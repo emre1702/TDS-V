@@ -14,7 +14,6 @@ public class Database : Script {
 	private string password = "Ajagrebo1-";
 	private string database = "TDS";
 
-
 	/* Variables */
 	string connStr;
 	Dictionary<string, MySqlDataAdapter> dataAdapters;
