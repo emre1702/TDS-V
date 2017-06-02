@@ -28,7 +28,7 @@ public class Database : Script {
 
 	/* Exports */
 
-	public DataTable executeQueryWithResult ( string sql ) {
+	public DataTable execResult ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -46,7 +46,7 @@ public class Database : Script {
 		}
 	}
 
-	public DataTable executePreparedQueryWithResult ( string sql, Dictionary<string, string> parameters ) {
+	public DataTable execPreparedResult ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -70,7 +70,7 @@ public class Database : Script {
 		}
 	}
 
-	public void executeQuery ( string sql ) {
+	public void exec ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -83,7 +83,7 @@ public class Database : Script {
 		}
 	}
 
-	public void executePreparedQuery ( string sql, Dictionary<string, string> parameters ) {
+	public void execPrepared ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
