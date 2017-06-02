@@ -1,0 +1,12 @@
+<meta>
+  <info name="TDS" description="TDS-Gamemode" author= "Bonus" type="gamemode" async="true" />
+
+  <!-- Class -->
+  <script src="server/class/database/cDatabase.cs" type="server" lang="csharp" />
+
+  <!-- Assembly -->
+  <assembly ref="System.Data.dll" />
+  <assembly ref="System.Xml.dll" />
+  <assembly ref="MySql.Data.dll" />
+  
+</meta>
