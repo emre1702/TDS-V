@@ -143,10 +143,10 @@ public class Database : Script {
 		dataAdapters = new Dictionary<string, MySqlDataAdapter> ();
 		var authentication = 
 		connStr = "server=" + ip +
-				  ";user=" + user +
+				  ";uid=" + user +
 				  ";database=" + database +
 				  ";port=" + port +
-				  ";password=" + password;
+				  ";pwd=" + password;
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				API.consoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
