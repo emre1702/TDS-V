@@ -1,13 +1,18 @@
-﻿"use strict"
+"use strict";
 
 let files = [
-   /* "language/language.js",
-    "loginregister/connect.js",
-    "loginregister/registerlogin.js", */
-    "timer.js",
-    "draw/draw.js",
+	"timer.js",
+	"scoreboard.js",
+	"draw/draw.js",
+    "damagesys/damagesys.js",
+    "language/language.js",
+    "registerlogin/connect.js",
+    "registerlogin/registerlogin.js",
+	"lobby/lobby.js",
+	"lobby/choice.js"
 ];
 let code = "";
+let htmlcode = "";
 let warning = "/* Copyright by Bonus!\n * Stealing is not allowed! */";
 
 let fs = require("fs");
@@ -25,26 +30,30 @@ code = toes5 ( code, {
 let uglify = require("uglify-js");
 let result = uglify.minify ( code, {
     compress : {
+        sequences: true,
         warnings: true,
         properties: true,
         dead_code: true,
+        unused: false,
         conditionals: true,
         booleans: true,
         loops: true,
-        unused: true,
         toplevel: true,
         if_return: true,
         join_vars: true,
         collapse_vars: true,
-        reduce_vars: true,
+        reduce_vars: true
+    },
+    mangle: {
+		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena" ] 
     },
     toplevel: true
 } );
 
-if ( result.warnings != undefined ) 
+if ( result.warnings !== undefined ) 
     console.log ( "warnings "+JSON.stringify ( result.warnings ) );
 
-if ( result.error == undefined ) {
+if ( result.error === undefined ) {
     fs.writeFile ( "script.js", warning+"\n"+result.code, function ( err ) {
         if ( err ) {
             console.log ( "Write "+err );

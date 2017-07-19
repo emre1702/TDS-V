@@ -1,8 +1,36 @@
 <meta>
   <info name="TDS" description="TDS-Gamemode" author= "Bonus" type="gamemode" async="true" />
 
-  <!-- Class -->
-  <script src="server/class/database/cDatabase.cs" type="server" lang="csharp" />
+  <!-- Zeugs -->
+  <script src="server/TDS.dll" type="server" lang="compiled" />
+  <script src="client/script.js" type="client" lang="javascript" />
+
+  <!-- CEF -->
+
+  <file src="client/language/language.js" />
+  <file src="client/window/css/normalize.min.css" />
+  <file src="client/window/css/style.css" />
+  <file src="client/window/js/jquery.min.js" />
+  <file src="client/window/js/jquery.validate.min.js" />
+  <file src="client/window/lobby/choice.html" />
+  <file src="client/window/lobby/choice.js" />
+  <file src="client/window/lobby/choice.css" />
+  <file src="client/window/registerlogin/registerlogin.html" />
+  <file src="client/window/registerlogin/registerlogin.js" />
+  <file src="client/window/damagesys/bloodscreen.html" />
+  <file src="client/window/damagesys/bloodscreen.js" />
+  
+  <!-- files -->
+  <file src="client/sounds/Go.wav" />
+  <file src="client/sounds/1.wav" />
+  <file src="client/sounds/2.wav" />
+  <file src="client/sounds/3.wav" />
+
+  <file src="client/pic/arenachoice.png" />
+  <file src="client/pic/gangchoice.png" />
+  <file src="client/pic/english.png" />
+  <file src="client/pic/german.png" />
+  <file src="client/pic/blood.png" />
 
   <!-- Assembly -->
   <assembly ref="System.Data.dll" />

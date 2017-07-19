@@ -5,29 +5,33 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using GrandTheftMultiplayer.Server.API;
 
-
-public class Database : Script {
-
-	private string ip = "127.0.0.1";
-	private int port = 3306;
-	private string user = "emre1702";
-	private string password = "Ajagrebo1-";
-	private string database = "TDS";
+class Database : Script {
+	private static readonly string ip = "127.0.0.1";
+	private static readonly int port = 3306;
+	private static readonly string user = "emre1702";
+	private static readonly string password = "Ajagrebo1-";
+	private static readonly string database = "TDS";
 
 	/* Variables */
-	string connStr;
-	Dictionary<string, MySqlDataAdapter> dataAdapters;
+	private static readonly string connStr = "server=" + ip +
+					";user=" + user +
+					";database=" + database +
+
+
+					";port=" + port +
+					";password=" + password + ";";
+	private static Dictionary<string, MySqlDataAdapter> dataAdapters;
 
 	/* Constructor */
 
 	public Database ( ) {
-		API.onResourceStart += onResourceStart;
-		API.onResourceStop += onResourceStop;
+		API.onResourceStart += this.OnResourceStart;
+		API.onResourceStop += this.OnResourceStop;
 	}
 
 	/* Exports */
 
-	public DataTable execResult ( string sql ) {
+	public static DataTable ExecResult ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -39,13 +43,13 @@ public class Database : Script {
 				return results;
 			}
 			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
 	}
 
-	public DataTable execPreparedResult ( string sql, Dictionary<string, string> parameters ) {
+	public static DataTable ExecPreparedResult ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -63,13 +67,13 @@ public class Database : Script {
 				return results;
 			}
 			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
 	}
 
-	public void exec ( string sql ) {
+	public static void Exec ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -77,12 +81,12 @@ public class Database : Script {
 				cmd.ExecuteNonQuery ();
 			}
 			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 		}
 	}
 
-	public void execPrepared ( string sql, Dictionary<string, string> parameters ) {
+	public static void ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -93,12 +97,12 @@ public class Database : Script {
 				cmd.ExecuteNonQuery ();
 			}
 			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 		}
 	}
 
-	public DataTable createDataTable ( string sql, string unique_name ) {
+	public static DataTable CreateDataTable ( string sql, string unique_name ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlDataAdapter dataAdapter;
@@ -111,42 +115,37 @@ public class Database : Script {
 				return dataTable;
 			}
 			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
 	}
 
-	public void updateDataTable ( string unique_name, DataTable updatedTable ) {
+	public static void UpdateDataTable ( string unique_name, DataTable updatedTable ) {
 		try {
 			dataAdapters[unique_name].Update ( updatedTable );
 		}
 		catch ( Exception ex ) {
-			API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 		}
 	}
 
-	public void closeDataTable ( string unique_name ) {
+	public static void CloseDataTable ( string unique_name ) {
 		try {
 			MySqlDataAdapter data = dataAdapters[unique_name];
 			dataAdapters.Remove ( unique_name );
 			data.Dispose ();
 		}
 		catch ( Exception ex ) {
-			API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
 		}
 	}
 
 	/* Hooks */
 
-	public void onResourceStart ( ) {
+	public void OnResourceStart ( ) {
 		dataAdapters = new Dictionary<string, MySqlDataAdapter> ();
-		var authentication = 
-		connStr = "server=" + ip +
-				  ";uid=" + user +
-				  ";database=" + database +
-				  ";port=" + port +
-				  ";pwd=" + password;
+
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				API.consoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
@@ -162,8 +161,7 @@ public class Database : Script {
 		}
 	}
 
-	public void onResourceStop ( ) {
+	public void OnResourceStop ( ) {
 		API.consoleOutput ( "DATABASE: [INFO] MySQL connection closed" );
 	}
 }
-

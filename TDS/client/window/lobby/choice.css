@@ -1,0 +1,175 @@
+body {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 115%;
+    overflow-x: hidden;
+}
+
+.button {
+    border: 0;
+    outline: none;
+    border-radius: 0;
+    padding: 15px 0;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    color: #ffffff;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    -webkit-appearance: none;
+    text-shadow: 0px 4px 3px rgba(0,0,0,0.4), 0px 8px 13px rgba(0,0,0,0.1), 0px 18px 23px rgba(0,0,0,0.1);
+}
+
+.btn-group button {
+    background-color: white;
+    padding: 30px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+    opacity: 1;
+}
+
+.btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@keyframes lefttoright {
+    from {margin-left: -40%;}
+    to {margin-left: 0%;}
+}
+
+.lefttorightanim {
+    animation-name: lefttoright;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(0.5, 0.57, 0.7, 1);
+}
+
+.image-button {
+    opacity: 1;
+}
+
+.image-button:hover, .image-button:focus {
+    background-size: 105% 105%;
+    opacity: 0.7;
+}
+
+.language-button {
+    width: 5%;
+    height: 4%;
+    display: inline-block;
+    opacity: 1;
+}
+
+.language-button:hover, .language-button:focus {
+    background-size: 100% 100%;
+    opacity: 0.7;
+}
+
+.button-blue {
+    background: -webkit-linear-gradient(top, rgba(5,2,154,1) 0%,rgba(10,10,120,1) 40%,rgba(3,2,90,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(5,2,154,1) 0%,rgba(10,10,120,1) 40%,rgba(3,2,90,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    width: 38%;
+}
+
+.button-blue:hover, .button-blue:focus {
+    background: -webkit-linear-gradient(top, rgba(32,29,251,1) 0%,rgba(17,17,217,1) 40%,rgba(6,4,162,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(32,29,251,1) 0%,rgba(17,17,217,1) 40%,rgba(6,4,162,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ 
+}
+
+.button-green {
+  background: -webkit-linear-gradient(top, rgba(0,138,0,1) 0%,rgba(0,87,0,1) 52%,rgba(1,61,0,1) 93%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(0,138,0,1) 0%,rgba(0,87,0,1) 52%,rgba(1,61,0,1) 93%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    width: 38%;
+}
+
+.button-green:hover, .button-green:focus {
+     background: -webkit-linear-gradient(top, rgba(180,221,180,1) 0%,rgba(131,199,131,1) 17%,rgba(82,177,82,1) 33%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(180,221,180,1) 0%,rgba(131,199,131,1) 17%,rgba(82,177,82,1) 33%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.button-red {
+   background: -webkit-linear-gradient(top, rgba(201,12,34,1) 0%,rgba(143,2,34,1) 52%,rgba(109,0,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(201,12,34,1) 0%,rgba(143,2,34,1) 52%,rgba(109,0,25,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    width: 20%;
+}
+
+.button-red:hover, .button-red:focus {
+  background: -webkit-linear-gradient(top, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%,rgba(143,2,34,1) 100%,rgba(181,3,6,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%,rgba(143,2,34,1) 100%,rgba(181,3,6,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.english {
+    background: url('../../pic/english.png') no-repeat; 
+    background-position: center center; 
+    background-size: 85% 85%; 
+    position: relative; 
+    left: 89%;
+}
+
+.german {
+    background: url('../../pic/german.png') no-repeat; 
+    background-position: center center; 
+    background-size: 85% 85%; 
+    position: relative; 
+    left: 89%;
+}
+
+.arena {
+    width: 33.33333%; 
+    background: url('../../pic/arenachoice.png') no-repeat; 
+    background-size: 95% 95%; 
+    background-position: center center; 
+    font-size: 4rem;
+}
+
+.gang {
+    /* display:none;*/ 
+    width: 33.33333%;  
+    background: url('../../pic/gangchoice.png') no-repeat; 
+    background-size: 95% 95%; 
+    background-position: center center; 
+    font-size: 4rem;
+}
+
+.custom {
+    width: 33.33333%;  
+    background: url('../../pic/arenachoice.png') no-repeat; 
+    background-size: 95% 95%; 
+    background-position: center center; 
+    font-size: 4rem;
+}
+
+table {  
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: inline-block;
+    width: 100%;
+}
+
+.create-lobby-button {
+    font-size: 2rem;
+    width: 20vw;
+    height: 12vh;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.join-lobby-button {
+    background: url('../../pic/arenachoice.png') no-repeat; 
+    background-size: 100% 100%; 
+    background-position: center center; 
+    font-size: 2rem;
+    width: 20vw;
+    height: 12vh;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+

@@ -1,10 +1,11 @@
 "use strict";
 let drawdrawings = [];
-API.onResourceStart.connect(function () {
-    for (let i = 0; i < drawdrawings.length; i++) {
+API.onUpdate.connect(function () {
+    let tick = API.getGlobalTime();
+    for (var i = 0; i < drawdrawings.length; i++) {
         let c = drawdrawings[i];
         if (c.activated) {
-            switch (this.type) {
+            switch (c.type) {
                 case "line":
                     API.drawLine(c.start, c.end, c.a, c.r, c.g, c.b);
                     break;
@@ -12,7 +13,15 @@ API.onResourceStart.connect(function () {
                     API.drawRectangle(c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a);
                     break;
                 case "text":
-                    API.drawText(c.text, c.x, c.y, c.scale, c.r, c.g, c.b, c.a, c.font, c.justify, c.shadow, c.outline, c.wordwrap);
+                    let alpha = c.a;
+                    if (c.enda != null) {
+                        alpha = getBlendValue(tick, c.a, c.enda, c.endastarttick, c.endaendtick);
+                    }
+                    let scale = c.scale;
+                    if (c.endscale != null) {
+                        scale = getBlendValue(tick, c.scale, c.endscale, c.endscalestarttick, c.endscaleendtick);
+                    }
+                    API.drawText(c.text, c.x, c.y, scale, c.r, c.g, c.b, alpha, c.font, c.justify, c.shadow, c.outline, c.wordwrap);
                     break;
                 case "editbox":
                     API.drawRectangle(c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a);
@@ -22,6 +31,12 @@ API.onResourceStart.connect(function () {
         }
     }
 });
+function getBlendValue(tick, start, end, starttick, endtick) {
+    let progress = (tick - starttick) / (endtick - starttick);
+    if (progress > 1)
+        progress = 1;
+    return start + progress * (end - start);
+}
 function removeClassDraw() {
     let index = drawdrawings.indexOf(this);
     if (index != -1) {
@@ -30,6 +45,22 @@ function removeClassDraw() {
     }
     else
         return false;
+}
+function blendClassDrawTextAlpha(enda, mstime) {
+    this.enda = enda;
+    this.endastarttick = API.getGlobalTime();
+    this.endaendtick = this.endastarttick + mstime;
+}
+function blendClassDrawTextScale(endscale, mstime) {
+    this.endscale = endscale;
+    this.endscalestarttick = API.getGlobalTime();
+    this.endscaleendtick = this.endscalestarttick + mstime;
+}
+function getClassDrawText() {
+    return this.text;
+}
+function setClassDrawText(text) {
+    this.text = text;
 }
 function cLine(start, end, r, g, b, a) {
     this.type = "line";
@@ -74,6 +105,10 @@ function cText(text, xpos, ypos, scale = 1.0, r = 255, g = 255, b = 255, a = 255
     this.outline = outline;
     this.wordwrap = wordwrap;
     this.remove = removeClassDraw;
+    this.blendTextAlpha = blendClassDrawTextAlpha;
+    this.blendTextScale = blendClassDrawTextScale;
+    this.getText = getClassDrawText;
+    this.setText = setClassDrawText;
     drawdrawings.push(this);
 }
 function cEditBox(defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20, a = 187, scale = 1.0, textr = 255, textg = 255, textb = 255, texta = 255, font = 0, justify = 0, shadow = false, outline = false, wordwrap = 0) {

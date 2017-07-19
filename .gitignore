@@ -20,3 +20,9 @@ TDS/packages/NLog.4.4.9/lib/net40/NLog.xml
 *NLog.xml
 TDS/TDS.csproj
 TDS/packages/NLog.4.4.9/lib/sl5/NLog.xml
+/TDS/obj/Debug
+/TDS/obj/Debug/TDS.csproj.FileListAbsolute.txt
+TDS.sln
+/TDS/bin/Debug/GrandTheftMultiplayer.Server.exe
+*.exe
+*.pdb
