@@ -11,54 +11,80 @@
     </head>
 
     <body>
-        <form>
-            <div class="btn-group" id="language_choice" style="margin-top: 5px;">
-                <button type="submit" class="button language-button english" data-eventtype="lang_english"/>
-                <button type="submit" class="button language-button german" data-eventtype="lang_german"/>
-            </div>
+        <div class="btn-group" id="language_choice" style="margin-top: 5px;">
+            <button class="button language-button english" data-eventtype="lang_english"/>
+            <button class="button language-button german" data-eventtype="lang_german"/>
+        </div>
 
-            <div class="btn-group" id="lobby_choice" style="margin-top: 35%;">
-                <button type="submit" class="button image-button arena" data-eventtype="join_arena" data-lang="arena">arena</button>
-                <button type="submit" class="button image-button gang" data-eventtype="join_gang" data-lang="copsnrobbers">gang</button>
-                <button type="submit" class="button image-button custom" data-eventtype="custom_lobby" data-lang="custom">custom</button>
-            </div>
-            <div class="btn-group" id="team_choice" style="display:none; margin-top: 40%;">
-                <button type="submit" style="margin: -5% 1%" class="button button-blue" data-eventtype="join_arena_player" data-lang="player">player</button>
-                <button type="submit" style="margin: -5% 40%" class="button button-blue" data-eventtype="join_arena_spectator" data-lang="spectator">spectator</button>
-                <button type="submit" style="margin: -5% 79%" class="button button-red" data-eventtype="join_arena_back" data-lang="back">back</button>
-            </div>
-            <div id="custom_lobby" style="display:none; margin-top: 35%;">
-                <table>
-                    <tr>
-                        <td>
-                            <button type="submit" class="button button-blue create-lobby-button" data-eventtype="join_arena" data-lang="arena">Erstellen</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>oasjdiojasiodaiosdiojasiosoi</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>Bonus</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>Hallo</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>JAja</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>jajajja</button>
-                        </td>
-                    </tr>
-                </table>
-                <div class="btn-group" id="team_choice" style="margin: 2% 27vw; display: inline-block; height: 9vh">
-                    <button type="submit" style="width: 20vw;" class="button button-green" data-eventtype="join_arena_back" data-lang="back">create</button>
-                    <button type="submit" style="width: 20vw; margin: -9vh 26vw" class="button button-red" data-eventtype="join_arena_back" data-lang="back">back</button>
+        <div class="btn-group" id="lobby_choice" style="margin-top: 35%;">
+            <button class="button image-button arena lefttorightanim" data-eventtype="join_arena" data-lang="arena">arena</button>
+            <button class="button image-button gang lefttorightanim" data-eventtype="join_gang" data-lang="copsnrobbers">gang</button>
+            <button class="button image-button custom lefttorightanim" data-eventtype="custom_lobby" data-lang="custom">custom</button>
+        </div>
+        <div class="btn-group" id="team_choice" style="display:none; margin-top: 40%;">
+            <button style="margin: -5% 1%" class="button button-blue" data-eventtype="join_arena_player" data-lang="player">player</button>
+            <button style="margin: -5% 40%" class="button button-blue" data-eventtype="join_arena_spectator" data-lang="spectator">spectator</button>
+            <button style="margin: -5% 79%" class="button button-red" data-eventtype="join_arena_back" data-lang="back">back</button>
+        </div>
+        <div id="custom_lobby" style="display:none; margin-top: 35%;">
+            <form>
+                <div class="form">
+                    <div class="text-field">
+                        <label for="lobby_name" data-lang="lobby_name">lobby-name*</label>
+                        <input type="text" id="lobby_name" name="lobbyname" required minlength="3" maxlength="20" autocomplete="on" data-disable="true" />
+                    </div>
+                    <div class="select-field">
+                        <select class="select-field-select" required name="Modus" size="1">
+                            <option>arena</option>
+                            <option>bomb</option>
+                        </select>
+                        <label class="select-field-label">modus*</label>
+                    </div>
+                     <div class="text-field">
+                        <label for="lobby_name" data-lang="lobby_name">lobby-password</label>
+                        <input type="text" id="lobby_name" name="lobbyname" autocomplete="on" data-disable="true" />
+                    </div>   
+                     <div class="text-field">
+                        <label for="lobby_name" data-lang="lobby_name">lobby-name*</label>
+                        <input type="text" id="lobby_name" name="lobbyname" required minlength="3" maxlength="20" autocomplete="on" data-disable="true" />
+                    </div>
+                     <div class="text-field">
+                        <label for="lobby_name" data-lang="lobby_name">lobby-name*</label>
+                        <input type="text" id="lobby_name" name="lobbyname" required minlength="3" maxlength="20" autocomplete="on" data-disable="true" />
+                    </div>
+                     <div class="text-field">
+                        <label for="lobby_name" data-lang="lobby_name">lobby-name*</label>
+                        <input type="text" id="lobby_name" name="lobbyname" required minlength="3" maxlength="20" autocomplete="on" data-disable="true" />
+                    </div>
                 </div>
-            </div>
-
-            <!-- <div class="form" id="custom_lobby" style="display:none;">
-
-            </div> -->
-        </form>
+                
+                <div class="btn-group" id="team_choice" style="position: fixed; top: 88vh;">
+                    <button type="submit" style="width: 20vw; position: fixed; left: 27vw;" class="button button-green" data-eventtype="create-lobby" data-lang="back">create</button>
+                    <button style="width: 20vw; position: fixed; left: 53vw" class="button button-red" data-eventtype="custom_lobby_back" data-lang="back">back</button>
+                </div>
+            </form>
+            <table id="lobby-table">
+                <tr>
+                    <td>
+                        <button class="button button-blue create-lobby-button" data-eventtype="join_arena" data-lang="arena">own</button>
+                    </td>
+                    <td>
+                        <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">Meine Lobby und so und so<br/>oasjdiojasiodaiosdiojasiosoi</button>
+                    </td>
+                    <td>
+                        <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>Bonus</button>
+                    </td>
+                    <td>
+                        <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>Hallo</button>
+                    </td>
+                    <td>
+                        <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>JAja</button>
+                    </td>
+                    <td>
+                        <button type="submit" class="button image-button join-lobby-button" data-eventtype="join_arena" data-lang="arena">arena<br/>jajajja</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html> 

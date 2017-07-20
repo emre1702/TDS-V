@@ -1,12 +1,33 @@
-var clickedbutton;
-
 $(document).ready ( function() {
-    $( "button" ).click( function ( event ) {
-        clickedbutton = $( this ).attr( "data-eventtype" );
-    } );
+    
+    $( '.form' ).find( 'input, textarea' ).on( 'keyup blur focus', function ( e ) {
+		var $this = $( this ),
+			label = $this.prev( 'label' );
 
-    $( "form" ).submit( function ( event ) {
+		if ( e.type === 'keyup' ) {
+			if ( $this.val() === '' ) {
+				label.removeClass( 'active highlight' );
+			} else {
+				label.addClass( 'active highlight' );
+			}
+		} else if ( e.type === 'blur' ) {
+			if ( $this.val() === '' ) {
+				label.removeClass( 'active highlight' );
+			} else {
+				label.removeClass( 'highlight' );
+			}
+		} else if ( e.type === 'focus' ) {
+			if ( $this.val() === '' ) {
+				label.removeClass( 'highlight' );
+			} else {
+				label.addClass( 'highlight' );
+			}
+		}
+	} );
+    
+    $( "button" ).click( function ( event ) {
         event.preventDefault();
+        var clickedbutton = $( this ).attr( "data-eventtype" );
 		switch ( clickedbutton ) {
 
 			case "join_arena":
@@ -33,7 +54,7 @@ $(document).ready ( function() {
 
             case "custom_lobby":
 				$( "#lobby_choice" ).hide();
-				$( "#custom_lobby" ).show();
+				$( "#custom_lobby" ).fadeIn( 2000 );
                 break;
                 
 			case "lang_english":
@@ -45,8 +66,18 @@ $(document).ready ( function() {
 				resourceCall( "changeLanguage", "german" );
 				resourceCall( "getLobbyChoiceLanguage" );
                 break;
+                
+            case "custom_lobby_back":
+                $( "#custom_lobby" ).hide();
+                $( "#lobby_choice" ).show();
+                break;
         }
-	} );
+    } );
+    
+    $( "form" ).submit( function ( event ) {
+		event.preventDefault();
+        
+    } );
     
 	resourceCall( "getLobbyChoiceLanguage" );
 } );
