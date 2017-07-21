@@ -28,6 +28,17 @@ let languagelist = {
             "player": "Spieler",
             "spectator": "Zuschauer",
             "back": "Zurück",
+            "create": "Erstellen",
+            "custom_lobby_own": "Eigene Lobby",
+            "lobby_name": "Lobby-Name",
+            "bomb": "Bombe",
+            "lobby_password": "Lobby-Passwort",
+            "max_players": "max. Spieler",
+            "round_time": "Runden-Zeit (Sekunden)",
+            "countdown_time": "Countdown-Zeit (Sekunden)",
+            "armor": "Weste",
+            "health": "HP",
+            "time_scale": "Zeit-Tempo",
         },
         "scoreboard": {
             "name": "Name",
@@ -67,6 +78,16 @@ let languagelist = {
             "player": "player",
             "spectator": "spectator",
             "back": "back",
+            "create": "create",
+            "lobby_name": "lobby-name",
+            "bomb": "bomb",
+            "lobby_password": "lobby-password",
+            "max_players": "max. players",
+            "round_time": "round-time (seconds)",
+            "countdown_time": "countdown-time (seconds)",
+            "armor": "armor",
+            "health": "health",
+            "time_scale": "time-scale",
         },
         "scoreboard": {
             "name": "name",
@@ -75,11 +96,12 @@ let languagelist = {
             "assists": "assists",
             "deaths": "deaths",
             "team": "team",
-            "lobby": "lobby"
+            "lobby": "lobby",
+            "custom_lobby_own": "own lobby"
         }
     }
 };
-let languagesetting = "german";
+let languagesetting = "english";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];

@@ -191,7 +191,6 @@ text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
 }
 
 .btn-group button {
-    background-color: white;
     border: 1px solid white; 
     padding: 30px 24px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
@@ -236,7 +235,7 @@ text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
     background-position: center center; 
     background-size: 85% 85%; 
     position: relative; 
-    left: 89%;
+    left: 85%;
 }
 
 .german {
@@ -244,7 +243,7 @@ text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
     background-position: center center; 
     background-size: 85% 85%; 
     position: relative; 
-    left: 89%;
+    left: 85%;
 }
 
 

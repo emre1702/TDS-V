@@ -8,6 +8,8 @@ function joinArena(isspectator) {
 function getLobbyChoiceLanguage() {
     lobbychoicedata.browser.call("getLobbyChoiceLanguage", JSON.stringify(languagelist[languagesetting].lobby_choice));
 }
+function createLobby() {
+}
 API.onServerEventTrigger.connect(function (eventName, args) {
     switch (eventName) {
         case "onClientJoinMainMenu":

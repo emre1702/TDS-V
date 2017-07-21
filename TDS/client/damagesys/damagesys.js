@@ -19,20 +19,4 @@ API.onLocalPlayerShoot.connect(function (weaponUsed, aimCoords) {
 });
 API.onResourceStart.connect(function () {
     API.callNative("NETWORK_SET_FRIENDLY_FIRE_OPTION", false);
-    let res = API.getScreenResolutionMaintainRatio();
-    bloodscreenbrowser = API.createCefBrowser(res.Width, res.Height);
-    API.waitUntilCefBrowserInit(bloodscreenbrowser);
-    API.setCefBrowserPosition(bloodscreenbrowser, 0, 0);
-    API.setCefBrowserHeadless(bloodscreenbrowser, false);
-    API.loadPageCefBrowser(bloodscreenbrowser, "client/window/damagesys/bloodscreen.html");
-});
-API.onPlayerArmorChange.connect(function (oldvalue) {
-    let newvalue = API.getPlayerArmor(API.getLocalPlayer());
-    if (newvalue < oldvalue)
-        bloodscreenbrowser.call("showBloodscreen");
-});
-API.onPlayerHealthChange.connect(function (oldvalue) {
-    let newvalue = API.getPlayerHealth(API.getLocalPlayer());
-    if (newvalue < oldvalue)
-        bloodscreenbrowser.call("showBloodscreen");
 });

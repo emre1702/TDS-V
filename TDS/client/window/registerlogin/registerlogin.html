@@ -10,15 +10,12 @@
         <script src='../js/jquery.validate.min.js'></script>
         <script src="registerlogin.js"></script>
     </head>
-
+    
     <body>
-        <form>
-            <div class="btn-group" id="language_choice" style="margin-top: 5px;">
-                <button type="submit" class="button language-button english" data-eventtype="lang_english"/>
-                <button type="submit" class="button language-button german" data-eventtype="lang_german"/>
-            </div>
-        </form>
-
+        <div class="btn-group" id="language_choice" style="margin-top: 5px;">
+            <button class="button language-button english" data-eventtype="lang_english" />
+            <button class="button language-button german" data-eventtype="lang_german" />
+        </div>
         <div class="form">
             <ul class="tab-group">
                 <li class="tab active">	<a href="#login" data-lang="tab_login">Login</a></li>
@@ -33,7 +30,7 @@
                             <label for="login_username" data-lang="username">
                                 username<span class="req">*</span>
                             </label>
-                            <input type="text" id="login_username" name="username" data-disable="true" />
+                            <input type="text" id="login_username" name="username" required data-disable="true" />
                         </div>
 
                         <div class="field-wrap">
@@ -55,7 +52,7 @@
                             <label for="register_username" data-lang="username">
                                 username<span class="req">*</span>
                             </label>
-                            <input type="text" id="register_username" name="username" data-disable="true" />
+                            <input type="text" id="register_username" name="username" required data-disable="true" />
                         </div>
                         <div class="field-wrap">
                             <label for="register_email" data-lang="register_email">
