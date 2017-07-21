@@ -14,6 +14,10 @@ using GrandTheftMultiplayer.Shared;
 namespace Manager {
 	class Utility : Script {
 
+		public Utility ( ) {
+			API.setGamemodeName ( "TDS" );
+		}
+
 		public static string ConvertToSHA512 ( string input ) {
 			byte[] hashbytes = SHA512Managed.Create ().ComputeHash ( Encoding.Default.GetBytes ( input ) );
 			StringBuilder sb = new StringBuilder ();
