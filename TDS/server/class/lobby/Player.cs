@@ -174,7 +174,7 @@ namespace Class {
 			}
 		}
 
-		private void SendAllPlayerEvent ( string eventName, int teamindex = 0, dynamic arg1 = null ) {
+		public void SendAllPlayerEvent ( string eventName, int teamindex = 0, dynamic arg1 = null ) {
 			if ( teamindex == 0 )
 				for ( int i = 0; i < this.players.Count; i++ )
 					for ( int j = 0; j < this.players[i].Count; j++ )

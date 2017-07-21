@@ -188,7 +188,7 @@ namespace Class {
 			}
 		}
 
-		private void FadeIn ( Client player ) {
+		private void SpawnAfterDeath ( Client player ) {
 			if ( player.exists ) {
 				API.sendNativeToPlayer ( player, Hash._RESET_LOCALPLAYER_STATE, player );
 				API.sendNativeToPlayer ( player, Hash.NETWORK_REQUEST_CONTROL_OF_ENTITY, player );
@@ -199,7 +199,8 @@ namespace Class {
 		}
 
 		public void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			API.triggerClientEventForAll ( "onClientPlayerDeath", player );
+			Character character = player.GetChar ();
+			character.lobby.SendAllPlayerEvent ( "onClientPlayerDeath", -1, player );
 
 			API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
 			API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
@@ -207,9 +208,9 @@ namespace Class {
 			API.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
 
 			player.freeze ( true );
-			Timer.SetTimer ( () => FadeIn ( player ), 2000, 1 );
+			Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000, 1 );
 			Client killer = API.getPlayerFromHandle ( entityKiller );
-			Class.Character character = player.GetChar ();
+			
 			if ( killer != null ) {
 				Console.WriteLine ( player.name + " got killed by " + killer.name );
 				if ( character.lobby == Manager.Arena.lobby )
