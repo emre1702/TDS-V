@@ -1,5 +1,5 @@
 "use strict";
-let languagelist = {
+var languagelist = {
     "german": {
         "loginregister": {
             "tab_login": "Login",
@@ -101,7 +101,7 @@ let languagelist = {
         }
     }
 };
-let languagesetting = "english";
+var languagesetting = "english";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];
@@ -110,4 +110,6 @@ function getLang(type, str = null) {
 }
 function changeLanguage(lang) {
     languagesetting = lang;
+    API.triggerServerEvent("onPlayerLanguageChange", lang);
+    changeSetting("language", lang);
 }
