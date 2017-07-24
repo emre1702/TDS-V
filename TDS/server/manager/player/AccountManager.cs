@@ -21,6 +21,16 @@ namespace Manager {
 			API.onPlayerDisconnected += this.OnPlayerDisconnected;
 		}
 
+		private static void SendWelcomeMessage ( Client player ) {
+			player.sendChatMessage ( "~o~_______________________________________" );
+			player.SendLangMessage ( "welcome_1" );
+			player.SendLangMessage ( "welcome_2" );
+			player.SendLangMessage ( "welcome_3" );
+			player.SendLangMessage ( "welcome_4" );
+			player.SendLangMessage ( "welcome_5" );
+			player.sendChatMessage ( "~o~_______________________________________" );
+		}
+
 		public void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
@@ -28,6 +38,7 @@ namespace Manager {
 					player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
 					player.freeze ( true );
 					player.name = player.socialClubName;
+					SendWelcomeMessage ( player );
 					API.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
 					break;
 
