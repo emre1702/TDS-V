@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 
@@ -191,5 +192,11 @@ namespace Class {
 			player.kill ();
 			player.SendLangNotification ( reason );
 		}
+
+		[Command("leave")]
+		public void Leave ( Client player ) {
+			player.GetChar ().lobby.RemovePlayer ( player );
+		}
+
 	}
 }
