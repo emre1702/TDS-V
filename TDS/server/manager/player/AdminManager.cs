@@ -11,10 +11,10 @@ namespace Manager {
 			{ "kick", 1 },
 			{ "ban (time)", 2 },
 			{ "ban (unban)", 2 },
-			{ "ban (permanent)", 3 }
+			{ "ban (permanent)", 2 }
 		};
 
-		[Command ( "next" )]
+		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round. Requirement: Supporter" )]
 		public void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
 				Class.Lobby lobby = player.GetChar ().lobby;
@@ -25,7 +25,7 @@ namespace Manager {
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "kick", GreedyArg = true )]
+		[Command ( "kick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the server. Requirement: Supporter" )]
 		public void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["kick"] ) ) {
@@ -35,7 +35,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "lobbykick", GreedyArg = true )]
+		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby. Requirement: Supporter or lobby-owner" )]
 		public void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true ) ) {
@@ -45,7 +45,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "ban", GreedyArg = true )]
+		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban. Requirement: Administrator" )]
 		public void BanPlayer ( Client player, Client target, int hours, string reason ) {
 			if ( player != target ) {
 				if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
