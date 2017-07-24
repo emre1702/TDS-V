@@ -52,36 +52,34 @@ namespace Manager {
 				|| hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] )
 				|| hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
 					if ( hours == 0 ) {
-						Database.ExecPrepared ( "DELETE FROM ban WHERE socialclubname = @SCN", new Dictionary<string, string> { { "@SCN", target.socialClubName } } );
+						Database.ExecPrepared ( "DELETE FROM ban WHERE socialclubname = @socialclubname", new Dictionary<string, string> { { "@socialclubname", target.socialClubName } } );
 						Language.SendMessageToAll ( "unban", target.name, player.name, reason );
 					} else if ( hours == -1 ) {
-						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@SCN, @ADD, @TYP, @STS, @STO, @ADM, @REA)",
+						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
 							new Dictionary<string, string> {
-								{ "@SCN", target.socialClubName },
-								{ "@ADD", target.address },
-								{ "@TYP", "permanent" },
-								{ "@STS", Utility.GetTimespan().ToString() },
-								{ "@STO", Utility.GetTimestamp() },
-								{ "@ENS", "0" },
-								{ "@ENO", "-" },
-								{ "@ADM", player.name },
-								{ "@REA", reason }
+								{ "@socialclubname", target.socialClubName },
+								{ "@address", target.address },
+								{ "@type", "permanent" },
+								{ "@startsec", Utility.GetTimespan().ToString() },
+								{ "@startoptic", Utility.GetTimestamp() },
+								{ "@admin", player.name },
+								{ "@reason", reason }
 							}
 						);
 						Language.SendMessageToAll ( "permaban", target.name, player.name, reason );
 						target.kick ( target.GetLang ( "youpermaban", player.name, reason ) );
 					} else {
-						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@SCN, @ADD, @TYP, @STS, @STO, @ENS, @ENO, @ADM, @REA)",
+						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
 							new Dictionary<string, string> {
-								{ "@SCN", target.socialClubName },
-								{ "@ADD", target.address },
-								{ "@TYP", "time" },
-								{ "@STS", Utility.GetTimespan().ToString() },
-								{ "@STO", Utility.GetTimestamp() },
-								{ "@ENS", Utility.GetTimespan(hours*3600).ToString() },
-								{ "@ENO", Utility.GetTimestamp ( hours*3600 ) },
-								{ "@ADM", player.name },
-								{ "@REA", reason }
+								{ "@socialclubname", target.socialClubName },
+								{ "@address", target.address },
+								{ "@type", "time" },
+								{ "@startsec", Utility.GetTimespan().ToString() },
+								{ "@startoptic", Utility.GetTimestamp() },
+								{ "@endsec", Utility.GetTimespan(hours*3600).ToString() },
+								{ "@endoptic", Utility.GetTimestamp ( hours*3600 ) },
+								{ "@admin", player.name },
+								{ "@reason", reason }
 							}
 						);
 						Language.SendMessageToAll ( "timeban", target.name, hours.ToString (), player.name, reason );
