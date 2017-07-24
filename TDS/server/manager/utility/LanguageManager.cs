@@ -21,6 +21,14 @@ static class Language {
 			{ "lobbykick", "{1} wurde von {2} aus der Lobby gekickt. Grund: {3}" },
 			{ "youlobbykick",  "Du wurdest von {1} aus der Lobby gekickt. Grund: {2}" },
 			{ "connecting", "Verbindet ..." },
+			{ "got_last_hitted_kill", "Du hast {1} zuletzt getroffen und den Kill bekommen." },
+			{ "got_assist", "Du hast den Assist von {1} bekommen." },
+
+			{ "welcome_1", "Willkommen auf dem ~b~Team Deathmatch Server~w~." },
+			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
+			{ "welcome_3", "bitte unseren Discord-Server nutzen:" },
+			{ "welcome_4", "discord.gg/ntVnGFt" },
+			{ "welcome_5", "Viel Spaß wünscht das ~b~TDS-Team~w~! ∑" },
 		} },
 		{ "english", new Dictionary<string, string> {
 			{ "wrong_password", "Wrong password!" },
@@ -37,6 +45,14 @@ static class Language {
 			{ "lobbykick", "{1} was kicked by {2} out of the lobby. Reason: {3}" },
 			{ "youlobbykick", "You were kicked by {1} out of the lobby. Reason: {2}" },
 			{ "connecting", "connecting ..." },
+			{ "got_last_hitted_kill", "You hitted {1} last and got the kill." },
+			{ "got_assist", "You got the assist of {1}." },
+
+			{ "welcome_1", "Welcome to ~b~Team Deathmatch Server~w~." },
+			{ "welcome_2", "For announcements, support, bug-reports etc." },
+			{ "welcome_3", "please visit our Discord-server:" },
+			{ "welcome_4", "discord.gg/ntVnGFt" },
+			{ "welcome_5", "Have fun from your ~b~TDS-Team~w~! ∑" },
 		} }
 	};
 
@@ -48,12 +64,12 @@ static class Language {
 			return GetReplaced ( langData[language][type], arg1, arg2, arg3, arg4 );
 	}
 
-	public static void SendLangMessage ( this Client player, string type ) {
-		player.sendChatMessage ( player.GetLang ( type ) );
+	public static void SendLangMessage ( this Client player, string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
+		player.sendChatMessage ( player.GetLang ( type, arg1, arg2, arg3, arg4 ) );
 	}
 
-	public static void SendLangNotification ( this Client player, string type ) {
-		API.shared.sendNotificationToPlayer ( player, player.GetLang ( type ) );
+	public static void SendLangNotification ( this Client player, string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
+		API.shared.sendNotificationToPlayer ( player, player.GetLang ( type, arg1, arg2, arg3, arg4 ) );
 	}
 
 	public static string GetReplaced ( string arg, string arg1, string arg2 = "", string arg3 = "", string arg4 = "" ) {
