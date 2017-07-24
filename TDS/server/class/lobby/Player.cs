@@ -8,8 +8,8 @@ namespace Class {
 
 	partial class Lobby : Script {
 
-		private int armor = 100;
-		private int health = 100;
+		public int armor = 100;
+		public int health = 100;
 		private int lifes = 1;
 		private List<List<Client>> players = new List<List<Client>> { new List<Client> () };
 		private List<List<Client>> alivePlayers = new List<List<Client>> { new List<Client> () };
@@ -64,6 +64,8 @@ namespace Class {
 			}
 			player.freeze ( true );
 			API.removeAllPlayerWeapons ( player );
+			Damage.allHitters[player] = new Dictionary<Client, int> ();
+			Damage.lastHitterDictionary.Remove ( player );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
@@ -82,8 +84,10 @@ namespace Class {
 				int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 				this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				this.alivePlayers[teamID].Remove ( player );
+				Damage.CheckLastHitter ( player, character );
 				this.CheckLobbyForEnoughAlive ();
 			}
+			Damage.allHitters.Remove ( player );
 			Manager.MainMenu.Join ( player );
 		}
 
@@ -114,29 +118,28 @@ namespace Class {
 			}
 		}
 
-		private void OnPlayerDeath ( Client player, NetHandle killer, int weapon ) {
-			Class.Character character = player.GetChar ();
+		public void OnPlayerDeath ( Client player, NetHandle killer, int weapon, Character character ) {
 			if ( character.lifes > 0 ) {
 				character.lifes--;
 				if ( character.lifes == 0 ) {
-					Lobby lobby = character.lobby;
 					int teamID = character.team;
-					int aliveindex = lobby.alivePlayers[teamID].IndexOf ( player );
-					lobby.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-					lobby.alivePlayers[teamID].RemoveAt ( aliveindex );
-					lobby.CheckLobbyForEnoughAlive ();
+					int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
+					this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
+					this.alivePlayers[teamID].RemoveAt ( aliveindex );
+					this.CheckLobbyForEnoughAlive ();
 				}
 			}
 		}
 
 		private void OnPlayerDisconnected ( Client player, string reason ) {
-			Class.Character character = player.GetChar ();
+			Character character = player.GetChar ();
 			int teamID = character.team;
 			Lobby lobby = character.lobby;
 			if ( character.lifes > 0 ) {
 				int aliveindex = lobby.alivePlayers[teamID].IndexOf ( player );
 				lobby.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				lobby.alivePlayers[teamID].RemoveAt ( aliveindex );
+				Damage.CheckLastHitter ( player, character );
 				lobby.CheckLobbyForEnoughAlive ();
 			}
 			lobby.players[teamID].Remove ( player );
@@ -174,20 +177,14 @@ namespace Class {
 			}
 		}
 
-		public void SendAllPlayerEvent ( string eventName, int teamindex = 0, dynamic arg1 = null ) {
+		public void SendAllPlayerEvent ( string eventName, int teamindex = 0, params object[] args ) {
 			if ( teamindex == 0 )
 				for ( int i = 0; i < this.players.Count; i++ )
 					for ( int j = 0; j < this.players[i].Count; j++ )
-						if ( arg1 == null )
-							this.players[i][j].triggerEvent ( eventName );
-						else
-							this.players[i][j].triggerEvent ( eventName, arg1 );
+						this.players[i][j].triggerEvent ( eventName, args );
 			else
 				for ( int j = 0; j < this.players[teamindex].Count; j++ )
-					if ( arg1 == null )
-						this.players[teamindex][j].triggerEvent ( eventName );
-					else
-						this.players[teamindex][j].triggerEvent ( eventName, arg1 );
+					this.players[teamindex][j].triggerEvent ( eventName, args );
 		}
 
 		private void KillPlayer ( Client player, string reason ) {

@@ -15,7 +15,7 @@ namespace Class {
 		public int team = 0;
 		public int lifes = 0;
 		public string language = "english";
-		public Class.Lobby lobby = Manager.MainMenu.lobby;
+		public Lobby lobby = Manager.MainMenu.lobby;
 		public Client spectating;
 		public bool loggedIn = true;
 		public bool isLobbyOwner = false;

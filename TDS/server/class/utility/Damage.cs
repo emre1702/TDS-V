@@ -6,7 +6,7 @@ using System;
 using GrandTheftMultiplayer.Server.Constant;
 
 namespace Class {
-	public class Damage : Script {
+	class Damage : Script {
 		//static attributes
 
 		private static Dictionary<int, int> damageDictionary = new Dictionary<int, int> {
@@ -90,6 +90,9 @@ namespace Class {
 		};
 		private Dictionary<int, double> customHeadMultiplicator = new Dictionary<int, double> ();
 
+		public static Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
+		public static Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
+
 
 		//private attributes
 
@@ -158,6 +161,16 @@ namespace Class {
 			if ( character.lobby == Manager.Arena.lobby ) {
 				character.damage += damage;
 			}
+
+			// Last-Hitter //
+			lastHitterDictionary[hitted] = player;
+			if ( !allHitters.ContainsKey ( hitted ) ) {
+				allHitters[hitted] = new Dictionary<Client, int> ();
+			}
+			if ( !allHitters[hitted].ContainsKey ( player ) ) {
+				allHitters[hitted][player] = 0;
+			}
+			allHitters[hitted][player] += damage;
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
@@ -198,9 +211,41 @@ namespace Class {
 			}
 		}
 
-		public void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
+		public static void CheckLastHitter ( Client player, Character character ) {
+			if ( lastHitterDictionary.ContainsKey ( player ) ) {
+				Client lasthitter = lastHitterDictionary[player];
+				if ( lasthitter.exists ) {
+					Character lasthittercharacter = lasthitter.GetChar ();
+					if ( character.lobby == lasthittercharacter.lobby ) {
+						if ( lasthittercharacter.lifes > 0 ) {
+							lasthittercharacter.kills++;
+							lasthitter.SendLangNotification ( "got_last_hitted_kill", player.name );
+						}
+					}
+				}
+			}
+			lastHitterDictionary.Remove ( player );
+		}
+
+		private static void CheckForAssist ( Client player, Character character ) {
+			if ( allHitters.ContainsKey ( player ) ) {
+				int halfarmorhp = ( character.lobby.armor + character.lobby.health ) / 2;
+				foreach ( KeyValuePair<Client, int> entry in allHitters[player] ) {
+					if ( entry.Value >= halfarmorhp ) {
+						Character targetcharacter = entry.Key.GetChar ();
+						if ( entry.Key.exists && targetcharacter.lobby == character.lobby ) {
+							targetcharacter.assists++;
+							entry.Key.SendLangNotification ( "got_assist", player.name );
+						}
+						return;
+					}
+				}
+			}
+		}
+
+		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			Character character = player.GetChar ();
-			character.lobby.SendAllPlayerEvent ( "onClientPlayerDeath", -1, player );
+			API.triggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
 
 			API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
 			API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
@@ -210,15 +255,28 @@ namespace Class {
 			player.freeze ( true );
 			Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000, 1 );
 			Client killer = API.getPlayerFromHandle ( entityKiller );
-			
-			if ( killer != null ) {
-				Console.WriteLine ( player.name + " got killed by " + killer.name );
+
+			if ( character.lifes > 0 ) {
+				character.lobby.OnPlayerDeath ( player, entityKiller, weapon, character );
+
+				// Kill //
+				if ( killer != null ) {
+					Console.WriteLine ( player.name + " got killed by " + killer.name );
+					if ( character.lobby == Manager.Arena.lobby )
+						killer.GetChar ().kills++;
+				} else {
+					CheckLastHitter ( player, character );
+					Console.WriteLine ( player.name + " died" );
+				}
+
+				// Death //
 				if ( character.lobby == Manager.Arena.lobby )
-					killer.GetChar ().kills++;
-			} else
-				Console.WriteLine ( player.name + " died" );
-			if ( character.lobby == Manager.Arena.lobby )
-				character.deaths++;
+					character.deaths++;
+
+				// Assist //
+				if ( character.lobby == Manager.Arena.lobby )
+					CheckForAssist ( player, character );
+			}
 		}
 	}
 }

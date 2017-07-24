@@ -15,7 +15,6 @@ namespace Class {
 		public bool deleteWhenEmpty = true;
 
 		public Lobby ( ) {
-			API.onPlayerDeath += this.OnPlayerDeath;
 			API.onPlayerDisconnected += this.OnPlayerDisconnected;
 			API.onClientEventTrigger += this.OnClientEventTrigger;
 			API.onPlayerRespawn += this.OnPlayerRespawn;
