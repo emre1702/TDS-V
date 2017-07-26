@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
-using GrandTheftMultiplayer.Shared;
-using System;
-using GrandTheftMultiplayer.Server.Constant;
 
 namespace Class {
-	class Damage : Script {
-		//static attributes
+	partial class Damagesys : Script {
 
 		private static Dictionary<int, int> damageDictionary = new Dictionary<int, int> {
 			//[ Handguns ]//
@@ -81,43 +78,18 @@ namespace Class {
 			{ -37975472, 0 },		//SmokeGrenade - Geändert, da kA
 			{ -1169823560, 0 },     //Pipebomb - Geändert, da kA
 		};
-		private Dictionary<int, int> customDamageDictionary = new Dictionary<int, int> ();
-
 		private static Dictionary<int, double> headMultiplicator = new Dictionary<int, double> {
 			{ 100416529, 5.0 },
 			{ 205991906, 5.0 },
 			{ -952879014, 5.0 }
 		};
-		private Dictionary<int, double> customHeadMultiplicator = new Dictionary<int, double> ();
-
 		public static Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 		public static Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
 
+		private Dictionary<int, int> customDamageDictionary = new Dictionary<int, int> ();
+		private Dictionary<int, double> customHeadMultiplicator = new Dictionary<int, double> ();
 
-		//private attributes
 
-		//public attributes
-
-		//constructor
-		public Damage ( ) {
-			API.onClientEventTrigger += this.OnPlayerHitOtherPlayer;
-			API.onPlayerDeath += this.OnPlayerDeath;
-		}
-
-		public Damage ( bool notusedvariable, Dictionary<int, int> customdamage = null, Dictionary<int, double> customheadmult = null ) {
-			if ( customdamage == null )
-				this.customDamageDictionary = new Dictionary<int, int> ();
-			else
-				this.customDamageDictionary = customdamage;
-			if ( customheadmult == null )
-				this.customHeadMultiplicator = new Dictionary<int, double> ();
-			else
-				this.customHeadMultiplicator = customheadmult;
-		}
-
-		//destructor
-
-		//private methods
 		private int GetDamage ( int hash, bool headshot ) {
 			int damage = 0;
 			if ( this.customDamageDictionary.ContainsKey ( hash ) )
@@ -125,7 +97,6 @@ namespace Class {
 			else if ( damageDictionary.ContainsKey ( hash ) )
 				damage = damageDictionary[hash];
 			if ( damage > 0 ) {
-
 				// Headshot //
 				if ( headshot ) {
 					if ( this.customHeadMultiplicator.ContainsKey ( hash ) )
@@ -190,7 +161,6 @@ namespace Class {
 			}
 		}
 
-
 		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic args ) {
 			if ( name == "onPlayerHitOtherPlayer" ) {
 				Client hitted = API.getPlayerFromHandle ( args[0] );
@@ -198,84 +168,6 @@ namespace Class {
 					Class.Lobby lobby = player.GetChar ().lobby;
 					lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );
 				}
-			}
-		}
-
-		private void SpawnAfterDeath ( Client player ) {
-			if ( player.exists ) {
-				API.sendNativeToPlayer ( player, Hash._RESET_LOCALPLAYER_STATE, player );
-				API.sendNativeToPlayer ( player, Hash.NETWORK_REQUEST_CONTROL_OF_ENTITY, player );
-				API.sendNativeToPlayer ( player, Hash.NETWORK_RESURRECT_LOCAL_PLAYER, 0, 0, 2000, player.rotation.Z, false, false );
-				API.sendNativeToPlayer ( player, Hash.RESURRECT_PED, player );
-				API.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 2000 );
-			}
-		}
-
-		public static void CheckLastHitter ( Client player, Character character ) {
-			if ( lastHitterDictionary.ContainsKey ( player ) ) {
-				Client lasthitter = lastHitterDictionary[player];
-				if ( lasthitter.exists ) {
-					Character lasthittercharacter = lasthitter.GetChar ();
-					if ( character.lobby == lasthittercharacter.lobby ) {
-						if ( lasthittercharacter.lifes > 0 ) {
-							lasthittercharacter.kills++;
-							lasthitter.SendLangNotification ( "got_last_hitted_kill", player.name );
-						}
-					}
-				}
-			}
-			lastHitterDictionary.Remove ( player );
-		}
-
-		private static void CheckForAssist ( Client player, Character character ) {
-			if ( allHitters.ContainsKey ( player ) ) {
-				int halfarmorhp = ( character.lobby.armor + character.lobby.health ) / 2;
-				foreach ( KeyValuePair<Client, int> entry in allHitters[player] ) {
-					if ( entry.Value >= halfarmorhp ) {
-						Character targetcharacter = entry.Key.GetChar ();
-						if ( entry.Key.exists && targetcharacter.lobby == character.lobby ) {
-							targetcharacter.assists++;
-							entry.Key.SendLangNotification ( "got_assist", player.name );
-						}
-						return;
-					}
-				}
-			}
-		}
-
-		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			Character character = player.GetChar ();
-			API.triggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
-
-			API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
-			API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
-			API.sendNativeToPlayer ( player, Hash.SET_FADE_OUT_AFTER_DEATH, false );
-			API.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
-
-			player.freeze ( true );
-			Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000, 1 );
-			Client killer = API.getPlayerFromHandle ( entityKiller );
-
-			if ( character.lifes > 0 ) {
-				character.lobby.OnPlayerDeath ( player, entityKiller, weapon, character );
-
-				// Kill //
-				if ( killer != null ) {
-					Console.WriteLine ( player.name + " got killed by " + killer.name );
-					if ( character.lobby == Manager.Arena.lobby )
-						killer.GetChar ().kills++;
-				} else {
-					CheckLastHitter ( player, character );
-					Console.WriteLine ( player.name + " died" );
-				}
-
-				// Death //
-				if ( character.lobby == Manager.Arena.lobby )
-					character.deaths++;
-
-				// Assist //
-				if ( character.lobby == Manager.Arena.lobby )
-					CheckForAssist ( player, character );
 			}
 		}
 	}

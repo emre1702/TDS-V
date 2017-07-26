@@ -65,8 +65,8 @@ namespace Class {
 			}
 			player.freeze ( true );
 			API.removeAllPlayerWeapons ( player );
-			Damage.allHitters[player] = new Dictionary<Client, int> ();
-			Damage.lastHitterDictionary.Remove ( player );
+			Damagesys.allHitters[player] = new Dictionary<Client, int> ();
+			Damagesys.lastHitterDictionary.Remove ( player );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
@@ -85,10 +85,10 @@ namespace Class {
 				int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 				this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				this.alivePlayers[teamID].Remove ( player );
-				Damage.CheckLastHitter ( player, character );
+				Damagesys.CheckLastHitter ( player, character );
 				this.CheckLobbyForEnoughAlive ();
 			}
-			Damage.allHitters.Remove ( player );
+			Damagesys.allHitters.Remove ( player );
 			Manager.MainMenu.Join ( player );
 		}
 
@@ -140,7 +140,7 @@ namespace Class {
 				int aliveindex = lobby.alivePlayers[teamID].IndexOf ( player );
 				lobby.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				lobby.alivePlayers[teamID].RemoveAt ( aliveindex );
-				Damage.CheckLastHitter ( player, character );
+				Damagesys.CheckLastHitter ( player, character );
 				lobby.CheckLobbyForEnoughAlive ();
 			}
 			lobby.players[teamID].Remove ( player );

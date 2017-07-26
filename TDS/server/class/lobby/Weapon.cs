@@ -7,7 +7,7 @@ namespace Class {
 
 		private List<WeaponHash> weapons = new List<WeaponHash> ();
 		private List<int> weaponsAmmo = new List<int> ();
-		public Damage damageSys;
+		public Damagesys damageSys;
 
 		public void AddWeapon ( WeaponHash weapon, int ammo ) {
 			this.weapons.Add ( weapon );

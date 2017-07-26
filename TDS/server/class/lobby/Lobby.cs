@@ -39,7 +39,7 @@ namespace Class {
 			lobbysbyindex [this.id] = this;
 			this.gotRounds = gotRounds;
 			this.isPlayable = isPlayable;
-			this.damageSys = new Damage ( true );
+			this.damageSys = new Damagesys ( true );
 		}
 
 		public static Lobby GetLobbyByName ( string name ) {
