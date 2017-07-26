@@ -13,6 +13,7 @@ using GrandTheftMultiplayer.Shared;
 
 namespace Manager {
 	class Utility : Script {
+		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
 		public Utility ( ) {
 			API.setGamemodeName ( "TDS" );
@@ -28,7 +29,7 @@ namespace Manager {
 		}
 
 		public static int GetTimespan ( int seconds = 0 ) {
-			TimeSpan t = DateTime.Now.AddSeconds ( seconds ) - new DateTime ( 2017, 7, 24 );
+			TimeSpan t = DateTime.Now.AddSeconds ( seconds ) - startDateTime;
 			return (int) t.TotalSeconds;
 		}
 
