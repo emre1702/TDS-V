@@ -10,7 +10,7 @@ namespace Class {
 
 		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			Character character = player.GetChar ();
-			API.triggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
+			API.TriggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
 
 			API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
 			API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
