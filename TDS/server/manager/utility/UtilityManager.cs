@@ -28,7 +28,7 @@ namespace Manager {
 		}
 
 		public static int GetTimespan ( int seconds = 0 ) {
-			TimeSpan t = DateTime.Now.AddSeconds ( seconds ) - new DateTime ( 2017, 6, 24 );
+			TimeSpan t = DateTime.Now.AddSeconds ( seconds ) - new DateTime ( 2017, 7, 24 );
 			return (int) t.TotalSeconds;
 		}
 
