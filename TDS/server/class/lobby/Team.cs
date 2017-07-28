@@ -22,7 +22,7 @@ namespace Class {
 			int lastteamcount = this.players[1].Count;
 			for ( int k = 2; k < this.players.Count; k++ ) {
 				int count = this.players[k].Count;
-				if ( count < lastteamcount || count == lastteamcount && rnd.Next ( 1, 2 ) == 1 ) {
+				if ( count < lastteamcount || count == lastteamcount && Manager.Utility.rnd.Next ( 1, 2 ) == 1 ) {
 					lastteamID = k;
 					lastteamcount = count;
 				}

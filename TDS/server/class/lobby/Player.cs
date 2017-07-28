@@ -4,6 +4,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using Manager;
 
 namespace Class {
 
@@ -24,7 +25,7 @@ namespace Class {
 			if ( this.isPlayable )
 				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap != null ? this.currentMap.name : "unknown" ) );
 			else {
-				player.position = new Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
+				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.stopSpectating ();
 				player.triggerEvent ( "onClientPlayerLeaveLobby" );
 			}
@@ -98,7 +99,7 @@ namespace Class {
 		}
 
 		private void RespawnPlayerInSpectateMode ( Client player ) {
-			player.position = new Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
+			player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
 			player.freeze ( true );
 			this.SpectateTeammate ( player );
 			player.triggerEvent ( "onClientSpectateMode" );
@@ -114,7 +115,7 @@ namespace Class {
 					lobby.RespawnPlayerInSpectateMode ( player );
 				}
 			} else {
-				player.position = new Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
+				player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.freeze ( true );
 			}
 		}
@@ -173,6 +174,13 @@ namespace Class {
 					Class.Character character2 = player.GetChar ();
 					if ( character2.lobby.isPlayable ) {
 						character2.lobby.KillPlayer ( player, "too_long_outside_map" );
+					}
+					break;
+
+				case "onMapMenuOpen":
+					Lobby lobby2 = player.GetChar ().lobby;
+					if ( lobby2.mapNames != null ) {
+						player.triggerEvent ( "onMapMenuOpen", lobby2.mapNames );
 					}
 					break;
 			}

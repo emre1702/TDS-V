@@ -16,8 +16,6 @@ class Database : Script {
 	private static readonly string connStr = "server=" + ip +
 					";user=" + user +
 					";database=" + database +
-
-
 					";port=" + port +
 					";password=" + password + ";";
 	private static Dictionary<string, MySqlDataAdapter> dataAdapters;

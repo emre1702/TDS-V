@@ -13,6 +13,7 @@ using GrandTheftMultiplayer.Shared;
 
 namespace Manager {
 	class Utility : Script {
+		public static readonly Random rnd = new Random ();
 		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
 		public Utility ( ) {
