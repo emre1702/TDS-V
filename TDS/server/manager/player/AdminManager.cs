@@ -25,20 +25,20 @@ namespace Manager {
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "kick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the server. Requirement: Supporter" )]
+		[Command ( "kick", GreedyArg = true, Alias = "rkick", AddToHelpmanager = true, Description = "Kicks a player from the server. Requirement: Supporter or VIP" )]
 		public void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
-				if ( player.IsAdminLevel ( neededLevels["kick"] ) ) {
+				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
 					Language.SendMessageToAll ( "kick", target.name, player.name, reason );
 					target.kick ( target.GetLang ( "youkick", player.name, reason ) );
 				}
 			}
 		}
 
-		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby. Requirement: Supporter or lobby-owner" )]
+		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby. Requirement: Supporter, lobby-owner or VIP" )]
 		public void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
-				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true ) ) {
+				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
 					Language.SendMessageToAll ( "lobbykick", target.name, player.name, reason );
 					target.GetChar ().lobby.RemovePlayer ( target );
 				}

@@ -12,12 +12,13 @@ namespace Manager {
 
 		public static void LoginPlayer ( Client player, int uid, string password = "" ) {
 			int adminlvl = 0;
-			int viplvl = 0;
+			int donatorLvl = 0;
 			int playtime = 0;
 			int kills = 0;
 			int assists = 0;
 			int deaths = 0;
 			int damage = 0;
+			bool isvip = false;
 			if ( password != "" ) {
 				DataTable result = Database.ExecPreparedResult ( "SELECT * FROM player WHERE UID = @UID", new Dictionary<string, string> { { "@UID", uid.ToString () } } );
 				if ( result.Rows.Count > 0 ) {
@@ -25,12 +26,13 @@ namespace Manager {
 					if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {
 						player.name = row["name"].ToString();
 						adminlvl = Convert.ToInt32 ( row["adminlvl"] );
-						viplvl = Convert.ToInt32 ( row["viplvl"] );
+						donatorLvl = Convert.ToInt32 ( row["donatorlvl"] );
 						playtime = Convert.ToInt32 ( row["playtime"] );
 						kills = Convert.ToInt32 ( row["kills"] );
 						assists = Convert.ToInt32 ( row["assists"] );
 						deaths = Convert.ToInt32 ( row["deaths"] );
 						damage = Convert.ToInt32 ( row["damage"] );
+						isvip = row["isvip"].ToString () == "1";
 					} else {
 						player.SendLangMessage ( "wrong_password" );
 						return;
@@ -46,12 +48,13 @@ namespace Manager {
 
 			character.uID = uid;
 			character.adminLvl = adminlvl;
-			character.vipLvl = viplvl;
+			character.donatorLvl = donatorLvl;
 			character.playtime = playtime;
 			character.kills = kills;
 			character.assists = assists;
 			character.deaths = deaths;
 			character.damage = damage;
+			character.isVIP = isvip;
 
 			character.loggedIn = true;
 
