@@ -1,0 +1,8 @@
+﻿namespace Manager {
+	partial class Log {
+		
+		public static void Error ( string errorstr, string lobbyname = "DEFAULT" ) {
+			AddLogEntry ( "error", errorstr, lobbyname );
+		}
+	}
+}
