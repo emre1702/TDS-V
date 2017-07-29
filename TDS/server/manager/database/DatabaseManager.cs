@@ -24,7 +24,6 @@ class Database : Script {
 
 	public Database ( ) {
 		API.onResourceStart += this.OnResourceStart;
-		API.onResourceStop += this.OnResourceStop;
 	}
 
 	/* Exports */
@@ -39,9 +38,8 @@ class Database : Script {
 				results.Load ( rdr );
 				rdr.Close ();
 				return results;
-			}
-			catch ( Exception ex ) {
-				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
@@ -63,9 +61,8 @@ class Database : Script {
 				results.Load ( rdr );
 				rdr.Close ();
 				return results;
-			}
-			catch ( Exception ex ) {
-				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
@@ -77,9 +74,8 @@ class Database : Script {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
 				conn.Open ();
 				cmd.ExecuteNonQuery ();
-			}
-			catch ( Exception ex ) {
-				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 		}
 	}
@@ -93,9 +89,8 @@ class Database : Script {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
 				cmd.ExecuteNonQuery ();
-			}
-			catch ( Exception ex ) {
-				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 		}
 	}
@@ -111,9 +106,8 @@ class Database : Script {
 				dataTable = new DataTable ();
 				dataAdapter.Fill ( dataTable );
 				return dataTable;
-			}
-			catch ( Exception ex ) {
-				API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 				return null;
 			}
 		}
@@ -122,9 +116,8 @@ class Database : Script {
 	public static void UpdateDataTable ( string unique_name, DataTable updatedTable ) {
 		try {
 			dataAdapters[unique_name].Update ( updatedTable );
-		}
-		catch ( Exception ex ) {
-			API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+		} catch ( Exception ex ) {
+			Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 		}
 	}
 
@@ -133,9 +126,8 @@ class Database : Script {
 			MySqlDataAdapter data = dataAdapters[unique_name];
 			dataAdapters.Remove ( unique_name );
 			data.Dispose ();
-		}
-		catch ( Exception ex ) {
-			API.shared.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+		} catch ( Exception ex ) {
+			Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 		}
 	}
 
@@ -151,15 +143,10 @@ class Database : Script {
 				if ( conn.State == ConnectionState.Open ) {
 					API.consoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
 				}
-			}
-			catch ( Exception ex ) {
-				API.consoleOutput ( "DATABASE: [ERROR] " + ex.ToString () );
+			} catch ( Exception ex ) {
+				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 
 		}
-	}
-
-	public void OnResourceStop ( ) {
-		API.consoleOutput ( "DATABASE: [INFO] MySQL connection closed" );
 	}
 }
