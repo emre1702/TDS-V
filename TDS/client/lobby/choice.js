@@ -20,6 +20,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             API.loadPageCefBrowser(lobbychoicedata.browser, "client/window/lobby/choice.html");
             API.setHudVisible(false);
             API.showCursor(true);
+            mapMenuClose();
             break;
         case "onClientPlayerJoinLobby":
             API.destroyCefBrowser(lobbychoicedata.browser);

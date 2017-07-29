@@ -9,6 +9,8 @@ namespace Manager {
 		}
 
 		private void MinuteTimerFunc ( ) {
+
+			// playtime //
 			List<Client> players = API.getAllPlayers ();
 			for ( int i = 0; i < players.Count; i++ ) {
 				Class.Character character = players[i].GetChar ();
@@ -19,6 +21,9 @@ namespace Manager {
 					}
 				}
 			}
+
+			// log-save //
+			Log.SaveInDatabase ();
 		}
 
 	}

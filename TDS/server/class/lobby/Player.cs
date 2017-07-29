@@ -178,10 +178,11 @@ namespace Class {
 					break;
 
 				case "onMapMenuOpen":
-					Lobby lobby2 = player.GetChar ().lobby;
-					if ( lobby2.mapNames != null ) {
-						player.triggerEvent ( "onMapMenuOpen", lobby2.mapNames );
-					}
+					SendMapsForVoting ( player );
+					break;
+
+				case "onMapVotingRequest":
+					player.GetChar ().lobby.AddMapToVoting ( player, args[0] );
 					break;
 			}
 		}
