@@ -6,7 +6,8 @@ using GrandTheftMultiplayer.Shared.Math;
 namespace Class {
 	partial class Lobby : Script {
 
-		private static Dictionary<int, Lobby> dimensionused = new Dictionary<int, Lobby> ();
+		private static Dictionary<int, Lobby> dimensionsUsed = new Dictionary<int, Lobby> ();
+		private List<string> mapNames;
 
 		private Dictionary<int, int> spawnCounter = new Dictionary<int, int> ();
 		private int dimension;
@@ -15,6 +16,18 @@ namespace Class {
 		private Timer countdownTimer;
 		private Timer roundEndTimer;
 		private List<Blip> mapBlips = new List<Blip> ();
+
+		public void AddMapList ( List<string> newmapnames, bool clone = true ) {
+			if ( clone )
+				this.mapNames = new List<string> ( newmapnames );
+			else 
+				this.mapNames = newmapnames;
+		}
+
+		public Map GetRandomMap ( ) {
+			int random = Manager.Utility.rnd.Next ( 0, this.mapNames.Count );
+			return Manager.Map.GetMapClass ( this.mapNames[random], this );
+		}
 
 		private Vector3[] GetMapRandomSpawnData ( int teamID ) {
 			Vector3[] list = new Vector3[2];
@@ -30,3 +43,6 @@ namespace Class {
 		}
 	}
 }
+
+
+ 

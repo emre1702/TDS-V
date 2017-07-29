@@ -9,11 +9,12 @@ namespace Manager {
 
 		public static void Create ( ) {
 			lobby = new Class.Lobby ( "arena", 1 );
+			lobby.AddMapList ( Manager.Map.mapNames, false );
 			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ) );
 			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ) );
 			lobby.deleteWhenEmpty = false;
 			lobby.AddWeapon ( (WeaponHash) ( 453432689 ), 1000 );
-			lobby.AddWeapon ( ( WeaponHash ) ( 736523883 ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) ( 736523883 ), 1000 );
 			lobby.AddWeapon ( (WeaponHash) ( -2084633992 ), 1000 );
 			lobby.AddWeapon ( (WeaponHash) ( -1466123874 ), 1000 );
 			lobby.Start ();

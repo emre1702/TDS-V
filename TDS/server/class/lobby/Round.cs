@@ -21,7 +21,7 @@ namespace Class {
 			this.status = "mapchoose";
 			API.consoleOutput ( this.status );
 
-			this.currentMap = Manager.Map.GetRandomMap ();
+			this.currentMap = this.GetNextMap ();
 
 			int tsindex = 1;
 			while ( this.currentMap.teamSpawns.ContainsKey ( tsindex ) ) {
