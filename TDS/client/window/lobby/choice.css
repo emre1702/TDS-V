@@ -283,7 +283,7 @@ input:focus, textarea:focus {
 }
 
 .select-field-select {
-    background: none;
+    /* background: none; */
     top: -2px;
     width: 104%;
     min-height: 3.5vh;
