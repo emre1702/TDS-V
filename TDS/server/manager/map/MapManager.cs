@@ -4,47 +4,53 @@ using System;
 using GrandTheftMultiplayer.Shared.Math;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server;
-
+using System.IO;
 
 namespace Manager {
-	static class Map {
-		private static List<string> xmlFilePaths = new List<string> {
-			"test"
-		};
-		private static Random rnd = new Random ();
+	class Map : Script {
+		private static string mapsPath = "resources/TDS/server/maps/";
+		public static List<string> mapNames = new List<string> {};
 
-		private static Class.Map GetMapClass ( string path ) {
-			Class.Map map = new Class.Map ();
-			XmlReader reader = XmlReader.Create ( path );
-			while ( reader.Read () ) {
-				if ( reader.NodeType == XmlNodeType.Element ) {
-					if ( reader.Name == "map" ) {
-						map.name = reader["name"];
-						map.type = reader["type"] ?? "arena";
-					} else if ( reader.Name == "limit" ) {
-						Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
-						map.mapLimits.Add ( pos );
-					} else if ( reader.Name.StartsWith ( "team" ) ) {
-						int teamnumber = Convert.ToInt32 ( reader.Name.Substring ( 4 ) );
-						if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
-							map.teamSpawns[teamnumber] = new List<Vector3> ();
-							map.teamRots[teamnumber] = new List<Vector3> ();
+		public Map () {
+			IEnumerable<string> files = Directory.EnumerateFiles ( mapsPath, "*.xml" );
+			foreach ( string filename in files ) {
+				mapNames.Add ( Path.GetFileNameWithoutExtension ( filename ) );
+			}
+			StandardLobbies.CreateStandardLobbies ();
+		}
+
+		public static Class.Map GetMapClass ( string mapname, Class.Lobby lobby ) {
+			try {
+				string path = mapsPath + mapname + ".xml";
+				Class.Map map = new Class.Map ();
+				XmlReader reader = XmlReader.Create ( path );
+				while ( reader.Read () ) {
+					if ( reader.NodeType == XmlNodeType.Element ) {
+						if ( reader.Name == "map" ) {
+							map.name = reader["name"];
+							map.type = reader["type"] ?? "arena";
+						} else if ( reader.Name == "limit" ) {
+							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
+							map.mapLimits.Add ( pos );
+						} else if ( reader.Name.StartsWith ( "team" ) ) {
+							int teamnumber = Convert.ToInt32 ( reader.Name.Substring ( 4 ) );
+							if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
+								map.teamSpawns[teamnumber] = new List<Vector3> ();
+								map.teamRots[teamnumber] = new List<Vector3> ();
+							}
+							Vector3 spawn = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), float.Parse ( reader["z"] ) );
+							map.teamSpawns[teamnumber].Add ( spawn );
+							Vector3 rot = new Vector3 ( float.Parse ( reader["xrot"] ), float.Parse ( reader["yrot"] ), float.Parse ( reader["zrot"] ) );
+							map.teamRots[teamnumber].Add ( rot );
 						}
-						Vector3 spawn = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), float.Parse ( reader["z"] ) );
-						map.teamSpawns[teamnumber].Add ( spawn );
-						Vector3 rot = new Vector3 ( float.Parse ( reader["xrot"] ), float.Parse ( reader["yrot"] ), float.Parse ( reader["zrot"] ) );
-						map.teamRots[teamnumber].Add ( rot );
 					}
 				}
+				return map;
+			} catch ( Exception e ) {
+				Log.Error ( "Error in Manager.Map.GetMapClass: " + e.ToString () );
+				return lobby.GetRandomMap ();
 			}
-			return map;
 		}
-
-		public static Class.Map GetRandomMap ( ) {
-			int random = rnd.Next ( 0, xmlFilePaths.Count );
-			return GetMapClass ( "resources/TDS/server/maps/" + xmlFilePaths[random] + ".xml" );
-		}
-
 
 		/*private static Map getMapDataOther ( string path ) {
 			Map map = new Map ();
