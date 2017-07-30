@@ -5,6 +5,7 @@ using GrandTheftMultiplayer.Server.Elements;
 namespace Class { 
 	partial class Lobby : Script {
 
+		private static readonly System.Random rnd = new System.Random ();
 		private static Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
 		private static Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
 
@@ -30,10 +31,10 @@ namespace Class {
 				this.id = ID;
 			}
 			int dimension = 1;
-			while ( dimensionsUsed.ContainsKey ( dimension ) )
+			while ( dimensionused.ContainsKey ( dimension ) )
 				dimension++;
 			this.dimension = dimension;
-			dimensionsUsed[dimension] = this;
+			dimensionused[dimension] = this;
 			lobbysbyname[name] = this;
 			lobbysbyindex [this.id] = this;
 			this.gotRounds = gotRounds;
@@ -46,7 +47,7 @@ namespace Class {
 		}
 
 		private void Remove ( ) {
-			dimensionsUsed.Remove ( this.dimension );
+			dimensionused.Remove ( this.dimension );
 			lobbysbyname.Remove ( this.name );
 			lobbysbyindex.Remove ( this.id );
 			this.roundEndTimer.Kill ();
