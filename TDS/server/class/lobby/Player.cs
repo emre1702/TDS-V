@@ -37,7 +37,7 @@ namespace Class {
 				this.players[0].Add ( player );
 				character.team = 0;
 			} else {
-				int teamID = this.GetTeamIDWithFewestMember ();
+				int teamID = this.GetTeamIDWithFewestMember ( this.players );
 				this.players[teamID].Add ( player );
 				player.setSkin ( this.teamSkins[teamID] );
 				character.team = teamID;

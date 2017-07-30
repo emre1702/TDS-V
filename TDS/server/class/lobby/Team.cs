@@ -17,11 +17,11 @@ namespace Class {
 			this.spawnCounter[this.teamSkins.Count - 1] = 0;
 		}
 
-		private int GetTeamIDWithFewestMember ( ) {
+		private int GetTeamIDWithFewestMember ( List<List<Client>> newplayerlist ) {
 			int lastteamID = 1;
-			int lastteamcount = this.players[1].Count;
-			for ( int k = 2; k < this.players.Count; k++ ) {
-				int count = this.players[k].Count;
+			int lastteamcount = newplayerlist[1].Count;
+			for ( int k = 2; k < newplayerlist.Count; k++ ) {
+				int count = newplayerlist[k].Count;
 				if ( count < lastteamcount || count == lastteamcount && Manager.Utility.rnd.Next ( 1, 2 ) == 1 ) {
 					lastteamID = k;
 					lastteamcount = count;
@@ -40,7 +40,7 @@ namespace Class {
 			for ( int i = 1; i < this.players.Count; i++ ) {
 				this.spawnCounter[i] = 0;
 				for ( int j = 0; j < this.players[i].Count; j++ ) {
-					int teamID = this.GetTeamIDWithFewestMember ();
+					int teamID = this.GetTeamIDWithFewestMember ( newplayerslist );
 					newplayerslist[teamID].Add ( players[i][j] );
 					this.players[i][j].setSkin ( this.teamSkins[teamID] );
 				}
