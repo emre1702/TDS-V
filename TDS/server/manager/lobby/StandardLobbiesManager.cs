@@ -1,8 +1,8 @@
 ﻿using GrandTheftMultiplayer.Server.API;
 
 namespace Manager {
-	class StandardLobbies : Script {
-		public StandardLobbies ( ) {
+	static class StandardLobbies {
+		public static void CreateStandardLobbies ( ) {
 			Arena.Create ();
 			MainMenu.Create ();
 		}
