@@ -111,5 +111,9 @@ function getLang(type, str = null) {
 function changeLanguage(lang) {
     languagesetting = lang;
     API.triggerServerEvent("onPlayerLanguageChange", lang);
-    changeSetting("language", lang);
 }
+API.onResourceStart.connect(function () {
+    var langnumber = API.returnNative("A8AE43AEC1A61314", 0);
+    if (langnumber == 22)
+        changeLanguage("german");
+});
