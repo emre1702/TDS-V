@@ -35,6 +35,7 @@ namespace Manager {
 			switch ( eventName ) {
 
 				case "onPlayerJoin":
+					player.GetChar ().language = args[0];
 					player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
 					player.freeze ( true );
 					player.name = player.socialClubName;

@@ -6,7 +6,6 @@ let files = [
 	"draw/draw.js",
     "damagesys/damagesys.js",
     "language/language.js",
-    "registerlogin/connect.js",
     "registerlogin/registerlogin.js",
 	"lobby/lobby.js",
 	"lobby/choice.js"

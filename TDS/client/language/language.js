@@ -113,7 +113,8 @@ function changeLanguage(lang) {
     API.triggerServerEvent("onPlayerLanguageChange", lang);
 }
 API.onResourceStart.connect(function () {
-    var langnumber = API.returnNative("A8AE43AEC1A61314", 0);
-    if (langnumber == 22)
-        changeLanguage("german");
+    var langnumber = API.returnNative("3160758157564346030", 0);
+    if (langnumber == 2)
+        languagesetting = "german";
+    API.triggerServerEvent("onPlayerJoin", languagesetting);
 });
