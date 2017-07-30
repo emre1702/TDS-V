@@ -3,7 +3,6 @@
 let files = [
 	"timer.js",
 	"scoreboard.js",
-	"settings.js",
 	"draw/draw.js",
     "damagesys/damagesys.js",
     "language/language.js",
