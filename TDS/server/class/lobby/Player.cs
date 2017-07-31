@@ -187,8 +187,8 @@ namespace Class {
 			}
 		}
 
-		public void SendAllPlayerEvent ( string eventName, int teamindex = 0, params object[] args ) {
-			if ( teamindex == 0 )
+		public void SendAllPlayerEvent ( string eventName, int teamindex = -1, params object[] args ) {
+			if ( teamindex == -1 )
 				for ( int i = 0; i < this.players.Count; i++ )
 					for ( int j = 0; j < this.players[i].Count; j++ )
 						this.players[i][j].triggerEvent ( eventName, args );
