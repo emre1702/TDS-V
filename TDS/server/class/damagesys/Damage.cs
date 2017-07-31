@@ -154,7 +154,7 @@ namespace Class {
 						this.DamagePlayer ( player, hitted, damage );
 						if ( hitted.health == 0 ) {
 							hitted.kill ();
-							OnPlayerDeath ( hitted, player, hash );
+							OnPlayerDeath ( hitted, player.handle, hash );
 						}
 					}
 				}

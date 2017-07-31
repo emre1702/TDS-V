@@ -8,43 +8,48 @@ using GrandTheftMultiplayer.Shared;
 namespace Class {
 	partial class Damagesys : Script {
 
+		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> (); 
+
 		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			Character character = player.GetChar ();
-			API.TriggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
+			if ( !deadTimer.ContainsKey ( player ) ) {
+				Character character = player.GetChar ();
+				API.TriggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
 
-			API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
-			API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
-			API.sendNativeToPlayer ( player, Hash.SET_FADE_OUT_AFTER_DEATH, false );
-			API.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
+				API.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
+				API.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
+				API.sendNativeToPlayer ( player, Hash.SET_FADE_OUT_AFTER_DEATH, false );
+				API.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
 
-			player.freeze ( true );
-			Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 );
-			Client killer = API.getPlayerFromHandle ( entityKiller );
+				player.freeze ( true );
+				deadTimer[player] = Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 );
+				Client killer = API.getPlayerFromHandle ( entityKiller );
 
-			if ( character.lifes > 0 ) {
-				character.lobby.OnPlayerDeath ( player, entityKiller, weapon, character );
+				if ( character.lifes > 0 ) {
+					character.lobby.OnPlayerDeath ( player, entityKiller, weapon, character );
 
-				// Kill //
-				if ( killer != null ) {
-					Console.WriteLine ( player.name + " got killed by " + killer.name );
+					// Kill //
+					if ( killer != null ) {
+						Console.WriteLine ( player.name + " got killed by " + killer.name );
+						if ( character.lobby == Manager.Arena.lobby )
+							killer.GetChar ().kills++;
+					} else {
+						CheckLastHitter ( player, character );
+						Console.WriteLine ( player.name + " died" );
+					}
+
+					// Death //
 					if ( character.lobby == Manager.Arena.lobby )
-						killer.GetChar ().kills++;
-				} else {
-					CheckLastHitter ( player, character );
-					Console.WriteLine ( player.name + " died" );
+						character.deaths++;
+
+					// Assist //
+					if ( character.lobby == Manager.Arena.lobby )
+						CheckForAssist ( player, character );
 				}
-
-				// Death //
-				if ( character.lobby == Manager.Arena.lobby )
-					character.deaths++;
-
-				// Assist //
-				if ( character.lobby == Manager.Arena.lobby )
-					CheckForAssist ( player, character );
 			}
 		}
 
 		private void SpawnAfterDeath ( Client player ) {
+			deadTimer.Remove ( player );
 			if ( player.exists ) {
 				API.sendNativeToPlayer ( player, Hash._RESET_LOCALPLAYER_STATE, player );
 				API.sendNativeToPlayer ( player, Hash.NETWORK_REQUEST_CONTROL_OF_ENTITY, player );
