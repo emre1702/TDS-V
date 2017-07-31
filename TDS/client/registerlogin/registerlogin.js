@@ -22,7 +22,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         API.waitUntilCefBrowserInit(loginpanel.loginbrowser);
         API.setCefBrowserPosition(loginpanel.loginbrowser, 0, 0);
         API.setCefBrowserHeadless(loginpanel.loginbrowser, false);
-        API.loadPageCefBrowser(loginpanel.loginbrowser, "client/window/registerlogin/login.html");
+        API.loadPageCefBrowser(loginpanel.loginbrowser, "client/window/registerlogin/registerlogin.html");
         API.setCanOpenChat(false);
         API.setHudVisible(false);
         API.showCursor(true);
