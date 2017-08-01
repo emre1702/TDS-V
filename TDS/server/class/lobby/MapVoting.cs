@@ -6,6 +6,7 @@ using GrandTheftMultiplayer.Server.Elements;
 namespace Class {
 	partial class Lobby : Script {
 		private Dictionary<string, int> mapVotes = new Dictionary<string, int>();
+		private Dictionary<Client, string> playerVotes = new Dictionary<Client, string> ();
 
 		private void SendMapsForVoting ( Client player ) {
 			if ( this.mapNames != null ) {
@@ -13,8 +14,30 @@ namespace Class {
 			}
 		}
 
-		private void AddMapToVoting ( Client player, string mapname ) {
+		private void AddVoteToMap ( Client player, string mapname ) {
+			if ( playerVotes.ContainsKey ( player ) ) {
+				if ( playerVotes[player] == mapname )
+					return;
+				mapVotes[playerVotes[player]]--;
+				this.SendAllPlayerEvent ( "onAddVoteToMap", -1, mapname, playerVotes[player] );
+			} else
+				this.SendAllPlayerEvent ( "onAddVoteToMap", -1, mapname );
+			playerVotes[player] = mapname;
+			mapVotes[mapname]++;
+		}
 
+		private void AddMapToVoting ( Client player, string mapname ) {
+			if ( !mapVotes.ContainsKey ( mapname ) ) {
+				// Anti-Cheat //
+				if ( !this.mapNames.Contains ( mapname ) ) {
+					Manager.Log.Error ( player.socialClubName + " voted for " + mapname + ", but it doesn't exist!", this.name );
+					return;
+				}
+				///////////////
+				mapVotes[mapname] = 0;
+				this.SendAllPlayerEvent ( "onNewMapForVoting", -1, mapname );
+			}
+			this.AddVoteToMap ( player, mapname );
 		}
 
 		private Map GetNextMap ( ) {

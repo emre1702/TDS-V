@@ -8,7 +8,8 @@ let files = [
     "language/language.js",
     "registerlogin/registerlogin.js",
 	"lobby/lobby.js",
-	"lobby/choice.js"
+	"lobby/choice.js",
+	"lobby/mapvoting.js",
 ];
 let code = "";
 let htmlcode = "";

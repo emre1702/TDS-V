@@ -198,10 +198,10 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             lobbydata.roundtimetext = new cText(minutes + ":" + (seconds >= 10 ? seconds : "0" + seconds), res.Width / 2, res.Height * 0.02, 0, 255, 255, 255, 255, 0, 1, true);
             lobbydata.roundtimetext.blendTextScale(1, 3000);
             lobbydata.roundtimetexttimer = new Timer(updateRoundTimeText, 1000, 0);
+            if (lobbydata.maplimitchecktimer != null)
+                lobbydata.maplimitchecktimer.kill();
             if (!args[0]) {
-                if (lobbydata.maplimit[0] !== undefined) {
-                    if (lobbydata.maplimitchecktimer != null)
-                        lobbydata.maplimitchecktimer.kill();
+                if (lobbydata.maplimit[0] != undefined) {
                     lobbydata.maplimitchecktimer = new Timer(checkMapLimit, 1000, -1);
                 }
                 lobbydata.teammateblips = [];
@@ -238,10 +238,11 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             lobbydata.isspectator = args[0];
             lobbydata.countdowntime = args[1];
             lobbydata.roundtime = args[2];
-            lobbydata.mapinfo = new cText(args[3], res.Width * 0.99, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true);
+            lobbydata.mapinfo = new cText(args[3], res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true);
             break;
         case "onClientPlayerLeaveLobby":
             removeLobbyTextsTimer(true);
+            mapMenuClose();
             break;
         case "onClientPlayerDeath":
             if (API.getLocalPlayer().Equals(args[0])) {

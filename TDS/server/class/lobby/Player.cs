@@ -178,7 +178,7 @@ namespace Class {
 					break;
 
 				case "onMapMenuOpen":
-					SendMapsForVoting ( player );
+					player.GetChar ().lobby.SendMapsForVoting ( player );
 					break;
 
 				case "onMapVotingRequest":
