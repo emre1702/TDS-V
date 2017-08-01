@@ -42,7 +42,7 @@ namespace Class {
 				this.MixTeams ();
 			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime * 1000 / 2, 1 );
 			if ( this.currentMap.mapLimits.Count > 0 )
-				this.SendAllPlayerEvent ( "sendClientMapData", 0, this.currentMap.mapLimits );
+				this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits );
 		}
 
 		private void StartRoundCountdown ( ) {
