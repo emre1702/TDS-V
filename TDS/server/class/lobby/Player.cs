@@ -22,9 +22,10 @@ namespace Class {
 			character.lobby = this;
 			character.spectating = null;
 			player.dimension = this.dimension;
-			if ( this.isPlayable )
+			if ( this.isPlayable ) { 
 				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap != null ? this.currentMap.name : "unknown" ) );
-			else {
+				this.SyncMapVotingOnJoin ( player );
+			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.stopSpectating ();
 				player.triggerEvent ( "onClientPlayerLeaveLobby" );
