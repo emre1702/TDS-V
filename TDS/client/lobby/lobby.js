@@ -242,7 +242,6 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             break;
         case "onClientPlayerLeaveLobby":
             removeLobbyTextsTimer(true);
-            mapMenuClose();
             break;
         case "onClientPlayerDeath":
             if (API.getLocalPlayer().Equals(args[0])) {
