@@ -47,5 +47,18 @@ namespace Class {
 			} else
 				return this.GetRandomMap ();
 		}
+
+		private void SyncMapVotingOnJoin ( Client player ) {
+			if ( mapVotes.Count > 0 ) {
+				List<string> mapnames = new List<string> ();
+				List<int> mapvotes = new List<int> ();
+
+				foreach ( KeyValuePair<string, int> pair in this.mapVotes.OrderByDescending ( p => p.Value ) ) {
+					mapnames.Add ( pair.Key );
+					mapvotes.Add ( pair.Value );
+				}
+				player.triggerEvent ( "onMapVotingSyncOnJoin", mapnames, mapvotes );
+			}
+		}
 	}
 }
