@@ -1,7 +1,6 @@
 TDS/packages/EntityFramework.6.1.3/tools/EntityFramework.PowerShell.Utility.dll
 *.suo
 TDS/app.config
-*.ts
 TDS/obj/Debug/build.force
 *.cache
 TDS/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
@@ -17,12 +16,9 @@ TDS/packages/MySql.Data.6.9.9/Readme.txt
 TDS/packages/NLog.4.4.9/lib/MonoAndroid10/NLog.xml
 TDS/packages/NLog.4.4.9/lib/net35/NLog.xml
 TDS/packages/NLog.4.4.9/lib/net40/NLog.xml
-*NLog.xml
-TDS/TDS.csproj
 TDS/packages/NLog.4.4.9/lib/sl5/NLog.xml
 /TDS/obj/Debug
 /TDS/obj/Debug/TDS.csproj.FileListAbsolute.txt
-TDS.sln
 /TDS/bin/Debug/GrandTheftMultiplayer.Server.exe
 *.exe
 *.pdb
