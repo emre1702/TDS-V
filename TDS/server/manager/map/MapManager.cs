@@ -16,7 +16,6 @@ namespace Manager {
 			foreach ( string filename in files ) {
 				mapNames.Add ( Path.GetFileNameWithoutExtension ( filename ) );
 			}
-			StandardLobbies.CreateStandardLobbies ();
 		}
 
 		public static Class.Map GetMapClass ( string mapname, Class.Lobby lobby ) {
