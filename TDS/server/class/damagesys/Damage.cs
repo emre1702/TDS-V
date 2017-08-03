@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Damagesys : Script {
+	partial class Damagesys {
 
 		private static Dictionary<int, int> damageDictionary = new Dictionary<int, int> {
 			//[ Handguns ]//
@@ -145,9 +145,9 @@ namespace Class {
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
-			if ( API.isPlayerDead ( hitted ) == false && hitted.dimension == player.dimension ) {
+			if ( API.shared.isPlayerDead ( hitted ) == false && hitted.dimension == player.dimension ) {
 				if ( player.GetChar ().team != hitted.GetChar ().team ) {
-					long tickCount = API.TickCount;
+					long tickCount = API.shared.TickCount;
 					int damage = this.GetDamage ( hash, headshot );
 
 					if ( damage > 0 ) {
@@ -161,9 +161,9 @@ namespace Class {
 			}
 		}
 
-		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic args ) {
+		private static void OnPlayerHitOtherPlayer ( Client player, string name, dynamic args ) {
 			if ( name == "onPlayerHitOtherPlayer" ) {
-				Client hitted = API.getPlayerFromHandle ( args[0] );
+				Client hitted = API.shared.getPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Class.Lobby lobby = player.GetChar ().lobby;
 					lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );

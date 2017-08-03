@@ -9,6 +9,7 @@ namespace Class {
 		private bool mixTeamsAfterRound = true;
 		public List<string> teams = new List<string> { "Spectator" };
 		private List<PedHash> teamSkins = new List<PedHash> { (PedHash) ( 225514697 ) };
+		private List<Color> teamColors = new List<Color> {  };
 
 		public void AddTeam ( string name, PedHash hash ) {
 			this.teams.Add ( name );

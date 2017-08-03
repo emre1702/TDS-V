@@ -3,7 +3,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class { 
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		private static Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
 		private static Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
@@ -13,10 +13,10 @@ namespace Class {
 		public bool isPlayable = true;
 		public bool deleteWhenEmpty = true;
 
-		public Lobby ( ) {
-			API.onPlayerDisconnected += this.OnPlayerDisconnected;
-			API.onClientEventTrigger += this.OnClientEventTrigger;
-			API.onPlayerRespawn += this.OnPlayerRespawn;
+		public static void LobbyOnStart ( API api ) {
+			api.onPlayerDisconnected += OnPlayerDisconnected;
+			api.onClientEventTrigger += OnClientEventTrigger;
+			api.onPlayerRespawn += OnPlayerRespawn;
 		}
 
 		public Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true ) {

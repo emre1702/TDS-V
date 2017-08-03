@@ -19,13 +19,13 @@ namespace Class {
 
 		public void StartMapChoose ( ) {
 			this.status = "mapchoose";
-			API.consoleOutput ( this.status );
+			API.shared.consoleOutput ( this.status );
 
 			this.currentMap = this.GetNextMap ();
 
 			int tsindex = 1;
 			while ( this.currentMap.teamSpawns.ContainsKey ( tsindex ) ) {
-				Blip blip = API.createBlip ( this.currentMap.teamSpawns[tsindex][0], this.dimension );
+				Blip blip = API.shared.createBlip ( this.currentMap.teamSpawns[tsindex][0], this.dimension );
 				blip.sprite = 491;
 				blip.name = "Spawn " + this.teams[tsindex];
 				this.mapBlips.Add ( blip );
@@ -33,7 +33,7 @@ namespace Class {
 			}
 
 			for ( int i = 0; i < this.currentMap.mapLimits.Count; i++ ) {
-				Blip blip = API.createBlip ( this.currentMap.mapLimits[i], this.dimension );
+				Blip blip = API.shared.createBlip ( this.currentMap.mapLimits[i], this.dimension );
 				blip.sprite = 441;
 				blip.name = "Limit";
 				this.mapBlips.Add ( blip );
@@ -47,12 +47,12 @@ namespace Class {
 
 		private void StartRoundCountdown ( ) {
 			this.status = "countdown";
-			API.consoleOutput ( this.status );
+			API.shared.consoleOutput ( this.status );
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
 			for ( int i = 0; i < this.players.Count; i++ )
 				for ( int j = 0; j < this.players[i].Count; j++ ) {
 					this.SetPlayerReadyForRound ( this.players[i][j], i );
-					API.sendNativeToPlayer ( this.players[i][j], Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
+					API.shared.sendNativeToPlayer ( this.players[i][j], Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
 					this.players[i][j].triggerEvent ( "onClientCountdownStart", this.currentMap.name );
 					if ( i == 0 )
 						this.SpectateAllTeams ( this.players[i][j], true );
@@ -62,7 +62,7 @@ namespace Class {
 
 		private void StartRound ( ) {
 			this.status = "round";
-			API.consoleOutput ( this.status );
+			API.shared.consoleOutput ( this.status );
 			if ( this.gotRounds )
 				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime * 1000, 1 );
 			this.alivePlayers = new List<List<Client>> ();
@@ -85,14 +85,14 @@ namespace Class {
 
 		private void EndRound ( ) {
 			this.status = "roundend";
-			API.consoleOutput ( this.status );
+			API.shared.consoleOutput ( this.status );
 			this.roundStartTimer.Kill ();
 			for ( int i = 0; i < this.mapBlips.Count; i++ ) {
 				this.mapBlips[i].delete ();
 			}
 			this.mapBlips = new List<Blip> ();
 			bool foundone = false;
-			API.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 * 1000 );
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 * 1000 );
 			for ( int i = 0; i < this.players.Count && !foundone; i++ ) {
 				if ( this.players[i].Count > 0 )
 					foundone = true;

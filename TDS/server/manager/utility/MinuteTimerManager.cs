@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
+using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Manager {
-	class MinuteTimerManager : GrandTheftMultiplayer.Server.API.Script {
+	class MinuteTimer {
 
-		public MinuteTimerManager ( ) {
-			Class.Timer.SetTimer ( this.MinuteTimerFunc, 60 * 1000, -1 );
+		public static void MinuteTimerOnStart ( ) {
+			Class.Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
 		}
 
-		private void MinuteTimerFunc ( ) {
+		private static void MinuteTimerFunc ( ) {
 
 			// playtime //
-			List<Client> players = API.getAllPlayers ();
+			List<Client> players = API.shared.getAllPlayers ();
 			for ( int i = 0; i < players.Count; i++ ) {
 				Class.Character character = players[i].GetChar ();
 				if ( character.loggedIn ) {

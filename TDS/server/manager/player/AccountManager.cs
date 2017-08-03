@@ -6,7 +6,7 @@ using System;
 
 namespace Manager {
 
-	class Account : Script {
+	class Account {
 		private static Random rnd = new Random ();
 
 		private static Dictionary<string, int> playerUIDs = new Dictionary<string, int> ();
@@ -14,11 +14,11 @@ namespace Manager {
 		private static Dictionary<string, bool> addressBanDict = new Dictionary<string, bool> ();
 		private static int lastPlayerUID = 0;
 
-		public Account ( ) {
-			API.onClientEventTrigger += this.OnClientEvent;
-			API.onPlayerBeginConnect += this.OnPlayerBeginConnect;
-			API.onResourceStart += this.OnResourceStart;
-			API.onPlayerDisconnected += this.OnPlayerDisconnected;
+		public static void AccountOnStart ( API api ) {
+			api.onClientEventTrigger += OnClientEvent;
+			api.onPlayerBeginConnect += OnPlayerBeginConnect;
+			api.onPlayerDisconnected += OnPlayerDisconnected;
+			OnResourceStart ();
 		}
 
 		private static void SendWelcomeMessage ( Client player ) {
@@ -31,7 +31,7 @@ namespace Manager {
 			player.sendChatMessage ( "~o~_______________________________________" );
 		}
 
-		public void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
+		public static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
 				case "onPlayerJoin":
@@ -40,7 +40,7 @@ namespace Manager {
 					player.freeze ( true );
 					player.name = player.socialClubName;
 					SendWelcomeMessage ( player );
-					API.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
+					API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
 					break;
 
 				case "onPlayerTryRegister":
@@ -71,7 +71,7 @@ namespace Manager {
 			addressBanDict[player.address] = true;
 		}
 
-		private void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
+		private static void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
 			player.name = player.socialClubName;
 			if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
 				DataTable result = Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
@@ -89,7 +89,7 @@ namespace Manager {
 			}
 		}
 
-		private void OnResourceStart ( ) {
+		private static void OnResourceStart ( ) {
 			DataTable result = Database.ExecResult ( "SELECT UID, name FROM player" );
 			foreach ( DataRow row in result.Rows ) {
 				playerUIDs[row["name"].ToString ()] = Convert.ToInt32 ( row["UID"] );
@@ -115,9 +115,9 @@ namespace Manager {
 			}
 		}
 
-		private void OnPlayerDisconnected ( Client player, string reason ) {
+		private static void OnPlayerDisconnected ( Client player, string reason ) {
 			SavePlayerData ( player );
-			API.triggerClientEventForAll ( "onClientPlayerQuit", player );
+			API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
 		}
 
 	}

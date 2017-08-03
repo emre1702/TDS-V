@@ -7,11 +7,11 @@ using GrandTheftMultiplayer.Server;
 using System.IO;
 
 namespace Manager {
-	class Map : Script {
+	class Map {
 		private static string mapsPath = "resources/TDS/server/maps/";
 		public static List<string> mapNames = new List<string> {};
 
-		public Map () {
+		public static void MapOnStart () {
 			IEnumerable<string> files = Directory.EnumerateFiles ( mapsPath, "*.xml" );
 			foreach ( string filename in files ) {
 				mapNames.Add ( Path.GetFileNameWithoutExtension ( filename ) );
@@ -54,7 +54,7 @@ namespace Manager {
 
 		/*private static Map getMapDataOther ( string path ) {
 			Map map = new Map ();
-			XmlGroup mapdata = API.shared.loadXml ( path );
+			XmlGroup mapdata = API.shared.shared.loadXml ( path );
 
 			bool teamexists = true;
 			int teamcounter = 1;

@@ -2,11 +2,11 @@
 using GrandTheftMultiplayer.Server.API;
 
 namespace Class {
-	partial class Damagesys : Script {
+	partial class Damagesys {
 
-		public Damagesys ( ) {
-			API.onClientEventTrigger += this.OnPlayerHitOtherPlayer;
-			API.onPlayerDeath += this.OnPlayerDeath;
+		public static void DamagesysOnStart ( API api ) {
+			api.onClientEventTrigger += OnPlayerHitOtherPlayer;
+			api.onPlayerDeath += OnPlayerDeath;
 		}
 
 		public Damagesys ( bool notusedvariable, Dictionary<int, int> customdamage = null, Dictionary<int, double> customheadmult = null ) {

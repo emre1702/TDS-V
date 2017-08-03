@@ -9,10 +9,10 @@ using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 
 namespace Manager {
-	public class Scoreboard : Script {
+	class Scoreboard {
 
-		public Scoreboard ( ) {
-			API.onClientEventTrigger += this.OnClientRequestPlayerListDatas;
+		public static void ScoreboardOnStart ( API api ) {
+			api.onClientEventTrigger += OnClientRequestPlayerListDatas;
 		}
 
 		public static string GetHoursOpticByMinutes ( int minutes ) {
@@ -21,9 +21,9 @@ namespace Manager {
 			return hours.ToString() + ":" + ( minutes < 10 ? "0" + minutes : minutes.ToString() );
 		}
 
-		private void OnClientRequestPlayerListDatas ( Client player, string eventName, params object[] args ) {
+		private static void OnClientRequestPlayerListDatas ( Client player, string eventName, params object[] args ) {
 			if ( eventName == "onClientRequestPlayerListDatas" ) {
-				List<Client> players = API.getAllPlayers ();
+				List<Client> players = API.shared.getAllPlayers ();
 
 				List<string> nameList = new List<string> ();
 				List<string> playtimeList = new List<string> ();
@@ -72,9 +72,9 @@ namespace Manager {
 				}
 
 				if ( ownLobbyID != 0 ) 
-					API.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
+					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 				else
-					API.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
+					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
 			}
 		}
 	}

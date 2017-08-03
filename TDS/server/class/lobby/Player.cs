@@ -46,10 +46,10 @@ namespace Class {
 					this.SetPlayerReadyForRound ( player, teamID );
 				} else {
 					int teamsinround = this.GetTeamAmountStillInRound ();
-					API.consoleOutput ( teamsinround + " teams still in round" );
+					API.shared.consoleOutput ( teamsinround + " teams still in round" );
 					if ( teamsinround < 2 ) {
 						this.EndRoundEarlier ();
-						API.consoleOutput ( "End round earlier because of joined player" );
+						API.shared.consoleOutput ( "End round earlier because of joined player" );
 					} else
 						this.RespawnPlayerInSpectateMode ( player );
 				}
@@ -66,14 +66,14 @@ namespace Class {
 				player.rotation = spawndata[1];
 			}
 			player.freeze ( true );
-			API.removeAllPlayerWeapons ( player );
+			API.shared.removeAllPlayerWeapons ( player );
 			Damagesys.allHitters[player] = new Dictionary<Client, int> ();
 			Damagesys.lastHitterDictionary.Remove ( player );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
 			for ( int i = 0; i < this.weapons.Count; i++ ) {
-				API.givePlayerWeapon ( player, this.weapons[i], this.weaponsAmmo[i], false, true );
+				API.shared.givePlayerWeapon ( player, this.weapons[i], this.weaponsAmmo[i], false, true );
 			}
 		}
 
@@ -106,7 +106,7 @@ namespace Class {
 			player.triggerEvent ( "onClientSpectateMode" );
 		}
 
-		private void OnPlayerRespawn ( Client player ) {
+		private static void OnPlayerRespawn ( Client player ) {
 			Class.Character character = player.GetChar ();
 			Lobby lobby = character.lobby;
 			if ( lobby.isPlayable ) {
@@ -134,7 +134,7 @@ namespace Class {
 			}
 		}
 
-		private void OnPlayerDisconnected ( Client player, string reason ) {
+		private static void OnPlayerDisconnected ( Client player, string reason ) {
 			Character character = player.GetChar ();
 			int teamID = character.team;
 			Lobby lobby = character.lobby;
@@ -148,7 +148,7 @@ namespace Class {
 			lobby.players[teamID].Remove ( player );
 		}
 
-		private void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) {
+		private static void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
 				case "joinLobby":
