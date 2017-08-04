@@ -23,7 +23,7 @@ namespace Class {
 			character.spectating = null;
 			player.dimension = this.dimension;
 			if ( this.isPlayable ) { 
-				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap != null ? this.currentMap.name : "unknown" ) );
+				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ) );
 				this.SyncMapVotingOnJoin ( player );
 			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
@@ -31,7 +31,7 @@ namespace Class {
 				player.triggerEvent ( "onClientPlayerLeaveLobby" );
 			}
 
-			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
+			if ( this.currentMap.created != false && this.currentMap.mapLimits.Count > 0 ) {
 				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
 			}
 			if ( spectator ) {

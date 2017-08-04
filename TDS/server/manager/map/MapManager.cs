@@ -22,6 +22,16 @@ namespace Manager {
 			try {
 				string path = mapsPath + mapname + ".xml";
 				Class.Map map = new Class.Map ();
+				map.type = "arena";
+				map.description = new Dictionary<string, string> {
+					{ "english", "No info available!" },
+					{ "german", "Keine Info verfügbar!" }
+				};
+				map.teamSpawns = new Dictionary<int, List<Vector3>> ();
+				map.teamRots = new Dictionary<int, List<Vector3>> ();
+				map.mapLimits = new List<Vector3> ();
+				map.created = true;
+
 				XmlReader reader = XmlReader.Create ( path );
 				while ( reader.Read () ) {
 					if ( reader.NodeType == XmlNodeType.Element ) {
