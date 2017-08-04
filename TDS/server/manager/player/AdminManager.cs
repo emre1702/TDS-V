@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using System.Collections.Generic;
 
 namespace Manager {
-	class Admin {
+	class Admin : Script {
 		private static Dictionary<string, int> neededLevels = new Dictionary<string, int> {
 			{ "next", 1 },
 			{ "lobbykick", 1 },
