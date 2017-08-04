@@ -10,7 +10,7 @@ namespace Class {
 
 		private void SendMapsForVoting ( Client player ) {
 			if ( this.mapNames != null ) {
-				player.triggerEvent ( "onMapMenuOpen", this.mapNames );
+				player.triggerEvent ( "onMapMenuOpen", this.mapNames, this.mapDescriptions );
 			}
 		}
 
@@ -43,6 +43,7 @@ namespace Class {
 		private Map GetNextMap ( ) {
 			if ( mapVotes.Count > 0 ) {
 				string wonmap = mapVotes.Aggregate ( ( l, r ) => l.Value > r.Value ? l : r ).Key;
+				this.SendAllPlayerLangNotification ( "map_won_voting", -1, wonmap );
 				return Manager.Map.GetMapClass ( wonmap, this );
 			} else
 				return this.GetRandomMap ();
