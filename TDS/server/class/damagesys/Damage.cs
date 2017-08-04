@@ -14,8 +14,8 @@ namespace Class {
 			{ -1076751822, 28 },    //SNSPistol
 			{ -771403250, 40 },     //HeavyPistol
 			{ 137902532, 34 },      //VintagePistol
-			{ -598887786, 220 },    //MarksmanPistol
-			{ -1045183535, 160 },   //Revolver
+			{ -598887786, 150 },    //MarksmanPistol
+			{ -1045183535, 110 },   //Revolver
 			{ 584646201, 28 },      //ApBistol
 			{ 911657153, 0 },       //Stun Gun	- Geändert
 			{ 1198879012, 0 },      //Flare Gun	- Geändert
