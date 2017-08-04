@@ -23,6 +23,7 @@ static class Language {
 			{ "connecting", "Verbindet ..." },
 			{ "got_last_hitted_kill", "Du hast {1} zuletzt getroffen und den Kill bekommen." },
 			{ "got_assist", "Du hast den Assist von {1} bekommen." },
+			{ "map_won_voting", "Die Map {1} hat das Voting gewonnen!" },
 
 			{ "welcome_1", "Willkommen auf dem ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
@@ -47,6 +48,7 @@ static class Language {
 			{ "connecting", "connecting ..." },
 			{ "got_last_hitted_kill", "You hitted {1} last and got the kill." },
 			{ "got_assist", "You got the assist of {1}." },
+			{ "map_won_voting", "The map {1} won the voting!" },
 
 			{ "welcome_1", "Welcome to ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
