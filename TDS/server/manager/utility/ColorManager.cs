@@ -19,5 +19,20 @@ namespace Manager {
 			{ "w", new Color ( 255, 255, 255 ) },  // unsicher 
 			// { "h", }, Bold
 		};
+		// unsicher (alles)
+		public static Dictionary<string, int> blipColorByString = new Dictionary<string, int> {
+			{ "r", 49 },
+			{ "b", 38 },
+			{ "g", 24 },
+			{ "y", 46 },
+			{ "p", 7 },
+			{ "q", 8 },
+			{ "o", 47 },
+			{ "c", 62 },
+			{ "m", 39 },
+			{ "u", 85 },
+			{ "s", 4 },
+			{ "w", 37 }
+		};
 	}
 }
