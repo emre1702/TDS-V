@@ -68,11 +68,13 @@
     <Compile Include="server\class\lobby\MapVoting.cs" />
     <Compile Include="server\class\lobby\Player.cs" />
     <Compile Include="server\class\lobby\Round.cs" />
+    <Compile Include="server\class\lobby\SendToPlayer.cs" />
     <Compile Include="server\class\lobby\Spectate.cs" />
     <Compile Include="server\class\lobby\Team.cs" />
     <Compile Include="server\class\lobby\Weapon.cs" />
     <Compile Include="server\class\map\Map.cs" />
     <Compile Include="server\class\player\PlayerExtend.cs" />
+    <Compile Include="server\manager\logs\Chat.cs" />
     <Compile Include="server\manager\logs\Error.cs" />
     <Compile Include="server\manager\logs\LogManager.cs" />
     <Compile Include="server\manager\player\AdminManager.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="server\class\utility\Timer.cs" />
     <Compile Include="server\manager\utility\MinuteTimerManager.cs" />
     <Compile Include="server\manager\utility\ResourceStartManager.cs" />
+    <Compile Include="server\manager\utility\ResourceStopManager.cs" />
     <Compile Include="server\manager\utility\ScoreboardManager.cs" />
     <Compile Include="server\manager\utility\UtilityManager.cs" />
   </ItemGroup>
