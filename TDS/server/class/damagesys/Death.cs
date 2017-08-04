@@ -43,7 +43,7 @@ namespace Class {
 
 					// Assist //
 					if ( character.lobby == Manager.Arena.lobby )
-						CheckForAssist ( player, character );
+						CheckForAssist ( player, character, killer );
 				}
 			}
 		}
@@ -59,17 +59,18 @@ namespace Class {
 			}
 		}
 
-		private static void CheckForAssist ( Client player, Character character ) {
+		private static void CheckForAssist ( Client player, Character character, Client killer ) {
 			if ( allHitters.ContainsKey ( player ) ) {
 				int halfarmorhp = ( character.lobby.armor + character.lobby.health ) / 2;
 				foreach ( KeyValuePair<Client, int> entry in allHitters[player] ) {
 					if ( entry.Value >= halfarmorhp ) {
 						Character targetcharacter = entry.Key.GetChar ();
-						if ( entry.Key.exists && targetcharacter.lobby == character.lobby ) {
+						if ( entry.Key.exists && targetcharacter.lobby == character.lobby && killer != entry.Key ) {
 							targetcharacter.assists++;
 							entry.Key.SendLangNotification ( "got_assist", player.name );
 						}
-						return;
+						if ( halfarmorhp % 2 != 0 || entry.Value != halfarmorhp / 2 )
+							return;
 					}
 				}
 			}
