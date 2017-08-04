@@ -20,7 +20,7 @@ namespace Manager {
 				Class.Lobby lobby = player.GetChar ().lobby;
 				if ( lobby.gotRounds ) {
 					// LOG //
-					Log.Admin ( "next", player, null, lobby.name );
+					Log.Admin ( "next", player, "0", lobby.name );
 					/////////
 					lobby.EndRoundEarlier ();
 				}
@@ -63,39 +63,56 @@ namespace Manager {
 		}
 
 		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban. Requirement: Administrator" )]
-		public void BanPlayer ( Client player, Client target, int hours, string reason ) {
-			if ( player != target ) {
+		public void BanPlayer ( Client player, string targetname, int hours, string reason ) {
+			if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
 				if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
 				|| hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] )
 				|| hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
-					if ( hours == 0 ) {
-						Database.ExecPrepared ( "DELETE FROM ban WHERE socialclubname = @socialclubname", new Dictionary<string, string> { { "@socialclubname", target.socialClubName } } );
-						Language.SendMessageToAll ( "unban", target.name, player.name, reason );
-						// LOG //
-						Log.Admin ( "unban", player, target, player.GetChar ().lobby.name );
-						/////////
-					} else if ( hours == -1 ) {
-						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
-							new Dictionary<string, string> {
-								{ "@socialclubname", target.socialClubName },
-								{ "@address", target.address },
+					int targetadminlvl = 0;
+					string targetaddress = "-";
+					Client target = API.getPlayerFromName ( targetname );
+					if ( target != null && target.GetChar ().loggedIn == true ) {
+						Class.Character targetcharacter = target.GetChar ();
+						targetadminlvl = targetcharacter.adminLvl;
+						targetaddress = target.address;
+					} else {
+						if ( target != null )
+							targetaddress = target.address;
+						System.Data.DataTable targetdata = Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", new Dictionary<string, string> {
+							{ "{1}", Account.playerUIDs[targetname].ToString() }
+						} );
+						targetadminlvl = System.Convert.ToInt32 ( targetdata.Rows[0]["adminlvl"] );
+					}
+					if ( targetadminlvl <= player.GetChar ().adminLvl ) {
+						if ( hours == 0 ) {
+							Database.ExecPrepared ( "DELETE FROM ban WHERE socialclubname = @socialclubname", new Dictionary<string, string> { { "@socialclubname", targetname } } );
+							Language.SendMessageToAll ( "unban", targetname, player.name, reason );
+							// LOG //
+							Log.Admin ( "unban", player, Account.playerUIDs[targetname].ToString(), player.GetChar ().lobby.name );
+							/////////
+						} else if ( hours == -1 ) {
+							Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
+								new Dictionary<string, string> {
+								{ "@socialclubname", targetname },
+								{ "@address", targetaddress },
 								{ "@type", "permanent" },
 								{ "@startsec", Utility.GetTimespan().ToString() },
 								{ "@startoptic", Utility.GetTimestamp() },
 								{ "@admin", player.name },
 								{ "@reason", reason }
-							}
-						);
-						Language.SendMessageToAll ( "permaban", target.name, player.name, reason );
-						target.kick ( target.GetLang ( "youpermaban", player.name, reason ) );
-						// LOG //
-						Log.Admin ( "permaban", player, target, player.GetChar ().lobby.name );
-						/////////
-					} else {
-						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
-							new Dictionary<string, string> {
-								{ "@socialclubname", target.socialClubName },
-								{ "@address", target.address },
+								}
+							);
+							Language.SendMessageToAll ( "permaban", targetname, player.name, reason );
+							if ( target != null )
+								target.kick ( target.GetLang ( "youpermaban", player.name, reason ) );
+							// LOG //
+							Log.Admin ( "permaban", player, Account.playerUIDs[targetname].ToString (), player.GetChar ().lobby.name );
+							/////////
+						} else {
+							Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
+								new Dictionary<string, string> {
+								{ "@socialclubname", targetname },
+								{ "@address", targetaddress },
 								{ "@type", "time" },
 								{ "@startsec", Utility.GetTimespan().ToString() },
 								{ "@startoptic", Utility.GetTimestamp() },
@@ -103,17 +120,21 @@ namespace Manager {
 								{ "@endoptic", Utility.GetTimestamp ( hours*3600 ) },
 								{ "@admin", player.name },
 								{ "@reason", reason }
-							}
-						);
-						Language.SendMessageToAll ( "timeban", target.name, hours.ToString (), player.name, reason );
-						target.kick ( target.GetLang ( "youtimeban", hours.ToString (), player.name, reason ) );
-						// LOG //
-						Log.Admin ( "timeban", player, target, player.GetChar ().lobby.name );
-						/////////
-					}
+								}
+							);
+							Language.SendMessageToAll ( "timeban", targetname, hours.ToString (), player.name, reason );
+							if ( target != null )
+								target.kick ( target.GetLang ( "youtimeban", hours.ToString (), player.name, reason ) );
+							// LOG //
+							Log.Admin ( "timeban", player, Account.playerUIDs[targetname].ToString (), player.GetChar ().lobby.name );
+							/////////
+						}
+					} else
+						player.SendLangNotification ( "adminlvl_not_high_enough" );
 				} else
 					player.SendLangNotification ( "adminlvl_not_high_enough" );
-			}
-		}
+			} else
+				player.SendLangNotification ( "player_doesnt_exist" );
+		}  
 	}
 }
