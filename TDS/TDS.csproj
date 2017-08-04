@@ -74,9 +74,12 @@
     <Compile Include="server\class\lobby\Weapon.cs" />
     <Compile Include="server\class\map\Map.cs" />
     <Compile Include="server\class\player\PlayerExtend.cs" />
+    <Compile Include="server\manager\logs\Admin.cs" />
     <Compile Include="server\manager\logs\Chat.cs" />
     <Compile Include="server\manager\logs\Error.cs" />
+    <Compile Include="server\manager\logs\LobbyOwner.cs" />
     <Compile Include="server\manager\logs\LogManager.cs" />
+    <Compile Include="server\manager\logs\VIP.cs" />
     <Compile Include="server\manager\player\AdminManager.cs" />
     <Compile Include="server\manager\player\ChatManager.cs" />
     <Compile Include="server\manager\utility\ColorManager.cs" />
