@@ -192,6 +192,7 @@ namespace Class {
 			}
 		}
 
+
 		public void SendAllPlayerEvent ( string eventName, int teamindex = -1, params object[] args ) {
 			if ( teamindex == -1 )
 				for ( int i = 0; i < this.players.Count; i++ )
@@ -211,6 +212,17 @@ namespace Class {
 				for ( int j = 0; j < this.players[teamindex].Count; j++ )
 					this.players[teamindex][j].SendLangNotification ( langstr, args );
 		}
+
+		public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
+			if ( teamindex == -1 )
+				for ( int i = 0; i < this.players.Count; i++ )
+					for ( int j = 0; j < this.players[i].Count; j++ )
+						this.players[i][j].sendChatMessage ( message );
+			else
+				for ( int j = 0; j < this.players[teamindex].Count; j++ )
+					this.players[teamindex][j].sendChatMessage ( message );
+		}
+
 
 		private void KillPlayer ( Client player, string reason ) {
 			player.kill ();
