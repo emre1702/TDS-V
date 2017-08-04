@@ -12,6 +12,7 @@ namespace Manager {
 			Manager.Account.AccountOnStart ( API );
 			Manager.MinuteTimer.MinuteTimerOnStart ();
 			Manager.Scoreboard.ScoreboardOnStart ( API );
+			Manager.Chat.ChatOnStart ( API );
 
 			MainMenu.Create ();
 			Arena.Create ();
