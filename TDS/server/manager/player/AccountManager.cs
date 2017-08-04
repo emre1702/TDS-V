@@ -9,7 +9,7 @@ namespace Manager {
 	class Account {
 		private static Random rnd = new Random ();
 
-		private static Dictionary<string, int> playerUIDs = new Dictionary<string, int> ();
+		public static Dictionary<string, int> playerUIDs = new Dictionary<string, int> ();
 		private static Dictionary<string, bool> socialClubNameBanDict = new Dictionary<string, bool> ();
 		private static Dictionary<string, bool> addressBanDict = new Dictionary<string, bool> ();
 		private static int lastPlayerUID = 0;
