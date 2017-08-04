@@ -1,22 +1,22 @@
 "use strict";
-let mapmenu = API.createMenu("Map-Vote", "Maps", 0, 0, 4);
-let mapvotes = API.createMenu("Votes", "", 0, 0, 9, false);
-mapmenu.ResetKey(menuControl.Back);
-mapvotes.ResetKey(menuControl.Back);
-mapvotes.ResetKey(menuControl.Select);
-mapmenu.Visible = false;
-mapvotes.Visible = false;
-let clickmapmenuevent = null;
-let cooldown = 0;
-let mapvotings = {};
-let mapvotingitems = [];
-let showmapmenu = false;
+let mapvotedata = {
+    menu: API.createMenu("Map-Vote", "Maps", 0, 0, 4),
+    clickevent: null,
+    menucooldown: 0,
+    votecooldown: 0,
+    votings: {},
+    votingmaps: [],
+    showmenu: false,
+    lastselectedmap: ""
+};
+mapvotedata.menu.ResetKey(menuControl.Back);
+mapvotedata.menu.Visible = false;
 API.onKeyDown.connect(function (sender, key) {
     if (key.KeyCode == Keys.M) {
-        if (!mapmenu.Visible) {
+        if (!mapvotedata.menu.Visible) {
             let tick = API.getGlobalTime();
-            if (cooldown <= tick) {
-                cooldown = tick + 3000;
+            if (mapvotedata.menucooldown <= tick) {
+                mapvotedata.menucooldown = tick + 3000;
                 API.triggerServerEvent("onMapMenuOpen");
             }
         }
@@ -25,84 +25,103 @@ API.onKeyDown.connect(function (sender, key) {
             API.showCursor(false);
         }
     }
+    else if (key.KeyCode >= 112 && key.KeyCode <= 117) {
+        let vote = key.KeyCode - 112;
+        if (vote < mapvotedata.votingmaps.length) {
+            let tick = API.getGlobalTime();
+            if (mapvotedata.votecooldown <= tick) {
+                mapvotedata.votecooldown = tick + 500;
+                API.triggerServerEvent("onVoteForMap", mapvotedata.votingmaps[vote]);
+                mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
+            }
+        }
+    }
 });
 API.onUpdate.connect(function () {
-    if (showmapmenu)
-        API.drawMenu(mapmenu);
-    if (mapvotingitems[0] != undefined)
-        API.drawMenu(mapvotes);
+    if (mapvotedata.showmenu)
+        API.drawMenu(mapvotedata.menu);
+    let mapvotinglength = mapvotedata.votingmaps.length;
+    if (mapvotinglength > 0) {
+        let counter = 0;
+        for (let i = mapvotinglength - 1; i >= 0; i--) {
+            let selectedthis = mapvotedata.lastselectedmap == mapvotedata.votingmaps[i];
+            API.drawText("F" + (i + 1) + " - " + mapvotedata.votingmaps[i] + " [" + mapvotedata.votings[mapvotedata.votingmaps[i]] + "]", res.Width - 5, res.Height * 0.8 - (res.Height * 0.02 * counter), (selectedthis ? 0.8 : 0.6), 255, 255, 255, 255, 0, 2, true, false, 0);
+            counter++;
+        }
+    }
 });
 function mapMenuItemClick(sender, item, index) {
+    mapvotedata.lastselectedmap = item.Text;
     API.triggerServerEvent("onMapVotingRequest", item.Text);
     mapMenuClose();
     API.showCursor(false);
 }
-function putMapSortedByAmountVotes(mapitem, amountvotes) {
-    for (let i = mapvotingitems.length - 1; i >= 0; i--) {
-        if (mapvotings[mapvotingitems[i].Description] < amountvotes) {
-            mapvotingitems.splice(i, 0, mapitem);
+function putMapSortedByAmountVotes(mapname, amountvotes) {
+    for (let i = mapvotedata.votingmaps.length - 1; i >= 0; i--) {
+        if (mapvotedata.votings[mapvotedata.votingmaps[i]] < amountvotes) {
+            mapvotedata.votingmaps.splice(i, 0, mapname);
+            return;
         }
     }
+    mapvotedata.votingmaps.unshift(mapname);
 }
 API.onServerEventTrigger.connect(function (eventName, args) {
     switch (eventName) {
         case "onMapMenuOpen":
-            for (let j = 0; j < 10; j++)
-                for (let i = 0; i < args[0].Count; i++) {
-                    let mapitem = API.createMenuItem(args[0][i], "placeholder");
-                    mapmenu.AddItem(mapitem);
-                }
-            mapmenu.Visible = true;
-            showmapmenu = true;
-            clickmapmenuevent = mapmenu.OnItemSelect.connect(mapMenuItemClick);
+            mapvotedata.menu.Clear();
+            for (let i = 0; i < args[0].Count; i++) {
+                let mapitem = API.createMenuItem(args[0][i], args[1][i]);
+                mapvotedata.menu.AddItem(mapitem);
+            }
+            mapvotedata.menu.Visible = true;
+            mapvotedata.showmenu = true;
+            mapvotedata.clickevent = mapvotedata.menu.OnItemSelect.connect(mapMenuItemClick);
             API.showCursor(true);
             break;
         case "onNewMapForVoting":
-            let index = mapvotingitems.length;
-            mapvotingitems[index] = API.createMenuItem(args[0] + " [0]", args[0]);
-            mapvotings[args[0]] = 0;
-            if (index == 0)
-                mapvotes.Visible = true;
+            let index = mapvotedata.votingmaps.length;
+            mapvotedata.votingmaps[index] = args[0];
+            mapvotedata.votings[args[0]] = 0;
             break;
         case "onAddVoteToMap":
-            mapvotings[args[0]]++;
-            let mapitem = undefined;
-            let oldmapitem = undefined;
-            for (let i = mapvotingitems.length - 1; i >= 0; i--) {
-                if (mapvotingitems[i].Description == args[0]) {
-                    mapitem = mapvotingitems[i];
-                    mapvotingitems.splice(i, 1);
-                    if (oldmapitem != undefined || args[1] == undefined)
-                        break;
-                }
-                else if (args[1] != undefined && mapvotingitems[i].Description == args[1]) {
-                    oldmapitem = mapvotingitems[i];
-                    mapvotingitems.splice(i, 1);
-                    if (mapitem != undefined)
-                        break;
-                }
+            let indexmap = mapvotedata.votingmaps.indexOf(args[0]);
+            mapvotedata.votingmaps.splice(indexmap, 1);
+            mapvotedata.votings[args[0]]++;
+            putMapSortedByAmountVotes(args[0], mapvotedata.votings[args[0]]);
+            if (args.length > 1) {
+                let indexoldmap = mapvotedata.votingmaps.indexOf(args[1]);
+                mapvotedata.votingmaps.splice(indexoldmap, 1);
+                mapvotedata.votings[args[1]]--;
+                putMapSortedByAmountVotes(args[1], mapvotedata.votings[args[1]]);
             }
-            mapitem.Text = args[0] + " [" + mapvotes[args[0]] + "]";
-            putMapSortedByAmountVotes(mapitem, mapvotings[args[0]]);
-            if (oldmapitem != undefined) {
-                mapvotings[args[1]]--;
-                oldmapitem.Text = args[1] + " [" + mapvotes[args[1]] + "]";
-                putMapSortedByAmountVotes(oldmapitem, mapvotings[args[1]]);
+            break;
+        case "onMapVotingSyncOnJoin":
+            mapvotedata.votings = {};
+            mapvotedata.votingmaps = [];
+            mapvotedata.lastselectedmap = "";
+            for (let i = 0; i < args[0].Count; i++) {
+                mapvotedata.votingmaps[i] = args[0][i];
+                mapvotedata.votings[args[0][i]] = args[1][i];
             }
             break;
         case "onClientRoundEnd":
-            mapvotes.Clear();
-            mapvotes.Visible = false;
-            mapvotings = {};
-            mapvotingitems = [];
+            mapvotedata.votings = {};
+            mapvotedata.votingmaps = [];
+            mapvotedata.lastselectedmap = "";
+            break;
+        case "onClientPlayerLeaveLobby":
+            mapvotedata.votings = {};
+            mapvotedata.votingmaps = [];
+            mapvotedata.lastselectedmap = "";
+            mapMenuClose();
             break;
     }
 });
 function mapMenuClose() {
-    mapmenu.Visible = false;
-    showmapmenu = false;
-    if (clickmapmenuevent != null) {
-        clickmapmenuevent.disconnect();
-        clickmapmenuevent = null;
+    mapvotedata.menu.Visible = false;
+    mapvotedata.showmenu = false;
+    if (mapvotedata.clickevent != null) {
+        mapvotedata.clickevent.disconnect();
+        mapvotedata.clickevent = null;
     }
 }
