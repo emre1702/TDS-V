@@ -70,7 +70,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         case "onMapMenuOpen":
             mapvotedata.menu.Clear();
             for (let i = 0; i < args[0].Count; i++) {
-                let mapitem = API.createMenuItem(args[0][i], args[1][i]);
+                let mapitem = API.createMenuItem(args[0][i], args[1][i] != undefined ? args[1][i] : "-");
                 mapvotedata.menu.AddItem(mapitem);
             }
             mapvotedata.menu.Visible = true;
