@@ -30,9 +30,9 @@ function createScoreboard() {
         fontcolor: [255, 255, 255, 255],
         scrollbarbackcolor: [30, 30, 30, 187],
         scrollbarcolor: [120, 120, 120, 187],
-        titlefontscale: 0.4,
-        fontscale: 0.3,
-        bottomfontscale: 0.4,
+        titlefontscale: 0.35,
+        fontscale: 0.28,
+        bottomfontscale: 0.35,
         titlefont: 0,
         font: 0,
         bottomfont: 0
