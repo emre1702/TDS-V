@@ -10,18 +10,34 @@ namespace Manager {
 	class Map {
 		private static string mapsPath = "resources/TDS/server/maps/";
 		public static List<string> mapNames = new List<string> {};
+		public static Dictionary<string, List<string>> mapDescriptions = new Dictionary<string, List<string>> ();
+		public static Dictionary<string, string> mapByName = new Dictionary<string, string> ();
 
 		public static void MapOnStart () {
+			for ( int i = 0; i < Language.languages.Count; i++ ) {
+				mapDescriptions[Language.languages[i]] = new List<string> ();
+			}
+
 			IEnumerable<string> files = Directory.EnumerateFiles ( mapsPath, "*.xml" );
-			foreach ( string filename in files ) {
-				mapNames.Add ( Path.GetFileNameWithoutExtension ( filename ) );
+			Class.Map map = new Class.Map ();
+			foreach ( string filepath in files ) {
+				string filename = Path.GetFileNameWithoutExtension ( filepath );
+				if ( AddInfosToMapClass ( map, filename, out map ) ) {
+					if ( map.name != null ) {
+						mapNames.Add ( map.name );
+						for ( int i = 0; i < Language.languages.Count; i++ ) {
+							mapDescriptions[Language.languages[i]].Add ( map.description[Language.languages[i]] );
+						}
+						mapByName[map.name] = filename;
+					} else
+						Log.Error ( "Map " + filename + " got no name!" );
+				}
 			}
 		}
 
-		public static Class.Map GetMapClass ( string mapname, Class.Lobby lobby ) {
+		private static bool AddInfosToMapClass ( Class.Map map, string mapname, out Class.Map newmap ) {
 			try {
 				string path = mapsPath + mapname + ".xml";
-				Class.Map map = new Class.Map ();
 				map.type = "arena";
 				map.description = new Dictionary<string, string> {
 					{ "english", "No info available!" },
@@ -57,11 +73,21 @@ namespace Manager {
 						}
 					}
 				}
-				return map;
+				newmap = map;
+				return true;
 			} catch ( Exception e ) {
 				Log.Error ( "Error in Manager.Map.GetMapClass: " + e.ToString () );
-				return lobby.GetRandomMap ();
+				newmap = map;
+				return false;
 			}
+		}
+
+		public static Class.Map GetMapClass ( string mapname, Class.Lobby lobby ) {
+			Class.Map map = new Class.Map ();
+			if ( AddInfosToMapClass ( map, mapByName[mapname], out map ) ) {
+				return map;
+			} else
+				return lobby.GetRandomMap ();
 		}
 
 		/*private static Map getMapDataOther ( string path ) {
