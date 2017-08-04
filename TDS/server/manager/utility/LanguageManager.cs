@@ -56,46 +56,39 @@ static class Language {
 		} }
 	};
 
-	public static string GetLang ( this Client player, string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
+	public static string GetLang ( this Client player, string type, params string[] args ) {
 		string language = player.GetChar ().language;
-		if ( arg1 == "" )
+		if ( args.Length == 0 )
 			return langData[language][type];
 		else
-			return GetReplaced ( langData[language][type], arg1, arg2, arg3, arg4 );
+			return GetReplaced ( langData[language][type], args );
 	}
 
-	public static void SendLangMessage ( this Client player, string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
-		player.sendChatMessage ( player.GetLang ( type, arg1, arg2, arg3, arg4 ) );
+	public static void SendLangMessage ( this Client player, string type, params string[] args ) {
+		player.sendChatMessage ( player.GetLang ( type, args ) );
 	}
 
-	public static void SendLangNotification ( this Client player, string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
-		API.shared.sendNotificationToPlayer ( player, player.GetLang ( type, arg1, arg2, arg3, arg4 ) );
+	public static void SendLangNotification ( this Client player, string type, params string[] args ) {
+		API.shared.sendNotificationToPlayer ( player, player.GetLang ( type, args ) );
 	}
 
-	public static string GetReplaced ( string arg, string arg1, string arg2 = "", string arg3 = "", string arg4 = "" ) {
-		StringBuilder builder = new StringBuilder ( arg );
-		builder.Replace ( "{1}", arg1 );
-		if ( arg2 != "" ) {
-			builder.Replace ( "{2}", arg2 );
-		}
-		if ( arg3 != "" ) {
-			builder.Replace ( "{3}", arg3 );
-		}
-		if ( arg4 != "" ) {
-			builder.Replace ( "{4}", arg4 );
+	public static string GetReplaced ( string str, params string[] args ) {
+		StringBuilder builder = new StringBuilder ( str );
+		for ( int i = 0; i < args.Length; i++ ) {
+			builder.Replace ( "{" + ( i + 1 ) + "}", args[i] );
 		}
 		return builder.ToString ();
 	}
 
-	public static void SendMessageToAll ( string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
+	public static void SendMessageToAll ( string type, params string[] args ) {
 		Dictionary<string, string> texts = new Dictionary<string, string> ();
 		List<string> keys = langData.Keys.ToList ();
 		for ( int i = 0; i < keys.Count; i++ ) {
 			string lang = keys[i];
-			if ( arg1 == "" )
+			if ( args.Length == 0 )
 				texts[lang] = langData[lang][type];
 			else
-				texts[lang] = GetReplaced ( langData[lang][type], arg1, arg2, arg3, arg4 );
+				texts[lang] = GetReplaced ( langData[lang][type], args );
 		}
 		List<Client> players = API.shared.getAllPlayers ();
 		for ( int i = 0; i < players.Count; i++ ) {
@@ -103,15 +96,15 @@ static class Language {
 		}
 	}
 
-	public static void SendNotificationToAll ( string type, string arg1 = "", string arg2 = "", string arg3 = "", string arg4 = "" ) {
+	public static void SendNotificationToAll ( string type, params string[] args ) {
 		Dictionary<string, string> texts = new Dictionary<string, string> ();
 		List<string> keys = langData.Keys.ToList ();
 		for ( int i = 0; i < keys.Count; i++ ) {
 			string lang = keys[i];
-			if ( arg1 == "" )
+			if ( args.Length == 0 )
 				texts[lang] = langData[lang][type];
 			else
-				texts[lang] = GetReplaced ( langData[lang][type], arg1, arg2, arg3, arg4 );
+				texts[lang] = GetReplaced ( langData[lang][type], args );
 		}
 		List<Client> players = API.shared.getAllPlayers ();
 		for ( int i = 0; i < players.Count; i++ ) {
