@@ -29,10 +29,8 @@ namespace Manager {
 							map.name = reader["name"];
 							if ( reader.GetAttribute ( "type" ) != null )
 								map.type = reader["type"];
-						} else if ( reader.Name == "english" ) {
-							map.english = reader.Value;
-						} else if ( reader.Name == "german" ) {
-							map.german = reader.Value;
+						} else if ( reader.Name == "english" || reader.Name == "german" ) {
+							map.description[reader.Name] = reader.Value;
 						} else if ( reader.Name == "limit" ) {
 							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
 							map.mapLimits.Add ( pos );
