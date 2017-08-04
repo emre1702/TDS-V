@@ -8,7 +8,7 @@ namespace Class {
 
 		private static Dictionary<int, Lobby> dimensionsUsed = new Dictionary<int, Lobby> ();
 		private List<string> mapNames;
-		private List<Dictionary<string, string>> mapDescriptions;
+		private Dictionary<string, List<string>> mapDescriptions;
 
 		private Dictionary<int, int> spawnCounter = new Dictionary<int, int> ();
 		private int dimension;
@@ -25,9 +25,9 @@ namespace Class {
 				this.mapNames = newmapnames;
 		}
 
-		public void AddMapDescriptions ( List<Dictionary<string, string>> mapdescriptions, bool clone = true ) {
+		public void AddMapDescriptions ( Dictionary<string, List<string>> mapdescriptions, bool clone = true ) {
 			if ( clone )
-				this.mapDescriptions = new List<Dictionary<string, string>> ( mapdescriptions );
+				this.mapDescriptions = new Dictionary<string, List<string>> ( mapdescriptions );
 			else
 				this.mapDescriptions = mapdescriptions;
 		}
