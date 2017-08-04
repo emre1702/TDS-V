@@ -73,10 +73,11 @@
     <Compile Include="server\class\lobby\Weapon.cs" />
     <Compile Include="server\class\map\Map.cs" />
     <Compile Include="server\class\player\PlayerExtend.cs" />
-    <Compile Include="server\manager\lobby\StandardLobbiesManager.cs" />
     <Compile Include="server\manager\logs\Error.cs" />
     <Compile Include="server\manager\logs\LogManager.cs" />
     <Compile Include="server\manager\player\AdminManager.cs" />
+    <Compile Include="server\manager\player\ChatManager.cs" />
+    <Compile Include="server\manager\utility\ColorManager.cs" />
     <Compile Include="server\manager\utility\LanguageManager.cs" />
     <Compile Include="server\manager\database\DatabaseManager.cs" />
     <Compile Include="server\class\player\Character.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="server\class\damagesys\Damage.cs" />
     <Compile Include="server\class\utility\Timer.cs" />
     <Compile Include="server\manager\utility\MinuteTimerManager.cs" />
+    <Compile Include="server\manager\utility\ResourceStartManager.cs" />
     <Compile Include="server\manager\utility\ScoreboardManager.cs" />
     <Compile Include="server\manager\utility\UtilityManager.cs" />
   </ItemGroup>
@@ -107,7 +109,6 @@
     <Content Include="client\pic\german.png" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
     <TypeScriptCompile Include="client\lobby\mapvoting.ts" />
-    <TypeScriptCompile Include="client\lobby\weaponchoice.ts" />
     <TypeScriptCompile Include="client\scoreboard.ts" />
     <Content Include="client\window\css\normalize.min.css" />
     <Content Include="client\window\css\style.css" />
