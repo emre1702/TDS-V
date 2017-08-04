@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq;
 
 static class Language {
+	public static List<string> languages = new List<string> { "english", "german" };
 	private static Dictionary<string, Dictionary<string, string>> langData = new Dictionary<string, Dictionary<string, string>> {
 		{ "german", new Dictionary<string, string> {
 			{ "wrong_password", "Falsches Passwort!" },
