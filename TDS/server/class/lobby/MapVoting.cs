@@ -10,7 +10,7 @@ namespace Class {
 
 		private void SendMapsForVoting ( Client player ) {
 			if ( this.mapNames != null ) {
-				player.triggerEvent ( "onMapMenuOpen", this.mapNames, this.mapDescriptions );
+				player.triggerEvent ( "onMapMenuOpen", this.mapNames, this.mapDescriptions[player.GetChar().language] );
 			}
 		}
 
