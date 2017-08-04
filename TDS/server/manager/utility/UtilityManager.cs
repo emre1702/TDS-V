@@ -12,7 +12,7 @@ using GrandTheftMultiplayer.Shared;
 
 
 namespace Manager {
-	class Utility {
+	class Utility : Script {
 		public static readonly Random rnd = new Random ();
 		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
@@ -94,6 +94,15 @@ namespace Manager {
 
 			} else
 				API.shared.sendChatMessageToPlayer ( player, "Der Spieler existiert nicht!" );
+		}
+
+		[Command ( "checkmapname" )]
+		public void CheckMapName ( Client player, string mapname ) {
+			if ( Map.mapByName.ContainsKey ( mapname ) ) {
+				API.sendNotificationToPlayer ( player, "map-name already taken" );
+			} else {
+				API.sendNotificationToPlayer ( player, "map-name is available" );
+			}
 		}
 	}
 }
