@@ -23,21 +23,9 @@ namespace Class {
 
 			this.currentMap = this.GetNextMap ();
 
-			int tsindex = 1;
-			while ( this.currentMap.teamSpawns.ContainsKey ( tsindex ) ) {
-				Blip blip = API.shared.createBlip ( this.currentMap.teamSpawns[tsindex][0], this.dimension );
-				blip.sprite = 491;
-				blip.name = "Spawn " + this.teams[tsindex];
-				this.mapBlips.Add ( blip );
-				tsindex++;
-			}
-
-			for ( int i = 0; i < this.currentMap.mapLimits.Count; i++ ) {
-				Blip blip = API.shared.createBlip ( this.currentMap.mapLimits[i], this.dimension );
-				blip.sprite = 441;
-				blip.name = "Limit";
-				this.mapBlips.Add ( blip );
-			}
+			this.CreateTeamSpawnBlips ();
+			this.CreateMapLimitBlips ();
+			
 			if ( this.mixTeamsAfterRound )
 				this.MixTeams ();
 			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime * 1000 / 2, 1 );

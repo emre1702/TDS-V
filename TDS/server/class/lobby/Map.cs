@@ -49,6 +49,25 @@ namespace Class {
 			list[1] = this.currentMap.teamRots[teamID][index];
 			return list;
 		}
+
+		private void CreateTeamSpawnBlips ( ) {
+			foreach ( KeyValuePair<int, List<Vector3>> entry in this.currentMap.teamSpawns ) { 
+				Blip blip = API.shared.createBlip ( entry.Value[0], this.dimension );
+				blip.sprite = 491;
+				blip.color = Manager.Colors.blipColorByString[this.teamColorStrings[entry.Key]];
+				blip.name = "Spawn " + this.teams[entry.Key];
+				this.mapBlips.Add ( blip );
+			}
+		}
+
+		private void CreateMapLimitBlips ( ) {
+			for ( int i = 0; i < this.currentMap.mapLimits.Count; i++ ) {
+				Blip blip = API.shared.createBlip ( this.currentMap.mapLimits[i], this.dimension );
+				blip.sprite = 441;
+				blip.name = "Limit";
+				this.mapBlips.Add ( blip );
+			}
+		}
 	}
 }
 
