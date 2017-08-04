@@ -27,7 +27,12 @@ namespace Manager {
 					if ( reader.NodeType == XmlNodeType.Element ) {
 						if ( reader.Name == "map" ) {
 							map.name = reader["name"];
-							map.type = reader["type"] ?? "arena";
+							if ( reader.GetAttribute ( "type" ) != null )
+								map.type = reader["type"];
+						} else if ( reader.Name == "english" ) {
+							map.english = reader.Value;
+						} else if ( reader.Name == "german" ) {
+							map.german = reader.Value;
 						} else if ( reader.Name == "limit" ) {
 							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
 							map.mapLimits.Add ( pos );
