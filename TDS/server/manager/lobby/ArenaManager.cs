@@ -11,8 +11,8 @@ namespace Manager {
 			lobby = new Class.Lobby ( "arena", 1 );
 			lobby.AddMapList ( Manager.Map.mapNames, false );
 			lobby.AddMapDescriptions ( Manager.Map.mapDescriptions, false );
-			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ) );
-			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ) );
+			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ), "g" );
+			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ), "r" );
 			lobby.deleteWhenEmpty = false;
 
 			// Handguns //
