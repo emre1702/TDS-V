@@ -19,6 +19,8 @@ namespace Class {
 			api.onPlayerRespawn += OnPlayerRespawn;
 		}
 
+		public Lobby ( ) { }
+
 		public Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true ) {
 			this.name = name;
 			if ( ID == -1 ) {
