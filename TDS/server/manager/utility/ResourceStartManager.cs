@@ -2,7 +2,7 @@
 
 namespace Manager {
 	class ResourceStart : Script {
-		ResourceStart ( ) {
+		public ResourceStart ( ) {
 			API.shared.setGamemodeName ( "TDS" );
 			Database.DatabaseOnStart ( API );
 			Class.Timer.TimerOnStart ( API );
