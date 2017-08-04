@@ -69,7 +69,7 @@ namespace Class {
 							targetcharacter.assists++;
 							entry.Key.SendLangNotification ( "got_assist", player.name );
 						}
-						if ( halfarmorhp % 2 != 0 || entry.Value != halfarmorhp / 2 )
+						if ( killer != entry.Key || halfarmorhp % 2 != 0 || entry.Value != halfarmorhp / 2 || allHitters[player].Count > 2 )
 							return;
 					}
 				}
