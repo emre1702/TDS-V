@@ -19,6 +19,9 @@ namespace Manager {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
 				Class.Lobby lobby = player.GetChar ().lobby;
 				if ( lobby.gotRounds ) {
+					// LOG //
+					Log.Admin ( "next", player, null, lobby.name );
+					/////////
 					lobby.EndRoundEarlier ();
 				}
 			} else
@@ -29,6 +32,12 @@ namespace Manager {
 		public void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
+					// LOG //
+					if ( player.GetChar().adminLvl >= neededLevels["kick"] )
+						Log.Admin ( "kick", player, target, player.GetChar ().lobby.name );
+					else 
+						Log.VIP ( "kick", player, target, player.GetChar ().lobby.name );
+					/////////
 					Language.SendMessageToAll ( "kick", target.name, player.name, reason );
 					target.kick ( target.GetLang ( "youkick", player.name, reason ) );
 				}
@@ -39,6 +48,14 @@ namespace Manager {
 		public void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
+					// LOG //
+					if ( player.GetChar().isLobbyOwner )
+						Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					else if ( player.GetChar ().adminLvl >= neededLevels["kick"] )
+						Log.Admin ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					else 
+						Log.VIP ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					/////////
 					Language.SendMessageToAll ( "lobbykick", target.name, player.name, reason );
 					target.GetChar ().lobby.RemovePlayer ( target );
 				}
@@ -54,6 +71,9 @@ namespace Manager {
 					if ( hours == 0 ) {
 						Database.ExecPrepared ( "DELETE FROM ban WHERE socialclubname = @socialclubname", new Dictionary<string, string> { { "@socialclubname", target.socialClubName } } );
 						Language.SendMessageToAll ( "unban", target.name, player.name, reason );
+						// LOG //
+						Log.Admin ( "unban", player, target, player.GetChar ().lobby.name );
+						/////////
 					} else if ( hours == -1 ) {
 						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
 							new Dictionary<string, string> {
@@ -68,6 +88,9 @@ namespace Manager {
 						);
 						Language.SendMessageToAll ( "permaban", target.name, player.name, reason );
 						target.kick ( target.GetLang ( "youpermaban", player.name, reason ) );
+						// LOG //
+						Log.Admin ( "permaban", player, target, player.GetChar ().lobby.name );
+						/////////
 					} else {
 						Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
 							new Dictionary<string, string> {
@@ -84,6 +107,9 @@ namespace Manager {
 						);
 						Language.SendMessageToAll ( "timeban", target.name, hours.ToString (), player.name, reason );
 						target.kick ( target.GetLang ( "youtimeban", hours.ToString (), player.name, reason ) );
+						// LOG //
+						Log.Admin ( "timeban", player, target, player.GetChar ().lobby.name );
+						/////////
 					}
 				} else
 					player.SendLangNotification ( "adminlvl_not_high_enough" );
