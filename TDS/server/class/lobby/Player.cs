@@ -185,6 +185,10 @@ namespace Class {
 				case "onMapVotingRequest":
 					player.GetChar ().lobby.AddMapToVoting ( player, args[0] );
 					break;
+
+				case "onVoteForMap":
+					player.GetChar ().lobby.AddVoteToMap ( player, args[0] );
+					break;
 			}
 		}
 
@@ -196,6 +200,16 @@ namespace Class {
 			else
 				for ( int j = 0; j < this.players[teamindex].Count; j++ )
 					this.players[teamindex][j].triggerEvent ( eventName, args );
+		}
+
+		public void SendAllPlayerLangNotification ( string langstr, int teamindex = -1, params string[] args ) {
+			if ( teamindex == -1 )
+				for ( int i = 0; i < this.players.Count; i++ )
+					for ( int j = 0; j < this.players[i].Count; j++ )
+						this.players[i][j].SendLangNotification ( langstr, args );
+			else
+				for ( int j = 0; j < this.players[teamindex].Count; j++ )
+					this.players[teamindex][j].SendLangNotification ( langstr, args );
 		}
 
 		private void KillPlayer ( Client player, string reason ) {
