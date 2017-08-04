@@ -95,7 +95,7 @@ class Database {
 		}
 	}
 
-	public static DataTable CreateDataTable ( string sql, string unique_name ) {
+	/*public static DataTable CreateDataTable ( string sql, string unique_name ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlDataAdapter dataAdapter;
@@ -129,7 +129,7 @@ class Database {
 		} catch ( Exception ex ) {
 			Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 		}
-	}
+	}*/
 
 	/* Hooks */
 
