@@ -83,6 +83,10 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             mapvotedata.votingmaps[index] = args[0];
             mapvotedata.votings[args[0]] = 0;
             break;
+        case "onMapRemoveFromVoting":
+            mapvotedata.votings[args[0]] = undefined;
+            mapvotedata.votingmaps.splice(mapvotedata.votingmaps.indexOf(args[0]), 1);
+            break;
         case "onAddVoteToMap":
             let indexmap = mapvotedata.votingmaps.indexOf(args[0]);
             mapvotedata.votingmaps.splice(indexmap, 1);

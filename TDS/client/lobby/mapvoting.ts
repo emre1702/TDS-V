@@ -91,6 +91,11 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			// args[0] = mapname (add vote)
 			break;
 
+		case "onMapRemoveFromVoting":
+			mapvotedata.votings[args[0]] = undefined;
+			mapvotedata.votingmaps.splice( mapvotedata.votingmaps.indexOf( args[0] ), 1 );
+			break;
+
 		case "onAddVoteToMap":
 			// args[0] = mapname (add vote)
 			// args[1] = old mapname (remove vote) OR undefined
