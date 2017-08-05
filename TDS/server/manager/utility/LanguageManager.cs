@@ -26,6 +26,7 @@ static class Language {
 			{ "got_assist", "Du hast den Assist von {1} bekommen." },
 			{ "map_won_voting", "Die Map {1} hat das Voting gewonnen!" },
 			{ "player_doesnt_exist", "Der Spieler existiert nicht!" },
+			{ "not_more_maps_for_voting_allowed", "Es dürfen nur 6 Maps im Voting sein!" },
 
 			{ "welcome_1", "Willkommen auf dem ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
@@ -52,6 +53,7 @@ static class Language {
 			{ "got_assist", "You got the assist of {1}." },
 			{ "map_won_voting", "The map {1} won the voting!" },
 			{ "player_doesnt_exist", "The player doesn't exist!" },
+			{ "not_more_maps_for_voting_allowed", "There can be only 6 maps in voting!" },
 
 			{ "welcome_1", "Welcome to ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
