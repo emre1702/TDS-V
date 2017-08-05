@@ -8,7 +8,7 @@ using Manager;
 
 namespace Class {
 
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		public int armor = 100;
 		public int health = 100;

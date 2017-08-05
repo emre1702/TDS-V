@@ -2,7 +2,7 @@
 
 namespace Class {
 
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		public void SendAllPlayerEvent ( string eventName, int teamindex = -1, params object[] args ) {
 			if ( teamindex == -1 )

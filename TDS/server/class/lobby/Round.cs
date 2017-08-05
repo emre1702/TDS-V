@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		public bool gotRounds = true;
 		private int countdownTime = 3;

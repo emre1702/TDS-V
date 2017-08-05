@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		private bool mixTeamsAfterRound = true;
 		public List<string> teams = new List<string> { "Spectator" };

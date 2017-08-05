@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		private static Dictionary<int, Lobby> dimensionsUsed = new Dictionary<int, Lobby> ();
 		private List<string> mapNames;

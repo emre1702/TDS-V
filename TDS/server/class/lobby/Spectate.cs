@@ -3,7 +3,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		private Dictionary<Client, List<Client>> spectatingMe = new Dictionary<Client, List<Client>> ();
 

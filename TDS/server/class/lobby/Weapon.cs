@@ -3,7 +3,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Shared;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 
 		private List<WeaponHash> weapons = new List<WeaponHash> ();
 		private List<int> weaponsAmmo = new List<int> ();

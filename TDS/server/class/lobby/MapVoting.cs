@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Lobby : Script {
+	partial class Lobby {
 		private Dictionary<string, int> mapVotes = new Dictionary<string, int>();
 		private Dictionary<Client, string> playerVotes = new Dictionary<Client, string> ();
 
