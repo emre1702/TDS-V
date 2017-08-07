@@ -208,14 +208,9 @@ namespace Class {
 			}
 		}
 
-		private void KillPlayer ( Client player, string reason ) {
+		public void KillPlayer ( Client player, string reason ) {
 			player.kill ();
 			player.SendLangNotification ( reason );
-		}
-
-		[Command("leave")]
-		public void Leave ( Client player ) {
-			player.GetChar ().lobby.RemovePlayer ( player );
 		}
 
 	}
