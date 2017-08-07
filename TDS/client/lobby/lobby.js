@@ -1,5 +1,4 @@
 "use strict";
-var res = API.getScreenResolutionMaintainRatio();
 let spectateevent = null;
 let countdownsoundspath = "client/sounds/";
 let countdownsounds = [
@@ -12,10 +11,7 @@ let lobbydata = {
     mapinfo: null,
     countdowntimer: null,
     countdowntext: null,
-    roundtimetexttimer: null,
-    roundtimetext: null,
     countdowntime: 0,
-    roundtime: 0,
     isspectator: true,
     maplimit: [],
     maplimitchecktimer: null,
@@ -46,15 +42,6 @@ function countdownRemoveText() {
         lobbydata.countdowntext = null;
     }
     lobbydata.countdowntimer = null;
-}
-function updateRoundTimeText() {
-    let textarray = lobbydata.roundtimetext.getText().split(":");
-    textarray[1]--;
-    if (textarray[1] < 0) {
-        textarray[1] = 59;
-        textarray[0]--;
-    }
-    lobbydata.roundtimetext.setText(textarray[0] + ":" + (textarray[1] >= 10 ? textarray[1] : "0" + textarray[1]));
 }
 function pressSpectateKey(sender, e) {
     if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A) {
@@ -116,14 +103,6 @@ function removeLobbyTextsTimer(removemapinfo) {
     if (spectateevent != null) {
         spectateevent.disconnect();
         spectateevent = null;
-    }
-    if (lobbydata.roundtimetext != null) {
-        lobbydata.roundtimetext.remove();
-        lobbydata.roundtimetext = null;
-    }
-    if (lobbydata.roundtimetexttimer != null) {
-        lobbydata.roundtimetexttimer.kill();
-        lobbydata.roundtimetexttimer = null;
     }
     if (lobbydata.maplimitchecktimer != null) {
         lobbydata.maplimitchecktimer.kill();
@@ -193,11 +172,6 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             API.startAudio(countdownsoundspath + countdownsounds[0], false);
             API.setAudioVolume(0.3);
             lobbydata.countdowntimer = new Timer(countdownRemoveText, 2000, 1);
-            let minutes = Math.floor(lobbydata.roundtime / 60);
-            let seconds = lobbydata.roundtime % 60;
-            lobbydata.roundtimetext = new cText(minutes + ":" + (seconds >= 10 ? seconds : "0" + seconds), res.Width / 2, res.Height * 0.02, 0, 255, 255, 255, 255, 0, 1, true);
-            lobbydata.roundtimetext.blendTextScale(1, 3000);
-            lobbydata.roundtimetexttimer = new Timer(updateRoundTimeText, 1000, 0);
             if (lobbydata.maplimitchecktimer != null)
                 lobbydata.maplimitchecktimer.kill();
             if (!args[0]) {
@@ -237,7 +211,6 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         case "onClientPlayerJoinLobby":
             lobbydata.isspectator = args[0];
             lobbydata.countdowntime = args[1];
-            lobbydata.roundtime = args[2];
             lobbydata.mapinfo = new cText(args[3], res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true);
             break;
         case "onClientPlayerLeaveLobby":
