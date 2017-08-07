@@ -108,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="client\window\font\Roboto-Regular.ttf" />
+    <None Include="client\window\font\Roboto-Thin.ttf" />
     <None Include="packages.config" />
     <None Include="tsconfig.json" />
   </ItemGroup>
@@ -116,11 +118,14 @@
     <Content Include="client\pic\english.png" />
     <Content Include="client\pic\gangchoice.png" />
     <Content Include="client\pic\german.png" />
+    <TypeScriptCompile Include="client\chat.ts" />
     <TypeScriptCompile Include="client\globals.ts" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
     <TypeScriptCompile Include="client\lobby\mapvoting.ts" />
     <TypeScriptCompile Include="client\roundinfo.ts" />
     <TypeScriptCompile Include="client\scoreboard.ts" />
+    <Content Include="client\window\chat\chat.html" />
+    <Content Include="client\window\chat\chat.js" />
     <Content Include="client\window\css\normalize.min.css" />
     <Content Include="client\window\css\style.css" />
     <Content Include="client\window\damagesys\bloodscreen.html" />
