@@ -2,6 +2,7 @@
 
 let files = [
 	"globals.js",
+	"chat.js",
 	"timer.js",
 	"scoreboard.js",
 	"roundinfo.js",
@@ -47,7 +48,7 @@ let result = uglify.minify ( code, {
         reduce_vars: true
     },
     mangle: {
-		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena" ] 
+		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena", "commitMessage"] 
     },
     toplevel: true
 } );
