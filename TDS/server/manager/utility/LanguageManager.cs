@@ -33,7 +33,7 @@ static class Language {
 			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
 			{ "welcome_3", "bitte unseren Discord-Server nutzen:" },
 			{ "welcome_4", "discord.gg/ntVnGFt" },
-			{ "welcome_5", "Viel Spaß wünscht das ~b~TDS-Team~w~! ∑" },
+			{ "welcome_5", "Viel Spaß wünscht das ~b~TDS-Team~w~!" },
 		} },
 		{ "english", new Dictionary<string, string> {
 			{ "wrong_password", "Wrong password!" },
@@ -61,7 +61,7 @@ static class Language {
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
 			{ "welcome_3", "please visit our Discord-server:" },
 			{ "welcome_4", "discord.gg/ntVnGFt" },
-			{ "welcome_5", "Have fun from your ~b~TDS-Team~w~! ∑" },
+			{ "welcome_5", "Have fun from your ~b~TDS-Team~w~!" },
 		} }
 	};
 
