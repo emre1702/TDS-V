@@ -2,6 +2,7 @@
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
+using Manager;
 
 namespace Class {
 	partial class Lobby {
@@ -54,9 +55,13 @@ namespace Class {
 			if ( this.gotRounds )
 				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime * 1000, 1 );
 			this.alivePlayers = new List<List<Client>> ();
+			List<int> amountinteams = new List<int> ();
 			for ( int i = 0; i < this.players.Count; i++ ) {
+				int amountinteam = this.players[i].Count;
+				if ( i != 0 )
+					amountinteams.Add ( amountinteam );
 				this.alivePlayers.Add ( new List<Client> () );
-				for ( int j = 0; j < this.players[i].Count; j++ ) {
+				for ( int j = 0; j < amountinteam; j++ ) {
 					Client player = this.players[i][j];
 					Class.Character character = player.GetChar ();
 					player.triggerEvent ( "onClientRoundStart", i == 0, this.players[i] );
@@ -69,6 +74,7 @@ namespace Class {
 					}
 				}
 			}
+			this.PlayerAmountInFightSync ( amountinteams );
 		}
 
 		private void EndRound ( ) {
