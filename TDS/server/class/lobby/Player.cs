@@ -16,6 +16,16 @@ namespace Class {
 		private List<List<Client>> players = new List<List<Client>> { new List<Client> () };
 		private List<List<Client>> alivePlayers = new List<List<Client>> { new List<Client> () };
 
+		private void SendPlayerAmountInFightInfo ( Client player ) {
+			List<int> amountinteams = new List<int> ();
+			List<int> amountaliveinteams = new List<int> ();
+			for ( int i = 0; i < this.players.Count; i++ ) {
+				amountinteams.Add ( this.players[i].Count );
+				amountaliveinteams.Add ( this.alivePlayers[i].Count );
+			}
+			player.PlayerAmountInFightSync ( amountinteams, amountaliveinteams );
+		}
+
 		public void AddPlayer ( Client player, bool spectator = false ) {
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
@@ -23,12 +33,13 @@ namespace Class {
 			character.spectating = null;
 			player.dimension = this.dimension;
 			if ( this.isPlayable ) { 
-				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ) );
+				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ), this.teams, this.teamColorsList );
 				this.SyncMapVotingOnJoin ( player );
 			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.stopSpectating ();
-				player.triggerEvent ( "onClientPlayerLeaveLobby" );
+				if ( this == Manager.MainMenu.lobby )
+					player.triggerEvent ( "onClientPlayerLeaveLobby" );
 			}
 
 			if ( this.currentMap.created != false && this.currentMap.mapLimits.Count > 0 ) {
@@ -42,18 +53,23 @@ namespace Class {
 				this.players[teamID].Add ( player );
 				player.setSkin ( this.teamSkins[teamID] );
 				character.team = teamID;
-				if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
-					this.SetPlayerReadyForRound ( player, teamID );
-				} else {
-					int teamsinround = this.GetTeamAmountStillInRound ();
-					API.shared.consoleOutput ( teamsinround + " teams still in round" );
-					if ( teamsinround < 2 ) {
-						this.EndRoundEarlier ();
-						API.shared.consoleOutput ( "End round earlier because of joined player" );
-					} else
-						this.RespawnPlayerInSpectateMode ( player );
+				if ( this.isPlayable ) {
+					if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
+						this.SetPlayerReadyForRound ( player, teamID );
+					} else {
+						int teamsinround = this.GetTeamAmountStillInRound ();
+						API.shared.consoleOutput ( teamsinround + " teams still in round" );
+						if ( teamsinround < 2 ) {
+							this.EndRoundEarlier ();
+							API.shared.consoleOutput ( "End round earlier because of joined player" );
+							return;
+						} else {
+							this.RespawnPlayerInSpectateMode ( player );
+						}	
+					}
 				}
 			}
+			this.SendPlayerAmountInFightInfo ( player );
 		}
 
 		private void SetPlayerReadyForRound ( Client player, int teamID ) {
