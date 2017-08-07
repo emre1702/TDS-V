@@ -4,6 +4,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared;
+using Manager;
 
 namespace Class {
 	partial class Damagesys {
@@ -13,7 +14,7 @@ namespace Class {
 		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
-				API.shared.TriggerClientEventForLobby ( character.lobby, "onClientPlayerDeath", -1, player );
+				character.lobby.DeathInfoSync ( player, character.team ); 
 
 				API.shared.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
 				API.shared.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
