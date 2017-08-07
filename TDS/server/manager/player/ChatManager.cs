@@ -15,5 +15,13 @@ namespace Manager {
 			string changedmessage = "~" + teamfontcolor + "~" + player.socialClubName + "~s~: " + message;
 			character.lobby.SendAllPlayerChatMessage ( changedmessage );
 		}
+
+		public static void SendGlobalMessage ( Client player, string message ) {
+			Class.Character character = player.GetChar ();
+			Log.Chat ( message, player, "global" );
+			string teamfontcolor = character.lobby.teamColorStrings[character.team] ?? "w";
+			string changedmessage = "[GLOBAL] ~" + teamfontcolor + "~" + player.socialClubName + "~s~: " + message;
+			API.shared.sendChatMessageToAll ( changedmessage );
+		}
 	}
 }
