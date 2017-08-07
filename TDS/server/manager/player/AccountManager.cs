@@ -22,13 +22,13 @@ namespace Manager {
 		}
 
 		private static void SendWelcomeMessage ( Client player ) {
-			player.sendChatMessage ( "~o~_______________________" );
+			player.sendChatMessage ( "~o~____________________________________" );
 			player.SendLangMessage ( "welcome_1" );
 			player.SendLangMessage ( "welcome_2" );
 			player.SendLangMessage ( "welcome_3" );
 			player.SendLangMessage ( "welcome_4" );
 			player.SendLangMessage ( "welcome_5" );
-			player.sendChatMessage ( "~o~_______________________" );
+			player.sendChatMessage ( "~o~____________________________________" );
 		}
 
 		public static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
