@@ -62,12 +62,14 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="server\class\damagesys\Damagesys.cs" />
     <Compile Include="server\class\damagesys\Death.cs" />
+    <Compile Include="server\manager\fightinfo\PlayerInFightManager.cs" />
     <Compile Include="server\class\lobby\APIExtend.cs" />
     <Compile Include="server\class\lobby\Lobby.cs" />
     <Compile Include="server\class\lobby\Map.cs" />
     <Compile Include="server\class\lobby\MapVoting.cs" />
     <Compile Include="server\class\lobby\Player.cs" />
     <Compile Include="server\class\lobby\Round.cs" />
+    <Compile Include="server\manager\fightinfo\DeathManager.cs" />
     <Compile Include="server\class\lobby\SendToPlayer.cs" />
     <Compile Include="server\class\lobby\Spectate.cs" />
     <Compile Include="server\class\lobby\Team.cs" />
@@ -113,8 +115,10 @@
     <Content Include="client\pic\english.png" />
     <Content Include="client\pic\gangchoice.png" />
     <Content Include="client\pic\german.png" />
+    <TypeScriptCompile Include="client\globals.ts" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
     <TypeScriptCompile Include="client\lobby\mapvoting.ts" />
+    <TypeScriptCompile Include="client\roundinfo.ts" />
     <TypeScriptCompile Include="client\scoreboard.ts" />
     <Content Include="client\window\css\normalize.min.css" />
     <Content Include="client\window\css\style.css" />
