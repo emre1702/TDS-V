@@ -12,6 +12,8 @@
   <file src="client/window/css/style.css" />
   <file src="client/window/js/jquery.min.js" />
   <file src="client/window/js/jquery.validate.min.js" />
+  <file src="client/window/chat/chat.html" />
+  <file src="client/window/chat/chat.js" />
   <file src="client/window/lobby/choice.html" />
   <file src="client/window/lobby/choice.js" />
   <file src="client/window/lobby/choice.css" />
@@ -31,6 +33,9 @@
   <file src="client/pic/english.png" />
   <file src="client/pic/german.png" />
   <file src="client/pic/blood.png" />
+  
+  <file src="client/window/font/Roboto-Regular.ttf" />
+  <file src="client/window/font/Roboto-Thin.ttf" />
 
   <!-- Assembly -->
   <assembly ref="System.Data.dll" />
