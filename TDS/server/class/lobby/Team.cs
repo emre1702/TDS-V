@@ -10,13 +10,18 @@ namespace Class {
 		public List<string> teams = new List<string> { "Spectator" };
 		private List<PedHash> teamSkins = new List<PedHash> { (PedHash) ( 225514697 ) };
 		public List<string> teamColorStrings = new List<string> { "s" };
+		private List<int> teamColorsList = new List<int> { 255, 255, 255 };
 
 		public void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
 			this.teams.Add ( name );
 			this.teamSkins.Add ( hash );
 			this.players.Add ( new List<Client> () );
 			this.spawnCounter[this.teamSkins.Count - 1] = 0;
-			this.teamColorStrings.Add ( colorstring ); 
+			this.teamColorStrings.Add ( colorstring );
+			Color rgb = Manager.Colors.fontColor[colorstring];
+			this.teamColorsList.Add ( rgb.red );
+			this.teamColorsList.Add ( rgb.green );
+			this.teamColorsList.Add ( rgb.blue );
 		}
 
 		private int GetTeamIDWithFewestMember ( List<List<Client>> newplayerlist ) {
