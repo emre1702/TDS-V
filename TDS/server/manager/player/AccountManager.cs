@@ -22,13 +22,13 @@ namespace Manager {
 		}
 
 		private static void SendWelcomeMessage ( Client player ) {
-			player.sendChatMessage ( "~o~_______________________________________" );
+			player.sendChatMessage ( "~o~_______________________" );
 			player.SendLangMessage ( "welcome_1" );
 			player.SendLangMessage ( "welcome_2" );
 			player.SendLangMessage ( "welcome_3" );
 			player.SendLangMessage ( "welcome_4" );
 			player.SendLangMessage ( "welcome_5" );
-			player.sendChatMessage ( "~o~_______________________________________" );
+			player.sendChatMessage ( "~o~_______________________" );
 		}
 
 		public static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
@@ -51,8 +51,11 @@ namespace Manager {
 					break;
 
 				case "onPlayerTryLogin":
-					string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-					Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
+					if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
+						string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
+						Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
+					} else
+						player.SendLangNotification ( "account_doesnt_exist" );
 					break;
 
 				case "onPlayerLanguageChange":
