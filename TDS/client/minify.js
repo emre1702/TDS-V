@@ -1,8 +1,10 @@
 "use strict";
 
 let files = [
+	"globals.js",
 	"timer.js",
 	"scoreboard.js",
+	"roundinfo.js",
 	"draw/draw.js",
     "damagesys/damagesys.js",
     "language/language.js",
