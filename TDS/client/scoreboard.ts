@@ -7,12 +7,11 @@ function createScoreboard() {
 	var lastplayerlisttrigger = 0;
 	var playerlistevent = null;
 	var playerlistopenkey = null;
-	var screenres = API.getScreenResolutionMaintainRatio();
 	var playerlistdata = {
 		maxplayers: 25,
-		completewidth: screenres.Width*0.4,
-		scrollbarwidth: screenres.Width*0.02,
-		columnheight: screenres.Height*0.025,
+		completewidth: res.Width*0.4,
+		scrollbarwidth: res.Width*0.02,
+		columnheight: res.Height*0.025,
 		columnwidthpercent: {
 			name: 0.3,
 			playtime: 0.15,
@@ -21,8 +20,8 @@ function createScoreboard() {
 			deaths: 0.1,
 			teamorlobby: 0.25
 		}, 
-		titleheight: screenres.Height*0.03,
-		//bottomheight: screenres.Height*0.03,
+		titleheight: res.Height*0.03,
+		//bottomheight: res.Height*0.03,
 		bottomheight: 0,
 		titlerectanglecolor: [ 20, 20, 20, 187 ],
 		bottomrectanglecolor: [ 20, 20, 20, 187 ],
@@ -53,8 +52,8 @@ function createScoreboard() {
 		var len = playertablelength;
 		if ( len > v.maxplayers )
 			len = v.maxplayers;
-		var startX = screenres.Width*0.5 - v.completewidth/2;
-		var startY = screenres.Height*0.5 - len*v.columnheight/2 + v.titleheight/2 - v.bottomheight/2;
+		var startX = res.Width*0.5 - v.completewidth/2;
+		var startY = res.Height*0.5 - len*v.columnheight/2 + v.titleheight/2 - v.bottomheight/2;
 		var titleStartY = startY - v.titleheight;
 		var bottomStartY = startY + len*v.columnheight;
 
