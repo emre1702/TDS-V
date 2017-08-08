@@ -48,7 +48,7 @@ let result = uglify.minify ( code, {
         reduce_vars: true
     },
     mangle: {
-		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena", "commitMessage"] 
+		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena", "commitMessage", "onFocusChange"] 
     },
     toplevel: true
 } );
