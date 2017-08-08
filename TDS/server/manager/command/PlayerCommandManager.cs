@@ -55,5 +55,17 @@ namespace Manager {
 				API.sendNotificationToPlayer ( player, "map-name is available" );
 			}
 		}
+
+		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", AddToHelpmanager = true )]
+		public void ToggleHitsound ( Client player, int activate = -1 ) {
+			Class.Character character = player.GetChar ();
+			if ( activate == 1 || activate != 0 && !character.hitsoundOn ) {
+				character.hitsoundOn = true;
+				player.SendLangNotification ( "activated_hitsound" );
+			} else {
+				character.hitsoundOn = false;
+				player.SendLangNotification ( "deactivated_hitsound" );
+			}
+		}
 	}
 }
