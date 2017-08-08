@@ -115,6 +115,13 @@ namespace Manager {
 						{ "@UID", character.uID.ToString() }
 					}
 				);
+				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID",
+					new Dictionary<string, string> {
+						{ "@HITSOUND", character.hitsoundOn ? "1" : "0" },
+
+						{ "@UID", character.uID.ToString() }
+					}
+				);
 			}
 		}
 
