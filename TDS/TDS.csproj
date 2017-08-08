@@ -119,6 +119,7 @@
     <Content Include="client\pic\gangchoice.png" />
     <Content Include="client\pic\german.png" />
     <TypeScriptCompile Include="client\chat.ts" />
+    <TypeScriptCompile Include="client\damagesys\hitsound.ts" />
     <TypeScriptCompile Include="client\globals.ts" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
     <TypeScriptCompile Include="client\lobby\mapvoting.ts" />
