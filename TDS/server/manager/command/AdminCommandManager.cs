@@ -2,6 +2,8 @@
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using System.Collections.Generic;
+using GrandTheftMultiplayer.Shared.Math;
+using GrandTheftMultiplayer.Shared;
 
 namespace Manager {
 	class AdminCommand : Script {
@@ -11,7 +13,10 @@ namespace Manager {
 			{ "kick", 1 },
 			{ "ban (time)", 2 },
 			{ "ban (unban)", 2 },
-			{ "ban (permanent)", 2 }
+			{ "ban (permanent)", 2 },
+			{ "goto", 2 },
+			{ "xyz", 2 },
+			{ "cveh", 2 },
 		};
 
 		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round. Requirement: Supporter" )]
@@ -135,6 +140,54 @@ namespace Manager {
 					player.SendLangNotification ( "adminlvl_not_high_enough" );
 			} else
 				player.SendLangNotification ( "player_doesnt_exist" );
-		}  
+		}
+
+		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player. Requirement: Administrator or lobby-owner" )]
+		public void GotoPlayer ( Client player, Client target ) {
+			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
+				Vector3 playerpos = API.shared.getEntityPosition ( target );
+				if ( player.isInVehicle ) {
+					API.shared.setEntityPosition ( player.vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+				} else if ( target.isInVehicle ) {
+					Client[] usersInCar = target.vehicle.occupants;
+					if ( usersInCar.Length < API.shared.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ) ) {
+						Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
+						foreach ( Client occupant in usersInCar ) {
+							occupiedseats[occupant.vehicleSeat] = true;
+						}
+						for ( int i = 0; i < API.shared.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ); i++ ) {
+							if ( !occupiedseats.ContainsKey ( i ) ) {
+								API.shared.setPlayerIntoVehicle ( player, target.vehicle, i );
+								return;
+							}
+						}
+					}
+					API.shared.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+				} else {
+					API.shared.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
+
+				}
+			} else
+				player.SendLangNotification( "adminlvl_not_high_enough" );
+		}
+
+		[Command ( "xyz", AddToHelpmanager = true, Alias = "gotoxyz,gotopos", Description = "Warps to a point. Requirement: Administrator or lobby-owner" )]
+		public void GotoXYZ ( Client player, float x, float y, float z ) {
+			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) ) {
+				API.shared.setEntityPosition ( player, new Vector3 ( x, y, z ) );
+			}
+		}
+
+		[Command ( "cveh", AddToHelpmanager = true, Alias = "createvehicle", Description = "Creates a vehicle. Requirement: Administrator or lobby-owner" )]
+		public void SpawnCarCommand ( Client player, string name ) {
+			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) ) {
+				VehicleHash model = API.shared.vehicleNameToModel ( name );
+
+				Vector3 rot = API.shared.getEntityRotation ( player.handle );
+				Vehicle veh = API.shared.createVehicle ( model, player.position, new Vector3 ( 0, 0, rot.Z ), 0, 0 );
+
+				API.shared.setPlayerIntoVehicle ( player, veh, -1 );
+			}
+		}
 	}
 }
