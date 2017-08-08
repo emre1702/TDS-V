@@ -28,6 +28,8 @@ static class Language {
 			{ "player_doesnt_exist", "Der Spieler existiert nicht!" },
 			{ "not_more_maps_for_voting_allowed", "Es dürfen nur 6 Maps im Voting sein!" },
 			{ "commited_suicide", "Du hast Selbstmord begangen." },
+			{ "activated_hitsound", "Hitsound aktiviert!" },
+			{ "deactivated_hitsound", "Hitsound deaktiviert!" },
 
 			{ "welcome_1", "Willkommen auf dem ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
@@ -56,6 +58,8 @@ static class Language {
 			{ "player_doesnt_exist", "The player doesn't exist!" },
 			{ "not_more_maps_for_voting_allowed", "There can be only 6 maps in voting!" },
 			{ "commited_suicide", "You commited suicide." },
+			{ "activated_hitsound", "Hitsound activated!" },
+			{ "deactivated_hitsound", "Hitsound deactivated!" },
 
 			{ "welcome_1", "Welcome to ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
