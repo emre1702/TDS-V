@@ -21,6 +21,8 @@ namespace Class {
 		public bool isLobbyOwner = false;
 		public bool isVIP = false;
 
+		public bool hitsoundOn = true;
+
 		public Character ( bool loggedin = true ) {
 			this.loggedIn = loggedin;
 		}
