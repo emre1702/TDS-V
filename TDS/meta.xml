@@ -23,10 +23,11 @@
   <file src="client/window/damagesys/bloodscreen.js" />
   
   <!-- files -->
-  <file src="client/sounds/Go.wav" />
+  <file src="client/sounds/go.wav" />
   <file src="client/sounds/1.wav" />
   <file src="client/sounds/2.wav" />
   <file src="client/sounds/3.wav" />
+  <file src="client/sounds/hit.wav" />
 
   <file src="client/pic/arenachoice.png" />
   <file src="client/pic/gangchoice.png" />
