@@ -146,12 +146,15 @@ namespace Class {
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
 			if ( API.shared.isPlayerDead ( hitted ) == false && hitted.dimension == player.dimension ) {
-				if ( player.GetChar ().team != hitted.GetChar ().team ) {
+				Character character = player.GetChar ();
+				if ( character.team != hitted.GetChar ().team ) {
 					long tickCount = API.shared.TickCount;
 					int damage = this.GetDamage ( hash, headshot );
 
 					if ( damage > 0 ) {
 						this.DamagePlayer ( player, hitted, damage );
+						if ( character.hitsoundOn )
+							player.triggerEvent ( "onClientPlayerHittedOpponent" );
 						if ( hitted.health == 0 ) {
 							hitted.kill ();
 							OnPlayerDeath ( hitted, player.handle, hash );
