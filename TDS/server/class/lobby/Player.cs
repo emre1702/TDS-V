@@ -27,6 +27,8 @@ namespace Class {
 		}
 
 		public void AddPlayer ( Client player, bool spectator = false ) {
+			if ( this != MainMenu.lobby )
+				MainMenu.lobby.players[0].Remove ( player );
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
 			character.lobby = this;
@@ -48,6 +50,7 @@ namespace Class {
 			if ( spectator ) {
 				this.players[0].Add ( player );
 				character.team = 0;
+				character.lifes = 0;
 			} else {
 				int teamID = this.GetTeamIDWithFewestMember ( this.players );
 				this.players[teamID].Add ( player );
