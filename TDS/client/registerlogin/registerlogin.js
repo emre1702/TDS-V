@@ -26,9 +26,11 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         API.setCanOpenChat(false);
         API.setHudVisible(false);
         API.showCursor(true);
+        nothidecursor++;
     }
     else if (eventName == "registerLoginSuccessful") {
         API.destroyCefBrowser(loginpanel.loginbrowser);
         API.setCanOpenChat(true);
+        nothidecursor--;
     }
 });
