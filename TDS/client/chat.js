@@ -4,6 +4,7 @@ let chatdata = {
     browser: null,
     teamsay: false,
     globalsay: false,
+    chatopen: false,
 };
 API.onResourceStart.connect(function () {
     chatdata.browser = API.createCefBrowser(res.Width, res.Height);
@@ -17,9 +18,13 @@ API.onResourceStart.connect(function () {
     chatdata.chat.SanitationLevel = 2;
 });
 API.onKeyDown.connect(function (sender, e) {
-    if (e.KeyCode == Keys.Z) {
-        onFocusChange(true);
-        chatdata.globalsay = true;
+    if (chatdata.chatopen == false) {
+        if (API.getCanOpenChat()) {
+            if (e.KeyCode == Keys.Z) {
+                onFocusChange(true);
+                chatdata.globalsay = true;
+            }
+        }
     }
 });
 API.onResourceStop.connect(function () {
@@ -36,21 +41,34 @@ function commitMessage(msg) {
         chatdata.chat.sendMessage("/teamchat " + msg);
     else
         chatdata.chat.sendMessage(msg);
-    onFocusChange(false);
 }
 function addMessage(msg, hasColor, r, g, b) {
     if (chatdata.browser != null) {
         chatdata.browser.call("addMessage", msg);
     }
 }
-function onFocusChange(focus) {
+function onFocusChange(focus, fromcef = false) {
     if (chatdata.browser != null) {
-        chatdata.browser.call("setFocus", focus);
+        if (fromcef == false)
+            chatdata.browser.call("setFocus", focus, true);
     }
-    API.showCursor(focus);
     if (!focus) {
-        chatdata.teamsay = false;
-        chatdata.globalsay = false;
+        if (chatdata.chatopen) {
+            chatdata.chat.sendMessage("");
+            chatdata.chatopen = false;
+            if (API.isCursorShown()) {
+                nothidecursor--;
+                if (nothidecursor == 0)
+                    API.showCursor(false);
+            }
+            chatdata.teamsay = false;
+            chatdata.globalsay = false;
+        }
+    }
+    else {
+        chatdata.chatopen = true;
+        nothidecursor++;
+        API.showCursor(true);
     }
 }
 function onChatHide(hide) {
