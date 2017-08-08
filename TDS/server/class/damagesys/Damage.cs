@@ -166,7 +166,9 @@ namespace Class {
 				Client hitted = API.shared.getPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Class.Lobby lobby = player.GetChar ().lobby;
-					lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );
+					if ( lobby != Manager.MainMenu.lobby ) {
+						lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );
+					}
 				}
 			}
 		}
