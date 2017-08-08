@@ -1,9 +1,8 @@
 ﻿/// <reference path="../types-gt-mp/index.d.ts" />
 
 let spectateevent = null;
-let countdownsoundspath = "client/sounds/";
 let countdownsounds = [
-	"Go.wav",
+	"go.wav",
 	"1.wav",
 	"2.wav",
 	"3.wav"
@@ -26,7 +25,7 @@ let lobbydata = {
 	updateteammateblipposevent: null
 }
 /* for ( var i = 0; i < countdownsounds.length; i++ ) {
-	API.preloadAudio( countdownsoundspath + countdownsounds[i] );
+	API.preloadAudio( soundspath + countdownsounds[i] );
 } */
 
 function countdownFunc( counter ) {
@@ -37,7 +36,7 @@ function countdownFunc( counter ) {
 		lobbydata.countdowntimer = new Timer( countdownFunc, 1000, 1, counter );
 		if ( countdownsounds[counter] != null ) {
 			API.setAudioVolume( 0.3 );
-			var audio = API.startAudio( countdownsoundspath + countdownsounds[counter], false );
+			var audio = API.startAudio( soundspath + countdownsounds[counter], false );
 		}
 	} 
 }
@@ -202,7 +201,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				lobbydata.countdowntext.setText( "GO" );
 			if ( lobbydata.countdowntimer != null )
 				lobbydata.countdowntimer.kill();
-			API.startAudio( countdownsoundspath + countdownsounds[0], false );
+			API.startAudio( soundspath + countdownsounds[0], false );
 			API.setAudioVolume( 0.3 );
 			lobbydata.countdowntimer = new Timer( countdownRemoveText, 2000, 1 );
 			
