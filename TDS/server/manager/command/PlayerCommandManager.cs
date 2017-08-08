@@ -26,7 +26,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "globalchat", Alias = "globalsay, global", Description = "Writes in global-chat", AddToHelpmanager = true )]
+		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true )]
 		public void GlobalChat ( Client player, string text ) {
 			Chat.SendGlobalMessage ( player, text );
 		}
