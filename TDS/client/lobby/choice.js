@@ -20,11 +20,14 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             API.loadPageCefBrowser(lobbychoicedata.browser, "client/window/lobby/choice.html");
             API.setHudVisible(false);
             API.showCursor(true);
+            nothidecursor++;
             break;
         case "onClientPlayerJoinLobby":
             API.destroyCefBrowser(lobbychoicedata.browser);
             API.setHudVisible(true);
-            API.showCursor(false);
+            nothidecursor--;
+            if (nothidecursor == 0)
+                API.showCursor(false);
             break;
     }
 });
