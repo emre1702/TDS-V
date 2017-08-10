@@ -25,7 +25,7 @@ namespace Manager {
 				string filename = Path.GetFileNameWithoutExtension ( filepath );
 				if ( AddInfosToMapClass ( map, filename, out map ) ) {
 					if ( map.name != null ) {
-						if ( map.type == "arena" )
+						if ( map.type == "normal" )
 							normalMapNames.Add ( map.name );
 						else if ( map.type == "hostage" )
 							hostageMapNames.Add ( map.name );
