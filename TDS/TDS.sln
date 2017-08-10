@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS", "TDS.csproj", "{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapCreator", "..\MapCreator\MapCreator.csproj", "{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,12 @@ Global
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Server|Any CPU.ActiveCfg = Release|Any CPU
+		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Server|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
