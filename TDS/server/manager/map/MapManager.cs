@@ -9,7 +9,8 @@ using System.IO;
 namespace Manager {
 	class Map {
 		private static string mapsPath = "resources/TDS/server/maps/";
-		public static List<string> mapNames = new List<string> {};
+		public static List<string> normalMapNames = new List<string> ();
+		public static List<string> hostageMapNames = new List<string> ();
 		public static Dictionary<string, List<string>> mapDescriptions = new Dictionary<string, List<string>> ();
 		public static Dictionary<string, string> mapByName = new Dictionary<string, string> ();
 
@@ -24,7 +25,10 @@ namespace Manager {
 				string filename = Path.GetFileNameWithoutExtension ( filepath );
 				if ( AddInfosToMapClass ( map, filename, out map ) ) {
 					if ( map.name != null ) {
-						mapNames.Add ( map.name );
+						if ( map.type == "arena" )
+							normalMapNames.Add ( map.name );
+						else if ( map.type == "hostage" )
+							hostageMapNames.Add ( map.name );
 						for ( int i = 0; i < Language.languages.Count; i++ ) {
 							mapDescriptions[Language.languages[i]].Add ( map.description[Language.languages[i]] );
 						}
@@ -38,7 +42,7 @@ namespace Manager {
 		private static bool AddInfosToMapClass ( Class.Map map, string mapname, out Class.Map newmap ) {
 			try {
 				string path = mapsPath + mapname + ".xml";
-				map.type = "arena";
+				map.type = "normal";
 				map.description = new Dictionary<string, string> {
 					{ "english", "No info available!" },
 					{ "german", "Keine Info verfügbar!" }
@@ -68,7 +72,7 @@ namespace Manager {
 							}
 							Vector3 spawn = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), float.Parse ( reader["z"] ) );
 							map.teamSpawns[teamnumber].Add ( spawn );
-							Vector3 rot = new Vector3 ( float.Parse ( reader["xrot"] ), float.Parse ( reader["yrot"] ), float.Parse ( reader["zrot"] ) );
+							Vector3 rot = new Vector3 ( 0, 0, float.Parse ( reader["rot"] ) );
 							map.teamRots[teamnumber].Add ( rot );
 						}
 					}
