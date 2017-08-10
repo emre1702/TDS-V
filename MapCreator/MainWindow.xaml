@@ -1,0 +1,83 @@
+﻿<Window x:Class="MapCreator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MapCreator"
+        mc:Ignorable="d"
+        Title="Map-Creator V1.0" Height="350" Width="525">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Width="517">
+            <TabItem Header="start" Margin="0,-2,-20,0">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.408,1.562" Height="271" Width="491"><Run Text="Welcome to the map-creator for TDS."/><LineBreak/><Run Text="This tool was created by Bonus (the projectmanager of TDS)."/><LineBreak/><Run/><LineBreak/><Run Text="With this tool you can create your own map which you can send to Bonus."/><LineBreak/><Run Text="If it's not bad the map can be used for TDS."/><LineBreak/><Run/><LineBreak/><Run Text="In this version you can only create a map for the normal gamemode."/><LineBreak/><Run Text="Later with new updates you will be able to create maps for other gamemodes aswell."/><LineBreak/><Run/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabplayerspawns" Header="player-spawns" Margin="22,-2,-22,0" HorizontalAlignment="Right" Width="88">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox Name="teamnumberplayerspawnbox" HorizontalAlignment="Left" Margin="417,69,0,196" TextWrapping="Wrap" Width="75" PreviewTextInput="TeamNumberValidationTextBox" RenderTransformOrigin="0.677,0.652" MaxLength="2"/>
+                    <Label Content="team:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="363,0,0,196" VerticalAlignment="Bottom" RenderTransformOrigin="0.775,1.269"/>
+                    <TextBox Name="xpositionplayerspawnbox" HorizontalAlignment="Left" Height="26" Margin="417,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="PositionValidationTextBox" MaxLength="10"/>
+                    <Label Content="X-position:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="326,108,0,0" VerticalAlignment="Top" Width="76" RenderTransformOrigin="0.539,1.346"/>
+                    <TextBox Name="ypositionplayerspawnbox" HorizontalAlignment="Left" Height="26" Margin="417,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="PositionValidationTextBox" MaxLength="10"/>
+                    <Label Content="Y-position:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="326,139,0,0" VerticalAlignment="Top" Width="76"/>
+                    <TextBox Name="zpositionplayerspawnbox" HorizontalAlignment="Left" Height="26" Margin="417,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="PositionValidationTextBox" MaxLength="10" RenderTransformOrigin="-0.333,1.538"/>
+                    <Label Content="Z-position:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="326,170,0,0" VerticalAlignment="Top" Width="76"/>
+                    <TextBox Name="zrotationplayerspawnbox" HorizontalAlignment="Left" Height="26" Margin="417,209,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="RotationValidationTextBox" MaxLength="9" RenderTransformOrigin="0.067,0.962"/>
+                    <Label Content="Z-rotation:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="326,209,0,0" VerticalAlignment="Top" Width="76" RenderTransformOrigin="0.474,1.154"/>
+                    <Button Content="add" HorizontalAlignment="Left" Margin="337,250,0,0" VerticalAlignment="Top" Width="164" RenderTransformOrigin="0,0.5" Click="OnPlayerSpawnAddClick" Height="31"/>
+                    <DataGrid Name="playerspawnlist" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="False" HorizontalAlignment="Left" Height="271" Margin="10,10,0,0" VerticalAlignment="Top" Width="311" AutoGenerateColumns="False" IsSynchronizedWithCurrentItem="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="team" IsReadOnly="False" Width="40" Binding="{Binding Path=team}"/>
+                            <DataGridTextColumn Header="Xpos" IsReadOnly="False" Width="70" Binding="{Binding Path=Xpos}"/>
+                            <DataGridTextColumn Header="Ypos" IsReadOnly="False" Width="70" Binding="{Binding Path=Ypos}"/>
+                            <DataGridTextColumn Header="Zpos" IsReadOnly="False" Width="70" Binding="{Binding Path=Zpos}"/>
+                            <DataGridTextColumn Header="Zrot" IsReadOnly="False" Width="58" Binding="{Binding Path=Zrot}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock HorizontalAlignment="Left" Margin="327,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.408,1.562" Height="45" Width="174"><Run Text="You need atleast 8 spawns for both teams."/><Run Text=" They all should be near to each other!"/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabmaplimit" Header="map-limit" Margin="24,-2,-22,0">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid Name="maplimitlist" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="False" HorizontalAlignment="Left" Height="271" Margin="10,10,0,0" VerticalAlignment="Top" Width="302" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" PreviewKeyDown="OnMapLimitPreviewKeyDown">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" IsReadOnly="False" Width="40" Binding="{Binding Path=ID}"/>
+                            <DataGridTextColumn Header="Xpos" IsReadOnly="False" Width="130" Binding="{Binding Path=Xpos}"/>
+                            <DataGridTextColumn Header="Ypos" IsReadOnly="False" Width="130" Binding="{Binding Path=Ypos}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Content="add" HorizontalAlignment="Left" Margin="327,250,0,0" VerticalAlignment="Top" Width="174" RenderTransformOrigin="0,0.5" Click="OnMapLimitAddClick" Height="31"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="327,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.408,1.562" Height="122" Width="174"><Run Text="Successively add the cordners of the map-limit. "/><LineBreak/><Run Text="If you don't pay attention to the order the map-limit won't work"/><Run Text=" and will kill all people - so your map will be useless."/><LineBreak/><Run Text="Max. 9 edges, not more!"/></TextBlock>
+                    <Label Content="X-position:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="317,137,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.263,0.385" Width="70"/>
+                    <Label Content="Y-position:" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="317,178,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.263,0.385" Width="70"/>
+                    <TextBox Name="xposmaplimitbox" HorizontalAlignment="Left" Height="23" Margin="402,140,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="99" RenderTransformOrigin="0,1.217" PreviewTextInput="PositionValidationTextBox" MaxLength="10"/>
+                    <TextBox Name="yposmaplimitbox" HorizontalAlignment="Left" Height="23" Margin="402,182,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="99" RenderTransformOrigin="-0.707,1.174" PreviewTextInput="PositionValidationTextBox" MaxLength="10"/>
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabmapinfo" Header="map-info" Margin="24,-2,-22,0" RenderTransformOrigin="0.73,0.52">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.408,1.562" Height="158" Width="252"><Run Text="Set the map-informations."/><LineBreak/><Run Text="The name should be chosen unique - else it has to be changed "/><Run Text="by Bonus."/><LineBreak/><Run Text="Descriptions are optional."/><LineBreak/><Run/><LineBreak/><Run Text="min. and max. players prevent too many players on a small map or too less players on a big map."/><Run Text=" If min. players is too high or max. players is 0, the map can only be "/><Run Text="voted"/><Run Text="."/></TextBlock>
+                    <Label HorizontalContentAlignment="Right" Content="map-name:" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Width="77"/>
+                    <TextBox Name="mapname" HorizontalAlignment="Left" Height="27" Margin="102,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.708,0.185"/>
+                    <Label HorizontalContentAlignment="Right" Content="min. players:" HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top" Width="77"/>
+                    <TextBox Name="minplayers" HorizontalAlignment="Left" Height="27" Margin="102,213,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" PreviewTextInput="PlayerValidationTextBox" RenderTransformOrigin="1.708,0.185"/>
+                    <Label HorizontalContentAlignment="Right" Content="max. players:" HorizontalAlignment="Left" Margin="10,245,0,0" VerticalAlignment="Top" Width="77"/>
+                    <TextBox Name="maxplayers" HorizontalAlignment="Left" Height="27" Margin="102,245,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" PreviewTextInput="PlayerValidationTextBox" RenderTransformOrigin="1.708,0.185"/>
+                    <Label Content="English description:" HorizontalAlignment="Left" Margin="297,5,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,1.154"/>
+                    <TextBox Name="englishdescription" HorizontalAlignment="Left" Height="96" Margin="297,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="204" MaxLength="200"/>
+                    <Label Content="German description:" HorizontalAlignment="Left" Margin="297,144,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,1.154"/>
+                    <TextBox Name="germandescription" HorizontalAlignment="Left" Height="96" Margin="297,175,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="204" MaxLength="200" RenderTransformOrigin="0.49,0.5"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="create map" Margin="24,-2,-22,0" RenderTransformOrigin="0.883,0.227" HorizontalAlignment="Left" Width="94">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.408,1.562" Height="215" Width="491"><Run Text="Here you can check"/><Run Text=" your inputs and finally create the map."/><LineBreak/><Run Text="The map will be created in the same folder as this program."/><LineBreak/><LineBreak/><Run Text="After creating the map you can send it to Bonus."/><LineBreak/><Run Text="Best way to do this is to send it in Discord (Bonus #7853) or in the GT-MP forum."/><LineBreak/><Run/><LineBreak/><Run Text="CARE: After successfully checking the map you won't be able to use the other tabs anymore."/><LineBreak/><Run Text="So only check the map if you're absolutely sure you're done."/></TextBlock>
+                    <Button x:Name="checkmapbutton" Content="check" HorizontalAlignment="Left" Margin="37,245,0,0" VerticalAlignment="Top" Width="135" Click="CheckMapButtonClick"/>
+                    <Button x:Name="createmapbutton" Content="create" HorizontalAlignment="Left" Margin="192,245,0,0" VerticalAlignment="Top" Width="135" Click="CreateMapButtonClick" RenderTransformOrigin="0.2,2" IsEnabled="False" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
