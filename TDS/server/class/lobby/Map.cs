@@ -18,11 +18,8 @@ namespace Class {
 		private Timer roundEndTimer;
 		private List<Blip> mapBlips = new List<Blip> ();
 
-		public void AddMapList ( List<string> newmapnames, bool clone = true ) {
-			if ( clone )
-				this.mapNames = new List<string> ( newmapnames );
-			else 
-				this.mapNames = newmapnames;
+		public void AddMapList ( List<string> newmapnames ) {
+			this.mapNames = new List<string> ( newmapnames );
 		}
 
 		public void AddMapDescriptions ( Dictionary<string, List<string>> mapdescriptions, bool clone = true ) {
