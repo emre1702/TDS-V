@@ -2,6 +2,7 @@
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Shared;
+using System.Collections.Generic;
 
 namespace Manager {
 	static class Arena {
@@ -9,7 +10,10 @@ namespace Manager {
 
 		public static void Create ( ) {
 			lobby = new Class.Lobby ( "arena", 1 );
-			lobby.AddMapList ( Manager.Map.mapNames, false );
+			List<string> mapsforarena = new List<string> ();
+			mapsforarena.AddRange ( Manager.Map.normalMapNames );
+			mapsforarena.AddRange ( Manager.Map.hostageMapNames );
+			lobby.AddMapList ( mapsforarena );
 			lobby.AddMapDescriptions ( Manager.Map.mapDescriptions, false );
 			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ), "g" );
 			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ), "r" );
