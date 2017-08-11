@@ -14,6 +14,7 @@ namespace Manager {
 			int adminlvl = 0;
 			int donatorLvl = 0;
 			int playtime = 0;
+			int money = 0;
 			int kills = 0;
 			int assists = 0;
 			int deaths = 0;
@@ -30,6 +31,7 @@ namespace Manager {
 						adminlvl = Convert.ToInt32 ( row["adminlvl"] );
 						donatorLvl = Convert.ToInt32 ( row["donatorlvl"] );
 						playtime = Convert.ToInt32 ( row["playtime"] );
+						money = Convert.ToInt32 ( row["money"] );
 						kills = Convert.ToInt32 ( row["kills"] );
 						assists = Convert.ToInt32 ( row["assists"] );
 						deaths = Convert.ToInt32 ( row["deaths"] );
