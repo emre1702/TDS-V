@@ -98,6 +98,7 @@
     <Compile Include="server\class\damagesys\Damage.cs" />
     <Compile Include="server\class\utility\Timer.cs" />
     <Compile Include="server\manager\utility\MinuteTimerManager.cs" />
+    <Compile Include="server\manager\utility\MoneyManager.cs" />
     <Compile Include="server\manager\utility\ResourceStartManager.cs" />
     <Compile Include="server\manager\utility\ResourceStopManager.cs" />
     <Compile Include="server\manager\utility\ScoreboardManager.cs" />
