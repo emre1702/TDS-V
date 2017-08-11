@@ -34,9 +34,17 @@ namespace Class {
 			character.lobby = this;
 			character.spectating = null;
 			player.dimension = this.dimension;
-			if ( this.isPlayable ) { 
-				player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ), this.teams, this.teamColorsList );
-				this.SyncMapVotingOnJoin ( player );
+			if ( this.isPlayable ) {
+				if ( this.gotRounds ) {
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ), this.teams, this.teamColorsList );
+					this.SyncMapVotingOnJoin ( player );
+				} else {
+					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
+					player.position = this.spawnpoint;
+					player.rotation = this.spawnrotation;
+					player.stopSpectating ();
+					player.freeze ( false );
+				}
 			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.stopSpectating ();
@@ -56,7 +64,7 @@ namespace Class {
 				this.players[teamID].Add ( player );
 				player.setSkin ( this.teamSkins[teamID] );
 				character.team = teamID;
-				if ( this.isPlayable ) {
+				if ( this.isPlayable && this.gotRounds ) {
 					if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
 						this.SetPlayerReadyForRound ( player, teamID );
 					} else {
@@ -221,24 +229,27 @@ namespace Class {
 					if ( character.lobby == this ) {
 						List<int> reward = new List<int> ();
 						if ( this.damageSys.playerKills.ContainsKey ( player ) ) {
-							reward.Add ( (int) ( Manager.Money.moneyForDict["kill"] * this.damageSys.playerKills[player] ) );
+							reward.Add ( (int) ( Manager.Money.moneyForDict["kill"] * (double) this.damageSys.playerKills[player] ) );
 						} else
 							reward.Add ( 0 );
 						if ( this.damageSys.playerAssists.ContainsKey ( player ) ) {
-							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * this.damageSys.playerAssists[player] ) );
+							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * (double) this.damageSys.playerAssists[player] ) );
 						} else
 							reward.Add ( 0 );
-						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * entry.Value ) );
+						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * (double) entry.Value ) );
 
 						int total = reward[0] + reward[1] + reward[2];
 						player.GivePoints ( total, character );
-						player.SendLangMessage ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (), total.ToString() );
+						player.SendLangNotification ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (), total.ToString() );
 					}
 				}
 			}
 
 			this.damageSys.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 			this.damageSys.lastHitterDictionary = new Dictionary<Client, Client> ();
+			this.damageSys.playerDamage = new Dictionary<Client, int> ();
+			this.damageSys.playerKills = new Dictionary<Client, int> ();
+			this.damageSys.playerAssists = new Dictionary<Client, int> ();
 		}
 
 	}
