@@ -34,3 +34,8 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         nothidecursor--;
     }
 });
+API.onResourceStart.connect(function () {
+    new Timer(function () {
+        API.triggerServerEvent("onPlayerJoin", languagesetting);
+    }, 500, 1);
+});
