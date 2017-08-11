@@ -121,5 +121,4 @@ API.onResourceStart.connect( function () {
 	var langnumber = API.returnNative( "3160758157564346030", 0 );
 	if ( langnumber == 2 ) 
 		languagesetting = "german";
-	API.triggerServerEvent( "onPlayerJoin", languagesetting );
 } );
