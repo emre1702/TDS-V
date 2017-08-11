@@ -38,5 +38,13 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			if ( nothidecursor == 0 )
 				API.showCursor( false );
 			break;
+
+		case "onClientPlayerJoinRoundlessLobby":
+			API.destroyCefBrowser( lobbychoicedata.browser );
+			API.setHudVisible( true );
+			nothidecursor--;
+			if ( nothidecursor == 0 )
+				API.showCursor( false );
+			break;
 	}
 } );
