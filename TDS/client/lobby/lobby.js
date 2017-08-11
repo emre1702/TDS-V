@@ -23,6 +23,11 @@ let lobbydata = {
     teammateblips: [],
     updateteammateblipposevent: null
 };
+API.onResourceStart.connect(function () {
+    for (var i = 0; i < countdownsounds.length; i++) {
+        API.preloadAudio(soundspath + countdownsounds[i]);
+    }
+});
 function countdownFunc(counter) {
     counter--;
     if (counter > 0) {
@@ -121,8 +126,10 @@ function removeLobbyTextsTimer(removemapinfo) {
 function updateTeamBlipPositions() {
     for (var playername in lobbydata.teammateblips) {
         var player = API.getPlayerByName(playername);
-        let pos = API.getEntityPosition(player);
-        API.setBlipPosition(lobbydata.teammateblips[playername], pos);
+        if (!player.IsNull) {
+            let pos = API.getEntityPosition(player);
+            API.setBlipPosition(lobbydata.teammateblips[playername], pos);
+        }
     }
 }
 API.onServerEventTrigger.connect(function (eventName, args) {
