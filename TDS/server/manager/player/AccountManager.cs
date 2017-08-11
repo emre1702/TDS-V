@@ -29,11 +29,12 @@ namespace Manager {
 			player.SendLangMessage ( "welcome_4" );
 			player.SendLangMessage ( "welcome_5" );
 			player.sendChatMessage ( "~o~__________________________________________" );*/
-			string msg = "~o~__________________________________________";
+			string msg = "~o~__________________________________________~w~";
 			for ( int i = 1; i <= 5; i++ ) {
 				msg += "~n~" + Language.GetLang ( player, "welcome_" + i );
 			}
 			msg += "~n~~o~__________________________________________";
+			player.sendChatMessage ( msg );
 		}
 
 		public static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
