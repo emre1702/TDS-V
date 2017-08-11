@@ -86,8 +86,6 @@ namespace Class {
 			}
 			player.freeze ( true );
 			API.shared.removeAllPlayerWeapons ( player );
-			Damagesys.allHitters[player] = new Dictionary<Client, int> ();
-			Damagesys.lastHitterDictionary.Remove ( player );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
@@ -106,10 +104,9 @@ namespace Class {
 				int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 				this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				this.alivePlayers[teamID].Remove ( player );
-				Damagesys.CheckLastHitter ( player, character );
+				this.damageSys.CheckLastHitter ( player, character );
 				this.CheckLobbyForEnoughAlive ();
 			}
-			Damagesys.allHitters.Remove ( player );
 			Manager.MainMenu.Join ( player );
 		}
 
@@ -161,7 +158,7 @@ namespace Class {
 				int aliveindex = lobby.alivePlayers[teamID].IndexOf ( player );
 				lobby.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 				lobby.alivePlayers[teamID].RemoveAt ( aliveindex );
-				Damagesys.CheckLastHitter ( player, character );
+				lobby.damageSys.CheckLastHitter ( player, character );
 				lobby.CheckLobbyForEnoughAlive ();
 			}
 			lobby.players[teamID].Remove ( player );
@@ -214,6 +211,34 @@ namespace Class {
 		public void KillPlayer ( Client player, string reason ) {
 			player.kill ();
 			player.SendLangNotification ( reason );
+		}
+
+		private void RewardAllPlayer ( ) {
+			foreach ( KeyValuePair<Client, int> entry in this.damageSys.playerDamage ) {
+				if ( entry.Key.exists ) {
+					Client player = entry.Key;
+					Character character = player.GetChar ();
+					if ( character.lobby == this ) {
+						List<int> reward = new List<int> ();
+						if ( this.damageSys.playerKills.ContainsKey ( player ) ) {
+							reward.Add ( (int) ( Manager.Money.moneyForDict["kill"] * this.damageSys.playerKills[player] ) );
+						} else
+							reward.Add ( 0 );
+						if ( this.damageSys.playerAssists.ContainsKey ( player ) ) {
+							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * this.damageSys.playerAssists[player] ) );
+						} else
+							reward.Add ( 0 );
+						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * entry.Value ) );
+
+						int total = reward[0] + reward[1] + reward[2];
+						player.GivePoints ( total, character );
+						player.SendLangMessage ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (), total.ToString() );
+					}
+				}
+			}
+
+			this.damageSys.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
+			this.damageSys.lastHitterDictionary = new Dictionary<Client, Client> ();
 		}
 
 	}

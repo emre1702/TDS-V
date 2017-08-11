@@ -91,6 +91,8 @@ namespace Class {
 				if ( this.players[i].Count > 0 )
 					foundone = true;
 			}
+			if ( this == Manager.Arena.lobby ) 
+				this.RewardAllPlayer ();
 			if ( foundone ) {
 				this.roundStartTimer = Timer.SetTimer ( this.StartMapChoose, this.roundEndTime * 1000 / 2, 1 );
 				this.SendAllPlayerEvent ( "onClientRoundEnd" );
