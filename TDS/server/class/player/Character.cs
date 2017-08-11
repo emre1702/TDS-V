@@ -8,6 +8,7 @@ namespace Class {
 		public int adminLvl = 0;
 		public int donatorLvl = 0;
 		public int playtime = 0;
+		public int money = 0;
 		public int kills = 0;
 		public int assists = 0;
 		public int deaths = 0;
