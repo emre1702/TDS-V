@@ -83,11 +83,12 @@ namespace Class {
 			{ 205991906, 5.0 },
 			{ -952879014, 5.0 }
 		};
-		public static Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
-		public static Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
-
 		private Dictionary<int, int> customDamageDictionary = new Dictionary<int, int> ();
 		private Dictionary<int, double> customHeadMultiplicator = new Dictionary<int, double> ();
+
+		public Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
+		public Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
+		public Dictionary<Client, int> playerDamage = new Dictionary<Client, int> ();
 
 
 		private int GetDamage ( int hash, bool headshot ) {
@@ -135,13 +136,21 @@ namespace Class {
 
 			// Last-Hitter //
 			lastHitterDictionary[hitted] = player;
-			if ( !allHitters.ContainsKey ( hitted ) ) {
-				allHitters[hitted] = new Dictionary<Client, int> ();
+			if ( !this.allHitters.ContainsKey ( hitted ) ) {
+				this.allHitters[hitted] = new Dictionary<Client, int> ();
 			}
-			if ( !allHitters[hitted].ContainsKey ( player ) ) {
-				allHitters[hitted][player] = 0;
+			if ( !this.allHitters[hitted].ContainsKey ( player ) ) {
+				this.allHitters[hitted][player] = 0;
 			}
-			allHitters[hitted][player] += damage;
+			this.allHitters[hitted][player] += damage;
+
+			// Reward //
+			if ( character.lobby == Manager.Arena.lobby ) {
+				if ( !this.playerDamage.ContainsKey ( player ) ) {
+					this.playerDamage[player] = 0;
+				}
+				this.playerDamage[player] += damage;
+			}
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
