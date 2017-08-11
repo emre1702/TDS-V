@@ -17,6 +17,8 @@ namespace Class {
 		private Timer countdownTimer;
 		private Timer roundEndTimer;
 		private List<Blip> mapBlips = new List<Blip> ();
+		private Vector3 spawnpoint;
+		private Vector3 spawnrotation;
 
 		public void AddMapList ( List<string> newmapnames ) {
 			this.mapNames = new List<string> ( newmapnames );
@@ -64,6 +66,11 @@ namespace Class {
 				blip.name = "Limit";
 				this.mapBlips.Add ( blip );
 			}
+		}
+
+		public void AddSpawnPoint ( Vector3 point, Vector3 rotation ) {
+			this.spawnpoint = point;
+			this.spawnrotation = rotation;
 		}
 	}
 }
