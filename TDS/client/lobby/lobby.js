@@ -44,11 +44,9 @@ function countdownRemoveText() {
 }
 function pressSpectateKey(sender, e) {
     if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A) {
-        API.sendChatMessage("spectate left");
         API.triggerServerEvent("spectateNext", false);
     }
     else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.D) {
-        API.sendChatMessage("spectate right");
         API.triggerServerEvent("spectateNext", true);
     }
 }
