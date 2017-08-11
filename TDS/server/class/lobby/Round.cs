@@ -14,13 +14,18 @@ namespace Class {
 		private string status;
 
 		public void Start ( ) {
-			if ( this.isPlayable )
-				this.StartMapChoose ();
+			if ( this.isPlayable ) {
+				if ( this.gotRounds )
+					this.StartMapChoose ();
+			}
 		}
 
 		public void StartMapChoose ( ) {
 			this.status = "mapchoose";
 			API.shared.consoleOutput ( this.status );
+
+			if ( this == Manager.Arena.lobby )
+				this.RewardAllPlayer ();
 
 			this.currentMap = this.GetNextMap ();
 
@@ -91,8 +96,6 @@ namespace Class {
 				if ( this.players[i].Count > 0 )
 					foundone = true;
 			}
-			if ( this == Manager.Arena.lobby ) 
-				this.RewardAllPlayer ();
 			if ( foundone ) {
 				this.roundStartTimer = Timer.SetTimer ( this.StartMapChoose, this.roundEndTime * 1000 / 2, 1 );
 				this.SendAllPlayerEvent ( "onClientRoundEnd" );
