@@ -26,7 +26,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true )]
+		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true )]
 		public void GlobalChat ( Client player, string text ) {
 			Chat.SendGlobalMessage ( player, text );
 		}
@@ -65,6 +65,13 @@ namespace Manager {
 			} else {
 				character.hitsoundOn = false;
 				player.SendLangNotification ( "deactivated_hitsound" );
+			}
+		}
+
+		[Command ( "ganglobby")]
+		public void JoinGangLobby ( Client player ) {
+			if ( player.GetChar().lobby == MainMenu.lobby ) {
+				GangLobby.Join ( player );
 			}
 		}
 	}
