@@ -3,6 +3,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using System.Collections.Generic;
 using System.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace Manager {
 
@@ -59,7 +60,7 @@ namespace Manager {
 				case "onPlayerTryLogin":
 					if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
 						string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-						Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
+						Task.Run ( () => Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw ) );
 					} else
 						player.SendLangNotification ( "account_doesnt_exist" );
 					break;

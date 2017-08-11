@@ -15,7 +15,7 @@ namespace Manager {
 			};
 			Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email) VALUES (@UID, @name, @password, @email);", parameters );
 			Account.AddAccount ( player.socialClubName, uid );
-			Login.LoginPlayer ( player, uid );
+			System.Threading.Tasks.Task.Run ( ( ) => Login.LoginPlayer ( player, uid ) );
 		}
 	}
 }
