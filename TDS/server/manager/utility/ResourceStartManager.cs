@@ -16,6 +16,7 @@ namespace Manager {
 
 			MainMenu.Create ();
 			Arena.Create ();
+			GangLobby.Create ();
 		}
 	}
 }
