@@ -30,7 +30,7 @@ static class Language {
 			{ "commited_suicide", "Du hast Selbstmord begangen." },
 			{ "activated_hitsound", "Hitsound aktiviert!" },
 			{ "deactivated_hitsound", "Hitsound deaktiviert!" },
-			{ "round_reward", "Runden-Belohnung:~n~Kills: ~g~${1}~n~Assists: ~g~${2}~n~Damage: ~g~${3}~n~~o~Insgesamt: ~g~${4}" },
+			{ "round_reward", "~w~Runden-Belohnung:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Insgesamt: ~g~${4}" },
 
 			{ "welcome_1", "Willkommen auf dem ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "Für Ankündigungen, Support, Bug-Meldung usw." },
@@ -61,7 +61,7 @@ static class Language {
 			{ "commited_suicide", "You commited suicide." },
 			{ "activated_hitsound", "Hitsound activated!" },
 			{ "deactivated_hitsound", "Hitsound deactivated!" },
-			{ "round_reward", "Round-reward:~n~Kills: ~g~${1}~n~Assists: ~g~${2}~n~Damage: ~g~${3}~n~~o~Total: ~g~${4}" },
+			{ "round_reward", "~w~Round-reward:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Total: ~g~${4}" },
 
 			{ "welcome_1", "Welcome to ~b~Team Deathmatch Server~w~." },
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
