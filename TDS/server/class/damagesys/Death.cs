@@ -9,11 +9,14 @@ using Manager;
 namespace Class {
 	partial class Damagesys {
 
-		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> (); 
+		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> ();
+		public Dictionary<Client, int> playerKills = new Dictionary<Client, int> ();
+		public Dictionary<Client, int> playerAssists = new Dictionary<Client, int> ();
 
 		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
+				Damagesys dmgsys = character.lobby.damageSys;
 				character.lobby.DeathInfoSync ( player, character.team ); 
 
 				API.shared.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
@@ -31,10 +34,15 @@ namespace Class {
 					// Kill //
 					if ( killer != null ) {
 						Console.WriteLine ( player.name + " got killed by " + killer.name );
-						if ( character.lobby == Manager.Arena.lobby )
+						if ( character.lobby == Manager.Arena.lobby ) {
 							killer.GetChar ().kills++;
+							if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
+								dmgsys.playerKills[killer] = 0;
+							}
+							dmgsys.playerKills[killer]++;
+						}
 					} else {
-						CheckLastHitter ( player, character );
+						character.lobby.damageSys.CheckLastHitter ( player, character );
 						Console.WriteLine ( player.name + " died" );
 					}
 
@@ -44,7 +52,7 @@ namespace Class {
 
 					// Assist //
 					if ( character.lobby == Manager.Arena.lobby )
-						CheckForAssist ( player, character, killer );
+						character.lobby.damageSys.CheckForAssist ( player, character, killer );
 				}
 			}
 		}
@@ -60,26 +68,32 @@ namespace Class {
 			}
 		}
 
-		private static void CheckForAssist ( Client player, Character character, Client killer ) {
-			if ( allHitters.ContainsKey ( player ) ) {
+		private void CheckForAssist ( Client player, Character character, Client killer ) {
+			if ( this.allHitters.ContainsKey ( player ) ) {
 				int halfarmorhp = ( character.lobby.armor + character.lobby.health ) / 2;
-				foreach ( KeyValuePair<Client, int> entry in allHitters[player] ) {
+				foreach ( KeyValuePair<Client, int> entry in this.allHitters[player] ) {
+					Client target = entry.Key;
 					if ( entry.Value >= halfarmorhp ) {
 						Character targetcharacter = entry.Key.GetChar ();
-						if ( entry.Key.exists && targetcharacter.lobby == character.lobby && killer != entry.Key ) {
+						if ( target.exists && targetcharacter.lobby == character.lobby && killer != target ) {
 							targetcharacter.assists++;
-							entry.Key.SendLangNotification ( "got_assist", player.name );
+							target.SendLangNotification ( "got_assist", player.name );
+							Damagesys dmgsys = character.lobby.damageSys;
+							if ( !dmgsys.playerAssists.ContainsKey ( target ) ) {
+								dmgsys.playerAssists[target] = 0;
+							}
+							dmgsys.playerAssists[target]++;
 						}
-						if ( killer != entry.Key || halfarmorhp % 2 != 0 || entry.Value != halfarmorhp / 2 || allHitters[player].Count > 2 )
+						if ( killer != target || halfarmorhp % 2 != 0 || entry.Value != halfarmorhp / 2 || this.allHitters[player].Count > 2 )
 							return;
 					}
 				}
 			}
 		}
 
-		public static void CheckLastHitter ( Client player, Character character ) {
-			if ( lastHitterDictionary.ContainsKey ( player ) ) {
-				Client lasthitter = lastHitterDictionary[player];
+		public void CheckLastHitter ( Client player, Character character ) {
+			if ( this.lastHitterDictionary.ContainsKey ( player ) ) {
+				Client lasthitter = this.lastHitterDictionary[player];
 				if ( lasthitter.exists ) {
 					Character lasthittercharacter = lasthitter.GetChar ();
 					if ( character.lobby == lasthittercharacter.lobby ) {
@@ -90,7 +104,7 @@ namespace Class {
 					}
 				}
 			}
-			lastHitterDictionary.Remove ( player );
+			this.lastHitterDictionary.Remove ( player );
 		}
 	}
 }
