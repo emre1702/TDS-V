@@ -112,6 +112,7 @@ namespace Manager {
 				Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID",
 					new Dictionary<string, string> {
 						{ "@PLAYTIME", character.playtime.ToString() },
+						{ "@MONEY", character.money.ToString() },
 						{ "@KILLS", character.kills.ToString() },
 						{ "@ASSISTS", character.assists.ToString() },
 						{ "@DEATHS", character.deaths.ToString() },
