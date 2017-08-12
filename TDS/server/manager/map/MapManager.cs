@@ -11,13 +11,13 @@ namespace Manager {
 		private static string mapsPath = "resources/TDS/server/maps/";
 		public static List<string> normalMapNames = new List<string> ();
 		public static List<string> hostageMapNames = new List<string> ();
-		public static Dictionary<string, List<string>> mapDescriptions = new Dictionary<string, List<string>> ();
+		public static Dictionary<string, List<string>> mapDescriptions = new Dictionary<string, List<string>> {
+			{ "english", new List<string>() },
+			{ "german", new List<string>() },
+		};
 		public static Dictionary<string, string> mapByName = new Dictionary<string, string> ();
 
 		public static void MapOnStart () {
-			for ( int i = 0; i < Language.languages.Count; i++ ) {
-				mapDescriptions[Language.languages[i]] = new List<string> ();
-			}
 
 			IEnumerable<string> files = Directory.EnumerateFiles ( mapsPath, "*.xml" );
 			Class.Map map = new Class.Map ();
@@ -29,9 +29,8 @@ namespace Manager {
 							normalMapNames.Add ( map.name );
 						else if ( map.type == "hostage" )
 							hostageMapNames.Add ( map.name );
-						for ( int i = 0; i < Language.languages.Count; i++ ) {
-							mapDescriptions[Language.languages[i]].Add ( map.description[Language.languages[i]] );
-						}
+						mapDescriptions["english"].Add ( map.description["english"] );
+						mapDescriptions["german"].Add ( map.description["german"] );
 						mapByName[map.name] = filename;
 					} else
 						Log.Error ( "Map " + filename + " got no name!" );
@@ -60,7 +59,8 @@ namespace Manager {
 							if ( reader.GetAttribute ( "type" ) != null )
 								map.type = reader["type"];
 						} else if ( reader.Name == "english" || reader.Name == "german" ) {
-							map.description[reader.Name] = reader.Value;
+							map.description[reader.Name] = reader.ReadString ();
+							API.shared.consoleOutput ( reader.Name + " - " + reader.ReadString() );
 						} else if ( reader.Name == "limit" ) {
 							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
 							map.mapLimits.Add ( pos );
