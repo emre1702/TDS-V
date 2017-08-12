@@ -88,7 +88,7 @@ namespace Class {
 
 		public Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 		public Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
-		public Dictionary<Client, int> playerDamage = new Dictionary<Client, int> ();
+		public Dictionary<Client, double> playerDamage = new Dictionary<Client, double> ();
 
 
 		private int GetDamage ( int hash, bool headshot ) {

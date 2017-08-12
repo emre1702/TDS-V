@@ -10,8 +10,8 @@ namespace Class {
 	partial class Damagesys {
 
 		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> ();
-		public Dictionary<Client, int> playerKills = new Dictionary<Client, int> ();
-		public Dictionary<Client, int> playerAssists = new Dictionary<Client, int> ();
+		public Dictionary<Client, double> playerKills = new Dictionary<Client, double> ();
+		public Dictionary<Client, double> playerAssists = new Dictionary<Client, double> ();
 
 		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
