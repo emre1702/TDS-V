@@ -222,21 +222,21 @@ namespace Class {
 		}
 
 		private void RewardAllPlayer ( ) {
-			foreach ( KeyValuePair<Client, int> entry in this.damageSys.playerDamage ) {
+			foreach ( KeyValuePair<Client, double> entry in this.damageSys.playerDamage ) {
 				if ( entry.Key.exists ) {
 					Client player = entry.Key;
 					Character character = player.GetChar ();
 					if ( character.lobby == this ) {
 						List<int> reward = new List<int> ();
 						if ( this.damageSys.playerKills.ContainsKey ( player ) ) {
-							reward.Add ( (int) ( Manager.Money.moneyForDict["kill"] * (double) this.damageSys.playerKills[player] ) );
+							reward.Add ( (int) ( Manager.Money.moneyForDict["kill"] * this.damageSys.playerKills[player] ) );
 						} else
 							reward.Add ( 0 );
 						if ( this.damageSys.playerAssists.ContainsKey ( player ) ) {
-							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * (double) this.damageSys.playerAssists[player] ) );
+							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * this.damageSys.playerAssists[player] ) );
 						} else
 							reward.Add ( 0 );
-						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * (double) entry.Value ) );
+						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * entry.Value ) );
 
 						int total = reward[0] + reward[1] + reward[2];
 						player.GivePoints ( total, character );
@@ -247,9 +247,9 @@ namespace Class {
 
 			this.damageSys.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 			this.damageSys.lastHitterDictionary = new Dictionary<Client, Client> ();
-			this.damageSys.playerDamage = new Dictionary<Client, int> ();
-			this.damageSys.playerKills = new Dictionary<Client, int> ();
-			this.damageSys.playerAssists = new Dictionary<Client, int> ();
+			this.damageSys.playerDamage = new Dictionary<Client, double> ();
+			this.damageSys.playerKills = new Dictionary<Client, double> ();
+			this.damageSys.playerAssists = new Dictionary<Client, double> ();
 		}
 
 	}
