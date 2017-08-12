@@ -1,5 +1,8 @@
 <MapData>
 	<map name="Test-Map" type="normal" minplayers="0" maxplayers="999" />
+  <german>Eine Test-Map, nichts besonderes</german>
+  <english>Only a test-map, nothing special</english>
+  
 	<team1 x="8.699318" y="-2.050943" z="70.29607" rot="65.79314" />
 	<team1 x="9.28" y="-0.7648852" z="70.47571" rot="65.79314" />
 	<team1 x="9.974826" y="0.2272" z="70.62256" rot="64" />
