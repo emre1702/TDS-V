@@ -25,14 +25,28 @@ API.onKeyDown.connect(function (sender, key) {
             API.showCursor(false);
         }
     }
-    else if (key.KeyCode >= 112 && key.KeyCode <= 117) {
-        let vote = key.KeyCode - 112;
-        if (vote < mapvotedata.votingmaps.length) {
-            let tick = API.getGlobalTime();
-            if (mapvotedata.votecooldown <= tick) {
-                mapvotedata.votecooldown = tick + 500;
-                API.triggerServerEvent("onVoteForMap", mapvotedata.votingmaps[vote]);
-                mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
+    else if (mapvotedata.votingmaps.length > 0) {
+        let vote = 0;
+        if (key.KeyCode == Keys.F1)
+            vote = 1;
+        else if (key.KeyCode == Keys.F2)
+            vote = 2;
+        else if (key.KeyCode == Keys.F3)
+            vote = 3;
+        else if (key.KeyCode == Keys.F4)
+            vote = 4;
+        else if (key.KeyCode == Keys.F5)
+            vote = 5;
+        else if (key.KeyCode == Keys.F6)
+            vote = 6;
+        if (vote > 0) {
+            if (vote < mapvotedata.votingmaps.length) {
+                let tick = API.getGlobalTime();
+                if (mapvotedata.votecooldown <= tick) {
+                    mapvotedata.votecooldown = tick + 500;
+                    API.triggerServerEvent("onVoteForMap", mapvotedata.votingmaps[vote]);
+                    mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
+                }
             }
         }
     }
@@ -45,7 +59,7 @@ API.onUpdate.connect(function () {
         let counter = 0;
         for (let i = mapvotinglength - 1; i >= 0; i--) {
             let selectedthis = mapvotedata.lastselectedmap == mapvotedata.votingmaps[i];
-            API.drawText("F" + (i + 1) + " - " + mapvotedata.votingmaps[i] + " [" + mapvotedata.votings[mapvotedata.votingmaps[i]] + "]", res.Width - 5, res.Height * 0.8 - (res.Height * 0.02 * counter), (selectedthis ? 0.8 : 0.6), 255, 255, 255, 255, 0, 2, true, false, 0);
+            API.drawText("F" + (i + 1) + " - " + mapvotedata.votingmaps[i] + " [" + mapvotedata.votings[mapvotedata.votingmaps[i]] + "]", res.Width - 5, res.Height * 0.8 - (res.Height * 0.04 * counter), 0.6, selectedthis ? 0 : 255, selectedthis ? 150 : 255, selectedthis ? 0 : 255, 255, 0, 2, true, false, 0);
             counter++;
         }
     }
@@ -70,7 +84,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         case "onMapMenuOpen":
             mapvotedata.menu.Clear();
             for (let i = 0; i < args[0].Count; i++) {
-                let mapitem = API.createMenuItem(args[0][i], args[1][i] != undefined ? args[1][i] : "-");
+                let mapitem = API.createMenuItem(args[0][i], args[1][i]);
                 mapvotedata.menu.AddItem(mapitem);
             }
             mapvotedata.menu.Visible = true;
