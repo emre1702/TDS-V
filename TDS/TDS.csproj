@@ -141,6 +141,8 @@
     <Content Include="client\pic\arenachoice.png" />
     <Content Include="client\window\registerlogin\registerlogin.html" />
     <Content Include="client\window\registerlogin\registerlogin.js" />
+    <Content Include="server\maps\Pluz._Investment.xml" />
+    <Content Include="server\maps\Pluz._Tower.xml" />
     <Content Include="server\maps\test.xml">
       <SubType>Designer</SubType>
     </Content>
