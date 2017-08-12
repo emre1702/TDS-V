@@ -47,9 +47,12 @@ namespace Class {
 			for ( int i = 1; i < this.players.Count; i++ ) {
 				this.spawnCounter[i] = 0;
 				for ( int j = 0; j < this.players[i].Count; j++ ) {
-					int teamID = this.GetTeamIDWithFewestMember ( newplayerslist );
-					newplayerslist[teamID].Add ( players[i][j] );
-					this.players[i][j].setSkin ( this.teamSkins[teamID] );
+					if ( this.players[i][j].exists ) {
+						int teamID = this.GetTeamIDWithFewestMember ( newplayerslist );
+						newplayerslist[teamID].Add ( players[i][j] );
+						this.players[i][j].setSkin ( this.teamSkins[teamID] );
+					} else
+						Manager.Log.Error ( "MixTeams in playerlist is non existent player" );
 				}
 			}
 			this.players = new List<List<Client>> ( newplayerslist );
