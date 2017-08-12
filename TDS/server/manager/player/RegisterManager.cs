@@ -2,6 +2,7 @@
 using GrandTheftMultiplayer.Server.Elements;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Manager {
 	static class Register {
@@ -13,9 +14,13 @@ namespace Manager {
 				{ "@password", Utility.ConvertToSHA512 ( password ) },
 				{ "@email", email }
 			};
-			Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email) VALUES (@UID, @name, @password, @email);", parameters );
+			Dictionary<string, string> defaultparams = new Dictionary<string, string> { { "@UID", uid.ToString () } };
+			Task.Run ( ( ) => {
+				Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email) VALUES (@UID, @name, @password, @email);", parameters );
+				Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
+			} );
 			Account.AddAccount ( player.socialClubName, uid );
-			System.Threading.Tasks.Task.Run ( ( ) => Login.LoginPlayer ( player, uid ) );
+			Task.Run ( ( ) => Login.LoginPlayer ( player, uid ) );
 		}
 	}
 }
