@@ -66,23 +66,27 @@ namespace Class {
 		}
 
 		private void Spectate ( Client player, Client target ) {
-			Character character = player.GetChar ();
-			if ( player != target ) {
-				character.spectating = target;
-				player.spectate ( target );
-				if ( !this.spectatingMe.ContainsKey ( target ) ) {
-					this.spectatingMe[target] = new List<Client> ();
-				}
-				this.spectatingMe[target].Add ( player );
-			} else {
-				if ( character.spectating != null ) {
-					Client oldspectating = character.spectating;
-					if ( this.spectatingMe.ContainsKey ( oldspectating ) ) {
-						this.spectatingMe[oldspectating].Remove ( player );
+			if ( player.exists ) {
+				if ( target.exists ) {
+					Character character = player.GetChar ();
+					if ( player != target ) {
+						character.spectating = target;
+						player.spectate ( target );
+						if ( !this.spectatingMe.ContainsKey ( target ) ) {
+							this.spectatingMe[target] = new List<Client> ();
+						}
+						this.spectatingMe[target].Add ( player );
+					} else {
+						if ( character.spectating != null ) {
+							Client oldspectating = character.spectating;
+							if ( this.spectatingMe.ContainsKey ( oldspectating ) ) {
+								this.spectatingMe[oldspectating].Remove ( player );
+							}
+						}
+						character.spectating = null;
+						player.stopSpectating ();
 					}
 				}
-				character.spectating = null;
-				player.stopSpectating ();
 			}
 		}
 
