@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
@@ -13,7 +14,7 @@ namespace Class {
 		public Dictionary<Client, double> playerKills = new Dictionary<Client, double> ();
 		public Dictionary<Client, double> playerAssists = new Dictionary<Client, double> ();
 
-		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
+		private static void OnPlayerDeathOtherTask ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 				Damagesys dmgsys = character.lobby.damageSys;
@@ -55,6 +56,10 @@ namespace Class {
 						character.lobby.damageSys.CheckForAssist ( player, character, killer );
 				}
 			}
+		}
+		
+		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
+			Task.Run ( () => OnPlayerDeathOtherTask ( player, entityKiller, weapon ) );
 		}
 
 		private static void SpawnAfterDeath ( Client player ) {
