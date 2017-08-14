@@ -7,7 +7,7 @@ using GrandTheftMultiplayer.Shared.Math;
 namespace Manager {
 	class PlayerCommand : Script {
 
-		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", AddToHelpmanager = true )]
+		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", AddToHelpmanager = true, Group = "user" )]
 		public void Leave ( Client player ) {
 			Class.Lobby lobby = player.GetChar ().lobby;
 			if ( lobby != MainMenu.lobby ) {
@@ -15,7 +15,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "kill", Alias = "suicide", Description = "Commits suicide", AddToHelpmanager = true )]
+		[Command ( "kill", Alias = "suicide", Description = "Commits suicide", AddToHelpmanager = true, Group = "user" )]
 		public void Kill ( Client player ) {
 			Class.Character character = player.GetChar ();
 			Class.Lobby lobby = character.lobby;
@@ -26,12 +26,12 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true )]
+		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public void GlobalChat ( Client player, string text ) {
 			Chat.SendGlobalMessage ( player, text );
 		}
 
-		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true )]
+		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
 			if ( API.shared.isPlayerInAnyVehicle ( sender ) ) {
 				NetHandle veh = API.shared.getPlayerVehicle ( sender );
@@ -47,7 +47,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", AddToHelpmanager = true )]
+		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", AddToHelpmanager = true, Group = "user" )]
 		public void CheckMapName ( Client player, string mapname ) {
 			if ( Map.mapByName.ContainsKey ( mapname ) ) {
 				API.sendNotificationToPlayer ( player, "map-name already taken" );
@@ -56,7 +56,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", AddToHelpmanager = true )]
+		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", AddToHelpmanager = true, Group = "user" )]
 		public void ToggleHitsound ( Client player, int activate = -1 ) {
 			Class.Character character = player.GetChar ();
 			if ( activate == 1 || activate != 0 && !character.hitsoundOn ) {
@@ -68,7 +68,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "ganglobby")]
+		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", AddToHelpmanager = true, Group = "user" )]
 		public void JoinGangLobby ( Client player ) {
 			if ( player.GetChar().lobby == MainMenu.lobby ) {
 				GangLobby.Join ( player );
