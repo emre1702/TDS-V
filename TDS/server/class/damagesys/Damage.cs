@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
@@ -129,9 +130,16 @@ namespace Class {
 
 			//hitted.triggerEvent ( "onClientPlayerDamage" );
 
-			// Stats //
+			
 			if ( character.lobby == Manager.Arena.lobby ) {
+				// Stats //
 				character.damage += damage;
+
+				// Reward //
+				if ( !this.playerDamage.ContainsKey ( player ) ) {
+					this.playerDamage[player] = 0;
+				}
+				this.playerDamage[player] += damage;
 			}
 
 			// Last-Hitter //
@@ -143,14 +151,6 @@ namespace Class {
 				this.allHitters[hitted][player] = 0;
 			}
 			this.allHitters[hitted][player] += damage;
-
-			// Reward //
-			if ( character.lobby == Manager.Arena.lobby ) {
-				if ( !this.playerDamage.ContainsKey ( player ) ) {
-					this.playerDamage[player] = 0;
-				}
-				this.playerDamage[player] += damage;
-			}
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
@@ -179,7 +179,7 @@ namespace Class {
 				if ( hitted != null ) {
 					Class.Lobby lobby = player.GetChar ().lobby;
 					if ( lobby != Manager.MainMenu.lobby ) {
-						lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );
+						Task.Run ( () => lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] ) );
 					}
 				}
 			}
