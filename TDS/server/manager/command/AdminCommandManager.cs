@@ -19,7 +19,7 @@ namespace Manager {
 			{ "cveh", 2 },
 		};
 
-		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round. Requirement: Supporter" )]
+		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round.", Group = "supporter,lobby-owner" )]
 		public void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
 				Class.Lobby lobby = player.GetChar ().lobby;
@@ -33,7 +33,7 @@ namespace Manager {
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "kick", GreedyArg = true, Alias = "rkick", AddToHelpmanager = true, Description = "Kicks a player from the server. Requirement: Supporter or VIP" )]
+		[Command ( "kick", GreedyArg = true, Alias = "rkick", AddToHelpmanager = true, Description = "Kicks a player from the server.", Group = "supporter,VIP" )]
 		public void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
@@ -49,7 +49,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby. Requirement: Supporter, lobby-owner or VIP" )]
+		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
 		public void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
@@ -67,7 +67,7 @@ namespace Manager {
 			}
 		}
 
-		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban. Requirement: Administrator" )]
+		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
 		public void BanPlayer ( Client player, string targetname, int hours, string reason ) {
 			if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
 				if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
@@ -141,10 +141,10 @@ namespace Manager {
 			} else
 				player.SendLangNotification ( "player_doesnt_exist" );
 		}
-
-		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player. Requirement: Administrator or lobby-owner" )]
+		
+		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
-			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
+			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().lobby == GangLobby.lobby ) {
 				Vector3 playerpos = API.shared.getEntityPosition ( target );
 				if ( player.isInVehicle ) {
 					API.shared.setEntityPosition ( player.vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
@@ -171,16 +171,16 @@ namespace Manager {
 				player.SendLangNotification( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "xyz", AddToHelpmanager = true, Alias = "gotoxyz,gotopos", Description = "Warps to a point. Requirement: Administrator or lobby-owner" )]
+		[Command ( "xyz", AddToHelpmanager = true, Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
-			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) ) {
+			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) || player.GetChar().lobby == GangLobby.lobby ) {
 				API.shared.setEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
-		[Command ( "cveh", AddToHelpmanager = true, Alias = "createvehicle", Description = "Creates a vehicle. Requirement: Administrator or lobby-owner" )]
+		[Command ( "cveh", AddToHelpmanager = true, Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
 		public void SpawnCarCommand ( Client player, string name ) {
-			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) ) {
+			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) || player.GetChar ().lobby == GangLobby.lobby ) {
 				VehicleHash model = API.shared.vehicleNameToModel ( name );
 
 				Vector3 rot = API.shared.getEntityRotation ( player.handle );
