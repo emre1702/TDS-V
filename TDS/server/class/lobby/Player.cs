@@ -139,7 +139,14 @@ namespace Class {
 				} else {
 					lobby.RespawnPlayerInSpectateMode ( player );
 				}
-			} else {
+			} else if ( !lobby.gotRounds ) {
+				if ( lobby.spawnpoint != null ) {
+					player.position = lobby.spawnpoint;
+					if ( lobby.spawnrotation != null )
+						player.rotation = lobby.spawnrotation;
+				}
+				player.freeze ( false );
+			} else { 
 				player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.freeze ( true );
 			}
