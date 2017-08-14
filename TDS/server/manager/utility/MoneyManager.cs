@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Manager {
@@ -10,9 +12,10 @@ namespace Manager {
 			{ "damage", 0.1 },
 		};
 
-		public static void GivePoints ( this Client player, double points, Class.Character character = null ) {
+		public static void GiveMoney ( this Client player, int money, Class.Character character = null ) {
 			character = character ?? player.GetChar ();
-			character.money += (int) points;
+			character.money += money;
+			player.triggerEvent ( "onClientMoneyChange", character.money );
 		}
 
 	}
