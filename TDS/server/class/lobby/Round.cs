@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
@@ -24,33 +25,27 @@ namespace Class {
 			this.status = "mapchoose";
 			API.shared.consoleOutput ( this.status );
 
-			if ( this == Manager.Arena.lobby )
-				this.RewardAllPlayer ();
-
 			this.currentMap = this.GetNextMap ();
 
-			this.CreateTeamSpawnBlips ();
-			this.CreateMapLimitBlips ();
+			Task.Run ( ( ) => {
+				if ( this == Manager.Arena.lobby )
+					this.RewardAllPlayer ();
+				this.CreateTeamSpawnBlips ();
+				this.CreateMapLimitBlips ();
+				if ( this.mixTeamsAfterRound )
+					this.MixTeams ();
+				if ( this.currentMap.mapLimits.Count > 0 )
+					this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits );
+			} );
 			
-			if ( this.mixTeamsAfterRound )
-				this.MixTeams ();
 			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime * 1000 / 2, 1 );
-			if ( this.currentMap.mapLimits.Count > 0 )
-				this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits );
+			
 		}
 
 		private void StartRoundCountdown ( ) {
 			this.status = "countdown";
 			API.shared.consoleOutput ( this.status );
-			this.spectatingMe = new Dictionary<Client, List<Client>> ();
-			for ( int i = 0; i < this.players.Count; i++ )
-				for ( int j = 0; j < this.players[i].Count; j++ ) {
-					this.SetPlayerReadyForRound ( this.players[i][j], i );
-					API.shared.sendNativeToPlayer ( this.players[i][j], Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
-					this.players[i][j].triggerEvent ( "onClientCountdownStart", this.currentMap.name );
-					if ( i == 0 )
-						this.SpectateAllTeams ( this.players[i][j], true );
-				}
+			Task.Run ( ( ) => this.SendPlayerRoundCountdownInfo () );
 			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 200, 1 );
 		}
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
@@ -243,10 +244,11 @@ namespace Class {
 							reward.Add ( (int) ( Manager.Money.moneyForDict["assist"] * this.damageSys.playerAssists[player] ) );
 						} else
 							reward.Add ( 0 );
+						API.shared.consoleOutput ( entry.Value + " Damage" );
 						reward.Add ( (int) ( Manager.Money.moneyForDict["damage"] * entry.Value ) );
 
 						int total = reward[0] + reward[1] + reward[2];
-						player.GivePoints ( total, character );
+						player.GiveMoney ( total, character );
 						player.SendLangNotification ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (), total.ToString() );
 					}
 				}
@@ -257,6 +259,18 @@ namespace Class {
 			this.damageSys.playerDamage = new Dictionary<Client, double> ();
 			this.damageSys.playerKills = new Dictionary<Client, double> ();
 			this.damageSys.playerAssists = new Dictionary<Client, double> ();
+		}
+
+		private void SendPlayerRoundCountdownInfo ( ) {
+			this.spectatingMe = new Dictionary<Client, List<Client>> ();
+			for ( int i = 0; i < this.players.Count; i++ )
+				for ( int j = 0; j < this.players[i].Count; j++ ) {
+					this.SetPlayerReadyForRound ( this.players[i][j], i );
+					API.shared.sendNativeToPlayer ( this.players[i][j], Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
+					this.players[i][j].triggerEvent ( "onClientCountdownStart", this.currentMap.name );
+					if ( i == 0 )
+						this.SpectateAllTeams ( this.players[i][j], true );
+				}
 		}
 
 	}
