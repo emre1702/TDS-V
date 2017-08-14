@@ -64,6 +64,8 @@ namespace Manager {
 
 			character.loggedIn = true;
 
+			player.GiveMoney ( money, character );
+
 			API.shared.triggerClientEvent ( player, "registerLoginSuccessful" );
 
 			MainMenu.Join ( player );
