@@ -111,7 +111,7 @@ namespace Manager {
 		public static void SavePlayerData ( Client player ) {
 			Class.Character character = player.GetChar ();
 			if ( character.loggedIn ) {
-				Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID",
+				Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID",
 					new Dictionary<string, string> {
 						{ "@PLAYTIME", character.playtime.ToString() },
 						{ "@MONEY", character.money.ToString() },
