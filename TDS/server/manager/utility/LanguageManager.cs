@@ -67,7 +67,7 @@ static class Language {
 			{ "welcome_2", "For announcements, support, bug-reports etc." },
 			{ "welcome_3", "please visit our Discord-server:" },
 			{ "welcome_4", "discord.gg/ntVnGFt" },
-			{ "welcome_5", "Have fun from your ~b~TDS-Team~w~!" },
+			{ "welcome_5", "Have fun wishes you the ~b~TDS-Team~w~!" },
 		} }
 	};
 
