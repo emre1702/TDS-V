@@ -3,6 +3,7 @@
 let files = [
 	"globals.js",
 	"chat.js",
+	"money.js",
 	"timer.js",
 	"scoreboard.js",
 	"roundinfo.js",
