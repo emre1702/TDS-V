@@ -85,7 +85,7 @@
     <Compile Include="server\manager\logs\LogManager.cs" />
     <Compile Include="server\manager\logs\VIP.cs" />
     <Compile Include="server\manager\command\AdminCommandManager.cs" />
-    <Compile Include="server\manager\player\ChatManager.cs" />
+    <Compile Include="server\manager\utility\ChatManager.cs" />
     <Compile Include="server\manager\utility\ColorManager.cs" />
     <Compile Include="server\manager\utility\LanguageManager.cs" />
     <Compile Include="server\manager\database\DatabaseManager.cs" />
