@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
 
@@ -53,7 +54,7 @@ namespace Class {
 			foreach ( KeyValuePair<int, List<Vector3>> entry in this.currentMap.teamSpawns ) { 
 				Blip blip = API.shared.createBlip ( entry.Value[0], this.dimension );
 				blip.sprite = 491;
-				blip.color = Manager.Colors.blipColorByString[this.teamColorStrings[entry.Key]];
+				blip.color = this.teamBlipColors[entry.Key];
 				blip.name = "Spawn " + this.teams[entry.Key];
 				this.mapBlips.Add ( blip );
 			}
