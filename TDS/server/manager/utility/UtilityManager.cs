@@ -31,7 +31,11 @@ namespace Manager {
 		}
 
 		public static string GetTimestamp ( int seconds = 0 ) {
-			return DateTime.Now.AddSeconds ( seconds ).ToString ( "de-DE" );
+			if ( seconds == 0 )
+				return DateTime.UtcNow.AddHours ( 2 ).ToString("dd-MM-yyyy HH:mm:ss");
+			else 
+				return DateTime.UtcNow.AddHours ( 2 ).AddSeconds ( seconds ).ToString ( "dd-MM-yyyy HH:mm:ss" );
+			;
 		}
 
 	}
