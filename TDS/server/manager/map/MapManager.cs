@@ -60,12 +60,11 @@ namespace Manager {
 								map.type = reader["type"];
 						} else if ( reader.Name == "english" || reader.Name == "german" ) {
 							map.description[reader.Name] = reader.ReadString ();
-							API.shared.consoleOutput ( reader.Name + " - " + reader.ReadString() );
 						} else if ( reader.Name == "limit" ) {
 							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
 							map.mapLimits.Add ( pos );
 						} else if ( reader.Name.StartsWith ( "team" ) ) {
-							int teamnumber = Convert.ToInt32 ( reader.Name.Substring ( 4 ) );
+							int teamnumber = Convert.ToInt16 ( reader.Name.Substring ( 4 ) );
 							if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
 								map.teamSpawns[teamnumber] = new List<Vector3> ();
 								map.teamRots[teamnumber] = new List<Vector3> ();
