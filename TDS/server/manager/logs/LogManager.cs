@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GrandTheftMultiplayer.Server.API;
 
 namespace Manager {
 	partial class Log {
@@ -27,7 +28,7 @@ namespace Manager {
 		}
 
 		private static string GetValueString ( int index ) {
-			string str = "(@UID"+index+"@, @targetUID"+index+"@, @type"+index+"@, @info"+index+"@, @lobby"+index+"@)";
+			string str = "(@UID"+index+"@, @name"+index+"@, @targetUID"+index+"@, @type"+index+"@, @info"+index+"@, @lobby"+index+"@, @date"+index+"@)";
 			logQueryParameters["@UID" + index + "@"] = logQueryUIDs[index];
 			logQueryParameters["@name" + index + "@"] = logQueryNames[index];
 			logQueryParameters["@targetUID" + index + "@"] = logQueryTargetUIDs[index];
