@@ -11,14 +11,17 @@ namespace Class {
 		private List<PedHash> teamSkins = new List<PedHash> { (PedHash) ( 225514697 ) };
 		public List<string> teamColorStrings = new List<string> { "s" };
 		private List<int> teamColorsList = new List<int> { 255, 255, 255 };
+		private List<int> teamBlipColors = new List<int> { 0 };
 
 		public void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
 			this.teams.Add ( name );
 			this.teamSkins.Add ( hash );
 			this.players.Add ( new List<Client> () );
+			this.alivePlayers.Add ( new List<Client> () );
 			this.spawnCounter[this.teamSkins.Count - 1] = 0;
 			this.teamColorStrings.Add ( colorstring );
 			Color rgb = Manager.Colors.fontColor[colorstring];
+			this.teamBlipColors.Add ( Manager.Colors.blipColorByString[colorstring] );
 			this.teamColorsList.Add ( rgb.red );
 			this.teamColorsList.Add ( rgb.green );
 			this.teamColorsList.Add ( rgb.blue );
