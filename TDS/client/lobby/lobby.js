@@ -20,7 +20,7 @@ let lobbydata = {
     minY: 0,
     maxY: 0,
     outsidemaptext: null,
-    teammateblips: [],
+    teammateblips: {},
     updateteammateblipposevent: null
 };
 API.onResourceStart.connect(function () {
@@ -126,7 +126,7 @@ function removeLobbyTextsTimer(removemapinfo) {
 function updateTeamBlipPositions() {
     for (var playername in lobbydata.teammateblips) {
         var player = API.getPlayerByName(playername);
-        if (!player.IsNull) {
+        if (player != null) {
             let pos = API.getEntityPosition(player);
             API.setBlipPosition(lobbydata.teammateblips[playername], pos);
         }
@@ -182,7 +182,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 if (lobbydata.maplimit[0] != undefined) {
                     lobbydata.maplimitchecktimer = new Timer(checkMapLimit, 1000, -1);
                 }
-                lobbydata.teammateblips = [];
+                lobbydata.teammateblips = {};
                 let localplayer = API.getLocalPlayer();
                 for (let i = 0; i < args[1].Count; i++) {
                     if (!localplayer.Equals(args[1][i])) {
@@ -205,7 +205,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             for (var playername in lobbydata.teammateblips) {
                 API.deleteEntity(lobbydata.teammateblips[playername]);
             }
-            lobbydata.teammateblips = [];
+            lobbydata.teammateblips = {};
             break;
         case "onClientSpectateMode":
             lobbydata.isspectator = true;
