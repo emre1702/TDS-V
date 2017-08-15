@@ -51,7 +51,6 @@ class Database {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
 				conn.Open ();
 
-
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
