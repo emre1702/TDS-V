@@ -30,6 +30,7 @@ namespace Class {
 			Task.Run ( ( ) => {
 				if ( this == Manager.Arena.lobby )
 					this.RewardAllPlayer ();
+				this.damageSys.EmptyDamagesysData ();
 				this.CreateTeamSpawnBlips ();
 				this.CreateMapLimitBlips ();
 				if ( this.mixTeamsAfterRound )
