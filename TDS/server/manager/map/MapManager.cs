@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System;
 using GrandTheftMultiplayer.Shared.Math;
 using GrandTheftMultiplayer.Server.API;
-using GrandTheftMultiplayer.Server;
 using System.IO;
+using Manager;
 
 namespace Manager {
 	class Map {
@@ -51,28 +51,29 @@ namespace Manager {
 				map.mapLimits = new List<Vector3> ();
 				map.created = true;
 
-				XmlReader reader = XmlReader.Create ( path );
-				while ( reader.Read () ) {
-					if ( reader.NodeType == XmlNodeType.Element ) {
-						if ( reader.Name == "map" ) {
-							map.name = reader["name"];
-							if ( reader.GetAttribute ( "type" ) != null )
-								map.type = reader["type"];
-						} else if ( reader.Name == "english" || reader.Name == "german" ) {
-							map.description[reader.Name] = reader.ReadString ();
-						} else if ( reader.Name == "limit" ) {
-							Vector3 pos = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), 0 );
-							map.mapLimits.Add ( pos );
-						} else if ( reader.Name.StartsWith ( "team" ) ) {
-							int teamnumber = Convert.ToInt16 ( reader.Name.Substring ( 4 ) );
-							if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
-								map.teamSpawns[teamnumber] = new List<Vector3> ();
-								map.teamRots[teamnumber] = new List<Vector3> ();
+				using ( XmlReader reader = XmlReader.Create ( path ) ) {
+					while ( reader.Read () ) {
+						if ( reader.NodeType == XmlNodeType.Element ) {
+							if ( reader.Name == "map" ) {
+								map.name = reader["name"];
+								if ( reader.GetAttribute ( "type" ) != null )
+									map.type = reader["type"];
+							} else if ( reader.Name == "english" || reader.Name == "german" ) {
+								map.description[reader.Name] = reader.ReadString ();
+							} else if ( reader.Name == "limit" ) {
+								Vector3 pos = new Vector3 ( reader["x"].ToFloat(), reader["y"].ToFloat (), 0 );
+								map.mapLimits.Add ( pos );
+							} else if ( reader.Name.StartsWith ( "team" ) ) {
+								int teamnumber = Convert.ToInt16 ( reader.Name.Substring ( 4 ) );
+								if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
+									map.teamSpawns[teamnumber] = new List<Vector3> ();
+									map.teamRots[teamnumber] = new List<Vector3> ();
+								}
+								Vector3 spawn = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+								map.teamSpawns[teamnumber].Add ( spawn );
+								Vector3 rot = new Vector3 ( 0, 0, reader["rot"].ToFloat () );
+								map.teamRots[teamnumber].Add ( rot );
 							}
-							Vector3 spawn = new Vector3 ( float.Parse ( reader["x"] ), float.Parse ( reader["y"] ), float.Parse ( reader["z"] ) );
-							map.teamSpawns[teamnumber].Add ( spawn );
-							Vector3 rot = new Vector3 ( 0, 0, float.Parse ( reader["rot"] ) );
-							map.teamRots[teamnumber].Add ( rot );
 						}
 					}
 				}
