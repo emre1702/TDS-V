@@ -62,6 +62,10 @@ namespace Class {
 				}
 			}
 		}
+
+		public bool IsOfficial ( ) {
+			return this == Manager.Arena.lobby || this == Manager.GangLobby.lobby;
+		}
 	}
 }
 

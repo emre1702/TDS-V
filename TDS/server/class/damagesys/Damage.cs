@@ -131,7 +131,7 @@ namespace Class {
 			//hitted.triggerEvent ( "onClientPlayerDamage" );
 
 			
-			if ( character.lobby == Manager.Arena.lobby ) {
+			if ( character.lobby.IsOfficial() ) {
 				// Stats //
 				character.damage += damage;
 			}

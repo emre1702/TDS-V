@@ -26,7 +26,7 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 
 			Task.Run ( ( ) => {
-				if ( this == Manager.Arena.lobby )
+				if ( this.IsOfficial () )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
 				this.currentMap = this.GetNextMap ();

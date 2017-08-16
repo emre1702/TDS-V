@@ -35,7 +35,7 @@ namespace Class {
 					// Kill //
 					if ( killer != null ) {
 						Console.WriteLine ( player.name + " got killed by " + killer.name );
-						if ( character.lobby == Manager.Arena.lobby ) {
+						if ( character.lobby.IsOfficial () ) {
 							killer.GetChar ().kills++;
 						}
 						if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
@@ -48,11 +48,11 @@ namespace Class {
 					}
 
 					// Death //
-					if ( character.lobby == Manager.Arena.lobby )
+					if ( character.lobby.IsOfficial () )
 						character.deaths++;
 
 					// Assist //
-					if ( character.lobby == Manager.Arena.lobby )
+					if ( character.lobby.IsOfficial () )
 						character.lobby.damageSys.CheckForAssist ( player, character, killer );
 				}
 			}
