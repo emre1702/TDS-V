@@ -134,13 +134,13 @@ namespace Class {
 			if ( character.lobby == Manager.Arena.lobby ) {
 				// Stats //
 				character.damage += damage;
-
-				// Reward //
-				if ( !this.playerDamage.ContainsKey ( player ) ) {
-					this.playerDamage[player] = 0;
-				}
-				this.playerDamage[player] += damage;
 			}
+
+			// Reward //
+			if ( !this.playerDamage.ContainsKey ( player ) ) {
+				this.playerDamage[player] = 0;
+			}
+			this.playerDamage[player] += damage;
 
 			// Last-Hitter //
 			lastHitterDictionary[hitted] = player;
@@ -179,7 +179,7 @@ namespace Class {
 				if ( hitted != null ) {
 					Class.Lobby lobby = player.GetChar ().lobby;
 					if ( lobby != Manager.MainMenu.lobby ) {
-						Task.Run ( () => lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] ) );
+						lobby.damageSys.DamagedPlayer ( player, hitted, args[1], args[2] );
 					}
 				}
 			}
