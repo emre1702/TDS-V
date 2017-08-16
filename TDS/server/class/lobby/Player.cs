@@ -253,12 +253,6 @@ namespace Class {
 					}
 				}
 			}
-
-			this.damageSys.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
-			this.damageSys.lastHitterDictionary = new Dictionary<Client, Client> ();
-			this.damageSys.playerDamage = new Dictionary<Client, double> ();
-			this.damageSys.playerKills = new Dictionary<Client, double> ();
-			this.damageSys.playerAssists = new Dictionary<Client, double> ();
 		}
 
 		private void SendPlayerRoundCountdownInfo ( ) {
