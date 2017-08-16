@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
-using GrandTheftMultiplayer.Server.API;
-using GrandTheftMultiplayer.Server.Managers;
-using GrandTheftMultiplayer.Server.Elements;
-using GrandTheftMultiplayer.Shared.Math;
-using GrandTheftMultiplayer.Shared;
+using System.Globalization;
 
 
 namespace Manager {
-	class Utility : Script {
+	static class Utility {
 		public static readonly Random rnd = new Random ();
 		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
@@ -36,6 +29,10 @@ namespace Manager {
 			else 
 				return DateTime.UtcNow.AddHours ( 2 ).AddSeconds ( seconds ).ToString ( "dd-MM-yyyy HH:mm:ss" );
 			;
+		}
+
+		public static float ToFloat ( this string str ) {
+			return float.Parse ( str, CultureInfo.InvariantCulture );
 		}
 
 	}
