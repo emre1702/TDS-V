@@ -25,12 +25,11 @@ namespace Class {
 			this.status = "mapchoose";
 			API.shared.consoleOutput ( this.status );
 
-			this.currentMap = this.GetNextMap ();
-
 			Task.Run ( ( ) => {
 				if ( this == Manager.Arena.lobby )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
+				this.currentMap = this.GetNextMap ();
 				this.CreateTeamSpawnBlips ();
 				this.CreateMapLimitBlips ();
 				if ( this.mixTeamsAfterRound )
