@@ -184,9 +184,11 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 }
                 lobbydata.teammateblips = {};
                 let localplayer = API.getLocalPlayer();
+                let dimension = API.getEntityDimension(localplayer);
                 for (let i = 0; i < args[1].Count; i++) {
                     if (!localplayer.Equals(args[1][i])) {
                         let blip = API.createBlip(API.getEntityPosition(args[1][i]));
+                        API.setEntityDimension(blip, dimension);
                         API.setBlipSprite(blip, 0);
                         lobbydata.teammateblips[API.getPlayerName(args[1][i])] = blip;
                     }
