@@ -1,12 +1,13 @@
 {
-  "compilerOptions": {
-    "alwaysStrict": true,
-    "noImplicitAny": false,
-    "noEmitOnError": true,
-    "removeComments": true,
-    "sourceMap": false,
-    "target": "es6",
-    "module": "commonjs"
-  },
+	"compilerOptions": {
+		"alwaysStrict": true,
+		"noImplicitAny": false,
+		"noEmitOnError": true,
+		"removeComments": true,
+		"sourceMap": false,
+		"target": "es6",
+		"module": "es6",
+		"checkJs": true
+	},
   "compileOnSave": true
 }
