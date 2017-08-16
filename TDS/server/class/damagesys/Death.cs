@@ -37,11 +37,11 @@ namespace Class {
 						Console.WriteLine ( player.name + " got killed by " + killer.name );
 						if ( character.lobby == Manager.Arena.lobby ) {
 							killer.GetChar ().kills++;
-							if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
-								dmgsys.playerKills[killer] = 0;
-							}
-							dmgsys.playerKills[killer]++;
 						}
+						if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
+							dmgsys.playerKills[killer] = 0;
+						}
+						dmgsys.playerKills[killer]++;
 					} else {
 						character.lobby.damageSys.CheckLastHitter ( player, character );
 						Console.WriteLine ( player.name + " died" );
