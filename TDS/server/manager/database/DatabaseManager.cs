@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using GrandTheftMultiplayer.Server.API;
 
-class Database {
+static class Database {
 	private static readonly string ip = "127.0.0.1";
 	private static readonly int port = 3306;
 	private static readonly string user = "emre1702";
 	private static readonly string password = "Ajagrebo1-";
-	private static readonly string database = "TDS";
+	private static readonly string database = "TDSV";
 
 	/* Variables */
 	private static readonly string connStr = "server=" + ip +
