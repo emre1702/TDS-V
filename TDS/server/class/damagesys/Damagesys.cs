@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
 	partial class Damagesys {
@@ -18,6 +19,14 @@ namespace Class {
 				this.customHeadMultiplicator = new Dictionary<int, double> ();
 			else
 				this.customHeadMultiplicator = customheadmult;
+		}
+
+		public void EmptyDamagesysData ( ) {
+			this.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
+			this.lastHitterDictionary = new Dictionary<Client, Client> ();
+			this.playerDamage = new Dictionary<Client, double> ();
+			this.playerKills = new Dictionary<Client, double> ();
+			this.playerAssists = new Dictionary<Client, double> ();
 		}
 	}
 }
