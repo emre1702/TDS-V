@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared;
 
 namespace Class {
 	partial class Damagesys {
@@ -78,6 +78,13 @@ namespace Class {
 			{ 126349499, 0 },		//Snowball - Geändert, da kA
 			{ -37975472, 0 },		//SmokeGrenade - Geändert, da kA
 			{ -1169823560, 0 },     //Pipebomb - Geändert, da kA
+
+			//[ Gunrunning ]//
+			{ API.shared.getHashKey ( "WEAPON_PISTOL_MK2" ), 26 },
+			{ API.shared.getHashKey ( "WEAPON_SMG_MK2" ), 22 },
+			{ API.shared.getHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 30 },
+			{ API.shared.getHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 32 },
+			{ API.shared.getHashKey ( "WEAPON_COMBATMG_MK2" ), 28 },
 		};
 		private static Dictionary<int, double> headMultiplicator = new Dictionary<int, double> {
 			{ 100416529, 5.0 },
