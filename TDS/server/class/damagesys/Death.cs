@@ -11,8 +11,8 @@ namespace Class {
 	partial class Damagesys {
 
 		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> ();
-		public Dictionary<Client, double> playerKills = new Dictionary<Client, double> ();
-		public Dictionary<Client, double> playerAssists = new Dictionary<Client, double> ();
+		public Dictionary<Client, int> playerKills = new Dictionary<Client, int> ();
+		public Dictionary<Client, int> playerAssists = new Dictionary<Client, int> ();
 
 		private static void OnPlayerDeathOtherTask ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
@@ -34,8 +34,7 @@ namespace Class {
 
 					// Kill //
 					if ( killer != null ) {
-						Console.WriteLine ( player.name + " got killed by " + killer.name );
-						if ( character.lobby.IsOfficial () ) {
+						if ( character.lobby.isOfficial ) {
 							killer.GetChar ().kills++;
 						}
 						if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
@@ -44,16 +43,15 @@ namespace Class {
 						dmgsys.playerKills[killer]++;
 					} else {
 						character.lobby.damageSys.CheckLastHitter ( player, character );
-						Console.WriteLine ( player.name + " died" );
 					}
 
-					// Death //
-					if ( character.lobby.IsOfficial () )
+					if ( character.lobby.isOfficial ) {
+						// Death //
 						character.deaths++;
-
-					// Assist //
-					if ( character.lobby.IsOfficial () )
+						// Assist //
 						character.lobby.damageSys.CheckForAssist ( player, character, killer );
+					}
+						
 				}
 			}
 		}
