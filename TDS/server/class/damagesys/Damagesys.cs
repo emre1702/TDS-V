@@ -24,9 +24,9 @@ namespace Class {
 		public void EmptyDamagesysData ( ) {
 			this.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 			this.lastHitterDictionary = new Dictionary<Client, Client> ();
-			this.playerDamage = new Dictionary<Client, double> ();
-			this.playerKills = new Dictionary<Client, double> ();
-			this.playerAssists = new Dictionary<Client, double> ();
+			this.playerDamage = new Dictionary<Client, int> ();
+			this.playerKills = new Dictionary<Client, int> ();
+			this.playerAssists = new Dictionary<Client, int> ();
 		}
 	}
 }
