@@ -129,7 +129,7 @@ function checkMapLimit() {
 	}
 }
 
-function removeLobbyTextsTimer ( removemapinfo ) {
+function removeLobbyTextsTimer( removemapinfo ) {
 	if ( spectateevent != null ) {
 		spectateevent.disconnect();
 		spectateevent = null;
@@ -275,7 +275,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			} else if ( lobbydata.teammateblips[API.getPlayerName( args[0] )] != undefined ) {
 				var name = API.getPlayerName( args[0] );
 				API.deleteEntity( lobbydata.teammateblips[name] );
-				lobbydata.teammateblips[name] = undefined;
+				delete lobbydata.teammateblips[name];
 			}
 			break;
 
@@ -283,7 +283,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			var name = API.getPlayerName( args[0] );
 			if ( lobbydata.teammateblips[name] != undefined ) {
 				API.deleteEntity( lobbydata.teammateblips[name] );
-				lobbydata.teammateblips[name] = undefined;
+				delete lobbydata.teammateblips[name];
 			}
 			break;
 	}
