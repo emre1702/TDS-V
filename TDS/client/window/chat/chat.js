@@ -22,7 +22,8 @@ function formatMsg(input) {
 	//pass = pass.replace( /~m~/g, '</span><span style="color: rgb(99, 99, 99);">' );
 	//pass = pass.replace( /~u~/g, '</span><span style="color: rgb(0, 0, 0);">' );
 	pass = pass.replace( /~s~/g, '</span><span style="color: rgb(220, 220, 220);">' );
-	pass = pass.replace( /~w~/g, '</span><span style="color: white;">' );
+	pass = pass.replace( /~w~/g, '</span><span style="color: white;">' );		// white
+	pass = pass.replace( /~dr~/g, '</span><span style="color: rgb( 169, 25, 25 );">' );		// dark red
 	pass = pass.replace( /~n~/g, '<br>' );
 
 	return output + pass + "</span>";
