@@ -18,6 +18,7 @@ namespace Manager {
 			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ), "g" );
 			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ), "r" );
 			lobby.deleteWhenEmpty = false;
+			lobby.isOfficial = true;
 
 			// Handguns //
 			lobby.AddWeapon ( (WeaponHash) ( 453432689 ), 1000 ); // Pistol
@@ -48,6 +49,13 @@ namespace Manager {
 			lobby.AddWeapon ( (WeaponHash) ( -1063057011 ), 1000 ); // SpecialCarbine
 			lobby.AddWeapon ( (WeaponHash) ( 2132975508 ), 1000 ); // BullpupRifle
 			lobby.AddWeapon ( (WeaponHash) ( 1649403952 ), 1000 ); // CompactRifle
+
+			// Gunrunning //
+			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_SMG_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );
 
 			lobby.Start ();
 		}
