@@ -8,6 +8,8 @@ using GrandTheftMultiplayer.Shared;
 namespace Manager {
 	class AdminCommand : Script {
 		private static Dictionary<string, int> neededLevels = new Dictionary<string, int> {
+			{ "adminsay", 1 },
+			{ "adminchat", 1 },
 			{ "next", 1 },
 			{ "lobbykick", 1 },
 			{ "kick", 1 },
@@ -187,6 +189,20 @@ namespace Manager {
 				Vehicle veh = API.shared.createVehicle ( model, player.position, new Vector3 ( 0, 0, rot.Z ), 0, 0 );
 
 				API.shared.setPlayerIntoVehicle ( player, veh, -1 );
+			}
+		}
+
+		[Command ( "adminsay", AddToHelpmanager = true, Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
+		public void AdminSay ( Client player, string text ) {
+			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
+				Chat.SendAdminMessage ( player, text );
+			}
+		}
+
+		[Command ( "adminchat", AddToHelpmanager = true, Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
+		public void AdminChat ( Client player, string text ) {
+			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
+				Chat.SendAdminChat ( player, text );
 			}
 		}
 	}
