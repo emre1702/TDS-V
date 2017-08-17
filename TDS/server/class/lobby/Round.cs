@@ -26,7 +26,7 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 
 			Task.Run ( ( ) => {
-				if ( this.IsOfficial () )
+				if ( this.isOfficial )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
 				this.currentMap = this.GetNextMap ();
