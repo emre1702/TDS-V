@@ -1,9 +1,10 @@
 var False = false;
 var True = true;
+let amountchilds = 0;
 
 function updateScroll() {
 	var body = $( "#chat-body" );
-	body.animate( { scrollTop: body.height() }, "slow" );	
+	body.animate( { scrollTop: body.prop ( "scrollHeight" ) }, "slow" );	
 }
 
 function formatMsg(input) {
@@ -28,19 +29,33 @@ function formatMsg(input) {
 }
 
 function addMessage(msg) {
-	var child = $( "<text>" + formatMsg( msg ) + "</text><br>");
+	var child = $( "<text>" + formatMsg( msg ) + "<br></text>");
 	child.hide();
-	$("#chat-body").append(child);
+	var chatbody = $( "#chat-body" );
+	chatbody.append( child );
+	amountchilds++;
 	child.fadeIn();
+
+	if ( amountchilds >= 40 ) {
+		amountchilds--;
+		chatbody.find( "text:first" ).remove();
+	}
 
 	updateScroll();
 }
 
 function addColoredMessage(msg, r,g,b) {
-	var child = $('<text style="color: rgb(' + r + ', ' + g + ', ' + b + ');">' + formatMsg(msg) + '</text><br>');
+	var child = $( '<text style="color: rgb(' + r + ', ' + g + ', ' + b + ');">' + formatMsg( msg ) + '<br></text>');
 	child.hide();
-	$("#chat-body").append(child);
+	var chatbody = $( "#chat-body" );
+	chatbody.append( child );
+	amountchilds++;
 	child.fadeIn();
+
+	if ( amountchilds >= 40 ) {
+		amountchilds--;
+		chatbody.find( "text:first" ).remove();
+	}
 
 	updateScroll();
 }
