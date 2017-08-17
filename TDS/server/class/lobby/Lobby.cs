@@ -12,6 +12,7 @@ namespace Class {
 		public int id;
 		public bool isPlayable = true;
 		public bool deleteWhenEmpty = true;
+		public bool isOfficial = false;
 
 		public static void LobbyOnStart ( API api ) {
 			api.onPlayerDisconnected += OnPlayerDisconnected;
@@ -61,10 +62,6 @@ namespace Class {
 					this.RemovePlayer ( player );
 				}
 			}
-		}
-
-		public bool IsOfficial ( ) {
-			return this == Manager.Arena.lobby || this == Manager.GangLobby.lobby;
 		}
 	}
 }
