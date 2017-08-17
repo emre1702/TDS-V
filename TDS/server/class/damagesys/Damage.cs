@@ -89,7 +89,7 @@ namespace Class {
 
 		public Dictionary<Client, Dictionary<Client, int>> allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 		public Dictionary<Client, Client> lastHitterDictionary = new Dictionary<Client, Client> ();
-		public Dictionary<Client, double> playerDamage = new Dictionary<Client, double> ();
+		public Dictionary<Client, int> playerDamage = new Dictionary<Client, int> ();
 
 
 		private int GetDamage ( int hash, bool headshot ) {
@@ -131,7 +131,7 @@ namespace Class {
 			//hitted.triggerEvent ( "onClientPlayerDamage" );
 
 			
-			if ( character.lobby.IsOfficial() ) {
+			if ( character.lobby.isOfficial ) {
 				// Stats //
 				character.damage += damage;
 			}
