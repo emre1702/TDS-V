@@ -135,6 +135,9 @@ namespace Manager {
 
 		private static void OnPlayerDisconnected ( Client player, string reason ) {
 			SavePlayerData ( player );
+			int adminlvl = player.GetChar ().adminLvl;
+			if ( adminlvl > 0 )
+				Admin.SetOffline ( player, adminlvl );
 			API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
 		}
 
