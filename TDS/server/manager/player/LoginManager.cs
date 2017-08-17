@@ -66,6 +66,9 @@ namespace Manager {
 
 			player.GiveMoney ( money, character );
 
+			if ( adminlvl > 0 )
+				Admin.SetOnline ( player, adminlvl );
+
 			API.shared.triggerClientEvent ( player, "registerLoginSuccessful" );
 
 			MainMenu.Join ( player );
