@@ -2,13 +2,13 @@
 let rounddata = {
     mapinfo: null,
     isspectator: true,
-    inround: false
+    infight: false
 };
 function setMapInfo(mapname) {
     rounddata.mapinfo = new cText(mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true);
 }
 API.onUpdate.connect(function () {
-    if (!rounddata.inround) {
+    if (!rounddata.infight) {
         API.disableControlThisFrame(24);
         API.disableControlThisFrame(257);
     }

@@ -4,7 +4,7 @@
 let rounddata = {
 	mapinfo: null,
 	isspectator: true,
-	inround: false
+	infight: false
 }
 
 
@@ -14,7 +14,7 @@ function setMapInfo ( mapname ) {
 
 
 API.onUpdate.connect( function () {
-	if ( !rounddata.inround ) {
+	if ( !rounddata.infight ) {
 		API.disableControlThisFrame( 24 );
 		API.disableControlThisFrame( 257 );
 	}
