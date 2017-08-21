@@ -19,6 +19,7 @@ namespace Manager {
 			api.onClientEventTrigger += OnClientEvent;
 			api.onPlayerBeginConnect += OnPlayerBeginConnect;
 			api.onPlayerDisconnected += OnPlayerDisconnected;
+			api.onPlayerConnected += OnPlayerConnected;
 			OnResourceStart ();
 		}
 
@@ -38,14 +39,17 @@ namespace Manager {
 			player.sendChatMessage ( msg );
 		}
 
-		public static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
+		private static void OnPlayerConnected ( Client player ) {
+			player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
+			player.freeze ( true );
+			player.name = player.socialClubName;
+		}
+
+		private static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
 				case "onPlayerJoin":
 					player.GetChar ().language = args[0];
-					player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
-					player.freeze ( true );
-					player.name = player.socialClubName;
 					SendWelcomeMessage ( player );
 					API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
 					break;
@@ -54,7 +58,7 @@ namespace Manager {
 					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
 					lastPlayerUID++;
 					playerUIDs[player.socialClubName] = lastPlayerUID;
-					Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
+					Task.Run ( () => Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ) );
 					break;
 
 				case "onPlayerTryLogin":
@@ -74,11 +78,6 @@ namespace Manager {
 
 		public static void AddAccount ( string name, int uid ) {
 			playerUIDs[name] = uid;
-		}
-
-		public void BanPlayer ( Client player ) {
-			socialClubNameBanDict[player.socialClubName] = true;
-			addressBanDict[player.address] = true;
 		}
 
 		private static void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
@@ -139,6 +138,68 @@ namespace Manager {
 			if ( adminlvl > 0 )
 				Admin.SetOffline ( player, adminlvl );
 			API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
+		}
+
+		public static void PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
+			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
+								new Dictionary<string, string> {
+								{ "@socialclubname", targetname },
+								{ "@address", targetaddress },
+								{ "@type", "permanent" },
+								{ "@startsec", Utility.GetTimespan().ToString() },
+								{ "@startoptic", Utility.GetTimestamp() },
+								{ "@admin", admin.name },
+								{ "@reason", reason }
+								}
+							);
+			socialClubNameBanDict[targetname] = true;
+			if ( targetaddress != "-" )
+				addressBanDict[targetaddress] = true;
+			Language.SendMessageToAll ( "permaban", targetname, admin.name, reason );
+			if ( target != null )
+				target.kick ( target.GetLang ( "youpermaban", admin.name, reason ) );
+			// LOG //
+			Log.Admin ( "permaban", admin, Account.playerUIDs[targetname].ToString (), admin.GetChar ().lobby.name );
+			/////////
+		}
+
+		public static void TimeBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, int hours ) {
+			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
+								new Dictionary<string, string> {
+								{ "@socialclubname", targetname },
+								{ "@address", targetaddress },
+								{ "@type", "time" },
+								{ "@startsec", Utility.GetTimespan().ToString() },
+								{ "@startoptic", Utility.GetTimestamp() },
+								{ "@endsec", Utility.GetTimespan(hours*3600).ToString() },
+								{ "@endoptic", Utility.GetTimestamp ( hours*3600 ) },
+								{ "@admin", admin.name },
+								{ "@reason", reason }
+								}
+							);
+			socialClubNameBanDict[targetname] = true;
+			if ( targetaddress != "-" )
+				addressBanDict[targetaddress] = true;
+			Language.SendMessageToAll ( "timeban", targetname, hours.ToString (), admin.name, reason );
+			if ( target != null )
+				target.kick ( target.GetLang ( "youtimeban", hours.ToString (), admin.name, reason ) );
+			// LOG //
+			Log.Admin ( "timeban", admin, Account.playerUIDs[targetname].ToString (), admin.GetChar ().lobby.name );
+			/////////
+		}
+
+		public static void UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
+			DataTable result = Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
+			targetaddress = result.Rows[0]["address"].ToString ();
+			Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
+			socialClubNameBanDict.Remove ( targetname );
+			if ( targetaddress != "-" )
+				addressBanDict.Remove ( targetaddress );
+
+			Language.SendMessageToAll ( "unban", targetname, admin.name, reason );
+			// LOG //
+			Log.Admin ( "unban", admin, Account.playerUIDs[targetname].ToString (), admin.GetChar ().lobby.name );
+			/////////
 		}
 
 	}
