@@ -62,6 +62,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="server\class\damagesys\Damagesys.cs" />
     <Compile Include="server\class\damagesys\Death.cs" />
+    <Compile Include="server\class\damagesys\KillingSpree.cs" />
     <Compile Include="server\manager\command\PlayerCommandManager.cs" />
     <Compile Include="server\manager\fightinfo\PlayerInFightManager.cs" />
     <Compile Include="server\class\lobby\APIExtend.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="server\manager\logs\LogManager.cs" />
     <Compile Include="server\manager\logs\VIP.cs" />
     <Compile Include="server\manager\command\AdminCommandManager.cs" />
+    <Compile Include="server\manager\utility\AdminManager.cs" />
     <Compile Include="server\manager\utility\ChatManager.cs" />
     <Compile Include="server\manager\utility\ColorManager.cs" />
     <Compile Include="server\manager\utility\LanguageManager.cs" />
@@ -122,11 +124,17 @@
     <Content Include="client\pic\german.png" />
     <TypeScriptCompile Include="client\chat.ts" />
     <TypeScriptCompile Include="client\damagesys\hitsound.ts" />
+    <TypeScriptCompile Include="client\lobby\blips.ts" />
+    <TypeScriptCompile Include="client\lobby\countdown.ts" />
+    <TypeScriptCompile Include="client\lobby\settings.ts" />
+    <TypeScriptCompile Include="client\lobby\maplimit.ts" />
+    <TypeScriptCompile Include="client\lobby\round.ts" />
+    <TypeScriptCompile Include="client\lobby\spectate.ts" />
     <TypeScriptCompile Include="client\money.ts" />
     <TypeScriptCompile Include="client\globals.ts" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
     <TypeScriptCompile Include="client\lobby\mapvoting.ts" />
-    <TypeScriptCompile Include="client\roundinfo.ts" />
+    <TypeScriptCompile Include="client\lobby\roundinfo.ts" />
     <TypeScriptCompile Include="client\scoreboard.ts" />
     <Content Include="client\window\chat\chat.html" />
     <Content Include="client\window\chat\chat.js" />
@@ -151,7 +159,7 @@
     <TypeScriptCompile Include="client\damagesys\damagesys.ts" />
     <TypeScriptCompile Include="client\draw\draw.ts" />
     <TypeScriptCompile Include="client\language\language.ts" />
-    <TypeScriptCompile Include="client\lobby\lobby.ts" />
+    <TypeScriptCompile Include="client\lobby\roundevents.ts" />
     <TypeScriptCompile Include="client\registerlogin\registerlogin.ts" />
     <Content Include="client\minify.js" />
   </ItemGroup>
