@@ -12,15 +12,14 @@ namespace Manager {
 				{ "@UID", uid.ToString() },
 				{ "@name", player.socialClubName },
 				{ "@password", Utility.ConvertToSHA512 ( password ) },
-				{ "@email", email }
+				{ "@email", email },
+				{ "@registerdate", Utility.GetTimestamp() }
 			};
 			Dictionary<string, string> defaultparams = new Dictionary<string, string> { { "@UID", uid.ToString () } };
-			Task.Run ( ( ) => {
-				Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email) VALUES (@UID, @name, @password, @email);", parameters );
-				Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
-			} );
+			Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters );
+			Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
 			Account.AddAccount ( player.socialClubName, uid );
-			Task.Run ( ( ) => Login.LoginPlayer ( player, uid ) );
+			Login.LoginPlayer ( player, uid );
 		}
 	}
 }
