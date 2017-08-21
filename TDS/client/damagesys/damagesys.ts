@@ -12,19 +12,28 @@ function Vector3Lerp( start: Vector3, end: Vector3, fraction: number ) {
 }
 
 API.onLocalPlayerShoot.connect( function ( weaponUsed, aimCoords ) {
-	var pos = API.getEntityPosition( API.getLocalPlayer() );
-	var endpos = Vector3Lerp( pos, aimCoords, 1.1 );
+	var frompos = API.getEntityPosition( API.getLocalPlayer() );
 
-	var raycast = API.createRaycast( pos, endpos, 8, null );
+	var dir = aimCoords.Subtract( frompos );
+	var distance = dir.Length();
+	dir.Normalize();
+
+	dir.X *= distance * 1.05;
+	dir.Y *= distance * 1.05;
+	dir.Z *= distance * 1.05;
+
+	var topos = frompos.Add( dir ); 
+
+	var raycast = API.createRaycast( frompos, topos, 8, null );
 
 	if ( raycast.didHitEntity ) {
 		var hitentityhandle = raycast.hitEntity;
 		var hithead = false;
 		//if (weaponUsed == 100416529 || weaponUsed == 205991906 || weaponUsed == 952879014) {
-		var neckpos = API.returnNative( "GET_PED_BONE_COORDS", 5, hitentityhandle, 39317 );
-		if ( aimCoords.Z > neckpos.Z ) {
-			hithead = true;
-		}
+		//var neckpos = API.returnNative( "GET_PED_BONE_COORDS", 5, hitentityhandle, 39317 );
+		//if ( aimCoords.Z > neckpos.Z ) {
+		//	hithead = true;
+		//}
 		//}
 		API.triggerServerEvent( "onPlayerHitOtherPlayer", hitentityhandle, weaponUsed, hithead );
 	}
