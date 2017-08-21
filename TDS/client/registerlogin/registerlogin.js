@@ -37,5 +37,5 @@ API.onServerEventTrigger.connect(function (eventName, args) {
 API.onResourceStart.connect(function () {
     new Timer(function () {
         API.triggerServerEvent("onPlayerJoin", languagesetting);
-    }, 500, 1);
+    }, 200, 1);
 });
