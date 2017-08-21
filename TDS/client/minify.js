@@ -6,15 +6,22 @@ let files = [
 	"money.js",
 	"timer.js",
 	"scoreboard.js",
-	"roundinfo.js",
 	"draw/draw.js",
 	"damagesys/damagesys.js",
 	"damagesys/hitsound.js",
     "language/language.js",
-    "registerlogin/registerlogin.js",
-	"lobby/lobby.js",
+	"registerlogin/registerlogin.js",
+
+	"lobby/blips.js",
 	"lobby/choice.js",
+	"lobby/countdown.js",
+	"lobby/maplimit.js",
 	"lobby/mapvoting.js",
+	"lobby/round.js",
+	"lobby/roundevents.js",
+	"lobby/roundinfo.js",
+	"lobby/settings.js",
+	"lobby/spectate.js",
 ];
 let code = "";
 let htmlcode = "";
