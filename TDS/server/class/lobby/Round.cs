@@ -9,7 +9,7 @@ namespace Class {
 	partial class Lobby {
 
 		public bool gotRounds = true;
-		private int countdownTime = 3;
+		private int countdownTime = 5;
 		private int roundTime = 4 * 60;
 		public int roundEndTime = 8;
 		private string status;
@@ -45,7 +45,10 @@ namespace Class {
 		private void StartRoundCountdown ( ) {
 			this.status = "countdown";
 			API.shared.consoleOutput ( this.status );
-			Task.Run ( ( ) => this.SendPlayerRoundCountdownInfo () );
+			Task.Run ( ( ) => {
+				this.spectatingMe = new Dictionary<Client, List<Client>> ();
+				this.SetAllPlayersInCountdown ();
+			} );
 			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 200, 1 );
 		}
 
@@ -70,7 +73,6 @@ namespace Class {
 						character.lifes = this.lifes;
 						this.alivePlayers[i].Add ( player );
 						player.freeze ( false );
-						this.GivePlayerWeapons ( player );
 					}
 				}
 			}
