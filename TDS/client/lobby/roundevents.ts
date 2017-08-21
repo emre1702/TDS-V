@@ -1,5 +1,6 @@
 ﻿/// <reference path="../types-gt-mp/index.d.ts" />
 
+
 API.onServerEventTrigger.connect( function ( eventName, args ) {
 	switch ( eventName ) {
 
@@ -19,12 +20,14 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			startMapLimit();
 			rounddata.isspectator = args[0];
 			if ( !rounddata.isspectator ) {
+				rounddata.infight = true;
 				startMapLimit();
 				createTeamBlips ( args[1] );
 			}
 			break;
 
 		case "onClientRoundEnd": 
+			rounddata.infight = false;
 			emptyMapLimit();
 			removeRoundThings( false );
 			stopCountdown();
@@ -44,11 +47,13 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			break;
 
 		case "onClientPlayerLeaveLobby":
+			rounddata.infight = false;
 			removeRoundThings( true );
 			break;
 
 		case "onClientPlayerDeath":
 			if ( API.getLocalPlayer() == args[0] ) {
+				rounddata.infight = false;
 				stopMapLimitCheck();
 			} else
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
