@@ -94,10 +94,11 @@ namespace Class {
 				player.rotation = spawndata[1];
 			}
 			player.freeze ( true );
-			API.shared.removeAllPlayerWeapons ( player );
+			this.GivePlayerWeapons ( player );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
+			API.shared.removeAllPlayerWeapons ( player );
 			for ( int i = 0; i < this.weapons.Count; i++ ) {
 				API.shared.givePlayerWeapon ( player, this.weapons[i], this.weaponsAmmo[i], false, true );
 			}
@@ -254,7 +255,7 @@ namespace Class {
 			}
 		}
 
-		private void SendPlayerRoundCountdownInfo ( ) {
+		private void SetAllPlayersInCountdown ( ) {
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
 			for ( int i = 0; i < this.players.Count; i++ )
 				for ( int j = 0; j < this.players[i].Count; j++ ) {
