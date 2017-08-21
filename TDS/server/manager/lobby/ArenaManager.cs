@@ -15,8 +15,8 @@ namespace Manager {
 			mapsforarena.AddRange ( Manager.Map.hostageMapNames );
 			lobby.AddMapList ( mapsforarena );
 			lobby.AddMapDescriptions ( Manager.Map.mapDescriptions, false );
-			lobby.AddTeam ( "Gut", (PedHash) ( 2047212121 ), "g" );
-			lobby.AddTeam ( "Böse", (PedHash) ( 275618457 ), "r" );
+			lobby.AddTeam ( "Good", (PedHash) ( 2047212121 ), "g" );
+			lobby.AddTeam ( "Bad", (PedHash) ( 275618457 ), "r" );
 			lobby.deleteWhenEmpty = false;
 			lobby.isOfficial = true;
 
