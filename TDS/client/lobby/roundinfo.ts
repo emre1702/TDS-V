@@ -1,4 +1,4 @@
-﻿/// <reference path="types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-gt-mp/index.d.ts" />
 
 let roundinfo = {
 	amountinteams: [],
