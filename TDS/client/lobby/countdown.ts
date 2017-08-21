@@ -64,7 +64,7 @@ function stopCountdown() {
 		countdowndata.text = null;
 	}
 	if ( countdowndata.timer != null ) {
-		countdowndata.timer.killit();
+		countdowndata.timer.kill();
 		countdowndata.timer = null;
 	}
 }
