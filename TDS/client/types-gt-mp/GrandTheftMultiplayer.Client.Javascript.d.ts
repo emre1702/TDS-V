@@ -1,5 +1,18 @@
 ﻿declare namespace GrandTheftMultiplayer.Client.Javascript {
 
+	const enum NativeReturnType {
+		Int = 0,
+		UInt = 1,
+		Long = 2,
+		ULong = 3,
+		String = 4,
+		Vector3 = 5,
+		Vector2 = 6,
+		Float = 7,
+		Bool = 8,
+		Handle = 9
+	}
+
 	class BooleanEvent {
 		constructor(object: any, method: any);
 		Invoke(value: boolean): void;
@@ -382,6 +395,7 @@
 		getModelDimensions(model: number): GrandTheftMultiplayer.Client.Misc.ModelDimensions;
 		callNative(hash: string, ...args: any[]): void;
 		returnNative(hash: string, returnType: number, ...args: any[]): any;
+		returnNative<T>(hash: string, returnType: NativeReturnType, ...args: any[]): T;
 		getGamePlayer(): number;
 		getLocalPlayer(): GrandTheftMultiplayer.Client.Util.LocalHandle;
 		getLocalPlayerInvincible(): boolean;

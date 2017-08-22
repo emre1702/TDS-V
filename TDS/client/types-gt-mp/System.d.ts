@@ -1,6 +1,6 @@
 ﻿declare namespace System {
 
-	class Array<T> implements System.Collections.IList {
+	class Array<T> {
 		readonly Length: number;
 		readonly LongLength: number;
 		readonly Rank: number;

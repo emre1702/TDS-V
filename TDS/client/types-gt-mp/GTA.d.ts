@@ -1115,13 +1115,11 @@
 		PlayAmbientSpeech(speechName: string, modifier?: GTA.SpeechModifier): void;
 		PlayAmbientSpeech(voiceName: string, speechName: string, modifier?: GTA.SpeechModifier): void;
 		ApplyDamage(damageAmount: number): void;
-		HasBeenDamagedBy(weapon: GTA.WeaponHash): boolean;
 		HasBeenDamagedByAnyWeapon(): boolean;
 		HasBeenDamagedByAnyMeleeWeapon(): boolean;
 		ClearLastWeaponDamage(): void;
 		GetLastDamagedBone(): GTA.Bone;
 		ClearLastBoneDamage(): void;
-		GetBoneIndex(boneID: GTA.Bone): number;
 		GetBoneCoord(boneID: GTA.Bone): GTA.Math.Vector3;
 		GetBoneCoord(boneID: GTA.Bone, offset: GTA.Math.Vector3): GTA.Math.Vector3;
 		GetLastWeaponImpactPosition(): GTA.Math.Vector3;

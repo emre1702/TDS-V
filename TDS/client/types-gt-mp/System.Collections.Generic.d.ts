@@ -5,6 +5,8 @@
 		readonly Count: number;
 		readonly Keys: any;
 		readonly Values: any;
+		readonly IsReadOnly: boolean;
+		readonly IsFixedSize: boolean;
 		Item: any;
 		constructor();
 		constructor(capacity: number);
@@ -13,7 +15,9 @@
 		constructor(dictionary: any);
 		constructor(dictionary: any, comparer: any);
 		Add(key: TKey, value: TValue): void;
+		Add(key: any, value: any): void;
 		Clear(): void;
+		Contains(key: any): boolean;
 		ContainsKey(key: TKey): boolean;
 		ContainsValue(value: TValue): boolean;
 		GetEnumerator(): any;
@@ -30,11 +34,14 @@
 	class List<T> implements System.Collections.IList {
 		Capacity: number;
 		readonly Count: number;
+		readonly IsReadOnly: boolean;
+		readonly IsFixedSize: boolean;
 		Item: any;
 		constructor();
 		constructor(capacity: number);
 		constructor(collection: System.Collections.Generic.IEnumerable<T>);
 		Add(item: T): void;
+		Add(value: any): number;
 		AddRange(collection: System.Collections.Generic.IEnumerable<T>): void;
 		AsReadOnly(): any;
 		BinarySearch(index: number, count: number, item: T, comparer: any): number;
