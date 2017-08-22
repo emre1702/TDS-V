@@ -95,6 +95,9 @@ function onKeyUp(event) {
 		setFocus(false);	
 	}
 }
+
+resourceEval( "API.triggerServerEvent ( 'onPlayerChatLoad' );" );
+
 /*
 window.setInterval(function () {
 	addMessage($("#chat-body").scrollTop() + " / " + $("#chat-body")[0].scrollHeight);
