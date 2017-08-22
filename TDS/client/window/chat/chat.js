@@ -96,7 +96,7 @@ function onKeyUp(event) {
 	}
 }
 
-resourceEval( "API.triggerServerEvent ( 'onPlayerChatLoad' );" );
+resourceCall( "onChatLoad" );
 
 /*
 window.setInterval(function () {

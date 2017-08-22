@@ -93,3 +93,7 @@ function onChatHide( hide ) {
 		API.setCefBrowserHeadless( chatdata.browser, hide );
 	}
 }
+
+function onChatLoad() {
+	API.triggerServerEvent( "onPlayerChatLoad", languagesetting );
+}

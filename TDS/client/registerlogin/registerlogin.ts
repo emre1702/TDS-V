@@ -41,7 +41,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 } );
 
 API.onResourceStart.connect( function () {
-	API.triggerServerEvent( "onPlayerJoin", languagesetting );
+	API.triggerServerEvent( "onPlayerJoin" );
 } );
 
 
