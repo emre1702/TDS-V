@@ -49,7 +49,6 @@ namespace Manager {
 			switch ( eventName ) {
 
 				case "onPlayerJoin":
-					player.GetChar ().language = args[0];
 					API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
 					break;
 
@@ -73,6 +72,7 @@ namespace Manager {
 					break;
 
 				case "onPlayerChatLoad":
+					player.GetChar ().language = args[0];
 					SendWelcomeMessage ( player );
 					break;
 
