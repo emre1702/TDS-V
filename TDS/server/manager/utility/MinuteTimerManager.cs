@@ -7,7 +7,7 @@ namespace Manager {
 	class MinuteTimer {
 
 		public static void MinuteTimerOnStart ( ) {
-			Class.Timer.SetTimer ( () => Task.Run ( ( ) => MinuteTimerFunc() ), 60 * 1000, -1 );
+			Class.Timer.SetTimer ( () => Task.Run ( ( ) => { MinuteTimerFunc (); } ), 60 * 1000, -1 );
 		}
 
 		private static void MinuteTimerFunc ( ) {

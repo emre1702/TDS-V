@@ -56,13 +56,17 @@ namespace Manager {
 					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
 					lastPlayerUID++;
 					playerUIDs[player.socialClubName] = lastPlayerUID;
-					Task.Run ( () => Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ) );
+					Task.Run ( () => {
+						Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
+					} );
 					break;
 
 				case "onPlayerTryLogin":
 					if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
 						string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-						Task.Run ( () => Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw ) );
+						Task.Run ( () => {
+							Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
+						} );
 					} else
 						player.SendLangNotification ( "account_doesnt_exist" );
 					break;

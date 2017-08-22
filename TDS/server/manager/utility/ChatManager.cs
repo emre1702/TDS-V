@@ -18,7 +18,9 @@ namespace Manager {
 
 		private static void OnChatMessage ( Client player, string message, CancelEventArgs e ) {
 			e.Cancel = true;
-			Task.Run ( () => OnChatMessageFunc ( player, message ) );
+			Task.Run ( () => {
+				OnChatMessageFunc ( player, message );
+			} );
 		}
 
 		public static void SendGlobalMessage ( Client player, string message ) {

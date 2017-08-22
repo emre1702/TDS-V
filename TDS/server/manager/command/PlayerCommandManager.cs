@@ -34,7 +34,9 @@ namespace Manager {
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public void TeamChat ( Client player, string text ) {
-			Task.Run ( () => Chat.SendTeamChat ( player, text ) ); 
+			Task.Run ( () => {
+				Chat.SendTeamChat ( player, text );
+			} ); 
 		}
 
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]

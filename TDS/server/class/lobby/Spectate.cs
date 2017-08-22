@@ -44,10 +44,11 @@ namespace Class {
 				givenindex = -1;
 				if ( teamID == 0 )
 					teamID = amountteams - 1;
-				else if ( teamID == amountteams - 1 )
+				else if ( teamID == amountteams )
 					teamID = 0;
 				if ( amounttried == amountteams ) {
 					this.Spectate ( player, player );
+					return;
 				}
 			}
 			int index = givenindex != -1 ? givenindex : this.alivePlayers[teamID].IndexOf ( spectating );

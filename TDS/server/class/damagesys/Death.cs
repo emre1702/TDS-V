@@ -57,7 +57,9 @@ namespace Class {
 		}
 		
 		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			Task.Run ( () => OnPlayerDeathOtherTask ( player, entityKiller, weapon ) );
+			Task.Run ( () => {
+				OnPlayerDeathOtherTask ( player, entityKiller, weapon );
+			} );
 		}
 
 		private static void SpawnAfterDeath ( Client player ) {
