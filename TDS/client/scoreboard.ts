@@ -122,7 +122,7 @@ function createScoreboard() {
                 var tick = new Date().getTime();
                 if ( playerlistevent !== null )
                     playerlistevent.disconnect();
-                if ( tick - lastplayerlisttrigger >= 15000 ) {
+                if ( tick - lastplayerlisttrigger >= 5000 ) {
                     lastplayerlisttrigger = tick;
                     playertablelength = 0;
                     playertable = [];
