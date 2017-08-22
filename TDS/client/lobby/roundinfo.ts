@@ -96,6 +96,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 	switch ( eventName ) {
 
 		case "onClientPlayerAmountInFightSync":
+			log( "onClientPlayerAmountInFightSync start" );
 			roundinfo.amountinteams = [];
 			roundinfo.aliveinteams = [];
 			for ( let i = 0; i < args[0].Count; i++ ) {
@@ -105,26 +106,36 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				else 
 					roundinfo.aliveinteams[i] = args[2][i];
 			}
+			log( "onClientPlayerAmountInFightSync end" );
 			break;
 
 		case "onClientPlayerDeath":
+			log( "onClientPlayerDeath start" );
 			roundinfo.aliveinteams[args[1]]--;
+			log( "onClientPlayerDeath end" );
 			break;
 
 		case "onClientRoundStart":
+			log( "onClientRoundStart start" );
 			roundinfo.starttick = API.getGlobalTime();
 			roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
+			log( "onClientRoundStart end" );
 			break;
 
 		case "onClientPlayerLeaveLobby":
+			log( "onClientPlayerLeaveLobby start" );
 			removeRoundInfo();
+			log( "onClientPlayerLeaveLobby end" );
 			break;
 
 		case "onClientRoundEnd":
+			log( "onClientRoundEnd start" );
 			removeRoundInfo();
+			log( "onClientRoundEnd end" );
 			break;
 
 		case "onClientPlayerJoinLobby":
+			log( "onClientPlayerJoinLobby start" );
 			roundinfo.roundtime = args[2];
 			for ( let i = 1; i < args[4].Count; i++ ) {
 				roundinfo.teamnames[i-1] = args[4][i];
@@ -132,6 +143,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			for ( let i = 3; i < args[5].Count; i++ ) {
 				roundinfo.teamcolors[i-3] = args[5][i];
 			}
+			log( "onClientPlayerJoinLobby end" );
 			break;
 	}
 } );

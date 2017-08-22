@@ -22,18 +22,22 @@ API.onUpdate.connect( function () {
 
 
 function removeMapInfo() {
+	log( "removeMapInfo start" );
 	if ( rounddata.mapinfo != null ) {
 		rounddata.mapinfo.remove();
 		rounddata.mapinfo = null;
 	}
+	log( "removeMapInfo end" );
 }
 
 
 function removeRoundThings( removemapinfo ) {
+	log( "removeRoundThings start" );
 	stopSpectate();
 	stopMapLimitCheck();
 	stopCountdown();
 	if ( removemapinfo ) {
 		removeMapInfo();
 	}
+	log( "removeRoundThings end" );
 }

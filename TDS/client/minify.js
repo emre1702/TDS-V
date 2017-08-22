@@ -2,6 +2,7 @@
 
 let files = [
 	"globals.js",
+	"logging.js",
 	"chat.js",
 	"money.js",
 	"timer.js",

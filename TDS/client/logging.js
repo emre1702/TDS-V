@@ -1,0 +1,11 @@
+"use strict";
+let activatedlogging = false;
+API.onChatCommand.connect(function (message) {
+    if (message == "/activatedalogging")
+        activatedlogging = !activatedlogging;
+});
+function log(message) {
+    if (activatedlogging) {
+        API.sendChatMessage(message.toString());
+    }
+}

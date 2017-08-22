@@ -33,10 +33,13 @@ function countdownFunc(counter) {
     }
 }
 function startCountdown() {
+    log("startCountdown start");
     countdowndata.text = new cText(lobbysettings.countdowntime.toString(), res.Width / 2, res.Height * 0.2, 2.0, 255, 255, 255, 255, 0, 1, true);
     countdownFunc(lobbysettings.countdowntime + 1);
+    log("startCountdown end");
 }
 function endCountdown() {
+    log("endCountdown start");
     if (countdowndata.text == null) {
         countdowndata.text = new cText("GO", res.Width / 2, res.Height * 0.2, 2.0, 255, 255, 255, 255, 0, 1, true);
     }
@@ -47,8 +50,10 @@ function endCountdown() {
     API.startAudio(soundspath + countdownsounds[0], false);
     API.setAudioVolume(0.3);
     countdowndata.timer = new Timer(stopCountdown, 2000, 1);
+    log("endCountdown end");
 }
 function stopCountdown() {
+    log("stopCountdown start");
     if (countdowndata.text != null) {
         countdowndata.text.remove();
         countdowndata.text = null;
@@ -57,4 +62,5 @@ function stopCountdown() {
         countdowndata.timer.kill();
         countdowndata.timer = null;
     }
+    log("stopCountdown end");
 }

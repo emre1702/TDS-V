@@ -17,7 +17,8 @@ function updateTeamBlipPositions() {
 }
 
 
-function createTeamBlips ( playerlist ) {
+function createTeamBlips( playerlist ) {
+	log( "createTeamBlips start" );
 	blipsdata.teamblips = {};
 	let localplayer = API.getLocalPlayer();
 	let dimension = API.getEntityDimension( localplayer );
@@ -29,19 +30,24 @@ function createTeamBlips ( playerlist ) {
 			blipsdata.teamblips[API.getPlayerName( playerlist[i] )] = blip;
 		}
 	}
+	log( "createTeamBlips updateteamblipsevent" );
 	blipsdata.updateteamblipsevent = API.onUpdate.connect( updateTeamBlipPositions );
+	log( "createTeamBlips end" );
 }
 
 
-function removeTeammateFromTeamBlips ( playername ) {
+function removeTeammateFromTeamBlips( playername ) {
+	log( "removeTeammateFromTeamBlips start" );
 	if ( blipsdata.teamblips[playername] != undefined ) {
 		API.deleteEntity( blipsdata.teamblips[playername] );
 		delete blipsdata.teamblips[playername];
 	}
+	log( "removeTeammateFromTeamBlips end" );
 }
 
 
 function stopTeamBlips() {
+	log( "stopTeamBlips start" );
 	if ( blipsdata.updateteamblipsevent != null ) {
 		blipsdata.updateteamblipsevent.disconnect();
 		blipsdata.updateteamblipsevent = null;
@@ -50,4 +56,5 @@ function stopTeamBlips() {
 		API.deleteEntity( blipsdata.teamblips[playername] );
 	}
 	blipsdata.teamblips = {};
+	log( "stopTeamBlips end" );
 }

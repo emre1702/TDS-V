@@ -56,7 +56,8 @@ function checkMapLimit() {
 }
 
 
-function loadMapLimitData ( data ) {
+function loadMapLimitData( data ) {
+	log( "loadMapLimitData start" );
 	maplimitdata.limit = [];
 	for ( let j = 0; j < data.Count; j++ ) {
 		maplimitdata.limit[j] = data[j];
@@ -79,6 +80,7 @@ function loadMapLimitData ( data ) {
 		maplimitdata.minY = minY;
 		maplimitdata.maxY = maxY;
 	}
+	log( "loadMapLimitData end" );
 }
 
 
@@ -92,15 +94,18 @@ function resetMapLimitCheck() {
 
 
 function startMapLimit() {
+	log( "startMapLimit start" );
 	if ( maplimitdata.checktimer != null )
 		maplimitdata.checktimer.kill();
 	if ( maplimitdata.limit[0] != undefined ) {
 		maplimitdata.checktimer = new Timer( checkMapLimit, 1000, -1 );
 	}
+	log( "startMapLimit end" );
 }
 
 
 function stopMapLimitCheck() {
+	log( "stopMapLimitCheck start" );
 	if ( maplimitdata.checktimer != null ) {
 		maplimitdata.checktimer.kill();
 		maplimitdata.checktimer = null;
@@ -110,6 +115,7 @@ function stopMapLimitCheck() {
 		maplimitdata.outsidetext.remove();
 		maplimitdata.outsidetext = null;
 	}
+	log( "stopMapLimitCheck end" );
 }
 
 

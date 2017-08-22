@@ -125,7 +125,7 @@ function createScoreboard() {
                 if ( tick - lastplayerlisttrigger >= 5000 ) {
                     lastplayerlisttrigger = tick;
                     playertablelength = 0;
-                    playertable = [];
+					playertable = [];
                     API.triggerServerEvent( "onClientRequestPlayerListDatas" );
                     playerlistevent = API.onUpdate.connect( drawPlayerList );
                 } else {
