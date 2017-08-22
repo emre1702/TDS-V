@@ -130,6 +130,7 @@
     <TypeScriptCompile Include="client\lobby\maplimit.ts" />
     <TypeScriptCompile Include="client\lobby\round.ts" />
     <TypeScriptCompile Include="client\lobby\spectate.ts" />
+    <TypeScriptCompile Include="client\logging.ts" />
     <TypeScriptCompile Include="client\money.ts" />
     <TypeScriptCompile Include="client\globals.ts" />
     <TypeScriptCompile Include="client\lobby\choice.ts" />
