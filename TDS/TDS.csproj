@@ -151,11 +151,9 @@
     <Content Include="client\pic\arenachoice.png" />
     <Content Include="client\window\registerlogin\registerlogin.html" />
     <Content Include="client\window\registerlogin\registerlogin.js" />
-    <Content Include="server\maps\Pluz._Investment.xml" />
-    <Content Include="server\maps\Pluz._Tower.xml" />
-    <Content Include="server\maps\test.xml">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="server\maps\BattlexChamP\Pluz._Investment.xml" />
+    <Content Include="server\maps\BattlexChamP\Pluz._Tower.xml" />
+    <Content Include="server\maps\Bonus1702\test.xml" />
     <Content Include="TDS.dll" />
     <TypeScriptCompile Include="client\damagesys\damagesys.ts" />
     <TypeScriptCompile Include="client\draw\draw.ts" />
