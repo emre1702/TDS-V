@@ -32,12 +32,14 @@ namespace Class {
 				MainMenu.lobby.players[0].Remove ( player );
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
+			Lobby oldlobby = character.lobby;
 			character.lobby = this;
 			character.spectating = null;
 			player.dimension = this.dimension;
 			if ( this.isPlayable ) {
 				if ( this.gotRounds ) {
-					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, ( this.currentMap.created != false ? this.currentMap.name : "unknown" ), this.teams, this.teamColorsList );
+					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, mapname, this.teams, this.teamColorsList );
 					this.SyncMapVotingOnJoin ( player );
 				} else {
 					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
@@ -49,11 +51,11 @@ namespace Class {
 			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
 				player.stopSpectating ();
-				if ( this == Manager.MainMenu.lobby )
+				if ( this == Manager.MainMenu.lobby && oldlobby != null )
 					player.triggerEvent ( "onClientPlayerLeaveLobby" );
 			}
 
-			if ( this.currentMap.created != false && this.currentMap.mapLimits.Count > 0 ) {
+			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
 				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
 			}
 			if ( spectator ) {
