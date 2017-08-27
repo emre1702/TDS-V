@@ -15,11 +15,13 @@ namespace Manager {
 			// playtime //
 			List<Client> players = API.shared.getAllPlayers ();
 			for ( int i = 0; i < players.Count; i++ ) {
-				Class.Character character = players[i].GetChar ();
-				if ( character.loggedIn ) {
-					character.playtime++;
-					if ( character.playtime % 30 == 0 ) {
-						Account.SavePlayerData ( players[i] );
+				if ( players[i].exists ) {
+					Class.Character character = players[i].GetChar ();
+					if ( character.loggedIn ) {
+						character.playtime++;
+						if ( character.playtime % 30 == 0 ) {
+							Account.SavePlayerData ( players[i] );
+						}
 					}
 				}
 			}
