@@ -39,35 +39,37 @@ namespace Manager {
 				int ownLobbyID = playerCharacter.lobby.id;
 
 				for ( int i=0; i < players.Count; i++ ) {
-					Class.Character character = players[i].GetChar ();
-					int lobbyID = character.lobby.id;
-					if ( lobbyID == ownLobbyID /* he is same lobby */ || ownLobbyID == 0 /* you are Mainmenu */) {
-						nameList.Add ( players[i].name );
-						if ( character.loggedIn ) {
-							playtimeList.Add ( GetHoursOpticByMinutes ( character.playtime ) );
-							killsList.Add ( character.kills.ToString () );
-							assistsList.Add ( character.assists.ToString () );
-							deathsList.Add ( character.deaths.ToString () );
-							if ( ownLobbyID == 0 )
-								teamorlobbyList.Add ( character.lobby.name );
-							else
-								teamorlobbyList.Add ( character.lobby.GetTeamName ( character.team ) );
+					if ( players[i].exists ) {
+						Class.Character character = players[i].GetChar ();
+						int lobbyID = character.lobby.id;
+						if ( lobbyID == ownLobbyID /* he is same lobby */ || ownLobbyID == 0 /* you are Mainmenu */) {
+							nameList.Add ( players[i].name );
+							if ( character.loggedIn ) {
+								playtimeList.Add ( GetHoursOpticByMinutes ( character.playtime ) );
+								killsList.Add ( character.kills.ToString () );
+								assistsList.Add ( character.assists.ToString () );
+								deathsList.Add ( character.deaths.ToString () );
+								if ( ownLobbyID == 0 )
+									teamorlobbyList.Add ( character.lobby.name );
+								else
+									teamorlobbyList.Add ( character.lobby.GetTeamName ( character.team ) );
+							} else {
+								playtimeList.Add ( "-" );
+								killsList.Add ( "-" );
+								assistsList.Add ( "-" );
+								deathsList.Add ( "-" );
+								teamorlobbyList.Add ( player.GetLang ( "connecting" ) );
+							}
 						} else {
-							playtimeList.Add ( "-" );
-							killsList.Add ( "-" );
-							assistsList.Add ( "-" );
-							deathsList.Add ( "-" );
-							teamorlobbyList.Add ( player.GetLang ( "connecting" ) );
-						}
-					} else {
-						if ( doneLobbyIDs.ContainsKey ( lobbyID ) ) {
-							otherLobbyAmounts[doneLobbyIDs[lobbyID]]++;
-						} else {
-							otherLobbyNames.Add ( character.lobby.name );
-							otherLobbyAmounts.Add ( 1 );
-							doneLobbyIDs[lobbyID] = otherLobbyNames.Count - 1;
-						}
+							if ( doneLobbyIDs.ContainsKey ( lobbyID ) ) {
+								otherLobbyAmounts[doneLobbyIDs[lobbyID]]++;
+							} else {
+								otherLobbyNames.Add ( character.lobby.name );
+								otherLobbyAmounts.Add ( 1 );
+								doneLobbyIDs[lobbyID] = otherLobbyNames.Count - 1;
+							}
 
+						}
 					}
 				}
 
