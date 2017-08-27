@@ -28,11 +28,12 @@ namespace Class {
 		}
 
 		public void AddPlayer ( Client player, bool spectator = false ) {
-			if ( this != MainMenu.lobby )
-				MainMenu.lobby.players[0].Remove ( player );
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
 			Lobby oldlobby = character.lobby;
+			if ( oldlobby == Manager.MainMenu.lobby && this != oldlobby ) {
+				oldlobby.players[0].Remove ( player );
+			}
 			character.lobby = this;
 			character.spectating = null;
 			player.dimension = this.dimension;
@@ -50,9 +51,7 @@ namespace Class {
 				}
 			} else {
 				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
-				player.stopSpectating ();
-				if ( this == Manager.MainMenu.lobby && oldlobby != null )
-					player.triggerEvent ( "onClientPlayerLeaveLobby" );
+				player.stopSpectating ();	
 			}
 
 			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
@@ -107,19 +106,29 @@ namespace Class {
 		}
 
 		public void RemovePlayer ( Client player ) {
-			Class.Character character = player.GetChar ();
+			Character character = player.GetChar ();
 			int teamID = character.team;
 			this.players[teamID].Remove ( player );
+			this.RemovePlayerFromAlive ( player, character );
+
+			if ( this != Manager.MainMenu.lobby ) {
+				player.triggerEvent ( "onClientPlayerLeaveLobby" );
+				Manager.MainMenu.Join ( player );
+			}
+		}
+
+		private void RemovePlayerFromAlive ( Client player, Character chara = null ) {
+			Character character = chara ?? player.GetChar ();
+			int teamID = character.team;
 			int oldlifes = character.lifes;
 			character.lifes = 0;
 			if ( oldlifes > 0 ) {
 				int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 				this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-				this.alivePlayers[teamID].Remove ( player );
+				this.alivePlayers[teamID].RemoveAt ( aliveindex );
 				this.damageSys.CheckLastHitter ( player, character );
 				this.CheckLobbyForEnoughAlive ();
 			}
-			Manager.MainMenu.Join ( player );
 		}
 
 		private void RespawnPlayerInRound ( Client player ) {
@@ -160,33 +169,21 @@ namespace Class {
 			if ( character.lifes > 0 ) {
 				character.lifes--;
 				if ( character.lifes == 0 ) {
-					int teamID = character.team;
-					int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
-					this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-					this.alivePlayers[teamID].RemoveAt ( aliveindex );
-					this.CheckLobbyForEnoughAlive ();
+					character.lifes = 1; // workaround, because there is a if to check, if the player was really alive //
+					this.RemovePlayerFromAlive ( player, character );
 				}
 			}
 		}
 
 		private static void OnPlayerDisconnected ( Client player, string reason ) {
-			Character character = player.GetChar ();
-			int teamID = character.team;
-			Lobby lobby = character.lobby;
-			if ( character.lifes > 0 ) {
-				int aliveindex = lobby.alivePlayers[teamID].IndexOf ( player );
-				lobby.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-				lobby.alivePlayers[teamID].RemoveAt ( aliveindex );
-				lobby.damageSys.CheckLastHitter ( player, character );
-				lobby.CheckLobbyForEnoughAlive ();
-			}
-			lobby.players[teamID].Remove ( player );
+			player.GetChar ().lobby.RemovePlayer ( player );
 		}
 
 		private static void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
 				case "joinLobby":
+					API.shared.consoleOutput ( "joinLobby event" );
 					if ( lobbysbyindex.ContainsKey ( args[0] ) ) {
 						Lobby lobby = lobbysbyindex[args[0]];
 						lobby.AddPlayer ( player, args[1] );
@@ -197,6 +194,7 @@ namespace Class {
 					break;
 
 				case "spectateNext":
+					API.shared.consoleOutput ( "spectateNext event" );
 					Class.Character character = player.GetChar ();
 					if ( character.lifes == 0 && ( character.lobby.status == "round" || character.team == 0 && character.lobby.status == "countdown" ) ) {
 						if ( character.team == 0 )
@@ -207,6 +205,7 @@ namespace Class {
 					break;
 
 				case "onPlayerWasTooLongOutsideMap":
+					API.shared.consoleOutput ( "onPlayerWasTooLongOutsideMap event" );
 					Class.Character character2 = player.GetChar ();
 					if ( character2.lobby.isPlayable ) {
 						character2.lobby.KillPlayer ( player, "too_long_outside_map" );
@@ -214,14 +213,17 @@ namespace Class {
 					break;
 
 				case "onMapMenuOpen":
+					API.shared.consoleOutput ( "onMapMenuOpen event" );
 					player.GetChar ().lobby.SendMapsForVoting ( player );
 					break;
 
 				case "onMapVotingRequest":
+					API.shared.consoleOutput ( "onMapVotingRequest event" );
 					player.GetChar ().lobby.AddMapToVoting ( player, args[0] );
 					break;
 
 				case "onVoteForMap":
+					API.shared.consoleOutput ( "onVoteForMap event" );
 					player.GetChar ().lobby.AddVoteToMap ( player, args[0] );
 					break;
 			}
