@@ -11,7 +11,7 @@ namespace Class {
 			Class.Character character = player.GetChar ();
 			Client spectating = character.spectating ?? player;
 			int teamID = character.team;
-			if ( this.alivePlayers.Count == 0 )
+			if ( this.alivePlayers[teamID].Count == 0 )
 				this.SpectateAllTeams ( player, forwards, givenindex, giventeam );
 			else {
 				int index = this.alivePlayers[teamID].IndexOf ( spectating );
@@ -19,12 +19,12 @@ namespace Class {
 					index = 0;
 				if ( forwards ) {
 					index++;
-					if ( index >= this.alivePlayers.Count )
+					if ( index >= this.alivePlayers[teamID].Count )
 						index = 0;
 				} else {
 					index--;
 					if ( index < 0 )
-						index = this.alivePlayers.Count - 1;
+						index = this.alivePlayers[teamID].Count - 1;
 				}
 				this.Spectate ( player, this.alivePlayers[teamID][index] );
 			}
@@ -56,12 +56,12 @@ namespace Class {
 				index = 0;
 			if ( forwards ) {
 				index++;
-				if ( index >= this.alivePlayers.Count )
+				if ( index >= this.alivePlayers[teamID].Count )
 					index = 0;
 			} else {
 				index--;
 				if ( index < 0 )
-					index = this.alivePlayers.Count - 1;
+					index = this.alivePlayers[teamID].Count - 1;
 			}
 			this.Spectate ( player, this.alivePlayers[teamID][index] );
 		}
