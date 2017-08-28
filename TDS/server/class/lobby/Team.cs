@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using GrandTheftMultiplayer.Server.API;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 
@@ -9,17 +9,18 @@ namespace Class {
 		private bool mixTeamsAfterRound = true;
 		public List<string> teams = new List<string> { "Spectator" };
 		private List<PedHash> teamSkins = new List<PedHash> { (PedHash) ( 225514697 ) };
-		public List<string> teamColorStrings = new List<string> { "s" };
+		public ConcurrentDictionary<int,string> teamColorStrings = new ConcurrentDictionary<int,string> { [0] = "s" };
 		private List<int> teamColorsList = new List<int> { 255, 255, 255 };
 		private List<int> teamBlipColors = new List<int> { 0 };
 
 		public void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
+			int index = this.teams.Count;
 			this.teams.Add ( name );
 			this.teamSkins.Add ( hash );
 			this.players.Add ( new List<Client> () );
 			this.alivePlayers.Add ( new List<Client> () );
 			this.spawnCounter[this.teamSkins.Count - 1] = 0;
-			this.teamColorStrings.Add ( colorstring );
+			this.teamColorStrings.TryAdd ( index, colorstring );
 			Color rgb = Manager.Colors.fontColor[colorstring];
 			this.teamBlipColors.Add ( Manager.Colors.blipColorByString[colorstring] );
 			this.teamColorsList.Add ( rgb.red );
