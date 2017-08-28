@@ -82,6 +82,7 @@ function putMapSortedByAmountVotes(mapname, amountvotes) {
 API.onServerEventTrigger.connect(function (eventName, args) {
     switch (eventName) {
         case "onMapMenuOpen":
+            log("onMapMenuOpen mapvoting start");
             mapvotedata.menu.Clear();
             for (let i = 0; i < args[0].Count; i++) {
                 let mapitem = API.createMenuItem(args[0][i], args[1][i]);
@@ -91,17 +92,23 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             mapvotedata.showmenu = true;
             mapvotedata.clickevent = mapvotedata.menu.OnItemSelect.connect(mapMenuItemClick);
             API.showCursor(true);
+            log("onMapMenuOpen mapvoting end");
             break;
         case "onNewMapForVoting":
+            log("onNewMapForVoting mapvoting start");
             let index = mapvotedata.votingmaps.length;
             mapvotedata.votingmaps[index] = args[0];
             mapvotedata.votings[args[0]] = 0;
+            log("onNewMapForVoting mapvoting end");
             break;
         case "onMapRemoveFromVoting":
+            log("onMapRemoveFromVoting mapvoting start");
             mapvotedata.votings[args[0]] = undefined;
             mapvotedata.votingmaps.splice(mapvotedata.votingmaps.indexOf(args[0]), 1);
+            log("onMapRemoveFromVoting mapvoting end");
             break;
         case "onAddVoteToMap":
+            log("onClientPlayerLeaveLobby mapvoting start");
             let indexmap = mapvotedata.votingmaps.indexOf(args[0]);
             mapvotedata.votingmaps.splice(indexmap, 1);
             mapvotedata.votings[args[0]]++;
@@ -112,8 +119,10 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 mapvotedata.votings[args[1]]--;
                 putMapSortedByAmountVotes(args[1], mapvotedata.votings[args[1]]);
             }
+            log("onAddVoteToMap mapvoting end");
             break;
         case "onMapVotingSyncOnJoin":
+            log("onMapVotingSyncOnJoin mapvoting start");
             mapvotedata.votings = {};
             mapvotedata.votingmaps = [];
             mapvotedata.lastselectedmap = "";
@@ -121,17 +130,22 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 mapvotedata.votingmaps[i] = args[0][i];
                 mapvotedata.votings[args[0][i]] = args[1][i];
             }
+            log("onMapVotingSyncOnJoin mapvoting end");
             break;
         case "onClientRoundEnd":
+            log("onClientRoundEnd mapvoting start");
             mapvotedata.votings = {};
             mapvotedata.votingmaps = [];
             mapvotedata.lastselectedmap = "";
+            log("onClientRoundEnd mapvoting end");
             break;
         case "onClientPlayerLeaveLobby":
+            log("onClientPlayerLeaveLobby mapvoting start");
             mapvotedata.votings = {};
             mapvotedata.votingmaps = [];
             mapvotedata.lastselectedmap = "";
             mapMenuClose();
+            log("onClientPlayerLeaveLobby mapvoting end");
             break;
     }
 });

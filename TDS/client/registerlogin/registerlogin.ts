@@ -21,7 +21,7 @@ function getLoginPanelData() {
 
 API.onServerEventTrigger.connect( function ( eventName, args ) {
 	if ( eventName == "startRegisterLogin" ) {
-		var res = API.getScreenResolution();
+		log( "startRegisterLogin registerlogin start" );
 		loginpanel.name = args[0];
 		loginpanel.isregistered = args[1];
 		loginpanel.loginbrowser = API.createCefBrowser( res.Width, res.Height );
@@ -33,10 +33,13 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		API.setHudVisible( false );
 		API.showCursor( true );
 		nothidecursor++;
+		log( "startRegisterLogin registerlogin end" );
 	} else if ( eventName == "registerLoginSuccessful" ) {
+		log( "registerLoginSuccessful registerlogin start" );
 		API.destroyCefBrowser( loginpanel.loginbrowser );
 		API.setCanOpenChat( true );
 		nothidecursor--;
+		log( "registerLoginSuccessful registerlogin end" );
 	}
 } );
 

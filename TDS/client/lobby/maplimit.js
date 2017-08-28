@@ -27,6 +27,7 @@ function pointIsInPoly(p) {
 }
 ;
 function checkMapLimit() {
+    log("checkMapLimit start");
     if (maplimitdata.limit != null) {
         var pos = API.getEntityPosition(API.getLocalPlayer());
         if (!pointIsInPoly(pos)) {
@@ -48,6 +49,7 @@ function checkMapLimit() {
     }
     else
         resetMapLimitCheck();
+    log("checkMapLimit start");
 }
 function loadMapLimitData(data) {
     log("loadMapLimitData start");

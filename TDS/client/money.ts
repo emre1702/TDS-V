@@ -3,7 +3,9 @@
 
 API.onServerEventTrigger.connect( function ( name, args ) {
 	if ( name === "onClientMoneyChange" ) {
+		log( "onClientMoneyChange start" );
 		currentmoney = args[0];
+		log( "onClientMoneyChange end" );
 	}
 } );
 

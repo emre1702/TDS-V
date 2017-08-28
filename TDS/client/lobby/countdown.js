@@ -21,6 +21,7 @@ API.onResourceStart.connect(function () {
     }
 });
 function countdownFunc(counter) {
+    log("countdownFunc start");
     counter--;
     if (counter > 0) {
         countdowndata.text.setText(counter.toString());
@@ -31,6 +32,7 @@ function countdownFunc(counter) {
             var audio = API.startAudio(soundspath + countdownsounds[counter], false);
         }
     }
+    log("countdownFunc end");
 }
 function startCountdown() {
     log("startCountdown start");

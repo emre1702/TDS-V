@@ -37,6 +37,7 @@ class Timer {
         this.killit = true;
     }
     execute(notremove) {
+        log("timer execute start");
         var argslength = this.args.length;
         switch (argslength) {
             case 0:
@@ -82,6 +83,7 @@ class Timer {
             this.executeatms += this.executeafterms;
             Timer.putTimerInSorted(this);
         }
+        log("timer execute end");
     }
     static putTimerInSorted(instance) {
         for (var i = alltimertable.length - 1; i >= 0; i--)

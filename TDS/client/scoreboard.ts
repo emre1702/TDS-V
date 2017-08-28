@@ -176,7 +176,8 @@ function createScoreboard() {
 	}
 	
     API.onServerEventTrigger.connect( function ( eventName, args ) {
-        if ( eventName === "giveRequestedPlayerListDatas" ) {
+		if ( eventName === "giveRequestedPlayerListDatas" ) {
+			log( "giveRequestedPlayerListDatas start" );
 			playertable = [];
 			inmainmenu = false;
 			for ( let i = 0; i < args[1].Count; i++ ) {
@@ -189,8 +190,10 @@ function createScoreboard() {
 				otherlobbytable[i] = { name: args[6][i], amount: args[7][i] };
 				playertablelength++;
 			}
+			log( "giveRequestedPlayerListDatas end" );
 			
 		} else if ( eventName === "giveRequestedPlayerListDatasMainmenu" ) {
+			log( "giveRequestedPlayerListDatasMainmenu start" );
 			playertable = [];
 			inmainmenu = true;
 			for ( let i = 0; i < args[1].Count; i++ ) {
@@ -203,6 +206,7 @@ function createScoreboard() {
 				otherlobbytable[i] = { name: args[6][i], amount: args[7][i] };
 				playertablelength++;
 			}
+			log( "giveRequestedPlayerListDatasMainmenu end" );
 		}
     } );
 }
