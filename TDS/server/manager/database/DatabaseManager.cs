@@ -27,6 +27,7 @@ static class Database {
 
 	/* Exports */
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
 	public static DataTable ExecResult ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
@@ -66,6 +67,7 @@ static class Database {
 		}
 	}
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
 	public static void Exec ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
