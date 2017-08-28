@@ -42,7 +42,7 @@ namespace Manager {
 					if ( players[i].exists ) {
 						Class.Character character = players[i].GetChar ();
 						int lobbyID = character.lobby.id;
-						if ( lobbyID == ownLobbyID /* he is same lobby */ || ownLobbyID == 0 /* you are Mainmenu */) {
+						if ( lobbyID == ownLobbyID /* he is same lobby */ || ownLobbyID == 0 /* you are in mainmenu */) {
 							nameList.Add ( players[i].name );
 							if ( character.loggedIn ) {
 								playtimeList.Add ( GetHoursOpticByMinutes ( character.playtime ) );
@@ -76,7 +76,7 @@ namespace Manager {
 				if ( ownLobbyID != 0 ) 
 					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 				else
-					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
+					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 			}
 		}
 	}
