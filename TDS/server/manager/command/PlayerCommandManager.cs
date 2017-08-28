@@ -9,7 +9,7 @@ namespace Manager {
 	class PlayerCommand : Script {
 
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", AddToHelpmanager = true, Group = "user" )]
-		public void Leave ( Client player ) {
+		public static void Leave ( Client player ) {
 			Class.Lobby lobby = player.GetChar ().lobby;
 			if ( lobby != MainMenu.lobby ) {
 				lobby.RemovePlayer ( player );
@@ -17,7 +17,7 @@ namespace Manager {
 		}
 
 		[Command ( "kill", Alias = "suicide", Description = "Commits suicide", AddToHelpmanager = true, Group = "user" )]
-		public void Kill ( Client player ) {
+		public static void Kill ( Client player ) {
 			Class.Character character = player.GetChar ();
 			Class.Lobby lobby = character.lobby;
 			if ( lobby.isPlayable ) {
@@ -28,19 +28,17 @@ namespace Manager {
 		}
 
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
-		public void GlobalChat ( Client player, string text ) {
-			Chat.SendGlobalMessage ( player, text );
+		public static void GlobalChat ( Client player, string text ) {
+			Task.Run ( ( ) => Chat.SendGlobalMessage ( player, text ) );
 		}
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
-		public void TeamChat ( Client player, string text ) {
-			Task.Run ( () => {
-				Chat.SendTeamChat ( player, text );
-			} ); 
+		public static void TeamChat ( Client player, string text ) {
+			Task.Run ( () => Chat.SendTeamChat ( player, text ) ); 
 		}
 
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]
-		public void SendPlayerPosition ( Client sender ) {
+		public static void SendPlayerPosition ( Client sender ) {
 			if ( API.shared.isPlayerInAnyVehicle ( sender ) ) {
 				NetHandle veh = API.shared.getPlayerVehicle ( sender );
 				Vector3 pos = API.shared.getEntityPosition ( veh );
@@ -56,16 +54,16 @@ namespace Manager {
 		}
 
 		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", AddToHelpmanager = true, Group = "user" )]
-		public void CheckMapName ( Client player, string mapname ) {
+		public static void CheckMapName ( Client player, string mapname ) {
 			if ( Map.mapByName.ContainsKey ( mapname ) ) {
-				API.sendNotificationToPlayer ( player, "map-name already taken" );
+				API.shared.sendNotificationToPlayer ( player, "map-name already taken" );
 			} else {
-				API.sendNotificationToPlayer ( player, "map-name is available" );
+				API.shared.sendNotificationToPlayer ( player, "map-name is available" );
 			}
 		}
 
 		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", AddToHelpmanager = true, Group = "user" )]
-		public void ToggleHitsound ( Client player, int activate = -1 ) {
+		public static void ToggleHitsound ( Client player, int activate = -1 ) {
 			Class.Character character = player.GetChar ();
 			if ( activate == 1 || activate != 0 && !character.hitsoundOn ) {
 				character.hitsoundOn = true;
@@ -77,7 +75,7 @@ namespace Manager {
 		}
 
 		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", AddToHelpmanager = true, Group = "user" )]
-		public void JoinGangLobby ( Client player ) {
+		public static void JoinGangLobby ( Client player ) {
 			if ( player.GetChar().lobby == MainMenu.lobby ) {
 				GangLobby.Join ( player );
 			}
