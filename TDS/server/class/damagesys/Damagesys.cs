@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
@@ -10,23 +11,23 @@ namespace Class {
 			api.onPlayerDeath += OnPlayerDeath;
 		}
 
-		public Damagesys ( bool notusedvariable, Dictionary<int, int> customdamage = null, Dictionary<int, double> customheadmult = null ) {
+		public Damagesys ( bool notusedvariable, ConcurrentDictionary<int, int> customdamage = null, ConcurrentDictionary<int, double> customheadmult = null ) {
 			if ( customdamage == null )
-				this.customDamageDictionary = new Dictionary<int, int> ();
+				this.customDamageDictionary = new ConcurrentDictionary<int, int> ();
 			else
 				this.customDamageDictionary = customdamage;
 			if ( customheadmult == null )
-				this.customHeadMultiplicator = new Dictionary<int, double> ();
+				this.customHeadMultiplicator = new ConcurrentDictionary<int, double> ();
 			else
 				this.customHeadMultiplicator = customheadmult;
 		}
 
 		public void EmptyDamagesysData ( ) {
-			this.allHitters = new Dictionary<Client, Dictionary<Client, int>> ();
-			this.lastHitterDictionary = new Dictionary<Client, Client> ();
-			this.playerDamage = new Dictionary<Client, int> ();
-			this.playerKills = new Dictionary<Client, int> ();
-			this.playerAssists = new Dictionary<Client, int> ();
+			this.allHitters = new ConcurrentDictionary<Client, ConcurrentDictionary<Client, int>> ();
+			this.lastHitterDictionary = new ConcurrentDictionary<Client, Client> ();
+			this.playerDamage = new ConcurrentDictionary<Client, int> ();
+			this.playerKills = new ConcurrentDictionary<Client, int> ();
+			this.playerAssists = new ConcurrentDictionary<Client, int> ();
 		}
 	}
 }

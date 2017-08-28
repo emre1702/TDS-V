@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
@@ -10,9 +11,9 @@ using Manager;
 namespace Class {
 	partial class Damagesys {
 
-		private static Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> ();
-		public Dictionary<Client, int> playerKills = new Dictionary<Client, int> ();
-		public Dictionary<Client, int> playerAssists = new Dictionary<Client, int> ();
+		private static ConcurrentDictionary<Client, Timer> deadTimer = new ConcurrentDictionary<Client, Timer> ();
+		public ConcurrentDictionary<Client, int> playerKills = new ConcurrentDictionary<Client, int> ();
+		public ConcurrentDictionary<Client, int> playerAssists = new ConcurrentDictionary<Client, int> ();
 
 		private static void OnPlayerDeathOtherTask ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
@@ -26,7 +27,7 @@ namespace Class {
 				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
 
 				player.freeze ( true );
-				deadTimer[player] = Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 );
+				deadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 ) );
 				Client killer = API.shared.getPlayerFromHandle ( entityKiller );
 
 				if ( character.lifes > 0 ) {
@@ -38,7 +39,7 @@ namespace Class {
 							killer.GetChar ().kills++;
 						}
 						if ( !dmgsys.playerKills.ContainsKey ( killer ) ) {
-							dmgsys.playerKills[killer] = 0;
+							dmgsys.playerKills.TryAdd ( killer, 0 );
 						}
 						dmgsys.playerKills[killer]++;
 					} else {
@@ -63,7 +64,8 @@ namespace Class {
 		}
 
 		private static void SpawnAfterDeath ( Client player ) {
-			deadTimer.Remove ( player );
+			deadTimer.TryRemove ( player, out Timer timer );
+			timer.Kill ();
 			if ( player.exists ) {
 				API.shared.sendNativeToPlayer ( player, Hash._RESET_LOCALPLAYER_STATE, player );
 				API.shared.sendNativeToPlayer ( player, Hash.NETWORK_REQUEST_CONTROL_OF_ENTITY, player );
@@ -98,7 +100,7 @@ namespace Class {
 
 		public void CheckLastHitter ( Client player, Character character ) {
 			if ( this.lastHitterDictionary.ContainsKey ( player ) ) {
-				Client lasthitter = this.lastHitterDictionary[player];
+				this.lastHitterDictionary.TryRemove ( player, out Client lasthitter );
 				if ( lasthitter.exists ) {
 					Character lasthittercharacter = lasthitter.GetChar ();
 					if ( character.lobby == lasthittercharacter.lobby ) {
@@ -109,7 +111,7 @@ namespace Class {
 					}
 				}
 			}
-			this.lastHitterDictionary.Remove ( player );
+			
 		}
 	}
 }
