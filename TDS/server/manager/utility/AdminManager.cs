@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Manager {
 	static class Admin {
 
-		public static Dictionary<int, string> nameByLevel = new Dictionary<int, string> {
-			{ 0, "User" },
-			{ 1, "Supporter" },
-			{ 2, "Administrator" },
-			{ 3, "Project manager" },
-			{ 4, "Owner" }
+		public static ConcurrentDictionary<int, string> nameByLevel = new ConcurrentDictionary<int, string> {
+			[0] = "User",
+			[1] = "Supporter",
+			[2] = "Administrator",
+			[3] = "Project manager",
+			[4] = "Owner"
 		};
-		public static Dictionary<int, string> levelFontColor = new Dictionary<int, string> {
-			{ 0, "~s~" },
-			{ 1, "~g~" },
-			{ 2, "~o~" },
-			{ 3, "~dr~" },
-			{ 4, "~dr~" }
+		public static ConcurrentDictionary<int, string> levelFontColor = new ConcurrentDictionary<int, string> {
+			[0] = "~s~",
+			[1] = "~g~",
+			[2] = "~o~",
+			[3] = "~dr~",
+			[4] = "~dr~"
 		};
 		public static List<Client>[] adminsOnline = new List<Client>[] { new List<Client>(), new List<Client> (), new List<Client> (), new List<Client>() };
 
