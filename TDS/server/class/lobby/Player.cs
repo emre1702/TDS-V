@@ -27,6 +27,34 @@ namespace Class {
 			player.PlayerAmountInFightSync ( amountinteams, amountaliveinteams );
 		}
 
+		private void AddPlayerAsSpectator ( Client player, Character character ) {
+			this.players[0].Add ( player );
+			character.team = 0;
+			character.lifes = 0;
+		}
+
+		private void AddPlayerAsPlayer ( Client player, Character character ) {
+			int teamID = this.GetTeamIDWithFewestMember ( this.players );
+			this.players[teamID].Add ( player );
+			player.setSkin ( this.teamSkins[teamID] );
+			character.team = teamID;
+			if ( this.isPlayable && this.gotRounds ) {
+				if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
+					this.SetPlayerReadyForRound ( player, teamID );
+				} else {
+					int teamsinround = this.GetTeamAmountStillInRound ();
+					API.shared.consoleOutput ( teamsinround + " teams still in round" );
+					if ( teamsinround < 2 ) {
+						this.EndRoundEarlier ();
+						API.shared.consoleOutput ( "End round earlier because of joined player" );
+						return;
+					} else {
+						this.RespawnPlayerInSpectateMode ( player );
+					}
+				}
+			}
+		}
+
 		public void AddPlayer ( Client player, bool spectator = false ) {
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
@@ -57,31 +85,13 @@ namespace Class {
 			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
 				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
 			}
+
 			if ( spectator ) {
-				this.players[0].Add ( player );
-				character.team = 0;
-				character.lifes = 0;
+				this.AddPlayerAsSpectator ( player, character );
 			} else {
-				int teamID = this.GetTeamIDWithFewestMember ( this.players );
-				this.players[teamID].Add ( player );
-				player.setSkin ( this.teamSkins[teamID] );
-				character.team = teamID;
-				if ( this.isPlayable && this.gotRounds ) {
-					if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
-						this.SetPlayerReadyForRound ( player, teamID );
-					} else {
-						int teamsinround = this.GetTeamAmountStillInRound ();
-						API.shared.consoleOutput ( teamsinround + " teams still in round" );
-						if ( teamsinround < 2 ) {
-							this.EndRoundEarlier ();
-							API.shared.consoleOutput ( "End round earlier because of joined player" );
-							return;
-						} else {
-							this.RespawnPlayerInSpectateMode ( player );
-						}	
-					}
-				}
+				this.AddPlayerAsPlayer ( player, character );
 			}
+
 			this.SendPlayerAmountInFightInfo ( player );
 		}
 
