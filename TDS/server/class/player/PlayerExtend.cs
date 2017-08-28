@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.Elements;
 
 static class PlayerExtend {
-	private static Dictionary<Client, Class.Character> characterdictionary = new Dictionary<Client, Class.Character> ();
+	private static ConcurrentDictionary<Client, Class.Character> characterdictionary = new ConcurrentDictionary<Client, Class.Character> ();
 
 	public static Class.Character GetChar ( this Client player ) {
 		if ( characterdictionary.ContainsKey ( player ) ) {
@@ -10,7 +11,7 @@ static class PlayerExtend {
 			return character;
 		} else {
 			Class.Character character = new Class.Character ( false );
-			characterdictionary[player] = character;
+			characterdictionary.TryAdd ( player, character );
 			return character;
 		}
 	}
