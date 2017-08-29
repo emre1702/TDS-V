@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 namespace Manager {
 	static class Register {
 
-		public static void RegisterPlayer ( Client player, int uid, string password, string email ) {
-			Dictionary<string, string> parameters = new Dictionary<string, string> {
-				{ "@UID", uid.ToString() },
-				{ "@name", player.socialClubName },
-				{ "@password", Utility.ConvertToSHA512 ( password ) },
-				{ "@email", email },
-				{ "@registerdate", Utility.GetTimestamp() }
-			};
-			Dictionary<string, string> defaultparams = new Dictionary<string, string> { { "@UID", uid.ToString () } };
-			Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters );
-			Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
-			Account.AddAccount ( player.socialClubName, uid );
+		public static async void RegisterPlayer ( Client player, int uid, string password, string email ) {
+			await Task.Run ( ( ) => {
+				Dictionary<string, string> parameters = new Dictionary<string, string> {
+					{ "@UID", uid.ToString() },
+					{ "@name", player.socialClubName },
+					{ "@password", Utility.ConvertToSHA512 ( password ) },
+					{ "@email", email },
+					{ "@registerdate", Utility.GetTimestamp() }
+				};
+				Dictionary<string, string> defaultparams = new Dictionary<string, string> { { "@UID", uid.ToString () } };
+				Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters );
+				Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
+				Account.AddAccount ( player.socialClubName, uid );
+			} );
 			Login.LoginPlayer ( player, uid );
 		}
 	}
