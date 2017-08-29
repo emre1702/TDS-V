@@ -58,9 +58,9 @@ function createScoreboard() {
         var titleslength = playerlisttitles.length;
         for (let i = 0; i < titleslength - 1; i++) {
             if (playerlisttitles[i] == "team" && inmainmenu)
-                API.drawText(language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, false, false, 0);
+                API.drawText(language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, true, true, 0);
             else
-                API.drawText(language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, false, false, 0);
+                API.drawText(language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, true, true, 0);
             lastwidthstitle += v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth;
         }
         API.drawRectangle(startX, startY, v.completewidth, len * v.columnheight, v.rectanglecolor[0], v.rectanglecolor[1], v.rectanglecolor[2], v.rectanglecolor[3]);
@@ -70,12 +70,12 @@ function createScoreboard() {
                 var lastwidths = 0;
                 for (let j = 0; j < titleslength - 1; j++) {
                     var index = playerlisttitlesindex[playerlisttitles[j]];
-                    API.drawText(playertable[i][index], startX + lastwidths + v.columnwidthpercent[index] * v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, false, false, 0);
+                    API.drawText(playertable[i][index], startX + lastwidths + v.columnwidthpercent[index] * v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0);
                     lastwidths += v.columnwidthpercent[index] * v.completewidth;
                 }
             }
             else {
-                API.drawText(otherlobbytable[notshowcounter].name + " (" + otherlobbytable[notshowcounter].amount + ")", startX + v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, false, false, 0);
+                API.drawText(otherlobbytable[notshowcounter].name + " (" + otherlobbytable[notshowcounter].amount + ")", startX + v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0);
                 notshowcounter++;
             }
         }

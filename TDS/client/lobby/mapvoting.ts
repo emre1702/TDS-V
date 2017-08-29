@@ -61,7 +61,7 @@ API.onUpdate.connect( function () {
 		let counter = 0;
 		for ( let i = mapvotinglength - 1; i >= 0; i-- ) {
 			let selectedthis = mapvotedata.lastselectedmap == mapvotedata.votingmaps[i];
-			API.drawText( "F" + ( i + 1 ) + " - " + mapvotedata.votingmaps[i] + " [" + mapvotedata.votings[mapvotedata.votingmaps[i]] + "]", res.Width - 5, res.Height * 0.8 - ( res.Height * 0.04 * counter ), 0.6, selectedthis ? 0 : 255, selectedthis ? 150 : 255, selectedthis ? 0 : 255, 255, 0, 2, true, false, 0 )
+			API.drawText( "F" + ( i + 1 ) + " - " + mapvotedata.votingmaps[i] + " [" + mapvotedata.votings[mapvotedata.votingmaps[i]] + "]", res.Width - 5, res.Height * 0.8 - ( res.Height * 0.04 * counter ), 0.6, selectedthis ? 0 : 255, selectedthis ? 150 : 255, selectedthis ? 0 : 255, 255, 0, 2, true, true, 0 )
 			counter++;
 		}
 	}
