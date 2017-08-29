@@ -119,7 +119,8 @@ namespace Class {
 			Character character = player.GetChar ();
 			int teamID = character.team;
 			this.players[teamID].Remove ( player );
-			this.RemovePlayerFromAlive ( player, character );
+			if ( character.lifes > 0 )
+				this.RemovePlayerFromAlive ( player, character );
 
 			if ( this != Manager.MainMenu.lobby ) {
 				player.triggerEvent ( "onClientPlayerLeaveLobby" );
@@ -130,15 +131,12 @@ namespace Class {
 		private void RemovePlayerFromAlive ( Client player, Character chara = null ) {
 			Character character = chara ?? player.GetChar ();
 			int teamID = character.team;
-			int oldlifes = character.lifes;
 			character.lifes = 0;
-			if ( oldlifes > 0 ) {
-				int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
-				this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-				this.alivePlayers[teamID].RemoveAt ( aliveindex );
-				this.damageSys.CheckLastHitter ( player, character );
-				this.CheckLobbyForEnoughAlive ();
-			}
+			int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
+			this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
+			this.alivePlayers[teamID].RemoveAt ( aliveindex );
+			this.damageSys.CheckLastHitter ( player, character );
+			this.CheckLobbyForEnoughAlive ();
 		}
 
 		private void RespawnPlayerInRound ( Client player ) {
@@ -178,8 +176,8 @@ namespace Class {
 		public void OnPlayerDeath ( Client player, NetHandle killer, int weapon, Character character ) {
 			if ( character.lifes > 0 ) {
 				character.lifes--;
+				character.lobby.DeathInfoSync ( player, character.team, API.shared.getEntityFromHandle<Client> ( killer ), weapon );
 				if ( character.lifes == 0 ) {
-					character.lifes = 1; // workaround, because there is a if to check, if the player was really alive //
 					this.RemovePlayerFromAlive ( player, character );
 				}
 			}
