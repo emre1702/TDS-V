@@ -14,7 +14,7 @@ namespace Class {
 		public int armor = 100;
 		public int health = 100;
 		private int lifes = 1;
-		private List<List<Client>> players = new List<List<Client>> { new List<Client> () };
+		public List<List<Client>> players = new List<List<Client>> { new List<Client> () };
 		private List<List<Client>> alivePlayers = new List<List<Client>> { new List<Client> () };
 
 		private void SendPlayerAmountInFightInfo ( Client player ) {
