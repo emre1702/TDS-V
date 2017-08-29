@@ -64,9 +64,7 @@ namespace Manager {
 				case "onPlayerTryLogin":
 					if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
 						string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-						Task.Run ( () => {
-							Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
-						} );
+						Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
 					} else
 						player.SendLangNotification ( "account_doesnt_exist" );
 					break;
