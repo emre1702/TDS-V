@@ -71,7 +71,7 @@
     <Compile Include="server\class\lobby\MapVoting.cs" />
     <Compile Include="server\class\lobby\Player.cs" />
     <Compile Include="server\class\lobby\Round.cs" />
-    <Compile Include="server\manager\fightinfo\DeathManager.cs" />
+    <Compile Include="server\manager\fightinfo\DeathInfoManager.cs" />
     <Compile Include="server\class\lobby\SendToPlayer.cs" />
     <Compile Include="server\class\lobby\Spectate.cs" />
     <Compile Include="server\class\lobby\Team.cs" />
