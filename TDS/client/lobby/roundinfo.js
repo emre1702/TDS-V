@@ -8,6 +8,7 @@ let roundinfo = {
     teamnames: [],
     teamcolors: [],
     drawevent: null,
+    killinfo: [],
     drawdata: {
         time: {
             text: {
@@ -44,6 +45,9 @@ let roundinfo = {
                 height: res.Height * 0.06,
                 a: 180
             }
+        },
+        kills: {
+            showtick: 5000
         }
     }
 };
@@ -73,6 +77,19 @@ function drawRoundInfo() {
         API.drawRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a);
     }
 }
+API.onUpdate.connect(function () {
+    if (roundinfo.killinfo[0] != undefined) {
+        let tick = API.getGlobalTime();
+        for (let i = roundinfo.killinfo.length - 1; i >= 0; i++) {
+            if (tick - roundinfo.starttick >= roundinfo.drawdata.kills.showtick) {
+            }
+            else {
+                roundinfo.killinfo.splice(0, i + 1);
+                break;
+            }
+        }
+    }
+});
 function removeRoundInfo() {
     roundinfo.roundtimeleft = null;
     roundinfo.amountinteams = [];
@@ -100,6 +117,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         case "onClientPlayerDeath":
             log("onClientPlayerDeath start");
             roundinfo.aliveinteams[args[1]]--;
+            roundinfo.killinfo.push({ "player": API.getPlayerName(args[1]), "killer": API.getPlayerName(args[2]), "weapon": args[3], "starttick": API.getGlobalTime() });
             log("onClientPlayerDeath end");
             break;
         case "onClientRoundStart":

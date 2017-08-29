@@ -9,6 +9,7 @@ let roundinfo = {
 	teamnames: [],
 	teamcolors: [],
 	drawevent: null,
+	killinfo: [],
 	drawdata: {
 		time: {
 			text: {
@@ -45,6 +46,9 @@ let roundinfo = {
 				height: res.Height * 0.06,
 				a: 180
 			}
+		},
+		kills: {
+			showtick: 5000
 		}
 			
 	}
@@ -82,6 +86,23 @@ function drawRoundInfo() {
 	}
 }
 
+
+API.onUpdate.connect( function () {
+	// Kill-Info //
+	if ( roundinfo.killinfo[0] != undefined ) {
+		let tick = API.getGlobalTime();
+		for ( let i = roundinfo.killinfo.length - 1; i >= 0; i++ ) {
+			if ( tick - roundinfo.starttick >= roundinfo.drawdata.kills.showtick ) {
+				// TO DO //
+			} else {
+				roundinfo.killinfo.splice( 0, i + 1 );
+				break;
+			}
+		}
+	}
+} );
+
+
 function removeRoundInfo() {
 	roundinfo.roundtimeleft = null;
 	roundinfo.amountinteams = [];
@@ -112,6 +133,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientPlayerDeath":
 			log( "onClientPlayerDeath start" );
 			roundinfo.aliveinteams[args[1]]--;
+			roundinfo.killinfo.push( { "player": API.getPlayerName( args[1] ), "killer": API.getPlayerName( args[2] ), "weapon": args[3], "starttick": API.getGlobalTime() } );
 			log( "onClientPlayerDeath end" );
 			break;
 
@@ -125,6 +147,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientPlayerLeaveLobby":
 			log( "onClientPlayerLeaveLobby start" );
 			removeRoundInfo();
+			roundinfo.killinfo[];
 			log( "onClientPlayerLeaveLobby end" );
 			break;
 
