@@ -45,10 +45,9 @@ namespace Class {
 		private void StartRoundCountdown ( ) {
 			this.status = "countdown";
 			API.shared.consoleOutput ( this.status );
-			Task.Run ( ( ) => {
-				this.spectatingMe = new Dictionary<Client, List<Client>> ();
-				this.SetAllPlayersInCountdown ();
-			} );
+			this.spectatingMe = new Dictionary<Client, List<Client>> ();
+			this.SetAllPlayersInCountdown ();
+
 			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 200, 1 );
 		}
 

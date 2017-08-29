@@ -29,12 +29,12 @@ namespace Manager {
 
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public static void GlobalChat ( Client player, string text ) {
-			Task.Run ( ( ) => Chat.SendGlobalMessage ( player, text ) );
+			Chat.SendGlobalMessage ( player, text );
 		}
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public static void TeamChat ( Client player, string text ) {
-			Task.Run ( () => Chat.SendTeamChat ( player, text ) ); 
+			Chat.SendTeamChat ( player, text ); 
 		}
 
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]
