@@ -14,8 +14,8 @@ namespace Class {
 		private static ConcurrentDictionary<Client, Timer> deadTimer = new ConcurrentDictionary<Client, Timer> ();
 		public ConcurrentDictionary<Client, int> playerKills = new ConcurrentDictionary<Client, int> ();
 		public ConcurrentDictionary<Client, int> playerAssists = new ConcurrentDictionary<Client, int> ();
-
-		private static void OnPlayerDeathOtherTask ( Client player, NetHandle entityKiller, int weapon ) {
+		
+		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 				Damagesys dmgsys = character.lobby.damageSys;
@@ -51,15 +51,9 @@ namespace Class {
 						// Assist //
 						character.lobby.damageSys.CheckForAssist ( player, character, killer );
 					}
-						
+
 				}
 			}
-		}
-		
-		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			Task.Run ( () => {
-				OnPlayerDeathOtherTask ( player, entityKiller, weapon );
-			} );
 		}
 
 		private static void SpawnAfterDeath ( Client player ) {
