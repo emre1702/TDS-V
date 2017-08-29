@@ -7,6 +7,7 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Server.Constant;
 using System.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace Manager {
 	class AdminCommand : Script {
@@ -163,14 +164,14 @@ namespace Manager {
 		[Command ( "adminsay", AddToHelpmanager = true, Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
 		public static void AdminSay ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
-				Chat.SendAdminMessage ( player, text );
+				Task.Run ( ( ) => Chat.SendAdminMessage ( player, text ) );
 			}
 		}
 
 		[Command ( "adminchat", AddToHelpmanager = true, Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
 		public static void AdminChat ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
-				Chat.SendAdminChat ( player, text );
+				Task.Run ( ( ) => Chat.SendAdminChat ( player, text ) );
 			}
 		}
 
