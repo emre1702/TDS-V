@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Data;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace Manager {
 
 	class Account {
 		private static Random rnd = new Random ();
 
-		public static Dictionary<string, int> playerUIDs = new Dictionary<string, int> ();
+		public static ConcurrentDictionary<string, int> playerUIDs = new ConcurrentDictionary<string, int> ();
 		private static Dictionary<string, bool> socialClubNameBanDict = new Dictionary<string, bool> ();
 		private static Dictionary<string, bool> addressBanDict = new Dictionary<string, bool> ();
 		private static int lastPlayerUID = 0;
@@ -56,9 +57,7 @@ namespace Manager {
 					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
 					lastPlayerUID++;
 					playerUIDs[player.socialClubName] = lastPlayerUID;
-					Task.Run ( () => {
-						Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
-					} );
+					Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
 					break;
 
 				case "onPlayerTryLogin":
