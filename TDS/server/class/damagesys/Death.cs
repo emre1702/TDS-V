@@ -19,7 +19,6 @@ namespace Class {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 				Damagesys dmgsys = character.lobby.damageSys;
-				character.lobby.DeathInfoSync ( player, character.team ); 
 
 				API.shared.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
 				API.shared.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
