@@ -19,26 +19,32 @@ namespace Manager {
 			[3] = "~dr~",
 			[4] = "~dr~"
 		};
-		public static List<Client>[] adminsOnline = new List<Client>[] { new List<Client>(), new List<Client> (), new List<Client> (), new List<Client>() };
+		public static ConcurrentDictionary<int,ConcurrentBag<Client>> adminsOnline = new ConcurrentDictionary<int, ConcurrentBag<Client>> {
+			[1] = new ConcurrentBag<Client>(),
+			[2] = new ConcurrentBag<Client>(),
+			[3] = new ConcurrentBag<Client>(),
+			[4] = new ConcurrentBag<Client>()
+		};
+		private static int adminMaxLvl = 4;
 
 		public static void SetOnline ( Client player, int adminlvl = 0 ) {
 			int alvl = adminlvl == 0 ? player.GetChar ().adminLvl : adminlvl;
-			if ( adminsOnline.Length >= alvl ) {
-				adminsOnline[alvl - 1].Add ( player );
+			if ( adminMaxLvl >= alvl ) {
+				adminsOnline[alvl].Add ( player );
 			}
 		}
 
 		public static void SetOffline ( Client player, int adminlvl = 0 ) {
 			int alvl = adminlvl == 0 ? player.GetChar ().adminLvl : adminlvl;
-			if ( adminsOnline.Length >= alvl ) {
-				adminsOnline[alvl - 1].Remove ( player );
+			if ( adminMaxLvl >= alvl ) {
+				adminsOnline[alvl].TryTake ( out player );
 			}
 		}
 
 		public static void SendChatMessageToAdmins ( string message ) {
-			for ( int i = 0; i < adminsOnline.Length; i++ ) {
+			for ( int i = 1; i <= adminMaxLvl; i++ ) {
 				for ( int j = 0; j < adminsOnline[i].Count; j++ ) {
-					Client player = adminsOnline[i][j];
+					adminsOnline[i].TryPeek ( out Client player );
 					if ( player.exists )
 						player.sendChatMessage ( message );
 				}
