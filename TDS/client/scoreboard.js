@@ -186,10 +186,6 @@ function createScoreboard() {
             playertablelength = playertable.length;
             playertable.sort(sortArrayMainmenu);
             otherlobbytable = [];
-            for (let i = 0; i < args[6].Count; i++) {
-                otherlobbytable[i] = { name: args[6][i], amount: args[7][i] };
-                playertablelength++;
-            }
             log("giveRequestedPlayerListDatasMainmenu end");
         }
     });

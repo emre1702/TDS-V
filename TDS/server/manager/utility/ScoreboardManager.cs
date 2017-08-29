@@ -44,7 +44,9 @@ namespace Manager {
 						int lobbyID = character.lobby.id;
 						if ( lobbyID == ownLobbyID /* he is same lobby */ || ownLobbyID == 0 /* you are in mainmenu */) {
 							nameList.Add ( players[i].name );
+
 							if ( character.loggedIn ) {
+								// character stats //
 								playtimeList.Add ( GetHoursOpticByMinutes ( character.playtime ) );
 								killsList.Add ( character.kills.ToString () );
 								assistsList.Add ( character.assists.ToString () );
@@ -54,6 +56,7 @@ namespace Manager {
 								else
 									teamorlobbyList.Add ( character.lobby.GetTeamName ( character.team ) );
 							} else {
+								// default status //
 								playtimeList.Add ( "-" );
 								killsList.Add ( "-" );
 								assistsList.Add ( "-" );
@@ -76,7 +79,7 @@ namespace Manager {
 				if ( ownLobbyID != 0 ) 
 					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 				else
-					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
+					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
 			}
 		}
 	}
