@@ -48,7 +48,12 @@ let roundinfo = {
 			}
 		},
 		kills: {
-			showtick: 5000
+			showtick: 5000,
+			fadeaftertick: 3000,
+			xpos: res.Width * 0.99,
+			ypos: res.Height * 0.45,
+			scale: 0.3,
+			height: res.Height * 0.04
 		}
 			
 	}
@@ -66,7 +71,7 @@ function drawRoundInfo() {
 	let seconds = fullseconds % 60;
 	let tdata = roundinfo.drawdata.time.text;
 	let trdata = roundinfo.drawdata.time.rectangle;
-	API.drawText( minutes + ":" + ( seconds >= 10 ? seconds : "0" + seconds ), trdata.xpos + trdata.width / 2, tdata.ypos, tdata.scale, tdata.r, tdata.g, tdata.b, tdata.a, 0, 1, true, false, 0 );
+	API.drawText( minutes + ":" + ( seconds >= 10 ? seconds : "0" + seconds ), trdata.xpos + trdata.width / 2, tdata.ypos, tdata.scale, tdata.r, tdata.g, tdata.b, tdata.a, 0, 1, true, true, 0 );
 	API.drawRectangle( trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.r, trdata.g, trdata.b, trdata.a );
 
 	// Teams //
@@ -89,11 +94,16 @@ function drawRoundInfo() {
 
 API.onUpdate.connect( function () {
 	// Kill-Info //
-	if ( roundinfo.killinfo[0] != undefined ) {
+	let length = roundinfo.killinfo.length;
+	if ( length > 0 ) {
 		let tick = API.getGlobalTime();
-		for ( let i = roundinfo.killinfo.length - 1; i >= 0; i++ ) {
-			if ( tick - roundinfo.starttick >= roundinfo.drawdata.kills.showtick ) {
-				// TO DO //
+		for ( let i = length - 1; i >= 0; i++ ) {
+			let tickwasted = tick - roundinfo.starttick;
+			let data = roundinfo.drawdata.kills;
+			if ( tickwasted >= data.showtick ) {
+				let alpha = tickwasted <= data.fadeaftertick ? 255 : ( tickwasted - data.fadeaftertick ) / ( data.showtick - tickwasted ) * 255;
+				let counter = length - i - 1;
+				API.drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, data.scale, 255, 255, 255, alpha, 0, 2, true, true, 0 );
 			} else {
 				roundinfo.killinfo.splice( 0, i + 1 );
 				break;
@@ -133,7 +143,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientPlayerDeath":
 			log( "onClientPlayerDeath start" );
 			roundinfo.aliveinteams[args[1]]--;
-			roundinfo.killinfo.push( { "player": API.getPlayerName( args[1] ), "killer": API.getPlayerName( args[2] ), "weapon": args[3], "starttick": API.getGlobalTime() } );
+			roundinfo.killinfo.push( { "killstr": args[2], "starttick": API.getGlobalTime() } );
 			log( "onClientPlayerDeath end" );
 			break;
 
