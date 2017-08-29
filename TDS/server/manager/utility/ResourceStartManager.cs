@@ -21,7 +21,7 @@ namespace Manager {
 
 			await Task.Run ( () => Manager.Map.MapOnStart () );
 			Arena.Create ();
-			GangLobby.Create ();
+			GangLobby.Create (); 
 		}
 	}
 }
