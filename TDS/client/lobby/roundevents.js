@@ -8,7 +8,12 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             break;
         case "onClientCountdownStart":
             log("onClientCountdownStart start");
-            startCountdown();
+            if (args[1] == undefined)
+                startCountdown();
+            else {
+                let seconds = Math.ceil(args[1] / 1000);
+                startCountdownAfterwards(lobbysettings.countdowntime - seconds * 1000 + 1);
+            }
             if (rounddata.isspectator)
                 startSpectate();
             rounddata.mapinfo.setText(args[0]);
@@ -17,7 +22,6 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         case "onClientRoundStart":
             log("onClientRoundStart start");
             endCountdown();
-            startMapLimit();
             rounddata.isspectator = args[0];
             if (!rounddata.isspectator) {
                 rounddata.infight = true;

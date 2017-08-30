@@ -48,8 +48,8 @@ let roundinfo = {
 			}
 		},
 		kills: {
-			showtick: 5000,
-			fadeaftertick: 3000,
+			showtick: 15000,
+			fadeaftertick: 11000,
 			xpos: res.Width * 0.99,
 			ypos: res.Height * 0.45,
 			scale: 0.3,
@@ -97,11 +97,11 @@ API.onUpdate.connect( function () {
 	let length = roundinfo.killinfo.length;
 	if ( length > 0 ) {
 		let tick = API.getGlobalTime();
-		for ( let i = length - 1; i >= 0; i++ ) {
-			let tickwasted = tick - roundinfo.starttick;
+		for ( let i = length - 1; i >= 0; i-- ) {
+			let tickwasted = tick - roundinfo.killinfo[i].starttick;
 			let data = roundinfo.drawdata.kills;
-			if ( tickwasted >= data.showtick ) {
-				let alpha = tickwasted <= data.fadeaftertick ? 255 : ( tickwasted - data.fadeaftertick ) / ( data.showtick - tickwasted ) * 255;
+			if ( tickwasted < data.showtick ) {
+				let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil (( data.showtick - tickwasted ) / ( data.showtick - data.fadeaftertick ) * 255 );
 				let counter = length - i - 1;
 				API.drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, data.scale, 255, 255, 255, alpha, 0, 2, true, true, 0 );
 			} else {
@@ -150,6 +150,8 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientRoundStart":
 			log( "onClientRoundStart start" );
 			roundinfo.starttick = API.getGlobalTime();
+			if ( args[3] != undefined )
+				roundinfo.starttick -= args[3];
 			roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
 			log( "onClientRoundStart end" );
 			break;
@@ -157,7 +159,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientPlayerLeaveLobby":
 			log( "onClientPlayerLeaveLobby start" );
 			removeRoundInfo();
-			roundinfo.killinfo[];
+			roundinfo.killinfo = [];
 			log( "onClientPlayerLeaveLobby end" );
 			break;
 

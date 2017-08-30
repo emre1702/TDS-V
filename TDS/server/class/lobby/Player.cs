@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
@@ -55,6 +56,27 @@ namespace Class {
 			}
 		}
 
+		private void SendPlayerRoundInfoOnJoin ( Client player ) {
+			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
+				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
+			}
+			if ( this.isPlayable ) {
+				this.SendPlayerAmountInFightInfo ( player );
+				if ( this.gotRounds ) {
+					this.SyncMapVotingOnJoin ( player );
+				}
+			}
+
+			int tick = Environment.TickCount;
+			if ( this.status == "countdown" ) {
+				int tickremaining = this.countdownTime * 1000 - ( tick - this.startTick );
+				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, tickremaining );
+				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name, tick - this.startTick );
+			} else if ( this.status == "round" ) {
+				player.triggerEvent ( "onClientRoundStart", true, this.players[0], tick - this.startTick );
+			}
+		}
+
 		public void AddPlayer ( Client player, bool spectator = false ) {
 			player.freeze ( true );
 			Class.Character character = player.GetChar ();
@@ -69,7 +91,6 @@ namespace Class {
 				if ( this.gotRounds ) {
 					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
 					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, mapname, this.teams, this.teamColorsList );
-					this.SyncMapVotingOnJoin ( player );
 				} else {
 					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
 					player.position = this.spawnpoint;
@@ -82,17 +103,13 @@ namespace Class {
 				player.stopSpectating ();	
 			}
 
-			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
-				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
-			}
-
 			if ( spectator ) {
 				this.AddPlayerAsSpectator ( player, character );
 			} else {
 				this.AddPlayerAsPlayer ( player, character );
 			}
 
-			this.SendPlayerAmountInFightInfo ( player );
+			this.SendPlayerRoundInfoOnJoin ( player );
 		}
 
 		private void SetPlayerReadyForRound ( Client player, int teamID ) {

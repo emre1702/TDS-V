@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
@@ -12,7 +13,8 @@ namespace Class {
 		private int countdownTime = 5;
 		private int roundTime = 4 * 60;
 		public int roundEndTime = 8;
-		private string status;
+		private string status = "loading";
+		private int startTick = 0;
 
 		public void Start ( ) {
 			if ( this.isPlayable ) {
@@ -47,13 +49,15 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
 			this.SetAllPlayersInCountdown ();
+			this.startTick = Environment.TickCount;
 
-			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 200, 1 );
+			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 300, 1 );
 		}
 
 		private void StartRound ( ) {
 			this.status = "round";
 			API.shared.consoleOutput ( this.status );
+			this.startTick = Environment.TickCount;
 			if ( this.gotRounds )
 				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime * 1000, 1 );
 			this.alivePlayers = new List<List<Client>> ();

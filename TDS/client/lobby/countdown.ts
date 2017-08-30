@@ -49,6 +49,14 @@ function startCountdown() {
 }
 
 
+function startCountdownAfterwards ( timeremaining ) {
+	log( "startCountdownAfterwards start" );
+	countdowndata.text = new cText( timeremaining.toString(), res.Width / 2, res.Height * 0.2, 2.0, 255, 255, 255, 255, 0, 1, true );
+	countdownFunc( timeremaining + 1 );
+	log( "startCountdownAfterwards end" );
+}
+
+
 function endCountdown() {
 	log( "endCountdown start" );
 	if ( countdowndata.text == null ) {
