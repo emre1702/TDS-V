@@ -132,12 +132,12 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             log("onClientPlayerDeath end");
             break;
         case "onClientRoundStart":
-            log("onClientRoundStart start");
+            log("onClientRoundStart roundinfo start");
             roundinfo.starttick = API.getGlobalTime();
-            if (args[3] != undefined)
-                roundinfo.starttick -= args[3];
+            if (2 in args)
+                roundinfo.starttick -= args[2];
             roundinfo.drawevent = API.onUpdate.connect(drawRoundInfo);
-            log("onClientRoundStart end");
+            log("onClientRoundStart roundinfo end");
             break;
         case "onClientPlayerLeaveLobby":
             log("onClientPlayerLeaveLobby start");

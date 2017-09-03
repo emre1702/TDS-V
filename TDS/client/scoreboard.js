@@ -66,7 +66,7 @@ function createScoreboard() {
         API.drawRectangle(startX, startY, v.completewidth, len * v.columnheight, v.rectanglecolor[0], v.rectanglecolor[1], v.rectanglecolor[2], v.rectanglecolor[3]);
         let notshowcounter = 0;
         for (var i = 0 + scroll; i < len + scroll; i++) {
-            if (playertable[i] !== undefined) {
+            if (i in playertable) {
                 var lastwidths = 0;
                 for (let j = 0; j < titleslength - 1; j++) {
                     var index = playerlisttitlesindex[playerlisttitles[j]];
