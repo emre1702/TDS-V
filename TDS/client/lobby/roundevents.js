@@ -7,20 +7,21 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             log("sendClientMapData end");
             break;
         case "onClientCountdownStart":
-            log("onClientCountdownStart start");
-            if (args[1] == undefined)
+            log("onClientCountdownStart roundevents start ");
+            if (!(1 in args)) {
                 startCountdown();
+            }
             else {
                 let seconds = Math.ceil(args[1] / 1000);
-                startCountdownAfterwards(lobbysettings.countdowntime - seconds * 1000 + 1);
+                startCountdownAfterwards(lobbysettings.countdowntime - seconds + 1);
             }
             if (rounddata.isspectator)
                 startSpectate();
             rounddata.mapinfo.setText(args[0]);
-            log("onClientCountdownStart end");
+            log("onClientCountdownStart roundevents end");
             break;
         case "onClientRoundStart":
-            log("onClientRoundStart start");
+            log("onClientRoundStart roundevents start");
             endCountdown();
             rounddata.isspectator = args[0];
             if (!rounddata.isspectator) {
@@ -28,7 +29,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 startMapLimit();
                 createTeamBlips(args[1]);
             }
-            log("onClientRoundStart end");
+            log("onClientRoundStart roundevents end");
             break;
         case "onClientRoundEnd":
             log("onClientRoundEnd start");
