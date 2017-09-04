@@ -56,12 +56,9 @@ namespace Class {
 			this.roundStartTimer.Kill ();
 			this.countdownTimer.Kill ();
 
-			for ( int i = 0; i < this.players.Count; i++ ) {
-				for ( int j = this.players[i].Count; j >= 0; j-- ) {
-					Client player = this.players[i][j];
-					this.RemovePlayer ( player );
-				}
-			}
+			this.FuncIterateAllPlayers ( ( player, teamID ) => {
+				this.RemovePlayer ( player );
+			} );
 		}
 	}
 }
