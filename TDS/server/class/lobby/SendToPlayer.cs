@@ -6,39 +6,35 @@ namespace Class {
 
 		public void SendAllPlayerEvent ( string eventName, int teamindex = -1, params object[] args ) {
 			if ( teamindex == -1 ) {
-				for ( int i = 0; i < this.players.Count; i++ )
-					for ( int j = this.players[i].Count - 1; j >= 0; j-- )
-						if ( this.players[i][j].exists )
-							this.players[i][j].triggerEvent ( eventName, args );
-
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.triggerEvent ( eventName, args );
+				} );
 			} else
-				for ( int j = 0; j < this.players[teamindex].Count; j++ )
-					if ( this.players[teamindex][j].exists )
-						this.players[teamindex][j].triggerEvent ( eventName, args );
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.triggerEvent ( eventName, args );
+				}, teamindex );
 		}
 
 		public void SendAllPlayerLangNotification ( string langstr, int teamindex = -1, params string[] args ) {
-			if ( teamindex == -1 ) { 
-				for ( int i = 0; i < this.players.Count; i++ )
-					for ( int j = 0; j < this.players[i].Count; j++ )
-						if ( this.players[i][j].exists )
-							this.players[i][j].SendLangNotification ( langstr, args );
+			if ( teamindex == -1 ) {
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.SendLangNotification ( langstr, args );
+				} );
 			} else
-				for ( int j = 0; j < this.players[teamindex].Count; j++ )
-					if ( this.players[teamindex][j].exists )
-						this.players[teamindex][j].SendLangNotification ( langstr, args );
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.SendLangNotification ( langstr, args );
+				}, teamindex );
 		}
 
 		public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
-			if ( teamindex == -1 ) { 
-				for ( int i = 0; i < this.players.Count; i++ )
-					for ( int j = 0; j < this.players[i].Count; j++ )
-						if ( this.players[i][j].exists )
-							this.players[i][j].sendChatMessage ( message );
+			if ( teamindex == -1 ) {
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.sendChatMessage ( message );
+				} );
 			} else
-				for ( int j = 0; j < this.players[teamindex].Count; j++ )
-					if ( this.players[teamindex][j].exists )
-						this.players[teamindex][j].sendChatMessage ( message );
+				this.FuncIterateAllPlayers ( ( player, teamID ) => {
+					player.sendChatMessage ( message );
+				}, teamindex );
 		}
 	}
 }
