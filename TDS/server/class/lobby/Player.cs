@@ -286,15 +286,37 @@ namespace Class {
 
 		private void SetAllPlayersInCountdown ( ) {
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
-			for ( int i = 0; i < this.players.Count; i++ )
-				for ( int j = 0; j < this.players[i].Count; j++ ) {
-					this.SetPlayerReadyForRound ( this.players[i][j], i );
-					API.shared.sendNativeToPlayer ( this.players[i][j], Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
-					this.players[i][j].triggerEvent ( "onClientCountdownStart", this.currentMap.name );
-					if ( i == 0 )
-						this.SpectateAllTeams ( this.players[i][j], true );
-				}
+			this.FuncIterateAllPlayers ( ( player, teamID ) => { 
+				this.SetPlayerReadyForRound ( player, teamID );
+				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
+				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name );
+				if ( teamID == 0 )
+					this.SpectateAllTeams ( player, true );
+			} );
 		}
 
+		internal void FuncIterateAllPlayers ( Action<Client, int> func, int teamID = -1 ) {
+			if ( teamID == -1 ) {
+				for ( int i = 0; i < this.players.Count; i++ )
+					for ( int j = this.players[i].Count - 1; j >= 0; j-- )
+						if ( this.players[i][j].exists ) {
+							if ( this.players[i][j].GetChar ().lobby == this ) {
+								func ( this.players[i][j], i );
+							} else
+								this.players[i].RemoveAt ( j );
+						} else
+							this.players[i].RemoveAt ( j );
+
+			} else
+				for ( int j = this.players[teamID].Count - 1; j >= 0; j-- )
+					if ( this.players[teamID][j].exists ) {
+						if ( this.players[teamID][j].GetChar ().lobby == this ) {
+							func ( this.players[teamID][j], teamID );
+						} else
+							this.players[teamID].RemoveAt ( j );
+					} else
+						this.players[teamID].RemoveAt ( j );
+
+		}
 	}
 }
