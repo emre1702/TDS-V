@@ -79,6 +79,7 @@ namespace Class {
 					}
 				}
 			}
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, 50 );
 			this.PlayerAmountInFightSync ( amountinteams );
 		}
 
