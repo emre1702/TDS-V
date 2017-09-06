@@ -12,7 +12,7 @@ namespace Manager {
 	static class Login {
 
 		public static async void LoginPlayer ( Client player, int uid, string password = "" ) {
-			await Task.Run ( ( ) => {
+			bool loggedin = await Task.Run ( ( ) => {
 				int adminlvl = 0;
 				int donatorLvl = 0;
 				int playtime = 0;
@@ -42,11 +42,11 @@ namespace Manager {
 							hitsoundon = row["hitsound"].ToString () == "1";
 						} else {
 							player.SendLangMessage ( "wrong_password" );
-							return;
+							return false;
 						}
 					} else {
 						player.SendLangMessage ( "account_doesnt_exist" );
-						return;
+						return false;
 					}
 
 				}
@@ -72,10 +72,11 @@ namespace Manager {
 					Admin.SetOnline ( player, adminlvl );
 
 				API.shared.triggerClientEvent ( player, "registerLoginSuccessful" );
-
+				return true;
 			} );
 
-			MainMenu.Join ( player );
+			if ( loggedin )
+				MainMenu.Join ( player );
 		}
 	}
 }
