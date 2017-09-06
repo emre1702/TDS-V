@@ -5,7 +5,7 @@
 *	fix for cursor-problems
 */ 
 API.onKeyDown.connect( function ( sender, e ) {
-	if ( e.KeyCode == Keys.RMenu ) {
+	if ( e.KeyCode == Keys.Menu ) {
 		if ( API.isCursorShown() ) {
 			API.showCursor( false );
 			nothidecursor = 0;
