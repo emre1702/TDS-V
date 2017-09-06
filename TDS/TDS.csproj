@@ -161,6 +161,7 @@
     <TypeScriptCompile Include="client\lobby\roundevents.ts" />
     <TypeScriptCompile Include="client\registerlogin\registerlogin.ts" />
     <Content Include="client\minify.js" />
+    <TypeScriptCompile Include="client\utility.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="client\settings.ts" />
