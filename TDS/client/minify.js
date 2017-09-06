@@ -5,6 +5,7 @@ let files = [
 	"logging.js",
 	"chat.js",
 	"money.js",
+	"utility.js",
 	"timer.js",
 	"scoreboard.js",
 	"draw/draw.js",
