@@ -208,7 +208,6 @@ namespace Class {
 			switch ( eventName ) {
 
 				case "joinLobby":
-					API.shared.consoleOutput ( "joinLobby event" );
 					if ( lobbysbyindex.ContainsKey ( args[0] ) ) {
 						Lobby lobby = lobbysbyindex[args[0]];
 						lobby.AddPlayer ( player, args[1] );
@@ -219,7 +218,6 @@ namespace Class {
 					break;
 
 				case "spectateNext":
-					API.shared.consoleOutput ( "spectateNext event" );
 					Class.Character character = player.GetChar ();
 					if ( character.lifes == 0 && ( character.lobby.status == "round" || character.team == 0 && character.lobby.status == "countdown" ) ) {
 						if ( character.team == 0 )
@@ -230,7 +228,6 @@ namespace Class {
 					break;
 
 				case "onPlayerWasTooLongOutsideMap":
-					API.shared.consoleOutput ( "onPlayerWasTooLongOutsideMap event" );
 					Class.Character character2 = player.GetChar ();
 					if ( character2.lobby.isPlayable ) {
 						character2.lobby.KillPlayer ( player, "too_long_outside_map" );
@@ -238,17 +235,14 @@ namespace Class {
 					break;
 
 				case "onMapMenuOpen":
-					API.shared.consoleOutput ( "onMapMenuOpen event" );
 					player.GetChar ().lobby.SendMapsForVoting ( player );
 					break;
 
 				case "onMapVotingRequest":
-					API.shared.consoleOutput ( "onMapVotingRequest event" );
 					player.GetChar ().lobby.AddMapToVoting ( player, args[0] );
 					break;
 
 				case "onVoteForMap":
-					API.shared.consoleOutput ( "onVoteForMap event" );
 					player.GetChar ().lobby.AddVoteToMap ( player, args[0] );
 					break;
 			}
