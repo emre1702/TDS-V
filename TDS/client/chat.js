@@ -2,8 +2,6 @@
 let chatdata = {
     chat: null,
     browser: null,
-    teamsay: false,
-    globalsay: false,
     chatopen: false,
 };
 API.onResourceStart.connect(function () {
@@ -21,8 +19,7 @@ API.onKeyDown.connect(function (sender, e) {
     if (chatdata.chatopen == false) {
         if (API.getCanOpenChat()) {
             if (e.KeyCode == Keys.Z) {
-                onFocusChange(true);
-                chatdata.globalsay = true;
+                onFocusChange(true, false, "/globalsay ");
             }
         }
     }
@@ -35,22 +32,17 @@ API.onResourceStop.connect(function () {
     }
 });
 function commitMessage(msg) {
-    if (chatdata.globalsay)
-        chatdata.chat.sendMessage("/globalchat " + msg);
-    else if (chatdata.teamsay)
-        chatdata.chat.sendMessage("/teamchat " + msg);
-    else
-        chatdata.chat.sendMessage(msg);
+    chatdata.chat.sendMessage(msg);
 }
 function addMessage(msg, hasColor, r, g, b) {
     if (chatdata.browser != null) {
         chatdata.browser.call("addMessage", msg);
     }
 }
-function onFocusChange(focus, fromcef = false) {
+function onFocusChange(focus, fromcef = false, cmd = "") {
     if (chatdata.browser != null) {
         if (fromcef == false)
-            chatdata.browser.call("setFocus", focus, true);
+            chatdata.browser.call("setFocus", focus, true, cmd);
     }
     if (!focus) {
         if (chatdata.chatopen) {
@@ -61,8 +53,6 @@ function onFocusChange(focus, fromcef = false) {
                 if (nothidecursor == 0)
                     API.showCursor(false);
             }
-            chatdata.teamsay = false;
-            chatdata.globalsay = false;
         }
     }
     else {

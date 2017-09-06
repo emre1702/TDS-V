@@ -14,7 +14,7 @@ function formatMsg(input) {
 	var pass = input.replace( /~r~/g, '</span><span style="color: rgb(222, 50, 50);">' );
 	pass = pass.replace( /~b~/g, '</span><span style="color: rgb(92, 180, 227);">');
 	pass = pass.replace( /~g~/g, '</span><span style="color: rgb(113, 202, 113);">');
-	//pass = pass.replace( /~y~/g, '</span><span style="color: rgb(238, 198, 80);">' );
+	pass = pass.replace( /~y~/g, '</span><span style="color: rgb(238, 198, 80);">' );
 	//pass = pass.replace( /~p~/g, '</span><span style="color: rgb(131, 101, 224);">' );
 	//pass = pass.replace( /~q~/g, '</span><span style="color: rgb(226, 79, 128);">' );
 	pass = pass.replace( /~o~/g, '</span><span style="color: rgb(253, 132, 85);">' );
@@ -61,11 +61,11 @@ function addColoredMessage(msg, r,g,b) {
 	updateScroll();
 }
 
-function setFocus( focus, fromscript = false ) {
+function setFocus( focus, fromscript = false, cmd = "" ) {
 	var mainInput = $("#main-input");
 	if ( focus ) {
 		mainInput.fadeIn();
-		mainInput.val( "" );
+		mainInput.val( cmd );
 		setTimeout( function () {
 			mainInput.focus();
 		}, 100 );
