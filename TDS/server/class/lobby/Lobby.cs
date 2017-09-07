@@ -60,6 +60,16 @@ namespace Class {
 				this.RemovePlayer ( player );
 			} );
 		}
+
+		private void RefreshPlayerList ( ) {
+			for ( int i = 0; i < this.players.Count; i++ ) {
+				for ( int j = this.players[i].Count - 1; j >= 0; j-- ) {
+					if ( !this.players[i][j].exists || this.players[i][j].GetChar ().lobby != this ) {
+						this.players[i].RemoveAt ( j );
+					} 
+				}
+			}
+		}
 	}
 }
 
