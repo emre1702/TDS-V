@@ -54,6 +54,18 @@ namespace Class {
 			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 300, 1 );
 		}
 
+		private void StartRoundForPlayer ( Client player, int teamID ) {
+			Class.Character character = player.GetChar ();
+			player.triggerEvent ( "onClientRoundStart", teamID == 0, this.players[teamID] );
+			character.team = teamID;
+			if ( teamID != 0 ) {
+				character.lifes = this.lifes;
+				this.alivePlayers[teamID].Add ( player );
+				player.freeze ( false );
+			}
+			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
+		}
+
 		private void StartRound ( ) {
 			this.status = "round";
 			API.shared.consoleOutput ( this.status );
@@ -68,18 +80,10 @@ namespace Class {
 					amountinteams.Add ( amountinteam );
 				this.alivePlayers.Add ( new List<Client> () );
 				for ( int j = 0; j < amountinteam; j++ ) {
-					Client player = this.players[i][j];
-					Class.Character character = player.GetChar ();
-					player.triggerEvent ( "onClientRoundStart", i == 0, this.players[i] );
-					character.team = i;
-					if ( i != 0 ) {
-						character.lifes = this.lifes;
-						this.alivePlayers[i].Add ( player );
-						player.freeze ( false );
-					}
+					this.StartRoundForPlayer ( this.players[i][j], i );
 				}
 			}
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, 50 );
+			
 			this.PlayerAmountInFightSync ( amountinteams );
 		}
 
@@ -93,6 +97,7 @@ namespace Class {
 			this.mapBlips = new List<Blip> ();
 			bool foundone = false;
 			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 * 1000 );
+			this.RefreshPlayerList ();
 			for ( int i = 0; i < this.players.Count && !foundone; i++ ) {
 				if ( this.players[i].Count > 0 )
 					foundone = true;
