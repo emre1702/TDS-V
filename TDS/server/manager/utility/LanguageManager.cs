@@ -34,6 +34,7 @@ static class Language {
 			["round_reward"] = "~w~Round-reward:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Total: ~g~${4}",
 			["deathinfo_killed"] = "{1} killed {2} with {3}",
 			["deathinfo_died"] = "{1} died",
+			["round_mission_normal"] = "Mission: Kill all opponents!",
 
 			["welcome_1"] = "Welcome to ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "For announcements, support, bug-reports etc.",
@@ -67,6 +68,7 @@ static class Language {
 			["round_reward"] = "~w~Runden-Belohnung:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Insgesamt: ~g~${4}",
 			["deathinfo_killed"] = "{1} hat {2} mit {3} getötet",
 			["deathinfo_died"] = "{1} ist gestorben",
+			["round_mission_normal"] = "Ziel: Töte alle Gegner!",
 
 			["welcome_1"] = "Willkommen auf dem ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "Für Ankündigungen, Support, Bug-Meldung usw.",
