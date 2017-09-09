@@ -10,7 +10,7 @@ namespace Manager {
 	static class Map {
 		private static string mapsPath = "resources/TDS/server/maps/";
 		public static List<string> normalMapNames = new List<string> ();
-		public static List<string> hostageMapNames = new List<string> ();
+		public static List<string> bombMapNames = new List<string> ();
 		public static Dictionary<string, List<string>> mapDescriptions = new Dictionary<string, List<string>> {
 			{ "english", new List<string>() },
 			{ "german", new List<string>() },
@@ -31,8 +31,8 @@ namespace Manager {
 						if ( map.name != null ) {
 							if ( map.type == "normal" )
 								normalMapNames.Add ( map.name );
-							else if ( map.type == "hostage" )
-								hostageMapNames.Add ( map.name );
+							else if ( map.type == "bomb" )
+								bombMapNames.Add ( map.name );
 							mapDescriptions["english"].Add ( map.description["english"] );
 							mapDescriptions["german"].Add ( map.description["german"] );
 							mapByName[map.name] = filename;
@@ -41,6 +41,41 @@ namespace Manager {
 					}
 				}
 			}
+		}
+
+		private static Vector3 GetCenterOfPositions ( List<Vector3> poly, float zpos = -1 ) {
+			float centerX = 0.0f;
+			float centerY = 0.0f;
+			float centerZ = 0.0f;
+			int length = poly.Count;
+
+			for ( int i = 0; i < length; i++ ) {
+				centerX += poly[i].X;
+				centerY += poly[i].Y;
+				centerZ += zpos == -1 ? poly[i].Z : zpos;
+			}
+
+			return new Vector3 ( centerX / length , centerY / length, centerZ / length );
+		}
+
+		private static Vector3 GetCenterByLimits ( Class.Map map, float zpos ) {
+			return GetCenterOfPositions ( map.mapLimits, zpos ) ?? GetCenterBySpawns ( map );
+		}
+
+		private static Vector3 GetCenterBySpawns ( Class.Map map ) {
+			int amountteams = map.teamSpawns.Count;
+			if ( amountteams == 1 ) {
+				foreach ( KeyValuePair<int, List<Vector3>> entry in map.teamSpawns ) {
+					return entry.Value[0];
+				}
+			} else if ( amountteams > 1 ) {
+				List<Vector3> positions = new List<Vector3> ();
+				foreach ( KeyValuePair<int, List<Vector3>> entry in map.teamSpawns ) {
+					positions.Add ( entry.Value[0] );
+				}
+				return GetCenterOfPositions ( positions );
+			}
+			return new Vector3 ();
 		}
 
 		private static bool AddInfos ( this Class.Map map, string mapfilename ) {
@@ -59,7 +94,7 @@ namespace Manager {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
 								map.mapLimits.Add ( pos );
 							} else if ( reader.Name == "middle" ) {
-								map.mapmid = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+								map.mapCenter = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
 							} else if ( reader.Name.StartsWith ( "team" ) ) {
 								int teamnumber = Convert.ToInt16 ( reader.Name.Substring ( 4 ) );
 								if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
@@ -72,6 +107,18 @@ namespace Manager {
 								map.teamRots[teamnumber].Add ( rot );
 							}
 						}
+					}
+				}
+				if ( map.mapCenter == null ) {
+					if ( map.mapLimits.Count > 0 ) {
+						float zpos = 0;
+						foreach ( KeyValuePair<int, List<Vector3>> entry in map.teamSpawns ) {
+							zpos = entry.Value[0].Z;
+							break;
+						}
+						map.mapCenter = GetCenterByLimits ( map, zpos );
+					} else {
+						map.mapCenter = GetCenterBySpawns ( map );
 					}
 				}
 				return true;
