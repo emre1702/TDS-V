@@ -34,7 +34,8 @@ static class Language {
 			["round_reward"] = "~w~Round-reward:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Total: ~g~${4}",
 			["deathinfo_killed"] = "{1} killed {2} with {3}",
 			["deathinfo_died"] = "{1} died",
-			["round_mission_normal"] = "Mission: Kill all opponents!",
+			["round_mission_normal"] = "Mission: All opponents have to die.",
+			["round_mission_bomb_spectator"] = "Mission: Place & defend the bomb or defuse it - or kill all opponents.",
 			["round_mission_bomb_good"] = "Mission: Prevent the bomb-explosion or kill all opponents!",
 			["round_mission_bomb_bad"] = "Mission: Let the bomb explode on one of the spots or kill all opponents!",
 
@@ -70,7 +71,8 @@ static class Language {
 			["round_reward"] = "~w~Runden-Belohnung:~n~Kills: ~g~${1}~n~~w~Assists: ~g~${2}~n~~w~Damage: ~g~${3}~n~~o~Insgesamt: ~g~${4}",
 			["deathinfo_killed"] = "{1} hat {2} mit {3} getötet",
 			["deathinfo_died"] = "{1} ist gestorben",
-			["round_mission_normal"] = "Ziel: Töte alle Gegner!",
+			["round_mission_normal"] = "Ziel: Alle Gegner müssen getötet werden.",
+			["round_mission_bomb_spectator"] = "Ziel: Bombe legen & verteidigen oder entschärfen - oder alle Gegner töten.",
 			["round_mission_bomb_good"] = "Ziel: Verhinde die Bomben-Explosion oder töte alle Gegner!",
 			["round_mission_bomb_bad"] = "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!",
 
