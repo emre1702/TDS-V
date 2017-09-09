@@ -11,9 +11,9 @@ function loadMapMiddleForCamera(mapmiddle) {
     API.pointCameraAtPosition(cameradata.camera, camerapos);
     API.setActiveCamera(cameradata.camera);
 }
-function setCameraGoTowardsPlayer() {
+function setCameraGoTowardsPlayer(time = -1) {
     cameradata.tocamera = API.createCamera(API.getGameplayCamPos(), API.getGameplayCamRot());
-    API.interpolateCameras(cameradata.camera, cameradata.tocamera, lobbysettings.countdowntime * 1000 * 0.9, true, true);
+    API.interpolateCameras(cameradata.camera, cameradata.tocamera, time == -1 ? (lobbysettings.countdowntime * 1000 * 0.9) : time, true, true);
 }
 function stopCountdownCamera() {
     cameradata.tocamera = null;
