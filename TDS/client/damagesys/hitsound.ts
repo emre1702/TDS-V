@@ -2,7 +2,7 @@
 
 function playHitSound() {
 	API.startAudio( soundspath + "hit.wav", false );
-	API.setAudioVolume( 0.5 );
+	API.setAudioVolume( 0.3 );
 }
 
 API.onServerEventTrigger.connect( function ( eventName, args ) {
