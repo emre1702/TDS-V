@@ -125,6 +125,7 @@
     <TypeScriptCompile Include="client\chat.ts" />
     <TypeScriptCompile Include="client\damagesys\hitsound.ts" />
     <TypeScriptCompile Include="client\lobby\blips.ts" />
+    <TypeScriptCompile Include="client\lobby\camera.ts" />
     <TypeScriptCompile Include="client\lobby\countdown.ts" />
     <TypeScriptCompile Include="client\lobby\settings.ts" />
     <TypeScriptCompile Include="client\lobby\maplimit.ts" />
