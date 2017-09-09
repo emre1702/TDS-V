@@ -51,7 +51,7 @@ namespace Class {
 			this.SetAllPlayersInCountdown ();
 			this.startTick = Environment.TickCount;
 
-			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 300, 1 );
+			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 400, 1 );
 		}
 
 		private void StartRoundForPlayer ( Client player, int teamID ) {
