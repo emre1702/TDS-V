@@ -13,5 +13,7 @@ namespace Class {
 		public Dictionary<int, List<Vector3>> teamRots = new Dictionary<int, List<Vector3>> ();
 		public List<Vector3> mapLimits = new List<Vector3> ();
 		public Vector3 mapCenter;
+		public List<Vector3> bombPlantPlacesPos = new List<Vector3> ();
+		public List<Vector3> bombPlantPlacesRot = new List<Vector3> ();
 	}
 }
