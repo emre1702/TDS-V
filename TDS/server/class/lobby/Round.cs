@@ -70,6 +70,13 @@ namespace Class {
 			this.SendAllPlayerLangNotification ( "round_mission_normal" );
 		}
 
+		// ONLY FOR 2 TEAMS ROUND //
+		private void StartRoundBomb ( ) {
+			this.SendAllPlayerLangNotification ( "round_mission_bomb_spectator", 0 );
+			this.SendAllPlayerLangNotification ( "round_mission_bomb_good", 1 );
+			this.SendAllPlayerLangNotification ( "round_mission_bomb_bad", 2 );
+		}
+
 		private void StartRound ( ) {
 			this.status = "round";
 			API.shared.consoleOutput ( this.status );
@@ -89,6 +96,11 @@ namespace Class {
 			}
 			
 			this.PlayerAmountInFightSync ( amountinteams );
+
+			if ( this.currentMap.type == "normal" )
+				this.StartRoundNormal ();
+			else if ( this.currentMap.type == "bomb" )
+				this.StartRoundBomb ();
 		}
 
 		private void EndRound ( ) {
