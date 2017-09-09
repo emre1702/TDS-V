@@ -28,8 +28,8 @@ function countdownFunc(counter) {
         countdowndata.text.blendTextScale(6, 1000);
         countdowndata.timer = new Timer(countdownFunc, 1000, 1, counter);
         if (countdownsounds[counter] != null) {
-            API.setAudioVolume(0.3);
-            var audio = API.startAudio(soundspath + countdownsounds[counter], false);
+            API.startAudio(soundspath + countdownsounds[counter], false);
+            API.setAudioVolume(0.2);
         }
     }
     log("countdownFunc end");
@@ -56,7 +56,7 @@ function endCountdown() {
     if (countdowndata.timer != null)
         countdowndata.timer.kill();
     API.startAudio(soundspath + countdownsounds[0], false);
-    API.setAudioVolume(0.3);
+    API.setAudioVolume(0.2);
     countdowndata.timer = new Timer(stopCountdown, 2000, 1);
     log("endCountdown end");
 }
