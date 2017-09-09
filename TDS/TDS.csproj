@@ -152,6 +152,7 @@
     <Content Include="client\pic\arenachoice.png" />
     <Content Include="client\window\registerlogin\registerlogin.html" />
     <Content Include="client\window\registerlogin\registerlogin.js" />
+    <Content Include="notices.txt" />
     <Content Include="server\maps\BattlexChamP\Pluz._Investment.xml" />
     <Content Include="server\maps\BattlexChamP\Pluz._Tower.xml" />
     <Content Include="server\maps\Bonus1702\test.xml" />

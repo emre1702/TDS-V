@@ -1,0 +1,1 @@
+﻿- Bomb-maps ONLY for lobbies with 2 teams -> team1 will be counter-terrorists, team2 will be terrorists
