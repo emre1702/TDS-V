@@ -35,6 +35,8 @@ static class Language {
 			["deathinfo_killed"] = "{1} killed {2} with {3}",
 			["deathinfo_died"] = "{1} died",
 			["round_mission_normal"] = "Mission: Kill all opponents!",
+			["round_mission_bomb_good"] = "Mission: Prevent the bomb-explosion or kill all opponents!",
+			["round_mission_bomb_bad"] = "Mission: Let the bomb explode on one of the spots or kill all opponents!",
 
 			["welcome_1"] = "Welcome to ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "For announcements, support, bug-reports etc.",
@@ -69,6 +71,8 @@ static class Language {
 			["deathinfo_killed"] = "{1} hat {2} mit {3} getötet",
 			["deathinfo_died"] = "{1} ist gestorben",
 			["round_mission_normal"] = "Ziel: Töte alle Gegner!",
+			["round_mission_bomb_good"] = "Ziel: Verhinde die Bomben-Explosion oder töte alle Gegner!",
+			["round_mission_bomb_bad"] = "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!",
 
 			["welcome_1"] = "Willkommen auf dem ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "Für Ankündigungen, Support, Bug-Meldung usw.",
