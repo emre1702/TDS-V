@@ -15,15 +15,16 @@ let files = [
 	"registerlogin/registerlogin.js",
 
 	"lobby/blips.js",
+	"lobby/camera.js",
 	"lobby/choice.js",
 	"lobby/countdown.js",
 	"lobby/maplimit.js",
 	"lobby/mapvoting.js",
 	"lobby/round.js",
-	"lobby/roundevents.js",
 	"lobby/roundinfo.js",
 	"lobby/settings.js",
 	"lobby/spectate.js",
+	"lobby/roundevents.js",
 ];
 let code = "";
 let htmlcode = "";
