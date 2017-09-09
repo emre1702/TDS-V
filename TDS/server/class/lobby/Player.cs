@@ -57,8 +57,8 @@ namespace Class {
 		}
 
 		private void SendPlayerRoundInfoOnJoin ( Client player ) {
-			if ( this.currentMap != null && this.currentMap.mapLimits.Count > 0 ) {
-				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits );
+			if ( this.currentMap != null ) {
+				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits, this.currentMap.mapCenter );
 			}
 			if ( this.isPlayable ) {
 				this.SendPlayerAmountInFightInfo ( player );
@@ -69,8 +69,7 @@ namespace Class {
 
 			int tick = Environment.TickCount;
 			if ( this.status == "countdown" ) {
-				int tickremaining = this.countdownTime * 1000 - ( tick - this.startTick );
-				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, tickremaining );
+				//int tickremaining = this.countdownTime * 1000 - ( tick - this.startTick );
 				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name, tick - this.startTick );
 			} else if ( this.status == "round" ) {
 				player.triggerEvent ( "onClientRoundStart", true, this.players[0], tick - this.startTick );
@@ -123,6 +122,7 @@ namespace Class {
 			}
 			player.freeze ( true );
 			this.GivePlayerWeapons ( player );
+			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
 		}
 
 		private void GivePlayerWeapons ( Client player ) {
@@ -282,7 +282,6 @@ namespace Class {
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
 			this.FuncIterateAllPlayers ( ( player, teamID ) => { 
 				this.SetPlayerReadyForRound ( player, teamID );
-				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, this.countdownTime * 1000 );
 				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name );
 				if ( teamID == 0 )
 					this.SpectateAllTeams ( player, true );
