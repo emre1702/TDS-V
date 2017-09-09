@@ -5,7 +5,9 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "sendClientMapData":
 			log( "sendClientMapData start" );
-			loadMapLimitData( args[0] );
+			if ( args[0].Count > 0 )
+				loadMapLimitData( args[0] );
+			loadMapMiddleForCamera( args[1] );
 			log( "sendClientMapData end" );
 			break;
 
@@ -20,11 +22,15 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			if ( rounddata.isspectator )
 				startSpectate();	
 			rounddata.mapinfo.setText( args[0] );
+			if ( cameradata.timer != null )
+				cameradata.timer.kill();
+			cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 1000 * 0.1, 1 );
 			log( "onClientCountdownStart roundevents end" );
 			break;
 
 		case "onClientRoundStart":
 			log( "onClientRoundStart roundevents start" );
+			stopCountdownCamera();
 			endCountdown();
 			rounddata.isspectator = args[0];
 			if ( !rounddata.isspectator ) {
