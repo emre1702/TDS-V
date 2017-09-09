@@ -95,6 +95,11 @@ namespace Manager {
 								map.mapLimits.Add ( pos );
 							} else if ( reader.Name == "middle" ) {
 								map.mapCenter = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+							} else if ( reader.Name == "bomb" ) {
+								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+								map.bombPlantPlacesPos.Add ( pos );
+								Vector3 rot = new Vector3 ( reader["rotx"].ToFloat (), reader["roty"].ToFloat (), reader["rotz"].ToFloat () );
+								map.bombPlantPlacesRot.Add ( rot );
 							} else if ( reader.Name.StartsWith ( "team" ) ) {
 								int teamnumber = Convert.ToInt16 ( reader.Name.Substring ( 4 ) );
 								if ( !map.teamSpawns.ContainsKey ( teamnumber ) ) {
