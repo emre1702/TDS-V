@@ -12,7 +12,7 @@ namespace Manager {
 			lobby = new Class.Lobby ( "arena", 1 );
 			List<string> mapsforarena = new List<string> ();
 			mapsforarena.AddRange ( Manager.Map.normalMapNames );
-			mapsforarena.AddRange ( Manager.Map.hostageMapNames );
+			mapsforarena.AddRange ( Manager.Map.bombMapNames );
 			lobby.AddMapList ( mapsforarena );
 			lobby.AddMapDescriptions ( Manager.Map.mapDescriptions, false );
 			lobby.AddTeam ( "Good", (PedHash) ( 2047212121 ), "g" );
