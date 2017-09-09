@@ -13,18 +13,23 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientCountdownStart":
 			log( "onClientCountdownStart roundevents start " );
+			if ( cameradata.timer != null )
+				cameradata.timer.kill();
 			if ( !( 1 in args) ) {
 				startCountdown();
+				cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 1000 * 0.1, 1 );
 			} else {
 				let seconds = Math.ceil( args[1] / 1000 );
-				startCountdownAfterwards( lobbysettings.countdowntime - seconds + 1 );
+				startCountdownAfterwards( lobbysettings.countdowntime - seconds );
+				if ( args[1] > lobbysettings.countdowntime * 1000 * 0.1 ) {
+					setCameraGoTowardsPlayer( lobbysettings.countdowntime * 1000 - args[1] );
+				} else {
+					cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 1000 * 0.1 - args[1], 1 );
+				}
 			}
 			if ( rounddata.isspectator )
 				startSpectate();	
 			rounddata.mapinfo.setText( args[0] );
-			if ( cameradata.timer != null )
-				cameradata.timer.kill();
-			cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 1000 * 0.1, 1 );
 			log( "onClientCountdownStart roundevents end" );
 			break;
 
