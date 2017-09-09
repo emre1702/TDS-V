@@ -36,10 +36,10 @@ namespace Class {
 				this.CreateMapLimitBlips ();
 				if ( this.mixTeamsAfterRound )
 					this.MixTeams ();
-				if ( this.currentMap.mapLimits.Count > 0 )
-					this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits );
+				this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
 			} );
-			
+
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime * 1000 / 2 );
 			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime * 1000 / 2, 1 );
 			
 		}
