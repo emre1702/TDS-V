@@ -66,6 +66,10 @@ namespace Class {
 			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
 		}
 
+		private void StartRoundNormal ( ) {
+			this.SendAllPlayerLangNotification ( "round_mission_normal" );
+		}
+
 		private void StartRound ( ) {
 			this.status = "round";
 			API.shared.consoleOutput ( this.status );
