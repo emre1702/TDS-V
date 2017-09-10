@@ -58,7 +58,7 @@ namespace Class {
 
 		private void SendPlayerRoundInfoOnJoin ( Client player ) {
 			if ( this.currentMap != null ) {
-				player.triggerEvent ( "sendClientMapData", this.currentMap.mapLimits, this.currentMap.mapCenter );
+				player.triggerEvent ( "onClientMapChange", this.currentMap.mapLimits, this.currentMap.mapCenter );
 			}
 			if ( this.isPlayable ) {
 				this.SendPlayerAmountInFightInfo ( player );
@@ -135,12 +135,13 @@ namespace Class {
 		public void RemovePlayer ( Client player ) {
 			Character character = player.GetChar ();
 			int teamID = character.team;
+			if ( this != Manager.MainMenu.lobby )
+				this.SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player );
 			this.players[teamID].Remove ( player );
 			if ( character.lifes > 0 )
 				this.RemovePlayerFromAlive ( player, character );
 
 			if ( this != Manager.MainMenu.lobby ) {
-				player.triggerEvent ( "onClientPlayerLeaveLobby" );
 				Manager.MainMenu.Join ( player );
 			}
 		}
@@ -152,7 +153,8 @@ namespace Class {
 			int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 			this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 			this.alivePlayers[teamID].RemoveAt ( aliveindex );
-			this.damageSys.CheckLastHitter ( player, character );
+			this.damageSys.CheckLastHitter ( player, character, out Client killer );
+			Manager.FightInfo.DeathInfoSync ( this, player, teamID, killer, (int) WeaponHash.Unarmed );
 			this.CheckLobbyForEnoughAlive ();
 		}
 
@@ -165,7 +167,7 @@ namespace Class {
 			player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
 			player.freeze ( true );
 			this.SpectateTeammate ( player );
-			player.triggerEvent ( "onClientSpectateMode" );
+			player.triggerEvent ( "onClientPlayerSpectateMode" );
 		}
 
 		private static void OnPlayerRespawn ( Client player ) {
@@ -190,10 +192,10 @@ namespace Class {
 			}
 		}
 
-		public void OnPlayerDeath ( Client player, NetHandle killer, int weapon, Character character ) {
+		public void OnPlayerDeath ( Client player, Client killer, int weapon, Character character ) {
 			if ( character.lifes > 0 ) {
 				character.lifes--;
-				character.lobby.DeathInfoSync ( player, character.team, API.shared.getEntityFromHandle<Client> ( killer ), weapon );
+				character.lobby.DeathInfoSync ( player, character.team, killer, weapon );
 				if ( character.lifes == 0 ) {
 					this.RemovePlayerFromAlive ( player, character );
 				}
@@ -286,6 +288,8 @@ namespace Class {
 				if ( teamID == 0 )
 					this.SpectateAllTeams ( player, true );
 			} );
+			if ( this.currentMap.type == "bomb" )
+				this.GiveBombToRandomTerrorist ();
 		}
 
 		internal void FuncIterateAllPlayers ( Action<Client, int> func, int teamID = -1 ) {
