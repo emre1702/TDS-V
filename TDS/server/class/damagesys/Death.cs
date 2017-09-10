@@ -14,7 +14,7 @@ namespace Class {
 		private static ConcurrentDictionary<Client, Timer> deadTimer = new ConcurrentDictionary<Client, Timer> ();
 		public ConcurrentDictionary<Client, int> playerKills = new ConcurrentDictionary<Client, int> ();
 		public ConcurrentDictionary<Client, int> playerAssists = new ConcurrentDictionary<Client, int> ();
-		
+
 		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
@@ -27,10 +27,10 @@ namespace Class {
 
 				player.freeze ( true );
 				deadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 ) );
-				Client killer = API.shared.getPlayerFromHandle ( entityKiller );
+				Client killer = API.shared.getPlayerFromHandle ( entityKiller ) ?? character.lobby.damageSys.GetLastHitter ( player, character );
 
 				if ( character.lifes > 0 ) {
-					character.lobby.OnPlayerDeath ( player, entityKiller, weapon, character );
+					character.lobby.OnPlayerDeath ( player, killer, weapon, character );
 
 					// Kill //
 					if ( killer != null ) {
@@ -41,8 +41,6 @@ namespace Class {
 							dmgsys.playerKills.TryAdd ( killer, 0 );
 						}
 						dmgsys.playerKills[killer]++;
-					} else {
-						character.lobby.damageSys.CheckLastHitter ( player, character );
 					}
 
 					if ( character.lobby.isOfficial ) {
@@ -91,9 +89,9 @@ namespace Class {
 			}
 		}
 
-		public void CheckLastHitter ( Client player, Character character ) {
+		public void CheckLastHitter ( Client player, Character character, out Client lasthitter ) {
 			if ( this.lastHitterDictionary.ContainsKey ( player ) ) {
-				this.lastHitterDictionary.TryRemove ( player, out Client lasthitter );
+				this.lastHitterDictionary.TryRemove ( player, out lasthitter );
 				if ( lasthitter.exists ) {
 					Character lasthittercharacter = lasthitter.GetChar ();
 					if ( character.lobby == lasthittercharacter.lobby ) {
@@ -103,8 +101,22 @@ namespace Class {
 						}
 					}
 				}
+			} else
+				lasthitter = null;
+
+		}
+
+		public Client GetLastHitter ( Client player, Character character ) {
+			if ( this.lastHitterDictionary.ContainsKey ( player ) ) {
+				this.lastHitterDictionary.TryRemove ( player, out Client lasthitter );
+				if ( lasthitter.exists ) {
+					Character lasthittercharacter = lasthitter.GetChar ();
+					if ( character.lobby == lasthittercharacter.lobby ) {
+						return lasthitter;
+					}
+				}
 			}
-			
+			return null;
 		}
 	}
 }
