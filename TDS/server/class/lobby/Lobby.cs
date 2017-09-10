@@ -56,6 +56,9 @@ namespace Class {
 			this.roundStartTimer.Kill ();
 			this.countdownTimer.Kill ();
 
+			if ( this.currentMap != null && this.currentMap.type == "bomb" )
+				this.StopRoundBomb ();
+
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				this.RemovePlayer ( player );
 			} );
