@@ -138,8 +138,11 @@ namespace Class {
 			if ( this != Manager.MainMenu.lobby )
 				this.SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player );
 			this.players[teamID].Remove ( player );
-			if ( character.lifes > 0 )
+			if ( character.lifes > 0 ) {
+				this.damageSys.CheckLastHitter ( player, character, out Client killer );
+				Manager.FightInfo.DeathInfoSync ( this, player, teamID, killer, (int) WeaponHash.Unarmed );
 				this.RemovePlayerFromAlive ( player, character );
+			}
 
 			if ( this != Manager.MainMenu.lobby ) {
 				Manager.MainMenu.Join ( player );
@@ -153,8 +156,6 @@ namespace Class {
 			int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 			this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 			this.alivePlayers[teamID].RemoveAt ( aliveindex );
-			this.damageSys.CheckLastHitter ( player, character, out Client killer );
-			Manager.FightInfo.DeathInfoSync ( this, player, teamID, killer, (int) WeaponHash.Unarmed );
 			this.CheckLobbyForEnoughAlive ();
 		}
 

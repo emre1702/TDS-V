@@ -10,7 +10,7 @@ let cameradata = {
 
 
 function loadMapMiddleForCamera( mapmiddle ) {
-	let camerapos = new Vector3( mapmiddle.X, mapmiddle.Y, mapmiddle.Z + 70 );
+	let camerapos = new Vector3( mapmiddle.X, mapmiddle.Y, mapmiddle.Z + 80 );
 	cameradata.camera = API.createCamera( camerapos, new Vector3( 270, 0, 0 ) );
 	API.pointCameraAtPosition( cameradata.camera, camerapos );
 	API.setActiveCamera( cameradata.camera );

@@ -3,16 +3,16 @@
 API.onServerEventTrigger.connect( function ( eventName, args ) {
 	switch ( eventName ) {
 
-		case "sendClientMapData":
-			log( "sendClientMapData start" );
+		case "onClientMapChange":
+			log( "onClientMapChange start" );
 			if ( args[0].Count > 0 )
 				loadMapLimitData( args[0] );
 			loadMapMiddleForCamera( args[1] );
-			log( "sendClientMapData end" );
+			log( "onClientMapChange end" );
 			break;
 
 		case "onClientCountdownStart":
-			log( "onClientCountdownStart roundevents start " );
+			log( "onClientCountdownStart start " );
 			if ( cameradata.timer != null )
 				cameradata.timer.kill();
 			if ( !( 1 in args) ) {
@@ -30,11 +30,11 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			if ( rounddata.isspectator )
 				startSpectate();	
 			rounddata.mapinfo.setText( args[0] );
-			log( "onClientCountdownStart roundevents end" );
+			log( "onClientCountdownStart end" );
 			break;
 
 		case "onClientRoundStart":
-			log( "onClientRoundStart roundevents start" );
+			log( "onClientRoundStart start" );
 			stopCountdownCamera();
 			endCountdown();
 			rounddata.isspectator = args[0];
@@ -43,7 +43,8 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				startMapLimit();
 				createTeamBlips ( args[1] );
 			}
-			log( "onClientRoundStart roundevents end" );
+			roundStartedRoundInfo ( args )
+			log( "onClientRoundStart end" );
 			break;
 
 		case "onClientRoundEnd": 
@@ -52,31 +53,17 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			emptyMapLimit();
 			removeRoundThings( false );
 			stopCountdown();
+			stopCountdownCamera();
 			stopTeamBlips();
+			removeRoundInfo();
 			log( "onClientRoundEnd end" );
 			break;
 
-		case "onClientSpectateMode":
-			log( "onClientSpectateMode start" );
+		case "onClientPlayerSpectateMode":
+			log( "onClientPlayerSpectateMode start" );
 			rounddata.isspectator = true;
 			startSpectate();
-			log( "onClientSpectateMode end" );
-			break;
-
-		case "onClientPlayerJoinLobby":
-			log( "onClientPlayerJoinLobby start" );
-			rounddata.isspectator = args[0];
-			lobbysettings.countdowntime = args[1];
-			// args[2] is used in roundinfo -> roundtime //
-			setMapInfo( args[3] );
-			log( "onClientPlayerJoinLobby end" );
-			break;
-
-		case "onClientPlayerLeaveLobby":
-			log( "onClientPlayerLeaveLobby start" );
-			rounddata.infight = false;
-			removeRoundThings( true );
-			log( "onClientPlayerLeaveLobby end" );
+			log( "onClientPlayerSpectateMode end" );
 			break;
 
 		case "onClientPlayerDeath":
@@ -84,8 +71,10 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			if ( API.getLocalPlayer() == args[0] ) {
 				rounddata.infight = false;
 				stopMapLimitCheck();
-			} else
+			} else {
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
+				playerDeathRoundInfo( args[1], args[2] );
+			}
 			log( "onClientPlayerDeath end" );
 			break;
 

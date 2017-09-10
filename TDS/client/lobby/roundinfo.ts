@@ -123,6 +123,29 @@ function removeRoundInfo() {
 	}
 }
 
+function roundStartedRoundInfo ( args ) {
+	roundinfo.starttick = API.getGlobalTime();
+	if ( 2 in args )
+		roundinfo.starttick -= args[2];
+	roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
+}
+
+function lobbyJoinRoundInfo ( args ) {
+	roundinfo.roundtime = args[2];
+	for ( let i = 1; i < args[4].Count; i++ ) {
+		roundinfo.teamnames[i - 1] = args[4][i];
+	}
+	for ( let i = 3; i < args[5].Count; i++ ) {
+		roundinfo.teamcolors[i - 3] = args[5][i];
+	}
+	log( "onClientPlayerJoinLobby end" );
+}
+
+function playerDeathRoundInfo( teamID, killstr ) {
+	roundinfo.aliveinteams[teamID]--;
+	roundinfo.killinfo.push( { "killstr": killstr, "starttick": API.getGlobalTime() } );
+}
+
 API.onServerEventTrigger.connect( function ( eventName, args ) {
 	switch ( eventName ) {
 
@@ -138,47 +161,6 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 					roundinfo.aliveinteams[i] = args[2][i];
 			}
 			log( "onClientPlayerAmountInFightSync end" );
-			break;
-
-		case "onClientPlayerDeath":
-			log( "onClientPlayerDeath start" );
-			roundinfo.aliveinteams[args[1]]--;
-			roundinfo.killinfo.push( { "killstr": args[2], "starttick": API.getGlobalTime() } );
-			log( "onClientPlayerDeath end" );
-			break;
-
-		case "onClientRoundStart":
-			log( "onClientRoundStart roundinfo start" );
-			roundinfo.starttick = API.getGlobalTime();
-			if ( 2 in args )
-				roundinfo.starttick -= args[2];
-			roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
-			log( "onClientRoundStart roundinfo end" );
-			break;
-
-		case "onClientPlayerLeaveLobby":
-			log( "onClientPlayerLeaveLobby start" );
-			removeRoundInfo();
-			roundinfo.killinfo = [];
-			log( "onClientPlayerLeaveLobby end" );
-			break;
-
-		case "onClientRoundEnd":
-			log( "onClientRoundEnd start" );
-			removeRoundInfo();
-			log( "onClientRoundEnd end" );
-			break;
-
-		case "onClientPlayerJoinLobby":
-			log( "onClientPlayerJoinLobby start" );
-			roundinfo.roundtime = args[2];
-			for ( let i = 1; i < args[4].Count; i++ ) {
-				roundinfo.teamnames[i-1] = args[4][i];
-			}
-			for ( let i = 3; i < args[5].Count; i++ ) {
-				roundinfo.teamcolors[i-3] = args[5][i];
-			}
-			log( "onClientPlayerJoinLobby end" );
 			break;
 	}
 } );

@@ -31,12 +31,16 @@ namespace Class {
 				if ( this.isOfficial )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
+				if ( this.currentMap != null && this.currentMap.type == "bomb" )
+					this.StopRoundBomb ();
 				this.currentMap = this.GetNextMap ();
+				if ( this.currentMap.type == "bomb" )
+					this.BombMapChose ();
 				this.CreateTeamSpawnBlips ();
 				this.CreateMapLimitBlips ();
 				if ( this.mixTeamsAfterRound )
 					this.MixTeams ();
-				this.SendAllPlayerEvent ( "sendClientMapData", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
+				this.SendAllPlayerEvent ( "onClientMapChange", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
 			} );
 
 			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime * 1000 / 2 );
@@ -68,13 +72,6 @@ namespace Class {
 
 		private void StartRoundNormal ( ) {
 			this.SendAllPlayerLangNotification ( "round_mission_normal" );
-		}
-
-		// ONLY FOR 2 TEAMS ROUND //
-		private void StartRoundBomb ( ) {
-			this.SendAllPlayerLangNotification ( "round_mission_bomb_spectator", 0 );
-			this.SendAllPlayerLangNotification ( "round_mission_bomb_good", 1 );
-			this.SendAllPlayerLangNotification ( "round_mission_bomb_bad", 2 );
 		}
 
 		private void StartRound ( ) {

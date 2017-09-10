@@ -108,7 +108,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             log("onMapRemoveFromVoting mapvoting end");
             break;
         case "onAddVoteToMap":
-            log("onClientPlayerLeaveLobby mapvoting start");
+            log("onAddVoteToMap mapvoting start");
             let indexmap = mapvotedata.votingmaps.indexOf(args[0]);
             mapvotedata.votingmaps.splice(indexmap, 1);
             mapvotedata.votings[args[0]]++;
@@ -139,16 +139,14 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             mapvotedata.lastselectedmap = "";
             log("onClientRoundEnd mapvoting end");
             break;
-        case "onClientPlayerLeaveLobby":
-            log("onClientPlayerLeaveLobby mapvoting start");
-            mapvotedata.votings = {};
-            mapvotedata.votingmaps = [];
-            mapvotedata.lastselectedmap = "";
-            mapMenuClose();
-            log("onClientPlayerLeaveLobby mapvoting end");
-            break;
     }
 });
+function localPlayerLeftLobbyMapVoting() {
+    mapvotedata.votings = {};
+    mapvotedata.votingmaps = [];
+    mapvotedata.lastselectedmap = "";
+    mapMenuClose();
+}
 function mapMenuClose() {
     mapvotedata.menu.Visible = false;
     mapvotedata.showmenu = false;

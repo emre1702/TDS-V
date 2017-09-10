@@ -63,6 +63,7 @@
     <Compile Include="server\class\damagesys\Damagesys.cs" />
     <Compile Include="server\class\damagesys\Death.cs" />
     <Compile Include="server\class\damagesys\KillingSpree.cs" />
+    <Compile Include="server\class\lobby\Bomb.cs" />
     <Compile Include="server\manager\command\PlayerCommandManager.cs" />
     <Compile Include="server\manager\fightinfo\PlayerInFightManager.cs" />
     <Compile Include="server\class\lobby\APIExtend.cs" />
@@ -127,6 +128,7 @@
     <TypeScriptCompile Include="client\lobby\blips.ts" />
     <TypeScriptCompile Include="client\lobby\camera.ts" />
     <TypeScriptCompile Include="client\lobby\countdown.ts" />
+    <TypeScriptCompile Include="client\lobby\lobbyevents.ts" />
     <TypeScriptCompile Include="client\lobby\settings.ts" />
     <TypeScriptCompile Include="client\lobby\maplimit.ts" />
     <TypeScriptCompile Include="client\lobby\round.ts" />
