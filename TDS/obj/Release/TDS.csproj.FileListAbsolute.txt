@@ -1,0 +1,12 @@
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\TDS.dll.config
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\TDS.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\TDS.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\GrandTheftMultiplayer.Server.exe
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\GrandTheftMultiplayer.Shared.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\MySql.Data.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\NLog.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\System.Data.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\NLog.xml
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.csprojResolveAssemblyReference.cache
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.pdb

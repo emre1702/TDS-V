@@ -1,0 +1,15 @@
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\DiscordBot.exe.config
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\DiscordBot.exe
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\DiscordBot.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\DSharpPlus.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\Newtonsoft.Json.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\System.Net.Http.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\System.Security.Cryptography.Algorithms.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\System.Security.Cryptography.Encoding.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\System.Security.Cryptography.Primitives.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\System.Security.Cryptography.X509Certificates.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\DSharpPlus.xml
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\bin\Release\Newtonsoft.Json.xml
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\obj\Release\DiscordBot.csprojResolveAssemblyReference.cache
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\obj\Release\DiscordBot.exe
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\DiscordBot\obj\Release\DiscordBot.pdb
