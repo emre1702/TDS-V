@@ -17,3 +17,5 @@ C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\x64\Release\DiscordB
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\x64\Release\DiscordBot.pdb
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\x64\Release\DiscordBot.exe
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\x64\Release\DiscordBot.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\x64\Release\DSharpPlus.CommandsNext.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\x64\Release\DSharpPlus.CommandsNext.xml
