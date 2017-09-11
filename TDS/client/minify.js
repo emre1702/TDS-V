@@ -25,7 +25,7 @@ let files = [
 	"lobby/settings.js",
 	"lobby/spectate.js",
 	"lobby/lobbyevents.js",
-	"lobby/roundevents.js",
+	"lobby/roundevents.js"
 ];
 let code = "";
 let htmlcode = "";
