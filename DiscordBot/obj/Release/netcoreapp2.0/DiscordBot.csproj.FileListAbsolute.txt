@@ -1,0 +1,12 @@
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp2.0\DiscordBot.deps.json
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp2.0\DiscordBot.runtimeconfig.json
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp2.0\DiscordBot.runtimeconfig.dev.json
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp2.0\DiscordBot.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp2.0\DiscordBot.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.csproj.CoreCompileInputs.cache
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.AssemblyInfoInputs.cache
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.AssemblyInfo.cs
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.dll
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.Properties.Resources.resources
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp2.0\DiscordBot.csproj.GenerateResource.Cache
