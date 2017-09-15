@@ -17,6 +17,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			log( "onClientPlayerLeaveLobby start" );
 			if ( API.getLocalPlayer() == args[0] ) {
 				rounddata.infight = false;
+				removeBombThings();
 				removeRoundThings( true );
 				stopCountdownCamera();
 				localPlayerLeftLobbyMapVoting();
