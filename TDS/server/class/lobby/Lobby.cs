@@ -18,6 +18,7 @@ namespace Class {
 			api.onPlayerDisconnected += OnPlayerDisconnected;
 			api.onClientEventTrigger += OnClientEventTrigger;
 			api.onPlayerRespawn += OnPlayerRespawn;
+			api.onPlayerWeaponSwitch += OnPlayerWeaponSwitch;
 		}
 
 		public Lobby ( ) { }
