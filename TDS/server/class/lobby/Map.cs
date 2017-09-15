@@ -69,6 +69,13 @@ namespace Class {
 			}
 		}
 
+		private void DeleteMapBlips ( ) {
+			for ( int i = 0; i < this.mapBlips.Count; i++ ) {
+				this.mapBlips[i].delete ();
+			}
+			this.mapBlips = new List<Blip> ();
+		}
+
 		public void AddSpawnPoint ( Vector3 point, Vector3 rotation ) {
 			this.spawnpoint = point;
 			this.spawnrotation = rotation;
