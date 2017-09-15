@@ -38,6 +38,8 @@ static class Language {
 			["round_mission_bomb_spectator"] = "Mission: Place & defend the bomb or defuse it - or kill all opponents.",
 			["round_mission_bomb_good"] = "Mission: Prevent the bomb-explosion or kill all opponents!",
 			["round_mission_bomb_bad"] = "Mission: Let the bomb explode on one of the spots or kill all opponents!",
+			["bomb_planted"] = "Bombe wurde platziert!",
+			["killing_spree_healtharmor"] = "{1} hat einen {2}er Killingspree und kriegt dafür {3} Leben/Weste.",
 
 			["welcome_1"] = "Welcome to ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "For announcements, support, bug-reports etc.",
@@ -75,6 +77,8 @@ static class Language {
 			["round_mission_bomb_spectator"] = "Ziel: Bombe legen & verteidigen oder entschärfen - oder alle Gegner töten.",
 			["round_mission_bomb_good"] = "Ziel: Verhinde die Bomben-Explosion oder töte alle Gegner!",
 			["round_mission_bomb_bad"] = "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!",
+			["bomb_planted"] = "Bomb was planted!",
+			["killing_spree_healtharmor"] = "{1} has got a {2}-killingspree and gets a {3} life/armor bonus.",
 
 			["welcome_1"] = "Willkommen auf dem ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "Für Ankündigungen, Support, Bug-Meldung usw.",
