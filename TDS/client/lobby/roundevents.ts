@@ -50,6 +50,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientRoundEnd": 
 			log( "onClientRoundEnd start" );
 			rounddata.infight = false;
+			removeBombThings();
 			emptyMapLimit();
 			removeRoundThings( false );
 			stopCountdown();
@@ -71,6 +72,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			if ( API.getLocalPlayer() == args[0] ) {
 				rounddata.infight = false;
 				stopMapLimitCheck();
+				removeBombThings();
 			} else {
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
 				playerDeathRoundInfo( args[1], args[2] );
@@ -83,5 +85,19 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
 			log( "onClientPlayerQuit end" );
 			break;
+
+		case "onClientPlayerGotBomb":
+			localPlayerGotBomb( args[0] );
+			break;
+
+		case "onClientPlayerPlantedBomb":
+			localPlayerPlantedBomb();
+			break;
+
+		case "onClientBombPlanted":
+			bombPlanted ( args[0] );
+			break;
+
+		
 	}
 } );
