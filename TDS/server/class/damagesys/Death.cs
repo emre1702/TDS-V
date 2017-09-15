@@ -29,6 +29,8 @@ namespace Class {
 				deadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 ) );
 				Client killer = API.shared.getPlayerFromHandle ( entityKiller ) ?? character.lobby.damageSys.GetLastHitter ( player, character );
 
+				dmgsys.playerSpree.Remove ( player );
+
 				if ( character.lifes > 0 ) {
 					character.lobby.OnPlayerDeath ( player, killer, weapon, character );
 
@@ -41,6 +43,9 @@ namespace Class {
 							dmgsys.playerKills.TryAdd ( killer, 0 );
 						}
 						dmgsys.playerKills[killer]++;
+
+						// Killingspree //
+						dmgsys.AddToKillingSpree ( killer );
 					}
 
 					if ( character.lobby.isOfficial ) {
@@ -98,6 +103,7 @@ namespace Class {
 						if ( lasthittercharacter.lifes > 0 ) {
 							lasthittercharacter.kills++;
 							lasthitter.SendLangNotification ( "got_last_hitted_kill", player.name );
+							this.AddToKillingSpree ( lasthitter );
 						}
 					}
 				}
