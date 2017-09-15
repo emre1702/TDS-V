@@ -18,6 +18,41 @@ namespace Class {
 		public List<List<Client>> players = new List<List<Client>> { new List<Client> () };
 		private List<List<Client>> alivePlayers = new List<List<Client>> { new List<Client> () };
 
+		public void AddPlayer ( Client player, bool spectator = false ) {
+			player.freeze ( true );
+			Class.Character character = player.GetChar ();
+			Lobby oldlobby = character.lobby;
+			if ( oldlobby == Manager.MainMenu.lobby && this != oldlobby ) {
+				oldlobby.players[0].Remove ( player );
+			}
+			character.lobby = this;
+			character.spectating = null;
+			player.dimension = this.dimension;
+			if ( this.isPlayable ) {
+				if ( this.gotRounds ) {
+					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, mapname, this.teams, this.teamColorsList );
+				} else {
+					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
+					player.position = this.spawnpoint;
+					player.rotation = this.spawnrotation;
+					player.stopSpectating ();
+					player.freeze ( false );
+				}
+			} else {
+				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
+				player.stopSpectating ();
+			}
+
+			if ( spectator ) {
+				this.AddPlayerAsSpectator ( player, character );
+			} else {
+				this.AddPlayerAsPlayer ( player, character );
+			}
+
+			this.SendPlayerRoundInfoOnJoin ( player );
+		}
+
 		private void SendPlayerAmountInFightInfo ( Client player ) {
 			List<int> amountinteams = new List<int> ();
 			List<int> amountaliveinteams = new List<int> ();
@@ -76,41 +111,6 @@ namespace Class {
 			}
 		}
 
-		public void AddPlayer ( Client player, bool spectator = false ) {
-			player.freeze ( true );
-			Class.Character character = player.GetChar ();
-			Lobby oldlobby = character.lobby;
-			if ( oldlobby == Manager.MainMenu.lobby && this != oldlobby ) {
-				oldlobby.players[0].Remove ( player );
-			}
-			character.lobby = this;
-			character.spectating = null;
-			player.dimension = this.dimension;
-			if ( this.isPlayable ) {
-				if ( this.gotRounds ) {
-					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
-					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, mapname, this.teams, this.teamColorsList );
-				} else {
-					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
-					player.position = this.spawnpoint;
-					player.rotation = this.spawnrotation;
-					player.stopSpectating ();
-					player.freeze ( false );
-				}
-			} else {
-				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
-				player.stopSpectating ();	
-			}
-
-			if ( spectator ) {
-				this.AddPlayerAsSpectator ( player, character );
-			} else {
-				this.AddPlayerAsPlayer ( player, character );
-			}
-
-			this.SendPlayerRoundInfoOnJoin ( player );
-		}
-
 		private void SetPlayerReadyForRound ( Client player, int teamID ) {
 			player.armor = this.armor;
 			player.health = this.health;
@@ -143,6 +143,7 @@ namespace Class {
 				Manager.FightInfo.DeathInfoSync ( this, player, teamID, killer, (int) WeaponHash.Unarmed );
 				this.RemovePlayerFromAlive ( player, character );
 			}
+			this.damageSys.playerSpree.Remove ( player );
 
 			if ( this != Manager.MainMenu.lobby ) {
 				Manager.MainMenu.Join ( player );
@@ -207,6 +208,13 @@ namespace Class {
 			player.GetChar ().lobby.RemovePlayer ( player );
 		}
 
+		private static void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon ) {
+			Character character = player.GetChar ();
+			if ( character.lobby.bombAtPlayer == player && character.lobby.currentMap.type == "bomb" ) {
+				character.lobby.ToggleBombAtHand ( player, oldweapon );
+			}
+		}
+
 		private static void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
@@ -247,6 +255,23 @@ namespace Class {
 
 				case "onVoteForMap":
 					player.GetChar ().lobby.AddVoteToMap ( player, args[0] );
+					break;
+
+				// BOMB //
+				case "onPlayerStartPlanting":
+					player.GetChar ().lobby.StartBombPlanting ( player );
+					break;
+
+				case "onPlayerStopPlanting":
+					player.GetChar ().lobby.StopBombPlanting ( player );
+					break;
+
+				case "onPlayerStartDefusing":
+					player.GetChar ().lobby.StartBombDefusing ( player );
+					break;
+
+				case "onPlayerStopDefusing":
+					player.GetChar ().lobby.StopBombDefusing ( player );
 					break;
 			}
 		}
@@ -315,6 +340,15 @@ namespace Class {
 					} else
 						this.players[teamID].RemoveAt ( j );
 
+		}
+
+		private bool IsSomeoneInLobby ( ) {
+			this.RefreshPlayerList ();
+			for ( int i = 0; i < this.players.Count; i++ ) {
+				if ( this.players[i].Count > 0 )
+					return true;
+			}
+			return false;
 		}
 	}
 }
