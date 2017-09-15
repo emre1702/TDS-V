@@ -104,18 +104,11 @@ namespace Class {
 			this.status = "roundend";
 			API.shared.consoleOutput ( this.status );
 			this.roundStartTimer.Kill ();
-			for ( int i = 0; i < this.mapBlips.Count; i++ ) {
-				this.mapBlips[i].delete ();
-			}
-			this.mapBlips = new List<Blip> ();
-			bool foundone = false;
+			this.DeleteMapBlips ();
 			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 * 1000 );
-			this.RefreshPlayerList ();
-			for ( int i = 0; i < this.players.Count && !foundone; i++ ) {
-				if ( this.players[i].Count > 0 )
-					foundone = true;
-			}
-			if ( foundone ) {
+			if ( this.currentMap.type == "bomb" )
+				this.StopRoundBombAtRoundEnd ();
+			if ( this.IsSomeoneInLobby() ) {
 				this.roundStartTimer = Timer.SetTimer ( this.StartMapChoose, this.roundEndTime * 1000 / 2, 1 );
 				this.SendAllPlayerEvent ( "onClientRoundEnd" );
 			} else if ( this.deleteWhenEmpty ) {
