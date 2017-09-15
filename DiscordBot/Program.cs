@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscordBot {
 	public partial class Program {
-		public static Dictionary<IDiscordClient, IAudioClient> clientsAudioClient = new Dictionary<IDiscordClient, IAudioClient> ();
-		public static Dictionary<IDiscordClient, float> clientsVolume = new Dictionary<IDiscordClient, float> ();
+		public static ConcurrentDictionary<IDiscordClient, IAudioClient> clientsAudioClient = new ConcurrentDictionary<IDiscordClient, IAudioClient> ();
+		public static ConcurrentDictionary<IDiscordClient, float> clientsVolume = new ConcurrentDictionary<IDiscordClient, float> ();
 
 		private DiscordSocketClient client;
 		private CommandService commands;
