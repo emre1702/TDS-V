@@ -15,6 +15,7 @@ let files = [
 	"registerlogin/registerlogin.js",
 
 	"lobby/blips.js",
+	"lobby/bomb.js",
 	"lobby/camera.js",
 	"lobby/choice.js",
 	"lobby/countdown.js",
