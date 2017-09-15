@@ -3,17 +3,45 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Audio;
+using Discord.Audio.Streams;
 using Discord.Commands;
 
 namespace DiscordBot {
 	public class UserCommands : ModuleBase {
 
+		private Random random = new Random ();
+
 		[Command("hi"), Summary("Greets the user"), Alias("hello", "hallo", "greet")]
-		public async Task GreetUser () {
+		public async Task GreetUser ( params string[] args ) {
 			await ReplyAsync ( $":wave: Hello {this.Context.User.Mention} :wave:" );
+		}
+
+		[Command("8ball")]
+		public async Task EightBall ( params string[] args ) {
+			int rndm = random.Next ( 1, 16 );
+
+			if ( rndm >= 1 && rndm <= 3 )
+				await ReplyAsync ( "Yes" );
+			else if ( rndm == 4 )
+				await ReplyAsync ( "Absolutely" );
+			else if ( rndm >= 5 && rndm <= 7 )
+				await ReplyAsync ( "No" );
+			else if ( rndm == 8 )
+				await ReplyAsync ( "Never" );
+			else if ( rndm >= 9 && rndm <= 11 )
+				await ReplyAsync ( "Maybe" );
+			else if ( rndm == 12 )
+				await ReplyAsync ( "Ask again" );
+			else if ( rndm == 13 )
+				await ReplyAsync ( "I don't know" );
+			else if ( rndm == 14 )
+				await ReplyAsync ( "Not sure" );
+			else if ( rndm == 15 )
+				await ReplyAsync ( "You should ask him" );
 		}
 	}
 
@@ -25,7 +53,7 @@ namespace DiscordBot {
 		}
 
 		[Command("join"), Summary("Joins your channel"), Alias ("come")]
-		public async Task ComeToChannel ( ) {
+		public async Task ComeToChannel ( params string[] args ) {
 			IVoiceChannel channel = ( this.Context.User as IGuildUser )?.VoiceChannel;
 			if ( channel == null ) {
 				await this.Context.Channel.SendMessageAsync ( "You are not in a voice channel!" );
@@ -36,21 +64,16 @@ namespace DiscordBot {
 		} 
 
 		private Process CreateStream ( string url, float volume ) {
-			Process currentsong = new Process ();
 
 			string volstr = volume.ToString ().Replace ( ',', '.' );
-			this.Context.Channel.SendMessageAsync ( volstr );
 
-			currentsong.StartInfo = new ProcessStartInfo {
+			return Process.Start ( new ProcessStartInfo {
 				FileName = "bash",
 				Arguments = "-c \"/usr/local/bin/youtube-dl -o - " + url+ " | ffmpeg -i pipe:0 -ac 2 -f s16le -ar 48000 -af volume="+ volstr + " pipe:1\"",
 				UseShellExecute = false,
 				RedirectStandardOutput = true,
 				CreateNoWindow = true
-			};
-
-			currentsong.Start ();
-			return currentsong;
+			} );
 		}
 
 
@@ -74,8 +97,7 @@ namespace DiscordBot {
 			Stream output = ffmpeg.StandardOutput.BaseStream;
 			AudioOutStream discord = client.CreatePCMStream ( AudioApplication.Music );
 			await output.CopyToAsync ( discord );
-			await Task.Delay ( 10000 );
-			await discord.FlushAsync ();
+			await discord.FlushAsync ().ConfigureAwait ( false );
 		}
 
 		/* [Command ( "stream" ), Summary ( "Plays a stream" ), Alias ( "radio" )]
