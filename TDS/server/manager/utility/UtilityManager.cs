@@ -9,6 +9,18 @@ namespace Manager {
 		public static readonly Random rnd = new Random ();
 		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
+		#pragma warning disable IDE1006 // Benennungsstile
+		[Flags]
+		public enum AnimationFlags {
+			Loop = 1 << 0,
+			StopOnLastFrame = 1 << 1,
+			OnlyAnimateUpperBody = 1 << 4,
+			AllowPlayerControl = 1 << 5,
+			Cancellable = 1 << 7
+		};
+		#pragma warning restore IDE1006 // Benennungsstile
+
+
 		public static string ConvertToSHA512 ( string input ) {
 			byte[] hashbytes = SHA512Managed.Create ().ComputeHash ( Encoding.Default.GetBytes ( input ) );
 			StringBuilder sb = new StringBuilder ();
