@@ -28,6 +28,7 @@ namespace Class {
 			this.playerDamage = new ConcurrentDictionary<Client, int> ();
 			this.playerKills = new ConcurrentDictionary<Client, int> ();
 			this.playerAssists = new ConcurrentDictionary<Client, int> ();
+			this.playerSpree = new Dictionary<Client, int> ();
 		}
 	}
 }
