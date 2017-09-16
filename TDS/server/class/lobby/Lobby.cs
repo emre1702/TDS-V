@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
 
 namespace Class { 
 	partial class Lobby {
@@ -19,6 +21,7 @@ namespace Class {
 			api.onClientEventTrigger += OnClientEventTrigger;
 			api.onPlayerRespawn += OnPlayerRespawn;
 			api.onPlayerWeaponSwitch += OnPlayerWeaponSwitch;
+			api.onEntityEnterColShape += OnEntityEnterColShape;
 		}
 
 		public Lobby ( ) { }
@@ -71,6 +74,18 @@ namespace Class {
 					if ( !this.players[i][j].exists || this.players[i][j].GetChar ().lobby != this ) {
 						this.players[i].RemoveAt ( j );
 					} 
+				}
+			}
+		}
+
+		private static void OnEntityEnterColShape ( ColShape shape, NetHandle entity ) {
+			Client player = API.shared.getPlayerFromHandle ( entity );
+			if ( player != null ) {
+				Character character = player.GetChar ();
+				if ( lobbyBombTakeCol.ContainsKey ( character.lobby ) ) {
+					if ( character.lifes > 0 && character.team == 1 ) {
+						character.lobby.TakeBomb ( player );
+					}
 				}
 			}
 		}
