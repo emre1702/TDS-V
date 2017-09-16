@@ -1,9 +1,39 @@
 ﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Shared;
+using System.Collections.Generic;
 
 namespace Manager {
 	class ResourceStop : Script {
 		public ResourceStop ( ) {
 			Manager.Log.SaveInDatabase ();
+			RemoveAllCreated ();
+		}
+
+		private static void RemoveAllCreated ( ) {
+			List<NetHandle> blips = API.shared.getAllBlips ();
+			for ( int i = 0; i < blips.Count; i++ )
+				API.shared.deleteEntity ( blips[i] );
+
+			List<NetHandle> markers = API.shared.getAllMarkers ();
+			for ( int i = 0; i < markers.Count; i++ )
+				API.shared.deleteEntity ( markers[i] );
+
+			List<NetHandle> peds = API.shared.getAllPeds ();
+			for ( int i = 0; i < peds.Count; i++ )
+				API.shared.deleteEntity ( peds[i] );
+
+			List<NetHandle> pickups = API.shared.getAllPickups ();
+			for ( int i = 0; i < pickups.Count; i++ )
+				API.shared.deleteEntity ( pickups[i] );
+
+			List<NetHandle> vehicles = API.shared.getAllVehicles ();
+			for ( int i = 0; i < vehicles.Count; i++ )
+				API.shared.deleteEntity ( vehicles[i] );
+
+			List<NetHandle> objects = API.shared.getAllObjects ();
+			for ( int i = 0; i < objects.Count; i++ )
+				API.shared.deleteEntity ( objects[i] );
+
 		}
 	}
 }
