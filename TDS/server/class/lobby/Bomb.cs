@@ -2,6 +2,7 @@
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 
@@ -20,6 +21,8 @@ namespace Class {
 		// name: prop_mp_cant_place_med
 		// id: -263709501
 
+		private static Dictionary<Lobby, SphereColShape> lobbyBombTakeCol = new Dictionary<Lobby, SphereColShape> ();
+
 		private List<Object> bombPlantPlaces = new List<Object> ();
 		private List<Blip> bombPlantBlips = new List<Blip> ();
 		private Object bomb;
@@ -29,6 +32,7 @@ namespace Class {
 		private Timer bombDefuseTimer;
 		private Client planter;
 		private Blip plantBlip;
+		private Marker bombTakeMarker;
 
 		private void BombMapChose ( ) {
 			for ( int i = 0; i < this.currentMap.bombPlantPlacesPos.Count; i++ ) {
@@ -53,13 +57,21 @@ namespace Class {
 			}
 		}
 
+		private void BombToHand ( Client player ) {
+			this.bomb.detach ( false );
+			this.bomb.attachTo ( player, "IK_R_Hand", new Vector3 (), new Vector3 () );
+		}
+
+		private void BombToBack ( Client player ) {
+			this.bomb.detach ( false );
+			this.bomb.attachTo ( player, "SKEL_Spine_Root", new Vector3 (), new Vector3 () );
+		}
+
 		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon ) {
 			if ( oldweapon == WeaponHash.Unarmed ) {
-				this.bomb.detach ( false );
-				this.bomb.attachTo ( player, "SKEL_Spine_Root", new Vector3 (), new Vector3 () );
+				this.BombToBack ( player );
 			} else if ( player.currentWeapon == WeaponHash.Unarmed ) {
-				this.bomb.detach ( false );
-				this.bomb.attachTo ( player, "IK_R_Hand", new Vector3 (), new Vector3 () );
+				this.BombToHand ( player );
 			}
 		}
 
@@ -164,6 +176,29 @@ namespace Class {
 			}
 		}
 
+		private void DropBomb () {
+			this.bomb.detach ();
+			this.bomb.freezePosition = true;
+			this.bomb.position = this.bombAtPlayer.position;
+			this.bombAtPlayer = null;
+			this.bombTakeMarker = API.shared.createMarker ( 0, this.bomb.position, new Vector3 (), new Vector3 (), new Vector3 ( 1, 1, 1 ), 180, 180, 0, 0, this.dimension );
+			SphereColShape bombtakecol = API.shared.createSphereColShape ( this.bomb.position, 2 );
+			lobbyBombTakeCol[this] = bombtakecol;
+		}
+
+		private void TakeBomb ( Client player ) {
+			this.bombAtPlayer = player;
+			if ( player.currentWeapon == WeaponHash.Unarmed )
+				this.BombToHand ( player );
+			else
+				this.BombToBack ( player );
+			this.bomb.freezePosition = false;
+			this.bombTakeMarker.delete ();
+			this.bombTakeMarker = null;
+			API.shared.deleteColShape ( lobbyBombTakeCol[this] );
+			lobbyBombTakeCol.Remove ( this );
+		}
+
 		private void StopBombDefusing ( Client player ) {
 			if ( this.bombDefuseTimer != null ) {
 				this.bombDefuseTimer.Kill ();
@@ -184,6 +219,12 @@ namespace Class {
 			if ( this.bombDetonateTimer != null ) {
 				this.bombDetonateTimer.Kill ();
 				this.bombDetonateTimer = null;
+			}
+			if ( lobbyBombTakeCol.ContainsKey ( this ) ) {
+				API.shared.deleteColShape ( lobbyBombTakeCol[this] );
+				lobbyBombTakeCol.Remove ( this );
+				this.bombTakeMarker.delete ();
+				this.bombTakeMarker = null;
 			}
 		}
 
