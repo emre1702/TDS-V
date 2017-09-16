@@ -157,6 +157,9 @@ namespace Class {
 			int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
 			this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
 			this.alivePlayers[teamID].RemoveAt ( aliveindex );
+			if ( this.bombAtPlayer == player ) {
+				this.DropBomb ();
+			}
 			this.CheckLobbyForEnoughAlive ();
 		}
 
@@ -198,6 +201,9 @@ namespace Class {
 			if ( character.lifes > 0 ) {
 				character.lifes--;
 				character.lobby.DeathInfoSync ( player, character.team, killer, weapon );
+				if ( this.bombAtPlayer == player ) {
+					this.DropBomb ();
+				}
 				if ( character.lifes == 0 ) {
 					this.RemovePlayerFromAlive ( player, character );
 				}
