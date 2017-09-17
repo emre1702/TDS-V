@@ -22,6 +22,8 @@ namespace Class {
 		// id: -263709501
 
 		private static Dictionary<Lobby, SphereColShape> lobbyBombTakeCol = new Dictionary<Lobby, SphereColShape> ();
+		private static int counterTerroristTeamID = 1;
+		private static int terroristTeamID = 2;
 
 		private List<Object> bombPlantPlaces = new List<Object> ();
 		private List<Blip> bombPlantBlips = new List<Blip> ();
@@ -46,10 +48,10 @@ namespace Class {
 		}
 
 		private void GiveBombToRandomTerrorist ( ) {
-			int amount = this.players[1].Count;
+			int amount = this.players[terroristTeamID].Count;
 			if ( amount > 0 ) {
 				int rnd = Manager.Utility.rnd.Next ( amount );
-				Client player = this.players[1][rnd];
+				Client player = this.players[terroristTeamID][rnd];
 				this.bomb.collisionless = true;
 				this.bomb.attachTo ( player, "SKEL_Spine_Root", new Vector3 (), new Vector3 () );
 				this.bombAtPlayer = player;
@@ -86,7 +88,7 @@ namespace Class {
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				this.damageSys.lastHitterDictionary[player] = this.planter;
 				player.kill ();
-			}, 2 );
+			}, counterTerroristTeamID );
 			// TEAM 2 WON //
 			//this.EndRoundEarlier ();
 		}
@@ -97,13 +99,13 @@ namespace Class {
 				for ( int i = 0; i < this.currentMap.bombPlantPlacesPos.Count; i++ ) {
 					if ( playerpos.DistanceTo ( this.currentMap.bombPlantPlacesPos[i] ) <= 5 ) {
 						player.triggerEvent ( "onClientPlayerPlantedBomb" );
-						this.SendAllPlayerEvent ( "onClientBombPlanted", 2, playerpos );
+						this.SendAllPlayerEvent ( "onClientBombPlanted", counterTerroristTeamID, playerpos );
 						this.bomb.detach ();
 						this.bomb.position = playerpos;
 						this.bombPlantPlaces[i].delete ();
 						this.bombPlantPlaces[i] = API.shared.createObject ( -263709501, this.currentMap.bombPlantPlacesPos[i], this.currentMap.bombPlantPlacesRot[i], this.dimension );
 						this.bombPlantBlips[i].color = 49;
-						// FLASH AFTER NEXT UPDATE //
+						//API.shared.setBlipFlashing ( this.bombPlantBlips[i], true );
 						this.bombAtPlayer = null;
 						this.planter = player;
 						this.SendAllPlayerLangNotification ( "bomb_planted" );
@@ -122,7 +124,7 @@ namespace Class {
 					this.FuncIterateAllPlayers ( ( target, teamID ) => {
 						this.damageSys.lastHitterDictionary[target] = player;
 						target.kill ();
-					}, 2 );
+					}, terroristTeamID );
 					//this.EndRoundEarlier ();
 					// TEAM 1 WON //
 				}

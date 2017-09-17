@@ -83,7 +83,7 @@ namespace Class {
 			if ( player != null ) {
 				Character character = player.GetChar ();
 				if ( lobbyBombTakeCol.ContainsKey ( character.lobby ) ) {
-					if ( character.lifes > 0 && character.team == 1 ) {
+					if ( character.lifes > 0 && character.team == terroristTeamID ) {
 						character.lobby.TakeBomb ( player );
 					}
 				}
