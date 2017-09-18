@@ -125,13 +125,6 @@ namespace Class {
 			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
 		}
 
-		private void GivePlayerWeapons ( Client player ) {
-			API.shared.removeAllPlayerWeapons ( player );
-			for ( int i = 0; i < this.weapons.Count; i++ ) {
-				API.shared.givePlayerWeapon ( player, this.weapons[i], this.weaponsAmmo[i], false, true );
-			}
-		}
-
 		public void RemovePlayer ( Client player ) {
 			Character character = player.GetChar ();
 			int teamID = character.team;
