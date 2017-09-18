@@ -21,17 +21,7 @@ namespace Class {
 				if ( rewardtyp == "healtharmor" ) {
 					int bonus = reward.Item2;
 					player.GetChar ().lobby.SendAllPlayerLangNotification ( "killing_spree_healtharmor", -1, player.name, this.playerSpree[player].ToString (), bonus.ToString() );
-					if ( player.health + bonus <= 100 ) {
-						player.health += bonus;
-					} else {
-						bonus -= 100 - player.health;
-						player.health = 100;
-						if ( player.armor + bonus <= 100 ) {
-							player.armor += bonus;
-						} else {
-							player.armor = 100;
-						}
-					}
+					player.AddHPArmor ( bonus );
 				}
 				
 			}

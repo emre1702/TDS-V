@@ -25,4 +25,23 @@ static class PlayerExtend {
 		}
 		return false;
 	}
+
+	public static int AddHPArmor ( this Client player, int hparmor ) {
+		int resthparmor = hparmor;
+		if ( player.health + resthparmor <= 100 ) {
+			player.health += resthparmor;
+			resthparmor = 0;
+		} else {
+			resthparmor -= 100 - player.health;
+			player.health = 100;
+			if ( player.armor + resthparmor <= 100 ) {
+				player.armor += resthparmor;
+				resthparmor = 0;
+			} else {
+				resthparmor -= 100 - player.armor;
+				player.armor = 100;
+			}
+		}
+		return resthparmor;
+	}
 }
