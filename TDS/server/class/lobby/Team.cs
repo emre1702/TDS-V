@@ -55,8 +55,7 @@ namespace Class {
 						int teamID = this.GetTeamIDWithFewestMember ( newplayerslist );
 						newplayerslist[teamID].Add ( players[i][j] );
 						this.players[i][j].setSkin ( this.teamSkins[teamID] );
-					} else
-						Manager.Log.Error ( "MixTeams in playerlist is non existent player" );
+					}
 				}
 			}
 			this.players = new List<List<Client>> ( newplayerslist );
