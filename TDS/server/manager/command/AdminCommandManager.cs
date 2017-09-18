@@ -77,7 +77,7 @@ namespace Manager {
 		
 
 		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
-		public static void BanPlayer ( Client player, string targetname, int hours, string reason ) {
+		public static async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
 			if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
 				if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
 				|| hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] )
@@ -94,7 +94,7 @@ namespace Manager {
 					} else {
 						if ( target != null )
 							targetaddress = target.address;
-						DataTable targetdata = Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam );
+						DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam );
 						targetadminlvl = Convert.ToInt32 ( targetdata.Rows[0]["adminlvl"] );
 					}
 					if ( targetadminlvl <= player.GetChar ().adminLvl ) {

@@ -84,10 +84,10 @@ namespace Manager {
 			playerUIDs[name] = uid;
 		}
 
-		private static void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
+		private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
 			player.name = player.socialClubName;
 			if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
-				DataTable result = Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
+				DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
 											new Dictionary<string, string> { { "@scn", player.socialClubName }, { "@address", player.address } } );
 				if ( result.Rows.Count > 0 ) {
 					DataRow row = result.Rows[0];
@@ -102,12 +102,12 @@ namespace Manager {
 			}
 		}
 
-		private static void OnResourceStart ( ) {
-			DataTable result = Database.ExecResult ( "SELECT UID, name FROM player" );
+		private static async void OnResourceStart ( ) {
+			DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" );
 			foreach ( DataRow row in result.Rows ) {
 				playerUIDs[row["name"].ToString ()] = Convert.ToInt32 ( row["UID"] );
 			}
-			DataTable maxuidresult = Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" );
+			DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" );
 			lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
 		}
 
@@ -192,8 +192,8 @@ namespace Manager {
 			/////////
 		}
 
-		public static void UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
-			DataTable result = Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
+		public static async void UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
+			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
 			targetaddress = result.Rows[0]["address"].ToString ();
 			Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
 			socialClubNameBanDict.Remove ( targetname );

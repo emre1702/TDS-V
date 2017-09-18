@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
 using GrandTheftMultiplayer.Server.API;
+using System.Threading.Tasks;
+using System.Data.Common;
 
 static class Database {
 	private static readonly string ip = "127.0.0.1";
@@ -28,12 +30,12 @@ static class Database {
 	/* Exports */
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
-	public static DataTable ExecResult ( string sql ) {
+	public static async Task<DataTable> ExecResult ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				conn.Open ();
-				MySqlDataReader rdr = cmd.ExecuteReader ();
+				await conn.OpenAsync ();
+				DbDataReader rdr = await cmd.ExecuteReaderAsync ();
 				DataTable results = new DataTable ();
 				results.Load ( rdr );
 				rdr.Close ();
@@ -45,17 +47,17 @@ static class Database {
 		}
 	}
 
-	public static DataTable ExecPreparedResult ( string sql, Dictionary<string, string> parameters ) {
+	public static async Task<DataTable> ExecPreparedResult ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				conn.Open ();
+				await conn.OpenAsync ();
 
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
 
-				MySqlDataReader rdr = cmd.ExecuteReader ();
+				DbDataReader rdr = await cmd.ExecuteReaderAsync ();
 				DataTable results = new DataTable ();
 				results.Load ( rdr );
 				rdr.Close ();
@@ -68,27 +70,27 @@ static class Database {
 	}
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
-	public static void Exec ( string sql ) {
+	public static async void Exec ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				conn.Open ();
-				cmd.ExecuteNonQuery ();
+				await conn.OpenAsync ();
+				await cmd.ExecuteNonQueryAsync ();
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
 		}
 	}
 
-	public static void ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
+	public static async void ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				conn.Open ();
+				await conn.OpenAsync ();
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
-				cmd.ExecuteNonQuery ();
+				await cmd.ExecuteNonQueryAsync ();
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
