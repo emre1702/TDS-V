@@ -34,10 +34,21 @@ function removeMapInfo() {
 function removeRoundThings( removemapinfo ) {
 	log( "removeRoundThings start" );
 	stopSpectate();
-	stopMapLimitCheck();
 	stopCountdown();
 	if ( removemapinfo ) {
 		removeMapInfo();
 	}
 	log( "removeRoundThings end" );
+}
+
+
+function toggleFightMode( bool ) {
+	if ( bool ) {
+		rounddata.infight = true;
+		API.forceSendAimData( true );
+	} else {
+		rounddata.infight = false;
+		API.forceSendAimData( false );
+		stopMapLimitCheck();
+	}
 }
