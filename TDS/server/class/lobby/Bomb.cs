@@ -37,14 +37,14 @@ namespace Class {
 		private Marker bombTakeMarker;
 
 		private void BombMapChose ( ) {
-			for ( int i = 0; i < this.currentMap.bombPlantPlacesPos.Count; i++ ) {
-				Object place = API.shared.createObject ( -51423166, this.currentMap.bombPlantPlacesPos[i], this.currentMap.bombPlantPlacesRot[i], this.dimension );
+			for ( int i = 0; i < this.currentMap.bombPlantPlaces.Count; i++ ) {
+				Object place = API.shared.createObject ( -51423166, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
 				this.bombPlantPlaces.Add ( place );
-				Blip blip = API.shared.createBlip ( this.currentMap.bombPlantPlacesPos[i], this.dimension );
+				Blip blip = API.shared.createBlip ( this.currentMap.bombPlantPlaces[i], this.dimension );
 				blip.sprite = 433;
 				this.bombPlantBlips.Add ( blip );
 			}
-			this.bomb = API.shared.createObject ( 1764669601, this.currentMap.bombPlantPlacesPos[0], this.currentMap.bombPlantPlacesRot[0], this.dimension );
+			this.bomb = API.shared.createObject ( 1764669601, this.currentMap.bombPlantPlaces[0], new Vector3(), this.dimension );
 		}
 
 		private void GiveBombToRandomTerrorist ( ) {
@@ -52,21 +52,23 @@ namespace Class {
 			if ( amount > 0 ) {
 				int rnd = Manager.Utility.rnd.Next ( amount );
 				Client player = this.players[terroristTeamID][rnd];
-				this.bomb.collisionless = true;
-				this.bomb.attachTo ( player, "SKEL_Spine_Root", new Vector3 (), new Vector3 () );
-				this.bombAtPlayer = player;
-				player.triggerEvent ( "onClientPlayerGotBomb", this.currentMap.bombPlantPlacesPos );
+				this.BombToBack ( player );
+				player.triggerEvent ( "onClientPlayerGotBomb", this.currentMap.bombPlantPlaces );
 			}
 		}
 
 		private void BombToHand ( Client player ) {
-			this.bomb.detach ( false );
-			this.bomb.attachTo ( player, "IK_R_Hand", new Vector3 (), new Vector3 () );
+			this.bomb.detach ();
+			this.bomb.collisionless = true;
+			this.bomb.attachTo ( player, "SKEL_R_Finger01", new Vector3 ( 0.1, 0, 0 ), new Vector3 () );
+			this.bombAtPlayer = player;
 		}
 
 		private void BombToBack ( Client player ) {
-			this.bomb.detach ( false );
-			this.bomb.attachTo ( player, "SKEL_Spine_Root", new Vector3 (), new Vector3 () );
+			this.bomb.detach ();
+			this.bomb.collisionless = true;
+			this.bomb.attachTo ( player, "SKEL_Pelvis", new Vector3 ( 0, 0, 0.24 ), new Vector3 ( 270, 0, 0 ) );
+			this.bombAtPlayer = player;
 		}
 
 		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon ) {
@@ -89,21 +91,23 @@ namespace Class {
 				this.damageSys.lastHitterDictionary[player] = this.planter;
 				player.kill ();
 			}, counterTerroristTeamID );
-			// TEAM 2 WON //
-			//this.EndRoundEarlier ();
+			// TERROR WON //
+			if ( this.status == "round" )
+				this.EndRoundEarlier ();
 		}
 
 		private void PlantBomb ( Client player ) {
 			if ( player.exists ) {
 				Vector3 playerpos = player.position;
-				for ( int i = 0; i < this.currentMap.bombPlantPlacesPos.Count; i++ ) {
-					if ( playerpos.DistanceTo ( this.currentMap.bombPlantPlacesPos[i] ) <= 5 ) {
+				for ( int i = 0; i < this.currentMap.bombPlantPlaces.Count; i++ ) {
+					if ( playerpos.DistanceTo ( this.currentMap.bombPlantPlaces[i] ) <= 5 ) {
 						player.triggerEvent ( "onClientPlayerPlantedBomb" );
 						this.SendAllPlayerEvent ( "onClientBombPlanted", counterTerroristTeamID, playerpos );
 						this.bomb.detach ();
-						this.bomb.position = playerpos;
+						this.bomb.position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
+						this.bomb.rotation = new Vector3 ( 270, 0, 0 );
 						this.bombPlantPlaces[i].delete ();
-						this.bombPlantPlaces[i] = API.shared.createObject ( -263709501, this.currentMap.bombPlantPlacesPos[i], this.currentMap.bombPlantPlacesRot[i], this.dimension );
+						this.bombPlantPlaces[i] = API.shared.createObject ( -263709501, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
 						this.bombPlantBlips[i].color = 49;
 						//API.shared.setBlipFlashing ( this.bombPlantBlips[i], true );
 						this.bombAtPlayer = null;
@@ -125,8 +129,9 @@ namespace Class {
 						this.damageSys.lastHitterDictionary[target] = player;
 						target.kill ();
 					}, terroristTeamID );
-					//this.EndRoundEarlier ();
-					// TEAM 1 WON //
+					// COUNTER-TERROR WON //
+					if ( this.status == "round" )
+						this.EndRoundEarlier ();
 				}
 				player.stopAnimation ();
 			}
@@ -134,8 +139,8 @@ namespace Class {
 
 		private void StartBombPlanting ( Client player ) {
 			if ( this.bomb != null ) {
-				if ( this.status == "playing" ) {
-					if ( this.bombDetonateTimer != null ) {
+				if ( this.status == "round" ) {
+					if ( this.bombDetonateTimer == null ) {
 						if ( this.bombPlantTimer != null ) {
 							this.bombPlantTimer.Kill ();
 							this.bombPlantTimer = null;
@@ -162,15 +167,17 @@ namespace Class {
 		private void StartBombDefusing ( Client player ) {
 			if ( this.bomb != null ) {
 				if ( this.status == "playing" ) {
-					if ( this.bombDefuseTimer != null ) {
-						this.bombDefuseTimer.Kill ();
-						this.bombDefuseTimer = null;
-					}
-					if ( !player.dead ) {
-						if ( player.currentWeapon == WeaponHash.Unarmed ) {
-							if ( this.bombAtPlayer == null ) {
-								player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop | Manager.Utility.AnimationFlags.Cancellable ) );
-								this.bombDefuseTimer = Timer.SetTimer ( ( ) => DefuseBomb ( player ), 8000, 1 );
+					if ( this.bombDetonateTimer != null ) {
+						if ( this.bombDefuseTimer != null ) {
+							this.bombDefuseTimer.Kill ();
+							this.bombDefuseTimer = null;
+						}
+						if ( !player.dead ) {
+							if ( player.currentWeapon == WeaponHash.Unarmed ) {
+								if ( this.bombAtPlayer == null ) {
+									player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop | Manager.Utility.AnimationFlags.Cancellable ) );
+									this.bombDefuseTimer = Timer.SetTimer ( ( ) => DefuseBomb ( player ), 8000, 1 );
+								}
 							}
 						}
 					}
