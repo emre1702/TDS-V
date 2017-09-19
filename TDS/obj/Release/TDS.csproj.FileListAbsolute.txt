@@ -7,6 +7,6 @@ C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\MySql.Data.dll
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\NLog.dll
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\System.Data.dll
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\bin\Release\NLog.xml
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.csprojResolveAssemblyReference.cache
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.dll
 C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.pdb
+C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS\obj\Release\TDS.csproj.CoreCompileInputs.cache
