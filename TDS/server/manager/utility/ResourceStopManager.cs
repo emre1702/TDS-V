@@ -1,12 +1,22 @@
 ﻿using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Shared;
 using System.Collections.Generic;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace Manager {
 	class ResourceStop : Script {
 		public ResourceStop ( ) {
-			Manager.Log.SaveInDatabase ();
+			SaveAllInDatabase ();
 			RemoveAllCreated ();
+		}
+
+		private static async void SaveAllInDatabase () {
+			await Manager.Log.SaveInDatabase ();
+
+			List<Client> players = API.shared.getAllPlayers ();
+			for ( int i = 0; i < players.Count; i++ ) {
+				await Account.SavePlayerData ( players[i] );
+			}
 		}
 
 		private static void RemoveAllCreated ( ) {

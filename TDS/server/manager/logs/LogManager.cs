@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 
 namespace Manager {
@@ -49,7 +50,7 @@ namespace Manager {
 			logQueryDates = new List<string> ();
 		}
 
-		public static void SaveInDatabase ( ) {
+		public static async Task SaveInDatabase ( ) {
 			int amount = logQueryUIDs.Count;
 			if ( amount > 0 ) {
 				logQueryParameters = new Dictionary<string, string> ();
@@ -63,7 +64,7 @@ namespace Manager {
 					}
 				}
 
-				Database.ExecPrepared ( sql, logQueryParameters );
+				await Database.ExecPrepared ( sql, logQueryParameters );
 				ResetLists ();
 			}
 		}

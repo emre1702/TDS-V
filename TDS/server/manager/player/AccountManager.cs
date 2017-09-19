@@ -46,7 +46,7 @@ namespace Manager {
 			player.name = player.socialClubName;
 		}
 
-		private static void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
+		private static async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
 				case "onPlayerJoin":
@@ -57,7 +57,7 @@ namespace Manager {
 					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
 					lastPlayerUID++;
 					playerUIDs[player.socialClubName] = lastPlayerUID;
-					Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
+					await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
 					break;
 
 				case "onPlayerTryLogin":
@@ -95,7 +95,7 @@ namespace Manager {
 						e.Cancel = true;
 						return;
 					} else
-						Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () );
+						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () );
 				}
 				socialClubNameBanDict.Remove ( player.socialClubName );
 				addressBanDict.Remove ( player.address );
@@ -111,10 +111,10 @@ namespace Manager {
 			lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
 		}
 
-		public static void SavePlayerData ( Client player ) {
+		public static async Task SavePlayerData ( Client player ) {
 			Class.Character character = player.GetChar ();
 			if ( character.loggedIn ) {
-				Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID",
+				await Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID",
 					new Dictionary<string, string> {
 						{ "@PLAYTIME", character.playtime.ToString() },
 						{ "@MONEY", character.money.ToString() },
@@ -126,7 +126,7 @@ namespace Manager {
 						{ "@UID", character.uID.ToString() }
 					}
 				);
-				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID",
+				await Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID",
 					new Dictionary<string, string> {
 						{ "@HITSOUND", character.hitsoundOn ? "1" : "0" },
 
@@ -136,16 +136,16 @@ namespace Manager {
 			}
 		}
 
-		private static void OnPlayerDisconnected ( Client player, string reason ) {
-			SavePlayerData ( player );
+		private static async void OnPlayerDisconnected ( Client player, string reason ) {
+			await SavePlayerData ( player );
 			int adminlvl = player.GetChar ().adminLvl;
 			if ( adminlvl > 0 )
 				Admin.SetOffline ( player, adminlvl );
 			API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
 		}
 
-		public static void PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
-			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
+		public static async Task PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
+			await Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)",
 								new Dictionary<string, string> {
 								{ "@socialclubname", targetname },
 								{ "@address", targetaddress },
@@ -167,8 +167,8 @@ namespace Manager {
 			/////////
 		}
 
-		public static void TimeBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, int hours ) {
-			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
+		public static async Task TimeBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, int hours ) {
+			await Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)",
 								new Dictionary<string, string> {
 								{ "@socialclubname", targetname },
 								{ "@address", targetaddress },
@@ -192,10 +192,10 @@ namespace Manager {
 			/////////
 		}
 
-		public static async void UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
+		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
 			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
 			targetaddress = result.Rows[0]["address"].ToString ();
-			Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
+			await Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
 			socialClubNameBanDict.Remove ( targetname );
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );

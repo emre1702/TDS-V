@@ -99,11 +99,11 @@ namespace Manager {
 					}
 					if ( targetadminlvl <= player.GetChar ().adminLvl ) {
 						if ( hours == 0 ) {
-							Account.UnBanPlayer ( player, target, targetname, targetaddress, reason, queryparam );
+							await Account.UnBanPlayer ( player, target, targetname, targetaddress, reason, queryparam );
 						} else if ( hours == -1 ) {
-							Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason );
+							await Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason );
 						} else {
-							Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours );
+							await Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours );
 						}
 					} else
 						player.SendLangNotification ( "adminlvl_not_high_enough" );

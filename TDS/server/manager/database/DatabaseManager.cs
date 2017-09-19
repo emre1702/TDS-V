@@ -70,7 +70,7 @@ static class Database {
 	}
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
-	public static async void Exec ( string sql ) {
+	public static async Task Exec ( string sql ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -82,7 +82,7 @@ static class Database {
 		}
 	}
 
-	public static async void ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
+	public static async Task ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );

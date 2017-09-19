@@ -7,10 +7,10 @@ namespace Manager {
 	class MinuteTimer {
 
 		public static void MinuteTimerOnStart ( ) {
-			Class.Timer.SetTimer ( () => Task.Run ( ( ) => { MinuteTimerFunc (); } ), 60 * 1000, -1 );
+			Class.Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
 		}
 
-		private static void MinuteTimerFunc ( ) {
+		private static async void MinuteTimerFunc ( ) {
 
 			// playtime //
 			List<Client> players = API.shared.getAllPlayers ();
@@ -20,14 +20,14 @@ namespace Manager {
 					if ( character.loggedIn ) {
 						character.playtime++;
 						if ( character.playtime % 30 == 0 ) {
-							Account.SavePlayerData ( players[i] );
+							await Account.SavePlayerData ( players[i] );
 						}
 					}
 				}
 			}
 
 			// log-save //
-			Log.SaveInDatabase ();
+			await Log.SaveInDatabase ();
 		}
 
 	}
