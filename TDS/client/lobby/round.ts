@@ -45,7 +45,7 @@ function removeRoundThings( removemapinfo ) {
 function toggleFightMode( bool ) {
 	if ( bool ) {
 		rounddata.infight = true;
-		API.forceSendAimData( true );
+		API.forceSendAimData( true ); 
 	} else {
 		rounddata.infight = false;
 		API.forceSendAimData( false );
