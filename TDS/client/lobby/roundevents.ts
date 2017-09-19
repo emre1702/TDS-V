@@ -39,17 +39,17 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			endCountdown();
 			rounddata.isspectator = args[0];
 			if ( !rounddata.isspectator ) {
-				rounddata.infight = true;
 				startMapLimit();
-				createTeamBlips ( args[1] );
+				createTeamBlips( args[1] );
+				toggleFightMode( true );
 			}
-			roundStartedRoundInfo ( args )
+			roundStartedRoundInfo( args )
 			log( "onClientRoundStart end" );
 			break;
 
 		case "onClientRoundEnd": 
 			log( "onClientRoundEnd start" );
-			rounddata.infight = false;
+			toggleFightMode( false );
 			removeBombThings();
 			emptyMapLimit();
 			removeRoundThings( false );
@@ -70,8 +70,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 		case "onClientPlayerDeath":
 			log( "onClientPlayerDeath start" );
 			if ( API.getLocalPlayer() == args[0] ) {
-				rounddata.infight = false;
-				stopMapLimitCheck();
+				toggleFightMode( false );
 				removeBombThings();
 			} else {
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
