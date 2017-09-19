@@ -5,7 +5,7 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true);
+    rounddata.mapinfo = new cText(mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true);
 }
 API.onUpdate.connect(function () {
     if (!rounddata.infight) {
@@ -24,10 +24,20 @@ function removeMapInfo() {
 function removeRoundThings(removemapinfo) {
     log("removeRoundThings start");
     stopSpectate();
-    stopMapLimitCheck();
     stopCountdown();
     if (removemapinfo) {
         removeMapInfo();
     }
     log("removeRoundThings end");
+}
+function toggleFightMode(bool) {
+    if (bool) {
+        rounddata.infight = true;
+        API.forceSendAimData(true);
+    }
+    else {
+        rounddata.infight = false;
+        API.forceSendAimData(false);
+        stopMapLimitCheck();
+    }
 }

@@ -9,7 +9,7 @@ let rounddata = {
 
 
 function setMapInfo ( mapname ) {
-	rounddata.mapinfo = new cText( mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 2, true );
+	rounddata.mapinfo = new cText( mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true );
 }
 
 
