@@ -2,12 +2,11 @@
 	"compilerOptions": {
 		"alwaysStrict": true,
 		"noImplicitAny": false,
-		"noEmitOnError": true,
+		"noEmitOnError": false,
 		"removeComments": true,
 		"sourceMap": false,
-		"target": "es6",
-		"module": "es6",
+		"target": "es2016",
 		"checkJs": true
 	},
-  "compileOnSave": true
+	"compileOnSave": true
 }
