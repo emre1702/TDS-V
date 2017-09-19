@@ -19,7 +19,9 @@ var languagelist = {
             "passwordhastobesame": "Beide Passwoerter muessen die selben sein!"
         },
         "round": {
-            "outside_map_limit": "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {1} Sekunden, um zurück zu gehen."
+            "outside_map_limit": "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {1} Sekunden, um zurück zu gehen.",
+            "planting": "Lege Bombe ...",
+            "defusing": "Entschärfe ..."
         },
         "lobby_choice": {
             "arena": "Arena",
@@ -69,7 +71,9 @@ var languagelist = {
             "passwordhastobesame": "Both passwords have to be the same!"
         },
         "round": {
-            "outside_map_limit": "You are outside of the map!\nThere are {1} seconds left to return to the map."
+            "outside_map_limit": "You are outside of the map!\nThere are {1} seconds left to return to the map.",
+            "planting": "planting ...",
+            "defusing": "defusing ..."
         },
         "lobby_choice": {
             "arena": "Arena",
