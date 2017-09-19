@@ -22,7 +22,6 @@ function checkPlant() {
     let isonplacetoplant = false;
     let playerpos = API.getEntityPosition(API.getLocalPlayer());
     for (let i = 0; i < bombdata.placestoplant.length && !isonplacetoplant; i++) {
-        log(playerpos.DistanceTo(bombdata.placestoplant[i]).toString());
         if (playerpos.DistanceTo(bombdata.placestoplant[i]) <= 5)
             isonplacetoplant = true;
     }
