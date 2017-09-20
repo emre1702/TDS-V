@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
@@ -25,16 +26,13 @@ namespace Class {
 			this.mapNames = new List<string> ( newmapnames );
 		}
 
-		public void AddMapDescriptions ( Dictionary<string, List<string>> mapdescriptions, bool clone = true ) {
-			if ( clone )
-				this.mapDescriptions = new Dictionary<string, List<string>> ( mapdescriptions );
-			else
-				this.mapDescriptions = mapdescriptions;
+		public void AddMapDescriptions ( Dictionary<string, List<string>> mapdescriptions ) {
+			this.mapDescriptions = new Dictionary<string, List<string>> ( mapdescriptions );
 		}
 
-		public Map GetRandomMap ( ) {
+		public async Task<Map> GetRandomMap ( ) {
 			int random = Manager.Utility.rnd.Next ( 0, this.mapNames.Count );
-			return Manager.Map.GetMapClass ( this.mapNames[random], this );
+			return await Manager.Map.GetMapClass ( this.mapNames[random], this );
 		}
 
 		private Vector3[] GetMapRandomSpawnData ( int teamID ) {

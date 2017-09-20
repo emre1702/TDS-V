@@ -14,7 +14,15 @@ namespace Manager {
 			mapsforarena.AddRange ( Manager.Map.normalMapNames );
 			mapsforarena.AddRange ( Manager.Map.bombMapNames );
 			lobby.AddMapList ( mapsforarena );
-			lobby.AddMapDescriptions ( Manager.Map.mapDescriptions, false );
+			Dictionary<string, List<string>> mapdescriptionsforarena = new Dictionary<string, List<string>> {
+				{ "german", new List<string>() },
+				{ "english", new List<string>() }
+			};
+			mapdescriptionsforarena["german"].AddRange ( Manager.Map.normalMapDescriptions["german"] );
+			mapdescriptionsforarena["english"].AddRange ( Manager.Map.normalMapDescriptions["english"] );
+			mapdescriptionsforarena["german"].AddRange ( Manager.Map.bombMapDescriptions["german"] );
+			mapdescriptionsforarena["english"].AddRange ( Manager.Map.bombMapDescriptions["english"] );
+			lobby.AddMapDescriptions ( mapdescriptionsforarena );
 			lobby.AddTeam ( "Good", (PedHash) ( 2047212121 ), "g" );
 			lobby.AddTeam ( "Bad", (PedHash) ( 275618457 ), "r" );
 			lobby.deleteWhenEmpty = false;

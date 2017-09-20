@@ -27,13 +27,13 @@ namespace Class {
 			this.status = "mapchoose";
 			API.shared.consoleOutput ( this.status );
 
-			Task.Run ( ( ) => {
+			Task.Run ( async ( ) => {
 				if ( this.isOfficial )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
 				if ( this.currentMap != null && this.currentMap.type == "bomb" )
 					this.StopRoundBomb ();
-				this.currentMap = this.GetNextMap ();
+				this.currentMap = await this.GetNextMap ();
 				if ( this.currentMap.type == "bomb" )
 					this.BombMapChose ();
 				this.CreateTeamSpawnBlips ();

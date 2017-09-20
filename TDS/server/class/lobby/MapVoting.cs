@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
@@ -50,15 +51,15 @@ namespace Class {
 			this.AddVoteToMap ( player, mapname );
 		}
 
-		private Map GetNextMap ( ) {
+		private async Task<Map> GetNextMap ( ) {
 			if ( this.mapVotes.Count > 0 ) {
 				string wonmap = this.mapVotes.Aggregate ( ( l, r ) => l.Value > r.Value ? l : r ).Key;
 				this.SendAllPlayerLangNotification ( "map_won_voting", -1, wonmap );
 				this.mapVotes = new Dictionary<string, int> ();
 				this.playerVotes = new Dictionary<Client, string> ();
-				return Manager.Map.GetMapClass ( wonmap, this );
+				return await Manager.Map.GetMapClass ( wonmap, this );
 			} else
-				return this.GetRandomMap ();
+				return await this.GetRandomMap ();
 		}
 
 		private void SyncMapVotingOnJoin ( Client player ) {
