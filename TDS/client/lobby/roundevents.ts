@@ -57,6 +57,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			stopCountdownCamera();
 			stopTeamBlips();
 			removeRoundInfo();
+			stopMapVoting();
 			log( "onClientRoundEnd end" );
 			break;
 
