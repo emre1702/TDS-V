@@ -1,6 +1,6 @@
 *.ide
 *.suo
-.vs/
+/.vs/
 TDS/packages/EntityFramework.6.1.3/tools/EntityFramework.PowerShell.Utility.dll
 TDS/obj/Debug/build.force
 *.cache
