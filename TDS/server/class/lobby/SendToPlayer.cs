@@ -1,4 +1,5 @@
-﻿using GrandTheftMultiplayer.Server.API;
+﻿using System.Collections.Generic;
+using GrandTheftMultiplayer.Server.API;
 
 namespace Class {
 
@@ -16,25 +17,16 @@ namespace Class {
 		}
 
 		public void SendAllPlayerLangNotification ( string langstr, int teamindex = -1, params string[] args ) {
-			if ( teamindex == -1 ) {
-				this.FuncIterateAllPlayers ( ( player, teamID ) => {
-					player.SendLangNotification ( langstr, args );
-				} );
-			} else
-				this.FuncIterateAllPlayers ( ( player, teamID ) => {
-					player.SendLangNotification ( langstr, args );
-				}, teamindex );
+			Dictionary<string, string> texts = Language.GetLangDictionary ( langstr, args );
+			this.FuncIterateAllPlayers ( ( player, teamID ) => {
+				API.shared.sendNotificationToPlayer ( player, texts[player.GetChar().language] );
+			} );
 		}
 
 		public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
-			if ( teamindex == -1 ) {
-				this.FuncIterateAllPlayers ( ( player, teamID ) => {
-					player.sendChatMessage ( message );
-				} );
-			} else
-				this.FuncIterateAllPlayers ( ( player, teamID ) => {
-					player.sendChatMessage ( message );
-				}, teamindex );
+			this.FuncIterateAllPlayers ( ( player, teamID ) => {
+				player.sendChatMessage ( message );
+			} );
 		}
 	}
 }
