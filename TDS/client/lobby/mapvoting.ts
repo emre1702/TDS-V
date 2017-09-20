@@ -145,22 +145,18 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			}
 			log( "onMapVotingSyncOnJoin mapvoting end" );
 			break;
-
-		case "onClientRoundEnd":
-			log( "onClientRoundEnd mapvoting start" );
-			mapvotedata.votings = {};
-			mapvotedata.votingmaps = [];
-			mapvotedata.lastselectedmap = "";
-			log( "onClientRoundEnd mapvoting end" );
-			break;
 	}
 } );
 
 function localPlayerLeftLobbyMapVoting() {
+	stopMapVoting()
+	mapMenuClose();
+}
+
+function stopMapVoting() {
 	mapvotedata.votings = {};
 	mapvotedata.votingmaps = [];
 	mapvotedata.lastselectedmap = "";
-	mapMenuClose();
 }
 
 function mapMenuClose() {
