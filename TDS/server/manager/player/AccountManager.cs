@@ -88,7 +88,7 @@ namespace Manager {
 			player.name = player.socialClubName;
 			if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
 				DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
-											new Dictionary<string, string> { { "@scn", player.socialClubName }, { "@address", player.address } } );
+											new Dictionary<string, string> { { "@scn", player.socialClubName }, { "@address", player.address } } ).ConfigureAwait ( false );
 				if ( result.Rows.Count > 0 ) {
 					DataRow row = result.Rows[0];
 					if ( row["type"].ToString () == "permanent" || Convert.ToInt32 ( row["endsec"] ) > Utility.GetTimespan () ) {
@@ -103,11 +103,11 @@ namespace Manager {
 		}
 
 		private static async void OnResourceStart ( ) {
-			DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" );
+			DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" ).ConfigureAwait ( false );
 			foreach ( DataRow row in result.Rows ) {
 				playerUIDs[row["name"].ToString ()] = Convert.ToInt32 ( row["UID"] );
 			}
-			DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" );
+			DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" ).ConfigureAwait ( false );
 			lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
 		}
 
@@ -193,7 +193,7 @@ namespace Manager {
 		}
 
 		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
-			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
+			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
 			targetaddress = result.Rows[0]["address"].ToString ();
 			await Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
 			socialClubNameBanDict.Remove ( targetname );

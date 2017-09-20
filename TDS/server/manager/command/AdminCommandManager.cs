@@ -94,7 +94,7 @@ namespace Manager {
 					} else {
 						if ( target != null )
 							targetaddress = target.address;
-						DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam );
+						DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
 						targetadminlvl = Convert.ToInt32 ( targetdata.Rows[0]["adminlvl"] );
 					}
 					if ( targetadminlvl <= player.GetChar ().adminLvl ) {

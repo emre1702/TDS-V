@@ -24,7 +24,7 @@ namespace Manager {
 			bool hitsoundon = true;
 
 			if ( password != "" ) {
-				DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM player, playersetting WHERE player.UID = @UID AND player.UID = playersetting.UID", new Dictionary<string, string> { { "@UID", uid.ToString () } } );
+				DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM player, playersetting WHERE player.UID = @UID AND player.UID = playersetting.UID", new Dictionary<string, string> { { "@UID", uid.ToString () } } ).ConfigureAwait ( false );
 				if ( result.Rows.Count > 0 ) {
 					DataRow row = result.Rows[0];
 					if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {

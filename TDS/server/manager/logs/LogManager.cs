@@ -64,7 +64,7 @@ namespace Manager {
 					}
 				}
 
-				await Database.ExecPrepared ( sql, logQueryParameters );
+				await Database.ExecPrepared ( sql, logQueryParameters ).ConfigureAwait ( false );
 				ResetLists ();
 			}
 		}

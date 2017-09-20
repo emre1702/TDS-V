@@ -34,8 +34,8 @@ static class Database {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				await conn.OpenAsync ();
-				DbDataReader rdr = await cmd.ExecuteReaderAsync ();
+				await conn.OpenAsync ().ConfigureAwait ( false );
+				DbDataReader rdr = await cmd.ExecuteReaderAsync ().ConfigureAwait ( false );
 				DataTable results = new DataTable ();
 				results.Load ( rdr );
 				rdr.Close ();
@@ -51,13 +51,13 @@ static class Database {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				await conn.OpenAsync ();
+				await conn.OpenAsync ().ConfigureAwait ( false );
 
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
 
-				DbDataReader rdr = await cmd.ExecuteReaderAsync ();
+				DbDataReader rdr = await cmd.ExecuteReaderAsync ().ConfigureAwait ( false );
 				DataTable results = new DataTable ();
 				results.Load ( rdr );
 				rdr.Close ();
@@ -74,7 +74,7 @@ static class Database {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				await conn.OpenAsync ();
+				await conn.OpenAsync ().ConfigureAwait ( false );
 				await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
@@ -86,7 +86,7 @@ static class Database {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
-				await conn.OpenAsync ();
+				await conn.OpenAsync ().ConfigureAwait ( false );
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}

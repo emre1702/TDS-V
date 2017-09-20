@@ -57,9 +57,9 @@ namespace Class {
 				this.SendAllPlayerLangNotification ( "map_won_voting", -1, wonmap );
 				this.mapVotes = new Dictionary<string, int> ();
 				this.playerVotes = new Dictionary<Client, string> ();
-				return await Manager.Map.GetMapClass ( wonmap, this );
+				return await Manager.Map.GetMapClass ( wonmap, this ).ConfigureAwait ( false );
 			} else
-				return await this.GetRandomMap ();
+				return await this.GetRandomMap ().ConfigureAwait ( false );
 		}
 
 		private void SyncMapVotingOnJoin ( Client player ) {

@@ -32,7 +32,7 @@ namespace Manager {
 				foreach ( string filepath in files ) {
 					string filename = Path.GetFileNameWithoutExtension ( filepath );
 					mapCreator[filename] = creator;
-					if ( await map.AddInfos ( filename ) ) {
+					if ( await map.AddInfos ( filename ).ConfigureAwait ( false ) ) {
 						if ( map.name != null ) {
 							if ( map.type == "normal" ) {
 								normalMapNames.Add ( map.name );
@@ -91,14 +91,14 @@ namespace Manager {
 			string path = mapsPath + mapCreator[mapfilename] + "/" + mapfilename + ".xml";
 			try {
 				using ( XmlReader reader = XmlReader.Create ( path ) ) {
-					while ( await reader.ReadAsync () ) {
+					while ( await reader.ReadAsync ().ConfigureAwait ( false ) ) {
 						if ( reader.NodeType == XmlNodeType.Element ) {
 							if ( reader.Name == "map" ) {
 								map.name = reader["name"];
 								if ( reader.GetAttribute ( "type" ) != null )
 									map.type = reader["type"];
 							} else if ( reader.Name == "english" || reader.Name == "german" ) {
-								map.description[reader.Name] = await reader.ReadElementContentAsStringAsync ();
+								map.description[reader.Name] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
 							} else if ( reader.Name == "limit" ) {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
 								map.mapLimits.Add ( pos );
@@ -142,10 +142,10 @@ namespace Manager {
 
 		public static async Task<Class.Map> GetMapClass ( string mapname, Class.Lobby lobby ) {
 			Class.Map map = new Class.Map ();
-			if ( await map.AddInfos ( mapByName[mapname] ) ) {
+			if ( await map.AddInfos ( mapByName[mapname] ).ConfigureAwait ( false ) ) {
 				return map;
 			} else
-				return await lobby.GetRandomMap ();
+				return await lobby.GetRandomMap ().ConfigureAwait ( false );
 		}
 
 		/*private static Map getMapDataOther ( string path ) {

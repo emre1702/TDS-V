@@ -33,7 +33,7 @@ namespace Class {
 				this.damageSys.EmptyDamagesysData ();
 				if ( this.currentMap != null && this.currentMap.type == "bomb" )
 					this.StopRoundBomb ();
-				this.currentMap = await this.GetNextMap ();
+				this.currentMap = await this.GetNextMap ().ConfigureAwait ( false );
 				if ( this.currentMap.type == "bomb" )
 					this.BombMapChose ();
 				this.CreateTeamSpawnBlips ();

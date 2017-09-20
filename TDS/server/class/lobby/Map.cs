@@ -32,7 +32,7 @@ namespace Class {
 
 		public async Task<Map> GetRandomMap ( ) {
 			int random = Manager.Utility.rnd.Next ( 0, this.mapNames.Count );
-			return await Manager.Map.GetMapClass ( this.mapNames[random], this );
+			return await Manager.Map.GetMapClass ( this.mapNames[random], this ).ConfigureAwait ( false );
 		}
 
 		private Vector3[] GetMapRandomSpawnData ( int teamID ) {
