@@ -150,7 +150,7 @@ namespace Class {
 						}
 						if ( !player.dead ) {
 							if ( player.currentWeapon == WeaponHash.Unarmed ) {
-								player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop | Manager.Utility.AnimationFlags.Cancellable ) );
+								player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop ) );
 								this.bombPlantTimer = Timer.SetTimer ( ( ) => PlantBomb ( player ), 3000, 1 );
 							}
 						}
@@ -178,7 +178,7 @@ namespace Class {
 						if ( !player.dead ) {
 							if ( player.currentWeapon == WeaponHash.Unarmed ) {
 								if ( this.bombAtPlayer == null ) {
-									player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop | Manager.Utility.AnimationFlags.Cancellable ) );
+									player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop ) );
 									this.bombDefuseTimer = Timer.SetTimer ( ( ) => DefuseBomb ( player ), 8000, 1 );
 								}
 							}
