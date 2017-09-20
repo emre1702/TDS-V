@@ -10,7 +10,6 @@ namespace Manager {
 		private static DateTime startDateTime = new DateTime ( 2017, 7, 24 );
 
 		#pragma warning disable IDE1006 // Benennungsstile
-		[Flags]
 		public enum AnimationFlags {
 			Loop = 1 << 0,
 			StopOnLastFrame = 1 << 1,
