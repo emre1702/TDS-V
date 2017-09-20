@@ -23,7 +23,7 @@ namespace Manager {
 		public static Dictionary<string, string> mapByName = new Dictionary<string, string> ();
 		public static Dictionary<string, string> mapCreator = new Dictionary<string, string> ();
 
-		public static async void MapOnStart () {
+		public static async Task MapOnStart () {
 			IEnumerable<string> directories = Directory.EnumerateDirectories ( mapsPath );
 			Class.Map map = new Class.Map ();
 			foreach ( string dir in directories ) {

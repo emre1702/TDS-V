@@ -75,7 +75,7 @@ static class Database {
 			try {
 				MySqlCommand cmd = new MySqlCommand ( sql, conn );
 				await conn.OpenAsync ();
-				await cmd.ExecuteNonQueryAsync ();
+				await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}
@@ -90,7 +90,7 @@ static class Database {
 				foreach ( KeyValuePair<string, string> entry in parameters ) {
 					cmd.Parameters.AddWithValue ( entry.Key, entry.Value );
 				}
-				await cmd.ExecuteNonQueryAsync ();
+				await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
 			}

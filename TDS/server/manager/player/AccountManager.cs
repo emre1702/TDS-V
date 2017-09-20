@@ -57,7 +57,7 @@ namespace Manager {
 					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
 					lastPlayerUID++;
 					playerUIDs[player.socialClubName] = lastPlayerUID;
-					await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
+					await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ).ConfigureAwait ( false );
 					break;
 
 				case "onPlayerTryLogin":
@@ -95,7 +95,7 @@ namespace Manager {
 						e.Cancel = true;
 						return;
 					} else
-						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () );
+						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () ).ConfigureAwait ( false );
 				}
 				socialClubNameBanDict.Remove ( player.socialClubName );
 				addressBanDict.Remove ( player.address );
@@ -125,19 +125,19 @@ namespace Manager {
 
 						{ "@UID", character.uID.ToString() }
 					}
-				);
+				).ConfigureAwait ( false );
 				await Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID",
 					new Dictionary<string, string> {
 						{ "@HITSOUND", character.hitsoundOn ? "1" : "0" },
 
 						{ "@UID", character.uID.ToString() }
 					}
-				);
+				).ConfigureAwait ( false );
 			}
 		}
 
 		private static async void OnPlayerDisconnected ( Client player, string reason ) {
-			await SavePlayerData ( player );
+			await SavePlayerData ( player ).ConfigureAwait ( false );
 			int adminlvl = player.GetChar ().adminLvl;
 			if ( adminlvl > 0 )
 				Admin.SetOffline ( player, adminlvl );
@@ -155,7 +155,7 @@ namespace Manager {
 								{ "@admin", admin.name },
 								{ "@reason", reason }
 								}
-							);
+			).ConfigureAwait ( false );
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
 				addressBanDict[targetaddress] = true;
@@ -180,7 +180,7 @@ namespace Manager {
 								{ "@admin", admin.name },
 								{ "@reason", reason }
 								}
-							);
+			).ConfigureAwait ( false );
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
 				addressBanDict[targetaddress] = true;
@@ -195,7 +195,7 @@ namespace Manager {
 		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, Dictionary<string, string> queryparam ) {
 			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam );
 			targetaddress = result.Rows[0]["address"].ToString ();
-			await Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
+			await Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
 			socialClubNameBanDict.Remove ( targetname );
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );

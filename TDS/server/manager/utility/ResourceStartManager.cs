@@ -19,7 +19,7 @@ namespace Manager {
 			Manager.Chat.ChatOnStart ( api );
 			MainMenu.Create ();
 
-			await Task.Run ( () => Manager.Map.MapOnStart () );
+			await Manager.Map.MapOnStart ().ConfigureAwait ( false );
 			Arena.Create ();
 			GangLobby.Create (); 
 		}

@@ -16,8 +16,8 @@ namespace Manager {
 				{ "@registerdate", Utility.GetTimestamp() }
 			};
 			Dictionary<string, string> defaultparams = new Dictionary<string, string> { { "@UID", uid.ToString () } };
-			await Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters );
-			await Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
+			await Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters ).ConfigureAwait ( false );
+			await Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams ).ConfigureAwait ( false );
 			Account.AddAccount ( player.socialClubName, uid );
 			Login.LoginPlayer ( player, uid );
 		}

@@ -20,14 +20,14 @@ namespace Manager {
 					if ( character.loggedIn ) {
 						character.playtime++;
 						if ( character.playtime % 30 == 0 ) {
-							await Account.SavePlayerData ( players[i] );
+							await Account.SavePlayerData ( players[i] ).ConfigureAwait ( false );
 						}
 					}
 				}
 			}
 
 			// log-save //
-			await Log.SaveInDatabase ();
+			await Log.SaveInDatabase ().ConfigureAwait ( false );
 		}
 
 	}

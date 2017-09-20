@@ -11,11 +11,11 @@ namespace Manager {
 		}
 
 		private static async void SaveAllInDatabase () {
-			await Manager.Log.SaveInDatabase ();
+			await Manager.Log.SaveInDatabase ().ConfigureAwait ( false );
 
 			List<Client> players = API.shared.getAllPlayers ();
 			for ( int i = 0; i < players.Count; i++ ) {
-				await Account.SavePlayerData ( players[i] );
+				await Account.SavePlayerData ( players[i] ).ConfigureAwait ( false );
 			}
 		}
 
