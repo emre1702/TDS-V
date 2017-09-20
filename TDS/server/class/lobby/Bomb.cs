@@ -83,6 +83,9 @@ namespace Class {
 			this.SendAllPlayerLangNotification ( "round_mission_bomb_spectator", 0 );
 			this.SendAllPlayerLangNotification ( "round_mission_bomb_good", 1 );
 			this.SendAllPlayerLangNotification ( "round_mission_bomb_bad", 2 );
+
+			if ( this.bombAtPlayer == null )
+				this.GiveBombToRandomTerrorist ();
 		}
 
 		private void DetonateBomb () {
