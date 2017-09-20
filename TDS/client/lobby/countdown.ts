@@ -27,7 +27,7 @@ API.onResourceStart.connect( function () {
 
 function countdownFunc( counter ) {
 	log( "countdownFunc start" );
-	counter--;
+	counter--;;
 	if ( counter > 0 ) {
 		countdowndata.text.setText( counter.toString() );
 		countdowndata.text.blendTextScale( 6, 1000 );
@@ -43,8 +43,8 @@ function countdownFunc( counter ) {
 
 function startCountdown() {
 	log( "startCountdown start" );
-	countdowndata.text = new cText( lobbysettings.countdowntime.toString(), res.Width / 2, res.Height * 0.2, 2.0, 255, 255, 255, 255, 0, 1, true );
-	countdownFunc( lobbysettings.countdowntime + 1 );
+	countdowndata.text = new cText( Math.floor( lobbysettings.countdowntime / 1000 ).toString(), res.Width / 2, res.Height * 0.2, 2.0, 255, 255, 255, 255, 0, 1, true );
+	countdowndata.timer = new Timer( countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor ( lobbysettings.countdowntime / 1000 ) + 1 );
 	log( "startCountdown end" );
 }
 

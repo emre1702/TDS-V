@@ -13,7 +13,7 @@ function loadMapMiddleForCamera(mapmiddle) {
 }
 function setCameraGoTowardsPlayer(time = -1) {
     cameradata.tocamera = API.createCamera(API.getGameplayCamPos(), API.getGameplayCamRot());
-    API.interpolateCameras(cameradata.camera, cameradata.tocamera, time == -1 ? (lobbysettings.countdowntime * 1000 * 0.9) : time, true, true);
+    API.interpolateCameras(cameradata.camera, cameradata.tocamera, time == -1 ? (lobbysettings.countdowntime * 0.9) : time, true, true);
 }
 function stopCountdownCamera() {
     cameradata.tocamera = null;

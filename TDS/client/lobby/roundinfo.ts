@@ -4,7 +4,6 @@ let roundinfo = {
 	amountinteams: [],
 	aliveinteams: [],
 	roundtime: 0,
-	roundtimeleft: null,
 	starttick: 0,
 	teamnames: [],
 	teamcolors: [],
@@ -64,9 +63,7 @@ function drawRoundInfo() {
 
 	// Time //
 	let tick = API.getGlobalTime();
-	let fullseconds = Math.ceil ( ( roundinfo.roundtime * 1000 - ( tick - roundinfo.starttick ) ) / 1000 )
-	if ( roundinfo.roundtimeleft != null )
-		fullseconds = Math.ceil(( roundinfo.roundtimeleft * 1000 - ( tick - roundinfo.starttick ) ) / 1000 )
+	let fullseconds = Math.ceil ( ( roundinfo.roundtime - ( tick - roundinfo.starttick ) ) / 1000 )
 	let minutes = Math.floor( fullseconds / 60 );
 	let seconds = fullseconds % 60;
 	let tdata = roundinfo.drawdata.time.text;
@@ -89,6 +86,10 @@ function drawRoundInfo() {
 		API.drawText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, teamdata.scale, teamdata.r, teamdata.g, teamdata.b, teamdata.a, 0, 1, true, true, 0 );
 		API.drawRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a );
 	}
+}
+
+function setRoundTimeLeft( lefttime ) {
+	roundinfo.starttick = API.getGlobalTime() - lefttime;
 }
 
 
@@ -114,7 +115,6 @@ API.onUpdate.connect( function () {
 
 
 function removeRoundInfo() {
-	roundinfo.roundtimeleft = null;
 	roundinfo.amountinteams = [];
 	roundinfo.aliveinteams = [];
 	if ( roundinfo.drawevent != null ) {
@@ -130,13 +130,12 @@ function roundStartedRoundInfo ( args ) {
 	roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
 }
 
-function lobbyJoinRoundInfo ( args ) {
-	roundinfo.roundtime = args[2];
-	for ( let i = 1; i < args[4].Count; i++ ) {
-		roundinfo.teamnames[i - 1] = args[4][i];
+function addTeamInfos ( teamnames,  teamcolors ) {
+	for ( let i = 1; i < teamnames.Count; i++ ) {
+		roundinfo.teamnames[i - 1] = teamnames[i];
 	}
-	for ( let i = 3; i < args[5].Count; i++ ) {
-		roundinfo.teamcolors[i - 3] = args[5][i];
+	for ( let i = 3; i < teamnames.Count; i++ ) {
+		roundinfo.teamcolors[i - 3] = teamnames[i];
 	}
 	log( "onClientPlayerJoinLobby end" );
 }

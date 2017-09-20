@@ -31,7 +31,7 @@ namespace Class {
 			if ( this.isPlayable ) {
 				if ( this.gotRounds ) {
 					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
-					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, this.countdownTime, this.roundTime, mapname, this.teams, this.teamColorsList );
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, new dynamic[] { this.teams, this.teamColorsList, this.countdownTime, this.roundTime, this.bombDetonateTime, this.bombPlantTime, this.bombDefuseTime } );
 				} else {
 					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
 					player.position = this.spawnpoint;
@@ -104,7 +104,6 @@ namespace Class {
 
 			int tick = Environment.TickCount;
 			if ( this.status == "countdown" ) {
-				//int tickremaining = this.countdownTime * 1000 - ( tick - this.startTick );
 				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name, tick - this.startTick );
 			} else if ( this.status == "round" ) {
 				player.triggerEvent ( "onClientRoundStart", true, this.players[0], tick - this.startTick );

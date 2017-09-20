@@ -11,9 +11,9 @@ let bombdata = {
 };
 function drawPlant() {
     let tickswasted = API.getGlobalTime() - bombdata.plantdefusestarttick;
-    if (tickswasted < 3000) {
+    if (tickswasted < lobbysettings.bombplanttime) {
         API.drawRectangle(res.Width * 0.46, res.Height * 0.7, res.Width * 0.08, res.Height * 0.02, 0, 0, 0, 187);
-        let progress = tickswasted / 3000;
+        let progress = tickswasted / lobbysettings.bombplanttime;
         API.drawRectangle(res.Width * 0.461, res.Height * 0.701, res.Width * 0.078 * progress, res.Height * 0.018, 0, 180, 0, 187);
         API.drawText(getLang("round", "planting"), res.Width * 0.5, res.Height * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0);
     }
@@ -42,9 +42,9 @@ function checkPlant() {
 }
 function drawDefuse() {
     let tickswasted = API.getGlobalTime() - bombdata.plantdefusestarttick;
-    if (tickswasted < 8000) {
+    if (tickswasted < lobbysettings.bombdefusetime) {
         API.drawRectangle(res.Width * 0.46, res.Height * 0.7, res.Width * 0.08, res.Height * 0.02, 0, 0, 0, 187);
-        let progress = tickswasted / 8000;
+        let progress = tickswasted / lobbysettings.bombdefusetime;
         API.drawRectangle(res.Width * 0.461, res.Height * 0.701, res.Width * 0.078 * progress, res.Height * 0.018, 180, 0, 0, 187);
         API.drawText(getLang("round", "defusing"), res.Width * 0.5, res.Height * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0);
     }
@@ -100,10 +100,13 @@ function localPlayerPlantedBomb() {
     bombdata.plantdefuseevent = null;
     bombdata.isplanting = false;
 }
-function bombPlanted(pos) {
-    bombdata.changed = true;
-    bombdata.plantedpos = pos;
-    bombdata.plantdefuseevent = API.onUpdate.connect(checkPlantDefuse);
+function bombPlanted(pos, candefuse) {
+    if (candefuse) {
+        bombdata.changed = true;
+        bombdata.plantedpos = pos;
+        bombdata.plantdefuseevent = API.onUpdate.connect(checkPlantDefuse);
+    }
+    setRoundTimeLeft(lobbysettings.bombdetonatetime);
 }
 function removeBombThings() {
     if (bombdata.changed) {

@@ -25,6 +25,10 @@ namespace Class {
 		private static int counterTerroristTeamID = 1;
 		private static int terroristTeamID = 2;
 
+		private int bombDetonateTime = 45000;
+		private int bombDefuseTime = 8000;
+		private int bombPlantTime = 3000;
+
 		private List<Object> bombPlantPlaces = new List<Object> ();
 		private List<Blip> bombPlantBlips = new List<Blip> ();
 		private Object bomb;
@@ -105,7 +109,6 @@ namespace Class {
 				for ( int i = 0; i < this.currentMap.bombPlantPlaces.Count; i++ ) {
 					if ( playerpos.DistanceTo ( this.currentMap.bombPlantPlaces[i] ) <= 5 ) {
 						player.triggerEvent ( "onClientPlayerPlantedBomb" );
-						this.SendAllPlayerEvent ( "onClientBombPlanted", counterTerroristTeamID, playerpos );
 						this.bomb.detach ();
 						this.bomb.position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
 						this.bomb.rotation = new Vector3 ( 270, 0, 0 );
@@ -116,7 +119,10 @@ namespace Class {
 						this.bombAtPlayer = null;
 						this.planter = player;
 						this.SendAllPlayerLangNotification ( "bomb_planted" );
-						this.bombDetonateTimer = Timer.SetTimer ( this.DetonateBomb, 45000, 1 );
+						this.bombDetonateTimer = Timer.SetTimer ( this.DetonateBomb, bombDetonateTime, 1 );
+						this.FuncIterateAllPlayers ( ( target, teamID ) 
+							=> target.triggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID ) 
+						);
 						break;
 					}
 				}
@@ -151,7 +157,7 @@ namespace Class {
 						if ( !player.dead ) {
 							if ( player.currentWeapon == WeaponHash.Unarmed ) {
 								player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop ) );
-								this.bombPlantTimer = Timer.SetTimer ( ( ) => PlantBomb ( player ), 3000, 1 );
+								this.bombPlantTimer = Timer.SetTimer ( ( ) => PlantBomb ( player ), this.bombPlantTime, 1 );
 							}
 						}
 					}
@@ -179,7 +185,7 @@ namespace Class {
 							if ( player.currentWeapon == WeaponHash.Unarmed ) {
 								if ( this.bombAtPlayer == null ) {
 									player.playAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Manager.Utility.AnimationFlags.Loop ) );
-									this.bombDefuseTimer = Timer.SetTimer ( ( ) => DefuseBomb ( player ), 8000, 1 );
+									this.bombDefuseTimer = Timer.SetTimer ( ( ) => DefuseBomb ( player ), this.bombDefuseTime, 1 );
 								}
 							}
 						}

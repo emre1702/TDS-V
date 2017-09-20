@@ -10,9 +10,9 @@ namespace Class {
 	partial class Lobby {
 
 		public bool gotRounds = true;
-		private int countdownTime = 5;
-		private int roundTime = 4 * 60;
-		public int roundEndTime = 8;
+		private int countdownTime = 5 * 1000;
+		private int roundTime = 4 * 60 * 1000;
+		public int roundEndTime = 8 * 1000;
 		private string status = "loading";
 		private int startTick = 0;
 
@@ -43,8 +43,8 @@ namespace Class {
 				this.SendAllPlayerEvent ( "onClientMapChange", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
 			} );
 
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime * 1000 / 2 );
-			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime * 1000 / 2, 1 );
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
+			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime / 2, 1 );
 			
 		}
 
@@ -55,7 +55,7 @@ namespace Class {
 			this.SetAllPlayersInCountdown ();
 			this.startTick = Environment.TickCount;
 
-			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime * 1000 + 400, 1 );
+			this.countdownTimer = Timer.SetTimer ( this.StartRound, this.countdownTime + 400, 1 );
 		}
 
 		private void StartRoundForPlayer ( Client player, int teamID ) {
@@ -79,7 +79,7 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 			this.startTick = Environment.TickCount;
 			if ( this.gotRounds )
-				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime * 1000, 1 );
+				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime, 1 );
 			this.alivePlayers = new List<List<Client>> ();
 			List<int> amountinteams = new List<int> ();
 			for ( int i = 0; i < this.players.Count; i++ ) {
@@ -105,11 +105,11 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 			this.roundStartTimer.Kill ();
 			this.DeleteMapBlips ();
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 * 1000 );
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 );
 			if ( this.currentMap.type == "bomb" )
 				this.StopRoundBombAtRoundEnd ();
 			if ( this.IsSomeoneInLobby() ) {
-				this.roundStartTimer = Timer.SetTimer ( this.StartMapChoose, this.roundEndTime * 1000 / 2, 1 );
+				this.roundStartTimer = Timer.SetTimer ( this.StartMapChoose, this.roundEndTime / 2, 1 );
 				this.SendAllPlayerEvent ( "onClientRoundEnd" );
 			} else if ( this.deleteWhenEmpty ) {
 				this.Remove ();
