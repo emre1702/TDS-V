@@ -119,8 +119,8 @@ function addTeamInfos(teamnames, teamcolors) {
     for (let i = 1; i < teamnames.Count; i++) {
         roundinfo.teamnames[i - 1] = teamnames[i];
     }
-    for (let i = 3; i < teamnames.Count; i++) {
-        roundinfo.teamcolors[i - 3] = teamnames[i];
+    for (let i = 3; i < teamcolors.Count; i++) {
+        roundinfo.teamcolors[i - 3] = teamcolors[i];
     }
 }
 function playerDeathRoundInfo(teamID, killstr) {
