@@ -19,7 +19,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				startCountdown();
 				cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 0.1, 1 );
 			} else {
-				startCountdownAfterwards( Math.ceil ( lobbysettings.countdowntime - args[1] ) );
+				startCountdownAfterwards( Math.ceil ( ( lobbysettings.countdowntime - args[1] ) / 1000 ) );
 				if ( args[1] > lobbysettings.countdowntime * 0.1 ) {
 					setCameraGoTowardsPlayer( lobbysettings.countdowntime - args[1] );
 				} else {
