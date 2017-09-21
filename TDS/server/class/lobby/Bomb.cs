@@ -56,15 +56,29 @@ namespace Class {
 			if ( amount > 0 ) {
 				int rnd = Manager.Utility.rnd.Next ( amount );
 				Client player = this.players[terroristTeamID][rnd];
-				this.BombToBack ( player );
+				if ( player.currentWeapon == WeaponHash.Unarmed )
+					this.BombToHand ( player );
+				else
+					this.BombToBack ( player );
 				player.triggerEvent ( "onClientPlayerGotBomb", this.currentMap.bombPlantPlaces );
 			}
+		}
+
+		private void SendBombPlantInfos () {
+			this.bombAtPlayer.SendLangMessage ( "plant_info" );
+		}
+
+		private void SendBombDefuseInfos() {
+			this.SendAllPlayerLangMessage ( "defuse_info_1", counterTerroristTeamID );
+			this.SendAllPlayerLangMessage ( "defuse_info_2", counterTerroristTeamID );
 		}
 
 		private void BombToHand ( Client player ) {
 			this.bomb.detach ();
 			this.bomb.collisionless = true;
 			this.bomb.attachTo ( player, "SKEL_R_Finger01", new Vector3 ( 0.1, 0, 0 ), new Vector3 () );
+			if ( this.bombAtPlayer != player )
+				this.SendBombPlantInfos ();
 			this.bombAtPlayer = player;
 		}
 
@@ -72,14 +86,16 @@ namespace Class {
 			this.bomb.detach ();
 			this.bomb.collisionless = true;
 			this.bomb.attachTo ( player, "SKEL_Pelvis", new Vector3 ( 0, 0, 0.24 ), new Vector3 ( 270, 0, 0 ) );
+			if ( this.bombAtPlayer != player )
+				this.SendBombPlantInfos ();
 			this.bombAtPlayer = player;
 		}
 
 		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon ) {
-			if ( oldweapon == WeaponHash.Unarmed ) {
-				this.BombToBack ( player );
-			} else if ( player.currentWeapon == WeaponHash.Unarmed ) {
+			if ( player.currentWeapon == WeaponHash.Unarmed ) {
 				this.BombToHand ( player );
+			} else if ( oldweapon == WeaponHash.Unarmed ) {
+				this.BombToBack ( player );
 			}
 		}
 
@@ -123,6 +139,7 @@ namespace Class {
 						this.FuncIterateAllPlayers ( ( target, teamID ) 
 							=> target.triggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID ) 
 						);
+						this.SendBombDefuseInfos ();
 						break;
 					}
 				}
@@ -205,7 +222,6 @@ namespace Class {
 		}
 
 		private void TakeBomb ( Client player ) {
-			this.bombAtPlayer = player;
 			if ( player.currentWeapon == WeaponHash.Unarmed )
 				this.BombToHand ( player );
 			else
