@@ -64,8 +64,8 @@ namespace Class {
 			}
 		}
 
-		private void SendBombPlantInfos () {
-			this.bombAtPlayer.SendLangMessage ( "plant_info" );
+		private void SendBombPlantInfos ( Client player ) {
+			player.SendLangMessage ( "plant_info" );
 		}
 
 		private void SendBombDefuseInfos() {
@@ -78,7 +78,7 @@ namespace Class {
 			this.bomb.collisionless = true;
 			this.bomb.attachTo ( player, "SKEL_R_Finger01", new Vector3 ( 0.1, 0, 0 ), new Vector3 () );
 			if ( this.bombAtPlayer != player )
-				this.SendBombPlantInfos ();
+				this.SendBombPlantInfos ( player );
 			this.bombAtPlayer = player;
 		}
 
@@ -87,7 +87,7 @@ namespace Class {
 			this.bomb.collisionless = true;
 			this.bomb.attachTo ( player, "SKEL_Pelvis", new Vector3 ( 0, 0, 0.24 ), new Vector3 ( 270, 0, 0 ) );
 			if ( this.bombAtPlayer != player )
-				this.SendBombPlantInfos ();
+				this.SendBombPlantInfos ( player );
 			this.bombAtPlayer = player;
 		}
 
