@@ -20,6 +20,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
                 removeBombThings();
                 removeRoundThings(true);
                 stopCountdownCamera();
+                stopCountdown();
                 localPlayerLeftLobbyMapVoting();
                 removeRoundInfo();
             }
