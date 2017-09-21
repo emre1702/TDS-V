@@ -20,13 +20,13 @@ namespace Class {
 			Dictionary<string, string> texts = Language.GetLangDictionary ( langstr, args );
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				API.shared.sendNotificationToPlayer ( player, texts[player.GetChar().language] );
-			} );
+			}, teamindex );
 		}
 
 		public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				player.sendChatMessage ( message );
-			} );
+			}, teamindex );
 		}
 	}
 }

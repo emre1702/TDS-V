@@ -175,7 +175,7 @@ namespace Class {
 
 		private void StartBombDefusing ( Client player ) {
 			if ( this.bomb != null ) {
-				if ( this.status == "playing" ) {
+				if ( this.status == "round" ) {
 					if ( this.bombDetonateTimer != null ) {
 						if ( this.bombDefuseTimer != null ) {
 							this.bombDefuseTimer.Kill ();
