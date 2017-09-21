@@ -40,6 +40,9 @@ static class Language {
 			["round_mission_bomb_bad"] = "Mission: Let the bomb explode on one of the spots or kill all opponents!",
 			["bomb_planted"] = "Bombe wurde platziert!",
 			["killing_spree_healtharmor"] = "{1} hat einen {2}er Killingspree und kriegt dafür {3} Leben/Weste.",
+			["plant_info"] = "Um die Bombe zu platzieren, musst du zur Faust wechseln und die linke Maustaste auf einem der Bomben-Spots klicken.",
+			["defuse_info_1"] = "Runden-Zeit hat sich verändert. Nun musst du entweder alle Gegner töten oder die Bombe entschärfen.",
+			["defuse_info_2"] = "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und drücke die linke Maustaste.",
 
 			["welcome_1"] = "Welcome to ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "For announcements, support, bug-reports etc.",
@@ -79,6 +82,9 @@ static class Language {
 			["round_mission_bomb_bad"] = "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!",
 			["bomb_planted"] = "Bomb was planted!",
 			["killing_spree_healtharmor"] = "{1} has got a {2}-killingspree and gets a {3} life/armor bonus.",
+			["plant_info"] = "To plant the bomb you have to take your fists and press the left mouse button on one of the bomb-spots.",
+			["defuse_info_1"] = "Round-time got changed. Now you have to kill all opponents or defuse the bomb.",
+			["defuse_info_2"] = "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and press the left mouse button.",
 
 			["welcome_1"] = "Willkommen auf dem ~b~Team Deathmatch Server~w~.",
 			["welcome_2"] = "Für Ankündigungen, Support, Bug-Meldung usw.",
