@@ -98,8 +98,8 @@ static class Language {
 
 	public static Dictionary<string, string> GetLangDictionary ( string type, params string[] args ) {
 		Dictionary<string, string> returndict = new Dictionary<string, string> ();
-		for ( int i = 0; i < languages.Count; i++ ) {
-			returndict[languages[i]] = GetLang ( languages[i], type, args );
+		foreach ( string language in languages ) { 
+			returndict[language] = GetLang ( language, type, args );
 		}
 		return returndict;
 	}
@@ -141,16 +141,16 @@ static class Language {
 	public static void SendMessageToAll ( string type, params string[] args ) {
 		Dictionary<string, string> texts = GetLangDictionary ( type, args );
 		List<Client> players = API.shared.getAllPlayers ();
-		for ( int i = 0; i < players.Count; i++ ) {
-			players[i].sendChatMessage ( texts[players[i].GetChar ().language] );
+		foreach ( Client player in players ) {
+			player.sendChatMessage ( texts[player.GetChar ().language] );
 		}
 	}
 
 	public static void SendNotificationToAll ( string type, params string[] args ) {
 		Dictionary<string, string> texts = GetLangDictionary ( type, args );
 		List<Client> players = API.shared.getAllPlayers ();
-		for ( int i = 0; i < players.Count; i++ ) {
-			API.shared.sendNotificationToPlayer ( players[i], texts[players[i].GetChar ().language] );
+		foreach ( Client player in players ) {
+			API.shared.sendNotificationToPlayer ( player, texts[player.GetChar ().language] );
 		}
 	}
 }

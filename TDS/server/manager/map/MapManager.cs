@@ -61,10 +61,10 @@ namespace Manager {
 			float centerZ = 0.0f;
 			int length = poly.Count;
 
-			for ( int i = 0; i < length; i++ ) {
-				centerX += poly[i].X;
-				centerY += poly[i].Y;
-				centerZ += zpos == -1 ? poly[i].Z : zpos;
+			foreach ( Vector3 point in poly ) { 
+				centerX += point.X;
+				centerY += point.Y;
+				centerZ += zpos == -1 ? point.Z : zpos;
 			}
 
 			return new Vector3 ( centerX / length , centerY / length, centerZ / length );

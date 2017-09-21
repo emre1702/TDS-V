@@ -93,11 +93,11 @@ namespace Class {
 
 		private void PlayerCantBeSpectatedAnymore ( Client player, int givenindex, int giventeam ) {
 			if ( this.spectatingMe.ContainsKey ( player ) ) {
-				for ( int i = 0; i < this.spectatingMe[player].Count; i++ ) {
-					if ( this.spectatingMe[player][i].GetChar ().team == 0 )
-						this.SpectateAllTeams ( this.spectatingMe[player][i], true, givenindex, giventeam );
+				foreach ( Client spectator in this.spectatingMe[player] ) {
+					if ( spectator.GetChar ().team == 0 )
+						this.SpectateAllTeams ( spectator, true, givenindex, giventeam );
 					else
-						this.SpectateTeammate ( this.spectatingMe[player][i], true, givenindex, giventeam );
+						this.SpectateTeammate ( spectator, true, givenindex, giventeam );
 				}
 				this.spectatingMe.Remove ( player );
 			}

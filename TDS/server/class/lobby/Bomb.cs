@@ -41,10 +41,10 @@ namespace Class {
 		private Marker bombTakeMarker;
 
 		private void BombMapChose ( ) {
-			for ( int i = 0; i < this.currentMap.bombPlantPlaces.Count; i++ ) {
-				Object place = API.shared.createObject ( -51423166, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
+			foreach ( Vector3 bombplace in this.currentMap.bombPlantPlaces ) {
+				Object place = API.shared.createObject ( -51423166, bombplace, new Vector3(), this.dimension );
 				this.bombPlantPlaces.Add ( place );
-				Blip blip = API.shared.createBlip ( this.currentMap.bombPlantPlaces[i], this.dimension );
+				Blip blip = API.shared.createBlip ( bombplace, this.dimension );
 				blip.sprite = 433;
 				this.bombPlantBlips.Add ( blip );
 			}

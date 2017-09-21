@@ -50,11 +50,11 @@ namespace Class {
 				newplayerslist.Add ( new List<Client> () );
 			for ( int i = 1; i < this.players.Count; i++ ) {
 				this.spawnCounter[i] = 0;
-				for ( int j = 0; j < this.players[i].Count; j++ ) {
-					if ( this.players[i][j].exists ) {
+				foreach ( Client player in this.players[i] ) {
+					if ( player.exists ) {
 						int teamID = this.GetTeamIDWithFewestMember ( newplayerslist );
-						newplayerslist[teamID].Add ( players[i][j] );
-						this.players[i][j].setSkin ( this.teamSkins[teamID] );
+						newplayerslist[teamID].Add ( player );
+						player.setSkin ( this.teamSkins[teamID] );
 					}
 				}
 			}
