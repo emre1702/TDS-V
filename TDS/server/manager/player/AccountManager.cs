@@ -33,7 +33,7 @@ namespace Manager {
 			player.SendLangMessage ( "welcome_5" );
 			player.sendChatMessage ( "~o~__________________________________________" );*/
 			string msg = "~o~__________________________________________~w~";
-			for ( int i = 1; i <= 5; i++ ) {
+			for ( int i = 1; i <= 6; i++ ) {
 				msg += "~n~" + Language.GetLang ( player, "welcome_" + i );
 			}
 			msg += "~n~~o~__________________________________________";
