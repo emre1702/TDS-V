@@ -19,7 +19,7 @@ namespace Manager {
 				killstr["german"] = Language.GetLang ( "german", "deathinfo_died", player.name );
 			}
 
-			lobby.FuncIterateAllPlayers ( ( target, teamID, thislobby ) => {
+			lobby.FuncIterateAllPlayers ( ( target, teamID ) => {
 				string language = target.GetChar ().language;
 				target.triggerEvent ( "onClientPlayerDeath", player, team, killstr[language] );
 			} );

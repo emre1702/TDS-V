@@ -63,8 +63,8 @@ namespace Class {
 			if ( this.currentMap != null && this.currentMap.type == "bomb" )
 				this.StopRoundBomb ();
 
-			this.FuncIterateAllPlayers ( ( player, teamID, lobby ) => {
-				lobby.RemovePlayer ( player );
+			this.FuncIterateAllPlayers ( ( player, teamID ) => {
+				this.RemovePlayer ( player );
 			} );
 		}
 
