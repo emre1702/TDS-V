@@ -89,7 +89,7 @@ function drawRoundInfo() {
 }
 
 function setRoundTimeLeft( lefttime ) {
-	roundinfo.starttick = API.getGlobalTime() - lefttime;
+	roundinfo.starttick = API.getGlobalTime() - ( roundinfo.roundtime - lefttime ); 
 }
 
 

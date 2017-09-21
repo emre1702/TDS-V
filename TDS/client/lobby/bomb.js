@@ -35,10 +35,8 @@ function checkPlant() {
             API.triggerServerEvent("onPlayerStartPlanting");
         }
     }
-    else if (bombdata.isplanting) {
-        bombdata.isplanting = false;
-        API.triggerServerEvent("onPlayerStopPlanting");
-    }
+    else
+        checkPlantDefuseStop();
 }
 function drawDefuse() {
     let tickswasted = API.getGlobalTime() - bombdata.plantdefusestarttick;
@@ -61,6 +59,14 @@ function checkDefuse() {
             API.triggerServerEvent("onPlayerStartDefusing");
         }
     }
+    else
+        checkPlantDefuseStop();
+}
+function checkPlantDefuseStop() {
+    if (bombdata.isplanting) {
+        bombdata.isplanting = false;
+        API.triggerServerEvent("onPlayerStopPlanting");
+    }
     else if (bombdata.isdefusing) {
         bombdata.isdefusing = false;
         API.triggerServerEvent("onPlayerStopDefusing");
@@ -81,10 +87,14 @@ function checkPlantDefuse() {
                     return;
                 }
             }
+            else
+                checkPlantDefuseStop();
         }
+        else
+            checkPlantDefuseStop();
     }
-    bombdata.isplanting = false;
-    bombdata.isdefusing = false;
+    else
+        checkPlantDefuseStop();
 }
 function localPlayerGotBomb(placestoplant) {
     bombdata.changed = true;

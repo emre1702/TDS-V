@@ -38,10 +38,8 @@ function checkPlant() {
 			bombdata.isplanting = true;
 			API.triggerServerEvent( "onPlayerStartPlanting" );
 		}
-	} else if ( bombdata.isplanting ) {
-		bombdata.isplanting = false;
-		API.triggerServerEvent( "onPlayerStopPlanting" );
-	}
+	} else
+		checkPlantDefuseStop();
 }
 
 function drawDefuse() {
@@ -64,6 +62,14 @@ function checkDefuse() {
 			bombdata.isdefusing = true;
 			API.triggerServerEvent( "onPlayerStartDefusing" );
 		}
+	} else
+		checkPlantDefuseStop();
+}
+
+function checkPlantDefuseStop() {
+	if ( bombdata.isplanting ) {
+		bombdata.isplanting = false;
+		API.triggerServerEvent( "onPlayerStopPlanting" );
 	} else if ( bombdata.isdefusing ) {
 		bombdata.isdefusing = false;
 		API.triggerServerEvent( "onPlayerStopDefusing" );
@@ -83,11 +89,12 @@ function checkPlantDefuse() {
 					checkDefuse();
 					return;
 				}
-			}
-		}
-	}
-	bombdata.isplanting = false;
-	bombdata.isdefusing = false;
+			} else
+				checkPlantDefuseStop();
+		} else
+			checkPlantDefuseStop();
+	} else
+		checkPlantDefuseStop();
 }
 
 function localPlayerGotBomb( placestoplant ) {
