@@ -7,22 +7,21 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			log( "onClientPlayerJoinLobby start" );
 			// args[0] => bool isspectator
 			// args[1] => mapname
-			// args[2] => settings-array:
-				// args[2][0] => teamnames
-				// args[2][1] => teamcolors
-				// args[2][2] => countdown-time
-				// args[2][3] => round-time
-				// args[2][4] => bomb-detonate-time
-				// args[2][5] => bomb-plant-time
-				// args[2][6] => bomb-defuse-time
+			// args[2] => teamnames
+			// args[3] => teamcolors
+			// args[4] => countdown-time
+			// args[5] => round-time
+			// args[6] => bomb-detonate-time
+			// args[7] => bomb-plant-time
+			// args[8] => bomb-defuse-time
 			rounddata.isspectator = args[0];
 			setMapInfo( args[1] );
-			addTeamInfos ( args[2][0], args[2][1] );
-			lobbysettings.countdowntime = args[2][2];
-			roundinfo.roundtime = args[2][3];
-			lobbysettings.bombdetonatetime = parseInt( args[2][4] );
-			lobbysettings.bombplanttime = parseInt( args[2][5] );
-			lobbysettings.bombdefusetime = parseInt ( args[2][6] );
+			addTeamInfos ( args[2], args[3] );
+			lobbysettings.countdowntime = args[4];
+			roundinfo.roundtime = args[5];
+			lobbysettings.bombdetonatetime = args[6];
+			lobbysettings.bombplanttime = args[7];
+			lobbysettings.bombdefusetime =  args[8];
 			log( "onClientPlayerJoinLobby end" );
 			break;
 

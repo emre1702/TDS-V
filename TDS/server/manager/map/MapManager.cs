@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 namespace Manager {
 	static class Map {
 		private static string mapsPath = "resources/TDS/server/maps/";
+		private static XmlReaderSettings settings = new XmlReaderSettings ();
+
 		public static List<string> normalMapNames = new List<string> ();
 		public static List<string> bombMapNames = new List<string> ();
 		public static Dictionary<string, List<string>> normalMapDescriptions = new Dictionary<string, List<string>> {
@@ -24,6 +26,7 @@ namespace Manager {
 		public static Dictionary<string, string> mapCreator = new Dictionary<string, string> ();
 
 		public static async Task MapOnStart () {
+			settings.Async = true;
 			IEnumerable<string> directories = Directory.EnumerateDirectories ( mapsPath );
 			Class.Map map = new Class.Map ();
 			foreach ( string dir in directories ) {
@@ -90,7 +93,7 @@ namespace Manager {
 		private static async Task<bool> AddInfos ( this Class.Map map, string mapfilename ) {
 			string path = mapsPath + mapCreator[mapfilename] + "/" + mapfilename + ".xml";
 			try {
-				using ( XmlReader reader = XmlReader.Create ( path ) ) {
+				using ( XmlReader reader = XmlReader.Create ( path, settings ) ) {
 					while ( await reader.ReadAsync ().ConfigureAwait ( false ) ) {
 						if ( reader.NodeType == XmlNodeType.Element ) {
 							if ( reader.Name == "map" ) {

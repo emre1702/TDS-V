@@ -23,11 +23,13 @@ namespace Class {
 			}
 		}
 
-		public void StartMapChoose ( ) {
+		public async void StartMapChoose ( ) {
 			this.status = "mapchoose";
 			API.shared.consoleOutput ( this.status );
 
-			Task.Run ( async ( ) => {
+			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
+
+			await Task.Run ( async ( ) => {
 				if ( this.isOfficial )
 					this.RewardAllPlayer ();
 				this.damageSys.EmptyDamagesysData ();
@@ -43,7 +45,7 @@ namespace Class {
 				this.SendAllPlayerEvent ( "onClientMapChange", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
 			} );
 
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
+			
 			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime / 2, 1 );
 			
 		}

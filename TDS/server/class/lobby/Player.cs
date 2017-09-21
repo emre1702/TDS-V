@@ -31,7 +31,7 @@ namespace Class {
 			if ( this.isPlayable ) {
 				if ( this.gotRounds ) {
 					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
-					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, new dynamic[] { this.teams, this.teamColorsList, this.countdownTime, this.roundTime, this.bombDetonateTime, this.bombPlantTime, this.bombDefuseTime } );
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, this.teams, this.teamColorsList, this.countdownTime, this.roundTime, this.bombDetonateTime, this.bombPlantTime, this.bombDefuseTime );
 				} else {
 					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
 					player.position = this.spawnpoint;

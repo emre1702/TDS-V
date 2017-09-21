@@ -122,7 +122,6 @@ function addTeamInfos(teamnames, teamcolors) {
     for (let i = 3; i < teamnames.Count; i++) {
         roundinfo.teamcolors[i - 3] = teamnames[i];
     }
-    log("onClientPlayerJoinLobby end");
 }
 function playerDeathRoundInfo(teamID, killstr) {
     roundinfo.aliveinteams[teamID]--;
