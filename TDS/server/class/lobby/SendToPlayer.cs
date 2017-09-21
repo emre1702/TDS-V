@@ -23,6 +23,13 @@ namespace Class {
 			}, teamindex );
 		}
 
+		public void SendAllPlayerLangMessage ( string langstr, int teamindex = -1, params string[] args ) {
+			Dictionary<string, string> texts = Language.GetLangDictionary ( langstr, args );
+			this.FuncIterateAllPlayers ( ( player, teamID ) => {
+				player.sendChatMessage ( texts[player.GetChar ().language] );
+			}, teamindex );
+		}
+
 		public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				player.sendChatMessage ( message );
