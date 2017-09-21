@@ -94,8 +94,8 @@ namespace Class {
 
 		private void DetonateBomb () {
 			API.shared.createOwnedExplosion ( this.planter, ExplosionType.GrenadeL, this.bomb.position, 200, this.dimension );
-			this.FuncIterateAllPlayers ( ( player, teamID ) => {
-				this.damageSys.lastHitterDictionary[player] = this.planter;
+			this.FuncIterateAllPlayers ( ( player, teamID, lobby ) => {
+				lobby.damageSys.lastHitterDictionary[player] = lobby.planter;
 				player.kill ();
 			}, counterTerroristTeamID );
 			// TERROR WON //
@@ -120,7 +120,7 @@ namespace Class {
 						this.planter = player;
 						this.SendAllPlayerLangNotification ( "bomb_planted" );
 						this.bombDetonateTimer = Timer.SetTimer ( this.DetonateBomb, bombDetonateTime, 1 );
-						this.FuncIterateAllPlayers ( ( target, teamID ) 
+						this.FuncIterateAllPlayers ( ( target, teamID, lobby ) 
 							=> target.triggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID ) 
 						);
 						break;
@@ -134,8 +134,8 @@ namespace Class {
 			if ( player.exists ) {
 				Vector3 playerpos = player.position;
 				if ( playerpos.DistanceTo ( this.bomb.position ) <= 2 ) {
-					this.FuncIterateAllPlayers ( ( target, teamID ) => {
-						this.damageSys.lastHitterDictionary[target] = player;
+					this.FuncIterateAllPlayers ( ( target, teamID, lobby ) => {
+						lobby.damageSys.lastHitterDictionary[target] = player;
 						target.kill ();
 					}, terroristTeamID );
 					// COUNTER-TERROR WON //

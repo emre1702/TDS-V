@@ -306,23 +306,23 @@ namespace Class {
 
 		private void SetAllPlayersInCountdown ( ) {
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
-			this.FuncIterateAllPlayers ( ( player, teamID ) => { 
-				this.SetPlayerReadyForRound ( player, teamID );
-				player.triggerEvent ( "onClientCountdownStart", this.currentMap.name );
+			this.FuncIterateAllPlayers ( ( player, teamID, lobby ) => {
+				lobby.SetPlayerReadyForRound ( player, teamID );
+				player.triggerEvent ( "onClientCountdownStart", lobby.currentMap.name );
 				if ( teamID == 0 )
-					this.SpectateAllTeams ( player, true );
+					lobby.SpectateAllTeams ( player, true );
 			} );
 			if ( this.currentMap.type == "bomb" )
 				this.GiveBombToRandomTerrorist ();
 		}
 
-		internal void FuncIterateAllPlayers ( Action<Client, int> func, int teamID = -1 ) {
+		internal void FuncIterateAllPlayers ( Action<Client, int, Lobby> func, int teamID = -1 ) {
 			if ( teamID == -1 ) {
 				for ( int i = 0; i < this.players.Count; i++ )
 					for ( int j = this.players[i].Count - 1; j >= 0; j-- )
 						if ( this.players[i][j].exists ) {
 							if ( this.players[i][j].GetChar ().lobby == this ) {
-								func ( this.players[i][j], i );
+								func ( this.players[i][j], i, this );
 							} else
 								this.players[i].RemoveAt ( j );
 						} else
@@ -332,7 +332,7 @@ namespace Class {
 				for ( int j = this.players[teamID].Count - 1; j >= 0; j-- )
 					if ( this.players[teamID][j].exists ) {
 						if ( this.players[teamID][j].GetChar ().lobby == this ) {
-							func ( this.players[teamID][j], teamID );
+							func ( this.players[teamID][j], teamID, this );
 						} else
 							this.players[teamID].RemoveAt ( j );
 					} else
