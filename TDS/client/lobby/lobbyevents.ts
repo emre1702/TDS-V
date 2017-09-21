@@ -27,12 +27,11 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientPlayerLeaveLobby":
 			log( "onClientPlayerLeaveLobby start" );
-			if ( API.getLocalPlayer() == args[0] ) {
+			if ( API.getLocalPlayer().Equals( args[0] ) ) {
 				toggleFightMode( false );
 				removeBombThings();
 				removeRoundThings( true );
 				stopCountdownCamera();
-				stopCountdown();
 				localPlayerLeftLobbyMapVoting();
 				removeRoundInfo();
 			} else {

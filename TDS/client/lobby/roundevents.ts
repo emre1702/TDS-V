@@ -69,7 +69,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientPlayerDeath":
 			log( "onClientPlayerDeath start" );
-			if ( API.getLocalPlayer() == args[0] ) {
+			if ( API.getLocalPlayer().Equals ( args[0] ) ) {
 				toggleFightMode( false );
 				removeBombThings();
 			} else {
