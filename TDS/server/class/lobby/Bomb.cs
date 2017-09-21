@@ -250,11 +250,15 @@ namespace Class {
 			for ( int i = 0; i < this.bombPlantPlaces.Count; i++ ) {
 				this.bombPlantPlaces[i].delete ();
 			}
+			for ( int i = 0; i < this.bombPlantBlips.Count; i++ ) {
+				this.bombPlantBlips[i].delete ();
+			}
 			if ( this.bomb != null ) {
 				bomb.delete ();
 				this.bomb = null;
 			}
 			this.bombPlantPlaces = new List<Object> ();
+			this.bombPlantBlips = new List<Blip> ();
 			this.bombAtPlayer = null;
 			this.planter = null;
 			if ( this.plantBlip != null ) {
