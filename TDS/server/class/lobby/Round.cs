@@ -24,29 +24,33 @@ namespace Class {
 		}
 
 		public async void StartMapChoose ( ) {
-			this.status = "mapchoose";
-			API.shared.consoleOutput ( this.status );
+			try {
+				this.status = "mapchoose";
+				API.shared.consoleOutput ( this.status );
 
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
+				API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
 
-			await Task.Run ( async ( ) => {
-				if ( this.isOfficial )
-					this.RewardAllPlayer ();
-				this.damageSys.EmptyDamagesysData ();
-				if ( this.currentMap != null && this.currentMap.type == "bomb" )
-					this.StopRoundBomb ();
-				this.currentMap = await this.GetNextMap ().ConfigureAwait ( false );
-				if ( this.currentMap.type == "bomb" )
-					this.BombMapChose ();
-				this.CreateTeamSpawnBlips ();
-				this.CreateMapLimitBlips ();
-				if ( this.mixTeamsAfterRound )
-					this.MixTeams ();
-				this.SendAllPlayerEvent ( "onClientMapChange", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
-			} );
+				await Task.Run ( async ( ) => {
+					if ( this.isOfficial )
+						this.RewardAllPlayer ();
+					this.damageSys.EmptyDamagesysData ();
+					if ( this.currentMap != null && this.currentMap.type == "bomb" )
+						this.StopRoundBomb ();
+					this.currentMap = await this.GetNextMap ().ConfigureAwait ( false );
+					if ( this.currentMap.type == "bomb" )
+						this.BombMapChose ();
+					this.CreateTeamSpawnBlips ();
+					this.CreateMapLimitBlips ();
+					if ( this.mixTeamsAfterRound )
+						this.MixTeams ();
+					this.SendAllPlayerEvent ( "onClientMapChange", -1, this.currentMap.mapLimits, this.currentMap.mapCenter );
+				} );
 
-			
-			this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime / 2, 1 );
+
+				this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime / 2, 1 );
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in StartMapChoose:" + ex.Message );
+			}
 			
 		}
 

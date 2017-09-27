@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 
 namespace Manager {
@@ -8,20 +9,24 @@ namespace Manager {
 		}
 
 		private static async void StartMethods ( API api ) {
-			api.setGamemodeName ( "TDS" );
-			Database.DatabaseOnStart ( api );
-			Class.Timer.TimerOnStart ( api );
-			Class.Damagesys.DamagesysOnStart ( api );
-			Class.Lobby.LobbyOnStart ( api );
-			Manager.Account.AccountOnStart ( api );
-			Manager.MinuteTimer.MinuteTimerOnStart ();
-			Manager.Scoreboard.ScoreboardOnStart ( api );
-			Manager.Chat.ChatOnStart ( api );
-			MainMenu.Create ();
+			try {
+				api.setGamemodeName ( "TDS" );
+				Database.DatabaseOnStart ( api );
+				Class.Timer.TimerOnStart ( api );
+				Class.Damagesys.DamagesysOnStart ( api );
+				Class.Lobby.LobbyOnStart ( api );
+				Manager.Account.AccountOnStart ( api );
+				Manager.MinuteTimer.MinuteTimerOnStart ();
+				Manager.Scoreboard.ScoreboardOnStart ( api );
+				Manager.Chat.ChatOnStart ( api );
+				MainMenu.Create ();
 
-			await Manager.Map.MapOnStart ().ConfigureAwait ( false );
-			Arena.Create ();
-			GangLobby.Create (); 
+				await Manager.Map.MapOnStart ().ConfigureAwait ( false );
+				Arena.Create ();
+				GangLobby.Create ();
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in StartMethods:" + ex.Message );
+			}
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using GrandTheftMultiplayer.Shared;
 using System.Collections.Generic;
 using GrandTheftMultiplayer.Server.Elements;
+using System;
 
 namespace Manager {
 	class ResourceStop : Script {
@@ -11,11 +12,15 @@ namespace Manager {
 		}
 
 		private static async void SaveAllInDatabase () {
-			await Manager.Log.SaveInDatabase ().ConfigureAwait ( false );
+			try {
+				await Manager.Log.SaveInDatabase ().ConfigureAwait ( false );
 
-			List<Client> players = API.shared.getAllPlayers ();
-			for ( int i = 0; i < players.Count; i++ ) {
-				await Account.SavePlayerData ( players[i] ).ConfigureAwait ( false );
+				List<Client> players = API.shared.getAllPlayers ();
+				for ( int i = 0; i < players.Count; i++ ) {
+					await Account.SavePlayerData ( players[i] ).ConfigureAwait ( false );
+				}
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in SaveAllInDatabase:" + ex.Message );
 			}
 		}
 

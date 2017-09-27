@@ -78,39 +78,43 @@ namespace Manager {
 
 		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
 		public static async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
-			if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
-				if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
-				|| hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] )
-				|| hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
-					int targetadminlvl = 0;
-					string targetaddress = "-";
-					int targetUID = Account.playerUIDs[targetname];
-					Dictionary<string, string> queryparam = new Dictionary<string, string> { { "{1}", targetUID.ToString () } };
-					Client target = API.shared.getPlayerFromName ( targetname );
-					if ( target != null && target.GetChar ().loggedIn == true ) {
-						Class.Character targetcharacter = target.GetChar ();
-						targetadminlvl = targetcharacter.adminLvl;
-						targetaddress = target.address;
-					} else {
-						if ( target != null )
+			try { 
+				if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
+					if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
+					|| hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] )
+					|| hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
+						int targetadminlvl = 0;
+						string targetaddress = "-";
+						int targetUID = Account.playerUIDs[targetname];
+						Dictionary<string, string> queryparam = new Dictionary<string, string> { { "{1}", targetUID.ToString () } };
+						Client target = API.shared.getPlayerFromName ( targetname );
+						if ( target != null && target.GetChar ().loggedIn == true ) {
+							Class.Character targetcharacter = target.GetChar ();
+							targetadminlvl = targetcharacter.adminLvl;
 							targetaddress = target.address;
-						DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
-						targetadminlvl = Convert.ToInt32 ( targetdata.Rows[0]["adminlvl"] );
-					}
-					if ( targetadminlvl <= player.GetChar ().adminLvl ) {
-						if ( hours == 0 ) {
-							await Account.UnBanPlayer ( player, target, targetname, targetaddress, reason, queryparam ).ConfigureAwait(false);
-						} else if ( hours == -1 ) {
-							await Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason ).ConfigureAwait ( false );
 						} else {
-							await Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours ).ConfigureAwait ( false );
+							if ( target != null )
+								targetaddress = target.address;
+							DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
+							targetadminlvl = Convert.ToInt32 ( targetdata.Rows[0]["adminlvl"] );
 						}
+						if ( targetadminlvl <= player.GetChar ().adminLvl ) {
+							if ( hours == 0 ) {
+								await Account.UnBanPlayer ( player, target, targetname, targetaddress, reason, queryparam ).ConfigureAwait(false);
+							} else if ( hours == -1 ) {
+								await Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason ).ConfigureAwait ( false );
+							} else {
+								await Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours ).ConfigureAwait ( false );
+							}
+						} else
+							player.SendLangNotification ( "adminlvl_not_high_enough" );
 					} else
 						player.SendLangNotification ( "adminlvl_not_high_enough" );
 				} else
-					player.SendLangNotification ( "adminlvl_not_high_enough" );
-			} else
-				player.SendLangNotification ( "player_doesnt_exist" );
+					player.SendLangNotification ( "player_doesnt_exist" );
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in BanPlayer AdminCommand:" + ex.Message );
+			}
 		}
 		
 		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]

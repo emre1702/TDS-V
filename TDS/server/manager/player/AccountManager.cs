@@ -47,36 +47,40 @@ namespace Manager {
 		}
 
 		private static async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
-			switch ( eventName ) {
+			try {
+				switch ( eventName ) {
 
-				case "onPlayerJoin":
-					API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
-					break;
+					case "onPlayerJoin":
+						API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
+						break;
 
-				case "onPlayerTryRegister":
-					string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-					lastPlayerUID++;
-					playerUIDs[player.socialClubName] = lastPlayerUID;
-					await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ).ConfigureAwait ( false );
-					break;
+					case "onPlayerTryRegister":
+						string registerpw = Manager.Utility.ConvertToSHA512 ( args[0] );
+						lastPlayerUID++;
+						playerUIDs[player.socialClubName] = lastPlayerUID;
+						await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ).ConfigureAwait ( false );
+						break;
 
-				case "onPlayerTryLogin":
-					if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
-						string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
-						Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
-					} else
-						player.SendLangNotification ( "account_doesnt_exist" );
-					break;
+					case "onPlayerTryLogin":
+						if ( playerUIDs.ContainsKey ( player.socialClubName ) ) {
+							string loginpw = Manager.Utility.ConvertToSHA512 ( args[0] );
+							Login.LoginPlayer ( player, playerUIDs[player.socialClubName], loginpw );
+						} else
+							player.SendLangNotification ( "account_doesnt_exist" );
+						break;
 
-				case "onPlayerLanguageChange":
-					player.GetChar ().language = args[0];
-					break;
+					case "onPlayerLanguageChange":
+						player.GetChar ().language = args[0];
+						break;
 
-				case "onPlayerChatLoad":
-					player.GetChar ().language = args[0];
-					SendWelcomeMessage ( player );
-					break;
+					case "onPlayerChatLoad":
+						player.GetChar ().language = args[0];
+						SendWelcomeMessage ( player );
+						break;
 
+				}
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in OnClientEvent AccountManager:" + ex.Message );
 			}
 		}
 
@@ -85,30 +89,38 @@ namespace Manager {
 		}
 
 		private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
-			player.name = player.socialClubName;
-			if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
-				DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
-											new Dictionary<string, string> { { "@scn", player.socialClubName }, { "@address", player.address } } ).ConfigureAwait ( false );
-				if ( result.Rows.Count > 0 ) {
-					DataRow row = result.Rows[0];
-					if ( row["type"].ToString () == "permanent" || Convert.ToInt32 ( row["endsec"] ) > Utility.GetTimespan () ) {
-						e.Cancel = true;
-						return;
-					} else
-						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () ).ConfigureAwait ( false );
+			try {
+				player.name = player.socialClubName;
+				if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
+					DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address",
+												new Dictionary<string, string> { { "@scn", player.socialClubName }, { "@address", player.address } } ).ConfigureAwait ( false );
+					if ( result.Rows.Count > 0 ) {
+						DataRow row = result.Rows[0];
+						if ( row["type"].ToString () == "permanent" || Convert.ToInt32 ( row["endsec"] ) > Utility.GetTimespan () ) {
+							e.Cancel = true;
+							return;
+						} else
+							await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"].ToString () ).ConfigureAwait ( false );
+					}
+					socialClubNameBanDict.Remove ( player.socialClubName );
+					addressBanDict.Remove ( player.address );
 				}
-				socialClubNameBanDict.Remove ( player.socialClubName );
-				addressBanDict.Remove ( player.address );
+			} catch (Exception ex ) {
+				API.shared.consoleOutput( "Error in OnPlayerBeginConnect AccountManager:" + ex.Message );
 			}
-		}
+}
 
 		private static async void OnResourceStart ( ) {
-			DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" ).ConfigureAwait ( false );
-			foreach ( DataRow row in result.Rows ) {
-				playerUIDs[row["name"].ToString ()] = Convert.ToInt32 ( row["UID"] );
+			try {
+				DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" ).ConfigureAwait ( false );
+				foreach ( DataRow row in result.Rows ) {
+					playerUIDs[row["name"].ToString ()] = Convert.ToInt32 ( row["UID"] );
+				}
+				DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" ).ConfigureAwait ( false );
+				lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in OnResourceStart AccountManager:" + ex.Message );
 			}
-			DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" ).ConfigureAwait ( false );
-			lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
 		}
 
 		public static async Task SavePlayerData ( Client player ) {
@@ -137,11 +149,15 @@ namespace Manager {
 		}
 
 		private static async void OnPlayerDisconnected ( Client player, string reason ) {
-			await SavePlayerData ( player ).ConfigureAwait ( false );
-			int adminlvl = player.GetChar ().adminLvl;
-			if ( adminlvl > 0 )
-				Admin.SetOffline ( player, adminlvl );
-			API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
+			try {
+				await SavePlayerData ( player ).ConfigureAwait ( false );
+				int adminlvl = player.GetChar ().adminLvl;
+				if ( adminlvl > 0 )
+					Admin.SetOffline ( player, adminlvl );
+				API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
+			} catch ( Exception ex ) {
+				API.shared.consoleOutput ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
+			}
 		}
 
 		public static async Task PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
