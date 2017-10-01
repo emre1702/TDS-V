@@ -48,7 +48,7 @@ static class Language {
 			["welcome_2"] = "For announcements, support, bug-reports etc.",
 			["welcome_3"] = "please visit our Discord-server:",
 			["welcome_4"] = "discord.gg/ntVnGFt",
-			["welcome_5"] = "You can get/hide the cursor with ALT.",
+			["welcome_5"] = "You can get/hide the cursor with DEL.",
 			["welcome_6"] = "Have fun wishes you the ~b~TDS-Team~w~!",
 		},
 		["german"] = new ConcurrentDictionary<string, string> {
@@ -91,7 +91,7 @@ static class Language {
 			["welcome_2"] = "Für Ankündigungen, Support, Bug-Meldung usw.",
 			["welcome_3"] = "bitte unseren Discord-Server nutzen:",
 			["welcome_4"] = "discord.gg/ntVnGFt",
-			["welcome_5"] = "Du kannst den Cursor mit ALT umschalten.",
+			["welcome_5"] = "Du kannst den Cursor mit ENTF umschalten.",
 			["welcome_6"] = "Viel Spaß wünscht das ~b~TDS-Team~w~!",
 		}
 	};
