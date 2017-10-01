@@ -9,9 +9,13 @@ let files = [
 	"timer.js",
 	"scoreboard.js",
 	"draw/draw.js",
+
 	"damagesys/damagesys.js",
+	"damagesys/death.js",
 	"damagesys/hitsound.js",
-    "language/language.js",
+
+	"language/language.js",
+
 	"registerlogin/registerlogin.js",
 
 	"lobby/blips.js",
