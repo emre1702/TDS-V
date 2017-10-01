@@ -32,17 +32,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GrandTheftMultiplayer.Server, Version=0.1.513.481, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\grandtheftmultiplayer.api.0.1.513.481\lib\net452\GrandTheftMultiplayer.Server.exe</HintPath>
+    <Reference Include="BCrypt.Net, Version=0.1.5073.29922, Culture=neutral, PublicKeyToken=6bcd409ee6bc9292, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt-Official.0.1.109\lib\BCrypt.Net.dll</HintPath>
     </Reference>
-    <Reference Include="GrandTheftMultiplayer.Shared, Version=0.1.489.410, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\grandtheftmultiplayer.api.0.1.513.481\lib\net452\GrandTheftMultiplayer.Shared.dll</HintPath>
+    <Reference Include="GrandTheftMultiplayer.Server, Version=0.1.638.649, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.638.649\lib\net452\GrandTheftMultiplayer.Server.exe</HintPath>
+    </Reference>
+    <Reference Include="GrandTheftMultiplayer.Shared, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.638.649\lib\net452\GrandTheftMultiplayer.Shared.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>packages\NLog.4.4.11\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -155,6 +158,7 @@
     <Content Include="client\pic\arenachoice.png" />
     <Content Include="client\window\registerlogin\registerlogin.html" />
     <Content Include="client\window\registerlogin\registerlogin.js" />
+    <Content Include="LICENSE.txt" />
     <Content Include="notices.txt" />
     <Content Include="server\maps\BattlexChamP\Pluz._Investment.xml" />
     <Content Include="server\maps\BattlexChamP\Pluz._Tower.xml" />
@@ -168,6 +172,10 @@
     <TypeScriptCompile Include="client\registerlogin\registerlogin.ts" />
     <Content Include="client\minify.js" />
     <TypeScriptCompile Include="client\utility.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Declarations.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\GrandTheftMultiplayer.Client.Contracts.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\GrandTheftMultiplayer.Client.Models.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\NativeUI.UIMenuDynamicListItem.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="client\settings.ts" />

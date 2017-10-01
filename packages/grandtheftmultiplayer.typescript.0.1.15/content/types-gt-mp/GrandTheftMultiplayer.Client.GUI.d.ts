@@ -6,6 +6,7 @@
 		Size: System.Drawing.Size;
 		eval(code: string): void;
 		call(method: string, ..._arguments: any[]): void;
+		GetHost(): any;
 		Dispose(): void;
 	}
 

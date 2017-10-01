@@ -1,5 +1,13 @@
 ﻿declare namespace NativeUI {
 
+	class BarTimerBar extends NativeUI.TimerBarBase {
+		Percentage: number;
+		BackgroundColor: System.Drawing.Color;
+		ForegroundColor: System.Drawing.Color;
+		constructor(label: string);
+		Draw(interval: number, offset: System.Drawing.Size): void;
+	}
+
 	class CheckboxChangeEvent {
 		constructor(object: any, method: any);
 		Invoke(sender: NativeUI.UIMenu, checkboxItem: NativeUI.UIMenuCheckboxItem, Checked: boolean): void;
@@ -72,53 +80,32 @@
 		EndInvoke(result: System.IAsyncResult): void;
 	}
 
-	class MenuPool {
-		MouseEdgeEnabled: boolean;
-		ControlDisablingEnabled: boolean;
-		ResetCursorOnOpen: boolean;
-		FormatDescriptions: boolean;
-		AUDIO_LIBRARY: string;
-		AUDIO_UPDOWN: string;
-		AUDIO_SELECT: string;
-		AUDIO_BACK: string;
-		AUDIO_ERROR: string;
-		WidthOffset: number;
-		CounterPretext: string;
-		DisableInstructionalButtons: boolean;
-		constructor();
-		Add(menu: NativeUI.UIMenu): void;
-		AddSubMenu(menu: NativeUI.UIMenu, text: string): NativeUI.UIMenu;
-		AddSubMenu(menu: NativeUI.UIMenu, text: string, description: string): NativeUI.UIMenu;
-		RefreshIndex(): void;
-		ToList(): System.Collections.Generic.List<NativeUI.UIMenu>;
-		ProcessControl(): void;
-		ProcessKey(key: System.Windows.Forms.Keys): void;
-		ProcessMouse(): void;
-		Draw(): void;
-		IsAnyMenuOpen(): boolean;
-		ProcessMenus(): void;
-		CloseAllMenus(): void;
-		SetBannerType(bannerType: NativeUI.Sprite): void;
-		SetBannerType(bannerType: NativeUI.UIResRectangle): void;
-		SetBannerType(bannerPath: string): void;
-		SetKey(menuControl: NativeUI.UIMenu.MenuControls, control: GTA.Control): void;
-		SetKey(menuControl: NativeUI.UIMenu.MenuControls, control: GTA.Control, controllerIndex: number): void;
-		SetKey(menuControl: NativeUI.UIMenu.MenuControls, control: System.Windows.Forms.Keys): void;
-		ResetKey(menuControl: NativeUI.UIMenu.MenuControls): void;
-	}
-
 	class Sprite {
 		TextureDict: string;
 		constructor(textureDict: string, textureName: string, position: System.Drawing.Point, size: System.Drawing.Size, heading: number, color: System.Drawing.Color);
 		constructor(textureDict: string, textureName: string, position: System.Drawing.Point, size: System.Drawing.Size);
 		Draw(): void;
+		Draw(dict: string, name: string, xpos: number, ypos: number, boxWidth: number, boxHeight: number, rotation: number, color: System.Drawing.Color): void;
 		DrawTexture(path: string, position: System.Drawing.Point, size: System.Drawing.Size, rotation: number, color: System.Drawing.Color): void;
 		DrawTexture(path: string, position: System.Drawing.Point, size: System.Drawing.Size): void;
 		WriteFileFromResources(yourAssembly: any, fullResourceName: string): string;
 		WriteFileFromResources(yourAssembly: any, fullResourceName: string, savePath: string): string;
 	}
 
+	class TextTimerBar extends NativeUI.TimerBarBase {
+		Text: string;
+		constructor(label: string, text: string);
+		Draw(interval: number, offset: System.Drawing.Size): void;
+	}
+
+	class TimerBarBase {
+		Label: string;
+		constructor(label: string);
+		Draw(interval: number, offset: System.Drawing.Size): void;
+	}
+
 	class UIMenu {
+		readonly _offset: System.Drawing.Point;
 		readonly Children: System.Collections.Generic.Dictionary<NativeUI.UIMenuItem, NativeUI.UIMenu>;
 		readonly WidthOffset: number;
 		Visible: boolean;
@@ -154,7 +141,6 @@
 		Draw(): void;
 		GetScreenResolutionMantainRatio(): System.Drawing.SizeF;
 		IsMouseInBounds(topLeft: System.Drawing.Point, boxSize: System.Drawing.Size): boolean;
-		IsMouseInListItemArrows(item: NativeUI.UIMenuListItem, topLeft: System.Drawing.Point, safezone: System.Drawing.Point): number;
 		GetSafezoneBounds(): System.Drawing.Point;
 		GoUpOverflow(): void;
 		GoUp(): void;
@@ -204,6 +190,18 @@
 		Draw(): void;
 	}
 
+	class UIMenuDynamicListItem extends NativeUI.UIMenuItem {
+		readonly CurrentListItem: string;
+		Callback: NativeUI.UIMenuDynamicListItem.DynamicListItemChangeCallback;
+		constructor(text: string, startingItem: string, changeCallback: NativeUI.UIMenuDynamicListItem.DynamicListItemChangeCallback);
+		constructor(text: string, description: string, startingItem: string, changeCallback: NativeUI.UIMenuDynamicListItem.DynamicListItemChangeCallback);
+		Position(y: number): void;
+		Draw(): void;
+		SetRightBadge(badge: NativeUI.UIMenuItem.BadgeStyle): void;
+		SetRightLabel(text: string): void;
+		CurrentItem(): string;
+	}
+
 	class UIMenuItem {
 		Selected: boolean;
 		Hovered: boolean;
@@ -232,6 +230,7 @@
 		OnListChanged: IEvent<(sender: NativeUI.UIMenuListItem, newIndex: number) => void>;
 		constructor(text: string, items: System.Collections.Generic.List<any>, index: number);
 		constructor(text: string, items: System.Collections.Generic.List<any>, index: number, description: string);
+		CurrentItem(): string;
 		Position(y: number): void;
 		ItemToIndex(item: any): number;
 		IndexToItem(index: number): any;
@@ -246,6 +245,7 @@
 		constructor(pos: System.Drawing.Point, size: System.Drawing.Size);
 		constructor(pos: System.Drawing.Point, size: System.Drawing.Size, color: System.Drawing.Color);
 		Draw(offset: System.Drawing.SizeF): void;
+		Draw(xPos: number, yPos: number, boxWidth: number, boxHeight: number, color: System.Drawing.Color): void;
 	}
 
 	class UIResText {
@@ -260,6 +260,7 @@
 		MeasureStringWidth(str: string, font: GTA.UI.Font, scale: number): number;
 		MeasureStringWidthNoConvert(str: string, font: GTA.UI.Font, scale: number): number;
 		Draw(offset: System.Drawing.SizeF): void;
+		Draw(caption: string, xPos: number, yPos: number, font: GTA.UI.Font, scale: number, color: System.Drawing.Color, alignment: NativeUI.UIResText.Alignment, dropShadow: boolean, outline: boolean, wordWrap: number): void;
 	}
 
 }

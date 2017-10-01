@@ -1,13 +1,16 @@
 ﻿declare namespace System {
 
 	class Array<T> implements System.Collections.IList {
+		[index: number]: T;
 		readonly Length: number;
 		readonly LongLength: number;
 		readonly Rank: number;
+		readonly Count: number;
 		readonly SyncRoot: any;
 		readonly IsReadOnly: boolean;
 		readonly IsFixedSize: boolean;
 		readonly IsSynchronized: boolean;
+		readonly Item: any;
 		AsReadOnly<T>(array: any[]): any;
 		Resize<T>(array: any, newSize: number): void;
 		CreateInstance(elementType: any, length: number): System.Array<T>;
@@ -42,7 +45,17 @@
 		GetLongLength(dimension: number): number;
 		GetUpperBound(dimension: number): number;
 		GetLowerBound(dimension: number): number;
+		Add(value: any): number;
+		Contains(value: any): boolean;
+		Clear(): void;
+		IndexOf(value: any): number;
+		Insert(index: number, value: any): void;
+		Remove(value: any): void;
+		RemoveAt(index: number): void;
 		Clone(): any;
+		CompareTo(other: any, comparer: any): number;
+		Equals(other: any, comparer: any): boolean;
+		GetHashCode(comparer: any): number;
 		BinarySearch(array: System.Array<T>, value: any): number;
 		BinarySearch(array: System.Array<T>, index: number, length: number, value: any): number;
 		BinarySearch(array: System.Array<T>, value: any, comparer: any): number;

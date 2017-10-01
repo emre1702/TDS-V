@@ -1,4 +1,4 @@
-﻿declare namespace GrandTheftMultiplayer.Client.Streamer {
+﻿declare namespace GrandTheftMultiplayer.Client.Contracts {
 
 	interface IStreamedItem {
 		RemoteHandle: number;
@@ -11,7 +11,7 @@
 		Attachables: System.Collections.Generic.List<number>;
 		PositionMovement: GrandTheftMultiplayer.Shared.Movement;
 		RotationMovement: GrandTheftMultiplayer.Shared.Movement;
-		readonly MaximumStreamDistance: any;
+		readonly MaximumStreamDistance: number;
 		readonly MaximumAmountStreamed: number;
 	}
 

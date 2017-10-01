@@ -126,6 +126,7 @@
 		Reflect(vector: GTA.Math.Vector3, normal: GTA.Math.Vector3): GTA.Math.Vector3;
 		Minimize(value1: GTA.Math.Vector3, value2: GTA.Math.Vector3): GTA.Math.Vector3;
 		Maximize(value1: GTA.Math.Vector3, value2: GTA.Math.Vector3): GTA.Math.Vector3;
+		ToString(numberFormat: string): string;
 		ToString(): string;
 		GetHashCode(): number;
 		Equals(value1: any, value2: any): boolean;

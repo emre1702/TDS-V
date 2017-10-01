@@ -45,6 +45,7 @@
 		removeElement(target: any, ...indices: any[]): boolean;
 		toStaticType(value: any): any;
 		tryCatch(tryFunc: any, catchFunc: any, finallyFunc?: any): boolean;
+		OnExposedToScriptCode(engine: any): void;
 	}
 
 }

@@ -1,4 +1,4 @@
-﻿declare namespace GrandTheftMultiplayer.Client.Util {
+﻿declare namespace GrandTheftMultiplayer.Client.Models {
 
 	enum HandleType {
 		GameHandle = 0,
@@ -11,11 +11,17 @@
 		readonly Raw: number;
 		readonly Value: number;
 		constructor(handle: number);
-		constructor(handle: number, localId: GrandTheftMultiplayer.Client.Util.HandleType);
+		constructor(handle: number, localId: GrandTheftMultiplayer.Client.Models.HandleType);
 		Equals(obj: any): boolean;
 		GetHashCode(): number;
 		Properties<T>(): any;
 		ToString(): string;
+	}
+
+	class ModelDimensions {
+		Maximum: GrandTheftMultiplayer.Shared.Math.Vector3;
+		Minimum: GrandTheftMultiplayer.Shared.Math.Vector3;
+		constructor();
 	}
 
 }
