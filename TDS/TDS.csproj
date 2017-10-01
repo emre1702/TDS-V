@@ -126,6 +126,7 @@
     <Content Include="client\pic\english.png" />
     <Content Include="client\pic\gangchoice.png" />
     <Content Include="client\pic\german.png" />
+    <TypeScriptCompile Include="client\damagesys\death.ts" />
     <TypeScriptCompile Include="client\lobby\bomb.ts" />
     <TypeScriptCompile Include="client\chat.ts" />
     <TypeScriptCompile Include="client\damagesys\hitsound.ts" />

@@ -28,8 +28,6 @@ namespace Class {
 				this.status = "mapchoose";
 				API.shared.consoleOutput ( this.status );
 
-				API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_IN, this.roundEndTime / 2 );
-
 				await Task.Run ( async ( ) => {
 					if ( this.isOfficial )
 						this.RewardAllPlayer ();
@@ -73,7 +71,6 @@ namespace Class {
 				this.alivePlayers[teamID].Add ( player );
 				player.freeze ( false );
 			}
-			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
 		}
 
 		private void StartRoundNormal ( ) {
@@ -111,7 +108,6 @@ namespace Class {
 			API.shared.consoleOutput ( this.status );
 			this.roundStartTimer.Kill ();
 			this.DeleteMapBlips ();
-			API.shared.sendNativeToPlayersInDimension ( this.dimension, Hash.DO_SCREEN_FADE_OUT, this.roundEndTime / 2 );
 			if ( this.currentMap.type == "bomb" )
 				this.StopRoundBombAtRoundEnd ();
 			if ( this.IsSomeoneInLobby() ) {

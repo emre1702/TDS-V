@@ -31,7 +31,7 @@ namespace Class {
 			if ( this.isPlayable ) {
 				if ( this.gotRounds ) {
 					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
-					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, this.teams, this.teamColorsList, this.countdownTime, this.roundTime, this.bombDetonateTime, this.bombPlantTime, this.bombDefuseTime );
+					player.triggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, this.teams, this.teamColorsList, this.countdownTime, this.roundTime, this.bombDetonateTime, this.bombPlantTime, this.bombDefuseTime, this.roundEndTime );
 				} else {
 					player.triggerEvent ( "onClientPlayerJoinRoundlessLobby" );
 					player.position = this.spawnpoint;
@@ -121,7 +121,6 @@ namespace Class {
 			}
 			player.freeze ( true );
 			this.GivePlayerWeapons ( player );
-			API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 50 );
 		}
 
 		public void RemovePlayer ( Client player ) {

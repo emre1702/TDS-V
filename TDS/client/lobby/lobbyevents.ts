@@ -21,7 +21,8 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			roundinfo.roundtime = args[5];
 			lobbysettings.bombdetonatetime = args[6];
 			lobbysettings.bombplanttime = args[7];
-			lobbysettings.bombdefusetime =  args[8];
+			lobbysettings.bombdefusetime = args[8];
+			lobbysettings.roundendtime = args[9];
 			log( "onClientPlayerJoinLobby end" );
 			break;
 
@@ -38,6 +39,10 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
 			}
 			log( "onClientPlayerLeaveLobby end" );
+			break;
+
+		case "onClientJoinMainMenu":
+			API.fadeScreenIn( 100 );
 			break;
 
 	}

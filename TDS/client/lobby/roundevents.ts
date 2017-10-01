@@ -5,6 +5,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientMapChange":
 			log( "onClientMapChange start" );
+			API.fadeScreenIn( lobbysettings.roundendtime / 2 );
 			if ( args[0].Count > 0 )
 				loadMapLimitData( args[0] );
 			loadMapMiddleForCamera( args[1] );
@@ -34,6 +35,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientRoundStart":
 			log( "onClientRoundStart start" );
+			API.fadeScreenIn( 50 );
 			stopCountdownCamera();
 			endCountdown();
 			rounddata.isspectator = args[0];
@@ -48,6 +50,7 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 		case "onClientRoundEnd": 
 			log( "onClientRoundEnd start" );
+			API.fadeScreenOut( lobbysettings.roundendtime / 2 );
 			toggleFightMode( false );
 			removeBombThings();
 			emptyMapLimit();
@@ -74,8 +77,8 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 				removeBombThings();
 			} else {
 				removeTeammateFromTeamBlips( API.getPlayerName( args[0] ) );
-				playerDeathRoundInfo( args[1], args[2] );
 			}
+			playerDeathRoundInfo( args[1], args[2] );
 			log( "onClientPlayerDeath end" );
 			break;
 

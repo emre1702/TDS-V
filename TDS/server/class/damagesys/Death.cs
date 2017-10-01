@@ -20,10 +20,7 @@ namespace Class {
 				Character character = player.GetChar ();
 				Damagesys dmgsys = character.lobby.damageSys;
 
-				API.shared.sendNativeToPlayer ( player, Hash._DISABLE_AUTOMATIC_RESPAWN, true );
-				API.shared.sendNativeToPlayer ( player, Hash.IGNORE_NEXT_RESTART, true );
-				API.shared.sendNativeToPlayer ( player, Hash.SET_FADE_OUT_AFTER_DEATH, false );
-				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_OUT, 2000 );
+				player.triggerEvent ( "clientPlayerDeathNatives" );
 
 				player.freeze ( true );
 				deadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 ) );
@@ -63,11 +60,7 @@ namespace Class {
 			deadTimer.TryRemove ( player, out Timer timer );
 			timer.Kill ();
 			if ( player.exists ) {
-				API.shared.sendNativeToPlayer ( player, Hash._RESET_LOCALPLAYER_STATE, player );
-				API.shared.sendNativeToPlayer ( player, Hash.NETWORK_REQUEST_CONTROL_OF_ENTITY, player );
-				API.shared.sendNativeToPlayer ( player, Hash.NETWORK_RESURRECT_LOCAL_PLAYER, 0, 0, 2000, player.rotation.Z, false, false );
-				API.shared.sendNativeToPlayer ( player, Hash.RESURRECT_PED, player );
-				API.shared.sendNativeToPlayer ( player, Hash.DO_SCREEN_FADE_IN, 2000 );
+				player.triggerEvent ( "onClientPlayerRespawn" );
 			}
 		}
 
