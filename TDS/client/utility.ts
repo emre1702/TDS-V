@@ -5,7 +5,7 @@
 *	fix for cursor-problems
 */ 
 API.onKeyDown.connect( function ( sender, e ) {
-	if ( e.KeyCode == Keys.Menu ) {
+	if ( e.KeyCode == Keys.End ) {
 		if ( API.isCursorShown() ) {
 			API.showCursor( false );
 			nothidecursor = 0;
@@ -15,3 +15,6 @@ API.onKeyDown.connect( function ( sender, e ) {
 		}
 	}
 } );
+
+API.setPedCanRagdoll( true );
+API.disableFingerPointing( true );
