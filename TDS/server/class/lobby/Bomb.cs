@@ -131,7 +131,7 @@ namespace Class {
 						this.bombPlantPlaces[i].delete ();
 						this.bombPlantPlaces[i] = API.shared.createObject ( -263709501, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
 						this.bombPlantBlips[i].color = 49;
-						//API.shared.setBlipFlashing ( this.bombPlantBlips[i], true );
+						this.bombPlantBlips[i].flashing = true;
 						this.bombAtPlayer = null;
 						this.planter = player;
 						this.SendAllPlayerLangNotification ( "bomb_planted" );
