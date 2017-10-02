@@ -100,6 +100,10 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 			bombPlanted ( args[0], args[1] );
 			break;
 
+		case "onClientBombDetonated":
+			bombDetonated();
+			break;
+
 		
 	}
 } );

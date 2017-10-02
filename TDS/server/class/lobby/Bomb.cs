@@ -113,6 +113,7 @@ namespace Class {
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				this.damageSys.lastHitterDictionary[player] = this.planter;
 				player.kill ();
+				player.triggerEvent ( "onClientBombDetonated" );
 			}, counterTerroristTeamID );
 			// TERROR WON //
 			if ( this.status == "round" )

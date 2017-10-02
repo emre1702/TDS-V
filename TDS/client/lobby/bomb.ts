@@ -122,6 +122,11 @@ function bombPlanted( pos, candefuse ) {
 	setRoundTimeLeft( lobbysettings.bombdetonatetime );
 }
 
+function bombDetonated() {
+	API.setGameplayCameraShake( "LARGE_EXPLOSION_SHAKE", 1.0 );
+	new Timer( API.stopGameplayCameraShake, 4000, 1 );
+}
+
 
 function removeBombThings() {
 	if ( bombdata.changed ) {
