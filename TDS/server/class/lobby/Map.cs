@@ -19,7 +19,7 @@ namespace Class {
 		private Timer countdownTimer;
 		private Timer roundEndTimer;
 		private List<Blip> mapBlips = new List<Blip> ();
-		private Vector3 spawnpoint;
+		private Vector3 spawnpoint = new Vector3 ( 0, 0, 1000 );
 		private Vector3 spawnrotation;
 
 		public void AddMapList ( List<string> newmapnames ) {

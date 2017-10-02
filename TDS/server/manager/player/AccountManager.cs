@@ -41,7 +41,7 @@ namespace Manager {
 		}
 
 		private static void OnPlayerConnected ( Client player ) {
-			player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( rnd.Next ( -10, 10 ), rnd.Next ( -10, 10 ), 1000 );
+			player.position = new GrandTheftMultiplayer.Shared.Math.Vector3 ( 0, 0, 1000 ).Around ( 10 );
 			player.freeze ( true );
 			player.name = player.socialClubName;
 		}

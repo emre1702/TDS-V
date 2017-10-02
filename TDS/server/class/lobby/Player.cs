@@ -40,7 +40,7 @@ namespace Class {
 					player.freeze ( false );
 				}
 			} else {
-				player.position = new Vector3 ( Manager.Utility.rnd.Next ( -10, 10 ), Manager.Utility.rnd.Next ( -10, 10 ), 1000 );
+				player.position = this.spawnpoint.Around ( 5 );
 				player.stopSpectating ();
 			}
 
@@ -160,7 +160,7 @@ namespace Class {
 		}
 
 		private void RespawnPlayerInSpectateMode ( Client player ) {
-			player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
+			player.position = this.spawnpoint.Around ( 10 );
 			player.freeze ( true );
 			this.SpectateTeammate ( player );
 			player.triggerEvent ( "onClientPlayerSpectateMode" );
@@ -182,8 +182,8 @@ namespace Class {
 						player.rotation = lobby.spawnrotation;
 				}
 				player.freeze ( false );
-			} else { 
-				player.position = new Vector3 ( Utility.rnd.Next ( -10, 10 ), Utility.rnd.Next ( -10, 10 ), 1000 );
+			} else {
+				player.position = lobby.spawnpoint.Around ( 5 );
 				player.freeze ( true );
 			}
 		}
