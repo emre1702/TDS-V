@@ -11,6 +11,7 @@ namespace Manager {
 		private static async void StartMethods ( API api ) {
 			try {
 				api.setGamemodeName ( "TDS" );
+				api.setMapName ( "Los Santos" );
 				Database.DatabaseOnStart ( api );
 				Class.Timer.TimerOnStart ( api );
 				Class.Damagesys.DamagesysOnStart ( api );
