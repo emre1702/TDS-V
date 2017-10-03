@@ -67,6 +67,7 @@
     <Compile Include="server\class\damagesys\Death.cs" />
     <Compile Include="server\class\damagesys\KillingSpree.cs" />
     <Compile Include="server\class\lobby\Bomb.cs" />
+    <Compile Include="server\class\lobby\ClientEvent.cs" />
     <Compile Include="server\manager\command\PlayerCommandManager.cs" />
     <Compile Include="server\manager\fightinfo\PlayerInFightManager.cs" />
     <Compile Include="server\class\lobby\APIExtend.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="server\class\lobby\Player.cs" />
     <Compile Include="server\class\lobby\Round.cs" />
     <Compile Include="server\manager\fightinfo\DeathInfoManager.cs" />
-    <Compile Include="server\class\lobby\SendToPlayer.cs" />
+    <Compile Include="server\class\lobby\AllPlayers.cs" />
     <Compile Include="server\class\lobby\Spectate.cs" />
     <Compile Include="server\class\lobby\Team.cs" />
     <Compile Include="server\class\lobby\Weapon.cs" />
