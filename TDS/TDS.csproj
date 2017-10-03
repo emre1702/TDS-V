@@ -35,11 +35,11 @@
     <Reference Include="BCrypt.Net, Version=0.1.5073.29922, Culture=neutral, PublicKeyToken=6bcd409ee6bc9292, processorArchitecture=MSIL">
       <HintPath>..\packages\BCrypt-Official.0.1.109\lib\BCrypt.Net.dll</HintPath>
     </Reference>
-    <Reference Include="GrandTheftMultiplayer.Server, Version=0.1.638.649, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.638.649\lib\net452\GrandTheftMultiplayer.Server.exe</HintPath>
+    <Reference Include="GrandTheftMultiplayer.Server, Version=0.1.640.64, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.640.64\lib\net452\GrandTheftMultiplayer.Server.exe</HintPath>
     </Reference>
     <Reference Include="GrandTheftMultiplayer.Shared, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.638.649\lib\net452\GrandTheftMultiplayer.Shared.dll</HintPath>
+      <HintPath>..\packages\grandtheftmultiplayer.api.0.1.640.64\lib\net452\GrandTheftMultiplayer.Shared.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
@@ -83,6 +83,7 @@
     <Compile Include="server\class\map\Map.cs" />
     <Compile Include="server\class\player\PlayerExtend.cs" />
     <Compile Include="server\manager\lobby\GangLobbyManager.cs" />
+    <Compile Include="server\manager\lobby\MapCreateLobbyManager.cs" />
     <Compile Include="server\manager\logs\Admin.cs" />
     <Compile Include="server\manager\logs\Chat.cs" />
     <Compile Include="server\manager\logs\Error.cs" />
@@ -173,10 +174,6 @@
     <TypeScriptCompile Include="client\registerlogin\registerlogin.ts" />
     <Content Include="client\minify.js" />
     <TypeScriptCompile Include="client\utility.ts" />
-    <TypeScriptCompile Include="types-gt-mp\Declarations.d.ts" />
-    <TypeScriptCompile Include="types-gt-mp\GrandTheftMultiplayer.Client.Contracts.d.ts" />
-    <TypeScriptCompile Include="types-gt-mp\GrandTheftMultiplayer.Client.Models.d.ts" />
-    <TypeScriptCompile Include="types-gt-mp\NativeUI.UIMenuDynamicListItem.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="client\settings.ts" />
