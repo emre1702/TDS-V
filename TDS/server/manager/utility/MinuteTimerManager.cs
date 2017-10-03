@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using System;
 
 namespace Manager {
-	class MinuteTimer {
+	class MinuteTimer : Script {
 
-		public static void MinuteTimerOnStart ( ) {
-			Class.Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
+		public MinuteTimer ( ) {
+			Class.Timer.SetTimer ( this.MinuteTimerFunc, 60 * 1000, -1 );
 		}
 
-		private static async void MinuteTimerFunc ( ) {
+		private async void MinuteTimerFunc ( ) {
 			try {
 
 				// playtime //
-				List<Client> players = API.shared.getAllPlayers ();
+				List<Client> players = API.getAllPlayers ();
 				for ( int i = 0; i < players.Count; i++ ) {
 					if ( players[i].exists ) {
 						Class.Character character = players[i].GetChar ();
@@ -31,7 +31,7 @@ namespace Manager {
 				// log-save //
 				await Log.SaveInDatabase ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in MinuteTimerFunc:" + ex.Message );
+				API.consoleOutput ( "Error in MinuteTimerFunc:" + ex.Message );
 			}
 		}
 

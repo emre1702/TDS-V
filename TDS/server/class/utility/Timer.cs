@@ -4,7 +4,7 @@ using GrandTheftMultiplayer.Server.API;
 
 namespace Class {
 
-	class Timer {
+	class Timer : Script {
 
 		private static List<Timer> timer = new List<Timer> ();
 		private static List<Timer> insertAfterList = new List<Timer> ();
@@ -15,8 +15,8 @@ namespace Class {
 		private int executesLeft;
 		public bool isRunning = true;
 
-		public static void TimerOnStart ( API api ) {
-			api.onUpdate += OnUpdateFunc;
+		public Timer ( ) {
+			API.onUpdate += OnUpdateFunc;
 		}
 
 		Timer ( Action thefunc, int executeafterms, int executeatms, int executes ) {
@@ -43,7 +43,7 @@ namespace Class {
 			try {
 				this.func ();
 			} catch ( Exception e ) {
-				API.shared.consoleOutput ( e.ToString() );
+				API.consoleOutput ( e.ToString() );
 			} finally {
 				if ( this.executesLeft == 1 ) {
 					this.executesLeft = 0;
@@ -98,11 +98,11 @@ namespace Class {
 
 		// Ja, die Funktion DARF private sein //
 		private void testTimerFunc ( Client player, string text ) {
-			API.shared.shared.sendChatMessageToPlayer ( player, "[TIMER] "+text );
+			API.sendChatMessageToPlayer ( player, "[TIMER] "+text );
 		}
 
 		void testTimerFunc ( ) {
-			API.shared.shared.sendChatMessageToAll ( "[TIMER2] Hallo" );
+			API.sendChatMessageToAll ( "[TIMER2] Hallo" );
 		}
 
 		[Command("ttimer")]
@@ -112,11 +112,11 @@ namespace Class {
 			// Geht auch normal, dann aber Funktion ohne Parameter //
 			cTimer.setTimer ( testTimerFunc, 1000, 1 );
 			// Geht auch ohne schon vorhandene Funktion //
-			cTimer.setTimer ( () => { API.shared.shared.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 1 );
+			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 1 );
 			// Unendlich //
-			cTimer.setTimer ( () => { API.shared.shared.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, -1 );
+			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, -1 );
 			// Auch Unendlich //
-			cTimer.setTimer ( () => { API.shared.shared.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 0 );
+			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 0 );
 		}
 	*/
 }

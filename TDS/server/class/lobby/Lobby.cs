@@ -5,7 +5,7 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 
 namespace Class { 
-	partial class Lobby {
+	partial class Lobby : Script {
 
 		private static Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
 		private static Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
@@ -16,17 +16,15 @@ namespace Class {
 		public bool deleteWhenEmpty = true;
 		public bool isOfficial = false;
 
-		public static void LobbyOnStart ( API api ) {
-			api.onPlayerDisconnected += OnPlayerDisconnected;
-			api.onClientEventTrigger += OnClientEventTrigger;
-			api.onPlayerRespawn += OnPlayerRespawn;
-			api.onPlayerWeaponSwitch += OnPlayerWeaponSwitch;
-			api.onEntityEnterColShape += OnEntityEnterColShape;
+		public Lobby ( ) {
+			API.onPlayerDisconnected += OnPlayerDisconnected;
+			API.onClientEventTrigger += OnClientEventTrigger;
+			API.onPlayerRespawn += OnPlayerRespawn;
+			API.onPlayerWeaponSwitch += OnPlayerWeaponSwitch;
+			API.onEntityEnterColShape += this.OnEntityEnterColShape;
 		}
 
-		public Lobby ( ) { }
-
-		public Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true ) {
+		internal Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true ) {
 			this.name = name;
 			if ( ID == -1 ) {
 				int theID = 0;
@@ -78,8 +76,8 @@ namespace Class {
 			}
 		}
 
-		private static void OnEntityEnterColShape ( ColShape shape, NetHandle entity ) {
-			Client player = API.shared.getPlayerFromHandle ( entity );
+		private void OnEntityEnterColShape ( ColShape shape, NetHandle entity ) {
+			Client player = API.getPlayerFromHandle ( entity );
 			if ( player != null ) {
 				Character character = player.GetChar ();
 				if ( lobbyBombTakeCol.ContainsKey ( character.lobby ) ) {

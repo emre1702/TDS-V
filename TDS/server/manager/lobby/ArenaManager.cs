@@ -5,10 +5,10 @@ using GrandTheftMultiplayer.Shared;
 using System.Collections.Generic;
 
 namespace Manager {
-	static class Arena {
+	class Arena : Script {
 		public static Class.Lobby lobby;
 
-		public static void Create ( ) {
+		public Arena ( ) {
 			lobby = new Class.Lobby ( "arena", 1 );
 			List<string> mapsforarena = new List<string> ();
 			mapsforarena.AddRange ( Manager.Map.normalMapNames );
@@ -59,11 +59,11 @@ namespace Manager {
 			lobby.AddWeapon ( (WeaponHash) ( 1649403952 ), 1000 ); // CompactRifle
 
 			// Gunrunning //
-			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
-			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_SMG_MK2" ), 1000 );
-			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
-			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
-			lobby.AddWeapon ( (WeaponHash) API.shared.getHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.getHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.getHashKey ( "WEAPON_SMG_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.getHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.getHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
+			lobby.AddWeapon ( (WeaponHash) API.getHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );
 
 			lobby.Start ();
 		}

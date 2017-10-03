@@ -15,7 +15,7 @@ namespace Class {
 		public ConcurrentDictionary<Client, int> playerKills = new ConcurrentDictionary<Client, int> ();
 		public ConcurrentDictionary<Client, int> playerAssists = new ConcurrentDictionary<Client, int> ();
 
-		private static void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
+		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
 			if ( !deadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 				Damagesys dmgsys = character.lobby.damageSys;
@@ -24,7 +24,7 @@ namespace Class {
 
 				player.freeze ( true );
 				deadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000, 1 ) );
-				Client killer = API.shared.getPlayerFromHandle ( entityKiller ) ?? character.lobby.damageSys.GetLastHitter ( player, character );
+				Client killer = API.getPlayerFromHandle ( entityKiller ) ?? character.lobby.damageSys.GetLastHitter ( player, character );
 
 				dmgsys.playerSpree.Remove ( player );
 

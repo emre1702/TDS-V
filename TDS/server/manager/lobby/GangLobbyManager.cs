@@ -9,11 +9,11 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
 
 namespace Manager {
-	static class GangLobby {
+	class GangLobby : Script {
 
 		public static Class.Lobby lobby;
 
-		public static void Create ( ) {
+		public GangLobby ( ) {
 			lobby = new Class.Lobby ( "gang", 2, false );
 			lobby.deleteWhenEmpty = false;
 			lobby.isOfficial = true;

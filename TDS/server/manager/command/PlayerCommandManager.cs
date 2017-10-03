@@ -29,36 +29,36 @@ namespace Manager {
 
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public static void GlobalChat ( Client player, string text ) {
-			Chat.SendGlobalMessage ( player, text );
+			Chat.instance.SendGlobalMessage ( player, text );
 		}
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public static void TeamChat ( Client player, string text ) {
-			Chat.SendTeamChat ( player, text ); 
+			Chat.instance.SendTeamChat ( player, text ); 
 		}
 
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]
-		public static void SendPlayerPosition ( Client sender ) {
-			if ( API.shared.isPlayerInAnyVehicle ( sender ) ) {
-				NetHandle veh = API.shared.getPlayerVehicle ( sender );
-				Vector3 pos = API.shared.getEntityPosition ( veh );
-				API.shared.sendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = API.shared.getEntityRotation ( veh );
-				API.shared.sendChatMessageToPlayer ( sender, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
+		public void SendPlayerPosition ( Client sender ) {
+			if ( API.isPlayerInAnyVehicle ( sender ) ) {
+				NetHandle veh = API.getPlayerVehicle ( sender );
+				Vector3 pos = API.getEntityPosition ( veh );
+				API.sendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
+				Vector3 rot = API.getEntityRotation ( veh );
+				API.sendChatMessageToPlayer ( sender, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
 			} else {
-				Vector3 pos = API.shared.getEntityPosition ( sender );
-				API.shared.sendChatMessageToPlayer ( sender, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = API.shared.getEntityRotation ( sender );
-				API.shared.sendChatMessageToPlayer ( sender, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
+				Vector3 pos = API.getEntityPosition ( sender );
+				API.sendChatMessageToPlayer ( sender, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
+				Vector3 rot = API.getEntityRotation ( sender );
+				API.sendChatMessageToPlayer ( sender, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
 			}
 		}
 
 		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", AddToHelpmanager = true, Group = "user" )]
-		public static void CheckMapName ( Client player, string mapname ) {
+		public void CheckMapName ( Client player, string mapname ) {
 			if ( Map.mapByName.ContainsKey ( mapname ) ) {
-				API.shared.sendNotificationToPlayer ( player, "map-name already taken" );
+				API.sendNotificationToPlayer ( player, "map-name already taken" );
 			} else {
-				API.shared.sendNotificationToPlayer ( player, "map-name is available" );
+				API.sendNotificationToPlayer ( player, "map-name is available" );
 			}
 		}
 

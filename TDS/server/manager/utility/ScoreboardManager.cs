@@ -1,18 +1,12 @@
-using System;
-using GrandTheftMultiplayer.Server;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
-using GrandTheftMultiplayer.Server.Constant;
-using GrandTheftMultiplayer.Server.Managers;
-using GrandTheftMultiplayer.Shared;
-using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 
 namespace Manager {
-	class Scoreboard {
+	class Scoreboard : Script {
 
-		public static void ScoreboardOnStart ( API api ) {
-			api.onClientEventTrigger += OnClientRequestPlayerListDatas;
+		public Scoreboard () {
+			API.onClientEventTrigger += this.OnClientRequestPlayerListDatas;
 		}
 
 		public static string GetHoursOpticByMinutes ( int minutes ) {
@@ -21,9 +15,9 @@ namespace Manager {
 			return hours.ToString() + ":" + ( minutes < 10 ? "0" + minutes : minutes.ToString() );
 		}
 
-		private static void OnClientRequestPlayerListDatas ( Client player, string eventName, params object[] args ) {
+		private void OnClientRequestPlayerListDatas ( Client player, string eventName, params object[] args ) {
 			if ( eventName == "onClientRequestPlayerListDatas" ) {
-				List<Client> players = API.shared.getAllPlayers ();
+				List<Client> players = API.getAllPlayers ();
 
 				List<string> nameList = new List<string> ();
 				List<string> playtimeList = new List<string> ();
@@ -77,9 +71,9 @@ namespace Manager {
 				}
 
 				if ( ownLobbyID != 0 ) 
-					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
+					API.triggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 				else
-					API.shared.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
+					API.triggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
 			}
 		}
 	}

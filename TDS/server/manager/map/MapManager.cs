@@ -153,7 +153,7 @@ namespace Manager {
 
 		/*private static Map getMapDataOther ( string path ) {
 			Map map = new Map ();
-			XmlGroup mapdata = API.shared.shared.loadXml ( path );
+			XmlGroup mapdata = API.loadXml ( path );
 
 			bool teamexists = true;
 			int teamcounter = 1;

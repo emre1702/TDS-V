@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace Manager {
 
-	class Account {
+	class Account : Script {
 		private static Random rnd = new Random ();
 
 		public static ConcurrentDictionary<string, int> playerUIDs = new ConcurrentDictionary<string, int> ();
@@ -16,11 +16,11 @@ namespace Manager {
 		private static Dictionary<string, bool> addressBanDict = new Dictionary<string, bool> ();
 		private static int lastPlayerUID = 0;
 
-		public static void AccountOnStart ( API api ) {
-			api.onClientEventTrigger += OnClientEvent;
-			api.onPlayerBeginConnect += OnPlayerBeginConnect;
-			api.onPlayerDisconnected += OnPlayerDisconnected;
-			api.onPlayerConnected += OnPlayerConnected;
+		public Account () {
+			API.onClientEventTrigger += this.OnClientEvent;
+			API.onPlayerBeginConnect += this.OnPlayerBeginConnect;
+			API.onPlayerDisconnected += this.OnPlayerDisconnected;
+			API.onPlayerConnected += OnPlayerConnected;
 			OnResourceStart ();
 		}
 
@@ -46,12 +46,12 @@ namespace Manager {
 			player.name = player.socialClubName;
 		}
 
-		private static async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
+		private async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
 			try {
 				switch ( eventName ) {
 
 					case "onPlayerJoin":
-						API.shared.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
+						API.triggerClientEvent ( player, "startRegisterLogin", player.socialClubName, playerUIDs.ContainsKey ( player.socialClubName ) );
 						break;
 
 					case "onPlayerTryRegister":
@@ -80,7 +80,7 @@ namespace Manager {
 
 				}
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in OnClientEvent AccountManager:" + ex.Message );
+				API.consoleOutput ( "Error in OnClientEvent AccountManager:" + ex.Message );
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace Manager {
 			playerUIDs[name] = uid;
 		}
 
-		private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
+		private async void OnPlayerBeginConnect ( Client player, CancelEventArgs e ) {
 			try {
 				player.name = player.socialClubName;
 				if ( socialClubNameBanDict.ContainsKey ( player.socialClubName ) || addressBanDict.ContainsKey ( player.address ) ) {
@@ -106,11 +106,11 @@ namespace Manager {
 					addressBanDict.Remove ( player.address );
 				}
 			} catch (Exception ex ) {
-				API.shared.consoleOutput( "Error in OnPlayerBeginConnect AccountManager:" + ex.Message );
+				API.consoleOutput( "Error in OnPlayerBeginConnect AccountManager:" + ex.Message );
 			}
 }
 
-		private static async void OnResourceStart ( ) {
+		private async void OnResourceStart ( ) {
 			try {
 				DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" ).ConfigureAwait ( false );
 				foreach ( DataRow row in result.Rows ) {
@@ -119,7 +119,7 @@ namespace Manager {
 				DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" ).ConfigureAwait ( false );
 				lastPlayerUID = Convert.ToInt32 ( maxuidresult.Rows[0]["MaxUID"] );
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in OnResourceStart AccountManager:" + ex.Message );
+				API.consoleOutput ( "Error in OnResourceStart AccountManager:" + ex.Message );
 			}
 		}
 
@@ -148,15 +148,15 @@ namespace Manager {
 			}
 		}
 
-		private static async void OnPlayerDisconnected ( Client player, string reason ) {
+		private async void OnPlayerDisconnected ( Client player, string reason ) {
 			try {
 				await SavePlayerData ( player ).ConfigureAwait ( false );
 				int adminlvl = player.GetChar ().adminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
-				API.shared.triggerClientEventForAll ( "onClientPlayerQuit", player );
+				API.triggerClientEventForAll ( "onClientPlayerQuit", player );
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
+				API.consoleOutput ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
 			}
 		}
 

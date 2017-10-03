@@ -19,7 +19,7 @@ namespace Class {
 		public void SendAllPlayerLangNotification ( string langstr, int teamindex = -1, params string[] args ) {
 			Dictionary<string, string> texts = Language.GetLangDictionary ( langstr, args );
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
-				API.shared.sendNotificationToPlayer ( player, texts[player.GetChar().language] );
+				API.sendNotificationToPlayer ( player, texts[player.GetChar().language] );
 			}, teamindex );
 		}
 

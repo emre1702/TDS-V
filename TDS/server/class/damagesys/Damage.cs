@@ -160,10 +160,10 @@ namespace Class {
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
-			if ( API.shared.isPlayerDead ( hitted ) == false && hitted.dimension == player.dimension ) {
+			if ( API.isPlayerDead ( hitted ) == false && hitted.dimension == player.dimension ) {
 				Character character = player.GetChar ();
 				if ( character.team != hitted.GetChar ().team ) {
-					long tickCount = API.shared.TickCount;
+					long tickCount = API.TickCount;
 					int damage = this.GetDamage ( hash, headshot );
 
 					if ( damage > 0 ) {
@@ -179,9 +179,9 @@ namespace Class {
 			}
 		}
 
-		private static void OnPlayerHitOtherPlayer ( Client player, string name, dynamic[] args ) {
+		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic[] args ) {
 			if ( name == "onPlayerHitOtherPlayer" ) {
-				Client hitted = API.shared.getPlayerFromHandle ( args[0] );
+				Client hitted = API.getPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Class.Lobby lobby = player.GetChar ().lobby;
 					if ( lobby != Manager.MainMenu.lobby ) {

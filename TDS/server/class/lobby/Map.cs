@@ -50,7 +50,7 @@ namespace Class {
 
 		private void CreateTeamSpawnBlips ( ) {
 			foreach ( KeyValuePair<int, List<Vector3>> entry in this.currentMap.teamSpawns ) { 
-				Blip blip = API.shared.createBlip ( entry.Value[0], this.dimension );
+				Blip blip = API.createBlip ( entry.Value[0], this.dimension );
 				blip.sprite = 491;
 				blip.color = this.teamBlipColors[entry.Key];
 				blip.name = "Spawn " + this.teams[entry.Key];
@@ -60,7 +60,7 @@ namespace Class {
 
 		private void CreateMapLimitBlips ( ) {
 			for ( int i = 0; i < this.currentMap.mapLimits.Count; i++ ) {
-				Blip blip = API.shared.createBlip ( this.currentMap.mapLimits[i], this.dimension );
+				Blip blip = API.createBlip ( this.currentMap.mapLimits[i], this.dimension );
 				blip.sprite = 441;
 				blip.name = "Limit";
 				this.mapBlips.Add ( blip );

@@ -79,10 +79,10 @@ namespace Class {
 					this.SetPlayerReadyForRound ( player, teamID );
 				} else {
 					int teamsinround = this.GetTeamAmountStillInRound ();
-					API.shared.consoleOutput ( teamsinround + " teams still in round" );
+					API.consoleOutput ( teamsinround + " teams still in round" );
 					if ( teamsinround < 2 ) {
 						this.EndRoundEarlier ();
-						API.shared.consoleOutput ( "End round earlier because of joined player" );
+						API.consoleOutput ( "End round earlier because of joined player" );
 						return;
 					} else {
 						this.RespawnPlayerInSpectateMode ( player );

@@ -7,47 +7,51 @@ using System;
 namespace Manager {
 	class ResourceStop : Script {
 		public ResourceStop ( ) {
+			API.onResourceStop += this.OnResourceStop;
+		}
+
+		public void OnResourceStop () {
 			SaveAllInDatabase ();
 			RemoveAllCreated ();
 		}
 
-		private static async void SaveAllInDatabase () {
+		private async void SaveAllInDatabase () {
 			try {
 				await Manager.Log.SaveInDatabase ().ConfigureAwait ( false );
 
-				List<Client> players = API.shared.getAllPlayers ();
+				List<Client> players = API.getAllPlayers ();
 				for ( int i = 0; i < players.Count; i++ ) {
 					await Account.SavePlayerData ( players[i] ).ConfigureAwait ( false );
 				}
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in SaveAllInDatabase:" + ex.Message );
+				API.consoleOutput ( "Error in SaveAllInDatabase:" + ex.Message );
 			}
 		}
 
-		private static void RemoveAllCreated ( ) {
-			List<NetHandle> blips = API.shared.getAllBlips ();
+		private void RemoveAllCreated ( ) {
+			List<NetHandle> blips = API.getAllBlips ();
 			for ( int i = 0; i < blips.Count; i++ )
-				API.shared.deleteEntity ( blips[i] );
+				API.deleteEntity ( blips[i] );
 
-			List<NetHandle> markers = API.shared.getAllMarkers ();
+			List<NetHandle> markers = API.getAllMarkers ();
 			for ( int i = 0; i < markers.Count; i++ )
-				API.shared.deleteEntity ( markers[i] );
+				API.deleteEntity ( markers[i] );
 
-			List<NetHandle> peds = API.shared.getAllPeds ();
+			List<NetHandle> peds = API.getAllPeds ();
 			for ( int i = 0; i < peds.Count; i++ )
-				API.shared.deleteEntity ( peds[i] );
+				API.deleteEntity ( peds[i] );
 
-			List<NetHandle> pickups = API.shared.getAllPickups ();
+			List<NetHandle> pickups = API.getAllPickups ();
 			for ( int i = 0; i < pickups.Count; i++ )
-				API.shared.deleteEntity ( pickups[i] );
+				API.deleteEntity ( pickups[i] );
 
-			List<NetHandle> vehicles = API.shared.getAllVehicles ();
+			List<NetHandle> vehicles = API.getAllVehicles ();
 			for ( int i = 0; i < vehicles.Count; i++ )
-				API.shared.deleteEntity ( vehicles[i] );
+				API.deleteEntity ( vehicles[i] );
 
-			List<NetHandle> objects = API.shared.getAllObjects ();
+			List<NetHandle> objects = API.getAllObjects ();
 			for ( int i = 0; i < objects.Count; i++ )
-				API.shared.deleteEntity ( objects[i] );
+				API.deleteEntity ( objects[i] );
 
 		}
 	}

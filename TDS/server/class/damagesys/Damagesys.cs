@@ -4,11 +4,11 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 
 namespace Class {
-	partial class Damagesys {
+	partial class Damagesys : Script {
 
-		public static void DamagesysOnStart ( API api ) {
-			api.onClientEventTrigger += OnPlayerHitOtherPlayer;
-			api.onPlayerDeath += OnPlayerDeath;
+		public Damagesys ( ) {
+			API.onClientEventTrigger += OnPlayerHitOtherPlayer;
+			API.onPlayerDeath += OnPlayerDeath;
 		}
 
 		public Damagesys ( bool notusedvariable, ConcurrentDictionary<int, int> customdamage = null, ConcurrentDictionary<int, double> customheadmult = null ) {

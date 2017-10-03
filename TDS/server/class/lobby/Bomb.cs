@@ -42,13 +42,13 @@ namespace Class {
 
 		private void BombMapChose ( ) {
 			foreach ( Vector3 bombplace in this.currentMap.bombPlantPlaces ) {
-				Object place = API.shared.createObject ( -51423166, bombplace, new Vector3(), this.dimension );
+				Object place = API.createObject ( -51423166, bombplace, new Vector3(), this.dimension );
 				this.bombPlantPlaces.Add ( place );
-				Blip blip = API.shared.createBlip ( bombplace, this.dimension );
+				Blip blip = API.createBlip ( bombplace, this.dimension );
 				blip.sprite = 433;
 				this.bombPlantBlips.Add ( blip );
 			}
-			this.bomb = API.shared.createObject ( 1764669601, this.currentMap.bombPlantPlaces[0], new Vector3(), this.dimension );
+			this.bomb = API.createObject ( 1764669601, this.currentMap.bombPlantPlaces[0], new Vector3(), this.dimension );
 		}
 
 		private void GiveBombToRandomTerrorist ( ) {
@@ -109,7 +109,7 @@ namespace Class {
 		}
 
 		private void DetonateBomb () {
-			API.shared.createOwnedExplosion ( this.planter, ExplosionType.GrenadeL, this.bomb.position, 200, this.dimension );
+			API.createOwnedExplosion ( this.planter, ExplosionType.GrenadeL, this.bomb.position, 200, this.dimension );
 			this.FuncIterateAllPlayers ( ( player, teamID ) => {
 				this.damageSys.lastHitterDictionary[player] = this.planter;
 				player.kill ();
@@ -130,7 +130,7 @@ namespace Class {
 						this.bomb.position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
 						this.bomb.rotation = new Vector3 ( 270, 0, 0 );
 						this.bombPlantPlaces[i].delete ();
-						this.bombPlantPlaces[i] = API.shared.createObject ( -263709501, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
+						this.bombPlantPlaces[i] = API.createObject ( -263709501, this.currentMap.bombPlantPlaces[i], new Vector3(), this.dimension );
 						this.bombPlantBlips[i].color = 49;
 						this.bombPlantBlips[i].flashing = true;
 						this.bombAtPlayer = null;
@@ -217,8 +217,8 @@ namespace Class {
 			this.bomb.freezePosition = true;
 			this.bomb.position = this.bombAtPlayer.position;
 			this.bombAtPlayer = null;
-			this.bombTakeMarker = API.shared.createMarker ( 0, this.bomb.position, new Vector3 (), new Vector3 (), new Vector3 ( 1, 1, 1 ), 180, 180, 0, 0, this.dimension );
-			SphereColShape bombtakecol = API.shared.createSphereColShape ( this.bomb.position, 2 );
+			this.bombTakeMarker = API.createMarker ( 0, this.bomb.position, new Vector3 (), new Vector3 (), new Vector3 ( 1, 1, 1 ), 180, 180, 0, 0, this.dimension );
+			SphereColShape bombtakecol = API.createSphereColShape ( this.bomb.position, 2 );
 			lobbyBombTakeCol[this] = bombtakecol;
 		}
 
@@ -230,7 +230,7 @@ namespace Class {
 			this.bomb.freezePosition = false;
 			this.bombTakeMarker.delete ();
 			this.bombTakeMarker = null;
-			API.shared.deleteColShape ( lobbyBombTakeCol[this] );
+			API.deleteColShape ( lobbyBombTakeCol[this] );
 			lobbyBombTakeCol.Remove ( this );
 		}
 
@@ -256,7 +256,7 @@ namespace Class {
 				this.bombDetonateTimer = null;
 			}
 			if ( lobbyBombTakeCol.ContainsKey ( this ) ) {
-				API.shared.deleteColShape ( lobbyBombTakeCol[this] );
+				API.deleteColShape ( lobbyBombTakeCol[this] );
 				lobbyBombTakeCol.Remove ( this );
 				this.bombTakeMarker.delete ();
 				this.bombTakeMarker = null;

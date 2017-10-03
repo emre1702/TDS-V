@@ -26,7 +26,7 @@ namespace Class {
 		public async void StartMapChoose ( ) {
 			try {
 				this.status = "mapchoose";
-				API.shared.consoleOutput ( this.status );
+				API.consoleOutput ( this.status );
 
 				await Task.Run ( async ( ) => {
 					if ( this.isOfficial )
@@ -47,14 +47,14 @@ namespace Class {
 
 				this.roundStartTimer = Timer.SetTimer ( this.StartRoundCountdown, this.roundEndTime / 2, 1 );
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in StartMapChoose:" + ex.Message );
+				API.consoleOutput ( "Error in StartMapChoose:" + ex.Message );
 			}
 			
 		}
 
 		private void StartRoundCountdown ( ) {
 			this.status = "countdown";
-			API.shared.consoleOutput ( this.status );
+			API.consoleOutput ( this.status );
 			this.spectatingMe = new Dictionary<Client, List<Client>> ();
 			this.SetAllPlayersInCountdown ();
 			this.startTick = Environment.TickCount;
@@ -79,7 +79,7 @@ namespace Class {
 
 		private void StartRound ( ) {
 			this.status = "round";
-			API.shared.consoleOutput ( this.status );
+			API.consoleOutput ( this.status );
 			this.startTick = Environment.TickCount;
 			if ( this.gotRounds )
 				this.roundEndTimer = Timer.SetTimer ( this.EndRound, this.roundTime, 1 );
@@ -105,7 +105,7 @@ namespace Class {
 
 		private void EndRound ( ) {
 			this.status = "roundend";
-			API.shared.consoleOutput ( this.status );
+			API.consoleOutput ( this.status );
 			this.roundStartTimer.Kill ();
 			this.DeleteMapBlips ();
 			if ( this.currentMap.type == "bomb" )

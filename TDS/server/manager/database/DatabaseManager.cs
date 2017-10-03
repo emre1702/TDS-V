@@ -6,7 +6,7 @@ using GrandTheftMultiplayer.Server.API;
 using System.Threading.Tasks;
 using System.Data.Common;
 
-static class Database {
+class Database : Script {
 	private static readonly string ip = "127.0.0.1";
 	private static readonly int port = 3306;
 	private static readonly string user = "emre1702";
@@ -23,8 +23,8 @@ static class Database {
 
 	/* Constructor */
 
-	public static void DatabaseOnStart ( API api ) {
-		api.onResourceStart += OnResourceStart;
+	public Database ( ) {
+		API.onResourceStart += this.OnResourceStart;
 	}
 
 	/* Exports */
@@ -135,15 +135,15 @@ static class Database {
 
 	/* Hooks */
 
-	public static void OnResourceStart ( ) {
+	public void OnResourceStart ( ) {
 		dataAdapters = new Dictionary<string, MySqlDataAdapter> ();
 
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
-				API.shared.consoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
+				API.consoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
 				conn.Open ();
 				if ( conn.State == ConnectionState.Open ) {
-					API.shared.consoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
+					API.consoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
 				}
 			} catch ( Exception ex ) {
 				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );

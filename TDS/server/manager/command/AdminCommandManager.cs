@@ -77,7 +77,7 @@ namespace Manager {
 		
 
 		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
-		public static async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
+		public async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
 			try { 
 				if ( Account.playerUIDs.ContainsKey ( targetname ) ) {
 					if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] )
@@ -87,7 +87,7 @@ namespace Manager {
 						string targetaddress = "-";
 						int targetUID = Account.playerUIDs[targetname];
 						Dictionary<string, string> queryparam = new Dictionary<string, string> { { "{1}", targetUID.ToString () } };
-						Client target = API.shared.getPlayerFromName ( targetname );
+						Client target = API.getPlayerFromName ( targetname );
 						if ( target != null && target.GetChar ().loggedIn == true ) {
 							Class.Character targetcharacter = target.GetChar ();
 							targetadminlvl = targetcharacter.adminLvl;
@@ -113,33 +113,33 @@ namespace Manager {
 				} else
 					player.SendLangNotification ( "player_doesnt_exist" );
 			} catch ( Exception ex ) {
-				API.shared.consoleOutput ( "Error in BanPlayer AdminCommand:" + ex.Message );
+				API.consoleOutput ( "Error in BanPlayer AdminCommand:" + ex.Message );
 			}
 		}
 		
 		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
-		public static void GotoPlayer ( Client player, Client target ) {
+		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().lobby == GangLobby.lobby ) {
-				Vector3 playerpos = API.shared.getEntityPosition ( target );
+				Vector3 playerpos = API.getEntityPosition ( target );
 				if ( player.isInVehicle ) {
-					API.shared.setEntityPosition ( player.vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+					API.setEntityPosition ( player.vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else if ( target.isInVehicle ) {
 					Client[] usersInCar = target.vehicle.occupants;
-					if ( usersInCar.Length < API.shared.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ) ) {
+					if ( usersInCar.Length < API.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ) ) {
 						Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
 						foreach ( Client occupant in usersInCar ) {
 							occupiedseats[occupant.vehicleSeat] = true;
 						}
-						for ( int i = 0; i < API.shared.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ); i++ ) {
+						for ( int i = 0; i < API.getVehicleMaxOccupants ( (VehicleHash) ( target.vehicle.model ) ); i++ ) {
 							if ( !occupiedseats.ContainsKey ( i ) ) {
-								API.shared.setPlayerIntoVehicle ( player, target.vehicle, i );
+								API.setPlayerIntoVehicle ( player, target.vehicle, i );
 								return;
 							}
 						}
 					}
-					API.shared.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+					API.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else {
-					API.shared.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
+					API.setEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
 
 				}
 			} else
@@ -147,35 +147,35 @@ namespace Manager {
 		}
 
 		[Command ( "xyz", AddToHelpmanager = true, Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
-		public static void GotoXYZ ( Client player, float x, float y, float z ) {
+		public void GotoXYZ ( Client player, float x, float y, float z ) {
 			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) || player.GetChar().lobby == GangLobby.lobby ) {
-				API.shared.setEntityPosition ( player, new Vector3 ( x, y, z ) );
+				API.setEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
 		[Command ( "cveh", AddToHelpmanager = true, Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
-		public static void SpawnCarCommand ( Client player, string name ) {
+		public void SpawnCarCommand ( Client player, string name ) {
 			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) || player.GetChar ().lobby == GangLobby.lobby ) {
-				VehicleHash model = API.shared.vehicleNameToModel ( name );
+				VehicleHash model = API.vehicleNameToModel ( name );
 
-				Vector3 rot = API.shared.getEntityRotation ( player.handle );
-				Vehicle veh = API.shared.createVehicle ( model, player.position, new Vector3 ( 0, 0, rot.Z ), 0, 0 );
+				Vector3 rot = API.getEntityRotation ( player.handle );
+				Vehicle veh = API.createVehicle ( model, player.position, new Vector3 ( 0, 0, rot.Z ), 0, 0 );
 
-				API.shared.setPlayerIntoVehicle ( player, veh, -1 );
+				API.setPlayerIntoVehicle ( player, veh, -1 );
 			}
 		}
 
 		[Command ( "adminsay", AddToHelpmanager = true, Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
 		public static void AdminSay ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
-				Chat.SendAdminMessage ( player, text );
+				Chat.instance.SendAdminMessage ( player, text );
 			}
 		}
 
 		[Command ( "adminchat", AddToHelpmanager = true, Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
 		public static void AdminChat ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
-				Chat.SendAdminChat ( player, text );
+				Chat.instance.SendAdminChat ( player, text );
 			}
 		}
 
