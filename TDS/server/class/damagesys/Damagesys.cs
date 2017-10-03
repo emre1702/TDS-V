@@ -7,8 +7,8 @@ namespace Class {
 	partial class Damagesys : Script {
 
 		public Damagesys ( ) {
-			API.onClientEventTrigger += OnPlayerHitOtherPlayer;
-			API.onPlayerDeath += OnPlayerDeath;
+			API.onClientEventTrigger += this.OnPlayerHitOtherPlayer;
+			API.onPlayerDeath += this.OnPlayerDeath;
 		}
 
 		public Damagesys ( bool notusedvariable, ConcurrentDictionary<int, int> customdamage = null, ConcurrentDictionary<int, double> customheadmult = null ) {
