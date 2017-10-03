@@ -30,6 +30,19 @@ namespace Class {
 			this.mapDescriptions = new Dictionary<string, List<string>> ( mapdescriptions );
 		}
 
+		private int GetDimension ( ) {
+			if ( this.playersInOwnDimension ) {
+				int dimension = 1;
+				while ( dimensionsUsed.ContainsKey ( dimension ) )
+					dimension++;
+				this.dimension = dimension;
+				dimensionsUsed[dimension] = this;
+				return dimension;
+			} else {
+				return this.dimension;
+			}
+		}
+
 		public async Task<Map> GetRandomMap ( ) {
 			int random = Manager.Utility.rnd.Next ( 0, this.mapNames.Count );
 			return await Manager.Map.GetMapClass ( this.mapNames[random], this ).ConfigureAwait ( false );

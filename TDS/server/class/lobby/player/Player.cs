@@ -25,7 +25,7 @@ namespace Class {
 			}
 			character.lobby = this;
 			character.spectating = null;
-			player.dimension = this.dimension;
+			player.dimension = this.GetDimension ();
 			if ( this.isPlayable ) {
 				if ( this.gotRounds ) {
 					string mapname = this.currentMap != null ? this.currentMap.name : "unknown";
@@ -114,8 +114,12 @@ namespace Class {
 		public void RemovePlayer ( Client player ) {
 			Character character = player.GetChar ();
 			int teamID = character.team;
-			if ( this != Manager.MainMenu.lobby )
+			if ( this != Manager.MainMenu.lobby ) {
 				this.SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player );
+				if ( this.playersInOwnDimension ) {
+					dimensionsUsed.Remove ( player.dimension );
+				}
+			}
 			this.players[teamID].Remove ( player );
 			if ( character.lifes > 0 ) {
 				this.damageSys.CheckLastHitter ( player, character, out Client killer );
