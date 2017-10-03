@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS", "TDS\TDS.csproj", "{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapCreator", "MapCreator\MapCreator.csproj", "{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBot", "DiscordBot\DiscordBot.csproj", "{EFBA6579-A124-437A-A7CE-5E439A635045}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,20 +41,11 @@ Global
 		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Server|Any CPU.Build.0 = Release|Any CPU
 		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Server|x64.ActiveCfg = Release|Any CPU
 		{8ECC01A0-FBD1-460C-8035-61FEEFF55C62}.Server|x64.Build.0 = Release|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Debug|x64.Build.0 = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Release|x64.ActiveCfg = Release|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Release|x64.Build.0 = Release|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Server|Any CPU.Build.0 = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Server|x64.ActiveCfg = Debug|Any CPU
-		{EFBA6579-A124-437A-A7CE-5E439A635045}.Server|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CEB846EC-4F41-4917-84C6-D0332E61A49C}
 	EndGlobalSection
 EndGlobal
