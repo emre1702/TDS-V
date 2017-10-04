@@ -26,6 +26,7 @@ namespace Manager {
 			{ "testskin", 2 }
 		};
 
+		#region Lobby
 		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round.", Group = "supporter,lobby-owner" )]
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
@@ -40,6 +41,26 @@ namespace Manager {
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
+		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
+		public static void LobbyKickPlayer ( Client player, Client target, string reason ) {
+			if ( player != target ) {
+				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
+					// LOG //
+					if ( player.GetChar ().isLobbyOwner )
+						Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					else if ( player.GetChar ().adminLvl >= neededLevels["kick"] )
+						Log.Admin ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					else
+						Log.VIP ( "lobbykick", player, target, player.GetChar ().lobby.name );
+					/////////
+					Language.SendMessageToAll ( "lobbykick", target.name, player.name, reason );
+					target.GetChar ().lobby.RemovePlayer ( target );
+				}
+			}
+		}
+		#endregion
+
+		#region Kick
 		[Command ( "kick", GreedyArg = true, Alias = "rkick", AddToHelpmanager = true, Description = "Kicks a player from the server.", Group = "supporter,VIP" )]
 		public static void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
@@ -55,27 +76,9 @@ namespace Manager {
 				}
 			}
 		}
+		#endregion
 
-		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
-		public static void LobbyKickPlayer ( Client player, Client target, string reason ) {
-			if ( player != target ) {
-				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
-					// LOG //
-					if ( player.GetChar().isLobbyOwner )
-						Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().lobby.name );
-					else if ( player.GetChar ().adminLvl >= neededLevels["kick"] )
-						Log.Admin ( "lobbykick", player, target, player.GetChar ().lobby.name );
-					else 
-						Log.VIP ( "lobbykick", player, target, player.GetChar ().lobby.name );
-					/////////
-					Language.SendMessageToAll ( "lobbykick", target.name, player.name, reason );
-					target.GetChar ().lobby.RemovePlayer ( target );
-				}
-			}
-		}
-
-		
-
+		#region Ban
 		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
 		public async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
 			try { 
@@ -116,7 +119,9 @@ namespace Manager {
 				API.consoleOutput ( "Error in BanPlayer AdminCommand:" + ex.Message );
 			}
 		}
-		
+		#endregion
+
+		#region Utility 
 		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().lobby == GangLobby.lobby ) {
@@ -165,6 +170,15 @@ namespace Manager {
 			}
 		}
 
+		[Command ( "testskin" )]
+		public static void TestSkin ( Client player, PedHash hash ) {
+			if ( player.IsAdminLevel ( neededLevels["testskin"] ) ) {
+				player.setSkin ( hash );
+			}
+		}
+		#endregion
+
+		#region Chat
 		[Command ( "adminsay", AddToHelpmanager = true, Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
 		public static void AdminSay ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
@@ -178,12 +192,6 @@ namespace Manager {
 				Chat.instance.SendAdminChat ( player, text );
 			}
 		}
-
-		[Command ("testskin")]
-		public static void TestSkin ( Client player, PedHash hash ) {
-			if ( player.IsAdminLevel ( neededLevels["testskin"] ) ) {
-				player.setSkin ( hash );
-			}
-		}
+		#endregion
 	}
 }

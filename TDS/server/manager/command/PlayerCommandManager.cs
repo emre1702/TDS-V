@@ -8,6 +8,7 @@ using GrandTheftMultiplayer.Shared.Math;
 namespace Manager {
 	class PlayerCommand : Script {
 
+		#region Lobby
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", AddToHelpmanager = true, Group = "user" )]
 		public static void Leave ( Client player ) {
 			Class.Lobby lobby = player.GetChar ().lobby;
@@ -27,6 +28,15 @@ namespace Manager {
 			}
 		}
 
+		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", AddToHelpmanager = true, Group = "user" )]
+		public static void JoinGangLobby ( Client player ) {
+			if ( player.GetChar ().lobby == MainMenu.lobby ) {
+				GangLobby.Join ( player );
+			}
+		}
+		#endregion
+
+		#region Chat
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", AddToHelpmanager = true, GreedyArg = true, Group = "user" )]
 		public static void GlobalChat ( Client player, string text ) {
 			Chat.instance.SendGlobalMessage ( player, text );
@@ -36,7 +46,9 @@ namespace Manager {
 		public static void TeamChat ( Client player, string text ) {
 			Chat.instance.SendTeamChat ( player, text ); 
 		}
+		#endregion
 
+		#region Utility
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", AddToHelpmanager = true, Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
 			if ( API.isPlayerInAnyVehicle ( sender ) ) {
@@ -61,7 +73,9 @@ namespace Manager {
 				API.sendNotificationToPlayer ( player, "map-name is available" );
 			}
 		}
+		#endregion
 
+		#region Deathmatch
 		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", AddToHelpmanager = true, Group = "user" )]
 		public static void ToggleHitsound ( Client player, int activate = -1 ) {
 			Class.Character character = player.GetChar ();
@@ -73,12 +87,7 @@ namespace Manager {
 				player.SendLangNotification ( "deactivated_hitsound" );
 			}
 		}
+		#endregion
 
-		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", AddToHelpmanager = true, Group = "user" )]
-		public static void JoinGangLobby ( Client player ) {
-			if ( player.GetChar().lobby == MainMenu.lobby ) {
-				GangLobby.Join ( player );
-			}
-		}
 	}
 }
