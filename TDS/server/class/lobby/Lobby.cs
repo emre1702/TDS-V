@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
@@ -15,6 +16,7 @@ namespace Class {
 		public bool isPlayable = true;
 		public bool deleteWhenEmpty = true;
 		public bool isOfficial = false;
+		private bool playersInOwnDimension = false;
 
 		public Lobby ( ) {
 			API.onPlayerDisconnected += OnPlayerDisconnected;
@@ -24,7 +26,7 @@ namespace Class {
 			API.onEntityEnterColShape += this.OnEntityEnterColShape;
 		}
 
-		internal Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true ) {
+		internal Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true, bool playersInOwnDimension = false ) {
 			this.name = name;
 			if ( ID == -1 ) {
 				int theID = 0;
@@ -34,24 +36,29 @@ namespace Class {
 			} else {
 				this.id = ID;
 			}
-			int dimension = 1;
-			while ( dimensionsUsed.ContainsKey ( dimension ) )
-				dimension++;
-			this.dimension = dimension;
-			dimensionsUsed[dimension] = this;
+			if ( !playersInOwnDimension ) {
+				int dimension = 1;
+				while ( dimensionsUsed.ContainsKey ( dimension ) )
+					dimension++;
+				this.dimension = dimension;
+				dimensionsUsed[dimension] = this;
+			}
 			lobbysbyname[name] = this;
 			lobbysbyindex [this.id] = this;
 			this.gotRounds = gotRounds;
 			this.isPlayable = isPlayable;
+			this.playersInOwnDimension = playersInOwnDimension;
 			this.damageSys = new Damagesys ( true );
 		}
 
-		public static Lobby GetLobbyByName ( string name ) {
-			return lobbysbyname[name];
-		}
-
 		private void Remove ( ) {
-			dimensionsUsed.Remove ( this.dimension );
+			if ( this.playersInOwnDimension ) {
+				foreach ( KeyValuePair<int, Lobby> item in dimensionsUsed.Where ( entry => entry.Value == this ).ToList() ) {
+					dimensionsUsed.Remove ( item.Key );
+				}
+			} else {
+				dimensionsUsed.Remove ( this.dimension );
+			}
 			lobbysbyname.Remove ( this.name );
 			lobbysbyindex.Remove ( this.id );
 			this.roundEndTimer.Kill ();
