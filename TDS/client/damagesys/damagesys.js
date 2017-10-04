@@ -1,8 +1,5 @@
 "use strict";
 var bloodscreenbrowser;
-function Vector3Lerp(start, end, fraction) {
-    return new Vector3((start.X + (end.X - start.X) * fraction), (start.Y + (end.Y - start.Y) * fraction), (start.Z + (end.Z - start.Z) * fraction));
-}
 API.onLocalPlayerShoot.connect(function (weaponUsed, aimCoords) {
     var frompos = API.getEntityPosition(API.getLocalPlayer());
     var dir = aimCoords.Subtract(frompos);
