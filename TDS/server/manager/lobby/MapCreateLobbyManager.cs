@@ -12,6 +12,7 @@ namespace Manager {
 			lobby.deleteWhenEmpty = false;
 			lobby.isOfficial = true;
 			lobby.AddSpawnPoint ( new Vector3 ( 8.699318, -2.050943, 70.29607 ), new Vector3 ( 0, 0, 65.79314 ) );
+			lobby.isMapCreateLobby = true;
 			lobby.Start ();
 		}
 
