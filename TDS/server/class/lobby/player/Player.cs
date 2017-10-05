@@ -48,6 +48,9 @@ namespace Class {
 				this.AddPlayerAsPlayer ( player, character );
 			}
 
+			if ( this.isMapCreateLobby )
+				this.StartPlayerFreecam ( player );
+
 			this.SendPlayerRoundInfoOnJoin ( player );
 		}
 
@@ -127,6 +130,13 @@ namespace Class {
 				this.RemovePlayerFromAlive ( player, character );
 			}
 			this.damageSys.playerSpree.Remove ( player );
+
+			if ( player.exists ) {
+				player.transparency = 255;
+			}
+
+			if ( this.isMapCreateLobby )
+				this.StopPlayerFreecam ( player, true );
 
 			if ( this != Manager.MainMenu.lobby ) {
 				Manager.MainMenu.Join ( player );
