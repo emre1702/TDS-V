@@ -11,12 +11,13 @@ namespace Class {
 		private static Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
 		private static Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
 
-		public string name;
-		public int id;
-		public bool isPlayable = true;
-		public bool deleteWhenEmpty = true;
-		public bool isOfficial = false;
+		internal string name;
+		internal int id;
+		internal bool isPlayable = true;
+		internal bool deleteWhenEmpty = true;
+		internal bool isOfficial = false;
 		private bool playersInOwnDimension = false;
+		internal bool isMapCreateLobby = false;
 
 		public Lobby ( ) {
 			API.onPlayerDisconnected += OnPlayerDisconnected;
