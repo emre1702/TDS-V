@@ -7,6 +7,7 @@ namespace Class {
 		private static void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) {
 			switch ( eventName ) {
 
+				#region Lobby
 				case "joinLobby":
 					if ( lobbysbyindex.ContainsKey ( args[0] ) ) {
 						Lobby lobby = lobbysbyindex[args[0]];
@@ -16,7 +17,9 @@ namespace Class {
 						player.triggerEvent ( "onClientJoinMainMenu" );
 					}
 					break;
+				#endregion
 
+				#region Spectate
 				case "spectateNext":
 					Class.Character character = player.GetChar ();
 					if ( character.lifes == 0 && ( character.lobby.status == "round" || character.team == 0 && character.lobby.status == "countdown" ) ) {
@@ -26,14 +29,18 @@ namespace Class {
 							character.lobby.SpectateTeammate ( player, args[0] );
 					}
 					break;
+				#endregion
 
+				#region Round
 				case "onPlayerWasTooLongOutsideMap":
 					Class.Character character2 = player.GetChar ();
 					if ( character2.lobby.isPlayable ) {
 						character2.lobby.KillPlayer ( player, "too_long_outside_map" );
 					}
 					break;
+				#endregion
 
+				#region MapVote
 				case "onMapMenuOpen":
 					player.GetChar ().lobby.SendMapsForVoting ( player );
 					break;
@@ -45,8 +52,9 @@ namespace Class {
 				case "onVoteForMap":
 					player.GetChar ().lobby.AddVoteToMap ( player, args[0] );
 					break;
+				#endregion
 
-				// BOMB //
+				#region Bomb
 				case "onPlayerStartPlanting":
 					player.GetChar ().lobby.StartBombPlanting ( player );
 					break;
@@ -62,6 +70,13 @@ namespace Class {
 				case "onPlayerStopDefusing":
 					player.GetChar ().lobby.StopBombDefusing ( player );
 					break;
+				#endregion
+
+				#region Freecam
+				case "setFreecamObjectPositionTo":
+					player.GetChar ().lobby.SetPlayerFreecamPos ( player, args[0] );
+					break;
+				#endregion
 			}
 		}
 	}
