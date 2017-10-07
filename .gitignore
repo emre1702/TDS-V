@@ -23,4 +23,5 @@ TDS/packages/NLog.4.4.9/lib/sl5/NLog.xml
 *.exe
 *.pdb
 TDS.csproj.FileListAbsolute.txt
+TDS/server/manager/database/DatabaseManager.cs
 
