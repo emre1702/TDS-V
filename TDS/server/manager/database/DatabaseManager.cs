@@ -9,8 +9,8 @@ using System.Data.Common;
 class Database : Script {
 	private static readonly string ip = "127.0.0.1";
 	private static readonly int port = 3306;
-	private static readonly string user = "emre1702";
-	private static readonly string password = "Ajagrebo1-";
+	private static readonly string user = "//";
+	private static readonly string password = "//";
 	private static readonly string database = "TDSV";
 
 	/* Variables */
