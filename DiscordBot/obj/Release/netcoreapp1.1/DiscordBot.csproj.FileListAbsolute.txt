@@ -1,8 +1,0 @@
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp1.1\DiscordBot.deps.json
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp1.1\DiscordBot.dll
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp1.1\DiscordBot.AssemblyInfo.cs
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp1.1\DiscordBot.pdb
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp1.1\DiscordBot.dll
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\obj\Release\netcoreapp1.1\DiscordBot.pdb
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp1.1\DiscordBot.runtimeconfig.json
-C:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\DiscordBot\bin\Release\netcoreapp1.1\DiscordBot.runtimeconfig.dev.json
