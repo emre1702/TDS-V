@@ -1,4 +1,4 @@
-# TDS-V - Team Deathmatch Server - Community project 
+# TDS-V - Team Deathmatch Server - community project 
 
 Welcome to the team-deathmatch community project in GT-MP.  
 This gamemode was created by me and opened for the community on 08.10.2017.  
