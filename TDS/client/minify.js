@@ -79,7 +79,7 @@ if ( result.error === undefined ) {
         if ( err ) {
             console.log ( "Write "+err );
         } else 
-            console.log ( "Erledigt" );
+            console.log ( "Done" );
     } );
 } else 
     console.log ( "minifiy "+JSON.stringify ( result.error ) );
