@@ -7,7 +7,7 @@ You can always play the gamemode on our GT-MP server:
 tds-v.com
 
 You can always visit our discord-server:  
-discord.gg/ntVnGFt
+[discord.gg/ntVnGFt](discord.gg/ntVnGFt)
 
 Please read the readme before trying to use the gamemode!
 
@@ -66,10 +66,10 @@ The idea for uglify came from Vio-V (Forces).
 ### How do I use minify.js?
 
 First you need to install NodeJS:  
-https://nodejs.org/en/download/  
+[https://nodejs.org/en/download/](https://nodejs.org/en/download/)  
 
 Then you need to install the packages ´fs´, ´babel-core´ and ´uglify-js´.  
-https://docs.npmjs.com/getting-started/installing-npm-packages-locally  
+[https://docs.npmjs.com/getting-started/installing-npm-packages-locally](https://docs.npmjs.com/getting-started/installing-npm-packages-locally)
 
 After that you can open the CMD prompt, cd to minify.js and use this command:  
 ´node minify.js´  
