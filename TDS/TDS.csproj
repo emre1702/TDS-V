@@ -138,6 +138,7 @@
     <TypeScriptCompile Include="client\lobby\countdown.ts" />
     <TypeScriptCompile Include="client\lobby\lobbyevents.ts" />
     <TypeScriptCompile Include="client\lobby\mapcreate\freecam.ts" />
+    <TypeScriptCompile Include="client\lobby\mapcreate\mapcreator.ts" />
     <TypeScriptCompile Include="client\lobby\settings.ts" />
     <TypeScriptCompile Include="client\lobby\maplimit.ts" />
     <TypeScriptCompile Include="client\lobby\round.ts" />

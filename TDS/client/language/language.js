@@ -50,6 +50,20 @@ var languagelist = {
             "deaths": "Tode",
             "team": "Team",
             "lobby": "Lobby"
+        },
+        "mapcreator_menu": {
+            "send_text": "Senden",
+            "send_description": "Sende die Map zum Server.",
+            "spawnpoint_text": "Spawn-Punkt",
+            "spawnpoint_description": "Füge Spawn-Punkte hinzu oder entferne sie!",
+            "team_text": "Team-Nummer",
+            "team_description": "Setze die Team-Nummer.",
+            "spawnpoint_add_text": "Spawnpunkt hinzufügen",
+            "spawnpoint_add_description": "Fügt einen Spawnpunkt hinzu.",
+            "maplimit_text": "Map-Limit",
+            "maplimit_description": "Setze die Ecken des Map-Limits (optional).",
+            "maplimit_add_text": "Ecke hinzufügen",
+            "maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
         }
     },
     "english": {
@@ -102,6 +116,20 @@ var languagelist = {
             "team": "team",
             "lobby": "lobby",
             "custom_lobby_own": "own lobby"
+        },
+        "mapcreator_menu": {
+            "send_text": "send",
+            "send_description": "Sends your map.",
+            "spawnpoint_text": "spawn-point",
+            "spawnpoint_description": "Add spawn-points or remove them!",
+            "team_text": "team-number",
+            "team_description": "Sets the team-number.",
+            "spawnpoint_add_text": "add spawn-point",
+            "spawnpoint_add_description": "Adds a spawn-point.",
+            "maplimit_text": "map-limit",
+            "maplimit_description": "Sets the corners for the map-limit (optional).",
+            "maplimit_add_text": "add corner",
+            "maplimit_add_description": "Adds a corner for the map-limit."
         }
     }
 };
@@ -115,9 +143,11 @@ function getLang(type, str = null) {
 function changeLanguage(lang) {
     languagesetting = lang;
     API.triggerServerEvent("onPlayerLanguageChange", lang);
+    changeMapCreatorLanguage();
 }
 API.onResourceStart.connect(function () {
     var langnumber = API.returnNative("3160758157564346030", 0);
     if (langnumber == 2)
         languagesetting = "german";
+    createMapCreator();
 });

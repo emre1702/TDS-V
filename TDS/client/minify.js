@@ -30,7 +30,10 @@ let files = [
 	"lobby/settings.js",
 	"lobby/spectate.js",
 	"lobby/lobbyevents.js",
-	"lobby/roundevents.js"
+	"lobby/roundevents.js",
+
+	//"lobby/mapcreate/freecam.ts",
+	//"lobby/mapcreate/mapcreator.ts"
 ];
 let code = "";
 let htmlcode = "";
@@ -79,7 +82,7 @@ if ( result.error === undefined ) {
         if ( err ) {
             console.log ( "Write "+err );
         } else 
-            console.log ( "Erledigt" );
+            console.log ( "Done" );
     } );
 } else 
     console.log ( "minifiy "+JSON.stringify ( result.error ) );

@@ -7,7 +7,6 @@
 
   <!-- CEF -->
 
-  <file src="client/language/language.js" />
   <file src="client/window/css/normalize.min.css" />
   <file src="client/window/css/style.css" />
   <file src="client/window/js/jquery.min.js" />

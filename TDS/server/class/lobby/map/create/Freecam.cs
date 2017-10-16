@@ -11,7 +11,7 @@ namespace Class {
 
 		private void StartPlayerFreecam ( Client player ) {
 			if ( playerCamObject.ContainsKey ( player ) )
-				this.StopPlayerFreecam ( player );
+				this.StopPlayerFreecam ( player, false );
 			NetHandle obj = API.createObject ( -1358020705, API.getEntityPosition ( player ), new Vector3 ( 0.0, 0.0, 0.0 ) ); //We create the object from server side, so later if we want to sync the object's position we can send the pos back here.
 			playerCamObject[player] = obj;
 
