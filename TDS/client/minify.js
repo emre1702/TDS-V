@@ -30,7 +30,10 @@ let files = [
 	"lobby/settings.js",
 	"lobby/spectate.js",
 	"lobby/lobbyevents.js",
-	"lobby/roundevents.js"
+	"lobby/roundevents.js",
+
+	//"lobby/mapcreate/freecam.ts",
+	//"lobby/mapcreate/mapcreator.ts"
 ];
 let code = "";
 let htmlcode = "";
