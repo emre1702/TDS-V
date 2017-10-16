@@ -4,6 +4,11 @@ Welcome to the team-deathmatch gamemode for GT-MP.
 This gamemode was created by Bonus1702/emre1702/Bonus (me).
 I stopped using GT-MP and wanted to release the gamemode.
 
+You can find me in Discord:
+Bonus#7853
+Or you can join our Discord-Server:
+[discord.gg/ntVnGFt]discord.gg/ntVnGFt
+
 
 Please read the readme before trying to use the gamemode!
 
