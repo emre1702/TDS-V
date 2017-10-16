@@ -23,42 +23,93 @@ let freecamdata = {
 
 
 
-API.onKeyDown.connect( function ( sender, e ) {
-	if ( e.KeyCode === Keys.W )
-		freecamdata.wdown = true;
-	if ( e.KeyCode === Keys.A )
-		freecamdata.adown = true;
-	if ( e.KeyCode === Keys.S )
-		freecamdata.sdown = true;
-	if ( e.KeyCode === Keys.D )
-		freecamdata.ddown = true;
+function freecamKeyDown( sender, e ) {
+	if ( freecamdata.freecamMode ) {
+		if ( mapcreatordata.selected == null ) {
+			if ( e.KeyCode === Keys.W )
+				freecamdata.wdown = true;
+			else if ( e.KeyCode === Keys.A )
+				freecamdata.adown = true;
+			else if ( e.KeyCode === Keys.S )
+				freecamdata.sdown = true;
+			else if ( e.KeyCode === Keys.D )
+				freecamdata.ddown = true;
 
-	if ( e.KeyCode === Keys.RShiftKey || e.KeyCode === Keys.ShiftKey )
-		freecamdata.shiftdown = true;
-	if ( e.KeyCode === Keys.Menu || e.KeyCode === Keys.RMenu )
-		freecamdata.altdown = true;
-} );
+			else if ( e.KeyCode === Keys.RShiftKey || e.KeyCode === Keys.ShiftKey )
+				freecamdata.shiftdown = true;
+			else if ( e.KeyCode === Keys.Menu || e.KeyCode === Keys.RMenu )
+				freecamdata.altdown = true;
 
-API.onKeyUp.connect( function ( sender, e ) {
-	if ( e.KeyCode === Keys.W )
-		freecamdata.wdown = false;
-	if ( e.KeyCode === Keys.A )
-		freecamdata.adown = false;
-	if ( e.KeyCode === Keys.S )
-		freecamdata.sdown = false;
-	if ( e.KeyCode === Keys.D )
-		freecamdata.ddown = false;
+			else if ( e.KeyCode === Keys.M ) {
+				startMapCreatorMenu();
+			}
+		} else
+			mapcreatorKeyDown( e );
+	} 
+	if ( e.KeyCode === Keys.F )
+		toggleFreecam();
 
-	if ( e.KeyCode === Keys.RShiftKey || e.KeyCode === Keys.ShiftKey )
-		freecamdata.shiftdown = false;
-	if ( e.KeyCode === Keys.Menu || e.KeyCode === Keys.RMenu )
-		freecamdata.altdown = false;
-} );
+}
+
+function freecamKeyUp( sender, e ) {
+	if ( freecamdata.freecamMode ) {
+		if ( mapcreatordata.selected == null ) {
+			if ( e.KeyCode === Keys.W )
+				freecamdata.wdown = false;
+			else if ( e.KeyCode === Keys.A )
+				freecamdata.adown = false;
+			else if ( e.KeyCode === Keys.S )
+				freecamdata.sdown = false;
+			else if ( e.KeyCode === Keys.D )
+				freecamdata.ddown = false;
+
+			else if ( e.KeyCode === Keys.RShiftKey || e.KeyCode === Keys.ShiftKey )
+				freecamdata.shiftdown = false;
+			else if ( e.KeyCode === Keys.Menu || e.KeyCode === Keys.RMenu ) {
+				freecamdata.altdown = false;
+			}
+		} else
+			mapcreatorKeyUp( e );
+
+	}
+	
+}
+
+
+function toggleFreecam() {
+	if ( freecamdata.freecamMode ) {
+		if ( freecamdata.keydownevent != null ) {
+			freecamdata.keydownevent.disconnect();
+			freecamdata.keydownevent = null;
+		}
+		if ( freecamdata.keyupevent != null ) {
+			freecamdata.keyupevent.disconnect();
+			freecamdata.keyupevent = null;
+		}
+		if ( freecamdata.onupdateevent != null ) {
+			freecamdata.onupdateevent.disconnect();
+			freecamdata.onupdateevent = null;
+		}
+		API.setActiveCamera( null );
+		freecamdata.freecamMode = false;
+		API.callNative( "DISPLAY_RADAR", true );
+		API.callNative( "SET_FOCUS_ENTITY", API.getLocalPlayer() );
+	} else {
+		API.attachCameraToEntity( freecamdata.cam, freecamdata.CameraObject, new Vector3( 0.0, 0.0, 0.0 ) ); //GTMP BUG: getting the camera position returns null, so i had to attach the camera to an object and move that instead
+		API.setEntityCollisionless( freecamdata.CameraObject, true );
+		API.setActiveCamera( freecamdata.cam );
+		API.callNative( "DISPLAY_RADAR", false );
+		freecamdata.onupdateevent = API.onUpdate.connect( freecamOnUpdate );
+		freecamdata.keyupevent = API.onKeyUp.connect( freecamKeyUp );
+		freecamdata.keydownevent = API.onKeyDown.connect( freecamKeyDown );
+		stopMapCreatorMenu();
+	}
+}
 
 
 
-API.onUpdate.connect( function () {
-	if ( freecamdata.freecamMode && freecamdata.toggleControl ) {
+function freecamOnUpdate () {
+	if ( freecamdata.toggleControl ) {
 		API.disableControlThisFrame( 16 );
 		API.disableControlThisFrame( 17 );
 		API.disableControlThisFrame( 26 );
@@ -113,7 +164,7 @@ API.onUpdate.connect( function () {
 			freecamdata.lastPos = camPos;
 		}
 	}
-} );
+}
 
 
 function startFreecam ( object ) {
@@ -125,6 +176,9 @@ function startFreecam ( object ) {
 
 	API.callNative( "DISPLAY_RADAR", false );
 	freecamdata.freecamMode = true;
+	freecamdata.onupdateevent = API.onUpdate.connect( freecamOnUpdate );
+	freecamdata.keyupevent = API.onKeyUp.connect( freecamKeyUp );
+	freecamdata.keydownevent = API.onKeyDown.connect( freecamKeyDown );
 }
 
 
@@ -162,6 +216,7 @@ function stopFreecam() {
 
 	API.callNative( "DISPLAY_RADAR", true );
 	API.callNative( "SET_FOCUS_ENTITY", API.getLocalPlayer() );
+	stopMapCreatorMenu();
 }
 
 
@@ -175,17 +230,3 @@ API.onServerEventTrigger.connect( function ( name, args ) {
 		freecamdata.toggleControl = args[0];
 	} */
 } );
-
-//By Don. Ported from C# to JS
-function clampAngle( angle ) {
-	return ( angle + Math.ceil( -angle / 360 ) * 360 );
-}
-
-function getPositionInFront( range, pos, zrot, plusangle ) {
-	var angle = clampAngle( zrot ) * ( Math.PI / 180 );
-	plusangle = ( clampAngle( plusangle ) * ( Math.PI / 180 ) );
-
-	pos.X += ( range * Math.sin( -angle - plusangle ) );
-	pos.Y += ( range * Math.cos( -angle - plusangle ) );
-	return pos;
-}
