@@ -11,7 +11,7 @@ function joinArena( isspectator ) {
 
 function getLobbyChoiceLanguage() {
 	log( "getLobbyChoiceLanguage start" );
-	lobbychoicedata.browser.call( "getLobbyChoiceLanguage", JSON.stringify( languagelist[languagesetting].lobby_choice ) );
+	lobbychoicedata.browser.call( "getLobbyChoiceLanguage", JSON.stringify( getLang( "lobby_choice" ) ) );
 	log( "getLobbyChoiceLanguage end" );
 }
 
