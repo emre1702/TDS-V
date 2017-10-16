@@ -16,7 +16,7 @@ function registerFunc( password, email ) {
 }
 
 function getLoginPanelData() {
-	loginpanel.loginbrowser.call( "getLoginPanelData", loginpanel.name, loginpanel.isregistered, JSON.stringify ( languagelist[languagesetting].loginregister ) );
+	loginpanel.loginbrowser.call( "getLoginPanelData", loginpanel.name, loginpanel.isregistered, JSON.stringify( getLang( "loginregister" ) ) );
 }
 
 API.onServerEventTrigger.connect( function ( eventName, args ) {
