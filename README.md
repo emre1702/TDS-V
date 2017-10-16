@@ -1,21 +1,11 @@
-# TDS-V - Team Deathmatch Server - community project 
+# TDS-V - Team Deathmatch Server
 
-Welcome to the team-deathmatch community project in GT-MP.  
-This gamemode was created by me and opened for the community on 08.10.2017.  
-Everyone can help make the gamemode better and be a part of something big.  
-You can always play the gamemode on our GT-MP server:  
-tds-v.com
+Welcome to the team-deathmatch gamemode for GT-MP.  
+This gamemode was created by Bonus1702/emre1702/Bonus (me).
+I stopped using GT-MP and wanted to release the gamemode.
 
-You can always visit our discord-server:  
-[discord.gg/ntVnGFt](discord.gg/ntVnGFt)
 
 Please read the readme before trying to use the gamemode!
-
-
-# Can I help?
-
-Sure, I want the gamemode to become a big community-project where everyone can help.  
-You all can create pull requests and help the gamemode to get bigger.  
 
 
 # How can I use the gamemode?
@@ -40,6 +30,8 @@ You need to use following files:
 - MySql.Data.dll 
   - You can find it in server -> DLL
   - Put it where your GrandTheftMultiplayer.Server.exe, acl.xml etc. are
+- database.sql
+  - import it to your database
   
 Also you need to change manager -> database -> DatabaseManager.cs.  
 Here you can change the settings to connect to your database.  
@@ -74,34 +66,3 @@ Then you need to install the packages `fs`, `babel-core` and `uglify-js`.
 After that you can open the CMD prompt, cd to minify.js and use this command:  
 `node minify.js` 
 That will update your script.js which you can use for your server after that.  
-
-
-# Changelogs:
-
-### 03.10.2017:
-- added cam-shake on bomb-explode  
-
-### 01.10.2017:
-- cursor-toggle on DEL now (instead of ALT)  
-- flash blip on bomb-plant  
-
-### 21.09.2017:
-- fixed many things on lobby-leave and death    
-- added cursor-info on welcome-message   
-- fixed animation-cancel on bomb-plant/-defuse  
-- fixed no bomb if no terrorist in countdown-start  
-- fixed wrong map-infos  
-- released bomb-mode  
-**Thanks to Pluz. for testing with me**  
-
-### 20.09.2017:
-- added bomb-mode Beta  
-- added killingspree (only HP and armor bonus right now)  
-- better sync of opp-aiming  
-- map-info now in middle of the screen  
-
-You can find older changelogs in discord.
-
-
-
-
