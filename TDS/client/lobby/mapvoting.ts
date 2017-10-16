@@ -9,47 +9,48 @@ let mapvotedata = {
 	votingmaps: [],
 	lastselectedmap: ""
 };
-mapvotedata.menu.ResetKey( menuControl.Back ); 
 mapvotedata.menu.Visible = false;
 
 
 API.onKeyDown.connect( function ( sender, key ) {
-	if ( key.KeyCode == Keys.M ) {
-		if ( !mapvotedata.menu.Visible ) {
-			let tick = API.getGlobalTime();
-			if ( mapvotedata.menucooldown <= tick ) {
-				mapvotedata.menucooldown = tick + 3000;
-				API.triggerServerEvent( "onMapMenuOpen" );
-			}
-		} else {
-			mapMenuClose();
-			API.showCursor( false );
-		}
-	} else if ( mapvotedata.votingmaps.length > 0 ) {
-		let vote = 0;
-		if ( key.KeyCode == Keys.F1 ) 
-			vote = 1;
-		else if ( key.KeyCode == Keys.F2 ) 
-			vote = 2;
-		else if ( key.KeyCode == Keys.F3 )
-			vote = 3;
-		else if ( key.KeyCode == Keys.F4 )
-			vote = 4;
-		else if ( key.KeyCode == Keys.F5 )
-			vote = 5;
-		else if ( key.KeyCode == Keys.F6 )
-			vote = 6;
-		if ( vote > 0 ) {
-			if ( vote < mapvotedata.votingmaps.length ) {
+	//if ( !freecamdata.freecamMode ) {
+		if ( key.KeyCode == Keys.M ) {
+			if ( !mapvotedata.menu.Visible ) {
 				let tick = API.getGlobalTime();
-				if ( mapvotedata.votecooldown <= tick ) {
-					mapvotedata.votecooldown = tick + 500;
-					API.triggerServerEvent( "onVoteForMap", mapvotedata.votingmaps[vote] );
-					mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
+				if ( mapvotedata.menucooldown <= tick ) {
+					mapvotedata.menucooldown = tick + 3000;
+					API.triggerServerEvent( "onMapMenuOpen" );
+				}
+			} else {
+				mapMenuClose();
+				API.showCursor( false );
+			}
+		} else if ( mapvotedata.votingmaps.length > 0 ) {
+			let vote = 0;
+			if ( key.KeyCode == Keys.F1 )
+				vote = 1;
+			else if ( key.KeyCode == Keys.F2 )
+				vote = 2;
+			else if ( key.KeyCode == Keys.F3 )
+				vote = 3;
+			else if ( key.KeyCode == Keys.F4 )
+				vote = 4;
+			else if ( key.KeyCode == Keys.F5 )
+				vote = 5;
+			else if ( key.KeyCode == Keys.F6 )
+				vote = 6;
+			if ( vote > 0 ) {
+				if ( vote < mapvotedata.votingmaps.length ) {
+					let tick = API.getGlobalTime();
+					if ( mapvotedata.votecooldown <= tick ) {
+						mapvotedata.votecooldown = tick + 500;
+						API.triggerServerEvent( "onVoteForMap", mapvotedata.votingmaps[vote] );
+						mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
+					}
 				}
 			}
 		}
-	}
+	//}
 } );
 
 API.onUpdate.connect( function () {

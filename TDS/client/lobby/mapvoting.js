@@ -8,7 +8,6 @@ let mapvotedata = {
     votingmaps: [],
     lastselectedmap: ""
 };
-mapvotedata.menu.ResetKey(menuControl.Back);
 mapvotedata.menu.Visible = false;
 API.onKeyDown.connect(function (sender, key) {
     if (key.KeyCode == Keys.M) {
