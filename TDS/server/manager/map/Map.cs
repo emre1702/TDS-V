@@ -1,0 +1,206 @@
+﻿namespace TDS.server.manager.map {
+
+	using System;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using System.Xml;
+	using GTANetworkAPI;
+	using instance.lobby;
+	using logs;
+	using utility;
+
+	static class Map {
+
+		private const string mapsPath = "resources/TDS/server/maps/";
+		private static readonly XmlReaderSettings settings = new XmlReaderSettings ();
+
+		public static List<string> NormalMapNames = new List<string> ();
+		public static List<string> BombMapNames = new List<string> ();
+		public static Dictionary<string, List<string>> NormalMapDescriptions = new Dictionary<string, List<string>> {
+			{
+				"english", new List<string> ()
+			}, {
+				"german", new List<string> ()
+			}
+		};
+		public static Dictionary<string, List<string>> BombMapDescriptions = new Dictionary<string, List<string>> {
+			{
+				"english", new List<string> ()
+			}, {
+				"german", new List<string> ()
+			}
+		};
+		public static ConcurrentDictionary<string, string> MapByName = new ConcurrentDictionary<string, string> ();
+		public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string> ();
+
+		public static async Task MapOnStart () {
+			settings.Async = true;
+			IEnumerable<string> directories = Directory.EnumerateDirectories ( mapsPath );
+			instance.map.Map map = new instance.map.Map ();
+			foreach ( string dir in directories ) {
+				string creator = Path.GetFileName ( dir );
+				IEnumerable<string> files = Directory.EnumerateFiles ( dir, "*.xml" );
+				foreach ( string filepath in files ) {
+					string filename = Path.GetFileNameWithoutExtension ( filepath );
+					MapCreator[filename] = creator;
+					if ( await map.AddInfos ( filename ).ConfigureAwait ( false ) ) {
+						if ( map.Name != null ) {
+							switch ( map.Type ) {
+								case "normal":
+									NormalMapNames.Add ( map.Name );
+									NormalMapDescriptions["english"].Add ( map.Description["english"] );
+									NormalMapDescriptions["german"].Add ( map.Description["german"] );
+									break;
+								case "bomb":
+									BombMapNames.Add ( map.Name );
+									BombMapDescriptions["english"].Add ( map.Description["english"] );
+									BombMapDescriptions["german"].Add ( map.Description["german"] );
+									break;
+							}
+
+							MapByName[map.Name] = filename;
+						} else
+							Log.Error ( "Map " + filename + " got no name!" );
+					}
+				}
+			}
+		}
+
+		private static Vector3 GetCenterOfPositions ( List<Vector3> poly, float zpos = -1 ) {
+			float centerX = 0.0f;
+			float centerY = 0.0f;
+			float centerZ = 0.0f;
+			int length = poly.Count;
+
+			foreach ( Vector3 point in poly ) {
+				centerX += point.X;
+				centerY += point.Y;
+				centerZ += Math.Abs ( zpos - ( -1 ) ) < 0.001 ? point.Z : zpos;
+			}
+
+			return new Vector3 ( centerX / length, centerY / length, centerZ / length );
+		}
+
+		private static Vector3 GetCenterByLimits ( instance.map.Map map, float zpos ) {
+			return GetCenterOfPositions ( map.MapLimits, zpos ) ?? GetCenterBySpawns ( map );
+		}
+
+		private static Vector3 GetCenterBySpawns ( instance.map.Map map ) {
+			int amountteams = map.TeamSpawns.Count;
+			if ( amountteams == 1 ) {
+				foreach ( KeyValuePair<uint, List<Vector3>> entry in map.TeamSpawns ) {
+					return entry.Value[0];
+				}
+			} else if ( amountteams > 1 ) {
+				List<Vector3> positions = map.TeamSpawns.Select ( entry => entry.Value[0] ).ToList ();
+				return GetCenterOfPositions ( positions );
+			}
+			return new Vector3 ();
+		}
+
+		private static async Task<bool> AddInfos ( this instance.map.Map map, string mapfilename ) {
+			string path = mapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
+			try {
+				using ( XmlReader reader = XmlReader.Create ( path, settings ) ) {
+					while ( await reader.ReadAsync ().ConfigureAwait ( false ) ) {
+						if ( reader.NodeType == XmlNodeType.Element ) {
+							if ( reader.Name == "map" ) {
+								map.Name = reader["name"];
+								if ( reader.GetAttribute ( "type" ) != null )
+									map.Type = reader["type"];
+							} else if ( reader.Name == "english" || reader.Name == "german" ) {
+								map.Description[reader.Name] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
+							} else if ( reader.Name == "limit" ) {
+								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
+								map.MapLimits.Add ( pos );
+							} else if ( reader.Name == "middle" ) {
+								map.MapCenter = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+							} else if ( reader.Name == "bomb" ) {
+								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+								map.BombPlantPlaces.Add ( pos );
+							} else if ( reader.Name.StartsWith ( "team" ) ) {
+								uint teamnumber = Convert.ToUInt16 ( reader.Name.Substring ( 4 ) );
+								if ( !map.TeamSpawns.ContainsKey ( teamnumber ) ) {
+									map.TeamSpawns[teamnumber] = new List<Vector3> ();
+									map.TeamRots[teamnumber] = new List<Vector3> ();
+								}
+								Vector3 spawn = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
+								map.TeamSpawns[teamnumber].Add ( spawn );
+								Vector3 rot = new Vector3 ( 0, 0, reader["rot"].ToFloat () );
+								map.TeamRots[teamnumber].Add ( rot );
+							}
+						}
+					}
+				}
+				if ( map.MapCenter == null ) {
+					if ( map.MapLimits.Count > 0 ) {
+						float zpos = map.TeamSpawns.Select ( entry => entry.Value[0].Z ).FirstOrDefault ();
+						map.MapCenter = GetCenterByLimits ( map, zpos );
+					} else {
+						map.MapCenter = GetCenterBySpawns ( map );
+					}
+				}
+				return true;
+			} catch ( Exception e ) {
+				Log.Error ( "Error in Manager.Map.GetMapClass: " + e + " (" + path + ")" );
+				return false;
+			}
+		}
+
+		public static async Task<instance.map.Map> GetMapClass ( string mapname, Lobby lobby ) {
+			instance.map.Map map = new instance.map.Map ();
+			if ( await map.AddInfos ( MapByName[mapname] ).ConfigureAwait ( false ) ) {
+				return map;
+			}
+			return await lobby.GetRandomMap ().ConfigureAwait ( false );
+		}
+
+		/*private static Map getMapDataOther ( string path ) {
+			Map map = new Map ();
+			XmlGroup mapdata = API.loadXml ( path );
+
+			bool teamexists = true;
+			int teamcounter = 1;
+
+			// Map-Info //
+			foreach ( xmlElement element in mapdata.getElementsByType ( "map" ) ) {
+				map.name = element.getElementData<string> ( "name" );
+				map.type = element.getElementData<string> ( "type" );
+			}
+
+			// Team-Spawns //
+			while ( teamexists ) {
+				bool gotone = false;
+				foreach ( xmlElement element in mapdata.getElementsByType ( "team" + teamcounter ) ) {
+					gotone = true;
+					double x = element.getElementData<double> ( "x" );
+					double y = element.getElementData<double> ( "y" );
+					double z = element.getElementData<double> ( "z" );
+					double xrot = element.getElementData<double> ( "xrot" );
+					double yrot = element.getElementData<double> ( "yrot" );
+					double zrot = element.getElementData<double> ( "zrot" );
+					map.teamSpawns[teamcounter].Add ( new Vector3 ( x, y, z ) );
+					map.teamRots[teamcounter].Add ( new Vector3 ( xrot, yrot, zrot ) );
+				}
+				if ( !gotone )
+					teamexists = false;
+				else
+					teamcounter++;
+			}
+
+			// Map-Begrenzungen //
+			foreach ( xmlElement element in mapdata.getElementsByType ( "limit" ) ) {
+				double x = element.getElementData<double> ( "x" );
+				double y = element.getElementData<double> ( "y" );
+				double z = element.getElementData<double> ( "z" );
+				map.maplimit.Add ( new Vector3 ( x, y, z ) );
+			}
+
+			return map;
+		}*/
+	}
+
+}

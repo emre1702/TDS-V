@@ -1,9 +1,11 @@
-﻿using GrandTheftMultiplayer.Server.Elements;
+﻿namespace TDS.server.manager.logs {
 
-namespace Manager {
+	using GTANetworkAPI;
+
 	partial class Log {
 		public static void Chat ( string chatstr, Client player, string lobbyname ) {
-			AddLogEntry ( "chat", chatstr, lobbyname, player.socialClubName );
+			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName );
 		}
 	}
+
 }

@@ -1,9 +1,12 @@
-﻿using GrandTheftMultiplayer.Server.Elements;
+﻿namespace TDS.server.manager.logs {
 
-namespace Manager {
+	using GTANetworkAPI;
+	using player;
+
 	partial class Log {
 		public static void LobbyOwner ( string command, Client player, Client target, string lobbyname ) {
-			AddLogEntry ( "lobbyowner", command, lobbyname, player.socialClubName, target != null ? Account.playerUIDs[target.socialClubName].ToString () : "0" );
+			AddLogEntry ( "lobbyowner", command, lobbyname, player.SocialClubName, target != null ? Account.PlayerUIDs[target.SocialClubName].ToString () : "0" );
 		}
 	}
+
 }
