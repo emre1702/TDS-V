@@ -78,24 +78,24 @@ function mapcreatorOnUpdate() {
         if (mapcreatordata.altdown)
             multiply = 0.5;
         if (mapcreatordata.wdown) {
-            to = Vector3Lerp(objpos, objpos.Add(camDir.Multiply(multiply)), 1.0);
+            to = vector3Lerp(objpos, objpos.Add(camDir.Multiply(multiply)), 1.0);
         }
         if (mapcreatordata.sdown) {
             if (to != null)
                 objpos = to;
-            to = Vector3Lerp(objpos, objpos.Subtract(camDir.Multiply(multiply)), 1.0);
+            to = vector3Lerp(objpos, objpos.Subtract(camDir.Multiply(multiply)), 1.0);
         }
         if (mapcreatordata.adown) {
             if (to != null)
                 objpos = to;
             let pos2 = getPositionInFront(multiply, objpos, camRot.Z, 90);
-            to = Vector3Lerp(objpos, pos2, 1.0);
+            to = vector3Lerp(objpos, pos2, 1.0);
         }
         if (mapcreatordata.ddown) {
             if (to != null)
                 objpos = to;
             let pos2 = getPositionInFront(multiply, objpos, camRot.Z, -90);
-            to = Vector3Lerp(objpos, pos2, 1.0);
+            to = vector3Lerp(objpos, pos2, 1.0);
         }
         if (mapcreatordata.edown) {
             rot = API.getEntityRotation(mapcreatordata.selected);

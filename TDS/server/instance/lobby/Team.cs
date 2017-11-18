@@ -10,18 +10,18 @@ namespace TDS.server.instance.lobby {
 		public List<string> Teams = new List<string> {
 			"Spectator"
 		};
-		private List<PedHash> teamSkins = new List<PedHash> {
+		private readonly List<PedHash> teamSkins = new List<PedHash> {
 			(PedHash) ( 225514697 )
 		};
 		public Dictionary<uint, string> TeamColorStrings = new Dictionary<uint, string> {
 			[0] = "s"
 		};
-		private List<int> teamColorsList = new List<int> {
+		private readonly List<int> teamColorsList = new List<int> {
 			255,
 			255,
 			255
 		};
-		private List<int> teamBlipColors = new List<int> {
+		private readonly List<int> teamBlipColors = new List<int> {
 			0
 		};
 
@@ -83,8 +83,8 @@ namespace TDS.server.instance.lobby {
 			return amount;
 		}
 
-		public string GetTeamName ( uint ID ) {
-			return this.Teams[(int)ID];
+		public string GetTeamName ( uint id ) {
+			return this.Teams[(int)id];
 		}
 
 	}

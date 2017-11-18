@@ -131,21 +131,21 @@ function freecamOnUpdate () {
 				multiply = 0.5;
 
 			if ( freecamdata.wdown ) {
-				to = Vector3Lerp( camPos, camPos.Add( camDir.Multiply( multiply ) ), 1.0 );
+				to = vector3Lerp( camPos, camPos.Add( camDir.Multiply( multiply ) ), 1.0 );
 			}
 			if ( freecamdata.sdown ) {
 				if ( to != null ) camPos = to;
-				to = Vector3Lerp( camPos, camPos.Subtract( camDir.Multiply( multiply ) ), 1.0 );
+				to = vector3Lerp( camPos, camPos.Subtract( camDir.Multiply( multiply ) ), 1.0 );
 			}
 			if ( freecamdata.adown ) {
 				if ( to != null ) camPos = to;
 				pos2 = getPositionInFront( multiply, camPos, camRot.Z, 90 );
-				to = Vector3Lerp( camPos, pos2, 1.0 );
+				to = vector3Lerp( camPos, pos2, 1.0 );
 			}
 			if ( freecamdata.ddown ) {
 				if ( to != null ) camPos = to;
 				pos2 = getPositionInFront( multiply, camPos, camRot.Z, -90 );
-				to = Vector3Lerp( camPos, pos2, 1.0 );
+				to = vector3Lerp( camPos, pos2, 1.0 );
 			}
 
 			if ( to != null && freecamdata.CameraObject != null ) {

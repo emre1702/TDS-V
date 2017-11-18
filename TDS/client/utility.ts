@@ -3,7 +3,7 @@
 API.setPedCanRagdoll( true );
 API.disableFingerPointing( true );
 
-function Vector3Lerp( start: Vector3, end: Vector3, fraction: number ) {
+function vector3Lerp( start: Vector3, end: Vector3, fraction: number ) {
 	return new Vector3(
 		( start.X + ( end.X - start.X ) * fraction ),
 		( start.Y + ( end.Y - start.Y ) * fraction ),

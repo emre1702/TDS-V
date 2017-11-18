@@ -47,10 +47,7 @@ namespace TDS.server.manager.utility {
 								killsList.Add ( character.Kills.ToString () );
 								assistsList.Add ( character.Assists.ToString () );
 								deathsList.Add ( character.Deaths.ToString () );
-								if ( ownLobbyID == 0 )
-									teamorlobbyList.Add ( character.Lobby.Name );
-								else
-									teamorlobbyList.Add ( character.Lobby.GetTeamName ( character.Team ) );
+								teamorlobbyList.Add ( ownLobbyID == 0 ? character.Lobby.Name : character.Lobby.GetTeamName ( character.Team ) );
 							} else {
 								// default status //
 								playtimeList.Add ( "-" );

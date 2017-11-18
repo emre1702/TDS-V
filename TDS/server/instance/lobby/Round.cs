@@ -118,10 +118,8 @@ namespace TDS.server.instance.lobby {
 		}
 
 		public void EndRoundEarlier () {
-			if ( this.roundEndTimer != null )
-				this.roundEndTimer.Kill ();
-			if ( this.countdownTimer != null )
-				this.countdownTimer.Kill ();
+			this.roundEndTimer?.Kill ();
+			this.countdownTimer?.Kill ();
 			this.EndRound ();
 		}
 

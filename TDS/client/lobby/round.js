@@ -7,7 +7,7 @@ let rounddata = {
 function setMapInfo(mapname) {
     rounddata.mapinfo = new cText(mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true);
 }
-API.onUpdate.connect(function () {
+API.onUpdate.connect(() => {
     if (!rounddata.infight) {
         API.disableControlThisFrame(24);
         API.disableControlThisFrame(257);

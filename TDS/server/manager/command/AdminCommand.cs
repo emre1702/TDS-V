@@ -100,7 +100,7 @@
 			try {
 				if ( Account.PlayerUIDs.ContainsKey ( targetname ) ) {
 					if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] ) || hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] ) || hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
-						uint targetadminlvl = 0;
+						uint targetadminlvl;
 						string targetaddress = "-";
 						uint targetUID = Account.PlayerUIDs[targetname];
 						Dictionary<string, string> queryparam = new Dictionary<string, string> {

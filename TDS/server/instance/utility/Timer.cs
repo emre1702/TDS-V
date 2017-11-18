@@ -7,14 +7,14 @@ namespace TDS.server.instance.utility {
 
 	class Timer : Script {
 
-		private static List<Timer> timer = new List<Timer> ();
+		private static readonly List<Timer> timer = new List<Timer> ();
 		private static List<Timer> insertAfterList = new List<Timer> ();
 
-		private Action func;
-		private uint executeAfterMs;
+		private readonly Action func;
+		private readonly uint executeAfterMs;
 		private uint executeAtMs;
 		private int executesLeft;
-		public bool isRunning = true;
+		public bool IsRunning = true;
 
 		public Timer () {
 			this.API.OnUpdate += OnUpdateFunc;
@@ -36,7 +36,7 @@ namespace TDS.server.instance.utility {
 		}
 
 		public void Kill () {
-			this.isRunning = false;
+			this.IsRunning = false;
 		}
 
 
@@ -48,7 +48,7 @@ namespace TDS.server.instance.utility {
 			} finally {
 				if ( this.executesLeft == 1 ) {
 					this.executesLeft = 0;
-					this.isRunning = false;
+					this.IsRunning = false;
 				} else {
 					if ( this.executesLeft != -1 )
 						this.executesLeft--;
@@ -75,7 +75,7 @@ namespace TDS.server.instance.utility {
 		private static void OnUpdateFunc () {
 			uint tick = (uint) Environment.TickCount;
 			for ( int i = timer.Count - 1; i >= 0; i-- ) {
-				if ( timer[i].isRunning ) {
+				if ( timer[i].IsRunning ) {
 					if ( timer[i].executeAtMs <= tick ) {
 						Timer thetimer = timer[i];
 						timer.RemoveAt ( i );
@@ -87,8 +87,8 @@ namespace TDS.server.instance.utility {
 			}
 
 			if ( insertAfterList.Count > 0 ) {
-				for ( int j = 0; j < insertAfterList.Count; j++ ) {
-					insertAfterList[j].InsertSorted ();
+				foreach ( Timer timer in insertAfterList ) {
+					timer.InsertSorted ();
 				}
 				insertAfterList = new List<Timer> ();
 			}

@@ -1,7 +1,7 @@
 "use strict";
 API.setPedCanRagdoll(true);
 API.disableFingerPointing(true);
-function Vector3Lerp(start, end, fraction) {
+function vector3Lerp(start, end, fraction) {
     return new Vector3((start.X + (end.X - start.X) * fraction), (start.Y + (end.Y - start.Y) * fraction), (start.Z + (end.Z - start.Z) * fraction));
 }
 function clampAngle(angle) {

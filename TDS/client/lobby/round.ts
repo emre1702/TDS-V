@@ -13,7 +13,7 @@ function setMapInfo ( mapname ) {
 }
 
 
-API.onUpdate.connect( function () {
+API.onUpdate.connect( () => {
 	if ( !rounddata.infight ) {
 		API.disableControlThisFrame( 24 );
 		API.disableControlThisFrame( 257 );

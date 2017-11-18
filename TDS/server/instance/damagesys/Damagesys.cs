@@ -6,7 +6,7 @@
 
 	internal partial class Damagesys : Script {
 
-		private Lobby lobby;
+		private readonly Lobby lobby;
 
 		public Damagesys () {
 			API.OnClientEventTrigger += this.OnPlayerHitOtherPlayer;

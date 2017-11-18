@@ -73,7 +73,7 @@ namespace TDS.server.instance.lobby {
 			player.SetSkin ( this.teamSkins[(int)teamID] );
 			character.Team = teamID;
 			if ( this.IsPlayable && this.GotRounds ) {
-				if ( this.countdownTimer != null && this.countdownTimer.isRunning ) {
+				if ( this.countdownTimer != null && this.countdownTimer.IsRunning ) {
 					this.SetPlayerReadyForRound ( player, teamID );
 				} else {
 					int teamsinround = this.GetTeamAmountStillInRound ();
@@ -232,8 +232,8 @@ namespace TDS.server.instance.lobby {
 
 		private bool IsSomeoneInLobby () {
 			this.RefreshPlayerList ();
-			for ( int i = 0; i < this.Players.Count; i++ ) {
-				if ( this.Players[i].Count > 0 )
+			foreach ( List<Client> playerlist in this.Players ) {
+				if ( playerlist.Count > 0 )
 					return true;
 			}
 			return false;

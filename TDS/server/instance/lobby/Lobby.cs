@@ -9,15 +9,15 @@ namespace TDS.server.instance.lobby {
 
 	partial class Lobby : Script {
 
-		private static Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
-		private static Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
+		private static readonly Dictionary<string, Lobby> lobbysbyname = new Dictionary<string, Lobby> ();
+		private static readonly Dictionary<int, Lobby> lobbysbyindex = new Dictionary<int, Lobby> ();
 
 		internal string Name;
 		internal int ID;
 		internal bool IsPlayable = true;
 		internal bool DeleteWhenEmpty = true;
 		internal bool IsOfficial = false;
-		private bool playersInOwnDimension;
+		private readonly bool playersInOwnDimension;
 		internal bool IsMapCreateLobby = false;
 
 		public Lobby () {
@@ -28,23 +28,23 @@ namespace TDS.server.instance.lobby {
 			API.OnEntityEnterColShape += OnEntityEnterColShape;
 		}
 
-		internal Lobby ( string name, int ID = -1, bool gotRounds = true, bool isPlayable = true,
+		internal Lobby ( string name, int id = -1, bool gotRounds = true, bool isPlayable = true,
 						bool playersInOwnDimension = false ) {
 			this.Name = name;
-			if ( ID == -1 ) {
+			if ( id == -1 ) {
 				int theID = 0;
 				while ( lobbysbyindex.ContainsKey ( theID ) )
 					theID++;
 				this.ID = theID;
 			} else {
-				this.ID = ID;
+				this.ID = id;
 			}
 			if ( !playersInOwnDimension ) {
-				uint dimension = 1;
-				while ( dimensionsUsed.ContainsKey ( dimension ) )
-					dimension++;
-				this.dimension = dimension;
-				dimensionsUsed[dimension] = this;
+				uint dim = 1;
+				while ( dimensionsUsed.ContainsKey ( dim ) )
+					dim++;
+				this.dimension = dim;
+				dimensionsUsed[dim] = this;
 			}
 			lobbysbyname[name] = this;
 			lobbysbyindex[this.ID] = this;
@@ -76,10 +76,10 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void RefreshPlayerList () {
-			for ( int i = 0; i < this.Players.Count; i++ ) {
-				for ( int j = this.Players[i].Count - 1; j >= 0; j-- ) {
-					if ( !this.Players[i][j].Exists || this.Players[i][j].GetChar ( ).Lobby != this ) {
-						this.Players[i].RemoveAt ( j );
+			foreach ( List<Client> playerlist in this.Players ) {
+				for ( int j = playerlist.Count - 1; j >= 0; j-- ) {
+					if ( !playerlist[j].Exists || playerlist[j].GetChar ( ).Lobby != this ) {
+						playerlist.RemoveAt ( j );
 					}
 				}
 			}

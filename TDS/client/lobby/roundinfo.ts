@@ -144,21 +144,21 @@ function playerDeathRoundInfo( teamID, killstr ) {
 	roundinfo.killinfo.push( { "killstr": killstr, "starttick": API.getGlobalTime() } );
 }
 
-API.onServerEventTrigger.connect( function ( eventName, args ) {
+API.onServerEventTrigger.connect( (eventName, args) => {
 	switch ( eventName ) {
 
-		case "onClientPlayerAmountInFightSync":
-			log( "onClientPlayerAmountInFightSync start" );
-			roundinfo.amountinteams = [];
-			roundinfo.aliveinteams = [];
-			for ( let i = 0; i < args[0].Count; i++ ) {
-				roundinfo.amountinteams[i] = args[0][i];
-				if ( args[1] == false )
-					roundinfo.aliveinteams[i] = args[0][i];
-				else 
-					roundinfo.aliveinteams[i] = args[2][i];
-			}
-			log( "onClientPlayerAmountInFightSync end" );
-			break;
+	case "onClientPlayerAmountInFightSync":
+		log( "onClientPlayerAmountInFightSync start" );
+		roundinfo.amountinteams = [];
+		roundinfo.aliveinteams = [];
+		for ( let i = 0; i < args[0].Count; i++ ) {
+			roundinfo.amountinteams[i] = args[0][i];
+			if ( args[1] == false )
+				roundinfo.aliveinteams[i] = args[0][i];
+			else 
+				roundinfo.aliveinteams[i] = args[2][i];
+		}
+		log( "onClientPlayerAmountInFightSync end" );
+		break;
 	}
 } );

@@ -127,7 +127,7 @@ function playerDeathRoundInfo(teamID, killstr) {
     roundinfo.aliveinteams[teamID]--;
     roundinfo.killinfo.push({ "killstr": killstr, "starttick": API.getGlobalTime() });
 }
-API.onServerEventTrigger.connect(function (eventName, args) {
+API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
         case "onClientPlayerAmountInFightSync":
             log("onClientPlayerAmountInFightSync start");

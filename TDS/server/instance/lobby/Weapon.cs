@@ -6,8 +6,8 @@ namespace TDS.server.instance.lobby {
 
 	partial class Lobby {
 
-		private List<WeaponHash> weapons = new List<WeaponHash> ();
-		private List<int> weaponsAmmo = new List<int> ();
+		private readonly List<WeaponHash> weapons = new List<WeaponHash> ();
+		private readonly List<int> weaponsAmmo = new List<int> ();
 		public Damagesys DmgSys;
 
 		public void AddWeapon ( WeaponHash weapon, int ammo ) {

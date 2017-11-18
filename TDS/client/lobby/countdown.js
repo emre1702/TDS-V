@@ -15,8 +15,8 @@ let countdowndata = {
     text: null,
     timer: null,
 };
-API.onResourceStart.connect(function () {
-    for (var i = 0; i < countdowndata.sounds.length; i++) {
+API.onResourceStart.connect(() => {
+    for (let i = 0; i < countdowndata.sounds.length; i++) {
         API.preloadAudio(soundspath + countdowndata.sounds[i]);
     }
 });

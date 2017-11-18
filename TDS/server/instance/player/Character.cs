@@ -19,7 +19,7 @@ namespace TDS.server.instance.player {
 		public string Language = "english";
 		public Lobby Lobby = MainMenu.TheLobby;
 		public Client Spectating;
-		public bool LoggedIn = true;
+		public bool LoggedIn;
 		public bool IsLobbyOwner = false;
 		public bool IsVIP = false;
 

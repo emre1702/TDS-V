@@ -7,7 +7,7 @@ let chatdata = {
 }
 
 
-API.onResourceStart.connect( function () {
+API.onResourceStart.connect( () => {
 	chatdata.browser = API.createCefBrowser( res.Width, res.Height );
 	API.waitUntilCefBrowserInit( chatdata.browser );
 	API.setCefBrowserPosition( chatdata.browser, 0, 0 );
@@ -23,7 +23,7 @@ API.onResourceStart.connect( function () {
 } );
 
 
-API.onKeyDown.connect( function ( sender, e ) {
+API.onKeyDown.connect( (sender, e) => {
 	if ( chatdata.chatopen == false ) {
 		if ( API.getCanOpenChat() ) {
 			if ( e.KeyCode == Keys.Z ) {
@@ -33,7 +33,7 @@ API.onKeyDown.connect( function ( sender, e ) {
 	}
 } );
 
-API.onResourceStop.connect( function () {
+API.onResourceStop.connect( () => {
 	if ( chatdata.browser != null ) {
 		var localCopy = chatdata.browser;
 		chatdata.browser = null;

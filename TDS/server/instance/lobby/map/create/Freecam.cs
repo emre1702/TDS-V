@@ -5,12 +5,12 @@ namespace TDS.server.instance.lobby {
 
 	partial class Lobby : Script {
 
-		private static Dictionary<Client, NetHandle> playerCamObject = new Dictionary<Client, NetHandle> ();
+		private static readonly Dictionary<Client, NetHandle> playerCamObject = new Dictionary<Client, NetHandle> ();
 		private static Dictionary<Client, bool> freecamControlsDisabled = new Dictionary<Client, bool> ();
 
 		private void StartPlayerFreecam ( Client player ) {
 			if ( playerCamObject.ContainsKey ( player ) )
-				this.StopPlayerFreecam ( player, false );
+				this.StopPlayerFreecam ( player );
 			NetHandle obj = this.API.CreateObject ( -1358020705, this.API.GetEntityPosition ( player ), new Vector3 ( 0.0, 0.0, 0.0 ) ); //We create the object from server side, so later if we want to sync the object's position we can send the pos back here.
 			playerCamObject[player] = obj;
 

@@ -21,7 +21,7 @@
 				player.TriggerEvent ( "clientPlayerDeathNatives" );
 
 				player.Freeze ( true );
-				deadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000, 1 ) );
+				deadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000 ) );
 				Client killer = this.API.GetPlayerFromHandle ( entityKiller ) ??
 								character.Lobby.DmgSys.GetLastHitter ( player, character );
 

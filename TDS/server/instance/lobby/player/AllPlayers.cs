@@ -51,7 +51,7 @@ namespace TDS.server.instance.lobby {
 				this.SetPlayerReadyForRound ( player, (uint) teamID );
 				player.TriggerEvent ( "onClientCountdownStart", this.currentMap.Name );
 				if ( teamID == 0 )
-					this.SpectateAllTeams ( player, true );
+					this.SpectateAllTeams ( player );
 			} );
 			if ( this.currentMap.Type == "bomb" )
 				this.GiveBombToRandomTerrorist ();
