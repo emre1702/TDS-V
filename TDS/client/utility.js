@@ -1,8 +1,10 @@
 "use strict";
-API.setPedCanRagdoll(true);
-API.disableFingerPointing(true);
 function vector3Lerp(start, end, fraction) {
-    return new Vector3((start.X + (end.X - start.X) * fraction), (start.Y + (end.Y - start.Y) * fraction), (start.Z + (end.Z - start.Z) * fraction));
+    return {
+        x: (start.x + (end.x - start.x) * fraction),
+        y: (start.y + (end.y - start.y) * fraction),
+        z: (start.z + (end.z - start.z) * fraction)
+    };
 }
 function clampAngle(angle) {
     return (angle + Math.ceil(-angle / 360) * 360);
@@ -14,15 +16,16 @@ function getPositionInFront(range, pos, zrot, plusangle) {
     pos.Y += (range * Math.cos(-angle - plusangle));
     return pos;
 }
-API.onKeyDown.connect(function (sender, e) {
-    if (e.KeyCode == Keys.End) {
-        if (API.isCursorShown()) {
-            API.showCursor(false);
-            nothidecursor = 0;
-        }
-        else {
-            API.showCursor(true);
-            nothidecursor = 1;
-        }
+function getTick() {
+    return new Date().getTime();
+}
+mp.keys.bind(0x23, true, function (sender, e) {
+    if (mp.gui.cursor.visible) {
+        mp.gui.cursor.visible = false;
+        nothidecursor = 0;
+    }
+    else {
+        mp.gui.cursor.visible = true;
+        nothidecursor = 1;
     }
 });

@@ -8,9 +8,9 @@ function createScoreboard() {
     var playerlistopenkey = null;
     var playerlistdata = {
         maxplayers: 25,
-        completewidth: res.Width * 0.4,
-        scrollbarwidth: res.Width * 0.02,
-        columnheight: res.Height * 0.025,
+        completewidth: res.x * 0.4,
+        scrollbarwidth: res.x * 0.02,
+        columnheight: res.x * 0.025,
         columnwidthpercent: {
             name: 0.3,
             playtime: 0.15,
@@ -19,7 +19,7 @@ function createScoreboard() {
             deaths: 0.1,
             teamorlobby: 0.25
         },
-        titleheight: res.Height * 0.03,
+        titleheight: res.y * 0.03,
         bottomheight: 0,
         titlerectanglecolor: [20, 20, 20, 187],
         bottomrectanglecolor: [20, 20, 20, 187],
@@ -49,8 +49,8 @@ function createScoreboard() {
         var len = playertablelength;
         if (len > v.maxplayers)
             len = v.maxplayers;
-        var startX = res.Width * 0.5 - v.completewidth / 2;
-        var startY = res.Height * 0.5 - len * v.columnheight / 2 + v.titleheight / 2 - v.bottomheight / 2;
+        var startX = res.x * 0.5 - v.completewidth / 2;
+        var startY = res.y * 0.5 - len * v.columnheight / 2 + v.titleheight / 2 - v.bottomheight / 2;
         var titleStartY = startY - v.titleheight;
         var bottomStartY = startY + len * v.columnheight;
         API.drawRectangle(startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor[0], v.titlerectanglecolor[1], v.titlerectanglecolor[2], v.titlerectanglecolor[3]);
@@ -104,7 +104,7 @@ function createScoreboard() {
             if (API.isControlJustPressed(20) && playerlistevent === null) {
                 playerlistopenkey = e.KeyCode;
                 scroll = 0;
-                var tick = new Date().getTime();
+                var tick = getTick();
                 if (playerlistevent !== null)
                     playerlistevent.disconnect();
                 if (tick - lastplayerlisttrigger >= 5000) {

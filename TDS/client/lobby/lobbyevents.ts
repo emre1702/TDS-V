@@ -1,4 +1,4 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 API.onServerEventTrigger.connect( function ( eventName, args ) {
 	switch ( eventName ) {

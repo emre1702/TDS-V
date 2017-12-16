@@ -1,14 +1,11 @@
-/// <reference path="types-gt-mp/index.d.ts" />
+/// <reference path="types-ragemp/index.d.ts" />
 
-API.setPedCanRagdoll( true );
-API.disableFingerPointing( true );
-
-function vector3Lerp( start: Vector3, end: Vector3, fraction: number ) {
-	return new Vector3(
-		( start.X + ( end.X - start.X ) * fraction ),
-		( start.Y + ( end.Y - start.Y ) * fraction ),
-		( start.Z + ( end.Z - start.Z ) * fraction )
-	);
+function vector3Lerp( start: { x, y, z }, end: { x, y, z }, fraction: number ) {
+	return {
+		x: ( start.x + ( end.x - start.x ) * fraction ),
+		y: ( start.y + ( end.y - start.y ) * fraction ),
+		z: ( start.z + ( end.z - start.z ) * fraction )
+	};
 }
 
 //By Don. Ported from C# to JS
@@ -25,17 +22,19 @@ function getPositionInFront( range, pos, zrot, plusangle ) {
 	return pos;
 }
 
+function getTick() {
+	return new Date().getTime();
+}
+
 /**
 *	fix for cursor-problems
-*/ 
-API.onKeyDown.connect( function ( sender, e ) {
-	if ( e.KeyCode == Keys.End ) {
-		if ( API.isCursorShown() ) {
-			API.showCursor( false );
-			nothidecursor = 0;
-		} else {
-			API.showCursor( true );
-			nothidecursor = 1;
-		}
+*/
+mp.keys.bind( 0x23, true, function ( sender, e ) {	// end
+	if ( mp.gui.cursor.visible ) {
+		mp.gui.cursor.visible = false;
+		nothidecursor = 0;
+	} else {
+		mp.gui.cursor.visible = true;
+		nothidecursor = 1;
 	}
 } );

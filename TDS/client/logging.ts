@@ -1,14 +1,13 @@
-﻿/// <reference path="types-gt-mp/index.d.ts" />
+﻿/// <reference path="types-ragemp/index.d.ts" />
 
 let activatedlogging = false;
 
-API.onChatCommand.connect( function ( message ) {
-	if ( message == "/activatedalogging" )
-		activatedlogging = !activatedlogging;
+mp.events.addCommand ( "activatedalogging", ( player, text ) => {
+	activatedlogging = !activatedlogging;
 } );
 
 function log ( message ) {
 	if ( activatedlogging ) {
-		API.sendChatMessage( message.toString() );
+		mp.gui.chat.push( message );
 	}
 }

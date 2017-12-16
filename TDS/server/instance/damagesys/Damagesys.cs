@@ -9,8 +9,8 @@
 		private readonly Lobby lobby;
 
 		public Damagesys () {
-			API.OnClientEventTrigger += this.OnPlayerHitOtherPlayer;
-			API.OnPlayerDeath += this.OnPlayerDeath;
+		    Event.OnClientEventTrigger += OnPlayerHitOtherPlayer;
+            Event.OnPlayerDeath += OnPlayerDeath;
 		}
 
 		public Damagesys ( Lobby lobby, Dictionary<int, int> customDamage = null,

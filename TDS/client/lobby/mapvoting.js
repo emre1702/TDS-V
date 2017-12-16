@@ -12,7 +12,7 @@ mapvotedata.menu.Visible = false;
 API.onKeyDown.connect(function (sender, key) {
     if (key.KeyCode == Keys.M) {
         if (!mapvotedata.menu.Visible) {
-            let tick = API.getGlobalTime();
+            let tick = getTick();
             if (mapvotedata.menucooldown <= tick) {
                 mapvotedata.menucooldown = tick + 3000;
                 API.triggerServerEvent("onMapMenuOpen");

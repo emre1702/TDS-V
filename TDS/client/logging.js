@@ -1,11 +1,10 @@
 "use strict";
 let activatedlogging = false;
-API.onChatCommand.connect(function (message) {
-    if (message == "/activatedalogging")
-        activatedlogging = !activatedlogging;
+mp.events.addCommand("activatedalogging", (player, text) => {
+    activatedlogging = !activatedlogging;
 });
 function log(message) {
     if (activatedlogging) {
-        API.sendChatMessage(message.toString());
+        mp.gui.chat.push(message);
     }
 }

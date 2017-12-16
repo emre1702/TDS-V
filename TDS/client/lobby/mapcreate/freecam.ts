@@ -1,7 +1,7 @@
 ﻿// SOURCE: 
 // https://github.com/TheVektor/freecam/blob/master/freecam/client/fc_client.js 
 
-/// <reference path="../../types-gt-mp/index.d.ts" />
+/// <reference path="../../types-ragemp/index.d.ts" />
 
 let freecamdata = {
 	CameraObject: null,

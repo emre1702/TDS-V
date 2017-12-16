@@ -1,4 +1,4 @@
-﻿/// <reference path="types-gt-mp/index.d.ts" />
+﻿/* /// <reference path="types-ragemp/index.d.ts" />
 
 let settings = { language: "english" };
 
@@ -17,3 +17,4 @@ function changeSetting ( index, value ) {
 	settings[index] = value;
 	API.setSetting( "TDS_settings", JSON.stringify( settings ) );
 }
+*/

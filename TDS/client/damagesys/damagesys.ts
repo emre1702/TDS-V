@@ -1,25 +1,12 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-ragemp/index.d.ts" />
 // Körperteile: https://pastebin.com/AGQWgCct
 
-var bloodscreenbrowser;
+let bloodscreenbrowser;
 
-API.onLocalPlayerShoot.connect( function ( weaponUsed, aimCoords ) {
-	var frompos = API.getEntityPosition( API.getLocalPlayer() );
+mp.events.add( "playerWeaponShoot", ( shotPosition: { x, y, z }, target ) => {
 
-	var dir = aimCoords.Subtract( frompos );
-	var distance = dir.Length();
-	dir.Normalize();
-
-	dir.X *= distance * 1.05;
-	dir.Y *= distance * 1.05;
-	dir.Z *= distance * 1.05;
-
-	var topos = frompos.Add( dir ); 
-
-	var raycast = API.createRaycast( frompos, topos, 8, null );
-
-	if ( raycast.didHitEntity ) {
-		var hitentityhandle = raycast.hitEntity;
+	if ( target != null ) {
+		let weapon = mp.players.local.weapon;
 		var hithead = false;
 		//if (weaponUsed == 100416529 || weaponUsed == 205991906 || weaponUsed == 952879014) {
 		//var neckpos = API.returnNative( "GET_PED_BONE_COORDS", 5, hitentityhandle, 39317 );
@@ -27,28 +14,8 @@ API.onLocalPlayerShoot.connect( function ( weaponUsed, aimCoords ) {
 		//	hithead = true;
 		//}
 		//}
-		API.triggerServerEvent( "onPlayerHitOtherPlayer", hitentityhandle, weaponUsed, hithead );
+		mp.events.callRemote( "onPlayerHitOtherPlayer", target, weapon, hithead );
 	}
 } );
 
-API.onResourceStart.connect( function () {
-	API.callNative( "NETWORK_SET_FRIENDLY_FIRE_OPTION", false );
-	/*let res = API.getScreenResolutionMaintainRatio();
-	bloodscreenbrowser = API.createCefBrowser( res.Width, res.Height );
-	API.waitUntilCefBrowserInit( bloodscreenbrowser );
-	API.setCefBrowserPosition( bloodscreenbrowser, 0, 0 );
-	API.setCefBrowserHeadless( bloodscreenbrowser, false );
-	API.loadPageCefBrowser( bloodscreenbrowser, "client/window/damagesys/bloodscreen.html" );*/
-} );
-
-/*API.onPlayerArmorChange.connect( function ( oldvalue ) {
-	let newvalue = API.getPlayerArmor( API.getLocalPlayer() );
-	if ( newvalue < oldvalue )
-		bloodscreenbrowser.call( "showBloodscreen" );
-} );
-
-API.onPlayerHealthChange.connect( function ( oldvalue ) {
-	let newvalue = API.getPlayerHealth( API.getLocalPlayer() );
-	if ( newvalue < oldvalue )
-		bloodscreenbrowser.call( "showBloodscreen" );
-} );*/
+mp.players.local.setCanAttackFriendly( false, false );

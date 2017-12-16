@@ -1,22 +1,28 @@
 "use strict";
 let spectatedata = {
-    event: null,
+    binded: false
 };
-function pressSpectateKey(sender, e) {
-    if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A) {
-        API.triggerServerEvent("spectateNext", false);
-    }
-    else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.D) {
-        API.triggerServerEvent("spectateNext", true);
-    }
+function pressSpectateKeyLeft(sender, e) {
+    mp.events.callRemote("spectateNext", false);
+}
+function pressSpectateKeyRight(sender, e) {
+    mp.events.callRemote("spectateNext", true);
 }
 function startSpectate() {
-    if (spectatedata.event == null)
-        spectatedata.event = API.onKeyDown.connect(pressSpectateKey);
+    if (!spectatedata.binded) {
+        mp.keys.bind(Keys.LeftArrow, true, pressSpectateKeyLeft);
+        mp.keys.bind(Keys.A, true, pressSpectateKeyLeft);
+        mp.keys.bind(Keys.RightArrow, true, pressSpectateKeyRight);
+        mp.keys.bind(Keys.D, true, pressSpectateKeyRight);
+        spectatedata.binded = true;
+    }
 }
 function stopSpectate() {
-    if (spectatedata.event != null) {
-        spectatedata.event.disconnect();
-        spectatedata.event = null;
+    if (spectatedata.binded) {
+        mp.keys.unbind(Keys.LeftArrow, true, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.A, true, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.RightArrow, true, pressSpectateKeyRight);
+        mp.keys.unbind(Keys.D, true, pressSpectateKeyRight);
+        spectatedata.binded = false;
     }
 }

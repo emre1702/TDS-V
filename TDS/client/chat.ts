@@ -1,26 +1,11 @@
-﻿/// <reference path="types-gt-mp/index.d.ts" />
-
+﻿/// <reference path="types-ragemp/index.d.ts" />
+ /*
 let chatdata = {
 	chat: null,
-	browser: null,
+	browser: mp.browsers.new( "client/window/chat/chat.html" ),
 	chatopen: false,
 }
-
-
-API.onResourceStart.connect( () => {
-	chatdata.browser = API.createCefBrowser( res.Width, res.Height );
-	API.waitUntilCefBrowserInit( chatdata.browser );
-	API.setCefBrowserPosition( chatdata.browser, 0, 0 );
-	API.loadPageCefBrowser( chatdata.browser, "client/window/chat/chat.html" );
-
-	chatdata.chat = API.registerChatOverride();
-
-	chatdata.chat.onAddMessageRequest.connect( addMessage );
-	chatdata.chat.onChatHideRequest.connect( onChatHide );
-	chatdata.chat.onFocusChange.connect( onFocusChange );
-
-	chatdata.chat.SanitationLevel = 2;
-} );
+chatdata.browser.markAsChat();
 
 
 API.onKeyDown.connect( (sender, e) => {
@@ -86,4 +71,4 @@ function onChatHide( hide ) {
 
 function onChatLoad() {
 	API.triggerServerEvent( "onPlayerChatLoad", languagesetting );
-}
+}*/

@@ -1,4 +1,4 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 
 let rounddata = {
@@ -9,11 +9,11 @@ let rounddata = {
 
 
 function setMapInfo ( mapname ) {
-	rounddata.mapinfo = new cText( mapname, res.Width * 0.5, res.Height * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true );
+	rounddata.mapinfo = new cText( mapname, res.x * 0.5, res.y * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true );
 }
 
 
-API.onUpdate.connect( () => {
+mp.events.add ( "render", () => {
 	if ( !rounddata.infight ) {
 		API.disableControlThisFrame( 24 );
 		API.disableControlThisFrame( 257 );

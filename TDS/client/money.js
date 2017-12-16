@@ -1,13 +1,11 @@
 "use strict";
-API.onServerEventTrigger.connect(function (name, args) {
-    if (name === "onClientMoneyChange") {
-        log("onClientMoneyChange start");
-        currentmoney = args[0];
-        log("onClientMoneyChange end");
-    }
+mp.events.add("onClientMoneyChange", money => {
+    log("onClientMoneyChange start");
+    currentmoney = money;
+    log("onClientMoneyChange end");
 });
-API.onUpdate.connect(function () {
+mp.events.add("render", () => {
     if (currentmoney != null) {
-        API.drawText("$" + currentmoney, res.Width - 15, 50, 1, 115, 186, 131, 255, 4, 2, true, true, 0);
+        mp.game.graphics.drawText("$" + currentmoney, 7, [115, 186, 131, 255], 1.0, 1.0, true, res.x - 90, 50);
     }
 });

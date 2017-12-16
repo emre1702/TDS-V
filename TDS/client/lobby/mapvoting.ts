@@ -1,4 +1,4 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let mapvotedata = {
 	menu: API.createMenu( "Map-Vote", "Maps", 0, 0, 4 ),
@@ -16,7 +16,7 @@ API.onKeyDown.connect( function ( sender, key ) {
 	//if ( !freecamdata.freecamMode ) {
 		if ( key.KeyCode == Keys.M ) {
 			if ( !mapvotedata.menu.Visible ) {
-				let tick = API.getGlobalTime();
+				let tick = getTick();
 				if ( mapvotedata.menucooldown <= tick ) {
 					mapvotedata.menucooldown = tick + 3000;
 					API.triggerServerEvent( "onMapMenuOpen" );

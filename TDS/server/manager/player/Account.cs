@@ -21,6 +21,7 @@
 		public Account () {
 			this.API.OnClientEventTrigger += this.OnClientEvent;
 			this.API.OnPlayerDisconnected += this.OnPlayerDisconnected;
+			this.API.OnPlayerConnect += OnPlayerBeginConnect;
 			this.API.OnPlayerConnected += OnPlayerConnected;
 			this.OnResourceStart ();
 		}
@@ -45,7 +46,6 @@
 			player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
 			player.Freeze ( true );
 			player.Name = player.SocialClubName;
-			OnPlayerBeginConnect ( player );
 		}
 
 		private async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
@@ -88,7 +88,6 @@
 			PlayerUIDs[name] = uid;
 		}
 
-		// workaround, GTA:N removed API.onPlayerBeginConnect
 		private static async void OnPlayerBeginConnect ( Client player ) {
 			try {
 				player.Name = player.SocialClubName;

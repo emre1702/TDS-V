@@ -83,11 +83,11 @@
 			[-1169823560] = 0, //Pipebomb - Geändert, da kA
 
 			//[ Gunrunning ]//
-			[API.Shared.GetHashKey ( "WEAPON_PISTOL_MK2" )] = 26,
+			/*[API.Shared.GetHashKey ( "WEAPON_PISTOL_MK2" )] = 26,
 			[API.Shared.GetHashKey ( "WEAPON_SMG_MK2" )] = 22,
 			[API.Shared.GetHashKey ( "WEAPON_ASSAULTRIFLE_MK2" )] = 30,
 			[API.Shared.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" )] = 32,
-			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
+			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28  */
 		};
 		private static readonly Dictionary<int, float> headMultiplicator = new Dictionary<int, float> {
 			[100416529] = 5.0f,

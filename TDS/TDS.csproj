@@ -3,8 +3,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="gtanetwork.api" Version="0.3.0.2" />
-    <PackageReference Include="MySql.Data" Version="6.10.4" />
-    <PackageReference Include="types-gtanetwork" Version="0.1.12" />
+    <PackageReference Include="gtanetwork.api" Version="0.3.0.10" />
+    <PackageReference Include="MySql.Data" Version="6.10.5" />
+    <PackageReference Include="types-ragemp-client" Version="0.0.4" />
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ let roundinfo = {
     drawdata: {
         time: {
             text: {
-                ypos: res.Height * 0.005,
+                ypos: res.y * 0.005,
                 scale: 0.5,
                 r: 255,
                 g: 255,
@@ -19,10 +19,10 @@ let roundinfo = {
                 a: 255,
             },
             rectangle: {
-                xpos: res.Width * 0.47,
+                xpos: res.x * 0.47,
                 ypos: 0,
-                width: res.Width * 0.06,
-                height: res.Height * 0.05,
+                width: res.x * 0.06,
+                height: res.y * 0.05,
                 r: 20,
                 g: 20,
                 b: 20,
@@ -31,7 +31,7 @@ let roundinfo = {
         },
         team: {
             text: {
-                ypos: -res.Height * 0.002,
+                ypos: -res.y * 0.002,
                 scale: 0.41,
                 r: 255,
                 g: 255,
@@ -40,23 +40,23 @@ let roundinfo = {
             },
             rectangle: {
                 ypos: 0,
-                width: res.Width * 0.13,
-                height: res.Height * 0.06,
+                width: res.x * 0.13,
+                height: res.y * 0.06,
                 a: 180
             }
         },
         kills: {
             showtick: 15000,
             fadeaftertick: 11000,
-            xpos: res.Width * 0.99,
-            ypos: res.Height * 0.45,
+            xpos: res.x * 0.99,
+            ypos: res.y * 0.45,
             scale: 0.3,
-            height: res.Height * 0.04
+            height: res.y * 0.04
         }
     }
 };
 function drawRoundInfo() {
-    let tick = API.getGlobalTime();
+    let tick = getTick();
     let fullseconds = Math.ceil((roundinfo.roundtime - (tick - roundinfo.starttick)) / 1000);
     let minutes = Math.floor(fullseconds / 60);
     let seconds = fullseconds % 60;
@@ -80,12 +80,12 @@ function drawRoundInfo() {
     }
 }
 function setRoundTimeLeft(lefttime) {
-    roundinfo.starttick = API.getGlobalTime() - (roundinfo.roundtime - lefttime);
+    roundinfo.starttick = getTick() - (roundinfo.roundtime - lefttime);
 }
-API.onUpdate.connect(function () {
+mp.events.add("render", function () {
     let length = roundinfo.killinfo.length;
     if (length > 0) {
-        let tick = API.getGlobalTime();
+        let tick = getTick();
         for (let i = length - 1; i >= 0; i--) {
             let tickwasted = tick - roundinfo.killinfo[i].starttick;
             let data = roundinfo.drawdata.kills;
@@ -110,7 +110,7 @@ function removeRoundInfo() {
     }
 }
 function roundStartedRoundInfo(args) {
-    roundinfo.starttick = API.getGlobalTime();
+    roundinfo.starttick = getTick();
     if (2 in args)
         roundinfo.starttick -= args[2];
     roundinfo.drawevent = API.onUpdate.connect(drawRoundInfo);
@@ -125,22 +125,18 @@ function addTeamInfos(teamnames, teamcolors) {
 }
 function playerDeathRoundInfo(teamID, killstr) {
     roundinfo.aliveinteams[teamID]--;
-    roundinfo.killinfo.push({ "killstr": killstr, "starttick": API.getGlobalTime() });
+    roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });
 }
-API.onServerEventTrigger.connect((eventName, args) => {
-    switch (eventName) {
-        case "onClientPlayerAmountInFightSync":
-            log("onClientPlayerAmountInFightSync start");
-            roundinfo.amountinteams = [];
-            roundinfo.aliveinteams = [];
-            for (let i = 0; i < args[0].Count; i++) {
-                roundinfo.amountinteams[i] = args[0][i];
-                if (args[1] == false)
-                    roundinfo.aliveinteams[i] = args[0][i];
-                else
-                    roundinfo.aliveinteams[i] = args[2][i];
-            }
-            log("onClientPlayerAmountInFightSync end");
-            break;
+mp.events.add("onClientPlayerAmountInFightSync", (eventName, args) => {
+    log("onClientPlayerAmountInFightSync start");
+    roundinfo.amountinteams = [];
+    roundinfo.aliveinteams = [];
+    for (let i = 0; i < args[0].Count; i++) {
+        roundinfo.amountinteams[i] = args[0][i];
+        if (args[1] == false)
+            roundinfo.aliveinteams[i] = args[0][i];
+        else
+            roundinfo.aliveinteams[i] = args[2][i];
     }
+    log("onClientPlayerAmountInFightSync end");
 });

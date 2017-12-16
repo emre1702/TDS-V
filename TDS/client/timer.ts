@@ -1,11 +1,11 @@
-/// <reference path="types-gt-mp/index.d.ts" />
+/// <reference path="types-ragemp/index.d.ts" />
 
 var alltimertable = [];
 var puttimerintable = [];
 
-API.onUpdate.connect( function () {
-	var tick = API.getGlobalTime();
-	for ( var i = alltimertable.length - 1; i >= 0; i-- )
+mp.events.add( "render", function () {
+	var tick = getTick();
+	for ( let i = alltimertable.length - 1; i >= 0; i-- )
 		if ( !alltimertable[i].killit ) {
 			if ( alltimertable[i].executeatms <= tick ) {
 				var timer = alltimertable[i];
@@ -17,7 +17,7 @@ API.onUpdate.connect( function () {
 			alltimertable.splice( i, 1 );
 	if ( puttimerintable.length > 0 ) {
 		for ( var j = 0; j < puttimerintable.length; j++ ) {
-			Timer.putTimerInSorted( puttimerintable[j] );
+			puttimerintable[j].putTimerInSorted();
 		}
 		puttimerintable = [];
 	}
@@ -35,7 +35,7 @@ class Timer {
 
 	constructor( func, executeafterms, executeamount, ...args ) {
 		this.func = func;
-		this.executeatms = executeafterms + API.getGlobalTime();
+		this.executeatms = executeafterms + getTick();
 		this.executeafterms = executeafterms;
 		this.executeamountleft = executeamount;
 		this.args = args;
@@ -94,18 +94,18 @@ class Timer {
 
 		if ( this.executeamountleft !== 0 ) {
 			this.executeatms += this.executeafterms;
-			Timer.putTimerInSorted( this );
+			this.putTimerInSorted();
 		}
 		log( "timer execute end" );
 	}
 
-	static putTimerInSorted( instance ) {
-		for ( var i = alltimertable.length - 1; i >= 0; i-- )
-			if ( alltimertable[i].executeatms > instance.executeatms ) {
-				alltimertable.splice( i+1, 0, instance );
+	private putTimerInSorted () {
+		for ( let i = alltimertable.length - 1; i >= 0; i-- )
+			if ( alltimertable[i].executeatms > this.executeatms ) {
+				alltimertable.splice( i + 1, 0, this );
 				return;
 			}
-		alltimertable.splice( 0, 0, instance );
+		alltimertable.splice( 0, 0, this );
 	}
 }
 

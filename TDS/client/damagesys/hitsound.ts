@@ -1,4 +1,4 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/* /// <reference path="../types-ragemp/index.d.ts" />
 
 function playHitSound() {
 	API.startAudio( soundspath + "hit.wav", false );
@@ -13,4 +13,4 @@ API.onServerEventTrigger.connect( function ( eventName, args ) {
 
 API.onResourceStart.connect( function () {
 	API.preloadAudio( soundspath + "hit.wav" );
-} );
+} );*/

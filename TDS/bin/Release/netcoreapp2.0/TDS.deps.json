@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "f5fcdd844c51eb29ffc4e6d7114c49119a4aa37c"
+    "signature": "d71276d9c1946d12be1dc52e36064c50f6232a5a"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,7 +10,7 @@
         "dependencies": {
           "MySql.Data": "6.10.4",
           "gtanetwork.api": "0.3.0.2",
-          "types-gtanetwork": "0.1.12"
+          "types-ragemp-client": "0.0.3"
         },
         "runtime": {
           "TDS.dll": {}
@@ -1803,7 +1803,7 @@
           "System.Xml.XPath": "4.3.0"
         }
       },
-      "types-gtanetwork/0.1.12": {}
+      "types-ragemp-client/0.0.3": {}
     }
   },
   "libraries": {
@@ -2813,12 +2813,12 @@
       "path": "system.xml.xpath.xdocument/4.3.0",
       "hashPath": "system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
     },
-    "types-gtanetwork/0.1.12": {
+    "types-ragemp-client/0.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1HyZGyudib7UlMEcqxT4ewM4VtG8l2tcakfWPAX4YKv5AZJWuuWZk4TYy4n70edVsog2YeNu4HFqqxOtEGNGuw==",
-      "path": "types-gtanetwork/0.1.12",
-      "hashPath": "types-gtanetwork.0.1.12.nupkg.sha512"
+      "sha512": "sha512-UmT/EAj/J+sBUZ7Y9gdW6DtkKhmcMD+Bk1N5u6xiibkrOwrjpBotMykT+VY+8bZfo5H6LjHVA6//HBFrJgE7Bw==",
+      "path": "types-ragemp-client/0.0.3",
+      "hashPath": "types-ragemp-client.0.0.3.nupkg.sha512"
     }
   }
 }

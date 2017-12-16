@@ -1,9 +1,9 @@
-﻿/// <reference path="../types-gt-mp/index.d.ts" />
+﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let bombdata = {
 	changed: false,
 	gotbomb: false,
-	placestoplant: [],
+	placestoplant: [] as { x, y, z }[],
 	plantdefuseevent: null,
 	isplanting: false,
 	isdefusing: false,
@@ -14,20 +14,21 @@ let bombdata = {
 // onPlayerStartPlanting & onPlayerStopPlanting //
 
 function drawPlant() {
-	let tickswasted = API.getGlobalTime() - bombdata.plantdefusestarttick;
+	let tickswasted = getTick() - bombdata.plantdefusestarttick;
 	if ( tickswasted < lobbysettings.bombplanttime ) {
-		API.drawRectangle( res.Width * 0.46, res.Height * 0.7, res.Width * 0.08, res.Height * 0.02, 0, 0, 0, 187 );
+		API.drawRectangle( res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187 );
 		let progress = tickswasted / lobbysettings.bombplanttime;
-		API.drawRectangle( res.Width * 0.461, res.Height * 0.701, res.Width * 0.078 * progress, res.Height * 0.018, 0, 180, 0, 187 );
-		API.drawText( getLang( "round", "planting" ), res.Width * 0.5, res.Height * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0 );
+		API.drawRectangle( res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 0, 180, 0, 187 );
+		API.drawText( getLang( "round", "planting" ), res.x * 0.5, res.y * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0 );
 	}
 }
 
 function checkPlant() {
 	let isonplacetoplant = false;
-	let playerpos = API.getEntityPosition( API.getLocalPlayer() );
+	let playerpos = mp.players.local.position;
 	for ( let i = 0; i < bombdata.placestoplant.length && !isonplacetoplant; i++ ) {
-		if ( playerpos.DistanceTo( bombdata.placestoplant[i] ) <= 5 )
+		let pos = bombdata.placestoplant[i];
+		if ( mp.game.gameplay.getDistanceBetweenCoords( playerpos.x, playerpos.y, playerpos.z, pos.x, pos.y, pos.z, true ) <= 5 )
 			isonplacetoplant = true;
 	}
 	if ( isonplacetoplant ) {
