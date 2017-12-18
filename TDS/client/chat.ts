@@ -70,5 +70,5 @@ function onChatHide( hide ) {
 }
 
 function onChatLoad() {
-	API.triggerServerEvent( "onPlayerChatLoad", languagesetting );
+	mp.events.callRemote( "onPlayerChatLoad", languagesetting );
 }*/

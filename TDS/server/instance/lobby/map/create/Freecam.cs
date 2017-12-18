@@ -3,7 +3,7 @@ namespace TDS.server.instance.lobby {
 	using System.Collections.Generic;
 	using GTANetworkAPI;
 
-	partial class Lobby : Script {
+	partial class OldLobby : Script {
 
 		private static readonly Dictionary<Client, NetHandle> playerCamObject = new Dictionary<Client, NetHandle> ();
 		private static Dictionary<Client, bool> freecamControlsDisabled = new Dictionary<Client, bool> ();

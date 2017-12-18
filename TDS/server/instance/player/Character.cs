@@ -1,10 +1,10 @@
 namespace TDS.server.instance.player {
 
-	using GTANetworkAPI;
-	using lobby;
-	using manager.lobby;
+    using GTANetworkAPI;
+    using lobby;
+    using TDS.server.enums;
 
-	class Character {
+    class Character {
 		public uint UID;
 		public uint AdminLvl = 0;
 		public uint DonatorLvl = 0;
@@ -16,8 +16,8 @@ namespace TDS.server.instance.player {
 		public uint Damage = 0;
 		public uint Team = 0;
 		public uint Lifes = 0;
-		public string Language = "english";
-		public Lobby Lobby = MainMenu.TheLobby;
+		public Language Language = Language.ENGLISH;
+		public Lobby Lobby;     //TODO = Main menu
 		public Client Spectating;
 		public bool LoggedIn;
 		public bool IsLobbyOwner = false;

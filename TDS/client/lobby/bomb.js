@@ -3,7 +3,7 @@ let bombdata = {
     changed: false,
     gotbomb: false,
     placestoplant: [],
-    plantdefuseevent: null,
+    plantdefuseevent: false,
     isplanting: false,
     isdefusing: false,
     plantdefusestarttick: 0,
@@ -12,10 +12,10 @@ let bombdata = {
 function drawPlant() {
     let tickswasted = getTick() - bombdata.plantdefusestarttick;
     if (tickswasted < lobbysettings.bombplanttime) {
-        API.drawRectangle(res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187);
+        mp.game.graphics.drawRect(res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187);
         let progress = tickswasted / lobbysettings.bombplanttime;
-        API.drawRectangle(res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 0, 180, 0, 187);
-        API.drawText(getLang("round", "planting"), res.x * 0.5, res.y * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0);
+        mp.game.graphics.drawRect(res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 0, 180, 0, 187);
+        mp.game.graphics.drawText(getLang("round", "planting"), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71);
     }
 }
 function checkPlant() {
@@ -31,33 +31,33 @@ function checkPlant() {
             drawPlant();
         }
         else {
-            bombdata.plantdefusestarttick = API.getGlobalTime();
+            bombdata.plantdefusestarttick = getTick();
             bombdata.isplanting = true;
-            API.triggerServerEvent("onPlayerStartPlanting");
+            mp.events.callRemote("onPlayerStartPlanting");
         }
     }
     else
         checkPlantDefuseStop();
 }
 function drawDefuse() {
-    let tickswasted = API.getGlobalTime() - bombdata.plantdefusestarttick;
+    let tickswasted = getTick() - bombdata.plantdefusestarttick;
     if (tickswasted < lobbysettings.bombdefusetime) {
-        API.drawRectangle(res.Width * 0.46, res.Height * 0.7, res.Width * 0.08, res.Height * 0.02, 0, 0, 0, 187);
+        mp.game.graphics.drawRect(res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187);
         let progress = tickswasted / lobbysettings.bombdefusetime;
-        API.drawRectangle(res.Width * 0.461, res.Height * 0.701, res.Width * 0.078 * progress, res.Height * 0.018, 180, 0, 0, 187);
-        API.drawText(getLang("round", "defusing"), res.Width * 0.5, res.Height * 0.71, 0.4, 255, 255, 255, 255, 0, 1, true, true, 0);
+        mp.game.graphics.drawRect(res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 180, 0, 0, 187);
+        mp.game.graphics.drawText(getLang("round", "defusing"), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71);
     }
 }
 function checkDefuse() {
-    let playerpos = API.getEntityPosition(API.getLocalPlayer());
-    if (playerpos.DistanceTo(bombdata.plantedpos) <= 5) {
+    let playerpos = mp.players.local.position;
+    if (mp.game.gameplay.getDistanceBetweenCoords(playerpos.x, playerpos.y, playerpos.z, bombdata.plantedpos.x, bombdata.plantedpos.y, bombdata.plantedpos.z, true) <= 5) {
         if (bombdata.isdefusing) {
             drawDefuse();
         }
         else {
-            bombdata.plantdefusestarttick = API.getGlobalTime();
+            bombdata.plantdefusestarttick = getTick();
             bombdata.isdefusing = true;
-            API.triggerServerEvent("onPlayerStartDefusing");
+            mp.events.callRemote("onPlayerStartDefusing");
         }
     }
     else
@@ -66,30 +66,24 @@ function checkDefuse() {
 function checkPlantDefuseStop() {
     if (bombdata.isplanting) {
         bombdata.isplanting = false;
-        API.triggerServerEvent("onPlayerStopPlanting");
+        mp.events.callRemote("onPlayerStopPlanting");
     }
     else if (bombdata.isdefusing) {
         bombdata.isdefusing = false;
-        API.triggerServerEvent("onPlayerStopDefusing");
+        mp.events.callRemote("onPlayerStopDefusing");
     }
 }
 function checkPlantDefuse() {
-    if (API.getPlayerCurrentWeapon() == -1569615261) {
-        API.disableControlThisFrame(24);
-        if (API.isDisabledControlPressed(24)) {
-            let localplayer = API.getLocalPlayer();
-            if (!API.isPlayerDead(localplayer)) {
-                if (bombdata.gotbomb) {
-                    checkPlant();
-                    return;
-                }
-                else {
-                    checkDefuse();
-                    return;
-                }
+    if (mp.players.local.weapon == WeaponHash.Unarmed) {
+        if (!mp.players.local.isDeadOrDying(true)) {
+            if (bombdata.gotbomb) {
+                checkPlant();
+                return;
             }
-            else
-                checkPlantDefuseStop();
+            else {
+                checkDefuse();
+                return;
+            }
         }
         else
             checkPlantDefuseStop();
@@ -103,36 +97,32 @@ function localPlayerGotBomb(placestoplant) {
     let i = placestoplant.Count;
     while (i--)
         bombdata.placestoplant[i] = placestoplant[i];
-    bombdata.plantdefuseevent = API.onUpdate.connect(checkPlantDefuse);
+    bombdata.plantdefuseevent = true;
 }
 function localPlayerPlantedBomb() {
     bombdata.gotbomb = false;
-    bombdata.plantdefuseevent.disconnect();
-    bombdata.plantdefuseevent = null;
+    bombdata.plantdefuseevent = false;
     bombdata.isplanting = false;
 }
 function bombPlanted(pos, candefuse) {
     if (candefuse) {
         bombdata.changed = true;
         bombdata.plantedpos = pos;
-        bombdata.plantdefuseevent = API.onUpdate.connect(checkPlantDefuse);
+        bombdata.plantdefuseevent = true;
     }
     setRoundTimeLeft(lobbysettings.bombdetonatetime);
 }
 function bombDetonated() {
-    API.setGameplayCameraShake("LARGE_EXPLOSION_SHAKE", 1.0);
-    new Timer(API.stopGameplayCameraShake, 4000, 1);
+    mp.game.cam.shakeGameplayCam("LARGE_EXPLOSION_SHAKE", 1.0);
+    new Timer(mp.game.cam.stopGameplayCamShaking, 4000, 1);
 }
 function removeBombThings() {
     if (bombdata.changed) {
-        if (bombdata.plantdefuseevent != null) {
-            bombdata.plantdefuseevent.disconnect();
-        }
         bombdata = {
             changed: false,
             gotbomb: false,
             placestoplant: [],
-            plantdefuseevent: null,
+            plantdefuseevent: false,
             isplanting: false,
             isdefusing: false,
             plantdefusestarttick: 0,

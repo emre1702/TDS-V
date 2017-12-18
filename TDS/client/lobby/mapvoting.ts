@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
-let mapvotedata = {
-	menu: API.createMenu( "Map-Vote", "Maps", 0, 0, 4 ),
+/*let mapvotedata = {
+	menu: mp.game.gameplay.( "Map-Vote", "Maps", 0, 0, 4 ),
 	clickevent: null,
 	menucooldown: 0,
 	votecooldown: 0,
@@ -19,7 +19,7 @@ API.onKeyDown.connect( function ( sender, key ) {
 				let tick = getTick();
 				if ( mapvotedata.menucooldown <= tick ) {
 					mapvotedata.menucooldown = tick + 3000;
-					API.triggerServerEvent( "onMapMenuOpen" );
+					mp.events.callRemote( "onMapMenuOpen" );
 				}
 			} else {
 				mapMenuClose();
@@ -44,7 +44,7 @@ API.onKeyDown.connect( function ( sender, key ) {
 					let tick = API.getGlobalTime();
 					if ( mapvotedata.votecooldown <= tick ) {
 						mapvotedata.votecooldown = tick + 500;
-						API.triggerServerEvent( "onVoteForMap", mapvotedata.votingmaps[vote] );
+						mp.events.callRemote( "onVoteForMap", mapvotedata.votingmaps[vote] );
 						mapvotedata.lastselectedmap = mapvotedata.votingmaps[vote];
 					}
 				}
@@ -67,7 +67,7 @@ API.onUpdate.connect( function () {
 
 function mapMenuItemClick( sender, item, index ) {
 	mapvotedata.lastselectedmap = item.Text;
-	API.triggerServerEvent( "onMapVotingRequest", item.Text );
+	mp.events.callRemote( "onMapVotingRequest", item.Text );
 	mapMenuClose();
 	API.showCursor( false );
 }
@@ -162,8 +162,4 @@ function mapMenuClose() {
 		mapvotedata.clickevent.disconnect();
 		mapvotedata.clickevent = null;
 	}
-}
-
-/* for ( var i = 0; i < VoicePlayers.length; i++ ) {
-	API.drawText( VoicePlayers[i].k, 10, res.Height * 0.5 + ( res.Height * 0.02 * ( i - 1 )), 0.2, 255, 255, 255, 255, 0, 0, false, true, 0 );
 }*/

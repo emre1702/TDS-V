@@ -23,7 +23,7 @@
 		/* Constructor */
 
 		public Database () {
-			this.API.OnResourceStart += this.OnResourceStart;
+			Event.OnResourceStart += this.OnResourceStart;
 		}
 
 		/* Exports */

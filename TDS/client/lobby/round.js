@@ -5,12 +5,10 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, res.x * 0.5, res.y * 0.95, 0.5, 255, 255, 255, 255, 0, 1, true);
+    rounddata.mapinfo = new cText(mapname, res.x * 0.5, res.y * 0.95, 1, { r: 255, g: 255, b: 255, a: 255 }, 0.5, 0.5, true);
 }
 mp.events.add("render", () => {
     if (!rounddata.infight) {
-        API.disableControlThisFrame(24);
-        API.disableControlThisFrame(257);
     }
 });
 function removeMapInfo() {
@@ -33,11 +31,9 @@ function removeRoundThings(removemapinfo) {
 function toggleFightMode(bool) {
     if (bool) {
         rounddata.infight = true;
-        API.forceSendAimData(true);
     }
     else {
         rounddata.infight = false;
-        API.forceSendAimData(false);
         stopMapLimitCheck();
     }
 }

@@ -41,7 +41,6 @@ mp.events.add( "onClientRoundStart", function ( args ) {
 	rounddata.isspectator = args[0];
 	if ( !rounddata.isspectator ) {
 		startMapLimit();
-		createTeamBlips( args[1] );
 		toggleFightMode( true );
 	}
 	roundStartedRoundInfo( args )
@@ -58,9 +57,8 @@ mp.events.add( "onClientRoundEnd", function ( args ) {
 	removeRoundThings( false );
 	stopCountdown();
 	stopCountdownCamera();
-	stopTeamBlips();
 	removeRoundInfo();
-	stopMapVoting();
+	//stopMapVoting();
 	log( "onClientRoundEnd end" );
 } );
 
@@ -78,8 +76,6 @@ mp.events.add( "onClientPlayerDeath", function ( player: MpPlayer, teamID: numbe
 	if ( mp.players.local == player ) {
 		toggleFightMode( false );
 		removeBombThings();
-	} else {
-		removeTeammateFromTeamBlips( player.name );
 	}
 	playerDeathRoundInfo( teamID, killstr );
 	log( "onClientPlayerDeath end" );
@@ -88,7 +84,7 @@ mp.events.add( "onClientPlayerDeath", function ( player: MpPlayer, teamID: numbe
 
 mp.events.add( "PlayerQuit", function ( player: MpPlayer, exitType: string, reason: string ) {
 	log( "onClientPlayerQuit start" );
-	removeTeammateFromTeamBlips( player.name );
+	//removeTeammateFromTeamBlips( player.name );
 	log( "onClientPlayerQuit end" );
 } );
 

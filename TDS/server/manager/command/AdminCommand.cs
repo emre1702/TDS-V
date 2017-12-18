@@ -46,8 +46,7 @@
 		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round.", Group = "supporter,lobby-owner" )]
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
-				Lobby lobby = player.GetChar ().Lobby;
-				if ( lobby.GotRounds ) {
+				if ( player.GetChar ().Lobby is instance.lobby.Arena lobby ) {
 					// LOG //
 					Log.Admin ( "next", player, "0", lobby.Name );
 					/////////
@@ -69,7 +68,7 @@
 					else
 						Log.VIP ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
 					/////////
-					Language.SendMessageToAll ( "lobbykick", target.Name, player.Name, reason );
+					ServerLanguage.SendMessageToAll ( "lobbykick", target.Name, player.Name, reason );
 					target.GetChar ().Lobby.RemovePlayer ( target );
 				}
 			}
@@ -86,8 +85,8 @@
 						Log.Admin ( "kick", player, target, player.GetChar ().Lobby.Name );
 					else
 						Log.VIP ( "kick", player, target, player.GetChar ().Lobby.Name );
-					/////////
-					Language.SendMessageToAll ( "kick", target.Name, player.Name, reason );
+                    /////////
+                    ServerLanguage.SendMessageToAll ( "kick", target.Name, player.Name, reason );
 					target.Kick ( target.GetLang ( "youkick", player.Name, reason ) );
 				}
 			}

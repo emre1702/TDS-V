@@ -3,7 +3,7 @@
 
 /// <reference path="../../types-ragemp/index.d.ts" />
 
-let freecamdata = {
+/*let freecamdata = {
 	CameraObject: null,
 	cam: null,
 	wdown: false,
@@ -149,7 +149,7 @@ function freecamOnUpdate () {
 			}
 
 			if ( to != null && freecamdata.CameraObject != null ) {
-				API.triggerServerEvent( "setFreecamObjectPositionTo", to );
+				mp.events.callRemote( "setFreecamObjectPositionTo", to );
 				//API.setEntityPosition(CameraObject,to); //GTMP BUG: If the camera goes out from the streaming distace of the object's spawn position->System.NullReferenceException
 			}
 
@@ -226,7 +226,7 @@ API.onServerEventTrigger.connect( function ( name, args ) {
 	} else if ( name == "stopFreecam" ) {
 		stopFreecam();
 	}
-	/* if ( name == "toggleFreecamControls" ) {
-		freecamdata.toggleControl = args[0];
-	} */
-} );
+	// if ( name == "toggleFreecamControls" ) {
+	//	freecamdata.toggleControl = args[0];
+//	} 
+} ); */

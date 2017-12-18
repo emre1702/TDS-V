@@ -8,12 +8,12 @@
 		public static Lobby TheLobby;
 
 		public GangLobby () {
-			TheLobby = new Lobby ( "gang", 2, false ) {
+			/*TheLobby = new Lobby ( "gang", 2, false ) {
 				DeleteWhenEmpty = false,
 				IsOfficial = true
 			};
 			TheLobby.AddSpawnPoint ( new Vector3 ( 8.699318, -2.050943, 70.29607 ), new Vector3 ( 0, 0, 65.79314 ) );
-			TheLobby.Start ();
+			TheLobby.Start ();*/
 		}
 
 		public static void Join ( Client player ) {

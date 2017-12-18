@@ -9,7 +9,7 @@
 		internal static Chat Instance;
 
 		public Chat () {
-			this.API.OnChatMessage += OnChatMessage;
+			Event.OnChatMessage += OnChatMessage;
 			Instance = this;
 		}
 

@@ -17,7 +17,7 @@ namespace TDS.server.instance.utility {
 		public bool IsRunning = true;
 
 		public Timer () {
-			this.API.OnUpdate += OnUpdateFunc;
+			Event.OnUpdate += OnUpdateFunc;
 		}
 
 		Timer ( Action thefunc, uint executeafterms, uint executeatms, int executes ) {

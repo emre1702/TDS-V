@@ -7,7 +7,7 @@ let roundinfo = {
 	starttick: 0,
 	teamnames: [],
 	teamcolors: [],
-	drawevent: null,
+	drawevent: false,
 	killinfo: [],
 	drawdata: {
 		time: {
@@ -60,33 +60,35 @@ let roundinfo = {
 	// roundinfo.roundtimetext = new cText( minutes + ":" + ( seconds >= 10 ? seconds : "0" + seconds ), res.Width / 2, res.Height * 0.02, 0, 255, 255, 255, 255, 0, 1, true );
 
 function drawRoundInfo() {
+	if ( roundinfo.drawevent ) {
+		// Time //
+		let tick = getTick();
+		let fullseconds = Math.ceil( ( roundinfo.roundtime - ( tick - roundinfo.starttick ) ) / 1000 )
+		let minutes = Math.floor( fullseconds / 60 );
+		let seconds = fullseconds % 60;
+		let tdata = roundinfo.drawdata.time.text;
+		let trdata = roundinfo.drawdata.time.rectangle;
+		mp.game.graphics.drawText( minutes + ":" + ( seconds >= 10 ? seconds : "0" + seconds ), 1, { r: tdata.r, g: tdata.g, b: tdata.b, a: tdata.a }, tdata.scale, tdata.scale, trdata.xpos + trdata.width / 2, tdata.ypos, true );
+		mp.game.graphics.drawRect( trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.r, trdata.g, trdata.b, trdata.a );
 
-	// Time //
-	let tick = getTick();
-	let fullseconds = Math.ceil ( ( roundinfo.roundtime - ( tick - roundinfo.starttick ) ) / 1000 )
-	let minutes = Math.floor( fullseconds / 60 );
-	let seconds = fullseconds % 60;
-	let tdata = roundinfo.drawdata.time.text;
-	let trdata = roundinfo.drawdata.time.rectangle;
-	API.drawText( minutes + ":" + ( seconds >= 10 ? seconds : "0" + seconds ), trdata.xpos + trdata.width / 2, tdata.ypos, tdata.scale, tdata.r, tdata.g, tdata.b, tdata.a, 0, 1, true, true, 0 );
-	API.drawRectangle( trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.r, trdata.g, trdata.b, trdata.a );
-
-	// Teams //
-	let teamdata = roundinfo.drawdata.team.text;
-	let teamrdata = roundinfo.drawdata.team.rectangle;
-	let leftteamamount = Math.ceil( roundinfo.teamnames.length / 2 );
-	for ( let i = 0; i < leftteamamount; i++ ) {
-		let startx = trdata.xpos - teamrdata.width * ( i + 1 );
-		API.drawText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, teamdata.scale, teamdata.r, teamdata.g, teamdata.b, teamdata.a, 0, 1, true, true, 0 );
-		API.drawRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a );
-	}
-	for ( let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++ ) {
-		let startx = trdata.xpos + trdata.width + teamrdata.width * j;
-		let i = leftteamamount + j;
-		API.drawText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, teamdata.scale, teamdata.r, teamdata.g, teamdata.b, teamdata.a, 0, 1, true, true, 0 );
-		API.drawRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a );
+		// Teams //
+		let teamdata = roundinfo.drawdata.team.text;
+		let teamrdata = roundinfo.drawdata.team.rectangle;
+		let leftteamamount = Math.ceil( roundinfo.teamnames.length / 2 );
+		for ( let i = 0; i < leftteamamount; i++ ) {
+			let startx = trdata.xpos - teamrdata.width * ( i + 1 );
+			mp.game.graphics.drawText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], 1, { r: teamdata.r, g: teamdata.g, b: teamdata.b, a: teamdata.a }, teamdata.scale, teamdata.scale, startx + teamrdata.width / 2, teamdata.ypos, true );
+			mp.game.graphics.drawRect( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a );
+		}
+		for ( let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++ ) {
+			let startx = trdata.xpos + trdata.width + teamrdata.width * j;
+			let i = leftteamamount + j;
+			mp.game.graphics.drawText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], { r: teamdata.r, g: teamdata.g, b: teamdata.b, a: teamdata.a }, teamdata.scale, teamdata.scale, startx + teamrdata.width / 2, 1, teamdata.ypos, true );
+			mp.game.graphics.drawRect( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a );
+		}
 	}
 }
+mp.events.add( "render", drawRoundInfo );
 
 function setRoundTimeLeft( lefttime ) {
 	roundinfo.starttick = getTick() - ( roundinfo.roundtime - lefttime ); 
@@ -102,9 +104,9 @@ mp.events.add ( "render", function () {
 			let tickwasted = tick - roundinfo.killinfo[i].starttick;
 			let data = roundinfo.drawdata.kills;
 			if ( tickwasted < data.showtick ) {
-				let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil (( data.showtick - tickwasted ) / ( data.showtick - data.fadeaftertick ) * 255 );
+				let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil( ( data.showtick - tickwasted ) / ( data.showtick - data.fadeaftertick ) * 255 );
 				let counter = length - i - 1;
-				API.drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, data.scale, 255, 255, 255, alpha, 0, 2, true, true, 0 );
+				mp.game.graphics.drawText( roundinfo.killinfo[i].killstr, 2, { r: 255, g: 255, b: 255, a: alpha }, data.scale, data.scale, data.xpos, data.ypos + counter * data.height, true );
 			} else {
 				roundinfo.killinfo.splice( 0, i + 1 );
 				break;
@@ -117,17 +119,14 @@ mp.events.add ( "render", function () {
 function removeRoundInfo() {
 	roundinfo.amountinteams = [];
 	roundinfo.aliveinteams = [];
-	if ( roundinfo.drawevent != null ) {
-		roundinfo.drawevent.disconnect();
-		roundinfo.drawevent = null;
-	}
+	roundinfo.drawevent = false;
 }
 
 function roundStartedRoundInfo( args ) {
 	roundinfo.starttick = getTick();
 	if ( 2 in args )
 		roundinfo.starttick -= args[2];
-	roundinfo.drawevent = API.onUpdate.connect( drawRoundInfo );
+	roundinfo.drawevent = true;
 }
 
 function addTeamInfos ( teamnames,  teamcolors ) {

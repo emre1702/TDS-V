@@ -2,15 +2,16 @@ namespace TDS.server.instance.map {
 
 	using System.Collections.Generic;
 	using GTANetworkAPI;
+    using TDS.server.enums;
 
-	class Map {
+    class Map {
 		public string Name = "unknown";
-		public string Type = "normal";
-		public Dictionary<string, string> Description = new Dictionary<string, string> {
+		public MapType Type = MapType.NORMAL;
+		public Dictionary<Language, string> Description = new Dictionary<Language, string> {
 			{
-				"english", "No info available."
+                Language.ENGLISH, "No info available."
 			}, {
-				"german", "Keine Info verfügbar."
+                Language.GERMAN, "Keine Info verfügbar."
 			}
 		};
 		public Dictionary<uint, List<Vector3>> TeamSpawns = new Dictionary<uint, List<Vector3>> ();

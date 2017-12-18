@@ -6,29 +6,36 @@
 	using player;
 	using extend;
 	using utility;
+    using TDS.server.instance.lobby;
 
-	internal partial class Damagesys {
+    internal partial class Damagesys {
 
-		private static readonly Dictionary<Client, Timer> deadTimer = new Dictionary<Client, Timer> ();
+		private static readonly Dictionary<Client, Timer> sDeadTimer = new Dictionary<Client, Timer> ();
 		public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint> (),
 										PlayerKills = new Dictionary<Client, uint> ();
 
-		private void OnPlayerDeath ( Client player, NetHandle entityKiller, int weapon ) {
-			if ( !deadTimer.ContainsKey ( player ) ) {
+		private void OnPlayerDeath ( Client player, NetHandle entityKiller, uint weapon, CancelEventArgs cancel ) {
+            cancel.Cancel = true;
+
+            if ( !sDeadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
-				Damagesys dmgsys = character.Lobby.DmgSys;
+
+                if ( !( character.Lobby is FightLobby lobby ) )
+                    return;
+
+				Damagesys dmgsys = lobby.DmgSys;
 
 				player.TriggerEvent ( "clientPlayerDeathNatives" );
 
 				player.Freeze ( true );
-				deadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000 ) );
-				Client killer = this.API.GetPlayerFromHandle ( entityKiller ) ??
-								character.Lobby.DmgSys.GetLastHitter ( player, character );
+                sDeadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000 ) );
+				Client killer = API.GetPlayerFromHandle ( entityKiller ) ??
+                                dmgsys.GetLastHitter ( player, character );
 
 				dmgsys.PlayerSpree.Remove ( player );
 
 				if ( character.Lifes > 0 ) {
-					character.Lobby.OnPlayerDeath ( player, killer, weapon, character );
+                    lobby.OnPlayerDeath ( player, killer, weapon, character );
 
 					// Kill //
 					if ( killer != null ) {
@@ -46,22 +53,22 @@
 						// Death //
 						character.Deaths++;
 						// Assist //
-						character.Lobby.DmgSys.CheckForAssist ( player, character, killer );
+						dmgsys.CheckForAssist ( player, character, killer );
 					}
 				}
 			}
 		}
 
 		private static void SpawnAfterDeath ( Client player ) {
-			deadTimer.Remove ( player, out Timer timer );
+            sDeadTimer.Remove ( player, out Timer timer );
 			timer.Kill ();
 			if ( player.Exists )
 				player.TriggerEvent ( "onClientPlayerRespawn" );
 		}
 
 		private void CheckForAssist ( Client player, Character character, Client killer ) {
-			if ( this.AllHitters.ContainsKey ( player ) ) {
-				uint halfarmorhp = ( character.Lobby.Armor + character.Lobby.Health ) / 2;
+			if ( AllHitters.ContainsKey ( player ) ) {
+				uint halfarmorhp = ( lobby.Armor + lobby.Health ) / 2;
 				foreach ( KeyValuePair<Client, int> entry in this.AllHitters[player] ) {
 					Client target = entry.Key;
 					if ( entry.Value >= halfarmorhp ) {
@@ -69,10 +76,9 @@
 						if ( target.Exists && targetcharacter.Lobby == character.Lobby && killer != target ) {
 							targetcharacter.Assists++;
 							target.SendLangNotification ( "got_assist", player.Name );
-							Damagesys dmgsys = character.Lobby.DmgSys;
-							if ( !dmgsys.PlayerAssists.ContainsKey ( target ) )
-								dmgsys.PlayerAssists[target] = 0;
-							dmgsys.PlayerAssists[target]++;
+							if ( !PlayerAssists.ContainsKey ( target ) )
+								PlayerAssists[target] = 0;
+							PlayerAssists[target]++;
 						}
 						if ( killer != target ||
 							halfarmorhp % 2 != 0 ||

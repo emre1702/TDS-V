@@ -49,10 +49,5 @@
 			}
 			return resthparmor;
 		}
-
-		public static void PlayerAmountInFightSync ( this Client player, List<uint> amountinteam, List<uint> amountaliveinteam ) {
-			player.TriggerEvent ( "onClientPlayerAmountInFightSync", amountinteam, true, amountaliveinteam );
-		}
 	}
-
 }

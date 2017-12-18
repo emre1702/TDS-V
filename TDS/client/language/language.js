@@ -142,12 +142,13 @@ function getLang(type, str = null) {
 }
 function changeLanguage(lang) {
     languagesetting = lang;
-    API.triggerServerEvent("onPlayerLanguageChange", lang);
+    mp.events.callRemote("onPlayerLanguageChange", lang);
     changeMapCreatorLanguage();
 }
-API.onResourceStart.connect(function () {
-    var langnumber = API.returnNative("3160758157564346030", 0);
+function loadLanguage() {
+    var langnumber = mp.game.invoke("3160758157564346030", 0);
     if (langnumber == 2)
         languagesetting = "german";
     createMapCreator();
-});
+}
+loadLanguage();

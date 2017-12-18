@@ -38,3 +38,11 @@ mp.keys.bind( 0x23, true, function ( sender, e ) {	// end
 		nothidecursor = 1;
 	}
 } );
+
+function getPlayerByName( name: string ) {
+	mp.players.forEach( ( player, index ) => {
+		if ( player.name == name )
+			return player;
+	} );
+	return null;
+}

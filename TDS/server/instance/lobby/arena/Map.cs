@@ -4,47 +4,33 @@ namespace TDS.server.instance.lobby {
 	using System.Threading.Tasks;
 	using GTANetworkAPI;
 	using map;
-	using utility;
+    using TDS.server.enums;
+    using utility;
 
-	partial class Lobby {
+	partial class Arena {
 
-		private static readonly Dictionary<uint, Lobby> dimensionsUsed = new Dictionary<uint, Lobby> ();
+		private static readonly Dictionary<uint, Lobby> sDimensionsUsed = new Dictionary<uint, Lobby> ();
 		private Queue<string> mapNames;
-		private Dictionary<string, List<string>> mapDescriptions;
+		private Dictionary<Language, List<string>> mapDescriptions;
 
 		private readonly Dictionary<uint, uint> spawnCounter = new Dictionary<uint, uint> ();
 		private uint dimension;
 		private Map currentMap;
-		private Timer roundStartTimer,
-						countdownTimer,
-						roundEndTimer;
 		private List<Blip> mapBlips = new List<Blip> ();
 		private Vector3 spawnpoint = new Vector3 ( 0, 0, 1000 ),
 						spawnrotation;
 
 		public void AddMapList ( List<string> newmapnames ) {
-			this.mapNames = new Queue<string> ( newmapnames );
+			mapNames = new Queue<string> ( newmapnames );
 		}
 
-		public void AddMapDescriptions ( Dictionary<string, List<string>> mapdescriptions ) {
-			this.mapDescriptions = new Dictionary<string, List<string>> ( mapdescriptions );
-		}
-
-		private uint GetDimension () {
-			if ( this.playersInOwnDimension ) {
-				uint dim = 1;
-				while ( dimensionsUsed.ContainsKey ( dim ) )
-					dim++;
-				this.dimension = dim;
-				dimensionsUsed[dim] = this;
-				return dim;
-			}
-			return this.dimension;
+		public void AddMapDescriptions ( Dictionary<Language, List<string>> mapdescriptions ) {
+			mapDescriptions = new Dictionary<Language, List<string>> ( mapdescriptions );
 		}
 
 		public async Task<Map> GetRandomMap () {
 			string mapname = this.mapNames.Dequeue ();
-			this.mapNames.Enqueue ( mapname );
+			mapNames.Enqueue ( mapname );
 			return await manager.map.Map.GetMapClass ( mapname, this ).ConfigureAwait ( false );
 		}
 
@@ -63,9 +49,9 @@ namespace TDS.server.instance.lobby {
 
 		private void CreateTeamSpawnBlips () {
 			foreach ( KeyValuePair<uint, List<Vector3>> entry in this.currentMap.TeamSpawns ) {
-				Blip blip = API.CreateBlip ( entry.Value[0], this.dimension );
+				Blip blip = NAPI.Blip.CreateBlip ( entry.Value[0], this.dimension );
 				blip.Sprite = 491;
-				blip.Color = this.teamBlipColors[(int)entry.Key];
+				blip.Color = teamBlipColors[(int)entry.Key];
 				blip.Name = "Spawn " + this.Teams[(int)entry.Key];
 				this.mapBlips.Add ( blip );
 			}
@@ -73,7 +59,7 @@ namespace TDS.server.instance.lobby {
 
 		private void CreateMapLimitBlips () {
 			foreach ( Vector3 maplimit in this.currentMap.MapLimits ) {
-				Blip blip = this.API.CreateBlip ( maplimit, this.dimension );
+				Blip blip = NAPI.Blip.CreateBlip ( maplimit, this.dimension );
 				blip.Sprite = 441;
 				blip.Name = "Limit";
 				this.mapBlips.Add ( blip );

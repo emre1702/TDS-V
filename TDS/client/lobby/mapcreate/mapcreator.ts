@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../types-ragemp/index.d.ts" />
 
-let mapcreatordata = {
+/* let mapcreatordata = {
 	main: {
 		menu: null as NativeUI.UIMenu,
 		send: null as NativeUI.UIMenuColoredItem,
@@ -320,4 +320,4 @@ function changeMapCreatorLanguage() {
 	mapcreatordata.maplimit.add.Text = getLang( "mapcreator_menu", "maplimit_add_text" );
 	mapcreatordata.maplimit.add.Description = getLang( "mapcreator_menu", "maplimit_add_description" );
 }
-
+*/

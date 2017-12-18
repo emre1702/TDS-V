@@ -1,6 +1,6 @@
 /// <reference path="types-ragemp/index.d.ts" />
 
-function createScoreboard() {	 
+/* function createScoreboard() {	 
 	var playertable = [];
 	var playertablelength = 0;
 	var scroll = 0;
@@ -45,8 +45,8 @@ function createScoreboard() {
 	var inmainmenu = false;
 
 	function drawPlayerList ( ) {
-		API.disableControlThisFrame ( 16 );
-		API.disableControlThisFrame ( 17 );
+		//API.disableControlThisFrame ( 16 );
+		//API.disableControlThisFrame ( 17 );
 		var language = getLang( "scoreboard" );
 		var v = playerlistdata;
 		var len = playertablelength;
@@ -59,21 +59,21 @@ function createScoreboard() {
 
 		// [[ TITEL ]] //
 		// HINTERGRUND //
-		API.drawRectangle ( startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor[0], v.titlerectanglecolor[1], v.titlerectanglecolor[2], v.titlerectanglecolor[3] );
+		mp.game.graphics.drawRect( startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor[0], v.titlerectanglecolor[1], v.titlerectanglecolor[2], v.titlerectanglecolor[3] );
 		// SCHRIFTEN //
 		var lastwidthstitle = 0;
 		var titleslength = playerlisttitles.length;
 		for ( let i = 0; i < titleslength - 1; i++ ) {
 			if ( playerlisttitles[i] == "team" && inmainmenu )
-				API.drawText( language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, true, true, 0 );
+				mp.game.graphics.drawText( language[playerlisttitles[i + 1]], v.titlefont, { r: v.titlefontcolor[0], g: v.titlefontcolor[1], b: v.titlefontcolor[2], a: v.titlefontcolor[3] }, v.titlefontscale, v.titlefontscale, startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, true );
 			else 
-				API.drawText( language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, v.titlefontscale, v.titlefontcolor[0], v.titlefontcolor[1], v.titlefontcolor[2], v.titlefontcolor[3], v.titlefont, 1, true, true, 0 );
+				mp.game.graphics.drawText( language[playerlisttitles[i]], v.titlefont, { r: v.titlefontcolor[0], g: v.titlefontcolor[1], b: v.titlefontcolor[2], a: v.titlefontcolor[3] }, v.titlefontscale, v.titlefontscale, startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, true );
 			lastwidthstitle += v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]]*v.completewidth;
 		}
 
 		// [[ INHALT ]] //
 		// HINTERGRUND //
-		API.drawRectangle ( startX, startY, v.completewidth, len*v.columnheight, v.rectanglecolor[0], v.rectanglecolor[1], v.rectanglecolor[2], v.rectanglecolor[3] );
+		mp.game.graphics.drawRect ( startX, startY, v.completewidth, len*v.columnheight, v.rectanglecolor[0], v.rectanglecolor[1], v.rectanglecolor[2], v.rectanglecolor[3] );
 		// SCHRIFTEN //
 		let notshowcounter = 0;
 		for ( var i = 0 + scroll; i < len + scroll; i++ ) {
@@ -81,25 +81,25 @@ function createScoreboard() {
 				var lastwidths = 0;
 				for ( let j = 0; j < titleslength - 1; j++ ) {
 					var index = playerlisttitlesindex[playerlisttitles[j]];
-					API.drawText( playertable[i][index], startX + lastwidths + v.columnwidthpercent[index] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
+					mp.game.graphics.drawText ( playertable[i][index], startX + lastwidths + v.columnwidthpercent[index] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
 					lastwidths += v.columnwidthpercent[index] * v.completewidth;
 				}
 			} else {
-				API.drawText( otherlobbytable[notshowcounter].name + " (" + otherlobbytable[notshowcounter].amount + ")", startX + v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
+				mp.game.graphics.drawText ( otherlobbytable[notshowcounter].name + " (" + otherlobbytable[notshowcounter].amount + ")", startX + v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
 				notshowcounter++;
 			}	
 		}
 		// SCROLLBAR //
 		if ( len < playertablelength ) {
-			API.drawRectangle ( startX + lastwidthstitle, titleStartY, v.scrollbarwidth, len*v.columnheight+v.titleheight, v.scrollbarbackcolor[0], v.scrollbarbackcolor[1], v.scrollbarbackcolor[2], v.scrollbarbackcolor[3] );
+			mp.game.graphics.drawRect ( startX + lastwidthstitle, titleStartY, v.scrollbarwidth, len*v.columnheight+v.titleheight, v.scrollbarbackcolor[0], v.scrollbarbackcolor[1], v.scrollbarbackcolor[2], v.scrollbarbackcolor[3] );
 			var amountnotshown = playertablelength-len;
             var scrollbarheight = len * v.columnheight / ( amountnotshown + 1 );
-			API.drawRectangle ( startX + lastwidthstitle, startY + scroll*scrollbarheight, v.scrollbarwidth, scrollbarheight, v.scrollbarcolor[0], v.scrollbarcolor[1], v.scrollbarcolor[2], v.scrollbarcolor[3] );
+			mp.game.graphics.drawRect ( startX + lastwidthstitle, startY + scroll*scrollbarheight, v.scrollbarwidth, scrollbarheight, v.scrollbarcolor[0], v.scrollbarcolor[1], v.scrollbarcolor[2], v.scrollbarcolor[3] );
 		}
 
 		// [[ BOTTOM ]] //
 		// HINTERGRUND //
-		API.drawRectangle ( startX, bottomStartY, v.completewidth, v.bottomheight, v.bottomrectanglecolor[0], v.bottomrectanglecolor[1], v.bottomrectanglecolor[2], v.bottomrectanglecolor[3] );
+		mp.game.graphics.drawRect ( startX, bottomStartY, v.completewidth, v.bottomheight, v.bottomrectanglecolor[0], v.bottomrectanglecolor[1], v.bottomrectanglecolor[2], v.bottomrectanglecolor[3] );
 
 
         if ( playertablelength - playerlistdata.maxplayers > 0 ) {
@@ -116,7 +116,7 @@ function createScoreboard() {
 
     API.onKeyDown.connect( function ( sender, e ) {
         if ( !API.isChatOpen() ) {
-            if ( API.isControlJustPressed( 20 /* MultiplayerInfo */ ) && playerlistevent === null ) {
+            if ( API.isControlJustPressed( 20 ) && playerlistevent === null ) {  // MultiplayerInfo
                 playerlistopenkey = e.KeyCode;
                 scroll = 0;
 				var tick = getTick();
@@ -126,7 +126,7 @@ function createScoreboard() {
                     lastplayerlisttrigger = tick;
                     playertablelength = 0;
 					playertable = [];
-                    API.triggerServerEvent( "onClientRequestPlayerListDatas" );
+                    mp.events.callRemote( "onClientRequestPlayerListDatas" );
                     playerlistevent = API.onUpdate.connect( drawPlayerList );
                 } else {
                     playerlistevent = API.onUpdate.connect( drawPlayerList );
@@ -206,4 +206,4 @@ function createScoreboard() {
 		}
     } );
 }
-createScoreboard();
+createScoreboard(); */

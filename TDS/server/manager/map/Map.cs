@@ -10,7 +10,8 @@
 	using GTANetworkAPI;
 	using instance.lobby;
 	using logs;
-	using utility;
+    using TDS.server.enums;
+    using utility;
 
 	static class Map {
 
@@ -19,18 +20,18 @@
 
 		public static List<string> NormalMapNames = new List<string> ();
 		public static List<string> BombMapNames = new List<string> ();
-		public static Dictionary<string, List<string>> NormalMapDescriptions = new Dictionary<string, List<string>> {
+		public static Dictionary<Language, List<string>> NormalMapDescriptions = new Dictionary<Language, List<string>> {
 			{
-				"english", new List<string> ()
+                Language.ENGLISH, new List<string> ()
 			}, {
-				"german", new List<string> ()
+                Language.GERMAN, new List<string> ()
 			}
 		};
-		public static Dictionary<string, List<string>> BombMapDescriptions = new Dictionary<string, List<string>> {
+		public static Dictionary<Language, List<string>> BombMapDescriptions = new Dictionary<Language, List<string>> {
 			{
-				"english", new List<string> ()
+                Language.ENGLISH, new List<string> ()
 			}, {
-				"german", new List<string> ()
+                Language.GERMAN, new List<string> ()
 			}
 		};
 		public static ConcurrentDictionary<string, string> MapByName = new ConcurrentDictionary<string, string> ();
@@ -49,15 +50,15 @@
 					if ( await map.AddInfos ( filename ).ConfigureAwait ( false ) ) {
 						if ( map.Name != null ) {
 							switch ( map.Type ) {
-								case "normal":
+								case MapType.NORMAL:
 									NormalMapNames.Add ( map.Name );
-									NormalMapDescriptions["english"].Add ( map.Description["english"] );
-									NormalMapDescriptions["german"].Add ( map.Description["german"] );
+									NormalMapDescriptions[Language.ENGLISH].Add ( map.Description[Language.ENGLISH] );
+									NormalMapDescriptions[Language.GERMAN].Add ( map.Description[Language.GERMAN] );
 									break;
-								case "bomb":
+								case MapType.BOMB:
 									BombMapNames.Add ( map.Name );
-									BombMapDescriptions["english"].Add ( map.Description["english"] );
-									BombMapDescriptions["german"].Add ( map.Description["german"] );
+									BombMapDescriptions[Language.ENGLISH].Add ( map.Description[Language.ENGLISH] );
+									BombMapDescriptions[Language.GERMAN].Add ( map.Description[Language.GERMAN] );
 									break;
 							}
 
@@ -110,9 +111,9 @@
 							if ( reader.Name == "map" ) {
 								map.Name = reader["name"];
 								if ( reader.GetAttribute ( "type" ) != null )
-									map.Type = reader["type"];
+									map.Type = reader["type"] == "normal" ? MapType.NORMAL : MapType.BOMB;
 							} else if ( reader.Name == "english" || reader.Name == "german" ) {
-								map.Description[reader.Name] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
+								map.Description[reader.Name == "english" ? Language.ENGLISH : Language.GERMAN] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
 							} else if ( reader.Name == "limit" ) {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
 								map.MapLimits.Add ( pos );
@@ -150,7 +151,7 @@
 			}
 		}
 
-		public static async Task<instance.map.Map> GetMapClass ( string mapname, Lobby lobby ) {
+		public static async Task<instance.map.Map> GetMapClass ( string mapname, Arena lobby ) {
 			instance.map.Map map = new instance.map.Map ();
 			if ( await map.AddInfos ( MapByName[mapname] ).ConfigureAwait ( false ) ) {
 				return map;

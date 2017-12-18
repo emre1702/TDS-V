@@ -10,77 +10,77 @@
 
 	internal partial class Damagesys {
 
-		private static readonly Dictionary<int, int> damageDictionary = new Dictionary<int, int> {
+		private static readonly Dictionary<WeaponHash, int> sDamageDictionary = new Dictionary<WeaponHash, int> {
 			//[ Handguns ]//
-			[453432689] = 26, //Pistol
-			[1593441988] = 27, //CombatPistol
-			[-1716589765] = 51, //Pistol50
-			[-1076751822] = 28, //SNSPistol
-			[-771403250] = 40, //HeavyPistol
-			[137902532] = 34, //VintagePistol
-			[-598887786] = 150, //MarksmanPistol
-			[-1045183535] = 110, //Revolver
-			[584646201] = 28, //ApBistol
-			[911657153] = 0, //Stun Gun	- Geändert
-			[1198879012] = 0, //Flare Gun	- Geändert
+			[WeaponHash.Pistol] = 26, //Pistol
+			[WeaponHash.CombatPistol] = 27, //CombatPistol
+			[WeaponHash.Pistol50] = 51, //Pistol50
+			[WeaponHash.SNSPistol] = 28, //SNSPistol
+			[WeaponHash.HeavyPistol] = 40, //HeavyPistol
+			[WeaponHash.VintagePistol] = 34, //VintagePistol
+			[WeaponHash.MarksmanPistol] = 150, //MarksmanPistol
+			[WeaponHash.Revolver] = 110, //Revolver
+			[WeaponHash.APPistol] = 28, //ApPistol
+			[WeaponHash.StunGun] = 0, //Stun Gun	- Geändert
+			[WeaponHash.FlareGun] = 0, //Flare Gun	- Geändert
 
 			//[ Machine Guns ]//
-			[324215364] = 21, //MicroSMG
-			[-619010992] = 20, //MachinePistol - Geändert
-			[736523883] = 22, //SMG
-			[-270015777] = 23, //AssaultSMG
-			[171789620] = 28, //CombatPWD
-			[-1660422300] = 40, //MG
-			[2144741730] = 28, //CombatMG
-			[1627465347] = 34, //Gusenberg
-			[-1121678507] = 22, //MiniSMG
+			[WeaponHash.MicroSMG] = 21, //MicroSMG
+			[WeaponHash.MachinePistol] = 20, //MachinePistol - Geändert
+			[WeaponHash.SMG] = 22, //SMG
+			[WeaponHash.AssaultSMG] = 23, //AssaultSMG
+			[WeaponHash.CombatPDW] = 28, //CombatPWD
+			[WeaponHash.MG] = 40, //MG
+			[WeaponHash.CombatMG] = 28, //CombatMG
+			[WeaponHash.Gusenberg] = 34, //Gusenberg
+			[WeaponHash.MiniSMG] = 22, //MiniSMG
 
 			//[ Assault Rifles ]//
-			[-1074790547] = 30, //AssaultRifle
-			[-2084633992] = 32, //CarbineRifle
-			[-1357824103] = 34, //AdvancedRifle
-			[-1063057011] = 32, //SpecialCarbine
-			[2132975508] = 32, //BullpupRifle
-			[1649403952] = 34, //CompactRifle
+			[WeaponHash.AssaultRifle] = 30, //AssaultRifle
+			[WeaponHash.CarbineRifle] = 32, //CarbineRifle
+			[WeaponHash.AdvancedRifle] = 34, //AdvancedRifle
+			[WeaponHash.SpecialCarbine] = 32, //SpecialCarbine
+			[WeaponHash.BullpupRifle] = 32, //BullpupRifle
+			[WeaponHash.CompactRifle] = 34, //CompactRifle
 
 			//[ Sniper Rifles ]//
-			[100416529] = 101, //SniperRifle
-			[205991906] = 216, //HeavySniper
-			[-952879014] = 65, //MarksmanRifle
+			[WeaponHash.SniperRifle] = 101, //SniperRifle
+			[WeaponHash.HeavySniper] = 216, //HeavySniper
+			[WeaponHash.MarksmanRifle] = 65, //MarksmanRifle
 
 			//[ Shotguns ]//
-			[487013001] = 2 * 29, //PumpShotgun
-			[2017895192] = 8 * 40, //SawnoffShotgun
-			[-1654528753] = 8 * 14, //BullpupShotgun
-			[-494615257] = 6 * 32, //AssaultShotgun
-			[-1466123874] = 165, //Musket
-			[984333226] = 117, //HeavyShotgun
-			[-275439685] = 166, //DoubleBarrelShotgun - Geändert
-			[317205821] = 6 * 27, //SweeperShotgun
+			[WeaponHash.PumpShotgun] = 2 * 29, //PumpShotgun
+			[WeaponHash.SawnOffShotgun] = 8 * 40, //SawnoffShotgun
+			[WeaponHash.BullpupShotgun] = 8 * 14, //BullpupShotgun
+			[WeaponHash.AssaultShotgun] = 6 * 32, //AssaultShotgun
+			[WeaponHash.Musket] = 165, //Musket
+			[WeaponHash.HeavyShotgun] = 117, //HeavyShotgun
+			[WeaponHash.DoubleBarrelShotgun] = 166, //DoubleBarrelShotgun - Geändert
+			[WeaponHash.SweeperShotgun] = 6 * 27, //SweeperShotgun
 
 			//[ Heavy Weapons ]//
-			[-1568386805] = 0, //GrenadeLauncher - Geändert, da kA
-			[-1312131151] = 0, //RPG - Geändert, da kA
-			[1119849093] = 30, //Minigun
-			[2138347493] = 0, //Firework - Geändert, da kA
-			[1834241177] = 0, //Railgun - Geändert, da kA
-			[1672152130] = 0, //HomingLauncher - Geändert, da kA
-			[1305664598] = 0, //GrenadeLauncherSmoke - Geändert, da kA
-			[125959754] = 0, //CompactLauncher - Geändert, da kA
+			[WeaponHash.GrenadeLauncher] = 0, //GrenadeLauncher - Geändert, da kA
+			[WeaponHash.RPG] = 0, //RPG - Geändert, da kA
+			[WeaponHash.Minigun] = 30, //Minigun
+			[WeaponHash.Firework] = 0, //Firework - Geändert, da kA
+			[WeaponHash.Railgun] = 0, //Railgun - Geändert, da kA
+			[WeaponHash.HomingLauncher] = 0, //HomingLauncher - Geändert, da kA
+			[WeaponHash.GrenadeLauncherSmoke] = 0, //GrenadeLauncherSmoke - Geändert, da kA
+			[WeaponHash.CompactGrenadeLauncher] = 0, //CompactLauncher - Geändert, da kA
 
 			//[ Thrown Weapons ]//
-			[-1813897027] = 0, //Grenade - Geändert, da kA
-			[741814745] = 0, //StickyBomb - Geändert, da kA
-			[-1420407917] = 0, //ProximityMine - Geändert, da kA
-			[-1600701090] = 0, //BZGas - Geändert, da kA
-			[615608432] = 0, //Molotov - Geändert, da kA
-			[101631238] = 0, //FireExtinguisher - Geändert, da kA
-			[883325847] = 0, //PetrolCan - Geändert, da kA
-			[1233104067] = 0, //Flare - Geändert, da kA
-			[600439132] = 0, //Ball - Geändert, da kA
-			[126349499] = 0, //Snowball - Geändert, da kA
-			[-37975472] = 0, //SmokeGrenade - Geändert, da kA
-			[-1169823560] = 0, //Pipebomb - Geändert, da kA
+			[WeaponHash.Grenade] = 0, //Grenade - Geändert, da kA
+			[WeaponHash.StickyBomb] = 0, //StickyBomb - Geändert, da kA
+			[WeaponHash.ProximityMine] = 0, //ProximityMine - Geändert, da kA
+			[WeaponHash.BZGas] = 0, //BZGas - Geändert, da kA
+			[WeaponHash.Molotov] = 0, //Molotov - Geändert, da kA
+			[WeaponHash.FireExtinguisher] = 0, //FireExtinguisher - Geändert, da kA
+			[WeaponHash.PetrolCan] = 0, //PetrolCan - Geändert, da kA
+			[WeaponHash.Flare] = 0, //Flare - Geändert, da kA
+			[WeaponHash.Ball] = 0, //Ball - Geändert, da kA
+			[WeaponHash.Snowball] = 0, //Snowball - Geändert, da kA
+			[WeaponHash.SmokeGrenade] = 0, //SmokeGrenade - Geändert, da kA
+			[WeaponHash.PipeBomb] = 0, //Pipebomb - Geändert, da kA
 
 			//[ Gunrunning ]//
 			/*[API.Shared.GetHashKey ( "WEAPON_PISTOL_MK2" )] = 26,
@@ -89,31 +89,31 @@
 			[API.Shared.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" )] = 32,
 			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28  */
 		};
-		private static readonly Dictionary<int, float> headMultiplicator = new Dictionary<int, float> {
-			[100416529] = 5.0f,
-			[205991906] = 5.0f,
-			[-952879014] = 5.0f
+		private static readonly Dictionary<WeaponHash, float> sHeadMultiplicator = new Dictionary<WeaponHash, float> {
+			[WeaponHash.SniperRifle] = 5.0f,
+			[WeaponHash.HeavySniper] = 5.0f,
+			[WeaponHash.MarksmanRifle] = 5.0f
 		};
-		private readonly Dictionary<int, int> customDamageDictionary = new Dictionary<int, int> ();
-		private readonly Dictionary<int, float> customHeadMultiplicator = new Dictionary<int, float> ();
+		private readonly Dictionary<WeaponHash, int> customDamageDictionary = new Dictionary<WeaponHash, int> ();
+		private readonly Dictionary<WeaponHash, float> customHeadMultiplicator = new Dictionary<WeaponHash, float> ();
 
 		public Dictionary<Client, Dictionary<Client, int>> AllHitters = new Dictionary<Client, Dictionary<Client, int>> ();
 		public Dictionary<Client, Client> LastHitterDictionary = new Dictionary<Client, Client> ();
 		public Dictionary<Client, int> PlayerDamage = new Dictionary<Client, int> ();
 
 
-		private int GetDamage ( int hash, bool headshot ) {
+		private int GetDamage ( WeaponHash hash, bool headshot ) {
 			int damage = 0;
-			if ( this.customDamageDictionary.ContainsKey ( hash ) )
-				damage = this.customDamageDictionary[hash];
-			else if ( damageDictionary.ContainsKey ( hash ) )
-				damage = damageDictionary[hash];
+			if ( customDamageDictionary.ContainsKey ( hash ) )
+				damage = customDamageDictionary[hash];
+			else if ( sDamageDictionary.ContainsKey ( hash ) )
+				damage = sDamageDictionary[hash];
 			if ( damage > 0 )
 				if ( headshot )
-					if ( this.customHeadMultiplicator.ContainsKey ( hash ) )
-						damage = (int) Math.Floor ( damage * this.customHeadMultiplicator[hash] );
-					else if ( headMultiplicator.ContainsKey ( hash ) )
-						damage = (int) Math.Floor ( damage * headMultiplicator[hash] );
+					if ( customHeadMultiplicator.ContainsKey ( hash ) )
+						damage = (int) Math.Floor ( damage * customHeadMultiplicator[hash] );
+					else if ( sHeadMultiplicator.ContainsKey ( hash ) )
+						damage = (int) Math.Floor ( damage * sHeadMultiplicator[hash] );
 			return damage;
 		}
 
@@ -139,33 +139,35 @@
 				character.Damage += (uint) damage;
 
 			// Reward //
-			if ( !this.PlayerDamage.ContainsKey ( player ) )
-				this.PlayerDamage[player] = 0;
-			this.PlayerDamage[player] += damage;
+			if ( !PlayerDamage.ContainsKey ( player ) )
+				PlayerDamage[player] = 0;
+			PlayerDamage[player] += damage;
 
 			// Last-Hitter //
 			this.LastHitterDictionary[hitted] = player;
-			if ( !this.AllHitters.ContainsKey ( hitted ) )
-				this.AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
-			if ( !this.AllHitters[hitted].ContainsKey ( player ) )
-				this.AllHitters[hitted][player] += damage;
+			if ( !AllHitters.ContainsKey ( hitted ) )
+				AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
+			if ( !AllHitters[hitted].ContainsKey ( player ) )
+				AllHitters[hitted][player] += damage;
 			else
-				this.AllHitters[hitted][player] = damage;
+				AllHitters[hitted][player] = damage;
 		}
 
-		private void DamagedPlayer ( Client player, Client hitted, int hash, bool headshot ) {
-			if ( this.API.IsPlayerDead ( hitted ) == false && hitted.Dimension == player.Dimension ) {
+		private void DamagedPlayer ( Client player, Client hitted, uint weapon, bool headshot ) {
+			if ( API.IsPlayerDead ( hitted ) == false && hitted.Dimension == player.Dimension ) {
 				Character character = player.GetChar ();
 				if ( character.Team != hitted.GetChar ().Team ) {
-					int damage = this.GetDamage ( hash, headshot );
+                    WeaponHash hash = (WeaponHash) weapon;
+
+                    int damage = this.GetDamage ( hash, headshot );
 
 					if ( damage > 0 ) {
-						this.DamagePlayer ( player, hitted, damage );
+						DamagePlayer ( player, hitted, damage );
 						if ( character.HitsoundOn )
 							player.TriggerEvent ( "onClientPlayerHittedOpponent" );
 						if ( hitted.Health == 0 ) {
 							hitted.Kill ();
-							this.OnPlayerDeath ( hitted, player.Handle, hash );
+							OnPlayerDeath ( hitted, player.Handle, weapon, null );
 						}
 					}
 				}
@@ -177,8 +179,8 @@
 				Client hitted = this.API.GetPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Lobby playerlobby = player.GetChar ().Lobby;
-					if ( playerlobby != MainMenu.TheLobby )
-						playerlobby.DmgSys.DamagedPlayer ( player, hitted, args[1], args[2] );
+					if ( playerlobby is FightLobby fightlobby )
+                        fightlobby.DmgSys.DamagedPlayer ( player, hitted, args[1], args[2] );
 				}
 			}
 		}

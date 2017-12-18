@@ -7,7 +7,8 @@
 	using database;
 	using extend;
 	using GTANetworkAPI;
-	using instance.player;
+    using GTANetworkInternals;
+    using instance.player;
 	using logs;
 	using utility;
 
@@ -19,11 +20,11 @@
 		private static uint lastPlayerUID;
 
 		public Account () {
-			this.API.OnClientEventTrigger += this.OnClientEvent;
-			this.API.OnPlayerDisconnected += this.OnPlayerDisconnected;
-			this.API.OnPlayerConnect += OnPlayerBeginConnect;
-			this.API.OnPlayerConnected += OnPlayerConnected;
-			this.OnResourceStart ();
+			Event.OnClientEventTrigger += OnClientEvent;
+            Event.OnPlayerDisconnected += OnPlayerDisconnected;
+            Event.OnPlayerConnect += OnPlayerBeginConnect;
+            Event.OnPlayerConnected += OnPlayerConnected;
+			OnResourceStart ();
 		}
 
 		private static void SendWelcomeMessage ( Client player ) {
@@ -42,7 +43,7 @@
 			player.SendChatMessage ( msg );
 		}
 
-		private static void OnPlayerConnected ( Client player ) {
+		private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
 			player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
 			player.Freeze ( true );
 			player.Name = player.SocialClubName;
@@ -52,7 +53,7 @@
 			try {
 				switch ( eventName ) {
 					case "onPlayerJoin":
-						this.API.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
+						API.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
 						break;
 
 					case "onPlayerTryRegister":
@@ -88,7 +89,7 @@
 			PlayerUIDs[name] = uid;
 		}
 
-		private static async void OnPlayerBeginConnect ( Client player ) {
+		private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs cancel ) {
 			try {
 				player.Name = player.SocialClubName;
 				if ( socialClubNameBanDict.ContainsKey ( player.SocialClubName ) || addressBanDict.ContainsKey ( player.Address ) ) {
@@ -103,11 +104,13 @@
 						DataRow row = result.Rows[0];
 						if ( row["type"].ToString () == "permanent" ) {
 							player.Kick ( "You are permanently banned by " + row["admin"] + ". Reason: " + row["reason"] );
+                            cancel.Cancel = true;
 							return;
 						}
 						if ( Convert.ToInt32 ( row["endsec"] ) > Utility.GetTimespan () ) {
 							player.Kick ( "You are banned until " + row["endoptic"] + " by " + row["admin"] + ". Reason: " + row["reason"] );
-							return;
+                            cancel.Cancel = true;
+                            return;
 						}
 						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"] ).ConfigureAwait ( false );
 					}
@@ -162,13 +165,13 @@
 			}
 		}
 
-		private async void OnPlayerDisconnected ( Client player, string reason ) {
+		private async void OnPlayerDisconnected ( Client player, byte type, string reason ) {
 			try {
 				await SavePlayerData ( player ).ConfigureAwait ( false );
 				uint adminlvl = player.GetChar ().AdminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
-				this.API.TriggerClientEventForAll ( "onClientPlayerQuit", player );
+				API.TriggerClientEventForAll ( "onClientPlayerQuit", player );
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
 			}
@@ -195,7 +198,7 @@
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
 				addressBanDict[targetaddress] = true;
-			Language.SendMessageToAll ( "permaban", targetname, admin.Name, reason );
+            ServerLanguage.SendMessageToAll ( "permaban", targetname, admin.Name, reason );
 			if ( target != null )
 				target.Kick ( target.GetLang ( "youpermaban", admin.Name, reason ) );
 			// LOG //
@@ -228,7 +231,7 @@
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
 				addressBanDict[targetaddress] = true;
-			Language.SendMessageToAll ( "timeban", targetname, hours.ToString (), admin.Name, reason );
+            ServerLanguage.SendMessageToAll ( "timeban", targetname, hours.ToString (), admin.Name, reason );
 			if ( target != null )
 				target.Kick ( target.GetLang ( "youtimeban", hours.ToString (), admin.Name, reason ) );
 			// LOG //
@@ -244,7 +247,7 @@
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );
 
-			Language.SendMessageToAll ( "unban", targetname, admin.Name, reason );
+            ServerLanguage.SendMessageToAll ( "unban", targetname, admin.Name, reason );
 			// LOG //
 			Log.Admin ( "unban", admin, PlayerUIDs[targetname].ToString (), admin.GetChar ().Lobby.Name );
 			/////////

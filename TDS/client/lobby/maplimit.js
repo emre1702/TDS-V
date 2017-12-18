@@ -29,15 +29,15 @@ function pointIsInPoly(p) {
 function checkMapLimit() {
     log("checkMapLimit start");
     if (maplimitdata.limit != null) {
-        var pos = API.getEntityPosition(API.getLocalPlayer());
+        var pos = mp.players.local.position;
         if (!pointIsInPoly(pos)) {
             maplimitdata.outsidecounter--;
             if (maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null)
-                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), res.Width / 2, res.Height / 2, 1.2, 255, 255, 255, 255, 0, 1);
+                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), res.x / 2, res.y / 2, 1, { r: 255, g: 255, b: 255, a: 255 }, 1.2, 1.2, true);
             else if (maplimitdata.outsidecounter > 0)
                 maplimitdata.outsidetext.setText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter));
             else if (maplimitdata.outsidecounter == 0) {
-                API.triggerServerEvent("onPlayerWasTooLongOutsideMap");
+                mp.events.callRemote("onPlayerWasTooLongOutsideMap");
                 maplimitdata.checktimer.kill();
                 maplimitdata.checktimer = null;
                 maplimitdata.outsidetext.remove();

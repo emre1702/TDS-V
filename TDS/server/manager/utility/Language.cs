@@ -1,17 +1,14 @@
 ﻿namespace TDS.server.manager.utility {
-
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 	using System.Text;
 	using extend;
 	using GTANetworkAPI;
+    using TDS.server.enums;
 
-	static class Language {
-		public static readonly List<string> Languages = new List<string> {
-			"english",
-			"german"
-		};
-		private static readonly Dictionary<string, Dictionary<string, string>> langData = new Dictionary<string, Dictionary<string, string>> {
-			["english"] = new Dictionary<string, string> {
+    static class ServerLanguage {
+		private static readonly Dictionary<Language, Dictionary<string, string>> langData = new Dictionary<Language, Dictionary<string, string>> {
+			[Language.ENGLISH] = new Dictionary<string, string> {
 				["wrong_password"] = "Wrong password!",
 				["account_doesnt_exist"] = "Account doesn't exist!",
 				["too_long_outside_map"] = "You've been too long outside the map!",
@@ -53,7 +50,7 @@
 				["welcome_5"] = "You can get/hide the cursor with END.",
 				["welcome_6"] = "Have fun wishes you the ~b~TDS-Team~w~!"
 			},
-			["german"] = new Dictionary<string, string> {
+			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
 				["account_doesnt_exist"] = "Account existiert nicht!",
 				["too_long_outside_map"] = "Du warst zu lange außerhalb der Map!",
@@ -97,22 +94,22 @@
 			}
 		};
 
-		public static Dictionary<string, string> GetLangDictionary ( string type, params string[] args ) {
-			Dictionary<string, string> returndict = new Dictionary<string, string> ();
-			foreach ( string language in Languages ) {
+		public static Dictionary<Language, string> GetLangDictionary ( string type, params string[] args ) {
+			Dictionary<Language, string> returndict = new Dictionary<Language, string> ();
+			foreach ( Language language in Enum.GetValues ( typeof ( Language ) ) ) {
 				returndict[language] = GetLang ( language, type, args );
 			}
 			return returndict;
 		}
 
 		public static string GetLang ( this Client player, string type, params string[] args ) {
-			string language = player.GetChar ().Language;
+			Language language = player.GetChar ().Language;
 			if ( args.Length == 0 )
 				return langData[language][type];
 			return GetReplaced ( langData[language][type], args );
 		}
 
-		public static string GetLang ( string language, string type, params string[] args ) {
+		public static string GetLang ( Language language, string type, params string[] args ) {
 			if ( args.Length == 0 )
 				return langData[language][type];
 			return GetReplaced ( langData[language][type], args );
@@ -138,7 +135,7 @@
 		}
 
 		public static void SendMessageToAll ( string type, params string[] args ) {
-			Dictionary<string, string> texts = GetLangDictionary ( type, args );
+			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
 			List<Client> players = API.Shared.GetAllPlayers ();
 			foreach ( Client player in players ) {
 				player.SendChatMessage ( texts[player.GetChar ().Language] );
@@ -146,7 +143,7 @@
 		}
 
 		public static void SendNotificationToAll ( string type, params string[] args ) {
-			Dictionary<string, string> texts = GetLangDictionary ( type, args );
+			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
 			List<Client> players = API.Shared.GetAllPlayers ();
 			foreach ( Client player in players ) {
 				API.Shared.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] );

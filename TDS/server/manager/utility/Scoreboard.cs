@@ -8,7 +8,7 @@ namespace TDS.server.manager.utility {
 	class Scoreboard : Script {
 
 		public Scoreboard () {
-			this.API.OnClientEventTrigger += this.OnClientRequestPlayerListDatas;
+			Event.OnClientEventTrigger += OnClientRequestPlayerListDatas;
 		}
 
 		public static string GetHoursOpticByMinutes ( uint minutes ) {

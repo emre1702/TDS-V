@@ -9,7 +9,7 @@
 	class ResourceStop : Script {
 
 		public ResourceStop () {
-			this.API.OnResourceStop += this.OnResourceStop;
+			Event.OnResourceStop += this.OnResourceStop;
 		}
 
 		public void OnResourceStop () {

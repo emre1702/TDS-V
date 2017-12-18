@@ -7,7 +7,7 @@ function loadSettings() {
 		settings = JSON.parse( API.getSetting( "TDS_settings" ) )
 		if ( settings.language != "english" && languagelist[settings.language] != undefined ) {
 			languagesetting = settings.language;
-			API.triggerServerEvent( "onPlayerLanguageChange", settings.language );
+			mp.events.callRemote( "onPlayerLanguageChange", settings.language );
 		}
 	} else
 		API.setSetting( "TDS_settings", JSON.stringify( settings ) );

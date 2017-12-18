@@ -2,20 +2,20 @@
 
 let drawdrawings = [];
 
-API.onUpdate.connect( function () {
-	let tick = API.getGlobalTime();
+mp.events.add( "render", () => {
+	let tick = getTick();
 	for ( var i = 0; i < drawdrawings.length; i++ ) {
 		let c = drawdrawings[i];
 		if ( c.activated ) {
 
 			switch ( c.type ) {
 
-				case "line":
-					API.drawLine( c.start, c.end, c.a, c.r, c.g, c.b );
-					break;
+				//case "line":
+				//	mp.game.graphics.drawline( c.start, c.end, c.a, c.r, c.g, c.b );
+				//	break;
 
 				case "rectangle":
-					API.drawRectangle( c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a );
+					mp.game.graphics.drawRect( c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a );
 					break;
 
 				case "text":
@@ -32,13 +32,13 @@ API.onUpdate.connect( function () {
 					} 
 
 					// draw //
-					API.drawText( c.text, c.x, c.y, scale, c.r, c.g, c.b, alpha, c.font, c.justify, c.shadow, c.outline, c.wordwrap );
+					mp.game.graphics.drawText( c.text, c.font, c.color, c.scaleX, c.scaleY, c.outline, c.x, c.y );
 					break;
 
-				case "editbox":
-					API.drawRectangle( c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a );
-					API.drawText( c.text, c.x + 1, c.y, c.scale, c.textr, c.textg, c.textb, c.texta, c.font, c.justify, c.shadow, c.outline, c.wordwrap );
-					break;
+				//case "editbox":
+					//API.drawRectangle( c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a );
+					//API.drawText( c.text, c.x + 1, c.y, c.scale, c.textr, c.textg, c.textb, c.texta, c.font, c.justify, c.shadow, c.outline, c.wordwrap );
+					//break;
 			}
 		}
 	}
@@ -63,13 +63,13 @@ function removeClassDraw() {
 
 function blendClassDrawTextAlpha( enda, mstime ) {
 	this.enda = enda;
-	this.endastarttick = API.getGlobalTime();
+	this.endastarttick = getTick();
 	this.endaendtick = this.endastarttick + mstime;
 }
 
 function blendClassDrawTextScale( endscale, mstime ) {
 	this.endscale = endscale;
-	this.endscalestarttick = API.getGlobalTime();
+	this.endscalestarttick = getTick();
 	this.endscaleendtick = this.endscalestarttick + mstime;
 }
 
@@ -110,22 +110,17 @@ function cRectangle( xpos, ypos, wsize, hsize, r, g, b, a ) {
 	drawdrawings.push( this );
 }
 
-function cText( text, xpos, ypos, scale = 1.0, r = 255, g = 255, b = 255, a = 255, font = 0, justify = 0, shadow = false, outline = false, wordwrap = 0 ) {
+function cText( text: string, x: number, y: number, fontid: number, color: { r: number, g: number, b: number, a: number }, scaleX: number, scaleY: number, outline: boolean ) {
 	this.type = "text";
 	this.activated = true;
 	this.text = text;
-	this.x = xpos;
-	this.y = ypos;
-	this.scale = scale;
-	this.r = r;
-	this.g = g;
-	this.b = b;
-	this.a = a;
-	this.font = font;
-	this.justify = justify;
-	this.shadow = shadow;
+	this.x = x;
+	this.y = y;
+	this.color = color;
+	this.scaleX = scaleX;
+	this.scaleY = scaleY;
 	this.outline = outline;
-	this.wordwrap = wordwrap;
+	 
 	this.remove = removeClassDraw;
 	this.blendTextAlpha = blendClassDrawTextAlpha;
 	this.blendTextScale = blendClassDrawTextScale;

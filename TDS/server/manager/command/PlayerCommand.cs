@@ -22,8 +22,7 @@
 		[Command ( "kill", Alias = "suicide", Description = "Commits suicide", AddToHelpmanager = true, Group = "user" )]
 		public static void Kill ( Client player ) {
 			Character character = player.GetChar ();
-			Lobby lobby = character.Lobby;
-			if ( lobby.IsPlayable ) {
+			if ( character.Lobby is FightLobby lobby ) {
 				if ( character.Lifes > 0 ) {
 					lobby.KillPlayer ( player, "commited_suicide" );
 				}
