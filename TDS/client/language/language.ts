@@ -147,13 +147,13 @@ function getLang( type, str = null ) {
 function changeLanguage( lang ) {
 	languagesetting = lang;
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
-	changeMapCreatorLanguage();
+	//changeMapCreatorLanguage();
 }
 
 function loadLanguage () {
 	var langnumber = mp.game.invoke ( "3160758157564346030", 0 );
 	if ( langnumber == 2 ) 
 		languagesetting = "german";
-	createMapCreator();
+	//createMapCreator();
 }
 loadLanguage();
