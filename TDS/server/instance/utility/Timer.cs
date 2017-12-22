@@ -21,10 +21,10 @@ namespace TDS.server.instance.utility {
 		}
 
 		Timer ( Action thefunc, uint executeafterms, uint executeatms, int executes ) {
-			this.func = thefunc;
-			this.executeAfterMs = executeafterms;
-			this.executeAtMs = executeatms;
-			this.executesLeft = executes;
+			func = thefunc;
+			executeAfterMs = executeafterms;
+			executeAtMs = executeatms;
+			executesLeft = executes;
 		}
 
 
@@ -36,23 +36,23 @@ namespace TDS.server.instance.utility {
 		}
 
 		public void Kill () {
-			this.IsRunning = false;
+			IsRunning = false;
 		}
 
 
 		public void Execute () {
 			try {
-				this.func ();
+				func ();
 			} catch ( Exception e ) {
 				Log.Error ( "Error in Execute in Timer.cs: " + e );
 			} finally {
-				if ( this.executesLeft == 1 ) {
-					this.executesLeft = 0;
-					this.IsRunning = false;
+				if ( executesLeft == 1 ) {
+					executesLeft = 0;
+					IsRunning = false;
 				} else {
-					if ( this.executesLeft != -1 )
-						this.executesLeft--;
-					this.executeAtMs += this.executeAfterMs;
+					if ( executesLeft != -1 )
+						executesLeft--;
+					executeAtMs += executeAfterMs;
 					insertAfterList.Add ( this );
 				}
 			}
@@ -62,7 +62,7 @@ namespace TDS.server.instance.utility {
 		private void InsertSorted () {
 			bool putin = false;
 			for ( int i = timer.Count - 1; i >= 0 && !putin; i-- )
-				if ( this.executeAtMs <= timer[i].executeAtMs ) {
+				if ( executeAtMs <= timer[i].executeAtMs ) {
 					timer.Insert ( i + 1, this );
 					putin = true;
 				}

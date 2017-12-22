@@ -7,16 +7,16 @@
 	class ResourceStart : Script {
 
 		public ResourceStart () {
-			this.API.SetGamemodeName ( "TDS" );
+			API.SetGamemodeName ( "TDS" );
 			//API.SetMapName ( "Los Santos" );
-			this.StartMethods ();
+			StartMethods ();
 		}
 
 		private async void StartMethods () {
 			try {
 				await Map.MapOnStart ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
-				this.API.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
+				API.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
 			}
 		}
 	}

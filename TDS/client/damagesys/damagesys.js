@@ -1,10 +1,8 @@
 "use strict";
-let bloodscreenbrowser;
-mp.events.add("playerWeaponShoot", (shotPosition, target) => {
-    if (target != null) {
-        let weapon = mp.players.local.weapon;
-        var hithead = false;
-        mp.events.callRemote("onPlayerHitOtherPlayer", target, weapon, hithead);
+let damagesysdata = {
+    lasthparmor: 0,
+};
+mp.events.add("render", () => {
+    if (mp.players.local.health + mp.players.local.armour < damagesysdata.lasthparmor) {
     }
 });
-mp.players.local.setCanAttackFriendly(false, false);

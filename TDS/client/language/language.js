@@ -133,14 +133,14 @@ var languagelist = {
         }
     }
 };
-var languagesetting = "english";
+let languagesetting = "english";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];
     else
         return languagelist[languagesetting][type];
 }
-function changeLanguage(lang) {
+function setLanguage(lang) {
     languagesetting = lang;
     mp.events.callRemote("onPlayerLanguageChange", lang);
 }
@@ -150,3 +150,6 @@ function loadLanguage() {
         languagesetting = "german";
 }
 loadLanguage();
+function getLanguage() {
+    return languagesetting;
+}

@@ -5,3 +5,4 @@ var nothidecursor = 0;
 //var soundspath = "client/sounds/";
 var currentmoney = null;
 var localPlayer = mp.players.local;
+var gameplayCam = mp.cameras.new( "gameplay" ) as MpCamera;

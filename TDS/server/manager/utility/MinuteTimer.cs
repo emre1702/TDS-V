@@ -12,13 +12,13 @@
 	class MinuteTimer : Script {
 
 		public MinuteTimer () {
-			Timer.SetTimer ( this.MinuteTimerFunc, 60 * 1000, -1 );
+			Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
 		}
 
 		private async void MinuteTimerFunc () {
 			try {
 				// playtime //
-				List<Client> players = this.API.GetAllPlayers ();
+				List<Client> players = API.GetAllPlayers ();
 				foreach ( Client player in players ) {
 					if ( player.Exists ) {
 						Character character = player.GetChar ();

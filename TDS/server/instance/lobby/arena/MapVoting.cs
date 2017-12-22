@@ -43,7 +43,7 @@ namespace TDS.server.instance.lobby {
 				if ( mapVotes.Count < 6 ) {
 					// Anti-Cheat //
 					if ( !mapNames.Contains ( mapname ) ) {
-						Log.Error ( player.SocialClubName + " voted for " + mapname + ", but it doesn't exist!", this.Name );
+						Log.Error ( player.SocialClubName + " voted for " + mapname + ", but it doesn't exist!", Name );
 						return;
 					}
 					///////////////
@@ -63,7 +63,7 @@ namespace TDS.server.instance.lobby {
 				playerVotes.Clear ();
 				return await manager.map.Map.GetMapClass ( wonmap, this ).ConfigureAwait ( false );
 			}
-			return await this.GetRandomMap ().ConfigureAwait ( false );
+			return await GetRandomMap ().ConfigureAwait ( false );
 		}
 
 		private void SyncMapVotingOnJoin ( Client player ) {

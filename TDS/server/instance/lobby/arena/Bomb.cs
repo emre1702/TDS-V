@@ -42,25 +42,25 @@ namespace TDS.server.instance.lobby {
 
 		private void BombMapChose () {
 			foreach ( Vector3 bombplace in currentMap.BombPlantPlaces ) {
-				Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), this.dimension );
-				this.bombPlantPlaces.Add ( place );
-				Blip blip = NAPI.Blip.CreateBlip ( bombplace, this.dimension );
+				Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), dimension );
+				bombPlantPlaces.Add ( place );
+				Blip blip = NAPI.Blip.CreateBlip ( bombplace, dimension );
 				blip.Sprite = 433;
 				bombPlantBlips.Add ( blip );
 			}
-			bomb = NAPI.Object.CreateObject ( 1764669601, this.currentMap.BombPlantPlaces[0], new Vector3 (), this.dimension );
+			bomb = NAPI.Object.CreateObject ( 1764669601, currentMap.BombPlantPlaces[0], new Vector3 (), dimension );
 		}
 
 		private void GiveBombToRandomTerrorist () {
 			int amount = Players[terroristTeamID].Count;
 			if ( amount > 0 ) {
 				int rnd = Utility.Rnd.Next ( amount );
-				Client player = this.Players[terroristTeamID][rnd];
+				Client player = Players[terroristTeamID][rnd];
 				if ( player.CurrentWeapon == WeaponHash.Unarmed )
 					BombToHand ( player );
 				else
 					BombToBack ( player );
-				player.TriggerEvent ( "onClientPlayerGotBomb", this.currentMap.BombPlantPlaces );
+				player.TriggerEvent ( "onClientPlayerGotBomb", currentMap.BombPlantPlaces );
 			}
 		}
 
@@ -83,19 +83,19 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void BombToBack ( Client player ) {
-			this.bomb.Detach ();
-			this.bomb.Collisionless = true;
-			this.bomb.AttachTo ( player, "SKEL_Pelvis", new Vector3 ( 0, 0, 0.24 ), new Vector3 ( 270, 0, 0 ) );
-			if ( this.bombAtPlayer != player )
-				this.SendBombPlantInfos ( player );
-			this.bombAtPlayer = player;
+			bomb.Detach ();
+			bomb.Collisionless = true;
+			bomb.AttachTo ( player, "SKEL_Pelvis", new Vector3 ( 0, 0, 0.24 ), new Vector3 ( 270, 0, 0 ) );
+			if ( bombAtPlayer != player )
+				SendBombPlantInfos ( player );
+			bombAtPlayer = player;
 		}
 
 		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon ) {
 			if ( player.CurrentWeapon == WeaponHash.Unarmed ) {
-				this.BombToHand ( player );
+				BombToHand ( player );
 			} else if ( oldweapon == WeaponHash.Unarmed ) {
-				this.BombToBack ( player );
+				BombToBack ( player );
 			}
 		}
 
@@ -105,13 +105,13 @@ namespace TDS.server.instance.lobby {
 			SendAllPlayerLangNotification ( "round_mission_bomb_bad", 2 );
 
 			if ( bombAtPlayer == null )
-				this.GiveBombToRandomTerrorist ();
+				GiveBombToRandomTerrorist ();
 		}
 
 		private void DetonateBomb () {
-			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, this.bomb.Position, 200, this.dimension );
-			this.FuncIterateAllPlayers ( ( player, teamID ) => {
-				this.DmgSys.LastHitterDictionary[player] = this.planter;
+			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, bomb.Position, 200, dimension );
+			FuncIterateAllPlayers ( ( player, teamID ) => {
+				DmgSys.LastHitterDictionary[player] = planter;
 				player.Kill ();
 				player.TriggerEvent ( "onClientBombDetonated" );
 			}, counterTerroristTeamID );
@@ -123,24 +123,24 @@ namespace TDS.server.instance.lobby {
 		private void PlantBomb ( Client player ) {
 			if ( player.Exists ) {
 				Vector3 playerpos = player.Position;
-				for ( int i = 0; i < this.currentMap.BombPlantPlaces.Count; i++ ) {
-					if ( playerpos.DistanceTo ( this.currentMap.BombPlantPlaces[i] ) <= 5 ) {
+				for ( int i = 0; i < currentMap.BombPlantPlaces.Count; i++ ) {
+					if ( playerpos.DistanceTo ( currentMap.BombPlantPlaces[i] ) <= 5 ) {
 						player.TriggerEvent ( "onClientPlayerPlantedBomb" );
-						this.bomb.Detach ();
-						this.bomb.Position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
-						this.bomb.Rotation = new Vector3 ( 270, 0, 0 );
-						this.bombPlantPlaces[i].Delete ();
-						this.bombPlantPlaces[i] =
-							NAPI.Object.CreateObject ( -263709501, this.currentMap.BombPlantPlaces[i], new Vector3 (), this.dimension );
-						this.bombPlantBlips[i].Color = 49;
-						//this.bombPlantBlips[i].Flashing = true;
-						this.bombAtPlayer = null;
-						this.planter = player;
-						this.SendAllPlayerLangNotification ( "bomb_planted" );
-						this.bombDetonateTimer = Timer.SetTimer ( this.DetonateBomb, this.bombDetonateTime );
-						this.FuncIterateAllPlayers ( ( target, teamID ) =>
+						bomb.Detach ();
+						bomb.Position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
+						bomb.Rotation = new Vector3 ( 270, 0, 0 );
+						bombPlantPlaces[i].Delete ();
+						bombPlantPlaces[i] =
+							NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), dimension );
+						bombPlantBlips[i].Color = 49;
+						//bombPlantBlips[i].Flashing = true;
+						bombAtPlayer = null;
+						planter = player;
+						SendAllPlayerLangNotification ( "bomb_planted" );
+						bombDetonateTimer = Timer.SetTimer ( DetonateBomb, bombDetonateTime );
+						FuncIterateAllPlayers ( ( target, teamID ) =>
 														target.TriggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID ) );
-						this.SendBombDefuseInfos ();
+						SendBombDefuseInfos ();
 						break;
 					}
 				}
@@ -151,9 +151,9 @@ namespace TDS.server.instance.lobby {
 		private void DefuseBomb ( Client player ) {
 			if ( player.Exists ) {
 				Vector3 playerpos = player.Position;
-				if ( playerpos.DistanceTo ( this.bomb.Position ) <= 2 ) {
-					this.FuncIterateAllPlayers ( ( target, teamID ) => {
-						this.DmgSys.LastHitterDictionary[target] = player;
+				if ( playerpos.DistanceTo ( bomb.Position ) <= 2 ) {
+					FuncIterateAllPlayers ( ( target, teamID ) => {
+						DmgSys.LastHitterDictionary[target] = player;
 						target.Kill ();
 					}, terroristTeamID );
 					// COUNTER-TERROR WON //
@@ -175,7 +175,7 @@ namespace TDS.server.instance.lobby {
 						if ( !player.Dead ) {
 							if ( player.CurrentWeapon == WeaponHash.Unarmed ) {
 								player.PlayAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Utility.AnimationFlags.Loop ) );
-								bombPlantTimer = Timer.SetTimer ( () => this.PlantBomb ( player ), this.bombPlantTime );
+								bombPlantTimer = Timer.SetTimer ( () => PlantBomb ( player ), bombPlantTime );
 							}
 						}
 					}
@@ -223,10 +223,10 @@ namespace TDS.server.instance.lobby {
         private void DropBomb () {
 			bomb.Detach ();
 			bomb.FreezePosition = true;
-			bomb.Position = this.bombAtPlayer.Position;
+			bomb.Position = bombAtPlayer.Position;
 			bombAtPlayer = null;
 			bombTakeMarker = NAPI.Marker.CreateMarker ( 0, bomb.Position, new Vector3 (), new Vector3 (), 1,
-														new Color ( 180, 0, 0, 180 ), true, true, this.dimension );
+														new Color ( 180, 0, 0, 180 ), true, dimension );
 			ColShape bombtakecol = NAPI.ColShape.CreateSphereColShape ( bomb.Position, 2 );
 			lobbyBombTakeCol[this] = bombtakecol;
 		}
@@ -266,10 +266,10 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void StopRoundBomb () {
-			foreach ( Object place in this.bombPlantPlaces ) {
+			foreach ( Object place in bombPlantPlaces ) {
 				place.Delete ();
 			}
-			foreach ( Blip blip in this.bombPlantBlips ) {
+			foreach ( Blip blip in bombPlantBlips ) {
 				blip.Delete ();
 			}
 			if ( bomb != null ) {

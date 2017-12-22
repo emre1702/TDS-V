@@ -29,9 +29,9 @@ namespace TDS.server.instance.lobby {
             Players.Add ( new List<Client> () );
             
             TeamColorStrings[teamid] = colorstring;
-            this.teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
+            teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
             Color color = Colors.FontColor[colorstring];
-            this.teamColorsList.Add ( color );
+            teamColorsList.Add ( color );
         }
 
         public void MixTeams ( ) {
@@ -41,14 +41,14 @@ namespace TDS.server.instance.lobby {
             for ( int i = 0; i < Players[0].Count; i++ ) {
                 newplayerslist[0].Add ( Players[0][i] );
             }
-            for ( int i = 1; i < this.Players.Count; i++ )
+            for ( int i = 1; i < Players.Count; i++ )
                 newplayerslist.Add ( new List<Client> () );
-            for ( uint i = 1; i < this.Players.Count; i++ ) {
-                foreach ( Client player in this.Players[(int) i] ) {
+            for ( uint i = 1; i < Players.Count; i++ ) {
+                foreach ( Client player in Players[(int) i] ) {
                     if ( player.Exists ) {
-                        int teamID = (int) this.GetTeamIDWithFewestMember ( newplayerslist );
+                        int teamID = (int) GetTeamIDWithFewestMember ( newplayerslist );
                         newplayerslist[teamID].Add ( player );
-                        player.SetSkin ( this.teamSkins[teamID] );
+                        player.SetSkin ( teamSkins[teamID] );
                     }
                 }
             }

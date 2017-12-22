@@ -31,14 +31,14 @@
 			Log.Chat ( message, player, "global" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
 			string changedmessage = "[GLOBAL] ~" + teamfontcolor + "~" + player.SocialClubName + "~s~: " + message;
-			this.API.SendChatMessageToAll ( changedmessage );
+			API.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminMessage ( Client player, string message ) {
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "osay" );
 			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] ~w~" + player.SocialClubName + ": ~s~" + message;
-			this.API.SendChatMessageToAll ( changedmessage );
+			API.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminChat ( Client player, string message ) {

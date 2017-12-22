@@ -19,7 +19,6 @@ mp.events.add("onClientPlayerLeaveLobby", (args) => {
         removeBombThings();
         removeRoundThings(true);
         stopCountdownCamera();
-        localPlayerLeftLobbyMapVoting();
         removeRoundInfo();
     }
     log("onClientPlayerLeaveLobby end");

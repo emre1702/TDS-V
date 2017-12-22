@@ -23,7 +23,7 @@ function getPositionInFront( range, pos, zrot, plusangle ) {
 }
 
 function getTick() {
-	return new Date().getTime();
+	return Date.now();
 }
 
 /**

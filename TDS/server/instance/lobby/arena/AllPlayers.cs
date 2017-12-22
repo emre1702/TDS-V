@@ -7,14 +7,14 @@ namespace TDS.server.instance.lobby
 
         private void SetAllPlayersInCountdown ( ) {
             spectatingMe = new Dictionary<Client, List<Client>> ();
-            this.FuncIterateAllPlayers ( ( player, teamID ) => {
+            FuncIterateAllPlayers ( ( player, teamID ) => {
                 SetPlayerReadyForRound ( player, (uint) teamID );
-                player.TriggerEvent ( "onClientCountdownStart", this.currentMap.Name );
+                player.TriggerEvent ( "onClientCountdownStart", currentMap.Name );
                 if ( teamID == 0 )
                     SpectateAllTeams ( player );
             } );
             if ( currentMap.Type == enums.MapType.BOMB )
-                this.GiveBombToRandomTerrorist ();
+                GiveBombToRandomTerrorist ();
         }
 
         private void SendPlayerAmountInFightInfo ( Client player ) {

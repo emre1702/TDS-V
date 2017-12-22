@@ -53,12 +53,12 @@ namespace TDS.server.instance.lobby {
 
         public void SendAllPlayerLangMessage ( string langstr, int teamindex = -1, params string[] args ) {
             Dictionary<Language, string> texts = ServerLanguage.GetLangDictionary ( langstr, args );
-            this.FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( texts[player.GetChar ().Language] ); },
+            FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( texts[player.GetChar ().Language] ); },
                                         teamindex );
         }
 
         public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
-            this.FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( message ); }, teamindex );
+            FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( message ); }, teamindex );
         }
     }
 }

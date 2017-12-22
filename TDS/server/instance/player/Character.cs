@@ -26,7 +26,7 @@ namespace TDS.server.instance.player {
 		public bool HitsoundOn = true;
 
 		public Character ( bool loggedin = true ) {
-			this.LoggedIn = loggedin;
+			LoggedIn = loggedin;
 		}
 
 	}

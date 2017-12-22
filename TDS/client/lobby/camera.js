@@ -12,11 +12,13 @@ function loadMapMiddleForCamera(mapmiddle) {
     cameradata.camera.setActive(true);
 }
 function setCameraGoTowardsPlayer(time = -1) {
-    cameradata.tocamera = mp.cameras.new(mp.game.cam.getGameplayCamPos(), mp.game.cam.getGameplayCamRot(0));
+    cameradata.tocamera = mp.cameras.new(gameplayCam.getCoord(), mp.game.cam.getGameplayCamRot(0));
     cameradata.camera.setActiveWithInterp(cameradata.tocamera, time == -1 ? (lobbysettings.countdowntime * 0.9) : time, true, true);
 }
 function stopCountdownCamera() {
+    cameradata.camera.destroy();
     cameradata.camera = null;
+    cameradata.tocamera.destroy();
     cameradata.tocamera = null;
     cameradata.camera.setActive(false);
 }

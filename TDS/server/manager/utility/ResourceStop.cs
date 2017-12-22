@@ -9,19 +9,19 @@
 	class ResourceStop : Script {
 
 		public ResourceStop () {
-			Event.OnResourceStop += this.OnResourceStop;
+			Event.OnResourceStop += OnResourceStop;
 		}
 
 		public void OnResourceStop () {
-			this.SaveAllInDatabase ();
-			this.RemoveAllCreated ();
+			SaveAllInDatabase ();
+			RemoveAllCreated ();
 		}
 
 		private async void SaveAllInDatabase () {
 			try {
 				await Log.SaveInDatabase ().ConfigureAwait ( false );
 
-				List<Client> players = this.API.GetAllPlayers ();
+				List<Client> players = API.GetAllPlayers ();
 				foreach ( Client player in players ) {
 					await Account.SavePlayerData ( player ).ConfigureAwait ( false );
 				}
@@ -31,29 +31,29 @@
 		}
 
 		private void RemoveAllCreated () {
-			List<NetHandle> blips = this.API.GetAllBlips ();
+			List<NetHandle> blips = API.GetAllBlips ();
 			foreach ( NetHandle blip in blips )
-				this.API.DeleteEntity ( blip );
+				API.DeleteEntity ( blip );
 
-			List<NetHandle> markers = this.API.GetAllMarkers ();
+			List<NetHandle> markers = API.GetAllMarkers ();
 			foreach ( NetHandle marker in markers )
-				this.API.DeleteEntity ( marker );
+				API.DeleteEntity ( marker );
 
-			List<NetHandle> peds = this.API.GetAllPeds ();
+			List<NetHandle> peds = API.GetAllPeds ();
 			foreach ( NetHandle ped in peds )
-				this.API.DeleteEntity ( ped );
+				API.DeleteEntity ( ped );
 
-			List<NetHandle> pickups = this.API.GetAllPickups ();
+			List<NetHandle> pickups = API.GetAllPickups ();
 			foreach ( NetHandle pickup in pickups )
-				this.API.DeleteEntity ( pickup );
+				API.DeleteEntity ( pickup );
 
-			List<NetHandle> vehicles = this.API.GetAllVehicles ();
+			List<NetHandle> vehicles = API.GetAllVehicles ();
 			foreach ( NetHandle vehicle in vehicles )
-				this.API.DeleteEntity ( vehicle );
+				API.DeleteEntity ( vehicle );
 
-			List<NetHandle> objects = this.API.GetAllObjects ();
+			List<NetHandle> objects = API.GetAllObjects ();
 			foreach ( NetHandle obj in objects )
-				this.API.DeleteEntity ( obj );
+				API.DeleteEntity ( obj );
 		}
 	}
 

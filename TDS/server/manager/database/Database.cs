@@ -23,7 +23,7 @@
 		/* Constructor */
 
 		public Database () {
-			Event.OnResourceStart += this.OnResourceStart;
+			Event.OnResourceStart += OnResourceStart;
 		}
 
 		/* Exports */
@@ -137,10 +137,10 @@
 		public void OnResourceStart () {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
-					this.API.ConsoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
+					API.ConsoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
 					conn.Open ();
 					if ( conn.State == ConnectionState.Open ) {
-						this.API.ConsoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
+						API.ConsoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
 					}
 				} catch ( Exception ex ) {
 					Log.Error ( "DATABASE: [ERROR] " + ex );

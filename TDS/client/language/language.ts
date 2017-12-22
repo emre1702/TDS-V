@@ -134,7 +134,7 @@ var languagelist = {
 		}
 	}	
 };
-var languagesetting = "english";
+let languagesetting = "english";
 
 
 function getLang( type, str = null ) {
@@ -144,7 +144,7 @@ function getLang( type, str = null ) {
 		return languagelist[languagesetting][type];
 }
 
-function changeLanguage( lang ) {
+function setLanguage( lang ) {
 	languagesetting = lang;
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
 	//changeMapCreatorLanguage();
@@ -157,3 +157,7 @@ function loadLanguage () {
 	//createMapCreator();
 }
 loadLanguage();
+
+function getLanguage() {
+	return languagesetting;
+}

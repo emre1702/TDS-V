@@ -62,11 +62,11 @@
                 TheLobby.AddWeapon ( WeaponHash.CompactRifle, 1000 ); // CompactRifle
 
                 /*// Gunrunning //
-                TheLobby.AddWeapon ( WeaponHash) this.API.GetHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
-                TheLobby.AddWeapon ( WeaponHash) this.API.GetHashKey ( "WEAPON_SMG_MK2" ), 1000 );
-                TheLobby.AddWeapon ( WeaponHash) this.API.GetHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
-                TheLobby.AddWeapon ( WeaponHash) this.API.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
-                TheLobby.AddWeapon ( WeaponHash) this.API.GetHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );*/
+                TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
+                TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_SMG_MK2" ), 1000 );
+                TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
+                TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
+                TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );*/
             }
 
             TheLobby.StartRoundGame ();

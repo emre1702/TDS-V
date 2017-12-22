@@ -43,7 +43,7 @@
 		};
 
 		#region Lobby
-		[Command ( "next", Alias = "endround", AddToHelpmanager = true, Description = "Ends the round.", Group = "supporter,lobby-owner" )]
+		[Command ( "next", Alias = "endround", Description = "Ends the round.", Group = "supporter,lobby-owner" )]
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
 				if ( player.GetChar ().Lobby is instance.lobby.Arena lobby ) {
@@ -56,7 +56,7 @@
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "lobbykick", GreedyArg = true, AddToHelpmanager = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
+		[Command ( "lobbykick", GreedyArg = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
 		public static void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
@@ -76,7 +76,7 @@
 		#endregion
 
 		#region Kick
-		[Command ( "kick", GreedyArg = true, Alias = "rkick", AddToHelpmanager = true, Description = "Kicks a player from the server.", Group = "supporter,VIP" )]
+		[Command ( "kick", GreedyArg = true, Alias = "rkick", Description = "Kicks a player from the server.", Group = "supporter,VIP" )]
 		public static void KickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
@@ -94,7 +94,7 @@
 		#endregion
 
 		#region Ban
-		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", AddToHelpmanager = true, Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
+		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
 		public async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
 			try {
 				if ( Account.PlayerUIDs.ContainsKey ( targetname ) ) {
@@ -107,7 +107,7 @@
 								"{1}", targetUID.ToString ()
 							}
 						};
-						Client target = this.API.GetPlayerFromName ( targetname );
+						Client target = API.GetPlayerFromName ( targetname );
 						if ( target != null && target.GetChar ().LoggedIn ) {
 							Character targetcharacter = target.GetChar ();
 							targetadminlvl = targetcharacter.AdminLvl;
@@ -139,50 +139,50 @@
 		#endregion
 
 		#region Utility 
-		[Command ( "goto", AddToHelpmanager = true, Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
+		[Command ( "goto", Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				Vector3 playerpos = this.API.GetEntityPosition ( target );
+				Vector3 playerpos = API.GetEntityPosition ( target );
 				if ( player.IsInVehicle ) {
-					this.API.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+					API.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else if ( target.IsInVehicle ) {
 					List<Client> usersInCar = target.Vehicle.Occupants;
-					if ( usersInCar.Count < this.API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
+					if ( usersInCar.Count < API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
 						Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
 						foreach ( Client occupant in usersInCar ) {
 							occupiedseats[occupant.VehicleSeat] = true;
 						}
-						for ( int i = 0; i < this.API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
+						for ( int i = 0; i < API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
 							if ( !occupiedseats.ContainsKey ( i ) ) {
-								this.API.SetPlayerIntoVehicle ( player, target.Vehicle, i );
+								API.SetPlayerIntoVehicle ( player, target.Vehicle, i );
 								return;
 							}
 						}
 					}
-					this.API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+					API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else {
-					this.API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
+					API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
 				}
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "xyz", AddToHelpmanager = true, Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
+		[Command ( "xyz", Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
 			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				this.API.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
+				API.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
-		[Command ( "cveh", AddToHelpmanager = true, Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
+		[Command ( "cveh", Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
 		public void SpawnCarCommand ( Client player, string name ) {
 			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				VehicleHash model = this.API.VehicleNameToModel ( name );
+				VehicleHash model = API.VehicleNameToModel ( name );
 
-				Vector3 rot = this.API.GetEntityRotation ( player.Handle );
-				Vehicle veh = this.API.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
+				Vector3 rot = API.GetEntityRotation ( player.Handle );
+				Vehicle veh = API.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
 
-				this.API.SetPlayerIntoVehicle ( player, veh, -1 );
+				API.SetPlayerIntoVehicle ( player, veh, -1 );
 			}
 		}
 
@@ -195,14 +195,14 @@
 		#endregion
 
 		#region Chat
-		[Command ( "adminsay", AddToHelpmanager = true, Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
+		[Command ( "adminsay", Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
 		public static void AdminSay ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
 				Chat.Instance.SendAdminMessage ( player, text );
 			}
 		}
 
-		[Command ( "adminchat", AddToHelpmanager = true, Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
+		[Command ( "adminchat", Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
 		public static void AdminChat ( Client player, string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
 				Chat.Instance.SendAdminChat ( player, text );

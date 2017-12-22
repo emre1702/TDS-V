@@ -15,7 +15,7 @@
 
 		public Damagesys ( FightLobby lobby, Dictionary<WeaponHash, int> customDamage = null,
 							Dictionary<WeaponHash, float> customHeadMult = null ) {
-			this.lobby = lobby;
+            this.lobby = lobby;
 			customDamageDictionary = customDamage ?? new Dictionary<WeaponHash, int> ();
 			customHeadMultiplicator = customHeadMult ?? new Dictionary<WeaponHash, float> ();
 		}

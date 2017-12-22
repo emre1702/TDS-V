@@ -47,7 +47,7 @@ namespace TDS.server.instance.lobby {
             player.Health = (int) Health;
             Spectate ( player, player );
             if ( teamID > 0 ) {
-                Vector3[] spawndata = this.GetMapRandomSpawnData ( teamID );
+                Vector3[] spawndata = GetMapRandomSpawnData ( teamID );
                 player.Position = spawndata[0];
                 player.Rotation = spawndata[1];
             }
@@ -69,19 +69,19 @@ namespace TDS.server.instance.lobby {
             DmgSys.PlayerSpree.Remove ( player );
 
 
-            //if ( this.IsMapCreateLobby )                            TODO
-            //    this.StopPlayerFreecam ( player, true );
+            //if ( IsMapCreateLobby )                            TODO
+            //    StopPlayerFreecam ( player, true );
         }
 
         private void RemovePlayerFromAlive ( Client player, Character chara = null ) {
             Character character = chara ?? player.GetChar ();
             int teamID = (int) character.Team;
             character.Lifes = 0;
-            int aliveindex = this.alivePlayers[teamID].IndexOf ( player );
-            this.PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
-            this.alivePlayers[teamID].RemoveAt ( aliveindex );
-            if ( this.bombAtPlayer == player ) {
-                this.DropBomb ();
+            int aliveindex = alivePlayers[teamID].IndexOf ( player );
+            PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
+            alivePlayers[teamID].RemoveAt ( aliveindex );
+            if ( bombAtPlayer == player ) {
+                DropBomb ();
             }
             CheckForEnoughAlive ();
         }
@@ -102,10 +102,10 @@ namespace TDS.server.instance.lobby {
 
 
 
-           /* if ( this.IsMapCreateLobby )        // TODO
-                this.StartPlayerFreecam ( player );
+           /* if ( IsMapCreateLobby )        // TODO
+                StartPlayerFreecam ( player );
 
-            this.SendPlayerRoundInfoOnJoin ( player );
+            SendPlayerRoundInfoOnJoin ( player );
         } */
 
 
@@ -135,7 +135,7 @@ namespace TDS.server.instance.lobby {
 
         private void SendPlayerRoundInfoOnJoin ( Client player ) {
             if ( currentMap != null ) {
-                player.TriggerEvent ( "onClientMapChange", this.currentMap.MapLimits, this.currentMap.MapCenter );
+                player.TriggerEvent ( "onClientMapChange", currentMap.MapLimits, currentMap.MapCenter );
             }
 
             SendPlayerAmountInFightInfo ( player );

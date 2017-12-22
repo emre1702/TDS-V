@@ -144,7 +144,7 @@
 			PlayerDamage[player] += damage;
 
 			// Last-Hitter //
-			this.LastHitterDictionary[hitted] = player;
+			LastHitterDictionary[hitted] = player;
 			if ( !AllHitters.ContainsKey ( hitted ) )
 				AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
 			if ( !AllHitters[hitted].ContainsKey ( player ) )
@@ -159,7 +159,7 @@
 				if ( character.Team != hitted.GetChar ().Team ) {
                     WeaponHash hash = (WeaponHash) weapon;
 
-                    int damage = this.GetDamage ( hash, headshot );
+                    int damage = GetDamage ( hash, headshot );
 
 					if ( damage > 0 ) {
 						DamagePlayer ( player, hitted, damage );
@@ -176,7 +176,7 @@
 
 		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic[] args ) {
 			if ( name == "onPlayerHitOtherPlayer" ) {
-				Client hitted = this.API.GetPlayerFromHandle ( args[0] );
+				Client hitted = API.GetPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Lobby playerlobby = player.GetChar ().Lobby;
 					if ( playerlobby is FightLobby fightlobby )

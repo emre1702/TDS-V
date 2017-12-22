@@ -11,4 +11,3 @@ mp.events.add("playerDeath", (player, reason, killer) => {
         mp.game.gameplay.setFadeOutAfterDeath(false);
     }
 });
-mp.game.gameplay.disableAutomaticRespawn(true);

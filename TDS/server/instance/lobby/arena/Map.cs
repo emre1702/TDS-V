@@ -29,53 +29,53 @@ namespace TDS.server.instance.lobby {
 		}
 
 		public async Task<Map> GetRandomMap () {
-			string mapname = this.mapNames.Dequeue ();
+			string mapname = mapNames.Dequeue ();
 			mapNames.Enqueue ( mapname );
 			return await manager.map.Map.GetMapClass ( mapname, this ).ConfigureAwait ( false );
 		}
 
 		private Vector3[] GetMapRandomSpawnData ( uint teamID ) {
 			Vector3[] list = new Vector3[2];
-			this.spawnCounter[teamID]++;
-			uint index = this.spawnCounter[teamID];
-			if ( index >= this.currentMap.TeamSpawns[teamID].Count ) {
+			spawnCounter[teamID]++;
+			uint index = spawnCounter[teamID];
+			if ( index >= currentMap.TeamSpawns[teamID].Count ) {
 				index = 0;
-				this.spawnCounter[teamID] = 0;
+				spawnCounter[teamID] = 0;
 			}
-			list[0] = this.currentMap.TeamSpawns[teamID][(int)index];
-			list[1] = this.currentMap.TeamRots[teamID][(int)index];
+			list[0] = currentMap.TeamSpawns[teamID][(int)index];
+			list[1] = currentMap.TeamRots[teamID][(int)index];
 			return list;
 		}
 
 		private void CreateTeamSpawnBlips () {
-			foreach ( KeyValuePair<uint, List<Vector3>> entry in this.currentMap.TeamSpawns ) {
-				Blip blip = NAPI.Blip.CreateBlip ( entry.Value[0], this.dimension );
+			foreach ( KeyValuePair<uint, List<Vector3>> entry in currentMap.TeamSpawns ) {
+				Blip blip = NAPI.Blip.CreateBlip ( entry.Value[0], dimension );
 				blip.Sprite = 491;
 				blip.Color = teamBlipColors[(int)entry.Key];
-				blip.Name = "Spawn " + this.Teams[(int)entry.Key];
-				this.mapBlips.Add ( blip );
+				blip.Name = "Spawn " + Teams[(int)entry.Key];
+				mapBlips.Add ( blip );
 			}
 		}
 
 		private void CreateMapLimitBlips () {
-			foreach ( Vector3 maplimit in this.currentMap.MapLimits ) {
-				Blip blip = NAPI.Blip.CreateBlip ( maplimit, this.dimension );
+			foreach ( Vector3 maplimit in currentMap.MapLimits ) {
+				Blip blip = NAPI.Blip.CreateBlip ( maplimit, dimension );
 				blip.Sprite = 441;
 				blip.Name = "Limit";
-				this.mapBlips.Add ( blip );
+				mapBlips.Add ( blip );
 			}
 		}
 
 		private void DeleteMapBlips () {
-			foreach ( Blip blip in this.mapBlips ) {
+			foreach ( Blip blip in mapBlips ) {
 				blip.Delete ();
 			}
-			this.mapBlips = new List<Blip> ();
+			mapBlips = new List<Blip> ();
 		}
 
 		public void AddSpawnPoint ( Vector3 point, Vector3 rotation ) {
-			this.spawnpoint = point;
-			this.spawnrotation = rotation;
+			spawnpoint = point;
+			spawnrotation = rotation;
 		}
 	}
 

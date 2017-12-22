@@ -69,7 +69,7 @@
 		private void CheckForAssist ( Client player, Character character, Client killer ) {
 			if ( AllHitters.ContainsKey ( player ) ) {
 				uint halfarmorhp = ( lobby.Armor + lobby.Health ) / 2;
-				foreach ( KeyValuePair<Client, int> entry in this.AllHitters[player] ) {
+				foreach ( KeyValuePair<Client, int> entry in AllHitters[player] ) {
 					Client target = entry.Key;
 					if ( entry.Value >= halfarmorhp ) {
 						Character targetcharacter = entry.Key.GetChar ();
@@ -83,7 +83,7 @@
 						if ( killer != target ||
 							halfarmorhp % 2 != 0 ||
 							entry.Value != halfarmorhp / 2 ||
-							this.AllHitters[player].Count > 2 )
+							AllHitters[player].Count > 2 )
 							return;
 					}
 				}
@@ -91,15 +91,15 @@
 		}
 
 		public void CheckLastHitter ( Client player, Character character, out Client lastHitter ) {
-			if ( this.LastHitterDictionary.ContainsKey ( player ) ) {
-				this.LastHitterDictionary.Remove ( player, out lastHitter );
+			if ( LastHitterDictionary.ContainsKey ( player ) ) {
+				LastHitterDictionary.Remove ( player, out lastHitter );
 				if ( lastHitter.Exists ) {
 					Character lasthittercharacter = lastHitter.GetChar ();
 					if ( character.Lobby == lasthittercharacter.Lobby )
 						if ( lasthittercharacter.Lifes > 0 ) {
 							lasthittercharacter.Kills++;
 							lastHitter.SendLangNotification ( "got_last_hitted_kill", player.Name );
-							this.AddToKillingSpree ( lastHitter );
+							AddToKillingSpree ( lastHitter );
 						}
 				}
 			} else
@@ -107,8 +107,8 @@
 		}
 
 		public Client GetLastHitter ( Client player, Character character ) {
-			if ( this.LastHitterDictionary.ContainsKey ( player ) ) {
-				this.LastHitterDictionary.Remove ( player, out Client lasthitter );
+			if ( LastHitterDictionary.ContainsKey ( player ) ) {
+				LastHitterDictionary.Remove ( player, out Client lasthitter );
 				if ( lasthitter.Exists ) {
 					Character lasthittercharacter = lasthitter.GetChar ();
 					if ( character.Lobby == lasthittercharacter.Lobby )

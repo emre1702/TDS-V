@@ -45,18 +45,18 @@ namespace TDS.server.instance.lobby {
         }
 
         private void RewardAllPlayer ( ) {
-            foreach ( KeyValuePair<Client, int> entry in this.DmgSys.PlayerDamage ) {
+            foreach ( KeyValuePair<Client, int> entry in DmgSys.PlayerDamage ) {
                 if ( entry.Key.Exists ) {
                     Client player = entry.Key;
                     Character character = player.GetChar ();
                     if ( character.Lobby == this ) {
                         List<uint> reward = new List<uint> ();
-                        if ( this.DmgSys.PlayerKills.ContainsKey ( player ) ) {
-                            reward.Add ( (uint) ( Money.MoneyForDict["kill"] * this.DmgSys.PlayerKills[player] ) );
+                        if ( DmgSys.PlayerKills.ContainsKey ( player ) ) {
+                            reward.Add ( (uint) ( Money.MoneyForDict["kill"] * DmgSys.PlayerKills[player] ) );
                         } else
                             reward.Add ( 0 );
-                        if ( this.DmgSys.PlayerAssists.ContainsKey ( player ) ) {
-                            reward.Add ( (uint) ( Money.MoneyForDict["assist"] * this.DmgSys.PlayerAssists[player] ) );
+                        if ( DmgSys.PlayerAssists.ContainsKey ( player ) ) {
+                            reward.Add ( (uint) ( Money.MoneyForDict["assist"] * DmgSys.PlayerAssists[player] ) );
                         } else
                             reward.Add ( 0 );
                         reward.Add ( (uint) ( Money.MoneyForDict["damage"] * entry.Value ) );

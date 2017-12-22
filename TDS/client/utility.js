@@ -17,7 +17,7 @@ function getPositionInFront(range, pos, zrot, plusangle) {
     return pos;
 }
 function getTick() {
-    return new Date().getTime();
+    return Date.now();
 }
 mp.keys.bind(0x23, true, function (sender, e) {
     if (mp.gui.cursor.visible) {
