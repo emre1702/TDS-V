@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
+using TDS.server.extend;
+using TDS.server.instance.player;
 using TDS.server.manager.utility;
 
 namespace TDS.server.instance.lobby {
@@ -68,6 +70,17 @@ namespace TDS.server.instance.lobby {
             return lastteamID;
         }
 
-        public string GetTeamName ( uint teamID ) => Teams[(int) teamID];
+        public string GetTeamName ( uint teamID ) {
+            return Teams[(int) teamID];
+        }
+
+        public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
+            player.Team = (int) teamID;     // testit - need to remove this when creating own damage-system
+            Players[(int) teamID].Add ( player );
+            player.SetSkin ( teamSkins[(int) teamID] );
+            if ( character == null )
+                character = player.GetChar ();
+            character.Team = teamID;
+        }
     }
 }

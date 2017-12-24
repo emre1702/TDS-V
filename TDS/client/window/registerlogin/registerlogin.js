@@ -75,13 +75,13 @@ $( document ).ready( function () {
 		event.preventDefault();
 		switch ( clickedbutton ) {
 			case "lang_english":
-				resourceCall( "changeLanguage", "english" );
-				resourceCall( "getLobbyChoiceLanguage" );
+				mp.trigger( "setLanguage", "english" );
+				mp.trigger( "getRegisterLoginLanguage" );
 				break;
 
 			case "lang_german":
-				resourceCall( "changeLanguage", "german" );
-				resourceCall( "getLobbyChoiceLanguage" );
+				mp.trigger( "setLanguage", "german" );
+				mp.trigger( "getRegisterLoginLanguage" );
 				break;
 		}
 	} );
@@ -95,14 +95,14 @@ $( document ).ready( function () {
 
 			case "login":
 				var password = $this.find( "input[id=login_password]" ).val();
-				resourceCall( "loginFunc", password );
+				mp.trigger( "loginFunc", password );
 				break;
 
 			case "register":
 				$this.find( "input:not(:hidden)[id=register_password_again]" ).each( function () {
 					var password = $this.find( "input[id=register_password]" ).val();
 					if ( password === $( this ).val() ) {
-						resourceCall( "registerFunc", password, $this.find( "input[id=register_email]" ).val() );
+						mp.trigger( "registerFunc", password, $this.find( "input[id=register_email]" ).val() );
 					} else {
 						alert( langdata["passwordhastobesame"] );
 						event.preventDefault();
@@ -111,15 +111,10 @@ $( document ).ready( function () {
 				break;
 		}
 	} );
-	resourceCall( "getLoginPanelData" );
 } );
 
 function getLoginPanelData( playername, isreg, lang ) {
-	var langdata = JSON.parse( lang );
-	$( "[data-lang]" ).each( function () {
-		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).next().attr( "required" ) ? "*" : "" ) );
-		//$( this ).html( $( this ).attr( "data-lang" ) );
-	} );
+	loadLanguage( lang );
 	$( "[data-lang=username]" ).each( function () {
 		$( this ).addClass( 'active highlight' );
 		$( this ).next( "input" ).val( playername );
@@ -130,4 +125,12 @@ function getLoginPanelData( playername, isreg, lang ) {
 	} );
 
 	isregistered = isreg;
+}
+
+function loadLanguage( lang ) {
+	var langdata = JSON.parse( lang );
+	$( "[data-lang]" ).each( function () {
+		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).next().attr( "required" ) ? "*" : "" ) );
+		//$( this ).html( $( this ).attr( "data-lang" ) );
+	} );
 }

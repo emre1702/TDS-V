@@ -112,9 +112,7 @@ namespace TDS.server.instance.lobby {
         private void AddPlayerAsPlayer ( Client player ) {
             Character character = player.GetChar ();
             uint teamID = GetTeamIDWithFewestMember ( Players );
-            Players[(int) teamID].Add ( player );
-            player.SetSkin ( teamSkins[(int) teamID] );
-            character.Team = teamID;
+            SetPlayerTeam ( player, teamID, character );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( player, teamID );
             } else {

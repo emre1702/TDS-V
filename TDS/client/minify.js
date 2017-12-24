@@ -3,7 +3,7 @@
 let files = [
 	"globals.js",
 	"logging.js",
-	"chat.js",
+	//"chat.js",
 	"money.js",
 	"utility.js",
 	"timer.js",
@@ -30,7 +30,7 @@ let files = [
 	"lobby/settings.js",
 	"lobby/spectate.js",
 	"lobby/lobbyevents.js",
-	"lobby/roundevents.js",
+	"lobby/roundevents.js"
 
 	//"lobby/mapcreate/freecam.ts",
 	//"lobby/mapcreate/mapcreator.ts"
@@ -68,9 +68,9 @@ let result = uglify.minify ( code, {
         collapse_vars: true,
         reduce_vars: true
     },
-    mangle: {
-		reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena", "commitMessage", "onFocusChange", "onChatLoad" ] 
-    },
+    //mangle: {
+	//	reserved: ["loginFunc", "registerFunc", "getLoginPanelData", "changeLanguage", "getLobbyChoiceLanguage", "joinArena", "commitMessage", "onFocusChange", "onChatLoad" ] 
+    //},
     toplevel: true
 } );
 

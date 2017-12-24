@@ -7,23 +7,28 @@ let loginpanel = {
 }
 
 
-function loginFunc( password ) {
+mp.events.add( "loginFunc", function ( password ) {
 	mp.events.callRemote( "onPlayerTryLogin", password );
-}
+} );
 
-function registerFunc( password, email ) {
+mp.events.add( "registerFunc", function ( password, email ) {
 	mp.events.callRemote( "onPlayerTryRegister", password, email );
-}
+} );
 
-function getLoginPanelData() {
-	loginpanel.loginbrowser.execute( "getLoginPanelData ( "+ loginpanel.name+", "+loginpanel.isregistered+", "+JSON.stringify( getLang( "loginregister" ) )+");" );
-}
+mp.events.add( "getRegisterLoginLanguage", () => {
+	loginpanel.loginbrowser.execute( "loadLanguage ( " + JSON.stringify( getLang( "loginregister" ) ) + ");" );
+} );
 
 mp.events.add( "startRegisterLogin", function ( eventName, args ) {
 	log( "startRegisterLogin registerlogin start" );
 	loginpanel.name = args[0];
 	loginpanel.isregistered = args[1];
 	loginpanel.loginbrowser = mp.browsers.new( "client/window/registerlogin/registerlogin.html" );
+	mp.events.add( 'browserDomReady', ( browser ) => {
+		if ( browser == loginpanel.loginbrowser ) {
+			loginpanel.loginbrowser.execute( "getLoginPanelData ( " + loginpanel.name + ", " + loginpanel.isregistered + ", " + JSON.stringify( getLang( "loginregister" ) ) + ");" );
+		}
+	} );
 	mp.gui.chat.activate( false );
 	mp.game.ui.displayHud( false );
 	mp.gui.cursor.visible = true;

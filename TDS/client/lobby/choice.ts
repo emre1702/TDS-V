@@ -5,23 +5,28 @@ let lobbychoicedata = {
 };
 
 
-function joinArena( isspectator ) {
+mp.events.add( "joinArena", function ( isspectator ) {
 	mp.events.callRemote( "joinLobby", 1, isspectator );
-}
+} );
 
-function getLobbyChoiceLanguage() {
+mp.events.add( "getLobbyChoiceLanguage", function () {
 	log( "getLobbyChoiceLanguage start" );
 	lobbychoicedata.browser.execute( "getLobbyChoiceLanguage ("+ JSON.stringify( getLang( "lobby_choice" ) )+")" );
 	log( "getLobbyChoiceLanguage end" );
-}
+} );
 
-function createLobby() {
+mp.events.add( "createLobby", function () {
 
-}
+} );
 
 mp.events.add( "onClientJoinMainMenu", ( args ) => {
 	log( "onClientJoinMainMenu start" );
 	lobbychoicedata.browser = mp.browsers.new( "client/window/lobby/choice.html" );
+	mp.events.add( 'browserDomReady', ( browser ) => {
+		if ( browser == lobbychoicedata.browser ) {
+			lobbychoicedata.browser.execute( "getLobbyChoiceLanguage (" + JSON.stringify( getLang( "lobby_choice" ) ) + ")" );
+		}
+	} );
 	mp.gui.cursor.visible = true;
 	nothidecursor++;
 	log( "onClientJoinMainMenu end" );

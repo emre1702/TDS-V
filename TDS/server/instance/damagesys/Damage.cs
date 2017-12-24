@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using GTANetworkAPI;
 	using lobby;
-	using manager.lobby;
 	using player;
 	using extend;
 

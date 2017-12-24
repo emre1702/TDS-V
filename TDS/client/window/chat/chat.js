@@ -1,4 +1,4 @@
-var False = false;
+/*var False = false;
 var True = true;
 let amountchilds = 0;
 
@@ -74,7 +74,7 @@ function setFocus( focus, fromscript = false, cmd = "" ) {
 		mainInput.hide();
 		mainInput.val( "" );
 		if ( !fromscript )
-			resourceCall( "onFocusChange", false, true );
+			mp.trigger( "onFocusChange", false, true );
 	}
 }
 
@@ -85,7 +85,7 @@ function onKeyUp(event) {
 		{
 			try
 			{
-				resourceCall("commitMessage", m+"");
+				mp.trigger("commitMessage", m+"");
 			}
 			catch(err) {
 				$("body").text(err);
@@ -96,9 +96,9 @@ function onKeyUp(event) {
 	}
 }
 
-resourceCall( "onChatLoad" );
+mp.trigger( "onChatLoad" );
 
-/*
+
 window.setInterval(function () {
 	addMessage($("#chat-body").scrollTop() + " / " + $("#chat-body")[0].scrollHeight);
 }, 500);

@@ -144,6 +144,7 @@ function setLanguage(lang) {
     languagesetting = lang;
     mp.events.callRemote("onPlayerLanguageChange", lang);
 }
+mp.events.add("setLanguage", setLanguage);
 function loadLanguage() {
     var langnumber = mp.game.invoke("3160758157564346030", 0);
     if (langnumber == 2)

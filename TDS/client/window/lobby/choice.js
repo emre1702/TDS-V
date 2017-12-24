@@ -92,11 +92,11 @@ $(document).ready ( function() {
                 break;
 
 			case "join_arena_player":
-                resourceCall( "joinArena", false );
+				mp.trigger( "joinArena", false );
                 break;
 
             case "join_arena_spectator":
-                resourceCall( "joinArena", true );
+				mp.trigger( "joinArena", true );
                 break;
                 
             case "join_arena_back":
@@ -114,13 +114,13 @@ $(document).ready ( function() {
                 break;
                 
 			case "lang_english":
-				resourceCall( "changeLanguage", "english" );
-				resourceCall( "getLobbyChoiceLanguage" );
+				mp.trigger( "setLanguage", "english" );
+				mp.trigger( "getLobbyChoiceLanguage" );
                 break;
             
 			case "lang_german":
-				resourceCall( "changeLanguage", "german" );
-				resourceCall( "getLobbyChoiceLanguage" );
+				mp.trigger( "setLanguage", "german" );
+				mp.trigger( "getLobbyChoiceLanguage" );
                 break;
                 
             case "custom_lobby_back":
@@ -148,7 +148,7 @@ $(document).ready ( function() {
 		var armor = $( '#armor' ).val();
 		var health = $( '#health' ).val();
 		var timescale = $( '#time-scale' ).val();
-		resourceCall( "createLobby", name, mode, password, roundtime, countdowntime, maxplayers, armor, health, timescale );
+		mp.trigger( "createLobby", name, mode, password, roundtime, countdowntime, maxplayers, armor, health, timescale );
 		
 	} );
     
@@ -157,8 +157,6 @@ $(document).ready ( function() {
             $('#validate-error').html ( "<div class='validate-error'>"+error.text()+"</div>" );
         }
     });
-    
-	resourceCall( "getLobbyChoiceLanguage" );
 } );
 
 function getLobbyChoiceLanguage( lang ) {
