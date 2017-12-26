@@ -44,24 +44,20 @@ namespace TDS.server.instance.lobby {
                     RewardAllPlayer ();
                 DmgSys.EmptyDamagesysData ();
 
-               // await Task.Run ( ( ) => {
-                    //NAPI.Task.Run ( async ( ) => {
+                await Task.Run ( async ( ) => {
+                    currentMap = await GetNextMap ().ConfigureAwait ( false );
+                    NAPI.Task.Run ( ( ) => {
                         if ( currentMap != null && currentMap.Type == MapType.BOMB )
                             StopRoundBomb ();
-                        currentMap = await GetNextMap ().ConfigureAwait ( false );
                         if ( currentMap.Type == MapType.BOMB )
                             BombMapChose ();
-                        NAPI.Util.ConsoleOutput ( "6" );
                         CreateTeamSpawnBlips ();
-                        NAPI.Util.ConsoleOutput ( "7" );
                         CreateMapLimitBlips ();
-                        NAPI.Util.ConsoleOutput ( "8" );
                         if ( mixTeamsAfterRound )
                             MixTeams ();
-                        NAPI.Util.ConsoleOutput ( "9" );
                         SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.MapLimits, currentMap.MapCenter );
-                   // } );
-               // } );
+                    } );
+                } );
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
             } catch ( Exception ex ) {
