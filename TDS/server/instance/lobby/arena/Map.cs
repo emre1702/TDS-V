@@ -46,21 +46,13 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void CreateTeamSpawnBlips () {
-            NAPI.Util.ConsoleOutput ( "1" );
 			foreach ( KeyValuePair<uint, List<Vector3>> entry in currentMap.TeamSpawns ) {
-                NAPI.Util.ConsoleOutput ( "2 "+entry.Value[0].X + " - "+ Dimension+" - "+entry.Value[0].ToString() );
-                Blip blip = API.CreateBlip ( pos: entry.Value[0], dimension: Dimension );
-                NAPI.Util.ConsoleOutput ( "3" );
+                Blip blip = NAPI.Blip.CreateBlip ( pos: entry.Value[0], dimension: Dimension );
                 blip.Sprite = 491;
-                NAPI.Util.ConsoleOutput ( "4" );
                 blip.Color = teamBlipColors[(int)entry.Key];
-                NAPI.Util.ConsoleOutput ( "5" );
                 blip.Name = "Spawn " + Teams[(int)entry.Key];
-                NAPI.Util.ConsoleOutput ( "6" );
                 mapBlips.Add ( blip );
-                NAPI.Util.ConsoleOutput ( "7" );
             }
-            NAPI.Util.ConsoleOutput ( "8" );
         }
 
 		private void CreateMapLimitBlips () {
