@@ -10,8 +10,6 @@ namespace TDS.server.instance.lobby {
 
     public partial class Arena : FightLobby, IRound {  
 
-        public Arena ( ) { }
-
         public Arena ( string name, int id = -1 ) : base ( name, id ) {
 
         }

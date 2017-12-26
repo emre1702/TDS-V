@@ -6,7 +6,7 @@ using TDS.server.instance.lobby.interfaces;
 
 namespace TDS.server.instance.lobby {
 
-    public partial class Lobby : Script {
+    public partial class Lobby {
 
         private static readonly Dictionary<string, Lobby> sLobbiesByName = new Dictionary<string, Lobby> ();
         public static readonly Dictionary<int, Lobby> SLobbiesByIndex = new Dictionary<int, Lobby> ();
@@ -19,8 +19,6 @@ namespace TDS.server.instance.lobby {
 
         public bool DeleteWhenEmpty = true;
         public bool IsOfficial = false;
-
-        public Lobby ( ) { }
 
             
         public Lobby ( string name, int id = -1 ) {

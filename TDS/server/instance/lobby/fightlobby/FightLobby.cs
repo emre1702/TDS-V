@@ -8,8 +8,6 @@ namespace TDS.server.instance.lobby {
 
     public partial class FightLobby : Lobby, IFight {
 
-        public FightLobby ( ) { }
-
         public FightLobby ( string name, int id = -1 ) : base ( name, id ) {
             DmgSys = new Damagesys ( this );
         }
