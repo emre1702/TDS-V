@@ -6,16 +6,12 @@
 	using System.Data.Common;
 	using System.Diagnostics.CodeAnalysis;
 	using System.Threading.Tasks;
-	using GTANetworkAPI;
+    using System.Xml;
+    using GTANetworkAPI;
 	using logs;
 	using MySql.Data.MySqlClient;
 
 	class Database : Script {
-		private const string ip = "127.0.0.1";
-		private const int port = 3306;
-		private static string user;
-		private static string password;
-		private static string database;
 
 		/* Variables */
 		private static string connStr;
@@ -23,11 +19,17 @@
 		/* Constructor */
 
 		public Database () {
-            user = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_name" );
-            password = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_password" );
-            database = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_database" );
+            LoadConnStr ();
+        }
 
-            connStr = "server=" + ip + ";user=" + user + ";database=" + database + ";port=" + port + ";password=" + password + ";";
+        private void LoadConnStr ( ) {
+            using ( XmlReader reader = XmlReader.Create ( "bridge/resources/TDS-V/config/mysql.xml", new XmlReaderSettings() ) ) {
+                while ( reader.Read() ) {
+                    if ( reader.NodeType == XmlNodeType.Element ) {
+                        connStr = "server=" + reader["ip"] + ";user=" + reader["user"] + ";database=" + reader["database"] + ";port=" + reader["port"] + ";password=" + reader["password"] + ";";
+                    }
+                }
+            }
             OnResourceStart ();
         }
 
@@ -139,17 +141,17 @@
 
 		/* Hooks */
 
-		private async void OnResourceStart () {
+		private void OnResourceStart () {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
-					API.ConsoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
-					await conn.OpenAsync ();
+					NAPI.Util.ConsoleOutput ( "DATABASE: [INFO] Attempting to connect to MySQL" );
+					conn.Open ();
 					if ( conn.State == ConnectionState.Open ) {
-						API.ConsoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
+                        NAPI.Util.ConsoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
 					} else
-                        API.ConsoleOutput ( "DATABASE: [ERROR] Connection to MySQL failed! "+ conn.State.ToString() );
+                        NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR] Connection to MySQL failed! "+ conn.State.ToString() );
                 } catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + ex );
+                    NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR] " + ex );
 				}
 			}
 		}
