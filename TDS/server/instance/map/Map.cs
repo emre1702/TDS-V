@@ -4,7 +4,7 @@ namespace TDS.server.instance.map {
 	using GTANetworkAPI;
     using TDS.server.enums;
 
-    class Map {
+    public class Map {
 		public string Name = "unknown";
 		public MapType Type = MapType.NORMAL;
 		public Dictionary<Language, string> Description = new Dictionary<Language, string> {

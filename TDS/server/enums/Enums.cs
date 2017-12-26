@@ -1,13 +1,13 @@
 ﻿namespace TDS.server.enums {
-    enum LobbyStatus {
+    public enum LobbyStatus {
         NONE, MAPCHOOSE, COUNTDOWN, ROUND, ROUNDEND
     }
 
-    enum Language {
+    public enum Language {
         ENGLISH, GERMAN
     }
 
-    enum MapType {
+    public enum MapType {
         NORMAL, BOMB
     }
 }

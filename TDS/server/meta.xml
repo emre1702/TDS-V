@@ -1,0 +1,18 @@
+<meta>
+  <info name="TDS" description="TDS-Gamemode" author="Bonus" type="gamemode" />
+
+  <script src="TDS.dll" />
+
+  <!-- Assembly -->
+  <assembly ref="System.Data.dll" />
+  <assembly ref="System.Xml.dll" />
+  <assembly ref="MySql.Data.dll" />
+
+  <!-- Settings -->
+  <settings>
+  	<setting name="mysql_name" value="-" default="root" description="The username for MySQL"/>
+  	<setting name="mysql_password" value="-" default="-" description="The password for MySQL"/>
+  	<setting name="mysql_database" value="-" default="-" description="The database-name for MySQL"/>
+  </settings>
+  
+</meta>

@@ -5,7 +5,6 @@ namespace TDS.server.instance.lobby {
 	using GTANetworkAPI;
 	using map;
     using TDS.server.enums;
-    using utility;
 
 	partial class Arena {
 
@@ -14,7 +13,6 @@ namespace TDS.server.instance.lobby {
 		private Dictionary<Language, List<string>> mapDescriptions;
 
 		private readonly Dictionary<uint, uint> spawnCounter = new Dictionary<uint, uint> ();
-		private uint dimension;
 		private Map currentMap;
 		private List<Blip> mapBlips = new List<Blip> ();
 		private Vector3 spawnpoint = new Vector3 ( 0, 0, 1000 ),
@@ -48,18 +46,26 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void CreateTeamSpawnBlips () {
+            NAPI.Util.ConsoleOutput ( "1" );
 			foreach ( KeyValuePair<uint, List<Vector3>> entry in currentMap.TeamSpawns ) {
-				Blip blip = NAPI.Blip.CreateBlip ( entry.Value[0], dimension );
-				blip.Sprite = 491;
-				blip.Color = teamBlipColors[(int)entry.Key];
-				blip.Name = "Spawn " + Teams[(int)entry.Key];
-				mapBlips.Add ( blip );
-			}
-		}
+                NAPI.Util.ConsoleOutput ( "2 "+entry.Value[0].X + " - "+ Dimension+" - "+entry.Value[0].ToString() );
+                Blip blip = API.CreateBlip ( pos: entry.Value[0], dimension: Dimension );
+                NAPI.Util.ConsoleOutput ( "3" );
+                blip.Sprite = 491;
+                NAPI.Util.ConsoleOutput ( "4" );
+                blip.Color = teamBlipColors[(int)entry.Key];
+                NAPI.Util.ConsoleOutput ( "5" );
+                blip.Name = "Spawn " + Teams[(int)entry.Key];
+                NAPI.Util.ConsoleOutput ( "6" );
+                mapBlips.Add ( blip );
+                NAPI.Util.ConsoleOutput ( "7" );
+            }
+            NAPI.Util.ConsoleOutput ( "8" );
+        }
 
 		private void CreateMapLimitBlips () {
 			foreach ( Vector3 maplimit in currentMap.MapLimits ) {
-				Blip blip = NAPI.Blip.CreateBlip ( maplimit, dimension );
+				Blip blip = NAPI.Blip.CreateBlip ( maplimit, Dimension );
 				blip.Sprite = 441;
 				blip.Name = "Limit";
 				mapBlips.Add ( blip );

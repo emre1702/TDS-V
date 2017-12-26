@@ -15,7 +15,7 @@
 
 	static class Map {
 
-		private const string mapsPath = "resources/TDS/server/maps/";
+		private const string mapsPath = "bridge/resources/TDS-V/maps/";
 		private static readonly XmlReaderSettings settings = new XmlReaderSettings ();
 
 		public static List<string> NormalMapNames = new List<string> ();

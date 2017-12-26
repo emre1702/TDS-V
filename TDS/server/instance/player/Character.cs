@@ -4,7 +4,7 @@ namespace TDS.server.instance.player {
     using lobby;
     using TDS.server.enums;
 
-    class Character {
+    public class Character {
 		public uint UID;
 		public uint AdminLvl = 0;
 		public uint DonatorLvl = 0;

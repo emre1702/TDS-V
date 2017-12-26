@@ -5,6 +5,7 @@
     using instance.lobby;
     using map;
     using TDS.server.enums;
+    using TDS.server.instance.utility;
 
     class Arena : Script {
         public static instance.lobby.Arena TheLobby;
@@ -69,7 +70,7 @@
                 TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );*/
             }
 
-            TheLobby.StartRoundGame ();
+            TheLobby.StartRoundGame ().Wait();
         }
 
         public static void Join ( Client player ) {

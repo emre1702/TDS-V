@@ -32,11 +32,11 @@ namespace TDS.server.instance.lobby {
             return amount;
         }
 
-        public void StartRoundGame ( ) {
-            StartMapChoose ();
+        public async Task StartRoundGame ( ) {
+            await StartMapChoose ();
         }
 
-        public async void StartMapChoose ( ) {
+        public async Task StartMapChoose ( ) {
             try {
                 status = LobbyStatus.MAPCHOOSE;
                 NAPI.Util.ConsoleOutput ( status.ToString () );
@@ -44,20 +44,24 @@ namespace TDS.server.instance.lobby {
                     RewardAllPlayer ();
                 DmgSys.EmptyDamagesysData ();
 
-                await Task.Run ( ( ) => {
-                    NAPI.Task.Run ( async ( ) => {
+               // await Task.Run ( ( ) => {
+                    //NAPI.Task.Run ( async ( ) => {
                         if ( currentMap != null && currentMap.Type == MapType.BOMB )
                             StopRoundBomb ();
                         currentMap = await GetNextMap ().ConfigureAwait ( false );
                         if ( currentMap.Type == MapType.BOMB )
                             BombMapChose ();
+                        NAPI.Util.ConsoleOutput ( "6" );
                         CreateTeamSpawnBlips ();
+                        NAPI.Util.ConsoleOutput ( "7" );
                         CreateMapLimitBlips ();
+                        NAPI.Util.ConsoleOutput ( "8" );
                         if ( mixTeamsAfterRound )
                             MixTeams ();
+                        NAPI.Util.ConsoleOutput ( "9" );
                         SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.MapLimits, currentMap.MapCenter );
-                    } );
-                } );
+                   // } );
+               // } );
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
             } catch ( Exception ex ) {
@@ -117,7 +121,7 @@ namespace TDS.server.instance.lobby {
             if ( currentMap.Type == MapType.BOMB )
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
-                roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime / 2 );
+                roundStartTimer = Timer.SetTimer ( async () => await StartMapChoose(), RoundEndTime / 2 );
                 SendAllPlayerEvent ( "onClientRoundEnd" );
             } else if ( DeleteWhenEmpty ) {
                 Remove ();

@@ -7,7 +7,7 @@
 	using player;
 	using extend;
 
-	internal partial class Damagesys {
+	partial class Damagesys {
 
 		private static readonly Dictionary<WeaponHash, int> sDamageDictionary = new Dictionary<WeaponHash, int> {
 			//[ Handguns ]//

@@ -8,7 +8,9 @@ using TDS.server.manager.utility;
 
 namespace TDS.server.instance.lobby {
 
-    partial class Arena : FightLobby, IRound {  
+    public partial class Arena : FightLobby, IRound {  
+
+        public Arena ( ) { }
 
         public Arena ( string name, int id = -1 ) : base ( name, id ) {
 

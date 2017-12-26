@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GTANetworkAPI;
-using TDS.server.extend;
+﻿using GTANetworkAPI;
 using TDS.server.instance.damagesys;
 using TDS.server.instance.lobby.interfaces;
 using TDS.server.instance.player;
@@ -9,7 +6,9 @@ using TDS.server.manager.utility;
 
 namespace TDS.server.instance.lobby {
 
-    partial class FightLobby : Lobby, IFight {
+    public partial class FightLobby : Lobby, IFight {
+
+        public FightLobby ( ) { }
 
         public FightLobby ( string name, int id = -1 ) : base ( name, id ) {
             DmgSys = new Damagesys ( this );

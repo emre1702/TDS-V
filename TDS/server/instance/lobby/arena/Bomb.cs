@@ -42,13 +42,13 @@ namespace TDS.server.instance.lobby {
 
 		private void BombMapChose () {
 			foreach ( Vector3 bombplace in currentMap.BombPlantPlaces ) {
-				Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), dimension );
+				Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), Dimension );
 				bombPlantPlaces.Add ( place );
-				Blip blip = NAPI.Blip.CreateBlip ( bombplace, dimension );
+				Blip blip = NAPI.Blip.CreateBlip ( bombplace, Dimension );
 				blip.Sprite = 433;
 				bombPlantBlips.Add ( blip );
 			}
-			bomb = NAPI.Object.CreateObject ( 1764669601, currentMap.BombPlantPlaces[0], new Vector3 (), dimension );
+			bomb = NAPI.Object.CreateObject ( 1764669601, currentMap.BombPlantPlaces[0], new Vector3 (), Dimension );
 		}
 
 		private void GiveBombToRandomTerrorist () {
@@ -109,7 +109,7 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void DetonateBomb () {
-			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, bomb.Position, 200, dimension );
+			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, bomb.Position, 200, Dimension );
 			FuncIterateAllPlayers ( ( player, teamID ) => {
 				DmgSys.LastHitterDictionary[player] = planter;
 				player.Kill ();
@@ -131,7 +131,7 @@ namespace TDS.server.instance.lobby {
 						bomb.Rotation = new Vector3 ( 270, 0, 0 );
 						bombPlantPlaces[i].Delete ();
 						bombPlantPlaces[i] =
-							NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), dimension );
+							NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), Dimension );
 						bombPlantBlips[i].Color = 49;
 						//bombPlantBlips[i].Flashing = true;
 						bombAtPlayer = null;
@@ -226,7 +226,7 @@ namespace TDS.server.instance.lobby {
 			bomb.Position = bombAtPlayer.Position;
 			bombAtPlayer = null;
 			bombTakeMarker = NAPI.Marker.CreateMarker ( 0, bomb.Position, new Vector3 (), new Vector3 (), 1,
-														new Color ( 180, 0, 0, 180 ), true, dimension );
+														new Color ( 180, 0, 0, 180 ), true, Dimension );
 			ColShape bombtakecol = NAPI.ColShape.CreateSphereColShape ( bomb.Position, 2 );
 			lobbyBombTakeCol[this] = bombtakecol;
 		}

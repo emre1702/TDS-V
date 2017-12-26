@@ -13,18 +13,23 @@
 	class Database : Script {
 		private const string ip = "127.0.0.1";
 		private const int port = 3306;
-		private const string user = "-";
-		private const string password = "-";
-		private const string database = "TDSV";
+		private static string user;
+		private static string password;
+		private static string database;
 
 		/* Variables */
-		private static readonly string connStr = "server=" + ip + ";user=" + user + ";database=" + database + ";port=" + port + ";password=" + password + ";";
+		private static string connStr;
 
 		/* Constructor */
 
 		public Database () {
-			Event.OnResourceStart += OnResourceStart;
-		}
+            user = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_name" );
+            password = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_password" );
+            database = NAPI.Resource.GetResourceSetting<string> ( "TDS-V", "mysql_database" );
+
+            connStr = "server=" + ip + ";user=" + user + ";database=" + database + ";port=" + port + ";password=" + password + ";";
+            OnResourceStart ();
+        }
 
 		/* Exports */
 
@@ -134,15 +139,16 @@
 
 		/* Hooks */
 
-		public void OnResourceStart () {
+		private async void OnResourceStart () {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
 					API.ConsoleOutput ( "DATABASE: [INFO] Attempting connecting to MySQL" );
-					conn.Open ();
+					await conn.OpenAsync ();
 					if ( conn.State == ConnectionState.Open ) {
 						API.ConsoleOutput ( "DATABASE: [INFO] Connected to MySQL" );
-					}
-				} catch ( Exception ex ) {
+					} else
+                        API.ConsoleOutput ( "DATABASE: [ERROR] Connection to MySQL failed! "+ conn.State.ToString() );
+                } catch ( Exception ex ) {
 					Log.Error ( "DATABASE: [ERROR] " + ex );
 				}
 			}

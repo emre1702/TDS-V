@@ -5,7 +5,7 @@
 	using GTANetworkAPI;
 	using extend;
 
-	internal partial class Damagesys {
+	partial class Damagesys {
 
 		private static readonly Dictionary<uint, Tuple<string, uint, uint>> sSpreeReward =
 			new Dictionary<uint, Tuple<string, uint, uint>> {

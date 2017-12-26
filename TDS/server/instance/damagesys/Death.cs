@@ -8,7 +8,7 @@
 	using utility;
     using TDS.server.instance.lobby;
 
-    internal partial class Damagesys {
+    partial class Damagesys {
 
 		private static readonly Dictionary<Client, Timer> sDeadTimer = new Dictionary<Client, Timer> ();
 		public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint> (),

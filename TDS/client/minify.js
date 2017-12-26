@@ -18,7 +18,6 @@ let files = [
 
 	"registerlogin/registerlogin.js",
 
-	"lobby/blips.js",
 	"lobby/bomb.js",
 	"lobby/camera.js",
 	"lobby/choice.js",
@@ -48,7 +47,11 @@ for ( let i = 0; i < files.length; i++ ) {
 code = toes5 ( code, { 
     comments: false,
     minified: true,
-    presets: ["es2015"]
+	presets: [
+		["env", {
+			uglify: true
+		}]
+	],
 } ).code;
 
 let uglify = require("uglify-js");

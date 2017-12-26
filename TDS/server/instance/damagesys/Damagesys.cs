@@ -4,7 +4,7 @@
 	using GTANetworkAPI;
 	using lobby;
 
-	internal partial class Damagesys : Script {
+    public partial class Damagesys : Script {
 
 		private readonly FightLobby lobby;
 
