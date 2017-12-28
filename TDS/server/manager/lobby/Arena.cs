@@ -1,17 +1,15 @@
 ﻿namespace TDS.server.manager.lobby {
 
-    using System.Collections.Generic;
     using GTANetworkAPI;
-    using instance.lobby;
     using map;
+    using System.Collections.Generic;
     using TDS.server.enums;
-    using TDS.server.instance.utility;
 
     class Arena : Script {
         public static instance.lobby.Arena TheLobby;
 
         public Arena ( ) {
-            TheLobby = new instance.lobby.Arena ( "arena", 1 ) {
+            TheLobby = new instance.lobby.Arena ( "arena", new Vector3 ( 0, 0, 999 ), 1 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
             };
@@ -73,6 +71,8 @@
 
         public static void Join ( Client player ) {
             TheLobby.AddPlayer ( player );
+
+            NAPI.Util.ConsoleOutput ( "Arena Join " + player.Name );
         }
 
     }

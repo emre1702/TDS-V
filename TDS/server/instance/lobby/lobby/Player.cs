@@ -8,9 +8,6 @@ namespace TDS.server.instance.lobby {
 
         public uint Armor = 100;
         public uint Health = 100;
-
-        public Vector3 spawnPoint;
-        public Vector3 spawnRotation;
         
 
         public void OnPlayerDisconnected ( Client player, byte type, string reason ) {
@@ -36,24 +33,26 @@ namespace TDS.server.instance.lobby {
 
 
         public virtual void AddPlayer ( Client player, bool spectator = false ) {
+            NAPI.Util.ConsoleOutput ( "Lobby AddPlayer " + player.Name );
             player.Freeze ( true );
             Character character = player.GetChar ();
 
             character.Lobby = this;
+            NAPI.Util.ConsoleOutput ( "Current Lobby: " + character.Lobby.Name + " - " + player.GetChar().Lobby.Name );
             character.Spectating = null;
             player.StopSpectating ();
             player.Dimension = Dimension;
 
-            player.Position = spawnPoint.Around ( 5 );
+            if ( spawnPoint != null )
+                player.Position = spawnPoint.Around ( 5 );
 
-            if ( !spectator )
+            if ( spectator )
                 AddPlayerAsSpectator ( player );
         }
 
         private void AddPlayerAsSpectator ( Client player ) {
-            Players[0].Add ( player );
+            SetPlayerTeam ( player, 0 );
             Character character = player.GetChar ();
-            character.Team = 0;
             character.Lifes = 0;
         }
 
@@ -64,9 +63,10 @@ namespace TDS.server.instance.lobby {
 
             Players[(int) teamID].Remove ( player );
 
-            if ( player.Exists ) {
+            if ( player.Exists )
                 player.Transparency = 255;
-            }
+
+            NAPI.Util.ConsoleOutput ( "RemovePlayer Lobby " + player.Name );
 
             //MainMenu.Join ( player );       // TODO
         }

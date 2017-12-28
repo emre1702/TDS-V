@@ -20,8 +20,11 @@ namespace TDS.server.instance.lobby {
         public bool DeleteWhenEmpty = true;
         public bool IsOfficial = false;
 
-            
-        public Lobby ( string name, int id = -1 ) {
+        public Vector3 spawnPoint;
+        public Vector3 spawnRotation;
+
+
+        public Lobby ( string name, Vector3 spawnpoint, int id = -1 ) {
             Name = name;
             if ( id == -1 ) {
                 int theID = 0;
@@ -31,6 +34,8 @@ namespace TDS.server.instance.lobby {
             } else {
                 ID = id;
             }
+
+            spawnPoint = spawnpoint;
 
             Dimension = GetFreeDimension();
 
@@ -45,13 +50,14 @@ namespace TDS.server.instance.lobby {
             SLobbiesByIndex.Remove ( ID );
             sDimensionsUsed.Remove ( Dimension );
 
-            FuncIterateAllPlayers ( ( player, teamID ) => {
+            FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
+                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
                 RemovePlayer ( player );
             } );
         }
 
         internal bool IsSomeoneInLobby ( ) {
-            foreach ( List<Client> playerlist in Players ) {
+            foreach ( List<NetHandle> playerlist in Players ) {
                 if ( playerlist.Count > 0 )
                     return true;
             }

@@ -7,7 +7,7 @@
 	class ResourceStart : Script {
 
 		public ResourceStart () {
-			API.SetGamemodeName ( "TDS" );
+			NAPI.Server.SetGamemodeName ( "TDS" );
 			//API.SetMapName ( "Los Santos" );
 			StartMethods ();
 		}
@@ -16,7 +16,7 @@
 			try {
 				await Map.MapOnStart ().ConfigureAwait ( false );
 			} catch ( Exception ex ) {
-				API.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
+				NAPI.Util.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
 			}
 		}
 	}

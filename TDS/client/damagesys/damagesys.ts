@@ -25,8 +25,8 @@ let damagesysdata = {
 	//damagesysbrowser: mp.browsers.new ( )
 }
 
-mp.events.add( "render", () => {
+/*mp.events.add( "render", () => {
 	if ( mp.players.local.health + mp.players.local.armour < damagesysdata.lasthparmor ) {
 		//show bloodscreen
 	}
-} );
+} ); */

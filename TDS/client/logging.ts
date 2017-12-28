@@ -1,10 +1,10 @@
 ﻿/// <reference path="types-ragemp/index.d.ts" />
 
-let activatedlogging = false;
+let activatedlogging = true;
 
-mp.events.addCommand ( "activatedalogging", ( player, text ) => {
-	activatedlogging = !activatedlogging;
-} );
+//mp.events.addCommand ( "activatedalogging", ( player, text ) => {
+//	activatedlogging = !activatedlogging;
+//} );
 
 function log ( message ) {
 	if ( activatedlogging ) {

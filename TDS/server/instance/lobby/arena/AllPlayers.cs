@@ -6,10 +6,11 @@ namespace TDS.server.instance.lobby
     partial class Arena {
 
         private void SetAllPlayersInCountdown ( ) {
-            spectatingMe = new Dictionary<Client, List<Client>> ();
-            FuncIterateAllPlayers ( ( player, teamID ) => {
+            spectatingMe = new Dictionary<NetHandle, List<NetHandle>> ();
+            FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
+                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
                 SetPlayerReadyForRound ( player, (uint) teamID );
-                player.TriggerEvent ( "onClientCountdownStart", currentMap.Name );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", currentMap.Name );
                 if ( teamID == 0 )
                     SpectateAllTeams ( player );
             } );

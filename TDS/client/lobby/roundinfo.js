@@ -109,17 +109,17 @@ function removeRoundInfo() {
     roundinfo.aliveinteams = [];
     roundinfo.drawevent = false;
 }
-function roundStartedRoundInfo(args) {
+function roundStartedRoundInfo(wastedticks) {
     roundinfo.starttick = getTick();
-    if (2 in args)
-        roundinfo.starttick -= args[2];
+    if (wastedticks != null)
+        roundinfo.starttick -= wastedticks;
     roundinfo.drawevent = true;
 }
 function addTeamInfos(teamnames, teamcolors) {
-    for (let i = 1; i < teamnames.Count; i++) {
+    for (let i = 1; i < teamnames.length; i++) {
         roundinfo.teamnames[i - 1] = teamnames[i];
     }
-    for (let i = 3; i < teamcolors.Count; i++) {
+    for (let i = 3; i < teamcolors.length; i++) {
         roundinfo.teamcolors[i - 3] = teamcolors[i];
     }
 }
@@ -127,16 +127,19 @@ function playerDeathRoundInfo(teamID, killstr) {
     roundinfo.aliveinteams[teamID]--;
     roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });
 }
-mp.events.add("onClientPlayerAmountInFightSync", (eventName, args) => {
+mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, amountaliveinteam) => {
     log("onClientPlayerAmountInFightSync start");
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
-    for (let i = 0; i < args[0].Count; i++) {
-        roundinfo.amountinteams[i] = args[0][i];
-        if (args[1] == false)
-            roundinfo.aliveinteams[i] = args[0][i];
+    amountinteam = JSON.parse(amountinteam);
+    if (isroundstarted)
+        amountaliveinteam = JSON.parse(amountaliveinteam);
+    for (let i = 0; i < amountinteam.length; i++) {
+        roundinfo.amountinteams[i] = Number.parseInt(amountinteam[i]);
+        if (!isroundstarted)
+            roundinfo.aliveinteams[i] = Number.parseInt(amountinteam[i]);
         else
-            roundinfo.aliveinteams[i] = args[2][i];
+            roundinfo.aliveinteams[i] = Number.parseInt(amountaliveinteam[i]);
     }
     log("onClientPlayerAmountInFightSync end");
 });

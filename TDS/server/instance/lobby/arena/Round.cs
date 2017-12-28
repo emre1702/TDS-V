@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,9 +21,6 @@ namespace TDS.server.instance.lobby {
         private long startTick;
         private bool mixTeamsAfterRound = true;
 
-        private List<List<Client>> alivePlayers = new List<List<Client>> {
-            new List<Client> ()
-        };
 
         private int GetTeamAmountStillInRound ( int minalive = 1 ) {
             int amount = 0;
@@ -36,6 +34,14 @@ namespace TDS.server.instance.lobby {
             await StartMapChoose ();
         }
 
+        private static List<Tuple<float, float, float>> GetJsonSerializableList ( List<Vector3> list ) {
+            List<Tuple<float, float, float>> newlist = new List<Tuple<float, float, float>> ();
+            foreach ( Vector3 vector in list ) {
+                newlist.Add ( new Tuple<float, float, float> ( vector.X, vector.Y, vector.Z ) );
+            }
+            return newlist;
+        } 
+
         public async Task StartMapChoose ( ) {
             try {
                 status = LobbyStatus.MAPCHOOSE;
@@ -45,9 +51,10 @@ namespace TDS.server.instance.lobby {
                 DmgSys.EmptyDamagesysData ();
 
                 await Task.Run ( async ( ) => {
+                    map.Map oldMap = currentMap;
                     currentMap = await GetNextMap ().ConfigureAwait ( false );
                     NAPI.Task.Run ( ( ) => {
-                        if ( currentMap != null && currentMap.Type == MapType.BOMB )
+                        if ( oldMap != null && oldMap.Type == MapType.BOMB )
                             StopRoundBomb ();
                         if ( currentMap.Type == MapType.BOMB )
                             BombMapChose ();
@@ -55,7 +62,9 @@ namespace TDS.server.instance.lobby {
                         CreateMapLimitBlips ();
                         if ( mixTeamsAfterRound )
                             MixTeams ();
-                        SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.MapLimits, currentMap.MapCenter );
+                        List <Tuple<float, float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
+                        NAPI.Util.ConsoleOutput ( "1: " + currentMap.MapCenter.X + " " + currentMap.MapCenter.Y + " " + currentMap.MapCenter.Z );
+                        SendAllPlayerEvent ( "onClientMapChange", -1, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
                     } );
                 } );
 
@@ -68,7 +77,7 @@ namespace TDS.server.instance.lobby {
         private void StartRoundCountdown ( ) {
             status = LobbyStatus.COUNTDOWN;
             NAPI.Util.ConsoleOutput ( status.ToString () );
-            spectatingMe = new Dictionary<Client, List<Client>> ();
+            spectatingMe = new Dictionary<NetHandle, List<NetHandle>> ();
             SetAllPlayersInCountdown ();
             startTick = Environment.TickCount;
 
@@ -80,15 +89,16 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
             roundEndTimer = Timer.SetTimer ( EndRound, roundTime );
-            alivePlayers = new List<List<Client>> ();
+            alivePlayers = new List<List<NetHandle>> ();
             List<uint> amountinteams = new List<uint> ();
             for ( int i = 0; i < Players.Count; i++ ) {
                 uint amountinteam = (uint) Players[i].Count;
                 if ( i != 0 )
                     amountinteams.Add ( amountinteam );
-                alivePlayers.Add ( new List<Client> () );
+                alivePlayers.Add ( new List<NetHandle> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
-                    StartRoundForPlayer ( Players[i][j], (uint) i );
+                    NAPI.Util.ConsoleOutput ( "StartRound " + i + ":" + j + " " + NAPI.Player.GetPlayerFromHandle ( Players[i][j] ).Name );
+                    StartRoundForPlayer ( NAPI.Player.GetPlayerFromHandle ( Players[i][j] ), (uint) i );
                 }
             }
 
@@ -100,7 +110,8 @@ namespace TDS.server.instance.lobby {
 
         private void StartRoundForPlayer ( Client player, uint teamID ) {
             Character character = player.GetChar ();
-            player.TriggerEvent ( "onClientRoundStart", teamID == 0 );
+            NAPI.Util.ConsoleOutput ( "StartRoundForPlayer " + player.Name );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 );
             character.Team = teamID;
             if ( teamID != 0 ) {
                 character.Lifes = Lifes;

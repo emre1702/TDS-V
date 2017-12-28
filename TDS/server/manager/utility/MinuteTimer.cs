@@ -18,14 +18,14 @@
 		private async void MinuteTimerFunc () {
 			try {
 				// playtime //
-				List<Client> players = API.GetAllPlayers ();
+				List<Client> players = NAPI.Pools.GetAllPlayers ();
 				foreach ( Client player in players ) {
 					if ( player.Exists ) {
 						Character character = player.GetChar ();
 						if ( character.LoggedIn ) {
 							character.Playtime++;
 							if ( character.Playtime % 30 == 0 ) {
-								await Account.SavePlayerData ( player ).ConfigureAwait ( false );
+								Account.SavePlayerData ( player );
 							}
 						}
 					}

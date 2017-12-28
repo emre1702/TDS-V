@@ -8,7 +8,7 @@ namespace TDS.server.instance.lobby {
 
     public partial class FightLobby : Lobby, IFight {
 
-        public FightLobby ( string name, int id = -1 ) : base ( name, id ) {
+        public FightLobby ( string name, Vector3 spawnpoint, int id = -1 ) : base ( name, spawnpoint, id ) {
             DmgSys = new Damagesys ( this );
         }
 
@@ -24,7 +24,7 @@ namespace TDS.server.instance.lobby {
         public override void AddPlayer ( Client player, bool spectator = false ) {
             base.AddPlayer ( player, spectator );
 
-            player.TriggerEvent ( "onClientPlayerJoinRoundlessLobby" );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinRoundlessLobby" );
             player.StopSpectating ();
             player.Freeze ( false );
         }

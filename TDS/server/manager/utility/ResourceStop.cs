@@ -21,9 +21,9 @@
 			try {
 				await Log.SaveInDatabase ().ConfigureAwait ( false );
 
-				List<Client> players = API.GetAllPlayers ();
+				List<Client> players = NAPI.Pools.GetAllPlayers ();
 				foreach ( Client player in players ) {
-					await Account.SavePlayerData ( player ).ConfigureAwait ( false );
+					Account.SavePlayerData ( player );
 				}
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in SaveAllInDatabase:" + ex.Message );
@@ -31,29 +31,29 @@
 		}
 
 		private void RemoveAllCreated () {
-			List<NetHandle> blips = API.GetAllBlips ();
+			List<NetHandle> blips = NAPI.Pools.GetAllBlips ();
 			foreach ( NetHandle blip in blips )
-				API.DeleteEntity ( blip );
+				NAPI.Entity.DeleteEntity ( blip );
 
-			List<NetHandle> markers = API.GetAllMarkers ();
+			List<NetHandle> markers = NAPI.Pools.GetAllMarkers ();
 			foreach ( NetHandle marker in markers )
-				API.DeleteEntity ( marker );
+                NAPI.Entity.DeleteEntity ( marker );
 
-			List<NetHandle> peds = API.GetAllPeds ();
+			List<NetHandle> peds = NAPI.Pools.GetAllPeds ();
 			foreach ( NetHandle ped in peds )
-				API.DeleteEntity ( ped );
+                NAPI.Entity.DeleteEntity ( ped );
 
-			List<NetHandle> pickups = API.GetAllPickups ();
+			List<NetHandle> pickups = NAPI.Pools.GetAllPickups ();
 			foreach ( NetHandle pickup in pickups )
-				API.DeleteEntity ( pickup );
+                NAPI.Entity.DeleteEntity ( pickup );
 
-			List<NetHandle> vehicles = API.GetAllVehicles ();
+			List<NetHandle> vehicles = NAPI.Pools.GetAllVehicles ();
 			foreach ( NetHandle vehicle in vehicles )
-				API.DeleteEntity ( vehicle );
+                NAPI.Entity.DeleteEntity ( vehicle );
 
-			List<NetHandle> objects = API.GetAllObjects ();
+			List<NetHandle> objects = NAPI.Pools.GetAllObjects ();
 			foreach ( NetHandle obj in objects )
-				API.DeleteEntity ( obj );
+                NAPI.Entity.DeleteEntity ( obj );
 		}
 	}
 

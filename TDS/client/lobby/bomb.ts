@@ -100,7 +100,7 @@ function checkPlantDefuse() {
 function localPlayerGotBomb( placestoplant ) {
 	bombdata.changed = true;
 	bombdata.gotbomb = true;
-	let i = placestoplant.Count;
+	let i = placestoplant.length;
 	while ( i-- )
 		bombdata.placestoplant[i] = placestoplant[i];
 	bombdata.plantdefuseevent = true;

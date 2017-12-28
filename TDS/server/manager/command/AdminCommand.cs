@@ -107,7 +107,7 @@
 								"{1}", targetUID.ToString ()
 							}
 						};
-						Client target = API.GetPlayerFromName ( targetname );
+						Client target = NAPI.Player.GetPlayerFromName ( targetname );
 						if ( target != null && target.GetChar ().LoggedIn ) {
 							Character targetcharacter = target.GetChar ();
 							targetadminlvl = targetcharacter.AdminLvl;
@@ -142,26 +142,26 @@
 		[Command ( "goto", Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				Vector3 playerpos = API.GetEntityPosition ( target );
+				Vector3 playerpos = NAPI.Entity.GetEntityPosition ( target );
 				if ( player.IsInVehicle ) {
-					API.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+                    NAPI.Entity.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else if ( target.IsInVehicle ) {
 					List<Client> usersInCar = target.Vehicle.Occupants;
-					if ( usersInCar.Count < API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
+					if ( usersInCar.Count < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
 						Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
 						foreach ( Client occupant in usersInCar ) {
 							occupiedseats[occupant.VehicleSeat] = true;
 						}
-						for ( int i = 0; i < API.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
+						for ( int i = 0; i < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
 							if ( !occupiedseats.ContainsKey ( i ) ) {
-								API.SetPlayerIntoVehicle ( player, target.Vehicle, i );
+								NAPI.Player.SetPlayerIntoVehicle ( player, target.Vehicle, i );
 								return;
 							}
 						}
 					}
-					API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+                    NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
 				} else {
-					API.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
+                    NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
 				}
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
@@ -170,19 +170,19 @@
 		[Command ( "xyz", Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
 			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				API.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
+                NAPI.Entity.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
 		[Command ( "cveh", Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
 		public void SpawnCarCommand ( Client player, string name ) {
 			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
-				VehicleHash model = API.VehicleNameToModel ( name );
+				VehicleHash model = NAPI.Util.VehicleNameToModel ( name );
 
-				Vector3 rot = API.GetEntityRotation ( player.Handle );
-				Vehicle veh = API.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
+				Vector3 rot = NAPI.Entity.GetEntityRotation ( player.Handle );
+				Vehicle veh = NAPI.Vehicle.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
 
-				API.SetPlayerIntoVehicle ( player, veh, -1 );
+				NAPI.Player.SetPlayerIntoVehicle ( player, veh, -1 );
 			}
 		}
 

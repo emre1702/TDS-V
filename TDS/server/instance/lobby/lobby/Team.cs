@@ -24,12 +24,13 @@ namespace TDS.server.instance.lobby {
             0
         };
 
-        internal virtual void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
+        public virtual void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
             uint teamid = (uint) Teams.Count;
             Teams.Add ( name );
             teamSkins.Add ( hash );
-            Players.Add ( new List<Client> () );
-            
+            Players.Add ( new List<NetHandle> () );
+            alivePlayers.Add ( new List<NetHandle> () );
+
             TeamColorStrings[teamid] = colorstring;
             teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
             Color color = Colors.FontColor[colorstring];
@@ -37,27 +38,28 @@ namespace TDS.server.instance.lobby {
         }
 
         public void MixTeams ( ) {
-            List<List<Client>> newplayerslist = new List<List<Client>> {
-                new List<Client> ()
+            List<List<NetHandle>> newplayerslist = new List<List<NetHandle>> {
+                new List<NetHandle> ()
             };
             for ( int i = 0; i < Players[0].Count; i++ ) {
                 newplayerslist[0].Add ( Players[0][i] );
             }
             for ( int i = 1; i < Players.Count; i++ )
-                newplayerslist.Add ( new List<Client> () );
+                newplayerslist.Add ( new List<NetHandle> () );
             for ( uint i = 1; i < Players.Count; i++ ) {
-                foreach ( Client player in Players[(int) i] ) {
-                    if ( player.Exists ) {
-                        int teamID = (int) GetTeamIDWithFewestMember ( newplayerslist );
+                foreach ( NetHandle playerhandle in Players[(int) i] ) {
+                    Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+                    if ( NAPI.Player.GetPlayerFromHandle ( player ).Exists ) {
+                        int teamID = (int) GetTeamIDWithFewestMember ( ref newplayerslist );
                         newplayerslist[teamID].Add ( player );
                         player.SetSkin ( teamSkins[teamID] );
                     }
                 }
             }
-            Players = new List<List<Client>> ( newplayerslist );
+            Players = new List<List<NetHandle>> ( newplayerslist );
         }
 
-        public uint GetTeamIDWithFewestMember ( List<List<Client>> newplayerlist ) {
+        public uint GetTeamIDWithFewestMember ( ref List<List<NetHandle>> newplayerlist ) {
             uint lastteamID = 1;
             int lastteamcount = newplayerlist[1].Count;
             for ( uint k = 2; k < newplayerlist.Count; k++ ) {
@@ -76,7 +78,7 @@ namespace TDS.server.instance.lobby {
 
         public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
             player.Team = (int) teamID;     // testit - need to remove this when creating own damage-system
-            Players[(int) teamID].Add ( player );
+            Players[(int) teamID].Add ( player.Handle );
             player.SetSkin ( teamSkins[(int) teamID] );
             if ( character == null )
                 character = player.GetChar ();

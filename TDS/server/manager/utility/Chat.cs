@@ -14,6 +14,7 @@
 		}
 
 		private static void OnChatMessageFunc ( Client player, string message ) {
+            NAPI.Util.ConsoleOutput ( "2: " + player.Name + ": " + message );
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "chat " + character.Lobby.Name );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
@@ -23,7 +24,9 @@
 
 		private static void OnChatMessage ( Client player, string message, CancelEventArgs e ) {
 			e.Cancel = true;
-			OnChatMessageFunc ( player, message );
+            NAPI.Util.ConsoleOutput ( player.GetChar().Lobby.Name + ": " + player.Name + ": " + message );
+            if ( player.GetChar().LoggedIn )
+			    OnChatMessageFunc ( player, message );
 		}
 
 		public void SendGlobalMessage ( Client player, string message ) {
@@ -31,7 +34,7 @@
 			Log.Chat ( message, player, "global" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
 			string changedmessage = "[GLOBAL] ~" + teamfontcolor + "~" + player.SocialClubName + "~s~: " + message;
-			API.SendChatMessageToAll ( changedmessage );
+			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminMessage ( Client player, string message ) {

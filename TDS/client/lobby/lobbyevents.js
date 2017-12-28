@@ -1,20 +1,22 @@
 "use strict";
-mp.events.add("onClientPlayerJoinLobby", (args) => {
+mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
     log("onClientPlayerJoinLobby start");
-    rounddata.isspectator = args[0];
-    setMapInfo(args[1]);
-    addTeamInfos(args[2], args[3]);
-    lobbysettings.countdowntime = args[4];
-    roundinfo.roundtime = args[5];
-    lobbysettings.bombdetonatetime = args[6];
-    lobbysettings.bombplanttime = args[7];
-    lobbysettings.bombdefusetime = args[8];
-    lobbysettings.roundendtime = args[9];
+    rounddata.isspectator = isspectator;
+    setMapInfo(mapname);
+    teamnames = JSON.parse(teamnames);
+    teamcolors = JSON.parse(teamcolors);
+    addTeamInfos(teamnames, teamcolors);
+    lobbysettings.countdowntime = countdowntime;
+    roundinfo.roundtime = roundtime;
+    lobbysettings.bombdetonatetime = bombdetonatetime;
+    lobbysettings.bombplanttime = bombplanttime;
+    lobbysettings.bombdefusetime = bombdefusetime;
+    lobbysettings.roundendtime = roundendtime;
     log("onClientPlayerJoinLobby end");
 });
-mp.events.add("onClientPlayerLeaveLobby", (args) => {
+mp.events.add("onClientPlayerLeaveLobby", (player) => {
     log("onClientPlayerLeaveLobby start");
-    if (mp.players.local == args[0]) {
+    if (mp.players.local == player) {
         toggleFightMode(false);
         removeBombThings();
         removeRoundThings(true);
@@ -23,6 +25,6 @@ mp.events.add("onClientPlayerLeaveLobby", (args) => {
     }
     log("onClientPlayerLeaveLobby end");
 });
-mp.events.add("onClientJoinMainMenu", (args) => {
+mp.events.add("onClientJoinMainMenu", () => {
     mp.game.cam.doScreenFadeIn(100);
 });

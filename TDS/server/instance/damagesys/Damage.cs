@@ -96,9 +96,9 @@
 		private readonly Dictionary<WeaponHash, int> customDamageDictionary = new Dictionary<WeaponHash, int> ();
 		private readonly Dictionary<WeaponHash, float> customHeadMultiplicator = new Dictionary<WeaponHash, float> ();
 
-		public Dictionary<Client, Dictionary<Client, int>> AllHitters = new Dictionary<Client, Dictionary<Client, int>> ();
-		public Dictionary<Client, Client> LastHitterDictionary = new Dictionary<Client, Client> ();
-		public Dictionary<Client, int> PlayerDamage = new Dictionary<Client, int> ();
+		public Dictionary<NetHandle, Dictionary<NetHandle, int>> AllHitters = new Dictionary<NetHandle, Dictionary<NetHandle, int>> ();
+		public Dictionary<NetHandle, NetHandle> LastHitterDictionary = new Dictionary<NetHandle, NetHandle> ();
+		public Dictionary<NetHandle, int> PlayerDamage = new Dictionary<NetHandle, int> ();
 
 
 		private int GetDamage ( WeaponHash hash, bool headshot ) {
@@ -145,7 +145,7 @@
 			// Last-Hitter //
 			LastHitterDictionary[hitted] = player;
 			if ( !AllHitters.ContainsKey ( hitted ) )
-				AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
+				AllHitters.TryAdd ( hitted, new Dictionary<NetHandle, int> () );
 			if ( !AllHitters[hitted].ContainsKey ( player ) )
 				AllHitters[hitted][player] += damage;
 			else
@@ -153,7 +153,7 @@
 		}
 
 		private void DamagedPlayer ( Client player, Client hitted, uint weapon, bool headshot ) {
-			if ( API.IsPlayerDead ( hitted ) == false && hitted.Dimension == player.Dimension ) {
+			if ( !NAPI.Player.IsPlayerDead ( hitted ) && hitted.Dimension == player.Dimension ) {
 				Character character = player.GetChar ();
 				if ( character.Team != hitted.GetChar ().Team ) {
                     WeaponHash hash = (WeaponHash) weapon;
@@ -163,7 +163,7 @@
 					if ( damage > 0 ) {
 						DamagePlayer ( player, hitted, damage );
 						if ( character.HitsoundOn )
-							player.TriggerEvent ( "onClientPlayerHittedOpponent" );
+                            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
 						if ( hitted.Health == 0 ) {
 							hitted.Kill ();
 							OnPlayerDeath ( hitted, player.Handle, weapon, null );
@@ -175,7 +175,7 @@
 
 		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic[] args ) {
 			if ( name == "onPlayerHitOtherPlayer" ) {
-				Client hitted = API.GetPlayerFromHandle ( args[0] );
+				Client hitted = NAPI.Player.GetPlayerFromHandle ( args[0] );
 				if ( hitted != null ) {
 					Lobby playerlobby = player.GetChar ().Lobby;
 					if ( playerlobby is FightLobby fightlobby )

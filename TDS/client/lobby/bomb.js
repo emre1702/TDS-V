@@ -91,14 +91,14 @@ function checkPlantDefuse() {
     else
         checkPlantDefuseStop();
 }
-function localPlayerGotBomb(placestoplant) {
+exports.localPlayerGotBomb = function (placestoplant) {
     bombdata.changed = true;
     bombdata.gotbomb = true;
-    let i = placestoplant.Count;
+    let i = placestoplant.length;
     while (i--)
         bombdata.placestoplant[i] = placestoplant[i];
     bombdata.plantdefuseevent = true;
-}
+};
 function localPlayerPlantedBomb() {
     bombdata.gotbomb = false;
     bombdata.plantdefuseevent = false;

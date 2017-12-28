@@ -14,8 +14,10 @@
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", Group = "user" )]
 		public static void Leave ( Client player ) {
 			Lobby lobby = player.GetChar ().Lobby;
+            NAPI.Util.ConsoleOutput ( "leave " + player.Name );
 			if ( lobby != MainMenu.TheLobby ) {
-				lobby.RemovePlayer ( player );
+                NAPI.Util.ConsoleOutput ( "leave2 " + player.Name );
+                lobby.RemovePlayer ( player );
 			}
 		}
 
@@ -40,35 +42,37 @@
 		#region Chat
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", GreedyArg = true, Group = "user" )]
 		public static void GlobalChat ( Client player, string text ) {
-			Chat.Instance.SendGlobalMessage ( player, text );
+            if ( player.GetChar().LoggedIn )
+			    Chat.Instance.SendGlobalMessage ( player, text );
 		}
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", GreedyArg = true, Group = "user" )]
 		public static void TeamChat ( Client player, string text ) {
-			Chat.Instance.SendTeamChat ( player, text );
+            if ( player.GetChar ().LoggedIn )
+                Chat.Instance.SendTeamChat ( player, text );
 		}
 		#endregion
 
 		#region Utility
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
-			if ( API.IsPlayerInAnyVehicle ( sender ) ) {
-				NetHandle veh = API.GetPlayerVehicle ( sender );
-				Vector3 pos = API.GetEntityPosition ( veh );
-				API.SendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = API.GetEntityRotation ( veh );
-				API.SendChatMessageToPlayer ( sender, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
+			if ( NAPI.Player.IsPlayerInAnyVehicle ( sender ) ) {
+				NetHandle veh = NAPI.Player.GetPlayerVehicle ( sender );
+				Vector3 pos = NAPI.Entity.GetEntityPosition ( veh );
+                NAPI.Chat.SendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
+				Vector3 rot = NAPI.Entity.GetEntityRotation ( veh );
+                NAPI.Chat.SendChatMessageToPlayer ( sender, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
 			} else {
-				Vector3 pos = API.GetEntityPosition ( sender );
-				API.SendChatMessageToPlayer ( sender, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = API.GetEntityRotation ( sender );
-				API.SendChatMessageToPlayer ( sender, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
+				Vector3 pos = NAPI.Entity.GetEntityPosition ( sender );
+				NAPI.Chat.SendChatMessageToPlayer ( sender, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
+				Vector3 rot = NAPI.Entity.GetEntityRotation ( sender );
+				NAPI.Chat.SendChatMessageToPlayer ( sender, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
 			}
 		}
 
 		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", Group = "user" )]
 		public void CheckMapName ( Client player, string mapname ) {
-			API.SendNotificationToPlayer ( player, Map.MapByName.ContainsKey ( mapname ) ? "map-name already taken" : "map-name is available" );
+			NAPI.Notification.SendNotificationToPlayer ( player, Map.MapByName.ContainsKey ( mapname ) ? "map-name already taken" : "map-name is available" );
 		}
 		#endregion
 

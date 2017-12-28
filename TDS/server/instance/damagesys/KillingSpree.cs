@@ -19,7 +19,7 @@
 					15, new Tuple<string, uint, uint> ( "healtharmor", 100, 0 )
 				}
 			};
-		public Dictionary<Client, uint> PlayerSpree = new Dictionary<Client, uint> ();
+		public Dictionary<NetHandle, uint> PlayerSpree = new Dictionary<NetHandle, uint> ();
 
 		private void CheckKillingSpree ( Client player ) {
 			if ( sSpreeReward.ContainsKey ( PlayerSpree[player] ) ) {

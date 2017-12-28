@@ -11,11 +11,11 @@ namespace TDS.server.instance.lobby {
 
 	partial class Arena {
 		private readonly Dictionary<string, uint> mapVotes = new Dictionary<string, uint> ();
-		private readonly Dictionary<Client, string> playerVotes = new Dictionary<Client, string> ();
+		private readonly Dictionary<NetHandle, string> playerVotes = new Dictionary<NetHandle, string> ();
 
         public void SendMapsForVoting ( Client player ) {
 			if ( mapNames != null ) {
-				player.TriggerEvent ( "onMapMenuOpen", mapNames, mapDescriptions[player.GetChar ().Language] );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onMapMenuOpen", mapNames, mapDescriptions[player.GetChar ().Language] );
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace TDS.server.instance.lobby {
 					mapnames.Add ( pair.Key );
 					mapvotes.Add ( pair.Value );
 				}
-				player.TriggerEvent ( "onMapVotingSyncOnJoin", mapnames, mapvotes );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onMapVotingSyncOnJoin", mapnames, mapvotes );
 			}
 		}
 	}

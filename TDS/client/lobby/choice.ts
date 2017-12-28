@@ -19,9 +19,9 @@ mp.events.add( "createLobby", function () {
 
 } );
 
-mp.events.add( "onClientJoinMainMenu", ( args ) => {
+mp.events.add( "onClientJoinMainMenu", () => {
 	log( "onClientJoinMainMenu start" );
-	lobbychoicedata.browser = mp.browsers.new( "client/window/lobby/choice.html" );
+	lobbychoicedata.browser = mp.browsers.new( "package://TDS-V/window/lobby/choice.html" );
 	mp.events.add( 'browserDomReady', ( browser ) => {
 		if ( browser == lobbychoicedata.browser ) {
 			lobbychoicedata.browser.execute( "getLobbyChoiceLanguage (" + JSON.stringify( getLang( "lobby_choice" ) ) + ")" );
@@ -39,13 +39,13 @@ function destroyLobbyChoiceBrowser() {
 		mp.gui.cursor.visible = false;
 }
 
-mp.events.add( "onClientPlayerJoinLobby", ( args ) => {
+mp.events.add( "onClientPlayerJoinLobby", () => {
 	log( "onClientPlayerJoinLobby start" );
 	destroyLobbyChoiceBrowser();
 	log( "onClientPlayerJoinLobby end" );
 } );
 
-mp.events.add( "onClientPlayerJoinRoundlessLobby", ( args ) => {
+mp.events.add( "onClientPlayerJoinRoundlessLobby", () => {
 	log( "onClientPlayerJoinRoundlessLobby start" );
 	destroyLobbyChoiceBrowser();
 	log( "onClientPlayerJoinRoundlessLobby end" );

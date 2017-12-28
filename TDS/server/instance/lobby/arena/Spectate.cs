@@ -7,13 +7,13 @@ namespace TDS.server.instance.lobby {
 
 	partial class Arena {
 
-		private Dictionary<Client, List<Client>> spectatingMe = new Dictionary<Client, List<Client>> ();
+		private Dictionary<NetHandle, List<NetHandle>> spectatingMe = new Dictionary<NetHandle, List<NetHandle>> ();
 
         public void RespawnPlayerInSpectateMode ( Client player ) {
             player.Position = spawnPoint.Around ( 10 );
             player.Freeze ( true );
             SpectateTeammate ( player );
-            player.TriggerEvent ( "onClientPlayerSpectateMode" );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerSpectateMode" );
         }
 
         public void SpectateTeammate ( Client player, bool forwards = true, int givenIndex = -1, int givenTeam = -1 ) {
@@ -35,7 +35,7 @@ namespace TDS.server.instance.lobby {
 					if ( index < 0 )
 						index = alivePlayers[(int)teamID].Count - 1;
 				}
-				Spectate ( player, alivePlayers[(int)teamID][index] );
+				Spectate ( player, NAPI.Player.GetPlayerFromHandle ( alivePlayers[(int)teamID][index] ) );
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace TDS.server.instance.lobby {
 				if ( index < 0 )
 					index = alivePlayers[(int)teamID].Count - 1;
 			}
-			Spectate ( player, alivePlayers[(int)teamID][index] );
+			Spectate ( player, NAPI.Player.GetPlayerFromHandle ( alivePlayers[(int)teamID][index] ) );
 		}
 
 		private void Spectate ( Client player, Client target ) {
@@ -83,7 +83,7 @@ namespace TDS.server.instance.lobby {
 						character.Spectating = target;
 						player.Spectate ( target );
 						if ( !spectatingMe.ContainsKey ( target ) ) {
-							spectatingMe[target] = new List<Client> ();
+							spectatingMe[target] = new List<NetHandle> ();
 						}
 						spectatingMe[target].Add ( player );
 					} else {
@@ -103,10 +103,10 @@ namespace TDS.server.instance.lobby {
 		private void PlayerCantBeSpectatedAnymore ( Client player, int givenindex, int giventeam ) {
 			if ( spectatingMe.ContainsKey ( player ) ) {
 				for ( int i = spectatingMe[player].Count - 1; i >= 0; i-- ) {
-					if ( spectatingMe[player][i].GetChar ().Team == 0 )
-						SpectateAllTeams ( spectatingMe[player][i], true, givenindex, giventeam );
+					if ( NAPI.Player.GetPlayerFromHandle ( spectatingMe[player][i] ).GetChar ().Team == 0 )
+						SpectateAllTeams ( NAPI.Player.GetPlayerFromHandle ( spectatingMe[player][i] ), true, givenindex, giventeam );
 					else
-						SpectateTeammate ( spectatingMe[player][i], true, givenindex, giventeam );
+						SpectateTeammate ( NAPI.Player.GetPlayerFromHandle ( spectatingMe[player][i] ), true, givenindex, giventeam );
 				}
 				spectatingMe.Remove ( player );
 			}

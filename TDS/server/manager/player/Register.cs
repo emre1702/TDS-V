@@ -29,9 +29,11 @@
 			};
 			await Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters ).ConfigureAwait ( false );
 			await Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams ).ConfigureAwait ( false );
-			Account.AddAccount ( player.SocialClubName, uid );
-			Login.LoginPlayer ( player, uid );
-		}
+            NAPI.Task.Run ( ( ) => {
+                Account.AddAccount ( player.SocialClubName, uid );
+                Login.LoginPlayer ( player, uid );
+            } );
+        }
 	}
 
 }

@@ -120,7 +120,7 @@
 		}
 
 		public static void SendLangNotification ( this Client player, string type, params string[] args ) {
-			API.Shared.SendNotificationToPlayer ( player, player.GetLang ( type, args ) );
+			NAPI.Notification.SendNotificationToPlayer ( player, player.GetLang ( type, args ) );
 		}
 
 		public static string GetReplaced ( string str, params string[] args ) {
@@ -136,7 +136,7 @@
 
 		public static void SendMessageToAll ( string type, params string[] args ) {
 			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
-			List<Client> players = API.Shared.GetAllPlayers ();
+			List<Client> players = NAPI.Pools.GetAllPlayers ();
 			foreach ( Client player in players ) {
 				player.SendChatMessage ( texts[player.GetChar ().Language] );
 			}
@@ -144,9 +144,9 @@
 
 		public static void SendNotificationToAll ( string type, params string[] args ) {
 			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
-			List<Client> players = API.Shared.GetAllPlayers ();
+			List<Client> players = NAPI.Pools.GetAllPlayers ();
 			foreach ( Client player in players ) {
-				API.Shared.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] );
+                NAPI.Notification.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] );
 			}
 		}
 	}

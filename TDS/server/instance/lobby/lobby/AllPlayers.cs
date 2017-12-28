@@ -9,56 +9,68 @@ namespace TDS.server.instance.lobby {
 
     partial class Lobby {
 
-        public List<List<Client>> Players = new List<List<Client>> {
-            new List<Client> ()
+        public List<List<NetHandle>> Players = new List<List<NetHandle>> {
+            new List<NetHandle> ()
         };
-        private List<List<Client>> alivePlayers = new List<List<Client>> {
-            new List<Client> ()
+        public List<List<NetHandle>> alivePlayers = new List<List<NetHandle>> {
+            new List<NetHandle> ()
         };
 
-        internal void FuncIterateAllPlayers ( Action<Client, int> func, int teamID = -1 ) {
+        internal void FuncIterateAllPlayers ( Action<NetHandle, int> func, int teamID = -1 ) {
             if ( teamID == -1 ) {
                 for ( int i = 0; i < Players.Count; i++ )
-                    for ( int j = Players[i].Count - 1; j >= 0; j-- )
-                        if ( Players[i][j].Exists ) {
-                            if ( Players[i][j].GetChar ().Lobby == this ) {
-                                func ( Players[i][j], i );
+                    for ( int j = Players[i].Count - 1; j >= 0; j-- ) {
+                        Client player = NAPI.Player.GetPlayerFromHandle ( Players[i][j] );
+                        if ( player.Exists ) {
+                            if ( player.GetChar ().Lobby == this ) {
+                                func ( player.Handle, i );
                             } else
                                 Players[i].RemoveAt ( j );
                         } else
                             Players[i].RemoveAt ( j );
+                    }
             } else
-                for ( int j = Players[teamID].Count - 1; j >= 0; j-- )
-                    if ( Players[teamID][j].Exists ) {
-                        if ( Players[teamID][j].GetChar ().Lobby == this ) {
-                            func ( Players[teamID][j], teamID );
+                for ( int j = Players[teamID].Count - 1; j >= 0; j-- ) {
+                    Client player = NAPI.Player.GetPlayerFromHandle ( Players[teamID][j] );
+                    if ( player.Exists ) {
+                        if ( player.GetChar ().Lobby == this ) {
+                            func ( player.Handle, teamID );
                         } else
                             Players[teamID].RemoveAt ( j );
                     } else
                         Players[teamID].RemoveAt ( j );
+                }
         }
 
         public void SendAllPlayerEvent ( string eventName, int teamindex = -1, params object[] args ) {
             if ( teamindex == -1 ) {
-                FuncIterateAllPlayers ( ( player, teamID ) => { NAPI.ClientEvent.TriggerClientEvent ( player, eventName, args ); } );
+                FuncIterateAllPlayers ( ( player, teamID ) => { NAPI.ClientEvent.TriggerClientEvent ( NAPI.Player.GetPlayerFromHandle ( player ), eventName, args ); } );
             } else
-                FuncIterateAllPlayers ( ( player, teamID ) => { NAPI.ClientEvent.TriggerClientEvent ( player, eventName, args ); }, teamindex );
+                FuncIterateAllPlayers ( ( player, teamID ) => { NAPI.ClientEvent.TriggerClientEvent ( NAPI.Player.GetPlayerFromHandle ( player ), eventName, args ); }, teamindex );
         }
 
         public void SendAllPlayerLangNotification ( string langstr, int teamindex = -1, params string[] args ) {
             Dictionary<Language, string> texts = ServerLanguage.GetLangDictionary ( langstr, args );
             FuncIterateAllPlayers (
-                ( player, teamID ) => { NAPI.Notification.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] ); }, teamindex );
+                ( playerhandle, teamID ) => {
+                    Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+                    NAPI.Notification.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] );
+                }, teamindex );
         }
 
         public void SendAllPlayerLangMessage ( string langstr, int teamindex = -1, params string[] args ) {
             Dictionary<Language, string> texts = ServerLanguage.GetLangDictionary ( langstr, args );
-            FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( texts[player.GetChar ().Language] ); },
-                                        teamindex );
+            FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
+                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+                player.SendChatMessage ( texts[player.GetChar ().Language] );
+            },teamindex );
         }
 
         public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
-            FuncIterateAllPlayers ( ( player, teamID ) => { player.SendChatMessage ( message ); }, teamindex );
+            FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
+                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+                player.SendChatMessage ( message );
+            }, teamindex );
         }
     }
 }

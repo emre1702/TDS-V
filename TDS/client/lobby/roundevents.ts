@@ -1,54 +1,56 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 
-mp.events.add( "onClientMapChange", function ( args ) {
+mp.events.add( "onClientMapChange", function ( maplimit, mapmidx, mapmidy, mapmidz ) {
 	log( "onClientMapChange start" );
-	mp.game.cam.doScreenFadeIn ( lobbysettings.roundendtime / 2 );
-	if ( args[0].Count > 0 )
-		loadMapLimitData( args[0] );
-	loadMapMiddleForCamera( args[1] );
+	mp.game.cam.doScreenFadeIn( lobbysettings.roundendtime / 2 );
+	maplimit = JSON.parse( maplimit );
+	if ( maplimit.length > 0 )
+		loadMapLimitData( maplimit );
+	mp.gui.chat.push( mapmidx + " - " + mapmidy + " - " + mapmidz );
+	loadMapMiddleForCamera( new mp.Vector3 ( mapmidx, mapmidy, mapmidz ) );
 	log( "onClientMapChange end" );
 } );
 
 
-mp.events.add( "onClientCountdownStart", function ( args ) {
+mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) {
 	log( "onClientCountdownStart start " );
 	if ( cameradata.timer != null )
 		cameradata.timer.kill();
-	if ( !( 1 in args ) ) {
+	if ( resttime == null ) {
 		startCountdown();
 		cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 0.1, 1 );
 	} else {
-		startCountdownAfterwards( Math.ceil(( lobbysettings.countdowntime - args[1] ) / 1000 ) );
-		if ( args[1] > lobbysettings.countdowntime * 0.1 ) {
-			setCameraGoTowardsPlayer( lobbysettings.countdowntime - args[1] );
+		startCountdownAfterwards( Math.ceil( ( lobbysettings.countdowntime - resttime ) / 1000 ) );
+		if ( resttime > lobbysettings.countdowntime * 0.1 ) {
+			setCameraGoTowardsPlayer( lobbysettings.countdowntime - resttime );
 		} else {
-			cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 0.1 - args[1], 1 );
+			cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 0.1 - resttime, 1 );
 		}
 	}
 	if ( rounddata.isspectator )
 		startSpectate();
-	rounddata.mapinfo.setText( args[0] );
+	rounddata.mapinfo.setText( mapname );
 	log( "onClientCountdownStart end" );
 } );
 
 
-mp.events.add( "onClientRoundStart", function ( args ) {
+mp.events.add( "onClientRoundStart", function ( isspectator, _, wastedticks ) {
 	log( "onClientRoundStart start" );
-	mp.game.cam.doScreenFadeIn ( 50 );
+	mp.game.cam.doScreenFadeIn( 50 );
 	stopCountdownCamera();
 	endCountdown();
-	rounddata.isspectator = args[0];
+	rounddata.isspectator = isspectator;
 	if ( !rounddata.isspectator ) {
 		startMapLimit();
 		toggleFightMode( true );
 	}
-	roundStartedRoundInfo( args )
+	roundStartedRoundInfo( wastedticks )
 	log( "onClientRoundStart end" );
 } );
 
 
-mp.events.add( "onClientRoundEnd", function ( args ) {
+mp.events.add( "onClientRoundEnd", function () {
 	log( "onClientRoundEnd start" );
 	mp.game.cam.doScreenFadeOut ( lobbysettings.roundendtime / 2 );
 	toggleFightMode( false );
@@ -63,7 +65,7 @@ mp.events.add( "onClientRoundEnd", function ( args ) {
 } );
 
 
-mp.events.add( "onClientPlayerSpectateMode", function ( args ) {
+mp.events.add( "onClientPlayerSpectateMode", function () {
 	log( "onClientPlayerSpectateMode start" );
 	rounddata.isspectator = true;
 	startSpectate();
@@ -89,22 +91,21 @@ mp.events.add( "PlayerQuit", function ( player: MpPlayer, exitType: string, reas
 } );
 
 
-mp.events.add( "onClientPlayerGotBomb", function ( args ) {
-	localPlayerGotBomb( args[0] );
+mp.events.add( "onClientPlayerGotBomb", function ( placestoplant ) {
+	localPlayerGotBomb( placestoplant );
 } );
 
 
-mp.events.add( "onClientPlayerPlantedBomb", function ( args ) {
+mp.events.add( "onClientPlayerPlantedBomb", function ( ) {
 	localPlayerPlantedBomb();
 } );
 
 
-mp.events.add( "onClientBombPlanted", function ( args ) {
-	bombPlanted ( args[0], args[1] );
+mp.events.add( "onClientBombPlanted", function ( pos, candefuse ) {
+	bombPlanted( pos, candefuse );
 } );
 
 
-mp.events.add( "onClientBombDetonated", function ( args ) {
+mp.events.add( "onClientBombDetonated", function ( ) {
 	bombDetonated();
 } );
-

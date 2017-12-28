@@ -6,11 +6,10 @@
 	using System.Threading.Tasks;
 	using database;
 	using extend;
-	using GTANetworkAPI;
-    using GTANetworkInternals;
+    using GTANetworkAPI;
     using instance.player;
 	using logs;
-	using utility;
+    using utility;
 
 	class Account : Script {
 
@@ -24,8 +23,8 @@
             Event.OnPlayerDisconnected += OnPlayerDisconnected;
             Event.OnPlayerConnect += OnPlayerBeginConnect;
             Event.OnPlayerConnected += OnPlayerConnected;
-			OnResourceStart ();
-		}
+            Event.OnResourceStart += OnResourceStart;
+        }
 
 		private static void SendWelcomeMessage ( Client player ) {
 			/*player.sendChatMessage ( "~o~__________________________________________" );
@@ -43,29 +42,30 @@
 			player.SendChatMessage ( msg );
 		}
 
-		private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
-			player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
-			player.Freeze ( true );
-			player.Name = player.SocialClubName;
-		}
+        private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
+            player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
+            player.Freeze ( true );
+            player.Name = player.SocialClubName;
+            NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
+        }
 
-		private async void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
-			try {
+		private void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
+            NAPI.Util.ConsoleOutput ( eventName );
+            try {
 				switch ( eventName ) {
-					case "onPlayerJoin":
-						API.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
-						break;
 
 					case "onPlayerTryRegister":
+                        if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
+                            return;
 						string registerpw = Utility.ConvertToSHA512 ( args[0] );
 						lastPlayerUID++;
 						PlayerUIDs[player.SocialClubName] = lastPlayerUID;
-						await Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] ).ConfigureAwait ( false );
+						Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
 						break;
 
 					case "onPlayerTryLogin":
 						if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
-							string loginpw = Utility.ConvertToSHA512 ( args[0] );
+                            string loginpw = Utility.ConvertToSHA512 ( args[0] );
 							Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], loginpw );
 						} else
 							player.SendLangNotification ( "account_doesnt_exist" );
@@ -89,7 +89,8 @@
 			PlayerUIDs[name] = uid;
 		}
 
-		private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs cancel ) {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage ( "Await.Warning", "CS4014:Await.Warning" )]
+        private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs cancel ) {
 			try {
 				player.Name = player.SocialClubName;
 				if ( socialClubNameBanDict.ContainsKey ( player.SocialClubName ) || addressBanDict.ContainsKey ( player.Address ) ) {
@@ -112,7 +113,7 @@
                             cancel.Cancel = true;
                             return;
 						}
-						await Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"] ).ConfigureAwait ( false );
+						Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"] ).ConfigureAwait ( false );
 					}
 					socialClubNameBanDict.Remove ( player.SocialClubName );
 					addressBanDict.Remove ( player.Address );
@@ -135,10 +136,10 @@
 			}
 		}
 
-		public static async Task SavePlayerData ( Client player ) {
+		public static void SavePlayerData ( Client player ) {
 			Character character = player.GetChar ();
 			if ( character.LoggedIn ) {
-				await Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID", new Dictionary<string, string> {
+				Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID", new Dictionary<string, string> {
 					{
 						"@PLAYTIME", character.Playtime.ToString ()
 					}, {
@@ -155,7 +156,7 @@
 						"@UID", character.UID.ToString ()
 					}
 				} ).ConfigureAwait ( false );
-				await Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID", new Dictionary<string, string> {
+				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID", new Dictionary<string, string> {
 					{
 						"@HITSOUND", character.HitsoundOn ? "1" : "0"
 					}, {
@@ -165,13 +166,13 @@
 			}
 		}
 
-		private async void OnPlayerDisconnected ( Client player, byte type, string reason ) {
+		private void OnPlayerDisconnected ( Client player, byte type, string reason ) {
 			try {
-				await SavePlayerData ( player ).ConfigureAwait ( false );
+				SavePlayerData ( player );
 				uint adminlvl = player.GetChar ().AdminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
-				API.TriggerClientEventForAll ( "onClientPlayerQuit", player );
+				NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player );
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
 			}

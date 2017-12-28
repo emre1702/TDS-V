@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TDS.server.enums;
@@ -20,14 +21,15 @@ namespace TDS.server.instance.lobby {
 				killstr[Language.GERMAN] = ServerLanguage.GetLang ( Language.GERMAN, "deathinfo_died", player.Name );
 			}
 
-			FuncIterateAllPlayers ( ( target, teamID ) => {
-				Language language = target.GetChar ( ).Language;
+			FuncIterateAllPlayers ( ( targethandle, teamID ) => {
+                Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
+                Language language = target.GetChar ( ).Language;
 				target.TriggerEvent ( "onClientPlayerDeath", player, team, killstr[language] );
 			} );
 		}
 
 		public void PlayerAmountInFightSync ( List<uint> amountinteam ) {
-			SendAllPlayerEvent ( "onClientPlayerAmountInFightSync", -1, amountinteam, false );
+			SendAllPlayerEvent ( "onClientPlayerAmountInFightSync", -1, JsonConvert.SerializeObject ( amountinteam ), false );
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 let loginpanel = {
 	loginbrowser: null as MpBrowser,
-	name: null,
+	name: null as string,
 	isregistered: null
 }
 
@@ -19,14 +19,14 @@ mp.events.add( "getRegisterLoginLanguage", () => {
 	loginpanel.loginbrowser.execute( "loadLanguage ( " + JSON.stringify( getLang( "loginregister" ) ) + ");" );
 } );
 
-mp.events.add( "startRegisterLogin", function ( eventName, args ) {
+mp.events.add( "startRegisterLogin", function ( name: string, isregistered: boolean ) {
 	log( "startRegisterLogin registerlogin start" );
-	loginpanel.name = args[0];
-	loginpanel.isregistered = args[1];
-	loginpanel.loginbrowser = mp.browsers.new( "client/window/registerlogin/registerlogin.html" );
-	mp.events.add( 'browserDomReady', ( browser ) => {
+	loginpanel.name = name;
+	loginpanel.isregistered = isregistered;
+	loginpanel.loginbrowser = mp.browsers.new( "package://TDS-V/window/registerlogin/registerlogin.html" );
+	mp.events.add( 'browserDomReady', ( browser: MpBrowser ) => {
 		if ( browser == loginpanel.loginbrowser ) {
-			loginpanel.loginbrowser.execute( "getLoginPanelData ( " + loginpanel.name + ", " + loginpanel.isregistered + ", " + JSON.stringify( getLang( "loginregister" ) ) + ");" );
+			browser.execute( "getLoginPanelData ( " + loginpanel.name + ", " + loginpanel.isregistered + ", " + JSON.stringify( getLang( "loginregister" ) ) + ");" );
 		}
 	} );
 	mp.gui.chat.activate( false );
@@ -36,7 +36,7 @@ mp.events.add( "startRegisterLogin", function ( eventName, args ) {
 	log( "startRegisterLogin registerlogin end" );
 } );
 
-mp.events.add( "registerLoginSuccessful", function ( eventName, args ) {
+mp.events.add( "registerLoginSuccessful", function () {
 	log( "registerLoginSuccessful registerlogin start" );
 	loginpanel.loginbrowser.destroy();
 	loginpanel.loginbrowser = null;
@@ -44,6 +44,3 @@ mp.events.add( "registerLoginSuccessful", function ( eventName, args ) {
 	nothidecursor--;
 	log( "registerLoginSuccessful registerlogin end" );
 } );
-
-mp.events.callRemote ( "onPlayerJoin" );
-

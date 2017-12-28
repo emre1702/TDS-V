@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TDS.server.enums;
@@ -68,6 +69,8 @@ namespace TDS.server.instance.lobby {
             }
             DmgSys.PlayerSpree.Remove ( player );
 
+            NAPI.Util.ConsoleOutput ( "RemovePlayer Arena " + player.Name );
+
 
             //if ( IsMapCreateLobby )                            TODO
             //    StopPlayerFreecam ( player, true );
@@ -87,10 +90,11 @@ namespace TDS.server.instance.lobby {
         }
 
         public override void AddPlayer ( Client player, bool spectator = false ) {
+            NAPI.Util.ConsoleOutput ( "AddPlayer Arena " + player.Name );
             AddPlayerDefault ( player, spectator );
 
             string mapname = currentMap != null ? currentMap.Name : "unknown";
-            player.TriggerEvent ( "onClientPlayerJoinLobby", spectator, mapname, Teams, teamColorsList,
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
                                 countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
                                 RoundEndTime );
 
@@ -111,7 +115,8 @@ namespace TDS.server.instance.lobby {
 
         private void AddPlayerAsPlayer ( Client player ) {
             Character character = player.GetChar ();
-            uint teamID = GetTeamIDWithFewestMember ( Players );
+            uint teamID = GetTeamIDWithFewestMember ( ref Players );
+            NAPI.Util.ConsoleOutput ( "AddPlayerAsPlayer " + teamID.ToString () );
             SetPlayerTeam ( player, teamID, character );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( player, teamID );
@@ -128,12 +133,14 @@ namespace TDS.server.instance.lobby {
         }
 
         public static void PlayerAmountInFightSync ( Client player, List<uint> amountinteam, List<uint> amountaliveinteam ) {
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", amountinteam, true, amountaliveinteam );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", JsonConvert.SerializeObject ( amountinteam ), true, JsonConvert.SerializeObject ( amountaliveinteam ) );
         }
 
         private void SendPlayerRoundInfoOnJoin ( Client player ) {
             if ( currentMap != null ) {
-                player.TriggerEvent ( "onClientMapChange", currentMap.MapLimits, currentMap.MapCenter );
+                List<Tuple<float, float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
+                NAPI.Util.ConsoleOutput ( "2: " + currentMap.MapCenter.X + " " + currentMap.MapCenter.Y + " " + currentMap.MapCenter.Z );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapChange", JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
             }
 
             SendPlayerAmountInFightInfo ( player );
@@ -145,10 +152,10 @@ namespace TDS.server.instance.lobby {
                 case LobbyStatus.COUNTDOWN:
                     Map map = currentMap;
                     if ( map != null )
-                        player.TriggerEvent ( "onClientCountdownStart", map.Name, tick - startTick );
+                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", map.Name, tick - startTick );
                     break;
                 case LobbyStatus.ROUND:
-                    player.TriggerEvent ( "onClientRoundStart", true, tick - startTick );
+                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", true, tick - startTick );
                     break;
             }
         }

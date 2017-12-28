@@ -61,16 +61,16 @@ function checkMapLimit() {
 function loadMapLimitData( data ) {
 	log( "loadMapLimitData start" );
 	maplimitdata.limit = [];
-	for ( let j = 0; j < data.Count; j++ ) {
-		maplimitdata.limit[j] = data[j];
+	for ( let j = 0; j < data.length; j++ ) {
+		maplimitdata.limit[j] = { X: Number.parseFloat( data[j].Item1 ), Y: Number.parseFloat( data[j].Item2 ) };
 	}
 	maplimitdata.outsidecounter = 11;
-	if ( data.Count > 0 ) {
+	if ( data.length > 0 ) {
 		var minX = maplimitdata.limit[0].X;
 		var maxX = maplimitdata.limit[0].X;
 		var minY = maplimitdata.limit[0].Y;
 		var maxY = maplimitdata.limit[0].Y;
-		for ( let i = 1; i < data.Count; i++ ) {
+		for ( let i = 1; i < data.length; i++ ) {
 			var q = maplimitdata.limit[i];
 			minX = Math.min( q.X, minX );
 			maxX = Math.max( q.X, maxX );

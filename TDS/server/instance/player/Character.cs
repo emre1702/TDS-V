@@ -17,7 +17,7 @@ namespace TDS.server.instance.player {
 		public uint Team = 0;
 		public uint Lifes = 0;
 		public Language Language = Language.ENGLISH;
-		public Lobby Lobby;     //TODO = Main menu
+        public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
 		public Client Spectating;
 		public bool LoggedIn;
 		public bool IsLobbyOwner = false;

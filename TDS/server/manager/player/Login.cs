@@ -15,7 +15,8 @@
 
 		public static async void LoginPlayer ( Client player, uint uid, string password = "" ) {
 			try {
-				uint adminlvl = 0;
+                NAPI.Util.ConsoleOutput ( "onPlayerTryLogin 3" );
+                uint adminlvl = 0;
 				uint donatorLvl = 0;
 				uint playtime = 0;
 				uint money = 0;
@@ -27,7 +28,8 @@
 				bool hitsoundon = true;
 
 				if ( password != "" ) {
-					DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM player, playersetting WHERE player.UID = @UID AND player.UID = playersetting.UID", new Dictionary<string, string> {
+                    NAPI.Util.ConsoleOutput ( "onPlayerTryLogin 4" );
+                    DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM player, playersetting WHERE player.UID = @UID AND player.UID = playersetting.UID", new Dictionary<string, string> {
 						{
 							"@UID", uid.ToString ()
 						}
@@ -72,8 +74,9 @@
 				character.LoggedIn = true;
 
 				player.GiveMoney ( money, character );
+                NAPI.Util.ConsoleOutput ( "onPlayerTryLogin 5" );
 
-				if ( adminlvl > 0 )
+                if ( adminlvl > 0 )
 					Admin.SetOnline ( player, adminlvl );
 
 				API.Shared.TriggerClientEvent ( player, "registerLoginSuccessful" );

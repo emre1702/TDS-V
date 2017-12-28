@@ -55,12 +55,12 @@ namespace TDS.server.instance.lobby {
 			int amount = Players[terroristTeamID].Count;
 			if ( amount > 0 ) {
 				int rnd = Utility.Rnd.Next ( amount );
-				Client player = Players[terroristTeamID][rnd];
+				Client player = NAPI.Player.GetPlayerFromHandle ( Players[terroristTeamID][rnd] );
 				if ( player.CurrentWeapon == WeaponHash.Unarmed )
 					BombToHand ( player );
 				else
 					BombToBack ( player );
-				player.TriggerEvent ( "onClientPlayerGotBomb", currentMap.BombPlantPlaces );
+				NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerGotBomb", currentMap.BombPlantPlaces );
 			}
 		}
 
@@ -110,10 +110,11 @@ namespace TDS.server.instance.lobby {
 
 		private void DetonateBomb () {
 			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, bomb.Position, 200, Dimension );
-			FuncIterateAllPlayers ( ( player, teamID ) => {
-				DmgSys.LastHitterDictionary[player] = planter;
-				player.Kill ();
-				player.TriggerEvent ( "onClientBombDetonated" );
+			FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
+				DmgSys.LastHitterDictionary[playerhandle] = planter;
+                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+                player.Kill ();
+				NAPI.ClientEvent.TriggerClientEvent ( player, "onClientBombDetonated" );
 			}, counterTerroristTeamID );
 			// TERROR WON //
 			if ( status == LobbyStatus.ROUND )
@@ -124,22 +125,24 @@ namespace TDS.server.instance.lobby {
 			if ( player.Exists ) {
 				Vector3 playerpos = player.Position;
 				for ( int i = 0; i < currentMap.BombPlantPlaces.Count; i++ ) {
-					if ( playerpos.DistanceTo ( currentMap.BombPlantPlaces[i] ) <= 5 ) {
-						player.TriggerEvent ( "onClientPlayerPlantedBomb" );
-						bomb.Detach ();
-						bomb.Position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
-						bomb.Rotation = new Vector3 ( 270, 0, 0 );
-						bombPlantPlaces[i].Delete ();
-						bombPlantPlaces[i] =
-							NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), Dimension );
-						bombPlantBlips[i].Color = 49;
-						//bombPlantBlips[i].Flashing = true;
-						bombAtPlayer = null;
-						planter = player;
-						SendAllPlayerLangNotification ( "bomb_planted" );
-						bombDetonateTimer = Timer.SetTimer ( DetonateBomb, bombDetonateTime );
-						FuncIterateAllPlayers ( ( target, teamID ) =>
-														target.TriggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID ) );
+                    if ( playerpos.DistanceTo ( currentMap.BombPlantPlaces[i] ) <= 5 ) {
+                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerPlantedBomb" );
+                        bomb.Detach ();
+                        bomb.Position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
+                        bomb.Rotation = new Vector3 ( 270, 0, 0 );
+                        bombPlantPlaces[i].Delete ();
+                        bombPlantPlaces[i] =
+                            NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), Dimension );
+                        bombPlantBlips[i].Color = 49;
+                        //bombPlantBlips[i].Flashing = true;
+                        bombAtPlayer = null;
+                        planter = player;
+                        SendAllPlayerLangNotification ( "bomb_planted" );
+                        bombDetonateTimer = Timer.SetTimer ( DetonateBomb, bombDetonateTime );
+                        FuncIterateAllPlayers ( ( targethandle, teamID ) => {
+                            Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
+                            target.TriggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID );
+                        } );                                                                                           
 						SendBombDefuseInfos ();
 						break;
 					}
@@ -152,9 +155,10 @@ namespace TDS.server.instance.lobby {
 			if ( player.Exists ) {
 				Vector3 playerpos = player.Position;
 				if ( playerpos.DistanceTo ( bomb.Position ) <= 2 ) {
-					FuncIterateAllPlayers ( ( target, teamID ) => {
-						DmgSys.LastHitterDictionary[target] = player;
-						target.Kill ();
+					FuncIterateAllPlayers ( ( targethandle, teamID ) => {
+						DmgSys.LastHitterDictionary[targethandle] = player;
+                        Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
+                        target.Kill ();
 					}, terroristTeamID );
 					// COUNTER-TERROR WON //
 					if ( status == LobbyStatus.ROUND )

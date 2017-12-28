@@ -20,7 +20,7 @@
 		public static void GiveMoney ( this Client player, uint money, Character character = null ) {
 			character = character ?? player.GetChar ();
 			character.Money += money;
-			player.TriggerEvent ( "onClientMoneyChange", character.Money );
+			NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMoneyChange", character.Money );
 		}
 
 	}

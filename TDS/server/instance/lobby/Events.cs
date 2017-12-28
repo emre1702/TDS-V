@@ -21,10 +21,14 @@ namespace TDS.server.instance.lobby {
                 case "joinLobby":
                     if ( Lobby.SLobbiesByIndex.ContainsKey ( args[0] ) ) {
                         Lobby lobby = Lobby.SLobbiesByIndex[args[0]];
-                        lobby.AddPlayer ( player, args[1] );
+                        if ( lobby is Arena arenalobby )
+                            arenalobby.AddPlayer ( player, args[1] );
+                        else
+                            lobby.AddPlayer ( player, args[1] );
+                        NAPI.Util.ConsoleOutput ( "JoinLobby " + player.Name + " - " + lobby.Name );
                     } else {
                         /* player.sendNotification (  lobby doesn't exist ); */
-                        player.TriggerEvent ( "onClientJoinMainMenu" );  //TODO is that needed?
+                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );  //TODO is that needed?
                     }
                     break;
                 #endregion
@@ -115,8 +119,8 @@ namespace TDS.server.instance.lobby {
         }
 
         private void OnEntityEnterColShape ( ColShape shape, NetHandle entity ) {
-            Client player = API.GetPlayerFromHandle ( entity );
-            if ( player != null ) {
+            Client player = NAPI.Player.GetPlayerFromHandle ( entity );
+            if ( player.Exists ) {
                 player.GetChar ().Lobby.OnEntityEnterColShape ( shape, player );
             }
         }

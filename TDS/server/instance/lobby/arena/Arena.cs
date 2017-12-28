@@ -10,7 +10,7 @@ namespace TDS.server.instance.lobby {
 
     public partial class Arena : FightLobby, IRound {  
 
-        public Arena ( string name, int id = -1 ) : base ( name, id ) {
+        public Arena ( string name, Vector3 spawnpoint, int id = -1 ) : base ( name, spawnpoint, id ) {
 
         }
 
@@ -42,9 +42,9 @@ namespace TDS.server.instance.lobby {
         }
 
         private void RewardAllPlayer ( ) {
-            foreach ( KeyValuePair<Client, int> entry in DmgSys.PlayerDamage ) {
-                if ( entry.Key.Exists ) {
-                    Client player = entry.Key;
+            foreach ( KeyValuePair<NetHandle, int> entry in DmgSys.PlayerDamage ) {
+                Client player = NAPI.Player.GetPlayerFromHandle ( entry.Key );
+                if ( player.Exists ) {
                     Character character = player.GetChar ();
                     if ( character.Lobby == this ) {
                         List<uint> reward = new List<uint> ();

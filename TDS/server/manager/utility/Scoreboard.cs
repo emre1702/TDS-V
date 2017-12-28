@@ -19,7 +19,7 @@ namespace TDS.server.manager.utility {
 
 		private void OnClientRequestPlayerListDatas ( Client player, string eventName, params object[] args ) {
 			if ( eventName == "onClientRequestPlayerListDatas" ) {
-				List<Client> players = API.GetAllPlayers ();
+                List<Client> players = NAPI.Pools.GetAllPlayers ();
 
 				List<string> nameList = new List<string> ();
 				List<string> playtimeList = new List<string> ();
@@ -69,9 +69,9 @@ namespace TDS.server.manager.utility {
 				}
 
 				if ( ownLobbyID != 0 )
-					API.TriggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
+                    NAPI.ClientEvent.TriggerClientEvent ( player, "giveRequestedPlayerListDatas", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList, otherLobbyNames, otherLobbyAmounts );
 				else
-					API.TriggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
+                    NAPI.ClientEvent.TriggerClientEvent ( player, "giveRequestedPlayerListDatasMainmenu", nameList, playtimeList, killsList, assistsList, deathsList, teamorlobbyList );
 			}
 		}
 	}

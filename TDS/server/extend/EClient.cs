@@ -7,16 +7,16 @@
 
 	internal static class EClient {
 
-		private static readonly ConcurrentDictionary<Client, Character> characterDictionary =
-			new ConcurrentDictionary<Client, Character> ();
+		private static ConcurrentDictionary<NetHandle, Character> characterDictionary =
+			new ConcurrentDictionary<NetHandle, Character> ();
 
 		public static Character GetChar ( this Client player ) {
-			if ( characterDictionary.ContainsKey ( player ) ) {
-				Character character = characterDictionary[player];
+			if ( characterDictionary.ContainsKey ( player.Handle ) ) {
+				Character character = characterDictionary[player.Handle];
 				return character;
 			} else {
 				Character character = new Character ( false );
-				characterDictionary.TryAdd ( player, character );
+				characterDictionary.TryAdd ( player.Handle, character );
 				return character;
 			}
 		}
