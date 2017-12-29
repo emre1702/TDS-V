@@ -17,7 +17,7 @@ declare interface MpGame {
     readonly gameplay: MpGameGameplay;
     readonly graphics: MpGameGraphics;
     readonly interior: MpGameInterior;
-    readonly itemset: MpGameItemset;
+	readonly itemset: MpGameItemset;
     readonly mobile: MpGameMobile;
     readonly object: MpGameObject;
     readonly pathfind: MpGamePathfind;
@@ -36,5 +36,7 @@ declare interface MpGame {
     readonly water: MpGameWater;
     readonly weapon: MpGameWeapon;
     readonly worldprobe: MpGameWorldprobe;
-    readonly zone: MpGameZone;
+	readonly zone: MpGameZone;
+
+	invoke( hash: string, ...args: any[] ): any;
 }

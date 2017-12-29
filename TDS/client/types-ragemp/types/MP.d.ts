@@ -6,7 +6,8 @@ declare interface ScriptContext {
     readonly objects: MpObjectPool;
     readonly pickups: MpPickupPool;
     readonly blips: MpBlipPool;
-    readonly gui: MpGui;
+	readonly gui: MpGui;
+	readonly keys: MpKeys;
     readonly markers: MpMarkerPool;
     readonly checkpoints: MpCheckpointPool;
     readonly cameras: MpCameraPool;
@@ -15,5 +16,6 @@ declare interface ScriptContext {
     readonly events: MpEvents;
     readonly game: MpGame;
     readonly nametags: MpNametags;
-    readonly raycasting: MpRaycasting;
+	readonly raycasting: MpRaycasting;
+	readonly Vector3: Vector3;
 }

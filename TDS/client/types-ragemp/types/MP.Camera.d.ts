@@ -56,5 +56,5 @@ declare interface MpCamera extends MpEntity {
 }
 
 declare interface MpCameraPool extends MpPool<MpCamera> {
-
+	"new"( name: string ): MpCamera;
 }

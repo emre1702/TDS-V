@@ -19,7 +19,7 @@ function drawPlant() {
 		mp.game.graphics.drawRect( res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187 );
 		let progress = tickswasted / lobbysettings.bombplanttime;
 		mp.game.graphics.drawRect( res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 0, 180, 0, 187 );
-		mp.game.graphics.drawText( getLang( "round", "planting" ), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71 );
+		//mp.game.graphics.drawText( getLang( "round", "planting" ), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71 );
 	}
 }
 
@@ -49,7 +49,7 @@ function drawDefuse() {
 		mp.game.graphics.drawRect( res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187 );
 		let progress = tickswasted / lobbysettings.bombdefusetime;
 		mp.game.graphics.drawRect( res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 180, 0, 0, 187 );
-		mp.game.graphics.drawText( getLang( "round", "defusing" ), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71 );
+		//mp.game.graphics.drawText( getLang( "round", "defusing" ), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71 );
 	}
 }
 

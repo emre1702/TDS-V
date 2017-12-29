@@ -17,8 +17,8 @@ namespace TDS.server.instance.lobby {
         public Dictionary<uint, string> TeamColorStrings = new Dictionary<uint, string> {
             [0] = "s"
         };
-        public readonly List<Color> teamColorsList = new List<Color> {
-            new Color ( 255, 255, 255 )
+        public readonly List<uint> teamColorsList = new List<uint> {
+            255, 255, 255
         };
         internal readonly List<int> teamBlipColors = new List<int> {
             0
@@ -34,7 +34,9 @@ namespace TDS.server.instance.lobby {
             TeamColorStrings[teamid] = colorstring;
             teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
             Color color = Colors.FontColor[colorstring];
-            teamColorsList.Add ( color );
+            teamColorsList.Add ( (uint) color.Red );
+            teamColorsList.Add ( (uint) color.Green );
+            teamColorsList.Add ( (uint) color.Blue );
         }
 
         public void MixTeams ( ) {

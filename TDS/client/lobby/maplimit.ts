@@ -34,13 +34,13 @@ function pointIsInPoly( p ) {
 
 
 function checkMapLimit() {
-	log( "checkMapLimit start" );
+	log( "checkMapLimit" );
 	if ( maplimitdata.limit != null ) {
 		var pos = mp.players.local.position;
 		if ( !pointIsInPoly( pos ) ) {
 			maplimitdata.outsidecounter--;
 			if ( maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null )
-				maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), res.x / 2, res.y / 2, 1, { r: 255, g: 255, b: 255, a: 255 }, 1.2, 1.2, true );
+				maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), res.x / 2, res.y / 2, 1, [255, 255, 255, 255], [1.2, 1.2], true, 1 );
 			else if ( maplimitdata.outsidecounter > 0 )
 				maplimitdata.outsidetext.setText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ) );
 			else if ( maplimitdata.outsidecounter == 0 ) {
@@ -54,12 +54,11 @@ function checkMapLimit() {
 			resetMapLimitCheck();
 	} else
 		resetMapLimitCheck();
-	log( "checkMapLimit start" );
 }
 
 
 function loadMapLimitData( data ) {
-	log( "loadMapLimitData start" );
+	log( "loadMapLimitData" );
 	maplimitdata.limit = [];
 	for ( let j = 0; j < data.length; j++ ) {
 		maplimitdata.limit[j] = { X: Number.parseFloat( data[j].Item1 ), Y: Number.parseFloat( data[j].Item2 ) };
@@ -82,7 +81,6 @@ function loadMapLimitData( data ) {
 		maplimitdata.minY = minY;
 		maplimitdata.maxY = maxY;
 	}
-	log( "loadMapLimitData end" );
 }
 
 
@@ -96,18 +94,17 @@ function resetMapLimitCheck() {
 
 
 function startMapLimit() {
-	log( "startMapLimit start" );
+	log( "startMapLimit" );
 	if ( maplimitdata.checktimer != null )
 		maplimitdata.checktimer.kill();
-	if ( maplimitdata.limit[0] != undefined ) {
+	if ( 0 in maplimitdata.limit ) {
 		maplimitdata.checktimer = new Timer( checkMapLimit, 1000, -1 );
 	}
-	log( "startMapLimit end" );
 }
 
 
 function stopMapLimitCheck() {
-	log( "stopMapLimitCheck start" );
+	log( "stopMapLimitCheck" );
 	if ( maplimitdata.checktimer != null ) {
 		maplimitdata.checktimer.kill();
 		maplimitdata.checktimer = null;
@@ -117,7 +114,6 @@ function stopMapLimitCheck() {
 		maplimitdata.outsidetext.remove();
 		maplimitdata.outsidetext = null;
 	}
-	log( "stopMapLimitCheck end" );
 }
 
 

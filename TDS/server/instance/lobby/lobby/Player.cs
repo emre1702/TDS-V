@@ -63,8 +63,11 @@ namespace TDS.server.instance.lobby {
 
             Players[(int) teamID].Remove ( player );
 
-            if ( player.Exists )
+            if ( player.Exists ) {
                 player.Transparency = 255;
+                if ( this != manager.lobby.MainMenu.TheLobby )
+                    manager.lobby.MainMenu.Join ( player );
+            }
 
             NAPI.Util.ConsoleOutput ( "RemovePlayer Lobby " + player.Name );
 

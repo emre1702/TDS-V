@@ -49,7 +49,6 @@ class Timer {
 	}
 
 	execute( notremove ) {
-		log( "timer execute start" );
 		var argslength = this.args.length;
 		switch ( argslength ) {
 			case 0:
@@ -96,7 +95,6 @@ class Timer {
 			this.executeatms += this.executeafterms;
 			this.putTimerInSorted();
 		}
-		log( "timer execute end" );
 	}
 
 	private putTimerInSorted () {

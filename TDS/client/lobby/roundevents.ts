@@ -2,19 +2,17 @@
 
 
 mp.events.add( "onClientMapChange", function ( maplimit, mapmidx, mapmidy, mapmidz ) {
-	log( "onClientMapChange start" );
+	log( "onClientMapChange" );
 	mp.game.cam.doScreenFadeIn( lobbysettings.roundendtime / 2 );
 	maplimit = JSON.parse( maplimit );
 	if ( maplimit.length > 0 )
 		loadMapLimitData( maplimit );
-	mp.gui.chat.push( mapmidx + " - " + mapmidy + " - " + mapmidz );
 	loadMapMiddleForCamera( new mp.Vector3 ( mapmidx, mapmidy, mapmidz ) );
-	log( "onClientMapChange end" );
 } );
 
 
 mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) {
-	log( "onClientCountdownStart start " );
+	log( "onClientCountdownStart" );
 	if ( cameradata.timer != null )
 		cameradata.timer.kill();
 	if ( resttime == null ) {
@@ -31,12 +29,11 @@ mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) 
 	if ( rounddata.isspectator )
 		startSpectate();
 	rounddata.mapinfo.setText( mapname );
-	log( "onClientCountdownStart end" );
 } );
 
 
 mp.events.add( "onClientRoundStart", function ( isspectator, _, wastedticks ) {
-	log( "onClientRoundStart start" );
+	log( "onClientRoundStart" );
 	mp.game.cam.doScreenFadeIn( 50 );
 	stopCountdownCamera();
 	endCountdown();
@@ -46,12 +43,11 @@ mp.events.add( "onClientRoundStart", function ( isspectator, _, wastedticks ) {
 		toggleFightMode( true );
 	}
 	roundStartedRoundInfo( wastedticks )
-	log( "onClientRoundStart end" );
 } );
 
 
 mp.events.add( "onClientRoundEnd", function () {
-	log( "onClientRoundEnd start" );
+	log( "onClientRoundEnd" );
 	mp.game.cam.doScreenFadeOut ( lobbysettings.roundendtime / 2 );
 	toggleFightMode( false );
 	removeBombThings();
@@ -61,33 +57,29 @@ mp.events.add( "onClientRoundEnd", function () {
 	stopCountdownCamera();
 	removeRoundInfo();
 	//stopMapVoting();
-	log( "onClientRoundEnd end" );
 } );
 
 
 mp.events.add( "onClientPlayerSpectateMode", function () {
-	log( "onClientPlayerSpectateMode start" );
+	log( "onClientPlayerSpectateMode" );
 	rounddata.isspectator = true;
 	startSpectate();
-	log( "onClientPlayerSpectateMode end" );
 } );
 
 
 mp.events.add( "onClientPlayerDeath", function ( player: MpPlayer, teamID: number, killstr: string ) {
-	log( "onClientPlayerDeath start" );
+	log( "onClientPlayerDeath" );
 	if ( mp.players.local == player ) {
 		toggleFightMode( false );
 		removeBombThings();
 	}
 	playerDeathRoundInfo( teamID, killstr );
-	log( "onClientPlayerDeath end" );
 } );
 
 
 mp.events.add( "PlayerQuit", function ( player: MpPlayer, exitType: string, reason: string ) {
-	log( "onClientPlayerQuit start" );
+	log( "PlayerQuit" );
 	//removeTeammateFromTeamBlips( player.name );
-	log( "onClientPlayerQuit end" );
 } );
 
 

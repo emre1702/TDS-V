@@ -20,7 +20,7 @@ mp.events.add( "getRegisterLoginLanguage", () => {
 } );
 
 mp.events.add( "startRegisterLogin", function ( name: string, isregistered: boolean ) {
-	log( "startRegisterLogin registerlogin start" );
+	log( "startRegisterLogin registerlogin" );
 	loginpanel.name = name;
 	loginpanel.isregistered = isregistered;
 	loginpanel.loginbrowser = mp.browsers.new( "package://TDS-V/window/registerlogin/registerlogin.html" );
@@ -33,14 +33,12 @@ mp.events.add( "startRegisterLogin", function ( name: string, isregistered: bool
 	mp.game.ui.displayHud( false );
 	mp.gui.cursor.visible = true;
 	nothidecursor++;
-	log( "startRegisterLogin registerlogin end" );
 } );
 
 mp.events.add( "registerLoginSuccessful", function () {
-	log( "registerLoginSuccessful registerlogin start" );
+	log( "registerLoginSuccessful registerlogin" );
 	loginpanel.loginbrowser.destroy();
 	loginpanel.loginbrowser = null;
 	mp.gui.chat.activate( true );
 	nothidecursor--;
-	log( "registerLoginSuccessful registerlogin end" );
 } );

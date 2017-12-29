@@ -2,7 +2,7 @@
 
 declare interface MpGameGraphics {
     notify(text: any): any;                                                                                                      //TODO: Missing documentation
-    drawText(text: any, fontId: any, colourRGBA: any, scaleX: any, scaleY: any, outline: any, x: any, y: any, z: any): any; //TODO: Missing documentation
+	drawText( text: string, position: [number, number], data: { font: number, color: [number, number, number, number], scale: [number, number], outline: boolean } ): any;
     drawText3d(text: any, pos: any, rotation: any, scale: any, r: any, g: any, b: any, a: any, initialOffsetScaled: any): any; //TODO: Missing documentation
     getSafeZoneSize(): any;                                                                                                      //TODO Missing documentation
     createCheckpoint(type: number, posX1: number, posY1: number, posZ1: number, posX2: number, posY2: number, posZ2: number, radius: number, colorR: number, colorG: number, colorB: number, alpha: number, reserved: number): number;

@@ -29,7 +29,7 @@ function getTick() {
 /**
 *	fix for cursor-problems
 */
-mp.keys.bind( 0x23, true, function ( sender, e ) {	// end
+mp.keys.bind( 0x23, true, function () {	// end
 	if ( mp.gui.cursor.visible ) {
 		mp.gui.cursor.visible = false;
 		nothidecursor = 0;

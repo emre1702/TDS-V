@@ -34,10 +34,10 @@ namespace TDS.server.instance.lobby {
             await StartMapChoose ();
         }
 
-        private static List<Tuple<float, float, float>> GetJsonSerializableList ( List<Vector3> list ) {
-            List<Tuple<float, float, float>> newlist = new List<Tuple<float, float, float>> ();
+        private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {
+            List<Tuple<float, float>> newlist = new List<Tuple<float, float>> ();
             foreach ( Vector3 vector in list ) {
-                newlist.Add ( new Tuple<float, float, float> ( vector.X, vector.Y, vector.Z ) );
+                newlist.Add ( new Tuple<float, float> ( vector.X, vector.Y ) );
             }
             return newlist;
         } 
@@ -62,7 +62,7 @@ namespace TDS.server.instance.lobby {
                         CreateMapLimitBlips ();
                         if ( mixTeamsAfterRound )
                             MixTeams ();
-                        List <Tuple<float, float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
+                        List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
                         NAPI.Util.ConsoleOutput ( "1: " + currentMap.MapCenter.X + " " + currentMap.MapCenter.Y + " " + currentMap.MapCenter.Z );
                         SendAllPlayerEvent ( "onClientMapChange", -1, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
                     } );
@@ -123,9 +123,9 @@ namespace TDS.server.instance.lobby {
         private void EndRound ( ) {
             status = LobbyStatus.ROUNDEND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
-            roundStartTimer.Kill ();
+            roundStartTimer?.Kill ();
             DeleteMapBlips ();
-            if ( currentMap.Type == MapType.BOMB )
+            if ( currentMap != null && currentMap.Type == MapType.BOMB )
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
                 roundStartTimer = Timer.SetTimer ( async () => await StartMapChoose(), RoundEndTime / 2 );

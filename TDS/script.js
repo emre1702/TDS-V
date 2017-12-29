@@ -4,21 +4,22 @@ var nothidecursor = 0;
 var currentmoney = null;
 var localPlayer = mp.players.local;
 var gameplayCam = mp.cameras.new("gameplay");
-let activatedlogging = true;
+let activatedlogging = false;
 function log(message) {
     if (activatedlogging) {
         mp.gui.chat.push(message);
     }
 }
+let moneydata = {
+    text: null
+};
 mp.events.add("onClientMoneyChange", money => {
-    log("onClientMoneyChange start");
+    log("onClientMoneyChange");
     currentmoney = money;
-    log("onClientMoneyChange end");
-});
-mp.events.add("render", () => {
-    if (currentmoney != null) {
-        mp.game.graphics.drawText("$" + currentmoney, 7, [115, 186, 131, 255], 1.0, 1.0, true, res.x - 90, 50);
-    }
+    if (moneydata.text == null)
+        moneydata.text = new cText("$0", res.x - 90, 50, 7, [115, 186, 131, 255], [1.0, 1.0], true, 2);
+    else
+        moneydata.text.setText("$" + currentmoney);
 });
 var alltimertable = [];
 var puttimerintable = [];
@@ -58,7 +59,6 @@ class Timer {
         this.killit = true;
     }
     execute(notremove) {
-        log("timer execute start");
         var argslength = this.args.length;
         switch (argslength) {
             case 0:
@@ -104,7 +104,6 @@ class Timer {
             this.executeatms += this.executeafterms;
             this.putTimerInSorted();
         }
-        log("timer execute end");
     }
     putTimerInSorted() {
         for (let i = alltimertable.length - 1; i >= 0; i--)
@@ -135,7 +134,7 @@ function getPositionInFront(range, pos, zrot, plusangle) {
 function getTick() {
     return Date.now();
 }
-mp.keys.bind(0x23, true, function (sender, e) {
+mp.keys.bind(0x23, true, function () {
     if (mp.gui.cursor.visible) {
         mp.gui.cursor.visible = false;
         nothidecursor = 0;
@@ -171,25 +170,30 @@ mp.events.add("playerDeath", (player, reason, killer) => {
     }
 });
 let drawdrawings = [];
+mp.game.ui.setTextWrap(0.0, 1.0);
+function drawText(text, x, y, fontid, color, scale, outline, alignment) {
+    mp.game.ui.setTextJustification(this.alignment);
+    mp.game.graphics.drawText(text, [x, y], { font: fontid, color: color, scale: scale, outline: outline });
+}
 mp.events.add("render", () => {
     let tick = getTick();
     for (var i = 0; i < drawdrawings.length; i++) {
         let c = drawdrawings[i];
         if (c.activated) {
-            switch (c.type) {
-                case "rectangle":
+            switch (c.constructor.name) {
+                case "cRectangle":
                     mp.game.graphics.drawRect(c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a);
                     break;
-                case "text":
-                    let alpha = c.a;
+                case "cText":
+                    let alpha = c[3];
                     if (c.enda != null) {
-                        alpha = getBlendValue(tick, c.a, c.enda, c.endastarttick, c.endaendtick);
+                        alpha = getBlendValue(tick, c[3], c.enda, c.endastarttick, c.endaendtick);
                     }
-                    let scale = c.scale;
+                    let scale = c.scale[0];
                     if (c.endscale != null) {
-                        scale = getBlendValue(tick, c.scale, c.endscale, c.endscalestarttick, c.endscaleendtick);
+                        scale = getBlendValue(tick, c.scale[0], c.endscale, c.endscalestarttick, c.endscaleendtick);
                     }
-                    mp.game.graphics.drawText(c.text, c.font, c.color, c.scaleX, c.scaleY, c.outline, c.x, c.y);
+                    drawText(c.text, c.x, c.y, c.font, [c.color[0], c.color[1], c.color[2], alpha], [scale, scale], c.outline, c.alignment);
                     break;
             }
         }
@@ -238,36 +242,41 @@ function cLine(start, end, r, g, b, a) {
     this.remove = removeClassDraw;
     drawdrawings.push(this);
 }
-function cRectangle(xpos, ypos, wsize, hsize, r, g, b, a) {
-    this.type = "rectangle";
-    this.activated = true;
-    this.x = xpos;
-    this.y = ypos;
-    this.width = wsize;
-    this.height = hsize;
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
-    this.remove = removeClassDraw;
-    drawdrawings.push(this);
+class cRectangle {
+    constructor(xpos, ypos, wsize, hsize, color) {
+        this.activated = true;
+        this.remove = removeClassDraw;
+        this.x = xpos;
+        this.y = ypos;
+        this.width = wsize;
+        this.height = hsize;
+        this.color = color;
+        drawdrawings.push(this);
+    }
 }
-function cText(text, x, y, fontid, color, scaleX, scaleY, outline) {
-    this.type = "text";
-    this.activated = true;
-    this.text = text;
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.scaleX = scaleX;
-    this.scaleY = scaleY;
-    this.outline = outline;
-    this.remove = removeClassDraw;
-    this.blendTextAlpha = blendClassDrawTextAlpha;
-    this.blendTextScale = blendClassDrawTextScale;
-    this.getText = getClassDrawText;
-    this.setText = setClassDrawText;
-    drawdrawings.push(this);
+class cText {
+    constructor(text, x, y, fontid, color, scale, outline, alignment) {
+        this.activated = true;
+        this.remove = removeClassDraw;
+        this.blendTextAlpha = blendClassDrawTextAlpha;
+        this.blendTextScale = blendClassDrawTextScale;
+        this.getText = getClassDrawText;
+        this.setText = setClassDrawText;
+        this.text = text;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.scale = scale;
+        this.outline = outline;
+        this.alignment = alignment;
+        if (alignment == 0)
+            this.text += "            ";
+        else if (alignment == 1)
+            this.text = "      " + text + "      ";
+        else
+            this.text = "            " + text;
+        drawdrawings.push(this);
+    }
 }
 function cEditBox(defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20, a = 187, scale = 1.0, textr = 255, textg = 255, textb = 255, texta = 255, font = 0, justify = 0, shadow = false, outline = false, wordwrap = 0) {
     this.type = "editbox";
@@ -473,7 +482,6 @@ function drawPlant() {
         mp.game.graphics.drawRect(res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187);
         let progress = tickswasted / lobbysettings.bombplanttime;
         mp.game.graphics.drawRect(res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 0, 180, 0, 187);
-        mp.game.graphics.drawText(getLang("round", "planting"), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71);
     }
 }
 function checkPlant() {
@@ -503,7 +511,6 @@ function drawDefuse() {
         mp.game.graphics.drawRect(res.x * 0.46, res.y * 0.7, res.x * 0.08, res.y * 0.02, 0, 0, 0, 187);
         let progress = tickswasted / lobbysettings.bombdefusetime;
         mp.game.graphics.drawRect(res.x * 0.461, res.y * 0.701, res.x * 0.078 * progress, res.y * 0.018, 180, 0, 0, 187);
-        mp.game.graphics.drawText(getLang("round", "defusing"), 1, { r: 255, g: 255, b: 255, a: 255 }, 0.4, 0.4, true, res.x * 0.5, res.y * 0.71);
     }
 }
 function checkDefuse() {
@@ -589,12 +596,12 @@ function removeBombThings() {
     }
 }
 let cameradata = {
-    camera: mp.cameras.new("default"),
+    camera: mp.cameras.new("mapview"),
     moving: false,
     timer: null,
 };
 function loadMapMiddleForCamera(mapmiddle) {
-    log("loadMapMiddleForCamera " + String(mapmiddle));
+    log("loadMapMiddleForCamera");
     cameradata.camera.setCoord(mapmiddle.x, mapmiddle.y, mapmiddle.z + 80);
     cameradata.camera.pointAtCoord(mapmiddle.x, mapmiddle.y, mapmiddle.z);
     cameradata.camera.setActive(true);
@@ -609,6 +616,7 @@ function setCameraGoTowardsPlayer(time = -1) {
 function stopCountdownCamera() {
     log("stopCountdownCamera");
     cameradata.camera.setActive(false);
+    mp.game.cam.renderScriptCams(false, false, 0, true, true);
 }
 let lobbychoicedata = {
     browser: null
@@ -617,14 +625,13 @@ mp.events.add("joinArena", function (isspectator) {
     mp.events.callRemote("joinLobby", 1, isspectator);
 });
 mp.events.add("getLobbyChoiceLanguage", function () {
-    log("getLobbyChoiceLanguage start");
+    log("getLobbyChoiceLanguage");
     lobbychoicedata.browser.execute("getLobbyChoiceLanguage (" + JSON.stringify(getLang("lobby_choice")) + ")");
-    log("getLobbyChoiceLanguage end");
 });
 mp.events.add("createLobby", function () {
 });
 mp.events.add("onClientJoinMainMenu", () => {
-    log("onClientJoinMainMenu start");
+    log("onClientJoinMainMenu");
     lobbychoicedata.browser = mp.browsers.new("package://TDS-V/window/lobby/choice.html");
     mp.events.add('browserDomReady', (browser) => {
         if (browser == lobbychoicedata.browser) {
@@ -633,7 +640,6 @@ mp.events.add("onClientJoinMainMenu", () => {
     });
     mp.gui.cursor.visible = true;
     nothidecursor++;
-    log("onClientJoinMainMenu end");
 });
 function destroyLobbyChoiceBrowser() {
     lobbychoicedata.browser.destroy();
@@ -642,14 +648,12 @@ function destroyLobbyChoiceBrowser() {
         mp.gui.cursor.visible = false;
 }
 mp.events.add("onClientPlayerJoinLobby", () => {
-    log("onClientPlayerJoinLobby start");
+    log("onClientPlayerJoinLobby");
     destroyLobbyChoiceBrowser();
-    log("onClientPlayerJoinLobby end");
 });
 mp.events.add("onClientPlayerJoinRoundlessLobby", () => {
-    log("onClientPlayerJoinRoundlessLobby start");
+    log("onClientPlayerJoinRoundlessLobby");
     destroyLobbyChoiceBrowser();
-    log("onClientPlayerJoinRoundlessLobby end");
 });
 let countdownsounds = [
     "go.wav",
@@ -668,7 +672,7 @@ let countdowndata = {
     timer: null,
 };
 function countdownFunc(counter) {
-    log("countdownFunc start");
+    log("countdownFunc");
     counter--;
     ;
     if (counter > 0) {
@@ -678,34 +682,30 @@ function countdownFunc(counter) {
         if (countdownsounds[counter] != null) {
         }
     }
-    log("countdownFunc end");
 }
 function startCountdown() {
-    log("startCountdown start");
-    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true);
+    log("startCountdown");
+    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
     countdowndata.timer = new Timer(countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor(lobbysettings.countdowntime / 1000) + 1);
-    log("startCountdown end");
 }
 function startCountdownAfterwards(timeremaining) {
-    log("startCountdownAfterwards start");
-    countdowndata.text = new cText(timeremaining.toString(), res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true);
+    log("startCountdownAfterwards");
+    countdowndata.text = new cText(timeremaining.toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
     countdownFunc(timeremaining + 1);
-    log("startCountdownAfterwards end");
 }
 function endCountdown() {
-    log("endCountdown start");
+    log("endCountdown");
     if (countdowndata.text == null) {
-        countdowndata.text = new cText("GO", res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true);
+        countdowndata.text = new cText("GO", res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
     }
     else
         countdowndata.text.setText("GO");
     if (countdowndata.timer != null)
         countdowndata.timer.kill();
     countdowndata.timer = new Timer(stopCountdown, 2000, 1);
-    log("endCountdown end");
 }
 function stopCountdown() {
-    log("stopCountdown start");
+    log("stopCountdown");
     if (countdowndata.text != null) {
         countdowndata.text.remove();
         countdowndata.text = null;
@@ -714,10 +714,9 @@ function stopCountdown() {
         countdowndata.timer.kill();
         countdowndata.timer = null;
     }
-    log("stopCountdown end");
 }
 mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
-    log("onClientPlayerJoinLobby start");
+    log("onClientPlayerJoinLobby");
     rounddata.isspectator = isspectator;
     setMapInfo(mapname);
     teamnames = JSON.parse(teamnames);
@@ -729,10 +728,9 @@ mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamc
     lobbysettings.bombplanttime = bombplanttime;
     lobbysettings.bombdefusetime = bombdefusetime;
     lobbysettings.roundendtime = roundendtime;
-    log("onClientPlayerJoinLobby end");
 });
 mp.events.add("onClientPlayerLeaveLobby", (player) => {
-    log("onClientPlayerLeaveLobby start");
+    log("onClientPlayerLeaveLobby");
     if (mp.players.local == player) {
         toggleFightMode(false);
         removeBombThings();
@@ -740,10 +738,19 @@ mp.events.add("onClientPlayerLeaveLobby", (player) => {
         stopCountdownCamera();
         removeRoundInfo();
     }
-    log("onClientPlayerLeaveLobby end");
 });
 mp.events.add("onClientJoinMainMenu", () => {
     mp.game.cam.doScreenFadeIn(100);
+});
+mp.events.add("testit", (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) => {
+    mp.gui.chat.push("1: " + arg1 + " - " + typeof (arg1));
+    mp.gui.chat.push("2: " + arg2 + " - " + typeof (arg2));
+    mp.gui.chat.push("3: " + arg3 + " - " + typeof (arg3));
+    mp.gui.chat.push("4: " + arg4 + " - " + typeof (arg4));
+    mp.gui.chat.push("5: " + arg5 + " - " + typeof (arg5));
+    mp.gui.chat.push("6: " + arg6 + " - " + typeof (arg6));
+    mp.gui.chat.push("7: " + arg7 + " - " + typeof (arg7));
+    mp.gui.chat.push("8: " + arg8 + " - " + typeof (arg8));
 });
 let maplimitdata = {
     limit: [],
@@ -773,13 +780,13 @@ function pointIsInPoly(p) {
 }
 ;
 function checkMapLimit() {
-    log("checkMapLimit start");
+    log("checkMapLimit");
     if (maplimitdata.limit != null) {
         var pos = mp.players.local.position;
         if (!pointIsInPoly(pos)) {
             maplimitdata.outsidecounter--;
             if (maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null)
-                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), res.x / 2, res.y / 2, 1, { r: 255, g: 255, b: 255, a: 255 }, 1.2, 1.2, true);
+                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), res.x / 2, res.y / 2, 1, [255, 255, 255, 255], [1.2, 1.2], true, 1);
             else if (maplimitdata.outsidecounter > 0)
                 maplimitdata.outsidetext.setText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter));
             else if (maplimitdata.outsidecounter == 0) {
@@ -795,10 +802,9 @@ function checkMapLimit() {
     }
     else
         resetMapLimitCheck();
-    log("checkMapLimit start");
 }
 function loadMapLimitData(data) {
-    log("loadMapLimitData start");
+    log("loadMapLimitData");
     maplimitdata.limit = [];
     for (let j = 0; j < data.length; j++) {
         maplimitdata.limit[j] = { X: Number.parseFloat(data[j].Item1), Y: Number.parseFloat(data[j].Item2) };
@@ -821,7 +827,6 @@ function loadMapLimitData(data) {
         maplimitdata.minY = minY;
         maplimitdata.maxY = maxY;
     }
-    log("loadMapLimitData end");
 }
 function resetMapLimitCheck() {
     if (maplimitdata.outsidetext != null) {
@@ -831,16 +836,15 @@ function resetMapLimitCheck() {
     }
 }
 function startMapLimit() {
-    log("startMapLimit start");
+    log("startMapLimit");
     if (maplimitdata.checktimer != null)
         maplimitdata.checktimer.kill();
-    if (maplimitdata.limit[0] != undefined) {
+    if (0 in maplimitdata.limit) {
         maplimitdata.checktimer = new Timer(checkMapLimit, 1000, -1);
     }
-    log("startMapLimit end");
 }
 function stopMapLimitCheck() {
-    log("stopMapLimitCheck start");
+    log("stopMapLimitCheck");
     if (maplimitdata.checktimer != null) {
         maplimitdata.checktimer.kill();
         maplimitdata.checktimer = null;
@@ -850,7 +854,6 @@ function stopMapLimitCheck() {
         maplimitdata.outsidetext.remove();
         maplimitdata.outsidetext = null;
     }
-    log("stopMapLimitCheck end");
 }
 function emptyMapLimit() {
     maplimitdata.limit = [];
@@ -861,30 +864,29 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, res.x * 0.5, res.y * 0.95, 1, { r: 255, g: 255, b: 255, a: 255 }, 0.5, 0.5, true);
+    rounddata.mapinfo = new cText(mapname, res.x * 0.5, res.y * 0.95, 1, [255, 255, 255, 255], [0.5, 0.5], true, 0);
 }
 mp.events.add("render", () => {
     if (!rounddata.infight) {
     }
 });
 function removeMapInfo() {
-    log("removeMapInfo start");
+    log("removeMapInfo");
     if (rounddata.mapinfo != null) {
         rounddata.mapinfo.remove();
         rounddata.mapinfo = null;
     }
-    log("removeMapInfo end");
 }
 function removeRoundThings(removemapinfo) {
-    log("removeRoundThings start");
+    log("removeRoundThings");
     stopSpectate();
     stopCountdown();
     if (removemapinfo) {
         removeMapInfo();
     }
-    log("removeRoundThings end");
 }
 function toggleFightMode(bool) {
+    log("toggleFightMode " + bool);
     if (bool) {
         rounddata.infight = true;
     }
@@ -894,17 +896,15 @@ function toggleFightMode(bool) {
     }
 }
 mp.events.add("onClientMapChange", function (maplimit, mapmidx, mapmidy, mapmidz) {
-    log("onClientMapChange start");
+    log("onClientMapChange");
     mp.game.cam.doScreenFadeIn(lobbysettings.roundendtime / 2);
     maplimit = JSON.parse(maplimit);
     if (maplimit.length > 0)
         loadMapLimitData(maplimit);
-    mp.gui.chat.push(mapmidx + " - " + mapmidy + " - " + mapmidz);
     loadMapMiddleForCamera(new mp.Vector3(mapmidx, mapmidy, mapmidz));
-    log("onClientMapChange end");
 });
 mp.events.add("onClientCountdownStart", function (mapname, resttime) {
-    log("onClientCountdownStart start ");
+    log("onClientCountdownStart");
     if (cameradata.timer != null)
         cameradata.timer.kill();
     if (resttime == null) {
@@ -923,10 +923,9 @@ mp.events.add("onClientCountdownStart", function (mapname, resttime) {
     if (rounddata.isspectator)
         startSpectate();
     rounddata.mapinfo.setText(mapname);
-    log("onClientCountdownStart end");
 });
 mp.events.add("onClientRoundStart", function (isspectator, _, wastedticks) {
-    log("onClientRoundStart start");
+    log("onClientRoundStart");
     mp.game.cam.doScreenFadeIn(50);
     stopCountdownCamera();
     endCountdown();
@@ -936,10 +935,9 @@ mp.events.add("onClientRoundStart", function (isspectator, _, wastedticks) {
         toggleFightMode(true);
     }
     roundStartedRoundInfo(wastedticks);
-    log("onClientRoundStart end");
 });
 mp.events.add("onClientRoundEnd", function () {
-    log("onClientRoundEnd start");
+    log("onClientRoundEnd");
     mp.game.cam.doScreenFadeOut(lobbysettings.roundendtime / 2);
     toggleFightMode(false);
     removeBombThings();
@@ -948,26 +946,22 @@ mp.events.add("onClientRoundEnd", function () {
     stopCountdown();
     stopCountdownCamera();
     removeRoundInfo();
-    log("onClientRoundEnd end");
 });
 mp.events.add("onClientPlayerSpectateMode", function () {
-    log("onClientPlayerSpectateMode start");
+    log("onClientPlayerSpectateMode");
     rounddata.isspectator = true;
     startSpectate();
-    log("onClientPlayerSpectateMode end");
 });
 mp.events.add("onClientPlayerDeath", function (player, teamID, killstr) {
-    log("onClientPlayerDeath start");
+    log("onClientPlayerDeath");
     if (mp.players.local == player) {
         toggleFightMode(false);
         removeBombThings();
     }
     playerDeathRoundInfo(teamID, killstr);
-    log("onClientPlayerDeath end");
 });
 mp.events.add("PlayerQuit", function (player, exitType, reason) {
-    log("onClientPlayerQuit start");
-    log("onClientPlayerQuit end");
+    log("PlayerQuit");
 });
 mp.events.add("onClientPlayerGotBomb", function (placestoplant) {
     localPlayerGotBomb(placestoplant);
@@ -988,82 +982,62 @@ let roundinfo = {
     starttick: 0,
     teamnames: [],
     teamcolors: [],
-    drawevent: false,
     killinfo: [],
+    drawclasses: {
+        text: {
+            time: null,
+            teams: []
+        },
+        rect: {
+            time: null,
+            teams: []
+        }
+    },
     drawdata: {
         time: {
             text: {
-                ypos: res.y * 0.005,
-                scale: 0.5,
-                r: 255,
-                g: 255,
-                b: 255,
-                a: 255,
+                ypos: 0.005,
+                scale: [0.5, 0.5],
+                color: [255, 255, 255, 255]
             },
             rectangle: {
-                xpos: res.x * 0.47,
+                xpos: 0.47,
                 ypos: 0,
-                width: res.x * 0.06,
-                height: res.y * 0.05,
-                r: 20,
-                g: 20,
-                b: 20,
-                a: 180
+                width: 0.06,
+                height: 0.05,
+                color: [20, 20, 20, 180]
             }
         },
         team: {
             text: {
-                ypos: -res.y * 0.002,
-                scale: 0.41,
-                r: 255,
-                g: 255,
-                b: 255,
-                a: 255
+                ypos: -0.002,
+                scale: [0.41, 0.41],
+                color: [255, 255, 255, 255]
             },
             rectangle: {
                 ypos: 0,
-                width: res.x * 0.13,
-                height: res.y * 0.06,
+                width: 0.13,
+                height: 0.06,
                 a: 180
             }
         },
         kills: {
             showtick: 15000,
             fadeaftertick: 11000,
-            xpos: res.x * 0.99,
-            ypos: res.y * 0.45,
-            scale: 0.3,
-            height: res.y * 0.04
+            xpos: 0.99,
+            ypos: 0.45,
+            scale: [0.3, 0.3],
+            height: 0.04
         }
     }
 };
-function drawRoundInfo() {
-    if (roundinfo.drawevent) {
-        let tick = getTick();
-        let fullseconds = Math.ceil((roundinfo.roundtime - (tick - roundinfo.starttick)) / 1000);
-        let minutes = Math.floor(fullseconds / 60);
-        let seconds = fullseconds % 60;
-        let tdata = roundinfo.drawdata.time.text;
-        let trdata = roundinfo.drawdata.time.rectangle;
-        mp.game.graphics.drawText(minutes + ":" + (seconds >= 10 ? seconds : "0" + seconds), 1, { r: tdata.r, g: tdata.g, b: tdata.b, a: tdata.a }, tdata.scale, tdata.scale, trdata.xpos + trdata.width / 2, tdata.ypos, true);
-        mp.game.graphics.drawRect(trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.r, trdata.g, trdata.b, trdata.a);
-        let teamdata = roundinfo.drawdata.team.text;
-        let teamrdata = roundinfo.drawdata.team.rectangle;
-        let leftteamamount = Math.ceil(roundinfo.teamnames.length / 2);
-        for (let i = 0; i < leftteamamount; i++) {
-            let startx = trdata.xpos - teamrdata.width * (i + 1);
-            mp.game.graphics.drawText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], 1, { r: teamdata.r, g: teamdata.g, b: teamdata.b, a: teamdata.a }, teamdata.scale, teamdata.scale, startx + teamrdata.width / 2, teamdata.ypos, true);
-            mp.game.graphics.drawRect(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a);
-        }
-        for (let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++) {
-            let startx = trdata.xpos + trdata.width + teamrdata.width * j;
-            let i = leftteamamount + j;
-            mp.game.graphics.drawText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], { r: teamdata.r, g: teamdata.g, b: teamdata.b, a: teamdata.a }, teamdata.scale, teamdata.scale, startx + teamrdata.width / 2, 1, teamdata.ypos, true);
-            mp.game.graphics.drawRect(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a);
-        }
-    }
+function refreshRoundInfo() {
+    let tick = getTick();
+    let fullseconds = Math.ceil((roundinfo.roundtime - (tick - roundinfo.starttick)) / 1000);
+    let minutes = Math.floor(fullseconds / 60);
+    let seconds = fullseconds % 60;
+    roundinfo.drawclasses.text.time.setText(minutes + ":" + (seconds >= 10 ? seconds : "0" + seconds));
 }
-mp.events.add("render", drawRoundInfo);
 function setRoundTimeLeft(lefttime) {
     roundinfo.starttick = getTick() - (roundinfo.roundtime - lefttime);
 }
@@ -1077,7 +1051,7 @@ mp.events.add("render", function () {
             if (tickwasted < data.showtick) {
                 let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil((data.showtick - tickwasted) / (data.showtick - data.fadeaftertick) * 255);
                 let counter = length - i - 1;
-                mp.game.graphics.drawText(roundinfo.killinfo[i].killstr, 2, { r: 255, g: 255, b: 255, a: alpha }, data.scale, data.scale, data.xpos, data.ypos + counter * data.height, true);
+                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 1, [255, 255, 255, alpha], data.scale, true, 2);
             }
             else {
                 roundinfo.killinfo.splice(0, i + 1);
@@ -1089,13 +1063,31 @@ mp.events.add("render", function () {
 function removeRoundInfo() {
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
-    roundinfo.drawevent = false;
+    mp.events.remove("render", refreshRoundInfo);
 }
 function roundStartedRoundInfo(wastedticks) {
     roundinfo.starttick = getTick();
     if (wastedticks != null)
         roundinfo.starttick -= wastedticks;
-    roundinfo.drawevent = true;
+    let tdata = roundinfo.drawdata.time.text;
+    let trdata = roundinfo.drawdata.time.rectangle;
+    roundinfo.drawclasses.rect.time = new cRectangle(trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.color);
+    roundinfo.drawclasses.text.time = new cText("0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 1, tdata.color, tdata.scale, true, 1);
+    let teamdata = roundinfo.drawdata.team.text;
+    let teamrdata = roundinfo.drawdata.team.rectangle;
+    let leftteamamount = Math.ceil(roundinfo.teamnames.length / 2);
+    for (let i = 0; i < leftteamamount; i++) {
+        let startx = trdata.xpos - teamrdata.width * (i + 1);
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, 1);
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
+    }
+    for (let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++) {
+        let startx = trdata.xpos + trdata.width + teamrdata.width * j;
+        let i = leftteamamount + j;
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, 1);
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
+    }
+    mp.events.add("render", refreshRoundInfo);
 }
 function addTeamInfos(teamnames, teamcolors) {
     for (let i = 1; i < teamnames.length; i++) {
@@ -1105,12 +1097,18 @@ function addTeamInfos(teamnames, teamcolors) {
         roundinfo.teamcolors[i - 3] = teamcolors[i];
     }
 }
+function refreshRoundInfoTeamData() {
+    for (let i = 0; i < roundinfo.drawclasses.text.teams.length; ++i) {
+        roundinfo.drawclasses.text.teams[i].setText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i]);
+    }
+}
 function playerDeathRoundInfo(teamID, killstr) {
-    roundinfo.aliveinteams[teamID]--;
+    roundinfo.aliveinteams[teamID - 1]--;
+    roundinfo.drawclasses.text.teams[teamID - 1].setText(roundinfo.teamnames[teamID - 1] + "\n" + roundinfo.aliveinteams[teamID - 1] + "/" + roundinfo.amountinteams[teamID - 1]);
     roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });
 }
 mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, amountaliveinteam) => {
-    log("onClientPlayerAmountInFightSync start");
+    log("onClientPlayerAmountInFightSync");
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
     amountinteam = JSON.parse(amountinteam);
@@ -1123,7 +1121,7 @@ mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, 
         else
             roundinfo.aliveinteams[i] = Number.parseInt(amountaliveinteam[i]);
     }
-    log("onClientPlayerAmountInFightSync end");
+    refreshRoundInfoTeamData();
 });
 var lobbysettings = {
     countdowntime: 0,
@@ -1135,27 +1133,27 @@ var lobbysettings = {
 let spectatedata = {
     binded: false
 };
-function pressSpectateKeyLeft(sender, e) {
+function pressSpectateKeyLeft() {
     mp.events.callRemote("spectateNext", false);
 }
-function pressSpectateKeyRight(sender, e) {
+function pressSpectateKeyRight() {
     mp.events.callRemote("spectateNext", true);
 }
 function startSpectate() {
     if (!spectatedata.binded) {
-        mp.keys.bind(Keys.LeftArrow, true, pressSpectateKeyLeft);
-        mp.keys.bind(Keys.A, true, pressSpectateKeyLeft);
-        mp.keys.bind(Keys.RightArrow, true, pressSpectateKeyRight);
-        mp.keys.bind(Keys.D, true, pressSpectateKeyRight);
+        mp.keys.bind(Keys.LeftArrow, false, pressSpectateKeyLeft);
+        mp.keys.bind(Keys.A, false, pressSpectateKeyLeft);
+        mp.keys.bind(Keys.RightArrow, false, pressSpectateKeyRight);
+        mp.keys.bind(Keys.D, false, pressSpectateKeyRight);
         spectatedata.binded = true;
     }
 }
 function stopSpectate() {
     if (spectatedata.binded) {
-        mp.keys.unbind(Keys.LeftArrow, true, pressSpectateKeyLeft);
-        mp.keys.unbind(Keys.A, true, pressSpectateKeyLeft);
-        mp.keys.unbind(Keys.RightArrow, true, pressSpectateKeyRight);
-        mp.keys.unbind(Keys.D, true, pressSpectateKeyRight);
+        mp.keys.unbind(Keys.LeftArrow, false, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.A, false, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.RightArrow, false, pressSpectateKeyRight);
+        mp.keys.unbind(Keys.D, false, pressSpectateKeyRight);
         spectatedata.binded = false;
     }
 }
@@ -1174,7 +1172,7 @@ mp.events.add("getRegisterLoginLanguage", () => {
     loginpanel.loginbrowser.execute("loadLanguage ( " + JSON.stringify(getLang("loginregister")) + ");");
 });
 mp.events.add("startRegisterLogin", function (name, isregistered) {
-    log("startRegisterLogin registerlogin start");
+    log("startRegisterLogin registerlogin");
     loginpanel.name = name;
     loginpanel.isregistered = isregistered;
     loginpanel.loginbrowser = mp.browsers.new("package://TDS-V/window/registerlogin/registerlogin.html");
@@ -1187,13 +1185,11 @@ mp.events.add("startRegisterLogin", function (name, isregistered) {
     mp.game.ui.displayHud(false);
     mp.gui.cursor.visible = true;
     nothidecursor++;
-    log("startRegisterLogin registerlogin end");
 });
 mp.events.add("registerLoginSuccessful", function () {
-    log("registerLoginSuccessful registerlogin start");
+    log("registerLoginSuccessful registerlogin");
     loginpanel.loginbrowser.destroy();
     loginpanel.loginbrowser = null;
     mp.gui.chat.activate(true);
     nothidecursor--;
-    log("registerLoginSuccessful registerlogin end");
 });

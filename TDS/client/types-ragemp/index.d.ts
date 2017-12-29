@@ -57,5 +57,6 @@
 /// <reference path="types/MP.Raycasting.d.ts" />
 /// <reference path="types/MP.Vector3.d.ts" />
 /// <reference path="types/MP.Vehicle.d.ts" />
+/// <reference path="types/WeaponHash.d.ts" />
 
 declare const mp: ScriptContext;

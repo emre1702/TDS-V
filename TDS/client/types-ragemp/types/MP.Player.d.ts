@@ -13,7 +13,7 @@ declare interface MpPlayer extends MpEntity {
     readonly isEnteringVehicle: boolean;
     readonly isLeavingVehicle: boolean;
     readonly seat: boolean;
-    readonly weapon: object; //TODO: Find type
+	readonly weapon: WeaponHash; //TODO: Find type
     readonly isAiming: boolean;
     readonly aimTarget: boolean;
     readonly ping: number;

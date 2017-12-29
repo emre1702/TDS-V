@@ -53,5 +53,5 @@ declare interface MpGameCam {
     isSphereVisible(x: number, y: number, z: number, radius: number): boolean;
     getIsMultiplayerBrief(p0: boolean): void;
     stopGameplayHint(p0: boolean): void;
-    shakeGameplayGam(shakeName: string, intensity: number): void;
+    shakeGameplayCam(shakeName: string, intensity: number): void;
 }

@@ -19,7 +19,7 @@
 
 		private static Dictionary<string, string> logQueryParameters = new Dictionary<string, string> ();
 
-		private static void AddLogEntry ( string type, string info, string lobby = "DEFAULT", string playername = "-", string targetUID = "DEFAULT" ) {
+		private static void AddLogEntry ( string type, string info, string lobby = "DEFAULT", string playername = "-", string targetUID = "0" ) {
 			logQueryUIDs.Add ( playername != "-" ? Account.PlayerUIDs[playername].ToString () : playername );
 			logQueryNames.Add ( playername );
 			logQueryTargetUIDs.Add ( targetUID );

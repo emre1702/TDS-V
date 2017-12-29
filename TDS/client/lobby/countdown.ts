@@ -26,7 +26,7 @@ let countdowndata = {
 
 
 function countdownFunc( counter ) {
-	log( "countdownFunc start" );
+	log( "countdownFunc" );
 	counter--;;
 	if ( counter > 0 ) {
 		countdowndata.text.setText( counter.toString() );
@@ -37,30 +37,27 @@ function countdownFunc( counter ) {
 			//API.setAudioVolume( 0.2 );
 		}
 	}
-	log( "countdownFunc end" );
 }
 
 
 function startCountdown() {
-	log( "startCountdown start" );
-	countdowndata.text = new cText( Math.floor( lobbysettings.countdowntime / 1000 ).toString(), res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true );
+	log( "startCountdown" );
+	countdowndata.text = new cText( Math.floor( lobbysettings.countdowntime / 1000 ).toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1 );
 	countdowndata.timer = new Timer( countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor ( lobbysettings.countdowntime / 1000 ) + 1 );
-	log( "startCountdown end" );
 }
 
 
 function startCountdownAfterwards ( timeremaining ) {
-	log( "startCountdownAfterwards start" );
-	countdowndata.text = new cText( timeremaining.toString(), res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true );
+	log( "startCountdownAfterwards" );
+	countdowndata.text = new cText( timeremaining.toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1 );
 	countdownFunc( timeremaining + 1 );
-	log( "startCountdownAfterwards end" );
 }
 
 
 function endCountdown() {
-	log( "endCountdown start" );
+	log( "endCountdown" );
 	if ( countdowndata.text == null ) {
-		countdowndata.text = new cText( "GO", res.x / 2, res.y * 0.2, 1, { r: 255, g: 255, b: 255, a: 255 }, 2.0, 2.0, true );
+		countdowndata.text = new cText( "GO", res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1 );
 	} else
 		countdowndata.text.setText( "GO" );
 	if ( countdowndata.timer != null )
@@ -68,12 +65,11 @@ function endCountdown() {
 	//API.startAudio( soundspath + countdownsounds[0], false );
 	//API.setAudioVolume( 0.2 );
 	countdowndata.timer = new Timer( stopCountdown, 2000, 1 );
-	log( "endCountdown end" );
 }
 
 
 function stopCountdown() {
-	log( "stopCountdown start" );
+	log( "stopCountdown" );
 	if ( countdowndata.text != null ) {
 		countdowndata.text.remove();
 		countdowndata.text = null;
@@ -82,5 +78,4 @@ function stopCountdown() {
 		countdowndata.timer.kill();
 		countdowndata.timer = null;
 	}
-	log( "stopCountdown end" );
 }

@@ -138,8 +138,7 @@ namespace TDS.server.instance.lobby {
 
         private void SendPlayerRoundInfoOnJoin ( Client player ) {
             if ( currentMap != null ) {
-                List<Tuple<float, float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
-                NAPI.Util.ConsoleOutput ( "2: " + currentMap.MapCenter.X + " " + currentMap.MapCenter.Y + " " + currentMap.MapCenter.Z );
+                List<Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapChange", JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
             }
 
