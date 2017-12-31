@@ -21,7 +21,7 @@ declare interface MpCamera extends MpEntity {
     shake(type: string, amplitude: number): void;
     isShaking(): boolean;
     setMotionBlurStrength(strength: number): void;
-    getRot(p0: object): MpVector3;
+    getRot(p0: number): MpVector3;
     setDofFnumberOfLens(p1: number): void;
     setRot(rotX: number, rotY: number, rotZ: number, p3: number): void;
     destroy(destroy?: boolean): void;
@@ -39,7 +39,7 @@ declare interface MpCamera extends MpEntity {
     getFarClip(): number;
     getCoord(): MpVector3;
     stopShaking(p0: boolean): void;
-    setParams(x: number, y: number, z: number, xRot: number, yRot: number, zRot: number, duration: number, p8: object, p9: object, p10: object): void;
+    setParams(x: number, y: number, z: number, xRot: number, yRot: number, zRot: number, fov: number, duration: number, p8: number, p9: number, p10: number): void;
     getFov(): number;
     setDofMaxNearInFocusDistance(p0: number): void;
     getNearClip(): number;

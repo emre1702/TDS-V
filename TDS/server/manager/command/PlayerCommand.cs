@@ -17,7 +17,8 @@
             NAPI.Util.ConsoleOutput ( "leave " + player.Name );
 			if ( lobby != MainMenu.TheLobby ) {
                 NAPI.Util.ConsoleOutput ( "leave2 " + player.Name );
-                lobby.RemovePlayer ( player );
+                lobby.RemovePlayerDerived ( player );
+                MainMenu.Join ( player );
 			}
 		}
 

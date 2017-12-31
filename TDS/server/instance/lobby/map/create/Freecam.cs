@@ -14,7 +14,7 @@ namespace TDS.server.instance.lobby {
 			Object obj = NAPI.Object.CreateObject ( -1358020705, NAPI.Entity.GetEntityPosition ( player ), new Vector3 ( 0.0, 0.0, 0.0 ) ); //We create the object from server side, so later if we want to sync the object's position we can send the pos back here.
 			playerCamObject[player] = obj;
 
-			NAPI.ClientEvent.TriggerClientEvent ( player, "startFreecam", obj );
+			NAPI.ClientEvent.TriggerClientEvent ( player, "startFreecam", obj.Handle );
 
 			NAPI.Player.FreezePlayer ( player, true );
 			NAPI.Entity.SetEntityPosition ( player, new Vector3 ( 0.0, 0.0, 200.0 ) );

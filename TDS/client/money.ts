@@ -8,8 +8,8 @@ let moneydata = {
 mp.events.add ( "onClientMoneyChange", money => {
 	log( "onClientMoneyChange" );
 	currentmoney = money;
-	if ( moneydata.text == null )
-		moneydata.text = new cText( "$0", res.x - 90, 50, 7, [115, 186, 131, 255], [1.0, 1.0], true, 2 );
-	else
+    if ( moneydata.text == null ) {
+        moneydata.text = new cText( "$" + currentmoney, 0.99, 0.01, 7, [115, 186, 131, 255], [1.0, 1.0], true, Alignment.RIGHT, true );
+    } else
 		moneydata.text.setText( "$" + currentmoney );
 } );

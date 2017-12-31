@@ -19,11 +19,12 @@ namespace TDS.server.instance.lobby {
         public bool DeleteWhenEmpty = true;
         public bool IsOfficial = false;
 
-        public Vector3 spawnPoint;
-        public Vector3 spawnRotation;
+        public Vector3 SpawnPoint = new Vector3 ( 0, 0, 900 );
+        public float AroundSpawnPoint = 3.0f;
+        public Vector3 SpawnRotation;
 
 
-        public Lobby ( string name, Vector3 spawnpoint, int id = -1 ) {
+        public Lobby ( string name, int id = -1 ) {
             Name = name;
             if ( id == -1 ) {
                 int theID = 0;
@@ -34,14 +35,20 @@ namespace TDS.server.instance.lobby {
                 ID = id;
             }
 
-            spawnPoint = spawnpoint;
-
             Dimension = GetFreeDimension();
 
             sLobbiesByName[name] = this;
             SLobbiesByIndex[ID] = this;
             sDimensionsUsed[Dimension] = this;
+        }
 
+        public void SetDefaultSpawnPoint ( Vector3 spawnpoint, float around = 0 ) {
+            SpawnPoint = spawnpoint;
+            AroundSpawnPoint = around;
+        }
+
+        public void SetDefaultSpawnRotation ( Vector3 spawnrotation ) {
+            SpawnRotation = spawnrotation;
         }
 
         public virtual void Remove ( ) {

@@ -16,8 +16,9 @@ let moneydata = {
 mp.events.add("onClientMoneyChange", money => {
     log("onClientMoneyChange");
     currentmoney = money;
-    if (moneydata.text == null)
-        moneydata.text = new cText("$0", res.x - 90, 50, 7, [115, 186, 131, 255], [1.0, 1.0], true, 2);
+    if (moneydata.text == null) {
+        moneydata.text = new cText("$" + currentmoney, 0.99, 0.01, 7, [115, 186, 131, 255], [1.0, 1.0], true, Alignment.RIGHT, true);
+    }
     else
         moneydata.text.setText("$" + currentmoney);
 });
@@ -170,30 +171,54 @@ mp.events.add("playerDeath", (player, reason, killer) => {
     }
 });
 let drawdrawings = [];
-mp.game.ui.setTextWrap(0.0, 1.0);
-function drawText(text, x, y, fontid, color, scale, outline, alignment) {
-    mp.game.ui.setTextJustification(this.alignment);
-    mp.game.graphics.drawText(text, [x, y], { font: fontid, color: color, scale: scale, outline: outline });
+function getStringWidth(text, scale, font) {
+    mp.game.ui.setTextEntryForWidth("STRING");
+    mp.game.ui.addTextComponentSubstringPlayerName(text);
+    mp.game.ui.setTextFont(font);
+    mp.game.ui.setTextScale(scale[0], scale[1]);
+    return mp.game.ui.getTextScreenWidth(true);
+}
+function drawText(text, x, y, font, color, scale, outline, alignment, relative) {
+    let xpos = relative ? x : x / res.x;
+    let ypos = relative ? y : y / res.y;
+    if (alignment == Alignment.LEFT)
+        xpos += getStringWidth(text, scale, font) / 2;
+    else if (alignment == Alignment.RIGHT)
+        xpos -= getStringWidth(text, scale, font) / 2;
+    mp.game.graphics.drawText(text, [xpos, ypos], { font, color, scale, outline });
+}
+function drawRectangle(x, y, width, length, color, alignment = Alignment.LEFT, relative = true) {
+    let xpos = relative ? x : x / res.x;
+    let ypos = relative ? y : y / res.y;
+    let sizex = relative ? width : width / res.x;
+    let sizey = relative ? length : length / res.y;
+    if (alignment == Alignment.LEFT)
+        xpos += sizex / 2;
+    else if (alignment == Alignment.RIGHT)
+        xpos -= sizex / 2;
+    ypos += sizey / 2;
+    mp.game.graphics.drawRect(xpos, ypos, sizex, sizey, color[0], color[1], color[2], color[3]);
 }
 mp.events.add("render", () => {
     let tick = getTick();
     for (var i = 0; i < drawdrawings.length; i++) {
         let c = drawdrawings[i];
         if (c.activated) {
-            switch (c.constructor.name) {
+            switch (c.type) {
                 case "cRectangle":
-                    mp.game.graphics.drawRect(c.x, c.y, c.width, c.height, c.r, c.g, c.b, c.a);
+                    drawRectangle(c.position[0], c.position[1], c.size[0], c.size[1], c.color, c.alignment, c.relative);
                     break;
                 case "cText":
-                    let alpha = c[3];
+                    let alpha = c.color[3];
                     if (c.enda != null) {
-                        alpha = getBlendValue(tick, c[3], c.enda, c.endastarttick, c.endaendtick);
+                        alpha = getBlendValue(tick, c.color[3], c.enda, c.endastarttick, c.endaendtick);
                     }
-                    let scale = c.scale[0];
+                    let scale = [c.scale[0], c.scale[1]];
                     if (c.endscale != null) {
-                        scale = getBlendValue(tick, c.scale[0], c.endscale, c.endscalestarttick, c.endscaleendtick);
+                        scale[0] = getBlendValue(tick, c.scale[0], c.endscale[0], c.endscalestarttick, c.endscaleendtick);
+                        scale[1] = getBlendValue(tick, c.scale[1], c.endscale[1], c.endscalestarttick, c.endscaleendtick);
                     }
-                    drawText(c.text, c.x, c.y, c.font, [c.color[0], c.color[1], c.color[2], alpha], [scale, scale], c.outline, c.alignment);
+                    drawText(c.text, c.position[0], c.position[1], c.font, [c.color[0], c.color[1], c.color[2], alpha], scale, c.outline, c.alignment, c.relative);
                     break;
             }
         }
@@ -230,51 +255,58 @@ function getClassDrawText() {
 function setClassDrawText(text) {
     this.text = text;
 }
-function cLine(start, end, r, g, b, a) {
-    this.type = "line";
-    this.activated = true;
-    this.start = start;
-    this.end = end;
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
-    this.remove = removeClassDraw;
-    drawdrawings.push(this);
-}
-class cRectangle {
-    constructor(xpos, ypos, wsize, hsize, color) {
+class cLine {
+    constructor(start, end, r, g, b, a) {
+        this.type = "cLine";
         this.activated = true;
         this.remove = removeClassDraw;
-        this.x = xpos;
-        this.y = ypos;
-        this.width = wsize;
-        this.height = hsize;
+        this.type = "line";
+        this.activated = true;
+        this.start = start;
+        this.end = end;
+        this.color = [r, g, b, a];
+        this.remove = removeClassDraw;
+        drawdrawings.push(this);
+    }
+}
+class cRectangle {
+    constructor(xpos, ypos, width, height, color, alignment = Alignment.LEFT, relative = true) {
+        this.type = "cRectangle";
+        this.activated = true;
+        this.remove = removeClassDraw;
+        this.position = [xpos, ypos];
+        this.size = [width, height];
         this.color = color;
+        this.alignment = alignment;
+        this.relative = relative;
         drawdrawings.push(this);
     }
 }
 class cText {
-    constructor(text, x, y, fontid, color, scale, outline, alignment) {
+    constructor(text, x, y, font, color, scale, outline, alignment, relative) {
+        this.type = "cText";
         this.activated = true;
+        this.endscale = null;
+        this.enda = null;
         this.remove = removeClassDraw;
         this.blendTextAlpha = blendClassDrawTextAlpha;
         this.blendTextScale = blendClassDrawTextScale;
         this.getText = getClassDrawText;
         this.setText = setClassDrawText;
         this.text = text;
-        this.x = x;
-        this.y = y;
+        this.position = [x, y];
+        this.font = font;
         this.color = color;
         this.scale = scale;
         this.outline = outline;
         this.alignment = alignment;
+        this.relative = relative;
         if (alignment == 0)
-            this.text += "            ";
+            this.text = "        " + text + "        ";
         else if (alignment == 1)
-            this.text = "      " + text + "      ";
+            this.text += "                ";
         else
-            this.text = "            " + text;
+            this.text = "                " + text;
         drawdrawings.push(this);
     }
 }
@@ -302,6 +334,12 @@ function cEditBox(defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20,
     this.remove = removeClassDraw;
     drawdrawings.push(this);
 }
+var Alignment;
+(function (Alignment) {
+    Alignment[Alignment["CENTER"] = 0] = "CENTER";
+    Alignment[Alignment["LEFT"] = 1] = "LEFT";
+    Alignment[Alignment["RIGHT"] = 2] = "RIGHT";
+})(Alignment || (Alignment = {}));
 var Keys;
 (function (Keys) {
     Keys[Keys["LeftArrow"] = 37] = "LeftArrow";
@@ -311,8 +349,13 @@ var Keys;
     Keys[Keys["A"] = 65] = "A";
     Keys[Keys["D"] = 68] = "D";
 })(Keys || (Keys = {}));
+var Language;
+(function (Language) {
+    Language["English"] = "ENGLISH";
+    Language["German"] = "GERMAN";
+})(Language || (Language = {}));
 var languagelist = {
-    "german": {
+    "GERMAN": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -378,7 +421,7 @@ var languagelist = {
             "maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
         }
     },
-    "english": {
+    "ENGLISH": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -445,7 +488,7 @@ var languagelist = {
         }
     }
 };
-let languagesetting = "english";
+let languagesetting = "ENGLISH";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];
@@ -460,7 +503,8 @@ mp.events.add("setLanguage", setLanguage);
 function loadLanguage() {
     var langnumber = mp.game.invoke("3160758157564346030", 0);
     if (langnumber == 2)
-        languagesetting = "german";
+        languagesetting = Language.German;
+    mp.events.callRemote("onPlayerChatLoad", languagesetting);
 }
 loadLanguage();
 function getLanguage() {
@@ -610,8 +654,8 @@ function loadMapMiddleForCamera(mapmiddle) {
 function setCameraGoTowardsPlayer(time = -1) {
     log("setCameraGoTowardsPlayer " + time);
     let pos = gameplayCam.getCoord();
-    cameradata.camera.setCoord(pos.x, pos.y, pos.z + 80);
-    mp.game.cam.renderScriptCams(true, true, time == -1 ? (lobbysettings.countdowntime * 0.9) : time, true, true);
+    let rot = gameplayCam.getRot(2);
+    cameradata.camera.setParams(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, gameplayCam.getFov(), time == -1 ? (lobbysettings.countdowntime * 0.9) : time, 1, 1, 2);
 }
 function stopCountdownCamera() {
     log("stopCountdownCamera");
@@ -626,7 +670,7 @@ mp.events.add("joinArena", function (isspectator) {
 });
 mp.events.add("getLobbyChoiceLanguage", function () {
     log("getLobbyChoiceLanguage");
-    lobbychoicedata.browser.execute("getLobbyChoiceLanguage (" + JSON.stringify(getLang("lobby_choice")) + ")");
+    lobbychoicedata.browser.execute("getLobbyChoiceLanguage (`" + JSON.stringify(getLang("lobby_choice")) + "`)");
 });
 mp.events.add("createLobby", function () {
 });
@@ -635,7 +679,7 @@ mp.events.add("onClientJoinMainMenu", () => {
     lobbychoicedata.browser = mp.browsers.new("package://TDS-V/window/lobby/choice.html");
     mp.events.add('browserDomReady', (browser) => {
         if (browser == lobbychoicedata.browser) {
-            lobbychoicedata.browser.execute("getLobbyChoiceLanguage (" + JSON.stringify(getLang("lobby_choice")) + ")");
+            lobbychoicedata.browser.execute("getLobbyChoiceLanguage (`" + JSON.stringify(getLang("lobby_choice")) + "`)");
         }
     });
     mp.gui.cursor.visible = true;
@@ -648,7 +692,6 @@ function destroyLobbyChoiceBrowser() {
         mp.gui.cursor.visible = false;
 }
 mp.events.add("onClientPlayerJoinLobby", () => {
-    log("onClientPlayerJoinLobby");
     destroyLobbyChoiceBrowser();
 });
 mp.events.add("onClientPlayerJoinRoundlessLobby", () => {
@@ -685,18 +728,18 @@ function countdownFunc(counter) {
 }
 function startCountdown() {
     log("startCountdown");
-    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
+    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdowndata.timer = new Timer(countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor(lobbysettings.countdowntime / 1000) + 1);
 }
 function startCountdownAfterwards(timeremaining) {
     log("startCountdownAfterwards");
-    countdowndata.text = new cText(timeremaining.toString(), res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
+    countdowndata.text = new cText(timeremaining.toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdownFunc(timeremaining + 1);
 }
 function endCountdown() {
     log("endCountdown");
     if (countdowndata.text == null) {
-        countdowndata.text = new cText("GO", res.x / 2, res.y * 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, 1);
+        countdowndata.text = new cText("GO", 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     }
     else
         countdowndata.text.setText("GO");
@@ -717,7 +760,7 @@ function stopCountdown() {
 }
 mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
     log("onClientPlayerJoinLobby");
-    rounddata.isspectator = isspectator;
+    rounddata.isspectator = isspectator == 1;
     setMapInfo(mapname);
     teamnames = JSON.parse(teamnames);
     teamcolors = JSON.parse(teamcolors);
@@ -729,8 +772,9 @@ mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamc
     lobbysettings.bombdefusetime = bombdefusetime;
     lobbysettings.roundendtime = roundendtime;
 });
-mp.events.add("onClientPlayerLeaveLobby", (player) => {
+mp.events.add("onClientPlayerLeaveLobby", (playerID) => {
     log("onClientPlayerLeaveLobby");
+    let player = mp.players.at(playerID);
     if (mp.players.local == player) {
         toggleFightMode(false);
         removeBombThings();
@@ -747,10 +791,6 @@ mp.events.add("testit", (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) => {
     mp.gui.chat.push("2: " + arg2 + " - " + typeof (arg2));
     mp.gui.chat.push("3: " + arg3 + " - " + typeof (arg3));
     mp.gui.chat.push("4: " + arg4 + " - " + typeof (arg4));
-    mp.gui.chat.push("5: " + arg5 + " - " + typeof (arg5));
-    mp.gui.chat.push("6: " + arg6 + " - " + typeof (arg6));
-    mp.gui.chat.push("7: " + arg7 + " - " + typeof (arg7));
-    mp.gui.chat.push("8: " + arg8 + " - " + typeof (arg8));
 });
 let maplimitdata = {
     limit: [],
@@ -763,16 +803,16 @@ let maplimitdata = {
     outsidetext: null,
 };
 function pointIsInPoly(p) {
-    if (p.X < maplimitdata.minX || p.X > maplimitdata.maxX || p.Y < maplimitdata.minY || p.Y > maplimitdata.maxY) {
+    if (p.x < maplimitdata.minX || p.x > maplimitdata.maxX || p.y < maplimitdata.minY || p.y > maplimitdata.maxY) {
         return false;
     }
     var inside = false;
     var vs = maplimitdata.limit;
     for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i].X, yi = vs[i].Y;
-        var xj = vs[j].X, yj = vs[j].Y;
-        var intersect = ((yi > p.Y) != (yj > p.Y))
-            && (p.X < (xj - xi) * (p.Y - yi) / (yj - yi) + xi);
+        var xi = vs[i].x, yi = vs[i].y;
+        var xj = vs[j].x, yj = vs[j].y;
+        var intersect = ((yi > p.y) != (yj > p.y))
+            && (p.x < (xj - xi) * (p.y - yi) / (yj - yi) + xi);
         if (intersect)
             inside = !inside;
     }
@@ -786,7 +826,7 @@ function checkMapLimit() {
         if (!pointIsInPoly(pos)) {
             maplimitdata.outsidecounter--;
             if (maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null)
-                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), res.x / 2, res.y / 2, 1, [255, 255, 255, 255], [1.2, 1.2], true, 1);
+                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), 0.5, 0.5, 1, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true);
             else if (maplimitdata.outsidecounter > 0)
                 maplimitdata.outsidetext.setText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter));
             else if (maplimitdata.outsidecounter == 0) {
@@ -807,20 +847,20 @@ function loadMapLimitData(data) {
     log("loadMapLimitData");
     maplimitdata.limit = [];
     for (let j = 0; j < data.length; j++) {
-        maplimitdata.limit[j] = { X: Number.parseFloat(data[j].Item1), Y: Number.parseFloat(data[j].Item2) };
+        maplimitdata.limit[j] = { x: data[j].Item1, y: data[j].Item2 };
     }
     maplimitdata.outsidecounter = 11;
     if (data.length > 0) {
-        var minX = maplimitdata.limit[0].X;
-        var maxX = maplimitdata.limit[0].X;
-        var minY = maplimitdata.limit[0].Y;
-        var maxY = maplimitdata.limit[0].Y;
+        var minX = maplimitdata.limit[0].x;
+        var maxX = maplimitdata.limit[0].x;
+        var minY = maplimitdata.limit[0].y;
+        var maxY = maplimitdata.limit[0].y;
         for (let i = 1; i < data.length; i++) {
             var q = maplimitdata.limit[i];
-            minX = Math.min(q.X, minX);
-            maxX = Math.max(q.X, maxX);
-            minY = Math.min(q.Y, minY);
-            maxY = Math.max(q.Y, maxY);
+            minX = Math.min(q.x, minX);
+            maxX = Math.max(q.x, maxX);
+            minY = Math.min(q.y, minY);
+            maxY = Math.max(q.y, maxY);
         }
         maplimitdata.minX = minX;
         maplimitdata.maxX = maxX;
@@ -830,10 +870,10 @@ function loadMapLimitData(data) {
 }
 function resetMapLimitCheck() {
     if (maplimitdata.outsidetext != null) {
-        maplimitdata.outsidecounter = 11;
         maplimitdata.outsidetext.remove();
         maplimitdata.outsidetext = null;
     }
+    maplimitdata.outsidecounter = 11;
 }
 function startMapLimit() {
     log("startMapLimit");
@@ -864,7 +904,7 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, res.x * 0.5, res.y * 0.95, 1, [255, 255, 255, 255], [0.5, 0.5], true, 0);
+    rounddata.mapinfo = new cText(mapname, 0.5, 0.95, 1, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true);
 }
 mp.events.add("render", () => {
     if (!rounddata.infight) {
@@ -924,12 +964,12 @@ mp.events.add("onClientCountdownStart", function (mapname, resttime) {
         startSpectate();
     rounddata.mapinfo.setText(mapname);
 });
-mp.events.add("onClientRoundStart", function (isspectator, _, wastedticks) {
+mp.events.add("onClientRoundStart", function (isspectator, wastedticks) {
     log("onClientRoundStart");
     mp.game.cam.doScreenFadeIn(50);
     stopCountdownCamera();
     endCountdown();
-    rounddata.isspectator = isspectator;
+    rounddata.isspectator = isspectator == 1;
     if (!rounddata.isspectator) {
         startMapLimit();
         toggleFightMode(true);
@@ -952,8 +992,9 @@ mp.events.add("onClientPlayerSpectateMode", function () {
     rounddata.isspectator = true;
     startSpectate();
 });
-mp.events.add("onClientPlayerDeath", function (player, teamID, killstr) {
+mp.events.add("onClientPlayerDeath", function (playerID, teamID, killstr) {
     log("onClientPlayerDeath");
+    let player = mp.players.at(playerID);
     if (mp.players.local == player) {
         toggleFightMode(false);
         removeBombThings();
@@ -1051,7 +1092,7 @@ mp.events.add("render", function () {
             if (tickwasted < data.showtick) {
                 let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil((data.showtick - tickwasted) / (data.showtick - data.fadeaftertick) * 255);
                 let counter = length - i - 1;
-                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 1, [255, 255, 255, alpha], data.scale, true, 2);
+                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 1, [255, 255, 255, alpha], data.scale, true, 2, true);
             }
             else {
                 roundinfo.killinfo.splice(0, i + 1);
@@ -1064,6 +1105,18 @@ function removeRoundInfo() {
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
     mp.events.remove("render", refreshRoundInfo);
+    if (roundinfo.drawclasses.rect.time != null) {
+        roundinfo.drawclasses.rect.time.remove();
+        roundinfo.drawclasses.text.time.remove();
+        for (let i = 0; i < roundinfo.drawclasses.text.teams.length; ++i) {
+            roundinfo.drawclasses.text.teams[i].remove();
+            roundinfo.drawclasses.rect.teams[i].remove();
+        }
+        roundinfo.drawclasses.text.time = null;
+        roundinfo.drawclasses.rect.time = null;
+        roundinfo.drawclasses.text.teams = [];
+        roundinfo.drawclasses.rect.teams = [];
+    }
 }
 function roundStartedRoundInfo(wastedticks) {
     roundinfo.starttick = getTick();
@@ -1072,20 +1125,22 @@ function roundStartedRoundInfo(wastedticks) {
     let tdata = roundinfo.drawdata.time.text;
     let trdata = roundinfo.drawdata.time.rectangle;
     roundinfo.drawclasses.rect.time = new cRectangle(trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.color);
-    roundinfo.drawclasses.text.time = new cText("0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 1, tdata.color, tdata.scale, true, 1);
+    roundinfo.drawclasses.text.time = new cText("0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 1, tdata.color, tdata.scale, true, Alignment.CENTER, true);
     let teamdata = roundinfo.drawdata.team.text;
     let teamrdata = roundinfo.drawdata.team.rectangle;
     let leftteamamount = Math.ceil(roundinfo.teamnames.length / 2);
     for (let i = 0; i < leftteamamount; i++) {
         let startx = trdata.xpos - teamrdata.width * (i + 1);
-        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, 1);
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
         roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
+        mp.gui.chat.push("TeamID add: " + i);
     }
     for (let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++) {
         let startx = trdata.xpos + trdata.width + teamrdata.width * j;
         let i = leftteamamount + j;
-        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, 1);
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
         roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
+        mp.gui.chat.push("TeamID add: " + i);
     }
     mp.events.add("render", refreshRoundInfo);
 }
@@ -1103,6 +1158,7 @@ function refreshRoundInfoTeamData() {
     }
 }
 function playerDeathRoundInfo(teamID, killstr) {
+    mp.gui.chat.push("TeamID remove: " + (teamID - 1));
     roundinfo.aliveinteams[teamID - 1]--;
     roundinfo.drawclasses.text.teams[teamID - 1].setText(roundinfo.teamnames[teamID - 1] + "\n" + roundinfo.aliveinteams[teamID - 1] + "/" + roundinfo.amountinteams[teamID - 1]);
     roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });
@@ -1112,11 +1168,11 @@ mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, 
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
     amountinteam = JSON.parse(amountinteam);
-    if (isroundstarted)
+    if (isroundstarted == 1)
         amountaliveinteam = JSON.parse(amountaliveinteam);
     for (let i = 0; i < amountinteam.length; i++) {
         roundinfo.amountinteams[i] = Number.parseInt(amountinteam[i]);
-        if (!isroundstarted)
+        if (isroundstarted == 0)
             roundinfo.aliveinteams[i] = Number.parseInt(amountinteam[i]);
         else
             roundinfo.aliveinteams[i] = Number.parseInt(amountaliveinteam[i]);
@@ -1169,19 +1225,17 @@ mp.events.add("registerFunc", function (password, email) {
     mp.events.callRemote("onPlayerTryRegister", password, email);
 });
 mp.events.add("getRegisterLoginLanguage", () => {
-    loginpanel.loginbrowser.execute("loadLanguage ( " + JSON.stringify(getLang("loginregister")) + ");");
+    loginpanel.loginbrowser.execute("loadLanguage ( `" + JSON.stringify(getLang("loginregister")) + "` );");
 });
 mp.events.add("startRegisterLogin", function (name, isregistered) {
     log("startRegisterLogin registerlogin");
     loginpanel.name = name;
-    loginpanel.isregistered = isregistered;
+    loginpanel.isregistered = isregistered == 1;
     loginpanel.loginbrowser = mp.browsers.new("package://TDS-V/window/registerlogin/registerlogin.html");
     mp.events.add('browserDomReady', (browser) => {
-        if (browser == loginpanel.loginbrowser) {
-            browser.execute("getLoginPanelData ( " + loginpanel.name + ", " + loginpanel.isregistered + ", " + JSON.stringify(getLang("loginregister")) + ");");
-        }
+        if (browser == loginpanel.loginbrowser)
+            browser.execute("getLoginPanelData ( `" + loginpanel.name + "`, `" + loginpanel.isregistered + "`, `" + JSON.stringify(getLang("loginregister")) + "` );");
     });
-    mp.gui.chat.activate(false);
     mp.game.ui.displayHud(false);
     mp.gui.cursor.visible = true;
     nothidecursor++;
@@ -1191,5 +1245,6 @@ mp.events.add("registerLoginSuccessful", function () {
     loginpanel.loginbrowser.destroy();
     loginpanel.loginbrowser = null;
     mp.gui.chat.activate(true);
+    mp.game.ui.displayHud(true);
     nothidecursor--;
 });

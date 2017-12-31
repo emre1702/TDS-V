@@ -65,23 +65,18 @@ $( document ).ready( function () {
 		}
 	} );
 
-	var clickedbutton;
-
-	$( "button" ).click( function ( event ) {
-		clickedbutton = $( this ).attr( "data-eventtype" );
-	} );
-
-	$( "form" ).submit( function ( event ) {
-		event.preventDefault();
-		switch ( clickedbutton ) {
-			case "lang_english":
-				mp.trigger( "setLanguage", "english" );
-				mp.trigger( "getRegisterLoginLanguage" );
+    $( "button:not( [type = 'submit'] )" ).click( function ( event ) {
+        event.preventDefault();
+        var type = $( this ).attr( "data-eventtype" );
+        switch ( type ) {
+            case "lang_english":
+                mp.trigger( "setLanguage", "ENGLISH" );
+                mp.trigger( "getRegisterLoginLanguage" );
 				break;
 
-			case "lang_german":
-				mp.trigger( "setLanguage", "german" );
-				mp.trigger( "getRegisterLoginLanguage" );
+            case "lang_german":
+                mp.trigger( "setLanguage", "GERMAN" );
+                mp.trigger( "getRegisterLoginLanguage" );
 				break;
 		}
 	} );
@@ -90,7 +85,7 @@ $( document ).ready( function () {
 		event.preventDefault();
 		var $this = $( this );
 		var button = $this.find( ':submit:not(:hidden)' );
-		var type = button.attr( "data-eventtype" );
+        var type = button.attr( "data-eventtype" );
 		switch ( type ) {
 
 			case "login":
@@ -114,6 +109,7 @@ $( document ).ready( function () {
 } );
 
 function getLoginPanelData( playername, isreg, lang ) {
+    mp.trigger( "outputCEF", "getLoginPanelData" );
 	loadLanguage( lang );
 	$( "[data-lang=username]" ).each( function () {
 		$( this ).addClass( 'active highlight' );
@@ -128,6 +124,7 @@ function getLoginPanelData( playername, isreg, lang ) {
 }
 
 function loadLanguage( lang ) {
+    mp.trigger( "outputCEF", "loadLanguage" ); 
 	var langdata = JSON.parse( lang );
 	$( "[data-lang]" ).each( function () {
 		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).next().attr( "required" ) ? "*" : "" ) );

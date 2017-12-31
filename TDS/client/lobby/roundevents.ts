@@ -32,12 +32,12 @@ mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) 
 } );
 
 
-mp.events.add( "onClientRoundStart", function ( isspectator, _, wastedticks ) {
+mp.events.add( "onClientRoundStart", function ( isspectator, wastedticks ) {
 	log( "onClientRoundStart" );
 	mp.game.cam.doScreenFadeIn( 50 );
 	stopCountdownCamera();
 	endCountdown();
-	rounddata.isspectator = isspectator;
+	rounddata.isspectator = isspectator == 1;
 	if ( !rounddata.isspectator ) {
 		startMapLimit();
 		toggleFightMode( true );
@@ -67,8 +67,9 @@ mp.events.add( "onClientPlayerSpectateMode", function () {
 } );
 
 
-mp.events.add( "onClientPlayerDeath", function ( player: MpPlayer, teamID: number, killstr: string ) {
-	log( "onClientPlayerDeath" );
+mp.events.add( "onClientPlayerDeath", function ( playerID: number, teamID: number, killstr: string ) {
+    log( "onClientPlayerDeath" );
+    let player = mp.players.at( playerID );
 	if ( mp.players.local == player ) {
 		toggleFightMode( false );
 		removeBombThings();

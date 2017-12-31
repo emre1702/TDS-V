@@ -8,10 +8,10 @@ class PopupMenu {
 
 	/**
 	 *
-	 * @param {string} title
-	 * @param {string} subtitle
-	 * @param {MenuItem[]} items
-	 * @param {Number} limit
+	 * @param {string} title The title of the menu.
+	 * @param {string} subtitle The subtitle of the menu.
+	 * @param {MenuItem[]} items Items of the menu.
+	 * @param {Number} limit TODO Dunno
 	 */
 	constructor(title, subtitle, items, limit) {
 		this.title = title || '';
@@ -532,7 +532,7 @@ Vue.component('popup-menu', {
 		'currentMenu.index': function(val, old) { // Change selected item depending on current index
 
 			if (val > (this.currentMenu.items.length - 1)) { // When more than length
-				for (var i = 0; i < this.currentMenu.items.length; i++) {
+				for (let i = 0; i < this.currentMenu.items.length; i++) {
 					this.currentMenu.items[i].visible = (i < this.currentMenu.limit);
 				}
 
@@ -541,7 +541,7 @@ Vue.component('popup-menu', {
 				return;
 
 			} else if (val < 0) { // When less than 0
-				for (var i = 0; i < this.currentMenu.items.length; i++) {
+                for ( let i = 0; i < this.currentMenu.items.length; i++) {
 						this.currentMenu.items[i].visible = (this.currentMenu.items.length - i <= this.currentMenu.limit);
 				}
 

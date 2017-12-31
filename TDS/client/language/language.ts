@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 var languagelist = {
-	"german": {
+	"GERMAN": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -67,7 +67,7 @@ var languagelist = {
 			"maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
 		}
 	},
-	"english": {
+	"ENGLISH": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -134,7 +134,7 @@ var languagelist = {
 		}
 	}	
 };
-let languagesetting = "english";
+let languagesetting: string = "ENGLISH";
 
 
 function getLang( type, str = null ) {
@@ -152,9 +152,12 @@ function setLanguage( lang ) {
 mp.events.add( "setLanguage", setLanguage );
 
 function loadLanguage () {
-	var langnumber = mp.game.invoke ( "3160758157564346030", 0 );
-	if ( langnumber == 2 ) 
-		languagesetting = "german";
+    var langnumber = mp.game.invoke( "3160758157564346030", 0 );
+    //TODO langnumber always 0
+    if ( langnumber == 2 )
+        languagesetting = Language.German;
+    // normally used when custom chat is loaded //
+    mp.events.callRemote( "onPlayerChatLoad", languagesetting );
 	//createMapCreator();
 }
 loadLanguage();

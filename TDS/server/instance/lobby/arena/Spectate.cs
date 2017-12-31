@@ -10,8 +10,6 @@ namespace TDS.server.instance.lobby {
 		private Dictionary<NetHandle, List<NetHandle>> spectatingMe = new Dictionary<NetHandle, List<NetHandle>> ();
 
         public void RespawnPlayerInSpectateMode ( Client player ) {
-            player.Position = spawnPoint.Around ( 10 );
-            player.Freeze ( true );
             SpectateTeammate ( player );
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerSpectateMode" );
         }

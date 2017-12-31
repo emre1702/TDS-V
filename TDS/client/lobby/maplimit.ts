@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let maplimitdata = {
-	limit: [],
+    limit: [] as { x: number, y: number }[],
 	outsidecounter: 11,
 	checktimer: null,
 	minX: 0,
@@ -12,19 +12,19 @@ let maplimitdata = {
 }
 
 
-function pointIsInPoly( p ) {
-	if ( p.X < maplimitdata.minX || p.X > maplimitdata.maxX || p.Y < maplimitdata.minY || p.Y > maplimitdata.maxY ) {
+function pointIsInPoly( p: MpVector3 ) {
+	if ( p.x < maplimitdata.minX || p.x > maplimitdata.maxX || p.y < maplimitdata.minY || p.y > maplimitdata.maxY ) {
 		return false;
 	}
 
 	var inside = false;
 	var vs = maplimitdata.limit;
 	for ( var i = 0, j = vs.length - 1; i < vs.length; j = i++ ) {
-		var xi = vs[i].X, yi = vs[i].Y;
-		var xj = vs[j].X, yj = vs[j].Y;
+		var xi = vs[i].x, yi = vs[i].y;
+		var xj = vs[j].x, yj = vs[j].y;
 
-		var intersect = ( ( yi > p.Y ) != ( yj > p.Y ) )
-			&& ( p.X < ( xj - xi ) * ( p.Y - yi ) / ( yj - yi ) + xi );
+		var intersect = ( ( yi > p.y ) != ( yj > p.y ) )
+			&& ( p.x < ( xj - xi ) * ( p.y - yi ) / ( yj - yi ) + xi );
 		if ( intersect )
 			inside = !inside;
 	}
@@ -36,11 +36,11 @@ function pointIsInPoly( p ) {
 function checkMapLimit() {
 	log( "checkMapLimit" );
 	if ( maplimitdata.limit != null ) {
-		var pos = mp.players.local.position;
+        var pos = mp.players.local.position;
 		if ( !pointIsInPoly( pos ) ) {
 			maplimitdata.outsidecounter--;
 			if ( maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null )
-				maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), res.x / 2, res.y / 2, 1, [255, 255, 255, 255], [1.2, 1.2], true, 1 );
+                maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), 0.5, 0.5, 1, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true );
 			else if ( maplimitdata.outsidecounter > 0 )
 				maplimitdata.outsidetext.setText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ) );
 			else if ( maplimitdata.outsidecounter == 0 ) {
@@ -57,24 +57,24 @@ function checkMapLimit() {
 }
 
 
-function loadMapLimitData( data ) {
-	log( "loadMapLimitData" );
-	maplimitdata.limit = [];
+function loadMapLimitData( data: { Item1, Item2, Item3 }[] ) {
+    log( "loadMapLimitData" );
+    maplimitdata.limit = [];
 	for ( let j = 0; j < data.length; j++ ) {
-		maplimitdata.limit[j] = { X: Number.parseFloat( data[j].Item1 ), Y: Number.parseFloat( data[j].Item2 ) };
+		maplimitdata.limit[j] = { x: data[j].Item1, y: data[j].Item2 };
 	}
 	maplimitdata.outsidecounter = 11;
 	if ( data.length > 0 ) {
-		var minX = maplimitdata.limit[0].X;
-		var maxX = maplimitdata.limit[0].X;
-		var minY = maplimitdata.limit[0].Y;
-		var maxY = maplimitdata.limit[0].Y;
+		var minX = maplimitdata.limit[0].x;
+		var maxX = maplimitdata.limit[0].x;
+		var minY = maplimitdata.limit[0].y;
+		var maxY = maplimitdata.limit[0].y;
 		for ( let i = 1; i < data.length; i++ ) {
 			var q = maplimitdata.limit[i];
-			minX = Math.min( q.X, minX );
-			maxX = Math.max( q.X, maxX );
-			minY = Math.min( q.Y, minY );
-			maxY = Math.max( q.Y, maxY );
+			minX = Math.min( q.x, minX );
+			maxX = Math.max( q.x, maxX );
+			minY = Math.min( q.y, minY );
+			maxY = Math.max( q.y, maxY );
 		}
 		maplimitdata.minX = minX;
 		maplimitdata.maxX = maxX;
@@ -86,10 +86,10 @@ function loadMapLimitData( data ) {
 
 function resetMapLimitCheck() {
 	if ( maplimitdata.outsidetext != null ) {
-		maplimitdata.outsidecounter = 11;
 		maplimitdata.outsidetext.remove();
 		maplimitdata.outsidetext = null;
-	}
+    }
+    maplimitdata.outsidecounter = 11;
 }
 
 

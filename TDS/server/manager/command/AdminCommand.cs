@@ -6,7 +6,6 @@
 	using database;
 	using extend;
 	using GTANetworkAPI;
-	using instance.lobby;
 	using instance.player;
 	using lobby;
 	using logs;
@@ -69,8 +68,9 @@
 						Log.VIP ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
 					/////////
 					ServerLanguage.SendMessageToAll ( "lobbykick", target.Name, player.Name, reason );
-					target.GetChar ().Lobby.RemovePlayer ( target );
-				}
+					target.GetChar ().Lobby.RemovePlayerDerived ( target );
+                    MainMenu.Join ( target );
+                }
 			}
 		}
 		#endregion

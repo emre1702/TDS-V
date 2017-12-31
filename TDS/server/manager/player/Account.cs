@@ -7,8 +7,11 @@
 	using database;
 	using extend;
     using GTANetworkAPI;
+    using GTANetworkInternals;
     using instance.player;
 	using logs;
+    using TDS.server.enums;
+    using TDS.server.instance.utility;
     using utility;
 
 	class Account : Script {
@@ -27,26 +30,18 @@
         }
 
 		private static void SendWelcomeMessage ( Client player ) {
-			/*player.sendChatMessage ( "~o~__________________________________________" );
-			player.SendLangMessage ( "welcome_1" );
-			player.SendLangMessage ( "welcome_2" );
-			player.SendLangMessage ( "welcome_3" );
-			player.SendLangMessage ( "welcome_4" );
-			player.SendLangMessage ( "welcome_5" );
-			player.sendChatMessage ( "~o~__________________________________________" );*/
-			string msg = "~o~__________________________________________~w~";
+            player.SendChatMessage ( "~o~__________________________________________~w~" );
 			for ( int i = 1; i <= 6; i++ ) {
-				msg += "~n~" + player.GetLang ( "welcome_" + i );
+                player.SendChatMessage ( "~n~" + player.GetLang ( "welcome_" + i ) );
 			}
-			msg += "~n~~o~__________________________________________";
-			player.SendChatMessage ( msg );
+            player.SendChatMessage ( "~n~~o~__________________________________________" ) ;
 		}
 
         private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
             player.Freeze ( true );
             player.Name = player.SocialClubName;
-            NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 );
         }
 
 		private void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
@@ -72,12 +67,12 @@
 						break;
 
 					case "onPlayerLanguageChange":
-						player.GetChar ().Language = args[0];
+						player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), args[0] );
 						break;
 
 					case "onPlayerChatLoad":
-						player.GetChar ().Language = args[0];
-						SendWelcomeMessage ( player );
+						player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), args[0] );
+                        SendWelcomeMessage ( player );
 						break;
 				}
 			} catch ( Exception ex ) {
@@ -172,7 +167,7 @@
 				uint adminlvl = player.GetChar ().AdminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
-				NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player );
+				//NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   // NOT USED RIGHT NOW
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
 			}

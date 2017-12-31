@@ -7,10 +7,10 @@
 		public static Lobby TheLobby;
 
 		public MainMenu () {
-            TheLobby = new Lobby ( "mainmenu", new Vector3 ( 0, 0, 999 ), 0 ) {
+            TheLobby = new Lobby ( "mainmenu", 0 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
-                spawnPoint = new Vector3 ( 0, 0, 900 )
+                AroundSpawnPoint = 5f
 			};
 		}
 

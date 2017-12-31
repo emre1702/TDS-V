@@ -24,7 +24,7 @@ namespace TDS.server.instance.lobby {
 			FuncIterateAllPlayers ( ( targethandle, teamID ) => {
                 Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
                 Language language = target.GetChar ( ).Language;
-				target.TriggerEvent ( "onClientPlayerDeath", player, team, killstr[language] );
+				target.TriggerEvent ( "onClientPlayerDeath", player.Value, (int) team, killstr[language] );
 			} );
 		}
 

@@ -111,7 +111,7 @@ namespace TDS.server.instance.lobby {
         private void StartRoundForPlayer ( Client player, uint teamID ) {
             Character character = player.GetChar ();
             NAPI.Util.ConsoleOutput ( "StartRoundForPlayer " + player.Name );
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
             character.Team = teamID;
             if ( teamID != 0 ) {
                 character.Lifes = Lifes;

@@ -36,11 +36,6 @@ namespace TDS.server.instance.lobby {
                 RespawnPlayerInRound ( player );
             else
                 RespawnPlayerInSpectateMode ( player );
-
-           /* } else { TODO Mainmenu
-                player.Position = lobby.spawnpoint.Around ( 5 );
-                player.Freeze ( true );
-            }  */
         }
 
         private void SetPlayerReadyForRound ( Client player, uint teamID ) {
@@ -94,9 +89,10 @@ namespace TDS.server.instance.lobby {
             AddPlayerDefault ( player, spectator );
 
             string mapname = currentMap != null ? currentMap.Name : "unknown";
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
-                                countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
-                                RoundEndTime );
+            // WORKAROUND BECAUSE OF BRIDGE //
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", spectator ? 1 : 0, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
+                                (int) countdownTime, (int) roundTime, (int) bombDetonateTime, (int) bombPlantTime, (int) bombDefuseTime,
+                                (int) RoundEndTime );
 
             if ( !spectator )
                 AddPlayerAsPlayer ( player );
@@ -133,7 +129,7 @@ namespace TDS.server.instance.lobby {
         }
 
         public static void PlayerAmountInFightSync ( Client player, List<uint> amountinteam, List<uint> amountaliveinteam ) {
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", JsonConvert.SerializeObject ( amountinteam ), true, JsonConvert.SerializeObject ( amountaliveinteam ) );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", JsonConvert.SerializeObject ( amountinteam ), 1, JsonConvert.SerializeObject ( amountaliveinteam ) );
         }
 
         private void SendPlayerRoundInfoOnJoin ( Client player ) {
@@ -154,7 +150,7 @@ namespace TDS.server.instance.lobby {
                         NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", map.Name, tick - startTick );
                     break;
                 case LobbyStatus.ROUND:
-                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", true, tick - startTick );
+                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", 1, tick - startTick );
                     break;
             }
         }

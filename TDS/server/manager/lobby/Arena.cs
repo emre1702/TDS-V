@@ -9,7 +9,7 @@
         public static instance.lobby.Arena TheLobby;
 
         public Arena ( ) {
-            TheLobby = new instance.lobby.Arena ( "arena", new Vector3 ( 0, 0, 999 ), 1 ) {
+            TheLobby = new instance.lobby.Arena ( "arena", 1 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
             };

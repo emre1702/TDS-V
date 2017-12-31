@@ -22,11 +22,13 @@ namespace TDS.server.instance.lobby {
             NAPI.Player.SetPlayerArmor ( player, (int) Armor );
             NAPI.Player.FreezePlayer ( player, true );
 
-            if ( spawnPoint != null ) 
-                player.Position = spawnPoint;
+            if ( character.Lifes == 0 ) {
+                player.Position = SpawnPoint.Around ( AroundSpawnPoint ); 
+                player.Freeze ( true );
 
-            if ( spawnRotation != null )
-                player.Rotation = spawnRotation;
+                if ( SpawnRotation != null )
+                    player.Rotation = SpawnRotation;
+            }
         }
 
         public virtual void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) { }
@@ -36,15 +38,14 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( "Lobby AddPlayer " + player.Name );
             player.Freeze ( true );
             Character character = player.GetChar ();
-
+            character.Lobby.RemovePlayerDerived ( player );
             character.Lobby = this;
             NAPI.Util.ConsoleOutput ( "Current Lobby: " + character.Lobby.Name + " - " + player.GetChar().Lobby.Name );
             character.Spectating = null;
             player.StopSpectating ();
             player.Dimension = Dimension;
 
-            if ( spawnPoint != null )
-                player.Position = spawnPoint.Around ( 5 );
+            player.Position = SpawnPoint.Around ( AroundSpawnPoint );
 
             if ( spectator )
                 AddPlayerAsSpectator ( player );
@@ -56,18 +57,22 @@ namespace TDS.server.instance.lobby {
             character.Lifes = 0;
         }
 
+        public void RemovePlayerDerived ( Client player ) {
+            if ( this is Arena lobby )
+                lobby.RemovePlayer ( player );
+            else
+                RemovePlayer ( player );
+        }
+
         public virtual void RemovePlayer ( Client player ) {
             Character character = player.GetChar ();
             uint teamID = character.Team;
-            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player );
+            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
 
             Players[(int) teamID].Remove ( player );
 
-            if ( player.Exists ) {
+            if ( player.Exists ) 
                 player.Transparency = 255;
-                if ( this != manager.lobby.MainMenu.TheLobby )
-                    manager.lobby.MainMenu.Join ( player );
-            }
 
             NAPI.Util.ConsoleOutput ( "RemovePlayer Lobby " + player.Name );
 

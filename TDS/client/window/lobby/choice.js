@@ -114,12 +114,12 @@ $(document).ready ( function() {
                 break;
                 
 			case "lang_english":
-				mp.trigger( "setLanguage", "english" );
+				mp.trigger( "setLanguage", "ENGLISH" );
 				mp.trigger( "getLobbyChoiceLanguage" );
                 break;
             
 			case "lang_german":
-				mp.trigger( "setLanguage", "german" );
+				mp.trigger( "setLanguage", "GERMAN" );
 				mp.trigger( "getLobbyChoiceLanguage" );
                 break;
                 
