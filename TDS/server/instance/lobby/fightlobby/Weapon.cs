@@ -17,9 +17,9 @@ namespace TDS.server.instance.lobby {
 
 		public void GivePlayerWeapons ( Client player ) {
 			player.RemoveAllWeapons ();
-			for ( int i = 0; i < weapons.Count; i++ ) {
+			/*for ( int i = 0; i < weapons.Count; i++ ) {
 				player.GiveWeapon ( weapons[i], weaponsAmmo[i] );
-			}
+			} */
 		}
 	}
 

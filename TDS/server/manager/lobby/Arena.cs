@@ -71,8 +71,6 @@
 
         public static void Join ( Client player ) {
             TheLobby.AddPlayer ( player );
-
-            NAPI.Util.ConsoleOutput ( "Arena Join " + player.Name );
         }
 
     }

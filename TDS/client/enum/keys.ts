@@ -6,6 +6,7 @@ enum Keys {
 	RightArrow = 0x27,
 	DownArrow = 0x28,
 	A = 0x41,
-	D = 0x44
+    D = 0x44,
+    M = 0x4D
 }
 

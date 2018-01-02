@@ -22,6 +22,19 @@ mp.events.add("onClientMoneyChange", money => {
     else
         moneydata.text.setText("$" + currentmoney);
 });
+let testit1 = (arg1, arg2) => {
+    mp.gui.chat.push("M " + arg1 + " - " + arg2);
+};
+mp.keys.bind(77, true, testit1);
+mp.keys.bind(68, false, () => {
+    mp.keys.unbind(77, testit1);
+});
+mp.keys.bind(0x65, false, () => {
+    mp.keys.unbind(77, true, testit1);
+});
+mp.keys.bind(40, false, () => {
+    mp.keys.bind(77, true, testit1);
+});
 var alltimertable = [];
 var puttimerintable = [];
 mp.events.add("render", function () {
@@ -115,6 +128,19 @@ class Timer {
         alltimertable.splice(0, 0, this);
     }
 }
+let uimenudata = {
+    lastbrowser: null
+};
+function startUIMenu(uimenu) {
+    if (uimenudata.lastbrowser != null)
+        uimenudata.lastbrowser.destroy();
+    uimenudata.lastbrowser = mp.browsers.new("package://TDS-V/window/uimenu/index.html");
+    mp.events.add("browserDomReady", (thebrowser) => {
+        if (thebrowser == uimenudata.lastbrowser)
+            uimenudata.lastbrowser.execute("addScript ( \"" + uimenu + "\");");
+    });
+    return uimenudata.lastbrowser;
+}
 function vector3Lerp(start, end, fraction) {
     return {
         x: (start.x + (end.x - start.x) * fraction),
@@ -176,16 +202,18 @@ function getStringWidth(text, scale, font) {
     mp.game.ui.addTextComponentSubstringPlayerName(text);
     mp.game.ui.setTextFont(font);
     mp.game.ui.setTextScale(scale[0], scale[1]);
-    return mp.game.ui.getTextScreenWidth(true);
+    let width = mp.game.ui.getTextScreenWidth(true);
+    return width;
 }
 function drawText(text, x, y, font, color, scale, outline, alignment, relative) {
     let xpos = relative ? x : x / res.x;
     let ypos = relative ? y : y / res.y;
+    let thetext = text + "               ";
     if (alignment == Alignment.LEFT)
-        xpos += getStringWidth(text, scale, font) / 2;
+        xpos += getStringWidth(text, scale, font);
     else if (alignment == Alignment.RIGHT)
-        xpos -= getStringWidth(text, scale, font) / 2;
-    mp.game.graphics.drawText(text, [xpos, ypos], { font, color, scale, outline });
+        xpos -= getStringWidth(text, scale, font);
+    mp.game.graphics.drawText(thetext, [xpos, ypos], { font, color, scale, outline });
 }
 function drawRectangle(x, y, width, length, color, alignment = Alignment.LEFT, relative = true) {
     let xpos = relative ? x : x / res.x;
@@ -301,12 +329,9 @@ class cText {
         this.outline = outline;
         this.alignment = alignment;
         this.relative = relative;
-        if (alignment == 0)
-            this.text = "        " + text + "        ";
-        else if (alignment == 1)
-            this.text += "                ";
-        else
-            this.text = "                " + text;
+        mp.gui.chat.push("" + getStringWidth("QQ", [1.0, 0.5], 1));
+        mp.gui.chat.push("" + getStringWidth("QQQQQQ", [1.0, 0.5], 1));
+        mp.gui.chat.push("" + getStringWidth("QQQQQQQQ", [2.0, 2.5], 0));
         drawdrawings.push(this);
     }
 }
@@ -348,6 +373,7 @@ var Keys;
     Keys[Keys["DownArrow"] = 40] = "DownArrow";
     Keys[Keys["A"] = 65] = "A";
     Keys[Keys["D"] = 68] = "D";
+    Keys[Keys["M"] = 77] = "M";
 })(Keys || (Keys = {}));
 var Language;
 (function (Language) {
@@ -646,7 +672,7 @@ let cameradata = {
 };
 function loadMapMiddleForCamera(mapmiddle) {
     log("loadMapMiddleForCamera");
-    cameradata.camera.setCoord(mapmiddle.x, mapmiddle.y, mapmiddle.z + 80);
+    cameradata.camera.setCoord(mapmiddle.x, mapmiddle.y, mapmiddle.z + 110);
     cameradata.camera.pointAtCoord(mapmiddle.x, mapmiddle.y, mapmiddle.z);
     cameradata.camera.setActive(true);
     mp.game.cam.renderScriptCams(true, true, 3000, true, true);
@@ -728,18 +754,18 @@ function countdownFunc(counter) {
 }
 function startCountdown() {
     log("startCountdown");
-    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
+    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdowndata.timer = new Timer(countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor(lobbysettings.countdowntime / 1000) + 1);
 }
 function startCountdownAfterwards(timeremaining) {
     log("startCountdownAfterwards");
-    countdowndata.text = new cText(timeremaining.toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
+    countdowndata.text = new cText(timeremaining.toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdownFunc(timeremaining + 1);
 }
 function endCountdown() {
     log("endCountdown");
     if (countdowndata.text == null) {
-        countdowndata.text = new cText("GO", 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
+        countdowndata.text = new cText("GO", 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     }
     else
         countdowndata.text.setText("GO");
@@ -826,7 +852,7 @@ function checkMapLimit() {
         if (!pointIsInPoly(pos)) {
             maplimitdata.outsidecounter--;
             if (maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null)
-                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), 0.5, 0.5, 1, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true);
+                maplimitdata.outsidetext = new cText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter), 0.5, 0.5, 0, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true);
             else if (maplimitdata.outsidecounter > 0)
                 maplimitdata.outsidetext.setText(getLang("round", "outside_map_limit").replace("{1}", maplimitdata.outsidecounter));
             else if (maplimitdata.outsidecounter == 0) {
@@ -904,7 +930,7 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, 0.5, 0.95, 1, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true);
+    rounddata.mapinfo = new cText(mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true);
 }
 mp.events.add("render", () => {
     if (!rounddata.infight) {
@@ -1092,7 +1118,7 @@ mp.events.add("render", function () {
             if (tickwasted < data.showtick) {
                 let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil((data.showtick - tickwasted) / (data.showtick - data.fadeaftertick) * 255);
                 let counter = length - i - 1;
-                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 1, [255, 255, 255, alpha], data.scale, true, 2, true);
+                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 0, [255, 255, 255, alpha], data.scale, true, Alignment.RIGHT, true);
             }
             else {
                 roundinfo.killinfo.splice(0, i + 1);
@@ -1125,22 +1151,20 @@ function roundStartedRoundInfo(wastedticks) {
     let tdata = roundinfo.drawdata.time.text;
     let trdata = roundinfo.drawdata.time.rectangle;
     roundinfo.drawclasses.rect.time = new cRectangle(trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.color);
-    roundinfo.drawclasses.text.time = new cText("0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 1, tdata.color, tdata.scale, true, Alignment.CENTER, true);
+    roundinfo.drawclasses.text.time = new cText("0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 0, tdata.color, tdata.scale, true, Alignment.CENTER, true);
     let teamdata = roundinfo.drawdata.team.text;
     let teamrdata = roundinfo.drawdata.team.rectangle;
     let leftteamamount = Math.ceil(roundinfo.teamnames.length / 2);
     for (let i = 0; i < leftteamamount; i++) {
         let startx = trdata.xpos - teamrdata.width * (i + 1);
-        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
         roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
-        mp.gui.chat.push("TeamID add: " + i);
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
     }
     for (let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++) {
         let startx = trdata.xpos + trdata.width + teamrdata.width * j;
         let i = leftteamamount + j;
-        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
         roundinfo.drawclasses.rect.teams[i] = new cRectangle(startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a]);
-        mp.gui.chat.push("TeamID add: " + i);
+        roundinfo.drawclasses.text.teams[i] = new cText(roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true);
     }
     mp.events.add("render", refreshRoundInfo);
 }
@@ -1158,7 +1182,6 @@ function refreshRoundInfoTeamData() {
     }
 }
 function playerDeathRoundInfo(teamID, killstr) {
-    mp.gui.chat.push("TeamID remove: " + (teamID - 1));
     roundinfo.aliveinteams[teamID - 1]--;
     roundinfo.drawclasses.text.teams[teamID - 1].setText(roundinfo.teamnames[teamID - 1] + "\n" + roundinfo.aliveinteams[teamID - 1] + "/" + roundinfo.amountinteams[teamID - 1]);
     roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });

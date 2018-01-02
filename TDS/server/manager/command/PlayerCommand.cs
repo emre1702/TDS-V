@@ -6,7 +6,8 @@
 	using instance.player;
 	using lobby;
 	using map;
-	using utility;
+    using TDS.server.instance.utility;
+    using utility;
 
 	class PlayerCommand : Script {
 
@@ -91,6 +92,42 @@
 		}
 		#endregion
 
-	}
+        [Command ( "testit123", ACLRequired = false, Hide = true)]
+        public void TestWeapon ( Client player ) {
+            player.GiveWeapon ( WeaponHash.AssaultRifle, 50 );
+            player.GiveWeapon ( WeaponHash.AdvancedRifle, 50 );
+        }
+
+        [Command ( "testit1232", ACLRequired = false, Hide = true )]
+        public void TestWeapon2 ( Client player ) {
+            //NAPI.Player.SetPlayerCurrentWeapon ( player, WeaponHash.AssaultRifle );
+            //NAPI.Player.SetPlayerCurrentWeaponAmmo ( player, 5000 );
+            NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeaponAmmo ( player ).ToString () );
+            Timer.SetTimer ( ( ) => {
+                NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeaponAmmo ( player ).ToString () );
+            }, 1000, 10 );
+        }
+
+        [Command ( "testit1233", ACLRequired = false, Hide = true )]
+        public void TestWeapon3 ( Client player ) {
+            //NAPI.Player.SetPlayerCurrentWeapon ( player, WeaponHash.AssaultRifle );
+            //NAPI.Player.SetPlayerCurrentWeaponAmmo ( player, 5000 );
+            NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeapon ( player ).ToString () );
+            Timer.SetTimer ( ( ) => {
+                NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeapon ( player ).ToString () );
+            }, 1000, 10 );
+        }
+
+        [Command ( "testit1234", ACLRequired = false, Hide = true )]
+        public void TestWeapon4 ( Client player ) {
+            //NAPI.Player.SetPlayerCurrentWeapon ( player, WeaponHash.AssaultRifle );
+            NAPI.Player.SetPlayerCurrentWeaponAmmo ( player, 5000 );
+            NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeaponAmmo ( player ).ToString () );
+            Timer.SetTimer ( ( ) => {
+                NAPI.Util.ConsoleOutput ( NAPI.Player.GetPlayerCurrentWeaponAmmo ( player ).ToString () );
+            }, 1000, 10 );
+        }
+
+    }
 
 }

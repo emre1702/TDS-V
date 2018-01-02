@@ -71,10 +71,14 @@
 		}
 
 		private static Vector3 GetCenterOfPositions ( List<Vector3> poly, float zpos = -1 ) {
-			float centerX = 0.0f;
+            int length = poly.Count;
+            if ( length <= 2 )
+                return null;
+
+            float centerX = 0.0f;
 			float centerY = 0.0f;
 			float centerZ = 0.0f;
-			int length = poly.Count;
+			
 
 			foreach ( Vector3 point in poly ) {
 				centerX += point.X;

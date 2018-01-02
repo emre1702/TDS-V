@@ -42,14 +42,14 @@ function countdownFunc( counter ) {
 
 function startCountdown() {
 	log( "startCountdown" );
-	countdowndata.text = new cText( Math.floor( lobbysettings.countdowntime / 1000 ).toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
+	countdowndata.text = new cText( Math.floor( lobbysettings.countdowntime / 1000 ).toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
 	countdowndata.timer = new Timer( countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor ( lobbysettings.countdowntime / 1000 ) + 1 );
 }
 
 
 function startCountdownAfterwards ( timeremaining ) {
     log( "startCountdownAfterwards" );
-    countdowndata.text = new cText( timeremaining.toString(), 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
+    countdowndata.text = new cText( timeremaining.toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
 	countdownFunc( timeremaining + 1 );
 }
 
@@ -57,7 +57,7 @@ function startCountdownAfterwards ( timeremaining ) {
 function endCountdown() {
 	log( "endCountdown" );
 	if ( countdowndata.text == null ) {
-        countdowndata.text = new cText( "GO", 0.5, 0.2, 1, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
+        countdowndata.text = new cText( "GO", 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true );
 	} else
 		countdowndata.text.setText( "GO" );
 	if ( countdowndata.timer != null )

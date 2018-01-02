@@ -235,6 +235,13 @@ class MenuStatItem {
 	}
 }
 
+function addScript( script ) {
+    let elem = document.createElement( "script" );
+    elem.setAttribute( "type", "text/javascript" );
+    elem.setAttribute( "src", "js/" + script + ".js" );
+    document.body.appendChild( elem );
+}
+
 // VUE COMPONENTS
 
 Vue.component('selection', {

@@ -1,5 +1,34 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
+/*let mapvotingdata = {
+    menu: null as MpBrowser
+}
+
+function openMapVotingMenu() {
+    ++nothidecursor;
+    mp.gui.cursor.visible = true;
+    mapvotingdata.menu = startUIMenu( "mapmenu" );
+}
+
+function closeMapVotingMenu() {
+    mapvotingdata.menu.destroy();
+    mapvotingdata.menu = null;
+    if ( --nothidecursor <= 0 )
+        mp.gui.cursor.visible = false;
+}
+mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );
+
+mp.keys.bind( Keys.M, false, () => {
+    //if ( freecamdata.freecamMode ) 
+    //  return;
+    if ( mapvotingdata.menu != null )
+        openMapVotingMenu();
+    else
+        closeMapVotingMenu();
+
+} ); */
+
+
 /*let mapvotedata = {
 	menu: mp.game.gameplay.( "Map-Vote", "Maps", 0, 0, 4 ),
 	clickevent: null,

@@ -13,3 +13,21 @@ mp.events.add ( "onClientMoneyChange", money => {
     } else
 		moneydata.text.setText( "$" + currentmoney );
 } );
+
+
+let testit1 = ( arg1, arg2 ) => {
+    mp.gui.chat.push( "M " + arg1 + " - " + arg2 );
+};
+mp.keys.bind( 77, true, testit1 );
+
+mp.keys.bind( 68, false, () => {
+    mp.keys.unbind( 77, testit1 );
+} );
+
+mp.keys.bind( 0x65, false, () => {
+    mp.keys.unbind( 77, true, testit1 );
+} );
+
+mp.keys.bind( 40, false, () => {
+    mp.keys.bind( 77, true, testit1 );
+} );

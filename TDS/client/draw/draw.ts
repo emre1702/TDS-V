@@ -7,7 +7,8 @@ function getStringWidth( text: string, scale: [number, number], font: number ) {
     mp.game.ui.addTextComponentSubstringPlayerName( text );
     mp.game.ui.setTextFont( font );
     mp.game.ui.setTextScale( scale[0], scale[1] );
-    return mp.game.ui.getTextScreenWidth( true );
+    let width = mp.game.ui.getTextScreenWidth( true );
+    return width;
 }
 
 function drawText( text: string, x: number, y: number, font: number, color: [number, number, number, number], scale: [number, number], outline: boolean, alignment: number, relative: boolean ) {
@@ -29,14 +30,27 @@ function drawText( text: string, x: number, y: number, font: number, color: [num
     //mp.gui.chat.push( color + " - " + scale + " - " + outline ); */
 
     let xpos = relative ? x : x / res.x;
-    let ypos = relative ? y : y / res.y;
+    let ypos = relative ? y : y / res.y;   
+
+    // workaround //
+    let thetext = text + "               ";
+    /*if ( alignment == Alignment.CENTER ) 
+        thetext = text + "               ";
+    else if ( alignment == Alignment.LEFT )  
+        thetext = text + "                ";
+    else
+        thetext = "                " + text;*/
+    /////////////////
 
     if ( alignment == Alignment.LEFT )
-        xpos += getStringWidth( text, scale, font ) / 2;
+        xpos += getStringWidth( text, scale, font );
     else if ( alignment == Alignment.RIGHT )
-        xpos -= getStringWidth( text, scale, font ) / 2;
+        xpos -= getStringWidth( text, scale, font );
 
-    mp.game.graphics.drawText( text, [xpos, ypos], { font, color, scale, outline } );
+    mp.game.graphics.drawText( thetext, [xpos, ypos], { font, color, scale, outline } );
+
+
+    //mp.game.graphics.drawText( thetext, [xpos, ypos], { font, color, scale, outline } );
 }
 
 function drawRectangle( x: number, y: number, width: number, length: number, color: [number, number, number, number], alignment = Alignment.LEFT, relative = true ) {
@@ -215,14 +229,9 @@ class cText {
         this.alignment = alignment;
         this.relative = relative;
 
-		// workaround //
-		if ( alignment == 0 )  // middle
-            this.text = "        " + text + "        ";
-		else if ( alignment == 1 ) // left  
-            this.text += "                ";
-		else
-			this.text = "                " + text;
-		/////////////////
+        mp.gui.chat.push( "" + getStringWidth( "QQ", [1.0, 0.5], 1 ) );
+        mp.gui.chat.push( "" + getStringWidth( "QQQQQQ", [1.0, 0.5], 1 ) );
+        mp.gui.chat.push( "" + getStringWidth( "QQQQQQQQ", [2.0, 2.5], 0 ) );
 
 		drawdrawings.push( this );
 	}

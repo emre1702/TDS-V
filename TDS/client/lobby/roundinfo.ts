@@ -84,8 +84,8 @@ mp.events.add ( "render", function () {
 			let data = roundinfo.drawdata.kills;
 			if ( tickwasted < data.showtick ) {
 				let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil( ( data.showtick - tickwasted ) / ( data.showtick - data.fadeaftertick ) * 255 );
-				let counter = length - i - 1;
-				drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 1, [255, 255, 255, alpha], data.scale, true, 2, true );
+                let counter = length - i - 1;
+                drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 0, [255, 255, 255, alpha], data.scale, true, Alignment.RIGHT, true );
 			} else {
 				roundinfo.killinfo.splice( 0, i + 1 );
 				break;
@@ -126,23 +126,21 @@ function roundStartedRoundInfo( wastedticks ) {
 	let trdata = roundinfo.drawdata.time.rectangle;
 
 	roundinfo.drawclasses.rect.time = new cRectangle ( trdata.xpos, trdata.ypos, trdata.width, trdata.height, trdata.color );
-    roundinfo.drawclasses.text.time = new cText( "0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 1, tdata.color, tdata.scale, true, Alignment.CENTER, true );
+    roundinfo.drawclasses.text.time = new cText( "0:00", trdata.xpos + trdata.width / 2, tdata.ypos, 0, tdata.color, tdata.scale, true, Alignment.CENTER, true );
 
 	let teamdata = roundinfo.drawdata.team.text;
 	let teamrdata = roundinfo.drawdata.team.rectangle;
 	let leftteamamount = Math.ceil( roundinfo.teamnames.length / 2 );
 	for ( let i = 0; i < leftteamamount; i++ ) {
-		let startx = trdata.xpos - teamrdata.width * ( i + 1 );
-        roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
-		roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
-        mp.gui.chat.push( "TeamID add: " + i );
+        let startx = trdata.xpos - teamrdata.width * ( i + 1 );
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
+        roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
     }
 	for ( let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++ ) {
 		let startx = trdata.xpos + trdata.width + teamrdata.width * j;
-		let i = leftteamamount + j;
-        roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 1, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
-		roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
-        mp.gui.chat.push( "TeamID add: " + i );
+        let i = leftteamamount + j;
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
+        roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
     }
 
 	mp.events.add( "render", refreshRoundInfo );
@@ -165,7 +163,6 @@ function refreshRoundInfoTeamData() {
 
 // use teamID - 1, because spectator (ID 0) isn't included
 function playerDeathRoundInfo( teamID, killstr ) {
-    mp.gui.chat.push( "TeamID remove: " + (teamID-1) );
 	roundinfo.aliveinteams[teamID-1]--;
 	roundinfo.drawclasses.text.teams[teamID-1].setText( roundinfo.teamnames[teamID-1] + "\n" + roundinfo.aliveinteams[teamID-1] + "/" + roundinfo.amountinteams[teamID-1] );
 	roundinfo.killinfo.push( { "killstr": killstr, "starttick": getTick() } );

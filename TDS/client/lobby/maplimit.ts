@@ -40,7 +40,7 @@ function checkMapLimit() {
 		if ( !pointIsInPoly( pos ) ) {
 			maplimitdata.outsidecounter--;
 			if ( maplimitdata.outsidecounter == 10 && maplimitdata.outsidetext == null )
-                maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), 0.5, 0.5, 1, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true );
+                maplimitdata.outsidetext = new cText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ), 0.5, 0.5, 0, [255, 255, 255, 255], [1.2, 1.2], true, Alignment.CENTER, true );
 			else if ( maplimitdata.outsidecounter > 0 )
 				maplimitdata.outsidetext.setText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ) );
 			else if ( maplimitdata.outsidecounter == 0 ) {
