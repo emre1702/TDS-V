@@ -145,19 +145,23 @@ function getLang( type, str = null ) {
 }
 
 function setLanguage( lang ) {
-	languagesetting = lang;
+    languagesetting = lang;
+    mp.storage.data.language = lang;
+    mp.storage.flush();
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
 	//changeMapCreatorLanguage();
 }
 mp.events.add( "setLanguage", setLanguage );
 
 function loadLanguage () {
-    var langnumber = mp.game.invoke( "3160758157564346030", 0 );
+    let langnumber = mp.game.invoke( "3160758157564346030", 0 );
+    let savedlang = mp.storage.data.language;
+    mp.gui.chat.push( "" + savedlang );
+    if ( savedlang != undefined )
+        languagesetting = savedlang;
     //TODO langnumber always 0
-    if ( langnumber == 2 )
+    else if ( langnumber == 2 )
         languagesetting = Language.German;
-    // normally used when custom chat is loaded //
-    mp.events.callRemote( "onPlayerChatLoad", languagesetting );
 	//createMapCreator();
 }
 loadLanguage();

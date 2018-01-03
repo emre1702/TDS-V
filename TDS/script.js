@@ -1,4 +1,11 @@
 "use strict";
+let chatdata = {
+    browser: mp.browsers.new("client/window/chat/chat.html"),
+};
+mp.gui.execute("window.location = 'package://TDS-V/window/chat/chat.html'");
+mp.events.add("onChatLoad", () => {
+    mp.events.callRemote("onPlayerChatLoad", languagesetting);
+});
 var res = mp.game.graphics.getScreenActiveResolution(0, 0);
 var nothidecursor = 0;
 var currentmoney = null;
@@ -21,19 +28,6 @@ mp.events.add("onClientMoneyChange", money => {
     }
     else
         moneydata.text.setText("$" + currentmoney);
-});
-let testit1 = (arg1, arg2) => {
-    mp.gui.chat.push("M " + arg1 + " - " + arg2);
-};
-mp.keys.bind(77, true, testit1);
-mp.keys.bind(68, false, () => {
-    mp.keys.unbind(77, testit1);
-});
-mp.keys.bind(0x65, false, () => {
-    mp.keys.unbind(77, true, testit1);
-});
-mp.keys.bind(40, false, () => {
-    mp.keys.bind(77, true, testit1);
 });
 var alltimertable = [];
 var puttimerintable = [];
@@ -374,6 +368,9 @@ var Keys;
     Keys[Keys["A"] = 65] = "A";
     Keys[Keys["D"] = 68] = "D";
     Keys[Keys["M"] = 77] = "M";
+    Keys[Keys["T"] = 84] = "T";
+    Keys[Keys["Y"] = 89] = "Y";
+    Keys[Keys["Z"] = 90] = "Z";
 })(Keys || (Keys = {}));
 var Language;
 (function (Language) {
@@ -523,14 +520,19 @@ function getLang(type, str = null) {
 }
 function setLanguage(lang) {
     languagesetting = lang;
+    mp.storage.data.language = lang;
+    mp.storage.flush();
     mp.events.callRemote("onPlayerLanguageChange", lang);
 }
 mp.events.add("setLanguage", setLanguage);
 function loadLanguage() {
-    var langnumber = mp.game.invoke("3160758157564346030", 0);
-    if (langnumber == 2)
+    let langnumber = mp.game.invoke("3160758157564346030", 0);
+    let savedlang = mp.storage.data.language;
+    mp.gui.chat.push("" + savedlang);
+    if (savedlang != undefined)
+        languagesetting = savedlang;
+    else if (langnumber == 2)
         languagesetting = Language.German;
-    mp.events.callRemote("onPlayerChatLoad", languagesetting);
 }
 loadLanguage();
 function getLanguage() {
@@ -1229,10 +1231,10 @@ function startSpectate() {
 }
 function stopSpectate() {
     if (spectatedata.binded) {
-        mp.keys.unbind(Keys.LeftArrow, false, pressSpectateKeyLeft);
-        mp.keys.unbind(Keys.A, false, pressSpectateKeyLeft);
-        mp.keys.unbind(Keys.RightArrow, false, pressSpectateKeyRight);
-        mp.keys.unbind(Keys.D, false, pressSpectateKeyRight);
+        mp.keys.unbind(Keys.LeftArrow, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.A, pressSpectateKeyLeft);
+        mp.keys.unbind(Keys.RightArrow, pressSpectateKeyRight);
+        mp.keys.unbind(Keys.D, pressSpectateKeyRight);
         spectatedata.binded = false;
     }
 }

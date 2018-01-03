@@ -28,10 +28,10 @@ function startSpectate() {
 
 function stopSpectate() {
 	if ( spectatedata.binded ) {
-		mp.keys.unbind( Keys.LeftArrow, false, pressSpectateKeyLeft );
-		mp.keys.unbind( Keys.A, false, pressSpectateKeyLeft );
-		mp.keys.unbind( Keys.RightArrow, false, pressSpectateKeyRight );
-		mp.keys.unbind( Keys.D, false, pressSpectateKeyRight );
+		mp.keys.unbind( Keys.LeftArrow, pressSpectateKeyLeft );
+		mp.keys.unbind( Keys.A, pressSpectateKeyLeft );
+		mp.keys.unbind( Keys.RightArrow, pressSpectateKeyRight );
+		mp.keys.unbind( Keys.D, pressSpectateKeyRight );
 		spectatedata.binded = false;
 	}
 }
