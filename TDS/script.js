@@ -1,7 +1,4 @@
 "use strict";
-let chatdata = {
-    browser: mp.browsers.new("client/window/chat/chat.html"),
-};
 mp.gui.execute("window.location = 'package://TDS-V/window/chat/chat.html'");
 mp.events.add("onChatLoad", () => {
     mp.events.callRemote("onPlayerChatLoad", languagesetting);
@@ -17,18 +14,22 @@ function log(message) {
         mp.gui.chat.push(message);
     }
 }
-let moneydata = {
-    text: null
+let mainbrowserdata = {
+    browser: mp.browsers.new("package://TDS-V/window/main/main.html"),
 };
 mp.events.add("onClientMoneyChange", money => {
-    log("onClientMoneyChange");
     currentmoney = money;
-    if (moneydata.text == null) {
-        moneydata.text = new cText("$" + currentmoney, 0.99, 0.01, 7, [115, 186, 131, 255], [1.0, 1.0], true, Alignment.RIGHT, true);
-    }
-    else
-        moneydata.text.setText("$" + currentmoney);
+    mainbrowserdata.browser.execute("setMoney ( " + money + " );");
 });
+function playSound(soundname) {
+    mainbrowserdata.browser.execute("playSound ( '" + soundname + "' );");
+}
+function showBloodscreen() {
+    mainbrowserdata.browser.execute("showBloodscreen ();");
+}
+function addKillMessage(msg) {
+    mainbrowserdata.browser.execute("addKillMessage ('" + msg + "');");
+}
 var alltimertable = [];
 var puttimerintable = [];
 mp.events.add("render", function () {
@@ -176,8 +177,16 @@ function distance(vector1, vector2, useZ = true) {
     return mp.game.gameplay.getDistanceBetweenCoords(vector1.x, vector1.y, vector1.z, vector2.x, vector2.y, vector2.z, useZ);
 }
 let damagesysdata = {
-    lasthparmor: 0,
+    lastarmorhp: 200
 };
+mp.events.add("render", () => {
+    if (!rounddata.infight)
+        return;
+    let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
+    if (armorhp < damagesysdata.lastarmorhp)
+        showBloodscreen();
+    damagesysdata.lastarmorhp = armorhp;
+});
 mp.events.add("playerSpawn", (player) => {
     if (player == localPlayer) {
         mp.game.cam.doScreenFadeIn(2000);
@@ -323,9 +332,6 @@ class cText {
         this.outline = outline;
         this.alignment = alignment;
         this.relative = relative;
-        mp.gui.chat.push("" + getStringWidth("QQ", [1.0, 0.5], 1));
-        mp.gui.chat.push("" + getStringWidth("QQQQQQ", [1.0, 0.5], 1));
-        mp.gui.chat.push("" + getStringWidth("QQQQQQQQ", [2.0, 2.5], 0));
         drawdrawings.push(this);
     }
 }
@@ -726,18 +732,12 @@ mp.events.add("onClientPlayerJoinRoundlessLobby", () => {
     log("onClientPlayerJoinRoundlessLobby");
     destroyLobbyChoiceBrowser();
 });
-let countdownsounds = [
-    "go.wav",
-    "1.wav",
-    "2.wav",
-    "3.wav"
-];
 let countdowndata = {
     sounds: [
-        "go.wav",
-        "1.wav",
-        "2.wav",
-        "3.wav"
+        "go",
+        "1",
+        "2",
+        "3"
     ],
     text: null,
     timer: null,
@@ -747,21 +747,22 @@ function countdownFunc(counter) {
     counter--;
     ;
     if (counter > 0) {
-        countdowndata.text.setText(counter.toString());
+        countdowndata.text.setText(counter + "");
         countdowndata.text.blendTextScale(6, 1000);
         countdowndata.timer = new Timer(countdownFunc, 1000, 1, counter);
-        if (countdownsounds[counter] != null) {
+        if (countdowndata.sounds[counter] != null) {
+            playSound(countdowndata.sounds[counter]);
         }
     }
 }
 function startCountdown() {
     log("startCountdown");
-    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000).toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
+    countdowndata.text = new cText(Math.floor(lobbysettings.countdowntime / 1000) + "", 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdowndata.timer = new Timer(countdownFunc, lobbysettings.countdowntime % 1000, 1, Math.floor(lobbysettings.countdowntime / 1000) + 1);
 }
 function startCountdownAfterwards(timeremaining) {
     log("startCountdownAfterwards");
-    countdowndata.text = new cText(timeremaining.toString(), 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
+    countdowndata.text = new cText(timeremaining.toString() + "", 0.5, 0.2, 0, [255, 255, 255, 255], [2.0, 2.0], true, Alignment.CENTER, true);
     countdownFunc(timeremaining + 1);
 }
 function endCountdown() {
@@ -773,6 +774,7 @@ function endCountdown() {
         countdowndata.text.setText("GO");
     if (countdowndata.timer != null)
         countdowndata.timer.kill();
+    playSound(countdowndata.sounds[0]);
     countdowndata.timer = new Timer(stopCountdown, 2000, 1);
 }
 function stopCountdown() {
@@ -1051,7 +1053,6 @@ let roundinfo = {
     starttick: 0,
     teamnames: [],
     teamcolors: [],
-    killinfo: [],
     drawclasses: {
         text: {
             time: null,
@@ -1110,25 +1111,6 @@ function refreshRoundInfo() {
 function setRoundTimeLeft(lefttime) {
     roundinfo.starttick = getTick() - (roundinfo.roundtime - lefttime);
 }
-mp.events.add("render", function () {
-    let length = roundinfo.killinfo.length;
-    if (length > 0) {
-        let tick = getTick();
-        for (let i = length - 1; i >= 0; i--) {
-            let tickwasted = tick - roundinfo.killinfo[i].starttick;
-            let data = roundinfo.drawdata.kills;
-            if (tickwasted < data.showtick) {
-                let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil((data.showtick - tickwasted) / (data.showtick - data.fadeaftertick) * 255);
-                let counter = length - i - 1;
-                drawText(roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 0, [255, 255, 255, alpha], data.scale, true, Alignment.RIGHT, true);
-            }
-            else {
-                roundinfo.killinfo.splice(0, i + 1);
-                break;
-            }
-        }
-    }
-});
 function removeRoundInfo() {
     roundinfo.amountinteams = [];
     roundinfo.aliveinteams = [];
@@ -1186,7 +1168,7 @@ function refreshRoundInfoTeamData() {
 function playerDeathRoundInfo(teamID, killstr) {
     roundinfo.aliveinteams[teamID - 1]--;
     roundinfo.drawclasses.text.teams[teamID - 1].setText(roundinfo.teamnames[teamID - 1] + "\n" + roundinfo.aliveinteams[teamID - 1] + "/" + roundinfo.amountinteams[teamID - 1]);
-    roundinfo.killinfo.push({ "killstr": killstr, "starttick": getTick() });
+    addKillMessage(killstr);
 }
 mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, amountaliveinteam) => {
     log("onClientPlayerAmountInFightSync");

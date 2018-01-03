@@ -3,10 +3,10 @@ let maxentries = 40;
 let active = true;
 let inputshowing = false;
 let mainInput = null;
+let chatbody;
 
 function updateScroll() {
-	var body = $( "#chat-body" );
-	body.animate( { scrollTop: body.prop ( "scrollHeight" ) }, "slow" );	
+    chatbody.animate( { scrollTop: body.prop ( "scrollHeight" ) }, "slow" );	
 }
 
 function enableChatInput( enable, cmd = "" ) {
@@ -44,9 +44,9 @@ var chatAPI = {
 
     show: ( toggle ) => {
         if ( toggle )
-            $( "#chat-body" ).show();
+            chatbody.show();
         else
-            $( "#chat-body" ).hide();
+            chatbody.hide();
 
         active = toggle;
     }
@@ -78,10 +78,7 @@ function formatMsg(input) {
 
 function addMessage(msg) {
 	var child = $( "<text>" + formatMsg( msg ) + "<br></text>");
-	child.hide();
-	var chatbody = $( "#chat-body" );
 	chatbody.append( child );
-	child.fadeIn();
 
     if ( ++amountentries >= maxentries ) {
         --amountentries;
@@ -93,6 +90,7 @@ function addMessage(msg) {
 
 $( document ).ready( function () {
     mainInput = $( "#main-input" );
+    chatbody = $( "#chat-body" );
 
     $( "body" ).keydown( function ( event ) {
         if ( event.which == 84 && !inputshowing && active ) {   // open chat-input

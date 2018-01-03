@@ -229,10 +229,6 @@ class cText {
         this.alignment = alignment;
         this.relative = relative;
 
-        mp.gui.chat.push( "" + getStringWidth( "QQ", [1.0, 0.5], 1 ) );
-        mp.gui.chat.push( "" + getStringWidth( "QQQQQQ", [1.0, 0.5], 1 ) );
-        mp.gui.chat.push( "" + getStringWidth( "QQQQQQQQ", [2.0, 2.5], 0 ) );
-
 		drawdrawings.push( this );
 	}
 }

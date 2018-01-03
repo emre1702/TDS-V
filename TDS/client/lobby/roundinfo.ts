@@ -7,7 +7,6 @@ let roundinfo = {
 	starttick: 0,
 	teamnames: [],
 	teamcolors: [],
-	killinfo: [],
 	drawclasses: {
 		text: {
 			time: null as cText,
@@ -72,27 +71,6 @@ function refreshRoundInfo() {
 function setRoundTimeLeft( lefttime ) {
 	roundinfo.starttick = getTick() - ( roundinfo.roundtime - lefttime ); 
 }
-
-
-mp.events.add ( "render", function () {
-	// Kill-Info //
-	let length = roundinfo.killinfo.length;
-	if ( length > 0 ) {
-		let tick = getTick();
-		for ( let i = length - 1; i >= 0; i-- ) {
-			let tickwasted = tick - roundinfo.killinfo[i].starttick;
-			let data = roundinfo.drawdata.kills;
-			if ( tickwasted < data.showtick ) {
-				let alpha = tickwasted <= data.fadeaftertick ? 255 : Math.ceil( ( data.showtick - tickwasted ) / ( data.showtick - data.fadeaftertick ) * 255 );
-                let counter = length - i - 1;
-                drawText( roundinfo.killinfo[i].killstr, data.xpos, data.ypos + counter * data.height, 0, [255, 255, 255, alpha], data.scale, true, Alignment.RIGHT, true );
-			} else {
-				roundinfo.killinfo.splice( 0, i + 1 );
-				break;
-			}
-		}
-	}
-} );
 
 
 function removeRoundInfo() {
@@ -164,8 +142,8 @@ function refreshRoundInfoTeamData() {
 // use teamID - 1, because spectator (ID 0) isn't included
 function playerDeathRoundInfo( teamID, killstr ) {
 	roundinfo.aliveinteams[teamID-1]--;
-	roundinfo.drawclasses.text.teams[teamID-1].setText( roundinfo.teamnames[teamID-1] + "\n" + roundinfo.aliveinteams[teamID-1] + "/" + roundinfo.amountinteams[teamID-1] );
-	roundinfo.killinfo.push( { "killstr": killstr, "starttick": getTick() } );
+    roundinfo.drawclasses.text.teams[teamID - 1].setText( roundinfo.teamnames[teamID - 1] + "\n" + roundinfo.aliveinteams[teamID - 1] + "/" + roundinfo.amountinteams[teamID - 1] );
+    addKillMessage( killstr );
 }
 
 mp.events.add( "onClientPlayerAmountInFightSync", ( amountinteam, isroundstarted, amountaliveinteam ) => {

@@ -1,6 +1,19 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 // Körperteile: https://pastebin.com/AGQWgCct
 
+let damagesysdata = {
+    lastarmorhp: 200
+}
+
+mp.events.add( "render", () => {
+    if ( !rounddata.infight )
+        return;
+    let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
+    if ( armorhp < damagesysdata.lastarmorhp )
+        showBloodscreen();
+    damagesysdata.lastarmorhp = armorhp;
+} );
+
 /* let bloodscreenbrowser;
 
 mp.events.add( "playerWeaponShoot", ( shotPosition: { x, y, z }, target ) => {
@@ -20,10 +33,6 @@ mp.events.add( "playerWeaponShoot", ( shotPosition: { x, y, z }, target ) => {
 
 mp.players.local.setCanAttackFriendly( false, false ); */
 
-let damagesysdata = {
-	lasthparmor: 0,
-	//damagesysbrowser: mp.browsers.new ( )
-}
 
 /*mp.events.add( "render", () => {
 	if ( mp.players.local.health + mp.players.local.armour < damagesysdata.lasthparmor ) {
