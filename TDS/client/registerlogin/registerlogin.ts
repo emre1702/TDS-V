@@ -28,7 +28,7 @@ mp.events.add( "startRegisterLogin", function ( name: string, isregistered ) {
 		if ( browser == loginpanel.loginbrowser )
             browser.execute( "getLoginPanelData ( `" + loginpanel.name + "`, `" + loginpanel.isregistered + "`, `" + JSON.stringify( getLang( "loginregister" ) ) + "` );" );
     } );
-    //mp.gui.chat.show( false );
+    mp.gui.chat.show( false );
 	mp.game.ui.displayHud( false );
 	mp.gui.cursor.visible = true;
 	nothidecursor++;
@@ -38,7 +38,7 @@ mp.events.add( "registerLoginSuccessful", function () {
 	log( "registerLoginSuccessful registerlogin" );
 	loginpanel.loginbrowser.destroy();
 	loginpanel.loginbrowser = null;
-    mp.gui.chat.activate( true );
+    mp.gui.chat.show( true );
     mp.game.ui.displayHud( true );
 	nothidecursor--;
 } );

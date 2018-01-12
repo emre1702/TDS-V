@@ -8,14 +8,16 @@ namespace TDS.server.instance.lobby {
 	using manager.logs;
 	using manager.utility;
 	using map;
+    using Newtonsoft.Json;
 
-	partial class Arena {
+    partial class Arena {
 		private readonly Dictionary<string, uint> mapVotes = new Dictionary<string, uint> ();
 		private readonly Dictionary<NetHandle, string> playerVotes = new Dictionary<NetHandle, string> ();
 
         public void SendMapsForVoting ( Client player ) {
-			if ( mapNames != null ) {
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onMapMenuOpen", mapNames, mapDescriptions[player.GetChar ().Language] );
+			if ( mapsJson != null ) {
+                NAPI.Util.ConsoleOutput ( mapsJson );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapMenuOpen", mapsJson );
 			}
 		}
 
@@ -41,12 +43,6 @@ namespace TDS.server.instance.lobby {
         public void AddMapToVoting ( Client player, string mapname ) {
 			if ( !mapVotes.ContainsKey ( mapname ) ) {
 				if ( mapVotes.Count < 6 ) {
-					// Anti-Cheat //
-					if ( !mapNames.Contains ( mapname ) ) {
-						Log.Error ( player.SocialClubName + " voted for " + mapname + ", but it doesn't exist!", Name );
-						return;
-					}
-					///////////////
 					mapVotes[mapname] = 0;
 					SendAllPlayerEvent ( "onNewMapForVoting", -1, mapname );
 				} else
@@ -55,15 +51,17 @@ namespace TDS.server.instance.lobby {
 			AddVoteToMap ( player, mapname );
 		}
 
-		private async Task<Map> GetNextMap () {
+		private Map GetNextMap () {
 			if ( mapVotes.Count > 0 ) {
 				string wonmap = mapVotes.Aggregate ( ( l, r ) => l.Value > r.Value ? l : r ).Key;
 				SendAllPlayerLangNotification ( "map_won_voting", -1, wonmap );
 				mapVotes.Clear ();
 				playerVotes.Clear ();
-				return await manager.map.Map.GetMapClass ( wonmap, this ).ConfigureAwait ( false );
+                for ( int i = 0; i < maps.Count; ++i )
+                    if ( maps[i].SyncData.Name == wonmap )
+                        return maps[i];
 			}
-			return await GetRandomMap ().ConfigureAwait ( false );
+            return GetRandomMap ();
 		}
 
 		private void SyncMapVotingOnJoin ( Client player ) {

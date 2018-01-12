@@ -1,16 +1,15 @@
 namespace TDS.server.instance.lobby {
 
 	using System.Collections.Generic;
-	using System.Threading.Tasks;
 	using GTANetworkAPI;
 	using map;
-    using TDS.server.enums;
+    using Newtonsoft.Json;
 
 	partial class Arena {
 
 		private static readonly Dictionary<uint, Lobby> sDimensionsUsed = new Dictionary<uint, Lobby> ();
-		private Queue<string> mapNames;
-		private Dictionary<Language, List<string>> mapDescriptions;
+		private List<Map> maps;
+        private string mapsJson;      
 
 		private readonly Dictionary<uint, uint> spawnCounter = new Dictionary<uint, uint> ();
 		private Map currentMap;
@@ -18,18 +17,14 @@ namespace TDS.server.instance.lobby {
 		private Vector3 spawnpoint = new Vector3 ( 0, 0, 1000 ),
 						spawnrotation;
 
-		public void AddMapList ( List<string> newmapnames ) {
-			mapNames = new Queue<string> ( newmapnames );
+		public void SetMapList ( List<Map> themaps, List<MapSync> themapssync ) {
+            maps = themaps;
+            mapsJson = JsonConvert.SerializeObject ( themapssync );
 		}
 
-		public void AddMapDescriptions ( Dictionary<Language, List<string>> mapdescriptions ) {
-			mapDescriptions = new Dictionary<Language, List<string>> ( mapdescriptions );
-		}
-
-		public async Task<Map> GetRandomMap () {
-			string mapname = mapNames.Dequeue ();
-			mapNames.Enqueue ( mapname );
-			return await manager.map.Map.GetMapClass ( mapname, this ).ConfigureAwait ( false );
+		public Map GetRandomMap () {
+            Map nextmap = maps[manager.utility.Utility.Rnd.Next ( 0, maps.Count )];
+            return nextmap;
 		}
 
 		private Vector3[] GetMapRandomSpawnData ( uint teamID ) {
@@ -56,8 +51,10 @@ namespace TDS.server.instance.lobby {
         }
 
 		private void CreateMapLimitBlips () {
+            NAPI.Util.ConsoleOutput ( "create map limit blips" );
 			foreach ( Vector3 maplimit in currentMap.MapLimits ) {
-				Blip blip = NAPI.Blip.CreateBlip ( maplimit, Dimension );
+                NAPI.Util.ConsoleOutput ( "map limit add" );
+                Blip blip = NAPI.Blip.CreateBlip ( maplimit, Dimension );
 				blip.Sprite = 441;
 				blip.Name = "Limit";
 				mapBlips.Add ( blip );

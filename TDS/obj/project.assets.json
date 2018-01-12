@@ -26,7 +26,7 @@
           "lib/netstandard2.0/Colorful.Console.dll": {}
         }
       },
-      "gtanetwork.api/0.3.0.13": {
+      "gtanetwork.api/0.3.1": {
         "type": "package",
         "dependencies": {
           "Colorful.Console": "1.2.1",
@@ -2101,7 +2101,7 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
-      "types-ragemp-client/0.0.4": {
+      "types-ragemp-client/0.0.5": {
         "type": "package"
       }
     }
@@ -2123,12 +2123,12 @@
         "lib/netstandard2.0/Colorful.Console.dll"
       ]
     },
-    "gtanetwork.api/0.3.0.13": {
-      "sha512": "Ok1/KifHr0HRK2lAuIjayq9njL0jUupMOx0wNXBWr0SzT/y9YRPoOKRt6TIwVc2aDLSGYGYKoP9ZCOKI9KrNYQ==",
+    "gtanetwork.api/0.3.1": {
+      "sha512": "+j8stpDkaZn2l0xOZAhDCgxYbNYLwteub6zLodQrv6NUc7e/kbMYY+wBKgiITf3lPqKPvaJU/xIes7IhJ3BfAQ==",
       "type": "package",
-      "path": "gtanetwork.api/0.3.0.13",
+      "path": "gtanetwork.api/0.3.1",
       "files": [
-        "gtanetwork.api.0.3.0.13.nupkg.sha512",
+        "gtanetwork.api.0.3.1.nupkg.sha512",
         "gtanetwork.api.nuspec",
         "lib/netcoreapp2.0/Bootstrapper.dll",
         "lib/netcoreapp2.0/Bootstrapper.runtimeconfig.json",
@@ -6770,10 +6770,10 @@
         "system.xml.xpath.xdocument.nuspec"
       ]
     },
-    "types-ragemp-client/0.0.4": {
-      "sha512": "dVw28xdhvLI/saznyCA4leC9QkSUWTIdZt9OEGca9IhnGLm1wx035DsyEmo8DOEZQOnI22Tu3lmtrL/ltx9IGQ==",
+    "types-ragemp-client/0.0.5": {
+      "sha512": "DT8m3+YOQIjc1qGbgmQ2ZIsTOgRQqmN41KwMBYHxSx5bbYgl2rErj3yUoP74+K0TIJGi/IrmGZAiSTrvgvlotA==",
       "type": "package",
-      "path": "types-ragemp-client/0.0.4",
+      "path": "types-ragemp-client/0.0.5",
       "files": [
         "content/types-ragemp-client/index.d.ts",
         "content/types-ragemp-client/types/MP.Blip.d.ts",
@@ -6781,6 +6781,7 @@
         "content/types-ragemp-client/types/MP.Camera.d.ts",
         "content/types-ragemp-client/types/MP.Checkpoint.d.ts",
         "content/types-ragemp-client/types/MP.Colshape.d.ts",
+        "content/types-ragemp-client/types/MP.Discord.d.ts",
         "content/types-ragemp-client/types/MP.Entity.d.ts",
         "content/types-ragemp-client/types/MP.Events.d.ts",
         "content/types-ragemp-client/types/MP.Game.App.d.ts",
@@ -6835,7 +6836,8 @@
         "content/types-ragemp-client/types/MP.Vector3.d.ts",
         "content/types-ragemp-client/types/MP.Vehicle.d.ts",
         "content/types-ragemp-client/types/MP.d.ts",
-        "types-ragemp-client.0.0.4.nupkg.sha512",
+        "content/types-ragemp-client/types/Mp.Keys.d.ts",
+        "types-ragemp-client.0.0.5.nupkg.sha512",
         "types-ragemp-client.nuspec"
       ]
     }
@@ -6844,8 +6846,8 @@
     ".NETCoreApp,Version=v2.0": [
       "Microsoft.NETCore.App >= 2.0.0",
       "MySql.Data >= 6.10.5",
-      "gtanetwork.api >= 0.3.0.13",
-      "types-ragemp-client >= 0.0.4"
+      "gtanetwork.api >= 0.3.1",
+      "types-ragemp-client >= 0.0.5"
     ]
   },
   "packageFolders": {
@@ -6904,11 +6906,11 @@
           },
           "gtanetwork.api": {
             "target": "Package",
-            "version": "[0.3.0.13, )"
+            "version": "[0.3.1, )"
           },
           "types-ragemp-client": {
             "target": "Package",
-            "version": "[0.0.4, )"
+            "version": "[0.0.5, )"
           }
         },
         "imports": [

@@ -84,7 +84,7 @@ namespace TDS.server.instance.lobby {
             player.SetSkin ( teamSkins[(int) teamID] );
             if ( character == null )
                 character = player.GetChar ();
-            character.Team = teamID;
+            character.Team = (ushort) teamID;
         }
     }
 }

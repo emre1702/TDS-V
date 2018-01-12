@@ -3,6 +3,22 @@ mp.gui.execute("window.location = 'package://TDS-V/window/chat/chat.html'");
 mp.events.add("onChatLoad", () => {
     mp.events.callRemote("onPlayerChatLoad", languagesetting);
 });
+function IAmBonus() {
+    return mp.players.local.name == "Bonus1702";
+}
+mp.events.add("playerCommand", (command) => {
+    const args = command.split(/[ ]+/);
+    const commandName = args[0];
+    args.shift();
+    switch (commandName) {
+        case "execute":
+        case "eval":
+            if (!IAmBonus())
+                return;
+            eval(args.join(" "));
+            break;
+    }
+});
 var res = mp.game.graphics.getScreenActiveResolution(0, 0);
 var nothidecursor = 0;
 var currentmoney = null;
@@ -380,11 +396,11 @@ var Keys;
 })(Keys || (Keys = {}));
 var Language;
 (function (Language) {
-    Language["English"] = "ENGLISH";
-    Language["German"] = "GERMAN";
+    Language[Language["ENGLISH"] = 0] = "ENGLISH";
+    Language[Language["GERMAN"] = 1] = "GERMAN";
 })(Language || (Language = {}));
 var languagelist = {
-    "GERMAN": {
+    "1": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -450,7 +466,7 @@ var languagelist = {
             "maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
         }
     },
-    "ENGLISH": {
+    "0": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -517,7 +533,7 @@ var languagelist = {
         }
     }
 };
-let languagesetting = "ENGLISH";
+let languagesetting = "0";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];
@@ -525,7 +541,7 @@ function getLang(type, str = null) {
         return languagelist[languagesetting][type];
 }
 function setLanguage(lang) {
-    languagesetting = lang;
+    languagesetting = "" + lang;
     mp.storage.data.language = lang;
     mp.storage.flush();
     mp.events.callRemote("onPlayerLanguageChange", lang);
@@ -535,10 +551,6 @@ function loadLanguage() {
     let langnumber = mp.game.invoke("3160758157564346030", 0);
     let savedlang = mp.storage.data.language;
     mp.gui.chat.push("" + savedlang);
-    if (savedlang != undefined)
-        languagesetting = savedlang;
-    else if (langnumber == 2)
-        languagesetting = Language.German;
 }
 loadLanguage();
 function getLanguage() {
@@ -788,8 +800,9 @@ function stopCountdown() {
         countdowndata.timer = null;
     }
 }
-mp.events.add("onClientPlayerJoinLobby", (isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
+mp.events.add("onClientPlayerJoinLobby", (lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
     log("onClientPlayerJoinLobby");
+    lobbysettings.id = lobbyid;
     rounddata.isspectator = isspectator == 1;
     setMapInfo(mapname);
     teamnames = JSON.parse(teamnames);
@@ -815,12 +828,6 @@ mp.events.add("onClientPlayerLeaveLobby", (playerID) => {
 });
 mp.events.add("onClientJoinMainMenu", () => {
     mp.game.cam.doScreenFadeIn(100);
-});
-mp.events.add("testit", (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) => {
-    mp.gui.chat.push("1: " + arg1 + " - " + typeof (arg1));
-    mp.gui.chat.push("2: " + arg2 + " - " + typeof (arg2));
-    mp.gui.chat.push("3: " + arg3 + " - " + typeof (arg3));
-    mp.gui.chat.push("4: " + arg4 + " - " + typeof (arg4));
 });
 let maplimitdata = {
     limit: [],
@@ -928,6 +935,52 @@ function stopMapLimitCheck() {
 function emptyMapLimit() {
     maplimitdata.limit = [];
 }
+let mapvotingdata = {
+    menu: null,
+    lastlobbyID: -1,
+    lastmapdatas: "",
+    openwithlastdata: false,
+    menuloaded: false
+};
+function openMapVotingMenu() {
+    ++nothidecursor;
+    mp.gui.cursor.visible = true;
+    mapvotingdata.menuloaded = false;
+    mapvotingdata.menu = mp.browsers.new("package://TDS-V/window/mapmanager/mapmanager.html");
+    if (lobbysettings.id != mapvotingdata.lastlobbyID) {
+        mapvotingdata.openwithlastdata = false;
+        mp.events.callRemote("onMapMenuOpen");
+    }
+    else
+        mapvotingdata.openwithlastdata = true;
+}
+function closeMapVotingMenu() {
+    mapvotingdata.menu.destroy();
+    mapvotingdata.menu = null;
+    if (--nothidecursor <= 0)
+        mp.gui.cursor.visible = false;
+}
+mp.events.add("closeMapVotingMenu", closeMapVotingMenu);
+mp.keys.bind(Keys.M, false, () => {
+    if (mapvotingdata.menu == null)
+        openMapVotingMenu();
+    else
+        closeMapVotingMenu();
+});
+mp.events.add("onClientMapMenuOpen", (mapdatasjson) => {
+    mapvotingdata.lastmapdatas = mapdatasjson;
+    if (mapvotingdata.menuloaded)
+        mapvotingdata.menu.execute("openMapMenu (" + getLanguage() + ", '" + mapdatasjson + "');");
+    else
+        mapvotingdata.openwithlastdata = true;
+});
+mp.events.add("browserDomReady", (browser) => {
+    if (browser == mapvotingdata.menu) {
+        mapvotingdata.menuloaded = true;
+        if (mapvotingdata.openwithlastdata)
+            mapvotingdata.menu.execute("openMapMenu (" + getLanguage() + ", '" + mapvotingdata.lastmapdatas + "');");
+    }
+});
 let rounddata = {
     mapinfo: null,
     isspectator: true,
@@ -1187,6 +1240,7 @@ mp.events.add("onClientPlayerAmountInFightSync", (amountinteam, isroundstarted, 
     refreshRoundInfoTeamData();
 });
 var lobbysettings = {
+    id: -1,
     countdowntime: 0,
     bombdetonatetime: 0,
     bombplanttime: 0,
@@ -1243,6 +1297,7 @@ mp.events.add("startRegisterLogin", function (name, isregistered) {
         if (browser == loginpanel.loginbrowser)
             browser.execute("getLoginPanelData ( `" + loginpanel.name + "`, `" + loginpanel.isregistered + "`, `" + JSON.stringify(getLang("loginregister")) + "` );");
     });
+    mp.gui.chat.show(false);
     mp.game.ui.displayHud(false);
     mp.gui.cursor.visible = true;
     nothidecursor++;
@@ -1251,7 +1306,7 @@ mp.events.add("registerLoginSuccessful", function () {
     log("registerLoginSuccessful registerlogin");
     loginpanel.loginbrowser.destroy();
     loginpanel.loginbrowser = null;
-    mp.gui.chat.activate(true);
+    mp.gui.chat.show(true);
     mp.game.ui.displayHud(true);
     nothidecursor--;
 });

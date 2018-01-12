@@ -1,13 +1,23 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
-/*let mapvotingdata = {
-    menu: null as MpBrowser
+let mapvotingdata = {
+    menu: null as MpBrowser,
+    lastlobbyID: -1,
+    lastmapdatas: "",
+    openwithlastdata: false,
+    menuloaded: false
 }
 
 function openMapVotingMenu() {
     ++nothidecursor;
     mp.gui.cursor.visible = true;
-    mapvotingdata.menu = startUIMenu( "mapmenu" );
+    mapvotingdata.menuloaded = false;
+    mapvotingdata.menu = mp.browsers.new( "package://TDS-V/window/mapmanager/mapmanager.html" );
+    if ( lobbysettings.id != mapvotingdata.lastlobbyID ) {
+        mapvotingdata.openwithlastdata = false;
+        mp.events.callRemote( "onMapMenuOpen" );
+    } else
+        mapvotingdata.openwithlastdata = true;
 }
 
 function closeMapVotingMenu() {
@@ -21,12 +31,28 @@ mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );
 mp.keys.bind( Keys.M, false, () => {
     //if ( freecamdata.freecamMode ) 
     //  return;
-    if ( mapvotingdata.menu != null )
+    if ( mapvotingdata.menu == null )
         openMapVotingMenu();
     else
         closeMapVotingMenu();
 
-} ); */
+} ); 
+
+mp.events.add( "onClientMapMenuOpen", ( mapdatasjson: string ) => {
+    mapvotingdata.lastmapdatas = mapdatasjson;
+    if ( mapvotingdata.menuloaded )
+        mapvotingdata.menu.execute( "openMapMenu (" + getLanguage() + ", '" + mapdatasjson + "');" );
+    else
+        mapvotingdata.openwithlastdata = true;
+} );
+
+mp.events.add( "browserDomReady", ( browser ) => {
+    if ( browser == mapvotingdata.menu ) {
+        mapvotingdata.menuloaded = true;
+        if ( mapvotingdata.openwithlastdata )
+            mapvotingdata.menu.execute( "openMapMenu (" + getLanguage() + ", '" + mapvotingdata.lastmapdatas + "');" );
+    }
+} );
 
 
 /*let mapvotedata = {

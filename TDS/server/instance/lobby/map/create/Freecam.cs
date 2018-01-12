@@ -1,4 +1,4 @@
-namespace TDS.server.instance.lobby {
+/*namespace TDS.server.instance.lobby {
 
 	using System.Collections.Generic;
 	using GTANetworkAPI;
@@ -36,4 +36,4 @@ namespace TDS.server.instance.lobby {
 		}
 	}
 
-}
+}         */

@@ -1,4 +1,4 @@
 ﻿enum Language {
-    English = "ENGLISH",
-    German = "GERMAN"
+    ENGLISH = 0,
+    GERMAN = 1
 }

@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 var languagelist = {
-	"GERMAN": {
+	"1": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -67,7 +67,7 @@ var languagelist = {
 			"maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
 		}
 	},
-	"ENGLISH": {
+	"0": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -134,7 +134,7 @@ var languagelist = {
 		}
 	}	
 };
-let languagesetting: string = "ENGLISH";
+let languagesetting: string = "0";
 
 
 function getLang( type, str = null ) {
@@ -145,7 +145,7 @@ function getLang( type, str = null ) {
 }
 
 function setLanguage( lang ) {
-    languagesetting = lang;
+    languagesetting = ""+lang;
     mp.storage.data.language = lang;
     mp.storage.flush();
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
@@ -157,11 +157,11 @@ function loadLanguage () {
     let langnumber = mp.game.invoke( "3160758157564346030", 0 );
     let savedlang = mp.storage.data.language;
     mp.gui.chat.push( "" + savedlang );
-    if ( savedlang != undefined )
-        languagesetting = savedlang;
+    //if ( savedlang != undefined )
+    //    languagesetting = savedlang;
     //TODO langnumber always 0
-    else if ( langnumber == 2 )
-        languagesetting = Language.German;
+    //else if ( langnumber == 2 )
+    //    languagesetting = ""+Language.GERMAN;
 	//createMapCreator();
 }
 loadLanguage();

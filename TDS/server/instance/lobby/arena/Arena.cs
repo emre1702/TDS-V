@@ -21,7 +21,7 @@ namespace TDS.server.instance.lobby {
             roundStartTimer.Kill ();
             countdownTimer.Kill ();
 
-            if ( currentMap != null && currentMap.Type == MapType.BOMB )  
+            if ( currentMap != null && currentMap.SyncData.Type == MapType.BOMB )  
                 StopRoundBomb ();
         }
 

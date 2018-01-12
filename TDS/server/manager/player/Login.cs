@@ -61,8 +61,8 @@
 				Character character = player.GetChar ();
 
 				character.UID = uid;
-				character.AdminLvl = adminlvl;
-				character.DonatorLvl = donatorLvl;
+				character.AdminLvl = (ushort) adminlvl;
+				character.DonatorLvl = (ushort) donatorLvl;
 				character.Playtime = playtime;
 				character.Kills = kills;
 				character.Assists = assists;

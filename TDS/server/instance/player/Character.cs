@@ -6,16 +6,16 @@ namespace TDS.server.instance.player {
 
     public class Character {
 		public uint UID;
-		public uint AdminLvl = 0;
-		public uint DonatorLvl = 0;
+		public ushort AdminLvl = 0;
+		public ushort DonatorLvl = 0;
 		public uint Playtime = 0;
 		public uint Money = 0;
 		public uint Kills = 0;
 		public uint Assists = 0;
 		public uint Deaths = 0;
 		public uint Damage = 0;
-		public uint Team = 0;
-		public uint Lifes = 0;
+		public ushort Team = 0;
+		public ushort Lifes = 0;
 		public Language Language = Language.ENGLISH;
         public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
 		public Client Spectating;

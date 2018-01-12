@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "2a6e9bbde546a3bab02e10e4017d74f0da53c2ce"
+    "signature": "2c7f0aa77e72b14fe30b521cf9930e5c9ab7b6b2"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,8 +9,8 @@
       "TDS/1.0.0": {
         "dependencies": {
           "MySql.Data": "6.10.5",
-          "gtanetwork.api": "0.3.0.13",
-          "types-ragemp-client": "0.0.4"
+          "gtanetwork.api": "0.3.1",
+          "types-ragemp-client": "0.0.5"
         },
         "runtime": {
           "TDS.dll": {}
@@ -36,7 +36,7 @@
           "lib/netstandard2.0/Colorful.Console.dll": {}
         }
       },
-      "gtanetwork.api/0.3.0.13": {
+      "gtanetwork.api/0.3.1": {
         "dependencies": {
           "Colorful.Console": "1.2.1",
           "Microsoft.CSharp": "4.4.1",
@@ -1267,7 +1267,7 @@
           "System.Xml.XPath": "4.3.0"
         }
       },
-      "types-ragemp-client/0.0.4": {}
+      "types-ragemp-client/0.0.5": {}
     }
   },
   "libraries": {
@@ -1283,12 +1283,12 @@
       "path": "colorful.console/1.2.1",
       "hashPath": "colorful.console.1.2.1.nupkg.sha512"
     },
-    "gtanetwork.api/0.3.0.13": {
+    "gtanetwork.api/0.3.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Ok1/KifHr0HRK2lAuIjayq9njL0jUupMOx0wNXBWr0SzT/y9YRPoOKRt6TIwVc2aDLSGYGYKoP9ZCOKI9KrNYQ==",
-      "path": "gtanetwork.api/0.3.0.13",
-      "hashPath": "gtanetwork.api.0.3.0.13.nupkg.sha512"
+      "sha512": "sha512-+j8stpDkaZn2l0xOZAhDCgxYbNYLwteub6zLodQrv6NUc7e/kbMYY+wBKgiITf3lPqKPvaJU/xIes7IhJ3BfAQ==",
+      "path": "gtanetwork.api/0.3.1",
+      "hashPath": "gtanetwork.api.0.3.1.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis/2.6.1": {
       "type": "package",
@@ -2060,12 +2060,12 @@
       "path": "system.xml.xpath.xdocument/4.3.0",
       "hashPath": "system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
     },
-    "types-ragemp-client/0.0.4": {
+    "types-ragemp-client/0.0.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-dVw28xdhvLI/saznyCA4leC9QkSUWTIdZt9OEGca9IhnGLm1wx035DsyEmo8DOEZQOnI22Tu3lmtrL/ltx9IGQ==",
-      "path": "types-ragemp-client/0.0.4",
-      "hashPath": "types-ragemp-client.0.0.4.nupkg.sha512"
+      "sha512": "sha512-DT8m3+YOQIjc1qGbgmQ2ZIsTOgRQqmN41KwMBYHxSx5bbYgl2rErj3yUoP74+K0TIJGi/IrmGZAiSTrvgvlotA==",
+      "path": "types-ragemp-client/0.0.5",
+      "hashPath": "types-ragemp-client.0.0.5.nupkg.sha512"
     }
   }
 }

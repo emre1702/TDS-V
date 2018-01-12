@@ -13,19 +13,8 @@
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
             };
-            List<string> mapsforarena = new List<string> ();
-            mapsforarena.AddRange ( Map.NormalMapNames );
-            mapsforarena.AddRange ( Map.BombMapNames );
-            TheLobby.AddMapList ( mapsforarena );
-            Dictionary<Language, List<string>> mapdescriptionsforarena = new Dictionary<Language, List<string>> {
-                { Language.ENGLISH, new List<string> () },
-                { Language.GERMAN, new List<string> () }
-            };
-            mapdescriptionsforarena[Language.GERMAN].AddRange ( Map.NormalMapDescriptions[Language.GERMAN] );
-            mapdescriptionsforarena[Language.ENGLISH].AddRange ( Map.NormalMapDescriptions[Language.ENGLISH] );
-            mapdescriptionsforarena[Language.GERMAN].AddRange ( Map.BombMapDescriptions[Language.GERMAN] );
-            mapdescriptionsforarena[Language.ENGLISH].AddRange ( Map.BombMapDescriptions[Language.ENGLISH] );
-            TheLobby.AddMapDescriptions ( mapdescriptionsforarena );
+            TheLobby.SetMapList ( Map.allMaps, Map.allMapsSync );
+
             TheLobby.AddTeam ( "Good", (PedHash) ( 2047212121 ), "g" );
             TheLobby.AddTeam ( "Bad", (PedHash) ( 275618457 ), "r" );
 
@@ -66,7 +55,7 @@
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );*/
 
-            TheLobby.StartRoundGame ().Wait();
+            TheLobby.StartRoundGame ();
         }
 
         public static void Join ( Client player ) {

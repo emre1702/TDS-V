@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 namespace TDS.server.instance.lobby.interfaces {
 
     interface IRound {
-        Task StartRoundGame ( );
-        Task StartMapChoose ( );
+        void StartRoundGame ( );
+        void StartMapChoose ( );
         void EndRoundEarlier ( );
         void CheckForEnoughAlive ( );
     }

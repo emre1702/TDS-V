@@ -18,51 +18,28 @@
 		private const string mapsPath = "bridge/resources/TDS-V/maps/";
 		private static readonly XmlReaderSettings settings = new XmlReaderSettings ();
 
-		public static List<string> NormalMapNames = new List<string> ();
-		public static List<string> BombMapNames = new List<string> ();
-		public static Dictionary<Language, List<string>> NormalMapDescriptions = new Dictionary<Language, List<string>> {
-			{
-                Language.ENGLISH, new List<string> ()
-			}, {
-                Language.GERMAN, new List<string> ()
-			}
-		};
-		public static Dictionary<Language, List<string>> BombMapDescriptions = new Dictionary<Language, List<string>> {
-			{
-                Language.ENGLISH, new List<string> ()
-			}, {
-                Language.GERMAN, new List<string> ()
-			}
-		};
-		public static ConcurrentDictionary<string, string> MapByName = new ConcurrentDictionary<string, string> ();
+        public static List<instance.map.Map> allMaps = new List<instance.map.Map> ();
+        public static List<instance.map.MapSync> allMapsSync = new List<instance.map.MapSync> ();
+
+		public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string> ();
 		public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string> ();
 
 		public static async Task MapOnStart () {
 			settings.Async = true;
 			IEnumerable<string> directories = Directory.EnumerateDirectories ( mapsPath );
-			instance.map.Map map = new instance.map.Map ();
 			foreach ( string dir in directories ) {
 				string creator = Path.GetFileName ( dir );
 				IEnumerable<string> files = Directory.EnumerateFiles ( dir, "*.xml" );
 				foreach ( string filepath in files ) {
 					string filename = Path.GetFileNameWithoutExtension ( filepath );
 					MapCreator[filename] = creator;
-					if ( await map.AddInfos ( filename ).ConfigureAwait ( false ) ) {
-						if ( map.Name != null ) {
-							switch ( map.Type ) {
-								case MapType.NORMAL:
-									NormalMapNames.Add ( map.Name );
-									NormalMapDescriptions[Language.ENGLISH].Add ( map.Description[Language.ENGLISH] );
-									NormalMapDescriptions[Language.GERMAN].Add ( map.Description[Language.GERMAN] );
-									break;
-								case MapType.BOMB:
-									BombMapNames.Add ( map.Name );
-									BombMapDescriptions[Language.ENGLISH].Add ( map.Description[Language.ENGLISH] );
-									BombMapDescriptions[Language.GERMAN].Add ( map.Description[Language.GERMAN] );
-									break;
-							}
+                    instance.map.Map map = new instance.map.Map ();
+                    if ( await map.AddInfos ( filename ).ConfigureAwait ( false ) ) {
+						if ( map.SyncData.Name != null ) {
+                            allMaps.Add ( map );
+                            allMapsSync.Add ( map.SyncData );
 
-							MapByName[map.Name] = filename;
+                            MapPathByName[map.SyncData.Name] = filename;
 						} else
 							Log.Error ( "Map " + filename + " got no name!" );
 					}
@@ -110,14 +87,16 @@
 			string path = mapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
 			try {
 				using ( XmlReader reader = XmlReader.Create ( path, settings ) ) {
-					while ( await reader.ReadAsync ().ConfigureAwait ( false ) ) {
+                    instance.map.MapSync syncdata = new instance.map.MapSync ();
+                    map.SyncData = syncdata;
+                    while ( await reader.ReadAsync ().ConfigureAwait ( false ) ) {
 						if ( reader.NodeType == XmlNodeType.Element ) {
 							if ( reader.Name == "map" ) {
-								map.Name = reader["name"];
+                                syncdata.Name = reader["name"];
 								if ( reader.GetAttribute ( "type" ) != null )
-									map.Type = reader["type"] == "normal" ? MapType.NORMAL : MapType.BOMB;
+                                    syncdata.Type = reader["type"] == "normal" ? MapType.NORMAL : MapType.BOMB;
 							} else if ( reader.Name == "english" || reader.Name == "german" ) {
-								map.Description[reader.Name == "english" ? Language.ENGLISH : Language.GERMAN] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
+                                syncdata.Description[reader.Name == "english" ? Language.ENGLISH : Language.GERMAN] = await reader.ReadElementContentAsStringAsync ().ConfigureAwait ( false );
 							} else if ( reader.Name == "limit" ) {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
 								map.MapLimits.Add ( pos );
@@ -157,10 +136,10 @@
 
 		public static async Task<instance.map.Map> GetMapClass ( string mapname, Arena lobby ) {
 			instance.map.Map map = new instance.map.Map ();
-			if ( await map.AddInfos ( MapByName[mapname] ).ConfigureAwait ( false ) ) {
+			if ( await map.AddInfos ( MapPathByName[mapname] ).ConfigureAwait ( false ) ) {
 				return map;
 			}
-			return await lobby.GetRandomMap ().ConfigureAwait ( false );
+            return lobby.GetRandomMap ();
 		}
 
 		/*private static Map getMapDataOther ( string path ) {

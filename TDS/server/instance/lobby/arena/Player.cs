@@ -88,9 +88,9 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( "AddPlayer Arena " + player.Name );
             AddPlayerDefault ( player, spectator );
 
-            string mapname = currentMap != null ? currentMap.Name : "unknown";
+            string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
             // WORKAROUND BECAUSE OF BRIDGE //
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", spectator ? 1 : 0, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID, spectator ? 1 : 0, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
                                 (int) countdownTime, (int) roundTime, (int) bombDetonateTime, (int) bombPlantTime, (int) bombDefuseTime,
                                 (int) RoundEndTime );
 
@@ -147,7 +147,7 @@ namespace TDS.server.instance.lobby {
                 case LobbyStatus.COUNTDOWN:
                     Map map = currentMap;
                     if ( map != null )
-                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", map.Name, tick - startTick );
+                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", map.SyncData.Name, tick - startTick );
                     break;
                 case LobbyStatus.ROUND:
                     NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", 1, tick - startTick );

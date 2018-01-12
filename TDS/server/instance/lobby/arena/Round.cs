@@ -30,8 +30,8 @@ namespace TDS.server.instance.lobby {
             return amount;
         }
 
-        public async Task StartRoundGame ( ) {
-            await StartMapChoose ();
+        public void StartRoundGame ( ) {
+            StartMapChoose ();
         }
 
         private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {
@@ -42,7 +42,7 @@ namespace TDS.server.instance.lobby {
             return newlist;
         } 
 
-        public async Task StartMapChoose ( ) {
+        public void StartMapChoose ( ) {
             try {
                 status = LobbyStatus.MAPCHOOSE;
                 NAPI.Util.ConsoleOutput ( status.ToString () );
@@ -50,23 +50,18 @@ namespace TDS.server.instance.lobby {
                     RewardAllPlayer ();
                 DmgSys.EmptyDamagesysData ();
 
-                await Task.Run ( async ( ) => {
-                    map.Map oldMap = currentMap;
-                    currentMap = await GetNextMap ().ConfigureAwait ( false );
-                    NAPI.Task.Run ( ( ) => {
-                        if ( oldMap != null && oldMap.Type == MapType.BOMB )
-                            StopRoundBomb ();
-                        if ( currentMap.Type == MapType.BOMB )
-                            BombMapChose ();
-                        CreateTeamSpawnBlips ();
-                        CreateMapLimitBlips ();
-                        if ( mixTeamsAfterRound )
-                            MixTeams ();
-                        List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
-                        NAPI.Util.ConsoleOutput ( "1: " + currentMap.MapCenter.X + " " + currentMap.MapCenter.Y + " " + currentMap.MapCenter.Z );
-                        SendAllPlayerEvent ( "onClientMapChange", -1, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
-                    } );
-                } );
+                map.Map oldMap = currentMap;
+                currentMap = GetNextMap ();
+                if ( oldMap != null && oldMap.SyncData.Type == MapType.BOMB )
+                    StopRoundBomb ();
+                if ( currentMap.SyncData.Type == MapType.BOMB )
+                    BombMapChose ();
+                CreateTeamSpawnBlips ();
+                CreateMapLimitBlips ();
+                if ( mixTeamsAfterRound )
+                    MixTeams ();
+                List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
+                SendAllPlayerEvent ( "onClientMapChange", -1, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
             } catch ( Exception ex ) {
@@ -104,7 +99,7 @@ namespace TDS.server.instance.lobby {
 
             PlayerAmountInFightSync ( amountinteams );
 
-            if ( currentMap.Type == MapType.BOMB )
+            if ( currentMap.SyncData.Type == MapType.BOMB )
                 StartRoundBomb ();
         }
 
@@ -112,9 +107,9 @@ namespace TDS.server.instance.lobby {
             Character character = player.GetChar ();
             NAPI.Util.ConsoleOutput ( "StartRoundForPlayer " + player.Name );
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
-            character.Team = teamID;
+            character.Team = (ushort) teamID;
             if ( teamID != 0 ) {
-                character.Lifes = Lifes;
+                character.Lifes = (ushort) Lifes;
                 alivePlayers[(int) teamID].Add ( player );
                 player.Freeze ( false );
             }
@@ -125,10 +120,10 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( status.ToString () );
             roundStartTimer?.Kill ();
             DeleteMapBlips ();
-            if ( currentMap != null && currentMap.Type == MapType.BOMB )
+            if ( currentMap != null && currentMap.SyncData.Type == MapType.BOMB )
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
-                roundStartTimer = Timer.SetTimer ( async () => await StartMapChoose(), RoundEndTime / 2 );
+                roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime / 2 );
                 SendAllPlayerEvent ( "onClientRoundEnd" );
             } else if ( DeleteWhenEmpty ) {
                 Remove ();

@@ -50,3 +50,4 @@ function getPlayerByName( name: string ) {
 function distance( vector1: MpVector3, vector2: MpVector3, useZ = true ) {
 	return mp.game.gameplay.getDistanceBetweenCoords( vector1.x, vector1.y, vector1.z, vector2.x, vector2.y, vector2.z, useZ );
 }
+
