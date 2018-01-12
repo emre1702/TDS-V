@@ -102,3 +102,8 @@ mp.events.add( "onClientBombPlanted", function ( pos, candefuse ) {
 mp.events.add( "onClientBombDetonated", function ( ) {
 	bombDetonated();
 } );
+
+
+mp.events.add( "onClientPlayerTeamChange", function ( teamID, teamUID ) {
+    setVoiceChatRoom( teamUID );
+} );

@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 var languagelist = {
-	"1": {
+	"GERMAN": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -67,7 +67,7 @@ var languagelist = {
 			"maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
 		}
 	},
-	"0": {
+	"ENGLISH": {
 		"loginregister": {
 			"tab_login": "Login",
 			"tab_register": "Register",
@@ -134,7 +134,7 @@ var languagelist = {
 		}
 	}	
 };
-let languagesetting: string = "0";
+let languagesetting: string = "ENGLISH";
 
 
 function getLang( type, str = null ) {
@@ -145,7 +145,7 @@ function getLang( type, str = null ) {
 }
 
 function setLanguage( lang ) {
-    languagesetting = ""+lang;
+    languagesetting = lang;
     mp.storage.data.language = lang;
     mp.storage.flush();
 	mp.events.callRemote( "onPlayerLanguageChange", lang );

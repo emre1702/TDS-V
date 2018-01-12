@@ -141,7 +141,7 @@
 		#region Utility 
 		[Command ( "goto", Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
-			if ( player.IsAdminLevel ( neededLevels["goto"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
+			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
 				Vector3 playerpos = NAPI.Entity.GetEntityPosition ( target );
 				if ( player.IsInVehicle ) {
                     NAPI.Entity.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
@@ -169,14 +169,14 @@
 
 		[Command ( "xyz", Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
-			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
+			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) ) {
                 NAPI.Entity.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
 		[Command ( "cveh", Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
 		public void SpawnCarCommand ( Client player, string name ) {
-			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) || player.GetChar ().Lobby == GangLobby.TheLobby ) {
+			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) ) {
 				VehicleHash model = NAPI.Util.VehicleNameToModel ( name );
 
 				Vector3 rot = NAPI.Entity.GetEntityRotation ( player.Handle );

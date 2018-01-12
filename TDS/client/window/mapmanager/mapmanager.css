@@ -71,7 +71,7 @@ body {
     font-size: 1em;
 }
 
-#choose_map {
+#choose_map_button {
     position: absolute;
     width: 22%;
     left: 67%;

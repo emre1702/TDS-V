@@ -40,6 +40,8 @@ namespace TDS.server.instance.lobby {
             sLobbiesByName[name] = this;
             SLobbiesByIndex[ID] = this;
             sDimensionsUsed[Dimension] = this;
+
+            AddTeam ( "Spectator", (PedHash) ( 225514697 ) );
         }
 
         public void SetDefaultSpawnPoint ( Vector3 spawnpoint, float around = 0 ) {

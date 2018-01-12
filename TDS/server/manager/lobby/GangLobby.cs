@@ -1,13 +1,12 @@
 ﻿namespace TDS.server.manager.lobby {
 
 	using GTANetworkAPI;
-	using instance.lobby;
 
-	class GangLobby : Script {
+	static class GangLobby {
 
-		public static Lobby TheLobby;
+		//public static Lobby TheLobby;
 
-		public GangLobby () {
+		public static void Create () {
 			/*TheLobby = new Lobby ( "gang", 2, false ) {
 				DeleteWhenEmpty = false,
 				IsOfficial = true
@@ -17,7 +16,7 @@
 		}
 
 		public static void Join ( Client player ) {
-			TheLobby.AddPlayer ( player, true );
+			//TheLobby.AddPlayer ( player, true );
 		}
 	}
 

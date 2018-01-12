@@ -41,7 +41,7 @@ mp.keys.bind( Keys.M, false, () => {
 mp.events.add( "onClientMapMenuOpen", ( mapdatasjson: string ) => {
     mapvotingdata.lastmapdatas = mapdatasjson;
     if ( mapvotingdata.menuloaded )
-        mapvotingdata.menu.execute( "openMapMenu (" + getLanguage() + ", '" + mapdatasjson + "');" );
+        mapvotingdata.menu.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapdatasjson + "');" );
     else
         mapvotingdata.openwithlastdata = true;
 } );
@@ -50,8 +50,12 @@ mp.events.add( "browserDomReady", ( browser ) => {
     if ( browser == mapvotingdata.menu ) {
         mapvotingdata.menuloaded = true;
         if ( mapvotingdata.openwithlastdata )
-            mapvotingdata.menu.execute( "openMapMenu (" + getLanguage() + ", '" + mapvotingdata.lastmapdatas + "');" );
+            mapvotingdata.menu.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapvotingdata.lastmapdatas + "');" );
     }
+} );
+
+mp.events.add( "onMapMenuVote", ( mapname ) => {
+    mp.events.callRemote( "onMapVotingRequest", mapname );
 } );
 
 

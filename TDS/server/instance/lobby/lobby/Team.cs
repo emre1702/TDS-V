@@ -8,21 +8,14 @@ namespace TDS.server.instance.lobby {
 
     partial class Lobby {
 
-        public List<string> Teams = new List<string> {
-            "Spectator"
-        };
-        internal readonly List<PedHash> teamSkins = new List<PedHash> {
-            (PedHash) ( 225514697 )
-        };
-        public Dictionary<uint, string> TeamColorStrings = new Dictionary<uint, string> {
-            [0] = "s"
-        };
-        public readonly List<uint> teamColorsList = new List<uint> {
-            255, 255, 255
-        };
-        internal readonly List<int> teamBlipColors = new List<int> {
-            0
-        };
+        public List<string> Teams = new List<string> ();
+        internal readonly List<PedHash> teamSkins = new List<PedHash>();
+        public List<string> TeamColorStrings = new List<string>();
+        public readonly List<uint> teamColorsList = new List<uint>();
+        internal readonly List<int> teamBlipColors = new List<int>();
+
+        private List<int> teamsUID = new List<int> ();
+        private static int sTeamsUIDCounter = 1;
 
         public virtual void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
             uint teamid = (uint) Teams.Count;
@@ -31,12 +24,14 @@ namespace TDS.server.instance.lobby {
             Players.Add ( new List<NetHandle> () );
             alivePlayers.Add ( new List<NetHandle> () );
 
-            TeamColorStrings[teamid] = colorstring;
+            TeamColorStrings.Add ( colorstring );
             teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
             Color color = Colors.FontColor[colorstring];
             teamColorsList.Add ( (uint) color.Red );
             teamColorsList.Add ( (uint) color.Green );
             teamColorsList.Add ( (uint) color.Blue );
+
+            teamsUID.Add ( sTeamsUIDCounter++ );
         }
 
         public void MixTeams ( ) {
@@ -78,6 +73,10 @@ namespace TDS.server.instance.lobby {
             return Teams[(int) teamID];
         }
 
+        private int GetTeamUID ( uint teamID ) {
+            return teamsUID[(int)teamID];
+        }
+
         public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
             player.Team = (int) teamID;     // testit - need to remove this when creating own damage-system
             Players[(int) teamID].Add ( player.Handle );
@@ -85,6 +84,7 @@ namespace TDS.server.instance.lobby {
             if ( character == null )
                 character = player.GetChar ();
             character.Team = (ushort) teamID;
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", (int) teamID, GetTeamUID ( teamID ) );
         }
     }
 }

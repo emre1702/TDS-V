@@ -1,10 +1,9 @@
 ﻿namespace TDS.server.manager.lobby {
 
 	using GTANetworkAPI;
-	using instance.lobby;
 
 	static class MapCreateLobby {
-		public static Lobby TheLobby;
+		//public static Lobby TheLobby;
 
 		public static void Create () {
 			/*TheLobby = new Lobby ( "mapcreate", 3, false, false, true ) {
@@ -17,7 +16,7 @@
 		}
 
 		public static void Join ( Client player ) {
-			TheLobby.AddPlayer ( player, true );
+			//TheLobby.AddPlayer ( player, true );
 		}
 	}
 

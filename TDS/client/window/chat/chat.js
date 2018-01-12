@@ -18,7 +18,7 @@ let colorreplace = [
     //[ /~u~/g, "rgb(0, 0, 0)" ],
     [/~s~/g, "rgb(220, 220, 220)"],
     [/~w~/g, "white"],
-    [/~dr~/g, "rgb(169, 25, 25)"],
+    [/~dr~/g, "rgb(169, 25, 25)"]
 ];
 
 
@@ -105,17 +105,17 @@ $( document ).ready( function () {
     maininput = $( "#main-input" );
 
     $( "body" ).keydown( function ( event ) {
-        if ( event.which == 84 && !inputshowing && active ) {   // open chat-input
+        if ( event.which === 84 && !inputshowing && active ) {   // open chat-input
             event.preventDefault();
             enableChatInput( true );
-        } else if ( event.which == 90 && !inputshowing && active ) {    // open globalchat-input
+        } else if ( event.which === 90 && !inputshowing && active ) {    // open globalchat-input
             event.preventDefault();
             enableChatInput( true, "/globalsay " );
-        } else if ( event.which == 13 && inputshowing ) {   // send message and close input
+        } else if ( event.which === 13 && inputshowing ) {   // send message and close input
             event.preventDefault();
             let msg = maininput.val();
             if ( msg ) {
-                if ( msg[0] == "/" ) {
+                if ( msg[0] === "/" ) {
                     msg = msg.substr( 1 );
                     if ( msg.length > 0 )
                         mp.invoke( "command", msg );

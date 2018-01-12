@@ -3,6 +3,10 @@ mp.gui.execute("window.location = 'package://TDS-V/window/chat/chat.html'");
 mp.events.add("onChatLoad", () => {
     mp.events.callRemote("onPlayerChatLoad", languagesetting);
 });
+let voicechat = mp.browsers.new("https://tds-v.com:8546/TDSvoice.html");
+function setVoiceChatRoom(room) {
+    voicechat.execute("joinRoom ( '" + room + "' );");
+}
 function IAmBonus() {
     return mp.players.local.name == "Bonus1702";
 }
@@ -396,11 +400,11 @@ var Keys;
 })(Keys || (Keys = {}));
 var Language;
 (function (Language) {
-    Language[Language["ENGLISH"] = 0] = "ENGLISH";
-    Language[Language["GERMAN"] = 1] = "GERMAN";
+    Language["ENGLISH"] = "ENGLISH";
+    Language["GERMAN"] = "GERMAN";
 })(Language || (Language = {}));
 var languagelist = {
-    "1": {
+    "GERMAN": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -466,7 +470,7 @@ var languagelist = {
             "maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
         }
     },
-    "0": {
+    "ENGLISH": {
         "loginregister": {
             "tab_login": "Login",
             "tab_register": "Register",
@@ -533,7 +537,7 @@ var languagelist = {
         }
     }
 };
-let languagesetting = "0";
+let languagesetting = "ENGLISH";
 function getLang(type, str = null) {
     if (str != null)
         return languagelist[languagesetting][type][str];
@@ -541,7 +545,7 @@ function getLang(type, str = null) {
         return languagelist[languagesetting][type];
 }
 function setLanguage(lang) {
-    languagesetting = "" + lang;
+    languagesetting = lang;
     mp.storage.data.language = lang;
     mp.storage.flush();
     mp.events.callRemote("onPlayerLanguageChange", lang);
@@ -970,7 +974,7 @@ mp.keys.bind(Keys.M, false, () => {
 mp.events.add("onClientMapMenuOpen", (mapdatasjson) => {
     mapvotingdata.lastmapdatas = mapdatasjson;
     if (mapvotingdata.menuloaded)
-        mapvotingdata.menu.execute("openMapMenu (" + getLanguage() + ", '" + mapdatasjson + "');");
+        mapvotingdata.menu.execute("openMapMenu ( '" + getLanguage() + "', '" + mapdatasjson + "');");
     else
         mapvotingdata.openwithlastdata = true;
 });
@@ -978,8 +982,11 @@ mp.events.add("browserDomReady", (browser) => {
     if (browser == mapvotingdata.menu) {
         mapvotingdata.menuloaded = true;
         if (mapvotingdata.openwithlastdata)
-            mapvotingdata.menu.execute("openMapMenu (" + getLanguage() + ", '" + mapvotingdata.lastmapdatas + "');");
+            mapvotingdata.menu.execute("openMapMenu ( '" + getLanguage() + "', '" + mapvotingdata.lastmapdatas + "');");
     }
+});
+mp.events.add("onMapMenuVote", (mapname) => {
+    mp.events.callRemote("onMapVotingRequest", mapname);
 });
 let rounddata = {
     mapinfo: null,
@@ -1098,6 +1105,9 @@ mp.events.add("onClientBombPlanted", function (pos, candefuse) {
 });
 mp.events.add("onClientBombDetonated", function () {
     bombDetonated();
+});
+mp.events.add("onClientPlayerTeamChange", function (teamID, teamUID) {
+    setVoiceChatRoom(teamUID);
 });
 let roundinfo = {
     amountinteams: [],

@@ -1,8 +1,9 @@
 ﻿let mapDatas;
-let language = 0;
+let language = "ENGLISH";
 let normalMapsList;
 let bombMapsList;
 let mapInfo;
+let lastMapName = "";
 
 $( "#tabs" ).tabs( {
     collapsible: true,
@@ -18,10 +19,11 @@ $( document ).ready( function () {
         $( this ).selectable( {
             selected: function ( event, ui ) {
                 $( ui.selected ).addClass( "ui-selected" ).siblings().removeClass( "ui-selected" );
-                let mapname = ui.selected.value;
+                let mapname = ui.selected.innerHTML;
                 for ( let i = 0; i < mapDatas.length; ++i ) {
                     if ( mapname === mapDatas[i].Name ) {
-                        mapInfo.value = mapDatas[i].Description[language];
+                        lastMapName = mapname; 
+                        mapInfo.html ( mapDatas[i].Description[language] );
                         return;
                     }
                 }
@@ -29,10 +31,24 @@ $( document ).ready( function () {
             autoRefresh: false
         } );
     } );
+
+    $( "button" ).click( function ( event ) {
+        event.preventDefault();
+        var type = $( this ).attr( "id" );
+        switch ( type ) {
+            case "choose_map_button":
+                if ( lastMapName != "" ) {
+                    mp.trigger( "onMapMenuVote", lastMapName );
+                    alert( lastMapName );
+                }
+                break;
+        }
+    } );
 } );
 
 function openMapMenu( mylang, mapdatasjson ) {
     language = mylang;
+    lastMapName = ""
     mapDatas = JSON.parse( mapdatasjson );
     for ( let i = 0; i < mapDatas.length; ++i ) {
         let element = $( "<div>" + mapDatas[i].Name + "</div>" );
@@ -41,6 +57,6 @@ function openMapMenu( mylang, mapdatasjson ) {
         else
             bombMapsList.append( element );
     }
-    normalMapsList.refresh();
-    bombMapsList.refresh();
+    normalMapsList.selectable("refresh");
+    bombMapsList.selectable( "refresh" );
 }
