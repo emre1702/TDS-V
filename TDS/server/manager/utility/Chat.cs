@@ -14,7 +14,6 @@
 		}
 
 		private static void OnChatMessageFunc ( Client player, string message ) {
-            NAPI.Util.ConsoleOutput ( "2: " + player.Name + ": " + message );
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "chat " + character.Lobby.Name );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
@@ -24,7 +23,6 @@
 
 		private static void OnChatMessage ( Client player, string message, CancelEventArgs e ) {
 			e.Cancel = true;
-            NAPI.Util.ConsoleOutput ( player.GetChar().Lobby.Name + ": " + player.Name + ": " + message );
             if ( player.GetChar().LoggedIn )
 			    OnChatMessageFunc ( player, message );
 		}

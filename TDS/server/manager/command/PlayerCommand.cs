@@ -15,9 +15,7 @@
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", Group = "user" )]
 		public static void Leave ( Client player ) {
 			Lobby lobby = player.GetChar ().Lobby;
-            NAPI.Util.ConsoleOutput ( "leave " + player.Name );
 			if ( lobby != MainMenu.TheLobby ) {
-                NAPI.Util.ConsoleOutput ( "leave2 " + player.Name );
                 lobby.RemovePlayerDerived ( player );
                 MainMenu.Join ( player );
 			}
