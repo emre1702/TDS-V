@@ -64,9 +64,6 @@ namespace TDS.server.instance.lobby {
             }
             DmgSys.PlayerSpree.Remove ( player );
 
-            NAPI.Util.ConsoleOutput ( "RemovePlayer Arena " + player.Name );
-
-
             //if ( IsMapCreateLobby )                            TODO
             //    StopPlayerFreecam ( player, true );
         }
@@ -85,7 +82,6 @@ namespace TDS.server.instance.lobby {
         }
 
         public override void AddPlayer ( Client player, bool spectator = false ) {
-            NAPI.Util.ConsoleOutput ( "AddPlayer Arena " + player.Name );
             AddPlayerDefault ( player, spectator );
 
             string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
@@ -112,7 +108,6 @@ namespace TDS.server.instance.lobby {
         private void AddPlayerAsPlayer ( Client player ) {
             Character character = player.GetChar ();
             uint teamID = GetTeamIDWithFewestMember ( ref Players );
-            NAPI.Util.ConsoleOutput ( "AddPlayerAsPlayer " + teamID.ToString () );
             SetPlayerTeam ( player, teamID, character );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( player, teamID );
