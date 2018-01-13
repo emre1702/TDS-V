@@ -5,7 +5,8 @@
 	using System.Data;
 	using System.Data.Common;
 	using System.Diagnostics.CodeAnalysis;
-	using System.Threading.Tasks;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml;
     using GTANetworkAPI;
 	using logs;
@@ -47,7 +48,7 @@
 					rdr.Close ();
 					return results;
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + ex );
+					Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + ex );
 					return null;
 				}
 			}
@@ -69,14 +70,15 @@
 					rdr.Close ();
 					return results;
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + ex );
+                    string s = string.Join ( ";", parameters.Select ( x => x.Key + "=" + x.Value ).ToArray () );
+                    Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + s + "\n" + ex );
 					return null;
 				}
 			}
 		}
 
 		[SuppressMessage ( "Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken überprüfen" )]
-		public static async Task Exec ( string sql ) {
+		public static async void Exec ( string sql ) {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
 					MySqlCommand cmd = new MySqlCommand ( sql, conn );
@@ -88,7 +90,7 @@
 			}
 		}
 
-		public static async Task ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
+		public static async void ExecPrepared ( string sql, Dictionary<string, string> parameters ) {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
 					MySqlCommand cmd = new MySqlCommand ( sql, conn );

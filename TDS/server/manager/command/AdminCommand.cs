@@ -122,9 +122,9 @@
 							if ( hours == 0 ) {
 								await Account.UnBanPlayer ( player, target, targetname, reason, queryparam ).ConfigureAwait ( false );
 							} else if ( hours == -1 ) {
-								await Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason ).ConfigureAwait ( false );
+								Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason );
 							} else {
-								await Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours ).ConfigureAwait ( false );
+								Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours );
 							}
 						} else
 							player.SendLangNotification ( "adminlvl_not_high_enough" );

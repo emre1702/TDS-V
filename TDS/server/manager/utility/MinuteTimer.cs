@@ -15,7 +15,7 @@
 			Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
 		}
 
-		private async void MinuteTimerFunc () {
+		private void MinuteTimerFunc () {
 			try {
 				// playtime //
 				List<Client> players = NAPI.Pools.GetAllPlayers ();
@@ -32,7 +32,7 @@
 				}
 
 				// log-save //
-				await Log.SaveInDatabase ().ConfigureAwait ( false );
+				Log.SaveInDatabase ();
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in MinuteTimerFunc:" + ex.Message );
 			}

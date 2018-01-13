@@ -17,9 +17,9 @@
 			RemoveAllCreated ();
 		}
 
-		private async void SaveAllInDatabase () {
+		private void SaveAllInDatabase () {
 			try {
-				await Log.SaveInDatabase ().ConfigureAwait ( false );
+				Log.SaveInDatabase ();
 
 				List<Client> players = NAPI.Pools.GetAllPlayers ();
 				foreach ( Client player in players ) {
