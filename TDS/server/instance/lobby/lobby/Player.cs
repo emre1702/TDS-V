@@ -35,12 +35,10 @@ namespace TDS.server.instance.lobby {
 
 
         public virtual void AddPlayer ( Client player, bool spectator = false ) {
-            NAPI.Util.ConsoleOutput ( "Lobby AddPlayer " + player.Name );
             player.Freeze ( true );
             Character character = player.GetChar ();
             character.Lobby.RemovePlayerDerived ( player );
             character.Lobby = this;
-            NAPI.Util.ConsoleOutput ( "Current Lobby: " + character.Lobby.Name + " - " + player.GetChar().Lobby.Name );
             character.Spectating = null;
             player.StopSpectating ();
             player.Dimension = Dimension;
@@ -73,8 +71,6 @@ namespace TDS.server.instance.lobby {
 
             if ( player.Exists ) 
                 player.Transparency = 255;
-
-            NAPI.Util.ConsoleOutput ( "RemovePlayer Lobby " + player.Name );
 
             //MainMenu.Join ( player );       // TODO
         }
