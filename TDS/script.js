@@ -207,6 +207,13 @@ mp.events.add("render", () => {
         showBloodscreen();
     damagesysdata.lastarmorhp = armorhp;
 });
+mp.events.add("playerWeaponShoot", function (arg1, arg2, arg3, arg4) {
+    mp.gui.chat.push(String(arg1) + " - " + typeof (arg1));
+    mp.gui.chat.push(String(arg2) + " - " + typeof (arg2));
+    mp.gui.chat.push(String(arg3) + " - " + typeof (arg3));
+    mp.gui.chat.push(String(arg4) + " - " + typeof (arg4));
+    mp.gui.chat.push(String(this) + " - " + typeof (this));
+});
 mp.events.add("playerSpawn", (player) => {
     if (player == localPlayer) {
         mp.game.cam.doScreenFadeIn(2000);
