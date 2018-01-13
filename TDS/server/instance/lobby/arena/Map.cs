@@ -51,9 +51,7 @@ namespace TDS.server.instance.lobby {
         }
 
 		private void CreateMapLimitBlips () {
-            NAPI.Util.ConsoleOutput ( "create map limit blips" );
 			foreach ( Vector3 maplimit in currentMap.MapLimits ) {
-                NAPI.Util.ConsoleOutput ( "map limit add" );
                 Blip blip = NAPI.Blip.CreateBlip ( maplimit, Dimension );
 				blip.Sprite = 441;
 				blip.Name = "Limit";
