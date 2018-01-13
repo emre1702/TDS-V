@@ -92,7 +92,6 @@ namespace TDS.server.instance.lobby {
                     amountinteams.Add ( amountinteam );
                 alivePlayers.Add ( new List<NetHandle> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
-                    NAPI.Util.ConsoleOutput ( "StartRound " + i + ":" + j + " " + NAPI.Player.GetPlayerFromHandle ( Players[i][j] ).Name );
                     StartRoundForPlayer ( NAPI.Player.GetPlayerFromHandle ( Players[i][j] ), (uint) i );
                 }
             }
@@ -105,7 +104,6 @@ namespace TDS.server.instance.lobby {
 
         private void StartRoundForPlayer ( Client player, uint teamID ) {
             Character character = player.GetChar ();
-            NAPI.Util.ConsoleOutput ( "StartRoundForPlayer " + player.Name );
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
             character.Team = (ushort) teamID;
             if ( teamID != 0 ) {
