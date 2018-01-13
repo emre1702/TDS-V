@@ -9,12 +9,8 @@ namespace TDS.server.instance.lobby {
 
     partial class Lobby {
 
-        public List<List<NetHandle>> Players = new List<List<NetHandle>> {
-            new List<NetHandle> ()
-        };
-        public List<List<NetHandle>> alivePlayers = new List<List<NetHandle>> {
-            new List<NetHandle> ()
-        };
+        public List<List<NetHandle>> Players = new List<List<NetHandle>>();
+        public List<List<NetHandle>> alivePlayers = new List<List<NetHandle>>();
 
         internal void FuncIterateAllPlayers ( Action<NetHandle, int> func, int teamID = -1 ) {
             if ( teamID == -1 ) {
