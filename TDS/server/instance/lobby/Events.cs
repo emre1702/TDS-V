@@ -25,7 +25,6 @@ namespace TDS.server.instance.lobby {
                             arenalobby.AddPlayer ( player, args[1] );
                         else
                             lobby.AddPlayer ( player, args[1] );
-                        NAPI.Util.ConsoleOutput ( "JoinLobby " + player.Name + " - " + lobby.Name );
                     } else {
                         /* player.sendNotification (  lobby doesn't exist ); */
                         NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );  //TODO is that needed?
