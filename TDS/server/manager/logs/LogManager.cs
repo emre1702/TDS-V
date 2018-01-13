@@ -51,7 +51,7 @@
 			logQueryDates = new List<string> ();
 		}
 
-		public static async Task SaveInDatabase () {
+		public static void SaveInDatabase () {
 			int amount = logQueryUIDs.Count;
 			if ( amount > 0 ) {
 				logQueryParameters = new Dictionary<string, string> ();
@@ -65,7 +65,7 @@
 					}
 				}
 
-				await Database.ExecPrepared ( sql, logQueryParameters ).ConfigureAwait ( false );
+				Database.ExecPrepared ( sql, logQueryParameters );
 				ResetLists ();
 			}
 		}
