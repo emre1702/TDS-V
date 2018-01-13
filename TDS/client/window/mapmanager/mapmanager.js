@@ -37,7 +37,7 @@ $( document ).ready( function () {
         var type = $( this ).attr( "id" );
         switch ( type ) {
             case "choose_map_button":
-                if ( lastMapName != "" ) {
+                if ( lastMapName !== "" ) {
                     mp.trigger( "onMapMenuVote", lastMapName );
                     alert( lastMapName );
                 }
@@ -48,7 +48,7 @@ $( document ).ready( function () {
 
 function openMapMenu( mylang, mapdatasjson ) {
     language = mylang;
-    lastMapName = ""
+    lastMapName = "";
     mapDatas = JSON.parse( mapdatasjson );
     for ( let i = 0; i < mapDatas.length; ++i ) {
         let element = $( "<div>" + mapDatas[i].Name + "</div>" );
