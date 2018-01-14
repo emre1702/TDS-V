@@ -180,7 +180,10 @@ class cRectangle {
     alignment: Alignment;
     relative: boolean;
 
-	remove = removeClassDraw;
+    remove = removeClassDraw;
+    setWidth = ( newwidth ) => {
+        this.size[0] = newwidth;
+    }
 
     constructor( xpos, ypos, width, height, color, alignment = Alignment.LEFT, relative = true ) {
 		this.position = [xpos, ypos];
