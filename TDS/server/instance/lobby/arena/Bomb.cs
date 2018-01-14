@@ -42,13 +42,13 @@ namespace TDS.server.instance.lobby {
 
 		private void BombMapChose () {
 			foreach ( Vector3 bombplace in currentMap.BombPlantPlaces ) {
-				/*Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), Dimension );
+				Object place = NAPI.Object.CreateObject ( -51423166, bombplace, new Vector3 (), 255, Dimension );
 				bombPlantPlaces.Add ( place );
 				Blip blip = NAPI.Blip.CreateBlip ( bombplace, Dimension );
 				blip.Sprite = 433;
-				bombPlantBlips.Add ( blip );    */
+				bombPlantBlips.Add ( blip );  
 			}
-			//bomb = NAPI.Object.CreateObject ( 1764669601, currentMap.BombPlantPlaces[0], new Vector3 (), Dimension );
+			bomb = NAPI.Object.CreateObject ( 1764669601, currentMap.BombPlantPlaces[0], new Vector3 (), 255, Dimension );
 		}
 
 		private void GiveBombToRandomTerrorist () {
@@ -131,7 +131,7 @@ namespace TDS.server.instance.lobby {
                         bomb.Position = new Vector3 ( playerpos.X, playerpos.Y, playerpos.Z - 0.9 );
                         bomb.Rotation = new Vector3 ( 270, 0, 0 );
                         bombPlantPlaces[i].Delete ();
-                        //bombPlantPlaces[i] = NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), Dimension );
+                        bombPlantPlaces[i] = NAPI.Object.CreateObject ( -263709501, currentMap.BombPlantPlaces[i], new Vector3 (), 255, Dimension );
                         bombPlantBlips[i].Color = 49;
                         //bombPlantBlips[i].Flashing = true;
                         bombAtPlayer = null;
