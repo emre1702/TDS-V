@@ -3,7 +3,7 @@
 	using GTANetworkAPI;
 
 	static class MapCreateLobby {
-		//public static Lobby TheLobby;
+		//public static Lobby TheLobby;     TODO
 
 		public static void Create () {
 			/*TheLobby = new Lobby ( "mapcreate", 3, false, false, true ) {

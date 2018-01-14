@@ -52,7 +52,7 @@ namespace TDS.server.instance.lobby {
                     if ( !( player.GetChar ().Lobby is Arena lobby0 ) )
                         return;
 
-                    lobby0.KillPlayer ( player, "too_long_outside_map" );    //TODO
+                    lobby0.KillPlayer ( player, "too_long_outside_map" );
                     break;
                 #endregion
 
@@ -101,7 +101,7 @@ namespace TDS.server.instance.lobby {
                 case "onPlayerStopDefusing":
                     if ( !( player.GetChar ().Lobby is Arena lobby4 ) )
                         return;
-                    lobby4.StopBombDefusing ( player );      //TODO
+                    lobby4.StopBombDefusing ( player );  
                     break;
                 #endregion
 

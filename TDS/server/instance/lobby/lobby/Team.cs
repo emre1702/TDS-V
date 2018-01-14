@@ -78,7 +78,7 @@ namespace TDS.server.instance.lobby {
         }
 
         public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
-            player.Team = (int) teamID;     // testit - need to remove this when creating own damage-system
+            player.Team = (int) teamID;     //TODO testit - need to remove this when creating own damage-system
             Players[(int) teamID].Add ( player.Handle );
             player.SetSkin ( teamSkins[(int) teamID] );
             if ( character == null )

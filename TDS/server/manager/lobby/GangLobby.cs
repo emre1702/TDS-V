@@ -4,7 +4,7 @@
 
 	static class GangLobby {
 
-		//public static Lobby TheLobby;
+		//public static Lobby TheLobby;          TODO
 
 		public static void Create () {
 			/*TheLobby = new Lobby ( "gang", 2, false ) {
