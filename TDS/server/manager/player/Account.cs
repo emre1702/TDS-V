@@ -41,6 +41,7 @@
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
             player.Freeze ( true );
             player.Name = player.SocialClubName;
+            NAPI.Util.ConsoleOutput ( "Already playerUID in: " + ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 ) );
             NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 );
         }
 
@@ -166,7 +167,7 @@
 				uint adminlvl = player.GetChar ().AdminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
-				//NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   // NOT USED RIGHT NOW
+				//NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in OnPlayerDisconnected AccountManager:" + ex.Message );
 			}
