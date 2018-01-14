@@ -120,7 +120,7 @@ function getLoginPanelData( playername, isreg, lang ) {
 		$( this ).prop( "disabled", true );
 	} );
 
-	isregistered = isreg;
+	isregistered = isreg == "1";
 }
 
 function loadLanguage( lang ) {
