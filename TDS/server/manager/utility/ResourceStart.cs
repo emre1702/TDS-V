@@ -8,7 +8,6 @@
 
 		public ResourceStart () {
 			NAPI.Server.SetGamemodeName ( "TDS" );
-			//API.SetMapName ( "Los Santos" );
 			StartMethods ();
 		}
 
