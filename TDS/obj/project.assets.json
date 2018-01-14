@@ -26,7 +26,7 @@
           "lib/netstandard2.0/Colorful.Console.dll": {}
         }
       },
-      "gtanetwork.api/0.3.1": {
+      "gtanetwork.api/0.3.1.1": {
         "type": "package",
         "dependencies": {
           "Colorful.Console": "1.2.1",
@@ -2123,12 +2123,12 @@
         "lib/netstandard2.0/Colorful.Console.dll"
       ]
     },
-    "gtanetwork.api/0.3.1": {
-      "sha512": "+j8stpDkaZn2l0xOZAhDCgxYbNYLwteub6zLodQrv6NUc7e/kbMYY+wBKgiITf3lPqKPvaJU/xIes7IhJ3BfAQ==",
+    "gtanetwork.api/0.3.1.1": {
+      "sha512": "Bu7WEAe3nFFw2Wiscp3hYnXm1k0h4TEWZ1uXLEYrGG3IXXu7sm95y41a4LPfzmshz6FmY73XmPTIIyI+ejvxBw==",
       "type": "package",
-      "path": "gtanetwork.api/0.3.1",
+      "path": "gtanetwork.api/0.3.1.1",
       "files": [
-        "gtanetwork.api.0.3.1.nupkg.sha512",
+        "gtanetwork.api.0.3.1.1.nupkg.sha512",
         "gtanetwork.api.nuspec",
         "lib/netcoreapp2.0/Bootstrapper.dll",
         "lib/netcoreapp2.0/Bootstrapper.runtimeconfig.json",
@@ -6846,7 +6846,7 @@
     ".NETCoreApp,Version=v2.0": [
       "Microsoft.NETCore.App >= 2.0.0",
       "MySql.Data >= 6.10.5",
-      "gtanetwork.api >= 0.3.1",
+      "gtanetwork.api >= 0.3.1.1",
       "types-ragemp-client >= 0.0.5"
     ]
   },
@@ -6906,7 +6906,7 @@
           },
           "gtanetwork.api": {
             "target": "Package",
-            "version": "[0.3.1, )"
+            "version": "[0.3.1.1, )"
           },
           "types-ragemp-client": {
             "target": "Package",

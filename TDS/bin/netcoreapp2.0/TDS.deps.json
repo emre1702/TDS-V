@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "2c7f0aa77e72b14fe30b521cf9930e5c9ab7b6b2"
+    "signature": "4726fa1cc5d0b1c66c754681fb68ebda377a0a70"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,7 +9,7 @@
       "TDS/1.0.0": {
         "dependencies": {
           "MySql.Data": "6.10.5",
-          "gtanetwork.api": "0.3.1",
+          "gtanetwork.api": "0.3.1.1",
           "types-ragemp-client": "0.0.5"
         },
         "runtime": {
@@ -36,7 +36,7 @@
           "lib/netstandard2.0/Colorful.Console.dll": {}
         }
       },
-      "gtanetwork.api/0.3.1": {
+      "gtanetwork.api/0.3.1.1": {
         "dependencies": {
           "Colorful.Console": "1.2.1",
           "Microsoft.CSharp": "4.4.1",
@@ -1283,12 +1283,12 @@
       "path": "colorful.console/1.2.1",
       "hashPath": "colorful.console.1.2.1.nupkg.sha512"
     },
-    "gtanetwork.api/0.3.1": {
+    "gtanetwork.api/0.3.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+j8stpDkaZn2l0xOZAhDCgxYbNYLwteub6zLodQrv6NUc7e/kbMYY+wBKgiITf3lPqKPvaJU/xIes7IhJ3BfAQ==",
-      "path": "gtanetwork.api/0.3.1",
-      "hashPath": "gtanetwork.api.0.3.1.nupkg.sha512"
+      "sha512": "sha512-Bu7WEAe3nFFw2Wiscp3hYnXm1k0h4TEWZ1uXLEYrGG3IXXu7sm95y41a4LPfzmshz6FmY73XmPTIIyI+ejvxBw==",
+      "path": "gtanetwork.api/0.3.1.1",
+      "hashPath": "gtanetwork.api.0.3.1.1.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis/2.6.1": {
       "type": "package",
