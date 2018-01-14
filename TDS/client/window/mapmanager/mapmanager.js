@@ -39,7 +39,6 @@ $( document ).ready( function () {
             case "choose_map_button":
                 if ( lastMapName !== "" ) {
                     mp.trigger( "onMapMenuVote", lastMapName );
-                    alert( lastMapName );
                 }
                 break;
         }
