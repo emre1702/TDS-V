@@ -1,6 +1,8 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 enum Keys {
+    LeftMouse = 0x01,
+    RightMouse = 0x2,
 	LeftArrow = 0x25,
 	UpArrow = 0x26,
 	RightArrow = 0x27,
