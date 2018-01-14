@@ -71,8 +71,6 @@ namespace TDS.server.instance.lobby {
 
             if ( player.Exists ) 
                 player.Transparency = 255;
-
-            //MainMenu.Join ( player );       // TODO
         }
     }
 }
