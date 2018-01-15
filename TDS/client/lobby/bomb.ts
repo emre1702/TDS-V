@@ -20,7 +20,8 @@ let bombdata = {
 
 function updatePlantDefuseProgress() {
 	let tickswasted = getTick() - bombdata.plantdefusestarttick;
-	if ( tickswasted < lobbysettings.bombplanttime ) {
+    if ( tickswasted < lobbysettings.bombplanttime ) {
+        mp.game.controls.disableControlAction( 0, 24, true );
 		let progress = tickswasted / lobbysettings.bombplanttime;
         bombdata.draw.progrect.setWidth( 0.078 * progress );
 	}
@@ -35,35 +36,25 @@ function checkPlant() {
 			isonplacetoplant = true;
 	}
 	if ( isonplacetoplant ) {
-		if ( bombdata.isplanting ) {
-            updatePlantDefuseProgress();
-		} else {
-			bombdata.plantdefusestarttick = getTick();
-            bombdata.isplanting = true;
-            bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.CENTER, true );
-            bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [0, 180, 0, 187], Alignment.CENTER, true );
-            bombdata.draw.text = new cText( getLang( "round", "planting" ), 0.5, 0.71, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
-			mp.events.callRemote( "onPlayerStartPlanting" );
-		}
-	} else
-		checkPlantDefuseStop();
+		bombdata.plantdefusestarttick = getTick();
+        bombdata.isplanting = true;
+        bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true );
+        bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [0, 180, 0, 187], Alignment.LEFT, true );
+        bombdata.draw.text = new cText( getLang( "round", "planting" ), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
+        mp.events.callRemote( "onPlayerStartPlanting" );
+	}
 }
 
 function checkDefuse() {
 	let playerpos = mp.players.local.position;
 	if ( mp.game.gameplay.getDistanceBetweenCoords( playerpos.x, playerpos.y, playerpos.z, bombdata.plantedpos.x, bombdata.plantedpos.y, bombdata.plantedpos.z, true ) <= 5 ) {
-		if ( bombdata.isdefusing ) {
-            updatePlantDefuseProgress();
-		} else {
-			bombdata.plantdefusestarttick = getTick();
-            bombdata.isdefusing = true;
-            bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.CENTER, true );
-            bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [180, 0, 0, 187], Alignment.CENTER, true );
-            bombdata.draw.text = new cText( getLang( "round", "defusing" ), 0.5, 0.71, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
-			mp.events.callRemote( "onPlayerStartDefusing" );
-		}
-	} else
-		checkPlantDefuseStop();
+		bombdata.plantdefusestarttick = getTick();
+        bombdata.isdefusing = true;
+        bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true );
+        bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [180, 0, 0, 187], Alignment.LEFT, true );
+        bombdata.draw.text = new cText( getLang( "round", "defusing" ), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
+		mp.events.callRemote( "onPlayerStartDefusing" );
+	}
 }
 
 function checkPlantDefuseStop() {
@@ -84,50 +75,69 @@ function checkPlantDefuseStop() {
     }
 }
 
+
+function checkPlantDefuseExtended() {
+    //let currentweapon = mp.game.invoke( '0x6678C142FAC881BA', localPlayer.handle );
+    if ( currentweapon == WeaponHash.OldUnarmed ) {
+        if ( !mp.players.local.isDeadOrDying( true ) ) {
+            mp.game.controls.disableControlAction( 0, 24, true );
+            return true;
+        }
+    }
+    return false;
+}
+
+
 function checkPlantDefuse() {
-    if ( mp.players.local.weapon == WeaponHash.Unarmed ) {
+    if ( !bombdata.isdefusing && !bombdata.isplanting ) {
         if ( mp.game.controls.isControlJustPressed( 0, 24 ) ) {
-            if ( !mp.players.local.isDeadOrDying( true ) ) {
-                mp.game.controls.disableControlAction ( 0, 24, true );
-			    if ( bombdata.gotbomb ) {
-				    checkPlant();
-				    return;
-			    } else {
-				    checkDefuse();
-				    return;
-			    }
-			} else
-				checkPlantDefuseStop();
-		} else
-			checkPlantDefuseStop();
-	} else
-		checkPlantDefuseStop();
+            if ( checkPlantDefuseExtended() ) {
+                if ( bombdata.gotbomb ) {
+                    checkPlant();
+                    return;
+                } else {
+                    checkDefuse();
+                    return;
+                }
+            }
+        }
+    } else {
+        if ( !mp.game.controls.isDisabledControlJustReleased( 0, 24 ) ) {
+            if ( checkPlantDefuseExtended() ) {
+                updatePlantDefuseProgress();
+            } else 
+                checkPlantDefuseStop();
+        } else 
+            checkPlantDefuseStop();
+    }
+
 }
 
 function localPlayerGotBomb( placestoplant ) {
+    log( "localPlayerGotBomb" );
 	bombdata.changed = true;
 	bombdata.gotbomb = true;
 	let i = placestoplant.length;
 	while ( i-- )
 		bombdata.placestoplant[i] = placestoplant[i];
     bombdata.plantdefuseevent = true;
-    mp.events.add( "checkPlantDefuse", checkPlantDefuse );
+    mp.events.add( "render", checkPlantDefuse );
 }
 
 function localPlayerPlantedBomb() {
 	bombdata.gotbomb = false;
 	bombdata.plantdefuseevent = false;
     bombdata.isplanting = false;
-    mp.events.remove( "checkPlantDefuse", checkPlantDefuse );
+    mp.events.remove( "render", checkPlantDefuse );
 }
 
 function bombPlanted( pos, candefuse ) {
 	if ( candefuse ) {
 		bombdata.changed = true;
 		bombdata.plantedpos = pos;
-		bombdata.plantdefuseevent = true;
+        bombdata.plantdefuseevent = true;
+        mp.events.add( "render", checkPlantDefuse );
     }
-    mp.events.add( "checkPlantDefuse", checkPlantDefuse );
 	setRoundTimeLeft( lobbysettings.bombdetonatetime );
 }
 
