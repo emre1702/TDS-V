@@ -61,7 +61,7 @@ namespace TDS.server.instance.lobby {
                 if ( mixTeamsAfterRound )
                     MixTeams ();
                 List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
-                SendAllPlayerEvent ( "onClientMapChange", -1, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
+                SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.SyncData.Name, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
             } catch ( Exception ex ) {

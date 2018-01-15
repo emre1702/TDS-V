@@ -1,8 +1,9 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 
-mp.events.add( "onClientMapChange", function ( maplimit, mapmidx, mapmidy, mapmidz ) {
-	log( "onClientMapChange" );
+mp.events.add( "onClientMapChange", function ( mapname, maplimit, mapmidx, mapmidy, mapmidz ) {
+    log( "onClientMapChange" );
+    setMapInfo( mapname );
 	mp.game.cam.doScreenFadeIn( lobbysettings.roundendtime / 2 );
 	maplimit = JSON.parse( maplimit );
 	if ( maplimit.length > 0 )
@@ -12,7 +13,7 @@ mp.events.add( "onClientMapChange", function ( maplimit, mapmidx, mapmidy, mapmi
 } );
 
 
-mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) {
+mp.events.add( "onClientCountdownStart", function ( resttime ) {
 	log( "onClientCountdownStart" );
 	if ( cameradata.timer != null )
 		cameradata.timer.kill();
@@ -29,7 +30,6 @@ mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) 
 	}
 	if ( rounddata.isspectator )
 		startSpectate();
-    rounddata.mapinfo.setText( mapname );
     toggleFightControls( false );
 } );
 

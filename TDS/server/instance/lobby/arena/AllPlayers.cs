@@ -10,7 +10,7 @@ namespace TDS.server.instance.lobby
             FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
                 Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
                 SetPlayerReadyForRound ( player, (uint) teamID );
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", currentMap.SyncData.Name );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart" );
                 if ( teamID == 0 )
                     SpectateAllTeams ( player );
             } );

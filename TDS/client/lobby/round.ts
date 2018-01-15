@@ -8,8 +8,11 @@ let rounddata = {
 }
 
 
-function setMapInfo ( mapname ) {
-    rounddata.mapinfo = new cText( mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true );
+function setMapInfo( mapname ) {
+    if ( rounddata.mapinfo == null )
+        rounddata.mapinfo = new cText( mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true );
+    else
+        rounddata.mapinfo.setText( mapname );
 }
 
 
