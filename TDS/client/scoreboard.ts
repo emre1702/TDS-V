@@ -1,146 +1,145 @@
 /// <reference path="types-ragemp/index.d.ts" />
 
-/* function createScoreboard() {	 
-	var playertable = [];
-	var playertablelength = 0;
-	var scroll = 0;
-	var lastplayerlisttrigger = 0;
-	var playerlistevent = null;
-	var playerlistopenkey = null;
-	var playerlistdata = {
+var scoreboardKeyJustPressed;
+var scoreboardKeyJustReleased;
+
+function createScoreboard() {
+    let playertable = {} as {
+        Name: string, PlayTime: string, Kills: number, Assists: number, Deaths: number, TeamOrLobby: string
+    }[];
+    let playertablelength = 0;
+    let scroll = 0;
+    let lastplayerlisttrigger = 0;
+    let showing = false;
+    let playerlistdata = {
 		maxplayers: 25,
-		completewidth: res.x*0.4,
-		scrollbarwidth: res.x*0.02,
-		columnheight: res.x*0.025,
-		columnwidthpercent: {
+		completewidth: 0.4,
+		scrollbarwidth: 0.02,
+		columnheight: 0.025,
+		columnwidth: {
 			name: 0.3,
 			playtime: 0.15,
 			kills: 0.1,
 			assists: 0.1,
 			deaths: 0.1,
-			teamorlobby: 0.25
+            team: 0.25,
+            lobby: 0.25
 		}, 
-		titleheight: res.y*0.03,
-		//bottomheight: res.Height*0.03,
+		titleheight: 0.03,
+		//bottomheight: 0.03,
 		bottomheight: 0,
-		titlerectanglecolor: [ 20, 20, 20, 187 ],
-		bottomrectanglecolor: [ 20, 20, 20, 187 ],
-		rectanglecolor: [ 10, 10, 10, 187 ],
-		titlefontcolor: [ 255, 255, 255, 255 ],
-		bottomfontcolor: [ 255, 255, 255, 255 ],
-		fontcolor: [ 255, 255, 255, 255 ],
-		scrollbarbackcolor: [ 30, 30, 30, 187 ],
-		scrollbarcolor: [ 120, 120, 120, 187 ],
-		titlefontscale: 0.35,
-		fontscale: 0.28,
-		bottomfontscale: 0.35,
+        titlerectanglecolor: [20, 20, 20, 187] as [number, number, number, number],
+        bottomrectanglecolor: [20, 20, 20, 187] as [number, number, number, number],
+        rectanglecolor: [10, 10, 10, 187] as [number, number, number, number],
+		titlefontcolor: [ 255, 255, 255, 255 ] as [ number, number, number, number],
+        bottomfontcolor: [255, 255, 255, 255] as [number, number, number, number],
+        fontcolor: [255, 255, 255, 255] as [number, number, number, number],
+        scrollbarbackcolor: [30, 30, 30, 187] as [number, number, number, number],
+        scrollbarcolor: [120, 120, 120, 187] as [number, number, number, number],
+		titlefontscale: [ 1.0, 0.35 ] as [number, number],
+        fontscale: [1.0, 0.28] as [number, number],
+        bottomfontscale: [1.0, 0.35] as [number, number],
 		titlefont: 0,
 		font: 0,
-		bottomfont: 0
+        bottomfont: 0
 	};
-	var playerlisttitles = [ "name", "playtime", "kills", "assists", "deaths", "team", "lobby" ];
-	var playerlisttitlesindex = { name: "name", playtime: "playtime", kills: "kills", assists: "assists", deaths: "deaths", team: "teamorlobby", lobby: "teamorlobby" };
-	var otherlobbytable = [];
-	var teamnames = [];
-	var inmainmenu = false;
+    let playerlisttitles = [ "name", "playtime", "kills", "assists", "deaths", "team", "lobby" ];
+    let playerlisttitlesindex = { name: "Name", playtime: "PlayTime", kills: "Kills", assists: "Assists", deaths: "Deaths", team: "TeamOrLobby", lobby: "TeamOrLobby" };
+    let otherlobbytable = [] as { Name: string, Amount: number }[];
+    let teamnames = [];
+    let inmainmenu = false;
 
-	function drawPlayerList ( ) {
-		//API.disableControlThisFrame ( 16 );
-		//API.disableControlThisFrame ( 17 );
-		var language = getLang( "scoreboard" );
-		var v = playerlistdata;
-		var len = playertablelength;
+    function drawPlayerList() {
+        mp.game.controls.disableControlAction( 0, 16, true );
+        mp.game.controls.disableControlAction( 0, 17, true );
+        let language = getLang( "scoreboard" );
+        let v = playerlistdata;
+        let len = playertablelength;
 		if ( len > v.maxplayers )
 			len = v.maxplayers;
-		var startX = res.x*0.5 - v.completewidth/2;
-		var startY = res.y*0.5 - len*v.columnheight/2 + v.titleheight/2 - v.bottomheight/2;
-		var titleStartY = startY - v.titleheight;
-		var bottomStartY = startY + len*v.columnheight;
+        let startX = 0.5 - v.completewidth/2;
+        let startY = 0.5 - len*v.columnheight/2 + v.titleheight/2 - v.bottomheight/2;
+        let titleStartY = startY - v.titleheight;
+        let bottomStartY = startY + len*v.columnheight;
 
 		// [[ TITEL ]] //
-		// HINTERGRUND //
-		mp.game.graphics.drawRect( startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor[0], v.titlerectanglecolor[1], v.titlerectanglecolor[2], v.titlerectanglecolor[3] );
+        // HINTERGRUND //
+        drawRectangle( startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor );
 		// SCHRIFTEN //
-		var lastwidthstitle = 0;
-		var titleslength = playerlisttitles.length;
+        let lastwidthstitle = 0;
+        let titleslength = playerlisttitles.length;
 		for ( let i = 0; i < titleslength - 1; i++ ) {
-			if ( playerlisttitles[i] == "team" && inmainmenu )
-				mp.game.graphics.drawText( language[playerlisttitles[i + 1]], v.titlefont, { r: v.titlefontcolor[0], g: v.titlefontcolor[1], b: v.titlefontcolor[2], a: v.titlefontcolor[3] }, v.titlefontscale, v.titlefontscale, startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, true );
+            if ( playerlisttitles[i] == "team" && inmainmenu )
+                drawText( language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true );
 			else 
-				mp.game.graphics.drawText( language[playerlisttitles[i]], v.titlefont, { r: v.titlefontcolor[0], g: v.titlefontcolor[1], b: v.titlefontcolor[2], a: v.titlefontcolor[3] }, v.titlefontscale, v.titlefontscale, startX + lastwidthstitle + v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]] * v.completewidth / 2, titleStartY, true );
-			lastwidthstitle += v.columnwidthpercent[playerlisttitlesindex[playerlisttitles[i]]]*v.completewidth;
+                drawText( language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true );
+            lastwidthstitle += v.columnwidth[playerlisttitles[i]]*v.completewidth;
 		}
 
 		// [[ INHALT ]] //
 		// HINTERGRUND //
-		mp.game.graphics.drawRect ( startX, startY, v.completewidth, len*v.columnheight, v.rectanglecolor[0], v.rectanglecolor[1], v.rectanglecolor[2], v.rectanglecolor[3] );
+        drawRectangle ( startX, startY, v.completewidth, len*v.columnheight, v.rectanglecolor );
 		// SCHRIFTEN //
 		let notshowcounter = 0;
-		for ( var i = 0 + scroll; i < len + scroll; i++ ) {
+        for ( let i = 0 + scroll; i < len + scroll; i++ ) {
 			if ( i in playertable ) {
-				var lastwidths = 0;
+                let lastwidths = 0;
 				for ( let j = 0; j < titleslength - 1; j++ ) {
-					var index = playerlisttitlesindex[playerlisttitles[j]];
-					mp.game.graphics.drawText ( playertable[i][index], startX + lastwidths + v.columnwidthpercent[index] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
-					lastwidths += v.columnwidthpercent[index] * v.completewidth;
+                    let index = playerlisttitlesindex[playerlisttitles[j]];
+                    drawText( playertable[i][index], startX + lastwidths + v.columnwidth[playerlisttitles[j]] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true );
+                    lastwidths += v.columnwidth[playerlisttitles[j]] * v.completewidth;
 				}
-			} else {
-				mp.game.graphics.drawText ( otherlobbytable[notshowcounter].name + " (" + otherlobbytable[notshowcounter].amount + ")", startX + v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.fontscale, v.fontcolor[0], v.fontcolor[1], v.fontcolor[2], v.fontcolor[3], v.font, 1, true, true, 0 );
+            } else {
+                drawText( otherlobbytable[notshowcounter].Name + " (" + otherlobbytable[notshowcounter].Amount + ")", startX + v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true );
 				notshowcounter++;
 			}	
 		}
 		// SCROLLBAR //
-		if ( len < playertablelength ) {
-			mp.game.graphics.drawRect ( startX + lastwidthstitle, titleStartY, v.scrollbarwidth, len*v.columnheight+v.titleheight, v.scrollbarbackcolor[0], v.scrollbarbackcolor[1], v.scrollbarbackcolor[2], v.scrollbarbackcolor[3] );
-			var amountnotshown = playertablelength-len;
-            var scrollbarheight = len * v.columnheight / ( amountnotshown + 1 );
-			mp.game.graphics.drawRect ( startX + lastwidthstitle, startY + scroll*scrollbarheight, v.scrollbarwidth, scrollbarheight, v.scrollbarcolor[0], v.scrollbarcolor[1], v.scrollbarcolor[2], v.scrollbarcolor[3] );
+        if ( len < playertablelength ) {
+            drawRectangle( startX + lastwidthstitle, titleStartY, v.scrollbarwidth, len * v.columnheight + v.titleheight, v.scrollbarbackcolor );
+            let amountnotshown = playertablelength-len;
+            let scrollbarheight = len * v.columnheight / ( amountnotshown + 1 );
+            drawRectangle ( startX + lastwidthstitle, startY + scroll*scrollbarheight, v.scrollbarwidth, scrollbarheight, v.scrollbarcolor );
 		}
 
 		// [[ BOTTOM ]] //
 		// HINTERGRUND //
-		mp.game.graphics.drawRect ( startX, bottomStartY, v.completewidth, v.bottomheight, v.bottomrectanglecolor[0], v.bottomrectanglecolor[1], v.bottomrectanglecolor[2], v.bottomrectanglecolor[3] );
+        drawRectangle ( startX, bottomStartY, v.completewidth, v.bottomheight, v.bottomrectanglecolor );
 
 
         if ( playertablelength - playerlistdata.maxplayers > 0 ) {
-            if ( API.isControlJustPressed( 16 ) ) {
-                var plus = Math.ceil(( playertablelength - playerlistdata.maxplayers ) / 10 );
+            if ( mp.game.controls.isControlJustPressed( 0, 16 ) ) {
+                let plus = Math.ceil(( playertablelength - playerlistdata.maxplayers ) / 10 );
                 scroll = scroll + plus >= playertablelength - playerlistdata.maxplayers ? playertablelength - playerlistdata.maxplayers : scroll + plus;
-            } else if ( API.isControlJustPressed( 17 ) ) {
-                var minus = Math.ceil(( playertablelength - playerlistdata.maxplayers ) / 10 );
+            } else if ( mp.game.controls.isControlJustPressed( 0, 17 ) ) {
+                let minus = Math.ceil(( playertablelength - playerlistdata.maxplayers ) / 10 );
                 scroll = scroll - minus <= 0 ? 0 : scroll - minus;
             }
         } else
             scroll = 0;
-	}
+    }
 
-    API.onKeyDown.connect( function ( sender, e ) {
-        if ( !API.isChatOpen() ) {
-            if ( API.isControlJustPressed( 20 ) && playerlistevent === null ) {  // MultiplayerInfo
-                playerlistopenkey = e.KeyCode;
-                scroll = 0;
-				var tick = getTick();
-                if ( playerlistevent !== null )
-                    playerlistevent.disconnect();
-                if ( tick - lastplayerlisttrigger >= 5000 ) {
-                    lastplayerlisttrigger = tick;
-                    playertablelength = 0;
-					playertable = [];
-                    mp.events.callRemote( "onClientRequestPlayerListDatas" );
-                    playerlistevent = API.onUpdate.connect( drawPlayerList );
-                } else {
-                    playerlistevent = API.onUpdate.connect( drawPlayerList );
-                }
-            }
+    scoreboardKeyJustPressed = function() {
+        if ( /*!ischatopen &&*/ !showing ) {
+            showing = true;
+            scroll = 0;
+            let tick = getTick();
+            if ( tick - lastplayerlisttrigger >= 5000 ) {
+                lastplayerlisttrigger = tick;
+                playertablelength = 0;
+                playertable = [];
+                mp.events.callRemote( "onClientRequestPlayerListDatas" );
+            } 
+            mp.events.add( "render", drawPlayerList );
         }
-    } );
+    }
 
-    API.onKeyUp.connect( function ( sender, e ) {
-        if ( playerlistevent !== null && e.KeyCode === playerlistopenkey ) {
-            playerlistevent.disconnect();
-            playerlistevent = null;
+    scoreboardKeyJustReleased = function () {
+        if ( showing ) {
+            showing = false;
+            mp.events.remove( "render", drawPlayerList );
         }
-    } );
+    }
 
 	function sortArray( a, b ) {
 		if ( a.teamorlobby !== b.teamorlobby ) {
@@ -174,36 +173,22 @@
 			return a.name < b.name ? -1 : 1;
 		}
 	}
-	
-    API.onServerEventTrigger.connect( function ( eventName, args ) {
-		if ( eventName === "giveRequestedPlayerListDatas" ) {
-			log( "giveRequestedPlayerListDatas start" );
-			playertable = [];
-			inmainmenu = false;
-			for ( let i = 0; i < args[1].Count; i++ ) {
-                playertable[i] = { name: args[0][i], playtime: args[1][i], kills: args[2][i], assists: args[3][i], deaths: args[4][i], teamorlobby: args[5][i] };
-			}
-			playertablelength = playertable.length;
-			playertable.sort( sortArray );
-			otherlobbytable = [];
-			for ( let i = 0; i < args[6].Count; i++ ) {
-				otherlobbytable[i] = { name: args[6][i], amount: args[7][i] };
-				playertablelength++;
-			}
-			log( "giveRequestedPlayerListDatas end" );
-			
-		} else if ( eventName === "giveRequestedPlayerListDatasMainmenu" ) {
-			log( "giveRequestedPlayerListDatasMainmenu start" );
-			playertable = [];
-			inmainmenu = true;
-			for ( let i = 0; i < args[1].Count; i++ ) {
-				playertable[i] = { name: args[0][i], playtime: args[1][i], kills: args[2][i], assists: args[3][i], deaths: args[4][i], teamorlobby: args[5][i] };
-			}
-			playertablelength = playertable.length;
-			playertable.sort( sortArrayMainmenu );
-			otherlobbytable = [];
-			log( "giveRequestedPlayerListDatasMainmenu end" );
-		}
+
+    mp.events.add( "giveRequestedPlayerListDatas", ( playersdata, otherlobbiesdata ) => {
+        log( "giveRequestedPlayerListDatas" );
+        playertable = JSON.parse( playersdata );
+        playertablelength = playertable.length;
+        otherlobbytable = [];
+        if ( otherlobbiesdata != undefined ) {
+            otherlobbytable = JSON.parse( otherlobbiesdata );
+            playertablelength += otherlobbytable.length;
+            inmainmenu = false;
+            playertable.sort( sortArray );
+        } else {
+            inmainmenu = true;
+            playertable.sort( sortArrayMainmenu );
+        }
     } );
+
 }
-createScoreboard(); */
+createScoreboard();
