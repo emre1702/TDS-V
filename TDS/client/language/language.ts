@@ -154,14 +154,12 @@ function setLanguage( lang ) {
 mp.events.add( "setLanguage", setLanguage );
 
 function loadLanguage () {
-    let langnumber = mp.game.invoke( "3160758157564346030", 0 );
+    let langnumber = mp.game.invoke( "E7A981467BC975BA", 0 );
     let savedlang = mp.storage.data.language;
-    mp.gui.chat.push( "" + savedlang );
-    //if ( savedlang != undefined )
-    //    languagesetting = savedlang;
-    //TODO langnumber always 0
-    //else if ( langnumber == 2 )
-    //    languagesetting = ""+Language.GERMAN;
+    if ( savedlang != undefined )
+        languagesetting = savedlang;
+    else if ( langnumber == 2 )
+        languagesetting = ""+Language.GERMAN;
 	//createMapCreator();
 }
 loadLanguage();
