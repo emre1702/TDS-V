@@ -1,3 +1,0 @@
-﻿declare enum WeaponHash {
-	Unarmed
-}
