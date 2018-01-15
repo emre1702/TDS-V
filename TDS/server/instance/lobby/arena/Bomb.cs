@@ -91,8 +91,8 @@ namespace TDS.server.instance.lobby {
 			bombAtPlayer = player;
 		}
 
-		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon ) {
-			if ( player.CurrentWeapon == WeaponHash.Unarmed ) {
+		private void ToggleBombAtHand ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
+			if ( newweapon == WeaponHash.Unarmed ) {
 				BombToHand ( player );
 			} else if ( oldweapon == WeaponHash.Unarmed ) {
 				BombToBack ( player );
