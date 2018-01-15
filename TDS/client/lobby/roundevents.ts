@@ -7,7 +7,8 @@ mp.events.add( "onClientMapChange", function ( maplimit, mapmidx, mapmidy, mapmi
 	maplimit = JSON.parse( maplimit );
 	if ( maplimit.length > 0 )
 		loadMapLimitData( maplimit );
-	loadMapMiddleForCamera( new mp.Vector3 ( mapmidx, mapmidy, mapmidz ) );
+    loadMapMiddleForCamera( new mp.Vector3( mapmidx, mapmidy, mapmidz ) );
+    toggleFightControls( false );
 } );
 
 
@@ -28,7 +29,8 @@ mp.events.add( "onClientCountdownStart", function ( mapname: string, resttime ) 
 	}
 	if ( rounddata.isspectator )
 		startSpectate();
-	rounddata.mapinfo.setText( mapname );
+    rounddata.mapinfo.setText( mapname );
+    toggleFightControls( false );
 } );
 
 
@@ -42,7 +44,9 @@ mp.events.add( "onClientRoundStart", function ( isspectator, wastedticks ) {
 		startMapLimit();
 		toggleFightMode( true );
 	}
-	roundStartedRoundInfo( wastedticks )
+    roundStartedRoundInfo( wastedticks );
+    toggleFightControls( true );
+    mp.game.ui.displayHud( true );
 } );
 
 
@@ -55,7 +59,8 @@ mp.events.add( "onClientRoundEnd", function () {
 	removeRoundThings( false );
 	stopCountdown();
 	stopCountdownCamera();
-	removeRoundInfo();
+    removeRoundInfo();
+    toggleFightControls( false );
 	//stopMapVoting();
 } );
 
