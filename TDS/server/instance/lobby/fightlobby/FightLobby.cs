@@ -17,10 +17,6 @@ namespace TDS.server.instance.lobby {
             DmgSys = null;
         }
 
-        public void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
-           
-        }
-
         public override void AddPlayer ( Client player, bool spectator = false ) {
             base.AddPlayer ( player, spectator );
 
