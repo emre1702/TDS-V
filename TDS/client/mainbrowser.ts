@@ -20,3 +20,7 @@ function showBloodscreen() {
 function addKillMessage( msg: string ) {
     mainbrowserdata.browser.execute( "addKillMessage ('" + msg + "');" );
 }
+
+function sendAlert ( msg: string ) {
+    mainbrowserdata.browser.execute( "alert ('" + msg + "');" );
+}
