@@ -3,6 +3,7 @@
 mp.gui.execute( "window.location = 'package://TDS-V/window/chat/chat.html'" );
 
 mp.events.add( "onChatLoad", () => {
+    loadLanguage();
     mp.events.callRemote( "onPlayerChatLoad", languagesetting );
 } );
 
