@@ -1,13 +1,13 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let bombdata = {
-	changed: false,
-	gotbomb: false,
-	placestoplant: [] as MpVector3[],
-	plantdefuseevent: false,
-	isplanting: false,
-	isdefusing: false,
-	plantdefusestarttick: 0,
+    changed: false,
+    gotbomb: false,
+    placestoplant: [] as MpVector3[],
+    plantdefuseevent: false,
+    isplanting: false,
+    isdefusing: false,
+    plantdefusestarttick: 0,
     plantedpos: null as MpVector3,
     draw: {
         backrect: null as cRectangle,
@@ -57,14 +57,7 @@ function checkDefuse() {
 	}
 }
 
-function checkPlantDefuseStop() {
-	if ( bombdata.isplanting ) {
-		bombdata.isplanting = false;
-		mp.events.callRemote( "onPlayerStopPlanting" );
-	} else if ( bombdata.isdefusing ) {
-		bombdata.isdefusing = false;
-		mp.events.callRemote( "onPlayerStopDefusing" );
-    }
+function removeBombDrawings() {
     if ( bombdata.draw.backrect != null ) {
         bombdata.draw.backrect.remove();
         bombdata.draw.backrect = null;
@@ -73,6 +66,17 @@ function checkPlantDefuseStop() {
         bombdata.draw.text.remove();
         bombdata.draw.text = null;
     }
+}
+
+function checkPlantDefuseStop() {
+	if ( bombdata.isplanting ) {
+		bombdata.isplanting = false;
+		mp.events.callRemote( "onPlayerStopPlanting" );
+	} else if ( bombdata.isdefusing ) {
+		bombdata.isdefusing = false;
+		mp.events.callRemote( "onPlayerStopDefusing" );
+    }
+    removeBombDrawings();
 }
 
 
@@ -129,6 +133,7 @@ function localPlayerPlantedBomb() {
 	bombdata.plantdefuseevent = false;
     bombdata.isplanting = false;
     mp.events.remove( "render", checkPlantDefuse );
+    removeBombDrawings();
 }
 
 function bombPlanted( pos, candefuse ) {
@@ -151,14 +156,7 @@ function removeBombThings() {
     if ( bombdata.changed ) {
         if ( bombdata.plantdefuseevent )
             mp.events.remove( "checkPlantDefuse", checkPlantDefuse );
-        if ( bombdata.draw.backrect != null ) {
-            bombdata.draw.backrect.remove();
-            bombdata.draw.backrect = null;
-            bombdata.draw.progrect.remove();
-            bombdata.draw.progrect = null;
-            bombdata.draw.text.remove();
-            bombdata.draw.text = null;
-        }
+        removeBombDrawings();
 		bombdata = {
 			changed: false,
 			gotbomb: false,
