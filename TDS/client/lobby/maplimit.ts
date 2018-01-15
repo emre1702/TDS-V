@@ -34,7 +34,6 @@ function pointIsInPoly( p: MpVector3 ) {
 
 
 function checkMapLimit() {
-	log( "checkMapLimit" );
 	if ( maplimitdata.limit != null ) {
         var pos = mp.players.local.position;
 		if ( !pointIsInPoly( pos ) ) {
@@ -58,7 +57,6 @@ function checkMapLimit() {
 
 
 function loadMapLimitData( data: { Item1, Item2, Item3 }[] ) {
-    log( "loadMapLimitData" );
     maplimitdata.limit = [];
 	for ( let j = 0; j < data.length; j++ ) {
 		maplimitdata.limit[j] = { x: data[j].Item1, y: data[j].Item2 };
@@ -94,7 +92,6 @@ function resetMapLimitCheck() {
 
 
 function startMapLimit() {
-	log( "startMapLimit" );
 	if ( maplimitdata.checktimer != null )
 		maplimitdata.checktimer.kill();
 	if ( 0 in maplimitdata.limit ) {
@@ -104,7 +101,6 @@ function startMapLimit() {
 
 
 function stopMapLimitCheck() {
-	log( "stopMapLimitCheck" );
 	if ( maplimitdata.checktimer != null ) {
 		maplimitdata.checktimer.kill();
 		maplimitdata.checktimer = null;
