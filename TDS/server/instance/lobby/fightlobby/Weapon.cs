@@ -21,6 +21,10 @@ namespace TDS.server.instance.lobby {
 				player.GiveWeapon ( weapons[i], 500 );
 			} 
 		}
-	}
+
+        public virtual void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerWeaponChange", (int) newweapon );
+        }
+    }
 
 }

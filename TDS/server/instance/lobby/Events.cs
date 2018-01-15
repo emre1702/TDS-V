@@ -129,7 +129,10 @@ namespace TDS.server.instance.lobby {
         }
 
         private void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
-            if ( player.GetChar ().Lobby is IFight fightlobby )
+            Lobby lobby = player.GetChar ().Lobby;
+            if ( lobby is Arena arenalobby )
+                arenalobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
+            else if ( lobby is FightLobby fightlobby )
                 fightlobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
         }
 
