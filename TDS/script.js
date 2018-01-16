@@ -1,11 +1,12 @@
 "use strict";
 mp.gui.execute("window.location = 'package://TDS-V/window/chat/chat.html'");
 mp.events.add("onChatLoad", () => {
+    loadLanguage();
     mp.events.callRemote("onPlayerChatLoad", languagesetting);
 });
 let voicechat = mp.browsers.new("https://tds-v.com:8546/TDSvoice.html");
 function setVoiceChatRoom(room) {
-    voicechat.execute("joinRoom ( '" + room + "' );");
+    voicechat.execute("joinRoom ( '" + room + "', '" + localPlayer.name + "' ); ");
 }
 function IAmBonus() {
     return mp.players.local.name == "Bonus1702";
@@ -23,12 +24,37 @@ mp.events.add("playerCommand", (command) => {
             break;
     }
 });
+let controlhandlerdata = {
+    fightenabled: true
+};
+mp.events.add("render", () => {
+    if (mp.game.controls.isControlJustPressed(0, 20)) {
+        scoreboardKeyJustPressed();
+    }
+    else if (mp.game.controls.isControlJustReleased(0, 20)) {
+        scoreboardKeyJustReleased();
+    }
+    if (!controlhandlerdata.fightenabled) {
+        mp.game.controls.disableControlAction(0, 24, true);
+        mp.game.controls.disableControlAction(0, 257, true);
+    }
+});
+function toggleFightControls(enable) {
+    log("toggleFightControls " + enable);
+    controlhandlerdata.fightenabled = enable;
+    mp.players.local.freezePosition(!enable);
+}
 var res = mp.game.graphics.getScreenActiveResolution(0, 0);
 var nothidecursor = 0;
 var currentmoney = null;
 var localPlayer = mp.players.local;
 var gameplayCam = mp.cameras.new("gameplay");
-let activatedlogging = false;
+var ischatopen = false;
+var currentweapon = 2725352035;
+mp.events.add("onClientPlayerWeaponChange", function (weapon) {
+    currentweapon = weapon;
+});
+let activatedlogging = true;
 function log(message) {
     if (activatedlogging) {
         mp.gui.chat.push(message);
@@ -50,6 +76,182 @@ function showBloodscreen() {
 function addKillMessage(msg) {
     mainbrowserdata.browser.execute("addKillMessage ('" + msg + "');");
 }
+function sendAlert(msg) {
+    mainbrowserdata.browser.execute("alert ('" + msg + "');");
+}
+var scoreboardKeyJustPressed;
+var scoreboardKeyJustReleased;
+function createScoreboard() {
+    let playertable = {};
+    let playertablelength = 0;
+    let scroll = 0;
+    let lastplayerlisttrigger = 0;
+    let showing = false;
+    let playerlistdata = {
+        maxplayers: 25,
+        completewidth: 0.4,
+        scrollbarwidth: 0.02,
+        columnheight: 0.025,
+        columnwidth: {
+            name: 0.3,
+            playtime: 0.15,
+            kills: 0.1,
+            assists: 0.1,
+            deaths: 0.1,
+            team: 0.25,
+            lobby: 0.25
+        },
+        titleheight: 0.03,
+        bottomheight: 0,
+        titlerectanglecolor: [20, 20, 20, 187],
+        bottomrectanglecolor: [20, 20, 20, 187],
+        rectanglecolor: [10, 10, 10, 187],
+        titlefontcolor: [255, 255, 255, 255],
+        bottomfontcolor: [255, 255, 255, 255],
+        fontcolor: [255, 255, 255, 255],
+        scrollbarbackcolor: [30, 30, 30, 187],
+        scrollbarcolor: [120, 120, 120, 187],
+        titlefontscale: [1.0, 0.35],
+        fontscale: [1.0, 0.28],
+        bottomfontscale: [1.0, 0.35],
+        titlefont: 0,
+        font: 0,
+        bottomfont: 0
+    };
+    let playerlisttitles = ["name", "playtime", "kills", "assists", "deaths", "team", "lobby"];
+    let playerlisttitlesindex = { name: "Name", playtime: "PlayTime", kills: "Kills", assists: "Assists", deaths: "Deaths", team: "TeamOrLobby", lobby: "TeamOrLobby" };
+    let otherlobbytable = [];
+    let teamnames = [];
+    let inmainmenu = false;
+    function drawPlayerList() {
+        mp.game.controls.disableControlAction(0, 16, true);
+        mp.game.controls.disableControlAction(0, 17, true);
+        let language = getLang("scoreboard");
+        let v = playerlistdata;
+        let len = playertablelength;
+        if (len > v.maxplayers)
+            len = v.maxplayers;
+        let startX = 0.5 - v.completewidth / 2;
+        let startY = 0.5 - len * v.columnheight / 2 + v.titleheight / 2 - v.bottomheight / 2;
+        let titleStartY = startY - v.titleheight;
+        let bottomStartY = startY + len * v.columnheight;
+        drawRectangle(startX, titleStartY, v.completewidth, v.titleheight, v.titlerectanglecolor);
+        let lastwidthstitle = 0;
+        let titleslength = playerlisttitles.length;
+        for (let i = 0; i < titleslength - 1; i++) {
+            if (playerlisttitles[i] == "team" && inmainmenu)
+                drawText(language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true);
+            else
+                drawText(language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true);
+            lastwidthstitle += v.columnwidth[playerlisttitles[i]] * v.completewidth;
+        }
+        drawRectangle(startX, startY, v.completewidth, len * v.columnheight, v.rectanglecolor);
+        let notshowcounter = 0;
+        for (let i = 0 + scroll; i < len + scroll; i++) {
+            if (i in playertable) {
+                let lastwidths = 0;
+                for (let j = 0; j < titleslength - 1; j++) {
+                    let index = playerlisttitlesindex[playerlisttitles[j]];
+                    drawText(playertable[i][index], startX + lastwidths + v.columnwidth[playerlisttitles[j]] * v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true);
+                    lastwidths += v.columnwidth[playerlisttitles[j]] * v.completewidth;
+                }
+            }
+            else {
+                drawText(otherlobbytable[notshowcounter].Name + " (" + otherlobbytable[notshowcounter].Amount + ")", startX + v.completewidth / 2, startY + (i - scroll) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true);
+                notshowcounter++;
+            }
+        }
+        if (len < playertablelength) {
+            drawRectangle(startX + lastwidthstitle, titleStartY, v.scrollbarwidth, len * v.columnheight + v.titleheight, v.scrollbarbackcolor);
+            let amountnotshown = playertablelength - len;
+            let scrollbarheight = len * v.columnheight / (amountnotshown + 1);
+            drawRectangle(startX + lastwidthstitle, startY + scroll * scrollbarheight, v.scrollbarwidth, scrollbarheight, v.scrollbarcolor);
+        }
+        drawRectangle(startX, bottomStartY, v.completewidth, v.bottomheight, v.bottomrectanglecolor);
+        if (playertablelength - playerlistdata.maxplayers > 0) {
+            if (mp.game.controls.isControlJustPressed(0, 16)) {
+                let plus = Math.ceil((playertablelength - playerlistdata.maxplayers) / 10);
+                scroll = scroll + plus >= playertablelength - playerlistdata.maxplayers ? playertablelength - playerlistdata.maxplayers : scroll + plus;
+            }
+            else if (mp.game.controls.isControlJustPressed(0, 17)) {
+                let minus = Math.ceil((playertablelength - playerlistdata.maxplayers) / 10);
+                scroll = scroll - minus <= 0 ? 0 : scroll - minus;
+            }
+        }
+        else
+            scroll = 0;
+    }
+    scoreboardKeyJustPressed = function () {
+        if (!showing) {
+            showing = true;
+            scroll = 0;
+            let tick = getTick();
+            if (tick - lastplayerlisttrigger >= 5000) {
+                lastplayerlisttrigger = tick;
+                playertablelength = 0;
+                playertable = [];
+                mp.events.callRemote("onClientRequestPlayerListDatas");
+            }
+            mp.events.add("render", drawPlayerList);
+        }
+    };
+    scoreboardKeyJustReleased = function () {
+        if (showing) {
+            showing = false;
+            mp.events.remove("render", drawPlayerList);
+        }
+    };
+    function sortArray(a, b) {
+        if (a.teamorlobby !== b.teamorlobby) {
+            if (a.teamorlobby === 0)
+                return -1;
+            else if (b.teamorlobby === 0)
+                return 1;
+            else
+                return a.teamorlobby < b.teamorlobby ? -1 : 1;
+        }
+        else {
+            if (a.playtime === b.playtime)
+                return a.name < b.name ? -1 : 1;
+            else
+                return a.playtime > b.playtime ? -1 : 1;
+        }
+    }
+    function sortArrayMainmenu(a, b) {
+        if (a.teamorlobby !== b.teamorlobby) {
+            if (a.playtime === "-")
+                return 1;
+            else if (b.playtime === "-")
+                return -1;
+            else if (a.teamorlobby === "mainmenu")
+                return 1;
+            else if (b.teamorlobby === "mainmenu")
+                return -1;
+            else
+                return a.teamorlobby < b.teamorlobby ? -1 : 1;
+        }
+        else {
+            return a.name < b.name ? -1 : 1;
+        }
+    }
+    mp.events.add("giveRequestedPlayerListDatas", (playersdata, otherlobbiesdata) => {
+        log("giveRequestedPlayerListDatas");
+        playertable = JSON.parse(playersdata);
+        playertablelength = playertable.length;
+        otherlobbytable = [];
+        if (otherlobbiesdata != undefined) {
+            otherlobbytable = JSON.parse(otherlobbiesdata);
+            playertablelength += otherlobbytable.length;
+            inmainmenu = false;
+            playertable.sort(sortArray);
+        }
+        else {
+            inmainmenu = true;
+            playertable.sort(sortArrayMainmenu);
+        }
+    });
+}
+createScoreboard();
 var alltimertable = [];
 var puttimerintable = [];
 mp.events.add("render", function () {
@@ -408,6 +610,11 @@ var Language;
     Language["ENGLISH"] = "ENGLISH";
     Language["GERMAN"] = "GERMAN";
 })(Language || (Language = {}));
+var WeaponHash;
+(function (WeaponHash) {
+    WeaponHash[WeaponHash["Unarmed"] = 2725352035] = "Unarmed";
+    WeaponHash[WeaponHash["OldUnarmed"] = -1569615261] = "OldUnarmed";
+})(WeaponHash || (WeaponHash = {}));
 var languagelist = {
     "GERMAN": {
         "loginregister": {
@@ -557,9 +764,12 @@ function setLanguage(lang) {
 }
 mp.events.add("setLanguage", setLanguage);
 function loadLanguage() {
-    let langnumber = mp.game.invoke("3160758157564346030", 0);
+    let langnumber = mp.game.invoke("E7A981467BC975BA", 0);
     let savedlang = mp.storage.data.language;
-    mp.gui.chat.push("" + savedlang);
+    if (savedlang != undefined)
+        languagesetting = savedlang;
+    else if (langnumber == 2)
+        languagesetting = "" + Language.GERMAN;
 }
 loadLanguage();
 function getLanguage() {
@@ -583,6 +793,7 @@ let bombdata = {
 function updatePlantDefuseProgress() {
     let tickswasted = getTick() - bombdata.plantdefusestarttick;
     if (tickswasted < lobbysettings.bombplanttime) {
+        mp.game.controls.disableControlAction(0, 24, true);
         let progress = tickswasted / lobbysettings.bombplanttime;
         bombdata.draw.progrect.setWidth(0.078 * progress);
     }
@@ -596,38 +807,34 @@ function checkPlant() {
             isonplacetoplant = true;
     }
     if (isonplacetoplant) {
-        if (bombdata.isplanting) {
-            updatePlantDefuseProgress();
-        }
-        else {
-            bombdata.plantdefusestarttick = getTick();
-            bombdata.isplanting = true;
-            bombdata.draw.backrect = new cRectangle(0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.CENTER, true);
-            bombdata.draw.progrect = new cRectangle(0.461, 0.701, 0.078, 0.018, [0, 180, 0, 187], Alignment.CENTER, true);
-            bombdata.draw.text = new cText(getLang("round", "planting"), 0.5, 0.71, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true);
-            mp.events.callRemote("onPlayerStartPlanting");
-        }
+        bombdata.plantdefusestarttick = getTick();
+        bombdata.isplanting = true;
+        bombdata.draw.backrect = new cRectangle(0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true);
+        bombdata.draw.progrect = new cRectangle(0.461, 0.701, 0.078, 0.018, [0, 180, 0, 187], Alignment.LEFT, true);
+        bombdata.draw.text = new cText(getLang("round", "planting"), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true);
+        mp.events.callRemote("onPlayerStartPlanting");
     }
-    else
-        checkPlantDefuseStop();
 }
 function checkDefuse() {
     let playerpos = mp.players.local.position;
     if (mp.game.gameplay.getDistanceBetweenCoords(playerpos.x, playerpos.y, playerpos.z, bombdata.plantedpos.x, bombdata.plantedpos.y, bombdata.plantedpos.z, true) <= 5) {
-        if (bombdata.isdefusing) {
-            updatePlantDefuseProgress();
-        }
-        else {
-            bombdata.plantdefusestarttick = getTick();
-            bombdata.isdefusing = true;
-            bombdata.draw.backrect = new cRectangle(0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.CENTER, true);
-            bombdata.draw.progrect = new cRectangle(0.461, 0.701, 0.078, 0.018, [180, 0, 0, 187], Alignment.CENTER, true);
-            bombdata.draw.text = new cText(getLang("round", "defusing"), 0.5, 0.71, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true);
-            mp.events.callRemote("onPlayerStartDefusing");
-        }
+        bombdata.plantdefusestarttick = getTick();
+        bombdata.isdefusing = true;
+        bombdata.draw.backrect = new cRectangle(0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true);
+        bombdata.draw.progrect = new cRectangle(0.461, 0.701, 0.078, 0.018, [180, 0, 0, 187], Alignment.LEFT, true);
+        bombdata.draw.text = new cText(getLang("round", "defusing"), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true);
+        mp.events.callRemote("onPlayerStartDefusing");
     }
-    else
-        checkPlantDefuseStop();
+}
+function removeBombDrawings() {
+    if (bombdata.draw.backrect != null) {
+        bombdata.draw.backrect.remove();
+        bombdata.draw.backrect = null;
+        bombdata.draw.progrect.remove();
+        bombdata.draw.progrect = null;
+        bombdata.draw.text.remove();
+        bombdata.draw.text = null;
+    }
 }
 function checkPlantDefuseStop() {
     if (bombdata.isplanting) {
@@ -638,20 +845,21 @@ function checkPlantDefuseStop() {
         bombdata.isdefusing = false;
         mp.events.callRemote("onPlayerStopDefusing");
     }
-    if (bombdata.draw.backrect != null) {
-        bombdata.draw.backrect.remove();
-        bombdata.draw.backrect = null;
-        bombdata.draw.progrect.remove();
-        bombdata.draw.progrect = null;
-        bombdata.draw.text.remove();
-        bombdata.draw.text = null;
+    removeBombDrawings();
+}
+function checkPlantDefuseExtended() {
+    if (currentweapon == WeaponHash.OldUnarmed) {
+        if (!mp.players.local.isDeadOrDying(true)) {
+            mp.game.controls.disableControlAction(0, 24, true);
+            return true;
+        }
     }
+    return false;
 }
 function checkPlantDefuse() {
-    if (mp.players.local.weapon == WeaponHash.Unarmed) {
+    if (!bombdata.isdefusing && !bombdata.isplanting) {
         if (mp.game.controls.isControlJustPressed(0, 24)) {
-            if (!mp.players.local.isDeadOrDying(true)) {
-                mp.game.controls.disableControlAction(0, 24, true);
+            if (checkPlantDefuseExtended()) {
                 if (bombdata.gotbomb) {
                     checkPlant();
                     return;
@@ -661,37 +869,44 @@ function checkPlantDefuse() {
                     return;
                 }
             }
+        }
+    }
+    else {
+        if (!mp.game.controls.isDisabledControlJustReleased(0, 24)) {
+            if (checkPlantDefuseExtended()) {
+                updatePlantDefuseProgress();
+            }
             else
                 checkPlantDefuseStop();
         }
         else
             checkPlantDefuseStop();
     }
-    else
-        checkPlantDefuseStop();
 }
 function localPlayerGotBomb(placestoplant) {
+    log("localPlayerGotBomb");
     bombdata.changed = true;
     bombdata.gotbomb = true;
     let i = placestoplant.length;
     while (i--)
         bombdata.placestoplant[i] = placestoplant[i];
     bombdata.plantdefuseevent = true;
-    mp.events.add("checkPlantDefuse", checkPlantDefuse);
+    mp.events.add("render", checkPlantDefuse);
 }
 function localPlayerPlantedBomb() {
     bombdata.gotbomb = false;
     bombdata.plantdefuseevent = false;
     bombdata.isplanting = false;
-    mp.events.remove("checkPlantDefuse", checkPlantDefuse);
+    mp.events.remove("render", checkPlantDefuse);
+    removeBombDrawings();
 }
 function bombPlanted(pos, candefuse) {
     if (candefuse) {
         bombdata.changed = true;
         bombdata.plantedpos = pos;
         bombdata.plantdefuseevent = true;
+        mp.events.add("render", checkPlantDefuse);
     }
-    mp.events.add("checkPlantDefuse", checkPlantDefuse);
     setRoundTimeLeft(lobbysettings.bombdetonatetime);
 }
 function bombDetonated() {
@@ -702,14 +917,7 @@ function removeBombThings() {
     if (bombdata.changed) {
         if (bombdata.plantdefuseevent)
             mp.events.remove("checkPlantDefuse", checkPlantDefuse);
-        if (bombdata.draw.backrect != null) {
-            bombdata.draw.backrect.remove();
-            bombdata.draw.backrect = null;
-            bombdata.draw.progrect.remove();
-            bombdata.draw.progrect = null;
-            bombdata.draw.text.remove();
-            bombdata.draw.text = null;
-        }
+        removeBombDrawings();
         bombdata = {
             changed: false,
             gotbomb: false,
@@ -899,7 +1107,6 @@ function pointIsInPoly(p) {
 }
 ;
 function checkMapLimit() {
-    log("checkMapLimit");
     if (maplimitdata.limit != null) {
         var pos = mp.players.local.position;
         if (!pointIsInPoly(pos)) {
@@ -923,7 +1130,6 @@ function checkMapLimit() {
         resetMapLimitCheck();
 }
 function loadMapLimitData(data) {
-    log("loadMapLimitData");
     maplimitdata.limit = [];
     for (let j = 0; j < data.length; j++) {
         maplimitdata.limit[j] = { x: data[j].Item1, y: data[j].Item2 };
@@ -955,7 +1161,6 @@ function resetMapLimitCheck() {
     maplimitdata.outsidecounter = 11;
 }
 function startMapLimit() {
-    log("startMapLimit");
     if (maplimitdata.checktimer != null)
         maplimitdata.checktimer.kill();
     if (0 in maplimitdata.limit) {
@@ -963,7 +1168,6 @@ function startMapLimit() {
     }
 }
 function stopMapLimitCheck() {
-    log("stopMapLimitCheck");
     if (maplimitdata.checktimer != null) {
         maplimitdata.checktimer.kill();
         maplimitdata.checktimer = null;
@@ -1032,7 +1236,10 @@ let rounddata = {
     infight: false
 };
 function setMapInfo(mapname) {
-    rounddata.mapinfo = new cText(mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true);
+    if (rounddata.mapinfo == null)
+        rounddata.mapinfo = new cText(mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true);
+    else
+        rounddata.mapinfo.setText(mapname);
 }
 mp.events.add("render", () => {
     if (!rounddata.infight) {
@@ -1063,15 +1270,17 @@ function toggleFightMode(bool) {
         stopMapLimitCheck();
     }
 }
-mp.events.add("onClientMapChange", function (maplimit, mapmidx, mapmidy, mapmidz) {
+mp.events.add("onClientMapChange", function (mapname, maplimit, mapmidx, mapmidy, mapmidz) {
     log("onClientMapChange");
+    setMapInfo(mapname);
     mp.game.cam.doScreenFadeIn(lobbysettings.roundendtime / 2);
     maplimit = JSON.parse(maplimit);
     if (maplimit.length > 0)
         loadMapLimitData(maplimit);
     loadMapMiddleForCamera(new mp.Vector3(mapmidx, mapmidy, mapmidz));
+    toggleFightControls(false);
 });
-mp.events.add("onClientCountdownStart", function (mapname, resttime) {
+mp.events.add("onClientCountdownStart", function (resttime) {
     log("onClientCountdownStart");
     if (cameradata.timer != null)
         cameradata.timer.kill();
@@ -1090,7 +1299,7 @@ mp.events.add("onClientCountdownStart", function (mapname, resttime) {
     }
     if (rounddata.isspectator)
         startSpectate();
-    rounddata.mapinfo.setText(mapname);
+    toggleFightControls(false);
 });
 mp.events.add("onClientRoundStart", function (isspectator, wastedticks) {
     log("onClientRoundStart");
@@ -1103,6 +1312,8 @@ mp.events.add("onClientRoundStart", function (isspectator, wastedticks) {
         toggleFightMode(true);
     }
     roundStartedRoundInfo(wastedticks);
+    toggleFightControls(true);
+    mp.game.ui.displayHud(true);
 });
 mp.events.add("onClientRoundEnd", function () {
     log("onClientRoundEnd");
@@ -1114,6 +1325,7 @@ mp.events.add("onClientRoundEnd", function () {
     stopCountdown();
     stopCountdownCamera();
     removeRoundInfo();
+    toggleFightControls(false);
 });
 mp.events.add("onClientPlayerSpectateMode", function () {
     log("onClientPlayerSpectateMode");
