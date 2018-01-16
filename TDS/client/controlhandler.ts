@@ -11,19 +11,13 @@ mp.events.add( "render", () => {
 
     if ( !controlhandlerdata.fightenabled ) {
         mp.game.controls.disableControlAction( 0, 24, true );
-        mp.game.controls.disableControlAction( 0, 25, true );
-        //TODO Disabled because of bride - movement //
-        mp.game.controls.disableControlAction( 0, 30, true );
-        mp.game.controls.disableControlAction( 0, 31, true );
-        mp.game.controls.disableControlAction( 0, 32, true );
-        mp.game.controls.disableControlAction( 0, 33, true );
-        mp.game.controls.disableControlAction( 0, 34, true );
-        mp.game.controls.disableControlAction( 0, 35, true );
-        ///////////////////////////////////////////////
+        mp.game.controls.disableControlAction( 0, 257, true );
     } 
 } );
 
 function toggleFightControls( enable: boolean ) {
+    log( "toggleFightControls " + enable );
     controlhandlerdata.fightenabled = enable;
+    mp.players.local.freezePosition( !enable );     //TODO because of brige-freeze not implemented
 }
 
