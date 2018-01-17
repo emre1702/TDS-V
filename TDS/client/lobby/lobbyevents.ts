@@ -1,19 +1,24 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
-mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime ) => {
+mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps ) => {
     log( "onClientPlayerJoinLobby" );
     lobbysettings.id = lobbyid;
-    rounddata.isspectator = isspectator == 1;
-	setMapInfo( mapname );
-	teamnames = JSON.parse( teamnames );
-	teamcolors = JSON.parse( teamcolors );
-	addTeamInfos( teamnames, teamcolors );
-	lobbysettings.countdowntime = countdowntime;
-	roundinfo.roundtime = roundtime;
-	lobbysettings.bombdetonatetime = bombdetonatetime;
-	lobbysettings.bombplanttime = bombplanttime;
-	lobbysettings.bombdefusetime = bombdefusetime;
-	lobbysettings.roundendtime = roundendtime;
+    if ( typeof isspectator !== "undefined" ) {
+        rounddata.isspectator = isspectator;
+        setMapInfo( mapname );
+        teamnames = JSON.parse( teamnames );
+        teamcolors = JSON.parse( teamcolors );
+        addTeamInfos( teamnames, teamcolors );
+        lobbysettings.countdowntime = countdowntime;
+        roundinfo.roundtime = roundtime;
+        lobbysettings.bombdetonatetime = bombdetonatetime;
+        lobbysettings.bombplanttime = bombplanttime;
+        lobbysettings.bombdefusetime = bombdefusetime;
+        lobbysettings.roundendtime = roundendtime;
+        mapvotingdata.inmaplobby = lobbywithmaps;
+    } else {
+        mapvotingdata.inmaplobby = false;
+    }
 } );
 
 mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
