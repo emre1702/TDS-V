@@ -28,8 +28,8 @@ mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
 		toggleFightMode( false );
 		removeBombThings();
 		removeRoundThings( true );
-		stopCountdownCamera();
-		//localPlayerLeftLobbyMapVoting();
+        stopCountdownCamera();
+        closeMapVotingMenu();   //TODO add removing map-voting infos, too
 		removeRoundInfo();
 	}
 } );
