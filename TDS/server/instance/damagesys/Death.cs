@@ -15,7 +15,7 @@
 										PlayerKills = new Dictionary<NetHandle, uint> ();
 
 		private void OnPlayerDeath ( Client player, NetHandle entityKiller, uint weapon, CancelEventArgs cancel ) {
-            cancel.Cancel = true;
+            cancel.Spawn = false;
 
             if ( !sDeadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
@@ -62,8 +62,10 @@
 		private static void SpawnAfterDeath ( Client player ) {
             sDeadTimer.Remove ( player, out Timer timer );
 			timer.Kill ();
-			if ( player.Exists )
-				NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerRespawn" );
+			if ( player.Exists ) {
+                Character character = player.GetChar ();
+                NAPI.Player.SpawnPlayer ( player, character.Lobby.SpawnPoint, character.Lobby.SpawnRotation.Z );
+            }    			
 		}
 
 		private void CheckForAssist ( Client player, Character character, Client killer ) {
