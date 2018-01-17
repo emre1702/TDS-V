@@ -5,7 +5,8 @@ let mapvotingdata = {
     lastlobbyID: -1,
     lastmapdatas: "",
     openwithlastdata: false,
-    menuloaded: false
+    menuloaded: false,
+    inmaplobby: false
 }
 
 function openMapVotingMenu() {
@@ -33,7 +34,8 @@ mp.keys.bind( Keys.M, false, () => {
     //  return;
     if ( mapvotingdata.menu == null ) {
         if ( !ischatopen )
-            openMapVotingMenu();
+            if ( mapvotingdata.inmaplobby )
+                openMapVotingMenu();
     } else
         closeMapVotingMenu();
 
