@@ -46,7 +46,6 @@ mp.events.add( "onClientRoundStart", function ( isspectator, wastedticks ) {
 	}
     roundStartedRoundInfo( wastedticks );
     toggleFightControls( true );
-    mp.game.ui.displayHud( true );
 } );
 
 
