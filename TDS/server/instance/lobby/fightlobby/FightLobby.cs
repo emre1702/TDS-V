@@ -20,7 +20,7 @@ namespace TDS.server.instance.lobby {
         public override void AddPlayer ( Client player, bool spectator = false ) {
             base.AddPlayer ( player, spectator );
 
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinRoundlessLobby" );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
             player.StopSpectating ();
             player.Freeze ( false );
         }

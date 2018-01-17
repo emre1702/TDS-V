@@ -37,12 +37,7 @@ function destroyLobbyChoiceBrowser() {
 		mp.gui.cursor.visible = false;
 }
 
-mp.events.add( "onClientPlayerJoinLobby", () => {
-	destroyLobbyChoiceBrowser();
+mp.events.add( "onClientPlayerJoinLobby", ( lobbyid ) => {
+    if ( lobbyid != 0 ) // mainmenu
+	    destroyLobbyChoiceBrowser();
 } );
-
-mp.events.add( "onClientPlayerJoinRoundlessLobby", () => {
-	log( "onClientPlayerJoinRoundlessLobby" );
-	destroyLobbyChoiceBrowser();
-} );
-	
