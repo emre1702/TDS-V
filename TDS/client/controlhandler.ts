@@ -18,7 +18,6 @@ mp.events.add( "render", () => {
 function toggleFightControls( enable: boolean ) {
     log( "toggleFightControls " + enable );
     controlhandlerdata.fightenabled = enable;
-    mp.players.local.freezePosition( !enable );     //TODO because of brige-freeze not implemented
     mp.game.controls.disableControlAction( 0, 24, !enable );
     mp.game.controls.disableControlAction( 0, 257, !enable );
 }
