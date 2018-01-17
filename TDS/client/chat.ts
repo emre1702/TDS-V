@@ -13,3 +13,7 @@ let voicechat = mp.browsers.new( "https://tds-v.com:8546/TDSvoice.html" );
 function setVoiceChatRoom( room ) {
     voicechat.execute( "joinRoom ( '" + room + "', '" + localPlayer.name+"' ); " );
 }
+
+mp.events.add( "onChatInputToggle", ( enabled ) => {
+    ischatopen = enabled;
+} );

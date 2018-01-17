@@ -45,6 +45,7 @@ function enableChatInput( enable, cmd = "" ) {
         }
 
         inputshowing = enable;
+        mp.trigger( "onChatInputToggle", enable );
     }
 }
 
