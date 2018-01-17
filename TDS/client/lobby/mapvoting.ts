@@ -31,9 +31,10 @@ mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );
 mp.keys.bind( Keys.M, false, () => {
     //if ( freecamdata.freecamMode ) 
     //  return;
-    if ( mapvotingdata.menu == null )
-        openMapVotingMenu();
-    else
+    if ( mapvotingdata.menu == null ) {
+        if ( !ischatopen )
+            openMapVotingMenu();
+    } else
         closeMapVotingMenu();
 
 } ); 
