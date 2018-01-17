@@ -8,6 +8,9 @@ let voicechat = mp.browsers.new("https://tds-v.com:8546/TDSvoice.html");
 function setVoiceChatRoom(room) {
     voicechat.execute("joinRoom ( '" + room + "', '" + localPlayer.name + "' ); ");
 }
+mp.events.add("onChatInputToggle", (enabled) => {
+    ischatopen = enabled;
+});
 function IAmBonus() {
     return mp.players.local.name == "Bonus1702";
 }
@@ -42,7 +45,8 @@ mp.events.add("render", () => {
 function toggleFightControls(enable) {
     log("toggleFightControls " + enable);
     controlhandlerdata.fightenabled = enable;
-    mp.players.local.freezePosition(!enable);
+    mp.game.controls.disableControlAction(0, 24, !enable);
+    mp.game.controls.disableControlAction(0, 257, !enable);
 }
 var res = mp.game.graphics.getScreenActiveResolution(0, 0);
 var nothidecursor = 0;
@@ -54,7 +58,7 @@ var currentweapon = 2725352035;
 mp.events.add("onClientPlayerWeaponChange", function (weapon) {
     currentweapon = weapon;
 });
-let activatedlogging = true;
+let activatedlogging = false;
 function log(message) {
     if (activatedlogging) {
         mp.gui.chat.push(message);
@@ -987,12 +991,9 @@ function destroyLobbyChoiceBrowser() {
     if (nothidecursor == 0)
         mp.gui.cursor.visible = false;
 }
-mp.events.add("onClientPlayerJoinLobby", () => {
-    destroyLobbyChoiceBrowser();
-});
-mp.events.add("onClientPlayerJoinRoundlessLobby", () => {
-    log("onClientPlayerJoinRoundlessLobby");
-    destroyLobbyChoiceBrowser();
+mp.events.add("onClientPlayerJoinLobby", (lobbyid) => {
+    if (lobbyid != 0)
+        destroyLobbyChoiceBrowser();
 });
 let countdowndata = {
     sounds: [
@@ -1050,20 +1051,26 @@ function stopCountdown() {
         countdowndata.timer = null;
     }
 }
-mp.events.add("onClientPlayerJoinLobby", (lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime) => {
+mp.events.add("onClientPlayerJoinLobby", (lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps) => {
     log("onClientPlayerJoinLobby");
     lobbysettings.id = lobbyid;
-    rounddata.isspectator = isspectator == 1;
-    setMapInfo(mapname);
-    teamnames = JSON.parse(teamnames);
-    teamcolors = JSON.parse(teamcolors);
-    addTeamInfos(teamnames, teamcolors);
-    lobbysettings.countdowntime = countdowntime;
-    roundinfo.roundtime = roundtime;
-    lobbysettings.bombdetonatetime = bombdetonatetime;
-    lobbysettings.bombplanttime = bombplanttime;
-    lobbysettings.bombdefusetime = bombdefusetime;
-    lobbysettings.roundendtime = roundendtime;
+    if (typeof isspectator !== "undefined") {
+        rounddata.isspectator = isspectator;
+        setMapInfo(mapname);
+        teamnames = JSON.parse(teamnames);
+        teamcolors = JSON.parse(teamcolors);
+        addTeamInfos(teamnames, teamcolors);
+        lobbysettings.countdowntime = countdowntime;
+        roundinfo.roundtime = roundtime;
+        lobbysettings.bombdetonatetime = bombdetonatetime;
+        lobbysettings.bombplanttime = bombplanttime;
+        lobbysettings.bombdefusetime = bombdefusetime;
+        lobbysettings.roundendtime = roundendtime;
+        mapvotingdata.inmaplobby = lobbywithmaps;
+    }
+    else {
+        mapvotingdata.inmaplobby = false;
+    }
 });
 mp.events.add("onClientPlayerLeaveLobby", (playerID) => {
     log("onClientPlayerLeaveLobby");
@@ -1073,6 +1080,7 @@ mp.events.add("onClientPlayerLeaveLobby", (playerID) => {
         removeBombThings();
         removeRoundThings(true);
         stopCountdownCamera();
+        closeMapVotingMenu();
         removeRoundInfo();
     }
 });
@@ -1186,7 +1194,8 @@ let mapvotingdata = {
     lastlobbyID: -1,
     lastmapdatas: "",
     openwithlastdata: false,
-    menuloaded: false
+    menuloaded: false,
+    inmaplobby: false
 };
 function openMapVotingMenu() {
     ++nothidecursor;
@@ -1208,8 +1217,11 @@ function closeMapVotingMenu() {
 }
 mp.events.add("closeMapVotingMenu", closeMapVotingMenu);
 mp.keys.bind(Keys.M, false, () => {
-    if (mapvotingdata.menu == null)
-        openMapVotingMenu();
+    if (mapvotingdata.menu == null) {
+        if (!ischatopen)
+            if (mapvotingdata.inmaplobby)
+                openMapVotingMenu();
+    }
     else
         closeMapVotingMenu();
 });
@@ -1313,7 +1325,6 @@ mp.events.add("onClientRoundStart", function (isspectator, wastedticks) {
     }
     roundStartedRoundInfo(wastedticks);
     toggleFightControls(true);
-    mp.game.ui.displayHud(true);
 });
 mp.events.add("onClientRoundEnd", function () {
     log("onClientRoundEnd");
