@@ -85,10 +85,9 @@ namespace TDS.server.instance.lobby {
             AddPlayerDefault ( player, spectator );
 
             string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
-            // WORKAROUND BECAUSE OF BRIDGE //
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID, spectator ? 1 : 0, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
-                                (int) countdownTime, (int) roundTime, (int) bombDetonateTime, (int) bombPlantTime, (int) bombDefuseTime,
-                                (int) RoundEndTime );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
+                                countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
+                                RoundEndTime, true );
 
             if ( !spectator )
                 AddPlayerAsPlayer ( player );
