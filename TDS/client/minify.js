@@ -1,7 +1,7 @@
 "use strict";
 
 let files = [
-	"globals.js",
+	/* "globals.js",
 	"logging.js",
 	//"chat.js",
 	"money.js",
@@ -32,7 +32,8 @@ let files = [
 	"lobby/roundevents.js"
 
 	//"lobby/mapcreate/freecam.ts",
-	//"lobby/mapcreate/mapcreator.ts"
+	//"lobby/mapcreate/mapcreator.ts" */
+    "../script.js"
 ];
 let code = "";
 let htmlcode = "";
