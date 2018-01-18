@@ -1,0 +1,45 @@
+<meta>
+  <info name="TDS" description="TDS-Gamemode" author= "Bonus" type="gamemode" async="true" />
+
+  <!-- Zeugs -->
+  <script src="server/TDS.dll" type="server" lang="compiled" />
+  <script src="client/script.js" type="client" lang="javascript" />
+
+  <!-- CEF -->
+
+  <file src="client/window/css/normalize.min.css" />
+  <file src="client/window/css/style.css" />
+  <file src="client/window/js/jquery.min.js" />
+  <file src="client/window/js/jquery.validate.min.js" />
+  <file src="client/window/chat/chat.html" />
+  <file src="client/window/chat/chat.js" />
+  <file src="client/window/lobby/choice.html" />
+  <file src="client/window/lobby/choice.js" />
+  <file src="client/window/lobby/choice.css" />
+  <file src="client/window/registerlogin/registerlogin.html" />
+  <file src="client/window/registerlogin/registerlogin.js" />
+  <file src="client/window/damagesys/bloodscreen.html" />
+  <file src="client/window/damagesys/bloodscreen.js" />
+  
+  <!-- files -->
+  <file src="client/sounds/go.wav" />
+  <file src="client/sounds/1.wav" />
+  <file src="client/sounds/2.wav" />
+  <file src="client/sounds/3.wav" />
+  <file src="client/sounds/hit.wav" />
+
+  <file src="client/pic/arenachoice.png" />
+  <file src="client/pic/gangchoice.png" />
+  <file src="client/pic/english.png" />
+  <file src="client/pic/german.png" />
+  <file src="client/pic/blood.png" />
+  
+  <file src="client/window/font/Roboto-Regular.ttf" />
+  <file src="client/window/font/Roboto-Thin.ttf" />
+
+  <!-- Assembly -->
+  <assembly ref="System.Data.dll" />
+  <assembly ref="System.Xml.dll" />
+  <assembly ref="MySql.Data.dll" />
+  
+</meta>

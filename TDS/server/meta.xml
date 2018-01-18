@@ -1,0 +1,5 @@
+<meta>
+  <info name="TDS" description="TDS-Gamemode" author="Bonus" type="gamemode" />
+
+  <script src="TDS.dll" />  
+</meta>
