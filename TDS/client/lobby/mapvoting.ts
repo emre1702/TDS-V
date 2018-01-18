@@ -22,10 +22,12 @@ function openMapVotingMenu() {
 }
 
 function closeMapVotingMenu() {
-    mapvotingdata.menu.destroy();
-    mapvotingdata.menu = null;
-    if ( --nothidecursor <= 0 )
-        mp.gui.cursor.visible = false;
+    if ( mapvotingdata.menu != null ) {
+        mapvotingdata.menu.destroy();
+        mapvotingdata.menu = null;
+        if ( --nothidecursor <= 0 )
+            mp.gui.cursor.visible = false;
+    }
 }
 mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );
 
