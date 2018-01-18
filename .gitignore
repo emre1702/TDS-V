@@ -22,8 +22,9 @@ TDS/packages/NLog.4.4.9/lib/sl5/NLog.xml
 /TDS/bin/Debug/GrandTheftMultiplayer.Server.exe
 *.exe
 *.pdb
-script.js
+/TDS/client/script.js
+/TDS/script.js
 TDS.csproj.FileListAbsolute.txt
 TDS/server/manager/database/DatabaseManager.cs
-/node_modules/
+/TDS/client/node_modules/
 
