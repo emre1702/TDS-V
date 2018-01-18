@@ -1,4 +1,3 @@
 ﻿- Bomb-maps ONLY for lobbies with 2 teams
 - bomb-place Z 1 less than player-pos
-- two chat-channels, one for insults and one without - if you insult in normal channel, you get banned to insult channel
-- c.constructor.names needs to get changed in draw.ts, add type again (because of minify)
+
