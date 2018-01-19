@@ -2,13 +2,11 @@
 
     using GTANetworkAPI;
     using map;
-    using System.Collections.Generic;
-    using TDS.server.enums;
 
-    class Arena : Script {
+    static class Arena {
         public static instance.lobby.Arena TheLobby;
 
-        public Arena ( ) {
+        public static void Create ( ) {
             TheLobby = new instance.lobby.Arena ( "arena", 1 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,

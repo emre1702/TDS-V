@@ -3,10 +3,10 @@
 	using GTANetworkAPI;
 	using instance.lobby;
 
-	class MainMenu : Script {
+	static class MainMenu {
 		public static Lobby TheLobby;
 
-		public MainMenu () {
+		public static void Create() {
             TheLobby = new Lobby ( "mainmenu", 0 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
