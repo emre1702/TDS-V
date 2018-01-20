@@ -25,8 +25,7 @@ namespace TDS.server.instance.lobby {
 				string oldvote = playerVotes[player];
 				if ( oldvote == mapname )
 					return;
-				mapVotes[oldvote]--;
-				if ( mapVotes[oldvote] <= 0 ) {
+				if ( --mapVotes[oldvote] <= 0 ) {
 					SendAllPlayerEvent ( "onMapRemoveFromVoting", -1, oldvote );
 					SendAllPlayerEvent ( "onAddVoteToMap", -1, mapname );
 					mapVotes.Remove ( oldvote, out uint _ );
@@ -41,7 +40,7 @@ namespace TDS.server.instance.lobby {
 
         public void AddMapToVoting ( Client player, string mapname ) {
 			if ( !mapVotes.ContainsKey ( mapname ) ) {
-				if ( mapVotes.Count < 6 ) {
+				if ( mapVotes.Count < 9 ) {
 					mapVotes[mapname] = 0;
 					SendAllPlayerEvent ( "onNewMapForVoting", -1, mapname );
 				} else
