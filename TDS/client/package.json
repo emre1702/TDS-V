@@ -638,6 +638,7 @@
       "resolved": "https://registry.npmjs.org/home-or-tmp/-/home-or-tmp-2.0.0.tgz",
       "version": "2.0.0"
     },
+    "html-minifier": "^3.5.8",
     "invariant": {
       "integrity": "sha1-nh9WrArNtr8wMwbzOL47IErmA2A=",
       "requires": {
@@ -854,6 +855,7 @@
       },
       "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.2.tgz",
       "version": "3.3.2"
-    }
+    },
+    "web-resource-inliner": "^4.2.1"
   }
 }
