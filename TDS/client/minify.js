@@ -52,7 +52,7 @@ code = toes5 ( code, {
 		["env", {
 			uglify: true
 		}]
-	],
+	]
 } ).code;
 
 let uglify = require("uglify-js");
