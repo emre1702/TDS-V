@@ -24,3 +24,11 @@ function addKillMessage( msg: string ) {
 function sendAlert ( msg: string ) {
     mainbrowserdata.browser.execute( "alert ('" + msg + "');" );
 }
+
+function openMapMenu ( mapslistjson: string ) {
+    mainbrowserdata.browser.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapslistjson + "');" );
+}
+
+function closeMapMenu() {
+    mainbrowserdata.browser.execute( "closeMapMenu();" );
+}
