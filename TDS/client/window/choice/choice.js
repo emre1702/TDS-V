@@ -25,7 +25,6 @@ var createlobby = "<div class='text-field'>	\
                         <label for='countdown_time' data-lang='countdown_time'>countdown-time (seconds)*</label>	\
                         <input type='number' id='countdown_time'required min='0' max='99999' value='3' step='1' />	\
                     </div>  	\
-                     	\
                     <div class='number-field'>	\
                         <label for='armor' data-lang='armor'>armor*</label>	\
                         <input type='number' id='armor' required min='0' max='100' value='100' step='1' />	\
@@ -159,10 +158,9 @@ $(document).ready ( function() {
     });
 } );
 
-function getLobbyChoiceLanguage( lang ) {
+function setLobbyChoiceLanguage( lang ) {
 	var langdata = JSON.parse( lang );
 	$( "[data-lang]" ).each( function () {
 		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).prop("required" ) ? "*" : "" ) );
-		//$( this ).html( $( this ).attr( "data-lang" ) );
 	} );
 }

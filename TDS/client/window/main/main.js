@@ -11,7 +11,7 @@ function playSound( soundname ) {
 }
 
 function showBloodscreen() {
-    bloodscreen.stop()
+    bloodscreen.stop();
     bloodscreen.css( "opacity", 1.0 );
     bloodscreen.animate( { opacity: 0.0 }, 2500 );
 }

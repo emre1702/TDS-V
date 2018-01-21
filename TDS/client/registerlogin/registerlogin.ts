@@ -23,10 +23,10 @@ mp.events.add( "startRegisterLogin", function ( name: string, isregistered ) {
 	log( "startRegisterLogin registerlogin" );
 	loginpanel.name = name;
 	loginpanel.isregistered = isregistered == 1;
-	loginpanel.loginbrowser = mp.browsers.new( "package://TDS-V/window/registerlogin/registerlogin.html" );
+    loginpanel.loginbrowser = mp.browsers.new( "package://TDS-V/window/registerlogin/index.html" );
 	mp.events.add( 'browserDomReady', ( browser: MpBrowser ) => {
 		if ( browser == loginpanel.loginbrowser )
-            browser.execute( "getLoginPanelData ( `" + loginpanel.name + "`, `" + loginpanel.isregistered + "`, `" + JSON.stringify( getLang( "loginregister" ) ) + "` );" );
+            browser.execute( "setLoginPanelData ( `" + loginpanel.name + "`, `" + loginpanel.isregistered + "`, `" + JSON.stringify( getLang( "loginregister" ) ) + "` );" );
     } );
     mp.gui.chat.show( false );
 	mp.game.ui.displayHud( false );

@@ -48,26 +48,25 @@ function enableChatInput( enable, cmd = "" ) {
         mp.trigger( "onChatInputToggle", enable );
     }
 }
+let chatAPI = {};
 
-let chatAPI = {
-    push: addMessage,
+chatAPI["push"] = addMessage;
 
-    clear: () => {
-        chat.container.html( "" );
-    },
+chatAPI["clear"] = () => {
+    getChatBody().html( "" );
+};
 
-    activate: ( toggle ) => {
-        enableChatInput( toggle );
-    },
+chatAPI["activate"] = ( toggle ) => {
+    enableChatInput( toggle );
+};
 
-    show: ( toggle ) => {
-        if ( toggle )
-            getChatBody().show();
-        else
-            getChatBody().hide();
+chatAPI["show"] = ( toggle ) => {
+    if ( toggle )
+        getChatBody().show();
+    else
+        getChatBody().hide();
 
-        active = toggle;
-    }
+    active = toggle;
 };
 
 function formatMsg( input ) {

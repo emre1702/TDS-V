@@ -108,7 +108,7 @@ $( document ).ready( function () {
 	} );
 } );
 
-function getLoginPanelData( playername, isreg, lang ) {
+function setLoginPanelData( playername, isreg, lang ) {
     mp.trigger( "outputCEF", "getLoginPanelData" );
 	loadLanguage( lang );
 	$( "[data-lang=username]" ).each( function () {
@@ -120,7 +120,7 @@ function getLoginPanelData( playername, isreg, lang ) {
 		$( this ).prop( "disabled", true );
 	} );
 
-	isregistered = isreg == "1";
+	isregistered = isreg === "1";
 }
 
 function loadLanguage( lang ) {
