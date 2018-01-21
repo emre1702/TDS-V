@@ -1,40 +1,46 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let mapvotingdata = {
-    menu: null as MpBrowser,
     lastlobbyID: -1,
     lastmapdatas: "",
-    openwithlastdata: false,
-    menuloaded: false,
-    inmaplobby: false
+    inmaplobby: false,
+    votings: [] as { name: string, votes: number }[],
+    visible: false
 }
 
 function openMapVotingMenu() {
     ++nothidecursor;
     mp.gui.cursor.visible = true;
-    mapvotingdata.menuloaded = false;
-    mapvotingdata.menu = mp.browsers.new( "package://TDS-V/window/mapmanager/mapmanager.html" );
+    mapvotingdata.visible = true;
     if ( lobbysettings.id != mapvotingdata.lastlobbyID ) {
-        mapvotingdata.openwithlastdata = false;
-        mp.events.callRemote( "onMapMenuOpen" );
+        mp.events.callRemote( "onMapsListRequest" );
     } else
-        mapvotingdata.openwithlastdata = true;
+        openMapMenu( mapvotingdata.lastmapdatas );
+        
 }
 
 function closeMapVotingMenu() {
-    if ( mapvotingdata.menu != null ) {
-        mapvotingdata.menu.destroy();
-        mapvotingdata.menu = null;
+    if ( mapvotingdata.visible ) {
+        closeMapMenu();
+        mapvotingdata.visible = false;
         if ( --nothidecursor <= 0 )
             mp.gui.cursor.visible = false;
     }
 }
 mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );
 
+function mapVotingsComparer( a: { name: string, votes: number }, b: { name: string, votes: number } ) {
+    return a.votes > b.votes ? 1 : -1;
+}
+
+function sortMapVotings() {
+    mapvotingdata.votings.sort( mapVotingsComparer );
+}
+
 mp.keys.bind( Keys.M, false, () => {
     //if ( freecamdata.freecamMode ) 
     //  return;
-    if ( mapvotingdata.menu == null ) {
+    if ( !mapvotingdata.visible ) {
         if ( !ischatopen )
             if ( mapvotingdata.inmaplobby )
                 openMapVotingMenu();
@@ -43,25 +49,54 @@ mp.keys.bind( Keys.M, false, () => {
 
 } ); 
 
-mp.events.add( "onClientMapMenuOpen", ( mapdatasjson: string ) => {
+mp.events.add( "onClientMapsListRequest", ( mapdatasjson: string ) => {
     mapvotingdata.lastmapdatas = mapdatasjson;
-    if ( mapvotingdata.menuloaded )
-        mapvotingdata.menu.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapdatasjson + "');" );
-    else
-        mapvotingdata.openwithlastdata = true;
+    openMapMenu( mapdatasjson );
 } );
 
-mp.events.add( "browserDomReady", ( browser ) => {
-    if ( browser == mapvotingdata.menu ) {
-        mapvotingdata.menuloaded = true;
-        if ( mapvotingdata.openwithlastdata )
-            mapvotingdata.menu.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapvotingdata.lastmapdatas + "');" );
-    }
-} );
-
+// triggered by browser //
 mp.events.add( "onMapMenuVote", ( mapname ) => {
     mp.events.callRemote( "onMapVotingRequest", mapname );
+    sortMapVotings();
 } );
+
+mp.events.add( "onNewMapForVoting", ( mapname ) => {
+    mapvotingdata.votings.push( { name: mapname, votes: 0 } );
+    sortMapVotings();
+    // send to the browsers //
+} );
+
+mp.events.add( "onMapRemoveFromVoting", ( mapname ) => {
+    for ( let i = 0; i < mapvotingdata.votings.length; ++i ) {
+        if ( mapvotingdata.votings[i].name == mapname ) {
+            mapvotingdata.votings.splice( i, 1 );
+            return;
+        }
+    }
+    sortMapVotings();
+    // send to the browsers //
+} );
+
+mp.events.add( "onAddVoteToMap", ( mapname, oldmapname ) => {
+    for ( let i = 0; i < mapvotingdata.votings.length; ++i ) {
+        if ( mapvotingdata.votings[i].name == mapname ) {
+            ++mapvotingdata.votings[i].votes;
+            break;
+        }
+    }
+    if ( typeof oldmapname !== "undefined" ) {
+        for ( let i = 0; i < mapvotingdata.votings.length; ++i ) {
+            if ( mapvotingdata.votings[i].name == oldmapname ) {
+                --mapvotingdata.votings[i].votes;
+                break;
+            }
+        }
+    }
+    sortMapVotings();
+    // send to the browsers //
+} );
+
+
 
 
 /*let mapvotedata = {
