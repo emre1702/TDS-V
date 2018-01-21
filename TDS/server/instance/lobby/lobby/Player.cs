@@ -25,9 +25,7 @@ namespace TDS.server.instance.lobby {
             if ( character.Lifes == 0 ) {
                 player.Position = SpawnPoint.Around ( AroundSpawnPoint ); 
                 player.Freeze ( true );
-
-                if ( SpawnRotation != null )
-                    player.Rotation = SpawnRotation;
+                player.Rotation = SpawnRotation;
             }
         }
 

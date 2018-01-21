@@ -14,8 +14,7 @@ namespace TDS.server.instance.lobby {
 		private readonly Dictionary<uint, uint> spawnCounter = new Dictionary<uint, uint> ();
 		private Map currentMap;
 		private List<Blip> mapBlips = new List<Blip> ();
-		private Vector3 spawnpoint = new Vector3 ( 0, 0, 1000 ),
-						spawnrotation;
+
 
 		public void SetMapList ( List<Map> themaps, List<MapSync> themapssync ) {
             maps = themaps;
@@ -64,11 +63,6 @@ namespace TDS.server.instance.lobby {
 				blip.Delete ();
 			}
 			mapBlips = new List<Blip> ();
-		}
-
-		public void AddSpawnPoint ( Vector3 point, Vector3 rotation ) {
-			spawnpoint = point;
-			spawnrotation = rotation;
 		}
 	}
 

@@ -21,7 +21,7 @@ namespace TDS.server.instance.lobby {
 
         public Vector3 SpawnPoint = new Vector3 ( 0, 0, 900 );
         public float AroundSpawnPoint = 3.0f;
-        public Vector3 SpawnRotation;
+        public Vector3 SpawnRotation = new Vector3();
 
 
         public Lobby ( string name, int id = -1 ) {
