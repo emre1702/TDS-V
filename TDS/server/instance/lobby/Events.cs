@@ -57,7 +57,7 @@ namespace TDS.server.instance.lobby {
                 #endregion
 
                 #region MapVote
-                case "onMapMenuOpen":
+                case "onMapsListRequest":
                     if ( !( player.GetChar ().Lobby is Arena lobby5 ) )
                         return;
 

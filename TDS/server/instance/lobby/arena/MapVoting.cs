@@ -16,7 +16,7 @@ namespace TDS.server.instance.lobby {
 
         public void SendMapsForVoting ( Client player ) {
 			if ( mapsJson != null ) {
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapMenuOpen", mapsJson );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapsListRequest", mapsJson );
 			}
 		}
 
