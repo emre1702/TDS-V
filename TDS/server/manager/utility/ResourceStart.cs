@@ -9,7 +9,7 @@
     class ResourceStart : Script {
 
 		public ResourceStart () {
-			NAPI.Server.SetGamemodeName ( "TDS" );
+			NAPI.Server.SetGamemodeName ( "tdm" );
             StartMethods ();
         }
 
