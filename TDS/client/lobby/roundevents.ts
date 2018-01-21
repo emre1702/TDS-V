@@ -60,7 +60,7 @@ mp.events.add( "onClientRoundEnd", function () {
 	stopCountdownCamera();
     removeRoundInfo();
     toggleFightControls( false );
-	//stopMapVoting();
+    clearMapVotingsInBrowser();
 } );
 
 

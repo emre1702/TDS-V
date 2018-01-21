@@ -29,7 +29,8 @@ mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
 		removeBombThings();
 		removeRoundThings( true );
         stopCountdownCamera();
-        closeMapVotingMenu();   //TODO add removing map-voting infos, too
+        closeMapVotingMenu();  
+        clearMapVotingsInBrowser();
 		removeRoundInfo();
 	}
 } );

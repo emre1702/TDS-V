@@ -3,13 +3,29 @@
     --secondary-color: #181818;
 }
 
-body {
-    overflow: auto;
+#mapmenu {
+    overflow: hidden;
     position: absolute;
     left: 30%;
     top: 25%;
-    width: 40%;
+    min-width: 40%;
     height: 50%;
+    display: none;
+}
+
+#mapvoting {
+    position: absolute;
+    text-align: right;
+    right: 0.5%;
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    top: 60%;
+    font-size: 1.3em;
+}
+
+.mapvoting_selected {
+    font-size: 1.4em;
+    text-shadow: -1px -1px 0 #005700, 1px -1px 0 #005700, -1px 1px 0 #005700, 1px 1px 0 #005700;
 }
 
 .tab {
@@ -23,6 +39,7 @@ body {
     margin-top: 1%;
     width: 45%;
     direction: rtl;
+    overflow-y: auto;
 }
 
 ::-webkit-scrollbar {

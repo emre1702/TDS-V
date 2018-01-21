@@ -25,10 +25,22 @@ function sendAlert ( msg: string ) {
     mainbrowserdata.browser.execute( "alert ('" + msg + "');" );
 }
 
-function openMapMenu ( mapslistjson: string ) {
+function openMapMenuInBrowser ( mapslistjson: string ) {
     mainbrowserdata.browser.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapslistjson + "');" );
 }
 
-function closeMapMenu() {
+function closeMapMenuInBrowser() {
     mainbrowserdata.browser.execute( "closeMapMenu();" );
+}
+
+function loadMapVotingsForMapBrowser( mapvotesjson: string ) {
+    mainbrowserdata.browser.execute( "loadMapVotings ('" + mapvotesjson + "');" );
+}
+
+function clearMapVotingsInBrowser() {
+    mainbrowserdata.browser.execute( "clearMapVotings();" );
+}
+
+function addVoteToMapInMapMenuBrowser( mapname: string, oldvotemapname: string ) {
+    mainbrowserdata.browser.execute( "addVoteToMapVoting ( '" + mapname + "', '" + oldvotemapname + "' ); " );
 }

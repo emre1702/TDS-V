@@ -6,20 +6,21 @@
         <link rel='stylesheet' href='../css/normalize.min.css'>
         <link rel='stylesheet' href='main.css'>
         <link rel="stylesheet" href="mapmanager.css">
+        <link href="../jquery-ui/jquery-ui.min.css" rel="stylesheet">
         <script src='../js/jquery.min.js'></script>
-        <script src="../jquery-ui/jquery-ui.js"></script>
+        <script src="../jquery-ui/jquery-ui.min.js"></script>
     </head>
     <body>
         <span id="money">$0</span>
         <img src="../../pic/blood.png" id="bloodscreen" />
         <div id="kill_messages_box"></div>
 
-        <div class="mapmenu" style="display:none;">
+        <div id="mapmenu">
             <div class="tab" id="tabs">
                 <ul>
                     <li><a href="#tabs-1">Normal</a></li>
                     <li><a href="#tabs-2">Bomb</a></li>
-                    <li><a href="#tabs-3">Favourites</a></li>
+                    <li><a href="#tabs-3">Voting</a></li>
                 </ul>
                 <div id="tabs-1" class="tab_list">
 
@@ -36,6 +37,8 @@
 
             <script src="index.js"></script>
         </div>
+
+        <div id="mapvoting"></div>
     </body>
 </html>
 
