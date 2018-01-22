@@ -90,7 +90,7 @@ body {
 
 .button-green:hover, .button-green:focus {
     background: -webkit-linear-gradient(top, #53db53 0%,#008a00 42%,#005700 76%,#10490a 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, #53db53 0%,#008a00 42%,#005700 76%,#10490a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(to bottom, #53db53 0%,#008a00 42%,#005700 76%,#10490a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .button-red {
@@ -106,7 +106,7 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
 }
 
 .english {
-    background: url('../../pic/english.png') no-repeat; 
+    background: url('../pic/english.png') no-repeat; 
     background-position: center center; 
     background-size: 85% 85%; 
     position: relative; 
@@ -114,7 +114,7 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
 }
 
 .german {
-    background: url('../../pic/german.png') no-repeat; 
+    background: url('../pic/german.png') no-repeat; 
     background-position: center center; 
     background-size: 85% 85%; 
     position: relative; 
@@ -123,7 +123,7 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
 
 .arena {
     width: 33.33333%; 
-    background: url('../../pic/arenachoice.png') no-repeat; 
+    background: url('../pic/arenachoice.png') no-repeat; 
     background-size: 95% 95%; 
     background-position: center center; 
     font-size: 4rem;
@@ -132,7 +132,7 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
 .gang {
     /* display:none;*/ 
     width: 33.33333%;  
-    background: url('../../pic/gangchoice.png') no-repeat; 
+    background: url('../pic/gangchoice.png') no-repeat; 
     background-size: 95% 95%; 
     background-position: center center; 
     font-size: 4rem;
@@ -140,7 +140,7 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
 
 .custom {
     width: 33.33333%;  
-    background: url('../../pic/arenachoice.png') no-repeat; 
+    background: url('../pic/arenachoice.png') no-repeat; 
     background-size: 95% 95%; 
     background-position: center center; 
     font-size: 4rem;
@@ -178,7 +178,7 @@ table {
 }
 
 .join-lobby-button {
-    background: url('../../pic/arenachoice.png') no-repeat; 
+    background: url('../pic/arenachoice.png') no-repeat; 
     background-size: 100% 100%; 
     background-position: center center; 
     font-size: 1.5rem;
