@@ -48,8 +48,12 @@
 				["welcome_3"] = "please visit our Discord-server:",
 				["welcome_4"] = "discord.gg/ntVnGFt",
 				["welcome_5"] = "You can get/hide the cursor with END.",
-				["welcome_6"] = "Have fun wishes you the ~b~TDS-Team~w~!"
-			},
+				["welcome_6"] = "Have fun wishes you the ~b~TDS-Team~w~!",
+                ["order_attack"] = "{1}Attack! Go go go!",
+                ["order_stay_back"] = "{1}Stay back!",
+                ["order_spread_out"] = "{1}Spread out!",
+                ["order_go_to_bomb"] = "{1}Go to the bomb!"
+            },
 			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
 				["account_doesnt_exist"] = "Account existiert nicht!",
@@ -90,8 +94,12 @@
 				["welcome_3"] = "bitte unseren Discord-Server nutzen:",
 				["welcome_4"] = "discord.gg/ntVnGFt",
 				["welcome_5"] = "Du kannst den Cursor mit ENDE umschalten.",
-				["welcome_6"] = "Viel Spaß wünscht das ~b~TDS-Team~w~!"
-			}
+				["welcome_6"] = "Viel Spaß wünscht das ~b~TDS-Team~w~!",
+                ["order_attack"] = "{1}Angriff! Los los los!",
+                ["order_stay_back"] = "{1}Bleibt zurück!",
+                ["order_spread_out"] = "{1}Teilt euch auf!",
+                ["order_go_to_bomb"] = "{1}Geht zur Bombe!"
+            }
 		};
 
 		public static Dictionary<Language, string> GetLangDictionary ( string type, params string[] args ) {

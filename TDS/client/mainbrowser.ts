@@ -5,9 +5,13 @@
 mp.events.add( "onClientMoneyChange", money => {
     currentmoney = money;
     mainbrowserdata.browser.execute( "setMoney ( " + money + " );" ); 
-
-     //   moneydata.text = new cText( "$" + currentmoney, 0.99, 0.01, 7, [115, 186, 131, 255], [1.0, 1.0], true, Alignment.RIGHT, true );
 } );
+
+mp.events.add( "browserDomReady", ( browser ) => {
+    if ( browser == mainbrowserdata.browser ) {
+        loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
+    }
+})
 
 function playSound( soundname: string ) {
     mainbrowserdata.browser.execute( "playSound ( '" + soundname + "' );" );
@@ -45,6 +49,14 @@ function addVoteToMapInMapMenuBrowser( mapname: string, oldvotemapname: string )
     mainbrowserdata.browser.execute( "addVoteToMapVoting ( '" + mapname + "', '" + oldvotemapname + "' ); " );
 }
 
-function loadMapFavouritesInBrowser( mapfavourites ) {
-    mainbrowserdata.browser.execute( "loadFavouriteMaps ( '" + mapfavourites + "');" );
+function loadMapFavouritesInBrowser( mapfavouritesjson: string ) {
+    mainbrowserdata.browser.execute( "loadFavouriteMaps ( '" + mapfavouritesjson + "');" );
+}
+
+function toggleCanVoteForMapWithNumpadInBrowser( bool: boolean ) {
+    mainbrowserdata.browser.execute( "toggleCanVoteForMapWithNumpad ( " + bool + " )" );
+}
+
+function loadOrderNamesInBrowser( ordernamesjson: string ) {
+    mainbrowserdata.browser.execute( "loadOrderNames ( '" + ordernamesjson + "');" );
 }

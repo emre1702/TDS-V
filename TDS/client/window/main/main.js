@@ -9,6 +9,7 @@ let bombMapsList;
 let favouriteMapsList;
 let votingMapsList;
 let mapVotingDiv;
+let ordersDiv;
 let mapInfo;
 let mapVoteButton;
 let mapFavouriteButton;
@@ -20,6 +21,7 @@ let votedMapName = "";
 let votingInCooldown = false;
 let mapSpecificThingsShowing = false;
 let currentlyonfavourite = false;
+let canvoteformapwithnumpad = true;
 
 function setMoney( money ) {
     moneyText.text( "$" + money );
@@ -198,15 +200,17 @@ function setMapVotingCooldown() {
 $( "body" ).keydown( function ( event ) {
     let key = event.which;
     // map-voting //
-    if ( key >= 0x61 && key <= 0x69 ) {
-        if ( votingInCooldown )
-            return;
-        event.preventDefault();
-        let index = 9 - ( 0x69 - key ) - 1;   // -1 because of indexing starting at 0
-        if ( votings.length > index ) {
-            votedMapName = votings[index].name;
-            mp.trigger( "onMapMenuVote", votedMapName );
-            setMapVotingCooldown();
+    if ( canvoteformapwithnumpad ) {
+        if ( key >= 0x61 && key <= 0x69 ) {
+            if ( votingInCooldown )
+                return;
+            event.preventDefault();
+            let index = 9 - ( 0x69 - key ) - 1;   // -1 because of indexing starting at 0
+            if ( votings.length > index ) {
+                votedMapName = votings[index].name;
+                mp.trigger( "onMapMenuVote", votedMapName );
+                setMapVotingCooldown();
+            }
         }
     }
 } );
@@ -229,6 +233,25 @@ function loadFavouriteMaps( favmapsjson ) {
     favouriteMaps = JSON.parse( favmapsjson );
 }
 
+function loadOrderNames( ordernamesjson ) {
+    ordersDiv.empty();
+    let ordernames = JSON.parse( ordernamesjson );
+    for ( let i = 0; i < ordernames.length && i < 9; ++i ) {
+        ordersDiv.append( $( "<div>"+(i + 1) + ". " + ordernames[i]+"</div>" ) );
+    }
+}
+
+function toggleCanVoteForMapWithNumpad( bool ) {
+    canvoteformapwithnumpad = bool;
+    if ( bool ) {
+        ordersDiv.hide( 300 );
+        mapVotingDiv.show( 300 );
+    } else {
+        ordersDiv.show( 300 );
+        mapVotingDiv.hide( 300 );
+    }
+}
+
 $( document ).ready( () => {
     mapMenuDiv = $( "#mapmenu" );
     mapVotingDiv = $( "#mapvoting" );
@@ -242,6 +265,7 @@ $( document ).ready( () => {
     mapInfo = $( "#map_info" );
     mapVoteButton = $( "#choose_map_button" );
     mapFavouriteButton = $( "#add_map_to_favourites" );
+    ordersDiv = $( "#orders" );
 
     $( "#tabs" ).tabs( {
         collapsible: true,

@@ -70,5 +70,12 @@ namespace TDS.server.instance.lobby {
             if ( player.Exists ) 
                 player.Transparency = 255;
         }
+
+        public void SendTeamOrder ( Client player, string ordershort ) {
+            Character character = player.GetChar ();
+            string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
+            string beforemessage = "[TEAM] ~" + teamfontcolor + "~" + player.SocialClubName + "~r~: ";
+            SendAllPlayerLangMessage ( ordershort, player.GetChar ().Team, beforemessage );
+        }
     }
 }

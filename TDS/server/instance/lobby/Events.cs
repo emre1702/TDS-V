@@ -111,6 +111,12 @@ namespace TDS.server.instance.lobby {
                     break;
                 #endregion
 
+                #region Order
+                case "onPlayerGiveOrder":
+                    player.GetChar ().Lobby.SendTeamOrder ( player, args[0] );
+                    break;
+                #endregion
+
                 default:
                     player.GetChar ().Lobby.OnClientEventTrigger ( player, eventName, args );
                     break;

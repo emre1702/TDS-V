@@ -65,7 +65,8 @@ var languagelist = {
 			"maplimit_description": "Setze die Ecken des Map-Limits (optional).",
 			"maplimit_add_text": "Ecke hinzufügen",
 			"maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
-		}
+        },
+        "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"]
 	},
 	"ENGLISH": {
 		"loginregister": {
@@ -131,7 +132,8 @@ var languagelist = {
 			"maplimit_description": "Sets the corners for the map-limit (optional).",
 			"maplimit_add_text": "add corner",
 			"maplimit_add_description": "Adds a corner for the map-limit."
-		}
+        },
+        "orders": ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"]
 	}	
 };
 let languagesetting: string = "ENGLISH";
@@ -149,7 +151,8 @@ function setLanguage( lang ) {
     mp.storage.data.language = lang;
     mp.storage.flush();
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
-	//changeMapCreatorLanguage();
+    //changeMapCreatorLanguage();
+    loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
 }
 mp.events.add( "setLanguage", setLanguage );
 
