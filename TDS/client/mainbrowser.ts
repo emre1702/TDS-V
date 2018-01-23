@@ -44,3 +44,7 @@ function clearMapVotingsInBrowser() {
 function addVoteToMapInMapMenuBrowser( mapname: string, oldvotemapname: string ) {
     mainbrowserdata.browser.execute( "addVoteToMapVoting ( '" + mapname + "', '" + oldvotemapname + "' ); " );
 }
+
+function loadMapFavouritesInBrowser( mapfavourites ) {
+    mainbrowserdata.browser.execute( "loadFavouriteMaps ( '" + mapfavourites + "');" );
+}

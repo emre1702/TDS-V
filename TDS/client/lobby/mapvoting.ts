@@ -1,11 +1,13 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
-let mapvotingdata = {
+var mapvotingdata = {
     lastlobbyID: -1,
     lastmapdatas: "",
     inmaplobby: false,
     votings: [] as { name: string, votes: number }[],
-    visible: false
+    visible: false,
+    favouritesloaded: false,
+    favourites: [] as string[]
 }
 
 function openMapVotingMenu() {
@@ -14,6 +16,17 @@ function openMapVotingMenu() {
     mapvotingdata.visible = true;
     if ( lobbysettings.id != mapvotingdata.lastlobbyID ) {
         mp.events.callRemote( "onMapsListRequest" );
+        if ( !mapvotingdata.favouritesloaded ) {
+            let favouritesstr = mp.storage.data.mapfavourites;
+            if ( favouritesstr != undefined ) {
+                mapvotingdata.favourites = JSON.parse( favouritesstr );
+                loadMapFavouritesInBrowser( favouritesstr );
+            } else 
+                loadMapFavouritesInBrowser( "[]" );
+            
+            mapvotingdata.favouritesloaded = true;
+        }
+
     } else
         openMapMenuInBrowser( mapvotingdata.lastmapdatas );
         
@@ -50,6 +63,19 @@ mp.events.add( "onMapMenuVote", ( mapname ) => {
     mp.events.callRemote( "onMapVotingRequest", mapname );
 } );
 
+// triggered by browser //
+mp.events.add( "onClientToggleMapFavourite", ( mapname, bool ) => {
+    if ( bool )
+        mapvotingdata.favourites.push( mapname )
+    else {
+        for ( let i = 0; i < mapvotingdata.favourites.length; ++i ) {
+            if ( mapvotingdata.favourites[i] == mapname )
+                mapvotingdata.favourites.splice( i, 1 );
+        }
+    }
+    mp.storage.data.mapfavourites = JSON.stringify( mapvotingdata.favourites );
+} );
+
 mp.events.add( "onAddVoteToMap", ( mapname, oldmapname ) => {
     addVoteToMapInMapMenuBrowser( mapname, oldmapname );
     let foundmap = false;
@@ -79,7 +105,6 @@ mp.events.add( "onMapVotingSyncOnJoin", ( mapsvotesjson ) => {
     }
     loadMapVotingsForMapBrowser( mapsvotesjson );
 } );
-
 
 
 

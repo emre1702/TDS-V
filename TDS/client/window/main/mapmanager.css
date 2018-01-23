@@ -6,9 +6,9 @@
 #mapmenu {
     overflow: hidden;
     position: absolute;
-    left: 30%;
+    left: 35%;
     top: 25%;
-    min-width: 40%;
+    min-width: 30%;
     height: 50%;
     display: none;
 }
@@ -30,7 +30,7 @@
 
 .tab {
     position: relative;
-    width: 100%;
+    width: 98%;
     height: 100%;
     float: left;
 }
@@ -77,24 +77,69 @@
 .ui-selectee:hover {
     background: rgb(17, 17, 17);
 }
- 
-#map_info {
+
+#rightside {
     position: absolute;
     width: 45%;
     left: 55%;
-    top: 15%;
-    height: 65%;
+    top: 12%;
+    height: 88%;
+}
+
+#map_info {
+    pointer-events: none;
+    float: none;
+    position: relative;
+    width: 100%;
+    height: 80%;
     color: white;
-    font-size: 1em;
+    font-size: 0.9em;
+    word-wrap: break-word;
+    display: none;
+}
+
+#add_map_to_favourites {
+    float: right;
+    background: url("../pic/heart.png") no-repeat;
+    background-position: center center;
+    background-size: 95% 95%;
+    border: none;
+    position: relative;
+    width: 12%;
+    height: 5%;
+    right: 2%;
+    display: none;
+}
+
+.add_map_to_favourites_notselected {
+    opacity: 0.5;
+    
+}
+
+.add_map_to_favourites_notselected:hover{
+    background-size: 105% 105%;
+    opacity: 1.0;
+}
+
+.add_map_to_favourites_selected {
+    opacity: 1.0;
+    
+}
+
+.add_map_to_favourites_selected:hover {
+    background-size: 105% 105%;
+    opacity: 0.7;
 }
 
 #choose_map_button {
     position: absolute;
-    width: 22%;
-    left: 67%;
-    top: 88%;
-    height: 10%;
+    width: 36%;
+    left: 31%;
+    bottom: 5%;
+    height: 11%;
     font-size: 1em;
+    padding: 0px;
+    display: none;
 }
 
 button {
