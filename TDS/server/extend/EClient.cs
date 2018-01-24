@@ -1,22 +1,21 @@
 ﻿namespace TDS.server.extend {
 
 	using System.Collections.Concurrent;
-	using System.Collections.Generic;
 	using GTANetworkAPI;
 	using instance.player;
 
 	internal static class EClient {
 
-		private static ConcurrentDictionary<NetHandle, Character> characterDictionary =
-			new ConcurrentDictionary<NetHandle, Character> ();
+		private static ConcurrentDictionary<Client, Character> characterDictionary =
+			new ConcurrentDictionary<Client, Character> ();
 
 		public static Character GetChar ( this Client player ) {
-			if ( characterDictionary.ContainsKey ( player.Handle ) ) {
-				Character character = characterDictionary[player.Handle];
+			if ( characterDictionary.ContainsKey ( player ) ) {
+				Character character = characterDictionary[player];
 				return character;
 			} else {
 				Character character = new Character ( false );
-				characterDictionary.TryAdd ( player.Handle, character );
+				characterDictionary.TryAdd ( player, character );
 				return character;
 			}
 		}

@@ -72,7 +72,7 @@ namespace TDS.server.instance.lobby {
         private void StartRoundCountdown ( ) {
             status = LobbyStatus.COUNTDOWN;
             NAPI.Util.ConsoleOutput ( status.ToString () );
-            spectatingMe = new Dictionary<NetHandle, List<NetHandle>> ();
+            spectatingMe = new Dictionary<Client, List<Client>> ();
             SetAllPlayersInCountdown ();
             startTick = Environment.TickCount;
 
@@ -84,15 +84,15 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
             roundEndTimer = Timer.SetTimer ( EndRound, roundTime );
-            alivePlayers = new List<List<NetHandle>> ();
+            alivePlayers = new List<List<Client>> ();
             List<uint> amountinteams = new List<uint> ();
             for ( int i = 0; i < Players.Count; i++ ) {
                 uint amountinteam = (uint) Players[i].Count;
                 if ( i != 0 )
                     amountinteams.Add ( amountinteam );
-                alivePlayers.Add ( new List<NetHandle> () );
+                alivePlayers.Add ( new List<Client> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
-                    StartRoundForPlayer ( NAPI.Player.GetPlayerFromHandle ( Players[i][j] ), (uint) i );
+                    StartRoundForPlayer ( Players[i][j], (uint) i );
                 }
             }
 

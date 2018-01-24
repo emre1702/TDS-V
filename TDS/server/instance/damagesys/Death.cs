@@ -10,9 +10,9 @@
 
     partial class Damagesys {
 
-		private static readonly Dictionary<NetHandle, Timer> sDeadTimer = new Dictionary<NetHandle, Timer> ();
-		public Dictionary<NetHandle, uint> PlayerAssists = new Dictionary<NetHandle, uint> (),
-										PlayerKills = new Dictionary<NetHandle, uint> ();
+		private static readonly Dictionary<Client, Timer> sDeadTimer = new Dictionary<Client, Timer> ();
+		public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint> (),
+										PlayerKills = new Dictionary<Client, uint> ();
 
 		private void OnPlayerDeath ( Client player, NetHandle entityKiller, uint weapon, CancelEventArgs cancel ) {
             cancel.Spawn = false;
@@ -71,8 +71,8 @@
 		private void CheckForAssist ( Client player, Character character, Client killer ) {
 			if ( AllHitters.ContainsKey ( player ) ) {
 				uint halfarmorhp = ( lobby.Armor + lobby.Health ) / 2;
-				foreach ( KeyValuePair<NetHandle, int> entry in AllHitters[player] ) {
-					Client target = NAPI.Player.GetPlayerFromHandle ( entry.Key );
+				foreach ( KeyValuePair<Client, int> entry in AllHitters[player] ) {
+                    Client target = entry.Key;
 					if ( entry.Value >= halfarmorhp ) {
 						Character targetcharacter = target.GetChar ();
 						if ( target.Exists && targetcharacter.Lobby == character.Lobby && killer != target ) {
@@ -94,8 +94,7 @@
 
 		public void CheckLastHitter ( Client player, Character character, out Client lastHitter ) {
 			if ( LastHitterDictionary.ContainsKey ( player ) ) {
-				LastHitterDictionary.Remove ( player, out NetHandle lastHitterhandle );
-                lastHitter = NAPI.Player.GetPlayerFromHandle ( lastHitterhandle );
+				LastHitterDictionary.Remove ( player, out lastHitter );
                 if ( lastHitter.Exists ) {
 					Character lasthittercharacter = lastHitter.GetChar ();
 					if ( character.Lobby == lasthittercharacter.Lobby )
@@ -111,8 +110,7 @@
 
 		public Client GetLastHitter ( Client player, Character character ) {
 			if ( LastHitterDictionary.ContainsKey ( player ) ) {
-				LastHitterDictionary.Remove ( player, out NetHandle lasthitterhandle );
-                Client lasthitter = NAPI.Player.GetPlayerFromHandle ( lasthitterhandle );
+				LastHitterDictionary.Remove ( player, out Client lasthitter );
                 if ( lasthitter.Exists ) {
 					Character lasthittercharacter = lasthitter.GetChar ();
 					if ( character.Lobby == lasthittercharacter.Lobby )

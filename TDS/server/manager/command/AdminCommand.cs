@@ -179,7 +179,7 @@
 			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) ) {
 				VehicleHash model = NAPI.Util.VehicleNameToModel ( name );
 
-				Vector3 rot = NAPI.Entity.GetEntityRotation ( player.Handle );
+                Vector3 rot = player.Rotation;
 				Vehicle veh = NAPI.Vehicle.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
 
 				NAPI.Player.SetPlayerIntoVehicle ( player, veh, -1 );

@@ -55,7 +55,7 @@ namespace TDS.server.instance.lobby {
 			int amount = Players[terroristTeamID].Count;
 			if ( amount > 0 ) {
 				int rnd = Utility.Rnd.Next ( amount );
-				Client player = NAPI.Player.GetPlayerFromHandle ( Players[terroristTeamID][rnd] );
+				Client player = Players[terroristTeamID][rnd];
 				if ( player.CurrentWeapon == WeaponHash.Unarmed )
 					BombToHand ( player );
 				else
@@ -110,9 +110,8 @@ namespace TDS.server.instance.lobby {
 
 		private void DetonateBomb () {
 			NAPI.Explosion.CreateOwnedExplosion ( planter, ExplosionType.GrenadeL, bomb.Position, 200, Dimension );
-			FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
-				DmgSys.LastHitterDictionary[playerhandle] = planter;
-                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+			FuncIterateAllPlayers ( ( player, teamID ) => {
+				DmgSys.LastHitterDictionary[player] = planter;
                 player.Kill ();
 				NAPI.ClientEvent.TriggerClientEvent ( player, "onClientBombDetonated" );
 			}, counterTerroristTeamID );
@@ -138,8 +137,7 @@ namespace TDS.server.instance.lobby {
                         planter = player;
                         SendAllPlayerLangNotification ( "bomb_planted" );
                         bombDetonateTimer = Timer.SetTimer ( DetonateBomb, bombDetonateTime );
-                        FuncIterateAllPlayers ( ( targethandle, teamID ) => {
-                            Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
+                        FuncIterateAllPlayers ( ( target, teamID ) => {
                             target.TriggerEvent ( "onClientBombPlanted", playerpos, teamID == counterTerroristTeamID );
                         } );                                                                                           
 						SendBombDefuseInfos ();
@@ -154,9 +152,8 @@ namespace TDS.server.instance.lobby {
 			if ( player.Exists ) {
 				Vector3 playerpos = player.Position;
 				if ( playerpos.DistanceTo ( bomb.Position ) <= 2 ) {
-					FuncIterateAllPlayers ( ( targethandle, teamID ) => {
-						DmgSys.LastHitterDictionary[targethandle] = player;
-                        Client target = NAPI.Player.GetPlayerFromHandle ( targethandle );
+					FuncIterateAllPlayers ( ( target, teamID ) => {
+						DmgSys.LastHitterDictionary[target] = player;
                         target.Kill ();
 					}, terroristTeamID );
 					// COUNTER-TERROR WON //

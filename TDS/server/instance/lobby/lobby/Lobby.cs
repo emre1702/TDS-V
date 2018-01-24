@@ -58,14 +58,13 @@ namespace TDS.server.instance.lobby {
             SLobbiesByIndex.Remove ( ID );
             sDimensionsUsed.Remove ( Dimension );
 
-            FuncIterateAllPlayers ( ( playerhandle, teamID ) => {
-                Client player = NAPI.Player.GetPlayerFromHandle ( playerhandle );
+            FuncIterateAllPlayers ( ( player, teamID ) => {
                 RemovePlayer ( player );
             } );
         }
 
         internal bool IsSomeoneInLobby ( ) {
-            foreach ( List<NetHandle> playerlist in Players ) {
+            foreach ( List<Client> playerlist in Players ) {
                 if ( playerlist.Count > 0 )
                     return true;
             }

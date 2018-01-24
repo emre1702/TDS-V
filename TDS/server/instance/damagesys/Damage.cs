@@ -96,9 +96,9 @@
 		private readonly Dictionary<WeaponHash, int> customDamageDictionary = new Dictionary<WeaponHash, int> ();
 		private readonly Dictionary<WeaponHash, float> customHeadMultiplicator = new Dictionary<WeaponHash, float> ();
 
-		public Dictionary<NetHandle, Dictionary<NetHandle, int>> AllHitters = new Dictionary<NetHandle, Dictionary<NetHandle, int>> ();
-		public Dictionary<NetHandle, NetHandle> LastHitterDictionary = new Dictionary<NetHandle, NetHandle> ();
-		public Dictionary<NetHandle, int> PlayerDamage = new Dictionary<NetHandle, int> ();
+		public Dictionary<Client, Dictionary<Client, int>> AllHitters = new Dictionary<Client, Dictionary<Client, int>> ();
+		public Dictionary<Client, Client> LastHitterDictionary = new Dictionary<Client, Client> ();
+		public Dictionary<Client, int> PlayerDamage = new Dictionary<Client, int> ();
 
 
 		private int GetDamage ( WeaponHash hash, bool headshot ) {
@@ -145,7 +145,7 @@
 			// Last-Hitter //
 			LastHitterDictionary[hitted] = player;
 			if ( !AllHitters.ContainsKey ( hitted ) )
-				AllHitters.TryAdd ( hitted, new Dictionary<NetHandle, int> () );
+				AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
 			if ( !AllHitters[hitted].ContainsKey ( player ) )
 				AllHitters[hitted][player] += damage;
 			else

@@ -20,11 +20,11 @@
 			[3] = "~dr~",
 			[4] = "~dr~"
 		};
-		public static Dictionary<uint, List<NetHandle>> AdminsOnline = new Dictionary<uint, List<NetHandle>> {
-			[1] = new List<NetHandle> (),
-			[2] = new List<NetHandle> (),
-			[3] = new List<NetHandle> (),
-			[4] = new List<NetHandle> ()
+		public static Dictionary<uint, List<Client>> AdminsOnline = new Dictionary<uint, List<Client>> {
+			[1] = new List<Client> (),
+			[2] = new List<Client> (),
+			[3] = new List<Client> (),
+			[4] = new List<Client> ()
 		};
 		private const int adminMaxLvl = 4;
 
@@ -45,7 +45,7 @@
 		public static void SendChatMessageToAdmins ( string message ) {
 			for ( uint adminlvl = 1; adminlvl <= adminMaxLvl; adminlvl++ ) {
 				for ( int j = 0; j < AdminsOnline[adminlvl].Count; j++ ) {
-					Client player = NAPI.Player.GetPlayerFromHandle ( AdminsOnline[adminlvl][j] );
+					Client player = AdminsOnline[adminlvl][j];
 					if ( player.Exists )
 						player.SendChatMessage ( message );
 				}

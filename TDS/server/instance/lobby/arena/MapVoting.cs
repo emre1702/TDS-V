@@ -12,7 +12,7 @@ namespace TDS.server.instance.lobby {
 
     partial class Arena {
 		private readonly Dictionary<string, uint> mapVotes = new Dictionary<string, uint> ();
-		private readonly Dictionary<NetHandle, string> playerVotes = new Dictionary<NetHandle, string> ();
+		private readonly Dictionary<Client, string> playerVotes = new Dictionary<Client, string> ();
 
         public void SendMapsForVoting ( Client player ) {
 			if ( mapsJson != null ) {

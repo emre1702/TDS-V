@@ -42,8 +42,8 @@ namespace TDS.server.instance.lobby {
         }
 
         private void RewardAllPlayer ( ) {
-            foreach ( KeyValuePair<NetHandle, int> entry in DmgSys.PlayerDamage ) {
-                Client player = NAPI.Player.GetPlayerFromHandle ( entry.Key );
+            foreach ( KeyValuePair<Client, int> entry in DmgSys.PlayerDamage ) {
+                Client player = entry.Key;
                 if ( player.Exists ) {
                     Character character = player.GetChar ();
                     if ( character.Lobby == this ) {
