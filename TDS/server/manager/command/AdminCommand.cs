@@ -12,7 +12,7 @@
 	using player;
 	using utility;
 
-	class AdminCommand : Script {
+	class AdminCommand {
 		private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
 			{
 				"adminsay", 1

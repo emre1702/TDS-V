@@ -6,10 +6,9 @@
 	using instance.player;
 	using lobby;
 	using map;
-    using TDS.server.instance.utility;
     using utility;
 
-	class PlayerCommand : Script {
+	class PlayerCommand {
 
 		#region Lobby
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", Group = "user" )]
