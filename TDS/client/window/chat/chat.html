@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF8" />
         <script src='../js/jquery.min.js'></script>
-        <script src="index.js"></script>
         <style type="text/css">
             @font-face {
                 font-family: Roboto;
@@ -16,10 +15,9 @@
             }
 
             body {
-                float: left;
                 position: relative;
                 font-family: Roboto, Arial;
-                background-color: transparent;
+                display: normal;
             }
 
             ::-webkit-scrollbar {
@@ -27,20 +25,24 @@
                 background: transparent; /* optional: just make scrollbar invisible */
             }
 
-            #chat-body {
+            .chat-body {
+                background: inherit;
                 overflow-y: scroll;
                 left: 5px;
                 max-width: 35vw;
-                max-height: 40vh;
+                max-height: 35vh;
                 padding-left: 5px;
                 font-size: 1.4em;
                 color: white;
                 text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-                z-index: 1;
                 white-space: pre-line;
             }
 
-            text :not(:first-child) {
+            #dirty-chat-body {
+                display: none;
+            }
+
+            .chat-body text :not(:first-child) {
                 white-space: pre-line;
                 display: inline;
                 position: relative;
@@ -59,12 +61,50 @@
                 margin-top: 1vh;
                 font-size: 1.2em;
                 display: none;
-                z-index: 2;
+            }
+
+            #chat_choice {
+                width: 35vw;
+                text-align: center;
+                font-size: 0.9em;
+                color: white;
+                margin-top: 1vh;
+                overflow: hidden;
+            } 
+            
+            #chat_choice div {
+                float: left;
+                background-color: darkgrey;
+                width: 10%;
+                position: relative;
+                transition: background 0.8s linear;
+                height: 5%;
             }
         </style>
     </head>
     <body>
-        <div id="chat-body"></div>
-        <input id="main-input" autofocus />   
+        <div id="normal-chat-body" class="chat-body">
+            <text>test</text>
+            <text>test</text>
+            <text>test</text>
+            <text>test</text>
+            <text>test</text>
+            <text>test</text>
+        </div>
+        <div id="dirty-chat-body" class="chat-body">
+            <text>test2</text>
+            <text>test2</text>
+            <text>test2</text>
+            <text>test2</text>
+            <text>test2</text>
+            <text>test2</text>
+        </div>
+        <div id="chat_choice">
+            <div id="normal_chat" data-chatID=0>normal</div>
+            <div id="dirty_chat" data-chatID=1>dirty</div>
+        </div>
+        <input id="main-input" autofocus />
+
+        <script src="chat.js"></script>
     </body>
 </html>

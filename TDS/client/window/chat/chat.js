@@ -1,9 +1,15 @@
-let amountentries = 0;
+let amountentries = [0, 0];
 let maxentries = 40;
 let active = true;
 let inputshowing = false;
-let maininput = null;
-let chatbody = null;
+let maininput = $( "#main-input" );
+let chatbodies = [
+    $( "#normal-chat-body" ),
+    $( "#dirty-chat-body" )
+];
+let chatstarts = ["$normal$", "$dirty$"];
+let chosentab = chatbodies[0];
+let chosenchatbody = 0;
 
 let colorreplace = [
     [/~r~/g, "rgb(222, 50, 50)"],
@@ -22,8 +28,9 @@ let colorreplace = [
 ];
 
 
-function updateScroll() {
-    getChatBody().animate( { scrollTop: getChatBody().prop( "scrollHeight" ) }, "slow" );
+function updateScroll( chatbody = null ) {
+    chatbody = chatbody === null ? getChatBody() : chatbody;
+    chatbody.animate( { scrollTop: chatbody.prop( "scrollHeight" ) }, "slow" );
 }
 
 function enableChatInput( enable, cmd = "" ) {
@@ -83,26 +90,42 @@ function formatMsg( input ) {
     return start + replaced + "</span>";
 }
 
-function addMessage( msg ) {
-    let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
-    getChatBody().append( child );
-
-    if ( ++amountentries >= maxentries ) {
-        --amountentries;
+function addChildToChatBody( child, chatbody ) {
+    chatbody.append( child );
+    if ( ++amountentries[i] >= maxentries ) {
+        --amountentries[i];
         chatbody.find( "text:first" ).remove();
     }
-
-    updateScroll();
+    updateScroll ( chatbody );
 }
 
-function getChatBody() {
-    if ( chatbody === null )
-        chatbody = $( "#chat-body" );
-    return chatbody;
+function addMessage( msg ) {
+    // output in the chatbody when starting with one of chatstarts //
+    for ( let i = 0; i < chatstarts.length; ++i ) {
+        if ( msg.startsWith( chatstarts[i] ) ) {
+            msg = msg.substring( chatstarts[i].length + 1 );
+            let chatbody = getChatBody( i );
+            let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
+            addChildToChatBody( child, chatbody );
+            return;
+        }
+    }
+
+    // else output in all chatbodies //
+    for ( let i = 0; i < chatbodies.length; ++i ) {
+        let chatbody = getChatBody( i );
+        let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
+        addChildToChatBody( child, chatbody );
+    }
+
+}
+
+function getChatBody( index = -1 ) {
+    let theindex = index === -1 ? chosenchatbody : index;
+    return chatbodies[index];
 }
 
 $( document ).ready( function () {
-    maininput = $( "#main-input" );
 
     $( "body" ).keydown( function ( event ) {
         if ( event.which === 84 && !inputshowing && active ) {   // open chat-input
@@ -119,12 +142,28 @@ $( document ).ready( function () {
                     msg = msg.substr( 1 );
                     if ( msg.length > 0 )
                         mp.invoke( "command", msg );
-                } else
-                    mp.invoke( "chatMessage", msg );
+                } else {
+                    mp.invoke( "chatMessage", chatstarts[chosenchatbody]+msg );
+                }
             }
 
             enableChatInput( false );
         }
+    } );
+
+    chosentab.css( "background", "#04074e" );
+
+    $( "#chat_choice div" ).click( function () {
+        if ( chosenchatbody === $( this ).attr ( "data-chatID" ) )
+            return;
+
+        chosentab.css( "background", "#A9A9A9" );
+        chatbodies[chosenchatbody].hide( 400 );
+
+        chosentab = $( this );
+        chosentab.css( "background", "#04074e" );
+        chosenchatbody = chosentab.attr( "data-chatID" );
+        chatbodies[chosenchatbody].show( 400 );
     } );
 
     mp.trigger( "onChatLoad" );
