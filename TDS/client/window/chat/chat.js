@@ -7,7 +7,7 @@ let chatbodies = [
     $( "#normal-chat-body" ),
     $( "#dirty-chat-body" )
 ];
-let chatstarts = ["$normal$", "$dirty$"];
+let chatends = ["$normal$", "$dirty$"];
 let chosentab = chatbodies[0];
 let chosenchatbody = 0;
 
@@ -100,10 +100,10 @@ function addChildToChatBody( child, chatbody ) {
 }
 
 function addMessage( msg ) {
-    // output in the chatbody when starting with one of chatstarts //
-    for ( let i = 0; i < chatstarts.length; ++i ) {
-        if ( msg.startsWith( chatstarts[i] ) ) {
-            msg = msg.substring( chatstarts[i].length + 1 );
+    // output in the chatbody when ending with one of chatends //
+    for ( let i = 0; i < chatends.length; ++i ) {
+        if ( msg.endsWith( chatends[i] ) ) {
+            msg = msg.substring( chatends[i].length + 1 );
             let chatbody = getChatBody( i );
             let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
             addChildToChatBody( child, chatbody );
@@ -143,7 +143,7 @@ $( document ).ready( function () {
                     if ( msg.length > 0 )
                         mp.invoke( "command", msg );
                 } else {
-                    mp.invoke( "chatMessage", chatstarts[chosenchatbody]+msg );
+                    mp.invoke( "chatMessage", msg+chatends[chosenchatbody] );
                 }
             }
 
