@@ -82,7 +82,7 @@ namespace TDS.server.instance.lobby {
             return i;
         }
 
-        public virtual void OnEntityEnterColShape ( ColShape shape, Client player ) { }
+        public virtual void OnPlayerEnterColShape ( ColShape shape, Client player ) { }
 
     }
 }

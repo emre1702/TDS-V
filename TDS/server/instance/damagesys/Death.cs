@@ -14,7 +14,7 @@
 		public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint> (),
 										PlayerKills = new Dictionary<Client, uint> ();
 
-		private void OnPlayerDeath ( Client player, NetHandle entityKiller, uint weapon, CancelEventArgs cancel ) {
+		private void OnPlayerDeath ( Client player, Client killer, uint weapon, CancelEventArgs cancel ) {
             cancel.Spawn = false;
 
             if ( !sDeadTimer.ContainsKey ( player ) ) {
@@ -29,7 +29,6 @@
 
 				player.Freeze ( true );
                 sDeadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000 ) );
-                Client killer = NAPI.Player.GetPlayerFromHandle ( entityKiller );
                 killer = killer.Exists ? killer : dmgsys.GetLastHitter ( player, character );
 
 				dmgsys.PlayerSpree.Remove ( player );

@@ -31,28 +31,28 @@
 		}
 
 		private void RemoveAllCreated () {
-			List<NetHandle> blips = NAPI.Pools.GetAllBlips ();
-			foreach ( NetHandle blip in blips )
+			List<Blip> blips = NAPI.Pools.GetAllBlips ();
+			foreach ( Blip blip in blips )
 				NAPI.Entity.DeleteEntity ( blip );
 
-			List<NetHandle> markers = NAPI.Pools.GetAllMarkers ();
-			foreach ( NetHandle marker in markers )
+			List<Marker> markers = NAPI.Pools.GetAllMarkers ();
+			foreach ( Marker marker in markers )
                 NAPI.Entity.DeleteEntity ( marker );
 
-			List<NetHandle> peds = NAPI.Pools.GetAllPeds ();
+			/*List<NetHandle> peds = NAPI.Pools.GetAllPeds ();
 			foreach ( NetHandle ped in peds )
-                NAPI.Entity.DeleteEntity ( ped );
+                NAPI.Entity.DeleteEntity ( ped ); */
 
-			List<NetHandle> pickups = NAPI.Pools.GetAllPickups ();
-			foreach ( NetHandle pickup in pickups )
+			List<Pickup> pickups = NAPI.Pools.GetAllPickups ();
+			foreach ( Pickup pickup in pickups )
                 NAPI.Entity.DeleteEntity ( pickup );
 
-			List<NetHandle> vehicles = NAPI.Pools.GetAllVehicles ();
-			foreach ( NetHandle vehicle in vehicles )
+			List<Vehicle> vehicles = NAPI.Pools.GetAllVehicles ();
+			foreach ( Vehicle vehicle in vehicles )
                 NAPI.Entity.DeleteEntity ( vehicle );
 
-			List<NetHandle> objects = NAPI.Pools.GetAllObjects ();
-			foreach ( NetHandle obj in objects )
+			List<GTANetworkAPI.Object> objects = NAPI.Pools.GetAllObjects ();
+			foreach ( GTANetworkAPI.Object obj in objects )
                 NAPI.Entity.DeleteEntity ( obj );
 		}
 	}

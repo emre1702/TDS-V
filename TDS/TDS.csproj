@@ -4,7 +4,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>C:\RAGEMP\server-files\bridge\resources\TDS-V\bin\</OutputPath>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -21,8 +21,9 @@
     <None Remove="client\node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="gtanetwork.api" Version="0.3.1.1" />
-    <PackageReference Include="MySql.Data" Version="6.10.5" />
+    <PackageReference Include="gtanetwork.api" Version="0.3.2.1" />
+    <PackageReference Include="MySql.Data" Version="6.10.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="types-ragemp-client" Version="0.0.5" />
   </ItemGroup>
   <ItemGroup>

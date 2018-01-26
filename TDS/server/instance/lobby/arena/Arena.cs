@@ -25,7 +25,8 @@ namespace TDS.server.instance.lobby {
                 StopRoundBomb ();
         }
 
-        public override void OnEntityEnterColShape ( ColShape shape, Client player ) {
+        public override void OnPlayerEnterColShape ( ColShape shape, Client player ) {
+            base.OnPlayerEnterColShape ( shape, player );
             Character character = player.GetChar ();
             if ( lobbyBombTakeCol.ContainsKey ( this ) ) {
                 if ( character.Lifes > 0 && character.Team == terroristTeamID ) {

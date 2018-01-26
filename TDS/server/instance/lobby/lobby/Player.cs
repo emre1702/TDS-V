@@ -29,9 +29,6 @@ namespace TDS.server.instance.lobby {
             }
         }
 
-        public virtual void OnClientEventTrigger ( Client player, string eventName, params dynamic[] args ) { }
-
-
         public virtual void AddPlayer ( Client player, bool spectator = false ) {
             player.Freeze ( true );
             Character character = player.GetChar ();

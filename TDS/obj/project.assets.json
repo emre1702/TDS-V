@@ -26,7 +26,7 @@
           "lib/netstandard2.0/Colorful.Console.dll": {}
         }
       },
-      "gtanetwork.api/0.3.1.1": {
+      "gtanetwork.api/0.3.2.1": {
         "type": "package",
         "dependencies": {
           "Colorful.Console": "1.2.1",
@@ -35,7 +35,8 @@
           "Microsoft.CodeAnalysis.Scripting": "2.6.1",
           "Microsoft.NETCore.App": "2.0.0",
           "Microsoft.Net.Compilers": "2.6.1",
-          "Newtonsoft.Json": "10.0.3"
+          "Newtonsoft.Json": "10.0.3",
+          "xxHash.Core": "0.3.0"
         },
         "compile": {
           "lib/netcoreapp2.0/Bootstrapper.dll": {}
@@ -427,7 +428,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "MySql.Data/6.10.5": {
+      "MySql.Data/6.10.6": {
         "type": "package",
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.4.0",
@@ -506,6 +507,18 @@
             "codeLanguage": "any",
             "copyToOutput": false
           }
+        }
+      },
+      "NeoSmart.Hashing/0.1.0": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/NeoSmart.Hashing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/NeoSmart.Hashing.dll": {}
         }
       },
       "NETStandard.Library/2.0.0": {
@@ -2103,6 +2116,19 @@
       },
       "types-ragemp-client/0.0.5": {
         "type": "package"
+      },
+      "xxHash.Core/0.3.0": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "neosmart.hashing": "0.1.0"
+        },
+        "compile": {
+          "lib/netstandard1.3/xxHash.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/xxHash.dll": {}
+        }
       }
     }
   },
@@ -2123,12 +2149,12 @@
         "lib/netstandard2.0/Colorful.Console.dll"
       ]
     },
-    "gtanetwork.api/0.3.1.1": {
-      "sha512": "Bu7WEAe3nFFw2Wiscp3hYnXm1k0h4TEWZ1uXLEYrGG3IXXu7sm95y41a4LPfzmshz6FmY73XmPTIIyI+ejvxBw==",
+    "gtanetwork.api/0.3.2.1": {
+      "sha512": "X+f0KIlS9mJuf3Uci0cvopPXBSSX64LBI57nRxxINYQpAp+w8Nvh39/+SCFl1f8dEbZ6pGcupQv2olkopDKTiw==",
       "type": "package",
-      "path": "gtanetwork.api/0.3.1.1",
+      "path": "gtanetwork.api/0.3.2.1",
       "files": [
-        "gtanetwork.api.0.3.1.1.nupkg.sha512",
+        "gtanetwork.api.0.3.2.1.nupkg.sha512",
         "gtanetwork.api.nuspec",
         "lib/netcoreapp2.0/Bootstrapper.dll",
         "lib/netcoreapp2.0/Bootstrapper.runtimeconfig.json",
@@ -2727,10 +2753,10 @@
         "runtime.json"
       ]
     },
-    "MySql.Data/6.10.5": {
-      "sha512": "XSrM/JWLHfikLZPn1yr/rERDPFeqzjr0f6aKGolA2Mxl+4RZiYZqFEu8lRJ4UwwOI3sa3KqLxUBva4rsrL+G6Q==",
+    "MySql.Data/6.10.6": {
+      "sha512": "dcod4CxVkrRANjfVWS7um5HTyLFJhyBGp5hVSdmrhhZZiP9cX3ZNfoZ0W88f6lDWExJuILsAIbctZirQ9mpjQQ==",
       "type": "package",
-      "path": "mysql.data/6.10.5",
+      "path": "mysql.data/6.10.6",
       "files": [
         "content/app.config.transform",
         "content/docs/MySqlCommand.xml",
@@ -2805,8 +2831,21 @@
         "lib/netstandard1.3/MySql.Data.xml",
         "lib/netstandard2.0/MySql.Data.dll",
         "lib/netstandard2.0/MySql.Data.xml",
-        "mysql.data.6.10.5.nupkg.sha512",
+        "mysql.data.6.10.6.nupkg.sha512",
         "mysql.data.nuspec"
+      ]
+    },
+    "NeoSmart.Hashing/0.1.0": {
+      "sha512": "2DIUrkK254XIxPc9qc48NAXjUSuz87UelhVL9qzb8yMPNdZWOSVKUZo8CchP3GDeIxV0qoAocg4bctfINFkeuw==",
+      "type": "package",
+      "path": "neosmart.hashing/0.1.0",
+      "files": [
+        "lib/net20/NeoSmart.Hashing.dll",
+        "lib/net40/NeoSmart.Hashing.dll",
+        "lib/net46/NeoSmart.Hashing.dll",
+        "lib/netstandard1.3/NeoSmart.Hashing.dll",
+        "neosmart.hashing.0.1.0.nupkg.sha512",
+        "neosmart.hashing.nuspec"
       ]
     },
     "NETStandard.Library/2.0.0": {
@@ -6840,13 +6879,26 @@
         "types-ragemp-client.0.0.5.nupkg.sha512",
         "types-ragemp-client.nuspec"
       ]
+    },
+    "xxHash.Core/0.3.0": {
+      "sha512": "MMjX3/OInZfN+Eo4HQ+2/2HBz5JtL37B9UN4ZCN5c8j5RjL8j8ldYuJABmprn0V1qZrd+I0vZfvCFFh5829CSQ==",
+      "type": "package",
+      "path": "xxhash.core/0.3.0",
+      "files": [
+        "lib/net20/xxHash.dll",
+        "lib/net40/xxHash.dll",
+        "lib/netstandard1.3/xxHash.dll",
+        "xxhash.core.0.3.0.nupkg.sha512",
+        "xxhash.core.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "Microsoft.NETCore.App >= 2.0.0",
-      "MySql.Data >= 6.10.5",
-      "gtanetwork.api >= 0.3.1.1",
+      "MySql.Data >= 6.10.6",
+      "Newtonsoft.Json >= 10.0.3",
+      "gtanetwork.api >= 0.3.2.1",
       "types-ragemp-client >= 0.0.5"
     ]
   },
@@ -6902,11 +6954,15 @@
           },
           "MySql.Data": {
             "target": "Package",
-            "version": "[6.10.5, )"
+            "version": "[6.10.6, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[10.0.3, )"
           },
           "gtanetwork.api": {
             "target": "Package",
-            "version": "[0.3.1.1, )"
+            "version": "[0.3.2.1, )"
           },
           "types-ragemp-client": {
             "target": "Package",

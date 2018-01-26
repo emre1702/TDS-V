@@ -22,7 +22,6 @@
 		private static uint lastPlayerUID;
 
 		public Account () {
-			Event.OnClientEventTrigger += OnClientEvent;
             Event.OnPlayerDisconnected += OnPlayerDisconnected;
             Event.OnPlayerConnect += OnPlayerBeginConnect;
             Event.OnPlayerConnected += OnPlayerConnected;
@@ -45,40 +44,35 @@
             NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 );
         }
 
-		private void OnClientEvent ( Client player, string eventName, params dynamic[] args ) {
-            try {
-				switch ( eventName ) {
+        [RemoteEvent ( "onPlayerTryRegister" )]
+        private void OnPlayerTryRegisterEvent ( Client player, string password, string email ) {
+            if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
+                return;
+            string registerpw = Utility.ConvertToSHA512 ( password );
+            lastPlayerUID++;
+            PlayerUIDs[player.SocialClubName] = lastPlayerUID;
+            Register.RegisterPlayer ( player, lastPlayerUID, registerpw, email );
+        }
 
-					case "onPlayerTryRegister":
-                        if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
-                            return;
-						string registerpw = Utility.ConvertToSHA512 ( args[0] );
-						lastPlayerUID++;
-						PlayerUIDs[player.SocialClubName] = lastPlayerUID;
-						Register.RegisterPlayer ( player, lastPlayerUID, registerpw, args[1] );
-						break;
+        [RemoteEvent ( "onPlayerTryLogin" )]
+        private void OnPlayerTryLoginEvent ( Client player, string password ) {
+            if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
+                string loginpw = Utility.ConvertToSHA512 ( password );
+                Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], loginpw );
+            } else
+                player.SendLangNotification ( "account_doesnt_exist" );
+        }
 
-					case "onPlayerTryLogin":
-						if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
-                            string loginpw = Utility.ConvertToSHA512 ( args[0] );
-							Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], loginpw );
-						} else
-							player.SendLangNotification ( "account_doesnt_exist" );
-						break;
+        [RemoteEvent ( "onPlayerLanguageChange" )]
+        private void OnPlayerLanguageChangeEvent ( Client player, string language ) {
+            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), language );
+        }
 
-					case "onPlayerLanguageChange":
-						player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), args[0] );
-						break;
-
-					case "onPlayerChatLoad":
-						player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), args[0] );
-                        SendWelcomeMessage ( player );
-						break;
-				}
-			} catch ( Exception ex ) {
-				Log.Error ( "Error in OnClientEvent AccountManager:" + ex.Message );
-			}
-		}
+        [RemoteEvent ( "onPlayerChatLoad" )]
+        private void OnPlayerChatLoadEvent ( Client player, string language ) {
+            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), language );
+            SendWelcomeMessage ( player );
+        }
 
 		public static void AddAccount ( string name, uint uid ) {
 			PlayerUIDs[name] = uid;

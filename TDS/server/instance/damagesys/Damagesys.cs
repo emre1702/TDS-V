@@ -9,7 +9,6 @@
 		private readonly FightLobby lobby;
 
 		public Damagesys () {
-		    Event.OnClientEventTrigger += OnPlayerHitOtherPlayer;
             Event.OnPlayerDeath += OnPlayerDeath;
 		}
 

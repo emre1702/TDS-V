@@ -166,21 +166,20 @@
                             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
 						if ( hitted.Health == 0 ) {
 							hitted.Kill ();
-							OnPlayerDeath ( hitted, player.Handle, weapon, null );
+							OnPlayerDeath ( hitted, player, weapon, null );
 						}
 					}
 				}
 			}
 		}
 
-		private void OnPlayerHitOtherPlayer ( Client player, string name, dynamic[] args ) {
-			if ( name == "onPlayerHitOtherPlayer" ) {
-				Client hitted = NAPI.Player.GetPlayerFromHandle ( args[0] );
-				if ( hitted != null ) {
-					Lobby playerlobby = player.GetChar ().Lobby;
-					if ( playerlobby is FightLobby fightlobby )
-                        fightlobby.DmgSys.DamagedPlayer ( player, hitted, args[1], args[2] );
-				}
+        [RemoteEvent ( "onPlayerHitOtherPlayer" )]
+		private void OnPlayerHitOtherPlayer ( Client player, NetHandle hittedhandle, uint weapon, bool headshot ) {
+			Client hitted = NAPI.Player.GetPlayerFromHandle ( hittedhandle );
+			if ( hitted != null ) {
+				Lobby playerlobby = player.GetChar ().Lobby;
+				if ( playerlobby is FightLobby fightlobby )
+                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, weapon, headshot );
 			}
 		}
 	}

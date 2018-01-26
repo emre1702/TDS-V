@@ -39,7 +39,7 @@
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "osay" );
 			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] ~w~" + player.SocialClubName + ": ~s~" + message;
-			API.SendChatMessageToAll ( changedmessage );
+			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminChat ( Client player, string message ) {
