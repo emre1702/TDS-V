@@ -16,7 +16,6 @@
 
 		private void OnPlayerDeath ( Client player, Client killer, uint weapon, CancelEventArgs cancel ) {
             cancel.Spawn = false;
-
             if ( !sDeadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 

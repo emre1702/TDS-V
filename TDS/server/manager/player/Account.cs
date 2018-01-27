@@ -3,7 +3,8 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Data;
-	using System.Threading.Tasks;
+    using System.Text;
+    using System.Threading.Tasks;
 	using database;
 	using extend;
     using GTANetworkAPI;
@@ -29,11 +30,13 @@
         }
 
 		private static void SendWelcomeMessage ( Client player ) {
-            player.SendChatMessage ( "~o~__________________________________________~w~" );
+            StringBuilder builder = new StringBuilder ();
+            builder.Append ( "#o#__________________________________________#w#" );
 			for ( int i = 1; i <= 6; i++ ) {
-                player.SendChatMessage ( "~n~" + player.GetLang ( "welcome_" + i ) );
+                builder.Append ( "#n#"+player.GetLang ( "welcome_" + i ) );
 			}
-            player.SendChatMessage ( "~n~~o~__________________________________________" ) ;
+            builder.Append ( "#n##o#__________________________________________" );
+            player.SendChatMessage ( builder.ToString () );
 		}
 
         private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
@@ -45,34 +48,35 @@
         }
 
         [RemoteEvent ( "onPlayerTryRegister" )]
-        private void OnPlayerTryRegisterEvent ( Client player, string password, string email ) {
+        public void OnPlayerTryRegisterEvent ( Client player, params object[] args ) {
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
                 return;
-            string registerpw = Utility.ConvertToSHA512 ( password );
+            string registerpw = Utility.ConvertToSHA512 ( (string)args[0] );
             lastPlayerUID++;
             PlayerUIDs[player.SocialClubName] = lastPlayerUID;
-            Register.RegisterPlayer ( player, lastPlayerUID, registerpw, email );
+            Register.RegisterPlayer ( player, lastPlayerUID, registerpw, (string)args[1] );
+        }
+
+        [RemoteEvent ( "onPlayerChatLoad" )]
+        public void OnPlayerChatLoadEvent ( Client player, params object[] args ) {
+            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), (string) args[0] );
+            SendWelcomeMessage ( player );
         }
 
         [RemoteEvent ( "onPlayerTryLogin" )]
-        private void OnPlayerTryLoginEvent ( Client player, string password ) {
+        public void OnPlayerTryLoginEvent ( Client player, params object[] args ) {
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
-                string loginpw = Utility.ConvertToSHA512 ( password );
+                string loginpw = Utility.ConvertToSHA512 ( (string) args[0] );
                 Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], loginpw );
             } else
                 player.SendLangNotification ( "account_doesnt_exist" );
         }
 
         [RemoteEvent ( "onPlayerLanguageChange" )]
-        private void OnPlayerLanguageChangeEvent ( Client player, string language ) {
-            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), language );
+        public void OnPlayerLanguageChangeEvent ( Client player, params object[] args ) {
+            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), (string) args[0] );
         }
 
-        [RemoteEvent ( "onPlayerChatLoad" )]
-        private void OnPlayerChatLoadEvent ( Client player, string language ) {
-            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), language );
-            SendWelcomeMessage ( player );
-        }
 
 		public static void AddAccount ( string name, uint uid ) {
 			PlayerUIDs[name] = uid;

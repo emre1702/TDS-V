@@ -31,7 +31,7 @@
 		}
 
 		private void RemoveAllCreated () {
-			List<Blip> blips = NAPI.Pools.GetAllBlips ();
+			 List<Blip> blips = NAPI.Pools.GetAllBlips ();
 			foreach ( Blip blip in blips )
 				NAPI.Entity.DeleteEntity ( blip );
 
@@ -39,9 +39,9 @@
 			foreach ( Marker marker in markers )
                 NAPI.Entity.DeleteEntity ( marker );
 
-			/*List<NetHandle> peds = NAPI.Pools.GetAllPeds ();
-			foreach ( NetHandle ped in peds )
-                NAPI.Entity.DeleteEntity ( ped ); */
+			//List<NetHandle> peds = NAPI.Pools.GetAllPeds ();
+			//foreach ( NetHandle ped in peds )
+            //    NAPI.Entity.DeleteEntity ( ped ); 
 
 			List<Pickup> pickups = NAPI.Pools.GetAllPickups ();
 			foreach ( Pickup pickup in pickups )
@@ -53,7 +53,7 @@
 
 			List<GTANetworkAPI.Object> objects = NAPI.Pools.GetAllObjects ();
 			foreach ( GTANetworkAPI.Object obj in objects )
-                NAPI.Entity.DeleteEntity ( obj );
+                NAPI.Entity.DeleteEntity ( obj );  
 		}
 	}
 

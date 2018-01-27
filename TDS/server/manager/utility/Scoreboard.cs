@@ -22,16 +22,18 @@ namespace TDS.server.manager.utility {
         public int Amount = 1;
     }
 
-	class Scoreboard {
+	class Scoreboard: Script {
 
-		public static string GetHoursOpticByMinutes ( uint minutes ) {
+        public Scoreboard ( ) { }
+
+        public static string GetHoursOpticByMinutes ( uint minutes ) {
 			uint hours = minutes / 60;
 			minutes = minutes % 60;
 			return hours + ":" + ( minutes < 10 ? "0" + minutes : minutes.ToString () );
 		}
 
         [RemoteEvent ( "onClientRequestPlayerListDatas" )]
-		private void OnClientRequestPlayerListDatas ( Client player ) {
+        public void OnClientRequestPlayerListDatas ( Client player ) {
             List<Client> players = NAPI.Pools.GetAllPlayers ();
 
             List<ScoreboardPlayerData> playersdata = new List<ScoreboardPlayerData> ();

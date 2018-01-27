@@ -14,12 +14,12 @@
 			[4] = "Owner"
 		};
 		public static Dictionary<uint, string> LevelFontColor = new Dictionary<uint, string> {
-			[0] = "~s~",
-			[1] = "~g~",
-			[2] = "~o~",
-			[3] = "~dr~",
-			[4] = "~dr~"
-		};
+			[0] = "#s#",
+			[1] = "#g#",
+			[2] = "#o#",
+			[3] = "#dr#",
+			[4] = "#dr#"
+        };
 		public static Dictionary<uint, List<Client>> AdminsOnline = new Dictionary<uint, List<Client>> {
 			[1] = new List<Client> (),
 			[2] = new List<Client> (),

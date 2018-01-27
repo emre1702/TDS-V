@@ -71,7 +71,7 @@ namespace TDS.server.instance.lobby {
         public void SendTeamOrder ( Client player, string ordershort ) {
             Character character = player.GetChar ();
             string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
-            string beforemessage = "[TEAM] ~" + teamfontcolor + "~" + player.SocialClubName + "~r~: ";
+            string beforemessage = "[TEAM] #" + teamfontcolor + "#" + player.SocialClubName + "#r#: ";
             SendAllPlayerLangMessage ( ordershort, player.GetChar ().Team, beforemessage );
         }
     }

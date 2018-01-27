@@ -15,13 +15,14 @@ namespace TDS.server.instance.lobby {
 
         #region Lobby
         [RemoteEvent("joinLobby")]
-        private void JoinLobbyEvent ( Client player, int index, bool spectator ) {
+        public void JoinLobbyEvent ( Client player, params object[] args ) {
+            int index = (int) args[0];
             if ( Lobby.SLobbiesByIndex.ContainsKey ( index ) ) {
                 Lobby lobby = Lobby.SLobbiesByIndex[index];
                 if ( lobby is Arena arenalobby )
-                    arenalobby.AddPlayer ( player, spectator );
+                    arenalobby.AddPlayer ( player, (bool) args[1] );
                 else
-                    lobby.AddPlayer ( player, spectator );
+                    lobby.AddPlayer ( player, (bool) args[1] );
             } else {
                 /* player.sendNotification (  lobby doesn't exist ); */
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );  //TODO is that needed?
@@ -31,23 +32,23 @@ namespace TDS.server.instance.lobby {
 
          #region Spectate
         [RemoteEvent("spectateNext")]
-        private void SpectateNextEvent ( Client player, bool forward ) {
+        public void SpectateNextEvent ( Client player, params object[] args ) {
             Character character = player.GetChar ();
             if ( !( character.Lobby is Arena arena ) )
                 return;
             if ( character.Lifes == 0 &&
                 ( arena.status == LobbyStatus.ROUND || character.Team == 0 && arena.status == LobbyStatus.COUNTDOWN ) ) {
                 if ( character.Team == 0 )
-                    arena.SpectateAllTeams ( player, forward );
+                    arena.SpectateAllTeams ( player, (bool) args[0] );
                 else
-                    arena.SpectateTeammate ( player, forward );
+                    arena.SpectateTeammate ( player, (bool) args[0] );
             }
         }
         #endregion
                 
         #region Round
         [RemoteEvent( "onPlayerWasTooLongOutsideMap" )]
-        private void TooLongOutsideMapEvent ( Client player ) {
+        public void TooLongOutsideMapEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
@@ -57,7 +58,7 @@ namespace TDS.server.instance.lobby {
 
         #region MapVote
         [RemoteEvent( "onMapsListRequest" )]
-        private void OnMapsListRequestEvent ( Client player ) {
+        public void OnMapsListRequestEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
@@ -65,46 +66,46 @@ namespace TDS.server.instance.lobby {
         }
                 
         [RemoteEvent ( "onMapVotingRequest" )]
-        private void OnMapVotingRequestEvent ( Client player, string mapname ) {
+        public void OnMapVotingRequestEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
-            arena.AddMapToVoting ( player, mapname );
+            arena.AddMapToVoting ( player, (string) args[0] );
         }
         
         [RemoteEvent ( "onVoteForMap" )]
-        private void OnVoteForMapEvent ( Client player, string mapname ) {
+        public void OnVoteForMapEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
-            arena.AddVoteToMap ( player, mapname );
+            arena.AddVoteToMap ( player, (string) args[0] );
         }
         #endregion
 
         #region Bomb
         [RemoteEvent ( "onPlayerStartPlanting" )]
-        private void onPlayerStartPlantingEvent ( Client player ) {
+        public void onPlayerStartPlantingEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StartBombPlanting ( player );
         }
                       
         [RemoteEvent ( "onPlayerStopPlanting" )]
-        private void onPlayerStopPlantingEvent ( Client player ) {
+        public void onPlayerStopPlantingEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StopBombPlanting ( player );
         }
 
         [RemoteEvent ( "onPlayerStartDefusing" )]
-        private void onPlayerStartDefusingEvent ( Client player ) {
+        public void onPlayerStartDefusingEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StartBombDefusing ( player );
         }
         
         [RemoteEvent ( "onPlayerStopDefusing" )]
-        private void onPlayerStopDefusingEvent ( Client player ) {
+        public void onPlayerStopDefusingEvent ( Client player ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StopBombDefusing ( player );
@@ -119,8 +120,8 @@ namespace TDS.server.instance.lobby {
 
         #region Order
         [RemoteEvent ( "onPlayerGiveOrder" )]
-        private void OnPlayerGiveOrderEvent ( Client player, string ordershort ) {
-            player.GetChar ().Lobby.SendTeamOrder ( player, ordershort );
+        public void OnPlayerGiveOrderEvent ( Client player, params object[] args ) {
+            player.GetChar ().Lobby.SendTeamOrder ( player, (string) args[0] );
         }
         #endregion
 

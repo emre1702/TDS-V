@@ -174,12 +174,12 @@
 		}
 
         [RemoteEvent ( "onPlayerHitOtherPlayer" )]
-		private void OnPlayerHitOtherPlayer ( Client player, NetHandle hittedhandle, uint weapon, bool headshot ) {
-			Client hitted = NAPI.Player.GetPlayerFromHandle ( hittedhandle );
+        public void OnPlayerHitOtherPlayer ( Client player, params object[] args ) {
+			Client hitted = NAPI.Player.GetPlayerFromHandle ( (NetHandle) args[0] );
 			if ( hitted != null ) {
 				Lobby playerlobby = player.GetChar ().Lobby;
 				if ( playerlobby is FightLobby fightlobby )
-                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, weapon, headshot );
+                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, (uint) args[1], (bool) args[2] );
 			}
 		}
 	}

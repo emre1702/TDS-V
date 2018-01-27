@@ -17,7 +17,7 @@
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "chat " + character.Lobby.Name );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
-			string changedmessage = "~" + teamfontcolor + "~" + player.SocialClubName + "~s~: " + message;
+			string changedmessage = "#" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
 			character.Lobby.SendAllPlayerChatMessage ( changedmessage );
 		}
 
@@ -31,21 +31,21 @@
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "global" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
-			string changedmessage = "[GLOBAL] ~" + teamfontcolor + "~" + player.SocialClubName + "~s~: " + message;
+			string changedmessage = "[GLOBAL] #" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
 			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminMessage ( Client player, string message ) {
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "osay" );
-			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] ~w~" + player.SocialClubName + ": ~s~" + message;
+			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] #w#" + player.SocialClubName + ": #s#" + message;
 			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
 		public void SendAdminChat ( Client player, string message ) {
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "achat" );
-			string changedmessage = "~w~[ADMINCHAT] " + Admin.LevelFontColor[character.AdminLvl] + player.SocialClubName + ": ~s~" + message;
+			string changedmessage = "[ADMINCHAT] " + Admin.LevelFontColor[character.AdminLvl] + player.SocialClubName + ": #s#" + message;
 			Admin.SendChatMessageToAdmins ( changedmessage );
 		}
 
@@ -53,7 +53,7 @@
 			Character character = player.GetChar ();
 			Log.Chat ( message, player, "team" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
-			string changedmessage = "[TEAM] ~" + teamfontcolor + "~" + player.SocialClubName + "~s~: " + message;
+			string changedmessage = "[TEAM] #" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
 			character.Lobby.SendAllPlayerChatMessage ( changedmessage, (int) character.Team );
 		}
 
