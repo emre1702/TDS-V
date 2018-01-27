@@ -21,10 +21,15 @@
     <None Remove="client\node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="gtanetwork.api" Version="0.3.2.1" />
     <PackageReference Include="MySql.Data" Version="6.10.6" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
     <PackageReference Include="types-ragemp-client" Version="0.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>..\..\..\..\..\..\..\RAGEMP\server-files\bridge\runtime\bootstrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
