@@ -8,23 +8,23 @@ let chatbodies = [
     $( "#dirty-chat-body" )
 ];
 let chatends = ["$normal$", "$dirty$"];
-let chosentab = chatbodies[0];
+let chosentab = $( "#normal_chat" );
 let chosenchatbody = 0;
 
 let colorreplace = [
-    [/~r~/g, "rgb(222, 50, 50)"],
-    [/~b~/g, "rgb(92, 180, 227)"],
-    [/~g~/g, "rgb(113, 202, 113)"],
-    [/~y~/g, "rgb(238, 198, 80)"],
-    [/~p~/g, "rgb(131, 101, 224)"],
-    [/~q~/g, "rgb(226, 79, 128)"],
-    [/~o~/g, "rgb(253, 132, 85)"],
-    //[ /~c~/g, "rgb(139, 139, 139)" ],
-    //[ /~m~/g, "rgb(99, 99, 99)" ],
-    //[ /~u~/g, "rgb(0, 0, 0)" ],
-    [/~s~/g, "rgb(220, 220, 220)"],
-    [/~w~/g, "white"],
-    [/~dr~/g, "rgb(169, 25, 25)"]
+    [/#r#/g, "rgb(222, 50, 50)"],
+    [/#b#/g, "rgb(92, 180, 227)"],
+    [/#g#/g, "rgb(113, 202, 113)"],
+    [/#y#/g, "rgb(238, 198, 80)"],
+    [/#p#/g, "rgb(131, 101, 224)"],
+    [/#q#/g, "rgb(226, 79, 128)"],
+    [/#o#/g, "rgb(253, 132, 85)"],
+    //[ /#c#/g, "rgb(139, 139, 139)" ],
+    //[ /#m#/g, "rgb(99, 99, 99)" ],
+    //[ /#u#/g, "rgb(0, 0, 0)" ],
+    [/#s#/g, "rgb(220, 220, 220)"],
+    [/#w#/g, "white"],
+    [/#dr#/g, "rgb(169, 25, 25)"]
 ];
 
 
@@ -80,20 +80,20 @@ function formatMsg( input ) {
     let start = '<span style="color: white;">';
 
     let replaced = input;
-    if ( input.indexOf( "~" ) !== -1 ) {
+    if ( input.indexOf( "#" ) !== -1 ) {
         for ( let i = 0; i < colorreplace.length; ++i ) {
             replaced = replaced.replace( colorreplace[i][0], "</span><span style='color: "+colorreplace[i][1] + ";'>" );
         }
-        replaced = replaced.replace( /~n~/g, '<br>' );
+        replaced = replaced.replace( /#n#/g, '<br>' );
     }
 
     return start + replaced + "</span>";
 }
 
-function addChildToChatBody( child, chatbody ) {
+function addChildToChatBody( child, chatbody, index ) {
     chatbody.append( child );
-    if ( ++amountentries[i] >= maxentries ) {
-        --amountentries[i];
+    if ( ++amountentries[index] >= maxentries ) {
+        --amountentries[index];
         chatbody.find( "text:first" ).remove();
     }
     updateScroll ( chatbody );
@@ -103,26 +103,28 @@ function addMessage( msg ) {
     // output in the chatbody when ending with one of chatends //
     for ( let i = 0; i < chatends.length; ++i ) {
         if ( msg.endsWith( chatends[i] ) ) {
-            msg = msg.substring( chatends[i].length + 1 );
+            msg = msg.slice( 0, -chatends[i].length );
             let chatbody = getChatBody( i );
-            let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
-            addChildToChatBody( child, chatbody );
+            let formattedmsg = formatMsg( msg );
+            let child = $( "<text>" + formattedmsg + "</text>" );
+            addChildToChatBody( child, chatbody, i );
             return;
         }
     }
 
+    let formattedmsg = formatMsg( msg );
     // else output in all chatbodies //
     for ( let i = 0; i < chatbodies.length; ++i ) {
         let chatbody = getChatBody( i );
-        let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
-        addChildToChatBody( child, chatbody );
+        let child = $( "<text>" + formattedmsg + "</text>" );
+        addChildToChatBody( child, chatbody, i );
     }
 
 }
 
 function getChatBody( index = -1 ) {
     let theindex = index === -1 ? chosenchatbody : index;
-    return chatbodies[index];
+    return chatbodies[theindex];
 }
 
 $( document ).ready( function () {
@@ -140,10 +142,11 @@ $( document ).ready( function () {
             if ( msg ) {
                 if ( msg[0] === "/" ) {
                     msg = msg.substr( 1 );
-                    if ( msg.length > 0 )
+                    if ( msg.length > 0 ) {
                         mp.invoke( "command", msg );
+                    }
                 } else {
-                    mp.invoke( "chatMessage", msg+chatends[chosenchatbody] );
+                    mp.invoke( "chatMessage", msg + chatends[chosenchatbody] );
                 }
             }
 

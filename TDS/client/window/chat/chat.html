@@ -17,7 +17,6 @@
             body {
                 position: relative;
                 font-family: Roboto, Arial;
-                display: normal;
             }
 
             ::-webkit-scrollbar {
@@ -26,7 +25,6 @@
             }
 
             .chat-body {
-                background: inherit;
                 overflow-y: scroll;
                 left: 5px;
                 max-width: 35vw;
@@ -42,9 +40,10 @@
                 display: none;
             }
 
-            .chat-body text :not(:first-child) {
+            .chat-body text {
+                float: left;
+                clear: both;
                 white-space: pre-line;
-                display: inline;
                 position: relative;
                 min-height: 20px;
                 top: 0px;
@@ -83,28 +82,14 @@
         </style>
     </head>
     <body>
-        <div id="normal-chat-body" class="chat-body">
-            <text>test</text>
-            <text>test</text>
-            <text>test</text>
-            <text>test</text>
-            <text>test</text>
-            <text>test</text>
-        </div>
-        <div id="dirty-chat-body" class="chat-body">
-            <text>test2</text>
-            <text>test2</text>
-            <text>test2</text>
-            <text>test2</text>
-            <text>test2</text>
-            <text>test2</text>
-        </div>
+        <div id="normal-chat-body" class="chat-body"></div>
+        <div id="dirty-chat-body" class="chat-body"></div>
         <div id="chat_choice">
             <div id="normal_chat" data-chatID=0>normal</div>
             <div id="dirty_chat" data-chatID=1>dirty</div>
         </div>
         <input id="main-input" autofocus />
 
-        <script src="chat.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>
