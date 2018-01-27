@@ -8,7 +8,7 @@
 	using map;
     using utility;
 
-	class PlayerCommand {
+	class PlayerCommand : Script {
 
 		#region Lobby
 		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", Group = "user" )]
