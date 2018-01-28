@@ -33,6 +33,7 @@
 
 				// log-save //
 				Log.SaveInDatabase ();
+                Season.SaveSeason ();
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in MinuteTimerFunc:" + ex.Message );
 			}
