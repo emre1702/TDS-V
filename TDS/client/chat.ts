@@ -4,6 +4,7 @@ mp.gui.execute( "window.location = 'package://TDS-V/window/chat/index.html'" );
 
 mp.events.add( "onChatLoad", () => {
     loadLanguage();
+    mp.gui.execute( "loadUserName ('" + localPlayer.name + "');" );
     mp.events.callRemote( "onPlayerChatLoad", languagesetting );
 } );
 

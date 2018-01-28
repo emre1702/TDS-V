@@ -14,6 +14,7 @@ let chattabs = [
 let chatends = ["$normal$", "$dirty$"];
 let chosentab = chattabs[0];
 let chosenchatbody = 0;
+let myname = null;
 
 let colorreplace = [
     [/#r#/g, "rgb(222, 50, 50)"],
@@ -85,8 +86,12 @@ chatAPI["show"] = ( toggle ) => {
     active = toggle;
 };
 
-function formatMsg( input ) {
-    let start = '<span style="color: white;">';
+function formatMsg( input, ismentioned ) {
+    let start; 
+    if ( ismentioned )
+        start = '<span style="color: white; background-color: rgba(255,178,102, 100);">';
+    else 
+        start = '<span style="color: white;">';
 
     let replaced = input;
     if ( input.indexOf( "#" ) !== -1 ) {
@@ -99,6 +104,21 @@ function formatMsg( input ) {
     return start + replaced + "</span>";
 }
 
+function isMentioned( msg ) {
+    if ( myname === null )
+        return false;
+    let firstindex = msg.indexOf( "@" );
+    if ( firstindex === -1 )
+        return false;
+    let lastindex = msg.indexOf( ":", firstindex + 1 );
+    if ( lastindex === -1 )
+        return false;
+    let name = msg.substring( firstindex, lastindex );
+    if ( name === myname )
+        return true;
+    return false;
+}
+
 function addChildToChatBody( child, chatbody, index ) {
     chatbody.append( child );
     if ( ++amountentries[index] >= maxentries ) {
@@ -109,19 +129,21 @@ function addChildToChatBody( child, chatbody, index ) {
 }
 
 function addMessage( msg ) {
+    let ismentioned = isMentioned( msg );
+
     // output in the chatbody when ending with one of chatends //
     for ( let i = 0; i < chatends.length; ++i ) {
         if ( msg.endsWith( chatends[i] ) ) {
             msg = msg.slice( 0, -chatends[i].length );
             let chatbody = getChatBody( i );
-            let formattedmsg = formatMsg( msg );
+            let formattedmsg = formatMsg( msg, ismentioned );
             let child = $( "<text>" + formattedmsg + "</text>" );
             addChildToChatBody( child, chatbody, i );
             return;
         }
     }
 
-    let formattedmsg = formatMsg( msg );
+    let formattedmsg = formatMsg( msg, ismentioned );
     // else output in all chatbodies //
     for ( let i = 0; i < chatbodies.length; ++i ) {
         let chatbody = getChatBody( i );
@@ -134,6 +156,10 @@ function addMessage( msg ) {
 function getChatBody( index = -1 ) {
     let theindex = index === -1 ? chosenchatbody : index;
     return chatbodies[theindex];
+}
+
+function loadUserName( username ) {
+    myname = username;
 }
 
 $( document ).ready( function () {

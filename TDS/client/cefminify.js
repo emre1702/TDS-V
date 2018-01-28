@@ -12,7 +12,7 @@ let files = [
     { path: "window/choice/", html: "choice.html", js: ["choice.js"], reserved: ["setLobbyChoiceLanguage"] },
     { path: "window/main/", html: "main.html", js: ["main.js"], 
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-                    "toggleCanVoteForMapWithNumpad", "loadOrderNames" ]
+            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "loadUserName" ]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], reserved: ["loadLanguage", "setLoginPanelData" ] }
 ];
