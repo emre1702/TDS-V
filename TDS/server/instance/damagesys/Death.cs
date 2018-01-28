@@ -19,16 +19,15 @@
             if ( !sDeadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 
+                player.Freeze ( true );
+                sDeadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000 ) );
+
                 if ( !( character.Lobby is FightLobby lobby ) )
                     return;
 
 				Damagesys dmgsys = lobby.DmgSys;
 
-				NAPI.ClientEvent.TriggerClientEvent ( player, "clientPlayerDeathNatives" );
-
-				player.Freeze ( true );
-                sDeadTimer.TryAdd ( player, Timer.SetTimer ( () => SpawnAfterDeath ( player ), 2000 ) );
-                killer = killer.Exists ? killer : dmgsys.GetLastHitter ( player, character );
+                killer = dmgsys.GetKiller ( player, killer, character );
 
 				dmgsys.PlayerSpree.Remove ( player );
 
@@ -36,7 +35,7 @@
                     lobby.OnPlayerDeath ( player, killer, weapon, character );
 
 					// Kill //
-					if ( killer != null ) {
+					if ( killer != player ) {
 						if ( character.Lobby is Arena )
 							killer.GetChar ().GiveKill();
 						if ( !dmgsys.PlayerKills.ContainsKey ( killer ) )
@@ -47,15 +46,26 @@
 						dmgsys.AddToKillingSpree ( killer );
 					}
 
-					if ( character.Lobby is Arena ) {
+					if ( character.Lobby is Arena ) 
 						// Death //
 						character.GiveDeath();
-						// Assist //
-						dmgsys.CheckForAssist ( player, character, killer );
-					}
-				}
+
+                    // Assist //
+                    dmgsys.CheckForAssist ( player, character, killer );
+                }
 			}
 		}
+
+        private Client GetKiller ( Client player, Client possiblekiller, Character character ) {
+            if ( player != possiblekiller && possiblekiller != null && possiblekiller.Exists )
+                return possiblekiller;
+
+            Client lasthitter = GetLastHitter ( player, character );
+            if ( lasthitter != null )
+                return lasthitter;
+
+            return player;
+        }
 
 		private static void SpawnAfterDeath ( Client player ) {
             sDeadTimer.Remove ( player, out Timer timer );
