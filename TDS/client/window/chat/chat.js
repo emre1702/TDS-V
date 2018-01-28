@@ -7,8 +7,12 @@ let chatbodies = [
     $( "#normal-chat-body" ),
     $( "#dirty-chat-body" )
 ];
+let chattabs = [
+    $( "#normal-chat" ),
+    $( "#dirty-chat" )
+];
 let chatends = ["$normal$", "$dirty$"];
-let chosentab = $( "#normal_chat" );
+let chosentab = chattabs[0];
 let chosenchatbody = 0;
 
 let colorreplace = [
@@ -68,10 +72,15 @@ chatAPI["activate"] = ( toggle ) => {
 };
 
 chatAPI["show"] = ( toggle ) => {
-    if ( toggle )
+    if ( toggle ) {
         getChatBody().show();
-    else
+        for ( let i = 0; i < chattabs.length; ++i )
+            chattabs[i].show();
+    } else {
         getChatBody().hide();
+        for ( let i = 0; i < chattabs.length; ++i )
+            chattabs[i].hide();
+    }
 
     active = toggle;
 };
