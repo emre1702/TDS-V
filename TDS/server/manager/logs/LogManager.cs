@@ -30,10 +30,10 @@
 		}
 
 		private static string GetValueString ( int index ) {
-			string str = "(@UID" + index + "@, @name" + index + "@, @targetUID" + index + "@, @type" + index + "@, @info" + index + "@, @lobby" + index + "@, @date" + index + "@)";
-			logQueryParameters["@UID" + index + "@"] = logQueryUIDs[index];
+			string str = "(@uid" + index + "@, @name" + index + "@, @targetuid" + index + "@, @type" + index + "@, @info" + index + "@, @lobby" + index + "@, @date" + index + "@)";
+			logQueryParameters["@uid" + index + "@"] = logQueryUIDs[index];
 			logQueryParameters["@name" + index + "@"] = logQueryNames[index];
-			logQueryParameters["@targetUID" + index + "@"] = logQueryTargetUIDs[index];
+			logQueryParameters["@targetuid" + index + "@"] = logQueryTargetUIDs[index];
 			logQueryParameters["@type" + index + "@"] = logQueryTypes[index];
 			logQueryParameters["@info" + index + "@"] = logQueryInfos[index];
 			logQueryParameters["@lobby" + index + "@"] = logQueryLobbies[index];
@@ -55,7 +55,7 @@
 			int amount = logQueryUIDs.Count;
 			if ( amount > 0 ) {
 				logQueryParameters = new Dictionary<string, string> ();
-				string sql = "INSERT INTO log (UID, name, targetUID, type, info, lobby, date) VALUES " + GetValueString ( 0 );
+				string sql = "INSERT INTO log (uid, name, targetuid, type, info, lobby, date) VALUES " + GetValueString ( 0 );
 
 				for ( int i = 1; i < logQueryUIDs.Count; i++ ) {
 					try {

@@ -43,7 +43,6 @@
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
             player.Freeze ( true );
             player.Name = player.SocialClubName;
-            NAPI.Util.ConsoleOutput ( "Already playerUID in: " + ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 ) );
             NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 );
         }
 
@@ -52,8 +51,7 @@
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
                 return;
             string registerpw = Utility.ConvertToSHA512 ( (string)args[0] );
-            lastPlayerUID++;
-            PlayerUIDs[player.SocialClubName] = lastPlayerUID;
+            PlayerUIDs[player.SocialClubName] = ++lastPlayerUID;
             Register.RegisterPlayer ( player, lastPlayerUID, registerpw, (string)args[1] );
         }
 
@@ -118,12 +116,12 @@
 
 		private async void OnResourceStart () {
 			try {
-				DataTable result = await Database.ExecResult ( "SELECT UID, name FROM player" ).ConfigureAwait ( false );
+				DataTable result = await Database.ExecResult ( "SELECT uid, name FROM player" ).ConfigureAwait ( false );
 				foreach ( DataRow row in result.Rows ) {
-					PlayerUIDs[row["name"].ToString ()] = Convert.ToUInt16 ( row["UID"] );
+					PlayerUIDs[row["name"].ToString ()] = Convert.ToUInt16 ( row["uid"] );
 				}
-				DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(UID) AS MaxUID FROM player" ).ConfigureAwait ( false );
-				lastPlayerUID = Convert.ToUInt16 ( maxuidresult.Rows[0]["MaxUID"] );
+				DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(uid) AS Maxuid FROM player" ).ConfigureAwait ( false );
+				lastPlayerUID = Convert.ToUInt16 ( maxuidresult.Rows[0]["Maxuid"] );
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in OnResourceStart AccountManager:" + ex.Message );
 			}
@@ -132,28 +130,31 @@
 		public static void SavePlayerData ( Client player ) {
 			Character character = player.GetChar ();
 			if ( character.LoggedIn ) {
-                Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY, kills = @KILLS, assists = @ASSISTS, deaths = @DEATHS, damage = @DAMAGE WHERE UID = @UID", new Dictionary<string, string> {
+                Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY WHERE uid = @UID", new Dictionary<string, string> {
                     {
                         "@PLAYTIME", character.Playtime.ToString ()
                     }, {
                         "@MONEY", character.Money.ToString ()
                     }, {
-                        "@KILLS", character.Kills.ToString ()
-                    }, {
-                        "@ASSISTS", character.Assists.ToString ()
-                    }, {
-                        "@DEATHS", character.Deaths.ToString ()
-                    }, {
-                        "@DAMAGE", character.Damage.ToString ()
-                    }, {
-                        "@UID", character.UID.ToString ()
+                        "@uid", character.UID.ToString ()
                     }
                 } );
-				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE UID = @UID", new Dictionary<string, string> {
+                Database.ExecPrepared ( "UPDATE playerarenastats SET currentkills = @CURRENTKILLS, currentassists = @CURRENTASSISTS, currentdeaths = @CURRENTDEATHS, currentdamage = @CURRENTDAMAGE, " +
+                    "totalkills = @TOTALKILLS, totalassists = @TOTALASSISTS, totaldeaths = @TOTALDEATHS, totaldamage = @TOTALDAMAGE WHERE uid = @UID", new Dictionary<string, string> {
+                        { "@CURRENTKILLS", character.Kills.ToString() },
+                        { "@CURRENTASSISTS", character.Assists.ToString() },
+                        { "@CURRENTDEATHS", character.Deaths.ToString() },
+                        { "@CURRENTDAMAGE", character.Damage.ToString() },
+                        { "@TOTALKILLS", character.TotalKills.ToString() },
+                        { "@TOTALASSISTS", character.TotalAssists.ToString() },
+                        { "@TOTALDEATHS", character.TotalDeaths.ToString() },
+                        { "@TOTALDAMAGE", character.TotalDamage.ToString() }
+                    } );
+				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE uid = @UID", new Dictionary<string, string> {
 					{
 						"@HITSOUND", character.HitsoundOn ? "1" : "0"
 					}, {
-						"@UID", character.UID.ToString ()
+                        "@UID", character.UID.ToString ()
 					}
 				} );
 			}
@@ -234,9 +235,9 @@
 		}
 
 		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string reason, Dictionary<string, string> queryparam ) {
-			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
+			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE uid = {1}", queryparam ).ConfigureAwait ( false );
 			string targetaddress = result.Rows[0]["address"].ToString ();
-			Database.ExecPrepared ( "DELETE FROM ban WHERE UID = {1}", queryparam );
+			Database.ExecPrepared ( "DELETE FROM ban WHERE uid = {1}", queryparam );
 			socialClubNameBanDict.Remove ( targetname );
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );

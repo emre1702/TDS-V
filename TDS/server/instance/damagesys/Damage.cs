@@ -134,8 +134,8 @@
 
 			//hitted.triggerEvent ( "onClientPlayerDamage" );
 
-			if ( lobby.IsOfficial )
-				character.Damage += (uint) damage;
+			if ( lobby is Arena )
+				character.GiveDamage ( (uint) damage );
 
 			// Reward //
 			if ( !PlayerDamage.ContainsKey ( player ) )

@@ -19,6 +19,7 @@
                     MainMenu.Create ();
                     Arena.Create ();
                 } );
+                Season.LoadSeason ();
             } catch ( Exception ex ) {
 				NAPI.Util.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
 			}

@@ -12,8 +12,12 @@ namespace TDS.server.instance.player {
 		public uint Money = 0;
 		public uint Kills = 0;
 		public uint Assists = 0;
-		public uint Deaths = 0;
+	    public uint Deaths = 0;
 		public uint Damage = 0;
+        public uint TotalKills = 0;
+        public uint TotalAssists = 0;
+        public uint TotalDeaths = 0;
+        public uint TotalDamage = 0;
 		public ushort Team = 0;
 		public ushort Lifes = 0;
 		public Language Language = Language.ENGLISH;
@@ -29,6 +33,26 @@ namespace TDS.server.instance.player {
 			LoggedIn = loggedin;
 		}
 
-	}
+        public void GiveKill () {
+            ++Kills;
+            ++TotalKills;
+        }
+
+        public void GiveAssist ( ) {
+            ++Assists;
+            ++TotalAssists;
+        }
+
+        public void GiveDeath ( ) {
+            ++Deaths;
+            ++TotalDeaths;
+        }
+
+        public void GiveDamage ( uint thedmg ) {
+            Damage += thedmg;
+            TotalDeaths += thedmg;
+        }
+
+    }
 
 }

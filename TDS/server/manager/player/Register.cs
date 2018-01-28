@@ -11,7 +11,7 @@
 		public static void RegisterPlayer ( Client player, uint uid, string password, string email ) {
 			Dictionary<string, string> parameters = new Dictionary<string, string> {
 				{
-					"@UID", uid.ToString ()
+                    "@uid", uid.ToString ()
 				}, {
 					"@name", player.SocialClubName
 				}, {
@@ -24,11 +24,12 @@
 			};
 			Dictionary<string, string> defaultparams = new Dictionary<string, string> {
 				{
-					"@UID", uid.ToString ()
+                    "@uid", uid.ToString ()
 				}
 			};
-			Database.ExecPrepared ( "INSERT INTO player (UID, name, password, email, registerdate) VALUES (@UID, @name, @password, @email, @registerdate);", parameters );
-			Database.ExecPrepared ( "INSERT INTO playersetting (UID) VALUES (@UID)", defaultparams );
+			Database.ExecPrepared ( "INSERT INTO player (uid, name, password, email, registerdate) VALUES (@uid, @name, @password, @email, @registerdate);", parameters );
+            Database.ExecPrepared ( "INSERT INTO playerarenastats (uid) VALUES (@uid);", defaultparams );
+            Database.ExecPrepared ( "INSERT INTO playersetting (uid) VALUES (@uid);", defaultparams );
             Account.AddAccount ( player.SocialClubName, uid );
             Login.LoginPlayer ( player, uid );
         }

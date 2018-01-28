@@ -115,7 +115,7 @@
 						} else {
 							if ( target != null )
 								targetaddress = target.Address;
-							DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE UID = {1}", queryparam ).ConfigureAwait ( false );
+							DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE uid = {1}", queryparam ).ConfigureAwait ( false );
 							targetadminlvl = Convert.ToUInt16 ( targetdata.Rows[0]["adminlvl"] );
 						}
 						if ( targetadminlvl <= player.GetChar ().AdminLvl ) {

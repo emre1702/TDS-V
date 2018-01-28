@@ -37,8 +37,8 @@
 
 					// Kill //
 					if ( killer != null ) {
-						if ( character.Lobby.IsOfficial )
-							killer.GetChar ().Kills++;
+						if ( character.Lobby is Arena )
+							killer.GetChar ().GiveKill();
 						if ( !dmgsys.PlayerKills.ContainsKey ( killer ) )
 							dmgsys.PlayerKills.TryAdd ( killer, 0 );
 						dmgsys.PlayerKills[killer]++;
@@ -47,9 +47,9 @@
 						dmgsys.AddToKillingSpree ( killer );
 					}
 
-					if ( character.Lobby.IsOfficial ) {
+					if ( character.Lobby is Arena ) {
 						// Death //
-						character.Deaths++;
+						character.GiveDeath();
 						// Assist //
 						dmgsys.CheckForAssist ( player, character, killer );
 					}
@@ -74,7 +74,8 @@
 					if ( entry.Value >= halfarmorhp ) {
 						Character targetcharacter = target.GetChar ();
 						if ( target.Exists && targetcharacter.Lobby == character.Lobby && killer != target ) {
-							targetcharacter.Assists++;
+                            if ( targetcharacter.Lobby is Arena )
+                                targetcharacter.GiveAssist ();
 							target.SendLangNotification ( "got_assist", player.Name );
 							if ( !PlayerAssists.ContainsKey ( target ) )
 								PlayerAssists[target] = 0;
@@ -97,7 +98,8 @@
 					Character lasthittercharacter = lastHitter.GetChar ();
 					if ( character.Lobby == lasthittercharacter.Lobby )
 						if ( lasthittercharacter.Lifes > 0 ) {
-							lasthittercharacter.Kills++;
+                            if ( character.Lobby is Arena )
+							    lasthittercharacter.GiveKill();
 							lastHitter.SendLangNotification ( "got_last_hitted_kill", player.Name );
 							AddToKillingSpree ( lastHitter );
 						}
