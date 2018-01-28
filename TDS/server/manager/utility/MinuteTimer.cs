@@ -11,6 +11,8 @@
 
 	class MinuteTimer : Script {
 
+        private static int counter = 0;
+
 		public MinuteTimer () {
 			Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
 		}
@@ -31,9 +33,13 @@
 					}
 				}
 
-				// log-save //
-				Log.SaveInDatabase ();
-                Season.SaveSeason ();
+                ++counter;
+
+                // log-save //
+                Log.SaveInDatabase ();
+
+                if ( counter % 30 == 0 )
+                    Season.SaveSeason ();
 			} catch ( Exception ex ) {
 				Log.Error ( "Error in MinuteTimerFunc:" + ex.Message );
 			}
