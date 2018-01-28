@@ -180,7 +180,7 @@
 				VehicleHash model = NAPI.Util.VehicleNameToModel ( name );
 
                 Vector3 rot = player.Rotation;
-				Vehicle veh = NAPI.Vehicle.CreateVehicle ( model, player.Position, rot.Z, 0, 0 );
+				Vehicle veh = NAPI.Vehicle.CreateVehicle ( model, player.Position, rot.Z, 0, 0, numberPlate: player.Name, dimension: player.Dimension );
 
 				NAPI.Player.SetPlayerIntoVehicle ( player, veh, -1 );
 			}
