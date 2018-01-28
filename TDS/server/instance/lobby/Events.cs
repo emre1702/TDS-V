@@ -58,7 +58,7 @@ namespace TDS.server.instance.lobby {
 
         #region MapVote
         [RemoteEvent( "onMapsListRequest" )]
-        public void OnMapsListRequestEvent ( Client player ) {
+        public void OnMapsListRequestEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
@@ -84,28 +84,28 @@ namespace TDS.server.instance.lobby {
 
         #region Bomb
         [RemoteEvent ( "onPlayerStartPlanting" )]
-        public void onPlayerStartPlantingEvent ( Client player ) {
+        public void onPlayerStartPlantingEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StartBombPlanting ( player );
         }
                       
         [RemoteEvent ( "onPlayerStopPlanting" )]
-        public void onPlayerStopPlantingEvent ( Client player ) {
+        public void onPlayerStopPlantingEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StopBombPlanting ( player );
         }
 
         [RemoteEvent ( "onPlayerStartDefusing" )]
-        public void onPlayerStartDefusingEvent ( Client player ) {
+        public void onPlayerStartDefusingEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StartBombDefusing ( player );
         }
         
         [RemoteEvent ( "onPlayerStopDefusing" )]
-        public void onPlayerStopDefusingEvent ( Client player ) {
+        public void onPlayerStopDefusingEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
             arena.StopBombDefusing ( player );
