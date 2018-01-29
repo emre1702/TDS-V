@@ -42,14 +42,24 @@
 		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", GreedyArg = true, Group = "user" )]
 		public static void GlobalChat ( Client player, string text ) {
             if ( player.GetChar().LoggedIn )
-			    Chat.Instance.SendGlobalMessage ( player, text );
+			    Chat.SendGlobalMessage ( player, text );
 		}
 
 		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", GreedyArg = true, Group = "user" )]
 		public static void TeamChat ( Client player, string text ) {
             if ( player.GetChar ().LoggedIn )
-                Chat.Instance.SendTeamChat ( player, text );
+                Chat.SendTeamChat ( player, text );
 		}
+
+        [Command ( "msg", Alias = "message,pm", Description = "Writes a private-message to a player", GreedyArg = true, Group = "user" )]
+        public static void PrivateMessage ( Client player, Client target, string text ) {
+            if ( player.GetChar ().LoggedIn && player != target ) {
+                if ( target.GetChar ().LoggedIn )
+                    Chat.SendPrivateMessage ( player, target, text );
+                else
+                    player.SendLangNotification ( "target_not_logged_in" );
+            }
+        }
 		#endregion
 
 		#region Utility

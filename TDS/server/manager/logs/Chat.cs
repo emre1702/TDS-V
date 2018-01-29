@@ -3,8 +3,8 @@
 	using GTANetworkAPI;
 
 	partial class Log {
-		public static void Chat ( string chatstr, Client player, string lobbyname ) {
-			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName );
+		public static void Chat ( string chatstr, Client player, string lobbyname, uint targetUID = 0 ) {
+			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName, targetUID: targetUID.ToString() );
 		}
 	}
 
