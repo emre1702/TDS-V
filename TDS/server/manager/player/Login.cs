@@ -55,11 +55,11 @@
                             isvip = row["isvip"].ToString () == "1";
 							hitsoundon = row["hitsound"].ToString () == "1";
 						} else {
-							player.SendLangMessage ( "wrong_password" );
+							player.SendLangNotification ( "wrong_password" );
 							return;
 						}
 					} else {
-						player.SendLangMessage ( "account_doesnt_exist" );
+						player.SendLangNotification ( "account_doesnt_exist" );
 						return;
 					}
 				}
