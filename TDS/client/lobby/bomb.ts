@@ -82,7 +82,7 @@ function checkPlantDefuseStop() {
 
 function checkPlantDefuseExtended() {
     //let currentweapon = mp.game.invoke( '0x6678C142FAC881BA', localPlayer.handle );
-    if ( currentweapon == WeaponHash.OldUnarmed ) {
+    if ( currentWeapon == WeaponHash.OldUnarmed ) {
         if ( !mp.players.local.isDeadOrDying( true ) ) {
             mp.game.controls.disableControlAction( 0, 24, true );
             return true;
