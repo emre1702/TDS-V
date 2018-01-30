@@ -63,7 +63,7 @@
 						return;
 					}
 				}
-				//player.Team = 1; // TODO Damage canceln lassen;
+				player.Team = 1;
 				Character character = player.GetChar ();
 
 				character.UID = uid;
