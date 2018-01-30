@@ -152,13 +152,12 @@
 				AllHitters[hitted][player] = damage;
 		}
 
-		private void DamagedPlayer ( Client player, Client hitted, uint weapon, bool headshot ) {
+		private void DamagedPlayer ( Client player, Client hitted, WeaponHash weapon, bool headshot ) {
 			if ( !NAPI.Player.IsPlayerDead ( hitted ) && hitted.Dimension == player.Dimension ) {
 				Character character = player.GetChar ();
 				if ( character.Team != hitted.GetChar ().Team ) {
-                    WeaponHash hash = (WeaponHash) weapon;
 
-                    int damage = GetDamage ( hash, headshot );
+                    int damage = GetDamage ( weapon, headshot );
 
 					if ( damage > 0 ) {
 						DamagePlayer ( player, hitted, damage );
@@ -166,7 +165,7 @@
                             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
 						if ( hitted.Health == 0 ) {
 							hitted.Kill ();
-							OnPlayerDeath ( hitted, player, weapon, null );
+							OnPlayerDeath ( hitted, player, (uint) weapon, null );
 						}
 					}
 				}
@@ -178,9 +177,12 @@
 			Client hitted = NAPI.Player.GetPlayerFromHandle ( (NetHandle) args[0] );
 			if ( hitted != null ) {
 				Lobby playerlobby = player.GetChar ().Lobby;
-				if ( playerlobby is FightLobby fightlobby )
-                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, (uint) args[1], (bool) args[2] );
+                if ( playerlobby is FightLobby fightlobby ) {
+                    WeaponHash currentweapon = player.CurrentWeapon;
+                    NAPI.Util.ConsoleOutput ( currentweapon.ToString () );
+                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, currentweapon, (bool) args[1] );
+                }
 			}
 		}
-	}
+    }
 }

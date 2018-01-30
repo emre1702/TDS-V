@@ -46,6 +46,7 @@ mp.events.add( "onClientRoundStart", function ( isspectator, wastedticks ) {
 	}
     roundStartedRoundInfo( wastedticks );
     toggleFightControls( true );
+    damagesysdata.shotsdoneinround = 0;
 } );
 
 
@@ -61,6 +62,7 @@ mp.events.add( "onClientRoundEnd", function () {
     removeRoundInfo();
     toggleFightControls( false );
     clearMapVotingsInBrowser();
+    mp.gui.chat.push( "Your shot-amount: " + damagesysdata.shotsdoneinround );
 } );
 
 
