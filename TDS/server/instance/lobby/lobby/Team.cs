@@ -34,34 +34,35 @@ namespace TDS.server.instance.lobby {
             teamsUID.Add ( sTeamsUIDCounter++ );
         }
 
+        private void PreparePlayersist ( int amountteams ) {
+            Players = new List<List<Client>> { new List<Client> () };
+
+            for ( int i = 1; i < amountteams; ++i )
+                Players.Add ( new List<Client> () );
+        }
+
         public void MixTeams ( ) {
-            List<List<Client>> newplayerslist = new List<List<Client>> {
-                new List<Client> ()
-            };
-            for ( int i = 0; i < Players[0].Count; i++ ) {
-                newplayerslist[0].Add ( Players[0][i] );
-            }
-            for ( int i = 1; i < Players.Count; i++ )
-                newplayerslist.Add ( new List<Client> () );
-            for ( uint i = 1; i < Players.Count; i++ ) {
-                foreach ( Client player in Players[(int) i] ) {
+            List<List<Client>> oldplayerslist = new List<List<Client>> ( Players );
+            int amountteams = oldplayerslist.Count;
+            PreparePlayersist ( amountteams );
+
+            for ( int i = 1; i < amountteams; i++ ) {
+                foreach ( Client player in oldplayerslist[i] ) {
                     if ( player.Exists ) {
-                        int teamID = (int) GetTeamIDWithFewestMember ( ref newplayerslist );
-                        newplayerslist[teamID].Add ( player );
-                        player.SetSkin ( teamSkins[teamID] );
+                        uint teamID = GetTeamIDWithFewestMember ( ref Players );
+                        SetPlayerTeam ( player, teamID );
                     }
                 }
             }
-            Players = new List<List<Client>> ( newplayerslist );
         }
 
         public uint GetTeamIDWithFewestMember ( ref List<List<Client>> newplayerlist ) {
             uint lastteamID = 1;
             int lastteamcount = newplayerlist[1].Count;
-            for ( uint k = 2; k < newplayerlist.Count; k++ ) {
-                int count = newplayerlist[(int) k].Count;
-                if ( count < lastteamcount || count == lastteamcount && Utility.Rnd.Next ( 1, 2 ) == 1 ) {
-                    lastteamID = k;
+            for ( int k = 2; k < newplayerlist.Count; ++k ) {
+                int count = newplayerlist[k].Count;
+                if ( count < lastteamcount || count == lastteamcount && Utility.Rnd.Next ( 2 ) == 1 ) {             // 0 or 1
+                    lastteamID = (uint) k;
                     lastteamcount = count;
                 }
             }
@@ -77,13 +78,14 @@ namespace TDS.server.instance.lobby {
         }
 
         public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
-            player.Team = (int) teamID;     //TODO testit - need to remove this when creating own damage-system
             Players[(int) teamID].Add ( player );
             player.SetSkin ( teamSkins[(int) teamID] );
-            if ( character == null )
-                character = player.GetChar ();
-            character.Team = (ushort) teamID;
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", (int) teamID, GetTeamUID ( teamID ) );
+            if ( character.Team != (ushort) teamID ) {  // not old team
+                if ( character == null )
+                    character = player.GetChar ();
+                character.Team = (ushort) teamID;
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", (int) teamID, GetTeamUID ( teamID ) );
+            }
         }
     }
 }
