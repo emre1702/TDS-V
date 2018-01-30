@@ -6,9 +6,12 @@ var currentmoney = null;
 var localPlayer = mp.players.local;
 var gameplayCam = mp.cameras.new( "gameplay" ) as MpCamera;
 var ischatopen = false;
-var currentweapon = 2725352035;
+var currentWeapon = 2725352035;
+var currentAmmo = 0;
 
+var getWeaponAmmo = ( weaponhash ) => mp.game.invoke( '0x2406A9C8DA99D3F4', localPlayer.handle, weaponhash );
 
 mp.events.add( "onClientPlayerWeaponChange", function ( weapon ) {
-    currentweapon = weapon;
+    currentWeapon = weapon;
+    currentAmmo = getWeaponAmmo( weapon );
 } );
