@@ -105,7 +105,6 @@ namespace TDS.server.instance.lobby {
         private void StartRoundForPlayer ( Client player, uint teamID ) {
             Character character = player.GetChar ();
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
-            character.Team = (ushort) teamID;
             if ( teamID != 0 ) {
                 character.Lifes = (ushort) Lifes;
                 alivePlayers[(int) teamID].Add ( player );
