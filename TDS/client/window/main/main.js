@@ -22,6 +22,7 @@ let votingInCooldown = false;
 let mapSpecificThingsShowing = false;
 let currentlyonfavourite = false;
 let canvoteformapwithnumpad = true;
+let votingmapslisttabsid = "#tabs-4";
 
 function setMoney( money ) {
     moneyText.text( "$" + money );
@@ -147,11 +148,13 @@ function removeVoteFromMap( mapname ) {
             if ( --votings[i].votes <= 0 ) {
                 votings.splice( i, 1 );
                 mapVotingDiv.children().eq( i ).remove();
+                if ( showingMapMenu ) 
+                    $( votingmapslisttabsid + " div:contains(" + mapname + ")" );
             }
-            break;
+            refreshMapVotingNames();
+            return;
         }
     }
-    refreshMapVotingNames();
 }
 
 function addVoteToMapVoting( mapname, oldmapname ) {
@@ -188,6 +191,11 @@ function loadMapVotings( votingsjson ) {
 
 function clearMapVotings() {
     votings = [];
+    mapVotingDiv.empty();
+    if ( showingMapMenu ) {
+        votingMapsList.empty();
+        votingMapsList.selectable( "refresh" );
+    }
 }
 
 function setMapVotingCooldown() {
@@ -261,7 +269,7 @@ $( document ).ready( () => {
     normalMapsList = $( "#tabs-1" );
     bombMapsList = $( "#tabs-2" );
     favouriteMapsList = $( "#tabs-3" );
-    votingMapsList = $( "#tabs-4" );
+    votingMapsList = $( votingmapslisttabsid );
     mapInfo = $( "#map_info" );
     mapVoteButton = $( "#choose_map_button" );
     mapFavouriteButton = $( "#add_map_to_favourites" );
