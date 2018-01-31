@@ -48,7 +48,7 @@
 					rdr.Close ();
 					return results;
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + ex );
+					Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + ex.StackTrace );
 					return null;
 				}
 			}
@@ -71,7 +71,7 @@
 					return results;
 				} catch ( Exception ex ) {
                     string s = string.Join ( ";", parameters.Select ( x => x.Key + "=" + x.Value ).ToArray () );
-                    Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + s + "\n" + ex );
+                    Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + s + "\n" + ex.StackTrace );
 					return null;
 				}
 			}
@@ -85,7 +85,7 @@
 					await conn.OpenAsync ().ConfigureAwait ( false );
 					await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + ex );
+					Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
 				}
 			}
 		}
@@ -100,12 +100,12 @@
 					}
 					await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + ex );
+					Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
 				}
 			}
 		}
 
-		/*public static DataTable CreateDataTable ( string sql, string unique_name ) {
+        /*public static DataTable CreateDataTable ( string sql, string unique_name ) {
 		using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 			try {
 				MySqlDataAdapter dataAdapter;
@@ -117,7 +117,7 @@
 				dataAdapter.Fill ( dataTable );
 				return dataTable;
 			} catch ( Exception ex ) {
-				Manager.Log.Error ( "DATABASE: [ERROR] " + ex.ToString () );
+				Manager.Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
 				return null;
 			}
 		}
@@ -141,9 +141,9 @@
 		}
 	}*/
 
-		/* Hooks */
+        /* Hooks */
 
-		private void OnResourceStart () {
+        private void OnResourceStart () {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
 					NAPI.Util.ConsoleOutput ( "DATABASE: [INFO] Attempting to connect to MySQL" );
@@ -153,7 +153,7 @@
 					} else
                         NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR] Connection to MySQL failed! "+ conn.State.ToString() );
                 } catch ( Exception ex ) {
-                    NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR] " + ex );
+                    NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR]\n" + ex.StackTrace );
 				}
 			}
 		}

@@ -43,8 +43,8 @@ namespace TDS.server.instance.utility {
 		public void Execute () {
 			try {
 				func ();
-			} catch ( Exception e ) {
-				Log.Error ( "Error in Execute in Timer.cs: " + e );
+			} catch ( Exception ex ) {
+				Log.Error ( ex.StackTrace );
 			} finally {
 				if ( executesLeft == 1 ) {
 					executesLeft = 0;

@@ -128,8 +128,8 @@
 					}
 				}
 				return true;
-			} catch ( Exception e ) {
-				Log.Error ( "Error in Manager.Map.GetMapClass: " + e + " (" + path + ")" );
+			} catch ( Exception ex ) {
+				Log.Error ( "Error in Manager.Map.GetMapClass (" + path + ")\n"+ex.StackTrace );
 				return false;
 			}
 		}

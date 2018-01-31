@@ -92,7 +92,7 @@
 
 				MainMenu.Join ( player );
 			} catch ( Exception ex ) {
-				Log.Error ( "Error in LoginPlayer:" + ex.Message );
+				Log.Error ( ex.StackTrace );
 			}
 		}
 	}

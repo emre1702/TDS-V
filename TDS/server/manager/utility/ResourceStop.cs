@@ -28,7 +28,7 @@
 
                 Season.SaveSeason ();
 			} catch ( Exception ex ) {
-				Log.Error ( "Error in SaveAllInDatabase:" + ex.Message );
+				Log.Error ( ex.StackTrace );
 			}
 		}
 

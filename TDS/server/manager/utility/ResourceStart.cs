@@ -21,7 +21,7 @@
                 } );
                 Season.LoadSeason ();
             } catch ( Exception ex ) {
-				NAPI.Util.ConsoleOutput ( "Error in StartMethods:" + ex.Message );
+				NAPI.Util.ConsoleOutput ( ex.StackTrace );
 			}
 		}
 	}

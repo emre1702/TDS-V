@@ -133,7 +133,7 @@
 				} else
 					player.SendLangNotification ( "player_doesnt_exist" );
 			} catch ( Exception ex ) {
-				Log.Error ( "Error in BanPlayer AdminCommand:" + ex.Message );
+				Log.Error ( ex.StackTrace );
 			}
 		}
 		#endregion

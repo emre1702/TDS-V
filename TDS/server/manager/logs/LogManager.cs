@@ -60,8 +60,8 @@
 				for ( int i = 1; i < logQueryUIDs.Count; i++ ) {
 					try {
 						sql += ", " + GetValueString ( i );
-					} catch ( Exception e ) {
-						Error ( "Error in SaveInDatabase: " + e );
+					} catch ( Exception ex ) {
+						Error ( ex.StackTrace );
 					}
 				}
 

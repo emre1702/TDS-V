@@ -41,7 +41,7 @@
                 if ( counter % 30 == 0 )
                     Season.SaveSeason ();
 			} catch ( Exception ex ) {
-				Log.Error ( "Error in MinuteTimerFunc:" + ex.Message );
+				Log.Error ( ex.StackTrace );
 			}
 		}
 
