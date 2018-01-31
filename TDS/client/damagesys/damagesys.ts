@@ -37,7 +37,7 @@ mp.events.add( "playerWeaponShot", ( hitpos ) => {
     mp.gui.chat.push( JSON.stringify( hitpos ) );
     let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer, 8 ) as { position: { x, y, z }, surfaceNormal: any, entity: MpEntity };
     if ( typeof raycast !== "undefined" )  // hit nothing
-        mp.events.callRemote( "onPlayerHitOtherPlayer", raycast.entity, false )
+        mp.events.callRemote( "onPlayerHitOtherPlayer", mp.players.atHandle ( raycast.entity ), false )
 } );
 
 mp.players.local.setCanAttackFriendly( false, false );
