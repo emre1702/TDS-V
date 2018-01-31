@@ -633,4 +633,5 @@ declare interface MpPlayer extends MpEntity {
 
 declare interface MpPlayerPool extends MpPool<MpPlayer> {
     readonly local: MpPlayer;
+    atHandle( handle: MpEntity ): MpPlayer;
 }

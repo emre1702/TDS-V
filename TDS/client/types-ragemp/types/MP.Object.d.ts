@@ -12,5 +12,5 @@ declare interface MpObject extends MpEntity {
 }
 
 declare interface MpObjectPool extends MpPool<MpObject> {
-
+    atHandle( handle: MpEntity ): MpPed;
 }

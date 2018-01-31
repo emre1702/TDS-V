@@ -313,5 +313,5 @@ declare interface MpVehicle extends MpEntity {
 }
 
 declare interface MpVehiclePool extends MpPool<MpVehicle> {
-
+    atHandle( handle: MpEntity ): MpVehicle;
 }
