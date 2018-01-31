@@ -27,7 +27,8 @@ var languagelist = {
 		"lobby_choice": {
 			"arena": "Arena",
 			"gang": "Gang",
-			"custom": "Eigenes",
+            "custom": "Eigenes",
+            "mapcreator": "Map-Ersteller",
 			"player": "Spieler",
 			"spectator": "Zuschauer",
 			"back": "Zurück",
@@ -94,7 +95,8 @@ var languagelist = {
 		"lobby_choice": {
 			"arena": "Arena",
 			"gang": "Gang",
-			"custom": "Custom",
+            "custom": "Custom",
+            "mapcreator": "Map-Creator",
 			"player": "player",
 			"spectator": "spectator",
 			"back": "back",
