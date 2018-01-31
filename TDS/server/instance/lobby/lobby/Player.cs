@@ -45,8 +45,8 @@ namespace TDS.server.instance.lobby {
         }
 
         private void AddPlayerAsSpectator ( Client player ) {
-            SetPlayerTeam ( player, 0 );
             Character character = player.GetChar ();
+            SetPlayerTeam ( player, 0, character );
             character.Lifes = 0;
         }
 

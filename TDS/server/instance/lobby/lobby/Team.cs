@@ -80,6 +80,8 @@ namespace TDS.server.instance.lobby {
         public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
             Players[(int) teamID].Add ( player );
             player.SetSkin ( teamSkins[(int) teamID] );
+            if ( character == null )
+                character = player.GetChar ();
             if ( character.Team != (ushort) teamID ) {  // not old team
                 if ( character == null )
                     character = player.GetChar ();
