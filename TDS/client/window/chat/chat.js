@@ -7,12 +7,8 @@ let chatbodies = [
     $( "#normal-chat-body" ),
     $( "#dirty-chat-body" )
 ];
-let chattabs = [
-    $( "#normal-chat" ),
-    $( "#dirty-chat" )
-];
 let chatends = ["$normal$", "$dirty$"];
-let chosentab = chattabs[0];
+let chosentab;
 let chosenchatbody = 0;
 let myname = null;
 
@@ -75,13 +71,14 @@ chatAPI["activate"] = ( toggle ) => {
 chatAPI["show"] = ( toggle ) => {
     if ( toggle ) {
         getChatBody().show();
-        for ( let i = 0; i < chattabs.length; ++i )
-            chattabs[i].show();
+        $( "#chat_choice" ).show();
     } else {
         getChatBody().hide();
-        for ( let i = 0; i < chattabs.length; ++i )
-            chattabs[i].hide();
+        $( "#chat_choice" ).hide();
     }
+
+    if ( !toggle && inputshowing )
+        enableChatInput( false );
 
     active = toggle;
 };
@@ -189,6 +186,7 @@ $( document ).ready( function () {
         }
     } );
 
+    chosentab = $( "#chat_choice div[data-chatID=0]" );
     chosentab.css( "background", "#04074e" );
 
     $( "#chat_choice div" ).click( function () {
