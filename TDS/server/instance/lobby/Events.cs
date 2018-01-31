@@ -48,7 +48,7 @@ namespace TDS.server.instance.lobby {
                 
         #region Round
         [RemoteEvent( "onPlayerWasTooLongOutsideMap" )]
-        public void TooLongOutsideMapEvent ( Client player ) {
+        public void TooLongOutsideMapEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
                 return;
 
