@@ -31,16 +31,15 @@ function checkShooting() {
     }
 }
 
-mp.events.add( "playerWeaponShot", ( hitpos ) => {
+mp.events.add( "playerWeaponShotDeactivated", ( hitpos ) => {
     let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
     let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as MpVector3;
-    mp.gui.chat.push( JSON.stringify( hitpos ) );
     let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer, 8 ) as { position: { x, y, z }, surfaceNormal: any, entity: MpEntity };
-    if ( typeof raycast !== "undefined" )  // hit nothing
+   if ( typeof raycast !== "undefined" )  // hit nothing
         mp.events.callRemote( "onPlayerHitOtherPlayer", mp.players.atHandle ( raycast.entity ), false )
 } );
 
-mp.players.local.setCanAttackFriendly( false, false );
+//mp.players.local.setCanAttackFriendly( false, false );
 
 
 /* let bloodscreenbrowser;
