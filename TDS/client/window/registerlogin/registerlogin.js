@@ -124,7 +124,6 @@ function setLoginPanelData( playername, isreg, lang ) {
 }
 
 function loadLanguage( lang ) {
-    mp.trigger( "outputCEF", "loadLanguage" ); 
 	var langdata = JSON.parse( lang );
 	$( "[data-lang]" ).each( function () {
 		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).next().attr( "required" ) ? "*" : "" ) );
