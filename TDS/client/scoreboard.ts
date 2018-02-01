@@ -68,8 +68,8 @@ function createScoreboard() {
 		// SCHRIFTEN //
         let lastwidthstitle = 0;
         let titleslength = playerlisttitles.length;
-		for ( let i = 0; i < titleslength - 1; i++ ) {
-            if ( playerlisttitles[i] == "team" && inmainmenu )
+		for ( let i = 0; i < titleslength - 1; ++i ) {
+            if ( inmainmenu && playerlisttitles[i] == "team" )
                 drawText( language[playerlisttitles[i + 1]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true );
 			else 
                 drawText( language[playerlisttitles[i]], startX + lastwidthstitle + v.columnwidth[playerlisttitles[i]] * v.completewidth / 2, titleStartY, v.titlefont, v.titlefontcolor, v.titlefontscale, true, Alignment.CENTER, true );
@@ -81,10 +81,10 @@ function createScoreboard() {
         drawRectangle ( startX, startY, v.completewidth, len*v.columnheight, v.rectanglecolor );
 		// SCHRIFTEN //
 		let notshowcounter = 0;
-        for ( let i = 0 + scroll; i < len + scroll; i++ ) {
+        for ( let i = 0 + scroll; i < len + scroll; ++i ) {
 			if ( i in playertable ) {
                 let lastwidths = 0;
-				for ( let j = 0; j < titleslength - 1; j++ ) {
+				for ( let j = 0; j < titleslength - 1; ++j ) {
                     let index = playerlisttitlesindex[playerlisttitles[j]];
                     drawText( playertable[i][index], startX + lastwidths + v.columnwidth[playerlisttitles[j]] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true );
                     lastwidths += v.columnwidth[playerlisttitles[j]] * v.completewidth;
@@ -141,19 +141,21 @@ function createScoreboard() {
         }
     }
 
-	function sortArray( a, b ) {
-		if ( a.teamorlobby !== b.teamorlobby ) {
-			if ( a.teamorlobby === 0 )
+    function sortArray(
+            a: { Name: string, PlayTime: string, Kills: number, Assists: number, Deaths: number, TeamOrLobby: string },
+            b: { Name: string, PlayTime: string, Kills: number, Assists: number, Deaths: number, TeamOrLobby: string } ) {
+        if ( a.TeamOrLobby !== b.TeamOrLobby ) {
+            if ( a.TeamOrLobby === "0" )
 				return -1;
-			else if ( b.teamorlobby === 0 )
+            else if ( b.TeamOrLobby === "0" )
 				return 1;
 			else
-				return a.teamorlobby < b.teamorlobby ? -1 : 1;
-		} else {
-			if ( a.playtime === b.playtime )
-				return a.name < b.name ? -1 : 1;
-			else 
-				return a.playtime > b.playtime ? -1 : 1;
+                return a.TeamOrLobby < b.TeamOrLobby ? -1 : 1;
+        } else {
+            if ( a.PlayTime === b.PlayTime )
+                return a.Name < b.Name ? -1 : 1;
+            else
+                return a.PlayTime > b.PlayTime ? -1 : 1;
 		}
 	}
 
