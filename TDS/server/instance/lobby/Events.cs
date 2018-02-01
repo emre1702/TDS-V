@@ -19,14 +19,19 @@ namespace TDS.server.instance.lobby {
             int index = (int) args[0];
             if ( Lobby.SLobbiesByIndex.ContainsKey ( index ) ) {
                 Lobby lobby = Lobby.SLobbiesByIndex[index];
-                if ( lobby is Arena arenalobby )
-                    arenalobby.AddPlayer ( player, (bool) args[1] );
+                if ( lobby is Arena )
+                    manager.lobby.Arena.Join ( player, (bool) args[1] );
                 else
                     lobby.AddPlayer ( player, (bool) args[1] );
             } else {
                 /* player.sendNotification (  lobby doesn't exist ); */
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );  //TODO is that needed?
             }
+        }
+
+        [RemoteEvent( "joinMapCreatorLobby" )]
+        public void JoinMapCreatorLobbyEvent ( Client player, params object[] args ) {
+            manager.lobby.MapCreatorLobby.Join ( player );
         }
         #endregion
 
