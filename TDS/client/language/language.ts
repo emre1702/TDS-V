@@ -51,7 +51,7 @@ var languagelist = {
 			"assists": "Assists",
 			"deaths": "Tode",
 			"team": "Team",
-			"lobby": "Lobby"
+            "lobby": "Lobby"
 		},
 		"mapcreator_menu": {
 			"send_text": "Senden",
@@ -109,7 +109,8 @@ var languagelist = {
 			"countdown_time": "countdown-time (seconds)",
 			"armor": "armor",
 			"health": "health",
-			"time_scale": "time-scale",
+            "time_scale": "time-scale",
+            "custom_lobby_own": "own lobby"
 		},
 		"scoreboard": {
 			"name": "name",
@@ -119,7 +120,6 @@ var languagelist = {
 			"deaths": "deaths",
 			"team": "team",
 			"lobby": "lobby",
-			"custom_lobby_own": "own lobby"
 		},
 		"mapcreator_menu": {
 			"send_text": "send",
