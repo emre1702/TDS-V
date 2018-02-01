@@ -2,6 +2,7 @@
 using TDS.server.enums;
 using TDS.server.extend;
 using TDS.server.instance.player;
+using TDS.server.manager.map;
 
 namespace TDS.server.instance.lobby {
     class LobbyEvents : Script {
@@ -69,7 +70,13 @@ namespace TDS.server.instance.lobby {
 
             arena.SendMapsForVoting ( player );
         }
-                
+
+        [RemoteEvent ( "checkMapName" )]
+        public void OnCheckMapNameEvent ( Client player, params object[] args ) {
+            string name = (string) args[0];
+            player.TriggerEvent ( "sendMapNameCheckResult", Map.MapPathByName.ContainsKey ( name ) );
+        }
+
         [RemoteEvent ( "onMapVotingRequest" )]
         public void OnMapVotingRequestEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
