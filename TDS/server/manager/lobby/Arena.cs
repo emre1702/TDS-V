@@ -56,8 +56,8 @@
             TheLobby.StartRoundGame ();
         }
 
-        public static void Join ( Client player ) {
-            TheLobby.AddPlayer ( player );
+        public static void Join ( Client player, bool spectator ) {
+            TheLobby.AddPlayer ( player, spectator );
         }
 
     }
