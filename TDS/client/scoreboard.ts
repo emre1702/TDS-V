@@ -159,20 +159,22 @@ function createScoreboard() {
 		}
 	}
 
-	function sortArrayMainmenu( a, b ) {
-		if ( a.teamorlobby !== b.teamorlobby ) {
-			if ( a.playtime === "-" )
+    function sortArrayMainmenu(
+            a: { Name: string, PlayTime: string, Kills: number, Assists: number, Deaths: number, TeamOrLobby: string },
+            b: { Name: string, PlayTime: string, Kills: number, Assists: number, Deaths: number, TeamOrLobby: string } ) {
+        if ( a.TeamOrLobby !== b.TeamOrLobby ) {
+            if ( a.PlayTime === "-" )
 				return 1;
-			else if ( b.playtime === "-" )
-				return -1;
-			else if ( a.teamorlobby === "mainmenu" )
+            else if ( b.PlayTime === "-" )
+                return -1;
+            else if ( a.TeamOrLobby === "mainmenu" )
 				return 1;
-			else if ( b.teamorlobby === "mainmenu" )
+            else if ( b.TeamOrLobby === "mainmenu" )
 				return -1;
 			else 
-				return a.teamorlobby < b.teamorlobby ? -1 : 1;
-		} else {
-			return a.name < b.name ? -1 : 1;
+                return a.TeamOrLobby < b.TeamOrLobby ? -1 : 1;
+        } else {
+            return a.Name < b.Name ? -1 : 1;
 		}
 	}
 
