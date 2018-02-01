@@ -9,6 +9,10 @@ mp.events.add( "joinArena", function ( isspectator ) {
 	mp.events.callRemote( "joinLobby", 1, isspectator );
 } );
 
+mp.events.add( "joinMapCreatorLobby", function () {
+    mp.events.callRemote( "joinMapCreatorLobby" );
+} );
+
 mp.events.add( "getLobbyChoiceLanguage", function () {
 	log( "getLobbyChoiceLanguage" );
     lobbychoicedata.browser.execute( "setLobbyChoiceLanguage (`" + JSON.stringify( getLang( "lobby_choice" ) ) +"`)" );
@@ -31,7 +35,10 @@ mp.events.add( "onClientJoinMainMenu", () => {
 } );
 
 function destroyLobbyChoiceBrowser() {
-	lobbychoicedata.browser.destroy();
+    if ( lobbychoicedata.browser === null )
+        return;
+    lobbychoicedata.browser.destroy();
+    lobbychoicedata.browser = null;
 	nothidecursor--;
 	if ( nothidecursor == 0 )
 		mp.gui.cursor.visible = false;
