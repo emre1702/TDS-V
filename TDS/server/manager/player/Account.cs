@@ -43,7 +43,7 @@
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
             player.Freeze ( true );
             player.Name = player.SocialClubName;
-            NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) ? 1 : 0 );
+            NAPI.ClientEvent.TriggerClientEvent ( player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey ( player.SocialClubName ) );
         }
 
         [RemoteEvent ( "onPlayerTryRegister" )]
@@ -124,7 +124,9 @@
 				lastPlayerUID = Convert.ToUInt16 ( maxuidresult.Rows[0]["Maxuid"] );
 			} catch ( Exception ex ) {
 				Log.Error ( ex.StackTrace );
-			}
+                lastPlayerUID = 0;
+
+            }
 		}
 
 		public static void SavePlayerData ( Client player ) {
