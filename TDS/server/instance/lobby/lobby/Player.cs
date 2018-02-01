@@ -40,6 +40,8 @@ namespace TDS.server.instance.lobby {
 
             player.Position = SpawnPoint.Around ( AroundSpawnPoint );
 
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
+
             if ( spectator )
                 AddPlayerAsSpectator ( player );
         }
@@ -66,6 +68,10 @@ namespace TDS.server.instance.lobby {
 
             if ( player.Exists ) 
                 player.Transparency = 255;
+
+            if ( DeleteWhenEmpty && !IsSomeoneInLobby() ) {
+                Remove ();
+            }
         }
 
         public void SendTeamOrder ( Client player, string ordershort ) {
