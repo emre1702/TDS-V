@@ -11,6 +11,7 @@ let chatends = ["$normal$", "$dirty$"];
 let chosentab;
 let chosenchatbody = 0;
 let myname = null;
+let globalsaykeycode = String.fromCharCode( 90 ) === "Z" ? 90 : Y;
 
 let colorreplace = [
     [/#r#/g, "rgb(222, 50, 50)"],
@@ -165,7 +166,7 @@ $( document ).ready( function () {
         if ( event.which === 84 && !inputshowing && active ) {   // open chat-input
             event.preventDefault();
             enableChatInput( true );
-        } else if ( event.which === 90 && !inputshowing && active ) {    // open globalchat-input
+        } else if ( event.which === globalsaykeycode && !inputshowing && active ) {    // open globalchat-input
             event.preventDefault();
             enableChatInput( true, "/globalsay " );
         } else if ( event.which === 13 && inputshowing ) {   // send message and close input
