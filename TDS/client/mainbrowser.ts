@@ -7,12 +7,6 @@ mp.events.add( "onClientMoneyChange", money => {
     mainbrowserdata.browser.execute( "setMoney ( " + money + " );" ); 
 } );
 
-mp.events.add( "browserDomReady", ( browser ) => {
-    if ( browser == mainbrowserdata.browser ) {
-        loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
-    }
-})
-
 function playSound( soundname: string ) {
     mainbrowserdata.browser.execute( "playSound ( '" + soundname + "' );" );
 }

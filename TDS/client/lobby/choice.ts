@@ -25,11 +25,6 @@ mp.events.add( "createLobby", function () {
 mp.events.add( "onClientJoinMainMenu", () => {
 	log( "onClientJoinMainMenu" );
 	lobbychoicedata.browser = mp.browsers.new( "package://TDS-V/window/choice/index.html" );
-	mp.events.add( 'browserDomReady', ( browser ) => {
-		if ( browser == lobbychoicedata.browser ) {
-            lobbychoicedata.browser.execute( "setLobbyChoiceLanguage (`" + JSON.stringify( getLang( "lobby_choice" ) ) + "`)" );
-		}
-	} );
 	mp.gui.cursor.visible = true;
 	nothidecursor++;
 } );
