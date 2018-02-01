@@ -34,7 +34,7 @@ $( document ).ready( function () {
 	$( '.tab a' ).on( 'click', function ( e ) {
 		var tick = new Date().getTime();
 		if ( tick >= lasttick + 1000 ) {
-			target = $( this ).attr( 'href' );
+			let target = $( this ).attr( 'href' );
 			if ( !isregistered || target !== "#signup" ) {
 
 				lasttick = tick;
@@ -120,7 +120,7 @@ function setLoginPanelData( playername, isreg, lang ) {
 		$( this ).prop( "disabled", true );
 	} );
 
-	isregistered = isreg === "1";
+	isregistered = isreg;
 }
 
 function loadLanguage( lang ) {
