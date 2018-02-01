@@ -1,5 +1,43 @@
 ﻿/// <reference path="../../types-ragemp/index.d.ts" />
 
+let mapcreatordata = {
+    browser: null as MpBrowser
+};
+
+function startMapCreator() {
+    if ( mapcreatordata.browser !== null )
+        return;
+
+    mapcreatordata.browser = mp.browsers.new( "package://TDS-V/window/mapcreator/index.html" );
+}
+
+function stopMapCreator() {
+    if ( mapcreatordata.browser === null )
+        return;
+
+    mapcreatordata.browser.destroy();
+    mapcreatordata.browser = null;
+}
+
+mp.events.add( "requestCurrentPositionForMapCreator", () => {
+    if ( mapcreatordata.browser === null )
+        return;
+    let position = localPlayer.position;
+    let x = Math.round( position.x * 100 ) / 100;
+    let y = Math.round( position.y * 100 ) / 100;
+    let z = Math.round( position.z * 100 ) / 100;
+    mapcreatordata.browser.execute( "LoadPositionFromClient (" +  x + ", " + y + ", " + z + "); " );
+} );
+
+mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number ) => {
+    if ( mapcreatordata.browser === null )
+        return;
+    mp.gui.chat.push( x + " - " + y + " - " + z );
+    localPlayer.position = { x: x, y: y, z: z } as MpVector3;
+} );
+
+
+
 /* let mapcreatordata = {
 	main: {
 		menu: null as NativeUI.UIMenu,
