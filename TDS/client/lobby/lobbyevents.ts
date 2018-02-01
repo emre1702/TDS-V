@@ -31,10 +31,15 @@ mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
         stopCountdownCamera();
         closeMapVotingMenu();  
         clearMapVotingsInBrowser();
-		removeRoundInfo();
+        removeRoundInfo();
+        stopMapCreator();
 	}
 } );
 
 mp.events.add( "onClientJoinMainMenu", () => {
 	mp.game.cam.doScreenFadeIn( 100 );
+} );
+
+mp.events.add( "onClientPlayerJoinMapCreatorLobby", () => {
+    startMapCreator();
 } );
