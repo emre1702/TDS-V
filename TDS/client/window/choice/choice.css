@@ -146,6 +146,11 @@ background: linear-gradient(to bottom, rgba(242,2,18,1) 0%,rgba(143,2,34,1) 100%
     font-size: 4rem;
 }
 
+.mapcreator {
+    width: 33.33333%;
+    font-size: 4rem;
+}
+
 table {  
     position: fixed;
     top: 72vh;

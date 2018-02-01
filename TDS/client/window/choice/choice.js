@@ -111,6 +111,10 @@ $(document).ready ( function() {
 				$( "#lobby_choice" ).hide();
 				$( "#custom_lobby" ).fadeIn( 2000 );
                 break;
+
+            case "join_mapcreator_lobby":
+                mp.trigger( "joinMapCreatorLobby" );
+                break;
                 
 			case "lang_english":
 				mp.trigger( "setLanguage", "ENGLISH" );
