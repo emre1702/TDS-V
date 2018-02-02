@@ -8,17 +8,19 @@ function showDialog( content ) {
     dialog.className = "customdialog";
     let closespan = document.createElement( "span" );
     closespan.className = "customdialog-close";
-    let contentelement = document.createElement( "p" );
+    closespan.innerHTML = "&times;";
+    let contentelement = document.createElement( "div" );
     contentelement.className = "customdialog-content";
-    let contentnode = document.createTextNode ( content );
-    contentelement.appendChild ( contentnode );
+    contentelement.innerHTML = content;
 
-    dialog.appendChild ( closespan );
-    dialog.appendChild ( contentelement );
+    dialog.appendChild( contentelement );
+    dialog.appendChild( closespan );
 
     closespan.onclick = function() {
         closeDialog();
     };
+
+    document.body.appendChild( dialog );
 }
 
 function closeDialog() {
