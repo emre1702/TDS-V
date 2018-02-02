@@ -18,7 +18,6 @@ function loadMapMiddleForCamera( mapmiddle ) {
 
 function setCameraGoTowardsPlayer( time = -1 ) {
 	log( "setCameraGoTowardsPlayer " + time );
-    cameradata.camera.setActive( false );
     mp.game.cam.renderScriptCams( false, true, time == -1 ? ( lobbysettings.countdowntime * 0.9 ) : time, true, true );
 }
 
