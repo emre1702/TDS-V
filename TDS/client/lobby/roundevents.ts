@@ -15,8 +15,10 @@ mp.events.add( "onClientMapChange", function ( mapname, maplimit, mapmidx, mapmi
 
 mp.events.add( "onClientCountdownStart", function ( resttime ) {
 	log( "onClientCountdownStart" );
-	if ( cameradata.timer != null )
-		cameradata.timer.kill();
+    if ( cameradata.timer != null ) {
+        cameradata.timer.kill();
+        cameradata.timer = null;
+    }
 	if ( resttime == null ) {
 		startCountdown();
 		cameradata.timer = new Timer( setCameraGoTowardsPlayer, lobbysettings.countdowntime * 0.1, 1 );
