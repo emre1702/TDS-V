@@ -10,5 +10,5 @@
         lobbychoicedata.browser.execute( "setLobbyChoiceLanguage (`" + JSON.stringify( getLang( "lobby_choice" ) ) + "`)" );
 
     else if ( browser === mapcreatordata.browser )
-        mapcreatordata.browser.execute( "loadLanguage ('" + JSON.stringify( getLang( "mapcreator_menu" ) ) + "');" );
+        mapcreatordata.browser.execute( "loadLanguage (`" + JSON.stringify( getLang( "mapcreator_menu" ) ) + "`);" );
 } );
