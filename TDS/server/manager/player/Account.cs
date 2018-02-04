@@ -138,7 +138,7 @@
                     }, {
                         "@MONEY", character.Money.ToString ()
                     }, {
-                        "@uid", character.UID.ToString ()
+                        "@UID", character.UID.ToString ()
                     }
                 } );
                 Database.ExecPrepared ( "UPDATE playerarenastats SET currentkills = @CURRENTKILLS, currentassists = @CURRENTASSISTS, currentdeaths = @CURRENTDEATHS, currentdamage = @CURRENTDAMAGE, " +
@@ -150,7 +150,8 @@
                         { "@TOTALKILLS", character.TotalKills.ToString() },
                         { "@TOTALASSISTS", character.TotalAssists.ToString() },
                         { "@TOTALDEATHS", character.TotalDeaths.ToString() },
-                        { "@TOTALDAMAGE", character.TotalDamage.ToString() }
+                        { "@TOTALDAMAGE", character.TotalDamage.ToString() },
+                        { "@UID", character.UID.ToString() }
                     } );
 				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE uid = @UID", new Dictionary<string, string> {
 					{
