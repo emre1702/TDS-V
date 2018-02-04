@@ -100,7 +100,7 @@
 					}
 					await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
+					Log.Error ( "DATABASE: [ERROR]\n" + sql + "\n" + ex.StackTrace );
 				}
 			}
 		}
