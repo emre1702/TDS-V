@@ -10,12 +10,15 @@ let uglify = require( "uglify-js" );
 let files = [
     { path: "window/chat/", html: "chat.html", js: ["chat.js"], reserved: ["chatAPI", "loadUserName"] },
     { path: "window/choice/", html: "choice.html", js: ["choice.js"], reserved: ["setLobbyChoiceLanguage"] },
-    { path: "window/main/", html: "main.html", js: ["main.js"], 
+    { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js"], 
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
             "toggleCanVoteForMapWithNumpad", "loadOrderNames" ]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], reserved: ["loadLanguage", "setLoginPanelData"] },
-    { path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], reserved: ["openMapCreatorMenu", "GotoPosition", "AddCurrentPosition", "RemovePosition", "LoadPositionFromClient" ] }
+    {
+        path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"],
+        reserved: ["openMapCreatorMenu", "gotoPosition", "addCurrentPosition", "removePosition", "loadPositionFromClient", "loadLanguage", "sendMap", "checkMapName", "loadResultOfMapNameCheck" ]
+    }
 ];
 let minifysettings = {
     compress: {
