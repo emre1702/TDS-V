@@ -14,12 +14,11 @@ let countdowndata = {
 
 function countdownFunc( counter ) {
 	log( "countdownFunc" );
-	counter--;;
-	if ( counter > 0 ) {
+	if ( --counter > 0 ) {
         countdowndata.text.setText( counter + "" );
-		countdowndata.text.blendTextScale( 6, 1000 );
+		countdowndata.text.blendTextScale( [6.0, 6.0], 1000 );
 		countdowndata.timer = new Timer( countdownFunc, 1000, 1, counter );
-        if ( countdowndata.sounds[counter] != null ) {
+        if ( counter in countdowndata.sounds ) {
             playSound( countdowndata.sounds[counter] );
 		}
 	}
