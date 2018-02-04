@@ -103,11 +103,13 @@
 
 		private int GetDamage ( WeaponHash hash, bool headshot ) {
 			int damage = 0;
-			if ( customDamageDictionary.ContainsKey ( hash ) )
-				damage = customDamageDictionary[hash];
-			else if ( sDamageDictionary.ContainsKey ( hash ) )
-				damage = sDamageDictionary[hash];
-			if ( damage > 0 )
+            if ( customDamageDictionary.ContainsKey ( hash ) )
+                damage = customDamageDictionary[hash];
+            else if ( sDamageDictionary.ContainsKey ( hash ) )
+                damage = sDamageDictionary[hash];
+            else
+                NAPI.Util.ConsoleOutput ( "No damage-entry for " + hash.ToString () );
+            if ( damage > 0 )
 				if ( headshot )
 					if ( customHeadMultiplicator.ContainsKey ( hash ) )
 						damage = (int) Math.Floor ( damage * customHeadMultiplicator[hash] );
