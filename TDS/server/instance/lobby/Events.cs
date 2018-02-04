@@ -36,7 +36,7 @@ namespace TDS.server.instance.lobby {
         }
         #endregion
 
-         #region Spectate
+        #region Spectate
         [RemoteEvent("spectateNext")]
         public void SpectateNextEvent ( Client player, params object[] args ) {
             Character character = player.GetChar ();
@@ -71,12 +71,6 @@ namespace TDS.server.instance.lobby {
             arena.SendMapsForVoting ( player );
         }
 
-        [RemoteEvent ( "checkMapName" )]
-        public void OnCheckMapNameEvent ( Client player, params object[] args ) {
-            string name = (string) args[0];
-            player.TriggerEvent ( "sendMapNameCheckResult", Map.MapPathByName.ContainsKey ( name ) );
-        }
-
         [RemoteEvent ( "onMapVotingRequest" )]
         public void OnMapVotingRequestEvent ( Client player, params object[] args ) {
             if ( !( player.GetChar ().Lobby is Arena arena ) )
@@ -91,6 +85,21 @@ namespace TDS.server.instance.lobby {
                 return;
 
             arena.AddVoteToMap ( player, (string) args[0] );
+        }
+        #endregion
+
+        #region MapCreate 
+        [RemoteEvent ( "checkMapName" )]
+        public void OnCheckMapNameEvent ( Client player, params object[] args ) {
+            string name = (string) args[0];
+            player.TriggerEvent ( "sendMapNameCheckResult", Map.MapPathByName.ContainsKey ( name ) );
+        }
+
+        [RemoteEvent ( "sendMapFromCreator" )]
+        public void SendMapFromCreatorEvent ( Client player, params object[] args ) {
+            string mapjson = (string) args[0];
+            Map.CreateNewMap ( mapjson );
+            player.GetChar ().Lobby.RemovePlayerDerived ( player );
         }
         #endregion
 
@@ -137,6 +146,7 @@ namespace TDS.server.instance.lobby {
         }
         #endregion
 
+        #region RageMP
         private void OnPlayerEnterColShape ( ColShape shape, Client player ) {
             player.GetChar ().Lobby.OnPlayerEnterColShape ( shape, player );
         }
@@ -156,5 +166,6 @@ namespace TDS.server.instance.lobby {
         private void OnPlayerSpawn ( Client player ) {
             player.GetChar ().Lobby.OnPlayerSpawn ( player );
         }
+        #endregion
     }
 }
