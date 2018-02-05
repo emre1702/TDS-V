@@ -67,6 +67,7 @@ chatAPI["clear"] = () => {
 
 chatAPI["activate"] = ( toggle ) => {
     enableChatInput( toggle );
+    active = toggle;
 };
 
 chatAPI["show"] = ( toggle ) => {
