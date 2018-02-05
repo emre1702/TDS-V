@@ -1,6 +1,86 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 var languagelist = {
+    "ENGLISH": {
+        "loginregister": {
+            "tab_login": "Login",
+            "tab_register": "Register",
+            "username": "username",
+            "password": "password",
+            "login_titel": "Welcome back!",
+            "login_forgotpw": "Password forgotten?",
+            "login_button": "login",
+            "register_titel": "Register at TDS!",
+            "register_email": "Email-address for password-reset",
+            "register_confirmpw": "confirm password",
+            "register_button": "Send",
+            "forgotpw_titel": "reset your password",
+            "forgotpw_email": "Email-address",
+            "forgotpw_reset": "reset",
+            "passwordhastobesame": "Both passwords have to be the same!"
+        },
+        "round": {
+            "outside_map_limit": "You are outside of the map!\nThere are {1} seconds left to return to the map.",
+            "planting": "planting ...",
+            "defusing": "defusing ..."
+        },
+        "lobby_choice": {
+            "arena": "Arena",
+            "gang": "Gang",
+            "custom": "Custom",
+            "mapcreator": "Map-Creator",
+            "player": "player",
+            "spectator": "spectator",
+            "back": "back",
+            "create": "create",
+            "lobby_name": "lobby-name",
+            "bomb": "bomb",
+            "lobby_password": "lobby-password",
+            "max_players": "max. players",
+            "round_time": "round-time (seconds)",
+            "countdown_time": "countdown-time (seconds)",
+            "armor": "armor",
+            "health": "health",
+            "time_scale": "time-scale",
+            "custom_lobby_own": "own lobby"
+        },
+        "scoreboard": {
+            "name": "name",
+            "playtime": "playtime",
+            "kills": "kills",
+            "assists": "assists",
+            "deaths": "deaths",
+            "team": "team",
+            "lobby": "lobby",
+        },
+        "mapcreator_menu": {
+            "general": "General",
+            "descriptions": "Descriptions",
+            "team_spawns": "Team-spawns",
+            "map_limit": "Map-limit",
+            "map_points": "Map-points",
+            "min_players": "Min-players:",
+            "max_players": "Max-players:",
+            "last": "Last",
+            "normal": "Normal",
+            "bomb": "Bomb",
+            "add": "Add",
+            "go": "Go",
+            "remove": "Remove",
+            "last_info": "When you send the map, it will get saved on the server.<br>Then Bonus has the chance to load the map and test it.<br>"
+            + "If he find mistakes or problems, he will solve them.<br>At the end if the map is acceptable, he will make it playable.<br><br>"
+            + "This whole process can take a bit, so you have to wait atleast 1-2 days.<br>Please first use 'Check', then maybe improve the map and at the end press 'Send'",
+            "send": "Send",
+            "check": "Check",
+            "map_name_already_used": "The map name is already used!<br>Please change it and use 'Check' again.",
+            "map_name_atleast": "The map name has to consist of atleast {1} chars.",
+            "map_min_players_min_max": "The min-players has to be min. {1} and max. {2}.",
+            "map_max_players_min_max": "The max-players has to be min. {1} and max. {2}.",
+            "map_team_spawns_min_per_team": "The min. amount for spawns per team has to be atleast {1}.",
+            "map_limit_min_max": "The map-limit amount has to be 0 or min. {1} and max. {2}."
+        },
+        "orders": ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"]
+    },	
 	"GERMAN": {
 		"loginregister": {
 			"tab_login": "Login",
@@ -53,90 +133,34 @@ var languagelist = {
 			"team": "Team",
             "lobby": "Lobby"
 		},
-		"mapcreator_menu": {
-			"send_text": "Senden",
-			"send_description": "Sende die Map zum Server.",
-			"spawnpoint_text": "Spawn-Punkt",
-			"spawnpoint_description": "Füge Spawn-Punkte hinzu oder entferne sie!",
-			"team_text": "Team-Nummer",
-			"team_description": "Setze die Team-Nummer.",
-			"spawnpoint_add_text": "Spawnpunkt hinzufügen",
-			"spawnpoint_add_description": "Fügt einen Spawnpunkt hinzu.",
-			"maplimit_text": "Map-Limit",
-			"maplimit_description": "Setze die Ecken des Map-Limits (optional).",
-			"maplimit_add_text": "Ecke hinzufügen",
-			"maplimit_add_description": "Fügt eine Ecke für die Map-Begrenzung hinzu.",
+        "mapcreator_menu": {
+            "general": "Allgemein",
+            "descriptions": "Beschreibungen",
+            "team_spawns": "Team-Spawns",
+            "map_limit": "Map-Limit",
+            "map_points": "Map-Punkte",
+            "min_players": "Min-Spieler:",
+            "max_players": "Max-Spieler:",
+            "last": "Zuletzt",
+            "normal": "Normal",
+            "bomb": "Bombe",
+            "add": "Add",
+            "go": "Gehe",
+            "remove": "Entfernen",
+            "last_info": "Wenn du die Map sendest, wird sie auf dem Server gespeichert.<br>Dann bekommt Bonus die Chance die Map gründlich zu testen.<br>"
+            + "Wenn er Probleme oder Fehler findet, fixt er sie.<br>Wenn die Map ausreichend gut ist, wird sie spielbar gemacht.<br><br>"
+            + "Dieser ganze Prozess kann etwas dauern, daher solltest du mit min. 1-2 Tagen rechnen.<br>Bitte nutze zuerst 'Prüfen', dann verbessere wenn möglich die Map und danach kannst du 'Senden' nutzen.",
+            "send": "Senden",
+            "check": "Check",
+            "map_name_already_used": "Der Map-Name ist schon in Benutzung.<br>Bitte ändere den Namen und nutze 'Prüfe' erneut.",
+            "map_name_atleast": "Der Map-Name muss min. {1} Zeichen lang sein.",
+            "map_min_players_min_max": "Die Min-Spieler Anzahl muss min. {1} und max. {2} sein.",
+            "map_max_players_min_max": "Die Max-Spieler Anzahl muss min. {1} und max. {2} sein.",
+            "map_team_spawns_min_per_team": "Die min. Anzahl an Team-Spawn muss min. {1} pro Team sein.",
+            "map_limit_min_max": "Die Anzahl der Team-Limit-Positionen muss 0, min. {1} oder max. {2} sein."
         },
-        "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"]
-	},
-	"ENGLISH": {
-		"loginregister": {
-			"tab_login": "Login",
-			"tab_register": "Register",
-			"username": "username",
-			"password": "password",
-			"login_titel": "Welcome back!",
-			"login_forgotpw": "Password forgotten?",
-			"login_button": "login",
-			"register_titel": "Register at TDS!",
-			"register_email": "Email-address for password-reset",
-			"register_confirmpw": "confirm password",
-			"register_button": "Send",
-			"forgotpw_titel": "reset your password",
-			"forgotpw_email": "Email-address",
-			"forgotpw_reset": "reset",
-			"passwordhastobesame": "Both passwords have to be the same!"
-		},
-		"round": {
-			"outside_map_limit": "You are outside of the map!\nThere are {1} seconds left to return to the map.",
-			"planting": "planting ...",
-			"defusing": "defusing ..."
-		},
-		"lobby_choice": {
-			"arena": "Arena",
-			"gang": "Gang",
-            "custom": "Custom",
-            "mapcreator": "Map-Creator",
-			"player": "player",
-			"spectator": "spectator",
-			"back": "back",
-			"create": "create",
-			"lobby_name": "lobby-name",
-			"bomb": "bomb",
-			"lobby_password": "lobby-password",
-			"max_players": "max. players",
-			"round_time": "round-time (seconds)",
-			"countdown_time": "countdown-time (seconds)",
-			"armor": "armor",
-			"health": "health",
-            "time_scale": "time-scale",
-            "custom_lobby_own": "own lobby"
-		},
-		"scoreboard": {
-			"name": "name",
-			"playtime": "playtime",
-			"kills": "kills",
-			"assists": "assists",
-			"deaths": "deaths",
-			"team": "team",
-			"lobby": "lobby",
-		},
-		"mapcreator_menu": {
-			"send_text": "send",
-			"send_description": "Sends your map.",
-			"spawnpoint_text": "spawn-point",
-			"spawnpoint_description": "Add spawn-points or remove them!",
-			"team_text": "team-number",
-			"team_description": "Sets the team-number.",
-			"spawnpoint_add_text": "add spawn-point",
-			"spawnpoint_add_description": "Adds a spawn-point.",
-			"maplimit_text": "map-limit",
-			"maplimit_description": "Sets the corners for the map-limit (optional).",
-			"maplimit_add_text": "add corner",
-			"maplimit_add_description": "Adds a corner for the map-limit."
-        },
-        "orders": ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"]
-	}	
+        "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"],
+	}
 };
 let languagesetting: string = "ENGLISH";
 
@@ -153,7 +177,6 @@ function setLanguage( lang ) {
     mp.storage.data.language = lang;
     mp.storage.flush();
 	mp.events.callRemote( "onPlayerLanguageChange", lang );
-    //changeMapCreatorLanguage();
     loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
 }
 mp.events.add( "setLanguage", setLanguage );
@@ -167,8 +190,6 @@ function loadLanguage () {
         if ( langnumber == 2 ) 
             languagesetting = "" + Language.GERMAN;
     }
-
-	//createMapCreator();
 }
 
 function getLanguage() {
