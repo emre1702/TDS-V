@@ -190,3 +190,22 @@ table, th, td {
 #team_number_teamspawns {
     width: 10%;
 }
+
+#last_information {
+    white-space: normal;
+    height: 80%;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-y: scroll;
+}
+
+button[disabled] {
+    background: #ccc;
+    color: white;
+}
+
+#map_type_switch {
+    display: inline-block;
+    width: 50%;
+}
+

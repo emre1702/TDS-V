@@ -5,8 +5,11 @@
         <title>TDS mapcreator</title>
         <link rel='stylesheet' href='mapcreator.css'>
         <link rel="stylesheet" href="../css/scrollbar.css">
+        <link rel="stylesheet" href="../css/dialog.css">
+        <link rel="stylesheet" href="../css/toggleswitch.css">
         <script src='../js/jquery.min.js'></script>
         <script src="../js/draggable.js"></script>
+        <script src="../js/dialog.js"></script>
     </head>
     <body>
         <div id="mapcreatormenu" class="window">
@@ -14,32 +17,38 @@
             <div id="body">
                 <div id="leftside">
                     <div id="mapcreatortab">
-                        <button onclick="openMapCreatorMenu(0);">General</button>
-                        <button onclick="openMapCreatorMenu(1);">Descriptions</button>
-                        <button onclick="openMapCreatorMenu(2);">Team-spawns</button>
-                        <button onclick="openMapCreatorMenu(3);">Map-limit</button>
-                        <button onclick="openMapCreatorMenu(4);">Map-points</button>
+                        <button data-lang="general" onclick="openMapCreatorMenu(0);">General</button>
+                        <button data-lang="descriptions" onclick="openMapCreatorMenu(1);">Descriptions</button>
+                        <button data-lang="team_spawns" onclick="openMapCreatorMenu(2);">Team-spawns</button>
+                        <button data-lang="map_limit" onclick="openMapCreatorMenu(3);">Map-limit</button>
+                        <button data-lang="map_points" onclick="openMapCreatorMenu(4);">Map-points</button>
+                        <button data-lang="last" onclick="openMapCreatorMenu(5);">Last</button>
                     </div>
                 </div>
                 <div id="rightside">
                     <div id="general_tabcontent" class="tabcontent">
-                        <div><span>Name:</span><input type="text" maxlength="30" /></div>
+                        <div><span>Name:</span><input id="map_name_input" type="text" maxlength="30" /></div>
                         <div>
                             <span>Type:</span>
-                            <select id="type_mapcreator">
-                                <option value="normal">Normal</option>
-                                <option value="bomb">Bomb</option>
-                            </select>
+                            <div id="map_type_switch" class="switch-toggle switch-candy">
+                                <input id="normal_radio_switch" name="state-d" type="radio" checked>
+                                <label for="normal_radio_switch" onclick="" data-lang="normal">Normal</label>
+
+                                <input id="bomb_radio_switch" name="state-d" type="radio">
+                                <label for="bomb_radio_switch" onclick="" data-lang="bomb">Bomb</label>
+
+                                <a></a>
+                            </div>
                         </div>
-                        <div><span>Min-players:</span><input type="number" min="0" max="99" /></div>
-                        <div><span>Max-players:</span><input type="number" min="2" max="999" /></div>
+                        <div><span data-lang="min_players">Min-players:</span><input id="min_players" type="number" min="0" max="99" /></div>
+                        <div><span data-lang="max_players">Max-players:</span><input id="max_players" type="number" min="2" max="999" /></div>
                     </div>
                     <div id="description_tabcontent" class="tabcontent">
                         <div class="more_height_content">
-                            <span>English:</span><textarea maxlength="100" name="Test123" placeholder="No infos."></textarea>
+                            <span>English:</span><textarea maxlength="100" id="english_description" placeholder="No infos."></textarea>
                         </div>
                         <div class="more_height_content">
-                            <span>Deutsch:</span><textarea maxlength="100" name="asd" placeholder="Keine Infos."></textarea>
+                            <span>Deutsch:</span><textarea maxlength="100" id="german_description" placeholder="Keine Infos."></textarea>
                         </div>
                     </div>
                     <div id="team_spawns_tabcontent" class="tabcontent">
@@ -50,13 +59,14 @@
                                     <th>X</th>
                                     <th>Y</th>
                                     <th>Z</th>
+                                    <th>Rotation</th>
                                 </tr>
                             </table>
                         </div>
                         <div>
-                            <button class="add_button" onclick="AddCurrentPosition(0);">Add</button>
-                            <button class="goto_button" onclick="GotoPosition(0);">Goto</button>
-                            <button class="remove_button" onclick="RemovePosition();">Remove</button>
+                            <button class="add_button" data-lang="add" onclick="addCurrentPosition(0);">Add</button>
+                            <button class="goto_button" data-lang="go" onclick="gotoPosition(0);">Go</button>
+                            <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
                             <span class="button_same_line">Team:</span>
                             <input id="team_number_teamspawns" type="number" min="1" max="10" value="1" />
                         </div>
@@ -72,14 +82,14 @@
                             </table>
                         </div>
                         <div>
-                            <button class="add_button" onclick="AddCurrentPosition(1);">Add</button>
-                            <button class="goto_button" onclick="GotoPosition(1);">Goto</button>
-                            <button class="remove_button" onclick="RemovePosition();">Remove</button>
+                            <button class="add_button" data-lang="add" onclick="addCurrentPosition(1);">Add</button>
+                            <button class="goto_button" data-lang="go" onclick="gotoPosition(1);">Go</button>
+                            <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
                         </div>
                     </div>
                     <div id="map_points_tabcontent" class="tabcontent">
                         <div>
-                            <span style="margin-right: 6%;">Map-center:</span>
+                            <span style="margin-right: 6%;" data-lang="map_center:">Map-center:</span>
                         </div>
                         <div>
                             <span id="map_center_x">X: </span>
@@ -87,8 +97,15 @@
                             <span id="map_center_z">Z: </span>
                         </div>
                         <div>
-                            <button class="add_button" onclick="AddCurrentPosition(2);">Add</button>
-                            <button class="goto_button" onclick="GotoPosition(2);">Goto</button>
+                            <button class="add_button" data-lang="add" onclick="addCurrentPosition(2);">Add</button>
+                            <button class="goto_button" data-lang="go" onclick="gotoPosition(2);">Go</button>
+                        </div>
+                    </div>
+                    <div id="last_tabcontent" class="tabcontent">
+                        <span id="last_information" data-lang="last_info"></span>
+                        <div>
+                            <button id="send_map_button" class="add_button" data-lang="send" onclick="sendMap();" disabled>Send</button>
+                            <button id="check_map_button" class="goto_button" data-lang="check" onclick="checkMapName();">Check</button>
                         </div>
                     </div>
                 </div>
