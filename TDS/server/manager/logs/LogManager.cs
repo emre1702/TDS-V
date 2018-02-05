@@ -61,7 +61,7 @@
 					try {
 						sql += ", " + GetValueString ( i );
 					} catch ( Exception ex ) {
-						Error ( ex.StackTrace );
+						Error ( ex.ToString() );
 					}
 				}
 

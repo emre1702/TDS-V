@@ -110,7 +110,7 @@
 					addressBanDict.Remove ( player.Address );
 				}
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
 			}
 		}
 
@@ -123,7 +123,7 @@
 				DataTable maxuidresult = await Database.ExecResult ( "SELECT Max(uid) AS Maxuid FROM player" ).ConfigureAwait ( false );
 				lastPlayerUID = Convert.ToUInt16 ( maxuidresult.Rows[0]["Maxuid"] );
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
                 lastPlayerUID = 0;
 
             }
@@ -171,7 +171,7 @@
 					Admin.SetOffline ( player, adminlvl );
 				//NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
 			}
 		}
 

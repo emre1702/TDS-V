@@ -21,7 +21,7 @@
                 } );
                 Season.LoadSeason ();
             } catch ( Exception ex ) {
-				NAPI.Util.ConsoleOutput ( ex.StackTrace );
+				NAPI.Util.ConsoleOutput ( ex.ToString() );
 			}
 		}
 	}

@@ -65,7 +65,7 @@ namespace TDS.server.instance.lobby {
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
             } catch ( Exception ex ) {
-                NAPI.Util.ConsoleOutput ( ex.StackTrace );
+                NAPI.Util.ConsoleOutput ( ex.ToString() );
             }
         }
 

@@ -48,7 +48,7 @@
 					rdr.Close ();
 					return results;
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + ex.StackTrace );
+					Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + ex.ToString() );
 					return null;
 				}
 			}
@@ -71,7 +71,7 @@
 					return results;
 				} catch ( Exception ex ) {
                     string s = string.Join ( ";", parameters.Select ( x => x.Key + "=" + x.Value ).ToArray () );
-                    Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + s + "\n" + ex.StackTrace );
+                    Log.Error ( "DATABASE: [ERROR] " + sql + "\n" + s + "\n" + ex.ToString() );
 					return null;
 				}
 			}
@@ -85,7 +85,7 @@
 					await conn.OpenAsync ().ConfigureAwait ( false );
 					await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
+					Log.Error ( "DATABASE: [ERROR]\n" + ex.ToString() );
 				}
 			}
 		}
@@ -100,7 +100,7 @@
 					}
 					await cmd.ExecuteNonQueryAsync ().ConfigureAwait ( false );
 				} catch ( Exception ex ) {
-					Log.Error ( "DATABASE: [ERROR]\n" + sql + "\n" + ex.StackTrace );
+					Log.Error ( "DATABASE: [ERROR]\n" + sql + "\n" + ex.ToString() );
 				}
 			}
 		}
@@ -117,7 +117,7 @@
 				dataAdapter.Fill ( dataTable );
 				return dataTable;
 			} catch ( Exception ex ) {
-				Manager.Log.Error ( "DATABASE: [ERROR]\n" + ex.StackTrace );
+				Manager.Log.Error ( "DATABASE: [ERROR]\n" + ex.ToString() );
 				return null;
 			}
 		}
@@ -153,7 +153,7 @@
 					} else
                         NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR] Connection to MySQL failed! "+ conn.State.ToString() );
                 } catch ( Exception ex ) {
-                    NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR]\n" + ex.StackTrace );
+                    NAPI.Util.ConsoleOutput ( "DATABASE: [ERROR]\n" + ex.ToString() );
 				}
 			}
 		}

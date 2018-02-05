@@ -41,7 +41,7 @@
                 if ( counter % 30 == 0 )
                     Season.SaveSeason ();
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
 			}
 		}
 

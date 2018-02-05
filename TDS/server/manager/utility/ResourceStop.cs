@@ -28,7 +28,7 @@
 
                 Season.SaveSeason ();
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
 			}
 		}
 

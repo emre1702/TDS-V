@@ -44,7 +44,7 @@ namespace TDS.server.instance.utility {
 			try {
 				func ();
 			} catch ( Exception ex ) {
-				Log.Error ( ex.StackTrace );
+				Log.Error ( ex.ToString() );
 			} finally {
 				if ( executesLeft == 1 ) {
 					executesLeft = 0;
