@@ -6,6 +6,7 @@
 	using instance.player;
 	using lobby;
 	using map;
+    using System;
     using utility;
 
 	class PlayerCommand : Script {
@@ -79,7 +80,7 @@
 			}
 		}
 
-		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to now for new maps)", Group = "user" )]
+		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to know for new maps)", Group = "user" )]
 		public void CheckMapName ( Client player, string mapname ) {
 			NAPI.Notification.SendNotificationToPlayer ( player, Map.MapPathByName.ContainsKey ( mapname ) ? "map-name already taken" : "map-name is available" );
 		}
@@ -98,6 +99,53 @@
 			}
 		}
 		#endregion
+
+        [RemoteEvent ( "testit")]
+        public static void TestitEvent ( Client player, params object[] args ) {
+            int number = Convert.ToInt32 ( args[0] );
+            NetHandle handle = (NetHandle) args[1];
+            switch ( number ) {
+                case 0:
+                    NAPI.Util.ConsoleOutput ( handle.GetType ().ToString() );
+                    break;
+            }
+        }
+
+        [Command ( "testit")]
+        public static void Testit ( Client player, int number ) {
+            switch ( number ) {
+                case 1:
+                    player.Vehicle.CustomPrimaryColor = new Color ( 60, 0, 0 );
+                    player.Vehicle.CustomSecondaryColor = new Color ( 255, 0, 0 );
+
+                    Color color = player.Vehicle.CustomPrimaryColor;
+                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+                    color = player.Vehicle.CustomSecondaryColor;
+                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+
+                    color = NAPI.Vehicle.GetVehicleCustomPrimaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+                    color = NAPI.Vehicle.GetVehicleCustomSecondaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+
+                    break;
+
+                case 2:
+                    NAPI.Vehicle.SetVehicleCustomPrimaryColor ( player.Vehicle, 60, 20, 60 );
+                    NAPI.Vehicle.SetVehicleCustomSecondaryColor ( player.Vehicle, 60, 0, 150 );
+
+                    Color color2 = player.Vehicle.CustomPrimaryColor;
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+                    color2 = player.Vehicle.CustomSecondaryColor;
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+
+                    color2 = NAPI.Vehicle.GetVehicleCustomPrimaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+                    color2 = NAPI.Vehicle.GetVehicleCustomSecondaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+                    break;
+            }
+        }
     }
 
 }
