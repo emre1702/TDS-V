@@ -29,15 +29,30 @@ function getTick() {
 /**
 *	fix for cursor-problems
 */
-mp.keys.bind( 0x23, true, function () {	// end
+mp.keys.bind( 0x23, true, function () {	
 	if ( mp.gui.cursor.visible ) {
 		mp.gui.cursor.visible = false;
-		nothidecursor = 0;
+        nothidecursor = 0;
+        mp.gui.chat.activate( true );
 	} else {
 		mp.gui.cursor.visible = true;
-		nothidecursor = 1;
+        nothidecursor = 1;
+        mp.gui.chat.activate( false );
 	}
 } );
+
+function toggleCursor( bool ) {
+    if ( bool ) {
+        ++nothidecursor;
+        mp.gui.cursor.visible = true;
+        mp.gui.chat.activate( false );
+    } else {
+        if ( --nothidecursor <= 0 ) {
+            mp.gui.cursor.visible = false;
+            mp.gui.chat.activate( true );
+        }
+    }
+}
 
 function getPlayerByName( name: string ) {
 	mp.players.forEach( ( player, index ) => {

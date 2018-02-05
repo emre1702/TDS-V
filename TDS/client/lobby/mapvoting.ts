@@ -11,8 +11,7 @@ var mapvotingdata = {
 }
 
 function openMapVotingMenu() {
-    ++nothidecursor;
-    mp.gui.cursor.visible = true;
+    toggleCursor( true );
     mapvotingdata.visible = true;
     if ( lobbysettings.id != mapvotingdata.lastlobbyID ) {
         mp.events.callRemote( "onMapsListRequest" );
@@ -36,8 +35,7 @@ function closeMapVotingMenu() {
     if ( mapvotingdata.visible ) {
         closeMapMenuInBrowser();
         mapvotingdata.visible = false;
-        if ( --nothidecursor <= 0 )
-            mp.gui.cursor.visible = false;
+        toggleCursor( false );
     }
 }
 mp.events.add( "closeMapVotingMenu", closeMapVotingMenu );

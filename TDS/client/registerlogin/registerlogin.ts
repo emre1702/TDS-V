@@ -26,8 +26,7 @@ mp.events.add( "startRegisterLogin", function ( name: string, isregistered ) {
     loginpanel.loginbrowser = mp.browsers.new( "package://TDS-V/window/registerlogin/index.html" );
     mp.gui.chat.show( false );
 	mp.game.ui.displayHud( false );
-	mp.gui.cursor.visible = true;
-	nothidecursor++;
+    toggleCursor( true );
 } );
 
 mp.events.add( "registerLoginSuccessful", function () {
@@ -36,5 +35,5 @@ mp.events.add( "registerLoginSuccessful", function () {
 	loginpanel.loginbrowser = null;
     mp.gui.chat.show( true );
     mp.game.ui.displayHud( true );
-	nothidecursor--;
+    toggleCursor( false );
 } );

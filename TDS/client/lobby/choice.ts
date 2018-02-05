@@ -25,8 +25,7 @@ mp.events.add( "createLobby", function () {
 mp.events.add( "onClientJoinMainMenu", () => {
 	log( "onClientJoinMainMenu" );
 	lobbychoicedata.browser = mp.browsers.new( "package://TDS-V/window/choice/index.html" );
-	mp.gui.cursor.visible = true;
-	nothidecursor++;
+    toggleCursor( true );
 } );
 
 function destroyLobbyChoiceBrowser() {
@@ -34,9 +33,7 @@ function destroyLobbyChoiceBrowser() {
         return;
     lobbychoicedata.browser.destroy();
     lobbychoicedata.browser = null;
-	nothidecursor--;
-	if ( nothidecursor == 0 )
-		mp.gui.cursor.visible = false;
+    toggleCursor( false );
 }
 
 mp.events.add( "onClientPlayerJoinLobby", ( lobbyid ) => {
