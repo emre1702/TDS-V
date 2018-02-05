@@ -146,10 +146,10 @@
             return lobby.GetRandomMap ();
 		}
 
-        private static string GetXmlStringByMap ( CreatedMap map ) {
+        private static string GetXmlStringByMap ( CreatedMap map, uint playeruid ) {
             StringBuilder builder = new StringBuilder ();
             builder.AppendLine ( "<MapData>" )
-                .AppendLine ( "\t<map name='" + map.Name + "' type='" + map.Type + "' minplayers='" + map.MinPlayers + "' maxplayers='" + map.MaxPlayers + "' />" )
+                .AppendLine ( "\t<map creator='"+ playeruid + "' name='" + map.Name + "' type='" + map.Type + "' minplayers='" + map.MinPlayers + "' maxplayers='" + map.MaxPlayers + "' />" )
                 .AppendLine ( "\t<english>" + map.Descriptions.English + "</english>" )
                 .AppendLine ( "\t<german>" + map.Descriptions.German + "</german>" );
 
@@ -167,13 +167,13 @@
             return builder.ToString();
         }  
 
-        public static async void CreateNewMap ( string content ) {
+        public static async void CreateNewMap ( string content, uint playeruid ) {
             try {
                 NAPI.Util.ConsoleOutput ( content + "\n\n" );
                 CreatedMap map = JsonConvert.DeserializeObject<CreatedMap> ( content );
                 NAPI.Util.ConsoleOutput ( JsonConvert.SerializeObject ( map ) );
                 using ( StreamWriter writer = File.CreateText ( newMapsPath + Utility.GetTimespan() + ".xml" ) ) {
-                    await writer.WriteAsync ( GetXmlStringByMap ( map ) );
+                    await writer.WriteAsync ( GetXmlStringByMap ( map, playeruid ) );
                 }                                         
             } catch ( Exception ex ) {
                 Log.Error ( ex.ToString(), "MapCreator" );
