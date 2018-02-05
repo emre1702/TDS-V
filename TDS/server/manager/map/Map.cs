@@ -5,18 +5,22 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using System.Threading.Tasks;
+    using System.Text;
+    using System.Threading.Tasks;
 	using System.Xml;
 	using GTANetworkAPI;
 	using instance.lobby;
 	using logs;
+    using Newtonsoft.Json;
     using TDS.server.enums;
+    using TDS.server.instance.map;
     using utility;
 
 	static class Map {
 
 		private const string mapsPath = "bridge/resources/TDS-V/maps/";
-		private static readonly XmlReaderSettings settings = new XmlReaderSettings ();
+        private const string newMapsPath = "bridge/resources/TDS-V/newmaps/";
+        private static readonly XmlReaderSettings settings = new XmlReaderSettings ();
 
         public static List<instance.map.Map> allMaps = new List<instance.map.Map> ();
         public static List<instance.map.MapSync> allMapsSync = new List<instance.map.MapSync> ();
@@ -129,7 +133,7 @@
 				}
 				return true;
 			} catch ( Exception ex ) {
-				Log.Error ( "Error in Manager.Map.GetMapClass (" + path + ")\n"+ex.StackTrace );
+				Log.Error ( "Error in Manager.Map.GetMapClass (" + path + ")\n"+ex.ToString() );
 				return false;
 			}
 		}
@@ -141,6 +145,40 @@
 			}
             return lobby.GetRandomMap ();
 		}
+
+        private static string GetXmlStringByMap ( CreatedMap map ) {
+            StringBuilder builder = new StringBuilder ();
+            builder.AppendLine ( "<MapData>" )
+                .AppendLine ( "\t<map name='" + map.Name + "' type='" + map.Type + "' minplayers='" + map.MinPlayers + "' maxplayers='" + map.MaxPlayers + "' />" )
+                .AppendLine ( "\t<english>" + map.Descriptions.English + "</english>" )
+                .AppendLine ( "\t<german>" + map.Descriptions.German + "</german>" );
+
+            for ( int i = 0; i < map.MapSpawns.Length; ++i ) {
+                TeamSpawn spawn = map.MapSpawns[i];
+                builder.AppendLine ( "\t<team" + spawn.Team + " x='" + spawn.X + "' y='" + spawn.Y + "' z='" + spawn.Z + "' rot='" + spawn.Rot + "' />" );
+            }
+
+            for ( int i = 0; i < map.MapLimitPositions.Length; ++i ) {
+                Position pos = map.MapLimitPositions[i];
+                builder.AppendLine ( "\t<limit x='" + pos.X + "' y='" + pos.Y + "' z='" + pos.Z + "' />" );
+            }
+
+            builder.AppendLine ( "</MapData>" );
+            return builder.ToString();
+        }  
+
+        public static async void CreateNewMap ( string content ) {
+            try {
+                NAPI.Util.ConsoleOutput ( content + "\n\n" );
+                CreatedMap map = JsonConvert.DeserializeObject<CreatedMap> ( content );
+                NAPI.Util.ConsoleOutput ( JsonConvert.SerializeObject ( map ) );
+                using ( StreamWriter writer = File.CreateText ( newMapsPath + Utility.GetTimespan() + ".xml" ) ) {
+                    await writer.WriteAsync ( GetXmlStringByMap ( map ) );
+                }                                         
+            } catch ( Exception ex ) {
+                Log.Error ( ex.ToString(), "MapCreator" );
+            }
+        }
 
 		/*private static Map getMapDataOther ( string path ) {
 			Map map = new Map ();
