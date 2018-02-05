@@ -26,16 +26,29 @@ mp.events.add( "requestCurrentPositionForMapCreator", () => {
     let x = Math.round( position.x * 100 ) / 100;
     let y = Math.round( position.y * 100 ) / 100;
     let z = Math.round( position.z * 100 ) / 100;
-    mapcreatordata.browser.execute( "LoadPositionFromClient (" +  x + ", " + y + ", " + z + "); " );
+    let rotation = localPlayer.getRotation( 2 );
+    mapcreatordata.browser.execute( "loadPositionFromClient (" + x + ", " + y + ", " + z + ", " + rotation.z + "); " );
 } );
 
-mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number ) => {
+mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, rot: number ) => {
     if ( mapcreatordata.browser === null )
         return;
-    mp.gui.chat.push( x + " - " + y + " - " + z );
     localPlayer.position = { x: x, y: y, z: z } as MpVector3;
+    if ( !isNaN( rot ) )
+        localPlayer.setRotation( 0.0, 0.0, rot, 2, true );
 } );
 
+mp.events.add( "checkMapName", ( name ) => {
+    mp.events.callRemote( "checkMapName", name );
+} );
+
+mp.events.add( "sendMapNameCheckResult", ( alreadyinuse ) => {
+    mapcreatordata.browser.execute( "loadResultOfMapNameCheck(" + alreadyinuse + ");" );
+} );
+
+mp.events.add( "sendMapFromCreator", ( mapjson ) => {
+    mp.events.callRemote( "sendMapFromCreator", mapjson );
+} );
 
 
 /* let mapcreatordata = {
