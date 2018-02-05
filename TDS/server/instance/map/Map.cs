@@ -26,4 +26,39 @@ namespace TDS.server.instance.map {
         };
     }
 
+    [Serializable]
+    public class CreatedMap {
+        public string Name;
+        public string Type;
+        public Description Descriptions;
+        public int MinPlayers;
+        public int MaxPlayers;
+        public TeamSpawn[] MapSpawns;
+        public Position[] MapLimitPositions;
+        public Position MapCenter;
+    }
+
+    [Serializable]
+    public class Description {
+        public string English;
+        public string German;
+    }
+
+
+    [Serializable]
+    public class Position {
+        public float X;
+        public float Y;
+        public float Z;
+    }
+
+    [Serializable]
+    public class TeamSpawn {
+        public int Team;
+        public float X;
+        public float Y;
+        public float Z;
+        public float Rot;
+    }
+
 }
