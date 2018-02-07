@@ -33,7 +33,6 @@ function drawText( text: string, x: number, y: number, font: number, color: [num
     let ypos = relative ? y : y / res.y;   
 
     // workaround //
-    let thetext = text + "               ";
     /*if ( alignment == Alignment.CENTER ) 
         thetext = text + "               ";
     else if ( alignment == Alignment.LEFT )  
@@ -47,7 +46,7 @@ function drawText( text: string, x: number, y: number, font: number, color: [num
     else if ( alignment == Alignment.RIGHT )
         xpos -= getStringWidth( text, scale, font );
 
-    mp.game.graphics.drawText( thetext, [xpos, ypos], { font, color, scale, outline } );
+    mp.game.graphics.drawText( text, [xpos, ypos], { font, color, scale, outline } );
 
 
     //mp.game.graphics.drawText( thetext, [xpos, ypos], { font, color, scale, outline } );
