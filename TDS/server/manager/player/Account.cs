@@ -32,7 +32,7 @@
 		private static void SendWelcomeMessage ( Client player ) {
             StringBuilder builder = new StringBuilder ();
             builder.Append ( "#o#__________________________________________#w#" );
-			for ( int i = 1; i <= 6; i++ ) {
+			for ( int i = 1; i <= 7; i++ ) {
                 builder.Append ( "#n#"+player.GetLang ( "welcome_" + i ) );
 			}
             builder.Append ( "#n##o#__________________________________________" );
