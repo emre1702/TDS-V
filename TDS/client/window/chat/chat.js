@@ -86,11 +86,11 @@ chatAPI["show"] = ( toggle ) => {
 };
 
 function formatMsg( input, ismentioned ) {
-    let start; 
+    let start = ""; 
     if ( ismentioned )
-        start = '<span style="color: white; background-color: rgba(255,178,102,0.5);">';
-    else 
-        start = '<span style="color: white;">';
+        start = '<span style="background-color: rgba(255,178,102,0.5);">';
+
+    start += '<span style="color: white;">';
 
     let replaced = input;
     if ( input.indexOf( "#" ) !== -1 ) {
@@ -99,6 +99,9 @@ function formatMsg( input, ismentioned ) {
         }
         replaced = replaced.replace( /#n#/g, '<br>' );
     }
+
+    if ( ismentioned )
+        replaced += "</span>";
 
     return start + replaced + "</span>";
 }
@@ -112,7 +115,7 @@ function isMentioned( msg ) {
     let lastindex = msg.indexOf( ":", firstindex + 1 );
     if ( lastindex === -1 )
         return false;
-    let name = msg.substring( firstindex+1, lastindex );
+    let name = msg.substring( firstindex + 1, lastindex );
     if ( name === myname )
         return true;
     return false;
