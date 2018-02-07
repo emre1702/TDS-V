@@ -112,7 +112,7 @@ function isMentioned( msg ) {
     let lastindex = msg.indexOf( ":", firstindex + 1 );
     if ( lastindex === -1 )
         return false;
-    let name = msg.substring( firstindex, lastindex );
+    let name = msg.substring( firstindex+1, lastindex );
     if ( name === myname )
         return true;
     return false;
