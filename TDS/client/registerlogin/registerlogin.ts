@@ -33,5 +33,5 @@ mp.events.add( "registerLoginSuccessful", function () {
 	loginpanel.loginbrowser.destroy();
 	loginpanel.loginbrowser = null;
     mp.gui.chat.activate( true );
-    toggleCursor( false );
+    --nothidecursor;
 } );
