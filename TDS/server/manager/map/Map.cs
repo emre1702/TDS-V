@@ -156,7 +156,7 @@
             if ( map.Type == "bomb" ) {
                 for ( int i = 0; i < map.BombPlaces.Length; ++i ) {
                     Position pos = map.BombPlaces[i];
-                    builder.AppendLine ( "\t<bomb x='" + pos.X + "' y='" + pos.Y + "' z='" + pos.Z + "' />" );
+                    builder.AppendLine ( "\t<bomb x='" + pos.X + "' y='" + pos.Y + "' z='" + ( pos.Z - 1 ) + "' />" );
                 }
             }
 
