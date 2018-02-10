@@ -92,7 +92,7 @@ namespace TDS.server.instance.lobby {
         [RemoteEvent ( "checkMapName" )]
         public void OnCheckMapNameEvent ( Client player, params object[] args ) {
             string name = (string) args[0];
-            player.TriggerEvent ( "sendMapNameCheckResult", Map.MapPathByName.ContainsKey ( name ) );
+            player.TriggerEvent ( "sendMapNameCheckResult", Map.DoesMapNameExist ( name ) );
         }
 
         [RemoteEvent ( "sendMapFromCreator" )]

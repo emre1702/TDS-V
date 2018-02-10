@@ -82,7 +82,7 @@
 
 		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to know for new maps)", Group = "user" )]
 		public void CheckMapName ( Client player, string mapname ) {
-			NAPI.Notification.SendNotificationToPlayer ( player, Map.MapPathByName.ContainsKey ( mapname ) ? "map-name already taken" : "map-name is available" );
+			NAPI.Notification.SendNotificationToPlayer ( player, Map.DoesMapNameExist ( mapname ) ? "map-name already taken" : "map-name is available" );
 		}
 		#endregion
 
@@ -110,6 +110,8 @@
                     break;
             }
         }
+
+        private static Vehicle lastveh;
 
         [Command ( "testit")]
         public static void Testit ( Client player, int number ) {
@@ -143,6 +145,23 @@
                     NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
                     color2 = NAPI.Vehicle.GetVehicleCustomSecondaryColor ( player.Vehicle );
                     NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+                    break;
+
+                case 3:
+                    NAPI.Resource.StopResource ( "TDS-V" );
+                    break;
+
+                case 4:
+                    lastveh = NAPI.Vehicle.CreateVehicle ( VehicleHash.T20, player.Position, player.Rotation.Z, 154, 0, "Hi", dimension: player.Dimension );
+                    break;
+
+                case 5:
+                    NAPI.Entity.DeleteEntity ( lastveh );
+                    lastveh = NAPI.Vehicle.CreateVehicle ( VehicleHash.T20, player.Position, player.Rotation.Z, 154, 0, "Hi", dimension: player.Dimension );
+                    break;
+
+                case 6:
+                    NAPI.Util.ConsoleOutput ( lastveh.Health.ToString() + " - " + lastveh.Livery.ToString() );
                     break;
             }
         }

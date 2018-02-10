@@ -25,7 +25,7 @@
         public static List<instance.map.Map> allMaps = new List<instance.map.Map> ();
         public static List<instance.map.MapSync> allMapsSync = new List<instance.map.MapSync> ();
 
-		public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string> ();
+		public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string> ();   // mapnames in lower case
 		public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string> ();
 
 		public static async Task MapOnStart () {
@@ -43,7 +43,7 @@
                             allMaps.Add ( map );
                             allMapsSync.Add ( map.SyncData );
 
-                            MapPathByName[map.SyncData.Name] = filename;
+                            MapPathByName[map.SyncData.Name.ToLower()] = filename;
 						} else
 							Log.Error ( "Map " + filename + " got no name!" );
 					}
@@ -140,7 +140,7 @@
 
 		public static async Task<instance.map.Map> GetMapClass ( string mapname, Arena lobby ) {
 			instance.map.Map map = new instance.map.Map ();
-			if ( await map.AddInfos ( MapPathByName[mapname] ).ConfigureAwait ( false ) ) {
+			if ( await map.AddInfos ( MapPathByName[mapname.ToLower()] ).ConfigureAwait ( false ) ) {
 				return map;
 			}
             return lobby.GetRandomMap ();
@@ -169,15 +169,17 @@
 
         public static async void CreateNewMap ( string content, uint playeruid ) {
             try {
-                NAPI.Util.ConsoleOutput ( content + "\n\n" );
                 CreatedMap map = JsonConvert.DeserializeObject<CreatedMap> ( content );
-                NAPI.Util.ConsoleOutput ( JsonConvert.SerializeObject ( map ) );
                 using ( StreamWriter writer = File.CreateText ( newMapsPath + Utility.GetTimespan() + ".xml" ) ) {
                     await writer.WriteAsync ( GetXmlStringByMap ( map, playeruid ) );
                 }                                         
             } catch ( Exception ex ) {
                 Log.Error ( ex.ToString(), "MapCreator" );
             }
+        }
+
+        public static bool DoesMapNameExist ( string mapname ) {
+            return MapPathByName.ContainsKey ( mapname.ToLower () );
         }
 
 		/*private static Map getMapDataOther ( string path ) {
