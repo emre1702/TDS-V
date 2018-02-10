@@ -177,7 +177,9 @@
         public static async void CreateNewMap ( string content, uint playeruid ) {
             try {
                 CreatedMap map = JsonConvert.DeserializeObject<CreatedMap> ( content );
-                using ( StreamWriter writer = File.CreateText ( newMapsPath + Utility.GetTimespan() + ".xml" ) ) {
+                string path = newMapsPath + playeruid + "/";
+                Directory.CreateDirectory ( path );
+                using ( StreamWriter writer = File.CreateText ( path + Utility.GetTimespan() + ".xml" ) ) {
                     await writer.WriteAsync ( GetXmlStringByMap ( map, playeruid ) );
                 }                                         
             } catch ( Exception ex ) {
