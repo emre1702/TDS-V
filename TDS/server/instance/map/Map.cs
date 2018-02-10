@@ -33,6 +33,7 @@ namespace TDS.server.instance.map {
         public Description Descriptions;
         public int MinPlayers;
         public int MaxPlayers;
+        public Position[] BombPlaces;
         public TeamSpawn[] MapSpawns;
         public Position[] MapLimitPositions;
         public Position MapCenter;

@@ -1,6 +1,7 @@
 let mapcreatormenu = $( "#mapcreatormenu" );
-let mapcreatortabs = [$( "#general_tabcontent" ), $( "#description_tabcontent" ), $( "#team_spawns_tabcontent" ), $( "#map_limit_tabcontent" ), $( "#map_points_tabcontent" ), $( "#last_tabcontent" )];
-let mapcreatortables = [$( "#team_spawns_table" ), $( "#map_limit_table" )];
+let mapcreatortabs = [$( "#general_tabcontent" ), $( "#description_tabcontent" ), $( "#team_spawns_tabcontent" ), $( "#map_limit_tabcontent" ),
+    $( "#map_points_tabcontent" ), $("#bomb_places_tabcontent" ), $( "#last_tabcontent" )];
+let mapcreatortables = [$( "#team_spawns_table" ), $( "#map_limit_table" ), undefined, $("#bomb_places_table")];
 let teamnumberteamspawns = $( "#team_number_teamspawns" );
 let selectedrow = null;
 let addpositionfor = 0;
@@ -54,6 +55,7 @@ function gotoPosition( number ) {
             rot = row.eq( 4 ).text();
             break;
         case 1:
+        case 3:
             row = selectedrow.find( "td" );
             x = row.eq( 0 ).text();
             y = row.eq( 1 ).text();
@@ -84,6 +86,7 @@ function loadPositionFromClient( x, y, z, rot ) {
             mapcreatortables[addpositionfor].append( row );
             break;
         case 1:
+        case 3:
             row = $( "<tr><td>" + x + "</td><td>" + y + "</td><td>+" + z + "</td></tr>" );
             row.click( clickOnRow );
             mapcreatortables[addpositionfor].append( row );
@@ -116,7 +119,8 @@ function sendMap() {
         MaxPlayers: parseInt( $( "#max_players" ).val() ),
         MapSpawns: [],
         MapLimitPositions: [],
-        MapCenter: {}
+        MapCenter: {},
+        BombPlaces: []
     };
 
     let english = $( "#english_description" ).val();
@@ -152,6 +156,16 @@ function sendMap() {
     obj.MapCenter.Z = parseFloat( $( "#map_center_z" ).text().substr( 3 ) );
     obj.MapCenter.Z = isNaN( obj.MapCenter.Z ) ? -9999 : obj.MapCenter.Z;
 
+    if ( obj.Type === "bomb" ) {
+        $( "#bomb_places_table tr:not(:first-child)" ).each( function () {
+            let row = $( this ).find( "td" );
+            let x = parseFloat( row.eq( 0 ).text() );
+            let y = parseFloat( row.eq( 1 ).text() );
+            let z = parseFloat( row.eq( 2 ).text() );
+            obj.BombPlaces.push( { X: x, Y: y, Z: z } );
+        } );
+    }
+
     mp.trigger( "sendMapFromCreator", JSON.stringify( obj ) );
 }
 
@@ -160,7 +174,6 @@ function disableSendButton() {
         $( "#send_map_button" ).attr( "disabled", "" );
         sendbuttondisabled = true;
     }
-
 }
 
 function checkMap() {
@@ -182,16 +195,25 @@ function checkMap() {
         return false;
     } 
 
-    let mapspawnrows = $( "#team_spawns_table tr" );
-    if ( mapspawnrows.length - 1 < 4 ) {      // -1 because of header
+    let mapspawnrows = $( "#team_spawns_table tr:not(:first-child)" );
+    if ( mapspawnrows.length < 4 ) {     
         showDialog( langdata["map_team_spawns_min_per_team"].replace( "{1}", "4" ) );
         return false;
     }
 
-    let maplimitrows = $( "#map_limit_table tr" );
-    if ( maplimitrows.length - 1 !== 0 && ( maplimitrows.length - 1 < 3 || maplimitrows.length - 1 > 20 ) ) {
+    let maplimitrows = $( "#map_limit_table tr:not(:first-child)" );
+    if ( maplimitrows.length !== 0 && ( maplimitrows.length < 3 || maplimitrows.length > 20 ) ) {
         showDialog( langdata["map_limit_min_max"].replace( "{1}", "3" ).replace ( "{2}", 20 ) );
         return false;
+    }
+
+    // bomb mode //
+    if ( typeof $( "#bomb_radio_switch" ).attr( "checked" ) !== "undefined" ) {
+        let bombplacesrows = $( "#bomb_places_table tr:not(:first-child)" );
+        if ( bombplacesrows.length === 0 ) {
+            showDialog( langdata["bomb_places_min"].replace( "{1}", 1 ) );
+            return false;
+        }
     }
 
     sendbuttondisabled = false;
@@ -210,6 +232,13 @@ function loadResultOfMapNameCheck( alreadyinuse ) {
         alert( langdata['map_name_already_used'] );
         showDialog( langdata["map_name_already_used"] );
     }
+}
+
+function toggleBombContents( bool ) {
+    if ( bool )
+        $( ".bomb_content" ).show(); 
+    else
+        $( ".bomb_content" ).hide()
 }
 
 $( document ).keyup( function ( e ) {

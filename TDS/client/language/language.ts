@@ -59,6 +59,7 @@ var languagelist = {
             "team_spawns": "Team-spawns",
             "map_limit": "Map-limit",
             "map_points": "Map-points",
+            "bomb_places": "Bomb-places",
             "min_players": "Min-players:",
             "max_players": "Max-players:",
             "last": "Last",
@@ -77,7 +78,8 @@ var languagelist = {
             "map_min_players_min_max": "The min-players has to be min. {1} and max. {2}.",
             "map_max_players_min_max": "The max-players has to be min. {1} and max. {2}.",
             "map_team_spawns_min_per_team": "The min. amount for spawns per team has to be atleast {1}.",
-            "map_limit_min_max": "The map-limit amount has to be 0 or min. {1} and max. {2}."
+            "map_limit_min_max": "The map-limit amount has to be 0 or min. {1} and max. {2}.",
+            "bomb_places_min": "There has to be atleast one bomb-place to be able to place the bomb.",
         },
         "orders": ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"]
     },	
@@ -139,6 +141,7 @@ var languagelist = {
             "team_spawns": "Team-Spawns",
             "map_limit": "Map-Limit",
             "map_points": "Map-Punkte",
+            "bomb_places": "Bomben-Plätze",
             "min_players": "Min-Spieler:",
             "max_players": "Max-Spieler:",
             "last": "Zuletzt",
@@ -157,7 +160,8 @@ var languagelist = {
             "map_min_players_min_max": "Die Min-Spieler Anzahl muss min. {1} und max. {2} sein.",
             "map_max_players_min_max": "Die Max-Spieler Anzahl muss min. {1} und max. {2} sein.",
             "map_team_spawns_min_per_team": "Die min. Anzahl an Team-Spawn muss min. {1} pro Team sein.",
-            "map_limit_min_max": "Die Anzahl der Team-Limit-Positionen muss 0, min. {1} oder max. {2} sein."
+            "map_limit_min_max": "Die Anzahl der Team-Limit-Positionen muss 0, min. {1} oder max. {2} sein.",
+            "bomb_places_min": "Es muss mindestens einen Bomben-Platz geben, um die Bombe platzieren zu können.",
         },
         "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"],
 	}

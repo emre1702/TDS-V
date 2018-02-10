@@ -153,6 +153,13 @@
                 .AppendLine ( "\t<english>" + map.Descriptions.English + "</english>" )
                 .AppendLine ( "\t<german>" + map.Descriptions.German + "</german>" );
 
+            if ( map.Type == "bomb" ) {
+                for ( int i = 0; i < map.BombPlaces.Length; ++i ) {
+                    Position pos = map.BombPlaces[i];
+                    builder.AppendLine ( "\t<bomb x='" + pos.X + "' y='" + pos.Y + "' z='" + pos.Z + "' />" );
+                }
+            }
+
             for ( int i = 0; i < map.MapSpawns.Length; ++i ) {
                 TeamSpawn spawn = map.MapSpawns[i];
                 builder.AppendLine ( "\t<team" + spawn.Team + " x='" + spawn.X + "' y='" + spawn.Y + "' z='" + spawn.Z + "' rot='" + spawn.Rot + "' />" );

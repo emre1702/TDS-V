@@ -22,7 +22,8 @@
                         <button data-lang="team_spawns" onclick="openMapCreatorMenu(2);">Team-spawns</button>
                         <button data-lang="map_limit" onclick="openMapCreatorMenu(3);">Map-limit</button>
                         <button data-lang="map_points" onclick="openMapCreatorMenu(4);">Map-points</button>
-                        <button data-lang="last" onclick="openMapCreatorMenu(5);">Last</button>
+                        <button data-lang="bomb_places" onclick="openMapCreatorMenu( 5 );" style="display: none;" class="bomb_content">Bomb-places</button>
+                        <button data-lang="last" onclick="openMapCreatorMenu(6);">Last</button>
                     </div>
                 </div>
                 <div id="rightside">
@@ -31,10 +32,10 @@
                         <div>
                             <span>Type:</span>
                             <div id="map_type_switch" class="switch-toggle switch-candy">
-                                <input id="normal_radio_switch" name="state-d" type="radio" checked>
+                                <input id="normal_radio_switch" name="state-d" type="radio" checked onclick="toggleBombContents( false );">
                                 <label for="normal_radio_switch" onclick="" data-lang="normal">Normal</label>
 
-                                <input id="bomb_radio_switch" name="state-d" type="radio">
+                                <input id="bomb_radio_switch" name="state-d" type="radio" onclick="toggleBombContents( true );">
                                 <label for="bomb_radio_switch" onclick="" data-lang="bomb">Bomb</label>
 
                                 <a></a>
@@ -99,6 +100,22 @@
                         <div>
                             <button class="add_button" data-lang="add" onclick="addCurrentPosition(2);">Add</button>
                             <button class="goto_button" data-lang="go" onclick="gotoPosition(2);">Go</button>
+                        </div>
+                    </div>
+                    <div id="bomb_places_tabcontent" class="tabcontent">
+                        <div class="tabtablediv">
+                            <table id="bomb_places_table" class="tabtable">
+                                <tr>
+                                    <th>X</th>
+                                    <th>Y</th>
+                                    <th>Z</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <button class="add_button" data-lang="add" onclick="addCurrentPosition(3);">Add</button>
+                            <button class="goto_button" data-lang="go" onclick="gotoPosition(3);">Go</button>
+                            <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
                         </div>
                     </div>
                     <div id="last_tabcontent" class="tabcontent">

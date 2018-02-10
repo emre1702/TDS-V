@@ -17,7 +17,8 @@ let files = [
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], reserved: ["loadLanguage", "setLoginPanelData"] },
     {
         path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"],
-        reserved: ["openMapCreatorMenu", "gotoPosition", "addCurrentPosition", "removePosition", "loadPositionFromClient", "loadLanguage", "sendMap", "checkMapName", "loadResultOfMapNameCheck" ]
+        reserved: ["openMapCreatorMenu", "gotoPosition", "addCurrentPosition", "removePosition", "loadPositionFromClient", "loadLanguage", "sendMap", "checkMapName", "loadResultOfMapNameCheck",
+        "toggleBombContents" ]
     }
 ];
 let minifysettings = {
