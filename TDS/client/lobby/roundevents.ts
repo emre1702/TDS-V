@@ -64,7 +64,6 @@ mp.events.add( "onClientRoundEnd", function () {
     removeRoundInfo();
     toggleFightControls( false );
     clearMapVotingsInBrowser();
-    mp.gui.chat.push( "Your shot-amount: " + damagesysdata.shotsdoneinround );
 } );
 
 
