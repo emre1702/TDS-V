@@ -55,14 +55,14 @@ function toggleCursor( bool ) {
 }
 
 function getPlayerByName( name: string ) {
-	mp.players.forEach( ( player, index ) => {
+    mp.players.forEach( ( player: PlayerMp ) => {
 		if ( player.name == name )
 			return player;
 	} );
 	return null;
 }
 
-function distance( vector1: MpVector3, vector2: MpVector3, useZ = true ) {
+function distance( vector1: Vector3Mp, vector2: Vector3Mp, useZ = true ) {
 	return mp.game.gameplay.getDistanceBetweenCoords( vector1.x, vector1.y, vector1.z, vector2.x, vector2.y, vector2.z, useZ );
 }
 

@@ -18,13 +18,13 @@
     lastused: {}
 }
 
-function callRemote( eventname: string, ...args: any[] ) {
-    mp.events.callRemote( eventname, args );
+function callRemote( eventname: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any ) {
+    mp.events.callRemote( eventname, arg1, arg2, arg3, arg4, arg5 );
 }
 
-function callRemoteCooldown( eventname: string, ...args: any[] ) {
+function callRemoteCooldown( eventname: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any  ) {
     if ( !( eventname in callremotedata.cooldowns ) ) {
-        mp.events.callRemote( eventname, args );
+        mp.events.callRemote( eventname, arg1, arg2, arg3, arg4, arg5 );
         return;
     }
 
@@ -32,7 +32,7 @@ function callRemoteCooldown( eventname: string, ...args: any[] ) {
     let incooldown = eventname in callremotedata.lastused && currenttick - callremotedata.lastused[eventname] < callremotedata.cooldowns[eventname];
     if ( !incooldown ) {
         callremotedata.lastused[eventname] = currenttick;
-        mp.events.callRemote( eventname, args );
+        mp.events.callRemote( eventname, arg1, arg2, arg3, arg4, arg5 );
         return;
     }
 }

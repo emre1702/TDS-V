@@ -12,7 +12,7 @@ let maplimitdata = {
 }
 
 
-function pointIsInPoly( p: MpVector3 ) {
+function pointIsInPoly( p: Vector3Mp ) {
 	if ( p.x < maplimitdata.minX || p.x > maplimitdata.maxX || p.y < maplimitdata.minY || p.y > maplimitdata.maxY ) {
 		return false;
 	}

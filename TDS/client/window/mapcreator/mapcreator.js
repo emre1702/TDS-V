@@ -236,9 +236,9 @@ function loadResultOfMapNameCheck( alreadyinuse ) {
 
 function toggleBombContents( bool ) {
     if ( bool )
-        $( ".bomb_content" ).show(); 
+        $( ".bomb_content" ).show();
     else
-        $( ".bomb_content" ).hide()
+        $( ".bomb_content" ).hide();
 }
 
 $( document ).keyup( function ( e ) {

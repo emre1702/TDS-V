@@ -85,7 +85,7 @@ mp.events.add( "onClientPlayerDeath", function ( playerID: number, teamID: numbe
 } );
 
 
-mp.events.add( "PlayerQuit", function ( player: MpPlayer, exitType: string, reason: string ) {
+mp.events.add( "PlayerQuit", function ( player: PlayerMp, exitType: string, reason: string ) {
 	log( "PlayerQuit" );
 	//removeTeammateFromTeamBlips( player.name );
 } );

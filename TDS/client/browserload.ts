@@ -1,4 +1,4 @@
-﻿mp.events.add( 'browserDomReady', ( browser: MpBrowser ) => {
+﻿mp.events.add( 'browserDomReady', ( browser: BrowserMp ) => {
 
     if ( browser === loginpanel.loginbrowser )
         browser.execute( "setLoginPanelData ( `" + loginpanel.name + "`, " + loginpanel.isregistered + ", `" + JSON.stringify( getLang( "loginregister" ) ) + "` );" );

@@ -33,8 +33,8 @@ function checkShooting() {
 
 mp.events.add( "playerWeaponShot", ( hitpos ) => {
     let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
-    let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as MpVector3;
-    let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer, 8 ) as { position: { x, y, z }, surfaceNormal: any, entity: MpEntity };
+    let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as Vector3Mp;
+    let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer.handle, 8 ) as RaycastResult;
     if ( typeof raycast !== "undefined" ) { // hit nothing {
         let player = mp.players.atHandle( raycast.entity );
         mp.gui.chat.push( player.name );

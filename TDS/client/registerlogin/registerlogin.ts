@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let loginpanel = {
-	loginbrowser: null as MpBrowser,
+    loginbrowser: null as BrowserMp,
 	name: null as string,
 	isregistered: null
 }

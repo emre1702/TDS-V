@@ -3,12 +3,12 @@
 let bombdata = {
     changed: false,
     gotbomb: false,
-    placestoplant: [] as MpVector3[],
+    placestoplant: [] as Vector3Mp[],
     plantdefuseevent: false,
     isplanting: false,
     isdefusing: false,
     plantdefusestarttick: 0,
-    plantedpos: null as MpVector3,
+    plantedpos: null as Vector3Mp,
     draw: {
         backrect: null as cRectangle,
         progrect: null as cRectangle,

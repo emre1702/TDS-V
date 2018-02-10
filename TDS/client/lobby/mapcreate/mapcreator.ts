@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../types-ragemp/index.d.ts" />
 
 let mapcreatordata = {
-    browser: null as MpBrowser
+    browser: null as BrowserMp
 };
 
 function startMapCreator() {
@@ -33,7 +33,7 @@ mp.events.add( "requestCurrentPositionForMapCreator", () => {
 mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, rot: number ) => {
     if ( mapcreatordata.browser === null )
         return;
-    localPlayer.position = { x: x, y: y, z: z } as MpVector3;
+    localPlayer.position = { x: x, y: y, z: z } as Vector3Mp;
     if ( !isNaN( rot ) )
         localPlayer.setRotation( 0.0, 0.0, rot, 2, true );
 } );

@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let cameradata = {
-	camera: mp.cameras.new( "mapview" ) as MpCamera,
+    camera: mp.cameras.new( "mapview" ) as CameraMp,
 	moving: false,
 	timer: null as Timer,
 }

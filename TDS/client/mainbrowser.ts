@@ -1,5 +1,5 @@
 ﻿let mainbrowserdata = {
-    browser: mp.browsers.new( "package://TDS-V/window/main/index.html" ) as MpBrowser,
+    browser: mp.browsers.new( "package://TDS-V/window/main/index.html" ) as BrowserMp,
 }
 
 mp.events.add( "onClientMoneyChange", money => {

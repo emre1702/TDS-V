@@ -1,7 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 let lobbychoicedata = {
-	browser: null as MpBrowser
+    browser: null as BrowserMp
 };
 
 
