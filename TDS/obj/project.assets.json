@@ -1004,9 +1004,6 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
-      },
-      "types-ragemp-client/0.0.5": {
-        "type": "package"
       }
     }
   },
@@ -4022,77 +4019,6 @@
         "system.xml.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xmldocument.nuspec"
       ]
-    },
-    "types-ragemp-client/0.0.5": {
-      "sha512": "DT8m3+YOQIjc1qGbgmQ2ZIsTOgRQqmN41KwMBYHxSx5bbYgl2rErj3yUoP74+K0TIJGi/IrmGZAiSTrvgvlotA==",
-      "type": "package",
-      "path": "types-ragemp-client/0.0.5",
-      "files": [
-        "content/types-ragemp-client/index.d.ts",
-        "content/types-ragemp-client/types/MP.Blip.d.ts",
-        "content/types-ragemp-client/types/MP.Browser.d.ts",
-        "content/types-ragemp-client/types/MP.Camera.d.ts",
-        "content/types-ragemp-client/types/MP.Checkpoint.d.ts",
-        "content/types-ragemp-client/types/MP.Colshape.d.ts",
-        "content/types-ragemp-client/types/MP.Discord.d.ts",
-        "content/types-ragemp-client/types/MP.Entity.d.ts",
-        "content/types-ragemp-client/types/MP.Events.d.ts",
-        "content/types-ragemp-client/types/MP.Game.App.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Audio.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Brain.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Cam.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Controls.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Cutscene.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Datafile.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Decisionevent.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Decorator.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Dlc1.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Dlc2.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Entity.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Fire.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Gameplay.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Graphics.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Interior.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Itemset.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Mobile.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Object.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Pathfind.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Ped.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Player.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Recorder.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Rope.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Script.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Stats.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Streaming.d.ts",
-        "content/types-ragemp-client/types/MP.Game.System.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Time.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Ui.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Unk.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Vehicle.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Water.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Weapon.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Worldprobe.d.ts",
-        "content/types-ragemp-client/types/MP.Game.Zone.d.ts",
-        "content/types-ragemp-client/types/MP.Game.d.ts",
-        "content/types-ragemp-client/types/MP.Gui.Chat.d.ts",
-        "content/types-ragemp-client/types/MP.Gui.Cursor.d.ts",
-        "content/types-ragemp-client/types/MP.Gui.d.ts",
-        "content/types-ragemp-client/types/MP.Marker.d.ts",
-        "content/types-ragemp-client/types/MP.Nametags.d.ts",
-        "content/types-ragemp-client/types/MP.Object.d.ts",
-        "content/types-ragemp-client/types/MP.Ped.d.ts",
-        "content/types-ragemp-client/types/MP.Pickup.d.ts",
-        "content/types-ragemp-client/types/MP.Player.d.ts",
-        "content/types-ragemp-client/types/MP.Pool.d.ts",
-        "content/types-ragemp-client/types/MP.Quaternion.d.ts",
-        "content/types-ragemp-client/types/MP.Raycasting.d.ts",
-        "content/types-ragemp-client/types/MP.Vector3.d.ts",
-        "content/types-ragemp-client/types/MP.Vehicle.d.ts",
-        "content/types-ragemp-client/types/MP.d.ts",
-        "content/types-ragemp-client/types/Mp.Keys.d.ts",
-        "types-ragemp-client.0.0.5.nupkg.sha512",
-        "types-ragemp-client.nuspec"
-      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -4100,8 +4026,7 @@
       "Microsoft.NETCore.App >= 2.0.0",
       "MySql.Data >= 6.10.6",
       "Newtonsoft.Json >= 10.0.3",
-      "System.Text.Encoding.CodePages >= 4.4.0",
-      "types-ragemp-client >= 0.0.5"
+      "System.Text.Encoding.CodePages >= 4.4.0"
     ]
   },
   "packageFolders": {
@@ -4165,10 +4090,6 @@
           "System.Text.Encoding.CodePages": {
             "target": "Package",
             "version": "[4.4.0, )"
-          },
-          "types-ragemp-client": {
-            "target": "Package",
-            "version": "[0.0.5, )"
           }
         },
         "imports": [
