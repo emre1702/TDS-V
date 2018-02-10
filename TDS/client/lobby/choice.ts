@@ -6,11 +6,11 @@ let lobbychoicedata = {
 
 
 mp.events.add( "joinArena", function ( isspectator ) {
-	mp.events.callRemote( "joinLobby", 1, isspectator );
+    callRemoteCooldown( "joinLobby", 1, isspectator );
 } );
 
 mp.events.add( "joinMapCreatorLobby", function () {
-    mp.events.callRemote( "joinMapCreatorLobby" );
+    callRemoteCooldown( "joinMapCreatorLobby" );
 } );
 
 mp.events.add( "getLobbyChoiceLanguage", function () {

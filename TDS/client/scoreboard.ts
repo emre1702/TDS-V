@@ -128,7 +128,7 @@ function createScoreboard() {
                 lastplayerlisttrigger = tick;
                 playertablelength = 0;
                 playertable = [];
-                mp.events.callRemote( "onClientRequestPlayerListDatas" );
+                callRemoteCooldown( "onClientRequestPlayerListDatas" );
             } 
             mp.events.add( "render", drawPlayerList );
         }

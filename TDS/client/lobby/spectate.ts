@@ -6,12 +6,12 @@ let spectatedata = {
 
 
 function pressSpectateKeyLeft() {
-	mp.events.callRemote( "spectateNext", false );
+    callRemoteCooldown( "spectateNext", false );
 }
 
 
 function pressSpectateKeyRight() {
-	mp.events.callRemote( "spectateNext", true );
+    callRemoteCooldown( "spectateNext", true );
 }
 
 

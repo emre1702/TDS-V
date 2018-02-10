@@ -14,7 +14,7 @@ function openMapVotingMenu() {
     toggleCursor( true );
     mapvotingdata.visible = true;
     if ( lobbysettings.id != mapvotingdata.lastlobbyID ) {
-        mp.events.callRemote( "onMapsListRequest" );
+        callRemoteCooldown( "onMapsListRequest" );
         if ( !mapvotingdata.favouritesloaded ) {
             let favouritesstr = mp.storage.data.mapfavourites;
             if ( favouritesstr != undefined ) {
@@ -58,7 +58,7 @@ mp.events.add( "onClientMapsListRequest", ( mapdatasjson: string ) => {
 
 // triggered by browser //
 mp.events.add( "onMapMenuVote", ( mapname ) => {
-    mp.events.callRemote( "onMapVotingRequest", mapname );
+    callRemoteCooldown( "onMapVotingRequest", mapname );
 } );
 
 // triggered by browser //

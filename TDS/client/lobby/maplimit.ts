@@ -43,7 +43,7 @@ function checkMapLimit() {
 			else if ( maplimitdata.outsidecounter > 0 )
 				maplimitdata.outsidetext.setText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ) );
 			else if ( maplimitdata.outsidecounter == 0 ) {
-				mp.events.callRemote( "onPlayerWasTooLongOutsideMap" );
+                callRemoteCooldown( "onPlayerWasTooLongOutsideMap" );
 				maplimitdata.checktimer.kill();
 				maplimitdata.checktimer = null;
 				maplimitdata.outsidetext.remove();

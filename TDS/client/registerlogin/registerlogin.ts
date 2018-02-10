@@ -8,11 +8,11 @@ let loginpanel = {
 
 
 mp.events.add( "loginFunc", function ( password ) {
-	mp.events.callRemote( "onPlayerTryLogin", password );
+    callRemoteCooldown( "onPlayerTryLogin", password );
 } );
 
 mp.events.add( "registerFunc", function ( password, email ) {
-	mp.events.callRemote( "onPlayerTryRegister", password, email );
+    callRemoteCooldown( "onPlayerTryRegister", password, email );
 } );
 
 mp.events.add( "getRegisterLoginLanguage", () => {

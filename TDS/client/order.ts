@@ -15,11 +15,7 @@ mp.keys.bind( 0x60, false, toggleOrderMode );
 
 for ( let i = 0; i < orderdata.orders.length && i < 9; ++i ) {
     mp.keys.bind( 0x61 + i, false, () => {
-        let currenttick = getTick();
-        if ( currenttick - orderdata.lastordertick >= orderdata.cooldown ) {
-            mp.events.callRemote( "onPlayerGiveOrder", orderdata.orders[i] );
-            orderdata.lastordertick = currenttick;
-            toggleOrderMode();
-        }
+        callRemoteCooldown( "onPlayerGiveOrder", orderdata.orders[i] );
+        toggleOrderMode();
     } );
 }

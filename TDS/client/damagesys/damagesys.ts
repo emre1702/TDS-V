@@ -17,7 +17,7 @@ mp.events.add( "render", () => {
     if ( armorhp < damagesysdata.lastarmorhp )
         showBloodscreen();
     damagesysdata.lastarmorhp = armorhp;
-    //checkShooting();
+    checkShooting();
 } );
 
 function checkShooting() {
@@ -31,15 +31,19 @@ function checkShooting() {
     }
 }
 
-mp.events.add( "playerWeaponShotDeactivated", ( hitpos ) => {
+mp.events.add( "playerWeaponShot", ( hitpos ) => {
     let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
     let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as MpVector3;
     let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer, 8 ) as { position: { x, y, z }, surfaceNormal: any, entity: MpEntity };
-   if ( typeof raycast !== "undefined" )  // hit nothing
-        mp.events.callRemote( "onPlayerHitOtherPlayer", mp.players.atHandle ( raycast.entity ), false )
+    if ( typeof raycast !== "undefined" ) { // hit nothing {
+        let player = mp.players.atHandle( raycast.entity );
+        mp.gui.chat.push( player.name );
+        callRemote( "onPlayerHitOtherPlayer", player, false );
+        return true;
+    }
 } );
 
-//mp.players.local.setCanAttackFriendly( false, false );
+mp.players.local.setCanAttackFriendly( false, false );
 
 
 /* let bloodscreenbrowser;
@@ -55,7 +59,7 @@ mp.events.add( "playerWeaponShoot", ( shotPosition: { x, y, z }, target ) => {
 		//	hithead = true;
 		//}
 		//}
-		mp.events.callRemote( "onPlayerHitOtherPlayer", target, weapon, hithead );
+		callRemote( "onPlayerHitOtherPlayer", target, weapon, hithead );
 	}
 } );
 

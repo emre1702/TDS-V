@@ -180,7 +180,7 @@ function setLanguage( lang ) {
     languagesetting = lang;
     mp.storage.data.language = lang;
     mp.storage.flush();
-	mp.events.callRemote( "onPlayerLanguageChange", lang );
+    callRemoteCooldown( "onPlayerLanguageChange", lang );
     loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
 }
 mp.events.add( "setLanguage", setLanguage );

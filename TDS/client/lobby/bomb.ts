@@ -41,7 +41,7 @@ function checkPlant() {
         bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true );
         bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [0, 180, 0, 187], Alignment.LEFT, true );
         bombdata.draw.text = new cText( getLang( "round", "planting" ), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
-        mp.events.callRemote( "onPlayerStartPlanting" );
+        callRemote( "onPlayerStartPlanting" );
 	}
 }
 
@@ -53,7 +53,7 @@ function checkDefuse() {
         bombdata.draw.backrect = new cRectangle( 0.46, 0.7, 0.08, 0.02, [0, 0, 0, 187], Alignment.LEFT, true );
         bombdata.draw.progrect = new cRectangle( 0.461, 0.701, 0.078, 0.018, [180, 0, 0, 187], Alignment.LEFT, true );
         bombdata.draw.text = new cText( getLang( "round", "defusing" ), 0.5, 0.7, 0, [255, 255, 255, 255], [1.0, 0.4], true, Alignment.CENTER, true );
-		mp.events.callRemote( "onPlayerStartDefusing" );
+		callRemote( "onPlayerStartDefusing" );
 	}
 }
 
@@ -71,10 +71,10 @@ function removeBombDrawings() {
 function checkPlantDefuseStop() {
 	if ( bombdata.isplanting ) {
 		bombdata.isplanting = false;
-		mp.events.callRemote( "onPlayerStopPlanting" );
+		callRemote( "onPlayerStopPlanting" );
 	} else if ( bombdata.isdefusing ) {
 		bombdata.isdefusing = false;
-		mp.events.callRemote( "onPlayerStopDefusing" );
+		callRemote( "onPlayerStopDefusing" );
     }
     removeBombDrawings();
 }

@@ -39,7 +39,7 @@ mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, ro
 } );
 
 mp.events.add( "checkMapName", ( name ) => {
-    mp.events.callRemote( "checkMapName", name );
+    callRemoteCooldown( "checkMapName", name );
 } );
 
 mp.events.add( "sendMapNameCheckResult", ( alreadyinuse ) => {
@@ -47,7 +47,7 @@ mp.events.add( "sendMapNameCheckResult", ( alreadyinuse ) => {
 } );
 
 mp.events.add( "sendMapFromCreator", ( mapjson ) => {
-    mp.events.callRemote( "sendMapFromCreator", mapjson );
+    callRemoteCooldown( "sendMapFromCreator", mapjson );
 } );
 
 
