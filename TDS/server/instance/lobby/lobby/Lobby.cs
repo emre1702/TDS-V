@@ -74,7 +74,7 @@ namespace TDS.server.instance.lobby {
         private uint GetFreeDimension ( ) {
             uint i = 1;
             while ( sDimensionsUsed.ContainsKey ( i ) )
-                i++;
+                ++i;
             return i;
         }
 
