@@ -19,6 +19,10 @@ namespace TDS.server.manager.map {
                 .AppendLine ( "\t<english>" + map.Descriptions.English + "</english>" )
                 .AppendLine ( "\t<german>" + map.Descriptions.German + "</german>" );
 
+            if ( map.MapCenter != null ) {
+                builder.AppendLine ( "\t<center x='" + map.MapCenter.X + "' y='" + map.MapCenter.Y + "' z='" + map.MapCenter.Z + "' />" );
+            }
+
             if ( map.Type == "bomb" ) {
                 for ( int i = 0; i < map.BombPlaces.Length; ++i ) {
                     Position pos = map.BombPlaces[i];
