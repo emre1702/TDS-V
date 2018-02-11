@@ -84,6 +84,15 @@
 			return new Vector3 ();
 		}
 
+        private static Vector3 GetCenter ( instance.map.Map map ) {
+            if ( map.MapLimits.Count > 0 ) {
+                float zpos = map.TeamSpawns.Select ( entry => entry.Value[0].Z ).FirstOrDefault ();
+                return GetCenterByLimits ( map, zpos );
+            } else {
+                return GetCenterBySpawns ( map );
+            }
+        }
+
 		private static async Task<bool> AddInfos ( this instance.map.Map map, string mapfilename ) {
 			string path = mapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
 			try {
@@ -101,7 +110,7 @@
 							} else if ( reader.Name == "limit" ) {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), 0 );
 								map.MapLimits.Add ( pos );
-							} else if ( reader.Name == "middle" ) {
+							} else if ( reader.Name == "center" ) {
 								map.MapCenter = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
 							} else if ( reader.Name == "bomb" ) {
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
@@ -121,12 +130,7 @@
 					}
 				}
 				if ( map.MapCenter == null ) {
-					if ( map.MapLimits.Count > 0 ) {
-						float zpos = map.TeamSpawns.Select ( entry => entry.Value[0].Z ).FirstOrDefault ();
-						map.MapCenter = GetCenterByLimits ( map, zpos );
-					} else {
-						map.MapCenter = GetCenterBySpawns ( map );
-					}
+                    map.MapCenter = GetCenter ( map );
 				}
 				return true;
 			} catch ( Exception ex ) {
