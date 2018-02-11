@@ -71,10 +71,6 @@ namespace TDS.server.instance.lobby {
             return false;
         }
 
-        private bool IsPlayable ( ) {
-            return ( this is IFight || this is IRound );
-        }
-
         private uint GetFreeDimension ( ) {
             uint i = 1;
             while ( sDimensionsUsed.ContainsKey ( i ) )
