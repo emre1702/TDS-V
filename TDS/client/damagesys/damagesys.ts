@@ -14,9 +14,11 @@ mp.events.add( "render", () => {
     if ( !rounddata.infight )
         return;
     let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
-    if ( armorhp < damagesysdata.lastarmorhp )
-        showBloodscreen();
-    damagesysdata.lastarmorhp = armorhp;
+    if ( armorhp != damagesysdata.lastarmorhp ) {
+        damagesysdata.lastarmorhp = armorhp;
+        if ( armorhp < damagesysdata.lastarmorhp )
+            showBloodscreen();
+    }
     checkShooting();
 } );
 
