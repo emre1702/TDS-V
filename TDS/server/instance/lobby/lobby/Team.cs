@@ -89,5 +89,14 @@ namespace TDS.server.instance.lobby {
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", (int) teamID, GetTeamUID ( teamID ) );
             }
         }
+
+        internal int GetTeamAmountWithPlayers ( ) {
+            int amount = 0;
+            for ( int i = 0; i < Players.Count; ++i ) {
+                if ( Players[i].Count > 0 )
+                    ++amount;
+            }
+            return amount;
+        }
     }
 }
