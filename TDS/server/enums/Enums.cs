@@ -10,4 +10,8 @@
     public enum MapType {
         NORMAL, BOMB
     }
+
+    public enum RoundEndReason {
+        DEATH, TIME, BOMB, COMMAND, NEWPLAYER
+    }
 }
