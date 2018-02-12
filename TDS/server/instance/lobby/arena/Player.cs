@@ -111,10 +111,10 @@ namespace TDS.server.instance.lobby {
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( player, teamID );
             } else {
-                int teamsinround = GetTeamAmountStillInRound ();
-                NAPI.Util.ConsoleOutput ( teamsinround + " teams still in round" );
+                int teamsinround = GetTeamAmountWithPlayers ();
+                NAPI.Util.ConsoleOutput ( teamsinround + " teams got players" );
                 if ( teamsinround < 2 ) {
-                    EndRoundEarlier ();
+                    EndRoundEarlier ( RoundEndReason.NEWPLAYER, player.Name );
                     NAPI.Util.ConsoleOutput ( "End round earlier because of joined player" );
                 } else {
                     RespawnPlayerInSpectateMode ( player );
