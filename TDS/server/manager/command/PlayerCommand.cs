@@ -67,7 +67,7 @@
 		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
 			if ( NAPI.Player.IsPlayerInAnyVehicle ( sender ) ) {
-				NetHandle veh = NAPI.Player.GetPlayerVehicle ( sender );
+				Vehicle veh = NAPI.Player.GetPlayerVehicle ( sender );
 				Vector3 pos = NAPI.Entity.GetEntityPosition ( veh );
                 NAPI.Chat.SendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
 				Vector3 rot = NAPI.Entity.GetEntityRotation ( veh );
