@@ -9,6 +9,7 @@
             lobby.SetDefaultSpawnPoint ( new Vector3 ( 8.699318, 2.050943, 70.29607 ), 5 );
             lobby.SetDefaultSpawnRotation ( new Vector3 ( 0, 0, 65.79314 ) );
             lobby.AddPlayer ( player );
+            lobby.SetPlayerLobbyOwner ( player );
             player.Freeze ( false );
 		}
 	}
