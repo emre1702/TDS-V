@@ -63,6 +63,7 @@ namespace TDS.server.instance.lobby {
             Character character = player.GetChar ();
             uint teamID = character.Team;
             SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
+            character.IsLobbyOwner = false;
 
             Players[(int) teamID].Remove ( player );
 
@@ -79,6 +80,10 @@ namespace TDS.server.instance.lobby {
             string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
             string beforemessage = "[TEAM] #" + teamfontcolor + "#" + player.SocialClubName + "#r#: ";
             SendAllPlayerLangMessage ( ordershort, player.GetChar ().Team, beforemessage );
+        }
+
+        public void SetPlayerLobbyOwner ( Client player ) {
+            player.GetChar ().IsLobbyOwner = true;
         }
     }
 }
