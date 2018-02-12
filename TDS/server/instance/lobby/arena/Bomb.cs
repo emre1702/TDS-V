@@ -117,7 +117,7 @@ namespace TDS.server.instance.lobby {
 			}, counterTerroristTeamID );
 			// TERROR WON //
 			if ( status == LobbyStatus.ROUND )
-				EndRoundEarlier ();
+				EndRoundEarlier ( RoundEndReason.BOMB, terroristTeamID );
 		}
 
 		private void PlantBomb ( Client player ) {
@@ -158,7 +158,7 @@ namespace TDS.server.instance.lobby {
 					}, terroristTeamID );
 					// COUNTER-TERROR WON //
 					if ( status == LobbyStatus.ROUND )
-						EndRoundEarlier ();
+						EndRoundEarlier ( RoundEndReason.BOMB, counterTerroristTeamID );
 				}
 				player.StopAnimation ();
 			}

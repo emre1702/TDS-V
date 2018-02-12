@@ -49,7 +49,7 @@
 					// LOG //
 					Log.Admin ( "next", player, "0", lobby.Name );
 					/////////
-					lobby.EndRoundEarlier ();
+					lobby.EndRoundEarlier ( enums.RoundEndReason.COMMAND, player.Name );
 				}
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );

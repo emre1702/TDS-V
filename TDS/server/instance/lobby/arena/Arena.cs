@@ -38,7 +38,7 @@ namespace TDS.server.instance.lobby {
         public void CheckForEnoughAlive ( ) {
             int teamsinround = GetTeamAmountStillInRound ();
             if ( teamsinround < 2 ) {
-                EndRoundEarlier ();
+                EndRoundEarlier ( RoundEndReason.DEATH );
             }
         }
 
