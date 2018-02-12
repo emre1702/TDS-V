@@ -54,7 +54,8 @@
                 ["order_stay_back"] = "{1}Stay back!",
                 ["order_spread_out"] = "{1}Spread out!",
                 ["order_go_to_bomb"] = "{1}Go to the bomb!",
-                ["target_not_logged_in"] = "The target is not logged in."
+                ["target_not_logged_in"] = "The target is not logged in."  ,
+                ["target_not_in_same_lobby"] = "The target is not in the same lobby."
             },
 			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
@@ -102,7 +103,8 @@
                 ["order_stay_back"] = "{1}Bleibt zurück!",
                 ["order_spread_out"] = "{1}Teilt euch auf!",
                 ["order_go_to_bomb"] = "{1}Geht zur Bombe!",
-                ["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt."
+                ["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt.",
+                ["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby."
             }
 		};
 

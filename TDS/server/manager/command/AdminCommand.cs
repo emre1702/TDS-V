@@ -59,13 +59,17 @@
 		public static void LobbyKickPlayer ( Client player, Client target, string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
-					// LOG //
-					if ( player.GetChar ().IsLobbyOwner )
-						Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
-					else if ( player.GetChar ().AdminLvl >= neededLevels["kick"] )
-						Log.Admin ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
-					else
-						Log.VIP ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                    // LOG //
+                    if ( player.GetChar ().IsLobbyOwner ) {
+                        if ( player.GetChar ().Lobby == target.GetChar ().Lobby )
+                            Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                        else
+                            player.SendLangNotification ( "target_not_in_same_lobby" );
+                    } 
+                    else if ( player.GetChar ().AdminLvl >= neededLevels["kick"] )
+                        Log.Admin ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                    else
+                        Log.VIP ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
 					/////////
 					ServerLanguage.SendMessageToAll ( "lobbykick", target.Name, player.Name, reason );
 					target.GetChar ().Lobby.RemovePlayerDerived ( target );
@@ -142,27 +146,30 @@
 		[Command ( "goto", Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
-				Vector3 playerpos = NAPI.Entity.GetEntityPosition ( target );
-				if ( player.IsInVehicle ) {
-                    NAPI.Entity.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
-				} else if ( target.IsInVehicle ) {
-					List<Client> usersInCar = target.Vehicle.Occupants;
-					if ( usersInCar.Count < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
-						Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
-						foreach ( Client occupant in usersInCar ) {
-							occupiedseats[occupant.VehicleSeat] = true;
-						}
-						for ( int i = 0; i < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
-							if ( !occupiedseats.ContainsKey ( i ) ) {
-								NAPI.Player.SetPlayerIntoVehicle ( player, target.Vehicle, i );
-								return;
-							}
-						}
-					}
-                    NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
-				} else {
-                    NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
-				}
+                if ( target.GetChar ().Lobby == player.GetChar ().Lobby ) {
+                    Vector3 playerpos = NAPI.Entity.GetEntityPosition ( target );
+                    if ( player.IsInVehicle ) {
+                        NAPI.Entity.SetEntityPosition ( player.Vehicle, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+                    } else if ( target.IsInVehicle ) {
+                        List<Client> usersInCar = target.Vehicle.Occupants;
+                        if ( usersInCar.Count < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ) ) {
+                            Dictionary<int, bool> occupiedseats = new Dictionary<int, bool> ();
+                            foreach ( Client occupant in usersInCar ) {
+                                occupiedseats[occupant.VehicleSeat] = true;
+                            }
+                            for ( int i = 0; i < NAPI.Vehicle.GetVehicleMaxOccupants ( (VehicleHash) ( target.Vehicle.Model ) ); i++ ) {
+                                if ( !occupiedseats.ContainsKey ( i ) ) {
+                                    NAPI.Player.SetPlayerIntoVehicle ( player, target.Vehicle, i );
+                                    return;
+                                }
+                            }
+                        }
+                        NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
+                    } else {
+                        NAPI.Entity.SetEntityPosition ( player, new Vector3 ( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
+                    }
+                } else
+                    player.SendLangNotification ( "target_not_in_same_lobby" );
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
