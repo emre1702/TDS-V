@@ -22,14 +22,6 @@ namespace TDS.server.instance.lobby {
         private bool mixTeamsAfterRound = true;
 
 
-        private int GetTeamAmountStillInRound ( int minalive = 1 ) {
-            int amount = 0;
-            for ( int i = 1; i < alivePlayers.Count; i++ )
-                if ( alivePlayers[i].Count >= minalive )
-                    amount++;
-            return amount;
-        }
-
         public void StartRoundGame ( ) {
             StartMapChoose ();
         }
@@ -83,7 +75,7 @@ namespace TDS.server.instance.lobby {
             status = LobbyStatus.ROUND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
-            roundEndTimer = Timer.SetTimer ( EndRound, roundTime );
+            roundEndTimer = Timer.SetTimer ( () => EndRound ( RoundEndReason.TIME ), roundTime );
             alivePlayers = new List<List<Client>> ();
             List<uint> amountinteams = new List<uint> ();
             for ( int i = 0; i < Players.Count; i++ ) {
@@ -112,7 +104,7 @@ namespace TDS.server.instance.lobby {
             }
         }
 
-        private void EndRound ( ) {
+        private void EndRound ( RoundEndReason reason, params object[] args ) {
             status = LobbyStatus.ROUNDEND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
             roundStartTimer?.Kill ();
@@ -127,10 +119,10 @@ namespace TDS.server.instance.lobby {
             }
         }
 
-        public void EndRoundEarlier ( ) {
+        public void EndRoundEarlier ( RoundEndReason reason, params object[] args ) {
             roundEndTimer?.Kill ();
             countdownTimer?.Kill ();
-            EndRound ();
+            EndRound ( reason, args );
         }
 
         private void RespawnPlayerInRound ( Client player ) {
