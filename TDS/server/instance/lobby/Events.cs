@@ -97,9 +97,13 @@ namespace TDS.server.instance.lobby {
 
         [RemoteEvent ( "sendMapFromCreator" )]
         public void SendMapFromCreatorEvent ( Client player, params object[] args ) {
-            string mapjson = (string) args[0];
-            Map.CreateNewMap ( mapjson, player.GetChar ().UID );
+            Map.CreateNewMap ( (string) args[0], player.GetChar ().UID );
             player.GetChar ().Lobby.RemovePlayerDerived ( player );
+        }
+
+        [RemoteEvent ( "requestNewMapsList" )]
+        public void RequestNewMapsListEvent ( Client player, params object[] args ) {
+            Map.RequestNewMapsList ( player, (bool) args[0] );
         }
         #endregion
 
