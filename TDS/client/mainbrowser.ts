@@ -1,6 +1,9 @@
-﻿let mainbrowserdata = {
+﻿mp.gui.chat.show( false );
+
+let mainbrowserdata = {
     browser: mp.browsers.new( "package://TDS-V/window/main/index.html" ) as BrowserMp,
 }
+mainbrowserdata.browser.markAsChat();
 
 mp.events.add( "onClientMoneyChange", money => {
     currentmoney = money;

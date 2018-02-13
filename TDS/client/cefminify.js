@@ -8,11 +8,10 @@ let toes5 = require( "babel-core" ).transform;
 let uglify = require( "uglify-js" );
 
 let files = [
-    { path: "window/chat/", html: "chat.html", js: ["chat.js"], reserved: ["chatAPI", "loadUserName"] },
     { path: "window/choice/", html: "choice.html", js: ["choice.js"], reserved: ["setLobbyChoiceLanguage"] },
-    { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js"], 
+    { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js"], 
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-            "toggleCanVoteForMapWithNumpad", "loadOrderNames" ]
+            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName" ]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], reserved: ["loadLanguage", "setLoginPanelData"] },
     {

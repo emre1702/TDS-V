@@ -1,10 +1,8 @@
 ﻿/// <reference path="types-ragemp/index.d.ts" />
  
-mp.gui.execute( "window.location = 'package://TDS-V/window/chat/index.html'" );
-
 mp.events.add( "onChatLoad", () => {
     loadLanguage();
-    mp.gui.execute( "loadUserName ('" + localPlayer.name + "');" );
+    mainbrowserdata.browser.execute( "loadUserName ('" + mp.players.local.name + "');" );
     callRemoteCooldown( "onPlayerChatLoad", languagesetting );
 } );
 
