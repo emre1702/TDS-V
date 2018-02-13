@@ -12,7 +12,8 @@ let chatdata = {
     chosentab: null,
     chosenchatbody: 0,
     myname: null,
-    globalsaykeycode: String.fromCharCode( 90 ) === "Z" ? 90 : Y
+    globalsaykeycode: String.fromCharCode( 90 ) === "Z" ? 90 : Y,
+    playernames: []
 };
 
 
@@ -165,9 +166,23 @@ function getChatBody( index = -1 ) {
 
 function loadUserName( username ) {
     chatdata.myname = username;
+    chatdata.playernames.push( username );
+}
+
+function addNameForChat( name ) {
+    chatdata.playernames.push( username );
+}
+
+function removeNameForChat( name ) {
+    let index = chatdata.playernames.indexOf( name );
+    if ( index !== -1 ) {
+        chatdata.playernames.splice( index, 1 );
+    }
 }
 
 $( document ).ready( function () {
+
+    addAutocomplete( chatdata.maininput, chatdata.playernames );
 
     $( "body" ).keydown( function ( event ) {
         if ( event.which === 84 && !chatdata.inputshowing && chatdata.active ) {   // open chat-input

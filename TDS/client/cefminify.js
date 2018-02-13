@@ -12,7 +12,7 @@ let files = [
     { path: "window/choice/", html: "choice.html", js: ["choice.js"], css: ["window/choice/choice.css"], reserved: ["setLobbyChoiceLanguage"] },
     { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js"], css: ["window/main/chat.css", "window/main/main.css", "window/main/mapmanager.css"],
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName" ]
+            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "addNameForChat", "removeNameForChat"]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     { path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], css: ["window/mapcreator/mapcreator.css"],
@@ -75,7 +75,8 @@ let htmlminifysettings = {
     removeStyleLinkTypeAttributes: true
 };
 let cssminifysettings = {
-    level: 2
+    level: 2,
+    rebase: false
 };
 
 let cleancss = new cleancssrequire( cssminifysettings );

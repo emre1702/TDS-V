@@ -16,3 +16,11 @@ function setVoiceChatRoom( room ) {
 mp.events.add( "onChatInputToggle", ( enabled ) => {
     ischatopen = enabled;
 } );
+
+mp.events.add( "playerJoin", ( player: PlayerMp ) => {
+    mainbrowserdata.browser.execute( "addNameForChat ( '" + player.name + "');" );
+} );
+
+mp.events.add( "playerQuit", ( player: PlayerMp, exitType: string, reason: string ) => {
+    mainbrowserdata.browser.execute( "removeNameForChat ( '" + player.name + "');" );
+} );
