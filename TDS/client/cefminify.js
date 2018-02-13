@@ -21,9 +21,10 @@ let files = [
     }
 ];
 let standalonejsfiles = [
-    { path: "window/js/", js: ["copyclipboard.js", "dialog.js", "jqueryui-autocomplete.js", "draggable.js"],
-        reserved: [ ["copyTextToClipboard"], ["showDialog", "closeDialog"], [], ["setElementDraggable"] ]
-    }
+    { path: "window/js/", js: ["copyclipboard.js", "dialog.js", "draggable.js"],
+        reserved: [ ["copyTextToClipboard"], ["showDialog", "closeDialog"], ["setElementDraggable"] ]
+    },
+    { path: "window/jquery-ui/", js: ["jquery-ui.autocomplete.js"], reserved: ["addAutocomplete"] } 
 ];
 let standalonecssfiles = [{ path: "window/css/", css: ["dialog.css", "scrollbar.css", "style.css", "toggleswitch.css"] }];
 
@@ -120,7 +121,7 @@ for ( let i = 0; i < standalonejsfiles.length; ++i ) {
         javascript = toes5( javascript, toes5settings ).code;
         minifysettings.mangle.reserved = standalonejsfiles[i].reserved[j];
         javascript = uglify.minify( javascript, minifysettings ).code;
-        let newfilename = standalonejsfiles[i].js[j].split( "." )[0] + ".min.js";
+        let newfilename = standalonejsfiles[i].js[j].slice( 0, -3 ) + ".min.js";
         fs.writeFile( path.resolve( standalonejsfiles[i].path, newfilename ), javascript, ( error ) => {
             if ( error )
                 console.log( error );
@@ -134,7 +135,7 @@ for ( let i = 0; i < standalonecssfiles.length; ++i ) {
             if ( error )
                 console.log( error );
             else {
-                let newfilename = standalonecssfiles[i].css[j].split( "." )[0] + ".min.css";
+                let newfilename = standalonecssfiles[i].css[j].slice( 0, -4 ) + ".min.css";
                 fs.writeFile( path.resolve( standalonecssfiles[i].path, newfilename ), minified.styles, ( error ) => {
                     if ( error )
                         console.log( error );
