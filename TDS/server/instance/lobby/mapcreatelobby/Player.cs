@@ -7,6 +7,7 @@ namespace TDS.server.instance.lobby {
             base.AddPlayer ( player, spectator );
 
             player.TriggerEvent ( "onClientPlayerJoinMapCreatorLobby" );
+            player.Freeze ( false );
         }
     }
 }
