@@ -24,7 +24,7 @@ let standalonejsfiles = [
     { path: "window/js/", js: ["copyclipboard.js", "dialog.js", "draggable.js"],
         reserved: [ ["copyTextToClipboard"], ["showDialog", "closeDialog"], ["setElementDraggable"] ]
     },
-    { path: "window/jquery-ui/", js: ["jquery-ui.autocomplete.js"], reserved: ["addAutocomplete"] } 
+    { path: "window/jquery-ui/", js: ["jquery-ui.autocomplete.js"], reserved: [ ["addAutocomplete"] ] } 
 ];
 let standalonecssfiles = [{ path: "window/css/", css: ["dialog.css", "scrollbar.css", "style.css", "toggleswitch.css"] }];
 
