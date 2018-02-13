@@ -2,21 +2,21 @@
 
 	using GTANetworkAPI;
 
-	static class GangLobby {
+    static class GangLobby {
 
-		//public static Lobby TheLobby;          TODO
+		public static instance.lobby.GangLobby TheLobby;       
 
 		public static void Create () {
-			/*TheLobby = new Lobby ( "gang", 2, false ) {
+			TheLobby = new instance.lobby.GangLobby ( "gang", 2 ) {
 				DeleteWhenEmpty = false,
 				IsOfficial = true
 			};
-			TheLobby.AddSpawnPoint ( new Vector3 ( 8.699318, -2.050943, 70.29607 ), new Vector3 ( 0, 0, 65.79314 ) );
-			TheLobby.Start ();*/
-		}
+            TheLobby.SetDefaultSpawnPoint ( new Vector3 ( 198.0562, -935.6811, 30.68681 ) );
+            TheLobby.SetDefaultSpawnRotation ( new Vector3 ( 0, 0, 144.0 ) );
+        }
 
 		public static void Join ( Client player ) {
-			//TheLobby.AddPlayer ( player, true );
+			TheLobby.AddPlayer ( player );
 		}
 	}
 
