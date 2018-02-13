@@ -91,7 +91,7 @@ chatAPI["show"] = ( toggle ) => {
 function formatMsg( input, ismentioned ) {
     let start = ""; 
     if ( ismentioned )
-        start = '<span style="background-color: rgba(255,178,102,0.5);">';
+        start = '<span style="background-color: rgba(255,178,102,0.6);">';
 
     start += '<span style="color: white;">';
 
