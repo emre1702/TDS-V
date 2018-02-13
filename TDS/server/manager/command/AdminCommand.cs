@@ -14,32 +14,20 @@
 
 	class AdminCommand : Script {
 		private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
-			{
-				"adminsay", 1
-			}, {
-				"adminchat", 1
-			}, {
-				"next", 1
-			}, {
-				"lobbykick", 1
-			}, {
-				"kick", 1
-			}, {
-				"ban (time)", 2
-			}, {
-				"ban (unban)", 2
-			}, {
-				"ban (permanent)", 2
-			}, {
-				"goto", 2
-			}, {
-				"xyz", 2
-			}, {
-				"cveh", 2
-			}, {
-				"testskin", 2
-			}
-		};
+            { "adminsay", 1 },
+            { "adminchat", 1 },
+            { "next", 1 },
+            { "lobbykick", 1 },
+            { "kick", 1 },
+            { "ban (time)", 2 },
+            { "ban (unban)", 2 },
+            { "ban (permanent)", 2 },
+            { "goto", 2 },
+            { "xyz", 2 },
+            { "cveh", 2 },
+            { "testskin", 2 },
+            { "object", 2 }
+        };
 
 		#region Lobby
 		[Command ( "next", Alias = "endround", Description = "Ends the round.", Group = "supporter,lobby-owner" )]
