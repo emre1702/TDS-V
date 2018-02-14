@@ -67,5 +67,15 @@ function distance( vector1: Vector3Mp, vector2: Vector3Mp, useZ = true ) {
 }
 
 mp.events.add( "testit", ( str ) => {
-    mp.gui.chat.push( str );
+    mp.gui.chat.push( String( str ) + " - " + typeof str );
+    if ( typeof str === "object" ) {
+        for ( let key in str ) {
+            mp.gui.chat.push( "1. " + key + " - " + str[key] );
+            if ( typeof str[key] === "object" ) {
+                for ( let againkey in str[key] ) {
+                    mp.gui.chat.push( "2. " + againkey + " - " + str[key][againkey] );
+                }
+            }
+        }
+    }
 } );
