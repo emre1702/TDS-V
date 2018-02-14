@@ -167,7 +167,7 @@
                             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
 						if ( hitted.Health == 0 ) {
 							hitted.Kill ();
-							OnPlayerDeath ( hitted, player, (uint) weapon, null );
+							OnPlayerDeath ( hitted, player, (uint) weapon );
 						}
 					}
 				}
@@ -175,10 +175,13 @@
 		}
 
         [RemoteEvent ( "onPlayerHitOtherPlayer" )]
-        public void OnPlayerHitOtherPlayer ( Client player, params object[] args ) {
+        public void OnPlayerHitOtherPlayer ( Client player, params dynamic[] args ) {
+            NAPI.Util.ConsoleOutput ( "Damagesys 0 " + args[0].GetType () );
 			Client hitted = NAPI.Player.GetPlayerFromHandle ( (NetHandle) args[0] );
+            NAPI.Util.ConsoleOutput ( "Damagesys: 1" );
 			if ( hitted != null ) {
-				Lobby playerlobby = player.GetChar ().Lobby;
+                NAPI.Util.ConsoleOutput ( "Damagesys: 2 " + hitted.Name );
+                Lobby playerlobby = player.GetChar ().Lobby;
                 if ( playerlobby is FightLobby fightlobby ) {
                     WeaponHash currentweapon = player.CurrentWeapon;
                     NAPI.Util.ConsoleOutput ( currentweapon.ToString () );
