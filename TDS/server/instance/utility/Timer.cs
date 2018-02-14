@@ -17,7 +17,6 @@ namespace TDS.server.instance.utility {
 		public bool IsRunning = true;
 
 		public Timer () {
-			Event.OnUpdate += OnUpdateFunc;
 		}
 
 		Timer ( Action thefunc, uint executeafterms, uint executeatms, int executes ) {
@@ -71,9 +70,9 @@ namespace TDS.server.instance.utility {
 				timer.Insert ( 0, this );
 		}
 
-
-		private static void OnUpdateFunc () {
-			uint tick = (uint) Environment.TickCount;
+        [ServerEvent(Event.Update)]
+        public static void OnUpdateFunc () {
+			int tick = Environment.TickCount;
 			for ( int i = timer.Count - 1; i >= 0; i-- ) {
 				if ( timer[i].IsRunning ) {
 					if ( timer[i].executeAtMs <= tick ) {

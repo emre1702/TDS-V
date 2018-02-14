@@ -9,9 +9,9 @@
 	class ResourceStop : Script {
 
 		public ResourceStop () {
-			Event.OnResourceStop += OnResourceStop;
 		}
 
+        [ServerEvent(Event.ResourceStop)]
 		public void OnResourceStop () {
 			SaveAllInDatabase ();
 			RemoveAllCreated ();

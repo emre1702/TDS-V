@@ -9,7 +9,6 @@
 		private readonly FightLobby lobby;
 
 		public Damagesys () {
-            Event.OnPlayerDeath += OnPlayerDeath;
 		}
 
 		public Damagesys ( FightLobby lobby, Dictionary<WeaponHash, int> customDamage = null,

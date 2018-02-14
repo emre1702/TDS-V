@@ -26,14 +26,6 @@ namespace TDS.server.instance.lobby {
             StartMapChoose ();
         }
 
-        private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {
-            List<Tuple<float, float>> newlist = new List<Tuple<float, float>> ();
-            foreach ( Vector3 vector in list ) {
-                newlist.Add ( new Tuple<float, float> ( vector.X, vector.Y ) );
-            }
-            return newlist;
-        } 
-
         public void StartMapChoose ( ) {
             try {
                 status = LobbyStatus.MAPCHOOSE;
@@ -94,16 +86,6 @@ namespace TDS.server.instance.lobby {
                 StartRoundBomb ();
         }
 
-        private void StartRoundForPlayer ( Client player, uint teamID ) {
-            Character character = player.GetChar ();
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
-            if ( teamID != 0 ) {
-                character.Lifes = (ushort) Lifes;
-                alivePlayers[(int) teamID].Add ( player );
-                player.Freeze ( false );
-            }
-        }
-
         private void EndRound ( RoundEndReason reason, params object[] args ) {
             status = LobbyStatus.ROUNDEND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
@@ -125,9 +107,27 @@ namespace TDS.server.instance.lobby {
             EndRound ( reason, args );
         }
 
+        private void StartRoundForPlayer ( Client player, uint teamID ) {
+            Character character = player.GetChar ();
+            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
+            if ( teamID != 0 ) {
+                character.Lifes = (ushort) Lifes;
+                alivePlayers[(int) teamID].Add ( player );
+                player.Freeze ( false );
+            }
+        }
+
         private void RespawnPlayerInRound ( Client player ) {
             SetPlayerReadyForRound ( player, player.GetChar ().Team );
             player.Freeze ( false );
+        }
+
+        private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {
+            List<Tuple<float, float>> newlist = new List<Tuple<float, float>> ();
+            foreach ( Vector3 vector in list ) {
+                newlist.Add ( new Tuple<float, float> ( vector.X, vector.Y ) );
+            }
+            return newlist;
         }
     }
 }

@@ -7,12 +7,7 @@ using TDS.server.manager.map;
 namespace TDS.server.instance.lobby {
     class LobbyEvents : Script {
 
-        public LobbyEvents ( ) {
-            Event.OnPlayerDisconnected += OnPlayerDisconnected;
-            Event.OnPlayerSpawn += OnPlayerSpawn;
-            Event.OnPlayerWeaponSwitch += OnPlayerWeaponSwitch;
-            Event.OnPlayerEnterColShape += OnPlayerEnterColShape;
-        }
+        public LobbyEvents ( ) { }
 
         #region Lobby
         [RemoteEvent("joinLobby")]
@@ -151,15 +146,18 @@ namespace TDS.server.instance.lobby {
         #endregion
 
         #region RageMP
-        private void OnPlayerEnterColShape ( ColShape shape, Client player ) {
+        [ServerEvent(Event.PlayerEnterColshape)]
+        public static void OnPlayerEnterColShape ( ColShape shape, Client player ) {
             player.GetChar ().Lobby.OnPlayerEnterColShape ( shape, player );
         }
 
-        private void OnPlayerDisconnected ( Client player, byte type, string reason ) {
+        [ServerEvent(Event.PlayerDisconnected)]
+        public static void OnPlayerDisconnected ( Client player, byte type, string reason ) {
             player.GetChar ().Lobby.OnPlayerDisconnected ( player, type, reason );
         }
 
-        private void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
+        [ServerEvent(Event.PlayerWeaponSwitch)]
+        public static void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
             Lobby lobby = player.GetChar ().Lobby;
             if ( lobby is Arena arenalobby )
                 arenalobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
@@ -167,7 +165,8 @@ namespace TDS.server.instance.lobby {
                 fightlobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
         }
 
-        private void OnPlayerSpawn ( Client player ) {
+        [ServerEvent(Event.PlayerSpawn)]
+        public static void OnPlayerSpawn ( Client player ) {
             player.GetChar ().Lobby.OnPlayerSpawn ( player );
         }
         #endregion

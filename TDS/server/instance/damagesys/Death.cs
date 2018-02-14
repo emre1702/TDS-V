@@ -14,8 +14,8 @@
 		public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint> (),
 										PlayerKills = new Dictionary<Client, uint> ();
 
-		private void OnPlayerDeath ( Client player, Client killer, uint weapon, CancelEventArgs cancel ) {
-            cancel.Spawn = false;
+        [ServerEvent(Event.PlayerDeath)]
+		public void OnPlayerDeath ( Client player, Client killer, uint weapon ) {
             if ( !sDeadTimer.ContainsKey ( player ) ) {
 				Character character = player.GetChar ();
 

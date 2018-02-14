@@ -25,5 +25,12 @@ namespace TDS.server.instance.lobby {
                     amount++;
             return amount;
         }
+
+        private int GetTeamStillInRound ( int minalive = 1 ) {
+            for ( int i = 1; i < alivePlayers.Count; i++ )
+                if ( alivePlayers[i].Count >= minalive )
+                    return i;
+            return 0;
+        }
     }
 }

@@ -34,7 +34,7 @@
 		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", Group = "user" )]
 		public static void JoinGangLobby ( Client player ) {
 			if ( player.GetChar ().Lobby == MainMenu.TheLobby ) {
-				GangLobby.Join ( player );
+				lobby.GangLobby.Join ( player );
 			}
 		}
 		#endregion
@@ -120,23 +120,30 @@
                     player.Vehicle.CustomPrimaryColor = new Color ( 60, 0, 0 );
                     player.Vehicle.CustomSecondaryColor = new Color ( 255, 0, 0 );
 
-                    Color color = player.Vehicle.CustomPrimaryColor;
-                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
-                    color = player.Vehicle.CustomSecondaryColor;
-                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+                    NAPI.Util.ConsoleOutput ( "\nTest 1 start:" );
 
-                    color = NAPI.Vehicle.GetVehicleCustomPrimaryColor ( player.Vehicle );
-                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
-                    color = NAPI.Vehicle.GetVehicleCustomSecondaryColor ( player.Vehicle );
-                    NAPI.Util.ConsoleOutput ( color.Red + " - " + color.Green + " - " + color.Blue );
+                    Color color3 = player.Vehicle.CustomPrimaryColor;
+                    NAPI.Util.ConsoleOutput ( color3.Red + " - " + color3.Green + " - " + color3.Blue );
+                    color3 = player.Vehicle.CustomSecondaryColor;
+                    NAPI.Util.ConsoleOutput ( color3.Red + " - " + color3.Green + " - " + color3.Blue );
+
+                    color3 = NAPI.Vehicle.GetVehicleCustomPrimaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color3.Red + " - " + color3.Green + " - " + color3.Blue );
+                    color3 = NAPI.Vehicle.GetVehicleCustomSecondaryColor ( player.Vehicle );
+                    NAPI.Util.ConsoleOutput ( color3.Red + " - " + color3.Green + " - " + color3.Blue );
 
                     break;
 
                 case 2:
-                    NAPI.Vehicle.SetVehicleCustomPrimaryColor ( player.Vehicle, 60, 20, 60 );
-                    NAPI.Vehicle.SetVehicleCustomSecondaryColor ( player.Vehicle, 60, 0, 150 );
+
+                    NAPI.Util.ConsoleOutput ( "\nTest 2 start:" );
 
                     Color color2 = player.Vehicle.CustomPrimaryColor;
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+                    color2 = player.Vehicle.CustomSecondaryColor;
+                    NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
+
+                    color2 = player.Vehicle.CustomPrimaryColor;
                     NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
                     color2 = player.Vehicle.CustomSecondaryColor;
                     NAPI.Util.ConsoleOutput ( color2.Red + " - " + color2.Green + " - " + color2.Blue );
@@ -163,6 +170,37 @@
                 case 6:
                     NAPI.Util.ConsoleOutput ( lastveh.Health.ToString() + " - " + lastveh.Livery.ToString() );
                     break;
+
+                case 7:
+                    NAPI.Util.ConsoleOutput ( player.Vehicle.MaxOccupants.ToString() );
+                    NAPI.Util.ConsoleOutput ( player.Vehicle.Occupants.Count.ToString () );
+                    break;
+
+                case 8:
+                    player.TriggerEvent ( "testit", new bool[] { true, false, true } );
+                    break;
+                case 9:
+                    player.TriggerEvent ( "testit", new string[] { "hi", "my" } );
+                    break;
+                case 10:
+                    player.TriggerEvent ( "testit", new int[] { 0, 1, 2 } );
+                    break;
+                case 11:
+                    player.TriggerEvent ( "testit", new uint[] { 0, 1, 2 } );
+                    break;
+                case 12:
+                    player.TriggerEvent ( "testit", new Vector3[] { player.Position, new Vector3 ( 0, 0, 0 ) } );
+                    break;
+                case 13:
+                    player.TriggerEvent ( "testit", new System.Collections.Generic.List<Vector3> { player.Position, new Vector3 ( 0, 0, 0 ) } );
+                    break;
+                case 14:
+                    player.TriggerEvent ( "testit", new double[] { 0.1, 1.2, 2.3 } );
+                    break;
+                case 15:
+                    player.TriggerEvent ( "testit", new float[] { 0.1f, 1.2f, 2.3f } );
+                    break;
+                    
             }
         }
     }

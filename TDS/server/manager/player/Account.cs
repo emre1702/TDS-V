@@ -23,10 +23,6 @@
 		private static uint lastPlayerUID;
 
 		public Account () {
-            Event.OnPlayerDisconnected += OnPlayerDisconnected;
-            Event.OnPlayerConnect += OnPlayerBeginConnect;
-            Event.OnPlayerConnected += OnPlayerConnected;
-            Event.OnResourceStart += OnResourceStart;
         }
 
 		private static void SendWelcomeMessage ( Client player ) {
@@ -38,8 +34,9 @@
             builder.Append ( "#n##o#__________________________________________" );
             player.SendChatMessage ( builder.ToString () );
 		}
-
-        private static void OnPlayerConnected ( Client player, CancelEventArgs cancel ) {
+        
+        [ServerEvent(Event.PlayerConnected)]
+        public static void OnPlayerConnected ( Client player ) {
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );
             player.Freeze ( true );
             player.Name = player.SocialClubName;
@@ -81,7 +78,8 @@
 		}
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage ( "Await.Warning", "CS4014:Await.Warning" )]
-        private static async void OnPlayerBeginConnect ( Client player, CancelEventArgs cancel ) {
+        [ServerEvent(Event.PlayerConnect)]
+        public static async void OnPlayerBeginConnect ( Client player ) {
 			try {
 				player.Name = player.SocialClubName;
 				if ( socialClubNameBanDict.ContainsKey ( player.SocialClubName ) || addressBanDict.ContainsKey ( player.Address ) ) {
@@ -96,12 +94,10 @@
 						DataRow row = result.Rows[0];
 						if ( row["type"].ToString () == "permanent" ) {
 							player.Kick ( "You are permanently banned by " + row["admin"] + ". Reason: " + row["reason"] );
-                            cancel.Cancel = true;
 							return;
 						}
 						if ( Convert.ToInt32 ( row["endsec"] ) > Utility.GetTimespan () ) {
 							player.Kick ( "You are banned until " + row["endoptic"] + " by " + row["admin"] + ". Reason: " + row["reason"] );
-                            cancel.Cancel = true;
                             return;
 						}
                         Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"] );
@@ -114,7 +110,8 @@
 			}
 		}
 
-		private async void OnResourceStart () {
+        [ServerEvent(Event.ResourceStart)]
+        public static async void OnResourceStart () {
 			try {
 				DataTable result = await Database.ExecResult ( "SELECT uid, name FROM player" ).ConfigureAwait ( false );
 				foreach ( DataRow row in result.Rows ) {
@@ -163,7 +160,8 @@
 			}
 		}
 
-		private void OnPlayerDisconnected ( Client player, byte type, string reason ) {
+        [ServerEvent(Event.PlayerDisconnected)]
+        public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
 			try {
 				SavePlayerData ( player );
 				uint adminlvl = player.GetChar ().AdminLvl;

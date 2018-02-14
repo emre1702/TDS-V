@@ -7,9 +7,7 @@
 
 	class Chat : Script {
 
-		public Chat () {
-			Event.OnChatMessage += OnChatMessage;
-		}
+        public Chat ( ) { }
 
 		private static void OnChatMessageFunc ( Client player, string message ) {
 			Character character = player.GetChar ();
@@ -19,8 +17,8 @@
 			character.Lobby.SendAllPlayerChatMessage ( changedmessage );
 		}
 
-		private static void OnChatMessage ( Client player, string message, CancelEventArgs e ) {
-			e.Cancel = true;
+        [ServerEvent(Event.ChatMessage)]
+        public static void OnChatMessage ( Client player, string message ) {
             if ( player.GetChar().LoggedIn )
 			    OnChatMessageFunc ( player, message );
 		}
