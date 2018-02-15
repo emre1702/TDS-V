@@ -152,7 +152,7 @@ namespace TDS.server.instance.lobby {
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public static void OnPlayerDisconnected ( Client player, byte type, string reason ) {
+        public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
             player.GetChar ().Lobby.OnPlayerDisconnected ( player, type, reason );
         }
 

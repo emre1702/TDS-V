@@ -10,7 +10,7 @@ namespace TDS.server.instance.lobby {
         public uint Health = 100;
         
 
-        public void OnPlayerDisconnected ( Client player, byte type, string reason ) {
+        public void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
             player.GetChar ().Lobby.RemovePlayer ( player );
         }
 
