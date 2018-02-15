@@ -11,8 +11,6 @@
 			NAPI.Server.SetGamemodeName ( "tdm" );
             NAPI.Server.SetAutoRespawnAfterDeath ( false );
             NAPI.Server.SetGlobalServerChat ( false );
-            foreach ( VehicleHash hash in Enum.GetValues ( typeof ( VehicleHash ) ) )
-                NAPI.Util.ConsoleOutput ( hash.ToString() + ": " + NAPI.Vehicle.GetVehicleMaxOccupants ( hash ).ToString() );
             StartMethods ();
         }
 
