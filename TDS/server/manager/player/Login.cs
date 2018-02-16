@@ -88,7 +88,7 @@
                 if ( adminlvl > 0 )
 					Admin.SetOnline ( player, adminlvl );
 
-				API.Shared.TriggerClientEvent ( player, "registerLoginSuccessful" );
+				NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
 
 				MainMenu.Join ( player );
 			} catch ( Exception ex ) {
