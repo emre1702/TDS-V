@@ -54,8 +54,14 @@
                 ["order_stay_back"] = "{1}Stay back!",
                 ["order_spread_out"] = "{1}Spread out!",
                 ["order_go_to_bomb"] = "{1}Go to the bomb!",
-                ["target_not_logged_in"] = "The target is not logged in."  ,
-                ["target_not_in_same_lobby"] = "The target is not in the same lobby."
+                ["target_not_logged_in"] = "The target is not logged in.",
+                ["target_not_in_same_lobby"] = "The target is not in the same lobby.",
+                ["round_end_death"] = "All opponents are dead!\n\nTeam {1} wins!",
+                ["round_end_time"] = "Time's up!\n\nTeam {1} wins because of most HP left!",
+                ["round_end_bomb_exploded"] = "Bomb exploded!\n\nTeam {1} wins!",
+                ["round_end_bomb_defused"] = "Bomb defused!\n\nTeam {1} wins!",
+                ["round_end_command"] = "Map was skipped by {1}!",
+                ["round_end_new_player"] = "Enough players in ...\n\nRound starting!"
             },
 			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
@@ -104,7 +110,13 @@
                 ["order_spread_out"] = "{1}Teilt euch auf!",
                 ["order_go_to_bomb"] = "{1}Geht zur Bombe!",
                 ["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt.",
-                ["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby."
+                ["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby.",
+                ["round_end_death"] = "Alle Gegner sind tot!\n\nTeam {1} gewinnt!",
+                ["round_end_time"] = "Zeit um!\n\nTeam {1} gewinnt mit den meisten HP übrig!",
+                ["round_end_bomb_exploded"] = "Bombe explodiert!\n\nTeam {1} gewinnt!",
+                ["round_end_bomb_defused"] = "Bombe entschärft!\n\nTeam {1} gewinnt!",
+                ["round_end_command"] = "Die Map wurde von {1} überspringen!",
+                ["round_end_new_player"] = "Genug Spieler drin ...\n\nRunde startet!"
             }
 		};
 
