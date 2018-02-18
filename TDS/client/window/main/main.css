@@ -39,3 +39,16 @@ text {
     top: 60%;
     font-size: 1.3em;
 }
+
+#round_end_reason {
+    display: flex;
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    top: 0px;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 7em;
+    color: black;
+}

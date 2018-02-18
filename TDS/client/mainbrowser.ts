@@ -2,6 +2,7 @@
 
 let mainbrowserdata = {
     browser: mp.browsers.new( "package://TDS-V/window/main/index.html" ) as BrowserMp,
+    roundendreasonshowing: false
 }
 mainbrowserdata.browser.markAsChat();
 
@@ -56,4 +57,16 @@ function toggleCanVoteForMapWithNumpadInBrowser( bool: boolean ) {
 
 function loadOrderNamesInBrowser( ordernamesjson: string ) {
     mainbrowserdata.browser.execute( "loadOrderNames ( '" + ordernamesjson + "');" );
+}
+
+function showRoundEndReason( reason: string ) {
+    mainbrowserdata.roundendreasonshowing = true;
+    mainbrowserdata.browser.execute( "showRoundEndReason (`" + reason + "`);" );
+}
+
+function hideRoundEndReason() {
+    if ( mainbrowserdata.roundendreasonshowing ) {
+        mainbrowserdata.browser.execute( "hideRoundEndReason ();" );
+        mainbrowserdata.roundendreasonshowing = false;
+    }
 }

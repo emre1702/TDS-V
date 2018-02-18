@@ -7,6 +7,7 @@ using TDS.server.enums;
 using TDS.server.extend;
 using TDS.server.instance.player;
 using TDS.server.instance.utility;
+using TDS.server.manager.utility;
 
 namespace TDS.server.instance.lobby {
 
@@ -67,7 +68,7 @@ namespace TDS.server.instance.lobby {
             status = LobbyStatus.ROUND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
-            roundEndTimer = Timer.SetTimer ( () => EndRound ( RoundEndReason.TIME ), roundTime );
+            roundEndTimer = Timer.SetTimer ( EndRoundTimesup, roundTime );
             alivePlayers = new List<List<Client>> ();
             List<uint> amountinteams = new List<uint> ();
             for ( int i = 0; i < Players.Count; i++ ) {
@@ -86,7 +87,7 @@ namespace TDS.server.instance.lobby {
                 StartRoundBomb ();
         }
 
-        private void EndRound ( RoundEndReason reason, params object[] args ) {
+        private void EndRound ( Dictionary<Language, string> reasonlangs ) {
             status = LobbyStatus.ROUNDEND;
             NAPI.Util.ConsoleOutput ( status.ToString () );
             roundStartTimer?.Kill ();
@@ -95,17 +96,55 @@ namespace TDS.server.instance.lobby {
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
                 roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime / 2 );
-                SendAllPlayerEvent ( "onClientRoundEnd" );
+                FuncIterateAllPlayers ( ( player, teamID ) => {
+                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundEnd", reasonlangs[player.GetChar().Language] );
+                } );                     
             } else if ( DeleteWhenEmpty ) {
                 Remove ();
             }
         }
 
-        public void EndRoundEarlier ( RoundEndReason reason, params object[] args ) {
+        private void EndRoundTimesup ( ) {
+            EndRound ( GetRoundEndReasonLang ( RoundEndReason.TIME, null ) );
+        }
+
+        public void EndRoundEarlier ( RoundEndReason reason, object arg ) {
             roundEndTimer?.Kill ();
             countdownTimer?.Kill ();
-            EndRound ( reason, args );
+            EndRound ( GetRoundEndReasonLang ( reason, arg ) );
         }
+
+        private Dictionary<Language, string> GetRoundEndReasonLang ( RoundEndReason reasonenum, object arg ) {
+            Dictionary<Language, string> reasons;
+            switch ( reasonenum ) {
+                case RoundEndReason.DEATH:
+                    if ( (int)arg == 0 )
+                        reasons = ServerLanguage.GetLangDictionary ( "round_end_death_all" );
+                    else 
+                        reasons = ServerLanguage.GetLangDictionary ( "round_end_death", GetTeamName ( Convert.ToUInt32 ( arg ) ) );
+                    break;
+                case RoundEndReason.TIME:
+                    reasons = ServerLanguage.GetLangDictionary ( "round_end_time" );
+                    break;
+                case RoundEndReason.BOMB:
+                    uint teamID = (uint) arg;
+                    if ( teamID == terroristTeamID )
+                        reasons = ServerLanguage.GetLangDictionary ( "round_end_bomb_exploded", GetTeamName ( teamID ) );
+                    else
+                        reasons = ServerLanguage.GetLangDictionary ( "round_end_bomb_defused", GetTeamName ( teamID ) );
+                    break;
+                case RoundEndReason.COMMAND:
+                    reasons = ServerLanguage.GetLangDictionary ( "round_end_command", (string) arg );
+                    break;
+                case RoundEndReason.NEWPLAYER:
+                    reasons = ServerLanguage.GetLangDictionary ( "round_end_command", (string) arg );
+                    break;
+                default:
+                    reasons = new Dictionary<Language, string> ();   // Only to not get an error! Won't be used & can't be used!
+                    break;
+            }
+            return reasons;
+        } 
 
         private void StartRoundForPlayer ( Client player, uint teamID ) {
             Character character = player.GetChar ();

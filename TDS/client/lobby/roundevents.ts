@@ -4,6 +4,7 @@
 mp.events.add( "onClientMapChange", function ( mapname, maplimit, mapmidx, mapmidy, mapmidz ) {
     log( "onClientMapChange" );
     setMapInfo( mapname );
+    hideRoundEndReason();
 	mp.game.cam.doScreenFadeIn( lobbysettings.roundendtime / 2 );
 	maplimit = JSON.parse( maplimit );
 	if ( maplimit.length > 0 )
@@ -31,7 +32,8 @@ mp.events.add( "onClientCountdownStart", function ( resttime ) {
 		}
 	}
 	if ( rounddata.isspectator )
-		startSpectate();
+        startSpectate();
+    hideRoundEndReason();
     toggleFightControls( false );
 } );
 
@@ -52,7 +54,7 @@ mp.events.add( "onClientRoundStart", function ( isspectator, wastedticks ) {
 } );
 
 
-mp.events.add( "onClientRoundEnd", function () {
+mp.events.add( "onClientRoundEnd", function ( reason ) {
 	log( "onClientRoundEnd" );
 	mp.game.cam.doScreenFadeOut ( lobbysettings.roundendtime / 2 );
 	toggleFightMode( false );
@@ -64,6 +66,7 @@ mp.events.add( "onClientRoundEnd", function () {
     removeRoundInfo();
     toggleFightControls( false );
     clearMapVotingsInBrowser();
+    showRoundEndReason( reason );
 } );
 
 

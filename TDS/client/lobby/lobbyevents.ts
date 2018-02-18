@@ -33,6 +33,7 @@ mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
         clearMapVotingsInBrowser();
         removeRoundInfo();
         stopMapCreator();
+        hideRoundEndReason();
 	}
 } );
 

@@ -56,12 +56,13 @@
                 ["order_go_to_bomb"] = "{1}Go to the bomb!",
                 ["target_not_logged_in"] = "The target is not logged in.",
                 ["target_not_in_same_lobby"] = "The target is not in the same lobby.",
-                ["round_end_death"] = "All opponents are dead!\n\nTeam {1} wins!",
-                ["round_end_time"] = "Time's up!\n\nTeam {1} wins because of most HP left!",
-                ["round_end_bomb_exploded"] = "Bomb exploded!\n\nTeam {1} wins!",
-                ["round_end_bomb_defused"] = "Bomb defused!\n\nTeam {1} wins!",
+                ["round_end_death"] = "All opponents are dead!<br>Team {1} wins!",
+                ["round_end_death_all"] = "All players are dead!<br>No team wins!",
+                ["round_end_time"] = "Time's up!<br>Team {1} wins because of most HP left!",
+                ["round_end_bomb_exploded"] = "Bomb exploded!<br>Team {1} wins!",
+                ["round_end_bomb_defused"] = "Bomb defused!<br>Team {1} wins!",
                 ["round_end_command"] = "Map was skipped by {1}!",
-                ["round_end_new_player"] = "Enough players in ...\n\nRound starting!"
+                ["round_end_new_player"] = "Enough players in ...<br>Round starting!"
             },
 			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
@@ -111,12 +112,13 @@
                 ["order_go_to_bomb"] = "{1}Geht zur Bombe!",
                 ["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt.",
                 ["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby.",
-                ["round_end_death"] = "Alle Gegner sind tot!\n\nTeam {1} gewinnt!",
-                ["round_end_time"] = "Zeit um!\n\nTeam {1} gewinnt mit den meisten HP übrig!",
-                ["round_end_bomb_exploded"] = "Bombe explodiert!\n\nTeam {1} gewinnt!",
-                ["round_end_bomb_defused"] = "Bombe entschärft!\n\nTeam {1} gewinnt!",
-                ["round_end_command"] = "Die Map wurde von {1} überspringen!",
-                ["round_end_new_player"] = "Genug Spieler drin ...\n\nRunde startet!"
+                ["round_end_death"] = "Alle Gegner sind tot!<br>Team {1} gewinnt!",
+                ["round_end_death_all"] = "Alle sind tot!<br>Kein Team gewinnt!",
+                ["round_end_time"] = "Zeit um!<br>Team {1} gewinnt mit den meisten HP übrig!",
+                ["round_end_bomb_exploded"] = "Bombe explodiert!<br>Team {1} gewinnt!",
+                ["round_end_bomb_defused"] = "Bombe entschärft!<br>Team {1} gewinnt!",
+                ["round_end_command"] = "Die Map wurde von {1} übersprungen!",
+                ["round_end_new_player"] = "Genug Spieler drin ...<br>Runde startet!"
             }
 		};
 

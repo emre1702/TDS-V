@@ -3,6 +3,7 @@ let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = "ENGLISH";
 let ordersDiv = $( "#orders" );
+let roundEndReason = $( "#round_end_reason" );
 
 function setMoney( money ) {
     moneyText.text( "$" + money );
@@ -56,4 +57,12 @@ function loadOrderNames( ordernamesjson ) {
     for ( let i = 0; i < ordernames.length && i < 9; ++i ) {
         ordersDiv.append( $( "<div>"+(i + 1) + ". " + ordernames[i]+"</div>" ) );
     }
+}
+
+function showRoundEndReason( reason ) {
+    roundEndReason.html( reason ).css( "display", "table-cell" );
+}
+
+function hideRoundEndReason() {
+    roundEndReason.hide();
 }
