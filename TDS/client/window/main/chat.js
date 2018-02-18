@@ -13,7 +13,8 @@ let chatdata = {
     chosenchatbody: 0,
     myname: null,
     globalsaykeycode: String.fromCharCode( 90 ) === "Z" ? 90 : Y,
-    playernames: []
+    playernames: [],
+    autocompleteon: false
 };
 
 
@@ -182,7 +183,8 @@ function removeNameForChat( name ) {
 
 $( document ).ready( function () {
 
-    addAutocomplete( chatdata.maininput, chatdata.playernames );
+    addAutocomplete( chatdata.maininput, chatdata.playernames, () => { chatdata.autocompleteon = true; return false; }, () => {
+        setTimeout( function () { chatdata.autocompleteon = false; }, 500 ) } );
 
     $( "body" ).keydown( function ( event ) {
         if ( event.which === 84 && !chatdata.inputshowing && chatdata.active ) {   // open chat-input
@@ -191,7 +193,7 @@ $( document ).ready( function () {
         } else if ( event.which === chatdata.globalsaykeycode && !chatdata.inputshowing && chatdata.active ) {    // open globalchat-input
             event.preventDefault();
             enableChatInput( true, "/globalsay " );
-        } else if ( event.which === 13 && chatdata.inputshowing ) {   // send message and close input
+        } else if ( event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon ) {   // send message and close input
             event.preventDefault();
             let msg = chatdata.maininput.val();
             if ( msg ) {

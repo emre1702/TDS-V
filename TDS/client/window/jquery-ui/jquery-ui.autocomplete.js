@@ -1,4 +1,4 @@
-﻿function addAutocomplete( elem, values ) {
+﻿function addAutocomplete( elem, values, selecteventfunc, closeevent ) {
     // don't navigate away from the field on tab when selecting an item
     elem.bind( "keydown", function ( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "autocomplete" ).menu.active ) {
@@ -29,7 +29,6 @@
             let hashtagused = text.lastIndexOf( "#" ) > text.lastIndexOf( "@" );
             if ( hashtagused ) {
                 terms = text.split( /#\s*/ );
-                ui.item.value = ui.item.value;
             } else {
                 terms = text.split( /@\s*/ );
                 ui.item.value = "@" + ui.item.value + ":";
@@ -40,9 +39,12 @@
             terms.push( ui.item.value );
             // add placeholder to get the comma-and-space at the end
             terms.push( "" );
-            elem.val ( terms.join( "" ) );
+            elem.val( terms.join( "" ) );
+            if ( typeof selecteventfunc !== "undefined" )
+                selecteventfunc();
             return false;
         },
+        close: closeevent,
         autoFocus: true
         /*,
         _renderItem: function ( ul, item ) {
