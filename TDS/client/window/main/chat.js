@@ -184,7 +184,7 @@ function removeNameForChat( name ) {
 $( document ).ready( function () {
 
     addAutocomplete( chatdata.maininput, chatdata.playernames, () => { chatdata.autocompleteon = true; return false; }, () => {
-        setTimeout( function () { chatdata.autocompleteon = false; }, 500 ) } );
+        setTimeout( function () { chatdata.autocompleteon = false; }, 500 ); } );
 
     $( "body" ).keydown( function ( event ) {
         if ( event.which === 84 && !chatdata.inputshowing && chatdata.active ) {   // open chat-input

@@ -35,7 +35,7 @@ function clickOnRow () {
 }
 
 function addCurrentPosition( number ) {
-    if ( number == 0 )
+    if ( number === 0 )
         if ( !teamnumberteamspawns.val() )
             return;
     addpositionfor = number;
