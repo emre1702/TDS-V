@@ -40,8 +40,8 @@
 						DataRow row = result.Rows[0];
 						if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {
 							player.Name = row["name"].ToString ();
-							adminlvl = Convert.ToUInt16 ( row["adminlvl"] );
-							donatorLvl = Convert.ToUInt16 ( row["donatorlvl"] );
+							adminlvl = Convert.ToUInt32 ( row["adminlvl"] );
+							donatorLvl = Convert.ToUInt32 ( row["donatorlvl"] );
 							playtime = Convert.ToUInt32 ( row["playtime"] );
 							money = Convert.ToUInt32 ( row["money"] );
 							kills = Convert.ToUInt32 ( row["currentkills"] );
