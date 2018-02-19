@@ -56,7 +56,7 @@
                         <div class="tabtablediv">
                             <table id="team_spawns_table" class="tabtable">
                                 <tr>
-                                    <th>Team</th>
+                                    <th data-lang="team">Team</th>
                                     <th>X</th>
                                     <th>Y</th>
                                     <th>Z</th>
@@ -68,8 +68,7 @@
                             <button class="add_button" data-lang="add" onclick="addCurrentPosition(0);">Add</button>
                             <button class="goto_button" data-lang="go" onclick="gotoPosition(0);">Go</button>
                             <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
-                            <span class="button_same_line">Team:</span>
-                            <input id="team_number_teamspawns" type="number" min="1" max="10" value="1" />
+                            <input id="team_number_teamspawns" type="number" min="1" max="10" placeholder="team" data-lang-placeholder="team" />
                         </div>
                     </div>
                     <div id="map_limit_tabcontent" class="tabcontent">

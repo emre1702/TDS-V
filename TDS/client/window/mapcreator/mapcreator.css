@@ -15,7 +15,7 @@ body {
     position: absolute;
     display: block;
     right: 0%;
-    width: 26%;
+    width: 20%;
     top: 0%;
     height: 30%;
     background: var(--secondary-color-gradient);
@@ -48,13 +48,13 @@ input[type="number"] {
 
 #leftside {
     float: left;
-    width: 25%;
+    width: 30%;
     height: 100%;
 }
 
 #rightside {
     float: left;
-    width: 75%;
+    width: 70%;
     height: 100%;
 }
 
@@ -118,15 +118,15 @@ input[type="number"] {
     box-sizing: border-box;
     border-radius: 10px;
     height: 100%;
-    width: 70%;
+    width: 60%;
 }
 
 .tabcontent input[type="text"] {
-    width: 65%;
+    width: 55%;
 }
 
 .tabcontent input[type="number"] {
-    width: 25%;
+    width: 35%;
 }
 
 .more_height_content {
@@ -188,7 +188,7 @@ table, th, td {
 }
 
 #team_number_teamspawns {
-    width: 10%;
+    width: 20%;
 }
 
 #last_information {

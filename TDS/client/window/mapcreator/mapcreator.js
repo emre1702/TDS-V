@@ -35,6 +35,9 @@ function clickOnRow () {
 }
 
 function addCurrentPosition( number ) {
+    if ( number == 0 )
+        if ( !teamnumberteamspawns.val() )
+            return;
     addpositionfor = number;
     mp.trigger( "requestCurrentPositionForMapCreator" );
 }
@@ -104,6 +107,9 @@ function loadLanguage( lang ) {
     langdata = JSON.parse( lang );
     $( "[data-lang]" ).each( function () {
         $( this ).html( langdata[$( this ).attr( "data-lang" )] );
+    } );
+    $( "[data-lang-placeholder]" ).each( function () {
+        $( this ).attr( "placeholder", langdata[$( this ).attr( "data-lang-placeholder" )] );
     } );
 }
 

@@ -68,6 +68,7 @@ var languagelist = {
             "add": "Add",
             "go": "Go",
             "remove": "Remove",
+            "team": "Team",
             "last_info": "When you send the map, it will get saved on the server.<br>Then Bonus has the chance to load the map and test it.<br>"
             + "If he find mistakes or problems, he will solve them.<br>At the end if the map is acceptable, he will make it playable.<br><br>"
             + "This whole process can take a bit, so you have to wait atleast 1-2 days.<br>Please first use 'Check', then maybe improve the map and at the end press 'Send'",
@@ -150,6 +151,7 @@ var languagelist = {
             "add": "Add",
             "go": "Gehe",
             "remove": "Entfernen",
+            "team": "Team",
             "last_info": "Wenn du die Map sendest, wird sie auf dem Server gespeichert.<br>Dann bekommt Bonus die Chance die Map gründlich zu testen.<br>"
             + "Wenn er Probleme oder Fehler findet, fixt er sie.<br>Wenn die Map ausreichend gut ist, wird sie spielbar gemacht.<br><br>"
             + "Dieser ganze Prozess kann etwas dauern, daher solltest du mit min. 1-2 Tagen rechnen.<br>Bitte nutze zuerst 'Prüfen', dann verbessere wenn möglich die Map und danach kannst du 'Senden' nutzen.",
