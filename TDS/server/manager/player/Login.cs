@@ -31,11 +31,7 @@
 				bool hitsoundon = true;
 
 				if ( password != "" ) {
-                    DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM player, playerarenastats, playersetting WHERE player.uid = @uid AND player.uid = playersetting.uid AND player.uid = playerarenastats.uid", new Dictionary<string, string> {
-						{
-                            "@uid", uid.ToString ()
-						}
-					} ).ConfigureAwait ( false );
+                    DataTable result = await Database.ExecResult ( $"SELECT * FROM player, playerarenastats, playersetting WHERE player.uid = @{uid} AND player.uid = playersetting.uid AND player.uid = playerarenastats.uid" ).ConfigureAwait ( false );
 					if ( result.Rows.Count > 0 ) {
 						DataRow row = result.Rows[0];
 						if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {
