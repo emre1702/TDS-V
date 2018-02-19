@@ -4,6 +4,7 @@ let killmessagesBox = $( "#kill_messages_box" );
 let language = "ENGLISH";
 let ordersDiv = $( "#orders" );
 let roundEndReason = $( "#round_end_reason" );
+let roundEndReasonContainer = $( "#round_end_reason_container" );
 
 function setMoney( money ) {
     moneyText.text( "$" + money );
@@ -60,9 +61,10 @@ function loadOrderNames( ordernamesjson ) {
 }
 
 function showRoundEndReason( reason ) {
-    roundEndReason.html( reason ).css( "display", "table-cell" );
+    roundEndReason.html( reason );
+    roundEndReasonContainer.css( "display", "table" );
 }
 
 function hideRoundEndReason() {
-    roundEndReason.hide();
+    roundEndReasonContainer.hide();
 }
