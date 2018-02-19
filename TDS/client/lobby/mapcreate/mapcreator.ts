@@ -26,8 +26,8 @@ mp.events.add( "requestCurrentPositionForMapCreator", () => {
     let x = Math.round( position.x * 100 ) / 100;
     let y = Math.round( position.y * 100 ) / 100;
     let z = Math.round( position.z * 100 ) / 100;
-    let rotation = localPlayer.getRotation( 2 );
-    mapcreatordata.browser.execute( "loadPositionFromClient (" + x + ", " + y + ", " + z + ", " + rotation.z + "); " );
+    let rotation = Math.round( localPlayer.getRotation( 2 ).z * 100 ) / 100;
+    mapcreatordata.browser.execute( "loadPositionFromClient (" + x + ", " + y + ", " + z + ", " + rotation + "); " );
 } );
 
 mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, rot: number ) => {
