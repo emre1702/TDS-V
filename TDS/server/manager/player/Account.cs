@@ -100,7 +100,7 @@
 							player.Kick ( "You are banned until " + row["endoptic"] + " by " + row["admin"] + ". Reason: " + row["reason"] );
                             return;
 						}
-                        Database.Exec ( "DELETE FROM ban WHERE id = " + row["id"] );
+                        Database.Exec ( $"DELETE FROM ban WHERE id = {row["id"]};" );
 					}
 					socialClubNameBanDict.Remove ( player.SocialClubName );
 					addressBanDict.Remove ( player.Address );
@@ -129,34 +129,11 @@
 		public static void SavePlayerData ( Client player ) {
 			Character character = player.GetChar ();
 			if ( character.LoggedIn ) {
-                Database.ExecPrepared ( "UPDATE player SET playtime = @PLAYTIME, money = @MONEY WHERE uid = @UID", new Dictionary<string, string> {
-                    {
-                        "@PLAYTIME", character.Playtime.ToString ()
-                    }, {
-                        "@MONEY", character.Money.ToString ()
-                    }, {
-                        "@UID", character.UID.ToString ()
-                    }
-                } );
-                Database.ExecPrepared ( "UPDATE playerarenastats SET currentkills = @CURRENTKILLS, currentassists = @CURRENTASSISTS, currentdeaths = @CURRENTDEATHS, currentdamage = @CURRENTDAMAGE, " +
-                    "totalkills = @TOTALKILLS, totalassists = @TOTALASSISTS, totaldeaths = @TOTALDEATHS, totaldamage = @TOTALDAMAGE WHERE uid = @UID", new Dictionary<string, string> {
-                        { "@CURRENTKILLS", character.Kills.ToString() },
-                        { "@CURRENTASSISTS", character.Assists.ToString() },
-                        { "@CURRENTDEATHS", character.Deaths.ToString() },
-                        { "@CURRENTDAMAGE", character.Damage.ToString() },
-                        { "@TOTALKILLS", character.TotalKills.ToString() },
-                        { "@TOTALASSISTS", character.TotalAssists.ToString() },
-                        { "@TOTALDEATHS", character.TotalDeaths.ToString() },
-                        { "@TOTALDAMAGE", character.TotalDamage.ToString() },
-                        { "@UID", character.UID.ToString() }
-                    } );
-				Database.ExecPrepared ( "UPDATE playersetting SET hitsound = @HITSOUND WHERE uid = @UID", new Dictionary<string, string> {
-					{
-						"@HITSOUND", character.HitsoundOn ? "1" : "0"
-					}, {
-                        "@UID", character.UID.ToString ()
-					}
-				} );
+                Database.Exec ( $"UPDATE player SET playtime = {character.Playtime}, money = {character.Money} WHERE uid = {character.UID}" );
+                Database.Exec ( $"UPDATE playerarenastats SET currentkills = {character.Kills}, currentassists = {character.Assists}, currentdeaths = {character.Deaths}" +
+                    $", currentdamage = {character.Damage}, totalkills = {character.TotalKills}, totalassists = {character.TotalAssists}, totaldeaths = {character.TotalDeaths}" +
+                    $", totaldamage = {character.TotalDamage} WHERE uid = {character.UID}" );
+                Database.Exec ( $"UPDATE playersetting SET hitsound = {Convert.ToInt32 ( character.HitsoundOn )} WHERE uid = {character.UID}" );
 			}
 		}
 
@@ -174,23 +151,11 @@
 		}
 
 		public static void PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
-			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @admin, @reason)", new Dictionary<string, string> {
-				{
-					"@socialclubname", targetname
-				}, {
-					"@address", targetaddress
-				}, {
-					"@type", "permanent"
-				}, {
-					"@startsec", Utility.GetTimespan ().ToString ()
-				}, {
-					"@startoptic", Utility.GetTimestamp ()
-				}, {
-					"@admin", admin.Name
-				}, {
-					"@reason", reason
-				}
-			} );
+			Database.ExecPrepared ( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +
+                $"(@socialclubname, @address, 'permanent', '{Utility.GetTimespan ()}', '{Utility.GetTimestamp ()}', @admin, @reason)",
+                new Dictionary<string, string> {
+                    { "@socialclubname", targetname }, { "@address", targetaddress }, { "@admin", admin.Name }, { "@reason", reason } }
+			);
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
 				addressBanDict[targetaddress] = true;
@@ -235,10 +200,10 @@
 			/////////
 		}
 
-		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string reason, Dictionary<string, string> queryparam ) {
-			DataTable result = await Database.ExecPreparedResult ( "SELECT address FROM ban WHERE uid = {1}", queryparam ).ConfigureAwait ( false );
+		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string reason, uint uid ) {
+			DataTable result = await Database.ExecResult ( $"SELECT address FROM ban WHERE uid = {uid}" ).ConfigureAwait ( false );
 			string targetaddress = result.Rows[0]["address"].ToString ();
-			Database.ExecPrepared ( "DELETE FROM ban WHERE uid = {1}", queryparam );
+			Database.Exec ( $"DELETE FROM ban WHERE uid = {uid}" );
 			socialClubNameBanDict.Remove ( targetname );
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );

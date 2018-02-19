@@ -9,11 +9,11 @@ namespace TDS.server.manager.utility {
         private const int stopSeasonAfterMonths = 1;
 
         private static void EndSeason ( DataRow row, int currentmonth ) {
-            Database.Exec ( "INSERT INTO season (month) VALUES (" + currentmonth + ")" );
+            Database.Exec ( $"INSERT INTO season (month) VALUES ({currentmonth})" );
 
             // Load kills and deaths of all players and reward them here //
 
-            Database.Exec ( "UPDATE playerarenastats SET currentkills = 0, currentassists = 0, currentdeaths = 0,  currentdamage = 0" );
+            //Database.Exec ( "UPDATE playerarenastats SET currentkills = 0, currentassists = 0, currentdeaths = 0,  currentdamage = 0" );
         }
 
         public static void SaveSeason ( ) {
@@ -45,7 +45,7 @@ namespace TDS.server.manager.utility {
                 else
                     LoadSeasonData ( row );
             } else
-                Database.Exec ( "INSERT INTO season (month) VALUES (" + currentmonth + ")" );
+                Database.Exec ( $"INSERT INTO season (month) VALUES ({currentmonth})" );
 
             
         }

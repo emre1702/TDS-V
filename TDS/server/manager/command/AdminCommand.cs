@@ -94,11 +94,6 @@
 						uint targetadminlvl;
 						string targetaddress = "-";
 						uint targetUID = Account.PlayerUIDs[targetname];
-						Dictionary<string, string> queryparam = new Dictionary<string, string> {
-							{
-								"{1}", targetUID.ToString ()
-							}
-						};
 						Client target = NAPI.Player.GetPlayerFromName ( targetname );
 						if ( target != null && target.GetChar ().LoggedIn ) {
 							Character targetcharacter = target.GetChar ();
@@ -107,12 +102,12 @@
 						} else {
 							if ( target != null )
 								targetaddress = target.Address;
-							DataTable targetdata = await Database.ExecPreparedResult ( "SELECT adminlvl FROM player WHERE uid = {1}", queryparam ).ConfigureAwait ( false );
+							DataTable targetdata = await Database.ExecResult ( $"SELECT adminlvl FROM player WHERE uid = {targetUID}" ).ConfigureAwait ( false );
 							targetadminlvl = Convert.ToUInt16 ( targetdata.Rows[0]["adminlvl"] );
 						}
 						if ( targetadminlvl <= player.GetChar ().AdminLvl ) {
 							if ( hours == 0 ) {
-								await Account.UnBanPlayer ( player, target, targetname, reason, queryparam ).ConfigureAwait ( false );
+								await Account.UnBanPlayer ( player, target, targetname, reason, targetUID ).ConfigureAwait ( false );
 							} else if ( hours == -1 ) {
 								Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason );
 							} else {
