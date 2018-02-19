@@ -37,7 +37,7 @@ let colorreplace = [
 
 function updateScroll( chatbody = null ) {
     chatbody = chatbody === null ? getChatBody() : chatbody;
-    chatbody.animate( { scrollTop: chatbody.prop( "scrollHeight" ) }, "slow" );
+    chatbody.finish().animate( { scrollTop: chatbody.prop( "scrollHeight" ) }, "slow" );
 }
 
 function enableChatInput( enable, cmd = "" ) {
