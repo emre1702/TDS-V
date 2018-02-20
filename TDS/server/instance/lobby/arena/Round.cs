@@ -77,7 +77,7 @@ namespace TDS.server.instance.lobby {
                     amountinteams.Add ( amountinteam );
                 alivePlayers.Add ( new List<Client> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
-                    StartRoundForPlayer ( Players[i][j], (uint) i );
+                    StartRoundForPlayer ( Players[i][j], i );
                 }
             }
 
@@ -121,13 +121,13 @@ namespace TDS.server.instance.lobby {
                     if ( (int)arg == 0 )
                         reasons = ServerLanguage.GetLangDictionary ( "round_end_death_all" );
                     else 
-                        reasons = ServerLanguage.GetLangDictionary ( "round_end_death", GetTeamName ( Convert.ToUInt32 ( arg ) ) );
+                        reasons = ServerLanguage.GetLangDictionary ( "round_end_death", GetTeamName ( (int) arg ) );
                     break;
                 case RoundEndReason.TIME:
                     reasons = ServerLanguage.GetLangDictionary ( "round_end_time" );
                     break;
                 case RoundEndReason.BOMB:
-                    uint teamID = (uint) arg;
+                    int teamID = (int) arg;
                     if ( teamID == terroristTeamID )
                         reasons = ServerLanguage.GetLangDictionary ( "round_end_bomb_exploded", GetTeamName ( teamID ) );
                     else
@@ -146,12 +146,12 @@ namespace TDS.server.instance.lobby {
             return reasons;
         } 
 
-        private void StartRoundForPlayer ( Client player, uint teamID ) {
+        private void StartRoundForPlayer ( Client player, int teamID ) {
             Character character = player.GetChar ();
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
             if ( teamID != 0 ) {
-                character.Lifes = (ushort) Lifes;
-                alivePlayers[(int) teamID].Add ( player );
+                character.Lifes = Lifes;
+                alivePlayers[teamID].Add ( player );
                 player.Freeze ( false );
             }
         }

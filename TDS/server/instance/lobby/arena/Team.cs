@@ -8,7 +8,7 @@ namespace TDS.server.instance.lobby {
         public override void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
             base.AddTeam ( name, hash, colorstring );
 
-            spawnCounter[(uint) teamSkins.Count - 1] = 0;
+            spawnCounter[teamSkins.Count - 1] = 0;
         }
 
 

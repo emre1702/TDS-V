@@ -61,7 +61,7 @@ namespace TDS.server.instance.lobby {
 
         public virtual void RemovePlayer ( Client player ) {
             Character character = player.GetChar ();
-            uint teamID = character.Team;
+            int teamID = character.Team;
             SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
             character.IsLobbyOwner = false;
 

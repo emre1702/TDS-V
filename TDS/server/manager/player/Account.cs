@@ -130,9 +130,10 @@
 			Character character = player.GetChar ();
 			if ( character.LoggedIn ) {
                 Database.Exec ( $"UPDATE player SET playtime = {character.Playtime}, money = {character.Money} WHERE uid = {character.UID}" );
-                Database.Exec ( $"UPDATE playerarenastats SET currentkills = {character.Kills}, currentassists = {character.Assists}, currentdeaths = {character.Deaths}" +
-                    $", currentdamage = {character.Damage}, totalkills = {character.TotalKills}, totalassists = {character.TotalAssists}, totaldeaths = {character.TotalDeaths}" +
-                    $", totaldamage = {character.TotalDamage} WHERE uid = {character.UID}" );
+                LobbyDeathmatchStats arena = character.ArenaStats;
+                Database.Exec ( $"UPDATE playerarenastats SET arenakills = {arena.Kills}, arenaassists = {arena.Assists}, arenadeaths = {arena.Deaths}" +
+                    $", arenadamage = {arena.Damage}, arenatotalkills = {arena.TotalKills}, arenatotalassists = {arena.TotalAssists}, arenatotaldeaths = {arena.TotalDeaths}" +
+                    $", arenatotaldamage = {arena.TotalDamage} WHERE uid = {character.UID}" );
                 Database.Exec ( $"UPDATE playersetting SET hitsound = {Convert.ToInt32 ( character.HitsoundOn )} WHERE uid = {character.UID}" );
 			}
 		}

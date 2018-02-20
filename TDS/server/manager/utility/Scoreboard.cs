@@ -13,7 +13,7 @@ namespace TDS.server.manager.utility {
         public int Kills = -1;
         public int Assists = -1;
         public int Deaths = -1;
-        public string TeamOrLobby;   
+        public string TeamOrLobby;
     }
 
     [Serializable]
@@ -54,15 +54,15 @@ namespace TDS.server.manager.utility {
 					if ( character.LoggedIn ) {
 						// character stats //
 						data.PlayTime = GetHoursOpticByMinutes ( character.Playtime );
-						data.Kills = (int) character.Kills;
-						data.Assists = (int) character.Assists;
-						data.Deaths = (int) character.Deaths;
+						data.Kills = (int) character.CurrentStats.Kills;
+						data.Assists = (int) character.CurrentStats.Assists;
+						data.Deaths = (int) character.CurrentStats.Deaths;
 						data.TeamOrLobby = ownLobbyID == 0 ? character.Lobby.Name : character.Lobby.GetTeamName ( character.Team );
 					} else {
                         // default status //
                         data.TeamOrLobby = player.GetLang ( "connecting" );
 					}
-				} else {
+				} else {   // is in another lobby and you aren't in mainmenu
 					if ( doneLobbyIDs.ContainsKey ( lobbyID ) ) {
                         ++otherlobbydata[doneLobbyIDs[lobbyID]].Amount;
 					} else {

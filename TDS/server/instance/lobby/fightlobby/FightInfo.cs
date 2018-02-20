@@ -10,7 +10,7 @@ namespace TDS.server.instance.lobby {
 
 	partial class FightLobby {
 
-		public void DeathInfoSync ( Client player, uint team, Client killer, uint weapon ) {
+		public void DeathInfoSync ( Client player, int team, Client killer, uint weapon ) {
 			Dictionary<Language, string> killstr = new Dictionary<Language, string> ();
 			if ( killer != null ) {
 				string weaponname = Enum.GetName ( typeof ( WeaponHash ), weapon );
@@ -23,7 +23,7 @@ namespace TDS.server.instance.lobby {
 
 			FuncIterateAllPlayers ( ( target, teamID ) => {
                 Language language = target.GetChar ( ).Language;
-				target.TriggerEvent ( "onClientPlayerDeath", player.Value, (int) team, killstr[language] );
+				target.TriggerEvent ( "onClientPlayerDeath", player.Value, team, killstr[language] );
 			} );
 		}
 

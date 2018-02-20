@@ -17,36 +17,36 @@ namespace TDS.server.instance.lobby {
         public void SpectateTeammate ( Client player, bool forwards = true, int givenIndex = -1, int givenTeam = -1 ) {
 			Character character = player.GetChar ();
 			Client spectating = character.Spectating ?? player;
-			uint teamID = character.Team;
-			if ( alivePlayers[(int)teamID].Count == 0 )
+			int teamID = character.Team;
+			if ( alivePlayers[teamID].Count == 0 )
 				SpectateAllTeams ( player, forwards, givenIndex, givenTeam );
 			else {
-				int index = alivePlayers[(int)teamID].IndexOf ( spectating );
+				int index = alivePlayers[teamID].IndexOf ( spectating );
 				if ( index == -1 )
 					index = 0;
 				if ( forwards ) {
 					index++;
-					if ( index >= alivePlayers[(int)teamID].Count )
+					if ( index >= alivePlayers[teamID].Count )
 						index = 0;
 				} else {
 					index--;
 					if ( index < 0 )
-						index = alivePlayers[(int)teamID].Count - 1;
+						index = alivePlayers[teamID].Count - 1;
 				}
-				Spectate ( player, alivePlayers[(int)teamID][index] );
+				Spectate ( player, alivePlayers[teamID][index] );
 			}
 		}
 
 		public void SpectateAllTeams ( Client player, bool forwards = true, int givenindex = -1, int giventeam = -1 ) {
 			Character character = player.GetChar ();
 			Client spectating = character.Spectating ?? player;
-			uint teamID = giventeam != -1 ? (uint) giventeam : spectating.GetChar ().Team;
+			int teamID = giventeam != -1 ? giventeam : spectating.GetChar ().Team;
 			if ( teamID == 0 )
 				teamID = 1;
-			uint amountteams = (uint) alivePlayers.Count;
+			int amountteams = alivePlayers.Count;
 			uint amounttried = 0;
-			while ( alivePlayers[(int)teamID].Count == 0 ) {
-				teamID += (uint) ( forwards ? 1 : -1 );
+			while ( alivePlayers[teamID].Count == 0 ) {
+				teamID += ( forwards ? 1 : -1 );
 				amounttried++;
 				givenindex = -1;
 				if ( teamID == 0 )
@@ -58,19 +58,19 @@ namespace TDS.server.instance.lobby {
 					return;
 				}
 			}
-			int index = givenindex != -1 ? givenindex : alivePlayers[(int)teamID].IndexOf ( spectating );
+			int index = givenindex != -1 ? givenindex : alivePlayers[teamID].IndexOf ( spectating );
 			if ( index == -1 )
 				index = 0;
 			if ( forwards ) {
 				index++;
-				if ( index >= alivePlayers[(int)teamID].Count )
+				if ( index >= alivePlayers[teamID].Count )
 					index = 0;
 			} else {
 				index--;
 				if ( index < 0 )
-					index = alivePlayers[(int)teamID].Count - 1;
+					index = alivePlayers[teamID].Count - 1;
 			}
-			Spectate ( player, alivePlayers[(int)teamID][index] );
+			Spectate ( player, alivePlayers[teamID][index] );
 		}
 
 		private void Spectate ( Client player, Client target ) {

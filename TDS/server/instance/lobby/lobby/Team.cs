@@ -18,7 +18,6 @@ namespace TDS.server.instance.lobby {
         private static int sTeamsUIDCounter = 1;
 
         public virtual void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
-            uint teamid = (uint) Teams.Count;
             Teams.Add ( name );
             teamSkins.Add ( hash );
             Players.Add ( new List<Client> () );
@@ -49,44 +48,44 @@ namespace TDS.server.instance.lobby {
             for ( int i = 1; i < amountteams; i++ ) {
                 foreach ( Client player in oldplayerslist[i] ) {
                     if ( player.Exists ) {
-                        uint teamID = GetTeamIDWithFewestMember ( ref Players );
+                        int teamID = GetTeamIDWithFewestMember ( ref Players );
                         SetPlayerTeam ( player, teamID );
                     }
                 }
             }
         }
 
-        public uint GetTeamIDWithFewestMember ( ref List<List<Client>> newplayerlist ) {
-            uint lastteamID = 1;
+        public int GetTeamIDWithFewestMember ( ref List<List<Client>> newplayerlist ) {
+            int lastteamID = 1;
             int lastteamcount = newplayerlist[1].Count;
             for ( int k = 2; k < newplayerlist.Count; ++k ) {
                 int count = newplayerlist[k].Count;
                 if ( count < lastteamcount || count == lastteamcount && Utility.Rnd.Next ( 2 ) == 1 ) {             // 0 or 1
-                    lastteamID = (uint) k;
+                    lastteamID = k;
                     lastteamcount = count;
                 }
             }
             return lastteamID;
         }
 
-        public string GetTeamName ( uint teamID ) {
-            return Teams[(int) teamID];
+        public string GetTeamName ( int teamID ) {
+            return Teams[teamID];
         }
 
-        private int GetTeamUID ( uint teamID ) {
-            return teamsUID[(int)teamID];
+        private int GetTeamUID ( int teamID ) {
+            return teamsUID[teamID];
         }
 
-        public void SetPlayerTeam ( Client player, uint teamID, Character character = null ) {
-            Players[(int) teamID].Add ( player );
-            player.SetSkin ( teamSkins[(int) teamID] );
+        public void SetPlayerTeam ( Client player, int teamID, Character character = null ) {
+            Players[teamID].Add ( player );
+            player.SetSkin ( teamSkins[teamID] );
             if ( character == null )
                 character = player.GetChar ();
-            if ( character.Team != (ushort) teamID ) {  // not old team
+            if ( character.Team != teamID ) {  // not old team
                 if ( character == null )
                     character = player.GetChar ();
-                character.Team = (ushort) teamID;
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", (int) teamID, GetTeamUID ( teamID ) );
+                character.Team = teamID;
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerTeamChange", teamID, GetTeamUID ( teamID ) );
             }
         }
 

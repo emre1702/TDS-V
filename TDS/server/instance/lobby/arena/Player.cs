@@ -38,7 +38,7 @@ namespace TDS.server.instance.lobby {
                 RespawnPlayerInSpectateMode ( player );
         }
 
-        private void SetPlayerReadyForRound ( Client player, uint teamID ) {
+        private void SetPlayerReadyForRound ( Client player, int teamID ) {
             player.Armor = (int) Armor;
             player.Health = (int) Health;
             Spectate ( player, player );
@@ -55,7 +55,7 @@ namespace TDS.server.instance.lobby {
             base.RemovePlayer ( player );
 
             Character character = player.GetChar ();
-            uint teamID = character.Team;
+            int teamID = character.Team;
 
             if ( character.Lifes > 0 ) {
                 DmgSys.CheckLastHitter ( player, character, out Client killer );
@@ -106,7 +106,7 @@ namespace TDS.server.instance.lobby {
 
         private void AddPlayerAsPlayer ( Client player ) {
             Character character = player.GetChar ();
-            uint teamID = GetTeamIDWithFewestMember ( ref Players );
+            int teamID = GetTeamIDWithFewestMember ( ref Players );
             SetPlayerTeam ( player, teamID, character );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( player, teamID );

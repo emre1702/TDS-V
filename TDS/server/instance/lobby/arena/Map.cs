@@ -11,7 +11,7 @@ namespace TDS.server.instance.lobby {
 		private List<Map> maps;
         private string mapsJson;      
 
-		private readonly Dictionary<uint, uint> spawnCounter = new Dictionary<uint, uint> ();
+		private readonly Dictionary<int, uint> spawnCounter = new Dictionary<int, uint> ();
 		private Map currentMap;
 		private List<Blip> mapBlips = new List<Blip> ();
 
@@ -26,7 +26,7 @@ namespace TDS.server.instance.lobby {
             return nextmap;
 		}
 
-		private Vector3[] GetMapRandomSpawnData ( uint teamID ) {
+		private Vector3[] GetMapRandomSpawnData ( int teamID ) {
 			Vector3[] list = new Vector3[2];
 			spawnCounter[teamID]++;
 			uint index = spawnCounter[teamID];
@@ -40,11 +40,11 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void CreateTeamSpawnBlips () {
-			foreach ( KeyValuePair<uint, List<Vector3>> entry in currentMap.TeamSpawns ) {
+			foreach ( KeyValuePair<int, List<Vector3>> entry in currentMap.TeamSpawns ) {
                 Blip blip = NAPI.Blip.CreateBlip ( pos: entry.Value[0], dimension: Dimension );
                 blip.Sprite = 491;
-                blip.Color = teamBlipColors[(int)entry.Key];
-                blip.Name = "Spawn " + Teams[(int)entry.Key];
+                blip.Color = teamBlipColors[entry.Key];
+                blip.Name = "Spawn " + Teams[entry.Key];
                 mapBlips.Add ( blip );
             }
         }

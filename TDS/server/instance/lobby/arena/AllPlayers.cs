@@ -8,7 +8,7 @@ namespace TDS.server.instance.lobby
         private void SetAllPlayersInCountdown ( ) {
             spectatingMe = new Dictionary<Client, List<Client>> ();
             FuncIterateAllPlayers ( ( player, teamID ) => {
-                SetPlayerReadyForRound ( player, (uint) teamID );
+                SetPlayerReadyForRound ( player, teamID );
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart" );
                 if ( teamID == 0 )
                     SpectateAllTeams ( player );

@@ -74,7 +74,7 @@
 		private static Vector3 GetCenterBySpawns ( instance.map.Map map ) {
 			int amountteams = map.TeamSpawns.Count;
 			if ( amountteams == 1 ) {
-				foreach ( KeyValuePair<uint, List<Vector3>> entry in map.TeamSpawns ) {
+				foreach ( KeyValuePair<int, List<Vector3>> entry in map.TeamSpawns ) {
 					return entry.Value[0];
 				}
 			} else if ( amountteams > 1 ) {
@@ -116,7 +116,7 @@
 								Vector3 pos = new Vector3 ( reader["x"].ToFloat (), reader["y"].ToFloat (), reader["z"].ToFloat () );
 								map.BombPlantPlaces.Add ( pos );
 							} else if ( reader.Name.StartsWith ( "team" ) ) {
-								uint teamnumber = Convert.ToUInt16 ( reader.Name.Substring ( 4 ) );
+								int teamnumber = Convert.ToInt32 ( reader.Name.Substring ( 4 ) );
 								if ( !map.TeamSpawns.ContainsKey ( teamnumber ) ) {
 									map.TeamSpawns[teamnumber] = new List<Vector3> ();
 									map.TeamRots[teamnumber] = new List<Vector3> ();
