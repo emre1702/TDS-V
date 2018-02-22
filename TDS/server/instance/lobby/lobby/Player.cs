@@ -38,6 +38,11 @@ namespace TDS.server.instance.lobby {
             player.StopSpectating ();
             player.Dimension = Dimension;
 
+            if ( !IsOfficial ) {
+                character.TempStats = new LobbyDeathmatchStats ();
+                character.CurrentStats = character.TempStats;
+            }
+
             player.Position = SpawnPoint.Around ( AroundSpawnPoint );
 
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
@@ -64,8 +69,9 @@ namespace TDS.server.instance.lobby {
             int teamID = character.Team;
             SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
             character.IsLobbyOwner = false;
+            character.CurrentStats = character.ArenaStats;
 
-            Players[(int) teamID].Remove ( player );
+            Players[teamID].Remove ( player );
 
             if ( player.Exists ) 
                 player.Transparency = 255;
