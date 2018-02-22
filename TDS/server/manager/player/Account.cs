@@ -141,7 +141,7 @@
         [ServerEvent(Event.PlayerDisconnected)]
         public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
 			try {
-				SavePlayerData ( player );
+                SavePlayerData ( player );
 				uint adminlvl = player.GetChar ().AdminLvl;
 				if ( adminlvl > 0 )
 					Admin.SetOffline ( player, adminlvl );
