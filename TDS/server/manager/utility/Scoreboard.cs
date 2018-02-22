@@ -33,7 +33,7 @@ namespace TDS.server.manager.utility {
 		}
 
         [RemoteEvent ( "onClientRequestPlayerListDatas" )]
-        public void OnClientRequestPlayerListDatas ( Client player, params object[] args ) {
+        public void OnClientRequestPlayerListDatas ( Client player ) {
             List<Client> players = NAPI.Pools.GetAllPlayers ();
 
             List<ScoreboardPlayerData> playersdata = new List<ScoreboardPlayerData> ();

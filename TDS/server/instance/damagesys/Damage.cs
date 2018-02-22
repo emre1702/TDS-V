@@ -175,17 +175,14 @@
 		}
 
         [RemoteEvent ( "onPlayerHitOtherPlayer" )]
-        public void OnPlayerHitOtherPlayer ( Client player, params dynamic[] args ) {
-            NAPI.Util.ConsoleOutput ( "Damagesys 0 " + args[0].GetType () );
-			Client hitted = NAPI.Player.GetPlayerFromHandle ( (NetHandle) args[0] );
-            NAPI.Util.ConsoleOutput ( "Damagesys: 1" );
+        public void OnPlayerHitOtherPlayer ( Client player, NetHandle hittedhandle, bool headshot ) {
+			Client hitted = NAPI.Player.GetPlayerFromHandle ( hittedhandle );
 			if ( hitted != null ) {
-                NAPI.Util.ConsoleOutput ( "Damagesys: 2 " + hitted.Name );
                 Lobby playerlobby = player.GetChar ().Lobby;
                 if ( playerlobby is FightLobby fightlobby ) {
                     WeaponHash currentweapon = player.CurrentWeapon;
                     NAPI.Util.ConsoleOutput ( currentweapon.ToString () );
-                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, currentweapon, (bool) args[1] );
+                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, currentweapon, headshot );
                 }
 			}
 		}

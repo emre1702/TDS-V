@@ -44,32 +44,32 @@
         }
 
         [RemoteEvent ( "onPlayerTryRegister" )]
-        public void OnPlayerTryRegisterEvent ( Client player, params object[] args ) {
+        public void OnPlayerTryRegisterEvent ( Client player, string password, string email ) {
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) )
                 return;
-            string registerpw = Utility.ConvertToSHA512 ( (string)args[0] );
+            password = Utility.ConvertToSHA512 ( password );
             PlayerUIDs[player.SocialClubName] = ++lastPlayerUID;
-            Register.RegisterPlayer ( player, lastPlayerUID, registerpw, (string)args[1] );
+            Register.RegisterPlayer ( player, lastPlayerUID, password, email );
         }
 
         [RemoteEvent ( "onPlayerChatLoad" )]
-        public void OnPlayerChatLoadEvent ( Client player, params object[] args ) {
-            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), (string) args[0] );
+        public void OnPlayerChatLoadEvent ( Client player, string language ) {
+            OnPlayerLanguageChangeEvent ( player, language );
             SendWelcomeMessage ( player );
         }
 
         [RemoteEvent ( "onPlayerTryLogin" )]
-        public void OnPlayerTryLoginEvent ( Client player, params object[] args ) {
+        public void OnPlayerTryLoginEvent ( Client player, string password ) {
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
-                string loginpw = Utility.ConvertToSHA512 ( (string) args[0] );
-                Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], loginpw );
+                password = Utility.ConvertToSHA512 ( password );
+                Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], password );
             } else
                 player.SendLangNotification ( "account_doesnt_exist" );
         }
 
         [RemoteEvent ( "onPlayerLanguageChange" )]
-        public void OnPlayerLanguageChangeEvent ( Client player, params object[] args ) {
-            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), (string) args[0] );
+        public void OnPlayerLanguageChangeEvent ( Client player, string language ) {
+            player.GetChar ().Language = (Language) Enum.Parse ( typeof ( Language ), language );
         }
 
 
