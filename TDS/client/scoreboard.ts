@@ -86,7 +86,7 @@ function createScoreboard() {
                 let lastwidths = 0;
 				for ( let j = 0; j < titleslength - 1; ++j ) {
                     let index = playerlisttitlesindex[playerlisttitles[j]];
-                    drawText( playertable[i][index], startX + lastwidths + v.columnwidth[playerlisttitles[j]] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true );
+                    drawText( ""+playertable[i][index], startX + lastwidths + v.columnwidth[playerlisttitles[j]] * v.completewidth / 2, startY + ( i - scroll ) * v.columnheight, v.font, v.fontcolor, v.fontscale, true, Alignment.CENTER, true );
                     lastwidths += v.columnwidth[playerlisttitles[j]] * v.completewidth;
 				}
             } else {
