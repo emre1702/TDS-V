@@ -74,14 +74,14 @@
 
 
 		public static void AddAccount ( string name, uint uid ) {
-			PlayerUIDs[name] = uid;
+            PlayerUIDs[name] = uid;
 		}
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage ( "Await.Warning", "CS4014:Await.Warning" )]
-        [ServerEvent(Event.PlayerConnect)]
-        public static async void OnPlayerBeginConnect ( Client player ) {
+        [ServerEvent(Event.PlayerConnected)]
+        public static async void OnPlayerBeginConnect ( Client player ) {       //TODO it's on connected, not connect anymore 
 			try {
-				player.Name = player.SocialClubName;
+                player.Name = player.SocialClubName;
 				if ( socialClubNameBanDict.ContainsKey ( player.SocialClubName ) || addressBanDict.ContainsKey ( player.Address ) ) {
 					DataTable result = await Database.ExecPreparedResult ( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address", new Dictionary<string, string> {
 						{
@@ -108,7 +108,7 @@
 			} catch ( Exception ex ) {
 				Log.Error ( ex.ToString() );
 			}
-		}
+		} 
 
         [ServerEvent(Event.ResourceStart)]
         public static async void OnResourceStart () {
