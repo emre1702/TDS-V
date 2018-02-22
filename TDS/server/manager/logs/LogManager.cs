@@ -28,9 +28,9 @@
             }
 
             public void GetValueString () {
-                builder.Append ( $"{UID}, @name" + Index + $"@, {TargetUID}, '{Type}', @info" + Index + $"@, '{Lobby}', '{Date}')" );
-                logQueryParameters["@name" + Index + "@"] = Name;
-                logQueryParameters["@info" + Index + "@"] = Info;
+                builder.Append ( $"({UID}, '@name{Index}@', {TargetUID}, '{Type}', '@info{Index}@', '{Lobby}', '{Date}')" );
+                logQueryParameters[$"@name{Index}@"] = Name;
+                logQueryParameters[$"@info{Index}@"] = Info;
             }
         }
 
