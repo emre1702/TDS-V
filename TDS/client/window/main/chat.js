@@ -136,6 +136,8 @@ function addChildToChatBody( child, chatbody, index ) {
 }
 
 function addMessage( msg ) {
+    //if ( !msg.startsWith( "RAGE MP" ) )
+    //    alert( msg );
     let ismentioned = isMentioned( msg );
 
     // output in the chatbody when ending with one of chatends //
@@ -197,6 +199,7 @@ $( document ).ready( function () {
             event.preventDefault();
             let msg = chatdata.maininput.val();
             if ( msg ) {
+                msg = msg.replace( /\\/g, "\\\\" ).replace( /\"/g, "\\\"" );
                 if ( msg[0] === "/" ) {
                     msg = msg.substr( 1 );
                     if ( msg.length > 0 ) {
