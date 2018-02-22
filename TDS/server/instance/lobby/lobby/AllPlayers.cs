@@ -62,7 +62,7 @@ namespace TDS.server.instance.lobby {
 
         public void SendAllPlayerChatMessage ( string message, int teamindex = -1 ) {
             FuncIterateAllPlayers ( ( player, teamID ) => {
-                player.SendChatMessage ( message );
+                NAPI.Chat.SendChatMessageToPlayer ( player, message, false );
             }, teamindex );
         }
     }
