@@ -9,15 +9,10 @@ namespace TDS.server.instance.player {
         public uint Kills = 0;
         public uint Assists = 0;
         public uint Deaths = 0;
-        [JsonIgnore]
         public uint Damage = 0;
-        [JsonIgnore]
         public uint TotalKills = 0;
-        [JsonIgnore]
         public uint TotalAssists = 0;
-        [JsonIgnore]
         public uint TotalDeaths = 0;
-        [JsonIgnore]
         public uint TotalDamage = 0;
     }
 
@@ -28,6 +23,7 @@ namespace TDS.server.instance.player {
 		public uint Playtime = 0;
 		public uint Money = 0;
         public LobbyDeathmatchStats ArenaStats;
+        public LobbyDeathmatchStats TempStats;
         public LobbyDeathmatchStats CurrentStats;
         public int Team = 0;
 		public uint Lifes = 0;
