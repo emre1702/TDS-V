@@ -16,6 +16,7 @@
 
 		private async void StartMethods () {
 			try {
+                Map.LoadMapRatingsFromDatabase ();
                 await Map.MapOnStart().ConfigureAwait ( false );
                 NAPI.Task.Run ( () => { 
                     MainMenu.Create ();

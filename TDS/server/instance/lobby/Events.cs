@@ -102,6 +102,13 @@ namespace TDS.server.instance.lobby {
         }
         #endregion
 
+        #region MapRanking
+        [RemoteEvent ( "addRatingToMap")]
+        public void AddRatingToMapEvent ( Client player, params object[] args ) {
+            Map.AddPlayerMapRating ( player, (string) args[0], (uint) args[1] );
+        }
+        #endregion
+
         #region Bomb
         [RemoteEvent ( "onPlayerStartPlanting" )]
         public void onPlayerStartPlantingEvent ( Client player, params object[] args ) {
