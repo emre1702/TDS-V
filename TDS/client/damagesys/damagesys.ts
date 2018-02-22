@@ -19,10 +19,10 @@ mp.events.add( "render", () => {
         if ( armorhp < damagesysdata.lastarmorhp )
             showBloodscreen();
     }
-    checkShooting();
+    //checkShooting();
 } );
 
-function checkShooting() {
+/*function checkShooting() {
     if ( localPlayer.isShooting() ) {
         damagesysdata.shooting = true;
     } else if ( damagesysdata.shooting ) {
@@ -31,9 +31,11 @@ function checkShooting() {
         damagesysdata.shotsdoneinround += ( currentAmmo - ammo );
         currentAmmo = ammo;
     }
-}
+}*/
 
-mp.events.add( "playerWeaponShot", ( hitpos ) => {
+mp.events.add( "playerWeaponShot", ( hitpos, hitentity ) => {
+    mp.gui.chat.push( "" + hitentity + " - " + typeof hitentity );
+    ++damagesysdata.shotsdoneinround;
     let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
     let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as Vector3Mp;
     let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer.handle, 8 ) as RaycastResult;
