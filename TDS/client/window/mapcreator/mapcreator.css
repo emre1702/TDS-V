@@ -15,7 +15,7 @@ body {
     position: absolute;
     display: block;
     right: 0%;
-    width: 20%;
+    width: 22%;
     top: 0%;
     height: 30%;
     background: var(--secondary-color-gradient);
@@ -48,13 +48,13 @@ input[type="number"] {
 
 #leftside {
     float: left;
-    width: 30%;
+    width: 29%;
     height: 100%;
 }
 
 #rightside {
     float: left;
-    width: 70%;
+    width: 71%;
     height: 100%;
 }
 
@@ -152,7 +152,7 @@ table, th, td {
 
 .add_button {
     margin-left: 3%;
-    width: 20%;
+    width: 21%;
     color: white;
     padding: 0px;
     border-color: var(--secondary-color);
@@ -162,7 +162,7 @@ table, th, td {
 
 .goto_button {
     margin-left: 3%;
-    width: 20%;
+    width: 21%;
     color: white;
     padding: 0px;
     border-color: var(--secondary-color);
@@ -174,7 +174,7 @@ table, th, td {
     margin-left: 3%;
     margin-right: 3%;
     padding: 0px;
-    width: 20%;
+    width: 21%;
     color: white;
     border-color: var(--secondary-color);
     background-color: rgba(207, 3, 3, 0.61);
@@ -184,7 +184,7 @@ table, th, td {
 .buttons_shrinker {
     display: inline;
     position: relative;
-    width: 70%;
+    width: 75%;
 }
 
 #team_number_teamspawns {
