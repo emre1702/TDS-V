@@ -10,9 +10,9 @@ namespace TDS.server.manager.utility {
     class ScoreboardPlayerData {
         public string Name;
         public string PlayTime = "-";
-        public int Kills = -1;
-        public int Assists = -1;
-        public int Deaths = -1;
+        public uint Kills = 0;
+        public uint Assists = 0;
+        public uint Deaths = 0;
         public string TeamOrLobby;
     }
 
@@ -54,9 +54,9 @@ namespace TDS.server.manager.utility {
 					if ( character.LoggedIn ) {
 						// character stats //
 						data.PlayTime = GetHoursOpticByMinutes ( character.Playtime );
-						data.Kills = (int) character.CurrentStats.Kills;
-						data.Assists = (int) character.CurrentStats.Assists;
-						data.Deaths = (int) character.CurrentStats.Deaths;
+						data.Kills = character.CurrentStats.Kills;
+						data.Assists = character.CurrentStats.Assists;
+						data.Deaths = character.CurrentStats.Deaths;
 						data.TeamOrLobby = ownLobbyID == 0 ? character.Lobby.Name : character.Lobby.GetTeamName ( character.Team );
 					} else {
                         // default status //
