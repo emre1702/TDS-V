@@ -134,7 +134,7 @@
                 Database.Exec ( $"UPDATE playerarenastats SET arenakills = {arena.Kills}, arenaassists = {arena.Assists}, arenadeaths = {arena.Deaths}" +
                     $", arenadamage = {arena.Damage}, arenatotalkills = {arena.TotalKills}, arenatotalassists = {arena.TotalAssists}, arenatotaldeaths = {arena.TotalDeaths}" +
                     $", arenatotaldamage = {arena.TotalDamage} WHERE uid = {character.UID}" );
-                Database.Exec ( $"UPDATE playersetting SET hitsound = {Convert.ToInt32 ( character.HitsoundOn )} WHERE uid = {character.UID}" );
+                Database.Exec ( $"UPDATE playersettings SET hitsound = {Convert.ToInt32 ( character.HitsoundOn )} WHERE uid = {character.UID}" );
 			}
 		}
 
