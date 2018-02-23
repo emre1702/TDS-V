@@ -12,20 +12,14 @@
 	using logs;
 	using MySql.Data.MySqlClient;
 
-	class Database : Script {
+	class Database {
 
 		/* Variables */
 		private static string connStr;
 
-		/* Constructor */
-
-		public Database () {
-            LoadConnStr ();
-        }
-
-        private void LoadConnStr ( ) {
-            using ( XmlReader reader = XmlReader.Create ( "bridge/resources/TDS-V/config/mysql.xml", new XmlReaderSettings() ) ) {
-                while ( reader.Read() ) {
+        public static async Task LoadConnStr ( ) {
+            using ( XmlReader reader = XmlReader.Create ( "bridge/resources/TDS-V/config/mysql.xml", new XmlReaderSettings { Async = true } ) ) {
+                while ( await reader.ReadAsync() ) {
                     if ( reader.NodeType == XmlNodeType.Element ) {
                         connStr = "server=" + reader["ip"] + ";user=" + reader["user"] + ";database=" + reader["database"] + ";port=" + reader["port"] + ";password=" + reader["password"] + ";";
                     }
@@ -143,7 +137,7 @@
 
         /* Hooks */
 
-        private void OnResourceStart () {
+        private static void OnResourceStart () {
 			using ( MySqlConnection conn = new MySqlConnection ( connStr ) ) {
 				try {
 					NAPI.Util.ConsoleOutput ( "DATABASE: [INFO] Attempting to connect to MySQL" );

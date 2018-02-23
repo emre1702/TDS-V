@@ -3,6 +3,7 @@
     using System;
     using GTANetworkAPI;
     using map;
+    using TDS.server.manager.database;
     using TDS.server.manager.lobby;
 
     class ResourceStart : Script {
@@ -16,6 +17,7 @@
 
 		private async void StartMethods () {
 			try {
+                await Database.LoadConnStr ();
                 Map.LoadMapRatingsFromDatabase ();
                 await Map.MapOnStart().ConfigureAwait ( false );
                 NAPI.Task.Run ( () => { 
