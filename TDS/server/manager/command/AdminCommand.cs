@@ -10,7 +10,9 @@
 	using lobby;
 	using logs;
 	using player;
-	using utility;
+    using TDS.server.instance.lobby;
+    using TDS.server.instance.lobby.interfaces;
+    using utility;
 
 	class AdminCommand : Script {
 		private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
@@ -33,11 +35,12 @@
 		[Command ( "next", Alias = "endround", Description = "Ends the round.", Group = "supporter,lobby-owner" )]
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
-				if ( player.GetChar ().Lobby is instance.lobby.Arena lobby ) {
+                Lobby lobby = player.GetChar ().Lobby;
+                if ( player.GetChar ().Lobby is IRound roundlobby ) {
 					// LOG //
 					Log.Admin ( "next", player, "0", lobby.Name );
-					/////////
-					lobby.EndRoundEarlier ( enums.RoundEndReason.COMMAND, player.Name );
+                    /////////
+                    roundlobby.EndRoundEarlier ( enums.RoundEndReason.COMMAND, player.Name );
 				}
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
