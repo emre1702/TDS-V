@@ -19,6 +19,7 @@ namespace TDS.server.instance.lobby {
         private uint countdownTime = 5 * 1000;
         private uint roundTime = 4 * 60 * 1000;
         public uint RoundEndTime = 8 * 1000;
+        private uint mapShowTime = 4 * 1000;
         private long startTick;
         private bool mixTeamsAfterRound = true;
 
@@ -48,7 +49,7 @@ namespace TDS.server.instance.lobby {
                 List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
                 SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.SyncData.Name, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
 
-                roundStartTimer = Timer.SetTimer ( StartRoundCountdown, RoundEndTime / 2 );
+                roundStartTimer = Timer.SetTimer ( StartRoundCountdown, mapShowTime );
             } catch ( Exception ex ) {
                 NAPI.Util.ConsoleOutput ( ex.ToString() );
             }
@@ -95,7 +96,7 @@ namespace TDS.server.instance.lobby {
             if ( currentMap != null && currentMap.SyncData.Type == MapType.BOMB )
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
-                roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime / 2 );
+                roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime );
                 FuncIterateAllPlayers ( ( player, teamID ) => {
                     NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundEnd", reasonlangs[player.GetChar().Language] );
                 } );                     
