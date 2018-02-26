@@ -10,9 +10,10 @@ let cleancssrequire = require( "clean-css" );
 
 let files = [
     { path: "window/choice/", html: "choice.html", js: ["choice.js"], css: ["window/choice/choice.css"], reserved: ["setLobbyChoiceLanguage"] },
-    { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js"], css: ["window/main/chat.css", "window/main/main.css", "window/main/mapmanager.css"],
+    { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js", "roundend.js"], 
+        css: ["window/main/chat.css", "window/main/main.css", "window/main/mapmanager.css", "window/main/roundend.css"],
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason"]
+            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings"]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     { path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], css: ["window/mapcreator/mapcreator.css"],
@@ -21,12 +22,13 @@ let files = [
     }
 ];
 let standalonejsfiles = [
-    { path: "window/js/", js: ["copyclipboard.js", "dialog.js", "draggable.js"],
-        reserved: [ ["copyTextToClipboard"], ["showDialog", "closeDialog"], ["setElementDraggable"] ]
+    { path: "window/js/", js: ["copyclipboard.js", "dialog.js", "draggable.js", "starrating.js"],
+        reserved: [["copyTextToClipboard"], ["showDialog", "closeDialog"], ["setElementDraggable"],
+        ["SimpleStarRating", "attr", "disable", "enable", "setCurrentRating", "setDefaultRating", "onrate", "showRating", "showCurrentRating", "showDefaultRating", "clearRating", "starClick"]]
     },
     { path: "window/jquery-ui/", js: ["jquery-ui.autocomplete.js"], reserved: [ ["addAutocomplete"] ] } 
 ];
-let standalonecssfiles = [{ path: "window/css/", css: ["dialog.css", "scrollbar.css", "style.css", "toggleswitch.css"] }];
+let standalonecssfiles = [{ path: "window/css/", css: ["dialog.css", "scrollbar.css", "style.css", "toggleswitch.css", "starrating.css"] }];
 
 let minifysettings = {
     compress: {
