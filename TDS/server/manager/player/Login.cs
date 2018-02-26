@@ -9,7 +9,8 @@
 	using instance.player;
 	using lobby;
 	using logs;
-	using utility;
+    using TDS.server.manager.map;
+    using utility;
 
 	static class Login {
 
@@ -48,6 +49,8 @@
 
                             if ( character.AdminLvl > 0 )
                                 Admin.SetOnline ( player, character.AdminLvl );
+
+                            Map.SendPlayerHisRatings ( player );
 
                             NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
 

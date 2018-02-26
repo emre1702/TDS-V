@@ -200,6 +200,21 @@
                 case 15:
                     player.TriggerEvent ( "testit", new float[] { 0.1f, 1.2f, 2.3f } );
                     break;
+
+                case 16:
+                    NAPI.Chat.SendChatMessageToPlayer ( player, "Hallo !{#FF0000}Bonus!" );
+                    NAPI.Chat.SendChatMessageToPlayer ( player, "Hallo !{#FF0000}Bonus!", false );
+
+                    NAPI.Chat.SendChatMessageToPlayer ( player, "Hallo "+"!{255 0 0 255}Bonus!" );
+                    NAPI.Chat.SendChatMessageToPlayer ( player, "Hallo !{255 0 0 255}Bonus!", false );
+
+                    string b = "Bonus";
+                    NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{#FF0000}}{b}!" );
+                    NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{#FF0000}}{b}!", false );
+
+                    NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{255 0 0}}{b}!" );
+                    NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{255 0 0}}{b}!", false );
+                    break;
                     
             }
         }

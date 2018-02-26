@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,7 +24,7 @@ namespace TDS.server.manager.map {
             if ( !playerMapRating[uid].ContainsKey ( mapname ) )
                 Database.Exec ( $"INSERT INTO playermaprating (uid, mapname, rating) VALUES ({uid}, '{mapname}', {rating});" );
             else {
-                Database.Exec ( $"UPDATE playermaprating SET rating = {rating} WHERE uid = {uid} AND mapname = '{mapname}');" );
+                Database.Exec ( $"UPDATE playermaprating SET rating = {rating} WHERE uid = {uid} AND mapname = '{mapname}';" );
                 RemoveRatingFromMap ( mapname, playerMapRating[uid][mapname] );
             }
             AddRatingToMap ( mapname, rating );
@@ -46,13 +47,19 @@ namespace TDS.server.manager.map {
         private static void AddRatingToMap ( string mapname, uint rating ) {
             if ( !mapRatingDict.ContainsKey ( mapname ) )
                 mapRatingDict[mapname] = new uint[] { 0, 0, 0, 0, 0 };
-            ++mapRatingDict[mapname][rating];
+            ++mapRatingDict[mapname][rating-1];
         }
 
         private static void RemoveRatingFromMap ( string mapname, uint rating ) {
             if ( !mapRatingDict.ContainsKey ( mapname ) )
                 return;
-            --mapRatingDict[mapname][rating];
+            --mapRatingDict[mapname][rating-1];
+        }
+
+        public static void SendPlayerHisRatings ( Client player ) {
+            uint uid = player.GetChar ().UID;
+            if ( playerMapRating.ContainsKey ( uid ) )
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientLoadOwnMapRatings", JsonConvert.SerializeObject ( playerMapRating[uid] ) );
         }
 
     }
