@@ -44,29 +44,38 @@ function clearMapVotingsInBrowser() {
 }
 
 function addVoteToMapInMapMenuBrowser( mapname: string, oldvotemapname: string ) {
-    mainbrowserdata.browser.execute( "addVoteToMapVoting ( '" + mapname + "', '" + oldvotemapname + "' ); " );
+    mainbrowserdata.browser.execute( "addVoteToMapVoting('" + mapname + "', '" + oldvotemapname + "');" );
 }
 
 function loadMapFavouritesInBrowser( mapfavouritesjson: string ) {
-    mainbrowserdata.browser.execute( "loadFavouriteMaps ( '" + mapfavouritesjson + "');" );
+    mainbrowserdata.browser.execute( "loadFavouriteMaps('" + mapfavouritesjson + "');" );
 }
 
 function toggleCanVoteForMapWithNumpadInBrowser( bool: boolean ) {
-    mainbrowserdata.browser.execute( "toggleCanVoteForMapWithNumpad ( " + bool + " )" );
+    mainbrowserdata.browser.execute( "toggleCanVoteForMapWithNumpad(" + bool + ");" );
 }
 
 function loadOrderNamesInBrowser( ordernamesjson: string ) {
-    mainbrowserdata.browser.execute( "loadOrderNames ( '" + ordernamesjson + "');" );
+    mainbrowserdata.browser.execute( "loadOrderNames('" + ordernamesjson + "');" );
 }
 
-function showRoundEndReason( reason: string ) {
+function showRoundEndReason( reason: string, currentmap: string ) {
     mainbrowserdata.roundendreasonshowing = true;
-    mainbrowserdata.browser.execute( "showRoundEndReason (`" + reason + "`);" );
+    mainbrowserdata.browser.execute( "showRoundEndReason(`" + reason + "`, `" + currentmap + "`);" );
 }
 
 function hideRoundEndReason() {
     if ( mainbrowserdata.roundendreasonshowing ) {
-        mainbrowserdata.browser.execute( "hideRoundEndReason ();" );
+        mainbrowserdata.browser.execute( "hideRoundEndReason();" );
         mainbrowserdata.roundendreasonshowing = false;
     }
 }
+
+mp.events.add( "onClientLoadOwnMapRatings", ( data ) => {
+    mainbrowserdata.browser.execute( "loadMyMapRatings(`" + data + "`);" );
+} );
+
+//from roundend.js//
+mp.events.add( "sendMapRating", ( currentmap: string, rating: number ) => {
+    mp.events.callRemote( "addRatingToMap", currentmap, rating );
+} );
