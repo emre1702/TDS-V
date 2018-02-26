@@ -1,14 +1,16 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 
-let rounddata = {
+var rounddata = {
 	mapinfo: null as cText,
 	isspectator: true,
-	infight: false
+    infight: false,
+    currentMap: "" as string
 }
 
 
 function setMapInfo( mapname ) {
+    rounddata.currentMap = mapname;
     if ( rounddata.mapinfo == null )
         rounddata.mapinfo = new cText( mapname, 0.5, 0.95, 0, [255, 255, 255, 255], [0.5, 0.5], true, Alignment.CENTER, true );
     else
@@ -16,12 +18,12 @@ function setMapInfo( mapname ) {
 }
 
 
-mp.events.add ( "render", () => {
+/* mp.events.add ( "render", () => {
 	if ( !rounddata.infight ) {
 		//API.disableControlThisFrame( 24 );
 		//API.disableControlThisFrame( 257 );
 	}
-} );
+} ); */
 
 
 function removeMapInfo() {
