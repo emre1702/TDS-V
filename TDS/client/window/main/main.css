@@ -39,20 +39,3 @@ text {
     top: 60%;
     font-size: 1.3em;
 }
-
-#round_end_reason_container {
-    display: none;
-    position: absolute;
-    left: 0px;
-    width: 100%;
-    top: 0px;
-    height: 100%;
-    text-align: center;
-    font-size: 7em;
-    color: white;
-}
-
-#round_end_reason {
-    display: table-cell;
-    vertical-align: middle;
-}

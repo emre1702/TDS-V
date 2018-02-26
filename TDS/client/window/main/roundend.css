@@ -1,0 +1,32 @@
+﻿#round_end_reason_container {
+    display: none;
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    top: 0px;
+    height: 100%;
+    text-align: center; 
+}
+
+#round_end_reason {
+    display: table-row;
+    position: absolute;
+    top: 20%;
+    left: 0%;
+    width: 100%;
+    border-color: transparent;
+    vertical-align: middle;
+    font-size: 5em;
+    color: white;
+    z-index: 1000;
+}
+
+#map_rating_stars {
+    vertical-align: middle;
+    position: absolute;
+    left: 40%;
+    width: 20%;
+    top: 70%;
+    color: #FFD700;
+    font-size: 5em;
+}
