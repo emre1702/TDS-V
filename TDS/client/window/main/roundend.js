@@ -5,7 +5,7 @@ let currentMap;
 let starRating = new SimpleStarRating( $( "#map_rating_stars" )[0], function ( rating ) {
     if ( !( currentMap in myMapRating ) || myMapRating[currentMap] !== rating ) {
         myMapRating[currentMap] = rating;
-        mp.trigger( "sendMapRanking", currentMap, rating );
+        mp.trigger( "sendMapRating", currentMap, rating );
         starRating.disable();
     }
 } );
