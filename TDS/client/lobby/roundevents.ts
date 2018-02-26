@@ -66,7 +66,7 @@ mp.events.add( "onClientRoundEnd", function ( reason ) {
     removeRoundInfo();
     toggleFightControls( false );
     clearMapVotingsInBrowser();
-    showRoundEndReason( reason );
+    showRoundEndReason( reason, rounddata.currentMap );
 } );
 
 
