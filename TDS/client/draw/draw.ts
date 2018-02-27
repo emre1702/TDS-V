@@ -2,7 +2,7 @@
 
 let drawdrawings = [];
 
-function getStringWidth( text: string, scale: [number, number], font: number ) {
+function getStringWidth ( text: string, scale: [number, number], font: number ): number {
     mp.game.ui.setTextEntryForWidth( "STRING" );
     mp.game.ui.addTextComponentSubstringPlayerName( text );
     mp.game.ui.setTextFont( font );
@@ -12,47 +12,13 @@ function getStringWidth( text: string, scale: [number, number], font: number ) {
 }
 
 function drawText( text: string, x: number, y: number, font: number, color: [number, number, number, number], scale: [number, number], outline: boolean, alignment: number, relative: boolean ) {
-    /*mp.game.ui.setTextJustification( alignment );
-    if ( alignment == Alignment.RIGHT )
-        mp.game.ui.setTextWrap ( 0, x );
-
-    mp.game.ui.setTextEntry( "CELL_EMAIL_BCON" );
-    mp.game.ui.addTextComponentSubstringPlayerName ( text );
-    mp.game.ui.setTextFont( font );
-    mp.game.ui.setTextScale( scale[0], scale[1] );
-    mp.game.ui.setTextColour( color[0], color[1], color[2], color[3] );
-
-    //mp.game.graphics.drawText( text, [relative ? x : x / res.x, relative ? y : y / res.y], { font: font, color: color, scale: scale, outline: outline } );
-    mp.game.invoke( "0x6C188BE134E074AA", text );
-    mp.game.ui.drawText( relative ? x : x / res.x, relative ? y : y / res.y )
-
-    //mp.gui.chat.push( text + " - " + ( relative ? x : x / res.x ) + " - " + ( relative ? y : y / res.y ) + " - " + font );
-    //mp.gui.chat.push( color + " - " + scale + " - " + outline ); */
-
     let xpos = relative ? x : x / res.x;
     let ypos = relative ? y : y / res.y;   
 
-    // workaround //
-    /*if ( alignment == Alignment.CENTER ) 
-        thetext = text + "               ";
-    else if ( alignment == Alignment.LEFT )  
-        thetext = text + "                ";
-    else
-        thetext = "                " + text;*/
-    /////////////////
-
-    if ( alignment == Alignment.LEFT )
-        xpos += getStringWidth( text, scale, font );
-    else if ( alignment == Alignment.RIGHT )
-        xpos -= getStringWidth( text, scale, font );
-
     mp.game.graphics.drawText( text, [xpos, ypos], { font, color, scale, outline } );
-
-
-    //mp.game.graphics.drawText( thetext, [xpos, ypos], { font, color, scale, outline } );
 }
 
-function drawRectangle( x: number, y: number, width: number, length: number, color: [number, number, number, number], alignment = Alignment.LEFT, relative = true ) {
+function drawRectangle( x: number, y: number, width: number, length: number, color: [number, number, number, number], alignment: Alignment = Alignment.LEFT, relative: boolean = true ) {
     let xpos = relative ? x : x / res.x;
     let ypos = relative ? y : y / res.y;
     let sizex = relative ? width : width / res.x;
@@ -110,7 +76,7 @@ mp.events.add( "render", () => {
 	}
 } );
 
-function getBlendValue( tick, start, end, starttick, endtick ) {
+function getBlendValue( tick: number, start: number, end: number, starttick: number, endtick: number ) {
 	let progress = ( tick - starttick ) / ( endtick - starttick );
 	if ( progress > 1 )
 		progress = 1;
@@ -127,24 +93,28 @@ function removeClassDraw() {
 		return false;
 }
 
-function blendClassDrawTextAlpha( enda: number, mstime ) {
+function blendClassDrawTextAlpha( enda: number, mstime: number ) {
 	this.enda = enda;
 	this.endastarttick = getTick();
 	this.endaendtick = this.endastarttick + mstime;
 }
 
-function blendClassDrawTextScale( endscale: [number, number], mstime ) {
+function blendClassDrawTextScale( endscale: [number, number], mstime: number ) {
 	this.endscale = endscale;
 	this.endscalestarttick = getTick();
 	this.endscaleendtick = this.endscalestarttick + mstime;
 }
 
-function getClassDrawText() {
-	return this.text;
-}
-
 function setClassDrawText ( text ) {
-	this.text = text;
+    if ( this.alignment == Alignment.LEFT ) {
+        this.position[0] -= getStringWidth( this.text, this.scale, this.font ) / 2;
+        this.position[0] += getStringWidth( text, this.scale, this.font ) / 2;
+    } else if ( this.alignment == Alignment.RIGHT ) {
+        this.position[0] += getStringWidth( this.text, this.scale, this.font ) / 2;
+        this.position[0] -= getStringWidth( text, this.scale, this.font ) / 2;
+    }
+
+    this.text = text;
 }
 
 
@@ -158,12 +128,11 @@ class cLine {
 
 	remove = removeClassDraw;
 
-	constructor( start, end, r, g, b, a ) {
-		this.type = "line";
+	constructor( start: [number, number], end: [number, number], color: [number, number, number, number] ) {
 		this.activated = true;
 		this.start = start;
 		this.end = end;
-		this.color = [r, g, b, a];
+		this.color = color;
 		this.remove = removeClassDraw;
 		drawdrawings.push( this );
 	}
@@ -184,7 +153,7 @@ class cRectangle {
         this.size[0] = newwidth;
     }
 
-    constructor( xpos, ypos, width, height, color, alignment = Alignment.LEFT, relative = true ) {
+    constructor( xpos: number, ypos: number, width: number, height: number, color: [number, number, number, number], alignment: Alignment = Alignment.LEFT, relative: boolean = true ) {
 		this.position = [xpos, ypos];
 		this.size = [width, height];
         this.color = color;
@@ -218,10 +187,9 @@ class cText {
 	remove = removeClassDraw;
 	blendTextAlpha = blendClassDrawTextAlpha;
 	blendTextScale = blendClassDrawTextScale;
-	getText = getClassDrawText;
 	setText = setClassDrawText;
 
-	constructor ( text: string, x: number, y: number, font: number, color: [number, number, number, number], scale: [number, number], outline: boolean, alignment: Alignment, relative: boolean ) {
+    constructor( text: string, x: number, y: number, font: number, color: [number, number, number, number], scale: [number, number], outline: boolean = true, alignment: Alignment = Alignment.LEFT, relative: boolean = true ) {
 		this.text = text;
         this.position = [x, y];
         this.font = font;
@@ -231,11 +199,16 @@ class cText {
         this.alignment = alignment;
         this.relative = relative;
 
+        if ( alignment == 1 )
+            this.position[0] += getStringWidth( text, scale, font ) / 2;
+        else if ( alignment == 2 )
+            this.position[0] -= getStringWidth( text, scale, font ) / 2;
+
 		drawdrawings.push( this );
 	}
 }
 
-function cEditBox( defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20, a = 187, scale = 1.0, textr = 255, textg = 255, textb = 255, texta = 255, font = 0, justify = 0, shadow = false, outline = false, wordwrap = 0 ) {
+/* function cEditBox( defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20, a = 187, scale = 1.0, textr = 255, textg = 255, textb = 255, texta = 255, font = 0, justify = 0, shadow = false, outline = false, wordwrap = 0 ) {
 	this.type = "editbox";
 	this.activated = true;
 	this.text = defaulttext;
@@ -258,5 +231,5 @@ function cEditBox( defaulttext, xpos, ypos, wsize, hsize, r = 20, g = 20, b = 20
 	this.wordwrap = wordwrap == 0 ? Math.floor( wsize ) : wordwrap;
 	this.remove = removeClassDraw;
 	drawdrawings.push( this );
-}
+} */
 	
