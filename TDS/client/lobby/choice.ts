@@ -35,8 +35,3 @@ function destroyLobbyChoiceBrowser() {
     lobbychoicedata.browser = null;
     toggleCursor( false );
 }
-
-mp.events.add( "onClientPlayerJoinLobby", ( lobbyid ) => {
-    if ( lobbyid != 0 ) // mainmenu
-	    destroyLobbyChoiceBrowser();
-} );

@@ -2,6 +2,8 @@
 
 mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps ) => {
     log( "onClientPlayerJoinLobby" );
+    if ( lobbysettings.id == 0 && lobbyid != 0 ) // mainmenu
+        destroyLobbyChoiceBrowser();
     lobbysettings.id = lobbyid;
     if ( typeof isspectator !== "undefined" ) {
         rounddata.isspectator = isspectator;
