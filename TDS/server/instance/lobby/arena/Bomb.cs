@@ -33,9 +33,8 @@ namespace TDS.server.instance.lobby {
 		private List<Blip> bombPlantBlips = new List<Blip> ();
 		private Object bomb;
 		private Client bombAtPlayer;
-		private Timer bombDetonateTimer,
-		              bombPlantTimer,
-	                  bombDefuseTimer;
+        private Timer bombDetonateTimer,
+                      bombPlantDefuseTimer;
 		private Client planter;
 		private Blip plantBlip;
 		private Marker bombTakeMarker;
@@ -168,14 +167,14 @@ namespace TDS.server.instance.lobby {
 			if ( bomb != null ) {
                 if ( status == LobbyStatus.ROUND ) {
 					if ( bombDetonateTimer == null ) {
-						if ( bombPlantTimer != null ) {
-							bombPlantTimer.Kill ();
-							bombPlantTimer = null;
+						if ( bombPlantDefuseTimer != null ) {
+                            bombPlantDefuseTimer.Kill ();
+                            bombPlantDefuseTimer = null;
 						}
 						if ( !player.Dead ) {
 							if ( player.CurrentWeapon == WeaponHash.Unarmed ) {
 								player.PlayAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Utility.AnimationFlags.Loop ) );
-								bombPlantTimer = Timer.SetTimer ( () => PlantBomb ( player ), bombPlantTime );
+                                bombPlantDefuseTimer = Timer.SetTimer ( () => PlantBomb ( player ), bombPlantTime );
 							}
 						}
 					}
@@ -184,9 +183,9 @@ namespace TDS.server.instance.lobby {
 		}
 
         public void StopBombPlanting ( Client player ) {
-			if ( bombPlantTimer != null ) {
-				bombPlantTimer.Kill ();
-				bombPlantTimer = null;
+			if ( bombPlantDefuseTimer != null ) {
+                bombPlantDefuseTimer.Kill ();
+                bombPlantDefuseTimer = null;
 			}
 			player.StopAnimation ();
 		}
@@ -195,15 +194,15 @@ namespace TDS.server.instance.lobby {
 			if ( bomb != null ) {
                 if ( status == LobbyStatus.ROUND ) {
 					if ( bombDetonateTimer != null ) {
-						if ( bombDefuseTimer != null ) {
-							bombDefuseTimer.Kill ();
-							bombDefuseTimer = null;
+						if ( bombPlantDefuseTimer != null ) {
+                            bombPlantDefuseTimer.Kill ();
+                            bombPlantDefuseTimer = null;
 						}
 						if ( !player.Dead ) {
 							if ( player.CurrentWeapon == WeaponHash.Unarmed ) {
 								if ( bombAtPlayer == null ) {
 									player.PlayAnimation ( "misstrevor2ig_7", "plant_bomb", (int) ( Utility.AnimationFlags.Loop ) );
-									bombDefuseTimer = Timer.SetTimer ( () => DefuseBomb ( player ), bombDefuseTime );
+                                    bombPlantDefuseTimer = Timer.SetTimer ( () => DefuseBomb ( player ), bombDefuseTime );
 								}
 							}
 						}
@@ -213,9 +212,9 @@ namespace TDS.server.instance.lobby {
 		}
 
         public void StopBombDefusing ( Client player ) {
-            if ( bombDefuseTimer != null ) {
-                bombDefuseTimer.Kill ();
-                bombDefuseTimer = null;
+            if ( bombPlantDefuseTimer != null ) {
+                bombPlantDefuseTimer.Kill ();
+                bombPlantDefuseTimer = null;
             }
             player.StopAnimation ();
         }
@@ -245,13 +244,9 @@ namespace TDS.server.instance.lobby {
 
     
 		private void StopRoundBombAtRoundEnd () {
-			if ( bombPlantTimer != null ) {
-				bombPlantTimer.Kill ();
-				bombPlantTimer = null;
-			}
-			if ( bombDefuseTimer != null ) {
-				bombDefuseTimer.Kill ();
-				bombDefuseTimer = null;
+			if ( bombPlantDefuseTimer != null ) {
+                bombPlantDefuseTimer.Kill ();
+                bombPlantDefuseTimer = null;
 			}
 			if ( bombDetonateTimer != null ) {
 				bombDetonateTimer.Kill ();
