@@ -11,7 +11,7 @@ namespace TDS.server.instance.lobby {
         public List<string> Teams = new List<string> ();
         internal readonly List<PedHash> teamSkins = new List<PedHash>();
         public List<string> TeamColorStrings = new List<string>();
-        public readonly List<uint> teamColorsList = new List<uint>();
+        public readonly List<Color> teamColorsList = new List<Color> ();
         internal readonly List<int> teamBlipColors = new List<int>();
 
         private List<int> teamsUID = new List<int> ();
@@ -26,9 +26,7 @@ namespace TDS.server.instance.lobby {
             TeamColorStrings.Add ( colorstring );
             teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
             Color color = Colors.FontColor[colorstring];
-            teamColorsList.Add ( (uint) color.Red );
-            teamColorsList.Add ( (uint) color.Green );
-            teamColorsList.Add ( (uint) color.Blue );
+            teamColorsList.Add ( color );
 
             teamsUID.Add ( sTeamsUIDCounter++ );
         }

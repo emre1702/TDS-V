@@ -6,7 +6,7 @@ let roundinfo = {
 	roundtime: 0,
 	starttick: 0,
 	teamnames: [],
-	teamcolors: [],
+    teamcolors: [] as { Red: number, Green: number, Blue: number }[],
 	drawclasses: {
 		text: {
 			time: null as cText,
@@ -111,25 +111,25 @@ function roundStartedRoundInfo( wastedticks ) {
 	let leftteamamount = Math.ceil( roundinfo.teamnames.length / 2 );
 	for ( let i = 0; i < leftteamamount; i++ ) {
         let startx = trdata.xpos - teamrdata.width * ( i + 1 );
-        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[i].Red, roundinfo.teamcolors[i].Green, roundinfo.teamcolors[i].Blue, teamrdata.a] );
         roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
     }
 	for ( let j = 0; j < roundinfo.teamnames.length - leftteamamount; j++ ) {
 		let startx = trdata.xpos + trdata.width + teamrdata.width * j;
         let i = leftteamamount + j;
-        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[0 + i * 3], roundinfo.teamcolors[1 + i * 3], roundinfo.teamcolors[2 + i * 3], teamrdata.a] );
+        roundinfo.drawclasses.rect.teams[i] = new cRectangle( startx, teamrdata.ypos, teamrdata.width, teamrdata.height, [roundinfo.teamcolors[i].Red, roundinfo.teamcolors[i].Green, roundinfo.teamcolors[i].Blue, teamrdata.a] );
         roundinfo.drawclasses.text.teams[i] = new cText( roundinfo.teamnames[i] + "\n" + roundinfo.aliveinteams[i] + "/" + roundinfo.amountinteams[i], startx + teamrdata.width / 2, teamdata.ypos, 0, teamdata.color, teamdata.scale, true, Alignment.CENTER, true );
     }
 
 	mp.events.add( "render", refreshRoundInfo );
 }
 
-function addTeamInfos ( teamnames, teamcolors ) {
+function addTeamInfos( teamnames, teamcolors: { Red: number, Green: number, Blue: number }[] ) {
 	for ( let i = 1; i < teamnames.length; i++ ) {
 		roundinfo.teamnames[i - 1] = teamnames[i];
 	}
-	for ( let i = 3; i < teamcolors.length; i++ ) {
-		roundinfo.teamcolors[i - 3] = teamcolors[i];
+	for ( let i = 1; i < teamcolors.length; i++ ) {
+		roundinfo.teamcolors[i - 1] = teamcolors[i];
 	}
 }
 
