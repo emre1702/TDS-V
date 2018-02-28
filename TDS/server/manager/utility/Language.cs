@@ -122,7 +122,9 @@
             }
 		};
 
-		public static Dictionary<Language, string> GetLangDictionary ( string type, params string[] args ) {
+        private static StringBuilder builder = new StringBuilder ();
+
+        public static Dictionary<Language, string> GetLangDictionary ( string type, params string[] args ) {
 			Dictionary<Language, string> returndict = new Dictionary<Language, string> ();
 			foreach ( Language language in Enum.GetValues ( typeof ( Language ) ) ) {
 				returndict[language] = GetLang ( language, type, args );
@@ -144,7 +146,7 @@
 		}
 
 		public static void SendLangMessage ( this Client player, string type, params string[] args ) {
-			player.SendChatMessage ( player.GetLang ( type, args ) );
+			NAPI.Chat.SendChatMessageToPlayer ( player, player.GetLang ( type, args ) );
 		}
 
 		public static void SendLangNotification ( this Client player, string type, params string[] args ) {
@@ -153,11 +155,13 @@
 
 		public static string GetReplaced ( string str, params string[] args ) {
 			if ( args.Length > 0 ) {
-				StringBuilder builder = new StringBuilder ( str );
-				for ( int i = 0; i < args.Length; i++ ) {
+                builder.Append ( str );
+				for ( int i = 0; i < args.Length; ++i ) {
 					builder.Replace ( "{" + ( i + 1 ) + "}", args[i] );
 				}
-				return builder.ToString ();
+                string result = builder.ToString ();
+                builder.Clear ();
+                return result;
 			}
 			return str;
 		}
@@ -166,7 +170,7 @@
 			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
 			List<Client> players = NAPI.Pools.GetAllPlayers ();
 			foreach ( Client player in players ) {
-				player.SendChatMessage ( texts[player.GetChar ().Language] );
+				NAPI.Chat.SendChatMessageToPlayer ( player, texts[player.GetChar ().Language] );
 			}
 		}
 
