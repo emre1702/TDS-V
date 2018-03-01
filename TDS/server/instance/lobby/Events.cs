@@ -20,7 +20,6 @@ namespace TDS.server.instance.lobby {
                     lobby.AddPlayer ( player, spectator );
             } else {
                 /* player.sendNotification (  lobby doesn't exist ); */
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );  //TODO is that needed?
             }
         }
 

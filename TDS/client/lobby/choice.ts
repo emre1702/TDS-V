@@ -22,11 +22,10 @@ mp.events.add( "createLobby", function () {
 
 } );
 
-mp.events.add( "onClientJoinMainMenu", () => {
-	log( "onClientJoinMainMenu" );
+function startLobbyChoiceBrowser() {
 	lobbychoicedata.browser = mp.browsers.new( "package://TDS-V/window/choice/index.html" );
     toggleCursor( true );
-} );
+}
 
 function destroyLobbyChoiceBrowser() {
     if ( lobbychoicedata.browser === null )

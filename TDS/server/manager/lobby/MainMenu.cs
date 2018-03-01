@@ -16,7 +16,6 @@
 
 		public static void Join ( Client player ) {
 			TheLobby.AddPlayer ( player, true );
-			NAPI.ClientEvent.TriggerClientEvent ( player, "onClientJoinMainMenu" );
 		}
 	}
 

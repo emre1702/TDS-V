@@ -2,8 +2,11 @@
 
 mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps ) => {
     log( "onClientPlayerJoinLobby" );
-    if ( lobbysettings.id == 0 && lobbyid != 0 ) // mainmenu
+    if ( lobbysettings.id == 0 && lobbyid != 0 ) // not mainmenu
         destroyLobbyChoiceBrowser();
+    else if ( lobbyid == 0 )  // mainmenu
+        mainMenuJoined();
+
     lobbysettings.id = lobbyid;
     if ( typeof isspectator !== "undefined" ) {
         rounddata.isspectator = isspectator;
@@ -39,9 +42,10 @@ mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
 	}
 } );
 
-mp.events.add( "onClientJoinMainMenu", () => {
-	mp.game.cam.doScreenFadeIn( 100 );
-} );
+function mainMenuJoined() {
+    mp.game.cam.doScreenFadeIn( 100 );
+    startLobbyChoiceBrowser();
+}
 
 mp.events.add( "onClientPlayerJoinMapCreatorLobby", () => {
     startMapCreator();
