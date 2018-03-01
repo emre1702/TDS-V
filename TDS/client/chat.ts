@@ -1,9 +1,9 @@
 ﻿/// <reference path="types-ragemp/index.d.ts" />
  
 mp.events.add( "onChatLoad", () => {
-    loadLanguage();
+    loadSettings();
     mainbrowserdata.browser.execute( "loadUserName ('" + mp.players.local.name + "');" );
-    callRemoteCooldown( "onPlayerChatLoad", languagesetting );
+    callRemoteCooldown( "onPlayerChatLoad", settingsdata.language, settingsdata.hitsound );
 } );
 
 
