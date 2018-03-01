@@ -12,8 +12,12 @@
 
 	class PlayerCommand : Script {
 
-		#region Lobby
-		[Command ( "leave", Alias = "leavelobby,lobbyleave", Description = "Leaves the lobby", Group = "user" )]
+        #region Lobby
+        [CommandAlias ( "leavelobby" )]
+        //[CommandAlias ( "lobbyleave" )]
+        [CommandDescription ( "Leaves the lobby" )]
+        [CommandGroup ( "user" )]
+        [Command ( "leave" )]
 		public static void Leave ( Client player ) {
 			Lobby lobby = player.GetChar ().Lobby;
 			if ( lobby != MainMenu.TheLobby ) {
@@ -22,7 +26,10 @@
 			}
 		}
 
-		[Command ( "kill", Alias = "suicide", Description = "Commits suicide", Group = "user" )]
+        [CommandDescription ( "Commits suicide" )]
+        [CommandGroup ( "user" )]
+        [CommandAlias ( "suicide" )]
+        [Command ( "kill" )]
 		public static void Kill ( Client player ) {
 			Character character = player.GetChar ();
 			if ( character.Lobby is FightLobby lobby ) {
@@ -32,29 +39,47 @@
 			}
 		}
 
-		[Command ( "ganglobby", Alias = "gwlobby,lobbygang,lobbygw", Description = "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu.", Group = "user" )]
+        [CommandDescription ( "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu." )]
+        [CommandGroup ( "user" )]
+        [CommandAlias ( "gwlobby" )]
+        //[CommandAlias ( "lobbygang" )]
+        //[CommandAlias ( "lobbygw" )]
+        [Command ( "ganglobby" )]
 		public static void JoinGangLobby ( Client player ) {
 			if ( player.GetChar ().Lobby == MainMenu.TheLobby ) {
 				lobby.GangLobby.Join ( player );
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Chat
-		[Command ( "globalchat", Alias = "globalsay,global", Description = "Writes in global-chat", GreedyArg = true, Group = "user" )]
-		public static void GlobalChat ( Client player, string text ) {
+        #region Chat
+        [CommandDescription ( "Writes in global-chat" )]
+        [CommandGroup ( "user" )]
+        [CommandAlias ( "globalsay" )]
+        //[CommandAlias ( "global" )]
+        [Command ( "globalchat" )]
+		public static void GlobalChat ( Client player, [RemainingText] string text ) {
             if ( player.GetChar().LoggedIn )
 			    Chat.SendGlobalMessage ( player, text );
 		}
 
-		[Command ( "teamchat", Alias = "t,teamsay,team", Description = "Writes in team-chat", GreedyArg = true, Group = "user" )]
-		public static void TeamChat ( Client player, string text ) {
+        [CommandDescription ( "Writes in team-chat" )]
+        [CommandGroup ( "user" )]
+        [CommandAlias ( "t" )]
+        //[CommandAlias ( "teamsay" )]
+        //[CommandAlias ( "team" )]
+        [Command ( "teamchat" )]
+		public static void TeamChat ( Client player, [RemainingText] string text ) {
             if ( player.GetChar ().LoggedIn )
                 Chat.SendTeamChat ( player, text );
 		}
 
-        [Command ( "msg", Alias = "message,pm", Description = "Writes a private-message to a player", GreedyArg = true, Group = "user" )]
-        public static void PrivateMessage ( Client player, Client target, string text ) {
+        [CommandDescription ( "Writes a private-message to a player." )]
+        [CommandGroup ( "user" )]
+        [CommandAlias ( "message" )]
+        //[CommandAlias ( "pm" )]
+        [Command ( "msg" )]
+        public static void PrivateMessage ( Client player, Client target, [RemainingText] string text ) {
             if ( player.GetChar ().LoggedIn && player != target ) {
                 if ( target.GetChar ().LoggedIn )
                     Chat.SendPrivateMessage ( player, target, text );
@@ -65,7 +90,12 @@
 		#endregion
 
 		#region Utility
-		[Command ( "pos", Alias = "getpos,rot,getrot", Description = "Gets your position and rotation", Group = "user" )]
+        [CommandDescription ( "Outputs your position and rotation." )]
+        [CommandGroup ( "user" )]
+        [CommandAlias( "getpos" )]
+        //[CommandAlias ( "rot" )]
+        //[CommandAlias ( "getrot" )]
+		[Command ( "pos", Description = "Gets your position and rotation", Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
 			if ( NAPI.Player.IsPlayerInAnyVehicle ( sender ) ) {
 				Vehicle veh = NAPI.Player.GetPlayerVehicle ( sender );
@@ -81,14 +111,20 @@
 			}
 		}
 
-		[Command ( "checkmapname", Description = "Checks if a map-name is already taken (needed to know for new maps)", Group = "user" )]
+        [CommandDescription ( "Checks if a map-name is already taken (needed to know for new maps)" )]
+        [CommandGroup ( "user" )]
+        [Command ( "checkmapname" )]
 		public void CheckMapName ( Client player, string mapname ) {
 			NAPI.Notification.SendNotificationToPlayer ( player, Map.DoesMapNameExist ( mapname ) ? "map-name already taken" : "map-name is available" );
 		}
-		#endregion
+        #endregion
 
-		#region Deathmatch
-		[Command ( "hitsound", Alias = "hitglocke,togglehitsound", Description = "Activates/deactivates the hitsound", Group = "user" )]
+        #region Deathmatch
+        [CommandDescription ( "Activates/deactivates the hitsound" )]
+        [CommandGroup ( "user" )]
+        //[CommandAlias ( "hitglocke" )]
+        //[CommandAlias ( "togglehitsound" )]
+        [Command ( "hitsound" )]
 		public static void ToggleHitsound ( Client player, int activate = -1 ) {
 			Character character = player.GetChar ();
 			if ( activate == 1 || activate != 0 && !character.HitsoundOn ) {
@@ -103,7 +139,7 @@
 		}
 		#endregion
 
-        [RemoteEvent ( "testit")]
+        [RemoteEvent ( "testit" )]
         public static void TestitEvent ( Client player, params object[] args ) {
             int number = Convert.ToInt32 ( args[0] );
             NetHandle handle = (NetHandle) args[1];

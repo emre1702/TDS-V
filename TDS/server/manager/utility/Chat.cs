@@ -17,6 +17,7 @@
 			character.Lobby.SendAllPlayerChatMessage ( changedmessage );
 		}
 
+        [DisableDefaultChat]
         [ServerEvent(Event.ChatMessage)]
         public static void OnChatMessage ( Client player, string message ) {
             if ( player.GetChar().LoggedIn )

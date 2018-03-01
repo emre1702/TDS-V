@@ -10,8 +10,8 @@
 
 		public ResourceStart () {
 			NAPI.Server.SetGamemodeName ( "tdm" );
-            NAPI.Server.SetAutoRespawnAfterDeath ( false );
-            NAPI.Server.SetGlobalServerChat ( false );
+            //NAPI.Server.SetAutoRespawnAfterDeath ( false );
+            //NAPI.Server.SetGlobalServerChat ( false );
             StartMethods ();
         }
 

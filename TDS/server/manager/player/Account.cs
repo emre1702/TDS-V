@@ -35,6 +35,7 @@
             player.SendChatMessage ( builder.ToString () );
 		}
         
+        [DisableDefaultOnConnectSpawn]
         [ServerEvent(Event.PlayerConnected)]
         public static void OnPlayerConnected ( Client player ) {
             player.Position = new Vector3 ( 0, 0, 1000 ).Around ( 10 );

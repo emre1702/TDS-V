@@ -31,8 +31,12 @@
             { "object", 2 }
         };
 
-		#region Lobby
-		[Command ( "next", Alias = "endround", Description = "Ends the round.", Group = "supporter,lobby-owner" )]
+        #region Lobby
+        [CommandDescription ( "Ends the round." )]
+        [CommandGroup ( "supporter" )]
+        //[CommandGroup ( "lobby-owner" )]
+        [CommandAlias ( "endround" )]
+        [Command ( "next" )]
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
                 Lobby lobby = player.GetChar ().Lobby;
@@ -46,8 +50,12 @@
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "lobbykick", GreedyArg = true, Description = "Kicks a player from the lobby.", Group = "supporter,lobby-owner,VIP" )]
-		public static void LobbyKickPlayer ( Client player, Client target, string reason ) {
+        [CommandDescription ( "Kicks a player from the lobby." )]
+        [CommandGroup ( "supporter" )]
+        //[CommandGroup ( "lobby-owner" )]
+        //[CommandGroup ( "VIP" )]
+		[Command ( "lobbykick" )]
+		public static void LobbyKickPlayer ( Client player, Client target, [RemainingText] string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
                     // LOG //
@@ -68,11 +76,15 @@
                 }
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Kick
-		[Command ( "kick", GreedyArg = true, Alias = "rkick", Description = "Kicks a player from the server.", Group = "supporter,VIP" )]
-		public static void KickPlayer ( Client player, Client target, string reason ) {
+        #region Kick
+        [CommandDescription ( "Kicks a player from the server." )]
+        [CommandGroup ( "supporter" )]
+        //[CommandGroup ( "VIP" )]
+        [CommandAlias ( "rkick" )]
+        [Command ( "kick" )]
+		public static void KickPlayer ( Client player, Client target, [RemainingText] string reason ) {
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
 					// LOG //
@@ -86,11 +98,17 @@
 				}
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Ban
-		[Command ( "ban", GreedyArg = true, Alias = "tban,timeban,pban,permaban", Description = "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban.", Group = "administrator" )]
-		public async void BanPlayer ( Client player, string targetname, int hours, string reason ) {
+        #region Ban
+        [CommandDescription ( "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban." )]
+        [CommandGroup ( "administrator" )]
+        [CommandAlias ( "tban" )]
+        //[CommandAlias ( "timeban" )]
+        //[CommandAlias ( "pban" )]
+        //[CommandAlias ( "permaban" )]
+        [Command ( "ban" )]
+		public async void BanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
 			try {
 				if ( Account.PlayerUIDs.ContainsKey ( targetname ) ) {
 					if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] ) || hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] ) || hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
@@ -129,7 +147,12 @@
 		#endregion
 
 		#region Utility 
-		[Command ( "goto", Alias = "gotoplayer,warpto", Description = "Warps to another player.", Group = "Administrator,lobby-owner" )]
+        [CommandDescription ( "Warps to another player." )]
+        [CommandGroup ( "administrator" )]
+        //[CommandGroup ( "lobby-owner" )]
+        [CommandAlias ( "gotoplayer" )]
+        //[CommandAlias ( "warpto" )]
+		[Command ( "goto" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
                 if ( target.GetChar ().Lobby == player.GetChar ().Lobby ) {
@@ -160,14 +183,23 @@
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
 		}
 
-		[Command ( "xyz", Alias = "gotoxyz,gotopos", Description = "Warps to a point.", Group = "Administrator,lobby-owner" )]
+        [CommandDescription ( "Warps to a point." )]
+        [CommandGroup ( "administrator" )]
+        //[CommandGroup ( "lobby-owner" )]
+        [CommandAlias ( "gotoxyz" )]
+        //[CommandAlias ( "gotopos" )]
+		[Command ( "xyz" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
 			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) ) {
                 NAPI.Entity.SetEntityPosition ( player, new Vector3 ( x, y, z ) );
 			}
 		}
 
-		[Command ( "cveh", Alias = "createvehicle", Description = "Creates a vehicle.", Group = "Administrator,lobby-owner" )]
+        [CommandDescription ( "Creates a vehicle." )]
+        [CommandGroup ( "administrator" )]
+        //[CommandGroup ( "lobby-owner" )]
+        [CommandAlias ( "createvehicle" )]
+		[Command ( "cveh" )]
 		public void SpawnCarCommand ( Client player, string name ) {
 			if ( player.IsAdminLevel ( neededLevels["cveh"], true ) ) {
 				VehicleHash model = NAPI.Util.VehicleNameToModel ( name );
@@ -188,15 +220,25 @@
 		#endregion
 
 		#region Chat
-		[Command ( "adminsay", Alias = "o,ochat,osay", Description = "Global-say for admins (for announcements).", Group = "Supporter", GreedyArg = true )]
-		public static void AdminSay ( Client player, string text ) {
+        [CommandDescription ( "Global-say for admins (for announcements)." )]
+        [CommandGroup ( "supporter" )]
+        [CommandAlias ( "o" )]
+        //[CommandAlias ( "ochat" )]
+        //[CommandAlias ( "osay" )]
+        [Command ( "adminsay" )]
+		public static void AdminSay ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
 				Chat.SendAdminMessage ( player, text );
 			}
 		}
 
-		[Command ( "adminchat", Alias = "a,achat,asay", Description = "Chat only for admins.", Group = "Supporter", GreedyArg = true )]
-		public static void AdminChat ( Client player, string text ) {
+        [CommandDescription ( "Chat only for admins." )]
+        [CommandGroup ( "supporter" )]
+        [CommandAlias ( "a" )]
+        //[CommandAlias ( "achat" )]
+        //[CommandAlias ( "asay" )]
+        [Command ( "adminchat" )]
+		public static void AdminChat ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
 				Chat.SendAdminChat ( player, text );
 			}
