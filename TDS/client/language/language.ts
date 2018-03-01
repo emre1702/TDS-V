@@ -168,36 +168,11 @@ var languagelist = {
         "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"],
 	}
 };
-let languagesetting: string = "ENGLISH";
 
 
 function getLang( type, str = null ) {
 	if ( str != null )
-		return languagelist[languagesetting][type][str];
+        return languagelist[settingsdata.language][type][str];
 	else 
-		return languagelist[languagesetting][type];
-}
-
-function setLanguage( lang ) {
-    languagesetting = lang;
-    mp.storage.data.language = lang;
-    mp.storage.flush();
-    callRemoteCooldown( "onPlayerLanguageChange", lang );
-    loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
-}
-mp.events.add( "setLanguage", setLanguage );
-
-function loadLanguage () {
-    let savedlang = mp.storage.data.language;
-    if ( typeof savedlang !== "undefined" )
-        languagesetting = savedlang;
-    else {
-        let langnumber = mp.game.invoke( "E7A981467BC975BA", 0 );
-        if ( langnumber == 2 ) 
-            languagesetting = "" + Language.GERMAN;
-    }
-}
-
-function getLanguage() {
-	return languagesetting;
+        return languagelist[settingsdata.language][type];
 }
