@@ -27,8 +27,8 @@ function sendAlert ( msg: string ) {
     mainbrowserdata.browser.execute( "alert ('" + msg + "');" );
 }
 
-function openMapMenuInBrowser ( mapslistjson: string ) {
-    mainbrowserdata.browser.execute( "openMapMenu ( '" + getLanguage() + "', '" + mapslistjson + "');" );
+function openMapMenuInBrowser( mapslistjson: string ) {
+    mainbrowserdata.browser.execute( "openMapMenu ( '" + settingsdata.language + "', '" + mapslistjson + "');" );
 }
 
 function closeMapMenuInBrowser() {
