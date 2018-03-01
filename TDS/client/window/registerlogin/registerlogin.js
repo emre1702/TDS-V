@@ -70,12 +70,12 @@ $( document ).ready( function () {
         var type = $( this ).attr( "data-eventtype" );
         switch ( type ) {
             case "lang_english":
-                mp.trigger( "setLanguage", "ENGLISH" );
+                mp.trigger( "onPlayerSettingChange", 0, "ENGLISH" );
                 mp.trigger( "getRegisterLoginLanguage" );
 				break;
 
             case "lang_german":
-                mp.trigger( "setLanguage", "GERMAN" );
+                mp.trigger( "onPlayerSettingChange", 0, "GERMAN" );
                 mp.trigger( "getRegisterLoginLanguage" );
 				break;
 		}
