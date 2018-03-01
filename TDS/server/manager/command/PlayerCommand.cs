@@ -7,6 +7,7 @@
 	using lobby;
 	using map;
     using System;
+    using TDS.server.enums;
     using utility;
 
 	class PlayerCommand : Script {
@@ -93,10 +94,12 @@
 			if ( activate == 1 || activate != 0 && !character.HitsoundOn ) {
 				character.HitsoundOn = true;
 				player.SendLangNotification ( "activated_hitsound" );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onPlayerSettingChange", PlayerSetting.HITSOUND, true );
 			} else {
 				character.HitsoundOn = false;
 				player.SendLangNotification ( "deactivated_hitsound" );
-			}
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onPlayerSettingChange", PlayerSetting.HITSOUND, false );
+            }
 		}
 		#endregion
 
