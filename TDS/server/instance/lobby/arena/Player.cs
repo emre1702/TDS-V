@@ -63,14 +63,11 @@ namespace TDS.server.instance.lobby {
                 RemovePlayerFromAlive ( player, character );
             }
             DmgSys.PlayerSpree.Remove ( player );
-
-            //if ( IsMapCreateLobby )                            TODO
-            //    StopPlayerFreecam ( player, true );
         }
 
         private void RemovePlayerFromAlive ( Client player, Character chara = null ) {
             Character character = chara ?? player.GetChar ();
-            int teamID = (int) character.Team;
+            int teamID = character.Team;
             character.Lifes = 0;
             int aliveindex = alivePlayers[teamID].IndexOf ( player );
             PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
@@ -84,6 +81,8 @@ namespace TDS.server.instance.lobby {
         public override void AddPlayer ( Client player, bool spectator = false ) {
             AddPlayerDefault ( player, spectator );
 
+            
+
             string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
                                 countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
@@ -94,15 +93,6 @@ namespace TDS.server.instance.lobby {
 
             SendPlayerRoundInfoOnJoin ( player );
         }
-
-
-
-           /* if ( IsMapCreateLobby )        // TODO
-                StartPlayerFreecam ( player );
-
-            SendPlayerRoundInfoOnJoin ( player );
-        } */
-
 
         private void AddPlayerAsPlayer ( Client player ) {
             Character character = player.GetChar ();
