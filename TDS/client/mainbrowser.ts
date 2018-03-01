@@ -82,5 +82,5 @@ mp.events.add( "onClientLoadOwnMapRatings", ( data ) => {
 
 //from roundend.js//
 mp.events.add( "sendMapRating", ( currentmap: string, rating: number ) => {
-    mp.events.callRemote( "addRatingToMap", currentmap, rating );
+    callRemoteCooldown( "addRatingToMap", currentmap, rating );
 } );
