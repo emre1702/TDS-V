@@ -14,4 +14,8 @@
     public enum RoundEndReason {
         DEATH, TIME, BOMB, COMMAND, NEWPLAYER
     }
+
+    public enum PlayerSetting {
+        LANGUAGE, HITSOUND
+    }
 }
