@@ -51,29 +51,6 @@ mp.events.add( "playerWeaponShot", ( hitpos, hitentity ) => {
 
 mp.players.local.setCanAttackFriendly( false, false );
 
-
-/* let bloodscreenbrowser;
-
-mp.events.add( "playerWeaponShoot", ( shotPosition: { x, y, z }, target ) => {
-
-	if ( target != null ) {
-		let weapon = mp.players.local.weapon;
-		var hithead = false;
-		//if (weaponUsed == 100416529 || weaponUsed == 205991906 || weaponUsed == 952879014) {
-		//var neckpos = API.returnNative( "GET_PED_BONE_COORDS", 5, hitentityhandle, 39317 );
-		//if ( aimCoords.Z > neckpos.Z ) {
-		//	hithead = true;
-		//}
-		//}
-		callRemote( "onPlayerHitOtherPlayer", target, weapon, hithead );
-	}
+mp.events.add( "onClientPlayerHittedOpponent", () => {
+    playHitsound();
 } );
-
-mp.players.local.setCanAttackFriendly( false, false ); */
-
-
-/*mp.events.add( "render", () => {
-	if ( mp.players.local.health + mp.players.local.armour < damagesysdata.lasthparmor ) {
-		//show bloodscreen
-	}
-} ); */

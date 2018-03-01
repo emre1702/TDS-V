@@ -15,6 +15,11 @@ function playSound( soundname: string ) {
     mainbrowserdata.browser.execute( "playSound ( '" + soundname + "' );" );
 }
 
+// own function because getting called many times at hitsound = on //
+function playHitsound() {
+    mainbrowserdata.browser.execute( "playHitsound();" );
+}
+
 function showBloodscreen() {
     mainbrowserdata.browser.execute( "showBloodscreen ();" );
 }

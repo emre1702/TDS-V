@@ -1,5 +1,6 @@
 ﻿let moneyText = $( "#money" );
 let bloodscreen = $( "#bloodscreen" );
+let hitsound = $( "#audio_hit" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = "ENGLISH";
 let ordersDiv = $( "#orders" );
@@ -10,6 +11,10 @@ function setMoney( money ) {
 
 function playSound( soundname ) {
     $( "#audio_" + soundname ).trigger("play").volume = 0.05;
+}
+
+function playHitsound() {
+    hitsound.trigger( "play" ).volume = 0.05;
 }
 
 function showBloodscreen() {
