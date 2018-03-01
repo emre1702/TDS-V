@@ -14,6 +14,7 @@
         "onPlayerChatLoad": 10000,
         "onPlayerGiveOrder": 3000,
         "onClientRequestPlayerListData": 4500,
+        "addRatingToMap": 4000,
     },
     lastused: {}
 }
@@ -22,7 +23,7 @@ function callRemote( eventname: string, arg1?: any, arg2?: any, arg3?: any, arg4
     mp.events.callRemote( eventname, arg1, arg2, arg3, arg4, arg5 );
 }
 
-function callRemoteCooldown( eventname: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any  ) {
+function callRemoteCooldown( eventname: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any ) {
     if ( !( eventname in callremotedata.cooldowns ) ) {
         mp.events.callRemote( eventname, arg1, arg2, arg3, arg4, arg5 );
         return;
