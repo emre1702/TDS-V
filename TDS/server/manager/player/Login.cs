@@ -44,7 +44,7 @@
 
                             character.LoggedIn = true;
 
-                            player.GiveMoney ( Convert.ToUInt32 ( row["money"] ), character );
+                            character.GiveMoney ( Convert.ToUInt32 ( row["money"] ) );
 
                             if ( character.AdminLvl > 0 )
                                 Admin.SetOnline ( character );

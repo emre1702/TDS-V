@@ -60,7 +60,7 @@ namespace TDS.server.instance.lobby {
                         reward.Add ( (uint) ( Money.MoneyForDict["damage"] * entry.Value ) );
 
                         uint total = reward[0] + reward[1] + reward[2];
-                        player.GiveMoney ( total, character );
+                        character.GiveMoney ( total );
                         player.SendLangNotification ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (),
                                                     total.ToString () );
                     }
