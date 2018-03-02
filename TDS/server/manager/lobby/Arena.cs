@@ -2,6 +2,7 @@
 
     using GTANetworkAPI;
     using map;
+    using TDS.server.instance.player;
 
     static class Arena {
         public static instance.lobby.Arena TheLobby;
@@ -56,8 +57,8 @@
             TheLobby.StartRoundGame ();
         }
 
-        public static void Join ( Client player, bool spectator ) {
-            TheLobby.AddPlayer ( player, spectator );
+        public static void Join ( Character character, bool spectator ) {
+            TheLobby.AddPlayer ( character, spectator );
         }
 
     }

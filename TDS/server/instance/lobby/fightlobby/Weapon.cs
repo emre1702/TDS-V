@@ -3,8 +3,9 @@ namespace TDS.server.instance.lobby {
 	using System.Collections.Generic;
 	using damagesys;
 	using GTANetworkAPI;
+    using TDS.server.instance.player;
 
-	partial class FightLobby {
+    partial class FightLobby {
 
 		private readonly List<WeaponHash> weapons = new List<WeaponHash> ();
 		private readonly List<int> weaponsAmmo = new List<int> ();
@@ -22,8 +23,8 @@ namespace TDS.server.instance.lobby {
 			} 
 		}
 
-        public virtual void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerWeaponChange", (int) newweapon );
+        public virtual void OnPlayerWeaponSwitch ( Character character, WeaponHash oldweapon, WeaponHash newweapon ) {
+            NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerWeaponChange", (int) newweapon );
         }
     }
 

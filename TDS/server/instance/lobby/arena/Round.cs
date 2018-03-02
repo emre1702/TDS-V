@@ -58,7 +58,7 @@ namespace TDS.server.instance.lobby {
         private void StartRoundCountdown ( ) {
             status = LobbyStatus.COUNTDOWN;
             NAPI.Util.ConsoleOutput ( status.ToString () );
-            spectatingMe = new Dictionary<Client, List<Client>> ();
+            spectatingMe.Clear ();
             SetAllPlayersInCountdown ();
             startTick = Environment.TickCount;
 
@@ -70,13 +70,13 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
             roundEndTimer = Timer.SetTimer ( EndRoundTimesup, roundTime );
-            alivePlayers = new List<List<Client>> ();
+            alivePlayers = new List<List<Character>> ();
             List<uint> amountinteams = new List<uint> ();
             for ( int i = 0; i < Players.Count; i++ ) {
                 uint amountinteam = (uint) Players[i].Count;
                 if ( i != 0 )
                     amountinteams.Add ( amountinteam );
-                alivePlayers.Add ( new List<Client> () );
+                alivePlayers.Add ( new List<Character> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
                     StartRoundForPlayer ( Players[i][j], i );
                 }
@@ -97,8 +97,8 @@ namespace TDS.server.instance.lobby {
                 StopRoundBombAtRoundEnd ();
             if ( IsSomeoneInLobby () ) {
                 roundStartTimer = Timer.SetTimer ( StartMapChoose, RoundEndTime );
-                FuncIterateAllPlayers ( ( player, teamID ) => {
-                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundEnd", reasonlangs[player.GetChar().Language] );
+                FuncIterateAllPlayers ( ( character, teamID ) => {
+                    NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientRoundEnd", reasonlangs[character.Language] );
                 } );                     
             } else if ( DeleteWhenEmpty ) {
                 Remove ();
@@ -147,19 +147,18 @@ namespace TDS.server.instance.lobby {
             return reasons;
         } 
 
-        private void StartRoundForPlayer ( Client player, int teamID ) {
-            Character character = player.GetChar ();
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
+        private void StartRoundForPlayer ( Character character, int teamID ) {
+            NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
             if ( teamID != 0 ) {
                 character.Lifes = Lifes;
-                alivePlayers[teamID].Add ( player );
-                player.Freeze ( false );
+                alivePlayers[teamID].Add ( character );
+                character.Player.Freeze ( false );
             }
         }
 
-        private void RespawnPlayerInRound ( Client player ) {
-            SetPlayerReadyForRound ( player, player.GetChar ().Team );
-            player.Freeze ( false );
+        private void RespawnPlayerInRound ( Character character ) {
+            SetPlayerReadyForRound ( character );
+            character.Player.Freeze ( false );
         }
 
         private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {

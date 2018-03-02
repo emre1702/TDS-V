@@ -1,17 +1,18 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
+using TDS.server.instance.player;
 
 namespace TDS.server.instance.lobby
 {
     partial class Arena {
 
         private void SetAllPlayersInCountdown ( ) {
-            spectatingMe = new Dictionary<Client, List<Client>> ();
-            FuncIterateAllPlayers ( ( player, teamID ) => {
-                SetPlayerReadyForRound ( player, teamID );
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart" );
+            spectatingMe.Clear ();
+            FuncIterateAllPlayers ( ( character, teamID ) => {
+                SetPlayerReadyForRound ( character );
+                NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientCountdownStart" );
                 if ( teamID == 0 )
-                    SpectateAllTeams ( player );
+                    SpectateAllTeams ( character );
             } );
             if ( currentMap.SyncData.Type == enums.MapType.BOMB )
                 GiveBombToRandomTerrorist ();

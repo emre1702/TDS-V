@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
+using TDS.server.instance.player;
 
 namespace TDS.server.instance.lobby.interfaces {
 
@@ -7,7 +8,7 @@ namespace TDS.server.instance.lobby.interfaces {
 
         void DeathInfoSync ( Client player, int team, Client killer, uint weapon );
         void PlayerAmountInFightSync ( List<uint> amountinteam );
-        void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon );
+        void OnPlayerWeaponSwitch ( Character character, WeaponHash oldweapon, WeaponHash newweapon );
 
     }
 }

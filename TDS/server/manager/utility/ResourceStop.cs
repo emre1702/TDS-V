@@ -5,8 +5,9 @@
 	using GTANetworkAPI;
 	using logs;
 	using player;
+    using TDS.server.extend;
 
-	class ResourceStop : Script {
+    class ResourceStop : Script {
 
 		public ResourceStop () {
 		}
@@ -23,8 +24,8 @@
 
 				List<Client> players = NAPI.Pools.GetAllPlayers ();
 				foreach ( Client player in players ) {
-					Account.SavePlayerData ( player );
-				}
+                    player.GetChar ().SaveData ();
+                }
 
                 Season.SaveSeason ();
 			} catch ( Exception ex ) {

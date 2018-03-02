@@ -21,30 +21,31 @@
 				Character character = player.GetChar ();
 
                 player.Freeze ( true );
-                sDeadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( player ), 2000 ) );
+                sDeadTimer.TryAdd ( player, Timer.SetTimer ( ( ) => SpawnAfterDeath ( character ), 2000 ) );
 
                 if ( !( character.Lobby is FightLobby lobby ) )
                     return;
 
 				Damagesys dmgsys = lobby.DmgSys;
 
-                killer = dmgsys.GetKiller ( player, killer, character );
+                Character killercharacter = dmgsys.GetKiller ( character, killer.GetChar() );
+                killer = killercharacter.Player;
 
-				dmgsys.PlayerSpree.Remove ( player );
+				dmgsys.PlayerSpree.Remove ( character );
 
 				if ( character.Lifes > 0 ) {
-                    lobby.OnPlayerDeath ( player, killer, weapon, character );
+                    lobby.OnPlayerDeath ( character, killer, weapon );
 
 					// Kill //
-					if ( killer != player ) {
+					if ( killercharacter != character ) {
 						if ( character.Lobby is Arena )
-							killer.GetChar ().GiveKill();
+                            killercharacter.GiveKill();
 						if ( !dmgsys.PlayerKills.ContainsKey ( killer ) )
 							dmgsys.PlayerKills.TryAdd ( killer, 0 );
 						dmgsys.PlayerKills[killer]++;
 
 						// Killingspree //
-						dmgsys.AddToKillingSpree ( killer );
+						dmgsys.AddToKillingSpree ( killercharacter );
 					}
 
 					if ( character.Lobby is Arena ) 
@@ -52,42 +53,41 @@
 						character.GiveDeath();
 
                     // Assist //
-                    dmgsys.CheckForAssist ( player, character, killer );
+                    dmgsys.CheckForAssist ( character, killer );
                 }
 			}
 		}
 
-        private Client GetKiller ( Client player, Client possiblekiller, Character character ) {
-            if ( player != possiblekiller && possiblekiller != null && possiblekiller.Exists )
-                return possiblekiller;
+        private Character GetKiller ( Character character, Character possiblekillercharacter ) {
+            if ( character.Player != possiblekillercharacter.Player && possiblekillercharacter.Player != null && possiblekillercharacter.Player.Exists )
+                return possiblekillercharacter;
 
-            Client lasthitter = GetLastHitter ( player, character );
-            if ( lasthitter != null )
-                return lasthitter;
+            Character lasthittercharacter = GetLastHitter ( character );
+            if ( lasthittercharacter != null )
+                return lasthittercharacter;
 
-            return player;
+            return character;
         }
 
-		private static void SpawnAfterDeath ( Client player ) {
-            sDeadTimer.Remove ( player, out Timer timer );
+		private static void SpawnAfterDeath ( Character character ) {
+            sDeadTimer.Remove ( character.Player, out Timer timer );
 			timer.Kill ();
-			if ( player.Exists ) {
-                Character character = player.GetChar ();
-                NAPI.Player.SpawnPlayer ( player, character.Lobby.SpawnPoint, character.Lobby.SpawnRotation.Z );
+			if ( character.Player.Exists ) {
+                NAPI.Player.SpawnPlayer ( character.Player, character.Lobby.SpawnPoint, character.Lobby.SpawnRotation.Z );
             }    			
 		}
 
-		private void CheckForAssist ( Client player, Character character, Client killer ) {
-			if ( AllHitters.ContainsKey ( player ) ) {
+		private void CheckForAssist ( Character character, Client killer ) {
+			if ( AllHitters.ContainsKey ( character ) ) {
 				uint halfarmorhp = ( lobby.Armor + lobby.Health ) / 2;
-				foreach ( KeyValuePair<Client, int> entry in AllHitters[player] ) {
-                    Client target = entry.Key;
+				foreach ( KeyValuePair<Character, int> entry in AllHitters[character] ) {
 					if ( entry.Value >= halfarmorhp ) {
-						Character targetcharacter = target.GetChar ();
+                        Character targetcharacter = entry.Key;
+                        Client target = targetcharacter.Player;
 						if ( target.Exists && targetcharacter.Lobby == character.Lobby && killer != target ) {
                             if ( targetcharacter.Lobby is Arena )
                                 targetcharacter.GiveAssist ();
-							target.SendLangNotification ( "got_assist", player.Name );
+							target.SendLangNotification ( "got_assist", character.Player.Name );
 							if ( !PlayerAssists.ContainsKey ( target ) )
 								PlayerAssists[target] = 0;
 							PlayerAssists[target]++;
@@ -95,37 +95,35 @@
 						if ( killer != target ||
 							halfarmorhp % 2 != 0 ||
 							entry.Value != halfarmorhp / 2 ||
-							AllHitters[player].Count > 2 )
+							AllHitters[character].Count > 2 )
 							return;
 					}
 				}
 			}
 		}
 
-		public void CheckLastHitter ( Client player, Character character, out Client lastHitter ) {
-			if ( LastHitterDictionary.ContainsKey ( player ) ) {
-				LastHitterDictionary.Remove ( player, out lastHitter );
-                if ( lastHitter.Exists ) {
-					Character lasthittercharacter = lastHitter.GetChar ();
-					if ( character.Lobby == lasthittercharacter.Lobby )
-						if ( lasthittercharacter.Lifes > 0 ) {
+		public void CheckLastHitter ( Character character, out Character lastHitterCharacter ) {
+            if ( LastHitterDictionary.ContainsKey ( character ) ) {
+				LastHitterDictionary.Remove ( character, out lastHitterCharacter );
+                if ( lastHitterCharacter.Player.Exists ) {
+					if ( character.Lobby == lastHitterCharacter.Lobby )
+						if ( lastHitterCharacter.Lifes > 0 ) {
                             if ( character.Lobby is Arena )
-							    lasthittercharacter.GiveKill();
-							lastHitter.SendLangNotification ( "got_last_hitted_kill", player.Name );
-							AddToKillingSpree ( lastHitter );
+                                lastHitterCharacter.GiveKill();
+                            lastHitterCharacter.Player.SendLangNotification ( "got_last_hitted_kill", character.Player.Name );
+							AddToKillingSpree ( lastHitterCharacter );
 						}
 				}
 			} else
-				lastHitter = null;
+                lastHitterCharacter = null;
 		}
 
-		public Client GetLastHitter ( Client player, Character character ) {
-			if ( LastHitterDictionary.ContainsKey ( player ) ) {
-				LastHitterDictionary.Remove ( player, out Client lasthitter );
-                if ( lasthitter.Exists ) {
-					Character lasthittercharacter = lasthitter.GetChar ();
+		public Character GetLastHitter ( Character character ) {
+			if ( LastHitterDictionary.ContainsKey ( character ) ) {
+				LastHitterDictionary.Remove ( character, out Character lasthittercharacter );
+                if ( lasthittercharacter.Player.Exists ) {
 					if ( character.Lobby == lasthittercharacter.Lobby )
-						return lasthitter;
+						return lasthittercharacter;
 				}
 			}
 			return null;

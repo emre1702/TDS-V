@@ -13,37 +13,37 @@ namespace TDS.server.instance.lobby {
 
         public uint Lifes = 1;
 
-        public override void OnPlayerDeath ( Client player, Client killer, uint weapon, Character character ) {
+        public override void OnPlayerDeath ( Character character, Client killer, uint weapon ) {
             if ( character.Lifes > 0 ) {
-                base.OnPlayerDeath ( player, killer, weapon, character );
+                base.OnPlayerDeath ( character, killer, weapon );
 
-                if ( bombAtPlayer == player ) {
+                if ( bombAtPlayer == character ) {
                     DropBomb ();
                 }
                 if ( character.Lifes == 0 ) {
-                    RemovePlayerFromAlive ( player, character );
+                    RemovePlayerFromAlive ( character );
                 }
             }
         }
 
-        public override void OnPlayerSpawn ( Client player ) {
-            base.OnPlayerSpawn ( player );
+        public override void OnPlayerSpawn ( Character character ) {
+            base.OnPlayerSpawn ( character );
 
-            Character character = player.GetChar ();
             Lobby lobby = character.Lobby;
 
             if ( character.Lifes > 0 )
-                RespawnPlayerInRound ( player );
+                RespawnPlayerInRound ( character );
             else
-                RespawnPlayerInSpectateMode ( player );
+                RespawnPlayerInSpectateMode ( character );
         }
 
-        private void SetPlayerReadyForRound ( Client player, int teamID ) {
+        private void SetPlayerReadyForRound ( Character character ) {
+            Client player = character.Player;
             player.Armor = (int) Armor;
             player.Health = (int) Health;
-            Spectate ( player, player );
-            if ( teamID > 0 ) {
-                Vector3[] spawndata = GetMapRandomSpawnData ( teamID );
+            Spectate ( character, character );
+            if ( character.Team > 0 ) {
+                Vector3[] spawndata = GetMapRandomSpawnData ( character.Team );
                 player.Position = spawndata[0];
                 player.Rotation = spawndata[1];
             }
@@ -51,63 +51,60 @@ namespace TDS.server.instance.lobby {
             GivePlayerWeapons ( player );
         }
 
-        public override void RemovePlayer ( Client player ) {
-            base.RemovePlayer ( player );
+        public override void RemovePlayer ( Character character ) {
+            base.RemovePlayer ( character );
 
-            Character character = player.GetChar ();
             int teamID = character.Team;
 
             if ( character.Lifes > 0 ) {
-                DmgSys.CheckLastHitter ( player, character, out Client killer );
-                DeathInfoSync ( player, teamID, killer, (uint) WeaponHash.Unarmed );
-                RemovePlayerFromAlive ( player, character );
+                DmgSys.CheckLastHitter ( character, out Character killercharacter );
+                DeathInfoSync ( character.Player, teamID, killercharacter.Player, (uint) WeaponHash.Unarmed );
+                RemovePlayerFromAlive ( character );
             }
-            DmgSys.PlayerSpree.Remove ( player );
+            DmgSys.PlayerSpree.Remove ( character );
         }
 
-        private void RemovePlayerFromAlive ( Client player, Character chara = null ) {
-            Character character = chara ?? player.GetChar ();
+        private void RemovePlayerFromAlive ( Character character ) {
             int teamID = character.Team;
             character.Lifes = 0;
-            int aliveindex = alivePlayers[teamID].IndexOf ( player );
-            PlayerCantBeSpectatedAnymore ( player, aliveindex, teamID );
+            int aliveindex = alivePlayers[teamID].IndexOf ( character );
+            PlayerCantBeSpectatedAnymore ( character, aliveindex, teamID );
             alivePlayers[teamID].RemoveAt ( aliveindex );
-            if ( bombAtPlayer == player ) {
+            if ( bombAtPlayer == character ) {
                 DropBomb ();
             }
             CheckForEnoughAlive ();
         }
 
-        public override void AddPlayer ( Client player, bool spectator = false ) {
-            AddPlayerDefault ( player, spectator );
+        public override void AddPlayer ( Character character, bool spectator = false ) {
+            AddPlayerDefault ( character, spectator );
 
             
 
             string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
+            NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
                                 countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
                                 RoundEndTime, true );
 
             if ( !spectator )
-                AddPlayerAsPlayer ( player );
+                AddPlayerAsPlayer ( character );
 
-            SendPlayerRoundInfoOnJoin ( player );
+            SendPlayerRoundInfoOnJoin ( character.Player );
         }
 
-        private void AddPlayerAsPlayer ( Client player ) {
-            Character character = player.GetChar ();
+        private void AddPlayerAsPlayer ( Character character ) {
             int teamID = GetTeamIDWithFewestMember ( ref Players );
-            SetPlayerTeam ( player, teamID, character );
+            SetPlayerTeam ( character, teamID );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
-                SetPlayerReadyForRound ( player, teamID );
+                SetPlayerReadyForRound ( character );
             } else {
                 int teamsinround = GetTeamAmountStillInRound ();
                 NAPI.Util.ConsoleOutput ( teamsinround + " teams still in round" );
                 if ( teamsinround < 2 ) {
-                    EndRoundEarlier ( RoundEndReason.NEWPLAYER, player.Name );
+                    EndRoundEarlier ( RoundEndReason.NEWPLAYER, character.Player.Name );
                     NAPI.Util.ConsoleOutput ( "End round earlier because of joined player" );
                 } else {
-                    RespawnPlayerInSpectateMode ( player );
+                    RespawnPlayerInSpectateMode ( character );
                 }
             }
         }

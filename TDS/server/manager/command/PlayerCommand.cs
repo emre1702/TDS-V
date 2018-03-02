@@ -19,10 +19,10 @@
         [CommandGroup ( "user" )]
         [Command ( "leave" )]
 		public static void Leave ( Client player ) {
-			Lobby lobby = player.GetChar ().Lobby;
-			if ( lobby != MainMenu.TheLobby ) {
-                lobby.RemovePlayerDerived ( player );
-                MainMenu.Join ( player );
+            Character character = player.GetChar ();
+			if ( character.Lobby != MainMenu.TheLobby ) {
+                character.Lobby.RemovePlayerDerived ( character );
+                MainMenu.Join ( character );
 			}
 		}
 
@@ -46,8 +46,9 @@
         //[CommandAlias ( "lobbygw" )]
         [Command ( "ganglobby" )]
 		public static void JoinGangLobby ( Client player ) {
-			if ( player.GetChar ().Lobby == MainMenu.TheLobby ) {
-				lobby.GangLobby.Join ( player );
+            Character character = player.GetChar();
+            if ( character.Lobby == MainMenu.TheLobby ) {
+				lobby.GangLobby.Join ( character );
 			}
 		}
         #endregion
@@ -59,8 +60,9 @@
         //[CommandAlias ( "global" )]
         [Command ( "globalchat" )]
 		public static void GlobalChat ( Client player, [RemainingText] string text ) {
+            Character character = player.GetChar ();
             if ( player.GetChar().LoggedIn )
-			    Chat.SendGlobalMessage ( player, text );
+			    Chat.SendGlobalMessage ( character, text );
 		}
 
         [CommandDescription ( "Writes in team-chat" )]
@@ -70,8 +72,9 @@
         //[CommandAlias ( "team" )]
         [Command ( "teamchat" )]
 		public static void TeamChat ( Client player, [RemainingText] string text ) {
-            if ( player.GetChar ().LoggedIn )
-                Chat.SendTeamChat ( player, text );
+            Character character = player.GetChar ();
+            if ( character.LoggedIn )
+                Chat.SendTeamChat ( character, text );
 		}
 
         [CommandDescription ( "Writes a private-message to a player." )]
@@ -80,9 +83,11 @@
         //[CommandAlias ( "pm" )]
         [Command ( "msg" )]
         public static void PrivateMessage ( Client player, Client target, [RemainingText] string text ) {
-            if ( player.GetChar ().LoggedIn && player != target ) {
+            Character character = player.GetChar ();
+            if ( character.LoggedIn && player != target ) {
+                Character targetcharacter = target.GetChar ();
                 if ( target.GetChar ().LoggedIn )
-                    Chat.SendPrivateMessage ( player, target, text );
+                    Chat.SendPrivateMessage ( character, targetcharacter, text );
                 else
                     player.SendLangNotification ( "target_not_logged_in" );
             }

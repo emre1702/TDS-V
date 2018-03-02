@@ -14,15 +14,15 @@
 
 	static class Login {
 
-		public static async void LoginPlayer ( Client player, uint uid, string password = "" ) {
+		public static async void LoginPlayer ( Character character, uint uid, string password = "" ) {
 			try {
 				if ( password != "" ) {
                     DataTable result = await Database.ExecResult ( $"SELECT * FROM player, playerarenastats WHERE player.uid = {uid} AND player.uid = playerarenastats.uid" ).ConfigureAwait ( false );
-					if ( result.Rows.Count > 0 ) {
+                    Client player = character.Player;
+                    if ( result.Rows.Count > 0 ) {
 						DataRow row = result.Rows[0];
 						if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {
-                            player.Team = 1;
-                            Character character = player.GetChar ();
+                            character.Player.Team = 1;
 
                             character.UID = uid;
                             player.Name = row["name"].ToString ();
@@ -47,13 +47,13 @@
                             player.GiveMoney ( Convert.ToUInt32 ( row["money"] ), character );
 
                             if ( character.AdminLvl > 0 )
-                                Admin.SetOnline ( player, character.AdminLvl );
+                                Admin.SetOnline ( character );
 
                             Map.SendPlayerHisRatings ( player );
 
                             NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
 
-                            MainMenu.Join ( player );
+                            MainMenu.Join ( character );
 						} else {
 							player.SendLangNotification ( "wrong_password" );
 							return;

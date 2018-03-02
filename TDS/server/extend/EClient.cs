@@ -11,10 +11,9 @@
 
 		public static Character GetChar ( this Client player ) {
 			if ( characterDictionary.ContainsKey ( player ) ) {
-				Character character = characterDictionary[player];
-				return character;
+				return characterDictionary[player];
 			} else {
-				Character character = new Character ( false );
+				Character character = new Character ( player, false );
 				characterDictionary.TryAdd ( player, character );
 				return character;
 			}

@@ -21,9 +21,9 @@ namespace TDS.server.instance.lobby {
 				killstr[Language.GERMAN] = ServerLanguage.GetLang ( Language.GERMAN, "deathinfo_died", player.Name );
 			}
 
-			FuncIterateAllPlayers ( ( target, teamID ) => {
-                Language language = target.GetChar ( ).Language;
-				target.TriggerEvent ( "onClientPlayerDeath", player.Value, team, killstr[language] );
+			FuncIterateAllPlayers ( ( targetcharacter, teamID ) => {
+                Language language = targetcharacter.Language;
+                targetcharacter.Player.TriggerEvent ( "onClientPlayerDeath", player.Value, team, killstr[language] );
 			} );
 		}
 

@@ -9,55 +9,51 @@
 
         public Chat ( ) { }
 
-		private static void OnChatMessageFunc ( Client player, string message ) {
-			Character character = player.GetChar ();
-			Log.Chat ( message, player, "chat " + character.Lobby.Name );
+		private static void OnChatMessageFunc ( Character character, string message ) {
+			Log.Chat ( message, character.Player, "chat " + character.Lobby.Name );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
-			string changedmessage = "#" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
+			string changedmessage = "#" + teamfontcolor + "#" + character.Player.SocialClubName + "#s#: " + message;
 			character.Lobby.SendAllPlayerChatMessage ( changedmessage );
 		}
 
         [DisableDefaultChat]
         [ServerEvent(Event.ChatMessage)]
         public static void OnChatMessage ( Client player, string message ) {
-            if ( player.GetChar().LoggedIn )
-			    OnChatMessageFunc ( player, message );
+            Character character = player.GetChar ();
+            if ( character.LoggedIn )
+			    OnChatMessageFunc ( character, message );
 		}
 
-		public static void SendGlobalMessage ( Client player, string message ) {
-			Character character = player.GetChar ();
-			Log.Chat ( message, player, "global" );
+		public static void SendGlobalMessage ( Character character, string message ) {
+			Log.Chat ( message, character.Player, "global" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
-			string changedmessage = "[GLOBAL] #" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
+			string changedmessage = "[GLOBAL] #" + teamfontcolor + "#" + character.Player.SocialClubName + "#s#: " + message;
 			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
-		public static void SendAdminMessage ( Client player, string message ) {
-			Character character = player.GetChar ();
-			Log.Chat ( message, player, "osay" );
-			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] #w#" + player.SocialClubName + ": #s#" + message;
+		public static void SendAdminMessage ( Character character, string message ) {
+			Log.Chat ( message, character.Player, "osay" );
+			string changedmessage = Admin.LevelFontColor[character.AdminLvl] + "[" + Admin.NameByLevel[character.AdminLvl] + "] #w#" + character.Player.SocialClubName + ": #s#" + message;
 			NAPI.Chat.SendChatMessageToAll ( changedmessage );
 		}
 
-		public static void SendAdminChat ( Client player, string message ) {
-			Character character = player.GetChar ();
-			Log.Chat ( message, player, "achat" );
-			string changedmessage = "[ADMINCHAT] " + Admin.LevelFontColor[character.AdminLvl] + player.SocialClubName + ": #s#" + message;
+		public static void SendAdminChat ( Character character, string message ) {
+			Log.Chat ( message, character.Player, "achat" );
+			string changedmessage = "[ADMINCHAT] " + Admin.LevelFontColor[character.AdminLvl] + character.Player.SocialClubName + ": #s#" + message;
 			Admin.SendChatMessageToAdmins ( changedmessage );
 		}
 
-		public static void SendTeamChat ( Client player, string message ) {
-			Character character = player.GetChar ();
-			Log.Chat ( message, player, "team" );
+		public static void SendTeamChat ( Character character, string message ) {
+			Log.Chat ( message, character.Player, "team" );
 			string teamfontcolor = character.Lobby.TeamColorStrings[character.Team];
-			string changedmessage = "[TEAM] #" + teamfontcolor + "#" + player.SocialClubName + "#s#: " + message;
-			character.Lobby.SendAllPlayerChatMessage ( changedmessage, (int) character.Team );
+			string changedmessage = "[TEAM] #" + teamfontcolor + "#" + character.Player.SocialClubName + "#s#: " + message;
+			character.Lobby.SendAllPlayerChatMessage ( changedmessage, character.Team );
 		}
 
-        public static void SendPrivateMessage ( Client player, Client target, string message ) {
-            Log.Chat ( message, player, "private", target.GetChar().UID );
-            string changedmessage = "[PM] #o#" + player.SocialClubName + "#s#: " + message;
-            target.SendChatMessage ( changedmessage );
+        public static void SendPrivateMessage ( Character character, Character targetcharacter, string message ) {
+            Log.Chat ( message, character.Player, "private", targetcharacter.UID );
+            string changedmessage = "[PM] #o#" + character.Player.SocialClubName + "#s#: " + message;
+            NAPI.Chat.SendChatMessageToPlayer ( targetcharacter.Player, changedmessage );
         }
 
 	}

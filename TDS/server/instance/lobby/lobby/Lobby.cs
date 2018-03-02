@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TDS.server.enums;
 using TDS.server.instance.lobby.interfaces;
+using TDS.server.instance.player;
 
 namespace TDS.server.instance.lobby {
 
@@ -58,13 +59,13 @@ namespace TDS.server.instance.lobby {
             SLobbiesByIndex.Remove ( ID );
             sDimensionsUsed.Remove ( Dimension );
 
-            FuncIterateAllPlayers ( ( player, teamID ) => {
-                RemovePlayer ( player );
+            FuncIterateAllPlayers ( ( character, teamID ) => {
+                RemovePlayer ( character );
             } );
         }
 
         internal bool IsSomeoneInLobby ( ) {
-            foreach ( List<Client> playerlist in Players ) {
+            foreach ( List<Character> playerlist in Players ) {
                 if ( playerlist.Count > 0 )
                     return true;
             }
@@ -78,7 +79,7 @@ namespace TDS.server.instance.lobby {
             return i;
         }
 
-        public virtual void OnPlayerEnterColShape ( ColShape shape, Client player ) { }
+        public virtual void OnPlayerEnterColShape ( ColShape shape, Character character ) { }
 
     }
 }

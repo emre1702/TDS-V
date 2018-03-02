@@ -4,6 +4,7 @@ namespace TDS.server.instance.player {
     using lobby;
     using Newtonsoft.Json;
     using TDS.server.enums;
+    using TDS.server.manager.database;
 
     public class LobbyDeathmatchStats {
         public uint Kills = 0;
@@ -17,6 +18,7 @@ namespace TDS.server.instance.player {
     }
 
     public class Character {
+        public Client Player;
 		public uint UID;
 		public uint AdminLvl = 0;
 		public uint DonatorLvl = 0;
@@ -30,16 +32,22 @@ namespace TDS.server.instance.player {
 		public uint Lifes = 0;
 		public Language Language = Language.ENGLISH;
         public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
-		public Client Spectating;
+		public Character Spectating;
 		public bool LoggedIn;
 		public bool IsLobbyOwner = false;
 		public bool IsVIP = false;
 
 		public bool HitsoundOn = true;
 
-		public Character ( bool loggedin = true ) {
+		public Character ( Client player, bool loggedin = true ) {
+            Player = player;
 			LoggedIn = loggedin;
 		}
+
+        public void GiveMoney ( uint money ) {
+            Money += money;
+            NAPI.ClientEvent.TriggerClientEvent ( Player, "onClientMoneyChange", Money );
+        }
 
         public void GiveKill () {
             ++CurrentStats.Kills;
@@ -59,6 +67,15 @@ namespace TDS.server.instance.player {
         public void GiveDamage ( uint thedmg ) {
             CurrentStats.Damage += thedmg;
             CurrentStats.TotalDeaths += thedmg;
+        }
+
+        public void SaveData () {
+            if ( LoggedIn ) {
+                Database.Exec ( $"UPDATE player SET playtime = {Playtime}, money = {Money} WHERE uid = {UID}" );
+                Database.Exec ( $"UPDATE playerarenastats SET arenakills = {ArenaStats.Kills}, arenaassists = {ArenaStats.Assists}, arenadeaths = {ArenaStats.Deaths}" +
+                    $", arenadamage = {ArenaStats.Damage}, arenatotalkills = {ArenaStats.TotalKills}, arenatotalassists = {ArenaStats.TotalAssists}, arenatotaldeaths = {ArenaStats.TotalDeaths}" +
+                    $", arenatotaldamage = {ArenaStats.TotalDamage} WHERE uid = {UID}" );
+            }
         }
 
     }

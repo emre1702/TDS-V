@@ -96,9 +96,9 @@
 		private readonly Dictionary<WeaponHash, int> customDamageDictionary = new Dictionary<WeaponHash, int> ();
 		private readonly Dictionary<WeaponHash, float> customHeadMultiplicator = new Dictionary<WeaponHash, float> ();
 
-		public Dictionary<Client, Dictionary<Client, int>> AllHitters = new Dictionary<Client, Dictionary<Client, int>> ();
-		public Dictionary<Client, Client> LastHitterDictionary = new Dictionary<Client, Client> ();
-		public Dictionary<Client, int> PlayerDamage = new Dictionary<Client, int> ();
+		public Dictionary<Character, Dictionary<Character, int>> AllHitters = new Dictionary<Character, Dictionary<Character, int>> ();
+		public Dictionary<Character, Character> LastHitterDictionary = new Dictionary<Character, Character> ();
+		public Dictionary<Character, int> PlayerDamage = new Dictionary<Character, int> ();
 
 
 		private int GetDamage ( WeaponHash hash, bool headshot ) {
@@ -118,8 +118,8 @@
 			return damage;
 		}
 
-		private void DamagePlayer ( Client player, Client hitted, int damage ) {
-			Character character = player.GetChar ();
+		private void DamagePlayer ( Character character, Character hittedcharacter, int damage ) {
+            Client hitted = hittedcharacter.Player;
 			if ( hitted.Armor + hitted.Health < damage )
 				damage = hitted.Armor + hitted.Health;
 			int leftdamage = damage;
@@ -139,35 +139,36 @@
 			if ( lobby is Arena )
 				character.GiveDamage ( (uint) damage );
 
-			// Reward //
-			if ( !PlayerDamage.ContainsKey ( player ) )
-				PlayerDamage[player] = 0;
-			PlayerDamage[player] += damage;
+            Client player = character.Player;
+            // Reward //
+            if ( !PlayerDamage.ContainsKey ( character ) )
+				PlayerDamage[character] = 0;
+			PlayerDamage[character] += damage;
 
 			// Last-Hitter //
-			LastHitterDictionary[hitted] = player;
-			if ( !AllHitters.ContainsKey ( hitted ) )
-				AllHitters.TryAdd ( hitted, new Dictionary<Client, int> () );
-			if ( !AllHitters[hitted].ContainsKey ( player ) )
-				AllHitters[hitted][player] += damage;
+			LastHitterDictionary[hittedcharacter] = character;
+			if ( !AllHitters.ContainsKey ( hittedcharacter ) )
+				AllHitters.TryAdd ( hittedcharacter, new Dictionary<Character, int> () );
+			if ( !AllHitters[hittedcharacter].ContainsKey ( character ) )
+				AllHitters[hittedcharacter][character] += damage;
 			else
-				AllHitters[hitted][player] = damage;
+				AllHitters[hittedcharacter][character] = damage;
 		}
 
-		private void DamagedPlayer ( Client player, Client hitted, WeaponHash weapon, bool headshot ) {
-			if ( !NAPI.Player.IsPlayerDead ( hitted ) && hitted.Dimension == player.Dimension ) {
-				Character character = player.GetChar ();
-				if ( character.Team != hitted.GetChar ().Team ) {
+		private void DamagedPlayer ( Character character, Character hittedcharacter, WeaponHash weapon, bool headshot ) {
+            Client player = character.Player;
+			if ( !NAPI.Player.IsPlayerDead ( hittedcharacter.Player ) && hittedcharacter.Player.Dimension == player.Dimension ) {
+				if ( character.Team != hittedcharacter.Team ) {
 
                     int damage = GetDamage ( weapon, headshot );
 
 					if ( damage > 0 ) {
-						DamagePlayer ( player, hitted, damage );
+						DamagePlayer ( character, hittedcharacter, damage );
 						if ( character.HitsoundOn )
                             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
-						if ( hitted.Health == 0 ) {
-							hitted.Kill ();
-							OnPlayerDeath ( hitted, player, (uint) weapon );
+						if ( hittedcharacter.Player.Health == 0 ) {
+                            hittedcharacter.Player.Kill ();
+							OnPlayerDeath ( hittedcharacter.Player, player, (uint) weapon );
 						}
 					}
 				}
@@ -178,11 +179,11 @@
         public void OnPlayerHitOtherPlayer ( Client player, NetHandle hittedhandle, bool headshot ) {
 			Client hitted = NAPI.Player.GetPlayerFromHandle ( hittedhandle );
 			if ( hitted != null ) {
-                Lobby playerlobby = player.GetChar ().Lobby;
-                if ( playerlobby is FightLobby fightlobby ) {
+                Character character = player.GetChar ();
+                if ( character.Lobby is FightLobby fightlobby ) {
                     WeaponHash currentweapon = player.CurrentWeapon;
                     NAPI.Util.ConsoleOutput ( currentweapon.ToString () );
-                    fightlobby.DmgSys.DamagedPlayer ( player, hitted, currentweapon, headshot );
+                    fightlobby.DmgSys.DamagedPlayer ( character, hitted.GetChar(), currentweapon, headshot );
                 }
 			}
 		}

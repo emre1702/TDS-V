@@ -4,7 +4,8 @@
 	using System.Threading.Tasks;
 	using database;
 	using GTANetworkAPI;
-	using utility;
+    using TDS.server.extend;
+    using utility;
 
 	static class Register {
 
@@ -21,7 +22,7 @@
 			Database.ExecPrepared ( $"INSERT INTO player (uid, name, password, email, registerdate) VALUES ({uid}, @name, @password, @email, '{Utility.GetTimestamp ()}');", parameters );
             Database.Exec ( $"INSERT INTO playerarenastats (uid) VALUES ({uid});" );
             Account.AddAccount ( player.SocialClubName, uid );
-            Login.LoginPlayer ( player, uid );
+            Login.LoginPlayer ( player.GetChar(), uid );
         }
 	}
 

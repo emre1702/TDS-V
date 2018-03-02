@@ -27,7 +27,7 @@
 						if ( character.LoggedIn ) {
 							character.Playtime++;
 							if ( character.Playtime % 30 == 0 ) {
-								Account.SavePlayerData ( player );
+                                character.SaveData ();
 							}
 						}
 					}

@@ -15,9 +15,9 @@ namespace TDS.server.instance.lobby {
             if ( Lobby.SLobbiesByIndex.ContainsKey ( index ) ) {
                 Lobby lobby = Lobby.SLobbiesByIndex[index];
                 if ( lobby is Arena )
-                    manager.lobby.Arena.Join ( player, spectator );
+                    manager.lobby.Arena.Join ( player.GetChar(), spectator );
                 else
-                    lobby.AddPlayer ( player, spectator );
+                    lobby.AddPlayer ( player.GetChar(), spectator );
             } else {
                 /* player.sendNotification (  lobby doesn't exist ); */
             }
@@ -25,7 +25,7 @@ namespace TDS.server.instance.lobby {
 
         [RemoteEvent( "joinMapCreatorLobby" )]
         public void JoinMapCreatorLobbyEvent ( Client player ) {
-            manager.lobby.MapCreatorLobby.Join ( player );
+            manager.lobby.MapCreatorLobby.Join ( player.GetChar() );
         }
         #endregion
 
@@ -38,9 +38,9 @@ namespace TDS.server.instance.lobby {
             if ( character.Lifes == 0 &&
                 ( arena.status == LobbyStatus.ROUND || character.Team == 0 && arena.status == LobbyStatus.COUNTDOWN ) ) {
                 if ( character.Team == 0 )
-                    arena.SpectateAllTeams ( player, forward );
+                    arena.SpectateAllTeams ( character, forward );
                 else
-                    arena.SpectateTeammate ( player, forward );
+                    arena.SpectateTeammate ( character, forward );
             }
         }
         #endregion
@@ -89,8 +89,9 @@ namespace TDS.server.instance.lobby {
 
         [RemoteEvent ( "sendMapFromCreator" )]
         public void SendMapFromCreatorEvent ( Client player, string map ) {
-            Map.CreateNewMap ( map, player.GetChar ().UID );
-            player.GetChar ().Lobby.RemovePlayerDerived ( player );
+            Character character = player.GetChar ();
+            Map.CreateNewMap ( map, character.UID );
+            character.Lobby.RemovePlayerDerived ( character );
         }
 
         [RemoteEvent ( "requestNewMapsList" )]
@@ -109,9 +110,10 @@ namespace TDS.server.instance.lobby {
         #region Bomb
         [RemoteEvent ( "onPlayerStartPlanting" )]
         public void onPlayerStartPlantingEvent ( Client player ) {
-            if ( !( player.GetChar ().Lobby is Arena arena ) )
+            Character character = player.GetChar ();
+            if ( !( character.Lobby is Arena arena ) )
                 return;
-            arena.StartBombPlanting ( player );
+            arena.StartBombPlanting ( character );
         }
                       
         [RemoteEvent ( "onPlayerStopPlanting" )]
@@ -123,16 +125,18 @@ namespace TDS.server.instance.lobby {
 
         [RemoteEvent ( "onPlayerStartDefusing" )]
         public void onPlayerStartDefusingEvent ( Client player ) {
-            if ( !( player.GetChar ().Lobby is Arena arena ) )
+            Character character = player.GetChar ();
+            if ( !( character.Lobby is Arena arena ) )
                 return;
-            arena.StartBombDefusing ( player );
+            arena.StartBombDefusing ( character );
         }
         
         [RemoteEvent ( "onPlayerStopDefusing" )]
         public void onPlayerStopDefusingEvent ( Client player ) {
-            if ( !( player.GetChar ().Lobby is Arena arena ) )
+            Character character = player.GetChar ();
+            if ( !( character.Lobby is Arena arena ) )
                 return;
-            arena.StopBombDefusing ( player );
+            arena.StopBombDefusing ( character );
         }
         #endregion
 
@@ -145,33 +149,37 @@ namespace TDS.server.instance.lobby {
         #region Order
         [RemoteEvent ( "onPlayerGiveOrder" )]
         public void OnPlayerGiveOrderEvent ( Client player, string ordershort ) {
-            player.GetChar ().Lobby.SendTeamOrder ( player, ordershort );
+            Character character = player.GetChar ();
+            character.Lobby.SendTeamOrder ( character, ordershort );
         }
         #endregion
 
         #region RageMP
         [ServerEvent(Event.PlayerEnterColshape)]
         public static void OnPlayerEnterColShape ( ColShape shape, Client player ) {
-            player.GetChar ().Lobby.OnPlayerEnterColShape ( shape, player );
+            Character character = player.GetChar ();
+            character.Lobby.OnPlayerEnterColShape ( shape, character );
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
         public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
-            player.GetChar ().Lobby.OnPlayerDisconnected ( player, type, reason );
+            Character character = player.GetChar ();
+            character.Lobby.OnPlayerDisconnected ( character, type, reason );
         }
 
         [ServerEvent(Event.PlayerWeaponSwitch)]
         public static void OnPlayerWeaponSwitch ( Client player, WeaponHash oldweapon, WeaponHash newweapon ) {
-            Lobby lobby = player.GetChar ().Lobby;
-            if ( lobby is Arena arenalobby )
-                arenalobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
-            else if ( lobby is FightLobby fightlobby )
-                fightlobby.OnPlayerWeaponSwitch ( player, oldweapon, newweapon );
+            Character character = player.GetChar ();
+            if ( character.Lobby is Arena arenalobby )
+                arenalobby.OnPlayerWeaponSwitch ( character, oldweapon, newweapon );
+            else if ( character.Lobby is FightLobby fightlobby )
+                fightlobby.OnPlayerWeaponSwitch ( character, oldweapon, newweapon );
         }
 
         [ServerEvent(Event.PlayerSpawn)]
         public static void OnPlayerSpawn ( Client player ) {
-            player.GetChar ().Lobby.OnPlayerSpawn ( player );
+            Character character = player.GetChar ();
+            character.Lobby.OnPlayerSpawn ( character );
         }
         #endregion
     }

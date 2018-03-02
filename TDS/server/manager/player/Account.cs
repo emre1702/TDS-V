@@ -65,7 +65,7 @@
         public void OnPlayerTryLoginEvent ( Client player, string password ) {
             if ( PlayerUIDs.ContainsKey ( player.SocialClubName ) ) {
                 password = Utility.ConvertToSHA512 ( password );
-                Login.LoginPlayer ( player, PlayerUIDs[player.SocialClubName], password );
+                Login.LoginPlayer ( player.GetChar (), PlayerUIDs[player.SocialClubName], password );
             } else
                 player.SendLangNotification ( "account_doesnt_exist" );
         }
@@ -129,24 +129,13 @@
             }
 		}
 
-		public static void SavePlayerData ( Client player ) {
-			Character character = player.GetChar ();
-			if ( character.LoggedIn ) {
-                Database.Exec ( $"UPDATE player SET playtime = {character.Playtime}, money = {character.Money} WHERE uid = {character.UID}" );
-                LobbyDeathmatchStats arena = character.ArenaStats;
-                Database.Exec ( $"UPDATE playerarenastats SET arenakills = {arena.Kills}, arenaassists = {arena.Assists}, arenadeaths = {arena.Deaths}" +
-                    $", arenadamage = {arena.Damage}, arenatotalkills = {arena.TotalKills}, arenatotalassists = {arena.TotalAssists}, arenatotaldeaths = {arena.TotalDeaths}" +
-                    $", arenatotaldamage = {arena.TotalDamage} WHERE uid = {character.UID}" );
-			}
-		}
-
         [ServerEvent(Event.PlayerDisconnected)]
         public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
 			try {
-                SavePlayerData ( player );
-				uint adminlvl = player.GetChar ().AdminLvl;
-				if ( adminlvl > 0 )
-					Admin.SetOffline ( player, adminlvl );
+                Character character = player.GetChar ();
+                character.SaveData ();
+				if ( character.AdminLvl > 0 )
+					Admin.SetOffline ( character );
 				//NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
 			} catch ( Exception ex ) {
 				Log.Error ( ex.ToString() );

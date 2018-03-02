@@ -3,8 +3,9 @@
 	using System.Collections.Generic;
 	using extend;
 	using GTANetworkAPI;
+    using TDS.server.instance.player;
 
-	static class Admin {
+    static class Admin {
 
 		public static Dictionary<uint, string> NameByLevel = new Dictionary<uint, string> {
 			[0] = "User",
@@ -20,34 +21,32 @@
 			[3] = "#dr#",
 			[4] = "#dr#"
         };
-		public static Dictionary<uint, List<Client>> AdminsOnline = new Dictionary<uint, List<Client>> {
-			[1] = new List<Client> (),
-			[2] = new List<Client> (),
-			[3] = new List<Client> (),
-			[4] = new List<Client> ()
+		public static Dictionary<uint, List<Character>> AdminsOnline = new Dictionary<uint, List<Character>> {
+			[1] = new List<Character> (),
+			[2] = new List<Character> (),
+			[3] = new List<Character> (),
+			[4] = new List<Character> ()
 		};
 		private const int adminMaxLvl = 4;
 
-		public static void SetOnline ( Client player, uint adminlvl = 0 ) {
-			uint alvl = adminlvl == 0 ? player.GetChar ().AdminLvl : adminlvl;
-			if ( adminMaxLvl >= alvl ) {
-				AdminsOnline[alvl].Add ( player );
+		public static void SetOnline ( Character character ) {
+			if ( adminMaxLvl >= character.AdminLvl ) {
+				AdminsOnline[character.AdminLvl].Add ( character );
 			}
 		}
 
-		public static void SetOffline ( Client player, uint adminlvl = 0 ) {
-			uint alvl = adminlvl == 0 ? player.GetChar ().AdminLvl : adminlvl;
-			if ( adminMaxLvl >= alvl ) {
-				AdminsOnline[alvl].Remove ( player );
+		public static void SetOffline ( Character character ) {
+			if ( adminMaxLvl >= character.AdminLvl ) {
+				AdminsOnline[character.AdminLvl].Remove ( character );
 			}
 		}
 
 		public static void SendChatMessageToAdmins ( string message ) {
 			for ( uint adminlvl = 1; adminlvl <= adminMaxLvl; adminlvl++ ) {
 				for ( int j = 0; j < AdminsOnline[adminlvl].Count; j++ ) {
-					Client player = AdminsOnline[adminlvl][j];
-					if ( player.Exists )
-						player.SendChatMessage ( message );
+					Character character = AdminsOnline[adminlvl][j];
+                    if ( character.Player.Exists )
+                        NAPI.Chat.SendChatMessageToPlayer ( character.Player, message );
 				}
 			}
 		}

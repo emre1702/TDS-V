@@ -7,19 +7,18 @@ namespace TDS.server.instance.lobby {
 
 	partial class Arena {
 
-		private Dictionary<Client, List<Client>> spectatingMe = new Dictionary<Client, List<Client>> ();
+		private Dictionary<Character, List<Character>> spectatingMe = new Dictionary<Character, List<Character>> ();
 
-        public void RespawnPlayerInSpectateMode ( Client player ) {
-            SpectateTeammate ( player );
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerSpectateMode" );
+        public void RespawnPlayerInSpectateMode ( Character character ) {
+            SpectateTeammate ( character );
+            NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerSpectateMode" );
         }
 
-        public void SpectateTeammate ( Client player, bool forwards = true, int givenIndex = -1, int givenTeam = -1 ) {
-			Character character = player.GetChar ();
-			Client spectating = character.Spectating ?? player;
+        public void SpectateTeammate ( Character character, bool forwards = true, int givenIndex = -1, int givenTeam = -1 ) {
+			Character spectating = character.Spectating ?? character;
 			int teamID = character.Team;
 			if ( alivePlayers[teamID].Count == 0 )
-				SpectateAllTeams ( player, forwards, givenIndex, givenTeam );
+				SpectateAllTeams ( character, forwards, givenIndex, givenTeam );
 			else {
 				int index = alivePlayers[teamID].IndexOf ( spectating );
 				if ( index == -1 )
@@ -33,14 +32,13 @@ namespace TDS.server.instance.lobby {
 					if ( index < 0 )
 						index = alivePlayers[teamID].Count - 1;
 				}
-				Spectate ( player, alivePlayers[teamID][index] );
+				Spectate ( character, alivePlayers[teamID][index] );
 			}
 		}
 
-		public void SpectateAllTeams ( Client player, bool forwards = true, int givenindex = -1, int giventeam = -1 ) {
-			Character character = player.GetChar ();
-			Client spectating = character.Spectating ?? player;
-			int teamID = giventeam != -1 ? giventeam : spectating.GetChar ().Team;
+		public void SpectateAllTeams ( Character character, bool forwards = true, int givenindex = -1, int giventeam = -1 ) {
+			Character spectating = character.Spectating ?? character;
+			int teamID = giventeam != -1 ? giventeam : spectating.Team;
 			if ( teamID == 0 )
 				teamID = 1;
 			int amountteams = alivePlayers.Count;
@@ -54,7 +52,7 @@ namespace TDS.server.instance.lobby {
 				else if ( teamID == amountteams )
 					teamID = 0;
 				if ( amounttried == amountteams ) {
-					Spectate ( player, player );
+					Spectate ( character, character );
 					return;
 				}
 			}
@@ -70,25 +68,26 @@ namespace TDS.server.instance.lobby {
 				if ( index < 0 )
 					index = alivePlayers[teamID].Count - 1;
 			}
-			Spectate ( player, alivePlayers[teamID][index] );
+			Spectate ( character, alivePlayers[teamID][index] );
 		}
 
-		private void Spectate ( Client player, Client target ) {
-			if ( player.Exists ) {
-				if ( target.Exists ) {
-					Character character = player.GetChar ();
-					if ( player != target ) {
-						character.Spectating = target;
+		private void Spectate ( Character character, Character targetcharacter ) {
+			if ( character.Player.Exists ) {
+				if ( targetcharacter.Player.Exists ) {
+                    Client player = character.Player;
+                    Client target = targetcharacter.Player;
+                    if ( player != target ) {
+						character.Spectating = targetcharacter;
 						player.Spectate ( target );
-						if ( !spectatingMe.ContainsKey ( target ) ) {
-							spectatingMe[target] = new List<Client> ();
+						if ( !spectatingMe.ContainsKey ( targetcharacter ) ) {
+							spectatingMe[targetcharacter] = new List<Character> ();
 						}
-						spectatingMe[target].Add ( player );
+						spectatingMe[targetcharacter].Add ( character );
 					} else {
 						if ( character.Spectating != null ) {
-							Client oldspectating = character.Spectating;
+							Character oldspectating = character.Spectating;
 							if ( spectatingMe.ContainsKey ( oldspectating ) ) {
-								spectatingMe[oldspectating].Remove ( player );
+								spectatingMe[oldspectating].Remove ( character );
 							}
 						}
 						character.Spectating = null;
@@ -98,15 +97,15 @@ namespace TDS.server.instance.lobby {
 			}
 		}
 
-		private void PlayerCantBeSpectatedAnymore ( Client player, int givenindex, int giventeam ) {
-			if ( spectatingMe.ContainsKey ( player ) ) {
-				for ( int i = spectatingMe[player].Count - 1; i >= 0; i-- ) {
-					if ( spectatingMe[player][i].GetChar ().Team == 0 )
-						SpectateAllTeams ( spectatingMe[player][i], true, givenindex, giventeam );
+		private void PlayerCantBeSpectatedAnymore ( Character character, int givenindex, int giventeam ) {
+			if ( spectatingMe.ContainsKey ( character ) ) {
+				for ( int i = spectatingMe[character].Count - 1; i >= 0; i-- ) {
+					if ( spectatingMe[character][i].Team == 0 )
+						SpectateAllTeams ( spectatingMe[character][i], true, givenindex, giventeam );
 					else
-						SpectateTeammate ( spectatingMe[player][i], true, givenindex, giventeam );
+						SpectateTeammate ( spectatingMe[character][i], true, givenindex, giventeam );
 				}
-				spectatingMe.Remove ( player );
+				spectatingMe.Remove ( character );
 			}
 		}
 	}

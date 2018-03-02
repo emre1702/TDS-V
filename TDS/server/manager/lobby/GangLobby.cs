@@ -1,6 +1,7 @@
 ﻿namespace TDS.server.manager.lobby {
 
 	using GTANetworkAPI;
+    using TDS.server.instance.player;
 
     static class GangLobby {
 
@@ -15,8 +16,8 @@
             TheLobby.SetDefaultSpawnRotation ( new Vector3 ( 0, 0, 144.0 ) );
         }
 
-		public static void Join ( Client player ) {
-			TheLobby.AddPlayer ( player );
+		public static void Join ( Character character ) {
+			TheLobby.AddPlayer ( character );
 		}
 	}
 

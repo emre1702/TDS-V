@@ -10,13 +10,13 @@ namespace TDS.server.instance.lobby {
         public uint Health = 100;
         
 
-        public void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
-            player.GetChar ().Lobby.RemovePlayer ( player );
+        public void OnPlayerDisconnected ( Character character, DisconnectionType type, string reason ) {
+            character.Lobby.RemovePlayer ( character );
         }
 
-        public virtual void OnPlayerSpawn ( Client player ) {
-            Character character = player.GetChar ();
+        public virtual void OnPlayerSpawn ( Character character ) {
             Lobby lobby = character.Lobby;
+            Client player = character.Player;
 
             NAPI.Player.SetPlayerHealth ( player, (int) Health );
             NAPI.Player.SetPlayerArmor ( player, (int) Armor );
@@ -29,10 +29,10 @@ namespace TDS.server.instance.lobby {
             }
         }
 
-        public virtual void AddPlayer ( Client player, bool spectator = false ) {
+        public virtual void AddPlayer ( Character character, bool spectator = false ) {
+            Client player = character.Player;
             player.Freeze ( true );
-            Character character = player.GetChar ();
-            character.Lobby.RemovePlayerDerived ( player );
+            character.Lobby.RemovePlayerDerived ( character );
             character.Lobby = this;
             character.Spectating = null;
             player.StopSpectating ();
@@ -48,48 +48,45 @@ namespace TDS.server.instance.lobby {
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
 
             if ( spectator )
-                AddPlayerAsSpectator ( player );
+                AddPlayerAsSpectator ( character );
         }
 
-        private void AddPlayerAsSpectator ( Client player ) {
-            Character character = player.GetChar ();
-            SetPlayerTeam ( player, 0, character );
+        private void AddPlayerAsSpectator ( Character character ) {
+            SetPlayerTeam ( character, 0 );
             character.Lifes = 0;
         }
 
-        public void RemovePlayerDerived ( Client player ) {
+        public void RemovePlayerDerived ( Character character ) {
             if ( this is Arena lobby )
-                lobby.RemovePlayer ( player );
+                lobby.RemovePlayer ( character );
             else
-                RemovePlayer ( player );
+                RemovePlayer ( character );
         }
 
-        public virtual void RemovePlayer ( Client player ) {
-            Character character = player.GetChar ();
+        public virtual void RemovePlayer ( Character character ) {
             int teamID = character.Team;
-            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
+            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, character.Player.Value );
             character.IsLobbyOwner = false;
             character.CurrentStats = character.ArenaStats;
 
-            Players[teamID].Remove ( player );
+            Players[teamID].Remove ( character );
 
-            if ( player.Exists ) 
-                player.Transparency = 255;
+            if ( character.Player.Exists )
+                character.Player.Transparency = 255;
 
             if ( DeleteWhenEmpty && !IsSomeoneInLobby() ) {
                 Remove ();
             }
         }
 
-        public void SendTeamOrder ( Client player, string ordershort ) {
-            Character character = player.GetChar ();
+        public void SendTeamOrder ( Character character, string ordershort ) {
             string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
-            string beforemessage = "[TEAM] #" + teamfontcolor + "#" + player.SocialClubName + "#r#: ";
-            SendAllPlayerLangMessage ( ordershort, player.GetChar ().Team, beforemessage );
+            string beforemessage = "[TEAM] #" + teamfontcolor + "#" + character.Player.SocialClubName + "#r#: ";
+            SendAllPlayerLangMessage ( ordershort, character.Team, beforemessage );
         }
 
-        public void SetPlayerLobbyOwner ( Client player ) {
-            player.GetChar ().IsLobbyOwner = true;
+        public void SetPlayerLobbyOwner ( Character character ) {
+            character.IsLobbyOwner = true;
         }
     }
 }

@@ -40,7 +40,7 @@
 		public static void NextMap ( Client player ) {
 			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
                 Lobby lobby = player.GetChar ().Lobby;
-                if ( player.GetChar ().Lobby is IRound roundlobby ) {
+                if ( lobby is IRound roundlobby ) {
 					// LOG //
 					Log.Admin ( "next", player, "0", lobby.Name );
                     /////////
@@ -59,20 +59,22 @@
 			if ( player != target ) {
 				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
                     // LOG //
-                    if ( player.GetChar ().IsLobbyOwner ) {
-                        if ( player.GetChar ().Lobby == target.GetChar ().Lobby )
-                            Log.LobbyOwner ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                    Character character = player.GetChar ();
+                    Character targetcharacter = target.GetChar ();
+                    if ( character.IsLobbyOwner ) {
+                        if ( character.Lobby == targetcharacter.Lobby )
+                            Log.LobbyOwner ( "lobbykick", player, target, character.Lobby.Name );
                         else
                             player.SendLangNotification ( "target_not_in_same_lobby" );
                     } 
-                    else if ( player.GetChar ().AdminLvl >= neededLevels["kick"] )
-                        Log.Admin ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                    else if ( character.AdminLvl >= neededLevels["kick"] )
+                        Log.Admin ( "lobbykick", player, target, character.Lobby.Name );
                     else
-                        Log.VIP ( "lobbykick", player, target, player.GetChar ().Lobby.Name );
+                        Log.VIP ( "lobbykick", player, target, character.Lobby.Name );
 					/////////
 					ServerLanguage.SendMessageToAll ( "lobbykick", target.Name, player.Name, reason );
-					target.GetChar ().Lobby.RemovePlayerDerived ( target );
-                    MainMenu.Join ( target );
+                    targetcharacter.Lobby.RemovePlayerDerived ( targetcharacter );
+                    MainMenu.Join ( targetcharacter );
                 }
 			}
 		}
@@ -228,7 +230,7 @@
         [Command ( "adminsay" )]
 		public static void AdminSay ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
-				Chat.SendAdminMessage ( player, text );
+				Chat.SendAdminMessage ( player.GetChar(), text );
 			}
 		}
 
@@ -240,7 +242,7 @@
         [Command ( "adminchat" )]
 		public static void AdminChat ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {
-				Chat.SendAdminChat ( player, text );
+				Chat.SendAdminChat ( player.GetChar (), text );
 			}
 		}
 		#endregion

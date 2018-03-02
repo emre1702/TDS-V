@@ -25,12 +25,11 @@ namespace TDS.server.instance.lobby {
                 StopRoundBomb ();
         }
 
-        public override void OnPlayerEnterColShape ( ColShape shape, Client player ) {
-            base.OnPlayerEnterColShape ( shape, player );
-            Character character = player.GetChar ();
+        public override void OnPlayerEnterColShape ( ColShape shape, Character character ) {
+            base.OnPlayerEnterColShape ( shape, character );
             if ( lobbyBombTakeCol.ContainsKey ( this ) ) {
                 if ( character.Lifes > 0 && character.Team == terroristTeamID ) {
-                    TakeBomb ( player );
+                    TakeBomb ( character );
                 }
             }
         }
@@ -44,10 +43,10 @@ namespace TDS.server.instance.lobby {
         }
 
         private void RewardAllPlayer ( ) {
-            foreach ( KeyValuePair<Client, int> entry in DmgSys.PlayerDamage ) {
-                Client player = entry.Key;
+            foreach ( KeyValuePair<Character, int> entry in DmgSys.PlayerDamage ) {
+                Character character = entry.Key;
+                Client player = character.Player;
                 if ( player.Exists ) {
-                    Character character = player.GetChar ();
                     if ( character.Lobby == this ) {
                         List<uint> reward = new List<uint> ();
                         if ( DmgSys.PlayerKills.ContainsKey ( player ) ) {

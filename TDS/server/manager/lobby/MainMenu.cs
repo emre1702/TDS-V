@@ -2,8 +2,9 @@
 
 	using GTANetworkAPI;
 	using instance.lobby;
+    using TDS.server.instance.player;
 
-	static class MainMenu {
+    static class MainMenu {
 		public static Lobby TheLobby;
 
 		public static void Create() {
@@ -14,8 +15,8 @@
 			};
 		}
 
-		public static void Join ( Client player ) {
-			TheLobby.AddPlayer ( player, true );
+		public static void Join ( Character character ) {
+			TheLobby.AddPlayer ( character, true );
 		}
 	}
 
