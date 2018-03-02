@@ -56,10 +56,10 @@ function checkMapLimit() {
 }
 
 
-function loadMapLimitData( data: { Item1, Item2, Item3 }[] ) {
+function loadMapLimitData( data: { X: number, Y: number, Z: number }[] ) {
     maplimitdata.limit = [];
 	for ( let j = 0; j < data.length; j++ ) {
-		maplimitdata.limit[j] = { x: data[j].Item1, y: data[j].Item2 };
+		maplimitdata.limit[j] = { x: data[j].X, y: data[j].Y };
 	}
 	maplimitdata.outsidecounter = 11;
 	if ( data.length > 0 ) {

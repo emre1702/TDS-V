@@ -115,8 +115,7 @@ namespace TDS.server.instance.lobby {
 
         private void SendPlayerRoundInfoOnJoin ( Client player ) {
             if ( currentMap != null ) {
-                List<Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapChange", currentMap.SyncData.Name, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapChange", currentMap.SyncData.Name, JsonConvert.SerializeObject ( currentMap.MapLimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
             }
 
             SendPlayerAmountInFightInfo ( player );

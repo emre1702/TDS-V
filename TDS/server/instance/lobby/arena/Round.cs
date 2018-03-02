@@ -46,8 +46,7 @@ namespace TDS.server.instance.lobby {
                 CreateMapLimitBlips ();
                 if ( mixTeamsAfterRound )
                     MixTeams ();
-                List <Tuple<float, float>> maplimits = GetJsonSerializableList ( currentMap.MapLimits );
-                SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.SyncData.Name, JsonConvert.SerializeObject ( maplimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
+                SendAllPlayerEvent ( "onClientMapChange", -1, currentMap.SyncData.Name, JsonConvert.SerializeObject ( currentMap.MapLimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
 
                 roundStartTimer = Timer.SetTimer ( StartRoundCountdown, mapShowTime );
             } catch ( Exception ex ) {
@@ -159,14 +158,6 @@ namespace TDS.server.instance.lobby {
         private void RespawnPlayerInRound ( Character character ) {
             SetPlayerReadyForRound ( character );
             character.Player.Freeze ( false );
-        }
-
-        private static List<Tuple<float, float>> GetJsonSerializableList ( List<Vector3> list ) {
-            List<Tuple<float, float>> newlist = new List<Tuple<float, float>> ();
-            foreach ( Vector3 vector in list ) {
-                newlist.Add ( new Tuple<float, float> ( vector.X, vector.Y ) );
-            }
-            return newlist;
         }
     }
 }
