@@ -4,6 +4,7 @@ namespace TDS.server.instance.player {
     using lobby;
     using Newtonsoft.Json;
     using TDS.server.enums;
+    using TDS.server.instance.lobby.ganglobby;
     using TDS.server.manager.database;
 
     public class LobbyDeathmatchStats {
@@ -28,7 +29,7 @@ namespace TDS.server.instance.player {
         public LobbyDeathmatchStats TempStats;
         public LobbyDeathmatchStats CurrentStats;
         public int Team = 0;
-        public uint Gang = 0;
+        public Gang Gang;
 		public uint Lifes = 0;
 		public Language Language = Language.ENGLISH;
         public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
