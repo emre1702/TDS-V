@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using TDS.server.extend;
+using TDS.server.instance.player;
 using TDS.server.manager.database;
 
 namespace TDS.server.manager.map {
@@ -56,10 +57,9 @@ namespace TDS.server.manager.map {
             --mapRatingDict[mapname][rating-1];
         }
 
-        public static void SendPlayerHisRatings ( Client player ) {
-            uint uid = player.GetChar ().UID;
-            if ( playerMapRating.ContainsKey ( uid ) )
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientLoadOwnMapRatings", JsonConvert.SerializeObject ( playerMapRating[uid] ) );
+        public static void SendPlayerHisRatings ( Character character ) {
+            if ( playerMapRating.ContainsKey ( character.UID ) )
+                NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientLoadOwnMapRatings", JsonConvert.SerializeObject ( playerMapRating[character.UID] ) );
         }
 
     }

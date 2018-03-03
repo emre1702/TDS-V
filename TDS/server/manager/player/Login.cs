@@ -47,7 +47,7 @@
                             if ( character.AdminLvl > 0 )
                                 Admin.SetOnline ( character );
 
-                            Map.SendPlayerHisRatings ( player );
+                            Map.SendPlayerHisRatings ( character );
                             Gang.CheckPlayerGang ( character );
 
 						} else {
