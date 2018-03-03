@@ -60,7 +60,7 @@
 					}
 				}
 
-                character.Player.Team = 1;
+                player.Team = 1;
                 character.UID = uid;
                 character.LoggedIn = true;
 
