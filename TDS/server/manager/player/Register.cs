@@ -1,7 +1,6 @@
 ﻿namespace TDS.server.manager.player {
 
 	using System.Collections.Generic;
-	using System.Threading.Tasks;
 	using database;
 	using GTANetworkAPI;
     using TDS.server.extend;

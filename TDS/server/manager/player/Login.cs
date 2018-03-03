@@ -9,22 +9,22 @@
 	using instance.player;
 	using lobby;
 	using logs;
+    using TDS.server.instance.lobby.ganglobby;
     using TDS.server.manager.map;
     using utility;
 
 	static class Login {
 
-		public static async void LoginPlayer ( Character character, uint uid, string password = "" ) {
+		public static async void LoginPlayer ( Character character, uint uid, string password = null ) {
 			try {
-				if ( password != "" ) {
+                Client player = character.Player;
+
+                if ( password != null ) {
                     DataTable result = await Database.ExecResult ( $"SELECT * FROM player, playerarenastats WHERE player.uid = {uid} AND player.uid = playerarenastats.uid" ).ConfigureAwait ( false );
-                    Client player = character.Player;
                     if ( result.Rows.Count > 0 ) {
 						DataRow row = result.Rows[0];
 						if ( Utility.ConvertToSHA512 ( password ) == row["password"].ToString () ) {
-                            character.Player.Team = 1;
 
-                            character.UID = uid;
                             player.Name = row["name"].ToString ();
                             character.AdminLvl = Convert.ToUInt32 ( row["adminlvl"] );
                             character.DonatorLvl = Convert.ToUInt32 ( row["donatorlvl"] );
@@ -42,18 +42,14 @@
                             character.CurrentStats = character.ArenaStats;
                             character.IsVIP = row["isvip"].ToString () == "1";
 
-                            character.LoggedIn = true;
-
                             character.GiveMoney ( Convert.ToUInt32 ( row["money"] ) );
 
                             if ( character.AdminLvl > 0 )
                                 Admin.SetOnline ( character );
 
                             Map.SendPlayerHisRatings ( player );
+                            Gang.CheckPlayerGang ( character );
 
-                            NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
-
-                            MainMenu.Join ( character );
 						} else {
 							player.SendLangNotification ( "wrong_password" );
 							return;
@@ -63,7 +59,15 @@
 						return;
 					}
 				}
-			} catch ( Exception ex ) {
+
+                character.Player.Team = 1;
+                character.UID = uid;
+                character.LoggedIn = true;
+
+                NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
+
+                MainMenu.Join ( character );
+            } catch ( Exception ex ) {
 				Log.Error ( ex.ToString() );
 			}
 		}
