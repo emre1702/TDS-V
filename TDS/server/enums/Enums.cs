@@ -18,4 +18,8 @@
     public enum PlayerSetting {
         LANGUAGE, HITSOUND
     }
+
+    public enum GangActivity {
+        INVITE, UNINVITE, RANKUP, RANKDOWN, CHANGE_RANKNAMES, CHANGE_RANKCOLORS  
+    }
 }
