@@ -62,7 +62,10 @@
                 ["round_end_bomb_exploded"] = "Bomb exploded!<br>Team {1} wins!",
                 ["round_end_bomb_defused"] = "Bomb defused!<br>Team {1} wins!",
                 ["round_end_command"] = "Map was skipped by {1}!",
-                ["round_end_new_player"] = "Enough players in ...<br>Round starting!"
+                ["round_end_new_player"] = "Enough players in ...<br>Round starting!",
+                ["not_allowed"] = "You are not allowed to do that!",
+                ["gang_doesnt_exist_anymore"] = "The gang doesn't exist anymore!",
+                ["invitation_was_removed"] = "The invitation already got removed!"
             },
 			[Language.GERMAN] = new Dictionary<string, string> {
 				["wrong_password"] = "Falsches Passwort!",
@@ -118,7 +121,10 @@
                 ["round_end_bomb_exploded"] = "Bombe explodiert!<br>Team {1} gewinnt!",
                 ["round_end_bomb_defused"] = "Bombe entschärft!<br>Team {1} gewinnt!",
                 ["round_end_command"] = "Die Map wurde von {1} übersprungen!",
-                ["round_end_new_player"] = "Genug Spieler drin ...<br>Runde startet!"
+                ["round_end_new_player"] = "Genug Spieler drin ...<br>Runde startet!",
+                ["not_allowed"] = "Du bist dazu nicht befugt!",
+                ["gang_doesnt_exist_anymore"] = "Die Gang existiert nicht mehr!",
+                ["invitation_was_removed"] = "Die Einladung wurde bereits zurückgezogen!"
             }
 		};
 
