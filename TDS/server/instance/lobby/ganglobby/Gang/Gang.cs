@@ -1,34 +1,54 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
-using TDS.server.extend;
-using TDS.server.instance.player;
+using System.Data;
+using TDS.server.manager.database;
+using TDS.server.manager.logs;
 
 namespace TDS.server.instance.lobby.ganglobby {
 
-    partial class Gang {
+    public partial class Gang {
+        private static Dictionary<uint, Gang> gangByUID = new Dictionary<uint, Gang> ();
         private static Dictionary<uint, Gang> playerMemberOfGang = new Dictionary<uint, Gang> ();
 
         private uint uid;
         private string name;
         private string shortname;
+        private uint owneruid;
 
         private List<Client> membersOnline = new List<Client> ();
+        private Dictionary<uint, uint> membersRank = new Dictionary<uint, uint> ();
 
-        public Gang ( uint uid, string name, string shortname ) {
+        public Gang ( uint uid, string name, string shortname, uint owneruid ) {
             this.uid = uid;
             this.name = name;
             this.shortname = shortname;
+            this.owneruid = owneruid;
         }
 
-        private void MemberCameOnline ( Client player ) {
-            Character character = player.GetChar ();
-            character.Gang = uid;
+        public static Gang GetGangByUID ( uint uid ) {
+            return gangByUID.ContainsKey ( uid ) ? gangByUID[uid] : null;
         }
 
-        public static void CheckPlayerGang ( Client player ) {
-            uint uid = player.GetChar ().UID;
-            if ( playerMemberOfGang.ContainsKey ( uid ) ) {
-                playerMemberOfGang[uid].MemberCameOnline ( player );
+        public static async void LoadGangFromDatabase ( ) {
+            DataTable gangtable = await Database.ExecResult ( "SELECT * FROM gang" );
+            foreach ( DataRow row in gangtable.Rows ) {
+                uint uid = Convert.ToUInt32 ( row["uid"] );
+                Gang gang = new Gang ( uid, row["name"].ToString(), row["shortname"].ToString (), Convert.ToUInt32 ( row["owneruid"] ) );
+                gangByUID[uid] = gang;
+            }
+
+            DataTable gangmembertable = await Database.ExecResult ( "SELECT * FROM gangmember" );
+            foreach ( DataRow row in gangmembertable.Rows ) {
+                uint ganguid = Convert.ToUInt32 ( row["ganguid"] );
+                if ( gangByUID.ContainsKey ( ganguid ) ) {
+                    Gang gang = gangByUID[ganguid];
+                    uint memberuid = Convert.ToUInt32 ( row["memberuid"] );
+                    playerMemberOfGang[memberuid] = gang;
+                    gang.membersRank[memberuid] = Convert.ToUInt32 ( row["rank"] );
+                } else {
+                    Log.Error ( $"Gang with uid {ganguid} doesn't exist, but player with uid {row["memberuid"].ToString ()} is in that gang!" );
+                }
             }
         }
     }
