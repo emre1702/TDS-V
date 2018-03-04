@@ -10,8 +10,7 @@ namespace TDS.server.instance.lobby {
             character.Player.Freeze ( false );
 
             if ( character.Gang != null ) {
-                int gangteamid = GetGangTeamID ( character.Gang );
-                SetPlayerTeam ( character, gangteamid );
+                SetPlayerTeam ( character, character.Gang );
             }
         }
     }
