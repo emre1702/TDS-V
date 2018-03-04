@@ -1,7 +1,8 @@
 ﻿namespace TDS.server.manager.utility {
-
-	using System;
-	using System.Globalization;
+    using GTANetworkAPI;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
 	using System.Security.Cryptography;
 	using System.Text;
 
@@ -40,6 +41,15 @@
 		public static float ToFloat ( this string str ) {
 			return float.Parse ( str, CultureInfo.InvariantCulture );
 		}
+
+        public static Client FindPlayer ( string name ) {
+            Client player = NAPI.Player.GetPlayerFromName ( name );
+            if ( player.Exists )
+                return player;
+            name = name.ToLower ();
+            return NAPI.Pools.GetAllPlayers ().Find ( c => c.Name.ToLower().StartsWith ( name ) );
+
+        }
 
 	}
 
