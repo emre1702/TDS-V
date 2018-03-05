@@ -42,7 +42,7 @@
                             character.CurrentStats = character.ArenaStats;
                             character.IsVIP = row["isvip"].ToString () == "1";
 
-                            character.GiveMoney ( Convert.ToInt32 ( row["money"] ) );
+                            character.GiveMoney ( Convert.ToInt16 ( row["money"] ) );
 
                             if ( character.AdminLvl > 0 )
                                 Admin.SetOnline ( character );
