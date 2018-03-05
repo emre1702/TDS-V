@@ -33,8 +33,7 @@
 
         #region Lobby
         [CommandDescription ( "Ends the round." )]
-        [CommandGroup ( "supporter" )]
-        //[CommandGroup ( "lobby-owner" )]
+        [CommandGroup ( "supporter/lobby-owner" )]
         [CommandAlias ( "endround" )]
         [Command ( "next" )]
 		public static void NextMap ( Client player ) {
@@ -51,9 +50,7 @@
 		}
 
         [CommandDescription ( "Kicks a player from the lobby." )]
-        [CommandGroup ( "supporter" )]
-        //[CommandGroup ( "lobby-owner" )]
-        //[CommandGroup ( "VIP" )]
+        [CommandGroup ( "supporter/lobby-owner/VIP" )]
 		[Command ( "lobbykick" )]
 		public static void LobbyKickPlayer ( Client player, Client target, [RemainingText] string reason ) {
 			if ( player != target ) {
@@ -82,8 +79,7 @@
 
         #region Kick
         [CommandDescription ( "Kicks a player from the server." )]
-        [CommandGroup ( "supporter" )]
-        //[CommandGroup ( "VIP" )]
+        [CommandGroup ( "supporter/VIP" )]
         [CommandAlias ( "rkick" )]
         [Command ( "kick" )]
 		public static void KickPlayer ( Client player, Client target, [RemainingText] string reason ) {
@@ -106,9 +102,9 @@
         [CommandDescription ( "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban." )]
         [CommandGroup ( "administrator" )]
         [CommandAlias ( "tban" )]
-        //[CommandAlias ( "timeban" )]
-        //[CommandAlias ( "pban" )]
-        //[CommandAlias ( "permaban" )]
+        [CommandAlias ( "timeban" )]
+        [CommandAlias ( "pban" )]
+        [CommandAlias ( "permaban" )]
         [Command ( "ban" )]
 		public async void BanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
 			try {
@@ -150,10 +146,9 @@
 
 		#region Utility 
         [CommandDescription ( "Warps to another player." )]
-        [CommandGroup ( "administrator" )]
-        //[CommandGroup ( "lobby-owner" )]
+        [CommandGroup ( "administrator/lobby-owner" )]
         [CommandAlias ( "gotoplayer" )]
-        //[CommandAlias ( "warpto" )]
+        [CommandAlias ( "warpto" )]
 		[Command ( "goto" )]
 		public void GotoPlayer ( Client player, Client target ) {
 			if ( player.IsAdminLevel ( neededLevels["goto"], true ) ) {
@@ -186,10 +181,9 @@
 		}
 
         [CommandDescription ( "Warps to a point." )]
-        [CommandGroup ( "administrator" )]
-        //[CommandGroup ( "lobby-owner" )]
+        [CommandGroup ( "administrator/lobby-owner" )]
         [CommandAlias ( "gotoxyz" )]
-        //[CommandAlias ( "gotopos" )]
+        [CommandAlias ( "gotopos" )]
 		[Command ( "xyz" )]
 		public void GotoXYZ ( Client player, float x, float y, float z ) {
 			if ( player.IsAdminLevel ( neededLevels["xyz"], true ) ) {
@@ -198,8 +192,7 @@
 		}
 
         [CommandDescription ( "Creates a vehicle." )]
-        [CommandGroup ( "administrator" )]
-        //[CommandGroup ( "lobby-owner" )]
+        [CommandGroup ( "administrator/lobby-owner" )]
         [CommandAlias ( "createvehicle" )]
 		[Command ( "cveh" )]
 		public void SpawnCarCommand ( Client player, string name ) {
@@ -225,8 +218,8 @@
         [CommandDescription ( "Global-say for admins (for announcements)." )]
         [CommandGroup ( "supporter" )]
         [CommandAlias ( "o" )]
-        //[CommandAlias ( "ochat" )]
-        //[CommandAlias ( "osay" )]
+        [CommandAlias ( "ochat" )]
+        [CommandAlias ( "osay" )]
         [Command ( "adminsay" )]
 		public static void AdminSay ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminsay"] ) ) {
@@ -237,8 +230,8 @@
         [CommandDescription ( "Chat only for admins." )]
         [CommandGroup ( "supporter" )]
         [CommandAlias ( "a" )]
-        //[CommandAlias ( "achat" )]
-        //[CommandAlias ( "asay" )]
+        [CommandAlias ( "achat" )]
+        [CommandAlias ( "asay" )]
         [Command ( "adminchat" )]
 		public static void AdminChat ( Client player, [RemainingText] string text ) {
 			if ( player.IsAdminLevel ( neededLevels["adminchat"] ) ) {

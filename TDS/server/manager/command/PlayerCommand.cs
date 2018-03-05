@@ -14,7 +14,7 @@
 
         #region Lobby
         [CommandAlias ( "leavelobby" )]
-        //[CommandAlias ( "lobbyleave" )]
+        [CommandAlias ( "lobbyleave" )]
         [CommandDescription ( "Leaves the lobby" )]
         [CommandGroup ( "user" )]
         [Command ( "leave" )]
@@ -42,8 +42,8 @@
         [CommandDescription ( "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu." )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "gwlobby" )]
-        //[CommandAlias ( "lobbygang" )]
-        //[CommandAlias ( "lobbygw" )]
+        [CommandAlias ( "lobbygang" )]
+        [CommandAlias ( "lobbygw" )]
         [Command ( "ganglobby" )]
 		public static void JoinGangLobby ( Client player ) {
             Character character = player.GetChar();
@@ -57,7 +57,7 @@
         [CommandDescription ( "Writes in global-chat" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "globalsay" )]
-        //[CommandAlias ( "global" )]
+        [CommandAlias ( "global" )]
         [Command ( "globalchat" )]
 		public static void GlobalChat ( Client player, [RemainingText] string text ) {
             Character character = player.GetChar ();
@@ -68,8 +68,8 @@
         [CommandDescription ( "Writes in team-chat" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "t" )]
-        //[CommandAlias ( "teamsay" )]
-        //[CommandAlias ( "team" )]
+        [CommandAlias ( "teamsay" )]
+        [CommandAlias ( "team" )]
         [Command ( "teamchat" )]
 		public static void TeamChat ( Client player, [RemainingText] string text ) {
             Character character = player.GetChar ();
@@ -80,7 +80,7 @@
         [CommandDescription ( "Writes a private-message to a player." )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "message" )]
-        //[CommandAlias ( "pm" )]
+        [CommandAlias ( "pm" )]
         [Command ( "msg" )]
         public static void PrivateMessage ( Client player, Client target, [RemainingText] string text ) {
             Character character = player.GetChar ();
@@ -98,8 +98,8 @@
         [CommandDescription ( "Outputs your position and rotation." )]
         [CommandGroup ( "user" )]
         [CommandAlias( "getpos" )]
-        //[CommandAlias ( "rot" )]
-        //[CommandAlias ( "getrot" )]
+        [CommandAlias ( "rot" )]
+        [CommandAlias ( "getrot" )]
 		[Command ( "pos", Description = "Gets your position and rotation", Group = "user" )]
 		public void SendPlayerPosition ( Client sender ) {
 			if ( NAPI.Player.IsPlayerInAnyVehicle ( sender ) ) {
@@ -127,8 +127,8 @@
         #region Deathmatch
         [CommandDescription ( "Activates/deactivates the hitsound" )]
         [CommandGroup ( "user" )]
-        //[CommandAlias ( "hitglocke" )]
-        //[CommandAlias ( "togglehitsound" )]
+        [CommandAlias ( "hitglocke" )]
+        [CommandAlias ( "togglehitsound" )]
         [Command ( "hitsound" )]
 		public static void ToggleHitsound ( Client player, int activate = -1 ) {
 			Character character = player.GetChar ();
