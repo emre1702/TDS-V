@@ -2,10 +2,10 @@ namespace TDS.server.instance.player {
 
     using GTANetworkAPI;
     using lobby;
-    using Newtonsoft.Json;
     using TDS.server.enums;
     using TDS.server.instance.lobby.ganglobby;
     using TDS.server.manager.database;
+    using TDS.server.manager.logs;
 
     public class LobbyDeathmatchStats {
         public uint Kills = 0;
@@ -45,9 +45,13 @@ namespace TDS.server.instance.player {
 			LoggedIn = loggedin;
 		}
 
-        public void GiveMoney ( uint money ) {
-            Money += money;
-            NAPI.ClientEvent.TriggerClientEvent ( Player, "onClientMoneyChange", Money );
+        public void GiveMoney ( short money ) {
+            if ( money > 0 || Money > money * -1 ) {
+                Money = (uint) checked(Money + money);
+                NAPI.ClientEvent.TriggerClientEvent ( Player, "onClientMoneyChange", Money );
+            } else
+                Log.Error ( $"Player {Player.Name} should have went to minus money! Current: {Money} | Substracted money: {money}" );
+                
         }
 
         public void GiveKill () {

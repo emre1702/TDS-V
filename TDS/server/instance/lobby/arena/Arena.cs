@@ -48,18 +48,18 @@ namespace TDS.server.instance.lobby {
                 Client player = character.Player;
                 if ( player.Exists ) {
                     if ( character.Lobby == this ) {
-                        List<uint> reward = new List<uint> ();
+                        List<int> reward = new List<int> ();
                         if ( DmgSys.PlayerKills.ContainsKey ( player ) ) {
-                            reward.Add ( (uint) ( Money.MoneyForDict["kill"] * DmgSys.PlayerKills[player] ) );
+                            reward.Add ( (int) ( Money.MoneyForDict["kill"] * DmgSys.PlayerKills[player] ) );
                         } else
                             reward.Add ( 0 );
                         if ( DmgSys.PlayerAssists.ContainsKey ( player ) ) {
-                            reward.Add ( (uint) ( Money.MoneyForDict["assist"] * DmgSys.PlayerAssists[player] ) );
+                            reward.Add ( (int) ( Money.MoneyForDict["assist"] * DmgSys.PlayerAssists[player] ) );
                         } else
                             reward.Add ( 0 );
-                        reward.Add ( (uint) ( Money.MoneyForDict["damage"] * entry.Value ) );
+                        reward.Add ( (int) ( Money.MoneyForDict["damage"] * entry.Value ) );
 
-                        uint total = reward[0] + reward[1] + reward[2];
+                        int total = reward[0] + reward[1] + reward[2];
                         character.GiveMoney ( total );
                         player.SendLangNotification ( "round_reward", reward[0].ToString (), reward[1].ToString (), reward[2].ToString (),
                                                     total.ToString () );
