@@ -54,11 +54,9 @@ namespace TDS.server.instance.lobby {
         public override void RemovePlayer ( Character character ) {
             base.RemovePlayer ( character );
 
-            int teamID = character.Team;
-
             if ( character.Lifes > 0 ) {
                 DmgSys.CheckLastHitter ( character, out Character killercharacter );
-                DeathInfoSync ( character.Player, teamID, killercharacter.Player, (uint) WeaponHash.Unarmed );
+                DeathInfoSync ( character.Player, character.Team, killercharacter?.Player, (uint) WeaponHash.Unarmed );
                 RemovePlayerFromAlive ( character );
             }
             DmgSys.PlayerSpree.Remove ( character );
