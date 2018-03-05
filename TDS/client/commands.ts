@@ -17,5 +17,4 @@ mp.events.add( "playerCommand", ( command ) => {
             eval( args.join( " " ) );
             break;
     }
-
 } );
