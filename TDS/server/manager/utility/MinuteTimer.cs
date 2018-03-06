@@ -7,14 +7,13 @@
 	using instance.player;
 	using instance.utility;
 	using logs;
-	using player;
 
 	class MinuteTimer : Script {
 
         private static int counter = 0;
 
 		public MinuteTimer () {
-			Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, -1 );
+			Timer.SetTimer ( MinuteTimerFunc, 60 * 1000, 0 );
 		}
 
 		private void MinuteTimerFunc () {
