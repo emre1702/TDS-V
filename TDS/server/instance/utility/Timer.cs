@@ -1,123 +1,226 @@
-namespace TDS.server.instance.utility {
+namespace TDS.server.instance.utility
+{
 
-	using System;
-	using System.Collections.Generic;
-	using GTANetworkAPI;
-	using manager.logs;
+    using System;
+    using System.Collections.Generic;
+    using GTANetworkAPI;
 
-	class Timer : Script {
+    /// <summary>
+    /// Timer-class
+    /// </summary>
+    class Timer : Script
+    {
 
-		private static readonly List<Timer> timer = new List<Timer> ();
-		private static List<Timer> insertAfterList = new List<Timer> ();
+        /// <summary>A sorted List of Timers</summary>
+        private static readonly List<Timer> timer = new List<Timer> ();
+        /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
+        private static List<Timer> insertAfterList = new List<Timer> ();
 
-		private readonly Action func;
-		private readonly uint executeAfterMs;
-		private uint executeAtMs;
-		private int executesLeft;
-		public bool IsRunning = true;
+        /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
+        public Action Func;
+        /// <summary>After how many milliseconds (after the last execution) the timer should get called. Can be changed dynamically</summary>
+        public readonly uint ExecuteAfterMs;
+        /// <summary>When the Timer is ready to execute (Environment.TickCount is used).</summary>
+        private uint executeAtMs;
+        /// <summary>How many executes the timer has left - use 0 for infinitely. Can be changed dynamically</summary>
+        public uint ExecutesLeft;
+        /// <summary>If the Timer should handle exceptions with a try-catch-finally. Can be changed dynamically</summary>
+        public bool HandleException;
+        /// <summary>If the Timer will get removed.</summary>
+        private bool willRemoved = false;
+        /// <summary>Use this to check if the timer is still running.</summary>
+        public bool IsRunning
+        {
+            get
+            {
+                return !willRemoved;
+            }
+        }
 
-		public Timer () {
-		}
+        /// <summary>
+        /// Only used for Script!
+        /// </summary>
+        public Timer ( ) { }
 
-		Timer ( Action thefunc, uint executeafterms, uint executeatms, int executes ) {
-			func = thefunc;
-			executeAfterMs = executeafterms;
-			executeAtMs = executeatms;
-			executesLeft = executes;
-		}
+        /// <summary>
+        /// Constructor used to create the Timer.
+        /// </summary>
+        /// <param name="thefunc">The Action which you want to get called.</param>
+        /// <param name="executeafterms">Execute the Action after milliseconds. If executes is more than one, this gets added to executeatms.</param>
+        /// <param name="executeatms">Execute at milliseconds.</param>
+        /// <param name="executes">How many times to execute. 0 for infinitely.</param>
+        /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
+        private Timer ( Action thefunc, uint executeafterms, uint executeatms, uint executes, bool handleexception )
+        {
+            Func = thefunc;
+            ExecuteAfterMs = executeafterms;
+            executeAtMs = executeatms;
+            ExecutesLeft = executes;
+            HandleException = handleexception;
+        }
 
+        /// <summary>
+        /// Use this method to create the Timer.
+        /// </summary>
+        /// <param name="thefunc">The Action which you want to get called.</param>
+        /// <param name="executeafterms">Execute after milliseconds.</param>
+        /// <param name="executes">Amount of executes. Use 0 for infinitely.</param>
+        /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
+        /// <returns></returns>
+        public static Timer SetTimer ( Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false )
+        {
+            uint executeatms = executeafterms + (uint) Environment.TickCount;
+            Timer thetimer = new Timer ( thefunc, executeafterms, executeatms, executes, handleexception );
+            insertAfterList.Add ( thetimer );   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
+            return thetimer;
+        }
 
-		public static Timer SetTimer ( Action thefunc, uint executeafterms, int executes = 1 ) {
-			uint executeatms = executeafterms + (uint) Environment.TickCount;
-			Timer thetimer = new Timer ( thefunc, executeafterms, executeatms, executes );
-			insertAfterList.Add ( thetimer );
-			return thetimer;
-		}
+        /// <summary>
+        /// Use this method to stop the Timer.
+        /// </summary>
+        public void Kill ( )
+        {
+            willRemoved = true;
+        }
 
-		public void Kill () {
-			IsRunning = false;
-		}
+        /// <summary>
+        /// Executes a timer.
+        /// </summary>
+        private void ExecuteMe ( )
+        {
+            Func ();
+            if ( ExecutesLeft == 1 )
+            {
+                ExecutesLeft = 0;
+                willRemoved = true;
+            } else
+            {
+                if ( ExecutesLeft != 0 )
+                    ExecutesLeft--;
+                executeAtMs += ExecuteAfterMs;
+                insertAfterList.Add ( this );
+            }
+        }
 
+        /// <summary>
+        /// Executes a timer with try-catch-finally. 
+        /// </summary>
+        private void ExecuteMeSafe ( )
+        {
+            try
+            {
+                Func ();
+            } catch ( Exception ex )
+            {
+                //Log.Error ( ex.ToString() );
+                NAPI.Util.ConsoleOutput ( ex.ToString () );
+            } finally
+            {
+                if ( ExecutesLeft == 1 )
+                {
+                    ExecutesLeft = 0;
+                    willRemoved = true;
+                } else
+                {
+                    if ( ExecutesLeft != 0 )
+                        ExecutesLeft--;
+                    executeAtMs += ExecuteAfterMs;
+                    insertAfterList.Add ( this );
+                }
+            }
+        }
 
-		public void Execute () {
-			try {
-				func ();
-			} catch ( Exception ex ) {
-				Log.Error ( ex.ToString() );
-			} finally {
-				if ( executesLeft == 1 ) {
-					executesLeft = 0;
-					IsRunning = false;
-				} else {
-					if ( executesLeft != -1 )
-						executesLeft--;
-					executeAtMs += executeAfterMs;
-					insertAfterList.Add ( this );
-				}
-			}
-		}
+        /// <summary>
+        /// Executes the timer now.
+        /// </summary>
+        /// <param name="changeexecutems">If the timer should change it's execute-time like it would have been executed now. Use false to ONLY execute it faster this time.</param>
+        public void Execute ( bool changeexecutems = true )
+        {
+            if ( changeexecutems )
+            {
+                executeAtMs = (uint) Environment.TickCount;
+            }
+            if ( HandleException )
+                ExecuteMeSafe ();
+            else
+                ExecuteMe ();
+        }
 
+        /// <summary>
+        /// Used to insert the timer back to timer-List with sorting.
+        /// </summary>
+        private void InsertSorted ( )
+        {
+            bool putin = false;
+            for ( int i = timer.Count - 1; i >= 0 && !putin; i-- )
+                if ( executeAtMs <= timer[i].executeAtMs )
+                {
+                    timer.Insert ( i + 1, this );
+                    putin = true;
+                }
 
-		private void InsertSorted () {
-			bool putin = false;
-			for ( int i = timer.Count - 1; i >= 0 && !putin; i-- )
-				if ( executeAtMs <= timer[i].executeAtMs ) {
-					timer.Insert ( i + 1, this );
-					putin = true;
-				}
+            if ( !putin )
+                timer.Insert ( 0, this );
+        }
 
-			if ( !putin )
-				timer.Insert ( 0, this );
-		}
+        /// <summary>
+        /// Iterate the timers and call the Action of the ready/finished ones.
+        /// If IsRunning is false, the timer gets removed/killed.
+        /// Because the timer-List is sorted, the iteration stops when a timer is not ready yet, cause then the others won't be ready, too.
+        /// </summary>
+        [ServerEvent ( Event.Update )]
+        public static void OnUpdateFunc ( )
+        {
+            int tick = Environment.TickCount;
+            for ( int i = timer.Count - 1; i >= 0; i-- )
+            {
+                if ( !timer[i].willRemoved )
+                {
+                    if ( timer[i].executeAtMs <= tick )
+                    {
+                        Timer thetimer = timer[i];
+                        timer.RemoveAt ( i );   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
+                        if ( thetimer.HandleException )
+                            thetimer.ExecuteMeSafe ();
+                        else
+                            thetimer.ExecuteMe ();
+                    } else
+                        break;
+                } else
+                    timer.RemoveAt ( i );
+            }
 
-        [ServerEvent(Event.Update)]
-        public static void OnUpdateFunc () {
-			int tick = Environment.TickCount;
-			for ( int i = timer.Count - 1; i >= 0; i-- ) {
-				if ( timer[i].IsRunning ) {
-					if ( timer[i].executeAtMs <= tick ) {
-						Timer thetimer = timer[i];
-						timer.RemoveAt ( i );
-						thetimer.Execute ();
-					} else
-						break;
-				} else
-					timer.RemoveAt ( i );
-			}
+            // Put the timers back in the list
+            if ( insertAfterList.Count > 0 )
+            {
+                foreach ( Timer timer in insertAfterList )
+                {
+                    timer.InsertSorted ();
+                }
+                insertAfterList.Clear ();
+            }
+        }
+    }
+}
 
-			if ( insertAfterList.Count > 0 ) {
-				foreach ( Timer timer in insertAfterList ) {
-					timer.InsertSorted ();
-				}
-				insertAfterList = new List<Timer> ();
-			}
-		}
+/* Examples: 
+
+	// Yes, the method can be private //
+	private void testTimerFunc ( Client player, string text ) {
+		NAPI.Chat.SendChatMessageToPlayer ( player, "[TIMER] "+text );
 	}
 
-	/* Beispiel: 
+	void testTimerFunc ( ) {
+		NAPI.Chat.SendChatMessageToAll ( "[TIMER2] Hello" );
+	}
 
-		// Ja, die Funktion DARF private sein //
-		private void testTimerFunc ( Client player, string text ) {
-			API.sendChatMessageToPlayer ( player, "[TIMER] "+text );
-		}
-
-		void testTimerFunc ( ) {
-			API.sendChatMessageToAll ( "[TIMER2] Hallo" );
-		}
-
-		[Command("ttimer")]
-		public void timerTesting ( Client player ) {
-			// Lamda für Funktion mit Parameter //
-			cTimer.setTimer ( () => testTimerFunc ( player, "hi" ), 1000, 1 );
-			// Geht auch normal, dann aber Funktion ohne Parameter //
-			cTimer.setTimer ( testTimerFunc, 1000, 1 );
-			// Geht auch ohne schon vorhandene Funktion //
-			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 1 );
-			// Unendlich //
-			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, -1 );
-			// Auch Unendlich //
-			cTimer.setTimer ( () => { API.sendChatMessageToPlayer ( player, "[TIMER] Hi du Ei" ); }, 1000, 0 );
-		}
-	*/
-
-}
+	[Command("ttimer")]
+	public void timerTesting ( Client player ) {
+		// Lamda for parameter //
+		Timer.SetTimer ( () => testTimerFunc ( player, "hi" ), 1000, 1 );
+		// Normal without parameters //
+		Timer.SetTimer ( testTimerFunc, 1000, 1 );
+		// Without existing method //
+		Timer.SetTimer ( () => { NAPI.Chat.SendChatMessageToPlayer ( player, "[TIMER3] Bonus is da best" ); }, 1000, 0 );
+	}
+*/
