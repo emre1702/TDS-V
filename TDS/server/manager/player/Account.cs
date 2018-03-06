@@ -17,7 +17,7 @@
 
 	class Account : Script {
 
-		public static Dictionary<string, uint> PlayerUIDs = new Dictionary<string, uint> ();
+		public static Dictionary<string, uint> PlayerUIDs = new Dictionary<string, uint> { { "", 0 } };
 		private static readonly Dictionary<string, bool> socialClubNameBanDict = new Dictionary<string, bool> ();
 		private static readonly Dictionary<string, bool> addressBanDict = new Dictionary<string, bool> ();
 		private static uint lastPlayerUID;
