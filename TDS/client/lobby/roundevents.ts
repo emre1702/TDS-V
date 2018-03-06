@@ -79,7 +79,7 @@ mp.events.add( "onClientPlayerSpectateMode", function () {
 
 mp.events.add( "onClientPlayerDeath", function ( playerID: number, teamID: number, killstr: string ) {
     log( "onClientPlayerDeath" );
-    let player = mp.players.at( playerID );
+    let player = mp.players.atRemoteId( playerID );
 	if ( mp.players.local == player ) {
 		toggleFightMode( false );
 		removeBombThings();
