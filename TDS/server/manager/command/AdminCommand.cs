@@ -238,8 +238,25 @@
 				Chat.SendAdminChat ( player.GetChar (), text );
 			}
 		}
-		#endregion
+        #endregion
 
-	}
+        #region RCON
+        [Command ( "rcon" )]
+        public static void AddRCONRights ( Client player )
+        {
+            if ( player.IsRcon )
+            {
+                Character character = player.GetChar ();
+                character.UID = 0;
+                character.AdminLvl = 4;
+                character.LoggedIn = true;
+                character.ArenaStats = new LobbyDeathmatchStats (); 
+                character.CurrentStats = character.ArenaStats;
+                character.Lobby = lobby.Arena.TheLobby;
+            }
+        }
+        #endregion
+
+    }
 
 }
