@@ -30,6 +30,7 @@ namespace TDS.server.instance.player {
         public LobbyDeathmatchStats CurrentStats;
         public int Team = 0;
         public Gang Gang;
+        public uint GangRank = 0;
 		public uint Lifes = 0;
 		public Language Language = Language.ENGLISH;
         public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
