@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TDS.server.instance.player;
 using TDS.server.manager.database;
 using TDS.server.manager.logs;
 
@@ -16,7 +17,7 @@ namespace TDS.server.instance.lobby.ganglobby {
         private string shortname;
         private uint owneruid;
 
-        private List<Client> membersOnline = new List<Client> ();
+        private List<Character> membersOnline = new List<Character> ();
         private Dictionary<uint, uint> membersRank = new Dictionary<uint, uint> ();
 
         public Gang ( uint uid, string name, string shortname, uint owneruid ) {
