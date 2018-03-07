@@ -7,7 +7,8 @@ namespace TDS.server.instance.lobby.ganglobby {
 
         private void AddMember ( Character character ) {
             playerMemberOfGang[character.UID] = this;
-            Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" ); 
+            Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" );
+            membersRank[uid] = 0;
             MemberCameOnline ( character );
 
             if ( character.Lobby is GangLobby lobby ) {
@@ -31,6 +32,7 @@ namespace TDS.server.instance.lobby.ganglobby {
 
         private void MemberCameOnline ( Character character ) {
             character.Gang = this;
+            character.GangRank = membersRank[character.UID];
         }
 
         public static void CheckPlayerGang ( Character character ) {
