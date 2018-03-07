@@ -8,7 +8,7 @@ namespace TDS.server.instance.lobby.ganglobby {
         private void AddMember ( Character character ) {
             playerMemberOfGang[character.UID] = this;
             Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" );
-            membersRank[uid] = 0;
+            membersRank[uid] = 1;
             MemberCameOnline ( character );
 
             if ( character.Lobby is GangLobby lobby ) {
@@ -16,23 +16,26 @@ namespace TDS.server.instance.lobby.ganglobby {
             }
         }
 
-        private void RemoveOnlineMember ( Character character ) {
+        private void RemoveOnlineMember ( Character character, bool saveindb = true ) {
             character.Gang = null;
-            RemoveMember ( character.UID );
+            membersOnline.Remove ( character );
+            RemoveMember ( character.UID, saveindb );
 
             if ( character.Lobby is GangLobby lobby ) {
                 lobby.SetPlayerTeam ( character, 0 );    
             }
         }
 
-        private void RemoveMember ( uint playeruid ) {
+        private void RemoveMember ( uint playeruid, bool saveindb = true ) {
             playerMemberOfGang.Remove ( playeruid );
-            Database.Exec ( $"DELETE FROM gangmember WHERE memberuid = {playeruid};" );
+            if ( saveindb )
+                Database.Exec ( $"DELETE FROM gangmember WHERE memberuid = {playeruid};" );
         }
 
         private void MemberCameOnline ( Character character ) {
             character.Gang = this;
             character.GangRank = membersRank[character.UID];
+            membersOnline.Add ( character );
         }
 
         public static void CheckPlayerGang ( Character character ) {
@@ -40,6 +43,11 @@ namespace TDS.server.instance.lobby.ganglobby {
             if ( playerMemberOfGang.ContainsKey ( uid ) ) {
                 playerMemberOfGang[uid].MemberCameOnline ( character );
             }
+        }
+
+        private void MemberWentOffline ( Character character )
+        {
+            membersOnline.Remove ( character );
         }
 
     }
