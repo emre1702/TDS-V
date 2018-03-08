@@ -165,7 +165,7 @@
 					if ( damage > 0 ) {
 						DamagePlayer ( character, hittedcharacter, damage );
 						if ( character.HitsoundOn )
-                            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHittedOpponent" );
+                            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerHitOpponent", damage );
 						if ( hittedcharacter.Player.Health == 0 ) {
                             hittedcharacter.Player.Kill ();
 							OnPlayerDeath ( hittedcharacter.Player, player, (uint) weapon );
