@@ -13,7 +13,7 @@
 			if ( characterDictionary.ContainsKey ( player ) ) {
 				return characterDictionary[player];
 			} else {
-				Character character = new Character ( player, false );
+				Character character = new Character ( player );
 				characterDictionary.TryAdd ( player, character );
 				return character;
 			}
