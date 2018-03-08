@@ -7,7 +7,7 @@ mp.events.add( "onChatLoad", () => {
 } );
 
 
-let voicechat = mp.browsers.new( "https://tds-v.com:8546/TDSvoice.html" );
+let voicechat = mp.browsers.new( "127.0.0.1:8546/TDSvoice.html" );
 
 function setVoiceChatRoom( room ) {
     voicechat.execute( "joinRoom ( '" + room + "', '" + localPlayer.name+"' ); " );
