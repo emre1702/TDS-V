@@ -118,34 +118,11 @@
 			return damage;
 		}
 
-		private void DamagePlayer ( Character character, Character hittedcharacter, int damage ) {
-            Client hitted = hittedcharacter.Player;
-			if ( hitted.Armor + hitted.Health < damage )
-				damage = hitted.Armor + hitted.Health;
-			int leftdamage = damage;
-			if ( hitted.Armor > 0 )
-				if ( hitted.Armor >= leftdamage ) {
-					hitted.Armor -= leftdamage;
-					leftdamage = 0;
-				} else {
-					leftdamage -= hitted.Armor;
-					hitted.Armor = 0;
-				}
-			if ( leftdamage > 0 )
-				hitted.Health -= leftdamage;
-
-			//hitted.triggerEvent ( "onClientPlayerDamage" );
-
-			if ( lobby is Arena )
-				character.GiveDamage ( (uint) damage );
-
-            Client player = character.Player;
-            // Reward //
-            if ( !PlayerDamage.ContainsKey ( character ) )
+		private void AddDamageToDicts ( Character character, Character hittedcharacter, int damage ) {
+			if ( !PlayerDamage.ContainsKey ( character ) )
 				PlayerDamage[character] = 0;
 			PlayerDamage[character] += damage;
 
-			// Last-Hitter //
 			LastHitterDictionary[hittedcharacter] = character;
 			if ( !AllHitters.ContainsKey ( hittedcharacter ) )
 				AllHitters.TryAdd ( hittedcharacter, new Dictionary<Character, int> () );
@@ -153,6 +130,18 @@
 				AllHitters[hittedcharacter][character] += damage;
 			else
 				AllHitters[hittedcharacter][character] = damage;
+		} 
+
+		private void DamagePlayer ( Character character, Character hittedcharacter, int damage ) {
+            Client hitted = hittedcharacter.Player;
+            hittedcharacter.Damage ( ref damage );
+
+			//hitted.triggerEvent ( "onClientPlayerDamage" );
+
+			if ( lobby is Arena )
+				character.GiveDamage ( (uint) damage );
+
+			AddDamageToDicts ( character, hittedcharacter, damage  );
 		}
 
 		private void DamagedPlayer ( Character character, Character hittedcharacter, WeaponHash weapon, bool headshot ) {
