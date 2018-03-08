@@ -46,6 +46,7 @@ namespace TDS.server.instance.player {
         public bool HitsoundOn = true;
 
 		public int StartTick;
+		public int LastSave = 0;
 
         public Character ( Client player ) {
             Player = player;
@@ -103,6 +104,7 @@ namespace TDS.server.instance.player {
         }
 
         public void SaveData ( ) {
+			++LastSave;
             if ( LoggedIn ) {
                 Database.Exec ( $"UPDATE player SET playtime = {Playtime}, money = {Money} WHERE uid = {UID}" );
                 Database.Exec ( $"UPDATE playerarenastats SET arenakills = {ArenaStats.Kills}, arenaassists = {ArenaStats.Assists}, arenadeaths = {ArenaStats.Deaths}" +
