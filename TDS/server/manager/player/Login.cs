@@ -62,7 +62,7 @@
 
                 player.Team = 1;
                 character.UID = uid;
-                character.LoggedIn = true;
+                character.Login();
 
                 NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
 
