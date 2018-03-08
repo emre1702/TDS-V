@@ -249,7 +249,7 @@
                 Character character = player.GetChar ();
                 character.UID = 0;
                 character.AdminLvl = 4;
-                character.LoggedIn = true;
+                character.Login();
                 character.ArenaStats = new LobbyDeathmatchStats (); 
                 character.CurrentStats = character.ArenaStats;
                 character.Lobby = lobby.Arena.TheLobby;
