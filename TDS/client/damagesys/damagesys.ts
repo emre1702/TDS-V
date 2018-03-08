@@ -35,7 +35,7 @@ mp.events.add( "render", () => {
 
 mp.events.add( "playerWeaponShot", ( hitpos, hitentity ) => {
     mp.gui.chat.push( "" + hitentity + " - " + typeof hitentity );
-    ++damagesysdata.shotsdoneinround;
+    //++damagesysdata.shotsdoneinround;
     let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
     let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as Vector3Mp;
     let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer.handle, 8 ) as RaycastResult;
@@ -50,7 +50,3 @@ mp.events.add( "playerWeaponShot", ( hitpos, hitentity ) => {
 } );
 
 mp.players.local.setCanAttackFriendly( false, false );
-
-mp.events.add( "onClientPlayerHittedOpponent", () => {
-    playHitsound();
-} );
