@@ -2,7 +2,8 @@ namespace TDS.server.instance.player {
 
     using GTANetworkAPI;
     using lobby;
-    using TDS.server.enums;
+	using System;
+	using TDS.server.enums;
     using TDS.server.instance.lobby.ganglobby;
     using TDS.server.manager.database;
     using TDS.server.manager.logs;
@@ -35,16 +36,25 @@ namespace TDS.server.instance.player {
         public Language Language = Language.ENGLISH;
         public Lobby Lobby = manager.lobby.MainMenu.TheLobby;
         public Character Spectating;
-        public bool LoggedIn;
+        public bool LoggedIn {
+			get;
+			private set;
+		}
         public bool IsLobbyOwner = false;
         public bool IsVIP = false;
 
         public bool HitsoundOn = true;
 
-        public Character ( Client player, bool loggedin = true ) {
+		public int StartTick;
+
+        public Character ( Client player ) {
             Player = player;
-            LoggedIn = loggedin;
         }
+
+		public void Login ( ) {
+			StartTick = Environment.TickCount;
+			LoggedIn = true;
+		}
 
         public void GiveMoney ( short money ) {
             if ( money > 0 || Money > money * -1 ) {
