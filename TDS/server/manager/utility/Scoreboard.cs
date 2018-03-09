@@ -14,6 +14,20 @@ namespace TDS.server.manager.utility {
         public uint Assists = 0;
         public uint Deaths = 0;
         public string TeamOrLobby;
+
+		public static string GetHoursOpticByMinutes ( uint minutes ) {
+			uint hours = minutes / 60;
+			minutes = minutes % 60;
+			return hours + ":" + ( minutes < 10 ? "0" + minutes : minutes.ToString () );
+		}
+
+		public void AddData ( Character character, int ownLobbyID ) {
+			PlayTime = GetHoursOpticByMinutes ( character.Playtime );
+			Kills = character.CurrentStats.Kills;
+			Assists = character.CurrentStats.Assists;
+			Deaths = character.CurrentStats.Deaths;
+			TeamOrLobby = ownLobbyID == 0 ? character.Lobby.Name : character.Lobby.GetTeamName ( character.Team );
+		}
     }
 
     [Serializable]
@@ -25,12 +39,6 @@ namespace TDS.server.manager.utility {
 	class Scoreboard: Script {
 
         public Scoreboard ( ) { }
-
-        public static string GetHoursOpticByMinutes ( uint minutes ) {
-			uint hours = minutes / 60;
-			minutes = minutes % 60;
-			return hours + ":" + ( minutes < 10 ? "0" + minutes : minutes.ToString () );
-		}
 
         [RemoteEvent ( "onClientRequestPlayerListDatas" )]
         public void OnClientRequestPlayerListDatas ( Client player ) {
@@ -50,17 +58,12 @@ namespace TDS.server.manager.utility {
                     ScoreboardPlayerData data = new ScoreboardPlayerData ();
                     playersdata.Add ( data );
                     data.Name = target.Name;
-
 					if ( character.LoggedIn ) {
 						// character stats //
-						data.PlayTime = GetHoursOpticByMinutes ( character.Playtime );
-						data.Kills = character.CurrentStats.Kills;
-						data.Assists = character.CurrentStats.Assists;
-						data.Deaths = character.CurrentStats.Deaths;
-						data.TeamOrLobby = ownLobbyID == 0 ? character.Lobby.Name : character.Lobby.GetTeamName ( character.Team );
+						data.AddData ( character, ownLobbyID );
 					} else {
-                        // default status //
-                        data.TeamOrLobby = player.GetLang ( "connecting" );
+						// default status //
+						data.TeamOrLobby = player.GetLang ( "connecting" );
 					}
 				} else {   // is in another lobby and you aren't in mainmenu
 					if ( doneLobbyIDs.ContainsKey ( lobbyID ) ) {
