@@ -13,7 +13,7 @@ let files = [
     { path: "window/main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js", "roundend.js"], 
         css: ["window/main/chat.css", "window/main/main.css", "window/main/mapmanager.css", "window/main/roundend.css"],
         reserved: ["setMoney", "playSound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings"]
+            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings"]
     },
     { path: "window/registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     { path: "window/mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], css: ["window/mapcreator/mapcreator.css"],
