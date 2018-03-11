@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using TDS.server.extend;
 using TDS.server.instance.player;
 
@@ -47,7 +48,13 @@ namespace TDS.server.instance.lobby {
 
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
 
-            if ( spectator )
+			FuncIterateAllPlayers ( ( thechar, teamID ) => {
+				if ( thechar != character )
+					NAPI.ClientEvent.TriggerClientEvent ( thechar.Player, "joinPlayerSameLobby", player );
+			} );
+			//NAPI.ClientEvent.TriggerClientEvent ( player, "syncPlayersSameLobby", JsonConvert.SerializeObject ( Players ) );
+
+			if ( spectator )
                 AddPlayerAsSpectator ( character );
         }
 
@@ -65,18 +72,25 @@ namespace TDS.server.instance.lobby {
 
         public virtual void RemovePlayer ( Character character ) {
             int teamID = character.Team;
-            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, character.Player.Value );
+			Client player = character.Player;
+            SendAllPlayerEvent ( "onClientPlayerLeaveLobby", -1, player.Value );
             character.IsLobbyOwner = false;
             character.CurrentStats = character.ArenaStats;
 
             Players[teamID].Remove ( character );
 
-            if ( character.Player.Exists )
-                character.Player.Transparency = 255;
+            if ( player.Exists )
+				player.Transparency = 255;
 
-            if ( DeleteWhenEmpty && !IsSomeoneInLobby() ) {
-                Remove ();
-            }
+            if ( !IsSomeoneInLobby() ) {
+				if ( DeleteWhenEmpty )
+					Remove ();
+            } else {
+				FuncIterateAllPlayers ( ( thechar, teamid ) => {
+					if ( thechar != character )
+						NAPI.ClientEvent.TriggerClientEvent ( thechar.Player, "leavePlayerSameLobby", player );
+				} );
+			}
         }
 
         public void SendTeamOrder ( Character character, string ordershort ) {
