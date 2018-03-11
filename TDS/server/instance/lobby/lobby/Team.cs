@@ -20,8 +20,8 @@ namespace TDS.server.instance.lobby {
         public virtual void AddTeam ( string name, PedHash hash, string colorstring = "s" ) {
             Teams.Add ( name );
             teamSkins.Add ( hash );
-            Players.Add ( new List<Character> () );
-            alivePlayers.Add ( new List<Character> () );
+            TeamPlayers.Add ( new List<Character> () );
+            AlivePlayers.Add ( new List<Character> () );
 
             TeamColorStrings.Add ( colorstring );
             teamBlipColors.Add ( Colors.BlipColorByString[colorstring] );
@@ -32,21 +32,21 @@ namespace TDS.server.instance.lobby {
         }
 
         private void PreparePlayersist ( int amountteams ) {
-            Players = new List<List<Character>> { new List<Character> () };
+            TeamPlayers = new List<List<Character>> { new List<Character> () };
 
             for ( int i = 1; i < amountteams; ++i )
-                Players.Add ( new List<Character> () );
+                TeamPlayers.Add ( new List<Character> () );
         }
 
         public void MixTeams ( ) {
-            List<List<Character>> oldplayerslist = new List<List<Character>> ( Players );
+            List<List<Character>> oldplayerslist = new List<List<Character>> ( TeamPlayers );
             int amountteams = oldplayerslist.Count;
             PreparePlayersist ( amountteams );
 
             for ( int i = 1; i < amountteams; i++ ) {
                 foreach ( Character character in oldplayerslist[i] ) {
                     if ( character.Player.Exists ) {
-                        int teamID = GetTeamIDWithFewestMember ( ref Players );
+                        int teamID = GetTeamIDWithFewestMember ( ref TeamPlayers );
                         SetPlayerTeam ( character, teamID );
                     }
                 }
@@ -75,7 +75,7 @@ namespace TDS.server.instance.lobby {
         }
 
         public void SetPlayerTeam ( Character character, int teamID ) {
-            Players[teamID].Add ( character );
+            TeamPlayers[teamID].Add ( character );
             character.Player.SetSkin ( teamSkins[teamID] );
             if ( character.Team != teamID ) {  // not old team
                 character.Team = teamID;
@@ -85,8 +85,8 @@ namespace TDS.server.instance.lobby {
 
         internal int GetTeamAmountWithPlayers ( ) {
             int amount = 0;
-            for ( int i = 0; i < Players.Count; ++i ) {
-                if ( Players[i].Count > 0 )
+            for ( int i = 0; i < TeamPlayers.Count; ++i ) {
+                if ( TeamPlayers[i].Count > 0 )
                     ++amount;
             }
             return amount;

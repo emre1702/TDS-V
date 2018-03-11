@@ -46,13 +46,14 @@ namespace TDS.server.instance.lobby {
 
             player.Position = SpawnPoint.Around ( AroundSpawnPoint );
 
+			Players.Add ( player );
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerJoinLobby", ID );
 
 			FuncIterateAllPlayers ( ( thechar, teamID ) => {
 				if ( thechar != character )
 					NAPI.ClientEvent.TriggerClientEvent ( thechar.Player, "joinPlayerSameLobby", player );
 			} );
-			//NAPI.ClientEvent.TriggerClientEvent ( player, "syncPlayersSameLobby", JsonConvert.SerializeObject ( Players ) );
+			NAPI.ClientEvent.TriggerClientEvent ( player, "syncPlayersSameLobby", JsonConvert.SerializeObject ( Players ) );
 
 			if ( spectator )
                 AddPlayerAsSpectator ( character );
@@ -77,9 +78,10 @@ namespace TDS.server.instance.lobby {
             character.IsLobbyOwner = false;
             character.CurrentStats = character.ArenaStats;
 
-            Players[teamID].Remove ( character );
+            TeamPlayers[teamID].Remove ( character );
+			Players.Remove ( player );
 
-            if ( player.Exists )
+			if ( player.Exists )
 				player.Transparency = 255;
 
             if ( !IsSomeoneInLobby() ) {

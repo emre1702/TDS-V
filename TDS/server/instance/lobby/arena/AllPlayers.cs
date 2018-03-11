@@ -21,9 +21,9 @@ namespace TDS.server.instance.lobby
         private void SendPlayerAmountInFightInfo ( Client player ) {
             List<uint> amountinteams = new List<uint> ();
             List<uint> amountaliveinteams = new List<uint> ();
-            for ( int i = 1; i < Players.Count; i++ ) {
-                amountinteams.Add ( (uint) Players[i].Count );
-                amountaliveinteams.Add ( (uint) alivePlayers[i].Count );
+            for ( int i = 1; i < TeamPlayers.Count; i++ ) {
+                amountinteams.Add ( (uint) TeamPlayers[i].Count );
+                amountaliveinteams.Add ( (uint) AlivePlayers[i].Count );
             }
             PlayerAmountInFightSync ( player, amountinteams, amountaliveinteams );
         }

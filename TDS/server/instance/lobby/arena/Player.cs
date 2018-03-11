@@ -65,9 +65,9 @@ namespace TDS.server.instance.lobby {
         private void RemovePlayerFromAlive ( Character character ) {
             int teamID = character.Team;
             character.Lifes = 0;
-            int aliveindex = alivePlayers[teamID].IndexOf ( character );
+            int aliveindex = AlivePlayers[teamID].IndexOf ( character );
             PlayerCantBeSpectatedAnymore ( character, aliveindex, teamID );
-            alivePlayers[teamID].RemoveAt ( aliveindex );
+            AlivePlayers[teamID].RemoveAt ( aliveindex );
             if ( bombAtPlayer == character ) {
                 DropBomb ();
             }
@@ -91,7 +91,7 @@ namespace TDS.server.instance.lobby {
         }
 
         private void AddPlayerAsPlayer ( Character character ) {
-            int teamID = GetTeamIDWithFewestMember ( ref Players );
+            int teamID = GetTeamIDWithFewestMember ( ref TeamPlayers );
             SetPlayerTeam ( character, teamID );
             if ( countdownTimer != null && countdownTimer.IsRunning ) {
                 SetPlayerReadyForRound ( character );

@@ -69,15 +69,15 @@ namespace TDS.server.instance.lobby {
             NAPI.Util.ConsoleOutput ( status.ToString () );
             startTick = Environment.TickCount;
             roundEndTimer = Timer.SetTimer ( EndRoundTimesup, roundTime );
-            alivePlayers = new List<List<Character>> ();
+            AlivePlayers = new List<List<Character>> ();
             List<uint> amountinteams = new List<uint> ();
-            for ( int i = 0; i < Players.Count; i++ ) {
-                uint amountinteam = (uint) Players[i].Count;
+            for ( int i = 0; i < TeamPlayers.Count; i++ ) {
+                uint amountinteam = (uint) TeamPlayers[i].Count;
                 if ( i != 0 )
                     amountinteams.Add ( amountinteam );
-                alivePlayers.Add ( new List<Character> () );
+                AlivePlayers.Add ( new List<Character> () );
                 for ( int j = 0; j < amountinteam; j++ ) {
-                    StartRoundForPlayer ( Players[i][j], i );
+                    StartRoundForPlayer ( TeamPlayers[i][j], i );
                 }
             }
 
@@ -150,7 +150,7 @@ namespace TDS.server.instance.lobby {
             NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientRoundStart", teamID == 0 ? 1 : 0 );
             if ( teamID != 0 ) {
                 character.Lifes = Lifes;
-                alivePlayers[teamID].Add ( character );
+                AlivePlayers[teamID].Add ( character );
                 character.Player.Freeze ( false );
             }
         }

@@ -53,10 +53,10 @@ namespace TDS.server.instance.lobby {
 		}
 
 		private void GiveBombToRandomTerrorist () {
-			int amount = Players[terroristTeamID].Count;
+			int amount = TeamPlayers[terroristTeamID].Count;
 			if ( amount > 0 ) {
 				int rnd = Utility.Rnd.Next ( amount );
-				Character character = Players[terroristTeamID][rnd];
+				Character character = TeamPlayers[terroristTeamID][rnd];
 				if ( character.Player.CurrentWeapon == WeaponHash.Unarmed )
 					BombToHand ( character );
 				else

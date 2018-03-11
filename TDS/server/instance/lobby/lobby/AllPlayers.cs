@@ -10,32 +10,33 @@ namespace TDS.server.instance.lobby {
 
     partial class Lobby {
 
-        public List<List<Character>> Players = new List<List<Character>>();
-        public List<List<Character>> alivePlayers = new List<List<Character>>();
+		public List<Client> Players = new List<Client> ();
+        public List<List<Character>> TeamPlayers = new List<List<Character>>();
+        public List<List<Character>> AlivePlayers = new List<List<Character>>();
 
         internal void FuncIterateAllPlayers ( Action<Character, int> func, int teamID = -1 ) {
             if ( teamID == -1 ) {
-                for ( int i = 0; i < Players.Count; i++ )
-                    for ( int j = Players[i].Count - 1; j >= 0; j-- ) {
-                        Character character = Players[i][j];
+                for ( int i = 0; i < TeamPlayers.Count; i++ )
+                    for ( int j = TeamPlayers[i].Count - 1; j >= 0; j-- ) {
+                        Character character = TeamPlayers[i][j];
                         if ( character.Player.Exists ) {
                             if ( character.Lobby == this ) {
                                 func ( character, i );
                             } else
-                                Players[i].RemoveAt ( j );
+                                TeamPlayers[i].RemoveAt ( j );
                         } else
-                            Players[i].RemoveAt ( j );
+                            TeamPlayers[i].RemoveAt ( j );
                     }
             } else
-                for ( int j = Players[teamID].Count - 1; j >= 0; j-- ) {
-                    Character character = Players[teamID][j];
+                for ( int j = TeamPlayers[teamID].Count - 1; j >= 0; j-- ) {
+                    Character character = TeamPlayers[teamID][j];
                     if ( character.Player.Exists ) {
                         if ( character.Lobby == this ) {
                             func ( character, teamID );
                         } else
-                            Players[teamID].RemoveAt ( j );
+                            TeamPlayers[teamID].RemoveAt ( j );
                     } else
-                        Players[teamID].RemoveAt ( j );
+                        TeamPlayers[teamID].RemoveAt ( j );
                 }
         }
 

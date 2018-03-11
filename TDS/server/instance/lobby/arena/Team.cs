@@ -20,15 +20,15 @@ namespace TDS.server.instance.lobby {
         /// <returns>Amount teams still in round.</returns>
         private int GetTeamAmountStillInRound ( int minalive = 1 ) {
             int amount = 0;
-            for ( int i = 1; i < alivePlayers.Count; i++ )
-                if ( alivePlayers[i].Count >= minalive )
+            for ( int i = 1; i < AlivePlayers.Count; i++ )
+                if ( AlivePlayers[i].Count >= minalive )
                     amount++;
             return amount;
         }
 
         private int GetTeamStillInRound ( int minalive = 1 ) {
-            for ( int i = 1; i < alivePlayers.Count; i++ )
-                if ( alivePlayers[i].Count >= minalive )
+            for ( int i = 1; i < AlivePlayers.Count; i++ )
+                if ( AlivePlayers[i].Count >= minalive )
                     return i;
             return 0;
         }

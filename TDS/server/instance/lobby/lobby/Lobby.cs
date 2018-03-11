@@ -65,7 +65,7 @@ namespace TDS.server.instance.lobby {
         }
 
         internal bool IsSomeoneInLobby ( ) {
-            foreach ( List<Character> playerlist in Players ) {
+            foreach ( List<Character> playerlist in TeamPlayers ) {
                 if ( playerlist.Count > 0 )
                     return true;
             }
