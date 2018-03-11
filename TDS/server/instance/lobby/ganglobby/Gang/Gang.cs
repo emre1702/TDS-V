@@ -51,6 +51,16 @@ namespace TDS.server.instance.lobby.ganglobby {
                     Log.Error ( $"Gang with uid {ganguid} doesn't exist, but player with uid {row["memberuid"].ToString ()} is in that gang!" );
                 }
             }
+
+			DataTable gangvehicletable = await Database.ExecResult ( "SELECT * FROM playervehicles" );
+			foreach ( DataRow row in gangvehicletable.Rows ) {
+				uint playeruid = Convert.ToUInt32 ( row["uid"] );
+				if ( playerMemberOfGang.ContainsKey ( playeruid ) ) {
+					string vehicle = Convert.ToString ( row["vehicle"] );
+					int amount = Convert.ToInt32 ( row["amount"] );
+					playerMemberOfGang[playeruid].AddVehicle ( vehicle, amount );
+				}
+			}
         }
     }
 }
