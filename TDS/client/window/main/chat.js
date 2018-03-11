@@ -172,15 +172,16 @@ function loadUserName( username ) {
     chatdata.playernames.push( username );
 }
 
+function loadNamesForChat( names ) {
+    chatdata.playernames = JSON.parse( names );
+}
+
 function addNameForChat( name ) {
     chatdata.playernames.push( username );
 }
 
-function removeNameForChat( name ) {
-    let index = chatdata.playernames.indexOf( name );
-    if ( index !== -1 ) {
-        chatdata.playernames.splice( index, 1 );
-    }
+function removeNameForChat( index ) {
+    chatdata.playernames.splice( index, 1 );
 }
 
 $( document ).ready( function () {
