@@ -9,7 +9,10 @@ namespace TDS.server.instance.lobby.ganglobby {
             playerMemberOfGang[character.UID] = this;
             Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" );
             membersRank[uid] = 1;
-            MemberCameOnline ( character );
+			AddPlayerVehicle ( character.UID );
+
+
+			MemberCameOnline ( character );
 
             if ( character.Lobby is GangLobby lobby ) {
                 lobby.SetPlayerTeam ( character, this );
@@ -28,9 +31,11 @@ namespace TDS.server.instance.lobby.ganglobby {
 
         private void RemoveMember ( uint playeruid, bool saveindb = true ) {
             playerMemberOfGang.Remove ( playeruid );
-            if ( saveindb )
-                Database.Exec ( $"DELETE FROM gangmember WHERE memberuid = {playeruid};" );
-        }
+			if ( saveindb ) {
+				Database.Exec ( $"DELETE FROM gangmember WHERE memberuid = {playeruid};" );
+				RemovePlayerVehicle ( playeruid );
+			}
+		}
 
         private void MemberCameOnline ( Character character ) {
             character.Gang = this;
