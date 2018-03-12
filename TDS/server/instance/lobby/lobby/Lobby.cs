@@ -8,9 +8,9 @@ namespace TDS.server.instance.lobby {
 
     public partial class Lobby {
 
-        private static readonly Dictionary<string, Lobby> sLobbiesByName = new Dictionary<string, Lobby> ();
-        public static readonly Dictionary<int, Lobby> SLobbiesByIndex = new Dictionary<int, Lobby> ();
-        private static readonly Dictionary<uint, Lobby> sDimensionsUsed = new Dictionary<uint, Lobby> ();
+        private static readonly Dictionary<string, Lobby> lobbiesByName = new Dictionary<string, Lobby> ();
+        public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby> ();
+        private static readonly Dictionary<uint, Lobby> dimensionsUsed = new Dictionary<uint, Lobby> ();
 
         public string Name;
         public int ID;
@@ -29,7 +29,7 @@ namespace TDS.server.instance.lobby {
             Name = name;
             if ( id == -1 ) {
                 int theID = 0;
-                while ( SLobbiesByIndex.ContainsKey ( theID ) )
+                while ( LobbiesByIndex.ContainsKey ( theID ) )
                     theID++;
                 ID = theID;
             } else {
@@ -38,9 +38,9 @@ namespace TDS.server.instance.lobby {
 
             Dimension = GetFreeDimension();
 
-            sLobbiesByName[name] = this;
-            SLobbiesByIndex[ID] = this;
-            sDimensionsUsed[Dimension] = this;
+            lobbiesByName[name] = this;
+            LobbiesByIndex[ID] = this;
+            dimensionsUsed[Dimension] = this;
 
             AddTeam ( "Spectator", (PedHash) ( 225514697 ) );
         }
@@ -55,9 +55,9 @@ namespace TDS.server.instance.lobby {
         }
 
         public virtual void Remove ( ) {
-            sLobbiesByName.Remove ( Name );
-            SLobbiesByIndex.Remove ( ID );
-            sDimensionsUsed.Remove ( Dimension );
+            lobbiesByName.Remove ( Name );
+            LobbiesByIndex.Remove ( ID );
+            dimensionsUsed.Remove ( Dimension );
 
             FuncIterateAllPlayers ( ( character, teamID ) => {
                 RemovePlayer ( character );
@@ -74,7 +74,7 @@ namespace TDS.server.instance.lobby {
 
         private uint GetFreeDimension ( ) {
             uint i = 1;
-            while ( sDimensionsUsed.ContainsKey ( i ) )
+            while ( dimensionsUsed.ContainsKey ( i ) )
                 ++i;
             return i;
         }

@@ -12,8 +12,8 @@ namespace TDS.server.instance.lobby {
         #region Lobby
         [RemoteEvent("joinLobby")]
         public void JoinLobbyEvent ( Client player, int index, bool spectator ) {
-            if ( Lobby.SLobbiesByIndex.ContainsKey ( index ) ) {
-                Lobby lobby = Lobby.SLobbiesByIndex[index];
+            if ( Lobby.LobbiesByIndex.ContainsKey ( index ) ) {
+                Lobby lobby = Lobby.LobbiesByIndex[index];
                 if ( lobby is Arena )
                     manager.lobby.Arena.Join ( player.GetChar(), spectator );
                 else
