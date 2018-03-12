@@ -9,7 +9,7 @@ mp.events.add( "onClientMapChange", function ( mapname, maplimit, mapmidx, mapmi
 	maplimit = JSON.parse( maplimit );
 	if ( maplimit.length > 0 )
 		loadMapLimitData( maplimit );
-    loadMapMiddleForCamera( new mp.Vector3( mapmidx, mapmidy, mapmidz ) );
+    setCameraToMapCenter( new mp.Vector3( mapmidx, mapmidy, mapmidz ) );
     toggleFightControls( false );
 } );
 

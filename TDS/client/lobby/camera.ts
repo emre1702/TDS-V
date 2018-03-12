@@ -7,8 +7,8 @@ let cameradata = {
 }
 
 
-function loadMapMiddleForCamera( mapmiddle ) {
-	log( "loadMapMiddleForCamera" );
+function setCameraToMapCenter( mapmiddle ) {
+    log( "setCameraToMapCenter" );
 	cameradata.camera.setCoord( mapmiddle.x, mapmiddle.y, mapmiddle.z + 110 );
 	cameradata.camera.pointAtCoord( mapmiddle.x, mapmiddle.y, mapmiddle.z );
 	cameradata.camera.setActive( true );
