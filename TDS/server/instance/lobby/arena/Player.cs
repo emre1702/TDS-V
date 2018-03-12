@@ -74,10 +74,9 @@ namespace TDS.server.instance.lobby {
             CheckForEnoughAlive ();
         }
 
-        public override void AddPlayer ( Character character, bool spectator = false ) {
-            AddPlayerDefault ( character, spectator );
-
-            
+        public override bool AddPlayer ( Character character, bool spectator = false ) {
+			if ( !AddPlayerDefault ( character, spectator ) )
+				return false;
 
             string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
             NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
@@ -88,6 +87,8 @@ namespace TDS.server.instance.lobby {
                 AddPlayerAsPlayer ( character );
 
             SendPlayerRoundInfoOnJoin ( character.Player );
+
+			return true;
         }
 
         private void AddPlayerAsPlayer ( Character character ) {

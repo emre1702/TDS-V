@@ -17,16 +17,19 @@ namespace TDS.server.instance.lobby {
             DmgSys = null;
         }
 
-        public override void AddPlayer ( Character character, bool spectator = false ) {
-            base.AddPlayer ( character, spectator );
+        public override bool AddPlayer ( Character character, bool spectator = false ) {
+			if ( !base.AddPlayer ( character, spectator ) )
+				return false;
 
             NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerJoinLobby", ID );
             character.Player.StopSpectating ();
             character.Player.Freeze ( false );
+
+			return true;
         }
 
-        internal void AddPlayerDefault ( Character character, bool spectator ) {
-            base.AddPlayer ( character, spectator );    
+        internal bool AddPlayerDefault ( Character character, bool spectator ) {
+            return base.AddPlayer ( character, spectator );    
         }
 
         public virtual void OnPlayerDeath ( Character character, Client killer, uint weapon ) {

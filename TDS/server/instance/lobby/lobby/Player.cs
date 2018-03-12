@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 using Newtonsoft.Json;
-using TDS.server.extend;
+using System.Collections.Generic;
 using TDS.server.instance.player;
 
 namespace TDS.server.instance.lobby {
@@ -9,6 +9,8 @@ namespace TDS.server.instance.lobby {
 
         public uint Armor = 100;
         public uint Health = 100;
+
+		public HashSet<uint> playerBlacklist = new HashSet<uint> ();
         
 
         public void OnPlayerDisconnected ( Character character, DisconnectionType type, string reason ) {
@@ -30,7 +32,10 @@ namespace TDS.server.instance.lobby {
             }
         }
 
-        public virtual void AddPlayer ( Character character, bool spectator = false ) {
+        public virtual bool AddPlayer ( Character character, bool spectator = false ) {
+			if ( !IsPlayerAllowedToJoin ( character ) )
+				return false;
+
             Client player = character.Player;
             player.Freeze ( true );
             character.Lobby.RemovePlayerDerived ( character );
@@ -57,6 +62,8 @@ namespace TDS.server.instance.lobby {
 
 			if ( spectator )
                 AddPlayerAsSpectator ( character );
+
+			return true;
         }
 
         private void AddPlayerAsSpectator ( Character character ) {
@@ -104,5 +111,9 @@ namespace TDS.server.instance.lobby {
         public void SetPlayerLobbyOwner ( Character character ) {
             character.IsLobbyOwner = true;
         }
+
+		public bool IsPlayerAllowedToJoin ( Character character ) {
+			return !playerBlacklist.Contains ( character.UID );
+		}
     }
 }
