@@ -33,6 +33,25 @@ CREATE TABLE IF NOT EXISTS `ban` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
+-- Exportiere Struktur von Tabelle tdsv.gang
+CREATE TABLE IF NOT EXISTS `gang` (
+  `uid` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL DEFAULT '0',
+  `shortname` varchar(10) NOT NULL DEFAULT '0',
+  `owneruid` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Daten Export vom Benutzer nicht ausgewählt
+-- Exportiere Struktur von Tabelle tdsv.gangmember
+CREATE TABLE IF NOT EXISTS `gangmember` (
+  `memberuid` int(11) NOT NULL,
+  `ganguid` int(11) NOT NULL DEFAULT 0,
+  `rank` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`memberuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Daten Export vom Benutzer nicht ausgewählt
 -- Exportiere Struktur von Tabelle tdsv.log
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -44,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `lobby` varchar(100) NOT NULL,
   `date` varchar(50) NOT NULL DEFAULT '-',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 -- Exportiere Struktur von Tabelle tdsv.player
@@ -61,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `registerdate` varchar(50) NOT NULL DEFAULT '-',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `UID` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 -- Exportiere Struktur von Tabelle tdsv.playerarenastats
@@ -77,24 +96,46 @@ CREATE TABLE IF NOT EXISTS `playerarenastats` (
   `arenatotaldamage` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Daten Export vom Benutzer nicht ausgewählt
--- Exportiere Struktur von Tabelle tdsv.playersetting
-CREATE TABLE IF NOT EXISTS `playersetting` (
+-- Exportiere Struktur von Tabelle tdsv.playermaprating
+CREATE TABLE IF NOT EXISTS `playermaprating` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `hitsound` tinyint(4) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `mapname` varchar(100) NOT NULL,
+  `rating` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Daten Export vom Benutzer nicht ausgewählt
+-- Exportiere Struktur von Tabelle tdsv.playervehicles
+CREATE TABLE IF NOT EXISTS `playervehicles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `vehicle` int(11) NOT NULL,
+  `amount` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 -- Exportiere Struktur von Tabelle tdsv.season
 CREATE TABLE IF NOT EXISTS `season` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `month` int(11) NOT NULL,
+  `topkiller` int(11) DEFAULT NULL,
+  `topkills` int(11) DEFAULT NULL,
+  `topassister` int(11) DEFAULT NULL,
+  `topassists` int(11) DEFAULT NULL,
+  `topdamager` int(11) DEFAULT NULL,
+  `topdamage` int(11) DEFAULT NULL,
+  `topkder` int(11) DEFAULT NULL,
+  `topkd` float DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
