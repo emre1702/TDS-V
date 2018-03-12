@@ -6,7 +6,7 @@ using TDS.server.manager.database;
 namespace TDS.server.manager.utility {
     class Season {
 
-        private const int stopSeasonAfterMonths = 1;
+        private const int stopSeasonAfterMonths = 3;
 
 		class SeasonTops {
 			public uint Killer = 0;
