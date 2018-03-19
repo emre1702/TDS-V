@@ -3,8 +3,19 @@
 	using GTANetworkAPI;
 
 	partial class Log {
+
+		private static string GetChatType ( ref string chat ) {
+			if ( chat.EndsWith ( "$normal$" ) )
+				return "normal";
+			else if ( chat.EndsWith ( "$dirty$" ) )
+				return "dirty";
+			else
+				return "0";
+		}
+
 		public static void Chat ( string chatstr, Client player, string lobbyname, uint targetUID = 0 ) {
-			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName, targetUID: targetUID.ToString() );
+			string chatinfoextended = targetUID != 0 ? targetUID.ToString() : GetChatType ( ref chatstr );
+			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName, targetUID: chatinfoextended );
 		}
 	}
 
