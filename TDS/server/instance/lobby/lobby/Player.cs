@@ -65,7 +65,7 @@ namespace TDS.server.instance.lobby {
 			if ( spectator )
                 AddPlayerAsSpectator ( character );
 
-			Log.LobbyJoin ( player, oldlobby.Name, Name );
+			Log.LobbyJoin ( player, ref oldlobby.Name, ref Name );
 
 			return true;
         }

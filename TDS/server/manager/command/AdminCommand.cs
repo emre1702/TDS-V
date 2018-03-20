@@ -61,7 +61,7 @@
 					Character targetcharacter = target.GetChar ();
 					if ( character.IsLobbyOwner ) {
 						if ( character.Lobby == targetcharacter.Lobby )
-							Log.LobbyOwner ( "lobbykick", player, target, character.Lobby.Name );
+							Log.LobbyOwner ( "lobbykick", player, target, ref character.Lobby.Name );
 						else
 							player.SendLangNotification ( "target_not_in_same_lobby" );
 					} else if ( character.AdminLvl >= neededLevels["kick"] )

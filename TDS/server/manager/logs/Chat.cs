@@ -13,7 +13,7 @@
 				return "0";
 		}
 
-		public static void Chat ( string chatstr, Client player, string lobbyname, uint targetUID = 0 ) {
+		public static void Chat ( ref string chatstr, Client player, string lobbyname, uint targetUID = 0 ) {
 			string chatinfoextended = targetUID != 0 ? targetUID.ToString() : GetChatType ( ref chatstr );
 			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName, targetUID: chatinfoextended );
 		}
