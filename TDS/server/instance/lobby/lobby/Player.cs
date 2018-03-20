@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using TDS.server.instance.player;
+using TDS.server.manager.logs;
 
 namespace TDS.server.instance.lobby {
 
@@ -38,7 +39,8 @@ namespace TDS.server.instance.lobby {
 
             Client player = character.Player;
             player.Freeze ( true );
-            character.Lobby.RemovePlayerDerived ( character );
+			Lobby oldlobby = character.Lobby;
+			oldlobby.RemovePlayerDerived ( character );
             character.Lobby = this;
             character.Spectating = null;
             player.StopSpectating ();
@@ -62,6 +64,8 @@ namespace TDS.server.instance.lobby {
 
 			if ( spectator )
                 AddPlayerAsSpectator ( character );
+
+			Log.LobbyJoin ( player, oldlobby.Name, Name );
 
 			return true;
         }
