@@ -50,6 +50,8 @@
                             Map.SendPlayerHisRatings ( character );
                             Gang.CheckPlayerGang ( character );
 
+							Log.Login ( player );
+
 						} else {
 							player.SendLangNotification ( "wrong_password" );
 							return;

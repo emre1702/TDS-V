@@ -21,6 +21,9 @@
 			Database.ExecPrepared ( $"INSERT INTO player (uid, name, password, email, registerdate) VALUES ({uid}, @name, @password, @email, '{Utility.GetTimestamp ()}');", parameters );
             Database.Exec ( $"INSERT INTO playerarenastats (uid) VALUES ({uid});" );
             Account.AddAccount ( player.SocialClubName, uid );
+
+			logs.Log.Register ( player );
+
             Login.LoginPlayer ( player.GetChar(), uid );
         }
 	}
