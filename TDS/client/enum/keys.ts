@@ -11,6 +11,7 @@ enum Keys {
     D = 0x44,
     M = 0x4D,
     T = 0x54,
+    U = 0x55,
     Y = 0x59,
     Z = 0x5A
 }
