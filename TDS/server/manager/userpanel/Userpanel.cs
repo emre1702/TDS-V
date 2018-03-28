@@ -13,9 +13,9 @@ namespace TDS.server.manager.userpanel {
 		[ServerEvent(Event.PlayerDisconnected)]
 		public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
 			// reports //
-			if ( playersInReportMain.Contains ( player ) ) {
-				PlayerLeaveReportMain ( player );
-				PlayerLeaveReport ( player );
+			if ( playersInReportMenu.Contains ( player ) ) {
+				PlayerCloseReportsMenu ( player );
+				PlayerCloseReport ( player );
 			}
 		}
     }
