@@ -1,8 +1,8 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
 var languagelist = {
-    "ENGLISH": {
-        "loginregister": {
+    ENGLISH: {
+        loginregister: {
             "tab_login": "Login",
             "tab_register": "Register",
             "username": "username",
@@ -19,12 +19,12 @@ var languagelist = {
             "forgotpw_reset": "reset",
             "passwordhastobesame": "Both passwords have to be the same!"
         },
-        "round": {
+        round: {
             "outside_map_limit": "You are outside of the map!\nThere are {1} seconds left to return to the map.",
             "planting": "planting ...",
             "defusing": "defusing ..."
         },
-        "lobby_choice": {
+        lobby_choice: {
             "arena": "Arena",
             "gang": "Gang",
             "custom": "Custom",
@@ -44,7 +44,7 @@ var languagelist = {
             "time_scale": "time-scale",
             "custom_lobby_own": "own lobby"
         },
-        "scoreboard": {
+        scoreboard: {
             "name": "name",
             "playtime": "playtime",
             "kills": "kills",
@@ -53,7 +53,7 @@ var languagelist = {
             "team": "team",
             "lobby": "lobby",
         },
-        "mapcreator_menu": {
+        mapcreator_menu: {
             "general": "General",
             "descriptions": "Descriptions",
             "team_spawns": "Team-spawns",
@@ -82,10 +82,10 @@ var languagelist = {
             "map_limit_min_max": "The map-limit amount has to be 0 or min. {1} and max. {2}.",
             "bomb_places_min": "There has to be atleast one bomb-place to be able to place the bomb.",
         },
-        "orders": ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"]
+        orders: ["Attack! Go go go!", "Stay back!", "Spread out!", "Go to the bomb!"],
     },	
-	"GERMAN": {
-		"loginregister": {
+	GERMAN: {
+		loginregister: {
 			"tab_login": "Login",
 			"tab_register": "Register",
 			"username": "Benutzername",
@@ -102,12 +102,12 @@ var languagelist = {
 			"forgotpw_reset": "Zuruecksetzen",
 			"passwordhastobesame": "Beide Passwoerter muessen die selben sein!"
 		},
-		"round": {
+		round: {
 			"outside_map_limit": "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {1} Sekunden, um zurück zu gehen.",
 			"planting": "Lege Bombe ...",
 			"defusing": "Entschärfe ..."
 		},
-		"lobby_choice": {
+		lobby_choice: {
 			"arena": "Arena",
 			"gang": "Gang",
             "custom": "Eigenes",
@@ -127,7 +127,7 @@ var languagelist = {
 			"health": "HP",
 			"time_scale": "Zeit-Tempo",
 		},
-		"scoreboard": {
+		scoreboard: {
 			"name": "Name",
 			"playtime": "Spielzeit",
 			"kills": "Kills",
@@ -136,7 +136,7 @@ var languagelist = {
 			"team": "Team",
             "lobby": "Lobby"
 		},
-        "mapcreator_menu": {
+        mapcreator_menu: {
             "general": "Allgemein",
             "descriptions": "Beschreibungen",
             "team_spawns": "Team-Spawns",
@@ -165,7 +165,7 @@ var languagelist = {
             "map_limit_min_max": "Die Anzahl der Team-Limit-Positionen muss 0, min. {1} oder max. {2} sein.",
             "bomb_places_min": "Es muss mindestens einen Bomben-Platz geben, um die Bombe platzieren zu können.",
         },
-        "orders": ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"],
+        orders: ["Angriff! Los los los!", "Bleibt zurück!", "Teilt euch auf!", "Geht zur Bombe!"],
 	}
 };
 
