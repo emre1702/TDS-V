@@ -44,11 +44,11 @@ mp.keys.bind( 0x23, true, function () {
 function toggleCursor( bool ) {
     if ( bool ) {
         ++nothidecursor;
-        mp.gui.cursor.visible = true;
+        mp.gui.cursor.show( true, false );
         mp.gui.chat.activate( false );
     } else {
         if ( --nothidecursor <= 0 ) {
-            mp.gui.cursor.visible = false;
+            mp.gui.cursor.show( false, false );
             mp.gui.chat.activate( true );
         }
     }
