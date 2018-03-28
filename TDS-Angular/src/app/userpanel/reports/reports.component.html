@@ -1,0 +1,30 @@
+<div id="main-report" *ngIf="!inReport && opened">
+    <table>
+        <thead>
+            <tr>
+                <th (click)="sortID()" class="not-selectable">ID</th>
+                <th (click)="sortTitle()" class="not-selectable">Title</th>
+                <th (click)="sortState()" class="not-selectable">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let entry of rowDatas; let i = index;">
+                <tr (click)="selectRow($event, i);" >
+                    <td>{{ entry.ID }}</td>
+                    <td>{{ entry.title }}</td>
+                    <td *ngIf="entry.open"><mat-icon>done</mat-icon></td>
+                    <td *ngIf="!entry.open">-</td>
+                </tr> 
+            </ng-container>   
+        </tbody>
+    </table>
+    <div id="main-buttons">
+        <button id="main-create" mat-button>Create</button>
+        <button id="main-open" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].open == false" (click)="toggleRowState();">Open</button>
+        <button id="main-close" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].open == true" (click)="toggleRowState();">Close</button> 
+        <button id="main-remove" mat-button>Remove</button>
+    </div>
+</div>
+<div *ngIf="inReport && opened">
+    
+</div>

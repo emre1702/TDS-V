@@ -1,0 +1,15 @@
+<mat-sidenav-container *ngIf="opened">
+    <mat-sidenav #sidenav mode="side" opened=true>
+        <mat-nav-list>
+            <a mat-list-item (click)="changeMenu('normal');">{{ language.normal }}</a>
+            <a mat-list-item (click)="changeMenu('team');">{{ language.team }}</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+            <ol>
+                <li *ngFor="let text of language[openedMenu+'rules']">
+                    <p [innerHTML]="text"></p>
+                </li>
+            </ol> 
+    </mat-sidenav-content>
+</mat-sidenav-container>

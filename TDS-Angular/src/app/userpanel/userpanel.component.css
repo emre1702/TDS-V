@@ -1,0 +1,49 @@
+.window {
+    width: 30%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+}
+
+mat-toolbar {
+    background: var(--secondary-color-gradient-dark);
+    color: white;
+    height: 10%;
+}
+
+#menu_button {
+    margin-left: -10px;
+    margin-right: 20px;
+}
+
+#close_button {
+    margin-left: auto;
+    margin-right: -10px;
+}
+
+mat-sidenav-container {
+    flex: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: transparent;
+    color: white;
+    width: 100%;
+    height: auto;
+}
+
+mat-sidenav {
+    display: inline-block; 
+    height: 100%;
+    background: var(--secondary-color-gradient-dark);
+}
+
+mat-nav-list>a {
+    color: white;
+}
+
+mat-sidenav-content {
+    padding-right: 6px;
+    width: auto;
+}
+
