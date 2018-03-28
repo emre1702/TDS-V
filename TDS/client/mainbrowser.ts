@@ -1,10 +1,31 @@
 ﻿mp.gui.chat.show( false );
 
 let mainbrowserdata = {
-    browser: mp.browsers.new( "package://TDS-V/window/main/index.html" ) as BrowserMp,
+    angular: new Angular(),
+    browser: null as BrowserMp,
     roundendreasonshowing: false
 }
-mainbrowserdata.browser.markAsChat();
+
+setTimeout( () => {
+    mainbrowserdata.angular.load( "package://TDS-V/window/userpanel/index.html" );
+    mainbrowserdata.browser = mp.browsers.new( "package://TDS-V/window/main/index.html" );
+    mainbrowserdata.browser.markAsChat();
+}, 500 );
+
+function addAngularListeners() {
+    // userpanel //
+    mainbrowserdata.angular.listen( "closeUserpanel", closeUserpanel );
+    mainbrowserdata.angular.listen( "requestLanguage", getLanguage );
+
+    // reports //
+    mainbrowserdata.angular.listen( "openReportsMenu", openReportsMenu );
+    mainbrowserdata.angular.listen( "closeReportsMenu", closeReportsMenu );
+    mainbrowserdata.angular.listen( "openReport", openReport );
+    mainbrowserdata.angular.listen( "closeReport", closeReport );
+    mainbrowserdata.angular.listen( "toggleReportState", toggleReportState );
+}
+addAngularListeners();
+
 
 mp.events.add( "onClientMoneyChange", money => {
     currentmoney = money;
