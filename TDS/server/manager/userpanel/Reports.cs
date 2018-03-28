@@ -38,7 +38,7 @@ namespace TDS.server.manager.userpanel {
 
 		private static Dictionary<Report, List<Client>> listOfPlayersInReport = new Dictionary<Report, List<Client>>();
 		private static Dictionary<Client, Report> playersInReport = new Dictionary<Client, Report> ();
-		private static List<Client> playersInReportMain = new List<Client> ();
+		private static List<Client> playersInReportMenu = new List<Client> ();
 
 		[RemoteEvent("onPlayerCreateReport")]
 		public static void PlayerCreateReport ( Client player, string json, string text ) {
@@ -53,7 +53,7 @@ namespace TDS.server.manager.userpanel {
 			reportTextsByReport[report] = new List<ReportText> ();
 			listOfPlayersInReport[report] = new List<Client> ();
 
-			foreach ( Client target in playersInReportMain ) {
+			foreach ( Client target in playersInReportMenu ) {
 				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReport", JsonConvert.SerializeObject ( report ) );
 			}
 
@@ -96,7 +96,7 @@ namespace TDS.server.manager.userpanel {
 
 			report.Open = state;
 
-			foreach ( Client target in playersInReportMain ) {
+			foreach ( Client target in playersInReportMenu ) {
 				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReportState", reportid, state );
 			}
 
@@ -107,8 +107,8 @@ namespace TDS.server.manager.userpanel {
 			Database.Exec ( $"UPDATE reports SET open={( state ? 1 : 0 )} WHERE id={reportid};" );
 		}
 		
-		[RemoteEvent("onPlayerJoinReport")]
-		public static void PlayerJoinReport ( Client player, uint index ) {
+		[RemoteEvent("onPlayerOpenReport")]
+		public static void PlayerOpenReport ( Client player, uint index ) {
 			if ( !reportsByID.ContainsKey ( index ) )
 				return;
 			Report report = reportsByID[index];
@@ -120,8 +120,8 @@ namespace TDS.server.manager.userpanel {
 			}
 		}
 
-		[RemoteEvent("onPlayerLeaveReport")]
-		public static void PlayerLeaveReport ( Client player ) {
+		[RemoteEvent("onPlayerCloseReport")]
+		public static void PlayerCloseReport ( Client player ) {
 			if ( playersInReport.ContainsKey ( player ) ) {
 				Report report = playersInReport[player];
 				playersInReport.Remove ( player );
@@ -142,15 +142,15 @@ namespace TDS.server.manager.userpanel {
 			NAPI.ClientEvent.TriggerClientEvent ( player, "syncReports", JsonConvert.SerializeObject ( reportstosend ) );
 		}
 
-		[RemoteEvent("onPlayerJoinReportMain")]
-		public static void PlayerJoinReportMain ( Client player ) {
-			playersInReportMain.Add ( player );
+		[RemoteEvent("onPlayerOpenReportsMenu")]
+		public static void PlayerOpenReportsMenu ( Client player ) {
+			playersInReportMenu.Add ( player );
 			SendPlayerReports ( player );
 		}
 
-		[RemoteEvent("onPlayerLeaveReportMain")]
-		public static void PlayerLeaveReportMain ( Client player ) {
-			playersInReportMain.Remove ( player );
+		[RemoteEvent( "onPlayerCloseReportsMenu" )]
+		public static void PlayerCloseReportsMenu ( Client player ) {
+			playersInReportMenu.Remove ( player );
 		}
 
 		private async static void LoadReportsData ( ) {
