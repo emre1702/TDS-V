@@ -54,5 +54,8 @@ function loadSettings() {
 
     if ( typeof savedhitsound !== "undefined" )
         settingsdata.hitsound = savedhitsound;
+}
 
+function getLanguage() {
+    return settingsdata.language;
 }
