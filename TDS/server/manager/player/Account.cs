@@ -142,7 +142,8 @@
 			}
 		}
 
-		public static void PermaBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason ) {
+		public static void PermaBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason ) {
+			Client admin = admincharacter.Player;
 			Database.ExecPrepared ( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +
                 $"(@socialclubname, @address, 'permanent', '{Utility.GetTimespan ()}', '{Utility.GetTimestamp ()}', @admin, @reason)",
                 new Dictionary<string, string> {
@@ -155,11 +156,12 @@
 			if ( target != null )
 				target.Kick ( target.GetLang ( "youpermaban", admin.Name, reason ) );
 			// LOG //
-			Log.Admin ( "permaban", admin, PlayerUIDs[targetname].ToString (), admin.GetChar ().Lobby.Name );
+			AdminLog.Log ( AdminLogType.PERMABAN, admincharacter.UID, PlayerUIDs[targetname], reason );
 			/////////
 		}
 
-		public static void TimeBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, int hours ) {
+		public static void TimeBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason, int hours ) {
+			Client admin = admincharacter.Player;
 			Database.ExecPrepared ( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES " +
 				$"(@socialclubname, @address, 'time', {Utility.GetTimespan ()}, '{Utility.GetTimestamp ()}', " +
 				$"{Utility.GetTimespan ( hours * 3600 )}, '{Utility.GetTimestamp ( hours * 3600 )}', @admin, @reason)", new Dictionary<string, string> {
@@ -175,11 +177,11 @@
 			if ( target != null )
 				target.Kick ( target.GetLang ( "youtimeban", hours.ToString (), admin.Name, reason ) );
 			// LOG //
-			Log.Admin ( "timeban", admin, PlayerUIDs[targetname].ToString (), admin.GetChar ().Lobby.Name );
+			AdminLog.Log ( AdminLogType.TIMEBAN, admincharacter.UID, PlayerUIDs[targetname], reason, hours );
 			/////////
 		}
 
-		public static async Task UnBanPlayer ( Client admin, Client target, string targetname, string reason, uint uid ) {
+		public static async Task UnBanPlayer ( Character admincharacter, Client target, string targetname, string reason, uint uid ) {
 			DataTable result = await Database.ExecResult ( $"SELECT address FROM ban WHERE uid = {uid}" ).ConfigureAwait ( false );
 			string targetaddress = result.Rows[0]["address"].ToString ();
 			Database.Exec ( $"DELETE FROM ban WHERE uid = {uid}" );
@@ -187,9 +189,9 @@
 			if ( targetaddress != "-" )
 				addressBanDict.Remove ( targetaddress );
 
-            ServerLanguage.SendMessageToAll ( "unban", targetname, admin.Name, reason );
+            ServerLanguage.SendMessageToAll ( "unban", targetname, admincharacter.Player.Name, reason );
 			// LOG //
-			Log.Admin ( "unban", admin, PlayerUIDs[targetname].ToString (), admin.GetChar ().Lobby.Name );
+			AdminLog.Log ( AdminLogType.UNBAN, admincharacter.UID, PlayerUIDs[targetname], reason );
 			/////////
 		}
 
