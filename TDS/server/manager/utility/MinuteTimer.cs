@@ -36,8 +36,11 @@
 
                 ++counter;
 
-                // log-save //
-                Log.SaveInDatabase ();
+				// log-save //
+				if ( counter % 3 == 0 )
+					Log.SaveInDatabase ();
+				else if ( counter % 3 == 1 )
+					AdminLog.SaveInDatabase ();
 
                 if ( counter % 30 == 0 )
                     Season.SaveSeason ();
