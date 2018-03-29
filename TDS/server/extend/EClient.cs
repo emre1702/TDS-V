@@ -22,9 +22,7 @@
 		public static bool IsAdminLevel ( this Client player, uint adminlvl, bool ownercando = false, bool vipcando = false ) {
 			if ( player.Exists ) {
 				Character character = player.GetChar ();
-				if ( character.AdminLvl >= adminlvl || ownercando && character.IsLobbyOwner || vipcando && character.IsVIP ) {
-					return true;
-				}
+				return character.IsAdminLevel ( adminlvl, ownercando, vipcando );
 			}
 			return false;
 		}

@@ -57,7 +57,11 @@ namespace TDS.server.instance.player {
 			LoggedIn = true;
 		}
 
-        public void GiveMoney ( short money ) {
+		public bool IsAdminLevel ( uint adminlvl, bool ownercando = false, bool vipcando = false ) {
+			return AdminLvl >= adminlvl || ownercando && IsLobbyOwner || vipcando && IsVIP;
+		}
+
+		public void GiveMoney ( short money ) {
             if ( money > 0 || Money > money * -1 ) {
                 Money = (uint) checked(Money + money);
                 NAPI.ClientEvent.TriggerClientEvent ( Player, "onClientMoneyChange", Money );
