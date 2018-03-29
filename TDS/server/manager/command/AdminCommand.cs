@@ -10,6 +10,7 @@
 	using lobby;
 	using logs;
 	using player;
+	using TDS.server.enums;
 	using TDS.server.instance.lobby;
 	using TDS.server.instance.lobby.interfaces;
 	using utility;
@@ -38,13 +39,14 @@
 		[CommandAlias ( "endround" )]
 		[Command ( "next" )]
 		public static void NextMap ( Client player ) {
-			if ( player.IsAdminLevel ( neededLevels["next"], true ) ) {
+			Character character = player.GetChar ();
+			if ( character.IsAdminLevel ( neededLevels["next"], true ) ) {
 				Lobby lobby = player.GetChar ().Lobby;
 				if ( lobby is IRound roundlobby ) {
 					// LOG //
-					Log.Admin ( "next", player, "0", lobby.Name );
+					AdminLog.Log ( AdminLogType.NEXT, character.UID, 0, lobby.Name );
 					/////////
-					roundlobby.EndRoundEarlier ( enums.RoundEndReason.COMMAND, player.Name );
+					roundlobby.EndRoundEarlier ( RoundEndReason.COMMAND, player.Name );
 				}
 			} else
 				player.SendLangNotification ( "adminlvl_not_high_enough" );
@@ -55,9 +57,9 @@
 		[Command ( "lobbykick" )]
 		public static void LobbyKickPlayer ( Client player, Client target, [RemainingText] string reason ) {
 			if ( player != target ) {
-				if ( player.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
+				Character character = player.GetChar ();
+				if ( character.IsAdminLevel ( neededLevels["lobbykick"], true, true ) ) {
 					// LOG //
-					Character character = player.GetChar ();
 					Character targetcharacter = target.GetChar ();
 					if ( character.IsLobbyOwner ) {
 						if ( character.Lobby == targetcharacter.Lobby )
@@ -65,7 +67,7 @@
 						else
 							player.SendLangNotification ( "target_not_in_same_lobby" );
 					} else if ( character.AdminLvl >= neededLevels["kick"] )
-						Log.Admin ( "lobbykick", player, target, character.Lobby.Name );
+						AdminLog.Log ( AdminLogType.LOBBYKICK, character.UID, targetcharacter.UID, character.Lobby.Name );
 					else
 						Log.VIP ( "lobbykick", player, target, character.Lobby.Name );
 					/////////
@@ -84,15 +86,19 @@
 		[Command ( "kick" )]
 		public static void KickPlayer ( Client player, Client target, [RemainingText] string reason ) {
 			if ( player != target ) {
-				if ( player.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
-					// LOG //
-					if ( player.GetChar ().AdminLvl >= neededLevels["kick"] )
-						Log.Admin ( "kick", player, target, player.GetChar ().Lobby.Name );
-					else
-						Log.VIP ( "kick", player, target, player.GetChar ().Lobby.Name );
-					/////////
-					ServerLanguage.SendMessageToAll ( "kick", target.Name, player.Name, reason );
-					target.Kick ( target.GetLang ( "youkick", player.Name, reason ) );
+				Character character = player.GetChar ();
+				if ( character.IsAdminLevel ( neededLevels["kick"], false, true ) ) {
+					Character targetcharacter = target.GetChar ();
+					if ( character.AdminLvl > targetcharacter.AdminLvl ) {
+						// LOG //
+						if ( character.AdminLvl >= neededLevels["kick"] )
+							AdminLog.Log ( AdminLogType.KICK, character.UID, targetcharacter.UID, character.Lobby.Name + ": " + reason );
+						else
+							Log.VIP ( "kick", player, target, character.Lobby.Name );
+						/////////
+						ServerLanguage.SendMessageToAll ( "kick", target.Name, player.Name, reason );
+						target.Kick ( target.GetLang ( "youkick", player.Name, reason ) );
+					}
 				}
 			}
 		}
@@ -109,28 +115,32 @@
 		public async void BanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
 			try {
 				if ( Account.PlayerUIDs.ContainsKey ( targetname ) ) {
-					if ( hours == -1 && player.IsAdminLevel ( neededLevels["ban (permanent)"] ) || hours == 0 && player.IsAdminLevel ( neededLevels["ban (unban)"] ) || hours > 0 && player.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
-						uint targetadminlvl;
+					Character character = player.GetChar ();
+					if ( hours == -1 && character.IsAdminLevel ( neededLevels["ban (permanent)"] ) || hours == 0 && character.IsAdminLevel ( neededLevels["ban (unban)"] ) || hours > 0 && character.IsAdminLevel ( neededLevels["ban (time)"] ) ) {
+						uint targetadminlvl = 0;
 						string targetaddress = "-";
 						uint targetUID = Account.PlayerUIDs[targetname];
 						Client target = NAPI.Player.GetPlayerFromName ( targetname );
-						if ( target != null && target.GetChar ().LoggedIn ) {
-							Character targetcharacter = target.GetChar ();
-							targetadminlvl = targetcharacter.AdminLvl;
-							targetaddress = target.Address;
-						} else {
-							if ( target != null )
+						Character targetcharacter;
+						if ( target != null ) {
+							targetcharacter = target.GetChar ();
+							if ( target != null && targetcharacter.LoggedIn ) {
+								targetadminlvl = targetcharacter.AdminLvl;
 								targetaddress = target.Address;
-							DataTable targetdata = await Database.ExecResult ( $"SELECT adminlvl FROM player WHERE uid = {targetUID}" ).ConfigureAwait ( false );
-							targetadminlvl = Convert.ToUInt16 ( targetdata.Rows[0]["adminlvl"] );
+							} else {
+								if ( target != null )
+									targetaddress = target.Address;
+								DataTable targetdata = await Database.ExecResult ( $"SELECT adminlvl FROM player WHERE uid = {targetUID}" ).ConfigureAwait ( false );
+								targetadminlvl = Convert.ToUInt16 ( targetdata.Rows[0]["adminlvl"] );
+							}
 						}
 						if ( targetadminlvl <= player.GetChar ().AdminLvl ) {
 							if ( hours == 0 ) {
-								await Account.UnBanPlayer ( player, target, targetname, reason, targetUID ).ConfigureAwait ( false );
+								await Account.UnBanPlayer ( character, target, targetname, reason, targetUID ).ConfigureAwait ( false );
 							} else if ( hours == -1 ) {
-								Account.PermaBanPlayer ( player, target, targetname, targetaddress, reason );
+								Account.PermaBanPlayer ( character, target, targetname, targetaddress, reason );
 							} else {
-								Account.TimeBanPlayer ( player, target, targetname, targetaddress, reason, hours );
+								Account.TimeBanPlayer ( character, target, targetname, targetaddress, reason, hours );
 							}
 						} else
 							player.SendLangNotification ( "adminlvl_not_high_enough" );
