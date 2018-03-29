@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using TDS.server.enums;
 
 namespace TDS.server.manager.logs {
 
@@ -6,7 +7,7 @@ namespace TDS.server.manager.logs {
 
 		public static void Error ( string errorstr, string lobbyname = "DEFAULT" ) {
             NAPI.Util.ConsoleOutput ( "[ERROR IN "+lobbyname + "] " + errorstr );
-			AddLogEntry ( "error", errorstr, lobbyname );
+			AddLogEntry ( LogType.ERROR, errorstr, lobbyname );
 		}
 	}
 

@@ -4,6 +4,7 @@
     using System.Text;
     using database;
 	using player;
+	using TDS.server.enums;
 	using utility;
 
 	partial class Log {
@@ -18,7 +19,7 @@
             public string UID;
             public string Name;
             public string TargetUID;
-            public string Type;
+            public LogType Type;
             public string Info;
             public string Lobby;
             public string Date;
@@ -28,13 +29,13 @@
             }
 
             public void GetValueString () {
-                builder.Append ( $"({UID}, '@name{Index}@', {TargetUID}, '{Type}', '@info{Index}@', '{Lobby}', '{Date}')" );
+                builder.Append ( $"({UID}, '@name{Index}@', {TargetUID}, '{(int)Type}', '@info{Index}@', '{Lobby}', '{Date}')" );
                 logQueryParameters[$"@name{Index}@"] = Name;
                 logQueryParameters[$"@info{Index}@"] = Info;
             }
         }
 
-		private static void AddLogEntry ( string type, string info, string lobby = "DEFAULT", string playername = "-", string targetUID = "0" ) {
+		private static void AddLogEntry ( LogType type, string info, string lobby = "DEFAULT", string playername = "-", string targetUID = "0" ) {
             new LogEntry {
                 Index = entries.Count,
                 UID = playername != "-" ? Account.PlayerUIDs[playername].ToString () : "0",

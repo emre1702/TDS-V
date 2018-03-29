@@ -1,6 +1,7 @@
 ﻿namespace TDS.server.manager.logs {
 
 	using GTANetworkAPI;
+	using TDS.server.enums;
 
 	partial class Log {
 
@@ -15,7 +16,7 @@
 
 		public static void Chat ( ref string chatstr, Client player, string lobbyname, uint targetUID = 0 ) {
 			string chatinfoextended = targetUID != 0 ? targetUID.ToString() : GetChatType ( ref chatstr );
-			AddLogEntry ( "chat", chatstr, lobbyname, player.SocialClubName, targetUID: chatinfoextended );
+			AddLogEntry ( LogType.CHAT, chatstr, lobbyname, player.SocialClubName, targetUID: chatinfoextended );
 		}
 	}
 
