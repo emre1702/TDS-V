@@ -160,26 +160,13 @@
 		}
 
 		public static void TimeBanPlayer ( Client admin, Client target, string targetname, string targetaddress, string reason, int hours ) {
-			Database.ExecPrepared ( "REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES (@socialclubname, @address, @type, @startsec, @startoptic, @endsec, @endoptic, @admin, @reason)", new Dictionary<string, string> {
-				{
-					"@socialclubname", targetname
-				}, {
-					"@address", targetaddress
-				}, {
-					"@type", "time"
-				}, {
-					"@startsec", Utility.GetTimespan ().ToString ()
-				}, {
-					"@startoptic", Utility.GetTimestamp ()
-				}, {
-					"@endsec", Utility.GetTimespan ( hours * 3600 ).ToString ()
-				}, {
-					"@endoptic", Utility.GetTimestamp ( hours * 3600 )
-				}, {
-					"@admin", admin.Name
-				}, {
-					"@reason", reason
-				}
+			Database.ExecPrepared ( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES " +
+				$"(@socialclubname, @address, 'time', {Utility.GetTimespan ()}, '{Utility.GetTimestamp ()}', " +
+				$"{Utility.GetTimespan ( hours * 3600 )}, '{Utility.GetTimestamp ( hours * 3600 )}', @admin, @reason)", new Dictionary<string, string> {
+					{ "@socialclubname", targetname },
+					{ "@address", targetaddress },
+					{ "@admin", admin.SocialClubName },
+					{ "@reason", reason }
 			} );
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
