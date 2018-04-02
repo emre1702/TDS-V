@@ -7,180 +7,244 @@ using System.Linq;
 using TDS.server.extend;
 using TDS.server.instance.player;
 using TDS.server.manager.database;
+using TDS.server.manager.player;
 using TDS.server.manager.utility;
 
-namespace TDS.server.manager.userpanel {
+namespace TDS.server.manager.userpanel
+{
 
 	[Serializable]
-	class Report {
+	class Report
+	{
 		public uint ID;
+		[JsonIgnore]
 		public uint AuthorUID;
+		[JsonIgnore]
 		public uint ForAdminlvl;
+		public string Author;
 		public string Title;
 		public bool Open = true;
+		[JsonIgnore]
+		public List<ReportText> Texts = new List<ReportText>();
 	}
 
 	[Serializable]
-	class ReportText {
+	class ReportText
+	{
 		public uint ID;
-		public uint ReportID;
-		public uint AuthorUID;
+		public string Author;
 		public string Text;
 		public string Date;
 	}
 
-	partial class Userpanel {
+	partial class Userpanel
+	{
 
-		private static List<Report> reports = new List<Report> ();
-		private static Dictionary<uint, Report> reportsByID = new Dictionary<uint, Report> ();
-		private static Dictionary<Report, List<ReportText>> reportTextsByReport = new Dictionary<Report, List<ReportText>> ();
-		private static Dictionary<Report, uint> highestTextID = new Dictionary<Report, uint> ();
+		private static Dictionary<string, uint> neededAdminlvls = new Dictionary<string, uint> {
+			{ "remove", 2 }
+		};
 
-		private static Dictionary<Report, List<Client>> listOfPlayersInReport = new Dictionary<Report, List<Client>>();
-		private static Dictionary<Client, Report> playersInReport = new Dictionary<Client, Report> ();
-		private static List<Client> playersInReportMenu = new List<Client> ();
+		private static List<Report> reports = new List<Report>();
+		private static Dictionary<uint, Report> reportsByID = new Dictionary<uint, Report>();
+		private static Dictionary<Report, uint> highestTextID = new Dictionary<Report, uint>();
 
-		[RemoteEvent("onPlayerCreateReport")]
-		public static void PlayerCreateReport ( Client player, string json, string text ) {
-			Character character = player.GetChar ();
-			Report report = JsonConvert.DeserializeObject<Report> ( json );
+		private static Dictionary<Report, List<Character>> listOfPlayersInReport = new Dictionary<Report, List<Character>>();
+		private static Dictionary<Character, Report> playersInReport = new Dictionary<Character, Report>();
+		private static List<Character> playersInReportMenu = new List<Character>();
 
-			report.ID = reportsByID.Keys.Max() + 1;
-			report.AuthorUID = character.UID;
-			
-			reports.Add ( report );
-			reportsByID[report.ID] = report;
-			reportTextsByReport[report] = new List<ReportText> ();
-			listOfPlayersInReport[report] = new List<Client> ();
-
-			foreach ( Client target in playersInReportMenu ) {
-				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReport", JsonConvert.SerializeObject ( report ) );
-			}
-
-			Database.ExecPrepared ( $"INSERT INTO reports (id, authoruid, foradminlvl, title) VALUES ({report.ID}, {report.AuthorUID}, {report.ForAdminlvl}, @TITLE@);", new Dictionary<string, string> {
-				{ "@TITLE@", report.Title }
-			} );
-
-			PlayerAddTextToReport ( player, report.ID, text );
-		}
-
-		[RemoteEvent("onPlayerAddTextToReport")]
-		public static void PlayerAddTextToReport ( Client player, uint reportid, string text ) {
-			if ( !reportsByID.ContainsKey ( reportid ) )
-				return;
-			Report report = reportsByID[reportid];
-			Character character = player.GetChar ();
-
-			ReportText reporttext = new ReportText {
-				ID = ++highestTextID[report],
-				ReportID = reportid,
+		[RemoteEvent("onClientCreateReport")]
+		public static void ClientCreateReport(Client player, string title, string text, uint forminadminlvl)
+		{
+			Character character = player.GetChar();
+			Report report = new Report()
+			{
+				ID = reportsByID.Keys.Max() + 1,
 				AuthorUID = character.UID,
-				Text = text,
-				Date = Utility.GetTimestamp ()
+				Author = player.Name,
+				Title = title,
+				ForAdminlvl = forminadminlvl
 			};
 
-			foreach ( Client target in listOfPlayersInReport[report] ) {
-				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReportText", JsonConvert.SerializeObject ( reporttext ) );
+			reports.Add(report);
+			reportsByID[report.ID] = report;
+			listOfPlayersInReport[report] = new List<Character>();
+
+			foreach ( Character target in playersInReportMenu )
+			{
+				if ( player == target.Player || target.AdminLvl >= report.ForAdminlvl )
+					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReport", JsonConvert.SerializeObject(report));
 			}
 
-			Database.ExecPrepared ( $"INSERT INTO reporttexts (id, reportid, authoruid, text, date) VALUES ({reporttext.ID}, {reportid}, {character.UID}, @TEXT@, '{reporttext.Date}');", new Dictionary<string, string> {
-				{ "@TEXT@", text }
-			} );
+			Database.ExecPrepared($"INSERT INTO reports (id, authoruid, foradminlvl, title) VALUES ({report.ID}, {report.AuthorUID}, {report.ForAdminlvl}, @TITLE@);", new Dictionary<string, string> {
+				{ "@TITLE@", report.Title }
+			});
+
+			ClientAddTextToReport(player, report.ID, text);
 		}
 
-		[RemoteEvent("onPlayerChangeReportState")] 
-		public static void PlayerChangeReportState ( Client player, uint reportid, bool state ) {
-			if ( !reportsByID.ContainsKey ( reportid ) )
+		[RemoteEvent("onClientAddTextToReport")]
+		public static void ClientAddTextToReport(Client player, uint reportid, string text)
+		{
+			if ( !reportsByID.ContainsKey(reportid) )
+				return;
+			Report report = reportsByID[reportid];
+
+			ReportText reporttext = new ReportText
+			{
+				ID = ++highestTextID[report],
+				Author = player.Name,
+				Text = text,
+				Date = Utility.GetTimestamp()
+			};
+
+			foreach ( Character target in listOfPlayersInReport[report] )
+			{
+				if ( target.UID == report.AuthorUID || target.AdminLvl >= report.ForAdminlvl )
+					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReportText", JsonConvert.SerializeObject(reporttext));
+			}
+
+			Database.ExecPrepared($"INSERT INTO reporttexts (id, reportid, authoruid, text, date) VALUES ({reporttext.ID}, {reportid}, {player.GetChar().UID}, @TEXT@, '{reporttext.Date}');", new Dictionary<string, string> {
+				{ "@TEXT@", text }
+			});
+		}
+
+		[RemoteEvent("onClientChangeReportState")]
+		public static void ClientChangeReportState(Client player, uint reportid, bool state)
+		{
+			if ( !reportsByID.ContainsKey(reportid) )
 				return;
 			Report report = reportsByID[reportid];
 
 			report.Open = state;
 
-			foreach ( Client target in playersInReportMenu ) {
-				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReportState", reportid, state );
+			foreach ( Character target in playersInReportMenu )
+			{
+				if ( target.UID == report.AuthorUID || target.AdminLvl >= report.ForAdminlvl )
+					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReportState", reportid, state);
 			}
 
-			foreach ( Client target in listOfPlayersInReport[report] ) {
-				NAPI.ClientEvent.TriggerClientEvent ( target, "syncReportState", reportid, state );
+			foreach ( Character target in listOfPlayersInReport[report] )
+			{
+				NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReportState", reportid, state);
 			}
 
-			Database.Exec ( $"UPDATE reports SET open={( state ? 1 : 0 )} WHERE id={reportid};" );
+			Database.Exec($"UPDATE reports SET open={(state ? 1 : 0)} WHERE id={reportid};");
 		}
-		
-		[RemoteEvent("onPlayerOpenReport")]
-		public static void PlayerOpenReport ( Client player, uint index ) {
-			if ( !reportsByID.ContainsKey ( index ) )
+
+		[RemoteEvent("onClientOpenReport")]
+		public static void ClientOpenReport(Client player, uint index)
+		{
+			if ( !reportsByID.ContainsKey(index) )
 				return;
 			Report report = reportsByID[index];
-			Character character = player.GetChar ();
-			if ( character.AdminLvl >= report.ForAdminlvl || report.AuthorUID == character.UID ) {
-				listOfPlayersInReport[report].Add ( player );
-				playersInReport[player] = report;
-				NAPI.ClientEvent.TriggerClientEvent ( player, "syncReportTexts", JsonConvert.SerializeObject ( reportTextsByReport[report] ) );
+			Character character = player.GetChar();
+			if ( character.AdminLvl >= report.ForAdminlvl || report.AuthorUID == character.UID )
+			{
+				listOfPlayersInReport[report].Add(character);
+				playersInReport[character] = report;
+				NAPI.ClientEvent.TriggerClientEvent(player, "syncReportTexts", JsonConvert.SerializeObject(report.Texts));
 			}
 		}
 
-		[RemoteEvent("onPlayerCloseReport")]
-		public static void PlayerCloseReport ( Client player ) {
-			if ( playersInReport.ContainsKey ( player ) ) {
-				Report report = playersInReport[player];
-				playersInReport.Remove ( player );
-				listOfPlayersInReport[report].Remove ( player );
+		[RemoteEvent("onClientCloseReport")]
+		public static void ClientCloseReport(Client player)
+		{
+			Character character = player.GetChar();
+			if ( playersInReport.ContainsKey(character) )
+			{
+				Report report = playersInReport[character];
+				playersInReport.Remove(character);
+				listOfPlayersInReport[report].Remove(character);
 			}
 		}
 
-		private static void SendPlayerReports ( Client player ) {
-			Character character = player.GetChar ();
-			List<Report> reportstosend = new List<Report> ();
+		private static void SendPlayerReports(Client player)
+		{
+			Character character = player.GetChar();
+			List<Report> reportstosend = new List<Report>();
 			foreach ( Report report in reports )
 				if ( report.AuthorUID == character.UID )
-					reportstosend.Add ( report );
+					reportstosend.Add(report);
 			if ( character.AdminLvl > 0 )
 				foreach ( Report report in reports )
 					if ( report.ForAdminlvl <= character.AdminLvl && report.AuthorUID != character.UID )
-						reportstosend.Add ( report );
-			NAPI.ClientEvent.TriggerClientEvent ( player, "syncReports", JsonConvert.SerializeObject ( reportstosend ) );
+						reportstosend.Add(report);
+			NAPI.ClientEvent.TriggerClientEvent(player, "syncReports", JsonConvert.SerializeObject(reportstosend));
 		}
 
-		[RemoteEvent("onPlayerOpenReportsMenu")]
-		public static void PlayerOpenReportsMenu ( Client player ) {
-			playersInReportMenu.Add ( player );
-			SendPlayerReports ( player );
+		[RemoteEvent("onClientOpenReportsMenu")]
+		public static void ClientOpenReportsMenu(Client player)
+		{
+			playersInReportMenu.Add(player.GetChar());
+			SendPlayerReports(player);
 		}
 
-		[RemoteEvent( "onPlayerCloseReportsMenu" )]
-		public static void PlayerCloseReportsMenu ( Client player ) {
-			playersInReportMenu.Remove ( player );
+		[RemoteEvent("onClientCloseReportsMenu")]
+		public static void ClientCloseReportsMenu(Client player)
+		{
+			playersInReportMenu.Remove(player.GetChar());
 		}
 
-		private async static void LoadReportsData ( ) {
-			DataTable reportstable = await Database.ExecResult ( "SELECT * FROM reports;" ); 	
-			foreach ( DataRow row in reportstable.Rows ) {
-				Report report = new Report {
-					ID = Convert.ToUInt32 ( row["id"] ),
-					AuthorUID = Convert.ToUInt32 ( row["authoruid"] ),
-					ForAdminlvl = Convert.ToUInt32 ( row["foradminlvl"] ),
-					Title = Convert.ToString ( row["Title"] ),
-					Open = Convert.ToBoolean ( row["open"] )
+		[RemoteEvent("onClientRemoveReport")]
+		public static void ClientRemoveReport(Client player, uint reportid)
+		{
+			if ( player.IsAdminLevel(neededAdminlvls["remove"]) )
+			{
+				Database.Exec($"DELETE FROM reports WHERE id={reportid};");
+				Database.Exec($"DELETE FROM reporttexts WHERE reportid={reportid};");
+
+				for ( int i = 0; i < reports.Count; ++i )
+				{
+					if ( reports[i].ID == reportid )
+					{
+						Report report = reports[i];
+						reports.RemoveAt(i);
+						reportsByID.Remove(reportid);
+						listOfPlayersInReport.Remove(report);
+						break;
+					}
+				}
+
+				foreach ( Character target in playersInReportMenu )
+				{
+					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReportRemove", reportid);
+				}
+			}
+		}
+
+		private async static void LoadReportsData()
+		{
+			DataTable reportstable = await Database.ExecResult("SELECT * FROM reports;");
+			foreach ( DataRow row in reportstable.Rows )
+			{
+				Report report = new Report
+				{
+					ID = Convert.ToUInt32(row["id"]),
+					AuthorUID = Convert.ToUInt32(row["authoruid"]),
+					Author = Account.GetNameByUID(Convert.ToUInt32(row["authoruid"])),
+					ForAdminlvl = Convert.ToUInt32(row["foradminlvl"]),
+					Title = Convert.ToString(row["Title"]),
+					Open = Convert.ToBoolean(row["open"])
 				};
-				reports.Add ( report );
+				reports.Add(report);
 				reportsByID[report.ID] = report;
-				reportTextsByReport[report] = new List<ReportText> ();
-				listOfPlayersInReport[report] = new List<Client> ();
+				listOfPlayersInReport[report] = new List<Character>();
 				highestTextID[report] = 0;
 			}
 
-			DataTable textstable = await Database.ExecResult ( "SELECT * FROM reporttexts;" );
-			foreach ( DataRow row in textstable.Rows ) {
-				ReportText text = new ReportText {
-					ID = Convert.ToUInt32 ( row["id"] ),
-					ReportID = Convert.ToUInt32 ( row["authoruid"] ),
-					AuthorUID = Convert.ToUInt32 ( row["authoruid"] ),
-					Text = Convert.ToString ( row["Title"] ),
-					Date = Convert.ToString ( row["state"] )
+			DataTable textstable = await Database.ExecResult("SELECT * FROM reporttexts;");
+			foreach ( DataRow row in textstable.Rows )
+			{
+				ReportText text = new ReportText
+				{
+					ID = Convert.ToUInt32(row["id"]),
+					Author = Account.GetNameByUID(Convert.ToUInt32(row["authoruid"])),
+					Text = Convert.ToString(row["Title"]),
+					Date = Convert.ToString(row["state"])
 				};
-				Report report = reportsByID[text.ReportID];
-				reportTextsByReport[report].Add ( text );
+				uint reportid = Convert.ToUInt32(row["reportid"]);
+				Report report = reportsByID[reportid];
+				report.Texts.Add(text);
 				if ( highestTextID[report] < text.ID )
 					highestTextID[report] = text.ID;
 			}
