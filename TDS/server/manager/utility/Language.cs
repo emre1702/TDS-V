@@ -80,6 +80,8 @@
 				["reason_missing"] = "The reason is missing!",
 				["player_not_muted"] = "The player is not muted!",
 				["player_already_muted"] = "The player is already muted!",
+				["you_are_still_permamuted"] = "You are still permamuted.",
+				["you_are_still_muted"] = "You are still muted for {1} minutes."
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -149,6 +151,8 @@
 				["reason_missing"] = "Die Begründung fehlt!",
 				["player_not_muted"] = "Der Spieler ist nicht gemutet!",
 				["player_already_muted"] = "Der Spieler ist bereits gemutet!",
+				["you_are_still_permamuted"] = "Du bist noch permanent gemutet.",
+				["you_are_still_muted"] = "Du bist noch für {1} Minuten gemutet."
 			}
 		};
 
