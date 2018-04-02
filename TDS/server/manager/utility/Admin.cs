@@ -41,12 +41,29 @@
 			}
 		}
 
-		public static void SendChatMessageToAdmins ( string message ) {
-			for ( uint adminlvl = 1; adminlvl <= adminMaxLvl; adminlvl++ ) {
-				for ( int j = 0; j < AdminsOnline[adminlvl].Count; j++ ) {
+		public static void SendChatMessageToAdmins ( string message, uint minadminlvl = 1 ) {
+			for ( uint adminlvl = minadminlvl; adminlvl <= adminMaxLvl; ++adminlvl ) {
+				for ( int j = AdminsOnline[adminlvl].Count - 1; j >= 0; --j ) {
 					Character character = AdminsOnline[adminlvl][j];
-                    if ( character.Player.Exists )
-                        NAPI.Chat.SendChatMessageToPlayer ( character.Player, message );
+					if ( character.Player.Exists )
+						NAPI.Chat.SendChatMessageToPlayer(character.Player, message);
+					else
+						AdminsOnline[adminlvl].RemoveAt(j);
+				}
+			}
+		}
+
+		public static void SendLangNotificationToAdmins(string type, uint minadminlvl = 1, params string[] args )
+		{
+			for ( uint adminlvl = minadminlvl; adminlvl <= adminMaxLvl; ++adminlvl )
+			{
+				for ( int j = AdminsOnline[adminlvl].Count - 1; j >= 0; --j )
+				{
+					Character character = AdminsOnline[adminlvl][j];
+					if ( character.Player.Exists )
+						character.SendLangNotification(type, args);
+					else
+						AdminsOnline[adminlvl].RemoveAt(j);
 				}
 			}
 		}
