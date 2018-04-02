@@ -20,8 +20,15 @@
         [ServerEvent(Event.ChatMessage)]
         public static void OnChatMessage ( Client player, string message ) {
             Character character = player.GetChar ();
-            if ( character.LoggedIn )
-			    OnChatMessageFunc ( character, message );
+			if ( character.LoggedIn )
+				if ( character.MuteTime == 0 )
+					OnChatMessageFunc( character, message );
+				else if ( character.MuteTime == 1 )
+					player.SendLangNotification( "you_are_still_permamuted" );
+				else
+					player.SendLangNotification( "you_are_still_muted", character.MuteTime.ToString() );
+
+
 		}
 
 		public static void SendGlobalMessage ( Character character, string message ) {
