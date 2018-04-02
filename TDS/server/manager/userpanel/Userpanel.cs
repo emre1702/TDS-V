@@ -1,4 +1,6 @@
 ﻿using GTANetworkAPI;
+using TDS.server.extend;
+using TDS.server.instance.player;
 
 namespace TDS.server.manager.userpanel {
 
@@ -13,9 +15,10 @@ namespace TDS.server.manager.userpanel {
 		[ServerEvent(Event.PlayerDisconnected)]
 		public static void OnPlayerDisconnected ( Client player, DisconnectionType type, string reason ) {
 			// reports //
-			if ( playersInReportMenu.Contains ( player ) ) {
-				PlayerCloseReportsMenu ( player );
-				PlayerCloseReport ( player );
+			Character character = player.GetChar();
+			if ( playersInReportMenu.Contains (character) ) {
+				ClientCloseReportsMenu (player);
+				ClientCloseReport(player);
 			}
 		}
     }
