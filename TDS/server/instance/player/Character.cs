@@ -26,6 +26,7 @@ namespace TDS.server.instance.player {
         public uint DonatorLvl = 0;
         public uint Playtime = 0;
         public uint Money = 0;
+		public int MuteTime = 0;
         public LobbyDeathmatchStats ArenaStats;
         public LobbyDeathmatchStats TempStats;
         public LobbyDeathmatchStats CurrentStats;
