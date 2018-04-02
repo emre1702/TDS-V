@@ -1,14 +1,19 @@
-﻿namespace TDS.server.manager.utility {
-    using System;
-    using System.Collections.Generic;
+﻿namespace TDS.server.manager.utility
+{
+	using System;
+	using System.Collections.Generic;
 	using System.Text;
 	using extend;
 	using GTANetworkAPI;
-    using TDS.server.enums;
+	using TDS.server.enums;
+	using TDS.server.instance.player;
 
-    static class ServerLanguage {
-		private static readonly Dictionary<Language, Dictionary<string, string>> langData = new Dictionary<Language, Dictionary<string, string>> {
-			[Language.ENGLISH] = new Dictionary<string, string> {
+	static class ServerLanguage
+	{
+		private static readonly Dictionary<Language, Dictionary<string, string>> langData = new Dictionary<Language, Dictionary<string, string>>
+		{
+			[Language.ENGLISH] = new Dictionary<string, string>
+			{
 				["wrong_password"] = "Wrong password!",
 				["account_doesnt_exist"] = "Account doesn't exist!",
 				["too_long_outside_map"] = "You've been too long outside the map!",
@@ -48,26 +53,29 @@
 				["welcome_3"] = "please visit our Discord-server:",
 				["welcome_4"] = "discord.gg/ntVnGFt",
 				["welcome_5"] = "You can get/hide the cursor with END.",
-                ["welcome_6"] = "If you can't move, use ALT+TAB.",
-                ["welcome_7"] = "Have fun wishes you the #b#TDS-Team#w#!",
-                ["order_attack"] = "{1}Attack! Go go go!",
-                ["order_stay_back"] = "{1}Stay back!",
-                ["order_spread_out"] = "{1}Spread out!",
-                ["order_go_to_bomb"] = "{1}Go to the bomb!",
-                ["target_not_logged_in"] = "The target is not logged in.",
-                ["target_not_in_same_lobby"] = "The target is not in the same lobby.",
-                ["round_end_death"] = "All opponents are dead!<br>Team {1} wins!",
-                ["round_end_death_all"] = "All players are dead!<br>No team wins!",
-                ["round_end_time"] = "Time's up!<br>Team {1} wins because of most HP left!",
-                ["round_end_bomb_exploded"] = "Bomb exploded!<br>Team {1} wins!",
-                ["round_end_bomb_defused"] = "Bomb defused!<br>Team {1} wins!",
-                ["round_end_command"] = "Map was skipped by {1}!",
-                ["round_end_new_player"] = "Enough players in ...<br>Round starting!",
-                ["not_allowed"] = "You are not allowed to do that!",
-                ["gang_doesnt_exist_anymore"] = "The gang doesn't exist anymore!",
-                ["invitation_was_removed"] = "The invitation already got removed!"
-            },
-			[Language.GERMAN] = new Dictionary<string, string> {
+				["welcome_6"] = "If you can't move, use ALT+TAB.",
+				["welcome_7"] = "Have fun wishes you the #b#TDS-Team#w#!",
+				["order_attack"] = "{1}Attack! Go go go!",
+				["order_stay_back"] = "{1}Stay back!",
+				["order_spread_out"] = "{1}Spread out!",
+				["order_go_to_bomb"] = "{1}Go to the bomb!",
+				["target_not_logged_in"] = "The target is not logged in.",
+				["target_not_in_same_lobby"] = "The target is not in the same lobby.",
+				["round_end_death"] = "All opponents are dead!<br>Team {1} wins!",
+				["round_end_death_all"] = "All players are dead!<br>No team wins!",
+				["round_end_time"] = "Time's up!<br>Team {1} wins because of most HP left!",
+				["round_end_bomb_exploded"] = "Bomb exploded!<br>Team {1} wins!",
+				["round_end_bomb_defused"] = "Bomb defused!<br>Team {1} wins!",
+				["round_end_command"] = "Map was skipped by {1}!",
+				["round_end_new_player"] = "Enough players in ...<br>Round starting!",
+				["not_allowed"] = "You are not allowed to do that!",
+				["gang_doesnt_exist_anymore"] = "The gang doesn't exist anymore!",
+				["invitation_was_removed"] = "The invitation already got removed!",
+				["created_report"] = "A report with ID {1} was created.",
+				["answered_report"] = "The creator answered to his report with ID {1}.",
+			},
+			[Language.GERMAN] = new Dictionary<string, string>
+			{
 				["wrong_password"] = "Falsches Passwort!",
 				["account_doesnt_exist"] = "Account existiert nicht!",
 				["too_long_outside_map"] = "Du warst zu lange außerhalb der Map!",
@@ -107,84 +115,114 @@
 				["welcome_3"] = "bitte unseren Discord-Server nutzen:",
 				["welcome_4"] = "discord.gg/ntVnGFt",
 				["welcome_5"] = "Du kannst den Cursor mit ENDE umschalten.",
-                ["welcome_6"] = "Wenn du dich nicht bewegen kannst, nutze ALT+TAB.",
+				["welcome_6"] = "Wenn du dich nicht bewegen kannst, nutze ALT+TAB.",
 				["welcome_7"] = "Viel Spaß wünscht das #b#TDS-Team#w#!",
-                ["order_attack"] = "{1}Angriff! Los los los!",
-                ["order_stay_back"] = "{1}Bleibt zurück!",
-                ["order_spread_out"] = "{1}Teilt euch auf!",
-                ["order_go_to_bomb"] = "{1}Geht zur Bombe!",
-                ["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt.",
-                ["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby.",
-                ["round_end_death"] = "Alle Gegner sind tot!<br>Team {1} gewinnt!",
-                ["round_end_death_all"] = "Alle sind tot!<br>Kein Team gewinnt!",
-                ["round_end_time"] = "Zeit um!<br>Team {1} gewinnt mit den meisten HP übrig!",
-                ["round_end_bomb_exploded"] = "Bombe explodiert!<br>Team {1} gewinnt!",
-                ["round_end_bomb_defused"] = "Bombe entschärft!<br>Team {1} gewinnt!",
-                ["round_end_command"] = "Die Map wurde von {1} übersprungen!",
-                ["round_end_new_player"] = "Genug Spieler drin ...<br>Runde startet!",
-                ["not_allowed"] = "Du bist dazu nicht befugt!",
-                ["gang_doesnt_exist_anymore"] = "Die Gang existiert nicht mehr!",
-                ["invitation_was_removed"] = "Die Einladung wurde bereits zurückgezogen!"
-            }
+				["order_attack"] = "{1}Angriff! Los los los!",
+				["order_stay_back"] = "{1}Bleibt zurück!",
+				["order_spread_out"] = "{1}Teilt euch auf!",
+				["order_go_to_bomb"] = "{1}Geht zur Bombe!",
+				["target_not_logged_in"] = "Das Ziel ist nicht eingeloggt.",
+				["target_not_in_same_lobby"] = "Das Ziel ist nicht in der selben Lobby.",
+				["round_end_death"] = "Alle Gegner sind tot!<br>Team {1} gewinnt!",
+				["round_end_death_all"] = "Alle sind tot!<br>Kein Team gewinnt!",
+				["round_end_time"] = "Zeit um!<br>Team {1} gewinnt mit den meisten HP übrig!",
+				["round_end_bomb_exploded"] = "Bombe explodiert!<br>Team {1} gewinnt!",
+				["round_end_bomb_defused"] = "Bombe entschärft!<br>Team {1} gewinnt!",
+				["round_end_command"] = "Die Map wurde von {1} übersprungen!",
+				["round_end_new_player"] = "Genug Spieler drin ...<br>Runde startet!",
+				["not_allowed"] = "Du bist dazu nicht befugt!",
+				["gang_doesnt_exist_anymore"] = "Die Gang existiert nicht mehr!",
+				["invitation_was_removed"] = "Die Einladung wurde bereits zurückgezogen!",
+				["created_report"] = "Ein Report mit der ID {1} wurde erstellt!",
+				["answered_report"] = "Der Ersteller hat seinem Report mit der ID {1} geantwortet.",
+			}
 		};
 
-        private static StringBuilder builder = new StringBuilder ();
+		private static StringBuilder builder = new StringBuilder();
 
-        public static Dictionary<Language, string> GetLangDictionary ( string type, params string[] args ) {
-			Dictionary<Language, string> returndict = new Dictionary<Language, string> ();
-			foreach ( Language language in Enum.GetValues ( typeof ( Language ) ) ) {
-				returndict[language] = GetLang ( language, type, args );
+		public static Dictionary<Language, string> GetLangDictionary(string type, params string[] args)
+		{
+			Dictionary<Language, string> returndict = new Dictionary<Language, string>();
+			foreach ( Language language in Enum.GetValues(typeof(Language)) )
+			{
+				returndict[language] = GetLang(language, type, args);
 			}
 			return returndict;
 		}
 
-		public static string GetLang ( this Client player, string type, params string[] args ) {
-			Language language = player.GetChar ().Language;
+		public static string GetLang(this Character character, string type, params string[] args)
+		{
+			Language language = character.Language;
 			if ( args.Length == 0 )
 				return langData[language][type];
-			return GetReplaced ( langData[language][type], args );
+			return GetReplaced(langData[language][type], args);
 		}
 
-		public static string GetLang ( Language language, string type, params string[] args ) {
+		public static string GetLang(this Client player, string type, params string[] args)
+		{
+			return GetLang(player.GetChar(), type, args);
+		}
+
+		public static string GetLang(Language language, string type, params string[] args)
+		{
 			if ( args.Length == 0 )
 				return langData[language][type];
-			return GetReplaced ( langData[language][type], args );
+			return GetReplaced(langData[language][type], args);
 		}
 
-		public static void SendLangMessage ( this Client player, string type, params string[] args ) {
-			NAPI.Chat.SendChatMessageToPlayer ( player, player.GetLang ( type, args ) );
+		public static void SendLangMessage(this Character character, string type, params string[] args)
+		{
+			NAPI.Chat.SendChatMessageToPlayer(character.Player, character.GetLang(type, args));
 		}
 
-		public static void SendLangNotification ( this Client player, string type, params string[] args ) {
-			NAPI.Notification.SendNotificationToPlayer ( player, player.GetLang ( type, args ) );
+		public static void SendLangMessage(this Client player, string type, params string[] args)
+		{
+			NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang(type, args));
 		}
 
-		public static string GetReplaced ( string str, params string[] args ) {
-			if ( args.Length > 0 ) {
-                builder.Append ( str );
-				for ( int i = 0; i < args.Length; ++i ) {
-					builder.Replace ( "{" + ( i + 1 ) + "}", args[i] );
+		public static void SendLangNotification(this Character character, string type, params string[] args)
+		{
+			NAPI.Notification.SendNotificationToPlayer(character.Player, character.GetLang(type, args));
+		}
+
+		public static void SendLangNotification(this Client player, string type, params string[] args)
+		{
+			NAPI.Notification.SendNotificationToPlayer(player, player.GetLang(type, args));
+		}
+
+		public static string GetReplaced(string str, params string[] args)
+		{
+			if ( args.Length > 0 )
+			{
+				builder.Append(str);
+				for ( int i = 0; i < args.Length; ++i )
+				{
+					builder.Replace("{" + (i + 1) + "}", args[i]);
 				}
-                string result = builder.ToString ();
-                builder.Clear ();
-                return result;
+				string result = builder.ToString();
+				builder.Clear();
+				return result;
 			}
 			return str;
 		}
 
-		public static void SendMessageToAll ( string type, params string[] args ) {
-			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
-			List<Client> players = NAPI.Pools.GetAllPlayers ();
-			foreach ( Client player in players ) {
-				NAPI.Chat.SendChatMessageToPlayer ( player, texts[player.GetChar ().Language] );
+		public static void SendMessageToAll(string type, params string[] args)
+		{
+			Dictionary<Language, string> texts = GetLangDictionary(type, args);
+			List<Client> players = NAPI.Pools.GetAllPlayers();
+			foreach ( Client player in players )
+			{
+				NAPI.Chat.SendChatMessageToPlayer(player, texts[player.GetChar().Language]);
 			}
 		}
 
-		public static void SendNotificationToAll ( string type, params string[] args ) {
-			Dictionary<Language, string> texts = GetLangDictionary ( type, args );
-			List<Client> players = NAPI.Pools.GetAllPlayers ();
-			foreach ( Client player in players ) {
-                NAPI.Notification.SendNotificationToPlayer ( player, texts[player.GetChar ().Language] );
+		public static void SendNotificationToAll(string type, params string[] args)
+		{
+			Dictionary<Language, string> texts = GetLangDictionary(type, args);
+			List<Client> players = NAPI.Pools.GetAllPlayers();
+			foreach ( Client player in players )
+			{
+				NAPI.Notification.SendNotificationToPlayer(player, texts[player.GetChar().Language]);
 			}
 		}
 	}
