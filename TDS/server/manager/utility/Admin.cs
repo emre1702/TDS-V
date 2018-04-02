@@ -18,7 +18,7 @@
 			[0] = "#s#",
 			[1] = "#g#",
 			[2] = "#o#",
-			[3] = "#dr#",
+			[3] = "#r#",
 			[4] = "#dr#"
         };
 		public static Dictionary<uint, List<Character>> AdminsOnline = new Dictionary<uint, List<Character>> {
