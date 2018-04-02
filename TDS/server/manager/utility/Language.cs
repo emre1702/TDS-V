@@ -73,6 +73,7 @@
 				["invitation_was_removed"] = "The invitation already got removed!",
 				["created_report"] = "A report with ID {1} was created.",
 				["answered_report"] = "The creator answered to his report with ID {1}.",
+				["got_report_answer"] = "A team-member answered your report with ID {1}."
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -135,6 +136,7 @@
 				["invitation_was_removed"] = "Die Einladung wurde bereits zurückgezogen!",
 				["created_report"] = "Ein Report mit der ID {1} wurde erstellt!",
 				["answered_report"] = "Der Ersteller hat seinem Report mit der ID {1} geantwortet.",
+				["got_report_answer"] = "Ein Team-Mitglied hat deinem Report mit der ID {1} geantwortet."
 			}
 		};
 

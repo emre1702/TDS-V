@@ -112,7 +112,16 @@ namespace TDS.server.manager.userpanel
 			{
 				if ( report.Texts.Count > 1 )
 					Admin.SendLangNotificationToAdmins("answered_report", report.ForAdminlvl, report.ID.ToString());
-			} //else NOTIFY THE USER
+			} else
+			{
+				string name = Account.GetNameByUID(report.AuthorUID);
+				if ( name == "" )
+					return;
+				Client author = NAPI.Player.GetPlayerFromName(name);
+				if ( author == null || !author.Exists )
+					return;
+				author.SendLangNotification("got_report_answer", report.ID.ToString());
+			}
 				
 
 			Database.ExecPrepared($"INSERT INTO reporttexts (id, reportid, authoruid, text, date) VALUES ({reporttext.ID}, {reportid}, {character.UID}, @TEXT@, '{reporttext.Date}');", new Dictionary<string, string> {
