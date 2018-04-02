@@ -18,11 +18,14 @@ function addAngularListeners() {
     mainbrowserdata.angular.listen( "requestLanguage", getLanguage );
 
     // reports //
+    mainbrowserdata.angular.listen( "createReport", createReport );
     mainbrowserdata.angular.listen( "openReportsMenu", openReportsMenu );
     mainbrowserdata.angular.listen( "closeReportsMenu", closeReportsMenu );
     mainbrowserdata.angular.listen( "openReport", openReport );
     mainbrowserdata.angular.listen( "closeReport", closeReport );
     mainbrowserdata.angular.listen( "toggleReportState", toggleReportState );
+    mainbrowserdata.angular.listen( "removeReport", removeReport );
+    mainbrowserdata.angular.listen( "addTextToReport", addTextToReport );
 }
 addAngularListeners();
 
