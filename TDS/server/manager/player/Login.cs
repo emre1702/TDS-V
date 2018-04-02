@@ -29,6 +29,7 @@
                             character.AdminLvl = Convert.ToUInt32 ( row["adminlvl"] );
                             character.DonatorLvl = Convert.ToUInt32 ( row["donatorlvl"] );
                             character.Playtime = Convert.ToUInt32 ( row["playtime"] );
+							character.MuteTime = Convert.ToInt32(row["mutetime"]);
                             character.ArenaStats = new LobbyDeathmatchStats {
                                 Kills = Convert.ToUInt32 ( row["arenakills"] ),
                                 Assists = Convert.ToUInt32 ( row["arenaassists"] ),
