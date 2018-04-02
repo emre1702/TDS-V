@@ -1,6 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { 
   MatButtonModule, 
   MatTabsModule, 
@@ -10,15 +9,16 @@ import {
   MatCheckboxModule, 
   MatSidenavModule, 
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
+  MatInputModule,
+  MatTooltipModule
 } from "@angular/material";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { AngularDraggableModule } from "angular2-draggable";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { AppComponent } from "./app.component";
 import { UserpanelComponent } from "./userpanel/userpanel.component";
-import { UserpanelContentDirective } from "./userpanel/content/userpanelcontent.directive";
-import { UserpanelContentService } from "./userpanel/content/userpanelcontent.service";
 
 import { UserpanelAdminComponent } from "./userpanel/admin/admin.component";
 import { UserpanelDonatorComponent } from "./userpanel/donator/donator.component";
@@ -26,9 +26,10 @@ import { UserpanelReportsComponent } from "./userpanel/reports/reports.component
 import { UserpanelRulesComponent } from "./userpanel/rules/rules.component";
 import { UserpanelSettingsComponent } from "./userpanel/settings/settings.component";
 import { UserpanelSuggestionsComponent } from "./userpanel/suggestions/suggestions.component";
-
 import { RAGE } from "./rageconnector/rageconnector.service";
 import { RAGEModule } from "./rageconnector/rageconnector.module";
+import { UserpanelContentDirective } from "./userpanel/content/userpanelcontent.directive";
+
 
 @NgModule({
   declarations: [
@@ -47,12 +48,15 @@ import { RAGEModule } from "./rageconnector/rageconnector.module";
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
+    MatFormFieldModule,
     NoopAnimationsModule,
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
     MatMenuModule,
+    MatInputModule,
     AngularDraggableModule,
+    MatTooltipModule,
     RAGEModule
   ],
   entryComponents: [
@@ -64,7 +68,7 @@ import { RAGEModule } from "./rageconnector/rageconnector.module";
     UserpanelSettingsComponent,
     UserpanelSuggestionsComponent
   ],
-  providers: [UserpanelContentService],
+  providers: [RAGE, FormBuilder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

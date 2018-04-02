@@ -1,13 +1,9 @@
-table {
+#main-report-table {
     display: inline-block;
-    box-shadow: inset 0 0 30px #000000;
-    margin-left: 5px;
     width: 75%;
-    margin-bottom: 5px;
-    margin-top: 5px;
     overflow-x: hidden;
-    border-collapse: collapse;
     flex-grow: 1;
+    border-collapse: collapse; 
 }
 
 #main-report {
@@ -21,7 +17,7 @@ th {
     background-color: var(--primary-color);     
 }
 
-td, th {
+td, th:not(#report-view-texts) {
     border: 1px solid #000000;
     padding: 5px;
 }
@@ -51,6 +47,11 @@ td:last-child {
     box-shadow: 4px 4px 10px black;
 }
 
+#main-view {
+    background-color: var(--view-color);
+    box-shadow: 4px 4px 10px black;
+}
+
 #main-open {
     margin-top: 20%;
     background-color: var(--open-color);
@@ -68,3 +69,121 @@ td:last-child {
     background-color: var(--remove-color);
     box-shadow: 4px 4px 10px black;
 }
+
+#report_creation_left_side {
+    width: 64%;
+    height: 90%;
+    margin-left: 2%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#report_creation_right_side {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    left: 66%;
+    width: 32%;
+    top: 4%;
+    bottom: 4%;
+}
+
+#report_creation_left_side > * {
+    width: 100%;
+    float: left;
+}
+
+#create_textarea {
+    height: 90%;
+}
+
+#creation-send {
+    background: var(--create-color);
+    box-shadow: 4px 4px 10px black;
+    margin-top: auto;
+}
+
+#for_teammember {
+    flex-grow: 0;
+}
+
+#for_teammember > *:not(:first-child) {
+    border-collapse: collapse;   
+}
+
+#selected_owner {
+    background: var(--owner);
+}
+
+#selected_projectmanager {
+    background: var(--projectmanager);    
+}
+
+#selected_administrator {
+    background: var(--administrator);    
+}
+
+#selected_supporter {
+    background: var(--supporter);    
+}
+
+.report-view-texts-container {
+    border: 2px solid var(--primary-color);
+    background: var(--secondary-color-gradient);
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+    margin: 5px 0;
+    margin-left: 5px;   
+}
+
+.report-view-texts-container-darker {
+    background: var(--secondary-color-gradient-darker);
+    border-color: #ccc;   
+}
+
+.report-view-texts-author-1 {
+    float: left;
+    color: #aaa;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.report-view-texts-author-2 {
+    float: right;
+    color: #999;
+    margin-left: 20px;
+    margin-right:0;
+}
+
+.report-view-texts-date-1 {
+    float: right;
+    color: #aaa;
+    font-size: 0.8em;
+}
+
+.report-view-texts-date-2 {
+    float: left;
+    color: #999;
+    font-size: 0.8em;
+}
+
+#report-view-interaction {
+    left: 5px;
+    right: 10px; 
+    display: inline;
+}
+
+#report-view-text-textarea {
+    width: calc( 75% - 10px ); 
+}
+
+#report-view-text-send {
+    background: var(--create-color);
+    margin-left: 5px;
+    width: calc( 25% - 10px ); 
+}
+
+
+

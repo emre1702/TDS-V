@@ -1,5 +1,3 @@
-import { Type } from "@angular/core";
-
-export class UserpanelContentItem {
-    constructor ( public component: Type<any> ) {}
+export interface UserpanelContentItem {
+    language: {};
 }

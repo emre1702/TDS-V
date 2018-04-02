@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { UserpanelContentComponent } from "../content/userpanelcontent.component";
 import { UserpanelComponent } from "../userpanel.component";
 
 @Component({
@@ -7,9 +6,6 @@ import { UserpanelComponent } from "../userpanel.component";
   templateUrl: "./admin.component.html",
 })
 
-export class UserpanelAdminComponent implements UserpanelContentComponent {
+export class UserpanelAdminComponent {
     private language;
-
-    onOpen() {}
-    onClose() {}
 }

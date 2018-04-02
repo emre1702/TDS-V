@@ -1,5 +1,3 @@
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-
 :root {
     --primary-color: rgba( 4, 7, 78, 0.61 );
     --primary-color-gradient: linear-gradient(to bottom, rgba(5,2,154,0.82) 0%,rgba(10,10,120,0.82) 40%,rgba(3,2,90,0.82) 100%);
@@ -12,9 +10,21 @@
     --secondary-color-gradient-darker: linear-gradient(to bottom, rgba(42,42,42,0.82) 0%,rgba(5,5,5,0.82) 100%);
     
     --create-color: darkgreen;
+    --view-color: darkgreen;
     --open-color: blue;
     --close-color: royalblue;
     --remove-color: darkred;
+
+    --owner: rgb(169,25,25);
+    --projectmanager: rgb(222,50,50);
+    --administrator: rgb(253,132,85);
+    --supporter: rgb(113,202,113);
+    --user: rgb(220,220,220);
+}
+
+.window-field {
+    box-shadow: inset 0 0 30px #000000;
+    margin: 5px 5px 5px 5px;
 }
 
 .ng-draggable {
@@ -49,7 +59,7 @@
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background: rgb(50, 50, 50);
+    background: rgb(80, 80, 50);
 }
 
 ::-webkit-scrollbar-thumb {

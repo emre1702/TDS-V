@@ -17,7 +17,7 @@ function RageMP() {
 	}
 
 	this.callClient = function (func, data) {
-        if (mp)  // so it doesn't output errors if testing without using Rage
+        if ( typeof mp !== "undefined" )  // so it doesn't output errors if testing without using Rage
 		    mp.trigger(func, data.catchResponse ? data.catchResponse.id : -1, ...data.Arguments);
 	}
 }

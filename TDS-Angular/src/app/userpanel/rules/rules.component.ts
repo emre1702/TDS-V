@@ -1,8 +1,4 @@
-import { Component, Input, ChangeDetectorRef } from "@angular/core";
-import { UserpanelComponent } from "../userpanel.component";
-import { RAGE } from "../../rageconnector/rageconnector.service";
-import { UserpanelContentComponent } from "../content/userpanelcontent.component";
-import { UserpanelContentService } from "../content/userpanelcontent.service";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-userpanel-rules",
@@ -10,24 +6,11 @@ import { UserpanelContentService } from "../content/userpanelcontent.service";
   styleUrls: ["./rules.component.css"]
 })
 
-export class UserpanelRulesComponent implements UserpanelContentComponent {
-    opened = false;
-    language = {};
+export class UserpanelRulesComponent {
+    language: {};
     openedMenu = "normal";
 
-    constructor( private rage: RAGE, private userpanelContentService: UserpanelContentService, private cdRef: ChangeDetectorRef ) {}
-
-    onOpen() {
-        if ( this.language === {} )
-            this.language = this.userpanelContentService.getLang( "rules" );
-        this.opened = true;
-        this.cdRef.detectChanges();
-    }
-
-    onClose() {
-        this.opened = false;
-        this.cdRef.detectChanges();
-    }
+    constructor() {}
 
     changeMenu ( menu: string ) {
         this.openedMenu = menu;

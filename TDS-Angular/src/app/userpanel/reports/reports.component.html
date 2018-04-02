@@ -1,30 +1,94 @@
-<div id="main-report" *ngIf="!inReport && opened">
-    <table>
+<div id="main-report" *ngIf="inReport === undefined && !inCreate">
+    <table id="main-report-table" class="window-field">
         <thead>
             <tr>
                 <th (click)="sortID()" class="not-selectable">ID</th>
-                <th (click)="sortTitle()" class="not-selectable">Title</th>
-                <th (click)="sortState()" class="not-selectable">State</th>
+                <th (click)="sortTitle()" class="not-selectable">{{ language.title }}</th>
+                <th (click)="sortState()" class="not-selectable">{{ language.state }}</th>
             </tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let entry of rowDatas; let i = index;">
                 <tr (click)="selectRow($event, i);" >
                     <td>{{ entry.ID }}</td>
-                    <td>{{ entry.title }}</td>
-                    <td *ngIf="entry.open"><mat-icon>done</mat-icon></td>
-                    <td *ngIf="!entry.open">-</td>
+                    <td>{{ entry.Title }}</td>
+                    <td *ngIf="!entry.Open"><mat-icon>done</mat-icon></td>
+                    <td *ngIf="entry.Open">-</td>
                 </tr> 
             </ng-container>   
         </tbody>
     </table>
     <div id="main-buttons">
-        <button id="main-create" mat-button>Create</button>
-        <button id="main-open" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].open == false" (click)="toggleRowState();">Open</button>
-        <button id="main-close" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].open == true" (click)="toggleRowState();">Close</button> 
-        <button id="main-remove" mat-button>Remove</button>
+        <button id="main-create" mat-button *ngIf="selectedRowIndex === undefined" (click)="switchToCreation()">{{ language.create }}</button>
+        <button id="main-view" mat-button *ngIf="selectedRowIndex !== undefined" (click)="switchToReport()">{{ language.view }}</button>
+        <button id="main-open" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == false" (click)="toggleRowState()">{{ language.open }}</button>
+        <button id="main-close" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == true" (click)="toggleRowState()">{{ language.close }}</button> 
+        <button id="main-remove" mat-button *ngIf="selectedRowIndex !== undefined" (click)="removeReport()">{{ language.remove }}</button>
     </div>
 </div>
-<div *ngIf="inReport && opened">
-    
+
+<div id="report-view" *ngIf="inReport !== undefined && !inCreate">
+    <div class="report-view-texts-container">
+        <span class="report-view-texts-author-1">{{ rowDataTexts[rowDatas[inReport].ID][0].Author }}</span>
+        <p class="report-view-texts-text-1">{{rowDatas[inReport].Title}}<br>{{ rowDataTexts[rowDatas[inReport].ID][0].Text }}</p>
+        <span class="report-view-texts-date-1">{{ rowDataTexts[rowDatas[inReport].ID][0].Date }}</span>
+    </div>
+    <div *ngFor="let textentry of rowDataTexts[rowDatas[inReport].ID]; let i = index">
+        <div class="report-view-texts-container report-view-texts-container-darker" *ngIf="i != 0 && textentry.Author !== rowDataTexts[rowDatas[inReport].ID][0].Author">
+            <span class="report-view-texts-author-2">{{ textentry.Author }}</span>
+            <p class="report-view-texts-text-2">{{ textentry.Text }}</p>
+            <span class="report-view-texts-date-2">{{ textentry.Date }}</span>
+        </div>
+        <div class="report-view-texts-container" *ngIf="i != 0 && textentry.Author === rowDataTexts[rowDatas[inReport].ID][0].Author">
+            <span class="report-view-texts-author-1">{{ textentry.Author }}</span>
+            <p class="report-view-texts-text-1">{{ textentry.Text }}</p>
+            <span class="report-view-texts-date-1">{{ textentry.Date }}</span>    
+        </div>
+    </div>
+    <mat-form-field id="report-view-interaction" [color]="formOptions.value.color">
+        <textarea matInput #reportTextArea required rows="3" id="report-view-text-textarea" [placeholder]="language.answer"></textarea>
+        <mat-hint align="end">{{reportTextArea.value?.length || 0}}/250</mat-hint>
+        <button id="report-view-text-send" mat-button (click)="sendReportAnswer()">{{ language.send }}</button>
+    </mat-form-field>
+</div>
+
+<div *ngIf="inCreate">
+    <div id="report_creation_left_side">
+        <mat-form-field [color]="formOptions.value.color">
+            <input matInput #titleInput required placeholder="Title">
+            <mat-hint align="end">{{titleInput.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+        <mat-form-field id="create_textarea" [color]="formOptions.value.color">
+            <textarea matInput #textArea required rows="9" placeholder="Text"></textarea>
+            <mat-hint align="end">{{textArea.value?.length || 0}}/250</mat-hint>
+        </mat-form-field>
+    </div>
+    <div id="report_creation_right_side">
+        <table id="for_teammember" class="window-field">
+            <thead>
+                <tr>
+                    <th>{{ language.for_teammember }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (click)="setReportFor(1)">
+                    <td *ngIf="forMinAdminlvl < 1" >{{ language.owner }}</td>
+                    <td id="selected_owner" *ngIf="forMinAdminlvl >= 1">{{ language.owner }}</td>
+                </tr>
+                <tr (click)="setReportFor(2)">
+                    <td *ngIf="forMinAdminlvl < 2">{{ language.projectmanager }}</td>
+                    <td id="selected_projectmanager" *ngIf="forMinAdminlvl >= 2">{{ language.projectmanager }}</td>
+                </tr>  
+                <tr (click)="setReportFor(3)">
+                    <td *ngIf="forMinAdminlvl < 3">{{ language.administrator }}</td>
+                    <td id="selected_administrator" *ngIf="forMinAdminlvl >= 3">{{ language.administrator }}</td>
+                </tr>  
+                <tr (click)="setReportFor(4)">
+                    <td *ngIf="forMinAdminlvl < 4">{{ language.supporter }}</td>
+                    <td id="selected_supporter" *ngIf="forMinAdminlvl >= 4">{{ language.supporter }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="creation-send" mat-button (click)="createReport()">Send</button>    
+    </div>
 </div>

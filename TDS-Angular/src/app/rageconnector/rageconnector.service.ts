@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from "@angular/core";
 
 declare var window: any;
 
+@Injectable()
 export class RAGE {
     
     private CustomEvents: EventEmitter<RAGEEvent> = new EventEmitter<RAGEEvent>(); 
@@ -63,8 +64,8 @@ export class RAGE {
          * @param {any} func - The function to be called from Rage.
          * @param {string} name - Your desired name for the function to be used when using angularbrowser.call from Rage
          */
-        listen: (instance: any, func: any, name: string): void => {
-            window.RageAngular[name] = func.bind(instance);
+        listen: (func: any, name: string): void => {
+            window.RageAngular[name] = func;
         },
 
         /**
