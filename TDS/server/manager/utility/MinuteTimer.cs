@@ -27,6 +27,8 @@
 						Character character = player.GetChar ();
 						if ( character.LoggedIn ) {
 							++character.Playtime;
+							if ( character.MuteTime > 0 )
+								--character.MuteTime;
 							if ( ( currenttick - character.StartTick ) / savePlayerAfterTick > character.LastSave ) {
                                 character.SaveData ();
 							}
