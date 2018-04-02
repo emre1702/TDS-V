@@ -21,6 +21,9 @@
 				["unban"] = "{1} was unbaned by {2}. Reason: {3}",
 				["permaban"] = "{1} was baned permanently by {2}. Reason: {3}",
 				["timeban"] = "{1} was baned for {2} hours by {3}. Reason: {4}",
+				["unmute"] = "{1} was unmuted by {2}. Reason: {3}",
+				["permamute"] = "{1} was muted permanently by {2}. Reason: {3}",
+				["timemute"] = "{1} was muted for {2} minutes by {3}. Reason: {4}",
 				["youpermaban"] = "You were baned permanently by {1}. Reason: {2}",
 				["youtimeban"] = "You were baned for {1} hours by {2}. Reason: {3}",
 				["kick"] = "{1} was kicked by {2}. Reason: {3}",
@@ -73,7 +76,10 @@
 				["invitation_was_removed"] = "The invitation already got removed!",
 				["created_report"] = "A report with ID {1} was created.",
 				["answered_report"] = "The creator answered to his report with ID {1}.",
-				["got_report_answer"] = "A team-member answered your report with ID {1}."
+				["got_report_answer"] = "A team-member answered your report with ID {1}.",
+				["reason_missing"] = "The reason is missing!",
+				["player_not_muted"] = "The player is not muted!",
+				["player_already_muted"] = "The player is already muted!",
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -84,6 +90,9 @@
 				["unban"] = "{1} wurde von {2} entbannt. Grund: {3}",
 				["permaban"] = "{1} wurde permanent von {2} gebannt. Grund: {3}",
 				["timeban"] = "{1} wurde für {2} Stunden von {3} gebannt. Grund: {4}",
+				["unmute"] = "{1} wurde von {2} entmutet. Grund: {3}",
+				["permamute"] = "{1} wurde von {2} permanent gemutet. Grund: {3}",
+				["timemute"] = "{1} wurde von {2} für {3} Minuten gemutet. Grund: {4}",
 				["youpermaban"] = "Du wurdest permanent von {1} gebannt. Grund: {2}",
 				["youtimeban"] = "Du wurdest für {1} Stunden von {2} gebannt. Grund: {3}",
 				["kick"] = "{1} wurde von {2} gekickt. Grund: {3}",
@@ -136,7 +145,10 @@
 				["invitation_was_removed"] = "Die Einladung wurde bereits zurückgezogen!",
 				["created_report"] = "Ein Report mit der ID {1} wurde erstellt!",
 				["answered_report"] = "Der Ersteller hat seinem Report mit der ID {1} geantwortet.",
-				["got_report_answer"] = "Ein Team-Mitglied hat deinem Report mit der ID {1} geantwortet."
+				["got_report_answer"] = "Ein Team-Mitglied hat deinem Report mit der ID {1} geantwortet.",
+				["reason_missing"] = "Die Begründung fehlt!",
+				["player_not_muted"] = "Der Spieler ist nicht gemutet!",
+				["player_already_muted"] = "Der Spieler ist bereits gemutet!",
 			}
 		};
 
