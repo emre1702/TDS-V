@@ -75,6 +75,8 @@ namespace TDS.server.manager.userpanel
 					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReport", JsonConvert.SerializeObject(report));
 			}
 
+			Admin.SendLangNotificationToAdmins("created_report", report.ForAdminlvl, report.ID.ToString());
+
 			Database.ExecPrepared($"INSERT INTO reports (id, authoruid, foradminlvl, title) VALUES ({report.ID}, {report.AuthorUID}, {report.ForAdminlvl}, @TITLE@);", new Dictionary<string, string> {
 				{ "@TITLE@", report.Title }
 			});
@@ -88,6 +90,7 @@ namespace TDS.server.manager.userpanel
 			if ( !reportsByID.ContainsKey(reportid) )
 				return;
 			Report report = reportsByID[reportid];
+			Character character = player.GetChar();
 
 			ReportText reporttext = new ReportText
 			{
@@ -96,6 +99,7 @@ namespace TDS.server.manager.userpanel
 				Text = text,
 				Date = Utility.GetTimestamp()
 			};
+			report.Texts.Add(reporttext);
 
 			foreach ( Character target in listOfPlayersInReport[report] )
 			{
@@ -103,7 +107,15 @@ namespace TDS.server.manager.userpanel
 					NAPI.ClientEvent.TriggerClientEvent(target.Player, "syncReportText", JsonConvert.SerializeObject(reporttext));
 			}
 
-			Database.ExecPrepared($"INSERT INTO reporttexts (id, reportid, authoruid, text, date) VALUES ({reporttext.ID}, {reportid}, {player.GetChar().UID}, @TEXT@, '{reporttext.Date}');", new Dictionary<string, string> {
+			// if it's not the text when creating the report //
+			if ( report.AuthorUID == character.UID )
+			{
+				if ( report.Texts.Count > 1 )
+					Admin.SendLangNotificationToAdmins("answered_report", report.ForAdminlvl, report.ID.ToString());
+			} //else NOTIFY THE USER
+				
+
+			Database.ExecPrepared($"INSERT INTO reporttexts (id, reportid, authoruid, text, date) VALUES ({reporttext.ID}, {reportid}, {character.UID}, @TEXT@, '{reporttext.Date}');", new Dictionary<string, string> {
 				{ "@TEXT@", text }
 			});
 		}
