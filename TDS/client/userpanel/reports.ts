@@ -8,8 +8,12 @@ mp.events.add( "syncReports", ( reports: string ) => {
     mainbrowserdata.angular.call( "syncReports(`" + reports + "`);" );
 } );
 
+mp.events.add( "syncReportText", ( reporttext: string ) => {
+    mainbrowserdata.angular.call( "syncReportText(`" + reporttext + "`);" );
+} );
+
 mp.events.add( "syncReportTexts", ( reporttexts: string ) => {
-    // SEND TO ANGULAR
+    mainbrowserdata.angular.call( "syncReportTexts(`"+ reporttexts +"`);" );
 } );
 
 mp.events.add( "syncReportState", ( reportid: number, state: boolean ) => {
@@ -17,28 +21,26 @@ mp.events.add( "syncReportState", ( reportid: number, state: boolean ) => {
 } );
 
 mp.events.add( "syncReport", ( report: string ) => {
-    // SEND TO ANGULAR
+    mainbrowserdata.angular.call( `syncReport('${report}');` );
 } );
 
-mp.events.add( "syncReportText", ( reporttext: string ) => {
-    // SEND TO ANGULAR
+mp.events.add( "syncReportRemove", ( reportid: number ) => {
+    mainbrowserdata.angular.call( `syncReportRemove (${reportid});` );
 } );
 
 
 // from browser //
+function addTextToReport ( reportid: number, text: string ) {
+    mp.events.callRemote( "onClientAddTextToReport", reportid, text );
+}
 
-
-mp.events.add( "addTextToReport", ( reportid: number, text: string ) => {
-    mp.events.callRemote( "onPlayerAddTextToReport", reportid, text );
-} );
-
-mp.events.add( "createReport", ( json: string, text: string ) => {
-    mp.events.callRemote( "onPlayerCreateReport", json, text );
-} );
+function createReport ( title: string, text: string, forminadminlvl: number ) {
+    mp.events.callRemote( "onClientCreateReport", title, text, forminadminlvl );
+}
 
 function openReportsMenu() {
     reportsdata.inreportsmenu = true;
-    mp.events.callRemote( "onPlayerOpenReportsMenu" );
+    mp.events.callRemote( "onClientOpenReportsMenu" );
 }
 
 function closeReportsMenu() {
@@ -48,14 +50,18 @@ function closeReportsMenu() {
 
 function openReport( index: number ) {
     reportsdata.inreport = true;
-    mp.events.callRemote( "onPlayerOpenReport", index );
+    mp.events.callRemote( "onClientOpenReport", index );
 }
 
 function closeReport() {
     reportsdata.inreport = false;
-    mp.events.callRemote( "onPlayerCloseReport" );
+    mp.events.callRemote( "onClientCloseReport" );
 }
 
 function toggleReportState( reportid: number, state: number ) {
-    mp.events.callRemote( "onPlayerChangeReportState", reportid, state == 1 );
+    mp.events.callRemote( "onClientChangeReportState", reportid, state == 1 );
+}
+
+function removeReport( reportid: number ) {
+    mp.events.callRemote( "onClientRemoveReport" );
 }
