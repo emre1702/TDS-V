@@ -1,9 +1,18 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
 
-let maplimitdata = {
+let maplimitdata: {
+    limit: { x: number, y: number }[],
+    outsidecounter: number,
+    checktimer: Timer,
+    minX: number,
+    maxX: number,
+    minY: number,
+    maxY: number,
+    outsidetext: cText
+} = {
     limit: [] as { x: number, y: number }[],
-	outsidecounter: 11,
-	checktimer: null,
+    outsidecounter: 11,
+    checktimer: null as Timer,
 	minX: 0,
 	maxX: 0,
 	minY: 0,
@@ -44,7 +53,7 @@ function checkMapLimit() {
 				maplimitdata.outsidetext.setText( getLang( "round", "outside_map_limit" ).replace( "{1}", maplimitdata.outsidecounter ) );
 			else if ( maplimitdata.outsidecounter == 0 ) {
                 callRemoteCooldown( "onPlayerWasTooLongOutsideMap" );
-				maplimitdata.checktimer.kill();
+                maplimitdata.checktimer.kill();
 				maplimitdata.checktimer = null;
 				maplimitdata.outsidetext.remove();
 				maplimitdata.outsidetext = null;
