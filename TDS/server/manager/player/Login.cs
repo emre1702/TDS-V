@@ -67,7 +67,7 @@
                 character.UID = uid;
                 character.Login();
 
-                NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful" );
+                NAPI.ClientEvent.TriggerClientEvent ( player, "registerLoginSuccessful", character.AdminLvl );
 
                 MainMenu.Join ( character );
             } catch ( Exception ex ) {
