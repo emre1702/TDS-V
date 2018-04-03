@@ -6,13 +6,10 @@ let mainbrowserdata = {
     roundendreasonshowing: false
 }
 
-setTimeout( () => {
-    mainbrowserdata.angular.load( "package://TDS-V/window/userpanel/index.html" );
-    mainbrowserdata.browser = mp.browsers.new( "package://TDS-V/window/main/index.html" );
-    mainbrowserdata.browser.markAsChat();
-}, 500 );
-
 function addAngularListeners() {
+    // browser //
+    mainbrowserdata.angular.listen( "requestAngularBrowserData", requestAngularBrowserData );
+
     // userpanel //
     mainbrowserdata.angular.listen( "closeUserpanel", closeUserpanel );
     mainbrowserdata.angular.listen( "requestLanguage", getLanguage );
@@ -29,10 +26,24 @@ function addAngularListeners() {
 }
 addAngularListeners();
 
+function requestAngularBrowserData() {
+    return { adminlvl: currentadminlvl, language: getLanguage() }; 
+}
 
 mp.events.add( "onClientMoneyChange", money => {
     currentmoney = money;
     mainbrowserdata.browser.execute( "setMoney ( " + money + " );" ); 
+} );
+
+mp.events.add( "onClientAdminLvlChange", adminlvl => {
+    currentadminlvl = adminlvl;
+} );
+
+mp.events.add( "registerLoginSuccessful", ( adminlvl ) => {
+    currentadminlvl = adminlvl;
+    mainbrowserdata.angular.load( "package://TDS-V/window/mainangular/index.html" );
+    mainbrowserdata.browser = mp.browsers.new( "package://TDS-V/window/main/index.html" );
+    mainbrowserdata.browser.markAsChat();
 } );
 
 function playSound( soundname: string ) {
