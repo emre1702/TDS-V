@@ -20,7 +20,15 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         AppComponent.openMenu( "userpanel" ); 
         this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "openUserpanel" );
-        this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "closeUserpanel" );   
+        this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "closeUserpanel" ); 
+
+        this.rage.Client.call( {
+            fn: "requestAngularBrowserData",
+            args: []
+        }, ( response: object ) => {
+            AppComponent.Settings.adminLvl = response["adminlvl"];
+            AppComponent.Settings.myLanguage = response["language"];
+        } );
     }
 
     static openMenu( menu: string ) {
@@ -38,4 +46,14 @@ export class AppComponent implements OnInit {
     get menus() {
       return AppComponent.menus;
     }
+
+    public static Settings: AppSettings = {
+        myLanguage: "ENGLISH",
+        adminLvl: 0
+    };
+}
+
+export interface AppSettings {
+    myLanguage: "GERMAN" | "ENGLISH";
+    adminLvl: number;
 }

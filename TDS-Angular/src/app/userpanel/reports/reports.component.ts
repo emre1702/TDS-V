@@ -12,6 +12,8 @@ import { MatInput } from "@angular/material";
 
 export class UserpanelReportsComponent implements OnInit, OnDestroy {
     language: {}; 
+    myAdminlvl = 0;
+    neededAdminlvls: { removeReport: number };
     inReport: number;
     inCreate = false;
     private selectedRow: HTMLElement;

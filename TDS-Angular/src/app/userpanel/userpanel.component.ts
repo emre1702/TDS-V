@@ -62,6 +62,7 @@ export class UserpanelComponent implements OnInit {
 
     loadComponent ( index: number ) {
         let component: Type<any> = UserpanelContentData.menus[index];
+        let componentname = UserpanelContentData.menuNames[index];
     
         let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
 
@@ -69,7 +70,11 @@ export class UserpanelComponent implements OnInit {
         viewContainerRef.clear();
     
         let componentRef = viewContainerRef.createComponent(componentFactory);
-        componentRef.instance.language = UserpanelContentData.getLang( UserpanelContentData.menuNames[index] );
+        componentRef.instance.language = UserpanelContentData.getLang( componentname );
+        if ( componentRef.instance.neededAdminlvls ) { 
+            componentRef.instance.myAdminlvl = AppComponent.Settings.adminLvl;
+            componentRef.instance.neededAdminlvls = UserpanelContentData.neededAdminlvls[componentname];
+        }
     }
 
     get menuNames() {
@@ -100,8 +105,11 @@ class UserpanelContentData {
         UserpanelAdminComponent,
         UserpanelDonatorComponent
     ];
-    
-    static myLanguage: ("ENGLISH"|"GERMAN") = "GERMAN";
+    static neededAdminlvls = {
+        reports: {
+            removeReport: 2
+        }
+    };
 
     static language = {
         ENGLISH: {
@@ -249,7 +257,7 @@ class UserpanelContentData {
     }
 
     static getLang( menu: string ) {
-        return UserpanelContentData.language[UserpanelContentData.myLanguage][menu];
+        return UserpanelContentData.language[AppComponent.Settings.myLanguage][menu];
     }
 }
 
