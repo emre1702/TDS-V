@@ -3,7 +3,8 @@
 let mainbrowserdata = {
     angular: new Angular(),
     browser: null as BrowserMp,
-    roundendreasonshowing: false
+    roundendreasonshowing: false,
+    angularloaded: false
 }
 
 function addAngularListeners() {
@@ -27,6 +28,7 @@ function addAngularListeners() {
 addAngularListeners();
 
 function requestAngularBrowserData() {
+    mainbrowserdata.angularloaded = true;
     return { adminlvl: currentadminlvl, language: getLanguage() }; 
 }
 

@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         AppComponent.openMenu( "userpanel" ); 
         this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "openUserpanel" );
-        this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "closeUserpanel" ); 
+        this.rage.Client.listen( () => AppComponent.openMenu( "userpanel" ), "closeUserpanel" );
+        this.rage.Client.listen( AppComponent.syncLanguage, "syncLanguage" ); 
 
         this.rage.Client.call( {
             fn: "requestAngularBrowserData",
@@ -37,6 +38,10 @@ export class AppComponent implements OnInit {
 
     static closeMenu( menu: string ) {
         this.opened[menu] = false;
+    }
+
+    static syncLanguage( language: "GERMAN" | "ENGLISH" ) {
+        this.Settings.myLanguage = language;
     }
 
     get opened() {

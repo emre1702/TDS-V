@@ -30,7 +30,10 @@ mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
             settingsdata.language = value;
             mp.storage.data.language = value;
             callRemoteCooldown( "onPlayerLanguageChange", value );
-            loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
+            if ( mainbrowserdata.angularloaded ) {
+                loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
+                mainbrowserdata.angular.call( `syncLanguage('${settingsdata.language}');` );
+            }
             break;
 
         case PlayerSetting.HITSOUND:
