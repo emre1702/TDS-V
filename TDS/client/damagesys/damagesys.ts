@@ -13,11 +13,13 @@ var getCurrentWeapon = () => mp.game.invoke( '0x6678C142FAC881BA', localPlayer.h
 mp.events.add( "render", () => {
     if ( !rounddata.infight )
         return;
-    let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
-    if ( armorhp != damagesysdata.lastarmorhp ) {
-        damagesysdata.lastarmorhp = armorhp;
-        if ( armorhp < damagesysdata.lastarmorhp )
-            showBloodscreen();
+    if ( settingsdata.bloodscreen ) {
+        let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
+        if ( armorhp != damagesysdata.lastarmorhp ) {
+            damagesysdata.lastarmorhp = armorhp;
+            if ( armorhp < damagesysdata.lastarmorhp )
+                showBloodscreen();
+        }
     }
     //checkShooting();
 } );

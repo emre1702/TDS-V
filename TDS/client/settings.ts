@@ -21,7 +21,8 @@ function changeSetting ( index, value ) {
 
 var settingsdata = {
     language: "ENGLISH",
-    hitsound: true
+    hitsound: true,
+    bloodscreen: true
 }
 
 mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
@@ -37,7 +38,13 @@ mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
             break;
 
         case PlayerSetting.HITSOUND:
+            settingsdata.hitsound = value;
             mp.storage.data.hitsound = value;
+            break;
+
+        case PlayerSetting.BLOODSCREEN:
+            settingsdata.bloodscreen = value;
+            mp.storage.data.blodscreen = value;
             break;
     } 
 } );
@@ -46,6 +53,7 @@ mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
 function loadSettings() {
     let savedlang = mp.storage.data.language;
     let savedhitsound = mp.storage.data.hitsound;
+    let savedbloodscreen = mp.storage.data.bloodscreen;
 
     if ( typeof savedlang !== "undefined" )
         settingsdata.language = savedlang;
@@ -57,6 +65,9 @@ function loadSettings() {
 
     if ( typeof savedhitsound !== "undefined" )
         settingsdata.hitsound = savedhitsound;
+
+    if ( typeof savedbloodscreen !== "undefined" )
+        settingsdata.bloodscreen = savedbloodscreen;
 }
 
 function getLanguage() {
