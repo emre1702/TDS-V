@@ -21,6 +21,12 @@
 				["unban"] = "{1} was unbaned by {2}. Reason: {3}",
 				["permaban"] = "{1} was baned permanently by {2}. Reason: {3}",
 				["timeban"] = "{1} was baned for {2} hours by {3}. Reason: {4}",
+				["unban_lobby"] = "{1} was unbaned in lobby by {2}. Reason: {3}",
+				["permaban_lobby"] = "{1} was baned permanently in lobby by {2}. Reason: {3}",
+				["timeban_lobby"] = "{1} was baned for {2} hours in lobby by {3}. Reason: {4}",
+				["unbaned_in_lobby"] = "You got unbaned in lobby {1} by {2}. Reason: {3}",
+				["still_permabaned_in_lobby"] = "You got permanently baned by {1} in this lobby. Reason: {2}",
+				["still_baned_in_lobby"] = "You are still baned until {1} by {2}. Reason: {3}",
 				["unmute"] = "{1} was unmuted by {2}. Reason: {3}",
 				["permamute"] = "{1} was muted permanently by {2}. Reason: {3}",
 				["timemute"] = "{1} was muted for {2} minutes by {3}. Reason: {4}",
@@ -81,7 +87,8 @@
 				["player_not_muted"] = "The player is not muted!",
 				["player_already_muted"] = "The player is already muted!",
 				["you_are_still_permamuted"] = "You are still permamuted.",
-				["you_are_still_muted"] = "You are still muted for {1} minutes."
+				["you_are_still_muted"] = "You are still muted for {1} minutes.",
+				["not_possible_in_this_lobby"] = "Not possible in this lobby!"
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -92,6 +99,12 @@
 				["unban"] = "{1} wurde von {2} entbannt. Grund: {3}",
 				["permaban"] = "{1} wurde permanent von {2} gebannt. Grund: {3}",
 				["timeban"] = "{1} wurde für {2} Stunden von {3} gebannt. Grund: {4}",
+				["unban_lobby"] = "{1} wurde in der Lobby von {2} entbannt. Grund: {3}",
+				["permaban_lobby"] = "{1} wurde permanent aus der Lobby von {2} gebannt. Grund: {3}",
+				["timeban_lobby"] = "{1} wurde für {2} Stunden aus der Lobby von {3} gebannt. Grund: {4}",
+				["unbaned_in_lobby"] = "Du wurdest in der Lobby {1} von {2} entbannt. Grund: {3}",
+				["still_permabaned_in_lobby"] = "Du wurdest von {1} aus dieser Lobby permanent gebannt. Grund: {2}",
+				["still_baned_in_lobby"] = "Du hast noch einen Ban bis {1} von {2}. Grund: {3}",
 				["unmute"] = "{1} wurde von {2} entmutet. Grund: {3}",
 				["permamute"] = "{1} wurde von {2} permanent gemutet. Grund: {3}",
 				["timemute"] = "{1} wurde von {2} für {3} Minuten gemutet. Grund: {4}",
@@ -152,7 +165,8 @@
 				["player_not_muted"] = "Der Spieler ist nicht gemutet!",
 				["player_already_muted"] = "Der Spieler ist bereits gemutet!",
 				["you_are_still_permamuted"] = "Du bist noch permanent gemutet.",
-				["you_are_still_muted"] = "Du bist noch für {1} Minuten gemutet."
+				["you_are_still_muted"] = "Du bist noch für {1} Minuten gemutet.",
+				["not_possible_in_this_lobby"] = "In dieser Lobby nicht möglich!"
 			}
 		};
 
