@@ -7,7 +7,7 @@
     static class Arena {
         public static instance.lobby.Arena TheLobby;
 
-        public static void Create ( ) {
+        public static async void Create ( ) {
             TheLobby = new instance.lobby.Arena ( "arena", 1 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
@@ -47,12 +47,14 @@
             TheLobby.AddWeapon ( WeaponHash.BullpupRifle, 1000 ); // BullpupRifle
             TheLobby.AddWeapon ( WeaponHash.CompactRifle, 1000 ); // CompactRifle
 
-            /*// Gunrunning //
+			/*// Gunrunning //
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_PISTOL_MK2" ), 1000 );
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_SMG_MK2" ), 1000 );
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_ASSAULTRIFLE_MK2" ), 1000 );
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" ), 1000 );
             TheLobby.AddWeapon ( WeaponHash) API.GetHashKey ( "WEAPON_COMBATMG_MK2" ), 1000 );*/
+
+			await TheLobby.ActivateBansSaving();
 
             TheLobby.StartRoundGame ();
         }

@@ -11,7 +11,8 @@
             TheLobby = new Lobby ( "mainmenu", 0 ) {
                 DeleteWhenEmpty = false,
                 IsOfficial = true,
-                AroundSpawnPoint = 5f
+                AroundSpawnPoint = 5f,
+				BanAllowed = false
 			};
 		}
 
