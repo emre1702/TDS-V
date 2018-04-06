@@ -156,9 +156,9 @@
 		public static void PermaBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason ) {
 			Client admin = admincharacter.Player;
 			Database.ExecPrepared( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +
-				$"(@socialclubname, @address, 'permanent', '{Utility.GetTimespan()}', '{Utility.GetTimestamp()}', @admin, @reason)",
+				$"(@socialclubname, @address, 0, '{Utility.GetTimespan()}', '{Utility.GetTimestamp()}', {admincharacter.UID}, @reason)",
 				new Dictionary<string, string> {
-					{ "@socialclubname", targetname }, { "@address", targetaddress }, { "@admin", admin.Name }, { "@reason", reason } }
+					{ "@socialclubname", targetname }, { "@address", targetaddress }, { "@reason", reason } }
 			);
 			socialClubNameBanDict[targetname] = true;
 			if ( targetaddress != "-" )
@@ -174,8 +174,8 @@
 		public static void TimeBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason, int hours ) {
 			Client admin = admincharacter.Player;
 			Database.ExecPrepared( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES " +
-				$"(@socialclubname, @address, 'time', {Utility.GetTimespan()}, '{Utility.GetTimestamp()}', " +
-				$"{Utility.GetTimespan( hours * 3600 )}, '{Utility.GetTimestamp( hours * 3600 )}', @admin, @reason)", new Dictionary<string, string> {
+				$"(@socialclubname, @address, 1, {Utility.GetTimespan()}, '{Utility.GetTimestamp()}', " +
+				$"{Utility.GetTimespan( hours * 3600 )}, '{Utility.GetTimestamp( hours * 3600 )}', {admincharacter.UID}, @reason)", new Dictionary<string, string> {
 					{ "@socialclubname", targetname },
 					{ "@address", targetaddress },
 					{ "@admin", admin.SocialClubName },
