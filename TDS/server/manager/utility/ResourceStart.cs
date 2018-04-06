@@ -22,11 +22,9 @@
                 Map.LoadMapRatingsFromDatabase ();
                 await Map.MapOnStart().ConfigureAwait ( false );
                 Gang.LoadGangFromDatabase ();
-                NAPI.Task.Run ( () => { 
-                    MainMenu.Create ();
-                    Arena.Create ();
-                    GangLobby.Create ();
-                } );
+                MainMenu.Create ();
+                Arena.Create ();
+                GangLobby.Create ();
                 Season.LoadSeason ();
             } catch ( Exception ex ) {
 				NAPI.Util.ConsoleOutput ( ex.ToString() );
