@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using TDS.server.instance.player;
 using TDS.server.manager.logs;
+using TDS.server.manager.utility;
 
 namespace TDS.server.instance.lobby {
 
@@ -10,8 +11,6 @@ namespace TDS.server.instance.lobby {
 
         public uint Armor = 100;
         public uint Health = 100;
-
-		public HashSet<uint> playerBlacklist = new HashSet<uint> ();
         
 
         public void OnPlayerDisconnected ( Character character, DisconnectionType type, string reason ) {
@@ -34,9 +33,18 @@ namespace TDS.server.instance.lobby {
         }
 
         public virtual bool AddPlayer ( Character character, bool spectator = false ) {
-			if ( !IsPlayerAllowedToJoin ( character ) )
-				return false;
-
+			LobbyBan ban = GetPlayerLobbyBan( character );
+			if ( ban != null ) {
+				if ( Utility.GetTimespan() < ban.EndSpan ) {
+					if ( ban.Type == 0 ) // permaban
+						character.SendLangMessage( "still_permabaned_in_lobby", ban.ByAdmin, ban.Reason );
+					else // timeban
+						character.SendLangMessage( "still_baned_in_lobby", ban.End, ban.ByAdmin, ban.Reason );
+					return false;
+				} else
+					RemoveBan( character.UID );
+			}
+				
             Client player = character.Player;
             player.Freeze ( true );
 			Lobby oldlobby = character.Lobby;
@@ -115,9 +123,5 @@ namespace TDS.server.instance.lobby {
         public void SetPlayerLobbyOwner ( Character character ) {
             character.IsLobbyOwner = true;
         }
-
-		public bool IsPlayerAllowedToJoin ( Character character ) {
-			return !playerBlacklist.Contains ( character.UID );
-		}
     }
 }
