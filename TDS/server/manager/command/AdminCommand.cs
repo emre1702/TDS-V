@@ -24,7 +24,10 @@
 			{ "kick", 1 },
 			{ "ban (time)", 1 },
 			{ "ban (unban)", 2 },
-			{ "ban (permanent)", 2 },
+			{ "ban (permanent)", 3 },
+			{ "lobbyban (time)", 1 },
+			{ "lobbyban (unban)", 2 },
+			{ "lobbyban (permanent)", 2 },
 			{ "mute (time)", 1 },
 			{ "mute (unmute)", 1 },
 			{ "mute (permaunmute)", 2 },
@@ -79,6 +82,38 @@
 					targetcharacter.Lobby.RemovePlayerDerived( targetcharacter );
 					MainMenu.Join( targetcharacter );
 				}
+			}
+		}
+
+		[CommandDescription( "Bans or unbans a player from the lobby. Can be used for breaking a lobby-rule or if a lobby-owner doesn't want a player in his lobby." )]
+		[CommandGroup( "supporter/lobby-owner" )]
+		[Command( "lobbyban" )]
+		public static void LobbyBanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
+			try {
+				if ( Account.PlayerUIDs.ContainsKey( targetname ) ) {
+					Character character = player.GetChar();
+					if ( hours == -1 && character.IsAdminLevel( neededLevels["lobbyban (permanent)"], true ) || hours == 0 && character.IsAdminLevel( neededLevels["lobbyban (unban)"], true ) || hours > 0 && character.IsAdminLevel( neededLevels["lobbyban (time)"], true ) ) {
+						if ( reason.Length > 3 ) {
+							if ( character.Lobby.BanAllowed ) {
+								uint targetUID = Account.PlayerUIDs[targetname];
+								Client target = NAPI.Player.GetPlayerFromName( targetname );
+								if ( hours == 0 ) {
+									character.Lobby.UnBanPlayer( character, target, targetname, targetUID, reason );
+								} else if ( hours == -1 ) {
+									character.Lobby.PermaBanPlayer( character, target, targetname, targetUID, reason );
+								} else {
+									character.Lobby.TimeBanPlayer( character, target, targetname, targetUID, hours, reason );
+								}
+							} else
+								character.SendLangNotification( "not_possible_in_this_lobby" );
+						} else
+							character.SendLangNotification( "reason_missing" );
+					} else
+						character.SendLangNotification( "adminlvl_not_high_enough" );
+				} else
+					player.SendLangNotification( "player_doesnt_exist" );
+			} catch ( Exception ex ) {
+				Log.Error( ex.ToString() );
 			}
 		}
 		#endregion
