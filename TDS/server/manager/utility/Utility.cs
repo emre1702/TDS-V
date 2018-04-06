@@ -27,9 +27,9 @@
 			return sb.ToString ();
 		}
 
-		public static int GetTimespan ( int seconds = 0 ) {
+		public static uint GetTimespan ( int seconds = 0 ) {
 			TimeSpan t = DateTime.Now.AddSeconds ( seconds ) - startDateTime;
-			return (int) t.TotalSeconds;
+			return (uint) t.TotalSeconds;
 		}
 
 		public static string GetTimestamp ( int seconds = 0 ) {
