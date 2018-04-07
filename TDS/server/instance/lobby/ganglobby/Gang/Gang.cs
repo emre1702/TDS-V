@@ -17,9 +17,6 @@ namespace TDS.server.instance.lobby.ganglobby {
         private string shortname;
         private uint owneruid;
 
-        private List<Character> membersOnline = new List<Character> ();
-        private Dictionary<uint, uint> membersRank = new Dictionary<uint, uint> ();
-
         public Gang ( uint uid, string name, string shortname, uint owneruid ) {
             this.uid = uid;
             this.name = name;

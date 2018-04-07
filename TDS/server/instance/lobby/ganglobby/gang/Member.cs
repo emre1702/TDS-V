@@ -1,11 +1,15 @@
-﻿using TDS.server.instance.player;
+﻿using System.Collections.Generic;
+using TDS.server.instance.player;
 using TDS.server.manager.database;
 
 namespace TDS.server.instance.lobby.ganglobby {
 
     partial class Gang {
 
-        private void AddMember ( Character character ) {
+		private List<Character> membersOnline = new List<Character>();
+		private Dictionary<uint, uint> membersRank = new Dictionary<uint, uint>();
+
+		private void AddMember ( Character character ) {
             playerMemberOfGang[character.UID] = this;
             Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" );
             membersRank[uid] = 1;
