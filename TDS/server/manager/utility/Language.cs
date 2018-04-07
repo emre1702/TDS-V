@@ -88,7 +88,9 @@
 				["player_already_muted"] = "The player is already muted!",
 				["you_are_still_permamuted"] = "You are still permamuted.",
 				["you_are_still_muted"] = "You are still muted for {1} minutes.",
-				["not_possible_in_this_lobby"] = "Not possible in this lobby!"
+				["not_possible_in_this_lobby"] = "Not possible in this lobby!",
+				["you_got_offline_messages_without_new"] = "You got {1} offline messages in userpanel.",
+				["you_got_offline_messages_with_new"] = "You got {1} offline messages in userpanel, {2} is/are new.",
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -166,7 +168,9 @@
 				["player_already_muted"] = "Der Spieler ist bereits gemutet!",
 				["you_are_still_permamuted"] = "Du bist noch permanent gemutet.",
 				["you_are_still_muted"] = "Du bist noch für {1} Minuten gemutet.",
-				["not_possible_in_this_lobby"] = "In dieser Lobby nicht möglich!"
+				["not_possible_in_this_lobby"] = "In dieser Lobby nicht möglich!",
+				["you_got_offline_messages_without_new"] = "Du hast {1} Offline-Nachrichten im Userpanel.",
+				["you_got_offline_messages_with_new"] = "Du hast {1} Offline-Nachrichten im Userpanel, {2} davon sind neu.",
 			}
 		};
 

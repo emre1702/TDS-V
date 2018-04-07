@@ -67,6 +67,7 @@
 			Character character = player.GetChar();
 			character.HitsoundOn = hitsoundon;
 			SendWelcomeMessage( player );
+			OfflineMessages.LoadOfflineMessages( character );
 		}
 
 		[RemoteEvent( "onPlayerTryLogin" )]
