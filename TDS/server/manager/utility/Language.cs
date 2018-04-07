@@ -91,6 +91,7 @@
 				["not_possible_in_this_lobby"] = "Not possible in this lobby!",
 				["you_got_offline_messages_without_new"] = "You got {1} offline messages in userpanel.",
 				["you_got_offline_messages_with_new"] = "You got {1} offline messages in userpanel, {2} is/are new.",
+				["gang_removed"] = "Your gang got disbanded."
 			},
 			[Language.GERMAN] = new Dictionary<string, string>
 			{
@@ -171,6 +172,7 @@
 				["not_possible_in_this_lobby"] = "In dieser Lobby nicht möglich!",
 				["you_got_offline_messages_without_new"] = "Du hast {1} Offline-Nachrichten im Userpanel.",
 				["you_got_offline_messages_with_new"] = "Du hast {1} Offline-Nachrichten im Userpanel, {2} davon sind neu.",
+				["gang_removed"] = "Deine Gang wurde aufgelöst."
 			}
 		};
 
