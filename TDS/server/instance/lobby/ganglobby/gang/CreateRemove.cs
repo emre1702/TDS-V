@@ -30,16 +30,16 @@ namespace TDS.server.instance.lobby.ganglobby {
 
 			gangByUID.Remove ( uid );
 
+			SendAllPlayerLangMessage( "gang_removed" );
+
 			// Remove online members //
 			for ( int i = membersOnline.Count - 1; i >= 0; --i ) {
-				// TODO: Send normal message
 				RemoveOnlineMember ( membersOnline[i], false );
 				playerMemberOfGang.Remove ( membersOnline[i].UID );
 			}
 
 			// Remove offline members
 			foreach ( KeyValuePair<uint, Gang> entry in playerMemberOfGang.Where ( entry => entry.Value == this ).ToList () ) {
-				// TODO: Send offline message
 				playerMemberOfGang.Remove ( entry.Key );
 			}
 		}
