@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
 
     public static Settings: AppSettings = {
         myLanguage: "ENGLISH",
-        adminLvl: 0
+        adminLvl: 4   // TODO: DEBUG!
     };
 }
 
