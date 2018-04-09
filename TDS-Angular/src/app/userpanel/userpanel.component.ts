@@ -61,9 +61,9 @@ export class UserpanelComponent implements OnInit {
     close = UserpanelComponent.close;
 
     loadComponent ( index: number ) {
-        let component: Type<any> = UserpanelContentData.menus[index];
         let componentname = UserpanelContentData.menuNames[index];
-    
+        let component: Type<any> = UserpanelContentData.menus[componentname];
+        
         let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
 
         let viewContainerRef = this.userpanelContentDirective.viewContainerRef;
@@ -71,7 +71,7 @@ export class UserpanelComponent implements OnInit {
     
         let componentRef = viewContainerRef.createComponent(componentFactory);
         componentRef.instance.language = UserpanelContentData.getLang( componentname );
-        if ( componentRef.instance.neededAdminlvls ) { 
+        if ( componentRef.instance.neededAdminlvls !== null ) { 
             componentRef.instance.myAdminlvl = AppComponent.Settings.adminLvl;
             componentRef.instance.neededAdminlvls = UserpanelContentData.neededAdminlvls[componentname];
         }
@@ -90,21 +90,23 @@ export class UserpanelComponent implements OnInit {
 
 class UserpanelContentData {
     static menuNames = [
+        // stats,
         "rules",
-        "settings",
+        // "settings",
         "reports",
-        "suggestions",
-        "admin",
-        "donator"
+        // "suggestions",
+        // "admin",
+        // "donator"
     ];
-    static menus = [
-        UserpanelRulesComponent,
-        UserpanelSettingsComponent,
-        UserpanelReportsComponent,
-        UserpanelSuggestionsComponent,
-        UserpanelAdminComponent,
-        UserpanelDonatorComponent
-    ];
+    static menus = {
+        // stats: UserpanelStatsComponent, 
+        rules: UserpanelRulesComponent,
+        settings: UserpanelSettingsComponent,
+        reports: UserpanelReportsComponent,
+        suggestions: UserpanelSuggestionsComponent,
+        admin: UserpanelAdminComponent,
+        donator: UserpanelDonatorComponent
+    };
     static neededAdminlvls = {
         reports: {
             removeReport: 2
@@ -114,6 +116,7 @@ class UserpanelContentData {
     static language = {
         ENGLISH: {
             main: {
+                stats: "Stats",
                 reports: "Reports",
                 settings: "Settings",
                 admin: "Admin",
@@ -183,6 +186,7 @@ class UserpanelContentData {
         },
         GERMAN: {
             main: {
+                stats: "Statistiken",
                 reports: "Reports",
                 settings: "Einstellungen",
                 admin: "Admin",
