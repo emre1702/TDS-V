@@ -50,6 +50,10 @@
     user-select: none;
 }
 
+.mat-chip-list-invalid {
+    border: red 1px solid;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
 }

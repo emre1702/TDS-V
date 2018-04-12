@@ -1,1 +1,75 @@
-<p>Suggestions</p>
+<div id="main-suggestions" *ngIf="inSuggestion === undefined && !inCreate">
+    <table id="main-suggestions-table" class="window-field">
+        <thead>
+            <tr>
+                <th (click)="sortID()" class="not-selectable">ID</th>
+                <th (click)="sortTitle()" class="not-selectable">{{ language.title }}</th>
+                <th (click)="sortState()" class="not-selectable">{{ language.state }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let entry of rowDatas; let i = index;">
+                <tr *ngIf="shownBadges[entry.Topic]" (click)="selectRow($event, i);" >
+                    <td>{{ entry.ID }}</td>
+                    <td>{{ entry.Title }}</td>
+                    <td *ngIf="!entry.Open"><mat-icon>done</mat-icon></td>
+                    <td *ngIf="entry.Open">-</td>
+                </tr> 
+            </ng-container>   
+        </tbody>
+    </table>
+    <div id="main-buttons">
+        <button id="main-create" mat-button *ngIf="selectedRowIndex === undefined" (click)="switchToCreation()">{{ language.create }}</button>
+        <button id="main-view" mat-button *ngIf="selectedRowIndex !== undefined" (click)="switchToSuggestion()">{{ language.view }}</button>
+        <button id="main-open" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == false" (click)="toggleRowState()">{{ language.open }}</button>
+        <button id="main-close" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == true" (click)="toggleRowState()">{{ language.close }}</button> 
+        <mat-chip-list id="suggestions_show_badge" class="mat-chip-list-stacked" multiple>
+            <mat-chip *ngFor="let badge of badgeNames" [id]="'show-'+badge+'-chip'" [selected]="shownBadges[badge]" (click)="onSuggestionsShowBadgeChange( badge )">{{ language[badge] }}</mat-chip>
+        </mat-chip-list>
+        <button id="main-remove" mat-button *ngIf="selectedRowIndex !== undefined && myAdminlvl >= neededAdminlvls.removeSuggestion" (click)="removeSuggestion()">{{ language.remove }}</button>
+    </div>
+</div>
+
+<div id="suggestion-view" *ngIf="inSuggestion !== undefined && !inCreate">
+    <div class="suggestion-view-texts-container">
+        <span class="suggestion-view-texts-author-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Author }}</span>
+        <p class="suggestion-view-texts-text-1">{{rowDatas[inSuggestion].Title}}<br>{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Text }}</p>
+        <span class="suggestion-view-texts-date-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Date }}</span>
+    </div>
+    <div *ngFor="let textentry of rowDataTexts[rowDatas[inSuggestion].ID]; let i = index">
+        <div class="suggestion-view-texts-container suggestion-view-texts-container-darker" *ngIf="i != 0 && textentry.Author !== rowDataTexts[rowDatas[inSuggestion].ID][0].Author">
+            <span class="suggestion-view-texts-author-2">{{ textentry.Author }}</span>
+            <p class="suggestion-view-texts-text-2">{{ textentry.Text }}</p>
+            <span class="suggestion-view-texts-date-2">{{ textentry.Date }}</span>
+        </div>
+        <div class="suggestion-view-texts-container" *ngIf="i != 0 && textentry.Author === rowDataTexts[rowDatas[inSuggestion].ID][0].Author">
+            <span class="suggestion-view-texts-author-1">{{ textentry.Author }}</span>
+            <p class="suggestion-view-texts-text-1">{{ textentry.Text }}</p>
+            <span class="suggestion-view-texts-date-1">{{ textentry.Date }}</span>    
+        </div>
+    </div>
+    <mat-form-field id="suggestion-view-interaction" [color]="formOptions.value.color">
+        <textarea matInput #suggestionTextArea required rows="3" id="suggestion-view-text-textarea" [placeholder]="language.answer"></textarea>
+        <mat-hint align="end">{{suggestionTextArea.value?.length || 0}}/250</mat-hint>
+        <button id="suggestion-view-text-send" mat-button (click)="sendSuggestionAnswer()">{{ language.send }}</button>
+    </mat-form-field>
+</div>
+
+<div *ngIf="inCreate">
+    <div id="suggestion_creation_left_side">
+        <mat-form-field [color]="formOptions.value.color">
+            <input matInput #titleInput required placeholder="Title">
+            <mat-hint align="end">{{titleInput.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+        <mat-form-field id="create_textarea" [color]="formOptions.value.color">
+            <textarea matInput #textArea required rows="9" placeholder="Text"></textarea>
+            <mat-hint align="end">{{textArea.value?.length || 0}}/250</mat-hint>
+        </mat-form-field>
+    </div>
+    <div id="suggestion_creation_right_side">
+        <mat-chip-list #suggestionBadgeList class="mat-chip-list-stacked">
+            <mat-chip *ngFor="let badge of badgeNames" [id]="badge+'-chip'" [selected]="selectedBadge == badge" (click)="selectedBadge = badge">{{ language[badge] }}</mat-chip>
+        </mat-chip-list>
+        <button id="creation-send" mat-button (click)="createSuggestion()">Send</button>    
+    </div>
+</div>

@@ -34,6 +34,13 @@ export class UserpanelComponent implements OnInit {
             rage.Client.listen( UserpanelReportsComponent.syncReportTexts, "syncReportTexts" );
             rage.Client.listen( UserpanelReportsComponent.syncReportState, "syncReportState" );
             rage.Client.listen( UserpanelReportsComponent.syncReportRemove, "syncReportRemove" );
+
+            rage.Client.listen( UserpanelReportsComponent.syncReport, "syncSuggestion" );
+            rage.Client.listen( UserpanelReportsComponent.syncReports, "syncSuggestions" );
+            rage.Client.listen( UserpanelReportsComponent.syncReportText, "syncSuggestionText" );
+            rage.Client.listen( UserpanelReportsComponent.syncReportTexts, "syncSuggestionTexts" );
+            rage.Client.listen( UserpanelReportsComponent.syncReportState, "syncSuggestionState" );
+            rage.Client.listen( UserpanelReportsComponent.syncReportRemove, "syncSuggestionRemove" );
         } 
         UserpanelComponent.instance = this;           
     }
@@ -94,7 +101,7 @@ class UserpanelContentData {
         "rules",
         // "settings",
         "reports",
-        // "suggestions",
+        "suggestions",
         // "admin",
         // "donator"
     ];
@@ -110,6 +117,9 @@ class UserpanelContentData {
     static neededAdminlvls = {
         reports: {
             removeReport: 2
+        },
+        suggestions: {
+            removeSuggestion: 3
         }
     };
 
@@ -182,6 +192,19 @@ class UserpanelContentData {
                 for_teammember: "For (min.):",
                 answer: "Answer",
                 send: "Send"
+            },
+
+            suggestions: {
+                title: "Title",
+                state: "State",
+                create: "Create",
+                view: "View",
+                open: "Open",
+                close: "Close",
+                remove: "Remove",
+
+                bug: "Bug",
+                suggestion: "Suggestion"
             }
         },
         GERMAN: {
@@ -252,6 +275,19 @@ class UserpanelContentData {
                 for_teammember: "Für (min.):",
                 answer: "Antwort",
                 send: "Senden"
+            },
+
+            suggestions: {
+                title: "Titel",
+                state: "Status",
+                create: "Erstellen",
+                view: "Betrachten",
+                open: "Öffnen",
+                close: "Schließen",
+                remove: "Entfernen",
+
+                bug: "Bug",
+                suggestion: "Vorschlag"
             }
         } 
     };

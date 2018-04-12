@@ -11,7 +11,8 @@ import {
   MatListModule,
   MatMenuModule,
   MatInputModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatChipsModule
 } from "@angular/material";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { AngularDraggableModule } from "angular2-draggable";
@@ -57,6 +58,7 @@ import { UserpanelContentDirective } from "./userpanel/content/userpanelcontent.
     MatInputModule,
     AngularDraggableModule,
     MatTooltipModule,
+    MatChipsModule,
     RAGEModule
   ],
   entryComponents: [
