@@ -4,7 +4,7 @@
             <tr>
                 <th (click)="sortID()" class="not-selectable">ID</th>
                 <th (click)="sortTitle()" class="not-selectable">{{ language.title }}</th>
-                <th (click)="sortState()" class="not-selectable">{{ language.state }}</th>
+                <th (click)="sortTopic()" class="not-selectable">{{ language.type }}</th>
             </tr>
         </thead>
         <tbody>
@@ -12,8 +12,7 @@
                 <tr *ngIf="shownBadges[entry.Topic]" (click)="selectRow($event, i);" >
                     <td>{{ entry.ID }}</td>
                     <td>{{ entry.Title }}</td>
-                    <td *ngIf="!entry.Open"><mat-icon>done</mat-icon></td>
-                    <td *ngIf="entry.Open">-</td>
+                    <td>{{ language[entry.Topic] }}</td>
                 </tr> 
             </ng-container>   
         </tbody>
@@ -23,6 +22,11 @@
         <button id="main-view" mat-button *ngIf="selectedRowIndex !== undefined" (click)="switchToSuggestion()">{{ language.view }}</button>
         <button id="main-open" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == false" (click)="toggleRowState()">{{ language.open }}</button>
         <button id="main-close" mat-button *ngIf="selectedRowIndex !== undefined && rowDatas[selectedRowIndex].Open == true" (click)="toggleRowState()">{{ language.close }}</button> 
+        <mat-form-field id="suggestions_show_state">
+            <mat-select [(value)]="selectedState" (selectionChange)="onStateSelectionChange()" [disabled]="loadingSuggestions">
+                <mat-option *ngFor="let state of stateNames" [value]="state">{{ language[state] }}</mat-option>   
+            </mat-select>
+        </mat-form-field>
         <mat-chip-list id="suggestions_show_badge" class="mat-chip-list-stacked" multiple>
             <mat-chip *ngFor="let badge of badgeNames" [id]="'show-'+badge+'-chip'" [selected]="shownBadges[badge]" (click)="onSuggestionsShowBadgeChange( badge )">{{ language[badge] }}</mat-chip>
         </mat-chip-list>
@@ -31,7 +35,7 @@
 </div>
 
 <div id="suggestion-view" *ngIf="inSuggestion !== undefined && !inCreate">
-    <div class="suggestion-view-texts-container">
+    <div class="suggestion-view-texts-container" *ngIf="rowDataTexts[rowDatas[inSuggestion].ID][0]">
         <span class="suggestion-view-texts-author-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Author }}</span>
         <p class="suggestion-view-texts-text-1">{{rowDatas[inSuggestion].Title}}<br>{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Text }}</p>
         <span class="suggestion-view-texts-date-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Date }}</span>

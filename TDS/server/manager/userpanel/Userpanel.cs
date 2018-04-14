@@ -1,15 +1,22 @@
 ﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using TDS.server.extend;
 using TDS.server.instance.player;
 
 namespace TDS.server.manager.userpanel {
 
-    partial class Userpanel : Script {
+	partial class Userpanel : Script {
+
+		private static Dictionary<string, uint> neededAdminlvls = new Dictionary<string, uint> {
+			{ "removeReport", 2 },
+			{ "removeSuggestion", 2 }
+	};
 
 		public Userpanel ( ) { }
 		
 		public static void LoadAllDatas () {
 			LoadReportsData ();
+			LoadSuggestionsData();
 		}
 
 		[ServerEvent(Event.PlayerDisconnected)]

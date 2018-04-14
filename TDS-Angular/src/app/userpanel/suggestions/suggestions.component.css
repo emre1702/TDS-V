@@ -198,6 +198,11 @@ mat-chip-list {
     background-color: red;
 }
 
+#suggestions_show_state {
+    margin-top: 10%;
+    width: 85%;
+}
+
 #suggestions_show_badge {
-    margin-top: 20%;
+    margin-top: 5%;
 }

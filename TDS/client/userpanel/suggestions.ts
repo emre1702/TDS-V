@@ -58,10 +58,14 @@ function closeSuggestion() {
     mp.events.callRemote( "onClientCloseSuggestion" );
 }
 
-function toggleSuggestionState( suggestionid: number, state: number ) {
-    mp.events.callRemote( "onClientChangeSuggestionState", suggestionid, state == 1 );
+function changeSuggestionState( suggestionid: number, state: number ) {
+    mp.events.callRemote( "onClientChangeSuggestionState", suggestionid, state );
 }
 
 function removeSuggestion( suggestionid: number ) {
     mp.events.callRemote( "onClientRemoveSuggestion" );
+}
+
+function requestSuggestionsByState( state: number ) {
+    mp.events.callRemote( "requestSuggestionsByState", state );
 }

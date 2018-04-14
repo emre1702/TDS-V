@@ -35,12 +35,12 @@ export class UserpanelComponent implements OnInit {
             rage.Client.listen( UserpanelReportsComponent.syncReportState, "syncReportState" );
             rage.Client.listen( UserpanelReportsComponent.syncReportRemove, "syncReportRemove" );
 
-            rage.Client.listen( UserpanelReportsComponent.syncReport, "syncSuggestion" );
-            rage.Client.listen( UserpanelReportsComponent.syncReports, "syncSuggestions" );
-            rage.Client.listen( UserpanelReportsComponent.syncReportText, "syncSuggestionText" );
-            rage.Client.listen( UserpanelReportsComponent.syncReportTexts, "syncSuggestionTexts" );
-            rage.Client.listen( UserpanelReportsComponent.syncReportState, "syncSuggestionState" );
-            rage.Client.listen( UserpanelReportsComponent.syncReportRemove, "syncSuggestionRemove" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestion, "syncSuggestion" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestions, "syncSuggestions" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionText, "syncSuggestionText" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionTexts, "syncSuggestionTexts" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionState, "syncSuggestionState" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionRemove, "syncSuggestionRemove" );
         } 
         UserpanelComponent.instance = this;           
     }
@@ -196,7 +196,7 @@ class UserpanelContentData {
 
             suggestions: {
                 title: "Title",
-                state: "State",
+                type: "Type",
                 create: "Create",
                 view: "View",
                 open: "Open",
@@ -204,7 +204,13 @@ class UserpanelContentData {
                 remove: "Remove",
 
                 bug: "Bug",
-                suggestion: "Suggestion"
+                suggestion: "Suggestion",
+                send: "Send",
+
+                opened: "Open", 
+                accepted: "Accepted", 
+                done: "Done", 
+                rejected: "Rejected"
             }
         },
         GERMAN: {
@@ -279,7 +285,7 @@ class UserpanelContentData {
 
             suggestions: {
                 title: "Titel",
-                state: "Status",
+                type: "Typ",
                 create: "Erstellen",
                 view: "Betrachten",
                 open: "Öffnen",
@@ -287,7 +293,13 @@ class UserpanelContentData {
                 remove: "Entfernen",
 
                 bug: "Bug",
-                suggestion: "Vorschlag"
+                suggestion: "Vorschlag",
+                send: "Senden",
+
+                opened: "Offen", 
+                accepted: "Angenommen", 
+                done: "Erledigt", 
+                rejected: "Abgelehnt"
             }
         } 
     };

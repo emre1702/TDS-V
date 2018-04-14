@@ -1,8 +1,12 @@
 import { Component, Input, ViewChild, OnDestroy, OnInit, Output, EventEmitter } from "@angular/core";
 import { UserpanelComponent } from "../userpanel.component";
 import { RAGE } from "../../rageconnector/rageconnector.service";
-import { MatInput, MatChipListChange, MatChip, MatChipList } from "@angular/material";
+import { MatInput, MatChipListChange, MatChip, MatChipList, MatSelect } from "@angular/material";
 import { FormBuilder, FormGroup } from "@angular/forms";
+
+enum SuggestionState {
+    OPEN, ACCEPTED, DONE, REJECTED
+}
 
 @Component({
     selector: "app-userpanel-suggestions",
@@ -17,6 +21,9 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
     inSuggestion: number;
     inCreate = false;
     selectedBadge: string;
+    selectedState = "opened";
+    lastSelectedState = "opened";
+    loadingSuggestions = false;
     private selectedRow: HTMLElement;
     private selectedRowIndex: number;
     private sortingsSmallToBig = {
@@ -26,21 +33,29 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
     };
     static instance: UserpanelSuggestionsComponent;
 
-    badgeNames = [ "suggestion", "bug" ];
+    static badgeNames = [ "suggestion", "bug" ];
+    get badgeNames() {
+        return UserpanelSuggestionsComponent.badgeNames;
+    }
     shownBadges = { "suggestion": true, "bug": true };
+    static stateNames = [ "opened", "accepted", "done", "rejected" ];
+    get stateNames() {
+        return UserpanelSuggestionsComponent.stateNames;
+    }
+    static stateNumbers = { opened: 0, accepted: 1, done: 2, rejected: 3 };
 
-    rowDatas: { ID: number, Author: String, Open: boolean, Title: string, Topic: string }[] = [
+    rowDatas: { ID: number, Author: String, State: SuggestionState, Title: string, Topic: string }[] = [
         {
             ID: 1337,
             Author: "Solid_Snake",
-            Open: true,
+            State: SuggestionState.OPEN,
             Title: "Wie werde ich so cool wie Bonus? Solid_Snake suckt hart!",
             Topic: "bug"
         },
         {
             ID: 1702,
             Author: "Bonus",
-            Open: false,
+            State: SuggestionState.ACCEPTED,
             Title: "Wie kann Solid_Snake so schwul sein?",
             Topic: "suggestion"
       }
@@ -96,17 +111,23 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
 
     static syncSuggestion( data: string ) {
         let _this = UserpanelSuggestionsComponent.instance;
-        _this.rowDatas.unshift ( JSON.parse( data ) ); 
-        if ( _this.selectedRowIndex !== undefined )
-            ++_this.selectedRowIndex;   
-        if ( _this.inSuggestion !== undefined )
-            ++_this.inSuggestion;
+        let parseddata = JSON.parse( data );
+        if ( parseddata.State === _this.selectedState ) {
+            _this.rowDatas.unshift (  ); 
+            if ( _this.selectedRowIndex !== undefined )
+                ++_this.selectedRowIndex;   
+            if ( _this.inSuggestion !== undefined )
+                ++_this.inSuggestion;
+        } // else 
+        // maybe inform the user that a new suggestion came in
     }
 
-    static syncSuggestions( suggestion: string ) {
-        UserpanelSuggestionsComponent.instance.rowDatas = JSON.parse( suggestion );
+    static syncSuggestions( suggestions: string ) {
+        UserpanelSuggestionsComponent.instance.rowDatas = JSON.parse( suggestions );
         UserpanelSuggestionsComponent.instance.selectedRowIndex = undefined;
         UserpanelSuggestionsComponent.instance.inSuggestion = undefined;
+
+        UserpanelSuggestionsComponent.instance.loadingSuggestions = false;
     }
 
     static syncSuggestionText( suggestiontext: string ) {
@@ -117,10 +138,10 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
         UserpanelSuggestionsComponent.instance.rowDataTexts[UserpanelSuggestionsComponent.instance.inSuggestion] = JSON.parse( suggestiontexts );
     }
 
-    static syncSuggestionState( suggestionid: number, state: boolean ) {
+    static syncSuggestionState( suggestionid: number, state: SuggestionState ) {
         for ( let suggestion of UserpanelSuggestionsComponent.instance.rowDatas ) {
             if ( suggestion.ID === suggestionid ) {
-                suggestion.Open = state;
+                suggestion.State = state;
                 break;
             }
         }
@@ -139,11 +160,11 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
         }
     }
 
-    toggleRowState() {
-        UserpanelSuggestionsComponent.instance.rowDatas[this.selectedRowIndex].Open = !UserpanelSuggestionsComponent.instance.rowDatas[this.selectedRowIndex].Open;
+    toggleRowState( state: SuggestionState ) {
+        UserpanelSuggestionsComponent.instance.rowDatas[this.selectedRowIndex].State = state;
         this.rage.Client.call( {
-            fn: "toggleSuggestionState",
-            args: [this.selectedRowIndex, UserpanelSuggestionsComponent.instance.rowDatas[this.selectedRowIndex].Open ? 1 : 0]
+            fn: "changeSuggestionState",
+            args: [this.selectedRowIndex, state]
         } );
     }
 
@@ -174,12 +195,12 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
         this.unselectRow();
     }
 
-    sortState() {
+    sortTopic() {
         this.sortingsSmallToBig.open = !this.sortingsSmallToBig.open;
         if ( this.sortingsSmallToBig.open )
-            UserpanelSuggestionsComponent.instance.rowDatas.sort ( ( a, b ) => a.Open ? 1 : b.Open ? -1 : 0 );
+            UserpanelSuggestionsComponent.instance.rowDatas.sort ( ( a, b ) => a.Topic === "bug" ? 1 : b.Topic === "bug" ? -1 : 0 );
         else 
-            UserpanelSuggestionsComponent.instance.rowDatas.sort ( ( a, b ) => a.Open ? -1 : b.Open ? 1 : 0 ); 
+            UserpanelSuggestionsComponent.instance.rowDatas.sort ( ( a, b ) => a.Topic === "bug"  ? -1 : b.Topic === "bug" ? 1 : 0 ); 
         this.unselectRow();
     }
 
@@ -262,5 +283,17 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
 
     getBadgeNameByLanguage( langstr: string ) {
         return Object.keys(this.language).find(key => this.language[key] === langstr);
+    }
+
+    onStateSelectionChange() {
+        if ( !UserpanelSuggestionsComponent.instance.loadingSuggestions ) {
+            this.lastSelectedState = this.selectedState;
+            this.rage.Client.call( {
+                fn: "requestSuggestionsByState",
+                args: [UserpanelSuggestionsComponent.stateNumbers[this.selectedState]]
+            } );
+            UserpanelSuggestionsComponent.instance.loadingSuggestions = true; 
+        } else 
+            this.selectedState = this.lastSelectedState;    
     }
 } 
