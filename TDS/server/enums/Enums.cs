@@ -30,4 +30,12 @@
 	public enum AdminLogType {
 		PERMABAN, TIMEBAN, UNBAN, PERMAMUTE, TIMEMUTE, UNMUTE, NEXT, KICK, LOBBYKICK, PERMABANLOBBY, TIMEBANLOBBY, UNBANLOBBY
 	}
+
+	public enum SuggestionState {
+		OPEN, ACCEPTED, DONE, REJECTED
+	}
+
+	public enum SuggestionVote {
+		NEITHER, YES, NO
+	}
 }
