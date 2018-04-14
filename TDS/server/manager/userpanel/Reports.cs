@@ -37,13 +37,9 @@ namespace TDS.server.manager.userpanel {
 
 	partial class Userpanel {
 
-		private static Dictionary<string, uint> neededAdminlvls = new Dictionary<string, uint> {
-			{ "remove", 2 }
-		};
-
 		private static List<Report> reports = new List<Report>();
 		private static Dictionary<uint, Report> reportsByID = new Dictionary<uint, Report>();
-		private static Dictionary<Report, uint> highestTextID = new Dictionary<Report, uint>();
+		private static Dictionary<Report, uint> highestReportsTextID = new Dictionary<Report, uint>();
 
 		private static Dictionary<Report, List<Character>> listOfPlayersInReport = new Dictionary<Report, List<Character>>();
 		private static Dictionary<Character, Report> playersInReport = new Dictionary<Character, Report>();
@@ -88,7 +84,7 @@ namespace TDS.server.manager.userpanel {
 			Character character = player.GetChar();
 
 			ReportText reporttext = new ReportText {
-				ID = ++highestTextID[report],
+				ID = ++highestReportsTextID[report],
 				Author = player.Name,
 				Text = text,
 				Date = Utility.GetTimestamp()
@@ -196,7 +192,7 @@ namespace TDS.server.manager.userpanel {
 		[RemoteEvent( "onClientRemoveReport" )]
 		public static void ClientRemoveReport ( Client player, uint reportid ) {
 			Character character = player.GetChar();
-			if ( character.IsAdminLevel( neededAdminlvls["remove"] ) ) {
+			if ( character.IsAdminLevel( neededAdminlvls["removeReport"] ) ) {
 				Database.Exec( $"DELETE FROM reports WHERE id={reportid};" );
 				Database.Exec( $"DELETE FROM reporttexts WHERE reportid={reportid};" );
 
@@ -226,13 +222,13 @@ namespace TDS.server.manager.userpanel {
 					AuthorUID = Convert.ToUInt32( row["authoruid"] ),
 					Author = Account.GetNameByUID( Convert.ToUInt32( row["authoruid"] ) ),
 					ForAdminlvl = Convert.ToUInt32( row["foradminlvl"] ),
-					Title = Convert.ToString( row["Title"] ),
+					Title = Convert.ToString( row["title"] ),
 					Open = Convert.ToBoolean( row["open"] )
 				};
 				reports.Add( report );
 				reportsByID[report.ID] = report;
 				listOfPlayersInReport[report] = new List<Character>();
-				highestTextID[report] = 0;
+				highestReportsTextID[report] = 0;
 			}
 
 			DataTable textstable = await Database.ExecResult( "SELECT * FROM reporttexts;" );
@@ -240,14 +236,14 @@ namespace TDS.server.manager.userpanel {
 				ReportText text = new ReportText {
 					ID = Convert.ToUInt32( row["id"] ),
 					Author = Account.GetNameByUID( Convert.ToUInt32( row["authoruid"] ) ),
-					Text = Convert.ToString( row["Title"] ),
-					Date = Convert.ToString( row["state"] )
+					Text = Convert.ToString( row["text"] ),
+					Date = Convert.ToString( row["date"] )
 				};
 				uint reportid = Convert.ToUInt32( row["reportid"] );
 				Report report = reportsByID[reportid];
 				report.Texts.Add( text );
-				if ( highestTextID[report] < text.ID )
-					highestTextID[report] = text.ID;
+				if ( highestReportsTextID[report] < text.ID )
+					highestReportsTextID[report] = text.ID;
 			}
 		}
 	}
