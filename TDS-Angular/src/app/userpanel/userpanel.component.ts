@@ -39,6 +39,8 @@ export class UserpanelComponent implements OnInit {
             rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestions, "syncSuggestions" );
             rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionText, "syncSuggestionText" );
             rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionTexts, "syncSuggestionTexts" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionVote, "syncSuggestionVote" );
+            rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionVotes, "syncSuggestionVotes" );
             rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionState, "syncSuggestionState" );
             rage.Client.listen( UserpanelSuggestionsComponent.syncSuggestionRemove, "syncSuggestionRemove" );
         } 

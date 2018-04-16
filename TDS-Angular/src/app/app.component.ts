@@ -40,6 +40,10 @@ export class AppComponent implements OnInit {
         this.opened[menu] = false;
     }
 
+    static syncMyName( name: string ) {
+        this.Settings.myName = name;
+    }
+
     static syncLanguage( language: "GERMAN" | "ENGLISH" ) {
         this.Settings.myLanguage = language;
     }
@@ -53,12 +57,14 @@ export class AppComponent implements OnInit {
     }
 
     public static Settings: AppSettings = {
+        myName: "",
         myLanguage: "ENGLISH",
         adminLvl: 4   // TODO: DEBUG!
     };
 }
 
 export interface AppSettings {
+    myName: string;
     myLanguage: "GERMAN" | "ENGLISH";
     adminLvl: number;
 }

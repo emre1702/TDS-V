@@ -18,6 +18,7 @@ import {
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { AngularDraggableModule } from "angular2-draggable";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from "./app.component";
 import { UserpanelComponent } from "./userpanel/userpanel.component";
@@ -61,6 +62,7 @@ import { UserpanelContentDirective } from "./userpanel/content/userpanelcontent.
     MatTooltipModule,
     MatChipsModule,
     MatSelectModule,
+    HttpClientModule,
     RAGEModule
   ],
   entryComponents: [

@@ -28,6 +28,14 @@ mp.events.add( "syncSuggestionRemove", ( suggestionid: number ) => {
     mainbrowserdata.angular.call( `syncSuggestionRemove (${suggestionid});` );
 } );
 
+mp.events.add( "syncSuggestionVotes", ( suggestionvotes: number ) => {
+    mainbrowserdata.angular.call( `syncSuggestionVotes(${suggestionvotes});` );
+} );
+
+mp.events.add( "syncSuggestionVote", ( name: string, vote: number ) => {
+    mainbrowserdata.angular.call( `syncSuggestionVote('${name}', ${vote});` );
+} );
+
 
 // from browser //
 function addTextToSuggestion( suggestionid: number, text: string ) {
@@ -67,5 +75,10 @@ function removeSuggestion( suggestionid: number ) {
 }
 
 function requestSuggestionsByState( state: number ) {
-    mp.events.callRemote( "requestSuggestionsByState", state );
+    mp.events.callRemote( "onClientRequestSuggestionsByState", state );
+}
+
+// vote: 1 = yes, 0 = no, -1 = neither
+function toggleSuggestionVote( suggestionid: number, vote: number ) {
+    mp.events.callRemote( "onClientToggleSuggestionVote", suggestionid, vote );
 }

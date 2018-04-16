@@ -1,8 +1,9 @@
 import { Component, Input, ViewChild, OnDestroy, OnInit, Output, EventEmitter } from "@angular/core";
 import { UserpanelComponent } from "../userpanel.component";
 import { RAGE } from "../../rageconnector/rageconnector.service";
-import { MatInput, MatChipListChange, MatChip, MatChipList, MatSelect } from "@angular/material";
+import { MatInput, MatChipListChange, MatChip, MatChipList, MatSelect, MatIconRegistry } from "@angular/material";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { DomSanitizer } from "@angular/platform-browser";
 
 enum SuggestionState {
     OPEN, ACCEPTED, DONE, REJECTED
@@ -19,11 +20,13 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
     myAdminlvl = 0;
     neededAdminlvls: { removeSuggestion: number };
     inSuggestion: number;
+    inSuggestionID: number;
     inCreate = false;
     selectedBadge: string;
     selectedState = "opened";
     lastSelectedState = "opened";
     loadingSuggestions = false;
+    myVote: boolean;
     private selectedRow: HTMLElement;
     private selectedRowIndex: number;
     private sortingsSmallToBig = {
@@ -61,18 +64,25 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
       }
     ];
     rowDataTexts: { [SuggestionID: number]: { ID: number, Author: string, Text: string, Date: string }[]} = {
-        1337: [{
-            ID: 1,
-            Author: "Bonus", 
-            Text: "Gar nicht, lel",
-            Date: "17:02:14 - 24.07.2018",
-        },
+        1337: [
         {
-            ID: 2,
+            ID: 1,
             Author: "Solid_Snake",
             Text: "spdafkp sdakpofsa opdfkpa sdkfpoasdkpo kaspof kopsda kpofdskpoa fpodspfads kfpodas kfposdapok faspokasodp kopfaksdopf oipdsakjioasdjiof jioasdjoifjasdiodjfoi sdajoif as",
             Date: "17:02:15 - 24.07.2018",
+        },
+        {
+            ID: 2,
+            Author: "Bonus", 
+            Text: "Gar nicht, lel",
+            Date: "17:02:14 - 24.07.2018",
         }]
+    };
+    suggestionVotes: { [SuggestionID: number]: { [Author: string]: number } } = { 
+        1337: {
+            "Solid_Snake": 1,
+            "Bonus": 0,
+        }
     };
     formOptions: FormGroup;
     @ViewChild("titleInput", { read: MatInput } ) titleInput: MatInput;
@@ -80,12 +90,14 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
     @ViewChild("suggestionTextArea", { read: MatInput } ) suggestionAnswerArea: MatInput;
     @ViewChild("suggestionBadgeList", { read: MatChipList } ) suggestionBadgeList: MatChipList;
 
-    constructor( private rage: RAGE, private fb: FormBuilder ) {
+    constructor( private rage: RAGE, private fb: FormBuilder, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer ) {
         UserpanelSuggestionsComponent.instance = this;
         UserpanelSuggestionsComponent.instance.rage = rage;
         this.formOptions = fb.group( {
             "color": "accent"
         } );
+        iconRegistry.addSvgIcon( "thumb-up", sanitizer.bypassSecurityTrustResourceUrl( "assets/img/thumb_up.svg" ) );
+        iconRegistry.addSvgIcon( "thumb-down", sanitizer.bypassSecurityTrustResourceUrl( "assets/img/thumb_down.svg" ) );
     }
 
     ngOnInit() {
@@ -126,16 +138,25 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
         UserpanelSuggestionsComponent.instance.rowDatas = JSON.parse( suggestions );
         UserpanelSuggestionsComponent.instance.selectedRowIndex = undefined;
         UserpanelSuggestionsComponent.instance.inSuggestion = undefined;
+        UserpanelSuggestionsComponent.instance.inSuggestionID = undefined;
 
         UserpanelSuggestionsComponent.instance.loadingSuggestions = false;
     }
 
     static syncSuggestionText( suggestiontext: string ) {
-        UserpanelSuggestionsComponent.instance.rowDataTexts[UserpanelSuggestionsComponent.instance.inSuggestion].push( JSON.parse( suggestiontext ) );    
+        UserpanelSuggestionsComponent.instance.rowDataTexts[UserpanelSuggestionsComponent.instance.inSuggestionID].push( JSON.parse( suggestiontext ) );    
     }
 
     static syncSuggestionTexts( suggestiontexts: string ) {
-        UserpanelSuggestionsComponent.instance.rowDataTexts[UserpanelSuggestionsComponent.instance.inSuggestion] = JSON.parse( suggestiontexts );
+        UserpanelSuggestionsComponent.instance.rowDataTexts[UserpanelSuggestionsComponent.instance.inSuggestionID] = JSON.parse( suggestiontexts );
+    }
+
+    static syncSuggestionVote( username: string, vote: number ) {
+        UserpanelSuggestionsComponent.instance.suggestionVotes[UserpanelSuggestionsComponent.instance.inSuggestionID][username] = vote;
+    }
+
+    static syncSuggestionVotes( suggestionvotes: string ) {
+        UserpanelSuggestionsComponent.instance.suggestionVotes[UserpanelSuggestionsComponent.instance.inSuggestionID] = JSON.parse( suggestionvotes );
     }
 
     static syncSuggestionState( suggestionid: number, state: SuggestionState ) {
@@ -151,8 +172,10 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
         for ( let index in UserpanelSuggestionsComponent.instance.rowDatas ) {
             if ( UserpanelSuggestionsComponent.instance.rowDatas[index].ID === suggestionid ) {
                 let intindex = parseInt( index, 10 );
-                if ( UserpanelSuggestionsComponent.instance.inSuggestion === intindex )
+                if ( UserpanelSuggestionsComponent.instance.inSuggestion === intindex ) {
                     UserpanelSuggestionsComponent.instance.inSuggestion = undefined;
+                    UserpanelSuggestionsComponent.instance.inSuggestionID = undefined;
+                }
                 if ( UserpanelSuggestionsComponent.instance.selectedRowIndex === intindex )
                     UserpanelSuggestionsComponent.instance.unselectRow();
                 UserpanelSuggestionsComponent.instance.rowDatas.splice( intindex, 1 );    
@@ -219,6 +242,7 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
 
     switchToSuggestion() {
         this.inSuggestion = this.selectedRowIndex;
+        this.inSuggestionID = this.rowDatas[this.inSuggestion].ID;
     }
 
     removeSuggestion() {   
@@ -271,7 +295,7 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
 
         this.rage.Client.call( {
             fn: "addTextToSuggestion",
-            args: [this.rowDatas[this.inSuggestion].ID, text]
+            args: [this.inSuggestionID, text]
         } );
 
         this.suggestionAnswerArea.value = "";
@@ -295,5 +319,25 @@ export class UserpanelSuggestionsComponent implements OnInit, OnDestroy {
             UserpanelSuggestionsComponent.instance.loadingSuggestions = true; 
         } else 
             this.selectedState = this.lastSelectedState;    
+    }
+
+    getVotes( val ) {
+        let amount = 0;
+        for ( let author in this.suggestionVotes[this.inSuggestionID] )
+            if ( this.suggestionVotes[this.inSuggestionID][author] === val )
+                ++amount;
+        return amount;
+    }
+
+    toggleVote( bool: boolean ) {
+        if ( this.myVote === bool )
+            this.myVote = undefined;
+        else 
+            this.myVote = bool;
+
+        this.rage.Client.call( {
+            fn: "toggleSuggestionVote",
+            args: [this.inSuggestionID, this.myVote ? 1 : ( this.myVote === false ? 0 : -1 )]
+        } );
     }
 } 

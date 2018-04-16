@@ -35,22 +35,52 @@
 </div>
 
 <div id="suggestion-view" *ngIf="inSuggestion !== undefined && !inCreate">
-    <div class="suggestion-view-texts-container" *ngIf="rowDataTexts[rowDatas[inSuggestion].ID][0]">
-        <span class="suggestion-view-texts-author-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Author }}</span>
-        <p class="suggestion-view-texts-text-1">{{rowDatas[inSuggestion].Title}}<br>{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Text }}</p>
-        <span class="suggestion-view-texts-date-1">{{ rowDataTexts[rowDatas[inSuggestion].ID][0].Date }}</span>
-    </div>
-    <div *ngFor="let textentry of rowDataTexts[rowDatas[inSuggestion].ID]; let i = index">
-        <div class="suggestion-view-texts-container suggestion-view-texts-container-darker" *ngIf="i != 0 && textentry.Author !== rowDataTexts[rowDatas[inSuggestion].ID][0].Author">
-            <span class="suggestion-view-texts-author-2">{{ textentry.Author }}</span>
-            <p class="suggestion-view-texts-text-2">{{ textentry.Text }}</p>
-            <span class="suggestion-view-texts-date-2">{{ textentry.Date }}</span>
+    <div class="chat-header clearfix">
+        <div class="chat-about">
+            <div class="chat-with">{{ rowDatas[inSuggestion].Title }}</div>
+            <div class="chat-num-messages">
+                {{ rowDatas[inSuggestion].Author }} - {{ getVotes(true) }}|{{ getVotes(false) }} 
+                <div class="float-right">
+                    <button mat-icon-button [ngClass]="myVote == true ? 'vote-for-thumb' : 'vote-neither-thumb'" (click)="toggleVote(true);"><mat-icon svgIcon="thumb-up"></mat-icon></button>
+                    <button mat-icon-button [ngClass]="myVote == false ? 'vote-against-thumb' : 'vote-neither-thumb'" (click)="toggleVote(false);"><mat-icon svgIcon="thumb-down"></mat-icon></button>
+                </div>
+            </div>
         </div>
-        <div class="suggestion-view-texts-container" *ngIf="i != 0 && textentry.Author === rowDataTexts[rowDatas[inSuggestion].ID][0].Author">
-            <span class="suggestion-view-texts-author-1">{{ textentry.Author }}</span>
-            <p class="suggestion-view-texts-text-1">{{ textentry.Text }}</p>
-            <span class="suggestion-view-texts-date-1">{{ textentry.Date }}</span>    
-        </div>
+    </div> <!-- end chat-header -->
+    <div class="chat-history">
+        <ul> 
+            <li>
+                <div class="message-data">
+                    <span class="message-data-name" >{{ rowDataTexts[inSuggestionID][0].Author }}</span> 
+                    <span class="message-data-time" >{{ rowDataTexts[inSuggestionID][0].Date }}</span> &nbsp; &nbsp;         
+                </div>
+                <div class="message my-message vote-for">{{ rowDataTexts[inSuggestionID][0].Text }}</div>
+            </li>
+            <div *ngFor="let textentry of rowDataTexts[inSuggestionID]; let i = index">
+                <li class="clearfix" *ngIf="i != 0 && textentry.Author !== rowDataTexts[inSuggestionID][0].Author" >
+                    <div class="message-data align-right">
+                        <span class="message-data-time" >{{ rowDataTexts[inSuggestionID][i].Date }}</span> &nbsp; &nbsp;
+                        <span class="message-data-name" >{{ rowDataTexts[inSuggestionID][i].Author }}</span>            
+                    </div>
+                    <div [ngSwitch]="suggestionVotes[inSuggestionID][rowDataTexts[inSuggestionID][i].Author]">
+                        <div *ngSwitchCase="1" class="message other-message float-right vote-for">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                        <div *ngSwitchCase="0" class="message other-message float-right vote-against">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                        <div *ngSwitchDefault class="message other-message float-right vote-neither">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                    </div>
+                </li>
+                <li *ngIf="i != 0 && textentry.Author === rowDataTexts[inSuggestionID][0].Author">
+                    <div class="message-data">
+                        <span class="message-data-name">{{ rowDataTexts[inSuggestionID][i].Author }}</span>
+                        <span class="message-data-time">{{ rowDataTexts[inSuggestionID][i].Date }}</span>
+                    </div>
+                    <div [ngSwitch]="suggestionVotes[inSuggestionID][rowDataTexts[inSuggestionID][i].Author]">
+                        <div *ngSwitchCase="1" class="message my-message vote-for">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                        <div *ngSwitchCase="0" class="message my-message vote-against">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                        <div *ngSwitchDefault class="message my-message vote-neither">{{ rowDataTexts[inSuggestionID][i].Text }}</div>
+                    </div>
+                </li>
+            </div>
+        </ul>
     </div>
     <mat-form-field id="suggestion-view-interaction" [color]="formOptions.value.color">
         <textarea matInput #suggestionTextArea required rows="3" id="suggestion-view-text-textarea" [placeholder]="language.answer"></textarea>

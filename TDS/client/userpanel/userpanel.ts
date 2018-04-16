@@ -49,6 +49,7 @@ function addUserpanelFunctionsToAngular() {
     mainbrowserdata.angular.listen( "removeSuggestion", removeSuggestion );
     mainbrowserdata.angular.listen( "addTextToSuggestion", addTextToSuggestion );
     mainbrowserdata.angular.listen( "requestSuggestionsByState", requestSuggestionsByState );
+    mainbrowserdata.angular.listen( "toggleSuggestionVote", toggleSuggestionVote );
 }
 
 mp.keys.bind( Keys.U, false, () => {

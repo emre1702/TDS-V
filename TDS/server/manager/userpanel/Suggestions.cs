@@ -24,6 +24,8 @@ namespace TDS.server.manager.userpanel {
 		public SuggestionState State = SuggestionState.OPEN;
 		[JsonIgnore]
 		public List<SuggestionText> Texts = new List<SuggestionText>();
+		[JsonIgnore]
+		public Dictionary<string, int> VoteByName = new Dictionary<string, int>();
 	}
 
 	[Serializable]
@@ -147,6 +149,7 @@ namespace TDS.server.manager.userpanel {
 			listOfPlayersInSuggestion[suggestion].Add( character );
 			playersInSuggestion[character] = suggestion;
 			NAPI.ClientEvent.TriggerClientEvent( player, "syncSuggestionTexts", JsonConvert.SerializeObject( suggestion.Texts ) );
+			NAPI.ClientEvent.TriggerClientEvent( player, "syncSuggestionVotes", JsonConvert.SerializeObject( suggestion.VoteByName ) );
 		}
 
 		[RemoteEvent( "onClientCloseSuggestion" )]
@@ -176,32 +179,55 @@ namespace TDS.server.manager.userpanel {
 
 		[RemoteEvent( "onClientRemoveSuggestion" )]
 		public static void ClientRemoveSuggestion ( Client player, uint suggestionid ) {
+			if ( !suggestionsByID.ContainsKey( suggestionid ) )
+				return;
+
 			Character character = player.GetChar();
 			if ( character.IsAdminLevel( neededAdminlvls["removeSuggestion"] ) ) {
 				Database.Exec( $"DELETE FROM suggestions WHERE id={suggestionid};" );
 				Database.Exec( $"DELETE FROM suggestiontexts WHERE suggestionid={suggestionid};" );
 
-				for ( int i = 0; i < suggestions.Count; ++i ) {
-					if ( suggestions[i].ID == suggestionid ) {
-						Suggestion suggestion = suggestions[i];
-						suggestions.RemoveAt( i );
-						suggestionsByID.Remove( suggestionid );
-						listOfPlayersInSuggestion.Remove( suggestion );
+				if ( !suggestionsByID.ContainsKey( suggestionid ) )
+					return;
 
-						foreach ( Character target in playersInSuggestionMenu ) {
-							NAPI.ClientEvent.TriggerClientEvent( target.Player, "syncSuggestionRemove", suggestionid );
-						}
+				Suggestion suggestion = suggestionsByID[suggestionid];
+				suggestions.Remove( suggestion );
+				suggestionsByID.Remove( suggestionid );
+				listOfPlayersInSuggestion.Remove( suggestion );
 
-						//SuggestionsLog.Remove( suggestion.ID, character.UID, character.UID == suggestion.AuthorUID ? "Creator" : "Admin Lvl " + character.AdminLvl );
-						return;
-					}
+				foreach ( Character target in playersInSuggestionMenu ) {
+					NAPI.ClientEvent.TriggerClientEvent( target.Player, "syncSuggestionRemove", suggestionid );
 				}
+
+				//SuggestionsLog.Remove( suggestion.ID, character.UID, character.UID == suggestion.AuthorUID ? "Creator" : "Admin Lvl " + character.AdminLvl );
 			}
 		}
 
-		[RemoteEvent( "requestSuggestionsByState" )]
+		[RemoteEvent( "onClientRequestSuggestionsByState" )]
 		public static void RequestSuggestionsByState ( Client player, uint state ) {
 			SendPlayerSuggestions( player, (SuggestionState)state );
+		}
+
+		// vote: 1 = yes, 0 = no, -1 = neither
+		[RemoteEvent( "onClientToggleSuggestionVote" )]
+		public static void ToggleSuggestionVote ( Client player, uint suggestionid, int vote ) {
+			if ( !suggestionsByID.ContainsKey( suggestionid ) )
+				return;
+
+			Suggestion suggestion = suggestionsByID[suggestionid];
+			bool hadvotedalready = false;
+			if ( suggestion.VoteByName.ContainsKey( player.Name ) )
+				hadvotedalready = true;
+			suggestion.VoteByName[player.Name] = vote;
+
+			foreach ( Character target in listOfPlayersInSuggestion[suggestion] ) {
+				NAPI.ClientEvent.TriggerClientEvent( target.Player, "syncSuggestionVote", player.Name, vote );
+			}
+
+			if ( hadvotedalready )
+				Database.Exec( $"UPDATE suggestionvotes SET vote = {vote} WHERE uid = {player.GetChar().UID} AND suggestionid = {suggestion.ID};" );
+			else
+				Database.Exec( $"INSERT INTO suggestionvotes (suggestionid, uid, vote) VALUES ({suggestion.ID}, {player.GetChar().UID}, {vote});" );
 		}
 
 		private async static void LoadSuggestionsData () {
@@ -234,6 +260,13 @@ namespace TDS.server.manager.userpanel {
 				suggestion.Texts.Add( text );
 				if ( highestSuggestionsTextID[suggestion] < text.ID )
 					highestSuggestionsTextID[suggestion] = text.ID;
+			}
+
+			DataTable votes = await Database.ExecResult( "SELECT * FROM suggestionvotes;" );
+			foreach ( DataRow row in votes.Rows ) {
+				Suggestion suggestion = suggestionsByID[Convert.ToUInt32( row["suggestionid"] )];
+				string name = Account.GetNameByUID( Convert.ToUInt32( row["uid"] ) );
+				suggestion.VoteByName[name] = Convert.ToByte( row["vote"] );
 			}
 		}
 	}
