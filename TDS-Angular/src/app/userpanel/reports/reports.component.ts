@@ -49,6 +49,12 @@ export class UserpanelReportsComponent implements OnInit, OnDestroy {
             Author: "Solid_Snake",
             Text: "spdafkp sdakpofsa opdfkpa sdkfpoasdkpo kaspof kopsda kpofdskpoa fpodspfads kfpodas kfposdapok faspokasodp kopfaksdopf oipdsakjioasdjiof jioasdjoifjasdiodjfoi sdajoif as",
             Date: "17:02:15 - 24.07.2018",
+        },
+        {
+            ID: 3,
+            Author: "Bonus",
+            Text: "spdafkp sdakpofsa opdfkpa sdkfpoasdkpo kaspof kopsda kpofdskpoa fpodspfads kfpodas kfposdapok faspokasodp kopfaksdopf oipdsakjioasdjiof jioasdjoifjasdiodjfoi sdajoif as",
+            Date: "17:02:15 - 24.07.2018",
         }]
     };
     forMinAdminlvl = 4;

@@ -28,22 +28,39 @@
 </div>
 
 <div id="report-view" *ngIf="inReport !== undefined && !inCreate">
-    <div class="report-view-texts-container">
-        <span class="report-view-texts-author-1">{{ rowDataTexts[rowDatas[inReport].ID][0].Author }}</span>
-        <p class="report-view-texts-text-1">{{rowDatas[inReport].Title}}<br>{{ rowDataTexts[rowDatas[inReport].ID][0].Text }}</p>
-        <span class="report-view-texts-date-1">{{ rowDataTexts[rowDatas[inReport].ID][0].Date }}</span>
-    </div>
-    <div *ngFor="let textentry of rowDataTexts[rowDatas[inReport].ID]; let i = index">
-        <div class="report-view-texts-container report-view-texts-container-darker" *ngIf="i != 0 && textentry.Author !== rowDataTexts[rowDatas[inReport].ID][0].Author">
-            <span class="report-view-texts-author-2">{{ textentry.Author }}</span>
-            <p class="report-view-texts-text-2">{{ textentry.Text }}</p>
-            <span class="report-view-texts-date-2">{{ textentry.Date }}</span>
-        </div>
-        <div class="report-view-texts-container" *ngIf="i != 0 && textentry.Author === rowDataTexts[rowDatas[inReport].ID][0].Author">
-            <span class="report-view-texts-author-1">{{ textentry.Author }}</span>
-            <p class="report-view-texts-text-1">{{ textentry.Text }}</p>
-            <span class="report-view-texts-date-1">{{ textentry.Date }}</span>    
-        </div>
+    <div class="chat-header clearfix">
+      
+      <div class="chat-about">
+        <div class="chat-with">{{ rowDatas[inReport].Title }}</div>
+        <div class="chat-num-messages">{{ rowDatas[inReport].Author }} ({{ rowDataTexts[rowDatas[inReport].ID].length }})</div>
+      </div>
+    </div> <!-- end chat-header -->
+    <div class="chat-history">
+        <ul> 
+            <li>
+                <div class="message-data">
+                    <span class="message-data-name" >{{ rowDataTexts[rowDatas[inReport].ID][0].Author }}</span> 
+                    <span class="message-data-time" >{{ rowDataTexts[rowDatas[inReport].ID][0].Date }}</span> &nbsp; &nbsp;         
+                </div>
+                <div class="message my-message">{{ rowDataTexts[rowDatas[inReport].ID][0].Text }}</div>
+            </li>
+            <div *ngFor="let textentry of rowDataTexts[rowDatas[inReport].ID]; let i = index">
+                <li class="clearfix" *ngIf="i != 0 && textentry.Author !== rowDataTexts[rowDatas[inReport].ID][0].Author" >
+                    <div class="message-data align-right">
+                        <span class="message-data-time" >{{ rowDataTexts[rowDatas[inReport].ID][i].Date }}</span> &nbsp; &nbsp;
+                        <span class="message-data-name" >{{ rowDataTexts[rowDatas[inReport].ID][i].Author }}</span>            
+                    </div>
+                    <div class="message other-message float-right">{{ rowDataTexts[rowDatas[inReport].ID][i].Text }}</div>
+                </li>
+                <li *ngIf="i != 0 && textentry.Author === rowDataTexts[rowDatas[inReport].ID][0].Author">
+                    <div class="message-data">
+                        <span class="message-data-name">{{ rowDataTexts[rowDatas[inReport].ID][i].Author }}</span>
+                        <span class="message-data-time">{{ rowDataTexts[rowDatas[inReport].ID][i].Date }}</span>
+                    </div>
+                    <div class="message my-message">{{ rowDataTexts[rowDatas[inReport].ID][i].Text }}</div>
+                </li>
+            </div>
+        </ul>
     </div>
     <mat-form-field id="report-view-interaction" [color]="formOptions.value.color">
         <textarea matInput #reportTextArea required rows="3" id="report-view-text-textarea" [placeholder]="language.answer"></textarea>

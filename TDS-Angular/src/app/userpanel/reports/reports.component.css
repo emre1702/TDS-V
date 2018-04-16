@@ -128,45 +128,104 @@ td:last-child {
     background: var(--supporter);    
 }
 
-.report-view-texts-container {
-    border: 2px solid var(--primary-color);
-    background: var(--secondary-color-gradient);
-    border-radius: 5px;
-    padding: 5px;
-    padding-bottom: 15px;
-    margin: 5px 0;
-    margin-left: 5px;   
+.chat-header {
+    padding: 20px;
+    border-bottom: 2px solid white;
 }
-
-.report-view-texts-container-darker {
-    background: var(--secondary-color-gradient-darker);
-    border-color: #ccc;   
-}
-
-.report-view-texts-author-1 {
+.chat-about {
     float: left;
-    color: #aaa;
-    margin-right: 20px;
-    border-radius: 50%;
+    padding-left: 10px;
+    margin-top: 6px;
 }
 
-.report-view-texts-author-2 {
+.chat-with {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.chat-num-messages {
+    color: wheat;
+}
+
+.chat-history {
+    padding: 10px 10px 10px;
+    border-bottom: 2px solid white;
+    overflow-y: scroll;
+    max-height: 50%;
+}
+
+.chat-history > ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+    
+.message-data {
+    margin-bottom: 15px;
+}
+
+.message-data-time {
+    color: lighten(gray, 8%);
+    padding-left: 6px;
+}
+
+.message {      
+    color: white;
+    padding: 18px 20px;
+    line-height: 26px;
+    font-size: 16px;
+    border-radius: 7px;
+    margin-bottom: 30px;
+    width: 90%;
+    position: relative;
+}
+
+.message:after {
+    bottom: 100%;
+    left: 7%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: green;
+    border-width: 10px;
+    margin-left: -10px;
+}
+
+.my-message {
+    background: rgba(0, 128, 0, 0.637);
+}
+
+.other-message {
+    background: rgba(0, 0, 255, 0.637);
+}
+
+.other-message:after {
+    border-bottom-color: rgba(0, 0, 255, 0.637);
+    left: 93%;
+}
+
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.float-right {
     float: right;
-    color: #999;
-    margin-left: 20px;
-    margin-right:0;
 }
 
-.report-view-texts-date-1 {
-    float: right;
-    color: #aaa;
-    font-size: 0.8em;
-}
-
-.report-view-texts-date-2 {
-    float: left;
-    color: #999;
-    font-size: 0.8em;
+#report-view {
+    height: 100%;
 }
 
 #report-view-interaction {
