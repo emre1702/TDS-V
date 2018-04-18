@@ -5,7 +5,7 @@ let msgAnimatedOut = false;
 let msgBgColor = 0;
 
 mp.events.add("ShowMidsizedMessage", (title, message, time = 5000) => {
-    if (midsizedMessageScaleform == null) midsizedMessageScaleform = new messageScaleform("midsized_message");
+    if ( midsizedMessageScaleform == null ) midsizedMessageScaleform = new BasicScaleform("midsized_message");
     midsizedMessageScaleform.callFunction("SHOW_MIDSIZED_MESSAGE", title, message);
 
     msgInit = Date.now();
@@ -14,7 +14,7 @@ mp.events.add("ShowMidsizedMessage", (title, message, time = 5000) => {
 });
 
 mp.events.add("ShowMidsizedShardMessage", (title, message, bgColor, useDarkerShard, condensed, time = 5000) => {
-    if (midsizedMessageScaleform == null) midsizedMessageScaleform = new messageScaleform("midsized_message");
+    if ( midsizedMessageScaleform == null ) midsizedMessageScaleform = new BasicScaleform("midsized_message");
     midsizedMessageScaleform.callFunction("SHOW_SHARD_MIDSIZED_MESSAGE", title, message, bgColor, useDarkerShard, condensed);
 
     msgInit = Date.now();

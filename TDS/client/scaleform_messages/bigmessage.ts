@@ -4,7 +4,7 @@ let bigMsgDuration = 5000;
 let bigMsgAnimatedOut = false;
 
 mp.events.add("ShowWeaponPurchasedMessage", (title, weaponName, weaponHash, time = 5000) => {
-    if (bigMessageScaleform == null) bigMessageScaleform = new messageScaleform("mp_big_message_freemode");
+    if ( bigMessageScaleform === null ) bigMessageScaleform = new BasicScaleform("mp_big_message_freemode");
     bigMessageScaleform.callFunction("SHOW_WEAPON_PURCHASED", title, weaponName, weaponHash);
 
     bigMsgInit = Date.now();
@@ -13,7 +13,7 @@ mp.events.add("ShowWeaponPurchasedMessage", (title, weaponName, weaponHash, time
 });
 
 mp.events.add("ShowPlaneMessage", (title, planeName, planeHash, time = 5000) => {
-    if (bigMessageScaleform == null) bigMessageScaleform = new messageScaleform("mp_big_message_freemode");
+    if ( bigMessageScaleform === null ) bigMessageScaleform = new BasicScaleform("mp_big_message_freemode");
     bigMessageScaleform.callFunction("SHOW_PLANE_MESSAGE", title, planeName, planeHash);
 
     bigMsgInit = Date.now();
@@ -22,16 +22,25 @@ mp.events.add("ShowPlaneMessage", (title, planeName, planeHash, time = 5000) => 
 });
 
 mp.events.add("ShowShardMessage", (title, message, titleColor, bgColor, time = 5000) => {
-    if (bigMessageScaleform == null) bigMessageScaleform = new messageScaleform("mp_big_message_freemode");
+    if ( bigMessageScaleform === null ) bigMessageScaleform = new BasicScaleform("mp_big_message_freemode");
     bigMessageScaleform.callFunction("SHOW_SHARD_CENTERED_MP_MESSAGE", title, message, titleColor, bgColor);
 
     bigMsgInit = Date.now();
     bigMsgDuration = time;
     bigMsgAnimatedOut = false;
-});
+} );
+
+mp.events.add( "ShowShardWastedMessage", ( time = 5000 ) => {
+    if ( bigMessageScaleform === null ) bigMessageScaleform = new BasicScaleform( "mp_big_message_freemode" );
+    bigMessageScaleform.callFunction( "SHOW_WASTED_MP_MESSAGE" );
+
+    bigMsgInit = Date.now();
+    bigMsgDuration = time;
+    bigMsgAnimatedOut = false;
+} );
 
 mp.events.add("render", () => {
-    if (bigMessageScaleform != null) {
+    if (bigMessageScaleform !== null) {
         bigMessageScaleform.renderFullscreen();
 
         if (bigMsgInit > 0 && Date.now() - bigMsgInit > bigMsgDuration) {

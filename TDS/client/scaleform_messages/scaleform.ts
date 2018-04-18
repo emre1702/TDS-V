@@ -1,4 +1,6 @@
 class BasicScaleform {
+    private handle: number;
+
     constructor(scaleformName) {
         this.handle = mp.game.graphics.requestScaleformMovie(scaleformName);
         while (!mp.game.graphics.hasScaleformMovieLoaded(this.handle)) mp.game.wait(0);
@@ -41,5 +43,3 @@ class BasicScaleform {
         mp.game.graphics.setScaleformMovieAsNoLongerNeeded(this.handle);
     }
 }
-
-exports = BasicScaleform;
