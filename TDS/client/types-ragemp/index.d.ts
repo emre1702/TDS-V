@@ -84,6 +84,7 @@ type GameMp = {
     invoke( hash: string, ...args: any[] ): any;
     joaat( text: string ): Hash;
     joaat( textArray: string[] ): Hash[];
+    wait( p0: number ): void;
 }
 
 type GuiMp = {
@@ -2105,6 +2106,7 @@ interface GameGraphicsMp {
     loadTvChannel( tvChannel: Hash ): boolean;
     moveVehicleDecals( p0: any, p1: any ): void;
     notify( text: string ): void;
+    popScaleformMovieFunctionVoid(): void;
     pushScaleformMovieFunction( scaleform: number, functionName: string ): boolean;
     pushScaleformMovieFunctionFromHudComponent( componentIndex: RageEnums.HudComponent | number, functionName: string ): boolean;
     pushScaleformMovieFunctionN( functionName: string ): boolean;
