@@ -28,3 +28,5 @@ TDS.csproj.FileListAbsolute.txt
 TDS/server/manager/database/DatabaseManager.cs
 /TDS/client/node_modules/
 
+/TDS-CP-Server/bin/Debug/netcoreapp2.0
+/TDS-CP-Server/obj

@@ -95,7 +95,7 @@
 			try {
 				player.Name = player.SocialClubName;
 				if ( socialClubNameBanDict.ContainsKey( player.SocialClubName ) || addressBanDict.ContainsKey( player.Address ) ) {
-					DataTable result = await Database.ExecPreparedResult( "SELECT * FROM ban WHERE socialclubname = @SCN OR address = @address", new Dictionary<string, string> {
+					DataTable result = await Database.ExecPreparedResult( "SELECT * FROM ban WHERE socialclubname = @scn OR address = @address", new Dictionary<string, string> {
 						{
 							"@scn", player.SocialClubName
 						}, {

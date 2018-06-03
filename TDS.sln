@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS", "TDS\TDS.csproj", "{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSCPServer", "TDS-CP-Server\TDSCPServer.csproj", "{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Server|x64.ActiveCfg = Release|Any CPU
 		{117DB6A4-436C-4EE6-A92C-F8F165BF7BFB}.Server|x64.Build.0 = Release|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Release|x64.Build.0 = Release|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Server|x64.ActiveCfg = Debug|Any CPU
+		{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}.Server|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

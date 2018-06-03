@@ -1172,15 +1172,12 @@
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "C:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\TDS.csproj",
+      "projectUniqueName": "B:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\TDS.csproj",
       "projectName": "TDS",
-      "projectPath": "C:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\TDS.csproj",
+      "projectPath": "B:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\TDS.csproj",
       "packagesPath": "C:\\Users\\EmreKara\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\obj\\",
+      "outputPath": "B:\\Users\\EmreKara\\Desktop\\Tools\\GitHub\\TDS-V\\TDS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
