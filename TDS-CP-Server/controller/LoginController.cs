@@ -11,12 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TDSCPServer.controller
 {
-    [Authorize]
     [Route("[controller]")]
     public class LoginController : Controller
     {
-
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> AuthenticateAsync([FromBody]UserData data)
         {
@@ -43,13 +40,6 @@ namespace TDSCPServer.controller
                 uid = data.UID,
                 token = tokenstring
             });
-        }
-
-        public IActionResult Index()
-        {
-            Database context = HttpContext.RequestServices.GetService(typeof(Database)) as Database;
-
-            return View();
         }
     }
 }
