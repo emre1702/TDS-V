@@ -16,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private refreshUsernames() {
         if (this.auth.isAuthenticated()) {
-            this.http.get(this.globaldata.apiUrl + "/User").subscribe((usernames: string[]) => {
+            this.http.get(this.globaldata.apiUrl + "/User/names").subscribe((usernames: string[]) => {
                 this.globaldata.userNames = usernames;
             });
         }
