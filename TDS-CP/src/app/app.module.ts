@@ -15,7 +15,7 @@ import {
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
 
-import { SettingsService } from "./shared/settings.service";
+import { GlobalDataService } from "./shared/globaldata.service";
 import { LoginComponent } from "./login/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -60,7 +60,7 @@ export function getToken() {
         MatProgressSpinnerModule
     ],
     providers: [
-        SettingsService,
+        GlobalDataService,
         JwtHelperService,
         LoadingService,
         AuthService,
