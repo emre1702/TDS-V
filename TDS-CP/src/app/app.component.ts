@@ -10,7 +10,7 @@ import { AuthService } from "./auth/auth.service";
 })
 export class AppComponent implements OnInit, OnDestroy {
     title = "TDS-CP";
-    private refreshUsernamesTimeout: NodeJS.Timer;
+    private refreshUsernamesTimeout: number;
 
     constructor(private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) {}
 
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.refreshUsernamesTimeout = setTimeout(this.refreshUsernames, 30 * 1000);
+        this.refreshUsernamesTimeout = setTimeout(this.refreshUsernames.bind(this), 30 * 1000);
         this.refreshUsernames();
     }
 
