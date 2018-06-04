@@ -21,33 +21,31 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { AngularDraggableModule } from "angular2-draggable";
 import { JwtHelperService, JWT_OPTIONS, JwtModule } from "@auth0/angular-jwt";
-import { ROUTES } from "./app.routes";
-import { HomeComponent } from "./home/home.component";
+import { appRouter } from "./app.router";
 import { LoadingComponent } from "./loading/loading.component";
 import { LoadingService } from "./loading/loading.service";
-import { AuthGuardService } from "./auth/auth-guard.service";
 import { AuthService } from "./auth/auth.service";
+import { HomeModule } from "./home/home.module";
+
+export function getToken() {
+    return localStorage.getItem("token");
+}
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
-        HomeComponent,
         LoadingComponent
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        RouterModule.forRoot(
-            ROUTES
-        ),
+        appRouter,
         AngularDraggableModule,
         JwtModule.forRoot({
             config: {
-                tokenGetter: () => {
-                    return localStorage.getItem("token");
-                },
+                tokenGetter: getToken,
                 whitelistedDomains: ["localhost:5000"],
                 skipWhenExpired: true
             }
@@ -66,7 +64,6 @@ import { AuthService } from "./auth/auth.service";
         JwtHelperService,
         LoadingService,
         AuthService,
-        AuthGuardService,
         {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 4000, horizontalPosition: "center", verticalPosition: "bottom", panelClass: "snackBar"}}
     ],
     bootstrap: [AppComponent]
