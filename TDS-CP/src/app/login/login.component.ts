@@ -1,7 +1,7 @@
 import { Component, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators, NgForm } from "@angular/forms";
 import { HttpClient, HttpHeaders, HttpRequest } from "@angular/common/http";
-import { SettingsService } from "../shared/settings.service";
+import { GlobalDataService } from "../shared/globaldata.service";
 import { Router } from "@angular/router";
 import { EventEmitter } from "events";
 import { MatSnackBar } from "@angular/material";
@@ -19,7 +19,7 @@ export class LoginComponent {
         password: new FormControl("", [Validators.required, Validators.minLength(3), Validators.maxLength(100)])
     });
 
-    constructor(private http: HttpClient, private snackBar: MatSnackBar, private settings: SettingsService, private loading: LoadingService, private router: Router) { }
+    constructor(private http: HttpClient, private snackBar: MatSnackBar, private settings: GlobalDataService, private loading: LoadingService, private router: Router) { }
 
     onSubmit(form: NgForm) {
         this.loading.show();

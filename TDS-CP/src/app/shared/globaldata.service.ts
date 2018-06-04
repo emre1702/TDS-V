@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable()
-export class SettingsService {
+export class GlobalDataService {
     public readonly apiUrl = "http://localhost:5000";
+    public userNames: string[] = [];
 }
