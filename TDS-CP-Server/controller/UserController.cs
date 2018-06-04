@@ -10,9 +10,10 @@ namespace TDSCPServer.controller
 {
 
     [Authorize]
+    [Route("[controller]")]
     public class UserController : Controller
     {
-        [HttpGet("/names")]
+        [HttpGet("names")]
         public async Task<IEnumerable<string>> GetUsernames()
         {
             DataTable result = await Database.ExecResult("SELECT name FROM playeronline");
