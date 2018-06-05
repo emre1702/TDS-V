@@ -27,7 +27,8 @@ namespace TDS.server.manager.utility {
 		public static Dictionary<Client, List<OfflineMessage>> PlayerOfflineMessages = new Dictionary<Client, List<OfflineMessage>>();
 
 		public static void AddOfflineMessage ( uint uid, string message, string by ) {
-			Database.ExecPrepared( $"INSERT INTO offlinemsg (uid, message, by) VALUES ({uid}, @MESSAGE@, @BY@);", new Dictionary<string, string> {
+            // TODO: "by" should be UID, when non-user just use negative values
+            Database.ExecPrepared( $"INSERT INTO offlinemsg (uid, message, by) VALUES ({uid}, @MESSAGE@, @BY@);", new Dictionary<string, string> {
 				{ "@MESSAGE@", message },
 				{ "@BY@", by }
 			} );
@@ -40,9 +41,10 @@ namespace TDS.server.manager.utility {
 			PlayerOfflineMessages[player] = new List<OfflineMessage>();
 			if ( table.Rows.Count > 0 ) {
 				foreach ( DataRow row in table.Rows ) {
+                    // TODO: "by" should be UID, when non-user just use negative values
 					OfflineMessage msg = new OfflineMessage( Convert.ToString( row["message"] ), Convert.ToString( row["by"] ) );
 					PlayerOfflineMessages[player].Add( msg );
-					if ( Convert.ToSByte( row["loadedonce"] ) == 0 ) {
+					if ( !Convert.ToBoolean( row["loadedonce"] ) ) {
 						++newones;
 						msg.FirstTimeLoaded = true;
 					}
