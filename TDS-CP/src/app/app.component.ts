@@ -1,33 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { GlobalDataService } from "./shared/globaldata.service";
-import { HttpClient } from "@angular/common/http";
-import { AuthService } from "./auth/auth.service";
+import { Component } from "@angular/core";
 
 @Component({
     selector: "app-root",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.css"]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
     title = "TDS-CP";
-    private refreshUsernamesTimeout: number;
-
-    constructor(private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) {}
-
-    private refreshUsernames() {
-        if (this.auth.isAuthenticated()) {
-            this.http.get(this.globaldata.apiUrl + "/User/names").subscribe((usernames: string[]) => {
-                this.globaldata.userNames = usernames;
-            });
-        }
-    }
-
-    ngOnInit() {
-        this.refreshUsernamesTimeout = setTimeout(this.refreshUsernames.bind(this), 30 * 1000);
-        this.refreshUsernames();
-    }
-
-    ngOnDestroy() {
-        clearTimeout(this.refreshUsernamesTimeout);
-    }
 }
