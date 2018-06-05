@@ -13,8 +13,8 @@
 
 
 -- Exportiere Datenbank Struktur für tdsv
-CREATE DATABASE IF NOT EXISTS `tdsv` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `tdsv`;
+CREATE DATABASE IF NOT EXISTS `tdsworld` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `tdsworld`;
 
 -- Exportiere Struktur von Tabelle tdsv.ban
 CREATE TABLE IF NOT EXISTS `ban` (
