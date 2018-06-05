@@ -227,7 +227,7 @@ namespace TDS.server.manager.userpanel {
 			if ( hadvotedalready )
 				Database.Exec( $"UPDATE suggestionvotes SET vote = {vote} WHERE uid = {player.GetChar().UID} AND suggestionid = {suggestion.ID};" );
 			else
-				Database.Exec( $"INSERT INTO suggestionvotes (suggestionid, uid, vote) VALUES ({suggestion.ID}, {player.GetChar().UID}, {vote});" );
+				Database.Exec( $"INSERT INTO suggestionvotes (uid, suggestionid, vote) VALUES ({player.GetChar().UID}, {suggestion.ID}, {vote});" );
 		}
 
 		private async static void LoadSuggestionsData () {
@@ -252,7 +252,7 @@ namespace TDS.server.manager.userpanel {
 				SuggestionText text = new SuggestionText {
 					ID = Convert.ToUInt32( row["id"] ),
 					Author = Account.GetNameByUID( Convert.ToUInt32( row["authoruid"] ) ),
-					Text = Convert.ToString( row["title"] ),
+					Text = Convert.ToString( row["text"] ),
 					Date = Convert.ToString( row["date"] )
 				};
 				uint suggestionid = Convert.ToUInt32( row["suggestionid"] );
