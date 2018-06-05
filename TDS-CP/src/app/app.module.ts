@@ -10,7 +10,9 @@ import {
     MatButtonModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MAT_SNACK_BAR_DEFAULT_OPTIONS
+    MAT_SNACK_BAR_DEFAULT_OPTIONS,
+    MatToolbarModule,
+    MatMenuModule
  } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
@@ -26,6 +28,9 @@ import { LoadingComponent } from "./loading/loading.component";
 import { LoadingService } from "./loading/loading.service";
 import { AuthService } from "./auth/auth.service";
 import { HomeModule } from "./home/home.module";
+import { UserOnlineComponent } from "./useronline/useronline.component";
+import { UserOnlineService } from "./useronline/useronline.service";
+import { NavigatorComponent } from "./navigator/navigator.component";
 
 export function getToken() {
     return localStorage.getItem("token");
@@ -35,7 +40,9 @@ export function getToken() {
     declarations: [
         AppComponent,
         LoginComponent,
-        LoadingComponent
+        LoadingComponent,
+        UserOnlineComponent,
+        NavigatorComponent
     ],
     imports: [
         BrowserModule,
@@ -57,13 +64,16 @@ export function getToken() {
         MatButtonModule,
         ReactiveFormsModule,
         MatSnackBarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatToolbarModule,
+        MatMenuModule
     ],
     providers: [
         GlobalDataService,
         JwtHelperService,
         LoadingService,
         AuthService,
+        UserOnlineService,
         {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 4000, horizontalPosition: "center", verticalPosition: "bottom", panelClass: "snackBar"}}
     ],
     bootstrap: [AppComponent]
