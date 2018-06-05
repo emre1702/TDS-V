@@ -154,11 +154,12 @@
 			}
 		}
 
-		public static void PermaBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason ) {
+		public static void PermaBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason, uint targetuid ) {
 			Client admin = admincharacter.Player;
-			Database.ExecPrepared( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +
-				$"(@socialclubname, @address, 0, '{Utility.GetTimespan()}', '{Utility.GetTimestamp()}', {admincharacter.UID}, @reason)",
-				new Dictionary<string, string> {
+			Database.ExecPrepared( $"REPLACE INTO ban (uid, socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +
+				$"({targetuid}, @socialclubname, @address, 0, '{Utility.GetTimespan()}', '{Utility.GetTimestamp()}', {admincharacter.UID}, @reason)",
+
+                new Dictionary<string, string> {
 					{ "@socialclubname", targetname }, { "@address", targetaddress }, { "@reason", reason } }
 			);
 			socialClubNameBanDict[targetname] = true;
@@ -172,10 +173,10 @@
 			/////////
 		}
 
-		public static void TimeBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason, int hours ) {
+		public static void TimeBanPlayer ( Character admincharacter, Client target, string targetname, string targetaddress, string reason, int hours, uint targetuid ) {
 			Client admin = admincharacter.Player;
-			Database.ExecPrepared( $"REPLACE INTO ban (socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES " +
-				$"(@socialclubname, @address, 1, {Utility.GetTimespan()}, '{Utility.GetTimestamp()}', " +
+			Database.ExecPrepared( $"REPLACE INTO ban (uid, socialclubname, address, type, startsec, startoptic, endsec, endoptic, admin, reason) VALUES " +
+				$"({targetuid}, @socialclubname, @address, 1, {Utility.GetTimespan()}, '{Utility.GetTimestamp()}', " +
 				$"{Utility.GetTimespan( hours * 3600 )}, '{Utility.GetTimestamp( hours * 3600 )}', {admincharacter.UID}, @reason)", new Dictionary<string, string> {
 					{ "@socialclubname", targetname },
 					{ "@address", targetaddress },

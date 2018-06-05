@@ -177,9 +177,9 @@
 									Account.UnBanPlayer( character, target, targetname, reason, targetUID );
 #pragma warning restore CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
 								} else if ( hours == -1 ) {
-									Account.PermaBanPlayer( character, target, targetname, targetaddress, reason );
+									Account.PermaBanPlayer( character, target, targetname, targetaddress, reason, targetUID);
 								} else {
-									Account.TimeBanPlayer( character, target, targetname, targetaddress, reason, hours );
+									Account.TimeBanPlayer( character, target, targetname, targetaddress, reason, hours, targetUID);
 								}
 							} else
 								character.SendLangNotification( "adminlvl_not_high_enough" );
