@@ -20,7 +20,7 @@ namespace TDSCPServer
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://*:5000")
+                .UseUrls("http://*:4201")
                 .UseIISIntegration()
                 .Build();
     }
