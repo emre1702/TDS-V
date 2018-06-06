@@ -1,11 +1,20 @@
 import { Injectable } from "@angular/core";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { Router, CanLoad } from "@angular/router";
+import { HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class AuthService implements CanLoad {
+    private headers: HttpHeaders;
 
     constructor(private jwtHelper: JwtHelperService, public router: Router) { }
+
+    getHeaders(): HttpHeaders {
+        if (!this.headers) {
+            this.headers = new HttpHeaders({"Authorization": "Bearer " + localStorage.getItem("token")});
+        }
+        return this.headers;
+    }
 
     public isAuthenticated(): boolean {
         const token = localStorage.getItem("token");

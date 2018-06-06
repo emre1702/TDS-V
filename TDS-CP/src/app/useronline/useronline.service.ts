@@ -18,7 +18,7 @@ export class UserOnlineService implements OnDestroy {
 
     refreshUsernames() {
         if (this.auth.isAuthenticated()) {
-            this.http.get(this.globaldata.apiUrl + "/User/names").subscribe((usernames: string[]) => {
+            this.http.get(this.globaldata.apiUrl + "/User/names", {withCredentials: true, headers: this.auth.getHeaders()}).subscribe((usernames: string[]) => {
                 this.userNamesArray = usernames;
                 this.userNamesArray.sort();
             });

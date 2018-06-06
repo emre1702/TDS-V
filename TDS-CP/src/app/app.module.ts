@@ -53,7 +53,6 @@ export function getToken() {
         JwtModule.forRoot({
             config: {
                 tokenGetter: getToken,
-                whitelistedDomains: ["localhost:5000"],
                 skipWhenExpired: true
             }
         }),
