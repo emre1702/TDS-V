@@ -15,7 +15,7 @@
       "severity": "warn"
     },
     "eofline": false,
-    "forin": true,
+    "forin": false,
     "import-blacklist": [
       true,
       "rxjs/Rx"
