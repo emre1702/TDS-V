@@ -28,8 +28,8 @@ import { LoadingComponent } from "./loading/loading.component";
 import { LoadingService } from "./loading/loading.service";
 import { AuthService } from "./auth/auth.service";
 import { HomeModule } from "./home/home.module";
-import { UserOnlineComponent } from "./useronline/useronline.component";
-import { UserOnlineService } from "./useronline/useronline.service";
+import { PlayerOnlineComponent } from "./playeronline/playeronline.component";
+import { PlayerOnlineService } from "./playeronline/playeronline.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
 
 export function getToken() {
@@ -41,7 +41,7 @@ export function getToken() {
         AppComponent,
         LoginComponent,
         LoadingComponent,
-        UserOnlineComponent,
+        PlayerOnlineComponent,
         NavigatorComponent
     ],
     imports: [
@@ -72,7 +72,7 @@ export function getToken() {
         JwtHelperService,
         LoadingService,
         AuthService,
-        UserOnlineService,
+        PlayerOnlineService,
         {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 4000, horizontalPosition: "center", verticalPosition: "bottom", panelClass: "snackBar"}}
     ],
     bootstrap: [AppComponent]

@@ -1,0 +1,14 @@
+<div style="margin-left: 5px" *ngIf="router.url !== '/login' && playerOnlineArray" class="footer">
+    Player online <span class="badge badge-pill badge-info">{{ playerOnlineArray.length }}</span><br>
+    <span *ngFor="let player of playerOnlineArray; index as i" [style.color]="globaldata.adminLvlColors[player.adminLvl]">
+        <span *ngIf="i != playerOnlineArray.length - 1">{{ player.name }}, </span>
+        <span *ngIf="i == playerOnlineArray.length - 1">{{ player.name }}</span>
+    </span>
+    <div style="margin-top: 10px">
+        <span *ngFor="let rankname of globaldata.adminLvlNames.reverse(); index as i" [style.color]="globaldata.adminLvlColors[globaldata.adminLvlNames.length-i-1]">
+            <span *ngIf="i != globaldata.adminLvlNames.length - 1">{{ rankname }}, </span>
+            <span *ngIf="i == globaldata.adminLvlNames.length - 1">{{ rankname }}</span>
+        </span>
+    </div>
+</div>
+
