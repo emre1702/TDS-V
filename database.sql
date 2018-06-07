@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '-',
-  `targetUID` int(11) NOT NULL DEFAULT '0',
+  `targetuid` int(11) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL,
   `info` text NOT NULL,
   `lobby` varchar(100) NOT NULL,
@@ -145,18 +145,18 @@ CREATE TABLE IF NOT EXISTS `offlinemsg` (
 
 -- Exportiere Struktur von Tabelle tds.player
 CREATE TABLE IF NOT EXISTS `player` (
-  `UID` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `password` varchar(500) NOT NULL,
   `email` varchar(200) NOT NULL,
   `adminlvl` int(11) NOT NULL DEFAULT '0',
   `donatorlvl` int(11) NOT NULL DEFAULT '0',
-  `isVip` tinyint(1) NOT NULL DEFAULT '0',
+  `isvip` tinyint(1) NOT NULL DEFAULT '0',
   `playtime` int(11) NOT NULL DEFAULT '0',
   `mutetime` int(11) NOT NULL DEFAULT '0',
   `money` int(11) NOT NULL DEFAULT '0',
   `registerdate` varchar(50) NOT NULL,
-  PRIMARY KEY (`UID`)
+  PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
@@ -193,16 +193,6 @@ CREATE TABLE IF NOT EXISTS `playeronline` (
   `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List the players online or offline.\r\nUsed for extern usage (control panel).';
-
--- Daten Export vom Benutzer nicht ausgewählt
-
-
--- Exportiere Struktur von Tabelle tds.playersetting
-CREATE TABLE IF NOT EXISTS `playersetting` (
-  `UID` int(11) NOT NULL,
-  `hitsound` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`UID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 
