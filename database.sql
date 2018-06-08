@@ -1,19 +1,20 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server Version:               5.5.5-10.0.10-MariaDB - mariadb.org binary distribution
+-- Server Version:               10.0.10-MariaDB - mariadb.org binary distribution
 -- Server Betriebssystem:        Win64
--- HeidiSQL Version:             8.0.0.4396
+-- HeidiSQL Version:             9.4.0.5125
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
 
 -- Exportiere Datenbank Struktur für tds
 CREATE DATABASE IF NOT EXISTS `tds` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `tds`;
-
 
 -- Exportiere Struktur von Tabelle tds.adminlog
 CREATE TABLE IF NOT EXISTS `adminlog` (
@@ -27,8 +28,6 @@ CREATE TABLE IF NOT EXISTS `adminlog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='type:\r\npermaban = 0\r\ntimeban = 1\r\nunban = 2\r\npermamute = 3\r\ntimemute = 4\r\nunmute = 5\r\nnext = 6\r\nkick = 7\r\nlobbykick = 8\r\npermabanlobby = 9\r\ntimebanlobby = 10 \r\nunbanlobby = 11';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.ban
 CREATE TABLE IF NOT EXISTS `ban` (
   `uid` int(11) NOT NULL,
@@ -45,8 +44,6 @@ CREATE TABLE IF NOT EXISTS `ban` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='type:\r\npermaban = 0\r\ntimeban = 1';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.banhistory
 CREATE TABLE IF NOT EXISTS `banhistory` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -58,8 +55,6 @@ CREATE TABLE IF NOT EXISTS `banhistory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.gang
 CREATE TABLE IF NOT EXISTS `gang` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
@@ -70,8 +65,6 @@ CREATE TABLE IF NOT EXISTS `gang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.gangmember
 CREATE TABLE IF NOT EXISTS `gangmember` (
   `memberuid` int(10) NOT NULL,
@@ -81,8 +74,6 @@ CREATE TABLE IF NOT EXISTS `gangmember` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.lobbyban
 CREATE TABLE IF NOT EXISTS `lobbyban` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -99,8 +90,6 @@ CREATE TABLE IF NOT EXISTS `lobbyban` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='type:\r\npermaban = 0\r\ntimeban = 1';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.lobbybanhistory
 CREATE TABLE IF NOT EXISTS `lobbybanhistory` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -112,13 +101,10 @@ CREATE TABLE IF NOT EXISTS `lobbybanhistory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.log
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(50) NOT NULL DEFAULT '-',
   `targetuid` int(11) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL,
   `info` text NOT NULL,
@@ -128,8 +114,6 @@ CREATE TABLE IF NOT EXISTS `log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='type:\r\nlogin = 0\r\nregister = 1\r\nchat = 2\r\nerror = 3\r\nlobbyowner = 4\r\nlobbyjoin = 5\r\nvip = 6';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.offlinemsg
 CREATE TABLE IF NOT EXISTS `offlinemsg` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -141,8 +125,6 @@ CREATE TABLE IF NOT EXISTS `offlinemsg` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.player
 CREATE TABLE IF NOT EXISTS `player` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
@@ -157,11 +139,9 @@ CREATE TABLE IF NOT EXISTS `player` (
   `money` int(11) NOT NULL DEFAULT '0',
   `registerdate` varchar(50) NOT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.playerarenastats
 CREATE TABLE IF NOT EXISTS `playerarenastats` (
   `uid` int(10) NOT NULL,
@@ -173,8 +153,6 @@ CREATE TABLE IF NOT EXISTS `playerarenastats` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.playermaprating
 CREATE TABLE IF NOT EXISTS `playermaprating` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -185,18 +163,13 @@ CREATE TABLE IF NOT EXISTS `playermaprating` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.playeronline
 CREATE TABLE IF NOT EXISTS `playeronline` (
   `uid` int(10) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List the players online or offline.\r\nUsed for extern usage (control panel).';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.playervehicles
 CREATE TABLE IF NOT EXISTS `playervehicles` (
   `uid` int(10) NOT NULL,
@@ -206,8 +179,6 @@ CREATE TABLE IF NOT EXISTS `playervehicles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.reports
 CREATE TABLE IF NOT EXISTS `reports` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -219,8 +190,6 @@ CREATE TABLE IF NOT EXISTS `reports` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.reportslog
 CREATE TABLE IF NOT EXISTS `reportslog` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -232,8 +201,6 @@ CREATE TABLE IF NOT EXISTS `reportslog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.reporttexts
 CREATE TABLE IF NOT EXISTS `reporttexts` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -245,8 +212,6 @@ CREATE TABLE IF NOT EXISTS `reporttexts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.season
 CREATE TABLE IF NOT EXISTS `season` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -263,8 +228,6 @@ CREATE TABLE IF NOT EXISTS `season` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.suggestions
 CREATE TABLE IF NOT EXISTS `suggestions` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -276,8 +239,6 @@ CREATE TABLE IF NOT EXISTS `suggestions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='state:\r\nopen = 0\r\naccepted = 1\r\ndone = 2\r\nrejected = 3';
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.suggestiontexts
 CREATE TABLE IF NOT EXISTS `suggestiontexts` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -289,8 +250,6 @@ CREATE TABLE IF NOT EXISTS `suggestiontexts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Daten Export vom Benutzer nicht ausgewählt
-
-
 -- Exportiere Struktur von Tabelle tds.suggestionvotes
 CREATE TABLE IF NOT EXISTS `suggestionvotes` (
   `id` int(10) NOT NULL AUTO_INCREMENT,

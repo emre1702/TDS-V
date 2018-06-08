@@ -17,7 +17,6 @@
             public int Index;
 
             public string UID;
-            public string Name;
             public string TargetUID;
             public LogType Type;
             public string Info;
@@ -29,8 +28,7 @@
             }
 
             public void GetValueString () {
-                builder.Append ( $"({UID}, '@name{Index}@', {TargetUID}, '{(int)Type}', '@info{Index}@', '{Lobby}', '{Date}')" );
-                logQueryParameters[$"@name{Index}@"] = Name;
+                builder.Append ( $"({UID}, {TargetUID}, '{(int)Type}', '@info{Index}@', '{Lobby}', '{Date}')" );
                 logQueryParameters[$"@info{Index}@"] = Info;
             }
         }
@@ -39,10 +37,9 @@
             new LogEntry {
                 Index = entries.Count,
                 UID = playername != "-" ? Account.PlayerUIDs[playername].ToString () : "0",
-                Name = playername,
                 TargetUID = targetUID,
                 Type = type,
-                Info = info,
+                Info = playername != "-" ? info : "["+playername+"]"+info,
                 Lobby = lobby,
                 Date = Utility.GetTimestamp()
             };
@@ -51,7 +48,7 @@
 		public static void SaveInDatabase () {
 			int amount = entries.Count;
 			if ( amount > 0 ) {
-                builder.Append ( "INSERT INTO log (uid, name, targetuid, type, info, lobby, date) VALUES " );
+                builder.Append ( "INSERT INTO log (uid, targetuid, type, info, lobby, date) VALUES " );
                 entries[0].GetValueString ();
 				for ( int i = 1; i < entries.Count; i++ ) {
                     builder.Append ( ", " );
