@@ -1,37 +1,48 @@
-<table id="log_entries" class="window-field">
-    <thead>
-        <tr>
-            <th class="not-selectable">ID</th>
-            <th class="not-selectable">Name</th>
-            <th class="not-selectable">Target</th>
-            <th class="not-selectable">Type</th>
-            <th class="not-selectable">Lobby</th>
-            <th class="not-selectable">Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <ng-container *ngFor="let entry of entries">
+<div id="all">
+    <table id="log_entries" class="window-field">
+        <thead>
             <tr>
-                <td>{{ entry.id }}</td>
-                <td>{{ entry.name }}</td>
-                <td>{{ entry.target }}</td>
-                <td>{{ entry.type }}</td>
-                <td>{{ entry.lobby }}</td>
-                <td>{{ entry.date }}</td>
+                <th class="not-selectable">ID</th>
+                <th class="not-selectable">Name</th>
+                <th class="not-selectable">Target</th>
+                <th class="not-selectable">Type</th>
+                <th class="not-selectable">Lobby</th>
+                <th class="not-selectable">Date</th>
             </tr>
-        </ng-container>
-    </tbody>
-</table>
-<div style="clear: both;"></div>
-<div id="right_side">
-    <mat-form-field>
-        <mat-select #logtypeselecter placeholder="Type">
-            <ng-container *ngFor="let type of globaldata.logTypes; index as i">
-                <mat-option *ngIf="globaldata.adminLvl >= globaldata.neededAdminLvlForLogTypes[type]" [value]="i">
-                    {{ type }}
-                </mat-option>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let entry of entries">
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.target }}</td>
+                    <td>{{ globaldata.logTypes[entry.type] }}</td>
+                    <td>{{ entry.lobby }}</td>
+                    <td>{{ entry.date }}</td>
+                </tr>
             </ng-container>
-        </mat-select>
-    </mat-form-field>
-    <button id="request_button" mat-button (click)="requestLogEntries(logtypeselecter.value)">Request</button>
+        </tbody>
+    </table>
+    <div id="right_side">
+        <mat-form-field>
+            <input matInput #nameOnlyInput placeholder="Name only">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput #targetOnlyInput placeholder="Target only">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select #logtypeselecter placeholder="Type">
+                <ng-container *ngFor="let type of globaldata.logTypes; index as i">
+                    <mat-option *ngIf="globaldata.adminLvl >= globaldata.neededAdminLvlForLogTypes[type]" [value]="i">
+                        {{ type }}
+                    </mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput #lobbyOnlyInput placeholder="Lobby only">
+        </mat-form-field>
+        <mat-paginator #paginator style="background: inherit" [length]="amountrows || 0" [pageSize]="globaldata.showLogEntriesPerPage">test</mat-paginator>
+        <button id="request_button" mat-button (click)="requestLogEntries(logtypeselecter.value)">{{ amountrows === undefined ? "Request infos" : "Request" }}</button>
+    </div>
 </div>
