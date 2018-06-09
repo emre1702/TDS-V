@@ -7,7 +7,6 @@ import { LoadingService } from "./loading.service";
     styleUrls: ["./loading.component.css"]
 })
 export class LoadingComponent implements OnInit {
-    @ViewChild("spinner") spinner: ElementRef;
     activated = false;
 
     constructor(private loadingService: LoadingService) { }
