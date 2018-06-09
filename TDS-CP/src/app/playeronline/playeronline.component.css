@@ -1,9 +1,3 @@
 .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    height: auto;
-    width: 100%;
-    /*background-color: var(--primary-color);*/
     color: var(--text-color);
 }
