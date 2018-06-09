@@ -1,11 +1,12 @@
 <mat-toolbar *ngIf="router.url !== '/login'">
     <button mat-button [matMenuTriggerFor]="admin">Admin</button>
     <mat-menu #admin="matMenu">
+        <button mat-menu-item [routerLink]="['account']">Account</button>
+        <button mat-menu-item [routerLink]="['gang']">Gang</button>
         <button mat-menu-item [matMenuTriggerFor]="logs">Logs</button>
-        <button mat-menu-item>Item 2</button>
     </mat-menu>
     <mat-menu #logs="matMenu">
-        <button mat-menu-item>Chat</button>
-        <button mat-menu-item>Login</button>
+        <button mat-menu-item [routerLink]="['adminlogs']">Admin</button>
+        <button mat-menu-item [routerLink]="['logs']">Rest</button>
     </mat-menu>
 </mat-toolbar>
