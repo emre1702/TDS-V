@@ -14,7 +14,7 @@ namespace TDSCPServer.controller
         public int id;
         public string name;
         public string target;
-        public string type;
+        public int type;
         public string info;
         public string lobby;
         public string date;
@@ -24,7 +24,7 @@ namespace TDSCPServer.controller
             id = Convert.ToInt32(row["id"]);
             name = Convert.ToString(row["name"]);
             target = Convert.ToString(row["target"]);
-            type = Convert.ToString(row["type"]);
+            type = Convert.ToInt32(row["type"]);
             info = Convert.ToString(row["info"]);
             lobby = Convert.ToString(row["lobby"]);
             date = Convert.ToString(row["date"]);
@@ -37,23 +37,23 @@ namespace TDSCPServer.controller
     {
         private const int showEntriesPerPage = 25;
 
-        [HttpGet("logs/{type}/amountrows")]
+        [HttpGet("logs/amountrows")]
         public async Task<int> GetLogEntriesAmount(int type)
         {
-            string rowsamountsql = "SELECT TABLE_ROWS AS amount FROM information_schema.tables WHERE table_schema = Database() AND TABLE_NAME = 'log'";
+            string rowsamountsql = $"SELECT Count(id) as count FROM log WHERE type = {type}";
             DataTable rowsamounttable = await Database.ExecResult(rowsamountsql);
             if (rowsamounttable.Rows.Count > 0)
             {
-                return Convert.ToInt32(rowsamounttable.Rows[0]["TABLE_ROWS"]);
+                return Convert.ToInt32(rowsamounttable.Rows[0]["count"]);
             }
             return 0;
         }
 
-        [HttpGet("logs/{type}/{page}")]
+        [HttpGet("logs")]
         public async Task<IEnumerable<LogEntry>> GetLogEntries(int type, int page)
         {
             page = page * showEntriesPerPage;
-            string logsql = $"SELECT log.id, IF(log.uid = 0, log.uid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.type, log.info, log.lobby, log.date FROM log, player, player as targetplayer WHERE log.type = {type} AND (log.uid = 0 OR log.uid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid) GROUP BY log.id LIMIT {page}, {showEntriesPerPage}";
+            string logsql = $"SELECT log.id, IF(log.uid = 0, log.uid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.type, log.info, log.lobby, log.date FROM log, player, player as targetplayer WHERE log.type = {type} AND (log.uid = 0 OR log.uid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid) GROUP BY log.id ORDER BY id DESC LIMIT {page}, {showEntriesPerPage}";
             DataTable table = await Database.ExecResult(logsql);
             List <LogEntry> entries = new List<LogEntry>();
             foreach (DataRow row in table.Rows)
