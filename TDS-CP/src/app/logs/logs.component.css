@@ -1,0 +1,25 @@
+#log_entries {
+    float: left;
+    width: 80%;
+}
+
+th, td {
+    text-align: center;
+    color: var(--text-color);
+}
+
+#right_side {
+    float: right;
+    margin: 5px 5px 5px 5px;
+    display: flex;
+    flex-direction: column;
+    width: calc(20% - 15px);
+    align-items: center;
+    justify-content: center;
+}
+
+#request_button {
+    color: var(--text-color);
+    background: var(--view-color);
+    width: 30%;
+}
