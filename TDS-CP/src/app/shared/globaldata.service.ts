@@ -27,6 +27,8 @@ export class GlobalDataService {
         return localStorage.getItem("adminlvl") || 0;
     }
 
+    public showLogEntriesPerPage = 25;
+
     constructor() {
         if (!GlobalDataService.singleton) {
             GlobalDataService.singleton = this;
