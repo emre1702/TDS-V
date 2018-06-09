@@ -22,7 +22,7 @@ namespace TDSCPServer.controller
         [HttpGet("names")]
         public async Task<IEnumerable<Player>> GetUsernames()
         {
-            DataTable result = await Database.ExecResult("SELECT playeronline.uid, player.name, player.adminlvl FROM playeronline, player WHERE playeronline.uid = player.uid");
+            DataTable result = await Database.ExecResult("SELECT player.name, player.adminlvl FROM playeronline, player WHERE playeronline.uid = player.uid");
             List<Player> players = new List<Player>();
             if (result != null && result.Rows != null && result.Rows.Count > 0)
             {
