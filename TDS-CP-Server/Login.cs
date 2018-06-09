@@ -26,7 +26,7 @@ namespace TDSCPServer
 
         public static async Task<string> AuthenticateAsync(UserData data)
         {
-            DataTable result = await Database.ExecPreparedResult("SELECT UID, password FROM player WHERE name = @1@", new Dictionary<string, string>
+            DataTable result = await Database.ExecPreparedResult("SELECT uid, adminlvl, password FROM player WHERE name = @1@", new Dictionary<string, string>
             {
                 { "@1@", data.Username }
             });
@@ -40,7 +40,8 @@ namespace TDSCPServer
             {
                 return "Wrong password.";
             }
-            data.UID = Convert.ToUInt32(row["UID"]);
+            data.UID = Convert.ToUInt32(row["uid"]);
+            data.AdminLvl = Convert.ToUInt32(row["adminlvl"]);
 
             return null;
         }

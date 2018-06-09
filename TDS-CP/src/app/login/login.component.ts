@@ -25,10 +25,10 @@ export class LoginComponent {
 
     onSubmit(form: NgForm) {
         this.loading.show();
-        this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {uid: number, token: string, error: string}) => {
+        this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {token: string, adminlvl: number, error: string}) => {
             if (data.token) {
-                localStorage.setItem("UID", data.uid.toString());
                 localStorage.setItem("token", data.token);
+                localStorage.setItem("adminlvl", data.adminlvl.toString());
                 this.router.navigateByUrl("home");
                 this.playerOnlineService.startRefreshingPlayernames();
             } else {

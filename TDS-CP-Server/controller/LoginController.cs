@@ -38,7 +38,8 @@ namespace TDSCPServer.controller
             return Ok(new
             {
                 uid = data.UID,
-                token = tokenstring
+                token = tokenstring,
+                adminlvl = data.AdminLvl
             });
         }
     }

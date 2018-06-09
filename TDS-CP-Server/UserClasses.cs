@@ -7,8 +7,9 @@ namespace TDSCPServer
 {
     public class UserData
     {
-        public uint UID { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public uint UID;
+        public string Username;
+        public string Password;
+        public uint AdminLvl;
     }
 }
