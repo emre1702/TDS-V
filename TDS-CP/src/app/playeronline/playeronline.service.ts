@@ -2,13 +2,18 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { GlobalDataService } from "../shared/globaldata.service";
 import { AuthService } from "../auth/auth.service";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class PlayerOnlineService implements OnDestroy {
     playerOnlineArray: Player[] = [];
     private refreshPlayernamesTimeout: number;
 
-    constructor(private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) { }
+    constructor(private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService, private router: Router) {
+        if (router.url !== "/login") {
+            this.startRefreshingPlayernames();
+        }
+    }
 
     refreshPlayernames() {
         if (this.auth.isAuthenticated()) {
