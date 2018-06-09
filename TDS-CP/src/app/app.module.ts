@@ -27,7 +27,6 @@ import { appRouter } from "./app.router";
 import { LoadingComponent } from "./loading/loading.component";
 import { LoadingService } from "./loading/loading.service";
 import { AuthService } from "./auth/auth.service";
-import { HomeModule } from "./home/home.module";
 import { PlayerOnlineComponent } from "./playeronline/playeronline.component";
 import { PlayerOnlineService } from "./playeronline/playeronline.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
