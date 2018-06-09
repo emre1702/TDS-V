@@ -1,0 +1,25 @@
+#all {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+#navigator {
+    display: table-row;
+    height: 4%;
+}
+
+#body {
+    display: table-row;
+    height: auto;
+    flex-grow: 1;
+}
+
+#playeronline {
+    display: table-row;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+}
