@@ -37,6 +37,7 @@ export class PlayerOnlineService implements OnDestroy {
     ngOnDestroy() {
         if (this.refreshPlayernamesTimeout) {
             clearTimeout(this.refreshPlayernamesTimeout);
+            this.refreshPlayernamesTimeout = undefined;
             this.globaldata.showingPlayername = false;
         }
     }
