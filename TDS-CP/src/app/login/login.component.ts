@@ -24,17 +24,19 @@ export class LoginComponent {
         private playerOnlineService: PlayerOnlineService ) { }
 
     onSubmit(form: NgForm) {
-        this.loading.show();
-        this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {token: string, adminlvl: number, error: string}) => {
-            if (data.token) {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("adminlvl", data.adminlvl.toString());
-                this.router.navigateByUrl("home");
-                this.playerOnlineService.startRefreshingPlayernames();
-            } else {
-                this.snackBar.open(data.error);
-            }
-            this.loading.hide();
-        });
+        if (!this.loading.showing) {
+            this.loading.show();
+            this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {token: string, adminlvl: number, error: string}) => {
+                if (data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("adminlvl", data.adminlvl.toString());
+                    this.router.navigateByUrl("home");
+                    this.playerOnlineService.startRefreshingPlayernames();
+                } else {
+                    this.snackBar.open(data.error);
+                }
+                this.loading.hide();
+            });
+        }
     }
 }
