@@ -1,10 +1,9 @@
 <mat-toolbar *ngIf="router.url !== '/login'">
-    <button mat-button [matMenuTriggerFor]="admin">Admin</button>
-    <mat-menu #admin="matMenu">
-        <button mat-menu-item [routerLink]="['account']">Account</button>
-        <button mat-menu-item [routerLink]="['gang']">Gang</button>
-        <button mat-menu-item [matMenuTriggerFor]="logs">Logs</button>
-    </mat-menu>
+    <button mat-button>Account</button>
+    <button mat-button>Gang</button>
+    <button mat-button *ngIf="globaldata.adminLvl > 0">Admin</button>
+    <button mat-button [matMenuTriggerFor]="logs">Logs</button>
+    <button mat-button (click)="logout()">Logout</button>
     <mat-menu #logs="matMenu">
         <button mat-menu-item [routerLink]="['adminlogs']">Admin</button>
         <button mat-menu-item [routerLink]="['logs']">Rest</button>
