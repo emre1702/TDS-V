@@ -56,7 +56,7 @@ export class GlobalDataService {
         return localStorage.getItem("adminlvl") || 0;
     }
 
-    public showLogEntriesPerPage = 25;
+    public readonly showLogEntriesPerPage = 25;
 
 
     constructor() {
