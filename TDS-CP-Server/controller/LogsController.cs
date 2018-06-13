@@ -20,6 +20,12 @@ namespace TDSCPServer.controller
         public string lobby;
         public string date;
 
+        
+        private static T GetValue<T>(DataRow row, string column)
+        {
+            return row.Table.Columns.Contains(column) ? (T) row[column] : default(T);
+        }
+
         public LogEntry(DataRow row, int type)
         {
             id = Convert.ToInt32(row["id"]);
@@ -27,7 +33,7 @@ namespace TDSCPServer.controller
             target = Convert.ToString(row["target"]);
             this.type = type;
             info = Convert.ToString(row["info"]);
-            lobby = Convert.ToString(row["lobby"]);
+            lobby = GetValue<string>(row, "lobby");
             date = Convert.ToString(row["date"]);
         }
     }
@@ -38,8 +44,53 @@ namespace TDSCPServer.controller
     {
         private const int showEntriesPerPage = 25;
 
-        [HttpGet("logs/amountrows")]
-        public async Task<int> GetLogEntriesAmount(int type, string onlyname = "", string onlytarget = "", string onlylobby = "")
+        [HttpGet("admin/amountrows")]
+        public async Task<int> GetLogEntriesAmountAdmin(int type, string onlyname = "", string onlytarget = "")
+        {
+            string rowsamountsql;
+            if (onlyname == "" && onlytarget == "")
+            {
+                rowsamountsql = $"SELECT Count(id) as count FROM adminlog WHERE type = {type}";
+            }
+            else
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append($"SELECT Count(DISTINCT log.id) as count FROM adminlog as log, player, player as target WHERE log.type = {type}");
+                if (onlyname != "")
+                {
+                    if (onlyname == "0")
+                    {
+                        builder.Append($" AND log.adminuid = 0");
+                    }
+                    else
+                    {
+                        builder.Append($" AND log.adminuid = player.uid AND player.name = '{onlyname}'");
+                    }
+                }
+                if (onlytarget != "")
+                {
+                    if (onlyname == "0")
+                    {
+                        builder.Append($" AND log.targetuid = 0");
+                    }
+                    else
+                    {
+                        builder.Append($" AND log.targetuid = target.uid AND target.name = '{onlytarget}'");
+                    }
+                }
+                rowsamountsql = builder.ToString();
+            }
+            Console.WriteLine(rowsamountsql);
+            DataTable rowsamounttable = await Database.ExecResult(rowsamountsql);
+            if (rowsamounttable.Rows.Count > 0)
+            {
+                return Convert.ToInt32(rowsamounttable.Rows[0]["count"]);
+            }
+            return 0;
+        }
+
+        [HttpGet("rest/amountrows")]
+        public async Task<int> GetLogEntriesAmountRest(int type, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
             string rowsamountsql;
             if (onlyname == "" && onlytarget == "" && onlylobby == "") 
@@ -86,8 +137,35 @@ namespace TDSCPServer.controller
             return 0;
         }
 
-        [HttpGet("logs")]
-        public async Task<IEnumerable<LogEntry>> GetLogEntries(int type, int page, string onlyname = "", string onlytarget = "", string onlylobby = "")
+        [HttpGet("admin")]
+        public async Task<IEnumerable<LogEntry>> GetLogEntriesAdmin(int type, int page, string onlyname = "", string onlytarget = "")
+        {
+            page = page * showEntriesPerPage;
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"SELECT log.id, IF(log.adminuid = 0, log.adminuid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.date FROM adminlog as log, player, player as targetplayer WHERE log.type = {type} AND (log.adminuid = 0 OR log.adminuid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
+            if (onlyname != "")
+            {
+                builder.Append($" AND IF(log.adminuid = 0, log.adminuid, player.name) = '{onlyname}'");
+            }
+            if (onlytarget != "")
+            {
+                builder.Append($" AND IF(log.targetuid = 0, log.targetuid, targetplayer.name) = '{onlytarget}'");
+            }
+            builder.Append($" GROUP BY log.id ORDER BY id DESC LIMIT {page}, {showEntriesPerPage}");
+            string logsql = builder.ToString();
+            Console.WriteLine(logsql);
+            DataTable table = await Database.ExecResult(logsql);
+
+            List<LogEntry> entries = new List<LogEntry>();
+            foreach (DataRow row in table.Rows)
+            {
+                entries.Add(new LogEntry(row, type));
+            }
+            return entries;
+        }
+
+        [HttpGet("rest")]
+        public async Task<IEnumerable<LogEntry>> GetLogEntriesRest(int type, int page, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
             page = page * showEntriesPerPage;
             StringBuilder builder = new StringBuilder();

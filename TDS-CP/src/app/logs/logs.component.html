@@ -1,4 +1,4 @@
-<div id="all">
+<div id="all" *ngIf="logsection != undefined">
     <table id="log_entries" class="window-field">
         <thead>
             <tr>
@@ -6,7 +6,8 @@
                 <th class="not-selectable">Name</th>
                 <th class="not-selectable">Target</th>
                 <th class="not-selectable">Type</th>
-                <th class="not-selectable">Lobby</th>
+                <th class="not-selectable">Info</th>
+                <th class="not-selectable" *ngIf="logsection == globaldata.logSectionEnum.rest">Lobby</th>
                 <th class="not-selectable">Date</th>
             </tr>
         </thead>
@@ -16,8 +17,9 @@
                     <td>{{ entry.id }}</td>
                     <td>{{ entry.name }}</td>
                     <td>{{ entry.target }}</td>
-                    <td>{{ globaldata.logTypes[entry.type] }}</td>
-                    <td>{{ entry.lobby }}</td>
+                    <td>{{ globaldata.logTypes[logsection][entry.type] }}</td>
+                    <td>{{ entry.info }}</td>
+                    <td *ngIf="logsection == globaldata.logSectionEnum.rest">{{ entry.lobby }}</td>
                     <td>{{ entry.date }}</td>
                 </tr>
             </ng-container>
@@ -32,17 +34,17 @@
         </mat-form-field>
         <mat-form-field>
             <mat-select #logtypeselecter placeholder="Type">
-                <ng-container *ngFor="let type of globaldata.logTypes; index as i">
+                <ng-container *ngFor="let type of globaldata.logTypes[logsection]; index as i">
                     <mat-option *ngIf="globaldata.adminLvl >= globaldata.neededAdminLvlForLogTypes[type]" [value]="i">
                         {{ type }}
                     </mat-option>
                 </ng-container>
             </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field *ngIf="logsection == globaldata.logSectionEnum.rest">
             <input matInput #lobbyOnlyInput placeholder="Lobby only">
         </mat-form-field>
-        <mat-paginator #paginator style="background: inherit" [length]="amountrows || 0" [pageSize]="globaldata.showLogEntriesPerPage">test</mat-paginator>
+        <mat-paginator #paginator style="background: inherit" [length]="amountrows || 0" [pageSize]="globaldata.showLogEntriesPerPage" [showFirstLastButtons]="true" [hidePageSize]="true">test</mat-paginator>
         <button id="request_button" mat-button (click)="requestLogEntries(logtypeselecter.value)">{{ amountrows === undefined ? "Request infos" : "Request" }}</button>
     </div>
 </div>
