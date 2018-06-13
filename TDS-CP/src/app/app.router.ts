@@ -6,7 +6,7 @@ import { ModuleWithProviders } from "@angular/core";
 export const router: Routes = [
     { path: "login", component: LoginComponent },
     { path: "home", loadChildren: "src/app/home/home.module#HomeModule", canLoad: [AuthService] },
-    { path: "logs", loadChildren: "src/app/logs/logs.module#LogsModule", canLoad: [AuthService] },
+    { path: "logs/:logtype", loadChildren: "src/app/logs/logs.module#LogsModule", canLoad: [AuthService] },
     { path: "**", redirectTo: "home", canLoad: [AuthService] }
 ];
 
