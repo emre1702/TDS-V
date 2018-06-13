@@ -45,6 +45,6 @@
             <input matInput #lobbyOnlyInput placeholder="Lobby only">
         </mat-form-field>
         <mat-paginator #paginator style="background: inherit" [length]="amountrows || 0" [pageSize]="globaldata.showLogEntriesPerPage" [showFirstLastButtons]="true" [hidePageSize]="true">test</mat-paginator>
-        <button id="request_button" mat-button (click)="requestLogEntries(logtypeselecter.value)">{{ amountrows === undefined ? "Request infos" : "Request" }}</button>
+        <button id="request_button" mat-button (click)="requestLogEntries(logtypeselecter.value)">{{ amountrows === undefined ? "Request amount" : "Load entries" }}</button>
     </div>
 </div>
