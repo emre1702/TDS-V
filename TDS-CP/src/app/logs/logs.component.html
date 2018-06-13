@@ -35,7 +35,7 @@
         <mat-form-field>
             <mat-select #logtypeselecter placeholder="Type">
                 <ng-container *ngFor="let type of globaldata.logTypes[logsection]; index as i">
-                    <mat-option *ngIf="globaldata.adminLvl >= globaldata.neededAdminLvlForLogTypes[type]" [value]="i">
+                    <mat-option *ngIf="globaldata.adminLvl >= globaldata.neededAdminLvlForLogTypes[type]" [value]="type == 'all' ? -1 : i">
                         {{ type }}
                     </mat-option>
                 </ng-container>

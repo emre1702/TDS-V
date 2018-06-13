@@ -50,12 +50,20 @@ namespace TDSCPServer.controller
             string rowsamountsql;
             if (onlyname == "" && onlytarget == "")
             {
-                rowsamountsql = $"SELECT Count(id) as count FROM adminlog WHERE type = {type}";
+                rowsamountsql = "SELECT Count(id) as count FROM adminlog";
+                if (type != -1)
+                {
+                    rowsamountsql += $" WHERE type = {type}";
+                }
             }
             else
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append($"SELECT Count(DISTINCT log.id) as count FROM adminlog as log, player, player as target WHERE log.type = {type}");
+                builder.Append($"SELECT Count(DISTINCT log.id) as count FROM adminlog as log, player, player as target WHERE log.type = " + (type == -1 ? "log.type" : type.ToString()) );
+                if (type != -1)
+                {
+
+                }
                 if (onlyname != "")
                 {
                     if (onlyname == "0")
@@ -95,11 +103,15 @@ namespace TDSCPServer.controller
             string rowsamountsql;
             if (onlyname == "" && onlytarget == "" && onlylobby == "") 
             {
-                rowsamountsql = $"SELECT Count(id) as count FROM log WHERE type = {type}";
+                rowsamountsql = $"SELECT Count(id) as count FROM log";
+                if (type != -1)
+                {
+                    rowsamountsql += $" WHERE type = {type}";
+                }
             } else
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append($"SELECT Count(DISTINCT log.id) as count FROM log, player, player as target WHERE log.type = {type}");
+                builder.Append($"SELECT Count(DISTINCT log.id) as count FROM log, player, player as target WHERE log.type = " + (type == -1 ? "log.type" : type.ToString()));
                 if (onlyname != "")
                 {
                     if (onlyname == "0")
@@ -142,7 +154,7 @@ namespace TDSCPServer.controller
         {
             page = page * showEntriesPerPage;
             StringBuilder builder = new StringBuilder();
-            builder.Append($"SELECT log.id, IF(log.adminuid = 0, log.adminuid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.date FROM adminlog as log, player, player as targetplayer WHERE log.type = {type} AND (log.adminuid = 0 OR log.adminuid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
+            builder.Append($"SELECT log.id, IF(log.adminuid = 0, log.adminuid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.date FROM adminlog as log, player, player as targetplayer WHERE log.type = " + (type == -1 ? "log.type" : type.ToString()) + " AND (log.adminuid = 0 OR log.adminuid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
             if (onlyname != "")
             {
                 builder.Append($" AND IF(log.adminuid = 0, log.adminuid, player.name) = '{onlyname}'");
@@ -169,7 +181,7 @@ namespace TDSCPServer.controller
         {
             page = page * showEntriesPerPage;
             StringBuilder builder = new StringBuilder();
-            builder.Append($"SELECT log.id, IF(log.uid = 0, log.uid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.lobby, log.date FROM log, player, player as targetplayer WHERE log.type = {type} AND (log.uid = 0 OR log.uid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
+            builder.Append($"SELECT log.id, IF(log.uid = 0, log.uid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.lobby, log.date FROM log, player, player as targetplayer WHERE log.type = "+(type == -1 ? "log.type" : type.ToString())+" AND (log.uid = 0 OR log.uid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
             if (onlyname != "")
             {
                 builder.Append($" AND IF(log.uid = 0, log.uid, player.name) = '{onlyname}'");
