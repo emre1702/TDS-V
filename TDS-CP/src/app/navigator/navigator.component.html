@@ -3,6 +3,7 @@
     <button mat-button>Gang</button>
     <button mat-button *ngIf="globaldata.adminLvl > 0">Admin</button>
     <button mat-button [matMenuTriggerFor]="logs">Logs</button>
+    <span id="space"></span>
     <button mat-button (click)="logout()">Logout</button>
     <mat-menu #logs="matMenu">
         <button mat-menu-item [routerLink]="['logs', 'admin']">Admin</button>
