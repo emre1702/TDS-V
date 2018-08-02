@@ -44,6 +44,7 @@ namespace TDSCPServer.controller
     {
         private const int showEntriesPerPage = 25;
 
+        [Authorize(Policy = "Supporter")]
         [HttpGet("admin/amountrows")]
         public async Task<int> GetLogEntriesAmountAdmin(int type, string onlyname = "", string onlytarget = "")
         {
@@ -149,6 +150,7 @@ namespace TDSCPServer.controller
             return 0;
         }
 
+        [Authorize(Policy = "Supporter")]
         [HttpGet("admin")]
         public async Task<IEnumerable<LogEntry>> GetLogEntriesAdmin(int type, int page, string onlyname = "", string onlytarget = "")
         {
