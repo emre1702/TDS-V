@@ -12,8 +12,8 @@
             </tr>
         </thead>
         <tbody>
-            <ng-container *ngFor="let entry of entries">
-                <tr>
+            <ng-container *ngFor="let entry of entries; let i = index" (click)="selected = i">
+                <tr (style)="selected == i ? 'background-color: grey' : ''">
                     <td>{{ entry.id }}</td>
                     <td>{{ entry.author }}</td>
                     <td>{{ entry.title }}</td>
@@ -25,6 +25,12 @@
         </tbody>
     </table>
     <div id="right_side">
-
+        <div *ngIf="selected != null">
+            <button id="view_button" mat-button (click)="viewReport()">View</button>
+            <button (id)="entries[selected].open ? 'open_button' : 'close_button'" mat-button (click)="toggleOpenState()">View</button>
+        </div>
+        <div *ngIf="selected == null">
+            <button id="createbutton" mat-button (click)="createReport()">Create</button>
+        </div>
     </div>
 </div>

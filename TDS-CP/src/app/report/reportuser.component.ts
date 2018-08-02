@@ -11,6 +11,7 @@ import { AuthService } from "../auth/auth.service";
 })
 export class ReportUserComponent implements OnInit {
     private entries: ReportUserEntry[] = [];
+    private selected: number;
 
     constructor(private http: HttpClient, private globaldata: GlobalDataService, private loading: LoadingService, private auth: AuthService) { }
 
@@ -21,6 +22,18 @@ export class ReportUserComponent implements OnInit {
             console.log(data.length);
             this.loading.hide();
         });
+    }
+
+    viewReport() {
+
+    }
+
+    toggleOpenState() {
+        this.entries[this.selected].open = !this.entries[this.selected].open;
+    }
+
+    createReport() {
+
     }
 
 }
