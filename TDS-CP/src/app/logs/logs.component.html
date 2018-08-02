@@ -7,7 +7,7 @@
                 <th class="not-selectable">Target</th>
                 <th class="not-selectable">Type</th>
                 <th class="not-selectable">Info</th>
-                <th class="not-selectable" *ngIf="logsection == globaldata.logSectionEnum.rest">Lobby</th>
+                <th class="not-selectable" *ngIf="logsection == 'rest'">Lobby</th>
                 <th class="not-selectable">Date</th>
             </tr>
         </thead>
@@ -19,7 +19,7 @@
                     <td>{{ entry.target }}</td>
                     <td>{{ globaldata.logTypes[logsection][entry.type] }}</td>
                     <td>{{ entry.info }}</td>
-                    <td *ngIf="logsection == globaldata.logSectionEnum.rest">{{ entry.lobby }}</td>
+                    <td *ngIf="logsection == 'rest'">{{ entry.lobby }}</td>
                     <td>{{ entry.date }}</td>
                 </tr>
             </ng-container>
@@ -41,7 +41,7 @@
                 </ng-container>
             </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="logsection == globaldata.logSectionEnum.rest">
+        <mat-form-field *ngIf="logsection == 'rest'">
             <input matInput #lobbyOnlyInput placeholder="Lobby only">
         </mat-form-field>
         <mat-paginator #paginator style="background: inherit" [length]="amountrows || 0" [pageSize]="globaldata.showLogEntriesPerPage" [showFirstLastButtons]="true" [hidePageSize]="true">test</mat-paginator>
