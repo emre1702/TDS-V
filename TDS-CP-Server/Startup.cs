@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -56,6 +57,14 @@ namespace TDSCPServer
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+            services.AddAuthorization(x =>
+            {
+                x.AddPolicy("Supporter", policy => policy.RequireClaim("AdminLvl", "1", "2", "3"));
+                x.AddPolicy("Administrator", policy => policy.RequireClaim("AdminLvl", "2", "3"));
+                x.AddPolicy("Projectleader", policy => policy.RequireClaim("AdminLvl", "3"));
+                x.AddPolicy("Owner", policy => policy.RequireClaim("UID", 1));
             });
         }
 
