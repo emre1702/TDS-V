@@ -40,8 +40,8 @@ namespace TDSCPServer
             {
                 return "Wrong password.";
             }
-            data.UID = Convert.ToUInt32(row["uid"]);
-            data.AdminLvl = Convert.ToUInt32(row["adminlvl"]);
+            data.UID = Convert.ToInt32(row["uid"]);
+            data.AdminLvl = Convert.ToInt32(row["adminlvl"]);
 
             return null;
         }
