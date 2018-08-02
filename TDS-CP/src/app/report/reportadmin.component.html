@@ -1,0 +1,31 @@
+<div id="all">
+    <table id="report_entries" class="window-field">
+        <thead>
+            <tr>
+                <th class="not-selectable">ID</th>
+                <th class="not-selectable">Name</th>
+                <th class="not-selectable">Target</th>
+                <th class="not-selectable">Type</th>
+                <th class="not-selectable">Info</th>
+                <th class="not-selectable" *ngIf="logsection == globaldata.logSectionEnum.rest">Lobby</th>
+                <th class="not-selectable">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let entry of entries">
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.target }}</td>
+                    <td>{{ globaldata.logTypes[logsection][entry.type] }}</td>
+                    <td>{{ entry.info }}</td>
+                    <td *ngIf="logsection == globaldata.logSectionEnum.rest">{{ entry.lobby }}</td>
+                    <td>{{ entry.date }}</td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <div id="right_side">
+
+    </div>
+</div>

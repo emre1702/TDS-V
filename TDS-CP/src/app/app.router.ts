@@ -7,6 +7,7 @@ export const router: Routes = [
     { path: "login", component: LoginComponent },
     { path: "home", loadChildren: "src/app/home/home.module#HomeModule", canLoad: [AuthService] },
     { path: "logs/:logtype", loadChildren: "src/app/logs/logs.module#LogsModule", canLoad: [AuthService] },
+    { path: "report", loadChildren: "src/app/report/report.module#ReportModule", canLoad: [AuthService] },
     { path: "**", redirectTo: "home", canLoad: [AuthService] }
 ];
 

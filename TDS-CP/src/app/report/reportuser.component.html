@@ -1,0 +1,30 @@
+<div id="all">
+    <table id="report_entries" class="window-field">
+        <thead>
+            <tr>
+                <th class="not-selectable">ID</th>
+                <th class="not-selectable">Author</th>
+                <th class="not-selectable">Title</th>
+                <th class="not-selectable">Amount answers</th>
+                <th class="not-selectable">For Adminlevel</th>
+                <th class="not-selectable">Open</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let entry of entries">
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.author }}</td>
+                    <td>{{ entry.title }}</td>
+                    <td>{{ entry.amountanswers }}</td>
+                    <td>{{ globaldata.adminLvlNames[entry.foradminlvl] }}</td>
+                    <td>{{ entry.open ? "yes" : "no" }}</td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <div id="right_side">
+
+    </div>
+</div>
