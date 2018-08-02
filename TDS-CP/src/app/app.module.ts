@@ -20,7 +20,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { GlobalDataService } from "./shared/globaldata.service";
 import { LoginComponent } from "./login/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
 import { AngularDraggableModule } from "angular2-draggable";
 import { JwtHelperService, JWT_OPTIONS, JwtModule } from "@auth0/angular-jwt";
 import { appRouter } from "./app.router";
