@@ -29,6 +29,7 @@ import { AuthService } from "./auth/auth.service";
 import { PlayerOnlineComponent } from "./playeronline/playeronline.component";
 import { PlayerOnlineService } from "./playeronline/playeronline.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
+import { ReversePipe } from "./reverse.pipe";
 
 export function getToken() {
     return localStorage.getItem("token");
@@ -40,7 +41,8 @@ export function getToken() {
         LoginComponent,
         LoadingComponent,
         PlayerOnlineComponent,
-        NavigatorComponent
+        NavigatorComponent,
+        ReversePipe
     ],
     imports: [
         BrowserModule,
