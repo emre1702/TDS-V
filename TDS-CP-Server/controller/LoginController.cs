@@ -32,7 +32,7 @@ namespace TDSCPServer.controller
                     new Claim("UID", data.UID.ToString()),
                     new Claim("AdminLvl", data.AdminLvl.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenhandler.CreateToken(descriptor);
