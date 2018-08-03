@@ -5,7 +5,7 @@
         <span *ngIf="i == playerOnlineArray.length - 1">{{ player.name }}</span>
     </span>
     <div style="margin-top: 10px">
-        <span *ngFor="let rankname of globaldata.adminLvlNames.reverse(); index as i" [style.color]="globaldata.adminLvlColors[globaldata.adminLvlNames.length-i-1]">
+        <span *ngFor="let rankname of globaldata.adminLvlNames | reverse; index as i" [style.color]="globaldata.adminLvlColors[globaldata.adminLvlNames.length-i-1]">
             <span *ngIf="i != globaldata.adminLvlNames.length - 1">{{ rankname }}, </span>
             <span *ngIf="i == globaldata.adminLvlNames.length - 1">{{ rankname }}</span>
         </span>

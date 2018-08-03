@@ -10,9 +10,9 @@ import { GlobalDataService } from "../shared/globaldata.service";
 })
 export class PlayerOnlineComponent {
     private refreshPlayernamesTimeout: number;
-    private get playerOnlineArray() {
+    get playerOnlineArray() {
         return this.playerOnlineService.playerOnlineArray;
     }
 
-    constructor(private playerOnlineService: PlayerOnlineService, private router: Router, private globaldata: GlobalDataService) { }
+    constructor(private playerOnlineService: PlayerOnlineService, public router: Router, public globaldata: GlobalDataService) { }
 }
