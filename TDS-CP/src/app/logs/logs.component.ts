@@ -17,18 +17,18 @@ export class LogsComponent implements OnInit, OnDestroy {
     @ViewChild("nameOnlyInput") nameOnlyInput: ElementRef;
     @ViewChild("targetOnlyInput") targetOnlyInput: ElementRef;
     @ViewChild("lobbyOnlyInput") lobbyOnlyInput: ElementRef;
-    public entries: LogEntry[] = [];
-    private logsection: string;
+    entries: LogEntry[] = [];
+    logsection: string;
     private page = 0;
     private amountpages = 0;
-    private amountrows: number;
+    amountrows: number;
     private lasttype;
     private lastnameonly: string;
     private lasttargetonly: string;
     private lastlobbyonly: string;
     private navSubscription: Subscription;
 
-    constructor(private http: HttpClient, private router: Router, private auth: AuthService, private loading: LoadingService, private globaldata: GlobalDataService, private route: ActivatedRoute) {
+    constructor(private http: HttpClient, private router: Router, private auth: AuthService, private loading: LoadingService, public globaldata: GlobalDataService, private route: ActivatedRoute) {
     }
 
     ngOnInit() {

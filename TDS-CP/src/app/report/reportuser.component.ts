@@ -10,10 +10,10 @@ import { AuthService } from "../auth/auth.service";
     styleUrls: ["./report.component.css"]
 })
 export class ReportUserComponent implements OnInit {
-    private entries: ReportUserEntry[] = [];
-    private selected: number;
+    entries: ReportUserEntry[] = [];
+    selected: number;
 
-    constructor(private http: HttpClient, private globaldata: GlobalDataService, private loading: LoadingService, private auth: AuthService) { }
+    constructor(private http: HttpClient, public globaldata: GlobalDataService, private loading: LoadingService, private auth: AuthService) { }
 
     ngOnInit() {
         this.loading.show();
