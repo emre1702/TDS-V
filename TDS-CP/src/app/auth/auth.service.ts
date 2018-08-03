@@ -10,10 +10,13 @@ export class AuthService implements CanLoad {
     constructor(private jwtHelper: JwtHelperService, public router: Router) { }
 
     getHeaders(): HttpHeaders {
-        if (!this.headers) {
-            this.headers = new HttpHeaders({"Authorization": "Bearer " + localStorage.getItem("token")});
+        if (this.isAuthenticated()) {
+            if (!this.headers) {
+                this.headers = new HttpHeaders({"Authorization": "Bearer " + localStorage.getItem("token")});
+            }
+            return this.headers;
         }
-        return this.headers;
+        return null;
     }
 
     public isAuthenticated(): boolean {
@@ -23,11 +26,15 @@ export class AuthService implements CanLoad {
 
     canLoad(): boolean {
         if (!this.isAuthenticated()) {
-            console.log("no");
             this.router.navigateByUrl("login");
             return false;
         }
-        console.log("yes");
         return true;
+    }
+
+    public removeAuthentication() {
+        localStorage.removeItem("token");
+        this.headers = null;
+        this.router.navigateByUrl("login");
     }
 }
