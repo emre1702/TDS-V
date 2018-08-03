@@ -30,7 +30,7 @@ namespace TDSCPServer.controller
         [HttpGet("user")] 
         public async Task<List<ReportUserEntry>> GetOwnReports()
         {
-            string uidstr = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UID").Value;
+            string uidstr = User.Claims.FirstOrDefault(c => c.Type == "UID").Value;
             if (uidstr == null)
                 return null;
             int uid = Convert.ToInt32(uidstr);
@@ -61,6 +61,17 @@ namespace TDSCPServer.controller
             Console.WriteLine(list.Count);
 
             return list;
+        }
+
+        [HttpPost("user/toggle_open")]
+        public void ToggleOwnReportOpen(int reportid)
+        {
+            string uidstr = User.Claims.FirstOrDefault(c => c.Type == "UID").Value;
+            if (uidstr == null)
+                return;
+            int uid = Convert.ToInt32(uidstr);
+
+            Database.Exec("UPDATE reports SET open = !open WHERE id = " + reportid + " AND authoruid = "+ uid);
         }
     }
 }
