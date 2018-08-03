@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { GlobalDataService } from "../shared/globaldata.service";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
+import { AuthService } from "../auth/auth.service";
+import { HttpClient } from "../../../node_modules/@angular/common/http";
 
 @Component({
     selector: "app-navigator",
@@ -10,12 +12,12 @@ import { PlayerOnlineService } from "../playeronline/playeronline.service";
 })
 export class NavigatorComponent {
 
-    constructor(private router: Router, private playeronline: PlayerOnlineService, private globaldata: GlobalDataService) { }
+    constructor(public router: Router, private playeronline: PlayerOnlineService, public globaldata: GlobalDataService, private auth: AuthService, private http: HttpClient) { }
 
     logout() {
-        localStorage.removeItem("token");
+        this.auth.removeAuthentication();
+        this.http.post(this.globaldata.apiUrl + "/Logout", {withCredentials: true, header: this.auth.getHeaders()}).subscribe(() => {});
         this.playeronline.ngOnDestroy();
-        this.router.navigateByUrl("login");
     }
 
 }
