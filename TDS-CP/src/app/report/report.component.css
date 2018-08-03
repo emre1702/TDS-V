@@ -27,28 +27,37 @@ mat-paginator {
     margin-top: 30%;
 }
 
+#right_side > * {
+    width: 100%;
+}
+
 #right_side > * > button {
     width: 50%;
+    margin-left: 25%;
     color: var(--text-color);
 }
 
+.selected_row {
+    background: var(--primary-color);
+}
+
 #create_button {
-    margin-top: 10%;
+    margin-top: 5%;
     background: var(--create-color);
 }
 
 #view_button {
-    margin-top: 10%;
+    margin-top: 5%;
     background: var(--view-color);
 }
 
 #open_button {
-    margin-top: 10%;
+    margin-top: 5%;
     background: var(--open-color);
 }
 
 #close_button {
-    margin-top: 10%;
+    margin-top: 5%;
     background: var(--close-color);
 }
 

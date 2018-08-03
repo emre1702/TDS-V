@@ -24,12 +24,13 @@ export class ReportUserComponent implements OnInit {
         });
     }
 
-    viewReport() {
-
-    }
-
     toggleOpenState() {
         this.entries[this.selected].open = !this.entries[this.selected].open;
+        this.http.post(this.globaldata.apiUrl + "/reports/user/toggle_open", null, {params: new HttpParams().set("reportid", this.entries[this.selected].id.toString()), withCredentials: true, headers: this.auth.getHeaders()}).subscribe(() => {});
+    }
+
+    viewReport() {
+
     }
 
     createReport() {
