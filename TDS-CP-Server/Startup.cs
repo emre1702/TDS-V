@@ -64,7 +64,7 @@ namespace TDSCPServer
                 x.AddPolicy("Supporter", policy => policy.RequireClaim("AdminLvl", "1", "2", "3"));
                 x.AddPolicy("Administrator", policy => policy.RequireClaim("AdminLvl", "2", "3"));
                 x.AddPolicy("Projectleader", policy => policy.RequireClaim("AdminLvl", "3"));
-                x.AddPolicy("Owner", policy => policy.RequireClaim("UID", 1));
+                x.AddPolicy("Owner", policy => policy.RequireClaim("UID", "1"));
             });
         }
 
