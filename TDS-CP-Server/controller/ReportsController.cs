@@ -35,14 +35,12 @@ namespace TDSCPServer.controller
                 return null;
             int uid = Convert.ToInt32(uidstr);
             
-            DataTable result = await Database.ExecPreparedResult(
-                @"SELECT reports.*, player.name, Count(reporttexts.id) as amountanswers 
+            DataTable result = await Database.ExecResult(
+                $@"SELECT reports.*, player.name, Count(reporttexts.id) as amountanswers 
                 FROM reports
                 LEFT JOIN reporttexts ON reports.id = reporttexts.reportid
                 LEFT JOIN player ON reports.authoruid = player.uid
-                WHERE reports.authoruid = 1", 
-                new Dictionary<string, string> { { "uid", uid.ToString() } } 
-            );
+                WHERE reports.authoruid = {uid}");
             List<ReportUserEntry> list = new List<ReportUserEntry>();
             foreach (DataRow row in result.Rows)
             {
@@ -71,7 +69,7 @@ namespace TDSCPServer.controller
                 return;
             int uid = Convert.ToInt32(uidstr);
 
-            Database.Exec("UPDATE reports SET open = !open WHERE id = " + reportid + " AND authoruid = "+ uid);
+            Database.Exec($"UPDATE reports SET open = !open WHERE id = {reportid} AND authoruid = {uid}");
         }
     }
 }
