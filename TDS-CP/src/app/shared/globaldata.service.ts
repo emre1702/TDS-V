@@ -38,8 +38,8 @@ export class GlobalDataService {
         ["all"]: 0,
     };
 
-    get adminLvl() {
-        return localStorage.getItem("adminlvl") || 0;
+    get adminLvl(): number {
+        return parseInt(localStorage.getItem("adminlvl"), 10) || 0;
     }
 
     public readonly showLogEntriesPerPage = 25;
