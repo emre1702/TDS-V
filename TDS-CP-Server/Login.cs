@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TDSCPServer.Models;
 
 namespace TDSCPServer
 {
@@ -24,7 +25,7 @@ namespace TDSCPServer
             return sb.ToString();
         }
 
-        public static async Task<string> AuthenticateAsync(UserData data)
+        public static async Task<string> AuthenticateAsync(UserLoginData data)
         {
             DataTable result = await Database.ExecPreparedResult("SELECT uid, adminlvl, password FROM player WHERE name = @1@", new Dictionary<string, string>
             {
