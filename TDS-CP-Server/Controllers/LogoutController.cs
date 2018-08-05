@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TDSCPServer.controller
+namespace TDSCPServer.Controllers
 {
 
     [Authorize]
