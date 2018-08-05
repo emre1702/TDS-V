@@ -4,7 +4,9 @@ import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth/auth.service";
 import { GlobalDataService } from "../../services/globaldata.service";
 
-@Injectable()
+@Injectable({
+    providedIn: "root"
+})
 export class PlayerOnlineService implements OnDestroy {
     playerOnlineArray: Player[] = [];
     private refreshPlayernamesTimeout: number;
