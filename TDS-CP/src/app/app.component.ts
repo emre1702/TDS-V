@@ -1,8 +1,8 @@
 import { Component, HostListener } from "@angular/core";
-import { HttpClient } from "../../node_modules/@angular/common/http";
-import { GlobalDataService } from "./shared/globaldata.service";
-import { AuthService } from "./auth/auth.service";
-import { PlayerOnlineService } from "./playeronline/playeronline.service";
+import { HttpClient } from "@angular/common/http";
+import { GlobalDataService } from "./services/globaldata.service";
+import { AuthService } from "./services/auth/auth.service";
+import { PlayerOnlineService } from "./components/playeronline/playeronline.service";
 
 @Component({
     selector: "app-root",

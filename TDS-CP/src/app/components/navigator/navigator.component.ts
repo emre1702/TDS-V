@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { GlobalDataService } from "../shared/globaldata.service";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
-import { AuthService } from "../auth/auth.service";
-import { HttpClient } from "../../../node_modules/@angular/common/http";
+import { HttpClient } from "@angular/common/http";
+import { GlobalDataService } from "../../services/globaldata.service";
+import { AuthService } from "../../services/auth/auth.service";
 
 @Component({
     selector: "app-navigator",

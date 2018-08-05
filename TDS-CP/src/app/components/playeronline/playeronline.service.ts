@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { GlobalDataService } from "../shared/globaldata.service";
-import { AuthService } from "../auth/auth.service";
 import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth/auth.service";
+import { GlobalDataService } from "../../services/globaldata.service";
 
 @Injectable()
 export class PlayerOnlineService implements OnDestroy {

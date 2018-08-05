@@ -1,12 +1,11 @@
-import { Component, OnInit, Output } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators, NgForm } from "@angular/forms";
-import { HttpClient, HttpHeaders, HttpRequest } from "@angular/common/http";
-import { GlobalDataService } from "../shared/globaldata.service";
+import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { EventEmitter } from "events";
 import { MatSnackBar } from "@angular/material";
 import { LoadingService } from "../loading/loading.service";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
+import { GlobalDataService } from "../../services/globaldata.service";
 
 @Component({
     selector: "app-login",

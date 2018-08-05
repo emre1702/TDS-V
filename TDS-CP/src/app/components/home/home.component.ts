@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { LoadingService } from "../loading/loading.service";
-import { GlobalDataService } from "../shared/globaldata.service";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
+import { GlobalDataService } from "../../services/globaldata.service";
 
 @Component({
     selector: "app-home",

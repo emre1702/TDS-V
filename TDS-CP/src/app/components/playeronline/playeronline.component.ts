@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { PlayerOnlineService } from "./playeronline.service";
-import { GlobalDataService } from "../shared/globaldata.service";
+import { GlobalDataService } from "../../services/globaldata.service";
 
 @Component({
     selector: "app-playeronline",

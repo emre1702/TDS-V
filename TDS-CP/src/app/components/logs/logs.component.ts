@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
-import { GlobalDataService } from "../shared/globaldata.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { AuthService } from "../auth/auth.service";
 import { LoadingService } from "../loading/loading.service";
 import { MatPaginator, MatInput } from "@angular/material";
 import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
-import { LogEntry } from "../models/logEntry.model";
+import { LogEntry } from "../../models/logEntry.model";
+import { AuthService } from "../../services/auth/auth.service";
+import { GlobalDataService } from "../../services/globaldata.service";
 
 @Component({
     selector: "app-logs",

@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { GlobalDataService } from "../shared/globaldata.service";
 import { LoadingService } from "../loading/loading.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { AuthService } from "../auth/auth.service";
-import { ReportUserEntry } from "../models/reportUserEntry.model";
+import { ReportUserEntry } from "../../models/reportUserEntry.model";
+import { GlobalDataService } from "../../services/globaldata.service";
+import { AuthService } from "../../services/auth/auth.service";
 
 @Component({
     selector: "app-reportuser",
