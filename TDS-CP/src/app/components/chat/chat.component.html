@@ -4,7 +4,7 @@
         <mat-sidenav-content>
             <div id="content_place">
                 <div class="text" *ngFor="let entry of chatservice.entries">
-                    [{{ entry.sent | date:"dd.MM. - hh:mm:ss" }}] {{ entry.username }}: {{ entry.message }}
+                    [{{ entry.sent | date:"dd.MM. - hh:mm:ss" }}] {{ entry.username }}:<br>{{ entry.message }}
                 </div>
             </div>
             <div id="send_row">
