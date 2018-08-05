@@ -14,14 +14,14 @@ namespace TDSCPServer
         public Task SendChatMessage(ChatMessage message)
         {
             lastChatMessages.Enqueue(message);
-            while (lastChatMessages.Count > 50)
+            while (lastChatMessages.Count > 25)
                 lastChatMessages.Dequeue();
             return Clients.All.SendAsync("SendChatMessage", message);
         }
 
         public Task SendLastChatMessages()
         {
-            return Clients.Caller.SendAsync("SendLastChatMessages", lastChatMessages.Take(10));
+            return Clients.Caller.SendAsync("SendLastChatMessages", lastChatMessages.Take(25));
         }
     }
 }
