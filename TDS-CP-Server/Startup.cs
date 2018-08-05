@@ -66,6 +66,8 @@ namespace TDSCPServer
                 x.AddPolicy("Projectleader", policy => policy.RequireClaim("AdminLvl", "3"));
                 x.AddPolicy("Owner", policy => policy.RequireClaim("UID", "1"));
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +82,11 @@ namespace TDSCPServer
                 .AllowAnyHeader()
                 .AllowCredentials());
             app.UseAuthentication();
+            app.UseFileServer();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotifyHub>("/notify");
+            });
 
             app.UseMvc();
         }
