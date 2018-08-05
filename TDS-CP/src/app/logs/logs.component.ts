@@ -6,6 +6,7 @@ import { LoadingService } from "../loading/loading.service";
 import { MatPaginator, MatInput } from "@angular/material";
 import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
+import { LogEntry } from "../models/logEntry.model";
 
 @Component({
     selector: "app-logs",
@@ -115,15 +116,4 @@ export class LogsComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-}
-
-class LogEntry {
-    public id: number;
-    public name: string;
-    public target: string;
-    public type: number;
-    public info: string;
-    public lobby: string;
-    public date: string;
 }

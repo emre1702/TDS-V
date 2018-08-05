@@ -3,6 +3,7 @@ import { GlobalDataService } from "../shared/globaldata.service";
 import { LoadingService } from "../loading/loading.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { AuthService } from "../auth/auth.service";
+import { ReportUserEntry } from "../models/reportUserEntry.model";
 
 @Component({
     selector: "app-reportuser",
@@ -37,13 +38,4 @@ export class ReportUserComponent implements OnInit {
 
     }
 
-}
-
-class ReportUserEntry {
-    public id: number;
-    public author: string;
-    public title: string;
-    public amountanswers: number;
-    public foradminlvl: number;
-    public open: boolean;
 }
