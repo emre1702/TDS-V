@@ -1,12 +1,15 @@
 <div id="all">
-    <div id="navigator">
+    <div id="navigator" *ngIf="router.url !== '/login'">
         <app-navigator></app-navigator>
     </div>
     <div id="body">
         <router-outlet></router-outlet>
     </div>
     <app-loading></app-loading>
-    <div id="playeronline">
+    <div id="playeronline" *ngIf="router.url !== '/login'">
         <app-playeronline></app-playeronline>
+    </div>
+    <div id="chat" #chatAppDiv *ngIf="router.url !== '/login'">
+        <app-chat id="chat_app"></app-chat>
     </div>
 </div>
