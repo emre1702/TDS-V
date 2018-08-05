@@ -36,7 +36,6 @@ export class ChatService {
             this.entries.push(message);
         });
         this.signalR.onLastMessagesReceived.subscribe((data: any) => {
-            console.log(data);
             this.entries = data;
         });
         if (this.activatedbool) {
