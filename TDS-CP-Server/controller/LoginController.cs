@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using TDSCPServer.Models;
 
 namespace TDSCPServer.controller
 {
@@ -16,7 +17,7 @@ namespace TDSCPServer.controller
     public class LoginController : Controller
     {
         [HttpPost]
-        public async Task<IActionResult> AuthenticateAsync([FromBody]UserData data)
+        public async Task<IActionResult> AuthenticateAsync([FromBody]UserLoginData data)
         {
             string error = await Login.AuthenticateAsync(data);
             if (error != null)
