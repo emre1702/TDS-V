@@ -23,3 +23,15 @@
     height: auto;
     width: 100%;
 }
+
+#chat {
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    right: 0;
+    overflow: hidden;
+}
+
+#chat_app {
+    position: sticky;
+}

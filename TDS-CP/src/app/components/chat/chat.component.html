@@ -1,0 +1,19 @@
+<div id="container">
+    <mat-sidenav-container [@chatOpened]="opened" (@chatOpened.start)="animationStart($event)" (@chatOpened.done)="animationDone($event)" id="tab">
+        <mat-sidenav #sidenav autoFocus=false mode="side" position="end"></mat-sidenav>
+        <mat-sidenav-content>
+            <div id="content_place">
+                <div class="text" *ngFor="let entry of chatservice.entries">
+                    [{{ entry.sent | date:"dd.MM. - hh:mm:ss" }}] {{ entry.username }}: {{ entry.message }}
+                </div>
+            </div>
+            <div id="send_row">
+                <mat-form-field id="chat_input">
+                    <input matInput #chatinput placeholder="message">
+                </mat-form-field>
+                <button id="chat_send_button" mat-button (click)="chatservice.sendChatMessage(chatinput.value)">Send</button>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+    <div id="tab_opener" #tabOpenerButton (click)="toggleOpenState()"><span class="toptobottom not-selectable">Chat</span></div>
+</div>

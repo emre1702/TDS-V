@@ -6,6 +6,7 @@ import { MatSnackBar } from "@angular/material";
 import { LoadingService } from "../loading/loading.service";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
 import { GlobalDataService } from "../../services/globaldata.service";
+import { ChatService } from "../chat/chat.service";
 
 @Component({
     selector: "app-login",
@@ -20,7 +21,7 @@ export class LoginComponent {
     });
 
     constructor(private http: HttpClient, private snackBar: MatSnackBar, private settings: GlobalDataService, private loading: LoadingService, private router: Router,
-        private playerOnlineService: PlayerOnlineService ) { }
+        private playerOnlineService: PlayerOnlineService, private chat: ChatService ) { }
 
     onSubmit(form: NgForm) {
         if (!this.loading.showing) {
@@ -31,6 +32,7 @@ export class LoginComponent {
                     localStorage.setItem("adminlvl", data.adminlvl.toString());
                     this.router.navigateByUrl("home");
                     this.playerOnlineService.startRefreshingPlayernames();
+                    this.chat.start();
                 } else {
                     this.snackBar.open(data.error);
                 }

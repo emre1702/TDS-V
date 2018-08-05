@@ -12,15 +12,15 @@ import {
     MatProgressSpinnerModule,
     MAT_SNACK_BAR_DEFAULT_OPTIONS,
     MatToolbarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSidenavModule
  } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { HttpClientModule } from "@angular/common/http";
 
 import { GlobalDataService } from "./services/globaldata.service";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AngularDraggableModule } from "angular2-draggable";
-import { JwtHelperService, JWT_OPTIONS, JwtModule } from "@auth0/angular-jwt";
+import { JwtHelperService, JwtModule } from "@auth0/angular-jwt";
 import { appRouter } from "./app.router";
 import { AuthService } from "./services/auth/auth.service";
 import { ReversePipe } from "./pipes/reverse/reverse.pipe";
@@ -31,6 +31,9 @@ import { PlayerOnlineComponent } from "./components/playeronline/playeronline.co
 import { NavigatorComponent } from "./components/navigator/navigator.component";
 import { LoadingService } from "./components/loading/loading.service";
 import { PlayerOnlineService } from "./components/playeronline/playeronline.service";
+import { ChatComponent } from "./components/chat/chat.component";
+import { HttpClientModule } from "../../node_modules/@angular/common/http";
+import { ChatService } from "./components/chat/chat.service";
 
 export function getToken() {
     return localStorage.getItem("token");
@@ -43,7 +46,8 @@ export function getToken() {
         LoadingComponent,
         PlayerOnlineComponent,
         NavigatorComponent,
-        ReversePipe
+        ReversePipe,
+        ChatComponent
     ],
     imports: [
         BrowserModule,
@@ -66,7 +70,8 @@ export function getToken() {
         MatSnackBarModule,
         MatProgressSpinnerModule,
         MatToolbarModule,
-        MatMenuModule
+        MatMenuModule,
+        MatSidenavModule
     ],
     providers: [
         GlobalDataService,
@@ -75,6 +80,7 @@ export function getToken() {
         AuthService,
         SignalRService,
         PlayerOnlineService,
+        ChatService,
         {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 4000, horizontalPosition: "center", verticalPosition: "bottom", panelClass: "snackBar"}}
     ],
     bootstrap: [AppComponent]
