@@ -56,8 +56,6 @@ namespace TDSCPServer.controller
                 list.Add(entry);
             }
 
-            Console.WriteLine(list.Count);
-
             return list;
         }
 
