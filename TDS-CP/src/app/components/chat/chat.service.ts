@@ -54,6 +54,7 @@ export class ChatService {
         if (this.router.url !== "/login") {
             let message = new ChatMessage("Bonus", text);
             message.sent = new Date();
+            this.entries.push(message);
             this.signalR.sendChatMessage(message);
         }
     }

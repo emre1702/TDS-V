@@ -16,7 +16,7 @@ namespace TDSCPServer
             lastChatMessages.Enqueue(message);
             while (lastChatMessages.Count > 25)
                 lastChatMessages.Dequeue();
-            return Clients.All.SendAsync("SendChatMessage", message);
+            return Clients.Others.SendAsync("SendChatMessage", message);
         }
 
         public Task SendLastChatMessages()
