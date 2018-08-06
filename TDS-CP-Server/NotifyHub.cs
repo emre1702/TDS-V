@@ -3,25 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDSCPServer.Controllers;
 using TDSCPServer.Models;
 
 namespace TDSCPServer
 {
     public class NotifyHub : Hub
-    {
-        private static Queue<ChatMessage> lastChatMessages = new Queue<ChatMessage>();
-
+    { 
         public Task SendChatMessage(ChatMessage message)
         {
-            lastChatMessages.Enqueue(message);
-            while (lastChatMessages.Count > 25)
-                lastChatMessages.Dequeue();
+            ChatController.AddChatMessage(message);
             return Clients.Others.SendAsync("SendChatMessage", message);
-        }
-
-        public Task SendLastChatMessages()
-        {
-            return Clients.Caller.SendAsync("SendLastChatMessages", lastChatMessages.Take(25));
         }
 
         public Task AddToGroup(EGroupID id)

@@ -3,6 +3,9 @@ import { Router } from "@angular/router";
 import { SignalRService } from "../../services/signalR/signalR.service";
 import { ChatMessage } from "../../models/chatMessage.model";
 import { Subject } from "../../../../node_modules/rxjs";
+import { HttpClient } from "@angular/common/http";
+import { GlobalDataService } from "../../services/globaldata.service";
+import { AuthService } from "../../services/auth/auth.service";
 
 @Injectable({
     providedIn: "root"
@@ -14,7 +17,7 @@ export class ChatService {
 
     onOpenToggle = new Subject<Boolean>();
 
-    constructor(private signalR: SignalRService, private router: Router) {
+    constructor(private signalR: SignalRService, private router: Router, private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) {
         if (router.url !== "/login") {
             this.start();
         }
@@ -25,22 +28,26 @@ export class ChatService {
             return;
         }
         this.started = true;
-        this.signalR.onHubConnected.subscribe(() => {
-            if (this.activatedbool) {
-                return;
-            }
-            this.activatedbool = true;
-            this.signalR.requestLastChatMessages();
-        });
+        if (!this.activatedbool) {
+            this.signalR.onHubConnected.subscribe(() => {
+                if (this.activatedbool) {
+                    return;
+                }
+                this.activatedbool = true;
+                this.requestLastChatMessages();
+            });
+        } else {
+            this.requestLastChatMessages();
+        }
         this.signalR.onMessageReceived.subscribe((message: ChatMessage) => {
             this.entries.push(message);
         });
-        this.signalR.onLastMessagesReceived.subscribe((data: any) => {
-            this.entries = data;
+    }
+
+    requestLastChatMessages() {
+        this.http.get(this.globaldata.apiUrl + "/chat", {withCredentials: true, headers: this.auth.getHeaders()}).subscribe((datas: ChatMessage[]) => {
+            this.entries = datas;
         });
-        if (this.activatedbool) {
-            this.signalR.requestLastChatMessages();
-        }
     }
 
     get activated() {
