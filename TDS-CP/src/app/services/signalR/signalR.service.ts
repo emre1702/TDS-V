@@ -36,12 +36,6 @@ export class SignalRService {
         this.hubConnection.on("SendChatMessage", (data: ChatMessage) => {
             this.onMessageReceived.next(data);
         });
-
-        // REPORTS //
-        this.hubConnection.on("AddNewUserReport", (report: ReportUserEntry) => {
-            this.onNewUserReport.next(report);
-        });
-
     }
 
     private startConnection() {
