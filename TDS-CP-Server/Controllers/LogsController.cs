@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TDSCPServer.Enums;
+using TDSCPServer.Utils;
 
 namespace TDSCPServer.Controllers
 {
@@ -42,11 +44,40 @@ namespace TDSCPServer.Controllers
     public class LogsController : Controller
     {
         private const int showEntriesPerPage = 25;
+        private static readonly Dictionary<int, Actions> adminActionByType = new Dictionary<int, Actions>
+        {
+            { -1, Actions.AdminLogAll },
+            { 0, Actions.AdminLogPermaban },
+            { 1, Actions.AdminLogTimeban },
+            { 2, Actions.AdminLogUnban },
+            { 3, Actions.AdminLogPermamute },
+            { 4, Actions.AdminLogTimemute },
+            { 5, Actions.AdminLogUnmute },
+            { 6, Actions.AdminLogNext },
+            { 7, Actions.AdminLogKick },
+            { 8, Actions.AdminLogLobbyKick },
+            { 9, Actions.AdminLogPermabanLobby },
+            { 10, Actions.AdminLogTimebanLobby },
+            { 11, Actions.AdminLogUnbanLobby }
+        };
+        private static readonly Dictionary<int, Actions> restActionByType = new Dictionary<int, Actions>
+        {
+            { 0, Actions.RestLogLogin },
+            { 1, Actions.RestLogRegister },
+            { 2, Actions.RestLogChat },
+            { 3, Actions.RestLogError },
+            { 4, Actions.RestLogLobbyOwner },
+            { 5, Actions.RestLogLobbyJoin },
+            { 6, Actions.RestLogVIP }
+        };
 
-        [Authorize(Policy = "Supporter")]
+
         [HttpGet("admin/amountrows")]
         public async Task<int> GetLogEntriesAmountAdmin(int type, string onlyname = "", string onlytarget = "")
         {
+            if (!AdminRequirement.IsAllowed(User, adminActionByType[type]))
+                return 0;
+
             string rowsamountsql;
             if (onlyname == "" && onlytarget == "")
             {
@@ -88,7 +119,6 @@ namespace TDSCPServer.Controllers
                 }
                 rowsamountsql = builder.ToString();
             }
-            Console.WriteLine(rowsamountsql);
             DataTable rowsamounttable = await Database.ExecResult(rowsamountsql);
             if (rowsamounttable.Rows.Count > 0)
             {
@@ -100,6 +130,9 @@ namespace TDSCPServer.Controllers
         [HttpGet("rest/amountrows")]
         public async Task<int> GetLogEntriesAmountRest(int type, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
+            if (!AdminRequirement.IsAllowed(User, restActionByType[type]))
+                return 0;
+
             string rowsamountsql;
             if (onlyname == "" && onlytarget == "" && onlylobby == "") 
             {
@@ -140,7 +173,6 @@ namespace TDSCPServer.Controllers
                 }
                 rowsamountsql = builder.ToString();
             }
-            Console.WriteLine(rowsamountsql);
             DataTable rowsamounttable = await Database.ExecResult(rowsamountsql);
             if (rowsamounttable.Rows.Count > 0)
             {   
@@ -149,10 +181,13 @@ namespace TDSCPServer.Controllers
             return 0;
         }
 
-        [Authorize(Policy = "Supporter")]
         [HttpGet("admin")]
         public async Task<IEnumerable<LogEntry>> GetLogEntriesAdmin(int type, int page, string onlyname = "", string onlytarget = "")
         {
+
+            if (!AdminRequirement.IsAllowed(User, adminActionByType[type]))
+                return null;
+
             page = page * showEntriesPerPage;
             StringBuilder builder = new StringBuilder();
             builder.Append($"SELECT log.id, IF(log.adminuid = 0, log.adminuid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.date FROM adminlog as log, player, player as targetplayer WHERE log.type = " + (type == -1 ? "log.type" : type.ToString()) + " AND (log.adminuid = 0 OR log.adminuid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
@@ -166,7 +201,6 @@ namespace TDSCPServer.Controllers
             }
             builder.Append($" GROUP BY log.id ORDER BY id DESC LIMIT {page}, {showEntriesPerPage}");
             string logsql = builder.ToString();
-            Console.WriteLine(logsql);
             DataTable table = await Database.ExecResult(logsql);
 
             List<LogEntry> entries = new List<LogEntry>();
@@ -180,6 +214,9 @@ namespace TDSCPServer.Controllers
         [HttpGet("rest")]
         public async Task<IEnumerable<LogEntry>> GetLogEntriesRest(int type, int page, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
+            if (!AdminRequirement.IsAllowed(User, restActionByType[type]))
+                return null;
+
             page = page * showEntriesPerPage;
             StringBuilder builder = new StringBuilder();
             builder.Append($"SELECT log.id, IF(log.uid = 0, log.uid, player.name) AS name, IF(log.targetuid = 0, log.targetuid, targetplayer.name) AS target, log.info, log.lobby, log.date FROM log, player, player as targetplayer WHERE log.type = "+(type == -1 ? "log.type" : type.ToString())+" AND (log.uid = 0 OR log.uid = player.uid) AND (log.targetuid = 0 OR log.targetuid = targetplayer.uid)");
@@ -197,7 +234,6 @@ namespace TDSCPServer.Controllers
             }
             builder.Append($" GROUP BY log.id ORDER BY id DESC LIMIT {page}, {showEntriesPerPage}");
             string logsql = builder.ToString();
-            Console.WriteLine(logsql);
             DataTable table = await Database.ExecResult(logsql);
             List <LogEntry> entries = new List<LogEntry>();
             foreach (DataRow row in table.Rows)
