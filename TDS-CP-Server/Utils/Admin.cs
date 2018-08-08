@@ -35,10 +35,10 @@ namespace TDSCPServer.Utils
 
         public static bool IsAllowed(ClaimsPrincipal user, Actions action)
         {
-            string uidstr = user.Claims.FirstOrDefault(c => c.Type == "AdminLvl").Value;
-            if (uidstr == null)
+            string adminlvlstr = user.Claims.FirstOrDefault(c => c.Type == "AdminLvl").Value;
+            if (adminlvlstr == null)
                 return false;
-            int adminlvl = Convert.ToInt32(uidstr);
+            int adminlvl = Convert.ToInt32(adminlvlstr);
             if (!requiredDict.ContainsKey(action))
                 return true;
             int requiredlvl = (int) requiredDict[action]; 
