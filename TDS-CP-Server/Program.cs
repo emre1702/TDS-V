@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using TDSCPServer.Controllers;
 
 namespace TDSCPServer
 {
@@ -8,6 +9,7 @@ namespace TDSCPServer
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
+            LogoutController.LogoutAll();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

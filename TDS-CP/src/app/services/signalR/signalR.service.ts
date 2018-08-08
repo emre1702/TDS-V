@@ -13,6 +13,7 @@ export class SignalRService {
     onHubConnected = new Subject<Boolean>();
     onMessageReceived = new Subject<ChatMessage>();
     onNewUserReport = new Subject<ReportUserEntry>();
+    onLogoutRequest = new Subject<Boolean>();
 
     constructor(private globaldata: GlobalDataService) {
         this.createConnection();
@@ -35,6 +36,11 @@ export class SignalRService {
         // CHAT //
         this.hubConnection.on("SendChatMessage", (data: ChatMessage) => {
             this.onMessageReceived.next(data);
+        });
+
+        // LOGOUT //
+        this.hubConnection.on("Logout", () => {
+            this.onLogoutRequest.next(true);
         });
     }
 

@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { PlayerOnlineService } from "../playeronline/playeronline.service";
 import { HttpClient } from "@angular/common/http";
 import { GlobalDataService } from "../../services/globaldata.service";
 import { AuthService } from "../../services/auth/auth.service";
+import { SignalRService } from "../../services/signalR/signalR.service";
 
 @Component({
     selector: "app-navigator",
@@ -12,7 +13,10 @@ import { AuthService } from "../../services/auth/auth.service";
 })
 export class NavigatorComponent {
 
-    constructor(public router: Router, private playeronline: PlayerOnlineService, public globaldata: GlobalDataService, private auth: AuthService, private http: HttpClient) { }
+    constructor(public router: Router, private playeronline: PlayerOnlineService, public globaldata: GlobalDataService, private auth: AuthService,
+            private http: HttpClient, private signalR: SignalRService) {
+        signalR.onLogoutRequest.subscribe(() => this.logout());
+    }
 
     logout() {
         this.auth.removeAuthentication();
