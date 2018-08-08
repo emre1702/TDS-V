@@ -75,7 +75,7 @@ namespace TDSCPServer.Controllers
         [HttpGet("admin/amountrows")]
         public async Task<int> GetLogEntriesAmountAdmin(int type, string onlyname = "", string onlytarget = "")
         {
-            if (!AdminRequirement.IsAllowed(User, adminActionByType[type]))
+            if (!Admin.IsAllowed(User, adminActionByType[type]))
                 return 0;
 
             string rowsamountsql;
@@ -130,7 +130,7 @@ namespace TDSCPServer.Controllers
         [HttpGet("rest/amountrows")]
         public async Task<int> GetLogEntriesAmountRest(int type, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
-            if (!AdminRequirement.IsAllowed(User, restActionByType[type]))
+            if (!Admin.IsAllowed(User, restActionByType[type]))
                 return 0;
 
             string rowsamountsql;
@@ -185,7 +185,7 @@ namespace TDSCPServer.Controllers
         public async Task<IEnumerable<LogEntry>> GetLogEntriesAdmin(int type, int page, string onlyname = "", string onlytarget = "")
         {
 
-            if (!AdminRequirement.IsAllowed(User, adminActionByType[type]))
+            if (!Admin.IsAllowed(User, adminActionByType[type]))
                 return null;
 
             page = page * showEntriesPerPage;
@@ -214,7 +214,7 @@ namespace TDSCPServer.Controllers
         [HttpGet("rest")]
         public async Task<IEnumerable<LogEntry>> GetLogEntriesRest(int type, int page, string onlyname = "", string onlytarget = "", string onlylobby = "")
         {
-            if (!AdminRequirement.IsAllowed(User, restActionByType[type]))
+            if (!Admin.IsAllowed(User, restActionByType[type]))
                 return null;
 
             page = page * showEntriesPerPage;

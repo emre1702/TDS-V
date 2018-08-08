@@ -6,7 +6,7 @@ using TDSCPServer.Enums;
 
 namespace TDSCPServer.Utils
 {
-    public static class AdminRequirement
+    public static class Admin
     {
         private static readonly Dictionary<Actions, AdminLevels> requiredDict = new Dictionary<Actions, AdminLevels>
         {
