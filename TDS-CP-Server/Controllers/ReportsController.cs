@@ -28,10 +28,9 @@ namespace TDSCPServer.Controllers
         [HttpGet("user")] 
         public async Task<List<ReportUserEntry>> GetOwnReports()
         {
-            string uidstr = User.Claims.FirstOrDefault(c => c.Type == "UID").Value;
-            if (uidstr == null)
+            uint uid = Utils.User.GetUID(User);
+            if (uid == 0)
                 return null;
-            int uid = Convert.ToInt32(uidstr);
             
             DataTable result = await Database.ExecResult(
                 $@"SELECT reports.*, player.name, Count(reporttexts.id) as amountanswers 
@@ -60,10 +59,9 @@ namespace TDSCPServer.Controllers
         [HttpPost("user/toggle_open")]
         public void ToggleOwnReportOpen(int reportid)
         {
-            string uidstr = User.Claims.FirstOrDefault(c => c.Type == "UID").Value;
-            if (uidstr == null)
+            uint uid = Utils.User.GetUID(User);
+            if (uid == 0)
                 return;
-            int uid = Convert.ToInt32(uidstr);
 
             Database.Exec($"UPDATE reports SET open = !open WHERE id = {reportid} AND authoruid = {uid}");
         }
