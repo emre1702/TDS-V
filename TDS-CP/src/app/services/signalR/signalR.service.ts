@@ -5,6 +5,7 @@ import { GlobalDataService } from "../globaldata.service";
 import { Subject } from "../../../../node_modules/rxjs";
 import { ReportUserEntry } from "../../models/reportUserEntry.model";
 import { EGroups } from "../../enums/egroups.enum";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
     providedIn: "root",
@@ -16,22 +17,34 @@ export class SignalRService {
     onNewUserReport = new Subject<ReportUserEntry>();
     onLogoutRequest = new Subject<Boolean>();
 
-    constructor(private globaldata: GlobalDataService) {
-        this.createConnection();
-        this.registerServerEvents();
-        this.startConnection();
+    constructor(private globaldata: GlobalDataService, private auth: AuthService) {
+        this.start();
+    }
+
+    public start() {
+        if (this.auth.isAuthenticated()) {
+            this.createConnection();
+            this.registerServerEvents();
+            this.startConnection();
+        }
     }
 
     sendChatMessage(message: ChatMessage) {
-        this.hubConnection.invoke("SendChatMessage", message);
+        if (this.auth.isAuthenticated()) {
+            this.hubConnection.invoke("SendChatMessage", message);
+        }
     }
 
     addToGroup(group: EGroups, opt?: string) {
-        this.hubConnection.invoke("AddToGroup", group, opt);
+        if (this.auth.isAuthenticated()) {
+            this.hubConnection.invoke("AddToGroup", group, opt);
+        }
     }
 
     removeFromGroup(group: EGroups, opt?: string) {
-        this.hubConnection.invoke("RemoveFromGroup", group, opt);
+        if (this.auth.isAuthenticated()) {
+            this.hubConnection.invoke("RemoveFromGroup", group, opt);
+        }
     }
 
     private createConnection() {
