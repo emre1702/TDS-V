@@ -2,6 +2,6 @@
 {
     public enum EGroups
     {
-        AdminReports, RestReports
+        Loggedin, AdminReports, RestReports
     }
 }
