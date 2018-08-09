@@ -12,6 +12,8 @@ import { AuthService } from "../auth/auth.service";
 })
 export class SignalRService {
     private hubConnection: HubConnection;
+    private started = false;
+
     onHubConnected = new Subject<Boolean>();
     onMessageReceived = new Subject<ChatMessage>();
     onNewUserReport = new Subject<ReportUserEntry>();
@@ -22,7 +24,8 @@ export class SignalRService {
     }
 
     public start() {
-        if (this.auth.isAuthenticated()) {
+        if (this.auth.isAuthenticated() && !this.started) {
+            this.started = true;
             this.createConnection();
             this.registerServerEvents();
             this.startConnection();
