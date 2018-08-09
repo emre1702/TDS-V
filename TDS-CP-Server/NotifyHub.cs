@@ -21,7 +21,7 @@ namespace TDSCPServer
         public Task SendChatMessage(ChatMessage message)
         {
             ChatController.AddChatMessage(message);
-            return Clients.Others.SendAsync("SendChatMessage", message);
+            return Clients.OthersInGroup(EGroups.Loggedin.ToString()).SendAsync("SendChatMessage", message);
         }
 
         public Task AddToGroup(EGroups group, string optional = "")
