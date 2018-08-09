@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { GlobalDataService } from "../../services/globaldata.service";
 import { AuthService } from "../../services/auth/auth.service";
 import { SignalRService } from "../../services/signalR/signalR.service";
+import { EGroups } from "../../enums/egroups.enum";
 
 @Component({
     selector: "app-navigator",
@@ -21,6 +22,7 @@ export class NavigatorComponent {
     logout() {
         this.auth.removeAuthentication();
         this.http.post(this.globaldata.apiUrl + "/Logout", {withCredentials: true, header: this.auth.getHeaders()}).subscribe(() => {});
+        this.signalR.removeFromGroup(EGroups.Loggedin);
         this.playeronline.ngOnDestroy();
     }
 
