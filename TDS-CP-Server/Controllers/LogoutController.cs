@@ -9,19 +9,6 @@ namespace TDSCPServer.Controllers
     [Route("[controller]")]
     public class LogoutController : Controller
     {
-
-        private static IHubContext<NotifyHub> _hubContext;
-
-        public LogoutController(IHubContext<NotifyHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
-
-        public static void LogoutAll()
-        {
-            _hubContext.Clients.All.SendAsync("Logout");
-        }
-
         [HttpPut]
         public IActionResult Logout()
         {

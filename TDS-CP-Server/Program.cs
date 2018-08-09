@@ -9,7 +9,7 @@ namespace TDSCPServer
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
-            LogoutController.LogoutAll();
+            NotifyHub.LogoutAll();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
