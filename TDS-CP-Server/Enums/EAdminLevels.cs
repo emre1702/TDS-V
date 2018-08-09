@@ -1,6 +1,6 @@
 ﻿namespace TDSCPServer.Enums
 {
-    public enum AdminLevels
+    public enum EAdminLevels
     {
         User = 0,
         Supporter = 1,

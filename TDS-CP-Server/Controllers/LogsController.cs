@@ -44,31 +44,31 @@ namespace TDSCPServer.Controllers
     public class LogsController : Controller
     {
         private const int showEntriesPerPage = 25;
-        private static readonly Dictionary<int, Actions> adminActionByType = new Dictionary<int, Actions>
+        private static readonly Dictionary<int, EActions> adminActionByType = new Dictionary<int, EActions>
         {
-            { -1, Actions.AdminLogAll },
-            { 0, Actions.AdminLogPermaban },
-            { 1, Actions.AdminLogTimeban },
-            { 2, Actions.AdminLogUnban },
-            { 3, Actions.AdminLogPermamute },
-            { 4, Actions.AdminLogTimemute },
-            { 5, Actions.AdminLogUnmute },
-            { 6, Actions.AdminLogNext },
-            { 7, Actions.AdminLogKick },
-            { 8, Actions.AdminLogLobbyKick },
-            { 9, Actions.AdminLogPermabanLobby },
-            { 10, Actions.AdminLogTimebanLobby },
-            { 11, Actions.AdminLogUnbanLobby }
+            { -1, EActions.AdminLogAll },
+            { 0, EActions.AdminLogPermaban },
+            { 1, EActions.AdminLogTimeban },
+            { 2, EActions.AdminLogUnban },
+            { 3, EActions.AdminLogPermamute },
+            { 4, EActions.AdminLogTimemute },
+            { 5, EActions.AdminLogUnmute },
+            { 6, EActions.AdminLogNext },
+            { 7, EActions.AdminLogKick },
+            { 8, EActions.AdminLogLobbyKick },
+            { 9, EActions.AdminLogPermabanLobby },
+            { 10, EActions.AdminLogTimebanLobby },
+            { 11, EActions.AdminLogUnbanLobby }
         };
-        private static readonly Dictionary<int, Actions> restActionByType = new Dictionary<int, Actions>
+        private static readonly Dictionary<int, EActions> restActionByType = new Dictionary<int, EActions>
         {
-            { 0, Actions.RestLogLogin },
-            { 1, Actions.RestLogRegister },
-            { 2, Actions.RestLogChat },
-            { 3, Actions.RestLogError },
-            { 4, Actions.RestLogLobbyOwner },
-            { 5, Actions.RestLogLobbyJoin },
-            { 6, Actions.RestLogVIP }
+            { 0, EActions.RestLogLogin },
+            { 1, EActions.RestLogRegister },
+            { 2, EActions.RestLogChat },
+            { 3, EActions.RestLogError },
+            { 4, EActions.RestLogLobbyOwner },
+            { 5, EActions.RestLogLobbyJoin },
+            { 6, EActions.RestLogVIP }
         };
 
 

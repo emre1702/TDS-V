@@ -8,32 +8,32 @@ namespace TDSCPServer.Utils
 {
     public static class Admin
     {
-        private static readonly Dictionary<Actions, AdminLevels> requiredDict = new Dictionary<Actions, AdminLevels>
+        private static readonly Dictionary<EActions, EAdminLevels> requiredDict = new Dictionary<EActions, EAdminLevels>
         {
-            { Actions.RestLogError, AdminLevels.ProjectLeader },
-            { Actions.RestLogChat, AdminLevels.Administrator },
-            { Actions.RestLogLogin, AdminLevels.Administrator },
-            { Actions.RestLogRegister, AdminLevels.Administrator },
-            { Actions.RestLogLobbyOwner, AdminLevels.Supporter },
-            { Actions.RestLogLobbyJoin, AdminLevels.Supporter },
-            { Actions.RestLogVIP, AdminLevels.Supporter },
+            { EActions.RestLogError, EAdminLevels.ProjectLeader },
+            { EActions.RestLogChat, EAdminLevels.Administrator },
+            { EActions.RestLogLogin, EAdminLevels.Administrator },
+            { EActions.RestLogRegister, EAdminLevels.Administrator },
+            { EActions.RestLogLobbyOwner, EAdminLevels.Supporter },
+            { EActions.RestLogLobbyJoin, EAdminLevels.Supporter },
+            { EActions.RestLogVIP, EAdminLevels.Supporter },
 
-            { Actions.AdminLogAll, AdminLevels.User },
-            { Actions.AdminLogPermaban, AdminLevels.User },
-            { Actions.AdminLogTimeban, AdminLevels.User },
-            { Actions.AdminLogUnban, AdminLevels.User },
-            { Actions.AdminLogPermamute, AdminLevels.User },
-            { Actions.AdminLogTimemute, AdminLevels.User },
-            { Actions.AdminLogUnmute, AdminLevels.User },
-            { Actions.AdminLogNext, AdminLevels.User },
-            { Actions.AdminLogKick, AdminLevels.User },
-            { Actions.AdminLogLobbyKick, AdminLevels.User },
-            { Actions.AdminLogPermabanLobby, AdminLevels.User },
-            { Actions.AdminLogTimebanLobby, AdminLevels.User },
-            { Actions.AdminLogUnbanLobby, AdminLevels.User },
+            { EActions.AdminLogAll, EAdminLevels.User },
+            { EActions.AdminLogPermaban, EAdminLevels.User },
+            { EActions.AdminLogTimeban, EAdminLevels.User },
+            { EActions.AdminLogUnban, EAdminLevels.User },
+            { EActions.AdminLogPermamute, EAdminLevels.User },
+            { EActions.AdminLogTimemute, EAdminLevels.User },
+            { EActions.AdminLogUnmute, EAdminLevels.User },
+            { EActions.AdminLogNext, EAdminLevels.User },
+            { EActions.AdminLogKick, EAdminLevels.User },
+            { EActions.AdminLogLobbyKick, EAdminLevels.User },
+            { EActions.AdminLogPermabanLobby, EAdminLevels.User },
+            { EActions.AdminLogTimebanLobby, EAdminLevels.User },
+            { EActions.AdminLogUnbanLobby, EAdminLevels.User },
         };
 
-        public static bool IsAllowed(ClaimsPrincipal user, Actions action)
+        public static bool IsAllowed(ClaimsPrincipal user, EActions action)
         {
             string adminlvlstr = user.Claims.FirstOrDefault(c => c.Type == "AdminLvl").Value;
             if (adminlvlstr == null)
