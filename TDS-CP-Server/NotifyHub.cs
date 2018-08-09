@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDSCPServer.Controllers;
+using TDSCPServer.Enums;
 using TDSCPServer.Models;
 
 namespace TDSCPServer
@@ -21,6 +22,16 @@ namespace TDSCPServer
         {
             ChatController.AddChatMessage(message);
             return Clients.Others.SendAsync("SendChatMessage", message);
+        }
+
+        public Task AddToGroup(EGroups group, string optional = "")
+        {
+            return Groups.AddToGroupAsync(Context.ConnectionId, group.ToString() + optional);
+        }
+
+        public Task RemoveFromGroup(EGroups group, string optional = "")
+        {
+            return Groups.AddToGroupAsync(Context.ConnectionId, group.ToString() + optional);
         }
 
         public static void LogoutAll()
