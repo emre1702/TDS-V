@@ -3,23 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
+using TDSCPServer.Models;
 
 namespace TDSCPServer.Controllers
 {
-
-    public class ReportUserEntry
-    {
-        public int id;
-        public string author;
-        public string title;
-        public int amountanswers;
-        public ushort foradminlvl;
-        public bool open;
-    }
-
-
     [Authorize]
     [Route("[controller]")]
     public class ReportsController : Controller
