@@ -4,6 +4,7 @@ import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
 import { GlobalDataService } from "../globaldata.service";
 import { Subject } from "../../../../node_modules/rxjs";
 import { ReportUserEntry } from "../../models/reportUserEntry.model";
+import { EGroups } from "../../enums/egroups.enum";
 
 @Injectable({
     providedIn: "root",
@@ -23,6 +24,14 @@ export class SignalRService {
 
     sendChatMessage(message: ChatMessage) {
         this.hubConnection.invoke("SendChatMessage", message);
+    }
+
+    addToGroup(group: EGroups, opt?: string) {
+        this.hubConnection.invoke("AddToGroup", group, opt);
+    }
+
+    removeFromGroup(group: EGroups, opt?: string) {
+        this.hubConnection.invoke("RemoveFromGroup", group, opt);
     }
 
     private createConnection() {
