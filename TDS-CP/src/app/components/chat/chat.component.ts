@@ -4,6 +4,7 @@ import { ChatService } from "./chat.service";
 import { MediaMatcher } from "../../../../node_modules/@angular/cdk/layout";
 import { Router } from "../../../../node_modules/@angular/router";
 import { MatInput } from "../../../../node_modules/@angular/material";
+import { Subscription } from "../../../../node_modules/rxjs";
 
 @Component({
     selector: "app-chat",

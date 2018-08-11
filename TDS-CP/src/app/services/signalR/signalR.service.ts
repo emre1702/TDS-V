@@ -1,8 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { ChatMessage } from "../../models/chatMessage.model";
 import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
 import { GlobalDataService } from "../globaldata.service";
-import { Subject } from "../../../../node_modules/rxjs";
 import { ReportUserEntry } from "../../models/reportUserEntry.model";
 import { EGroups } from "../../enums/egroups.enum";
 import { AuthService } from "../auth/auth.service";
@@ -15,10 +14,10 @@ export class SignalRService {
     private hubConnection: HubConnection;
     private started = false;
 
-    onHubConnected = new Subject<Boolean>();
-    onMessageReceived = new Subject<ChatMessage>();
-    onNewUserReport = new Subject<ReportUserEntry>();
-    onLogoutRequest = new Subject<string>();
+    onHubConnected = new EventEmitter(true);
+    onMessageReceived = new EventEmitter<ChatMessage>(true);
+    onNewUserReport = new EventEmitter<ReportUserEntry>(true);
+    onLogoutRequest = new EventEmitter<string>(true);
 
     constructor(private globaldata: GlobalDataService, private auth: AuthService, private router: Router) {
         this.start();
@@ -84,7 +83,7 @@ export class SignalRService {
         this.hubConnection
             .start()
             .then(() => {
-                this.onHubConnected.next(true);
+                this.onHubConnected.next();
             })
             .catch(error => {
                 console.log("Error - Couldn't connect with hub! Retrying ...");

@@ -13,7 +13,7 @@ import { GlobalDataService } from "../../services/globaldata.service";
     templateUrl: "./logs.component.html",
     styleUrls: ["./logs.component.css"],
 })
-export class LogsComponent implements OnInit, OnDestroy {
+export class LogsComponent implements OnInit {
     @ViewChild("paginator") paginator: MatPaginator;
     @ViewChild("nameOnlyInput") nameOnlyInput: ElementRef;
     @ViewChild("targetOnlyInput") targetOnlyInput: ElementRef;
@@ -40,12 +40,6 @@ export class LogsComponent implements OnInit, OnDestroy {
                 this.logsection = this.route.snapshot.params.logtype;
             }
         });
-    }
-
-    ngOnDestroy() {
-        if (this.navSubscription) {
-            this.navSubscription.unsubscribe();
-        }
     }
 
     loadEntries(logentries: LogEntry[]) {
