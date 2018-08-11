@@ -70,12 +70,12 @@ export class SignalRService {
 
         // CHAT //
         this.hubConnection.on("SendChatMessage", (data: ChatMessage) => {
-            this.onMessageReceived.next(data);
+            this.onMessageReceived.emit(data);
         });
 
         // LOGOUT //
         this.hubConnection.on("Logout", () => {
-            this.onLogoutRequest.next("Server requested a logout!");
+            this.onLogoutRequest.emit("Server requested a logout!");
         });
     }
 
@@ -83,20 +83,20 @@ export class SignalRService {
         this.hubConnection
             .start()
             .then(() => {
-                this.onHubConnected.next();
+                this.onHubConnected.emit();
             })
             .catch(error => {
                 console.log("Error - Couldn't connect with hub! Retrying ...");
                 setTimeout(this.startConnection(), 5000);
                 if (this.router.url !== "/login") {
-                    this.onLogoutRequest.next("Can't connect to the server!");
+                    this.onLogoutRequest.emit("Can't connect to the server!");
                 }
             });
         this.hubConnection.onclose(error => {
             if (error) {
                 console.log("Error - Couldn't connect with hub! Retrying ...");
                 setTimeout(this.startConnection(), 5000);
-                this.onLogoutRequest.next("Disconnected to the server!");
+                this.onLogoutRequest.emit("Disconnected to the server!");
             }
 
         });

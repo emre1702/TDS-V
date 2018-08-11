@@ -40,14 +40,14 @@ export class ChatService {
         }
         this.signalR.onMessageReceived.subscribe((message: ChatMessage) => {
             this.entries.push(message);
-            this.onEntryChange.next();
+            this.onEntryChange.emit();
         });
     }
 
     requestLastChatMessages() {
         this.http.get(this.globaldata.apiUrl + "/chat", {withCredentials: true, headers: this.auth.getHeaders()}).subscribe((datas: ChatMessage[]) => {
             this.entries = datas;
-            this.onEntryChange.next();
+            this.onEntryChange.emit();
         });
     }
 
@@ -64,7 +64,7 @@ export class ChatService {
             message.sent = new Date();
             this.entries.push(message);
             this.signalR.sendChatMessage(message);
-            this.onEntryChange.next(true);
+            this.onEntryChange.emit();
         }
     }
 }

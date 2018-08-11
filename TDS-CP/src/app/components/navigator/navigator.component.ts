@@ -21,7 +21,7 @@ export class NavigatorComponent {
     }
 
     logoutStart() {
-        this.signalR.onLogoutRequest.next();
+        this.signalR.onLogoutRequest.emit();
     }
 
     logout(error: string) {

@@ -27,14 +27,13 @@ export class LogsComponent implements OnInit {
     private lastnameonly: string;
     private lasttargetonly: string;
     private lastlobbyonly: string;
-    private navSubscription: Subscription;
 
     constructor(private http: HttpClient, private router: Router, private auth: AuthService, private loading: LoadingService, public globaldata: GlobalDataService, private route: ActivatedRoute) {
     }
 
     ngOnInit() {
         this.logsection = this.route.snapshot.params.logtype;
-        this.navSubscription = this.router.events.subscribe((e: any) => {
+        this.router.events.subscribe((e: any) => {
             if (e instanceof NavigationEnd) {
                 this.resetSearch();
                 this.logsection = this.route.snapshot.params.logtype;
