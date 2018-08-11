@@ -34,6 +34,7 @@ import { PlayerOnlineService } from "./components/playeronline/playeronline.serv
 import { ChatComponent } from "./components/chat/chat.component";
 import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ChatService } from "./components/chat/chat.service";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 export function getToken() {
     return localStorage.getItem("token");
@@ -61,6 +62,7 @@ export function getToken() {
                 skipWhenExpired: true
             }
         }),
+        FlexLayoutModule,
 
         MatIconModule,
         MatFormFieldModule,
