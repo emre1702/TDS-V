@@ -11,12 +11,12 @@ namespace TDSCPServer
 {
     public class NotifyHub : Hub
     {
-        private static IHubContext<NotifyHub> _hubContext;
+        /*private static IHubContext<NotifyHub> _hubContext;
 
         public NotifyHub(IHubContext<NotifyHub> hubContext)
         {
             _hubContext = hubContext;
-        }
+        }*/
 
         public Task SendChatMessage(ChatMessage message)
         {
@@ -32,13 +32,6 @@ namespace TDSCPServer
         public Task RemoveFromGroup(EGroups group, string optional = "")
         {
             return Groups.AddToGroupAsync(Context.ConnectionId, group.ToString() + optional);
-        }
-
-        public static void LogoutAll()
-        {
-            _hubContext.Clients.All.SendAsync("Logout");
-        }
-
-        
+        }        
     }
 }
