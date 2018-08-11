@@ -30,6 +30,16 @@ export class SignalRService {
             this.createConnection();
             this.registerServerEvents();
             this.startConnection();
+            this.onLogoutRequest.subscribe(() => {
+                this.stop();
+            });
+        }
+    }
+
+    private stop() {
+        if (this.started) {
+            this.started = false;
+            this.hubConnection.stop();
         }
     }
 
