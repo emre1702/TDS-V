@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 export class GlobalDataService {
     private static singleton: GlobalDataService;
 
-    public readonly apiUrl = "http://194.95.0.48:4201";
+    public readonly apiUrl = "http://194.95.0.48:4201";   // "http://tds-v.com:4201";
     public showingPlayername = false;
     public readonly adminLvlNames = ["User", "Supporter", "Administrator", "Projectleader"];
     public readonly adminLvlColors = ["rgb(220,220,220)", "rgb(113,202,113)", "rgb(253,132,85)", "rgb(222,50,50)"];
@@ -37,6 +37,10 @@ export class GlobalDataService {
         ["unbanlobby"]: 0,
         ["all"]: 0,
     };
+
+    get username(): string {
+        return localStorage.getItem("username") || "-";
+    }
 
     get adminLvl(): number {
         return parseInt(localStorage.getItem("adminlvl"), 10) || 0;
