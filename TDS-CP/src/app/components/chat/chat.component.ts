@@ -34,7 +34,8 @@ export class ChatComponent implements OnDestroy, AfterViewInit {
 
     private _mobileQueryListener: () => void;
 
-    constructor(public chatservice: ChatService, private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher, public router: Router) {
+    constructor(public chatservice: ChatService, private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher,
+                public router: Router, private changedetector: ChangeDetectorRef ) {
         this.mobileQuery = this.media.matchMedia("(max-width: 599px)");
         this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
@@ -50,9 +51,8 @@ export class ChatComponent implements OnDestroy, AfterViewInit {
     }
 
     private scrollChatToBottom() {
-        setTimeout(() => {
-            this.contentPlace.nativeElement.scrollTo({left: 0 , top: this.contentPlace.nativeElement.scrollHeight, behavior: "smooth"});
-        }, 500);
+        this.changedetector.detectChanges();
+        this.contentPlace.nativeElement.scrollTo({left: 0 , top: this.contentPlace.nativeElement.scrollHeight, behavior: "smooth"});
     }
 
     sendChatMessage() {
