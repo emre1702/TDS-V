@@ -42,7 +42,6 @@ export class ChatComponent implements OnDestroy {
     }
 
     sendChatMessage() {
-        console.log(this.chatInput);
         const text = this.chatInput.value;
         if (text.length < 3) {
             this.messageTooShort = true;
