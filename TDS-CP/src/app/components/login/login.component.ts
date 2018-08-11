@@ -27,9 +27,10 @@ export class LoginComponent {
     onSubmit(form: NgForm) {
         if (!this.loading.showing) {
             this.loading.show();
-            this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {token: string, adminlvl: number, error: string}) => {
+            this.http.post(this.settings.apiUrl + "/Login", form.value).subscribe((data: {uid: number, token: string, username: string, adminlvl: number, error: string}) => {
                 if (data.token) {
                     localStorage.setItem("token", data.token);
+                    localStorage.setItem("username", data.username);
                     localStorage.setItem("adminlvl", data.adminlvl.toString());
                     this.router.navigateByUrl("home");
                     this.signalR.start();
