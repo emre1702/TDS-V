@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="router.url !== '/login'">
+<mat-toolbar fxLayout="row wrap" *ngIf="router.url !== '/login'">
     <button mat-button>Account</button>
     <button mat-button>Gang</button>
     <button mat-button [matMenuTriggerFor]="admin" *ngIf="globaldata.adminLvl > 0">Admin</button>
