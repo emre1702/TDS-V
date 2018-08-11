@@ -18,7 +18,7 @@ export class SignalRService {
     onHubConnected = new Subject<Boolean>();
     onMessageReceived = new Subject<ChatMessage>();
     onNewUserReport = new Subject<ReportUserEntry>();
-    onLogoutRequest = new Subject<Boolean>();
+    onLogoutRequest = new Subject<string>();
 
     constructor(private globaldata: GlobalDataService, private auth: AuthService, private router: Router) {
         this.start();
@@ -76,7 +76,7 @@ export class SignalRService {
 
         // LOGOUT //
         this.hubConnection.on("Logout", () => {
-            this.onLogoutRequest.next(true);
+            this.onLogoutRequest.next("Server requested a logout!");
         });
     }
 
@@ -90,13 +90,16 @@ export class SignalRService {
                 console.log("Error - Couldn't connect with hub! Retrying ...");
                 setTimeout(this.startConnection(), 5000);
                 if (this.router.url !== "/login") {
-                    this.onLogoutRequest.next(true);
+                    this.onLogoutRequest.next("Can't connect to the server!");
                 }
             });
         this.hubConnection.onclose(error => {
-            console.log("Error - Couldn't connect with hub! Retrying ...");
-            setTimeout(this.startConnection(), 5000);
-            this.onLogoutRequest.next(true);
+            if (error) {
+                console.log("Error - Couldn't connect with hub! Retrying ...");
+                setTimeout(this.startConnection(), 5000);
+                this.onLogoutRequest.next("Disconnected to the server!");
+            }
+
         });
 
     }

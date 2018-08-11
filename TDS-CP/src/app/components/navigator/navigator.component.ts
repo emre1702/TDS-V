@@ -6,6 +6,7 @@ import { GlobalDataService } from "../../services/globaldata.service";
 import { AuthService } from "../../services/auth/auth.service";
 import { SignalRService } from "../../services/signalR/signalR.service";
 import { EGroups } from "../../enums/egroups.enum";
+import { MatSnackBar } from "../../../../node_modules/@angular/material";
 
 @Component({
     selector: "app-navigator",
@@ -14,16 +15,22 @@ import { EGroups } from "../../enums/egroups.enum";
 })
 export class NavigatorComponent {
 
-    constructor(public router: Router, private playeronline: PlayerOnlineService, public globaldata: GlobalDataService, private auth: AuthService,
-            private http: HttpClient, private signalR: SignalRService) {
-        signalR.onLogoutRequest.subscribe(() => this.logout());
+    constructor(public router: Router, public globaldata: GlobalDataService, private signalR: SignalRService, private auth: AuthService,
+            private playeronline: PlayerOnlineService, private http: HttpClient, private snackBar: MatSnackBar) {
+        signalR.onLogoutRequest.subscribe((error) => this.logout(error));
     }
 
-    logout() {
+    logoutStart() {
+        this.signalR.onLogoutRequest.next();
+    }
+
+    logout(error: string) {
+        console.log("on log out navigator");
         this.auth.removeAuthentication();
-        this.http.post(this.globaldata.apiUrl + "/Logout", {withCredentials: true, header: this.auth.getHeaders()}).subscribe(() => {});
         this.signalR.removeFromGroup(EGroups.Loggedin);
         this.playeronline.ngOnDestroy();
+        if (error) {
+            this.snackBar.open(error);
+        }
     }
-
 }
