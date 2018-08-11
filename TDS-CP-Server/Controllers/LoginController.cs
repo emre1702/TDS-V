@@ -38,6 +38,7 @@ namespace TDSCPServer.Controllers
             {
                 uid = data.UID,
                 token = tokenstring,
+                username = data.Username,
                 adminlvl = data.AdminLvl
             });
         }
