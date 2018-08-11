@@ -1,7 +1,7 @@
 <div id="container">
     <mat-sidenav-container id="tab">
         <mat-sidenav fxLayout="column" #sidenav autoFocus=false [opened]="router.url !== '/login'" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" position="end">
-            <div id="content_place">
+            <div id="content_place" #contentplace>
                 <div class="text" *ngFor="let entry of chatservice.entries">
                     [{{ entry.sent | date:"dd.MM. - HH:mm:ss" }}] {{ entry.username }}:<br>{{ entry.message }}
                 </div>

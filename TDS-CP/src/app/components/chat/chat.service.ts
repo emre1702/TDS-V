@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { SignalRService } from "../../services/signalR/signalR.service";
 import { ChatMessage } from "../../models/chatMessage.model";
-import { Subject } from "../../../../node_modules/rxjs";
 import { HttpClient } from "@angular/common/http";
 import { GlobalDataService } from "../../services/globaldata.service";
 import { AuthService } from "../../services/auth/auth.service";
+import { Subject } from "../../../../node_modules/rxjs";
 
 @Injectable({
     providedIn: "root"
@@ -14,6 +14,8 @@ export class ChatService {
     activatedbool = false;
     entries: ChatMessage[] = [];
     started = false;
+
+    onEntryChange = new Subject<Boolean>();
 
     constructor(private signalR: SignalRService, private router: Router, private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) {
         if (router.url !== "/login") {
@@ -39,12 +41,14 @@ export class ChatService {
         }
         this.signalR.onMessageReceived.subscribe((message: ChatMessage) => {
             this.entries.push(message);
+            this.onEntryChange.next(true);
         });
     }
 
     requestLastChatMessages() {
         this.http.get(this.globaldata.apiUrl + "/chat", {withCredentials: true, headers: this.auth.getHeaders()}).subscribe((datas: ChatMessage[]) => {
             this.entries = datas;
+            this.onEntryChange.next(true);
         });
     }
 
@@ -61,6 +65,7 @@ export class ChatService {
             message.sent = new Date();
             this.entries.push(message);
             this.signalR.sendChatMessage(message);
+            this.onEntryChange.next(true);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { Component, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { trigger, transition, state, style, animate } from "../../../../node_modules/@angular/animations";
 import { ChatService } from "./chat.service";
 import { MediaMatcher } from "../../../../node_modules/@angular/cdk/layout";
@@ -22,12 +22,14 @@ import { MatInput } from "../../../../node_modules/@angular/material";
         ])
     ]
 })
-export class ChatComponent implements OnDestroy {
+export class ChatComponent implements OnDestroy, AfterViewInit {
     mobileQuery: MediaQueryList;
     messageTooShort = false;
     messageTooLong = false;
+    scrollBeforeAfterView = false;
     @ViewChild("tabOpenerButton") tabOpener: ElementRef;
     @ViewChild("chatinput") chatInput: MatInput;
+    @ViewChild("contentplace") contentPlace: ElementRef;
 
     private _mobileQueryListener: () => void;
 
@@ -39,6 +41,17 @@ export class ChatComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
+
+    ngAfterViewInit() {
+        this.scrollChatToBottom();
+        this.chatservice.onEntryChange.subscribe(this.scrollChatToBottom.bind(this));
+    }
+
+    private scrollChatToBottom() {
+        setTimeout(() => {
+            this.contentPlace.nativeElement.scrollTo({left: 0 , top: this.contentPlace.nativeElement.scrollHeight, behavior: "smooth"});
+        }, 500);
     }
 
     sendChatMessage() {
