@@ -8,6 +8,7 @@ import { PlayerOnlineService } from "../playeronline/playeronline.service";
 import { GlobalDataService } from "../../services/globaldata.service";
 import { ChatService } from "../chat/chat.service";
 import { SignalRService } from "../../services/signalR/signalR.service";
+import { EGroups } from "../../enums/egroups.enum";
 
 @Component({
     selector: "app-login",
@@ -36,6 +37,7 @@ export class LoginComponent {
                     this.signalR.start();
                     this.playerOnlineService.startRefreshingPlayernames();
                     this.chat.start();
+                    this.signalR.addToGroup(EGroups.Loggedin);
                 } else {
                     this.snackBar.open(data.error);
                 }
