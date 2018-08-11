@@ -1,7 +1,9 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { trigger, transition, state, style, animate } from "../../../../node_modules/@angular/animations";
 import { ChatService } from "./chat.service";
-import { AnimationEvent } from "@angular/animations";
+import { MediaMatcher } from "../../../../node_modules/@angular/cdk/layout";
+import { Router } from "../../../../node_modules/@angular/router";
+import { MatInput } from "../../../../node_modules/@angular/material";
 
 @Component({
     selector: "app-chat",
@@ -20,28 +22,46 @@ import { AnimationEvent } from "@angular/animations";
         ])
     ]
 })
-export class ChatComponent {
-    opened = true;
+export class ChatComponent implements OnDestroy {
+    mobileQuery: MediaQueryList;
+    messageTooShort = false;
+    messageTooLong = false;
     @ViewChild("tabOpenerButton") tabOpener: ElementRef;
+    @ViewChild("chatinput") chatInput: MatInput;
 
-    constructor(public chatservice: ChatService) {}
+    private _mobileQueryListener: () => void;
 
-    toggleOpenState() {
-        this.opened = !this.opened;
-        this.chatservice.toggleOpenState(this.opened);
+    constructor(public chatservice: ChatService, private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher, public router: Router) {
+        this.mobileQuery = this.media.matchMedia("(max-width: 599px)");
+        this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    animationStart(event: AnimationEvent) {
-        if (this.opened) {
-            event.element.hidden = false;
-            this.tabOpener.nativeElement.style.height = "10vh";
-        }
+    ngOnDestroy() {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    animationDone(event: AnimationEvent) {
-        if (!this.opened) {
-            event.element.hidden = true;
-            this.tabOpener.nativeElement.style.height = "100%";
+    sendChatMessage() {
+        console.log(this.chatInput);
+        const text = this.chatInput.value;
+        if (text.length < 3) {
+            this.messageTooShort = true;
+        } else {
+            this.messageTooShort = false;
         }
+
+        if (text.length > 100) {
+            this.messageTooLong = true;
+        } else {
+            this.messageTooLong = false;
+        }
+        if (!this.messageTooShort && !this.messageTooLong) {
+            this.chatservice.sendChatMessage(text);
+            this.chatInput.value = "";
+            this.chatInput.errorState = false;
+        } else {
+            this.chatInput.errorState = true;
+        }
+
     }
 }

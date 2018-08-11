@@ -1,19 +1,39 @@
 <div id="container">
-    <mat-sidenav-container [@chatOpened]="opened" (@chatOpened.start)="animationStart($event)" (@chatOpened.done)="animationDone($event)" id="tab">
-        <mat-sidenav #sidenav autoFocus=false mode="side" position="end"></mat-sidenav>
-        <mat-sidenav-content>
+    <mat-sidenav-container id="tab">
+        <mat-sidenav fxLayout="column" #sidenav autoFocus=false [opened]="router.url !== '/login'" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" position="end">
             <div id="content_place">
                 <div class="text" *ngFor="let entry of chatservice.entries">
-                    [{{ entry.sent | date:"dd.MM. - hh:mm:ss" }}] {{ entry.username }}:<br>{{ entry.message }}
+                    [{{ entry.sent | date:"dd.MM. - HH:mm:ss" }}] {{ entry.username }}:<br>{{ entry.message }}
                 </div>
             </div>
             <div id="send_row">
-                <mat-form-field id="chat_input">
-                    <input matInput #chatinput placeholder="message">
+                <mat-form-field id="chat_input" (keyup.enter)="sendChatMessage()">
+                    <input matInput #chatinput="matInput" type="text" placeholder="message">
+                    <mat-error *ngIf="messageTooShort">
+                        Message is too short!
+                    </mat-error>
+                    <mat-error *ngIf="messageTooLong">
+                        Message is too short!
+                    </mat-error>
+
                 </mat-form-field>
-                <button id="chat_send_button" mat-button (click)="chatservice.sendChatMessage(chatinput.value)">Send</button>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div id="all">
+                <div id="navigator" *ngIf="router.url !== '/login'">
+                    <app-navigator></app-navigator>
+                </div>
+                <div id="body">
+                    <router-outlet></router-outlet>
+                </div>
+                <app-loading></app-loading>
+                <div id="playeronline" *ngIf="router.url !== '/login'">
+                    <app-playeronline></app-playeronline>
+                </div>
+                <button mat-icon-button *ngIf="router.url !== '/login'" id="tab_opener" (click)="sidenav.toggle()"><mat-icon>chat</mat-icon></button>
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
-    <div id="tab_opener" #tabOpenerButton (click)="toggleOpenState()"><span class="toptobottom not-selectable">Chat</span></div>
 </div>
+

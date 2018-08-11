@@ -15,8 +15,6 @@ export class ChatService {
     entries: ChatMessage[] = [];
     started = false;
 
-    onOpenToggle = new Subject<Boolean>();
-
     constructor(private signalR: SignalRService, private router: Router, private http: HttpClient, private globaldata: GlobalDataService, private auth: AuthService) {
         if (router.url !== "/login") {
             this.start();
@@ -59,14 +57,10 @@ export class ChatService {
 
     sendChatMessage(text: string) {
         if (this.router.url !== "/login") {
-            let message = new ChatMessage("Bonus", text);
+            let message = new ChatMessage(this.globaldata.username, text);
             message.sent = new Date();
             this.entries.push(message);
             this.signalR.sendChatMessage(message);
         }
-    }
-
-    toggleOpenState(bool: Boolean) {
-        this.onOpenToggle.next(bool);
     }
 }
