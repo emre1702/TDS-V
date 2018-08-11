@@ -6,6 +6,7 @@ import { Subject } from "../../../../node_modules/rxjs";
 import { ReportUserEntry } from "../../models/reportUserEntry.model";
 import { EGroups } from "../../enums/egroups.enum";
 import { AuthService } from "../auth/auth.service";
+import { Router } from "../../../../node_modules/@angular/router";
 
 @Injectable({
     providedIn: "root",
@@ -19,7 +20,7 @@ export class SignalRService {
     onNewUserReport = new Subject<ReportUserEntry>();
     onLogoutRequest = new Subject<Boolean>();
 
-    constructor(private globaldata: GlobalDataService, private auth: AuthService) {
+    constructor(private globaldata: GlobalDataService, private auth: AuthService, private router: Router) {
         this.start();
     }
 
@@ -78,7 +79,15 @@ export class SignalRService {
             .catch(error => {
                 console.log("Error - Couldn't connect with hub! Retrying ...");
                 setTimeout(this.startConnection(), 5000);
+                if (this.router.url !== "/login") {
+                    this.onLogoutRequest.next(true);
+                }
             });
+        this.hubConnection.onclose(error => {
+            console.log("Error - Couldn't connect with hub! Retrying ...");
+            setTimeout(this.startConnection(), 5000);
+            this.onLogoutRequest.next(true);
+        });
 
     }
 }
