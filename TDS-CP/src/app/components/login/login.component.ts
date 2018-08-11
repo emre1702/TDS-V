@@ -9,6 +9,7 @@ import { GlobalDataService } from "../../services/globaldata.service";
 import { ChatService } from "../chat/chat.service";
 import { SignalRService } from "../../services/signalR/signalR.service";
 import { EGroups } from "../../enums/egroups.enum";
+import { AuthService } from "../../services/auth/auth.service";
 
 @Component({
     selector: "app-login",
@@ -23,7 +24,7 @@ export class LoginComponent {
     });
 
     constructor(private http: HttpClient, private snackBar: MatSnackBar, private settings: GlobalDataService, private loading: LoadingService, private router: Router,
-        private playerOnlineService: PlayerOnlineService, private chat: ChatService, private signalR: SignalRService ) { }
+        private playerOnlineService: PlayerOnlineService, private chat: ChatService, private signalR: SignalRService) {}
 
     onSubmit(form: NgForm) {
         if (!this.loading.showing) {
@@ -34,10 +35,12 @@ export class LoginComponent {
                     localStorage.setItem("username", data.username);
                     localStorage.setItem("adminlvl", data.adminlvl.toString());
                     this.router.navigateByUrl("home");
+                    this.signalR.onHubConnected.subscribe(() => {
+                        this.signalR.addToGroup(EGroups.Loggedin);
+                        this.chat.start();
+                    });
                     this.signalR.start();
                     this.playerOnlineService.startRefreshingPlayernames();
-                    this.chat.start();
-                    this.signalR.addToGroup(EGroups.Loggedin);
                 } else {
                     this.snackBar.open(data.error);
                 }
