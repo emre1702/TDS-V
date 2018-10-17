@@ -32,3 +32,4 @@ TDS/server/manager/database/DatabaseManager.cs
 /TDS-CP-Server/obj
 /TDS/app.config
 /TDS/efcore.bat
+/TDS/bin/
