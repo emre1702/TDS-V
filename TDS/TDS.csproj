@@ -28,6 +28,7 @@
     <None Remove="server\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="gtanetwork.api" Version="0.3.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
       <PrivateAssets>all</PrivateAssets>
@@ -53,6 +54,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="servernew\Entities\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
 </Project>
