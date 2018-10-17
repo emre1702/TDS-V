@@ -31,3 +31,4 @@ TDS/server/manager/database/DatabaseManager.cs
 /TDS-CP-Server/bin/Debug/netcoreapp2.0
 /TDS-CP-Server/obj
 /TDS/app.config
+/TDS/efcore.bat
