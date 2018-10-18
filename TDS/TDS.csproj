@@ -54,6 +54,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <Folder Include="Entity\" />
   </ItemGroup>
 </Project>
