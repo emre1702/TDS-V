@@ -16,6 +16,8 @@ namespace TDS.Entities
         public string Password { get; set; }
         public string Email { get; set; }
         public bool? AllowDataTransfer { get; set; }
+        public DateTime LastLoginTimestamp { get; set; }
+        public DateTime RegisterTimestamp { get; set; }
 
         public Playersettings Playersettings { get; set; }
         public ICollection<Playerlobbystats> Playerlobbystats { get; set; }

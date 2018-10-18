@@ -13,5 +13,6 @@ namespace TDS.Entities
         public uint Damage { get; set; }
 
         public Players IdNavigation { get; set; }
+        public Lobbies LobbyNavigation { get; set; }
     }
 }

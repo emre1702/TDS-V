@@ -16,6 +16,8 @@ namespace TDS.Entities
         }
 
         public virtual DbSet<Languages> Languages { get; set; }
+        public virtual DbSet<Lobbies> Lobbies { get; set; }
+        public virtual DbSet<Logs> Logs { get; set; }
         public virtual DbSet<Playerlobbystats> Playerlobbystats { get; set; }
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<Playersettings> Playersettings { get; set; }
@@ -42,11 +44,41 @@ namespace TDS.Entities
                     .HasColumnType("varchar(50)");
             });
 
+            modelBuilder.Entity<Lobbies>(entity =>
+            {
+                entity.ToTable("lobbies");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateTimestamp).HasColumnType("timestamp");
+
+                entity.Property(e => e.IsTemporary)
+                    .IsRequired()
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("'b\\'1\\''");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.Password).HasColumnType("varchar(100)");
+            });
+
+            modelBuilder.Entity<Logs>(entity =>
+            {
+                entity.ToTable("logs");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
+
             modelBuilder.Entity<Playerlobbystats>(entity =>
             {
                 entity.HasKey(e => new { e.Id, e.Lobby });
 
                 entity.ToTable("playerlobbystats");
+
+                entity.HasIndex(e => e.Lobby)
+                    .HasName("FK_playerlobbystats_lobbies");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -64,6 +96,11 @@ namespace TDS.Entities
                     .WithMany(p => p.Playerlobbystats)
                     .HasForeignKey(d => d.Id)
                     .HasConstraintName("FK_playerlobbystats_player");
+
+                entity.HasOne(d => d.LobbyNavigation)
+                    .WithMany(p => p.Playerlobbystats)
+                    .HasForeignKey(d => d.Lobby)
+                    .HasConstraintName("FK_playerlobbystats_lobbies");
             });
 
             modelBuilder.Entity<Players>(entity =>
@@ -79,6 +116,10 @@ namespace TDS.Entities
 
                 entity.Property(e => e.Email).HasColumnType("varchar(100)");
 
+                entity.Property(e => e.LastLoginTimestamp)
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
@@ -86,6 +127,10 @@ namespace TDS.Entities
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.RegisterTimestamp)
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
 
                 entity.Property(e => e.Scname)
                     .IsRequired()

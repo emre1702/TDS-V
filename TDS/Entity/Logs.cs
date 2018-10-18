@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TDS.Entities
 {
-    public partial class Setting
+    public partial class Logs
     {
         public uint Id { get; set; }
     }
