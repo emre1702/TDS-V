@@ -1,4 +1,4 @@
-﻿namespace TDS.Manager
+﻿namespace TDS.Utility
 {
     using GTANetworkAPI;
     using System;
