@@ -1,43 +1,119 @@
 ﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Threading.Tasks;
+using TDS.Default;
+using TDS.Entity;
+using TDS.Instance.Player;
 
 namespace TDS.Manager.Player
 {
     static class Player
     {
-        private static ConditionalWeakTable<Client, Entities.Players> playerEntities = new ConditionalWeakTable<Client, Entities.Players>(); 
+        private static ConditionalWeakTable<Client, Players> clientEntities = new ConditionalWeakTable<Client, Players>();
+        private static readonly ConditionalWeakTable<Client, Character> clientPlayers = new ConditionalWeakTable<Client, Character>();
 
-        /// <summary>
-        /// Get the EF Entity for a player.
-        /// First look for it in playerEntities (caching) - if it's not there, search for it in the Database.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        public static Entities.Players GetEntity(this Client player)
+        public static Client GetClient(this Players character)
         {
-            return playerEntities.GetValue(player, (Client pl) =>
+            foreach (KeyValuePair<Client, Players> entry in clientEntities)
             {
-                using (var dbcontext = new Entities.TDSNewContext())
+                if (entry.Value == character)
                 {
-                    Entities.Players entity = dbcontext.Players.FirstOrDefault(p => p.Scname == pl.SocialClubName);
-                    if (entity != null)
-                    {
-                        playerEntities.Add(pl, entity);
-                    }
-                    return entity;
+                    return entry.Key;
                 }
-            });
+            }
+            return null;
         }
 
-        public static Entities.Playersettings GetSettings(this Client player)
+        public static Character GetChar(this Client client)
         {
-            return GetEntity(player)?.Playersettings;
+           return clientPlayers.GetValue(client, (Client c) =>
+           {
+                Character player = new Character
+                {
+                    Player = c
+                };
+                clientPlayers.Add(c, player);
+                return player;
+           });
+        }
+
+        public static Players GetEntity(this Client client)
+        {
+            return GetChar(client)?.Entity;
+        }
+
+        public static Client GetPlayer(uint id)
+        {
+            foreach (var entry in clientPlayers)
+            {
+                if (entry.Value.Entity.Id == id)
+                {
+                    return entry.Value.Player;
+                }
+            }
+            return null;
+        }
+
+        public static Playersettings GetSettings(this Client player)
+        {
+            return player.GetChar().Entity.Playersettings;
+        }
+
+        public static async Task<Players> GetEntityByID(uint id)
+        {
+            using (var dbcontext = new TDSNewContext())
+            {
+                return await dbcontext.Players.FindAsync(id);
+            }
+        }
+
+        public static async Task<bool> DoesPlayerWithScnameExist(string scname)
+        {
+            return await GetPlayerIDByScname(scname) != 0;
+        }
+
+        public static async Task<uint> GetPlayerIDByScname(string scname)
+        {
+            // Check our cache first
+            var idobj = clientEntities
+                        .Where(pl => pl.Value.Scname == scname)
+                        .Select(pl => new { ID = pl.Value.Id })
+                        .FirstOrDefault();
+            bool exists = idobj != null;
+            if (!exists)
+            {
+                // Now check the database
+                using (var dbcontext = new TDSNewContext())
+                {
+                    idobj = (await dbcontext.Players
+                                .Where(p => p.Scname == scname)
+                                .Select(p => new { ID = p.Id })
+                                .ToListAsync()
+                            ).FirstOrDefault();
+                    exists = idobj != null;
+
+                }
+            }
+            return exists ? idobj.ID : 0;
         }
 
 
+
+        public static void GiveMoney(this Client player, int money)
+        {
+            Players entity = player.GetChar().Entity;
+            if (money >= 0 || entity.Playerstats.Money > money * -1)
+            {
+                entity.Playerstats.Money = (uint) (entity.Playerstats.Money + money);
+                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.ClientMoneyChange, entity.Playerstats.Money);
+            }
+            else
+                Logs.Error.Log($"Should have went to minus money! Current: {entity.Playerstats.Money} | Substracted money: {money}", 
+                                Environment.StackTrace, player);
+        }
     }
 }

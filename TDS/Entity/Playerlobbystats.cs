@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS.Entities
+namespace TDS.Entity
 {
     public partial class Playerlobbystats
     {
@@ -11,6 +11,10 @@ namespace TDS.Entities
         public uint Deaths { get; set; }
         public uint Assists { get; set; }
         public uint Damage { get; set; }
+        public uint TotalKills { get; set; }
+        public uint TotalDeaths { get; set; }
+        public uint TotalAssists { get; set; }
+        public uint TotalDamage { get; set; }
 
         public Players IdNavigation { get; set; }
         public Lobbies LobbyNavigation { get; set; }

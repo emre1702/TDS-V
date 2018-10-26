@@ -7,31 +7,29 @@ namespace TDS.Interface
     interface ILanguage
     {
         string ACCOUNT_DOESNT_EXIST { get; }
-        string ACTIVATED_HITSOUND { get; }
         string ADMINLVL_NOT_HIGH_ENOUGH { get; }
-        string ANSWERED_REPORT_INFO { get; }
 
+        string BOMB_PLANT_INFO { get; }
         string BOMB_PLANTED { get; }
 
         string COMMITED_SUICIDE { get; }
         string CONNECTING { get; }
-        string CREATED_REPORT_INFO { get; }
 
-        string DEACTIVATED_HITSOUND { get; }
         string DEATH_KILLED_INFO { get; }
         string DEATH_DIED_INFO { get; }
         string[] DEFUSE_INFO { get; }
 
         string GANG_DOESNT_EXIST_ANYMORE { get; }
+        string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
         string GOT_ASSIST { get; }
         string GOT_LAST_HITTED_KILL { get; }
         string GOT_OFFLINE_MESSAGE_WITH_NEW { get; }
         string GOT_OFFLINE_MESSAGE_WITHOUT_NEW { get; }
-        string GOT_REPORT_ANSWER_INFO { get; }
 
-        string GANG_INVITATION_WAS_REMOVED { get; }
-        
+        string HITSOUND_ACTIVATED { get; }
+        string HITSOUND_DEACTIVATED { get; }
+
         string KICK_INFO { get; }
         string KICK_YOU_INFO { get; }
         string KICK_LOBBY_INFO { get; }
@@ -53,12 +51,14 @@ namespace TDS.Interface
         string PERMABAN_YOU_INFO { get; }
         string PERMABAN_LOBBY_INFO { get; }
         string PERMAMUTE_INFO { get; }
-        string PLANT_INFO { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
         string PLAYER_NOT_MUTED { get; }
 
         string REASON_MISSING { get; }
+        string REPORT_ANSWERED_INFO { get; }
+        string REPORT_CREATED_INFO { get; }
+        string REPORT_GOT_ANSWER_INFO { get; }
         string ROUND_END_BOMB_DEFUSED_INFO { get; }
         string ROUND_END_BOMB_EXPLODED_INFO { get; }
         string ROUND_END_COMMAND_INFO { get; }

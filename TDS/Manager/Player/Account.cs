@@ -1,29 +1,20 @@
-﻿/*namespace TDS.Manager.Player
+﻿namespace TDS.Manager.Player
 {
-
     using System;
     using System.Collections.Generic;
-    using System.Data;
+    using System.Globalization;
+    using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
-    using database;
-    using extend;
     using GTANetworkAPI;
-    using GTANetworkInternals;
-    using instance.player;
-    using logs;
-    using TDS.server.enums;
-    using TDS.server.instance.utility;
-    using utility;
+    using Microsoft.EntityFrameworkCore;
+    using TDS.Entity;
+    using TDS.Interface;
+    using TDS.Enum;
+    using TDS.Manager.Utility;
+    using TDS.Default;
 
     class Account : Script
     {
-
-        public static Dictionary<string, uint> PlayerUIDs = new Dictionary<string, uint> { { "", 0 } };
-        private static Dictionary<uint, string> playerUIDNames = new Dictionary<uint, string> { { 0, "" } };
-        private static readonly Dictionary<string, bool> socialClubNameBanDict = new Dictionary<string, bool>();
-        private static readonly Dictionary<string, bool> addressBanDict = new Dictionary<string, bool>();
-
         public Account()
         {
         }
@@ -31,77 +22,107 @@
         private static void SendWelcomeMessage(Client player)
         {
             StringBuilder builder = new StringBuilder();
+            ILanguage lang = player.GetLang();
             builder.Append("#o#__________________________________________#w#");
-            for (int i = 1; i <= 7; i++)
+            for (int i = 1; i <= lang.WELCOME_MESSAGE.Length; i++)
             {
-                builder.Append("#n#" + player.GetLang("welcome_" + i));
+                builder.Append(lang.WELCOME_MESSAGE[i]);
             }
             builder.Append("#n##o#__________________________________________");
             player.SendChatMessage(builder.ToString());
         }
 
-        public static string GetNameByUID(uint uid)
+        [ServerEvent(Event.PlayerDisconnected)]
+        public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
         {
-            if (playerUIDNames.ContainsKey(uid))
-            {
-                return playerUIDNames[uid];
-            }
-            else
-                return "-";
-        }
+            Players entity = player.GetEntity();
+            if (entity == null)
+                return;
 
-        //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
-        [ServerEvent(Event.PlayerConnected)]
-        public static void OnPlayerConnected(Client player)
-        {
-            player.Position = new Vector3(0, 0, 1000).Around(10);
-            player.Freeze(true);
-            player.Name = player.SocialClubName;
-            NAPI.ClientEvent.TriggerClientEvent(player, "startRegisterLogin", player.SocialClubName, PlayerUIDs.ContainsKey(player.SocialClubName));
+            if (!entity.LoggedIn)
+                return;
+
+            entity.LoggedIn = false;
+            if (entity.AdminLvl > 0)
+                Admin.SetOffline(player);
+
+            using (var dbcontext = new TDSNewContext())
+            {
+                dbcontext.SaveChangesAsync();
+                dbcontext.Entry(entity).State = EntityState.Detached;
+            }
+            //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
         }
 
         [RemoteEvent("onPlayerTryRegister")]
-        public void OnPlayerTryRegisterEvent(Client player, string password, string email)
+        public static async void OnPlayerTryRegisterEvent(Client player, string password, string email)
         {
-            if (PlayerUIDs.ContainsKey(player.SocialClubName))
+            if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
                 return;
             Register.RegisterPlayer(player, password, email);
         }
 
+        //TODO check parameter (hitsoundon and language removed) + check if event gets triggered AFTER Login!!
         [RemoteEvent("onPlayerChatLoad")]
-        public void OnPlayerChatLoadEvent(Client player, string language, bool hitsoundon)
+        public static void OnPlayerChatLoadEvent(Client player)
         {
-            OnPlayerLanguageChangeEvent(player, language);
-            player.GetSettings().HitsoundOn = hitsoundon;
             SendWelcomeMessage(player);
-            OfflineMessages.LoadOfflineMessages(character);
+            OfflineMessagesManager.CheckOfflineMessages(player);
         }
 
         [RemoteEvent("onPlayerTryLogin")]
-        public void OnPlayerTryLoginEvent(Client player, string password)
+        public static async void OnPlayerTryLoginEvent(Client player, string password)
         {
-            if (PlayerUIDs.ContainsKey(player.SocialClubName))
+            uint id = await Player.GetPlayerIDByScname(player.SocialClubName);
+            if (id != 0)
             {
-                password = Utility.ToSHA512(password);
-                Login.LoginPlayer(player.GetChar(), PlayerUIDs[player.SocialClubName], password);
+                Login.LoginPlayer(player, id, password);
             }
             else
-                player.SendLangNotification("account_doesnt_exist");
+                NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().ACCOUNT_DOESNT_EXIST);
         }
 
         [RemoteEvent("onPlayerLanguageChange")]
-        public void OnPlayerLanguageChangeEvent(Client player, string language)
+        public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
-            player.GetChar().Language = (Language)Enum.Parse(typeof(Language), language);
+            if (System.Enum.IsDefined(typeof(ELanguage), language))
+                player.GetEntity().Playersettings.Language = language;
         }
 
-
-        public static void AddAccount(string name, uint uid)
+        //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
+        [ServerEvent(Event.PlayerConnected)]
+        public static async void OnPlayerConnected(Client player)
         {
-            PlayerUIDs[name] = uid;
+            player.Position = new Vector3(0, 0, 1000).Around(10);
+            player.Freeze(true);
+            player.Name = player.SocialClubName;    //TODO make it settable
+
+            using (var dbcontext = new TDSNewContext())
+            {
+                var ban = await dbcontext.Playerbans
+                    .Where(b => b.ForLobby == 0)
+                    .Where(b => b.Scname == player.SocialClubName || b.Serial == player.Serial || b.Ip == player.Address)
+                    .Where(b => !b.EndTimestamp.HasValue || b.EndTimestamp.Value > DateTime.Now)    //TODO: Is that correct this way?
+                    .AsNoTracking()
+                    .Select(b => new {
+                        b.Reason,
+                        Admin = b.AdminNavigation.Name,
+                        Start = b.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo),
+                        End = b.EndTimestamp.HasValue ? b.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never",
+                     })
+                    .FirstOrDefaultAsync();
+
+                if (ban != null)
+                {
+                    player.Kick($"Banned! Admin: {ban.Admin} - Reason: {ban.Reason} - End: {ban.End} - Start: {ban.Start}");  //Todo: Test line break and display
+                    return;
+                }
+            }
+
+            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
+        /*[System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         [ServerEvent(Event.PlayerConnected)]
         public static async void OnPlayerBeginConnect(Client player)
         {       //TODO it's on connected, not connect anymore 
@@ -163,23 +184,6 @@
                 Log.Error(ex.ToString());
                 lastPlayerUID = 0;
 
-            }
-        }
-
-        [ServerEvent(Event.PlayerDisconnected)]
-        public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
-        {
-            try
-            {
-                Character character = player.GetChar();
-                character.SaveData();
-                if (character.AdminLvl > 0)
-                    Admin.SetOffline(character);
-                //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
             }
         }
 
@@ -263,9 +267,8 @@
             }
 
 
-        }
+        }*/
 
     }
 
 }
-*/

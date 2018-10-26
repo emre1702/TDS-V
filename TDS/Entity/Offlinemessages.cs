@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TDS.Entity
+{
+    public partial class Offlinemessages
+    {
+        public uint Id { get; set; }
+        public uint TargetId { get; set; }
+        public uint SourceId { get; set; }
+        public string Message { get; set; }
+        public bool AlreadyLoadedOnce { get; set; }
+        public DateTime Timestamp { get; set; }
+
+        public Players Source { get; set; }
+        public Players Target { get; set; }
+    }
+}

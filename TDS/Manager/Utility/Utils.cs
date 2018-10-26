@@ -1,4 +1,4 @@
-﻿namespace TDS.Utility
+﻿namespace TDS.Manager.Utility
 {
     using GTANetworkAPI;
     using System;
@@ -6,8 +6,9 @@
     using System.Security.Cryptography;
     using System.Text;
 
-    static class Utility
+    static class Utils
     {
+        private static readonly StringBuilder strbuilder = new StringBuilder();
         public static readonly Random Rnd = new Random();
         private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
 
@@ -56,6 +57,22 @@
                 return player;
             name = name.ToLower();
             return NAPI.Pools.GetAllPlayers().Find(c => c.Name.ToLower().StartsWith(name));
+        }
+
+        public static string GetReplaced(string str, params string[] args)
+        {
+            if (args.Length > 0)
+            {
+                strbuilder.Append(str);
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    strbuilder.Replace("{" + (i + 1) + "}", args[i]);
+                }
+                string result = strbuilder.ToString();
+                strbuilder.Clear();
+                return result;
+            }
+            return str;
         }
 
     }
