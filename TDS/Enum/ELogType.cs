@@ -16,5 +16,7 @@ namespace TDS.Enum
         Next,
         Login,
         Register,
+        Lobby_Join,
+        Lobby_Leave
     }
 }

@@ -10,7 +10,7 @@ namespace TDS.Manager.Logs
     {
         private static readonly List<LogsRest> notsavedrestlogs = new List<LogsRest>();
 
-        public static void Log(ELogType type, Client source, bool saveipserial)
+        public static void Log(ELogType type, Client source, bool saveipserial = false, bool savelobby = false)
         {
             notsavedrestlogs.Add(
                 new LogsRest
@@ -19,6 +19,7 @@ namespace TDS.Manager.Logs
                     Source = source?.GetEntity()?.Id ?? 0,
                     Ip = saveipserial ? source?.Address : null,
                     Serial = saveipserial ? source?.Serial : null,
+                    Lobby = savelobby ? source?.GetChar().CurrentLobby?.Id : null
                 }
             );
         }

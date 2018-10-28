@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using TDS.Entity;
 
 namespace TDS.Instance.Lobby
@@ -10,13 +11,20 @@ namespace TDS.Instance.Lobby
 
         private readonly Lobbies entity;
 
+        public uint Id { get => this.entity.Id; }
         private readonly uint dimension;
+        private readonly Vector3 spawnPoint;
 
         public Lobby (Lobbies entity)
         {
             this.entity = entity;
 
             this.dimension = GetFreeDimension();
+            this.spawnPoint = new Vector3(
+                this.entity.DefaultSpawnX, 
+                this.entity.DefaultSpawnY, 
+                this.entity.DefaultSpawnZ
+            );
 
             LobbiesByIndex[this.entity.Id] = this;
             dimensionsUsed.Add(this.dimension);

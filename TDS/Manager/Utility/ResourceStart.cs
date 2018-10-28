@@ -5,7 +5,6 @@
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using TDS.Entity;
-    using TDS.Manager.Lobby;
     using TDS.Manager.Maps;
 
     class ResourceStart : Script
@@ -32,7 +31,7 @@
 
                     BansManager.RemoveExpiredBans(dbcontext);
                     await Maps.LoadMaps();
-                    await LobbyManager.LoadAllLobbies(dbcontext);
+                    await LobbyManager.LoadAllLobbiesWithTeams(dbcontext);
 
 
                     // Gang.LoadGangFromDatabase ();

@@ -32,6 +32,7 @@ namespace TDS.Entity
         public virtual DbSet<Playersettings> Playersettings { get; set; }
         public virtual DbSet<Playerstats> Playerstats { get; set; }
         public virtual DbSet<Settings> Settings { get; set; }
+        public virtual DbSet<Teams> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -110,6 +111,10 @@ namespace TDS.Entity
 
                 entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("'900'");
 
+                entity.Property(e => e.DisappearAfterDeathMs)
+                    .HasColumnName("DisappearAfterDeathMS")
+                    .HasDefaultValueSql("'4000'");
+
                 entity.Property(e => e.IsOfficial).HasColumnType("bit(1)");
 
                 entity.Property(e => e.IsTemporary).HasColumnType("bit(1)");
@@ -119,6 +124,10 @@ namespace TDS.Entity
                     .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.Password).HasColumnType("varchar(100)");
+
+                entity.Property(e => e.SpawnAgainAfterDeathMs)
+                    .HasColumnName("SpawnAgainAfterDeathMS")
+                    .HasDefaultValueSql("'500'");
 
                 entity.Property(e => e.StartArmor)
                     .HasColumnType("tinyint(3)")
@@ -467,6 +476,26 @@ namespace TDS.Entity
                 entity.Property(e => e.NewMapsPath)
                     .IsRequired()
                     .HasColumnType("varchar(300)");
+            });
+
+            modelBuilder.Entity<Teams>(entity =>
+            {
+                entity.ToTable("teams");
+
+                entity.HasIndex(e => e.Lobby)
+                    .HasName("FK_Teams_lobbies");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                entity.HasOne(d => d.LobbyNavigation)
+                    .WithMany(p => p.Teams)
+                    .HasForeignKey(d => d.Lobby)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Teams_lobbies");
             });
         }
     }

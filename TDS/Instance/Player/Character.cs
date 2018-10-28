@@ -14,7 +14,8 @@ namespace TDS.Instance.Player
         public Client Player;
         public Lobby.Lobby CurrentLobby;
         public Playerlobbystats CurrentLobbyStats;
-        public int TeamID;
+        public Teams Team;
+        public uint Lifes = 0;
 
         private Players fEntity;
 

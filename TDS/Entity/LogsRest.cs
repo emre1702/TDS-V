@@ -10,6 +10,7 @@ namespace TDS.Entity
         public uint Source { get; set; }
         public string Serial { get; set; }
         public string Ip { get; set; }
+        public uint? Lobby { get; set; }
         public DateTime Timestamp { get; set; }
     }
 }

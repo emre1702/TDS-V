@@ -17,17 +17,17 @@
             [ELanguage.English] = new English()
         };
 
-        public static ILanguage GetLang(this Client player)
+        public static ILanguage GetLang (this Client player)
         {
             return languageByID[(ELanguage)player.GetEntity().Playersettings.Language];
         }
 
-		public static ILanguage GetLang(this Players character)
+		public static ILanguage GetLang (this Players character)
 		{
             return languageByID[(ELanguage)character.Playersettings.Language];
         }
 
-        public static ILanguage GetLang(this Type language)
+        public static ILanguage GetLang (this Type language)
         {
             foreach (ILanguage lang in languageByID.Values)
             {
@@ -39,10 +39,20 @@
             return languageByID[ELanguage.English];
         }
 
-       /* public static void SendLangMessage(this Client player, Func<ILanguage, string> propertygetter)
+        public static Dictionary<ELanguage, string> GetLangDictionary (Func<ELanguage, string> langgetter)
         {
-            NAPI.Chat.SendChatMessageToPlayer(player, propertygetter(player.GetLang()));
-        }*/
+            Dictionary<ELanguage, string> returndict = new Dictionary<ELanguage, string>();
+            foreach (ELanguage language in Enum.GetValues(typeof(ELanguage)))
+            {
+                returndict[language] = langgetter(language);
+            }
+            return returndict;
+        }
+
+        /* public static void SendLangMessage(this Client player, Func<ILanguage, string> propertygetter)
+         {
+             NAPI.Chat.SendChatMessageToPlayer(player, propertygetter(player.GetLang()));
+         }*/
 
 
 

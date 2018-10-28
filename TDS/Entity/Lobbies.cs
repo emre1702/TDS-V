@@ -9,6 +9,7 @@ namespace TDS.Entity
         {
             Playerbans = new HashSet<Playerbans>();
             Playerlobbystats = new HashSet<Playerlobbystats>();
+            Teams = new HashSet<Teams>();
         }
 
         public uint Id { get; set; }
@@ -24,10 +25,13 @@ namespace TDS.Entity
         public float DefaultSpawnRotation { get; set; }
         public bool IsTemporary { get; set; }
         public bool IsOfficial { get; set; }
+        public uint DisappearAfterDeathMs { get; set; }
+        public uint SpawnAgainAfterDeathMs { get; set; }
         public DateTime? CreateTimestamp { get; set; }
 
         public Players OwnerNavigation { get; set; }
         public ICollection<Playerbans> Playerbans { get; set; }
         public ICollection<Playerlobbystats> Playerlobbystats { get; set; }
+        public ICollection<Teams> Teams { get; set; }
     }
 }
