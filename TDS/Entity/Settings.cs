@@ -9,5 +9,7 @@ namespace TDS.Entity
         public string GamemodeName { get; set; }
         public string MapsPath { get; set; }
         public string NewMapsPath { get; set; }
+        public bool ErrorToPlayerOnNonExistentCommand { get; set; }
+        public bool ToChatOnNonExistentCommand { get; set; }
     }
 }

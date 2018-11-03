@@ -13,6 +13,7 @@ namespace TDS.Entity
         public byte ColorB { get; set; }
         public byte BlipColor { get; set; }
         public uint SkinHash { get; set; }
+        public bool IsSpectatorTeam { get; set; }
 
         public Lobbies LobbyNavigation { get; set; }
     }

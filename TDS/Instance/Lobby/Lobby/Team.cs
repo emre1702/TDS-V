@@ -1,4 +1,4 @@
-﻿using GTANetworkAPI;
+using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Default;
 using TDS.Entity;
@@ -12,12 +12,14 @@ namespace TDS.Instance.Lobby
         private Dictionary<uint, Teams> teamsByID = new Dictionary<uint, Teams>();
         private Dictionary<Teams, List<Character>> TeamPlayers = new Dictionary<Teams, List<Character>>();
 
-        public static Teams SpectatorTeam;
+        private Teams spectatorTeam;
 
         public void AddTeam(Teams team)
         {
             this.teamsByID[team.Id] = team;
             this.TeamPlayers[team] = new List<Character>();
+            if (team.IsSpectatorTeam)
+                spectatorTeam = team;
         }
 
         private void SetPlayerTeam(Character character, Teams team)
@@ -63,8 +65,8 @@ namespace TDS.Instance.Lobby
             this.ClearTeamPlayersLists();
             foreach (Character character in this.players)
             {
-                if (character.Team == SpectatorTeam)
-                    this.TeamPlayers[SpectatorTeam].Add(character);
+                if (character.Team.IsSpectatorTeam)
+                    this.TeamPlayers[this.spectatorTeam].Add(character);
                 else
                     this.SetPlayerTeam(character, this.GetTeamWithFewestPlayer());
             }

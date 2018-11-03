@@ -5,6 +5,7 @@
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using TDS.Entity;
+    using TDS.Manager.Commands;
     using TDS.Manager.Maps;
 
     class ResourceStart : Script
@@ -26,19 +27,18 @@
                     dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                     await Setting.Load(dbcontext);
+                    CommandsManager.LoadCommands(dbcontext);
 
                     NAPI.Server.SetGamemodeName(Setting.GamemodeName);
 
                     BansManager.RemoveExpiredBans(dbcontext);
                     await Maps.LoadMaps();
-                    await LobbyManager.LoadAllLobbiesWithTeams(dbcontext);
+                    await LobbyManager.LoadAllLobbiesWithTeams();
 
 
                     // Gang.LoadGangFromDatabase ();
 
                     // Season.LoadSeason ();
-
-                    dbcontext.SaveChanges();
                 }
             }
             catch (Exception ex)

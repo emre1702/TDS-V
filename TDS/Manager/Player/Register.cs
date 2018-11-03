@@ -17,9 +17,8 @@ namespace TDS.Manager.Player
                     Name = player.Name,
                     Scname = player.SocialClubName,
                     Password = Utils.ToSHA512(password),      // TODO: Check if password is already hashed to SHA512
-                    Email = email,        
-                    IsVip = false,
-                    LoggedIn = false
+                    Email = email,        // TODO: Make that nullable at client
+                    IsVip = false
                 };
                 // TODO: Check if adding them to dbplayer is enough 
                 dbplayer.Playerlobbystats.Add(new Playerlobbystats());
@@ -27,8 +26,11 @@ namespace TDS.Manager.Player
                     Id = dbplayer.Id,  // TODO: Check if we need that with Id = dbplayer.Id
                     AllowDataTransfer = false,   // TODO: Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
                     HitsoundOn = true
-                };      
-                dbplayer.Playerstats = new Playerstats();
+                };
+                dbplayer.Playerstats = new Playerstats  //TODO: Do we need Id = ... here?
+                {
+                    LoggedIn = false
+                };
                 context.Players.Add(dbplayer);
                 await context.SaveChangesAsync();
 

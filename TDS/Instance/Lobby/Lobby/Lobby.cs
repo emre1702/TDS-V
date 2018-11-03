@@ -1,4 +1,4 @@
-﻿using GTANetworkAPI;
+using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Entity;
 
@@ -9,11 +9,13 @@ namespace TDS.Instance.Lobby
         public static readonly Dictionary<uint, Lobby> LobbiesByIndex = new Dictionary<uint, Lobby>();
         private static readonly HashSet<uint> dimensionsUsed = new HashSet<uint> { 0 };
 
-        private readonly Lobbies entity;
+        protected readonly Lobbies entity;
 
         public uint Id { get => this.entity.Id; }
+        public bool IsOfficial { get => this.entity.IsOfficial; }
+
         private readonly uint dimension;
-        private readonly Vector3 spawnPoint;
+        protected readonly Vector3 spawnPoint;
 
         public Lobby (Lobbies entity)
         {
@@ -30,7 +32,7 @@ namespace TDS.Instance.Lobby
             dimensionsUsed.Add(this.dimension);
         }
 
-        private void Remove()
+        protected virtual void Remove()
         {
             LobbiesByIndex.Remove(this.entity.Id);
             dimensionsUsed.Remove(this.dimension);

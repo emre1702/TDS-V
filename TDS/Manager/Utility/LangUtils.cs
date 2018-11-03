@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
 	using GTANetworkAPI;
-    using TDS.Entity;
     using TDS.Interface;
     using TDS.Enum;
-    using TDS.Manager.Language;
+    using TDS.Instance.Language;
     using TDS.Manager.Player;
+    using TDS.Instance.Player;
 
     static class LangUtils
 	{
@@ -22,9 +22,9 @@
             return languageByID[(ELanguage)player.GetEntity().Playersettings.Language];
         }
 
-		public static ILanguage GetLang (this Players character)
+		public static ILanguage GetLang (this Character character)
 		{
-            return languageByID[(ELanguage)character.Playersettings.Language];
+            return languageByID[(ELanguage)character.Entity.Playersettings.Language];
         }
 
         public static ILanguage GetLang (this Type language)
@@ -37,6 +37,16 @@
                 }
             }
             return languageByID[ELanguage.English];
+        }
+
+        public static ILanguage GetLang(byte language)
+        {
+            return languageByID[(ELanguage)language];
+        }
+
+        public static ILanguage GetLang(ELanguage language)
+        {
+            return languageByID[language];
         }
 
         public static Dictionary<ELanguage, string> GetLangDictionary (Func<ELanguage, string> langgetter)

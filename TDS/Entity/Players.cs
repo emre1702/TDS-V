@@ -24,7 +24,6 @@ namespace TDS.Entity
         public sbyte AdminLvl { get; set; }
         public bool IsVip { get; set; }
         public sbyte Donation { get; set; }
-        public bool LoggedIn { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
         public Playersettings Playersettings { get; set; }

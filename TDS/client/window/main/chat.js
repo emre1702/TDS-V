@@ -203,8 +203,8 @@ $( document ).ready( function () {
                 msg = msg.replace( /\\/g, "\\\\" ).replace( /\"/g, "\\\"" );
                 if ( msg[0] === "/" ) {
                     msg = msg.substr( 1 );
-                    if ( msg.length > 0 ) {
-                        mp.invoke( "command", msg );
+                    if (msg.length > 0) {
+                        mp.trigger("customCommand", msg);
                     }
                 } else {
                     mp.invoke( "chatMessage", msg + chatdata.chatends[chatdata.chosenchatbody] );

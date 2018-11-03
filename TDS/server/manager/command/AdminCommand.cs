@@ -40,7 +40,7 @@
 			{ "object", 2 }
 		};
 
-		#region Lobby
+		/*#region Lobby
 		[CommandDescription( "Ends the round." )]
 		[CommandGroup( "supporter/lobby-owner" )]
 		[CommandAlias( "endround" )]
@@ -383,7 +383,7 @@
 				character.Lobby = lobby.Arena.TheLobby;
 			}
 		}
-		#endregion
+		#endregion*/
 
 	}
 

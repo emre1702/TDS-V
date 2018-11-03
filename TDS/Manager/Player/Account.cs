@@ -39,12 +39,12 @@
             if (entity == null)
                 return;
 
-            if (!entity.LoggedIn)
+            if (!entity.Playerstats.LoggedIn)
                 return;
 
-            entity.LoggedIn = false;
+            entity.Playerstats.LoggedIn = false;
             if (entity.AdminLvl > 0)
-                Admin.SetOffline(player);
+                AdminsManager.SetOffline(player);
 
             using (var dbcontext = new TDSNewContext())
             {
@@ -85,7 +85,7 @@
         [RemoteEvent("onPlayerLanguageChange")]
         public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
-            if (System.Enum.IsDefined(typeof(ELanguage), language))
+            if (Enum.IsDefined(typeof(ELanguage), language))
                 player.GetEntity().Playersettings.Language = language;
         }
 
@@ -122,72 +122,7 @@
             NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
         }
 
-        /*[System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
-        [ServerEvent(Event.PlayerConnected)]
-        public static async void OnPlayerBeginConnect(Client player)
-        {       //TODO it's on connected, not connect anymore 
-            try
-            {
-                player.Name = player.SocialClubName;
-                if (socialClubNameBanDict.ContainsKey(player.SocialClubName) || addressBanDict.ContainsKey(player.Address))
-                {
-                    DataTable result = await Database.ExecPreparedResult("SELECT * FROM ban WHERE socialclubname = @scn OR address = @address", new Dictionary<string, string> {
-                        {
-                            "@scn", player.SocialClubName
-                        }, {
-                            "@address", player.Address
-                        }
-                    }).ConfigureAwait(false);
-                    if (result.Rows.Count > 0)
-                    {
-                        DataRow row = result.Rows[0];
-                        if (row["type"].ToString() == "permanent")
-                        {
-                            player.Kick("You are permanently banned by " + row["admin"] + ". Reason: " + row["reason"]);
-                            return;
-                        }
-                        if (Convert.ToInt32(row["endsec"]) > Utility.GetTimespan())
-                        {
-                            player.Kick("You are banned until " + row["endoptic"] + " by " + row["admin"] + ". Reason: " + row["reason"]);
-                            return;
-                        }
-                        Database.Exec($"DELETE FROM ban WHERE id = {row["id"]};");
-                    }
-                    socialClubNameBanDict.Remove(player.SocialClubName);
-                    addressBanDict.Remove(player.Address);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
-
-        [ServerEvent(Event.ResourceStart)]
-        public static async void OnResourceStart()
-        {
-            try
-            {
-                DataTable result = await Database.ExecResult("SELECT uid, name FROM player").ConfigureAwait(false);
-                foreach (DataRow row in result.Rows)
-                {
-                    string name = row["name"].ToString();
-                    uint uid = Convert.ToUInt32(row["uid"]);
-                    PlayerUIDs[name] = uid;
-                    playerUIDNames[uid] = name;
-                }
-                DataTable maxuidresult = await Database.ExecResult("SELECT Max(uid) AS Maxuid FROM player").ConfigureAwait(false);
-                lastPlayerUID = Convert.ToUInt32(maxuidresult.Rows[0]["Maxuid"]);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                lastPlayerUID = 0;
-
-            }
-        }
-
-        public static void PermaBanPlayer(Character admincharacter, Client target, string targetname, string targetaddress, string reason, uint targetuid)
+        /*public static void PermaBanPlayer(Character admincharacter, Client target, string targetname, string targetaddress, string reason, uint targetuid)
         {
             Client admin = admincharacter.Player;
             Database.ExecPrepared($"REPLACE INTO ban (uid, socialclubname, address, type, startsec, startoptic, admin, reason) VALUES " +

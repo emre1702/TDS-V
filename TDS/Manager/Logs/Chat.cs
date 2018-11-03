@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Entity;
+using TDS.Instance.Player;
 using TDS.Manager.Player;
 
 namespace TDS.Manager.Logs
@@ -9,20 +10,16 @@ namespace TDS.Manager.Logs
     {
         private static readonly List<LogsChat> notsavedchatlogs = new List<LogsChat>();
 
-        public static void Log (string chat, Client source, Client target, bool global, bool dirty)
+        public static void Log (string chat, Character source, Character target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
         {
-            // Don't log dirty or lobby chats
-            if (dirty)
-                return;
-            //if (!global && !source?.GetLobby()?.IsOfficial)
-                //return;
-
             notsavedchatlogs.Add(
                 new LogsChat {
-                    Source = source?.GetEntity()?.Id ?? 0,
-                    Target = target?.GetEntity()?.Id ?? null,
+                    Source = source.Entity?.Id ?? 0,
+                    Target = target?.Entity?.Id ?? null,
                     Message = chat,
-                    //Lobby = global ? null : source?.GetLobby()
+                    Lobby = isglobal ? null : source?.CurrentLobby.Id,
+                    IsAdminChat = isadminchat,
+                    IsTeamChat = isteamchat
                 }
             );
         }

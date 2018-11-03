@@ -1,45 +1,24 @@
-﻿using GTANetworkAPI;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS.Default;
 using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
-using TDS.Instance.Utility;
 using TDS.Manager.Player;
 
 namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        private Dictionary<Character, Timer> deathSpawnTimer = new Dictionary<Character, Timer>(); 
-
-        public async Task<bool> AddPlayer(Client player, uint teamid)
+        public virtual async Task<bool> AddPlayer(Character character, uint teamid)
         {
-            Character character = player.GetChar();
             using (var dbcontext = new TDSNewContext())
             {
                 if (this.entity.Id != 0) {
-                    #region Check ban
-                    Playerbans ban = await dbcontext.Playerbans.FindAsync(character.Entity.Id, this.entity.Id);
-                    if (ban != null)
-                    {
-                        if (ban.EndTimestamp.HasValue && ban.EndTimestamp.Value > DateTime.Now)
-                        {
-                            //Todo: Add output
-                            return false;
-                        }
-                        else if (ban.EndTimestamp.HasValue)
-                        {
-                            dbcontext.Remove(ban);
-                            await dbcontext.SaveChangesAsync();
-                            
-                        }
-                    }
-                    #endregion
+                    if (await this.IsPlayerBaned(character, dbcontext))
+                        return false;
 
                     this.AddPlayerLobbyStats(character, dbcontext);
                 }
@@ -48,23 +27,21 @@ namespace TDS.Instance.Lobby
             #region Remove from old lobby
             Lobby oldlobby = character.CurrentLobby;
             if (oldlobby != null)
-            {
                 oldlobby.RemovePlayer(character);
-                
-            }
             #endregion
             character.CurrentLobby = this;
             this.players.Add(character);
 
             character.Player.Dimension = this.dimension;
             character.Player.Position = this.spawnPoint.Around(this.entity.AroundSpawnPoint);
+            character.Player.Freeze(true);
 
             this.SetPlayerTeam(character, this.teamsByID[teamid]);
 
             this.SendAllPlayerEvent(DCustomEvents.ClientPlayerJoinSameLobby, null, character.Player);
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvents.ClientPlayerJoinLobby, this.Id);
             NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvents.SyncPlayersSameLobby, JsonConvert.SerializeObject(this.players));
             Manager.Logs.Rest.Log(ELogType.Lobby_Join, character.Player, false, this.entity.IsOfficial);
-
             return true;
         }
 
@@ -134,6 +111,11 @@ namespace TDS.Instance.Lobby
             //string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
             //string beforemessage = "[TEAM] #" + teamfontcolor + "#" + character.Player.SocialClubName + "#r#: ";
             //SendAllPlayerLangMessage(ordershort, character.Team, beforemessage);
+        }
+
+        public bool IsPlayerLobbyOwner(Character character)
+        {
+            return character.CurrentLobby == this && this.entity.Owner == character.Entity.Id;
         }
     }
 }

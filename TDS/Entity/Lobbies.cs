@@ -10,6 +10,7 @@ namespace TDS.Entity
             Playerbans = new HashSet<Playerbans>();
             Playerlobbystats = new HashSet<Playerlobbystats>();
             Teams = new HashSet<Teams>();
+            WeaponsDamage = new HashSet<WeaponsDamage>();
         }
 
         public uint Id { get; set; }
@@ -33,5 +34,6 @@ namespace TDS.Entity
         public ICollection<Playerbans> Playerbans { get; set; }
         public ICollection<Playerlobbystats> Playerlobbystats { get; set; }
         public ICollection<Teams> Teams { get; set; }
+        public ICollection<WeaponsDamage> WeaponsDamage { get; set; }
     }
 }

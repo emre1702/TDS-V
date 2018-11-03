@@ -3,7 +3,7 @@
     playerssamelobbynames: [] as string[]
 }
 
-mp.events.add( "syncPlayersSameLobby", ( players: string ) => {
+mp.events.add(ECustomRemoteEvents.SyncPlayersSameLobby, (players: string) => {
     mp.gui.chat.push( players );
     lobbyplayerdata.playerssamelobby = JSON.parse( players );
     lobbyplayerdata.playerssamelobbynames = [];
@@ -13,17 +13,21 @@ mp.events.add( "syncPlayersSameLobby", ( players: string ) => {
     mainbrowserdata.browser.execute( "loadNamesForChat(`" + JSON.stringify( lobbyplayerdata.playerssamelobbynames ) + "`);" );
 } );
 
-mp.events.add( "joinPlayerSameLobby", ( player: PlayerMp ) => {
-    lobbyplayerdata.playerssamelobby.push( player );
-    lobbyplayerdata.playerssamelobbynames.push( player.name );
-    mainbrowserdata.browser.execute( "addNameForChat('" + player.name + "');" );
+mp.events.add(ECustomRemoteEvents.ClientPlayerJoinSameLobby, (player: PlayerMp) => {
+    if (player != mp.players.local) {
+        lobbyplayerdata.playerssamelobby.push(player);
+        lobbyplayerdata.playerssamelobbynames.push(player.name);
+        mainbrowserdata.browser.execute("addNameForChat('" + player.name + "');");
+    }
 } );
 
-mp.events.add( "leavePlayerSameLobby", ( player: PlayerMp ) => {
-    let index = lobbyplayerdata.playerssamelobby.indexOf( player );
-    if ( index != -1 ) {
-        lobbyplayerdata.playerssamelobby.splice( index, 1 );
-        lobbyplayerdata.playerssamelobbynames.splice( index, 1 );
-        mainbrowserdata.browser.execute( "removeNameForChat(" + index + ");" );
+mp.events.add(ECustomRemoteEvents.ClientPlayerLeaveSameLobby, (player: PlayerMp) => {
+    if (player != mp.players.local) {
+        let index = lobbyplayerdata.playerssamelobby.indexOf(player);
+        if (index != -1) {
+            lobbyplayerdata.playerssamelobby.splice(index, 1);
+            lobbyplayerdata.playerssamelobbynames.splice(index, 1);
+            mainbrowserdata.browser.execute("removeNameForChat(" + index + ");");
+        }
     }
 } );

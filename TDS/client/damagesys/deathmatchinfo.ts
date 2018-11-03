@@ -1,10 +1,12 @@
-﻿let deathmatchinfodata = {
+﻿/// <reference path="../enum/customremoteevents.ts" />
+
+let deathmatchinfodata = {
     damage: 0,
     kills: 0,
     assists: 0
 }
 
-mp.events.add( "onClientPlayerHitOpponent", ( damage ) => {
+mp.events.add(ECustomRemoteEvents.ClientPlayerHitOpponent, (damage) => {
     playHitsound();
 
     //deathmatchinfodata.damage += damage;

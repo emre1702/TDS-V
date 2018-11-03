@@ -4,7 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using TDS.Default;
     using TDS.Entity;
-    using TDS.Manager.Language;
+    using TDS.Instance.Language;
     using TDS.Manager.Utility;
 
     static class Login
@@ -14,35 +14,36 @@
         {
             using (var dbcontext = new TDSNewContext())
             {
-                Players character = await dbcontext.Players
+                Players entity = await dbcontext.Players
                                         .Include(p => p.Playersettings)
                                         .Include(p => p.OfflinemessagesTarget)
+                                        .AsNoTracking()
                                         .FirstOrDefaultAsync(p => p.Id == id);
-                if (character == null)
+                if (entity == null)
                 {
                     NAPI.Chat.SendChatMessageToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
                     return;
                 }
 
-                if (Utils.ToSHA512(password) != character.Password)
+                if (Utils.ToSHA512(password) != entity.Password)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player, character.GetLang().WRONG_PASSWORD);
+                    NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().WRONG_PASSWORD);
                     return;
                 }
 
+                dbcontext.Attach(entity.Playerstats);
+
                 player.GiveMoney(0);        // to update at clientside
 
-                if (character.AdminLvl > 0)
-                    Admin.SetOnline(player);
+                if (entity.AdminLvl > 0)
+                    AdminsManager.SetOnline(player);
 
                 player.Team = 1;        // To be able to use custom damagesystem
-                character.LoggedIn = true;
+                entity.Playerstats.LoggedIn = true;
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RegisterLoginSuccessful, character.AdminLvl);
+                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RegisterLoginSuccessful, entity.AdminLvl);
                 //MainMenu.Join(character);
 
-                dbcontext.Players.Attach(character);
-                dbcontext.Entry(character).Property(p => p.LoggedIn).IsModified = true;
                 await dbcontext.SaveChangesAsync();
 
                 //Map.SendPlayerHisRatings(character);

@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../types-ragemp/index.d.ts" />
+/// <reference path="../../enum/custombrowserremoteevents.ts" />
 
 let mapcreatordata = {
     browser: null as BrowserMp
@@ -19,7 +20,7 @@ function stopMapCreator() {
     mapcreatordata.browser = null;
 }
 
-mp.events.add( "requestCurrentPositionForMapCreator", () => {
+mp.events.add(ECustomBrowserRemoteEvents.RequestCurrentPositionForMapCreator, () => {
     if ( mapcreatordata.browser === null )
         return;
     let position = localPlayer.position;
@@ -30,7 +31,7 @@ mp.events.add( "requestCurrentPositionForMapCreator", () => {
     mapcreatordata.browser.execute( "loadPositionFromClient (" + x + ", " + y + ", " + z + ", " + rotation + "); " );
 } );
 
-mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, rot: number ) => {
+mp.events.add(ECustomBrowserRemoteEvents.GotoPositionByMapCreator, ( x: number, y: number, z: number, rot: number ) => {
     if ( mapcreatordata.browser === null )
         return;
     localPlayer.position = { x: x, y: y, z: z } as Vector3Mp;
@@ -38,15 +39,15 @@ mp.events.add( "gotoPositionByMapCreator", ( x: number, y: number, z: number, ro
         localPlayer.setRotation( 0.0, 0.0, rot, 2, true );
 } );
 
-mp.events.add( "checkMapName", ( name ) => {
+mp.events.add( "CheckMapName", ( name ) => {
     callRemoteCooldown( "checkMapName", name );
 } );
 
-mp.events.add( "sendMapNameCheckResult", ( alreadyinuse ) => {
+mp.events.add( "SendMapNameCheckResult", ( alreadyinuse ) => {
     mapcreatordata.browser.execute( "loadResultOfMapNameCheck(" + alreadyinuse + ");" );
 } );
 
-mp.events.add( "sendMapFromCreator", ( mapjson ) => {
+mp.events.add( "SendMapFromCreator", ( mapjson ) => {
     callRemoteCooldown( "sendMapFromCreator", mapjson );
 } );
 

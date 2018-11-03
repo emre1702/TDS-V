@@ -1,56 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>C:\RAGEMP\server-files\bridge\resources\TDS-V\bin\</OutputPath>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	  <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Remove="client\angular\e2e\**" />
-    <Compile Remove="client\angular\node_modules\**" />
-    <Compile Remove="client\node_modules\**" />
-    <Compile Remove="server - Kopieren\**" />
     <Compile Remove="server\**" />
-    <EmbeddedResource Remove="client\angular\e2e\**" />
-    <EmbeddedResource Remove="client\angular\node_modules\**" />
-    <EmbeddedResource Remove="client\node_modules\**" />
-    <EmbeddedResource Remove="server - Kopieren\**" />
     <EmbeddedResource Remove="server\**" />
-    <None Remove="client\angular\e2e\**" />
-    <None Remove="client\angular\node_modules\**" />
-    <None Remove="client\node_modules\**" />
-    <None Remove="server - Kopieren\**" />
     <None Remove="server\**" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="gtanetwork.api" Version="0.3.5" />
+    <PackageReference Include="gtanetwork.api" Version="0.3.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+
 </Project>

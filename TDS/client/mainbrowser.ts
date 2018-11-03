@@ -1,4 +1,6 @@
-﻿mp.gui.chat.show( false );
+﻿/// <reference path="enum/customremoteevents.ts" />
+
+mp.gui.chat.show(false);
 
 let mainbrowserdata = {
     angular: new Angular(),
@@ -20,7 +22,7 @@ function requestAngularBrowserData() {
     return { adminlvl: currentadminlvl, language: getLanguage() }; 
 }
 
-mp.events.add( "onClientMoneyChange", money => {
+mp.events.add(ECustomRemoteEvents.ClientMoneyChange, money => {
     currentmoney = money;
     mainbrowserdata.browser.execute( "setMoney ( " + money + " );" ); 
 } );
@@ -29,7 +31,7 @@ mp.events.add( "onClientAdminLvlChange", adminlvl => {
     currentadminlvl = adminlvl;
 } );
 
-mp.events.add( "registerLoginSuccessful", ( adminlvl ) => {
+mp.events.add(ECustomRemoteEvents.RegisterLoginSuccessful, (adminlvl) => {
     currentadminlvl = adminlvl;
     mainbrowserdata.angular.load( "package://TDS-V/window/mainangular/index.html" );
     mainbrowserdata.browser = mp.browsers.new( "package://TDS-V/window/main/index.html" );

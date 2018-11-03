@@ -7,6 +7,8 @@ namespace TDS.Entity
     {
         public uint Id { get; set; }
         public uint Money { get; set; }
+        public uint? MuteTime { get; set; }
+        public bool LoggedIn { get; set; }
         public DateTime LastLoginTimestamp { get; set; }
 
         public Players IdNavigation { get; set; }

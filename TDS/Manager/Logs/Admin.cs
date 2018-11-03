@@ -1,8 +1,8 @@
-﻿using GTANetworkAPI;
+﻿
 using System.Collections.Generic;
 using TDS.Entity;
 using TDS.Enum;
-using TDS.Manager.Player;
+using TDS.Instance.Player;
 
 namespace TDS.Manager.Logs
 {
@@ -10,14 +10,14 @@ namespace TDS.Manager.Logs
     {
         private static readonly List<LogsAdmin> notsavedadminlogs = new List<LogsAdmin>();
 
-        public static void Log (ELogType cmd, Client source, Client target, string info, bool asdonator, bool asvip)
+        public static void Log (ELogType cmd, Character source, string info, Character target = null, bool asdonator = false, bool asvip = false)
         {
 
             notsavedadminlogs.Add(
                 new LogsAdmin
                 {
-                    Source = source?.GetEntity()?.Id ?? 0,
-                    Target = target?.GetEntity()?.Id ?? null,
+                    Source = source?.Entity?.Id ?? 0,
+                    Target = target?.Entity?.Id ?? null,
                     Type = (byte)cmd,
                     AsDonator = asdonator,
                     AsVip = asvip,

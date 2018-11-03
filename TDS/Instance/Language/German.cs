@@ -1,6 +1,6 @@
 ﻿using TDS.Interface;
 
-namespace TDS.Manager.Language
+namespace TDS.Instance.Language
 {
     class German : English, ILanguage
     {

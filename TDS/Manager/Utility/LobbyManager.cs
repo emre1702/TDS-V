@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Entity;
@@ -8,27 +9,21 @@ namespace TDS.Manager.Utility
 {
     static class LobbyManager
     {
-        public static async Task LoadAllLobbiesWithTeams(TDSNewContext dbcontext)
+        public static async Task LoadAllLobbiesWithTeams()
         {
-            dbcontext.RemoveRange(dbcontext.Lobbies.Where(l => l.IsTemporary));
-            foreach (Lobbies lobbysetting in await dbcontext.Lobbies.AsNoTracking().ToListAsync())
+            using (TDSNewContext dbcontext = new TDSNewContext())
             {
-                new Lobby(lobbysetting);
-            }
+                dbcontext.RemoveRange(dbcontext.Lobbies.Where(l => l.IsTemporary));
+                await dbcontext.SaveChangesAsync();
 
-            foreach (Teams team in await dbcontext.Teams.AsNoTracking().ToListAsync())
-            {
-                if (!team.Lobby.HasValue)
+                List<Lobbies> teamlist = await dbcontext.Lobbies.Include(l => l.Teams).AsNoTracking().ToListAsync();
+                foreach (Lobbies lobbysetting in teamlist)
                 {
-                    Lobby.SpectatorTeam = team;
-                    foreach (var lobby in Lobby.LobbiesByIndex.Values)
+                    Lobby lobby = new Lobby(lobbysetting);
+                    foreach (Teams team in lobbysetting.Teams)
                     {
                         lobby.AddTeam(team);
                     }
-                }
-                else
-                {
-                    Lobby.LobbiesByIndex[team.Lobby.Value].AddTeam(team);
                 }
             }
         }

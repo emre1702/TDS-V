@@ -15,4 +15,9 @@ function setVoiceChatRoom( room ) {
 
 mp.events.add( "onChatInputToggle", ( enabled ) => {
     ischatopen = enabled;
-} );
+});
+
+mp.events.add("customCommand", (msg: string) => {
+    let arr = msg.split(" ");
+    mp.events.callRemote(ECustomEvents.ClientCommandUse, arr.shift(), arr);
+});

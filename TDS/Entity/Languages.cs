@@ -8,6 +8,7 @@ namespace TDS.Entity
         public Languages()
         {
             Adminlevelnames = new HashSet<Adminlevelnames>();
+            CommandsInfo = new HashSet<CommandsInfo>();
             Playersettings = new HashSet<Playersettings>();
         }
 
@@ -15,6 +16,7 @@ namespace TDS.Entity
         public string Language { get; set; }
 
         public ICollection<Adminlevelnames> Adminlevelnames { get; set; }
+        public ICollection<CommandsInfo> CommandsInfo { get; set; }
         public ICollection<Playersettings> Playersettings { get; set; }
     }
 }

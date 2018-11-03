@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS.Default;
 using TDS.Entity;
 using TDS.Instance.Player;
+using TDS.Manager.Logs;
 
 namespace TDS.Manager.Player
 {
@@ -112,7 +113,7 @@ namespace TDS.Manager.Player
                 NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.ClientMoneyChange, entity.Playerstats.Money);
             }
             else
-                Logs.Error.Log($"Should have went to minus money! Current: {entity.Playerstats.Money} | Substracted money: {money}", 
+                Error.Log($"Should have went to minus money! Current: {entity.Playerstats.Money} | Substracted money: {money}", 
                                 Environment.StackTrace, player);
         }
     }

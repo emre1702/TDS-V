@@ -1,6 +1,7 @@
 ﻿/// <reference path="../types-ragemp/index.d.ts" />
+/// <reference path="../enum/customremoteevents.ts" />
 
-mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps ) => {
+mp.events.add(ECustomRemoteEvents.ClientPlayerJoinLobby, (lobbyid, isspectator, mapname, teamnames, teamcolors, countdowntime, roundtime, bombdetonatetime, bombplanttime, bombdefusetime, roundendtime, lobbywithmaps) => {
     log( "onClientPlayerJoinLobby" );
     if ( lobbysettings.id == 0 && lobbyid != 0 ) // not mainmenu
         destroyLobbyChoiceBrowser();
@@ -26,7 +27,7 @@ mp.events.add( "onClientPlayerJoinLobby", ( lobbyid, isspectator, mapname, teamn
     }
 } );
 
-mp.events.add( "onClientPlayerLeaveLobby", ( playerID: number ) => {
+mp.events.add(ECustomRemoteEvents.ClientPlayerLeaveSameLobby, (playerID: number) => {
     log( "onClientPlayerLeaveLobby" );
     let player = mp.players.at( playerID );
 	if ( mp.players.local == player ) {

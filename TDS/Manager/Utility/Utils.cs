@@ -59,14 +59,14 @@
             return NAPI.Pools.GetAllPlayers().Find(c => c.Name.ToLower().StartsWith(name));
         }
 
-        public static string GetReplaced(string str, params string[] args)
+        public static string GetReplaced(string str, params object[] args)
         {
             if (args.Length > 0)
             {
                 strbuilder.Append(str);
                 for (int i = 0; i < args.Length; ++i)
                 {
-                    strbuilder.Replace("{" + (i + 1) + "}", args[i]);
+                    strbuilder.Replace("{" + (i + 1) + "}", args[i].ToString());
                 }
                 string result = strbuilder.ToString();
                 strbuilder.Clear();

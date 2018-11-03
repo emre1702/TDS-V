@@ -17,6 +17,9 @@ namespace TDS.Entity
 
         public virtual DbSet<Adminlevelnames> Adminlevelnames { get; set; }
         public virtual DbSet<Adminlevels> Adminlevels { get; set; }
+        public virtual DbSet<Commands> Commands { get; set; }
+        public virtual DbSet<CommandsAlias> CommandsAlias { get; set; }
+        public virtual DbSet<CommandsInfo> CommandsInfo { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LogsAdmin> LogsAdmin { get; set; }
@@ -33,12 +36,15 @@ namespace TDS.Entity
         public virtual DbSet<Playerstats> Playerstats { get; set; }
         public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
+        public virtual DbSet<WeaponsDamage> WeaponsDamage { get; set; }
+        public virtual DbSet<WeaponsHash> WeaponsHash { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo");
             }
         }
 
@@ -74,9 +80,85 @@ namespace TDS.Entity
 
                 entity.ToTable("adminlevels");
 
-                entity.Property(e => e.FontColor)
-                    .HasColumnType("char(2)")
-                    .HasDefaultValueSql("'w'");
+                entity.Property(e => e.ColorB).HasColumnType("tinyint(3)");
+
+                entity.Property(e => e.ColorG).HasColumnType("tinyint(3)");
+
+                entity.Property(e => e.ColorR).HasColumnType("tinyint(3)");
+            });
+
+            modelBuilder.Entity<Commands>(entity =>
+            {
+                entity.ToTable("commands");
+
+                entity.HasIndex(e => e.NeededAdminLevel)
+                    .HasName("FK_admincommands_adminlevels");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Command)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.LobbyOwnerCanUse)
+                    .IsRequired()
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("'b\\'0\\''");
+
+                entity.Property(e => e.VipCanUse)
+                    .IsRequired()
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("'b\\'0\\''");
+
+                entity.HasOne(d => d.NeededAdminLevelNavigation)
+                    .WithMany(p => p.Commands)
+                    .HasForeignKey(d => d.NeededAdminLevel)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK_admincommands_adminlevels");
+            });
+
+            modelBuilder.Entity<CommandsAlias>(entity =>
+            {
+                entity.HasKey(e => e.Alias);
+
+                entity.ToTable("commands_alias");
+
+                entity.HasIndex(e => e.Command)
+                    .HasName("FK_commandsalias_commands");
+
+                entity.Property(e => e.Alias).HasColumnType("varchar(50)");
+
+                entity.HasOne(d => d.CommandNavigation)
+                    .WithMany(p => p.CommandsAlias)
+                    .HasForeignKey(d => d.Command)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_commandsalias_commands");
+            });
+
+            modelBuilder.Entity<CommandsInfo>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.Language });
+
+                entity.ToTable("commands_info");
+
+                entity.HasIndex(e => e.Language)
+                    .HasName("FK_commands_info_languages");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Info)
+                    .IsRequired()
+                    .HasColumnType("varchar(200)");
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithMany(p => p.CommandsInfo)
+                    .HasForeignKey(d => d.Id)
+                    .HasConstraintName("FK__commands");
+
+                entity.HasOne(d => d.LanguageNavigation)
+                    .WithMany(p => p.CommandsInfo)
+                    .HasForeignKey(d => d.Language)
+                    .HasConstraintName("FK_commands_info_languages");
             });
 
             modelBuilder.Entity<Languages>(entity =>
@@ -168,6 +250,10 @@ namespace TDS.Entity
                 entity.ToTable("logs_chat");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsAdminChat).HasColumnType("bit(1)");
+
+                entity.Property(e => e.IsTeamChat).HasColumnType("bit(1)");
 
                 entity.Property(e => e.Message)
                     .IsRequired()
@@ -394,8 +480,6 @@ namespace TDS.Entity
                     .HasColumnName("IsVIP")
                     .HasColumnType("bit(1)");
 
-                entity.Property(e => e.LoggedIn).HasColumnType("bit(1)");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
@@ -451,6 +535,8 @@ namespace TDS.Entity
                     .HasColumnType("timestamp")
                     .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
 
+                entity.Property(e => e.LoggedIn).HasColumnType("bit(1)");
+
                 entity.Property(e => e.Money).HasDefaultValueSql("'0'");
 
                 entity.HasOne(d => d.IdNavigation)
@@ -465,6 +551,8 @@ namespace TDS.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.ErrorToPlayerOnNonExistentCommand).HasColumnType("bit(1)");
+
                 entity.Property(e => e.GamemodeName)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
@@ -476,6 +564,8 @@ namespace TDS.Entity
                 entity.Property(e => e.NewMapsPath)
                     .IsRequired()
                     .HasColumnType("varchar(300)");
+
+                entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit(1)");
             });
 
             modelBuilder.Entity<Teams>(entity =>
@@ -487,6 +577,8 @@ namespace TDS.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.IsSpectatorTeam).HasColumnType("bit(1)");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
@@ -496,6 +588,45 @@ namespace TDS.Entity
                     .HasForeignKey(d => d.Lobby)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Teams_lobbies");
+            });
+
+            modelBuilder.Entity<WeaponsDamage>(entity =>
+            {
+                entity.HasKey(e => new { e.Hash, e.Lobby });
+
+                entity.ToTable("weapons_damage");
+
+                entity.HasIndex(e => e.Lobby)
+                    .HasName("FK_weapons_damage_lobbies");
+
+                entity.Property(e => e.Lobby).HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Damage).HasColumnType("smallint(3)");
+
+                entity.Property(e => e.HeadMultiplicator).HasDefaultValueSql("'1'");
+
+                entity.HasOne(d => d.HashNavigation)
+                    .WithMany(p => p.WeaponsDamage)
+                    .HasForeignKey(d => d.Hash)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_weapons_damage_weapons_hash");
+
+                entity.HasOne(d => d.LobbyNavigation)
+                    .WithMany(p => p.WeaponsDamage)
+                    .HasForeignKey(d => d.Lobby)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_weapons_damage_lobbies");
+            });
+
+            modelBuilder.Entity<WeaponsHash>(entity =>
+            {
+                entity.HasKey(e => e.Hash);
+
+                entity.ToTable("weapons_hash");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
             });
         }
     }

@@ -13,25 +13,33 @@ namespace TDS.Manager.Utility
 
     class AdminLevel
     {
+        public sbyte Level;
+        public string FontColor;
         public Dictionary<ELanguage, string> Names = new Dictionary<ELanguage, string>();
         public List<Client> PlayersOnline = new List<Client>();
     }
 
-    static class Admin
+    static class AdminsManager
     {
 
-        public static List<AdminLevel> AdminLevels = new List<AdminLevel>();
+        public static Dictionary<sbyte, AdminLevel> AdminLevels = new Dictionary<sbyte, AdminLevel>();
 
         [ServerEvent(Event.ResourceStart)]
         public async static void AdminResourceStart()
         {
             using (var dbcontext = new TDSNewContext())
             {
-                AdminLevels = await dbcontext.Adminlevels.OrderBy(lvl => lvl.Level).Select(lvl => new AdminLevel()).ToListAsync();
+                AdminLevels = await dbcontext.Adminlevels
+                    .OrderBy(lvl => lvl.Level)
+                    .Select(lvl => new AdminLevel {
+                                    Level = (sbyte)lvl.Level,
+                                    FontColor = "{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
+                                })
+                    .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);
 
                 foreach (var entry in await dbcontext.Adminlevelnames.ToListAsync())
                 {
-                    AdminLevels[entry.Level].Names[(ELanguage)entry.Language] = entry.Name;
+                    AdminLevels[(sbyte)entry.Level].Names[(ELanguage)entry.Language] = entry.Name;
                 }
             }
         }
@@ -54,18 +62,23 @@ namespace TDS.Manager.Utility
             }
         }
 
-        public static void CallMethodForAdmins(Action<Client> func, uint minadminlvl = 1)
+        public static void CallMethodForAdmins(Action<Client> func, sbyte minadminlvl = 1)
         {
-            for (uint lvl = minadminlvl; lvl < AdminLevels.Count; ++lvl)
+            for (sbyte lvl = minadminlvl; lvl < AdminLevels.Count; ++lvl)
             {
-                foreach (Client player in AdminLevels[(int)lvl].PlayersOnline)
+                foreach (Client player in AdminLevels[lvl].PlayersOnline)
                 {
                     func(player);
                 }
             }
         }
 
-        public static void SendChatMessageToAdmins(Func<ILanguage, string> propertygetter, uint minadminlvl = 1)
+        public static void SendChatMessageToAdmins(string msg, uint minadminlvl = 1)
+        {
+            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player, msg));
+        }
+
+        public static void SendLangChatMessageToAdmins(Func<ILanguage, string> propertygetter, uint minadminlvl = 1)
         {
             CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player, propertygetter(player.GetLang())));
         }

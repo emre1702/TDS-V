@@ -1,4 +1,4 @@
-﻿using GTANetworkAPI;
+using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using TDS.Entity;
@@ -12,7 +12,7 @@ namespace TDS.Instance.Lobby
     {
         private List<Character> players = new List<Character>();
 
-        private void SendAllPlayerEvent(string eventname, uint? teamindex, params object[] args)
+        protected void SendAllPlayerEvent(string eventname, uint? teamindex, params object[] args)
         {
             if (!teamindex.HasValue)
             {
@@ -22,7 +22,7 @@ namespace TDS.Instance.Lobby
                 this.FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); }, teamindex.Value);
         }
 
-        private void FuncIterateAllPlayers(Action<Character, Teams> func, uint? teamID = null)
+        protected void FuncIterateAllPlayers(Action<Character, Teams> func, uint? teamID = null)
         {
             if (!teamID.HasValue)
             {
@@ -50,6 +50,14 @@ namespace TDS.Instance.Lobby
             this.FuncIterateAllPlayers((character, teamID) =>
             {
                 NAPI.Chat.SendChatMessageToPlayer(character.Player, texts[(ELanguage)character.Entity.Playersettings.Language]);
+            }, teamindex);
+        }
+
+        public void SendAllPlayerChatMessage(string msg, uint? teamindex = null)
+        {
+            this.FuncIterateAllPlayers((character, teamID) =>
+            {
+                NAPI.Chat.SendChatMessageToPlayer(character.Player, msg);
             }, teamindex);
         }
     }

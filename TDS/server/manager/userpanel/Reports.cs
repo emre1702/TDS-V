@@ -104,7 +104,7 @@ namespace TDS.server.manager.userpanel {
 				}	
 			} else {
 				string name = Account.GetNameByUID( report.AuthorUID );
-				if ( name == "" )
+				if ( name == string.Empty )
 					return;
 				Client author = NAPI.Player.GetPlayerFromName( name );
 				if ( author == null || !author.Exists )
