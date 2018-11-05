@@ -44,5 +44,9 @@ namespace TDS.Instance.Lobby
                 return 0;
             }
         }
+
+        public virtual void OnPlayerEnterColShape(ColShape shape, Character character)
+        {
+        }
     }
 }

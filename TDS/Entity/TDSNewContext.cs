@@ -43,8 +43,7 @@ namespace TDS.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo");
+                optionsBuilder.UseMySql(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             }
         }
 

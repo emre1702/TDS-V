@@ -12,6 +12,7 @@ using TDS.Enum;
 using TDS.Instance.Player;
 using TDS.Instance.Utility;
 using TDS.Manager.Player;
+using TDS.Manager.Utility;
 
 namespace TDS.Manager.Commands
 {
@@ -71,23 +72,34 @@ namespace TDS.Manager.Commands
                     #endregion
                 }
 
+                methoddataByCommand[cmd] = methoddata;
+
             }
         }
 
-        [RemoteEvent(DCustomEvents.ClientCommandUse)]   // TODO: Add clientside
+        [RemoteEvent(DCustomEvents.ClientCommandUse)] 
         public static void UseCommand(Client player, string cmd, object[] args)
         {
+            Character character = player.GetChar();
+            if (!character.Entity.Playerstats.LoggedIn)
+                return;
             TDSCommandInfos cmdinfos = new TDSCommandInfos { Command = cmd };
             if (commandByAlias.ContainsKey(cmd))
                 cmd = commandByAlias[cmd];
+
+            #region If the command doesn't exist 
             if (!methoddataByCommand.ContainsKey(cmd))
             {
-                // TODO: This command does not exist output!
+                if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
+                    NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_DOESNT_EXIST);
+                if (SettingsManager.ToChatOnNonExistentCommand)
+                    ChatManager.OnLobbyChatMessage(player, "/" + cmd + " " + string.Join(" ", args));
                 return;
             }
+            #endregion
+
             Entity.Commands entity = commandsDict[cmd];
 
-            Character character = player.GetChar();
             bool canuse = false;
             bool needright = false;
 
@@ -130,11 +142,14 @@ namespace TDS.Manager.Commands
                     cmdinfos.WithRight = ECommandUsageRight.Donator;
             }
             #endregion
+
+            #region User Check
             if (!needright)
             {
                 canuse = true;
                 cmdinfos.WithRight = ECommandUsageRight.User;
             }
+            #endregion
 
             if (canuse)
             {
@@ -149,8 +164,8 @@ namespace TDS.Manager.Commands
                     args = args.Take(index + 1).ToArray();
                 }
                 methoddata.Method(character, cmdinfos, args);
-
-                //for (int i = 0; i < args.Length; ++i)   Check if we need that
+#warning Check if we need that
+                //for (int i = 0; i < args.Length; ++i)   
                 //{
                 //    args[i] = Convert.ChangeType(args[i], methoddata.ParameterTypes[i]);
                 //}

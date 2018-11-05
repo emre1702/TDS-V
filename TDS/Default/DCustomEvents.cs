@@ -4,9 +4,12 @@
     {
         // Go through all events, add clientside that default/enum and check parameters
 
+        public const string ClientBombDetonated = "ClientBombDetonated";
         public const string ClientCommandUse = "ClientCommandUse";
         public const string ClientLoadOwnMapRatings = "ClientLoadOwnMapRatings";
+        public const string ClientMapChange = "ClientMapChange";
         public const string ClientMoneyChange = "ClientMoneyChange";
+        public const string ClientPlayerDeath = "ClientPlayerDeath";
         public const string ClientPlayerHitOpponent = "ClientPlayerHitOpponent";
         public const string ClientPlayerJoinMapCreatorLobby = "ClientPlayerJoinMapCreatorLobby";
         public const string ClientPlayerJoinLobby = "ClientPlayerJoinLobby";

@@ -14,10 +14,11 @@ namespace TDS.Instance.Lobby
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
                 Lobby lobby = Lobby.LobbiesByIndex[index];
+#warning todo After adding Arena
                 //if (lobby is Arena)  todo
                 //    manager.lobby.Arena.Join(player.GetChar(), spectator);
                 //else
-                    await lobby.AddPlayer(player.GetChar(), teamid);
+                await lobby.AddPlayer(player.GetChar(), teamid);
             }
             else
             {

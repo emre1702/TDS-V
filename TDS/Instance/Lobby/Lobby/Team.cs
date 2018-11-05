@@ -10,21 +10,21 @@ namespace TDS.Instance.Lobby
     partial class Lobby
     {
         private Dictionary<uint, Teams> teamsByID = new Dictionary<uint, Teams>();
-        private Dictionary<Teams, List<Character>> TeamPlayers = new Dictionary<Teams, List<Character>>();
+        protected Dictionary<Teams, List<Character>> teamPlayers = new Dictionary<Teams, List<Character>>();
 
         private Teams spectatorTeam;
 
         public void AddTeam(Teams team)
         {
-            this.teamsByID[team.Id] = team;
-            this.TeamPlayers[team] = new List<Character>();
+            teamsByID[team.Id] = team;
+            teamPlayers[team] = new List<Character>();
             if (team.IsSpectatorTeam)
                 spectatorTeam = team;
         }
 
-        private void SetPlayerTeam(Character character, Teams team)
+        protected void SetPlayerTeam(Character character, Teams team)
         {
-            this.TeamPlayers[team].Add(character);
+            teamPlayers[team].Add(character);
             character.Player.SetSkin(team.SkinHash);
             if (character.Team != team)
                 NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvents.ClientPlayerTeamChange, team.Id);
@@ -40,7 +40,7 @@ namespace TDS.Instance.Lobby
         {
             Teams teamwithfewest = null;
             int fewestamount = -1;
-            foreach (var entry in this.TeamPlayers)
+            foreach (var entry in teamPlayers)
             {
                 if (entry.Value.Count > fewestamount 
                     || entry.Value.Count == fewestamount && Utils.Rnd.Next(2) == 1)
@@ -54,21 +54,21 @@ namespace TDS.Instance.Lobby
 
         private void ClearTeamPlayersLists()
         {
-            foreach (var entry in this.TeamPlayers)
+            foreach (var entry in teamPlayers)
             {
                 entry.Value.Clear();
             }
         }
 
-        private void MixTeams()
+        protected void MixTeams()
         {
-            this.ClearTeamPlayersLists();
+            ClearTeamPlayersLists();
             foreach (Character character in this.players)
             {
                 if (character.Team.IsSpectatorTeam)
-                    this.TeamPlayers[this.spectatorTeam].Add(character);
+                    teamPlayers[spectatorTeam].Add(character);
                 else
-                    this.SetPlayerTeam(character, this.GetTeamWithFewestPlayer());
+                    SetPlayerTeam(character, GetTeamWithFewestPlayer());
             }
         }
     }

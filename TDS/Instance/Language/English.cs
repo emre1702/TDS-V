@@ -4,12 +4,13 @@ namespace TDS.Instance.Language
 {
     class English : ILanguage
     {
-        public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist!";
-        public virtual string ADMINLVL_NOT_HIGH_ENOUGH => "Your adminlevel isn't high enough for this action!";
+        public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
+        public virtual string ADMINLVL_NOT_HIGH_ENOUGH => "Your adminlevel isn't high enough for this action.";
 
         public virtual string BOMB_PLANT_INFO => "To plant the bomb you have to take your fists and hold the left mouse button on one of the bomb-spots.";
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 
+        public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
         public virtual string COMMITED_SUICIDE => "You commited suicide.";
         public virtual string CONNECTING => "connecting ...";
 

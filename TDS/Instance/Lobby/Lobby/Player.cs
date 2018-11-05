@@ -50,7 +50,7 @@ namespace TDS.Instance.Lobby
             await this.SavePlayerLobbyStats(character);
 
             this.players.Remove(character);
-            this.TeamPlayers[character.Team].Remove(character);
+            this.teamPlayers[character.Team].Remove(character);
 
             character.CurrentLobby = null;
             character.CurrentLobbyStats = null;
@@ -99,7 +99,7 @@ namespace TDS.Instance.Lobby
             character.CurrentLobbyStats = stats;
         }
 
-        // Todo: improve that for enum! ordershort as string won't work!
+#warning Todo: improve that for enum! ordershort as string won't work!
         private void SendTeamOrder(Character character, string ordershort)
         {
             Teams team = character.Team;

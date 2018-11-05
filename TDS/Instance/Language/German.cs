@@ -4,12 +4,13 @@ namespace TDS.Instance.Language
 {
     class German : English, ILanguage
     {
-        public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht!";
-        public override string ADMINLVL_NOT_HIGH_ENOUGH => "Dein Adminlevel ist nicht hoch genug dafür!";
+        public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
+        public override string ADMINLVL_NOT_HIGH_ENOUGH => "Dein Adminlevel ist nicht hoch genug dafür.";
 
         public override string BOMB_PLANT_INFO => "Um die Bombe zu platzieren, musst du zur Faust wechseln und die linke Maustaste auf einem der Bomben-Spots gedrückt halten.";
-        public override string BOMB_PLANTED => "Bombe wurde platziert!";
+        public override string BOMB_PLANTED => "Bombe wurde platziert.";
 
+        public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
         public override string COMMITED_SUICIDE => "Du hast Selbstmord begangen.";
         public override string CONNECTING => "Verbindet ...";
 

@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Entity;
+using TDS.Instance.Player;
 
 namespace TDS.Instance.Lobby
 {
@@ -11,31 +12,31 @@ namespace TDS.Instance.Lobby
 
         protected readonly Lobbies entity;
 
-        public uint Id { get => this.entity.Id; }
-        public bool IsOfficial { get => this.entity.IsOfficial; }
+        public uint Id { get => entity.Id; }
+        public bool IsOfficial { get => entity.IsOfficial; }
 
-        private readonly uint dimension;
+        protected readonly uint dimension;
         protected readonly Vector3 spawnPoint;
 
-        public Lobby (Lobbies entity)
+        public Lobby(Lobbies entity)
         {
             this.entity = entity;
 
-            this.dimension = GetFreeDimension();
-            this.spawnPoint = new Vector3(
-                this.entity.DefaultSpawnX, 
-                this.entity.DefaultSpawnY, 
-                this.entity.DefaultSpawnZ
+            dimension = GetFreeDimension();
+            spawnPoint = new Vector3(
+                entity.DefaultSpawnX,
+                entity.DefaultSpawnY,
+                entity.DefaultSpawnZ
             );
 
-            LobbiesByIndex[this.entity.Id] = this;
-            dimensionsUsed.Add(this.dimension);
+            LobbiesByIndex[entity.Id] = this;
+            dimensionsUsed.Add(dimension);
         }
 
         protected virtual void Remove()
         {
-            LobbiesByIndex.Remove(this.entity.Id);
-            dimensionsUsed.Remove(this.dimension);
+            LobbiesByIndex.Remove(entity.Id);
+            dimensionsUsed.Remove(dimension);
         }
 
         private static uint GetFreeID()
@@ -56,7 +57,7 @@ namespace TDS.Instance.Lobby
 
         private bool IsEmpty()
         {
-            return this.players.Count == 0;
+            return players.Count == 0;
         }
     }
 }

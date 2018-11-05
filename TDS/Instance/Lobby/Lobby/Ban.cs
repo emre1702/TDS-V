@@ -26,7 +26,7 @@ namespace TDS.Instance.Lobby
             // !ban.EndTimestamp.HasValue => permaban
             if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
             {
-                //Todo: Add output
+#warning Todo: Add output
                 return true;
             }
             else if (ban.EndTimestamp.HasValue)

@@ -1,20 +1,23 @@
-namespace TDS.Instance.Map {
+namespace TDS.Instance
+{
     using System;
     using System.Collections.Generic;
     using GTANetworkAPI;
     using TDS.Enum;
 
-    class Map {
+    class Map
+    {
         public MapSync SyncData;
-		public Dictionary<int, List<Vector3>> TeamSpawns = new Dictionary<int, List<Vector3>> ();
-		public Dictionary<int, List<Vector3>> TeamRots = new Dictionary<int, List<Vector3>> ();
-		public List<Vector3> MapLimits = new List<Vector3> ();
-		public Vector3 MapCenter;
-		public List<Vector3> BombPlantPlaces = new List<Vector3> ();
-	}
+        public Dictionary<int, List<Vector3>> TeamSpawns = new Dictionary<int, List<Vector3>>();
+        public Dictionary<int, List<Vector3>> TeamRots = new Dictionary<int, List<Vector3>>();
+        public List<Vector3> MapLimits = new List<Vector3>();
+        public Vector3 MapCenter;
+        public List<Vector3> BombPlantPlaces = new List<Vector3>();
+    }
 
     [Serializable]
-    class MapSync {
+    class MapSync
+    {
         public string Name = "unknown";
         public EMapType Type = EMapType.Normal;
         public Dictionary<ELanguage, string> Description = new Dictionary<ELanguage, string> {
@@ -27,7 +30,8 @@ namespace TDS.Instance.Map {
     }
 
     [Serializable]
-    class CreatedMap {
+    class CreatedMap
+    {
         public string Name;
         public string Type;
         public Description Descriptions;
@@ -40,20 +44,23 @@ namespace TDS.Instance.Map {
     }
 
     [Serializable]
-    class Description {
+    class Description
+    {
         public string English;
         public string German;
     }
 
     [Serializable]
-    class Position {
+    class Position
+    {
         public float X;
         public float Y;
         public float Z;
     }
 
     [Serializable]
-    class TeamSpawn {
+    class TeamSpawn
+    {
         public int Team;
         public float X;
         public float Y;

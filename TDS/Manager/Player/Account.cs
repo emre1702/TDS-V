@@ -51,7 +51,8 @@
                 dbcontext.SaveChangesAsync();
                 dbcontext.Entry(entity).State = EntityState.Detached;
             }
-            //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   //TODO NOT USED RIGHT NOW
+#warning TODO NOT USED RIGHT NOW
+            //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   
         }
 
         [RemoteEvent("onPlayerTryRegister")]
@@ -62,7 +63,7 @@
             Register.RegisterPlayer(player, password, email);
         }
 
-        //TODO check parameter (hitsoundon and language removed) + check if event gets triggered AFTER Login!!
+# warning TODO check parameter (hitsoundon and language removed) + check if event gets triggered AFTER Login!!
         [RemoteEvent("onPlayerChatLoad")]
         public static void OnPlayerChatLoadEvent(Client player)
         {
@@ -95,14 +96,16 @@
         {
             player.Position = new Vector3(0, 0, 1000).Around(10);
             player.Freeze(true);
-            player.Name = player.SocialClubName;    //TODO make it settable
+            #warning TODO Make it settable
+            player.Name = player.SocialClubName;  
 
             using (var dbcontext = new TDSNewContext())
             {
                 var ban = await dbcontext.Playerbans
                     .Where(b => b.ForLobby == 0)
                     .Where(b => b.Scname == player.SocialClubName || b.Serial == player.Serial || b.Ip == player.Address)
-                    .Where(b => !b.EndTimestamp.HasValue || b.EndTimestamp.Value > DateTime.Now)    //TODO: Is that correct this way?
+#warning Todo: Is that correct this way?
+                    .Where(b => !b.EndTimestamp.HasValue || b.EndTimestamp.Value > DateTime.Now)
                     .AsNoTracking()
                     .Select(b => new {
                         b.Reason,
@@ -114,7 +117,8 @@
 
                 if (ban != null)
                 {
-                    player.Kick($"Banned! Admin: {ban.Admin} - Reason: {ban.Reason} - End: {ban.End} - Start: {ban.Start}");  //Todo: Test line break and display
+#warning Todo: Test line break and display
+                    player.Kick($"Banned! Admin: {ban.Admin} - Reason: {ban.Reason} - End: {ban.End} - Start: {ban.Start}");
                     return;
                 }
             }

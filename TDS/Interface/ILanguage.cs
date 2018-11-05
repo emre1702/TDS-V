@@ -12,6 +12,7 @@ namespace TDS.Interface
         string BOMB_PLANT_INFO { get; }
         string BOMB_PLANTED { get; }
 
+        string COMMAND_DOESNT_EXIST { get; }
         string COMMITED_SUICIDE { get; }
         string CONNECTING { get; }
 

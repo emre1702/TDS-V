@@ -8,7 +8,7 @@
 
     class ChatManager : Script
     {
-        // TODO: Add dirty chat
+#warning TODO: Add dirty chat
 
         public ChatManager() { }
 
