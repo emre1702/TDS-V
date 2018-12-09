@@ -7,22 +7,22 @@ let damagesysdata = {
     shooting: false
 }
 
-var getCurrentWeapon = () => mp.game.invoke( '0x6678C142FAC881BA', localPlayer.handle );
+var getCurrentWeapon = () => mp.game.invoke('0x6678C142FAC881BA', localPlayer.handle);
 
 
-mp.events.add( "render", () => {
-    if ( !rounddata.infight )
+mp.events.add("render", () => {
+    if (!rounddata.infight)
         return;
-    if ( settingsdata.bloodscreen ) {
+    if (settingsdata.bloodscreen) {
         let armorhp = mp.players.local.getHealth() + mp.players.local.getArmour();
-        if ( armorhp != damagesysdata.lastarmorhp ) {
+        if (armorhp != damagesysdata.lastarmorhp) {
             damagesysdata.lastarmorhp = armorhp;
-            if ( armorhp < damagesysdata.lastarmorhp )
+            if (armorhp < damagesysdata.lastarmorhp)
                 showBloodscreen();
         }
     }
     //checkShooting();
-} );
+});
 
 /*function checkShooting() {
     if ( localPlayer.isShooting() ) {
@@ -35,20 +35,20 @@ mp.events.add( "render", () => {
     }
 }*/
 
-mp.events.add( "playerWeaponShot", ( hitpos, hitentity ) => {
-    mp.gui.chat.push( "" + hitentity + " - " + typeof hitentity );
+mp.events.add("playerWeaponShot", (hitpos, hitentity) => {
+    mp.gui.chat.push("" + hitentity + " - " + typeof hitentity);
     //++damagesysdata.shotsdoneinround;
-    let startpos = localPlayer.getBoneCoords( 6286, 0, 0, 0 );
-    let endpos = vector3Lerp( startpos, hitpos, 1.02 ) as Vector3Mp;
-    let raycast = mp.raycasting.testPointToPoint( startpos, endpos, localPlayer.handle, 8 ) as RaycastResult;
-    if ( typeof raycast !== "undefined" ) { // hit nothing {
-        let player = mp.players.atHandle( raycast.entity );
-        if ( player !== null ) {
-            mp.gui.chat.push( player.name );
-            callRemote( "onPlayerHitOtherPlayer", player, false );
+    let startpos = localPlayer.getBoneCoords(6286, 0, 0, 0);
+    let endpos = vector3Lerp(startpos, hitpos, 1.02) as Vector3Mp;
+    let raycast = mp.raycasting.testPointToPoint(startpos, endpos, localPlayer.handle, 8) as RaycastResult;
+    if (typeof raycast !== "undefined") { // hit nothing {
+        let player = mp.players.atHandle(raycast.entity);
+        if (player !== null) {
+            mp.gui.chat.push(player.name);
+            callRemote(ECustomEvents.PlayerHitOtherPlayer, player, false);
             return true;
         }
     }
-} );
+});
 
-mp.players.local.setCanAttackFriendly( false, false );
+mp.players.local.setCanAttackFriendly(false, false);

@@ -87,7 +87,7 @@
         public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
             if (Enum.IsDefined(typeof(ELanguage), language))
-                player.GetEntity().Playersettings.Language = language;
+                player.GetChar().LanguageEnum = (ELanguage) language;
         }
 
         //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
@@ -123,7 +123,7 @@
                 }
             }
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
+            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvent.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
         }
 
         /*public static void PermaBanPlayer(Character admincharacter, Client target, string targetname, string targetaddress, string reason, uint targetuid)

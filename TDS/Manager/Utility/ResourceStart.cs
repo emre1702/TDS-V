@@ -15,14 +15,14 @@
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
-            this.LoadAll();
+            LoadAll();
         }
 
         private async void LoadAll()
         {
             try
             {
-                using (var dbcontext = new TDSNewContext())
+                /*using (var dbcontext = new TDSNewContext())
                 {
                     dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -39,7 +39,7 @@
                     // Gang.LoadGangFromDatabase ();
 
                     // Season.LoadSeason ();
-                }
+                }*/
             }
             catch (Exception ex)
             {

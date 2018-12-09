@@ -1,6 +1,6 @@
 ﻿namespace TDS.Enum
 {
-    public enum ELobbyStatus
+    public enum ERoundStatus
     {
         None, Mapchoose, Countdown, Round, RoundEnd
     }

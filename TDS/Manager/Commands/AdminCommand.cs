@@ -24,7 +24,7 @@ namespace TDS.Manager.Commands
             ChatManager.SendAdminChat(character, text);
         }
 
-       /* [TDSCommand("next")]
+       /*[TDSCommand("next")]
         public static void NextMap(Character character, TDSCommandInfos cmdinfos)
         {
             //if (character.CurrentLobby is IRound roundlobby)  // Todo: Activate after implementing

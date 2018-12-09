@@ -7,14 +7,15 @@ namespace TDS.Entity
     {
         public Lobbies()
         {
+            LobbyWeapons = new HashSet<LobbyWeapons>();
             Playerbans = new HashSet<Playerbans>();
             Playerlobbystats = new HashSet<Playerlobbystats>();
             Teams = new HashSet<Teams>();
-            WeaponsDamage = new HashSet<WeaponsDamage>();
         }
 
         public uint Id { get; set; }
         public uint? Owner { get; set; }
+        public byte Type { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public sbyte StartHealth { get; set; }
@@ -26,14 +27,17 @@ namespace TDS.Entity
         public float DefaultSpawnRotation { get; set; }
         public bool IsTemporary { get; set; }
         public bool IsOfficial { get; set; }
-        public uint DisappearAfterDeathMs { get; set; }
         public uint SpawnAgainAfterDeathMs { get; set; }
+        public uint? MoneyPerKill { get; set; }
+        public uint? MoneyPerAssist { get; set; }
+        public uint? MoneyPerDamage { get; set; }
+        public uint DurationRound { get; set; }
         public DateTime? CreateTimestamp { get; set; }
 
         public Players OwnerNavigation { get; set; }
+        public ICollection<LobbyWeapons> LobbyWeapons { get; set; }
         public ICollection<Playerbans> Playerbans { get; set; }
         public ICollection<Playerlobbystats> Playerlobbystats { get; set; }
         public ICollection<Teams> Teams { get; set; }
-        public ICollection<WeaponsDamage> WeaponsDamage { get; set; }
     }
 }

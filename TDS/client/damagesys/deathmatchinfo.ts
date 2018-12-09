@@ -6,7 +6,7 @@ let deathmatchinfodata = {
     assists: 0
 }
 
-mp.events.add(ECustomRemoteEvents.ClientPlayerHitOpponent, (damage) => {
+mp.events.add(ECustomRemoteEvents.ClientPlayerHitOpponent, () => {
     playHitsound();
 
     //deathmatchinfodata.damage += damage;

@@ -102,19 +102,9 @@ namespace TDS.Manager.Player
             return exists ? idobj.ID : 0;
         }
 
-
-
         public static void GiveMoney(this Client player, int money)
         {
-            Players entity = player.GetChar().Entity;
-            if (money >= 0 || entity.Playerstats.Money > money * -1)
-            {
-                entity.Playerstats.Money = (uint) (entity.Playerstats.Money + money);
-                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.ClientMoneyChange, entity.Playerstats.Money);
-            }
-            else
-                Error.Log($"Should have went to minus money! Current: {entity.Playerstats.Money} | Substracted money: {money}", 
-                                Environment.StackTrace, player);
+            player.GetChar().GiveMoney(money);
         }
     }
 }

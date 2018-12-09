@@ -20,8 +20,10 @@ namespace TDS.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<CommandsAlias> CommandsAlias { get; set; }
         public virtual DbSet<CommandsInfo> CommandsInfo { get; set; }
+        public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
+        public virtual DbSet<LobbyWeapons> LobbyWeapons { get; set; }
         public virtual DbSet<LogsAdmin> LogsAdmin { get; set; }
         public virtual DbSet<LogsChat> LogsChat { get; set; }
         public virtual DbSet<LogsError> LogsError { get; set; }
@@ -36,7 +38,6 @@ namespace TDS.Entity
         public virtual DbSet<Playerstats> Playerstats { get; set; }
         public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
-        public virtual DbSet<WeaponsDamage> WeaponsDamage { get; set; }
         public virtual DbSet<WeaponsHash> WeaponsHash { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -160,6 +161,21 @@ namespace TDS.Entity
                     .HasConstraintName("FK_commands_info_languages");
             });
 
+            modelBuilder.Entity<KillingspreeRewards>(entity =>
+            {
+                entity.HasKey(e => e.KillsAmount);
+
+                entity.ToTable("killingspree_rewards");
+
+                entity.Property(e => e.KillsAmount).HasColumnType("int(10)");
+
+                entity.Property(e => e.HealthOrArmor).HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.OnlyArmor).HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.OnlyHealth).HasDefaultValueSql("'0'");
+            });
+
             modelBuilder.Entity<Languages>(entity =>
             {
                 entity.ToTable("languages");
@@ -192,9 +208,7 @@ namespace TDS.Entity
 
                 entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("'900'");
 
-                entity.Property(e => e.DisappearAfterDeathMs)
-                    .HasColumnName("DisappearAfterDeathMS")
-                    .HasDefaultValueSql("'4000'");
+                entity.Property(e => e.DurationRound).HasDefaultValueSql("'240'");
 
                 entity.Property(e => e.IsOfficial).HasColumnType("bit(1)");
 
@@ -223,6 +237,23 @@ namespace TDS.Entity
                     .HasForeignKey(d => d.Owner)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_lobbies_players");
+            });
+
+            modelBuilder.Entity<LobbyWeapons>(entity =>
+            {
+                entity.HasKey(e => new { e.Lobby, e.Hash });
+
+                entity.ToTable("lobby_weapons");
+
+                entity.Property(e => e.Damage).HasColumnType("smallint(5)");
+
+                entity.Property(e => e.HeadMultiplicator).HasDefaultValueSql("'1'");
+
+                entity.HasOne(d => d.LobbyNavigation)
+                    .WithMany(p => p.LobbyWeapons)
+                    .HasForeignKey(d => d.Lobby)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_lobby_weapons_lobbies");
             });
 
             modelBuilder.Entity<LogsAdmin>(entity =>
@@ -587,34 +618,6 @@ namespace TDS.Entity
                     .HasForeignKey(d => d.Lobby)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Teams_lobbies");
-            });
-
-            modelBuilder.Entity<WeaponsDamage>(entity =>
-            {
-                entity.HasKey(e => new { e.Hash, e.Lobby });
-
-                entity.ToTable("weapons_damage");
-
-                entity.HasIndex(e => e.Lobby)
-                    .HasName("FK_weapons_damage_lobbies");
-
-                entity.Property(e => e.Lobby).HasDefaultValueSql("'0'");
-
-                entity.Property(e => e.Damage).HasColumnType("smallint(3)");
-
-                entity.Property(e => e.HeadMultiplicator).HasDefaultValueSql("'1'");
-
-                entity.HasOne(d => d.HashNavigation)
-                    .WithMany(p => p.WeaponsDamage)
-                    .HasForeignKey(d => d.Hash)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_weapons_damage_weapons_hash");
-
-                entity.HasOne(d => d.LobbyNavigation)
-                    .WithMany(p => p.WeaponsDamage)
-                    .HasForeignKey(d => d.Lobby)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_weapons_damage_lobbies");
             });
 
             modelBuilder.Entity<WeaponsHash>(entity =>

@@ -15,9 +15,9 @@ namespace TDS.Instance.Utility
         /// <summary>A sorted List of Timers</summary>
         private static readonly List<Timer> timer = new List<Timer>();
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
-        private static List<Timer> insertAfterList = new List<Timer>();
+        private static readonly List<Timer> insertAfterList = new List<Timer>();
         /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
-        private static Stopwatch stopwatch = new Stopwatch();
+        private static readonly Stopwatch stopwatch = new Stopwatch();
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
@@ -32,13 +32,9 @@ namespace TDS.Instance.Utility
         /// <summary>If the Timer will get removed.</summary>
         private bool willRemoved = false;
         /// <summary>Use this to check if the timer is still running.</summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return !willRemoved;
-            }
-        }
+        public bool IsRunning => !willRemoved;
+        /// <summary>The remaining ms to execute</summary>
+        public ulong RemainingMsToExecute => executeAtMs - GetCurrentMs();
 
         /// <summary>
         /// Only used for Script!
@@ -49,43 +45,28 @@ namespace TDS.Instance.Utility
         }
 
         /// <summary>
-        /// Constructor used to create the Timer.
-        /// </summary>
-        /// <param name="thefunc">The Action which you want to get called.</param>
-        /// <param name="executeafterms">Execute the Action after milliseconds. If executes is more than one, this gets added to executeatms.</param>
-        /// <param name="executeatms">Execute at milliseconds.</param>
-        /// <param name="executes">How many times to execute. 0 for infinitely.</param>
-        /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
-        private Timer(Action thefunc, uint executeafterms, ulong executeatms, uint executes, bool handleexception)
-        {
-            Func = thefunc;
-            ExecuteAfterMs = executeafterms;
-            executeAtMs = executeatms;
-            ExecutesLeft = executes;
-            HandleException = handleexception;
-        }
-
-        /// <summary>
-        /// Use this method to create the Timer.
+        /// Use this constructor to create the Timer.
         /// </summary>
         /// <param name="thefunc">The Action which you want to get called.</param>
         /// <param name="executeafterms">Execute after milliseconds.</param>
         /// <param name="executes">Amount of executes. Use 0 for infinitely.</param>
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
-        /// <returns></returns>
-        public static Timer SetTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
+        public Timer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
-            ulong executeatms = executeafterms + GetTick();
-            Timer thetimer = new Timer(thefunc, executeafterms, executeatms, executes, handleexception);
-            insertAfterList.Add(thetimer);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
-            return thetimer;
+            ulong executeatms = executeafterms + GetCurrentMs();
+            Func = thefunc;
+            ExecuteAfterMs = executeafterms;
+            executeAtMs = executeatms;
+            ExecutesLeft = executes;
+            HandleException = handleexception;
+            insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
         }
 
         /// <summary>
         /// Method to get the elapsed milliseconds.
         /// </summary>
         /// <returns>Elapsed milliseconds</returns>
-        private static ulong GetTick()
+        private static ulong GetCurrentMs()
         {
             return (ulong)stopwatch.ElapsedMilliseconds;
         }
@@ -157,7 +138,7 @@ namespace TDS.Instance.Utility
         {
             if (changeexecutems)
             {
-                executeAtMs = GetTick();
+                executeAtMs = GetCurrentMs();
             }
             if (HandleException)
                 ExecuteMeSafe();
@@ -190,7 +171,7 @@ namespace TDS.Instance.Utility
         [ServerEvent(Event.Update)]
         public static void OnUpdateFunc()
         {
-            ulong tick = GetTick();
+            ulong tick = GetCurrentMs();
             for (int i = timer.Count - 1; i >= 0; i--)
             {
                 if (!timer[i].willRemoved)

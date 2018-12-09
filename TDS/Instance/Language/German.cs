@@ -26,6 +26,7 @@ namespace TDS.Instance.Language
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GOT_ASSIST => "Du hast den Assist von {1} bekommen.";
         public override string GOT_LAST_HITTED_KILL => "Du hast {1} zuletzt getroffen und den Kill bekommen.";
+        public override string GOT_LOBBY_BAN => "Du hast hier vom Lobby-Besitzer einen Bann. Dauer: {1} | Grund: {2}";
         public override string GOT_OFFLINE_MESSAGE_WITH_NEW => "Du hast {1} Offline-Nachrichten im Userpanel, {2} davon sind neu.";
         public override string GOT_OFFLINE_MESSAGE_WITHOUT_NEW => "Du hast {1} Offline-Nachrichten im Userpanel.";
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";

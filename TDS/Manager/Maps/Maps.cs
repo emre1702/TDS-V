@@ -15,7 +15,7 @@ namespace TDS.Manager.Maps
 
     static partial class Maps
     {
-        private static readonly XmlReaderSettings settings = new XmlReaderSettings();
+        /*private static readonly XmlReaderSettings settings = new XmlReaderSettings();
 
         public static List<Instance.Map.Map> allMaps = new List<Instance.Map.Map>();
         public static List<Instance.Map.MapSync> allMapsSync = new List<Instance.Map.MapSync>();

@@ -58,7 +58,7 @@
         public static void SendTeamChat(Character character, string message)
         {
             string changedmessage = "[TEAM] " + character.TeamChatColor + character.Player.Name + ": {220|220|220}" + message;
-            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team.Id);
+            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team.Index);
             Chat.Log(message, character, isteamchat: true);
         }
 

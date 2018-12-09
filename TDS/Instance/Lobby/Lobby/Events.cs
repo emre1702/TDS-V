@@ -7,41 +7,36 @@ namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        private Dictionary<Character, Timer> deathSpawnTimer = new Dictionary<Character, Timer>();
+        protected readonly Dictionary<Character, Timer> DeathSpawnTimer = new Dictionary<Character, Timer>();
 
-        public void OnPlayerSpawn(Character character)
+        public virtual void OnPlayerSpawn(Character character)
         {
-            NAPI.Player.SetPlayerHealth(character.Player, this.entity.StartHealth);
-            NAPI.Player.SetPlayerArmor(character.Player, this.entity.StartArmor);
+            NAPI.Player.SetPlayerHealth(character.Player, LobbyEntity.StartHealth);
+            NAPI.Player.SetPlayerArmor(character.Player, LobbyEntity.StartArmor);
         }
 
         public void OnPlayerDisconnected(Character character)
         {
             this.RemovePlayer(character);
         }
- 
-        public virtual uint OnPlayerDeath(Character character, Client killer, uint weapon)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="killer"></param>
+        /// <param name="weapon"></param>
+        /// <returns>Time in ms to disapper & spawn again</returns>
+        public virtual void OnPlayerDeath(Character character, Client killer, uint weapon, bool spawnPlayer = true)
         {
-            if (character.Lifes > 0)
+            if (DeathSpawnTimer.ContainsKey(character))
             {
-                --character.Lifes;
-                if (character.Lifes == 0)
-                {
-                    if (this.deathSpawnTimer.ContainsKey(character))
-                        this.deathSpawnTimer[character].Kill();
-                    this.deathSpawnTimer[character] = Timer.SetTimer(
-                        () =>
-                        {
-                            NAPI.Player.SpawnPlayer(character.Player, this.spawnPoint, this.entity.DefaultSpawnRotation);
-                            this.deathSpawnTimer[character] = null;
-                        }
-                    , this.entity.DisappearAfterDeathMs);
-                }
-                return this.entity.DisappearAfterDeathMs;
-            } else
+                DeathSpawnTimer[character].Kill();
+                DeathSpawnTimer.Remove(character);
+            }
+            if (spawnPlayer)
             {
-                NAPI.Player.SpawnPlayer(character.Player, this.spawnPoint, this.entity.DefaultSpawnRotation);
-                return 0;
+                NAPI.Player.SpawnPlayer(character.Player, spawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
             }
         }
 

@@ -6,6 +6,7 @@ namespace TDS.Entity
     public partial class Teams
     {
         public uint Id { get; set; }
+        public uint Index { get; set; }
         public string Name { get; set; }
         public uint? Lobby { get; set; }
         public byte ColorR { get; set; }

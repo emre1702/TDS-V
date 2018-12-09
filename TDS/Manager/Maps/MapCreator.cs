@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TDS.Default;
-using TDS.Instance.Map;
 using TDS.Manager.Logs;
 using TDS.Manager.Player;
 using TDS.Manager.Utility;
@@ -15,7 +14,7 @@ namespace TDS.Manager.Maps
 
     static partial class Maps
     {
-        private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
+        /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("<MapData>")
@@ -118,6 +117,6 @@ namespace TDS.Manager.Maps
                 filenames = GetOwnNewMapFileNames(uid);
             NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RequestNewMapsList, JsonConvert.SerializeObject(filenames));
 
-        }
+        }*/
     }
 }

@@ -9,25 +9,15 @@ namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        private Dictionary<uint, Teams> teamsByID = new Dictionary<uint, Teams>();
-        protected Dictionary<Teams, List<Character>> teamPlayers = new Dictionary<Teams, List<Character>>();
-
-        private Teams spectatorTeam;
-
-        public void AddTeam(Teams team)
-        {
-            teamsByID[team.Id] = team;
-            teamPlayers[team] = new List<Character>();
-            if (team.IsSpectatorTeam)
-                spectatorTeam = team;
-        }
+        protected readonly Teams[] teams;
+        protected readonly List<Character>[] teamPlayers;
 
         protected void SetPlayerTeam(Character character, Teams team)
         {
-            teamPlayers[team].Add(character);
+            teamPlayers[team.Index].Add(character);
             character.Player.SetSkin(team.SkinHash);
-            if (character.Team != team)
-                NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvents.ClientPlayerTeamChange, team.Id);
+            if (character.Team.Id != team.Id)
+                NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientPlayerTeamChange, team.Index);
             character.Team = team;
         }
 
@@ -38,35 +28,35 @@ namespace TDS.Instance.Lobby
 
         private Teams GetTeamWithFewestPlayer()
         {
-            Teams teamwithfewest = null;
+            int teamindexwithfewest = 0;
             int fewestamount = -1;
-            foreach (var entry in teamPlayers)
-            {
-                if (entry.Value.Count > fewestamount 
-                    || entry.Value.Count == fewestamount && Utils.Rnd.Next(2) == 1)
+            for (int i = 0; i < teamPlayers.Length; ++i) {
+                List<Character> entry = teamPlayers[i];
+                if (entry.Count > fewestamount
+                    || entry.Count == fewestamount && Utils.Rnd.Next(2) == 1)
                 {
-                    fewestamount = entry.Value.Count;
-                    teamwithfewest = entry.Key;
+                    fewestamount = entry.Count;
+                    teamindexwithfewest = i;
                 }
             }
-            return teamwithfewest;
+            return teams[teamindexwithfewest];
         }
 
         private void ClearTeamPlayersLists()
         {
             foreach (var entry in teamPlayers)
             {
-                entry.Value.Clear();
+                entry.Clear();
             }
         }
 
         protected void MixTeams()
         {
             ClearTeamPlayersLists();
-            foreach (Character character in this.players)
+            foreach (Character character in players)
             {
                 if (character.Team.IsSpectatorTeam)
-                    teamPlayers[spectatorTeam].Add(character);
+                    teamPlayers[0].Add(character);  // because he is already in that team
                 else
                     SetPlayerTeam(character, GetTeamWithFewestPlayer());
             }

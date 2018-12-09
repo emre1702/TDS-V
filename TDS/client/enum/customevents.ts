@@ -1,4 +1,5 @@
 ﻿enum ECustomEvents {
     ClientCommandUse = "ClientCommandUse",
-    JoinLobby = "JoinLobby"
+    JoinLobby = "JoinLobby",
+    PlayerHitOtherPlayer = "PlayerHitOtherPlayer"
 }

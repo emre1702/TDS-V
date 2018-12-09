@@ -25,6 +25,7 @@ namespace TDS.Interface
         string GANG_REMOVED { get; }
         string GOT_ASSIST { get; }
         string GOT_LAST_HITTED_KILL { get; }
+        string GOT_LOBBY_BAN { get; }
         string GOT_OFFLINE_MESSAGE_WITH_NEW { get; }
         string GOT_OFFLINE_MESSAGE_WITHOUT_NEW { get; }
 

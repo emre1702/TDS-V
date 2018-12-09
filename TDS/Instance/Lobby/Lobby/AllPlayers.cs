@@ -4,66 +4,70 @@ using System.Collections.Generic;
 using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
+using TDS.Interface;
 using TDS.Manager.Utility;
 
 namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        private List<Character> players = new List<Character>();
+        private readonly List<Character> players = new List<Character>();
 
         protected void SendAllPlayerEvent(string eventname, uint? teamindex, params object[] args)
         {
             if (!teamindex.HasValue)
             {
-                this.FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); });
+                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); });
             }
             else
-                this.FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); }, teamindex.Value);
+                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); }, teamindex.Value);
         }
 
-        protected void FuncIterateAllPlayers(Action<Character, Teams> func, uint? teamID = null)
+        protected void FuncIterateAllPlayers(Action<Character, Teams> func, uint? teamIndex = null)
         {
-            if (!teamID.HasValue)
+            if (!teamIndex.HasValue)
             {
-                foreach (KeyValuePair<Teams, List<Character>> entry in teamPlayers)
+                for (int i = 0; i < teamPlayers.Length; ++i)
                 {
-                    for (int j = entry.Value.Count - 1; j >= 0; --j)
+                    Teams team = teams[i];
+                    for (int j = teamPlayers[i].Count - 1; j >= 0; --j)
                     {
-                        func(entry.Value[j], entry.Key);
+                        func(teamPlayers[i][j], team);
                     }
                 }
             }
             else
             {
-                Teams team = teamsByID[teamID.Value];
-                foreach (Character character in teamPlayers[team])
+                uint i = teamIndex.Value;
+                Teams team = teams[teamIndex.Value];
+                for (int j = teamPlayers[i].Count - 1; j >= 0; --j)
                 {
-                    func(character, team);
+                    func(teamPlayers[i][j], team);
                 }
             }
         }
 
-        protected void FuncIterateAllPlayers(Action<Character, Teams> func, Teams team)
+        protected void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, uint? teamindex = null)
         {
-            foreach (Character character in teamPlayers[team]) 
+            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
+            FuncIterateAllPlayers((character, team) =>
             {
-                func(character, team);
-            }
+                NAPI.Chat.SendChatMessageToPlayer(character.Player, texts[character.Language]);
+            }, teamindex);
         }
 
-        protected void SendAllPlayerLangMessage(Func<ELanguage, string> langgetter, uint? teamindex = null)
+        protected void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, uint? teamindex = null)
         {
-            Dictionary<ELanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
-            this.FuncIterateAllPlayers((character, team) =>
+            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
+            FuncIterateAllPlayers((character, team) =>
             {
-                NAPI.Chat.SendChatMessageToPlayer(character.Player, texts[(ELanguage)character.Entity.Playersettings.Language]);
+                NAPI.Notification.SendNotificationToPlayer(character.Player, texts[character.Language]);
             }, teamindex);
         }
 
         public void SendAllPlayerChatMessage(string msg, uint? teamindex = null)
         {
-            this.FuncIterateAllPlayers((character, teamID) =>
+            FuncIterateAllPlayers((character, teamID) =>
             {
                 NAPI.Chat.SendChatMessageToPlayer(character.Player, msg);
             }, teamindex);

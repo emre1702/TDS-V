@@ -7,26 +7,7 @@ namespace TDS.Instance.Lobby
 {
     class LobbyEvents : Script
     {
-        #region Lobby
-        [RemoteEvent(DCustomRemoteEvents.JoinLobby)]
-        public static async void JoinLobbyEvent(Client player, uint index, uint teamid)
-        {
-            if (Lobby.LobbiesByIndex.ContainsKey(index))
-            {
-                Lobby lobby = Lobby.LobbiesByIndex[index];
-#warning todo After adding Arena
-                //if (lobby is Arena)  todo
-                //    manager.lobby.Arena.Join(player.GetChar(), spectator);
-                //else
-                await lobby.AddPlayer(player.GetChar(), teamid);
-            }
-            else
-            {
-                // player.sendNotification (  lobby doesn't exist ); 
-            }
-        }
-        #endregion
-
+        #region Server
         [ServerEvent(Event.PlayerSpawn)]
         public static void OnPlayerSpawn(Client player)
         {
@@ -47,6 +28,42 @@ namespace TDS.Instance.Lobby
             Character character = player.GetChar();
             character.CurrentLobby.OnPlayerDeath(character, killer, reason);
         }
+        #endregion Server
+
+        #region Remote
+        #region Lobby
+        [RemoteEvent(DCustomRemoteEvents.JoinLobby)]
+        public static async void JoinLobbyEvent(Client player, uint index, uint teamid)
+        {
+            if (Lobby.LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = Lobby.LobbiesByIndex[index];
+#warning todo After adding Arena
+                //if (lobby is Arena)  todo
+                //    manager.lobby.Arena.Join(player.GetChar(), spectator);
+                //else
+                await lobby.AddPlayer(player.GetChar(), teamid);
+            }
+            else
+            {
+                // player.sendNotification (  lobby doesn't exist ); 
+            }
+        }
+        #endregion Lobby
+
+        #region Damagesys
+        [RemoteEvent(DCustomRemoteEvents.PlayerHitOtherPlayer)]
+        public void OnPlayerHitOtherPlayer(Client player, Client hitted, bool headshot)
+        {
+            Character character = player.GetChar();
+            if (character.CurrentLobby is FightLobby fightlobby)
+            {
+                WeaponHash currentweapon = player.CurrentWeapon;
+                fightlobby.DamagedPlayer(character, hitted.GetChar(), currentweapon, headshot);
+            }
+        }
+        #endregion Damagesys
+        #endregion Remote
 
 
         /*[RemoteEvent("joinMapCreatorLobby")]

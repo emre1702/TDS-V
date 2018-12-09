@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Entity;
+using TDS.Enum;
 using TDS.Instance.Lobby;
 
 namespace TDS.Manager.Utility
@@ -16,13 +17,33 @@ namespace TDS.Manager.Utility
                 dbcontext.RemoveRange(dbcontext.Lobbies.Where(l => l.IsTemporary));
                 await dbcontext.SaveChangesAsync();
 
-                List<Lobbies> teamlist = await dbcontext.Lobbies.Include(l => l.Teams).AsNoTracking().ToListAsync();
+                List<Lobbies> teamlist = await dbcontext.Lobbies
+                    .Include(l => l.Teams)
+                    .Include(l => l.LobbyWeapons)
+                    .AsNoTracking()
+                    .ToListAsync();
                 foreach (Lobbies lobbysetting in teamlist)
                 {
-                    Lobby lobby = new Lobby(lobbysetting);
-                    foreach (Teams team in lobbysetting.Teams)
+                    ELobbyType type = (ELobbyType)lobbysetting.Type;
+                    Lobby lobby;
+                    switch (type)
                     {
-                        lobby.AddTeam(team);
+                        case ELobbyType.FightLobby:
+                            lobby = new FightLobby(lobbysetting);
+                            break;
+                        case ELobbyType.Arena:
+                            lobby = new Arena(lobbysetting);
+                            break;
+                        //case ELobbyType.GangLobby:
+#warning todo Add after implementation of lobbies
+                            //lobby = new GangLobby(lobbysetting);
+                            //break;
+                        //case ELobbyType.MapCreateLobby:
+         
+                        //    break;
+                        default:
+                            lobby = new Lobby(lobbysetting);
+                            break;
                     }
                 }
             }

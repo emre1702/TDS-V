@@ -23,8 +23,8 @@ namespace TDS.Manager.Maps
 
         public static async void AddPlayerMapRating(Client player, string mapname, byte rating)
         {
-            if (!DoesMapNameExist(mapname))
-                return;
+            //if (!DoesMapNameExist(mapname))
+                //return;
 
             uint playerid = player.GetEntity().Id;
             using (var dbcontext = new TDSNewContext())
@@ -47,7 +47,7 @@ namespace TDS.Manager.Maps
                 List<Playermapratings> list = await dbcontext.Playermapratings.Where(rating => rating.Id == character.Entity.Id).ToListAsync();
                 if (list.Count > 0)
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvents.ClientLoadOwnMapRatings, JsonConvert.SerializeObject(list));
+                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientLoadOwnMapRatings, JsonConvert.SerializeObject(list));
                 }
             }
         }

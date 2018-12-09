@@ -5,6 +5,7 @@
     using TDS.Default;
     using TDS.Entity;
     using TDS.Instance.Language;
+    using TDS.Instance.Player;
     using TDS.Manager.Utility;
 
     static class Login
@@ -31,9 +32,9 @@
                     return;
                 }
 
+                Character character = player.GetChar();
                 dbcontext.Attach(entity.Playerstats);
-
-                player.GiveMoney(0);        // to update at clientside
+                character.Entity = entity;
 
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(player);
@@ -41,7 +42,7 @@
                 player.Team = 1;        // To be able to use custom damagesystem
                 entity.Playerstats.LoggedIn = true;
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RegisterLoginSuccessful, entity.AdminLvl);
+                NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvent.RegisterLoginSuccessful, entity.AdminLvl);
                 //MainMenu.Join(character);
 
                 await dbcontext.SaveChangesAsync();

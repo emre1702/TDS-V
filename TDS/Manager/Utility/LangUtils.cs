@@ -19,12 +19,12 @@
 
         public static ILanguage GetLang (this Client player)
         {
-            return languageByID[(ELanguage)player.GetEntity().Playersettings.Language];
+            return languageByID[player.GetChar().LanguageEnum];
         }
 
 		public static ILanguage GetLang (this Character character)
 		{
-            return languageByID[(ELanguage)character.Entity.Playersettings.Language];
+            return languageByID[character.LanguageEnum];
         }
 
         public static ILanguage GetLang (this Type language)
@@ -44,17 +44,17 @@
             return languageByID[(ELanguage)language];
         }
 
-        public static ILanguage GetLang(ELanguage language)
+        public static ILanguage GetLang(this ELanguage language)
         {
             return languageByID[language];
         }
 
-        public static Dictionary<ELanguage, string> GetLangDictionary (Func<ELanguage, string> langgetter)
+        public static Dictionary<ILanguage, string> GetLangDictionary (Func<ILanguage, string> langgetter)
         {
-            Dictionary<ELanguage, string> returndict = new Dictionary<ELanguage, string>();
-            foreach (ELanguage language in Enum.GetValues(typeof(ELanguage)))
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in languageByID.Values)
             {
-                returndict[language] = langgetter(language);
+                returndict[lang] = langgetter(lang);
             }
             return returndict;
         }

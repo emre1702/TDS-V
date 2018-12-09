@@ -75,6 +75,12 @@
             return str;
         }
 
+        public static string DurationTo(this DateTime time1, DateTime time2)
+        {
+            TimeSpan span = time2 - time1;
+            return $"{(int)(span.TotalMinutes / 60)}:{(int)Math.Ceiling(span.TotalMinutes % 60)}";
+        }
+
     }
 
 }

@@ -77,7 +77,7 @@ namespace TDS.Manager.Commands
             }
         }
 
-        [RemoteEvent(DCustomEvents.ClientCommandUse)] 
+        [RemoteEvent(DCustomEvent.ClientCommandUse)] 
         public static void UseCommand(Client player, string cmd, object[] args)
         {
             Character character = player.GetChar();

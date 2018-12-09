@@ -25,6 +25,7 @@ namespace TDS.Instance.Language
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GOT_ASSIST => "You got the assist of {1}.";
         public virtual string GOT_LAST_HITTED_KILL => "You hitted {1} last and got the kill.";
+        public virtual string GOT_LOBBY_BAN => "You got a ban from the lobby-owner here. Duration: {1} | Reason: {2}";
         public virtual string GOT_OFFLINE_MESSAGE_WITH_NEW => "You got {1} offline messages in userpanel, {2} is/are new.";
         public virtual string GOT_OFFLINE_MESSAGE_WITHOUT_NEW => "You got {1} offline messages in userpanel.";
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
