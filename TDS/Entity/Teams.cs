@@ -16,6 +16,6 @@ namespace TDS.Entity
         public uint SkinHash { get; set; }
         public bool IsSpectatorTeam { get; set; }
 
-        public Lobbies LobbyNavigation { get; set; }
+        public virtual Lobbies LobbyNavigation { get; set; }
     }
 }

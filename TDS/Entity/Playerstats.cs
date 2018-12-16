@@ -11,6 +11,6 @@ namespace TDS.Entity
         public bool LoggedIn { get; set; }
         public DateTime LastLoginTimestamp { get; set; }
 
-        public Players IdNavigation { get; set; }
+        public virtual Players IdNavigation { get; set; }
     }
 }

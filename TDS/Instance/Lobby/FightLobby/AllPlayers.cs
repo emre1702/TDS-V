@@ -5,6 +5,7 @@ namespace TDS.Instance.Lobby
 {
     partial class FightLobby
     {
-        protected List<Character>[] AliveOrNotDisappearedPlayers;
+        protected List<TDSPlayer>[] SpectateablePlayers;
+        protected List<TDSPlayer>[] AlivePlayers;
     }
 }

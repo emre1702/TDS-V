@@ -9,6 +9,6 @@ namespace TDS.Entity
         public string MapName { get; set; }
         public byte Rating { get; set; }
 
-        public Players IdNavigation { get; set; }
+        public virtual Players IdNavigation { get; set; }
     }
 }

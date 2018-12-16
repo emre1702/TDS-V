@@ -10,6 +10,7 @@ using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
 using TDS.Manager.Player;
+using TDS_Common.Default;
 
 namespace TDS.Manager.Maps
 {
@@ -40,14 +41,14 @@ namespace TDS.Manager.Maps
             }
         }
 
-        public static async void SendPlayerHisRatingsAsync(Character character)
+        public static async void SendPlayerHisRatingsAsync(TDSPlayer character)
         {
             using (var dbcontext = new TDSNewContext())
             {
                 List<Playermapratings> list = await dbcontext.Playermapratings.Where(rating => rating.Id == character.Entity.Id).ToListAsync();
                 if (list.Count > 0)
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientLoadOwnMapRatings, JsonConvert.SerializeObject(list));
+                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(list));
                 }
             }
         }

@@ -8,6 +8,6 @@ namespace TDS.Entity
         public string Alias { get; set; }
         public ushort? Command { get; set; }
 
-        public Commands CommandNavigation { get; set; }
+        public virtual Commands CommandNavigation { get; set; }
     }
 }

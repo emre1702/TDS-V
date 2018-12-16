@@ -1,5 +1,3 @@
-using GTANetworkAPI;
-using System.Collections.Generic;
 using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Lobby.Interfaces;
@@ -17,7 +15,9 @@ namespace TDS.Instance.Lobby
             roundStatusMethod[ERoundStatus.Round] = StartRound;
             roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
-            durationsDict[ERoundStatus.Round] = entity.DurationRound * 1000;
+            durationsDict[ERoundStatus.Round] = entity.DurationRound.Value * 1000;
+
+            spawnCounter = new int[entity.Teams.Count-1];
         }
 
         public override void Start()
@@ -32,20 +32,8 @@ namespace TDS.Instance.Lobby
             nextRoundStatusTimer?.Kill();
             nextRoundStatusTimer = null;
 
-            /*if (currentMap != null && currentMap.SyncData.Type == MapType.BOMB)
-                StopRoundBomb();*/
+            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+                StopBombRound();
         }
-
-        /*
-
-        public void CheckForEnoughAlive()
-        {
-            int teamsinround = GetTeamAmountStillInRound();
-            if (teamsinround < 2)
-            {
-                int winnerteam = GetTeamStillInRound();
-                EndRoundEarlier(RoundEndReason.DEATH, winnerteam);
-            }
-        }*/
     }
 }

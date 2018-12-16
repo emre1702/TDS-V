@@ -44,7 +44,8 @@ namespace TDS.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo");
             }
         }
 
@@ -52,7 +53,8 @@ namespace TDS.Entity
         {
             modelBuilder.Entity<Adminlevelnames>(entity =>
             {
-                entity.HasKey(e => new { e.Level, e.Language });
+                entity.HasKey(e => new { e.Level, e.Language })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("adminlevelnames");
 
@@ -76,7 +78,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<Adminlevels>(entity =>
             {
-                entity.HasKey(e => e.Level);
+                entity.HasKey(e => e.Level)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("adminlevels");
 
@@ -119,7 +122,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<CommandsAlias>(entity =>
             {
-                entity.HasKey(e => e.Alias);
+                entity.HasKey(e => e.Alias)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("commands_alias");
 
@@ -137,7 +141,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<CommandsInfo>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.Language });
+                entity.HasKey(e => new { e.Id, e.Language })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("commands_info");
 
@@ -163,7 +168,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<KillingspreeRewards>(entity =>
             {
-                entity.HasKey(e => e.KillsAmount);
+                entity.HasKey(e => e.KillsAmount)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("killingspree_rewards");
 
@@ -196,7 +202,17 @@ namespace TDS.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.AmountLifes)
+                    .HasColumnType("tinyint(3)")
+                    .HasDefaultValueSql("'1'");
+
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("'3'");
+
+                entity.Property(e => e.BombDefuseTimeMs).HasDefaultValueSql("'8000'");
+
+                entity.Property(e => e.BombDetonateTimeMs).HasDefaultValueSql("'45000'");
+
+                entity.Property(e => e.BombPlantTimeMs).HasDefaultValueSql("'3000'");
 
                 entity.Property(e => e.CreateTimestamp).HasColumnType("timestamp");
 
@@ -214,6 +230,8 @@ namespace TDS.Entity
 
                 entity.Property(e => e.IsTemporary).HasColumnType("bit(1)");
 
+                entity.Property(e => e.MixTeamsAfterRound).HasColumnType("bit(1)");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(100)");
@@ -222,7 +240,7 @@ namespace TDS.Entity
 
                 entity.Property(e => e.SpawnAgainAfterDeathMs)
                     .HasColumnName("SpawnAgainAfterDeathMS")
-                    .HasDefaultValueSql("'500'");
+                    .HasDefaultValueSql("'3000'");
 
                 entity.Property(e => e.StartArmor)
                     .HasColumnType("tinyint(3)")
@@ -241,7 +259,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<LobbyWeapons>(entity =>
             {
-                entity.HasKey(e => new { e.Lobby, e.Hash });
+                entity.HasKey(e => new { e.Lobby, e.Hash })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("lobby_weapons");
 
@@ -381,7 +400,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<Playerbans>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.ForLobby });
+                entity.HasKey(e => new { e.Id, e.ForLobby })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("playerbans");
 
@@ -438,7 +458,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<Playerlobbystats>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.Lobby });
+                entity.HasKey(e => new { e.Id, e.Lobby })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("playerlobbystats");
 
@@ -476,7 +497,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<Playermapratings>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.MapName });
+                entity.HasKey(e => new { e.Id, e.MapName })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("playermapratings");
 
@@ -622,7 +644,8 @@ namespace TDS.Entity
 
             modelBuilder.Entity<WeaponsHash>(entity =>
             {
-                entity.HasKey(e => e.Hash);
+                entity.HasKey(e => e.Hash)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("weapons_hash");
 

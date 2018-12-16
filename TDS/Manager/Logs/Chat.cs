@@ -10,7 +10,7 @@ namespace TDS.Manager.Logs
     {
         private static readonly List<LogsChat> notsavedchatlogs = new List<LogsChat>();
 
-        public static void Log (string chat, Character source, Character target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
+        public static void Log (string chat, TDSPlayer source, TDSPlayer target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
         {
             notsavedchatlogs.Add(
                 new LogsChat {

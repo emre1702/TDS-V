@@ -2,6 +2,6 @@
 {
     enum ERoundEndReason
     {
-        Death, Time, Bomb, Command, NewPlayer
+        Death, Time, BombExploded, BombDefused, Command, NewPlayer, Empty
     }
 }

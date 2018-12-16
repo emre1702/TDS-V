@@ -1,12 +1,10 @@
 namespace TDS.Instance
 {
-
-    using System;
     using System.Collections.Generic;
     using GTANetworkAPI;
-    using TDS.Default;
     using TDS.Dto;
     using TDS.Instance.Player;
+    using TDS_Common.Default;
 
     partial class Damagesys
     {
@@ -93,11 +91,11 @@ namespace TDS.Instance
         };*/
 
         private readonly Dictionary<WeaponHash, DamageDto> damagesDict = new Dictionary<WeaponHash, DamageDto>();
-        private readonly Dictionary<Character, Dictionary<Character, int>> lastHittersDict = new Dictionary<Character, Dictionary<Character, int>>();
+        private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
-        public void DamagePlayer(Character target, WeaponHash weapon, bool headshot, Character source = null)
+        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer source = null)
         {
-            if (NAPI.Player.IsPlayerDead(target.Player))
+            if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
             if (source != null)
             {
@@ -117,10 +115,10 @@ namespace TDS.Instance
                 source.CurrentRoundStats.Damage += (uint) damage;
 
                 if (source.Entity.Playersettings.HitsoundOn)
-                    NAPI.ClientEvent.TriggerClientEvent(source.Player, DCustomEvent.ClientPlayerHitOpponent);
+                    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
             }
             
-            if (target.Player.Health == 0)
+            if (target.Client.Health == 0)
             {
 #warning todo Check if we need that
                 //target.Player.Kill();
@@ -128,12 +126,12 @@ namespace TDS.Instance
             }
         }
 
-        private void UpdateLastHitter(Character target, Character source, int damage)
+        public void UpdateLastHitter(TDSPlayer target, TDSPlayer source, int damage)
         {
-            if (!lastHittersDict.TryGetValue(target, out Dictionary<Character, int> lasthitterdict))
+            if (!allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int> lasthitterdict))
             {
-                lasthitterdict = new Dictionary<Character, int>();
-                lastHittersDict[target] = lasthitterdict;
+                lasthitterdict = new Dictionary<TDSPlayer, int>();
+                allHitters[target] = lasthitterdict;
             }
             lasthitterdict.TryGetValue(source, out int currentDamage);
             lasthitterdict[source] = currentDamage + damage;

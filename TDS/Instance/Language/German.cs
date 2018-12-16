@@ -27,8 +27,7 @@ namespace TDS.Instance.Language
         public override string GOT_ASSIST => "Du hast den Assist von {1} bekommen.";
         public override string GOT_LAST_HITTED_KILL => "Du hast {1} zuletzt getroffen und den Kill bekommen.";
         public override string GOT_LOBBY_BAN => "Du hast hier vom Lobby-Besitzer einen Bann. Dauer: {1} | Grund: {2}";
-        public override string GOT_OFFLINE_MESSAGE_WITH_NEW => "Du hast {1} Offline-Nachrichten im Userpanel, {2} davon sind neu.";
-        public override string GOT_OFFLINE_MESSAGE_WITHOUT_NEW => "Du hast {1} Offline-Nachrichten im Userpanel.";
+        public override string GOT_UNREAD_OFFLINE_MESSAGES => "Du hast {1} ungelesene Offline-Nachricht(en) im Userpanel.";
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
 
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
@@ -39,6 +38,8 @@ namespace TDS.Instance.Language
         public override string KICK_LOBBY_INFO => "{1} wurde von {2} aus der Lobby gekickt. Grund: {3}";
         public override string KICK_LOBBY_YOU_INFO => "Du wurdest von {1} aus der Lobby gekickt. Grund: {2}";
         public override string KILLING_SPREE_HEALTHARMOR => "{1} hat einen {2}er Killingspree und kriegt dafür {3} Leben/Weste.";
+
+        public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";
 
         public override string MAP_WON_VOTING => "Die Map {1} hat das Voting gewonnen!";
 

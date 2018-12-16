@@ -15,8 +15,8 @@ namespace TDS.Entity
         public DateTime StartTimestamp { get; set; }
         public DateTime? EndTimestamp { get; set; }
 
-        public Players AdminNavigation { get; set; }
-        public Lobbies ForLobbyNavigation { get; set; }
-        public Players IdNavigation { get; set; }
+        public virtual Players AdminNavigation { get; set; }
+        public virtual Lobbies ForLobbyNavigation { get; set; }
+        public virtual Players IdNavigation { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Default;
+using TDS.Enum;
 using TDS.Instance.Player;
 using TDS.Manager.Player;
 using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
@@ -35,7 +37,7 @@ namespace TDS.Instance.Lobby
                     damagereward = character.CurrentRoundStats.Damage * LobbyEntity.MoneyPerDamage.Value;
 
                 character.GiveMoney(killreward + assistreward + damagereward);
-                NAPI.Chat.SendChatMessageToPlayer(character.Player, Utils.GetReplaced(character.Language.ROUND_REWARD_INFO,
+                NAPI.Chat.SendChatMessageToPlayer(character.Client, Utils.GetReplaced(character.Language.ROUND_REWARD_INFO,
                     killreward == 0 ? "-" : killreward.ToString(),
                     assistreward == 0 ? "-" : assistreward.ToString(),
                     damagereward == 0 ? "-" : damagereward.ToString(),
@@ -51,24 +53,25 @@ namespace TDS.Instance.Lobby
             {
                 if (!team.IsSpectatorTeam)
                     RemoveAsSpectator(character);
-                //SetPlayerReadyForRound(character);
-                AliveOrNotDisappearedPlayers[team.Index].Add(character);
-                NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientCountdownStart); 
+                SetPlayerReadyForRound(character);
+                SpectateablePlayers[team.Index].Add(character);
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
             });
-            //if (currentMap.SyncData.Type == enums.MapType.BOMB)
-            //    GiveBombToRandomTerrorist();*/
+            if (currentMap.SyncedData.Type == EMapType.Bomb)
+                GiveBombToRandomTerrorist();
         }
 
-        /*private void SendPlayerAmountInFightInfo(Client player)
+        private void SendPlayerAmountInFightInfo(Client player)
         {
-            List<uint> amountinteams = new List<uint>();
-            List<uint> amountaliveinteams = new List<uint>();
-            for (int i = 1; i < TeamPlayers.Count; i++)
+            List<int> amountinteams = new List<int>();
+            List<int> amountaliveinteams = new List<int>();
+            for (int i = 1; i < TeamPlayers.Length; i++)
             {
-                amountinteams.Add((uint)TeamPlayers[i].Count);
-                amountaliveinteams.Add((uint)AlivePlayers[i].Count);
+                amountinteams.Add(TeamPlayers[i].Count);
+                amountaliveinteams.Add(AlivePlayers[i].Count);
             }
-            PlayerAmountInFightSync(player, amountinteams, amountaliveinteams);
-        }*/
+            //PlayerAmountInFightSync(player, amountinteams, amountaliveinteams);
+#warning Implement with Client implementation
+        }
     }
 }

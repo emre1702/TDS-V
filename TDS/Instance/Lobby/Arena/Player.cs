@@ -1,45 +1,50 @@
+using GTANetworkAPI;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
+using TDS.Default;
 using TDS.Dto;
+using TDS.Entity;
+using TDS.Enum;
 using TDS.Instance.Player;
+using TDS.Instance.Utility;
+using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby {
 
     partial class Arena {
 
-        public override async Task<bool> AddPlayer(Character character, uint teamid)
+        public override async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
-            if (!await AddPlayer(character, teamid))
+            if (!await base.AddPlayer(character, teamindex))
                 return false;
 
             character.CurrentRoundStats = new RoundStatsDto();
-#warning todo: Add spectate
+            SpectateOtherSameTeam(character);
+
+            //string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
+            //NAPI.ClientEvent.TriggerClientEvent(character.Client, DCustomEvent.SyncLobbySettings, spectator, mapname, JsonConvert.SerializeObject(Teams), JsonConvert.SerializeObject(teamColorsList),
+            //                    countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
+            //                    RoundEndTime, true);
+#warning Implement after client implementation
+
+            if (teamindex != 0)
+                AddPlayerAsPlayer(character);
+
+            SendPlayerRoundInfoOnJoin(character);
+
             return true;
-
-
-            /*
-            if ( !AddPlayerDefault ( character, spectator ) )
-				return false;
-
-            string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
-            NAPI.ClientEvent.TriggerClientEvent ( character.Player, "onClientPlayerJoinLobby", ID, spectator, mapname, JsonConvert.SerializeObject ( Teams ), JsonConvert.SerializeObject ( teamColorsList ), 
-                                countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
-                                RoundEndTime, true );
-
-            if ( !spectator )
-                AddPlayerAsPlayer ( character );
-
-            SendPlayerRoundInfoOnJoin ( character.Player );
-
-			return true;*/
         }
 
-        public override void RemovePlayer(Character character)
+        public override void RemovePlayer(TDSPlayer character)
         {
             if (character.Lifes > 0)
             {
+                RemovePlayerFromAlive(character, false);
+                PlayerCantBeSpectatedAnymore(character);
                 //Damagesys.CheckLastHitter(character, out Character killercharacter);
                 //DeathInfoSync(character.Player, character.Team, killercharacter?.Player, (uint)WeaponHash.Unarmed);
-                //RemovePlayerFromAlive(character);
+                //
                 //Damagesys.PlayerSpree.Remove(character);
             } 
             else
@@ -47,80 +52,120 @@ namespace TDS.Instance.Lobby {
             base.RemovePlayer(character);
         }
 
-        /*public uint Lifes = 1;
+        private void SetPlayerReadyForRound(TDSPlayer character, bool freeze = true)
+        {
+            Client player = character.Client;
+            if (!character.Team.IsSpectatorTeam)
+            {
+                PositionRotationDto spawndata = GetMapRandomSpawnData(character.Team);
+                NAPI.Player.SpawnPlayer(player, spawndata.Position, spawndata.Rotation);
+            }
+            else
+                NAPI.Player.SpawnPlayer(player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
 
-
-        private void SetPlayerReadyForRound ( Character character ) {
-            Client player = character.Player;
-            player.Armor = (int) Armor;
-            player.Health = (int) Health;
-            Spectate ( character, character );
             RemoveAsSpectator(character);
-            if ( character.Team > 0 ) {
-                Vector3[] spawndata = GetMapRandomSpawnData ( character.Team );
-                player.Position = spawndata[0];
-                player.Rotation = spawndata[1];
-            }
-            player.Freeze ( true );
-            GivePlayerWeapons ( player );
+            
+            player.Freeze(freeze);
+            GivePlayerWeapons(player);
+
+            if (!SpectateablePlayers[character.Team.Index].Contains(character))
+                SpectateablePlayers[character.Team.Index].Add(character);
+
+            if (removeSpectatorsTimer.ContainsKey(character))
+                removeSpectatorsTimer.Remove(character);
+
+            character.CurrentRoundStats.Clear();
         }
 
-
-        private void RemovePlayerFromAlive ( Character character ) {
-            int teamID = character.Team;
-            character.Lifes = 0;
-            int aliveindex = AlivePlayers[teamID].IndexOf ( character );
-            PlayerCantBeSpectatedAnymore ( character, aliveindex, teamID );
-            AlivePlayers[teamID].RemoveAt ( aliveindex );
-            if ( bombAtPlayer == character ) {
-                DropBomb ();
+        private void RemovePlayerFromAlive(TDSPlayer character, bool removespectators = true)
+        {
+            AlivePlayers[character.Team.Index].Remove(character);
+            if (bombAtPlayer == character)
+            {
+                DropBomb();
             }
-            CheckForEnoughAlive ();
+
+            removeSpectatorsTimer[character] = new Timer(() =>
+            {
+                PlayerCantBeSpectatedAnymore(character);
+                SpectateOtherSameTeam(character);
+
+            }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
+
+            RoundCheckForEnoughAlive();  
         }
 
+        private void StartRoundForPlayer(TDSPlayer player)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team.IsSpectatorTeam);
+            if (!player.Team.IsSpectatorTeam)
+            {
+                player.Lifes = LobbyEntity.AmountLifes.Value;
+                AlivePlayers[player.Team.Index].Add(player);
+                player.Client.Freeze(false);
+            }
+            player.LastHitter = null;
+        }
 
-        private void AddPlayerAsPlayer ( Character character ) {
-            int teamID = GetTeamIDWithFewestMember ( ref TeamPlayers );
-            SetPlayerTeam ( character, teamID );
-            if ( countdownTimer != null && countdownTimer.IsRunning ) {
-                SetPlayerReadyForRound ( character );
-            } else {
-                int teamsinround = GetTeamAmountStillInRound ();
-                NAPI.Util.ConsoleOutput ( teamsinround + " teams still in round" );
-                if ( teamsinround < 2 ) {
-                    EndRoundEarlier ( RoundEndReason.NEWPLAYER, character.Player.Name );
-                    NAPI.Util.ConsoleOutput ( "End round earlier because of joined player" );
-                } else {
-                    RespawnPlayerInSpectateMode ( character );
+        private void AddPlayerAsPlayer(TDSPlayer character)
+        {
+            Teams team = GetTeamWithFewestPlayer();
+            SetPlayerTeam(character, team);
+            if (currentRoundStatus == ERoundStatus.Countdown)
+            {
+                SetPlayerReadyForRound(character);
+            }
+            else
+            {
+                SpectateOtherSameTeam(character);
+                int teamsinround = GetTeamAmountStillInRound();
+                if (teamsinround < 2)
+                {
+                    currentRoundEndBecauseOfPlayer = character;
+                    SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
+                }
+                else
+                {
+                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerSpectateMode);
                 }
             }
         }
+
+        private void SendPlayerRoundInfoOnJoin(TDSPlayer player)
+        {
+            if (currentMap != null)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name, JsonConvert.SerializeObject(currentMap.MapLimits), currentMap.MapCenter);
+            }
+
+            SendPlayerAmountInFightInfo(player.Client);
+            SyncMapVotingOnJoin(player.Client);
+
+            switch (currentRoundStatus)
+            {
+                case ERoundStatus.Countdown:
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, nextRoundStatusTimer.RemainingMsToExecute);
+                    break;
+                case ERoundStatus.Round:
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer.RemainingMsToExecute);
+                    break;
+            }
+        }
+
+
+        /*
+
+
+        
+
+
+        
 
         public static void PlayerAmountInFightSync ( Client player, List<uint> amountinteam, List<uint> amountaliveinteam ) {
             NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", JsonConvert.SerializeObject ( amountinteam ), 1, JsonConvert.SerializeObject ( amountaliveinteam ) );
         }
 
-        private void SendPlayerRoundInfoOnJoin ( Client player ) {
-            if ( currentMap != null ) {
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onClientMapChange", currentMap.SyncData.Name, JsonConvert.SerializeObject ( currentMap.MapLimits ), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z );
-            }
-
-            SendPlayerAmountInFightInfo ( player );
-            SyncMapVotingOnJoin ( player );
-
-
-            int tick = Environment.TickCount;
-            switch ( status ) {
-                case LobbyStatus.COUNTDOWN:
-                    Map map = currentMap;
-                    if ( map != null )
-                        NAPI.ClientEvent.TriggerClientEvent ( player, "onClientCountdownStart", tick - startTick );
-                    break;
-                case LobbyStatus.ROUND:
-                    NAPI.ClientEvent.TriggerClientEvent ( player, "onClientRoundStart", 1, tick - startTick );
-                    break;
-            }
-        }*/
+        */
 
     }
 }

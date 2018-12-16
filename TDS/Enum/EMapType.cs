@@ -1,6 +1,6 @@
 ﻿namespace TDS.Enum
 {
-    enum EMapType
+    public enum EMapType
     {
         Normal, Bomb
     }

@@ -12,6 +12,7 @@
     using TDS.Enum;
     using TDS.Manager.Utility;
     using TDS.Default;
+    using TDS_Common.Default;
 
     class Account : Script
     {
@@ -51,7 +52,7 @@
                 dbcontext.SaveChangesAsync();
                 dbcontext.Entry(entity).State = EntityState.Detached;
             }
-#warning TODO NOT USED RIGHT NOW
+#warning Check that after Client implementation
             //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   
         }
 
@@ -123,7 +124,7 @@
                 }
             }
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvent.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, await Player.DoesPlayerWithScnameExist(player.SocialClubName));
         }
 
         /*public static void PermaBanPlayer(Character admincharacter, Client target, string targetname, string targetaddress, string reason, uint targetuid)

@@ -22,24 +22,24 @@
         {
             try
             {
-                /*using (var dbcontext = new TDSNewContext())
+                using (var dbcontext = new TDSNewContext())
                 {
                     dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-                    await Setting.Load(dbcontext);
+                    await SettingsManager.Load(dbcontext);
                     CommandsManager.LoadCommands(dbcontext);
 
-                    NAPI.Server.SetGamemodeName(Setting.GamemodeName);
+                    NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
 
                     BansManager.RemoveExpiredBans(dbcontext);
-                    await Maps.LoadMaps();
-                    await LobbyManager.LoadAllLobbiesWithTeams();
+                    //await Maps.LoadMaps();
+                    await LobbyManager.LoadAllLobbies();
 
 
                     // Gang.LoadGangFromDatabase ();
 
                     // Season.LoadSeason ();
-                }*/
+                }
             }
             catch (Exception ex)
             {

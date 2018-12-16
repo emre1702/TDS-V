@@ -1,16 +1,20 @@
 namespace TDS.Instance.Lobby {
     using GTANetworkAPI;
+    using Newtonsoft.Json;
     using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
+    using TDS.Default;
+    using TDS.Dto;
     using TDS.Manager.Utility;
+    using TDS_Common.Default;
 
     partial class Arena {
 
         private readonly Dictionary<string, uint> mapVotes = new Dictionary<string, uint>();
         private readonly Dictionary<Client, string> playerVotes = new Dictionary<Client, string>();
 
-        private Map GetVotedMap()
+        private MapDto GetVotedMap()
         {
             if (mapVotes.Count > 0)
             {
@@ -21,11 +25,19 @@ namespace TDS.Instance.Lobby {
                 });  
                 mapVotes.Clear();
                 playerVotes.Clear();
-                /*for (int i = 0; i < maps.Count; ++i)
-                    if (maps[i].SyncData.Name == wonmap)
-                        return maps[i];*/
+                for (int i = 0; i < maps.Count; ++i)
+                    if (maps[i].SyncedData.Name == wonmap)
+                        return maps[i];
             }
             return null;
+        }
+
+        private void SyncMapVotingOnJoin(Client player)
+        {
+            if (mapVotes.Count > 0)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.MapVotingSyncOnPlayerJoin, JsonConvert.SerializeObject(mapVotes));
+            }
         }
 
         /*
@@ -64,11 +76,7 @@ namespace TDS.Instance.Lobby {
 			}
 		}
 
-		private void SyncMapVotingOnJoin ( Client player ) {
-			if ( mapVotes.Count > 0 ) {
-                NAPI.ClientEvent.TriggerClientEvent ( player, "onMapVotingSyncOnJoin", JsonConvert.SerializeObject ( mapVotes ) );
-			}
-		}*/
+		*/
     }
 
 }

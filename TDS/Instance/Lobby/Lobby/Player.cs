@@ -6,12 +6,13 @@ using TDS.Default;
 using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        public virtual async Task<bool> AddPlayer(Character character, uint teamindex)
+        public virtual async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
             using (var dbcontext = new TDSNewContext())
             {
@@ -31,34 +32,34 @@ namespace TDS.Instance.Lobby
             character.CurrentLobby = this;
             players.Add(character);
 
-            character.Player.Dimension = dimension;
-            character.Player.Position = spawnPoint.Around(LobbyEntity.AroundSpawnPoint);
-            character.Player.Freeze(true);
+            character.Client.Dimension = Dimension;
+            character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
+            character.Client.Freeze(true);
 
-            SetPlayerTeam(character, teams[teamindex]);
+            SetPlayerTeam(character, Teams[teamindex]);
 
-            SendAllPlayerEvent(DCustomEvent.ClientPlayerJoinSameLobby, null, character.Player);
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientPlayerJoinLobby, Id);
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.SyncPlayersSameLobby, JsonConvert.SerializeObject(players));
-            Manager.Logs.Rest.Log(ELogType.Lobby_Join, character.Player, false, LobbyEntity.IsOfficial);
+            SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, Id);
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.SyncPlayersSameLobby, JsonConvert.SerializeObject(players));
+            Manager.Logs.Rest.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
             return true;
         }
 
-        public virtual async void RemovePlayer(Character character)
+        public virtual async void RemovePlayer(TDSPlayer character)
         {
             await SavePlayerLobbyStats(character);
 
             players.Remove(character);
-            teamPlayers[character.Team.Index].Remove(character);
+            TeamPlayers[character.Team.Index].Remove(character);
 
             character.CurrentLobby = null;
             character.CurrentLobbyStats = null;
             character.Lifes = 0;
-            if (character.Player.Exists)
+            if (character.Client.Exists)
             {
-                character.Player.Freeze(true);
-                character.Player.StopSpectating();
-                character.Player.Transparency = 255;
+                character.Client.Freeze(true);
+                character.Client.StopSpectating();
+                character.Client.Transparency = 255;
             }
             if (DeathSpawnTimer.ContainsKey(character))
             {
@@ -73,11 +74,11 @@ namespace TDS.Instance.Lobby
                     Remove();
             }
 
-            SendAllPlayerEvent(DCustomEvent.ClientPlayerLeaveSameLobby, null, character.Player);
-            Manager.Logs.Rest.Log(ELogType.Lobby_Leave, character.Player, false, LobbyEntity.IsOfficial);
+            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, character.Client);
+            Manager.Logs.Rest.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
         }
 
-        private async Task SavePlayerLobbyStats(Character character)
+        private async Task SavePlayerLobbyStats(TDSPlayer character)
         {
             if (character.CurrentLobbyStats == null)
                 return;
@@ -91,7 +92,7 @@ namespace TDS.Instance.Lobby
             }
         }
 
-        private async void AddPlayerLobbyStats(Character character, TDSNewContext dbcontext)
+        private async void AddPlayerLobbyStats(TDSPlayer character, TDSNewContext dbcontext)
         {
             Playerlobbystats stats = await dbcontext.Playerlobbystats.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (stats == null)
@@ -105,12 +106,12 @@ namespace TDS.Instance.Lobby
         }
 
 #warning Todo: improve that for enum! ordershort as string won't work!
-        private void SendTeamOrder(Character character, string ordershort)
+        private void SendTeamOrder(TDSPlayer character, string ordershort)
         {
             Teams team = character.Team;
             SendAllPlayerLangMessage(lang =>
             {
-                return $"[TEAM] {{{team.ColorR}|{team.ColorG}|{team.ColorB}}} {character.Player.Name}{{150|0|0}}: {ordershort}";
+                return $"[TEAM] {{{team.ColorR}|{team.ColorG}|{team.ColorB}}} {character.Client.Name}{{150|0|0}}: {ordershort}";
             }, character.Team.Index);
 
             //string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
@@ -118,7 +119,7 @@ namespace TDS.Instance.Lobby
             //SendAllPlayerLangMessage(ordershort, character.Team, beforemessage);
         }
 
-        public bool IsPlayerLobbyOwner(Character character)
+        public bool IsPlayerLobbyOwner(TDSPlayer character)
         {
             return character.CurrentLobby == this && LobbyEntity.Owner == character.Entity.Id;
         }

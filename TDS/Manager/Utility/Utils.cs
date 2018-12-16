@@ -12,15 +12,6 @@
         public static readonly Random Rnd = new Random();
         private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
 
-        public enum AnimationFlags
-        {
-            Loop = 1 << 0,
-            StopOnLastFrame = 1 << 1,
-            OnlyAnimateUpperBody = 1 << 4,
-            AllowPlayerControl = 1 << 5,
-            Cancellable = 1 << 7
-        }
-
         public static uint GetTimespan(int seconds = 0)
         {
             TimeSpan t = DateTime.Now.AddSeconds(seconds) - startDateTime;

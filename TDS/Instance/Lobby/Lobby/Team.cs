@@ -4,20 +4,21 @@ using TDS.Default;
 using TDS.Entity;
 using TDS.Instance.Player;
 using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        protected readonly Teams[] teams;
-        protected readonly List<Character>[] teamPlayers;
+        protected readonly Teams[] Teams;
+        protected readonly List<TDSPlayer>[] TeamPlayers;
 
-        protected void SetPlayerTeam(Character character, Teams team)
+        protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {
-            teamPlayers[team.Index].Add(character);
-            character.Player.SetSkin(team.SkinHash);
+            TeamPlayers[team.Index].Add(character);
+            character.Client.SetSkin(team.SkinHash);
             if (character.Team.Id != team.Id)
-                NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.ClientPlayerTeamChange, team.Index);
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Index);
             character.Team = team;
         }
 
@@ -26,12 +27,12 @@ namespace TDS.Instance.Lobby
             return this.TeamPlayers.Values.Count(list => list.Count > 0);
         }*/
 
-        private Teams GetTeamWithFewestPlayer()
+        protected Teams GetTeamWithFewestPlayer()
         {
             int teamindexwithfewest = 0;
             int fewestamount = -1;
-            for (int i = 0; i < teamPlayers.Length; ++i) {
-                List<Character> entry = teamPlayers[i];
+            for (int i = 0; i < TeamPlayers.Length; ++i) {
+                List<TDSPlayer> entry = TeamPlayers[i];
                 if (entry.Count > fewestamount
                     || entry.Count == fewestamount && Utils.Rnd.Next(2) == 1)
                 {
@@ -39,12 +40,12 @@ namespace TDS.Instance.Lobby
                     teamindexwithfewest = i;
                 }
             }
-            return teams[teamindexwithfewest];
+            return Teams[teamindexwithfewest];
         }
 
         private void ClearTeamPlayersLists()
         {
-            foreach (var entry in teamPlayers)
+            foreach (var entry in TeamPlayers)
             {
                 entry.Clear();
             }
@@ -53,10 +54,10 @@ namespace TDS.Instance.Lobby
         protected void MixTeams()
         {
             ClearTeamPlayersLists();
-            foreach (Character character in players)
+            foreach (TDSPlayer character in players)
             {
                 if (character.Team.IsSpectatorTeam)
-                    teamPlayers[0].Add(character);  // because he is already in that team
+                    TeamPlayers[0].Add(character);  // because he is already in that team
                 else
                     SetPlayerTeam(character, GetTeamWithFewestPlayer());
             }

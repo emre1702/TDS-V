@@ -22,7 +22,7 @@
             return languageByID[player.GetChar().LanguageEnum];
         }
 
-		public static ILanguage GetLang (this Character character)
+		public static ILanguage GetLang (this TDSPlayer character)
 		{
             return languageByID[character.LanguageEnum];
         }

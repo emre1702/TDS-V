@@ -7,15 +7,14 @@ namespace TDS.Instance.Lobby
     partial class Arena
     {
 
-        public override void OnPlayerWeaponSwitch(Character character, WeaponHash oldweapon, WeaponHash newweapon)
+        public override void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
         {
             base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
 
-#warning todo Add after Arena implementation
-            /*if (bombAtPlayer == character)
+            if (bombAtPlayer == character)
             {
                 ToggleBombAtHand(character, oldweapon, newweapon);
-            }*/
+            }
         }
     }
 }

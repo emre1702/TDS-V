@@ -6,19 +6,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using TDS.CustomAttribute;
-using TDS.Default;
 using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
 using TDS.Instance.Utility;
 using TDS.Manager.Player;
 using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Manager.Commands
 {
     class CommandsManager : Script
     {
-        private delegate void CommandMethod(Character character, TDSCommandInfos commandinfos, params object[] args);
+        private delegate void CommandMethod(TDSPlayer character, TDSCommandInfos commandinfos, params object[] args);
 
         private class CommandMethodData
         {
@@ -77,10 +77,10 @@ namespace TDS.Manager.Commands
             }
         }
 
-        [RemoteEvent(DCustomEvent.ClientCommandUse)] 
+        [RemoteEvent(DToServerEvent.CommandUsed)] 
         public static void UseCommand(Client player, string cmd, object[] args)
         {
-            Character character = player.GetChar();
+            TDSPlayer character = player.GetChar();
             if (!character.Entity.Playerstats.LoggedIn)
                 return;
             TDSCommandInfos cmdinfos = new TDSCommandInfos { Command = cmd };

@@ -18,8 +18,8 @@ namespace TDS.Entity
         public bool? VipCanUse { get; set; }
         public bool? LobbyOwnerCanUse { get; set; }
 
-        public Adminlevels NeededAdminLevelNavigation { get; set; }
-        public ICollection<CommandsAlias> CommandsAlias { get; set; }
-        public ICollection<CommandsInfo> CommandsInfo { get; set; }
+        public virtual Adminlevels NeededAdminLevelNavigation { get; set; }
+        public virtual ICollection<CommandsAlias> CommandsAlias { get; set; }
+        public virtual ICollection<CommandsInfo> CommandsInfo { get; set; }
     }
 }

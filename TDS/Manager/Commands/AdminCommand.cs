@@ -13,30 +13,31 @@ namespace TDS.Manager.Commands
 
         //#region Chat
         [TDSCommand("adminsay")]
-        public static void AdminSay(Character character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        public static void AdminSay(TDSPlayer character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
         {
             ChatManager.SendAdminMessage(character, text); 
         }
 
         [TDSCommand("adminchat")]
-        public static void AdminChat(Character character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        public static void AdminChat(TDSPlayer character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
         {
             ChatManager.SendAdminChat(character, text);
         }
 
-       /*[TDSCommand("next")]
-        public static void NextMap(Character character, TDSCommandInfos cmdinfos)
-        {
-            //if (character.CurrentLobby is IRound roundlobby)  // Todo: Activate after implementing
-            //{
-                // LOG //
-                Admin.Log(Enum.ELogType.Next, character, "Lobby: " + roundlobby.Id,   (AdminLogType.NEXT, character.UID, 0, lobby.Name);
-                if (!character.CurrentLobby.IsPlayerLobbyOwner(character)) 
-                /////////
-                roundlobby.EndRoundEarlier(RoundEndReason.COMMAND, player.Name);
+        /*[TDSCommand("next")]
+         public static void NextMap(Character character, TDSCommandInfos cmdinfos)
+         {
+             //if (character.CurrentLobby is IRound roundlobby)  // Todo: Activate after implementing
+             //{
+                 // LOG //
+                 Admin.Log(Enum.ELogType.Next, character, "Lobby: " + roundlobby.Id,   (AdminLogType.NEXT, character.UID, 0, lobby.Name);
+                 if (!character.CurrentLobby.IsPlayerLobbyOwner(character)) 
+                 /////////
+                 currentRoundEndBecauseOfPlayer = character;
+                 roundlobby.EndRoundEarlier(RoundEndReason.COMMAND, player.Name);
 
-            //}
-        }*/
+             //}
+         }*/
 
         /*private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
 			{ "next", 1 },

@@ -16,7 +16,7 @@ namespace TDS.Entity
         public sbyte ColorG { get; set; }
         public sbyte ColorB { get; set; }
 
-        public ICollection<Adminlevelnames> Adminlevelnames { get; set; }
-        public ICollection<Commands> Commands { get; set; }
+        public virtual ICollection<Adminlevelnames> Adminlevelnames { get; set; }
+        public virtual ICollection<Commands> Commands { get; set; }
     }
 }

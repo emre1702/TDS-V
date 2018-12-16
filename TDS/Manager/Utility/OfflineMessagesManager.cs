@@ -24,32 +24,31 @@ namespace TDS.Manager.Utility {
                     Message = message
                 };
                 dbcontext.Offlinemessages.AddAsync(msg);
+                dbcontext.SaveChangesAsync();
             }
         }
         #endregion
 
-        public static void CheckOfflineMessages(Client player)
+        public static async void CheckOfflineMessages(Client player)
         {
-            uint amountnewentries = 0;
-            foreach (Offlinemessages msg in player.GetEntity().OfflinemessagesSource)
+            Players entity = player.GetEntity();
+
+            using (var dbcontext = new TDSNewContext())
             {
-                if (!msg.AlreadyLoadedOnce)
+                dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+                int amountnewentries = await dbcontext
+                    .Offlinemessages
+                    .Where(msg => msg.SourceId == entity.Id && msg.AlreadyLoadedOnce)
+                    .CountAsync();
+
+                if (amountnewentries > 0)
                 {
-                    ++amountnewentries;
-                    msg.AlreadyLoadedOnce = true;
+                    NAPI.Chat.SendChatMessageToPlayer(player,
+                        Utils.GetReplaced(player.GetLang().GOT_UNREAD_OFFLINE_MESSAGES, entity.OfflinemessagesSource.Count, amountnewentries.ToString())
+                    );
                 }
             }
-            if (amountnewentries > 0)
-            {     
-                NAPI.Chat.SendChatMessageToPlayer(player, 
-                    Utils.GetReplaced(player.GetLang().GOT_OFFLINE_MESSAGE_WITH_NEW, amountnewentries.ToString())
-                );
-                using (var dbcontext = new TDSNewContext())
-                {
-                    dbcontext.SaveChangesAsync();
-                }
-            } else
-                NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().GOT_OFFLINE_MESSAGE_WITHOUT_NEW);
         }
 	}
 }

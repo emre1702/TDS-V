@@ -16,7 +16,7 @@ namespace TDS.Entity
         public uint TotalAssists { get; set; }
         public uint TotalDamage { get; set; }
 
-        public Players IdNavigation { get; set; }
-        public Lobbies LobbyNavigation { get; set; }
+        public virtual Players IdNavigation { get; set; }
+        public virtual Lobbies LobbyNavigation { get; set; }
     }
 }

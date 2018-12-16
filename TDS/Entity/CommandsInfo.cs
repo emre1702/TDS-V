@@ -9,7 +9,7 @@ namespace TDS.Entity
         public byte Language { get; set; }
         public string Info { get; set; }
 
-        public Commands IdNavigation { get; set; }
-        public Languages LanguageNavigation { get; set; }
+        public virtual Commands IdNavigation { get; set; }
+        public virtual Languages LanguageNavigation { get; set; }
     }
 }

@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDSCPServer", "TDS-CP-Server\TDSCPServer.csproj", "{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS", "TDS\TDS.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server", "TDS\TDS_Server.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Client", "TDS_Client\TDS_Client.csproj", "{6B6B462A-3A21-4624-9E07-F09020BCF48C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Common", "TDS_Common\TDS_Common.csproj", "{FADB6D4A-1502-4912-A565-FD5F2F009387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,30 @@ Global
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|x64.ActiveCfg = Debug|Any CPU
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|x64.Build.0 = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Debug|x64.Build.0 = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Release|x64.ActiveCfg = Release|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Release|x64.Build.0 = Release|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Server|x64.ActiveCfg = Debug|Any CPU
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C}.Server|x64.Build.0 = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Debug|x64.Build.0 = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Release|x64.ActiveCfg = Release|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Release|x64.Build.0 = Release|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|x64.ActiveCfg = Debug|Any CPU
+		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,6 +11,6 @@ namespace TDS.Entity
         public short Damage { get; set; }
         public float HeadMultiplicator { get; set; }
 
-        public Lobbies LobbyNavigation { get; set; }
+        public virtual Lobbies LobbyNavigation { get; set; }
     }
 }

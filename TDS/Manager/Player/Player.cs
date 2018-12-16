@@ -15,7 +15,7 @@ namespace TDS.Manager.Player
     static class Player
     {
         private static ConditionalWeakTable<Client, Players> clientEntities = new ConditionalWeakTable<Client, Players>();
-        private static readonly ConditionalWeakTable<Client, Character> clientPlayers = new ConditionalWeakTable<Client, Character>();
+        private static readonly ConditionalWeakTable<Client, TDSPlayer> clientPlayers = new ConditionalWeakTable<Client, TDSPlayer>();
 
         public static Client GetClient(this Players character)
         {
@@ -29,14 +29,11 @@ namespace TDS.Manager.Player
             return null;
         }
 
-        public static Character GetChar(this Client client)
+        public static TDSPlayer GetChar(this Client client)
         {
            return clientPlayers.GetValue(client, (Client c) =>
            {
-                Character player = new Character
-                {
-                    Player = c
-                };
+                TDSPlayer player = new TDSPlayer(client);
                 clientPlayers.Add(c, player);
                 return player;
            });
@@ -53,7 +50,7 @@ namespace TDS.Manager.Player
             {
                 if (entry.Value.Entity.Id == id)
                 {
-                    return entry.Value.Player;
+                    return entry.Value.Client;
                 }
             }
             return null;

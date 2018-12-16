@@ -15,30 +15,31 @@ namespace TDS.Instance.Lobby
 
         public uint Id { get => LobbyEntity.Id; }
         public bool IsOfficial { get => LobbyEntity.IsOfficial; }
+        public int StartTotalHP { get => LobbyEntity.StartArmor + LobbyEntity.StartHealth; }
 
-        protected readonly uint dimension;
-        protected readonly Vector3 spawnPoint;
+        protected readonly uint Dimension;
+        protected readonly Vector3 SpawnPoint;
 
         public Lobby(Lobbies entity)
         {
             LobbyEntity = entity;
 
-            dimension = GetFreeDimension();
-            spawnPoint = new Vector3(
+            Dimension = GetFreeDimension();
+            SpawnPoint = new Vector3(
                 entity.DefaultSpawnX,
                 entity.DefaultSpawnY,
                 entity.DefaultSpawnZ
             );
 
             LobbiesByIndex[entity.Id] = this;
-            dimensionsUsed.Add(dimension);
+            dimensionsUsed.Add(Dimension);
 
-            teams = new Teams[entity.Teams.Count];
-            teamPlayers = new List<Character>[entity.Teams.Count];
+            Teams = new Teams[entity.Teams.Count];
+            TeamPlayers = new List<TDSPlayer>[entity.Teams.Count];
             foreach (Teams team in entity.Teams)
             {
-                teams[team.Index] = team;
-                teamPlayers[team.Index] = new List<Character>();
+                Teams[team.Index] = team;
+                TeamPlayers[team.Index] = new List<TDSPlayer>();
             }
         }
 
@@ -50,9 +51,9 @@ namespace TDS.Instance.Lobby
         protected virtual void Remove()
         {
             LobbiesByIndex.Remove(LobbyEntity.Id);
-            dimensionsUsed.Remove(dimension);
+            dimensionsUsed.Remove(Dimension);
 
-            foreach (Character character in players)
+            foreach (TDSPlayer character in players)
             {
                 RemovePlayer(character);
             }

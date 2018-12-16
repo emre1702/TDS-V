@@ -10,7 +10,7 @@ namespace TDS.Manager.Utility
 {
     static class LobbyManager
     {
-        public static async Task LoadAllLobbiesWithTeams()
+        public static async Task LoadAllLobbies()
         {
             using (TDSNewContext dbcontext = new TDSNewContext())
             {

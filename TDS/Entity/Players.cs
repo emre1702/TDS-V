@@ -26,14 +26,14 @@ namespace TDS.Entity
         public sbyte Donation { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
-        public Playersettings Playersettings { get; set; }
-        public Playerstats Playerstats { get; set; }
-        public ICollection<Lobbies> Lobbies { get; set; }
-        public ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
-        public ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
-        public ICollection<Playerbans> PlayerbansAdminNavigation { get; set; }
-        public ICollection<Playerbans> PlayerbansIdNavigation { get; set; }
-        public ICollection<Playerlobbystats> Playerlobbystats { get; set; }
-        public ICollection<Playermapratings> Playermapratings { get; set; }
+        public virtual Playersettings Playersettings { get; set; }
+        public virtual Playerstats Playerstats { get; set; }
+        public virtual ICollection<Lobbies> Lobbies { get; set; }
+        public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
+        public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
+        public virtual ICollection<Playerbans> PlayerbansAdminNavigation { get; set; }
+        public virtual ICollection<Playerbans> PlayerbansIdNavigation { get; set; }
+        public virtual ICollection<Playerlobbystats> Playerlobbystats { get; set; }
+        public virtual ICollection<Playermapratings> Playermapratings { get; set; }
     }
 }

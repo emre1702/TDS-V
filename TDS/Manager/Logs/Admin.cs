@@ -10,7 +10,7 @@ namespace TDS.Manager.Logs
     {
         private static readonly List<LogsAdmin> notsavedadminlogs = new List<LogsAdmin>();
 
-        public static void Log (ELogType cmd, Character source, string info, Character target = null, bool asdonator = false, bool asvip = false)
+        public static void Log (ELogType cmd, TDSPlayer source, string info, TDSPlayer target = null, bool asdonator = false, bool asvip = false)
         {
 
             notsavedadminlogs.Add(

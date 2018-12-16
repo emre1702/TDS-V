@@ -12,7 +12,7 @@ namespace TDS.Entity
         public bool AlreadyLoadedOnce { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public Players Source { get; set; }
-        public Players Target { get; set; }
+        public virtual Players Source { get; set; }
+        public virtual Players Target { get; set; }
     }
 }

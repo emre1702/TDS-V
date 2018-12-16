@@ -1,10 +1,17 @@
 using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TDS.Default;
+using TDS.Dto;
+using TDS.Entity;
 using TDS.Enum;
 using TDS.Instance.Player;
 using TDS.Instance.Utility;
+using TDS.Interface;
+using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
@@ -28,11 +35,14 @@ namespace TDS.Instance.Lobby
             [ERoundStatus.RoundEnd] = ERoundStatus.Mapchoose
         };
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
+        private ERoundEndReason currentRoundEndReason;
+        private TDSPlayer currentRoundEndBecauseOfPlayer;
 
-        private void SetRoundStatus(ERoundStatus status)
+        private void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
             currentRoundStatus = status;
-            roundStatusMethod[status]();
+            if (status == ERoundStatus.RoundEnd)
+                currentRoundEndReason = roundEndReason;
             ERoundStatus nextStatus = nextRoundStatsDict[status];
             nextRoundStatusTimer?.Kill();
             if (!IsEmpty())
@@ -40,10 +50,11 @@ namespace TDS.Instance.Lobby
                 nextRoundStatusTimer = new Timer(() =>
                 {
                     if (IsEmpty())
-                        SetRoundStatus(ERoundStatus.RoundEnd);
+                        SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);
                     else
                         SetRoundStatus(nextStatus);
                 }, durationsDict[nextStatus]);
+                roundStatusMethod[status]();
             }
             else if (currentRoundStatus != ERoundStatus.RoundEnd)
                 roundStatusMethod[ERoundStatus.RoundEnd]();
@@ -51,22 +62,16 @@ namespace TDS.Instance.Lobby
 
         private void StartMapChoose()
         {
-            var oldMap = currentMap;
-            currentMap = GetNextMap();
-
-            /*DmgSys.EmptyDamagesysData();
-
-            if (oldMap != null && oldMap.SyncData.Type == MapType.BOMB)
-                StopRoundBomb();
-            if (currentMap.SyncData.Type == MapType.BOMB)
-                BombMapChose();
-            CreateTeamSpawnBlips();
-            CreateMapLimitBlips();
-            if (mixTeamsAfterRound)
+            ClearBombRound();
+            MapDto nextMap = GetNextMap();
+            if (nextMap.SyncedData.Type == EMapType.Bomb)
+                StartBombMapChoose(nextMap);
+            CreateTeamSpawnBlips(nextMap);
+            CreateMapLimitBlips(nextMap);
+            if (LobbyEntity.MixTeamsAfterRound.Value)
                 MixTeams();
-            SendAllPlayerEvent("onClientMapChange", -1, currentMap.SyncData.Name, JsonConvert.SerializeObject(currentMap.MapLimits), currentMap.MapCenter.X, currentMap.MapCenter.Y, currentMap.MapCenter.Z);
-
-            roundStartTimer = Timer.SetTimer(StartRoundCountdown, mapShowTime);*/
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, JsonConvert.SerializeObject(nextMap.MapLimits), nextMap.MapCenter);
+            currentMap = nextMap;
         }
 
         private void StartRoundCountdown()
@@ -76,25 +81,16 @@ namespace TDS.Instance.Lobby
 
         private void StartRound()
         {
-            /*roundEndTimer = Timer.SetTimer(EndRoundTimesup, roundTime);
-            AlivePlayers = new List<List<Character>>();
-            List<uint> amountinteams = new List<uint>();
-            for (int i = 0; i < TeamPlayers.Count; i++)
+            FuncIterateAllPlayers((player, team) =>
             {
-                uint amountinteam = (uint)TeamPlayers[i].Count;
-                if (i != 0)
-                    amountinteams.Add(amountinteam);
-                AlivePlayers.Add(new List<Character>());
-                for (int j = 0; j < amountinteam; j++)
-                {
-                    StartRoundForPlayer(TeamPlayers[i][j], i);
-                }
-            }
+                StartRoundForPlayer(player);
+            });
 
-            PlayerAmountInFightSync(amountinteams);
+            List<int> amountplayersinplayingteams = TeamPlayers.Skip(1).Select(list => list.Count).ToList(); 
+            PlayerAmountInFightSync(amountplayersinplayingteams);            
 
-            if (currentMap.SyncData.Type == MapType.BOMB)
-                StartRoundBomb();*/
+            if (currentMap.SyncedData.Type == EMapType.Bomb)
+                StartRoundBomb();
         }
 
         private void EndRound()
@@ -106,91 +102,93 @@ namespace TDS.Instance.Lobby
             }
             RewardAllPlayer();
 
-            foreach (List<Character> entry in AliveOrNotDisappearedPlayers)
-            {
+            foreach (List<TDSPlayer> entry in AlivePlayers)
                 entry.Clear();
-            }
+
+            Teams winnerTeam = GetRoundWinnerTeam();
+            Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(winnerTeam);
 
             FuncIterateAllPlayers((character, team) =>
             {
-                NAPI.ClientEvent.TriggerClientEvent(character.Player, DCustomEvent.RoundEnd/*, reasonlangs[character.Language]*/ );
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
             });
 
-            /*DeleteMapBlips();
-            if (currentMap != null && currentMap.SyncData.Type == MapType.BOMB)
-                StopRoundBombAtRoundEnd(); */
+            DmgSys.Clear();
+
+            DeleteMapBlips();
+            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+                StopBombRound();
 
         }
 
-
-
-        /* private void StartRound()
+        private void RoundCheckForEnoughAlive()
         {
-            
-        }
-
-
-        private void EndRoundTimesup()
-        {
-            EndRound(GetRoundEndReasonLang(RoundEndReason.TIME, null));
-        }
-
-        public void EndRoundEarlier(RoundEndReason reason, object arg)
-        {
-            roundEndTimer?.Kill();
-            countdownTimer?.Kill();
-            EndRound(GetRoundEndReasonLang(reason, arg));
-        }
-
-        private Dictionary<Language, string> GetRoundEndReasonLang(RoundEndReason reasonenum, object arg)
-        {
-            Dictionary<Language, string> reasons;
-            switch (reasonenum)
+            int teamsinround = GetTeamAmountStillInRound();
+            if (teamsinround < 2)
             {
-                case RoundEndReason.DEATH:
-                    if ((int)arg == 0)
-                        reasons = ServerLanguage.GetLangDictionary("round_end_death_all");
-                    else
-                        reasons = ServerLanguage.GetLangDictionary("round_end_death", GetTeamName((int)arg));
-                    break;
-                case RoundEndReason.TIME:
-                    reasons = ServerLanguage.GetLangDictionary("round_end_time");
-                    break;
-                case RoundEndReason.BOMB:
-                    int teamID = (int)arg;
-                    if (teamID == terroristTeamID)
-                        reasons = ServerLanguage.GetLangDictionary("round_end_bomb_exploded", GetTeamName(teamID));
-                    else
-                        reasons = ServerLanguage.GetLangDictionary("round_end_bomb_defused", GetTeamName(teamID));
-                    break;
-                case RoundEndReason.COMMAND:
-                    reasons = ServerLanguage.GetLangDictionary("round_end_command", (string)arg);
-                    break;
-                case RoundEndReason.NEWPLAYER:
-                    reasons = ServerLanguage.GetLangDictionary("round_end_command", (string)arg);
-                    break;
+                SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Death);
+            }
+        }
+
+        private Teams GetRoundWinnerTeam()
+        {
+            switch (currentRoundEndReason)
+            {
+                case ERoundEndReason.Death:
+                    return GetTeamStillInRound();
+                case ERoundEndReason.Time:
+                    return GetTeamWithHighestHP();
+                case ERoundEndReason.BombExploded:
+                    return terroristTeam;
+                case ERoundEndReason.BombDefused:
+                    return counterTerroristTeam;
+                case ERoundEndReason.Command:
+                case ERoundEndReason.NewPlayer:
+                case ERoundEndReason.Empty:
                 default:
-                    reasons = new Dictionary<Language, string>();   // Only to not get an error! Won't be used & can't be used!
-                    break;
+                    return null;
             }
-            return reasons;
         }
 
-        private void StartRoundForPlayer(Character character, int teamID)
+        private Dictionary<ILanguage, string> GetRoundEndReasonText(Teams winnerTeam)
         {
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, "onClientRoundStart", teamID == 0 ? 1 : 0);
-            if (teamID != 0)
+            switch (currentRoundEndReason)
             {
-                character.Lifes = Lifes;
-                AlivePlayers[teamID].Add(character);
-                character.Player.Freeze(false);
+                case ERoundEndReason.Death:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_DEATH_INFO, winnerTeam.Name) : lang.ROUND_END_DEATH_ALL_INFO;
+                    });
+
+                case ERoundEndReason.Time:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Name ?? "-");
+                    });
+                case ERoundEndReason.BombExploded:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam.Name ?? "-");
+                    });
+                case ERoundEndReason.BombDefused:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam.Name ?? "-");
+                    });
+                case ERoundEndReason.Command:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, currentRoundEndBecauseOfPlayer.Client.Name ?? "-");
+                    });
+                case ERoundEndReason.NewPlayer:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return lang.ROUND_END_NEW_PLAYER_INFO;
+                    });
+                case ERoundEndReason.Empty:
+                default:
+                    return null;
             }
         }
-
-        private void RespawnPlayerInRound(Character character)
-        {
-            SetPlayerReadyForRound(character);
-            character.Player.Freeze(false);
-        }*/
     }
 }

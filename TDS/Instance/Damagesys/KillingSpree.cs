@@ -1,46 +1,53 @@
-#warning Todo Killingspree after next efcore.bat
-/*namespace TDS.Instance {
+namespace TDS.Instance
+{
 
-	using System;
-	using System.Collections.Generic;
-	using GTANetworkAPI;
-	using extend;
-    using TDS.server.instance.player;
+    using System;
+    using System.Collections.Generic;
+    using TDS.Instance.Player;
+    using TDS.Manager.Utility;
 
-    partial class Damagesys {
+    partial class Damagesys
+    {
 
-		private static readonly Dictionary<uint, Tuple<string, uint, uint>> sSpreeReward =
-			new Dictionary<uint, Tuple<string, uint, uint>> {
-				{
-					3, new Tuple<string, uint, uint> ( "healtharmor", 30, 0 )
-				}, {
-					5, new Tuple<string, uint, uint> ( "healtharmor", 50, 0 )
-				}, {
-					10, new Tuple<string, uint, uint> ( "healtharmor", 100, 0 )
-				}, {
-					15, new Tuple<string, uint, uint> ( "healtharmor", 100, 0 )
-				}
-			};
-		public Dictionary<Character, uint> PlayerSpree = new Dictionary<Character, uint> ();
+        private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
+            new Dictionary<int, Tuple<string, int, int>> {
+                {
+                    3, new Tuple<string, int, int> ( "healtharmor", 30, 0 )
+                }, {
+                    5, new Tuple<string, int, int> ( "healtharmor", 50, 0 )
+                }, {
+                    10, new Tuple<string, int, int> ( "healtharmor", 100, 0 )
+                }, {
+                    15, new Tuple<string, int, int> ( "healtharmor", 100, 0 )
+                }
+            };
+        public Dictionary<TDSPlayer, int> PlayerSpree = new Dictionary<TDSPlayer, int>();
 
-		private void CheckKillingSpree ( Character character ) {
-			if ( sSpreeReward.ContainsKey ( PlayerSpree[character] ) ) {
-				Tuple<string, uint, uint> reward = sSpreeReward[PlayerSpree[character]];
-				string rewardtyp = reward.Item1;
-				if ( rewardtyp == "healtharmor" ) {
-					uint bonus = reward.Item2;
-                    character.Lobby.SendAllPlayerLangNotification ( "killing_spree_healtharmor", -1, character.Player.Name,
-																			PlayerSpree[character].ToString (), bonus.ToString () );
-                    character.Player.AddHPArmor ( bonus );
-				}
-			}
-		}
+        private void CheckKillingSpree(TDSPlayer character)
+        {
+            if (sSpreeReward.ContainsKey(PlayerSpree[character]))
+            {
+                Tuple<string, int, int> reward = sSpreeReward[PlayerSpree[character]];
+                string rewardtyp = reward.Item1;
+                if (rewardtyp == "healtharmor")
+                {
+                    int bonus = reward.Item2;
+                    character.CurrentLobby.SendAllPlayerLangNotification((lang) =>
+                    {
+                        return Utils.GetReplaced(lang.KILLING_SPREE_HEALTHARMOR, character.Client.Name,
+                            PlayerSpree[character].ToString(), bonus.ToString());
+                    });
+                    character.AddHPArmor(bonus);
+                }
+            }
+        }
 
-		public void AddToKillingSpree ( Character character ) {
-			if ( !PlayerSpree.ContainsKey ( character ) )
-				PlayerSpree[character] = 0;
-			PlayerSpree[character]++;
-		}
-	}
+        public void AddToKillingSpree(TDSPlayer character)
+        {
+            if (!PlayerSpree.ContainsKey(character))
+                PlayerSpree[character] = 0;
+            PlayerSpree[character]++;
+        }
+    }
 
-}*/
+}

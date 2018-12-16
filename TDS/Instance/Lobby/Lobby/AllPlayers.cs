@@ -11,38 +11,38 @@ namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        private readonly List<Character> players = new List<Character>();
+        private readonly List<TDSPlayer> players = new List<TDSPlayer>();
 
         protected void SendAllPlayerEvent(string eventname, uint? teamindex, params object[] args)
         {
             if (!teamindex.HasValue)
             {
-                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); });
+                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Client, eventname, args); });
             }
             else
-                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Player, eventname, args); }, teamindex.Value);
+                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Client, eventname, args); }, teamindex.Value);
         }
 
-        protected void FuncIterateAllPlayers(Action<Character, Teams> func, uint? teamIndex = null)
+        protected void FuncIterateAllPlayers(Action<TDSPlayer, Teams> func, uint? teamIndex = null)
         {
             if (!teamIndex.HasValue)
             {
-                for (int i = 0; i < teamPlayers.Length; ++i)
+                for (int i = 0; i < TeamPlayers.Length; ++i)
                 {
-                    Teams team = teams[i];
-                    for (int j = teamPlayers[i].Count - 1; j >= 0; --j)
+                    Teams team = Teams[i];
+                    for (int j = TeamPlayers[i].Count - 1; j >= 0; --j)
                     {
-                        func(teamPlayers[i][j], team);
+                        func(TeamPlayers[i][j], team);
                     }
                 }
             }
             else
             {
                 uint i = teamIndex.Value;
-                Teams team = teams[teamIndex.Value];
-                for (int j = teamPlayers[i].Count - 1; j >= 0; --j)
+                Teams team = Teams[teamIndex.Value];
+                for (int j = TeamPlayers[i].Count - 1; j >= 0; --j)
                 {
-                    func(teamPlayers[i][j], team);
+                    func(TeamPlayers[i][j], team);
                 }
             }
         }
@@ -52,16 +52,16 @@ namespace TDS.Instance.Lobby
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
             FuncIterateAllPlayers((character, team) =>
             {
-                NAPI.Chat.SendChatMessageToPlayer(character.Player, texts[character.Language]);
+                NAPI.Chat.SendChatMessageToPlayer(character.Client, texts[character.Language]);
             }, teamindex);
         }
 
-        protected void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, uint? teamindex = null)
+        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, uint? teamindex = null)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
             FuncIterateAllPlayers((character, team) =>
             {
-                NAPI.Notification.SendNotificationToPlayer(character.Player, texts[character.Language]);
+                NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language]);
             }, teamindex);
         }
 
@@ -69,7 +69,7 @@ namespace TDS.Instance.Lobby
         {
             FuncIterateAllPlayers((character, teamID) =>
             {
-                NAPI.Chat.SendChatMessageToPlayer(character.Player, msg);
+                NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
             }, teamindex);
         }
     }

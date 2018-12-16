@@ -29,11 +29,11 @@ namespace TDS.Instance.Lobby
             uint startindextoiterate = startindex;
             do
             {
-                if (++startindextoiterate == teams.Length - 1)
+                if (++startindextoiterate == Teams.Length - 1)
                     startindextoiterate = 0;
-            } while (teams[startindex].IsSpectatorTeam && startindextoiterate != startindex);
+            } while (Teams[startindex].IsSpectatorTeam && startindextoiterate != startindex);
 
-            return teams[startindextoiterate];
+            return Teams[startindextoiterate];
         }
 
         private Teams GetNextNonSpectatorTeamWithPlayers(Teams start)
@@ -46,12 +46,30 @@ namespace TDS.Instance.Lobby
             uint startindextoiterate = startindex;
             do
             {
-                if (++startindextoiterate == teams.Length - 1)
+                if (++startindextoiterate >= Teams.Length - 1)
                     startindextoiterate = 0;
-            } while ((teams[startindex].IsSpectatorTeam || AliveOrNotDisappearedPlayers[startindex].Count == 0) && startindextoiterate != startindex);
-            Teams team = teams[startindextoiterate];
+            } while ((Teams[startindex].IsSpectatorTeam || SpectateablePlayers[startindex].Count == 0) && startindextoiterate != startindex);
+            Teams team = Teams[startindextoiterate];
 
-            return AliveOrNotDisappearedPlayers[team.Index].Count == 0 ? null : team;
+            return SpectateablePlayers[team.Index].Count == 0 ? null : team;
+        }
+
+        private Teams GetPreviousNonSpectatorTeamWithPlayers(Teams start)
+        {
+            return GetPreviousNonSpectatorTeamWithPlayers(start.Index);
+        }
+
+        private Teams GetPreviousNonSpectatorTeamWithPlayers(uint startindex)
+        {
+            int startindextoiterate = (int) startindex;
+            do
+            {
+                if (--startindextoiterate < 0)
+                    startindextoiterate = Teams.Length - 1;
+            } while ((Teams[startindex].IsSpectatorTeam || SpectateablePlayers[startindex].Count == 0) && startindextoiterate != startindex);
+            Teams team = Teams[startindextoiterate];
+
+            return SpectateablePlayers[team.Index].Count == 0 ? null : team;
         }
     }
 }

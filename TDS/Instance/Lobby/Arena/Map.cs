@@ -1,25 +1,76 @@
+using GTANetworkAPI;
 using System.Collections.Generic;
+using TDS.Dto;
+using TDS.Entity;
 using TDS.Manager.Utility;
 
 namespace TDS.Instance.Lobby {
 
 	partial class Arena {
 
-        private Map currentMap;
-        private List<Map> maps;
+        private MapDto currentMap;
+        private List<MapDto> maps;
+        private List<Blip> mapBlips = new List<Blip>();
+        private int[] spawnCounter;
 
-        private Map GetNextMap()
+        private MapDto GetNextMap()
         {
-            Map map = GetVotedMap();
+            MapDto map = GetVotedMap();
             if (map != null)
                 return map;
             return GetRandomMap();
         }
 
-        private Map GetRandomMap()
+        public MapDto GetRandomMap()
         {
-            Map nextmap = maps[Utils.Rnd.Next(0, maps.Count)];
+            MapDto nextmap = maps[Utils.Rnd.Next(0, maps.Count)];
             return nextmap;
+        }
+
+        private void CreateTeamSpawnBlips(MapDto map)
+        {
+            int i = 0;
+            foreach (List<PositionRotationDto> entry in map.TeamSpawns)
+            {
+                Blip blip = NAPI.Blip.CreateBlip(pos: entry[0].Position, dimension: Dimension);
+                blip.Sprite = 491;
+                Teams team = Teams[i++];
+                blip.Color = team.BlipColor;
+                blip.Name = "Spawn " + team.Name;
+                mapBlips.Add(blip);
+            }
+        }
+
+        private void CreateMapLimitBlips(MapDto map)
+        {
+            foreach (Vector3 maplimit in map.MapLimits)
+            {
+                Blip blip = NAPI.Blip.CreateBlip(maplimit, Dimension);
+                blip.Sprite = 441;
+                blip.Name = "Limit";
+                mapBlips.Add(blip);
+            }
+        }
+
+        private PositionRotationDto GetMapRandomSpawnData(Teams team)
+        {
+            int teamindex = (int)team.Index;
+            int index = ++spawnCounter[teamindex-1];
+            if (index >= currentMap.TeamSpawns[teamindex-1].Count)
+            {
+                index = 0;
+                spawnCounter[teamindex-1] = 0;
+            }
+            return currentMap.TeamSpawns[teamindex-1][index];
+        }
+
+        private void DeleteMapBlips()
+        {
+            foreach (Blip blip in mapBlips)
+            {
+                blip.Delete();
+            }
+            mapBlips = new List<Blip>();
         }
 
         /*private static readonly Dictionary<uint, Lobby> sDimensionsUsed = new Dictionary<uint, Lobby> ();
@@ -28,7 +79,7 @@ namespace TDS.Instance.Lobby {
 
 		private readonly Dictionary<int, uint> spawnCounter = new Dictionary<int, uint> ();
 		
-		private List<Blip> mapBlips = new List<Blip> ();
+		
 
 
 		public void SetMapList ( List<Map> themaps, List<MapSync> themapssync ) {
@@ -43,44 +94,13 @@ namespace TDS.Instance.Lobby {
 
         
 
-		private Vector3[] GetMapRandomSpawnData ( int teamID ) {
-			Vector3[] list = new Vector3[2];
-			spawnCounter[teamID]++;
-			uint index = spawnCounter[teamID];
-			if ( index >= currentMap.TeamSpawns[teamID].Count ) {
-				index = 0;
-				spawnCounter[teamID] = 0;
-			}
-			list[0] = currentMap.TeamSpawns[teamID][(int)index];
-			list[1] = currentMap.TeamRots[teamID][(int)index];
-			return list;
-		}
+		
 
-		private void CreateTeamSpawnBlips () {
-			foreach ( KeyValuePair<int, List<Vector3>> entry in currentMap.TeamSpawns ) {
-                Blip blip = NAPI.Blip.CreateBlip ( pos: entry.Value[0], dimension: Dimension );
-                blip.Sprite = 491;
-                blip.Color = teamBlipColors[entry.Key];
-                blip.Name = "Spawn " + Teams[entry.Key];
-                mapBlips.Add ( blip );
-            }
-        }
+		
 
-		private void CreateMapLimitBlips () {
-			foreach ( Vector3 maplimit in currentMap.MapLimits ) {
-                Blip blip = NAPI.Blip.CreateBlip ( maplimit, Dimension );
-				blip.Sprite = 441;
-				blip.Name = "Limit";
-				mapBlips.Add ( blip );
-			}
-		}
+		
 
-		private void DeleteMapBlips () {
-			foreach ( Blip blip in mapBlips ) {
-				blip.Delete ();
-			}
-			mapBlips = new List<Blip> ();
-		}*/
+		*/
     }
 
 }

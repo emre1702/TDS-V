@@ -15,8 +15,8 @@ namespace TDS.Entity
         public byte Id { get; set; }
         public string Language { get; set; }
 
-        public ICollection<Adminlevelnames> Adminlevelnames { get; set; }
-        public ICollection<CommandsInfo> CommandsInfo { get; set; }
-        public ICollection<Playersettings> Playersettings { get; set; }
+        public virtual ICollection<Adminlevelnames> Adminlevelnames { get; set; }
+        public virtual ICollection<CommandsInfo> CommandsInfo { get; set; }
+        public virtual ICollection<Playersettings> Playersettings { get; set; }
     }
 }

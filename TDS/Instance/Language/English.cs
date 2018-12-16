@@ -26,8 +26,7 @@ namespace TDS.Instance.Language
         public virtual string GOT_ASSIST => "You got the assist of {1}.";
         public virtual string GOT_LAST_HITTED_KILL => "You hitted {1} last and got the kill.";
         public virtual string GOT_LOBBY_BAN => "You got a ban from the lobby-owner here. Duration: {1} | Reason: {2}";
-        public virtual string GOT_OFFLINE_MESSAGE_WITH_NEW => "You got {1} offline messages in userpanel, {2} is/are new.";
-        public virtual string GOT_OFFLINE_MESSAGE_WITHOUT_NEW => "You got {1} offline messages in userpanel.";
+        public virtual string GOT_UNREAD_OFFLINE_MESSAGES => "You got {1} unread offline message(s) in userpanel";
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
 
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
@@ -38,6 +37,8 @@ namespace TDS.Instance.Language
         public virtual string KICK_LOBBY_INFO => "{1} was kicked by {2} out of the lobby. Reason: {3}";    
         public virtual string KICK_LOBBY_YOU_INFO => "You were kicked by {1} out of the lobby. Reason: {2}";
         public virtual string KILLING_SPREE_HEALTHARMOR => "{1} has got a {2}-killingspree and gets a {3} life/armor bonus.";
+
+        public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
 
         public virtual string MAP_WON_VOTING => "The map {1} won the voting!";
 

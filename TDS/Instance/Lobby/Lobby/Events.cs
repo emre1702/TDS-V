@@ -7,15 +7,15 @@ namespace TDS.Instance.Lobby
 {
     partial class Lobby
     {
-        protected readonly Dictionary<Character, Timer> DeathSpawnTimer = new Dictionary<Character, Timer>();
+        protected readonly Dictionary<TDSPlayer, Timer> DeathSpawnTimer = new Dictionary<TDSPlayer, Timer>();
 
-        public virtual void OnPlayerSpawn(Character character)
+        public virtual void OnPlayerSpawn(TDSPlayer character)
         {
-            NAPI.Player.SetPlayerHealth(character.Player, LobbyEntity.StartHealth);
-            NAPI.Player.SetPlayerArmor(character.Player, LobbyEntity.StartArmor);
+            NAPI.Player.SetPlayerHealth(character.Client, LobbyEntity.StartHealth);
+            NAPI.Player.SetPlayerArmor(character.Client, LobbyEntity.StartArmor);
         }
 
-        public void OnPlayerDisconnected(Character character)
+        public void OnPlayerDisconnected(TDSPlayer character)
         {
             this.RemovePlayer(character);
         }
@@ -27,7 +27,7 @@ namespace TDS.Instance.Lobby
         /// <param name="killer"></param>
         /// <param name="weapon"></param>
         /// <returns>Time in ms to disapper & spawn again</returns>
-        public virtual void OnPlayerDeath(Character character, Client killer, uint weapon, bool spawnPlayer = true)
+        public virtual void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
         {
             if (DeathSpawnTimer.ContainsKey(character))
             {
@@ -36,11 +36,11 @@ namespace TDS.Instance.Lobby
             }
             if (spawnPlayer)
             {
-                NAPI.Player.SpawnPlayer(character.Player, spawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
+                NAPI.Player.SpawnPlayer(character.Client, SpawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
             }
         }
 
-        public virtual void OnPlayerEnterColShape(ColShape shape, Character character)
+        public virtual void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
         {
         }
     }

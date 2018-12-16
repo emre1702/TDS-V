@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TDS.Default;
 using TDS.Interface;
 using TDS.Manager.Utility;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
@@ -32,13 +33,13 @@ namespace TDS.Instance.Lobby
 
             FuncIterateAllPlayers((targetcharacter, targetteam) =>
             {
-                targetcharacter.Player.TriggerEvent(DCustomEvent.ClientPlayerDeath, player.Value, teamID, killstr[targetcharacter.Language]);
+                targetcharacter.Client.TriggerEvent(DToClientEvent.Death, player.Value, teamID, killstr[targetcharacter.Language]);
             });
         }
 
-        public void PlayerAmountInFightSync(List<uint> amountinteam)
+        public void PlayerAmountInFightSync(List<int> amountinteam)
         {
-            SendAllPlayerEvent(DCustomEvent.ClientPlayerAmountInFightSync, null, JsonConvert.SerializeObject(amountinteam), false);
+            SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, JsonConvert.SerializeObject(amountinteam), false);
         }
     }
 

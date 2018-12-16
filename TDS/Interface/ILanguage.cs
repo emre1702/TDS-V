@@ -26,8 +26,7 @@ namespace TDS.Interface
         string GOT_ASSIST { get; }
         string GOT_LAST_HITTED_KILL { get; }
         string GOT_LOBBY_BAN { get; }
-        string GOT_OFFLINE_MESSAGE_WITH_NEW { get; }
-        string GOT_OFFLINE_MESSAGE_WITHOUT_NEW { get; }
+        string GOT_UNREAD_OFFLINE_MESSAGES { get; }
 
         string HITSOUND_ACTIVATED { get; }
         string HITSOUND_DEACTIVATED { get; }
@@ -37,6 +36,8 @@ namespace TDS.Interface
         string KICK_LOBBY_INFO { get; }
         string KICK_LOBBY_YOU_INFO { get; }
         string KILLING_SPREE_HEALTHARMOR { get; }
+
+        string LOBBY_DOESNT_EXIST { get; }
 
         string MAP_WON_VOTING { get; }
 

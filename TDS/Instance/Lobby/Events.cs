@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using TDS.Default;
 using TDS.Instance.Player;
 using TDS.Manager.Player;
+using TDS_Common.Default;
 
 namespace TDS.Instance.Lobby
 {
@@ -11,51 +12,50 @@ namespace TDS.Instance.Lobby
         [ServerEvent(Event.PlayerSpawn)]
         public static void OnPlayerSpawn(Client player)
         {
-            Character character = player.GetChar();
+            TDSPlayer character = player.GetChar();
             character.CurrentLobby.OnPlayerSpawn(character);
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
         public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
         {
-            Character character = player.GetChar();
+            TDSPlayer character = player.GetChar();
             character.CurrentLobby.OnPlayerDisconnected(character);
         }
 
+        //[DisableDefaultOnDeathRespawn] 
+#warning Add this after version 0.4
         [ServerEvent(Event.PlayerDeath)]
         public static void OnPlayerDeath(Client player, Client killer, uint reason)
         {
-            Character character = player.GetChar();
+            TDSPlayer character = player.GetChar();
             character.CurrentLobby.OnPlayerDeath(character, killer, reason);
         }
         #endregion Server
 
         #region Remote
         #region Lobby
-        [RemoteEvent(DCustomRemoteEvents.JoinLobby)]
-        public static async void JoinLobbyEvent(Client player, uint index, uint teamid)
+        [RemoteEvent(DToServerEvent.JoinLobby)]
+        public static async void JoinLobbyEvent(Client player, uint index, uint teamindex)
         {
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
                 Lobby lobby = Lobby.LobbiesByIndex[index];
-#warning todo After adding Arena
-                //if (lobby is Arena)  todo
-                //    manager.lobby.Arena.Join(player.GetChar(), spectator);
-                //else
-                await lobby.AddPlayer(player.GetChar(), teamid);
+                await lobby.AddPlayer(player.GetChar(), teamindex);
             }
             else
             {
-                // player.sendNotification (  lobby doesn't exist ); 
+                NAPI.Chat.SendChatMessageToPlayer(player, player.GetChar().Language.LOBBY_DOESNT_EXIST);
+#warning Remove lobby at client view and check, why he saw this lobby
             }
         }
         #endregion Lobby
 
         #region Damagesys
-        [RemoteEvent(DCustomRemoteEvents.PlayerHitOtherPlayer)]
+        [RemoteEvent(DToServerEvent.HitOtherPlayer)]
         public void OnPlayerHitOtherPlayer(Client player, Client hitted, bool headshot)
         {
-            Character character = player.GetChar();
+            TDSPlayer character = player.GetChar();
             if (character.CurrentLobby is FightLobby fightlobby)
             {
                 WeaponHash currentweapon = player.CurrentWeapon;

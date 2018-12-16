@@ -18,7 +18,7 @@ namespace TDS.Instance
 
         public void Clear()
         {
-            lastHittersDict.Clear();
+            allHitters.Clear();
         }
     }
 

@@ -1,99 +1,83 @@
+using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS.Instance.Lobby;
+using TDS.Instance.Player;
+using TDS.Instance.Utility;
+using TDS.Manager.Player;
+using TDS.Manager.Utility;
+
 namespace TDS.Instance
 {
 
     partial class Damagesys
     {
 
-        /*private static readonly Dictionary<Client, Timer> sDeadTimer = new Dictionary<Client, Timer>();
+        private static readonly Dictionary<TDSPlayer, Timer> sDeadTimer = new Dictionary<TDSPlayer, Timer>();
         public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint>(),
                                         PlayerKills = new Dictionary<Client, uint>();
 
-        //[DisableDefaultOnDeathRespawn] todo: After Version 0.4
-        [ServerEvent(Event.PlayerDeath)]
-        public void OnPlayerDeath(Client player, Client killer, uint weapon)
+        public void OnPlayerDeath(TDSPlayer player, Client killer, uint weapon)
         {
             if (!sDeadTimer.ContainsKey(player))
             {
-                Character character = player.GetChar();
+                player.Client.Freeze(true);
 
-                player.Freeze(true);
-                sDeadTimer.TryAdd(player, Timer.SetTimer(() => SpawnAfterDeath(character), 2000));
+                TDSPlayer killercharacter = GetKiller(player, killer.GetChar());
+                killer = killercharacter.Client;
 
-                if (!(character.Lobby is FightLobby lobby))
-                    return;
+                PlayerSpree.Remove(player);
 
-                Damagesys dmgsys = lobby.DmgSys;
-
-                Character killercharacter = dmgsys.GetKiller(character, killer.GetChar());
-                killer = killercharacter.Player;
-
-                dmgsys.PlayerSpree.Remove(character);
-
-                if (character.Lifes > 0)
+                if (player.Lifes > 0)
                 {
-                    lobby.OnPlayerDeath(character, killer, weapon);
-
                     // Kill //
-                    if (killercharacter != character)
+                    if (killercharacter != player)
                     {
-                        if (character.Lobby is Arena)
-                            killercharacter.GiveKill();
-                        if (!dmgsys.PlayerKills.ContainsKey(killer))
-                            dmgsys.PlayerKills.TryAdd(killer, 0);
-                        dmgsys.PlayerKills[killer]++;
+                        ++killercharacter.CurrentRoundStats.Kills;
+                        if (!PlayerKills.ContainsKey(killer))
+                            PlayerKills.TryAdd(killer, 0);
+                        PlayerKills[killer]++;
 
                         // Killingspree //
-                        dmgsys.AddToKillingSpree(killercharacter);
+                        AddToKillingSpree(killercharacter);
                     }
 
-                    if (character.Lobby is Arena)
-                        // Death //
-                        character.GiveDeath();
+                    // Death //
+                    ++player.CurrentRoundStats.Deaths;
 
                     // Assist //
-                    dmgsys.CheckForAssist(character, killer);
+                    CheckForAssist(player, killer);
                 }
             }
         }
 
-        private Character GetKiller(Character character, Character possiblekillercharacter)
+        private TDSPlayer GetKiller(TDSPlayer player, TDSPlayer possiblekiller)
         {
-            if (character.Player != possiblekillercharacter.Player && possiblekillercharacter.Player != null && possiblekillercharacter.Player.Exists)
-                return possiblekillercharacter;
+            if (player.Client != possiblekiller.Client && possiblekiller.Client != null && possiblekiller.Client.Exists)
+                return possiblekiller;
 
-            Character lasthittercharacter = GetLastHitter(character);
-            if (lasthittercharacter != null)
-                return lasthittercharacter;
+            if (player.LastHitter != null)
+                return player.LastHitter;
 
-            return character;
+            return player;
         }
 
-        private static void SpawnAfterDeath(Character character)
+        private void CheckForAssist(TDSPlayer character, Client killer)
         {
-            sDeadTimer.Remove(character.Player, out Timer timer);
-            timer.Kill();
-            if (character.Player.Exists)
+            if (allHitters.ContainsKey(character))
             {
-                NAPI.Player.SpawnPlayer(character.Player, character.Lobby.SpawnPoint, character.Lobby.SpawnRotation.Z);
-            }
-        }
-
-        private void CheckForAssist(Character character, Client killer)
-        {
-            if (AllHitters.ContainsKey(character))
-            {
-                uint halfarmorhp = (lobby.Armor + lobby.Health) / 2;
-                foreach (KeyValuePair<Character, int> entry in AllHitters[character])
+                int halfarmorhp = character.CurrentLobby.StartTotalHP / 2;
+                foreach (KeyValuePair<TDSPlayer, int> entry in allHitters[character])
                 {
                     if (entry.Value >= halfarmorhp)
                     {
-                        Character targetcharacter = entry.Key;
-                        Client target = targetcharacter.Player;
-                        if (target.Exists && targetcharacter.Lobby == character.Lobby && killer != target)
+                        TDSPlayer targetcharacter = entry.Key;
+                        Client target = targetcharacter.Client;
+                        if (target.Exists && targetcharacter.CurrentLobby == character.CurrentLobby && killer != target)
                         {
-                            if (targetcharacter.Lobby is Arena)
-                                targetcharacter.GiveAssist();
-                            target.SendLangNotification("got_assist", character.Player.Name);
+                            if (targetcharacter.CurrentLobby is Arena)
+                                ++targetcharacter.CurrentRoundStats.Assists;
+                            NAPI.Notification.SendNotificationToPlayer(target, Utils.GetReplaced(character.Language.GOT_ASSIST, character.Client.Name));
+
                             if (!PlayerAssists.ContainsKey(target))
                                 PlayerAssists[target] = 0;
                             PlayerAssists[target]++;
@@ -101,47 +85,31 @@ namespace TDS.Instance
                         if (killer != target ||
                             halfarmorhp % 2 != 0 ||
                             entry.Value != halfarmorhp / 2 ||
-                            AllHitters[character].Count > 2)
+                            allHitters[character].Count > 2)
                             return;
                     }
                 }
             }
         }
 
-        public void CheckLastHitter(Character character, out Character lastHitterCharacter)
+        public void CheckLastHitter(TDSPlayer character)
         {
-            if (LastHitterDictionary.ContainsKey(character))
+            if (character.LastHitter != null)
             {
-                LastHitterDictionary.Remove(character, out lastHitterCharacter);
-                if (lastHitterCharacter.Player.Exists)
+                TDSPlayer lastHitterCharacter = character.LastHitter;
+                if (lastHitterCharacter.Client.Exists)
                 {
-                    if (character.Lobby == lastHitterCharacter.Lobby)
+                    if (character.CurrentLobby == lastHitterCharacter.CurrentLobby)
                         if (lastHitterCharacter.Lifes > 0)
                         {
-                            if (character.Lobby is Arena)
-                                lastHitterCharacter.GiveKill();
-                            lastHitterCharacter.Player.SendLangNotification("got_last_hitted_kill", character.Player.Name);
+                            ++lastHitterCharacter.CurrentRoundStats.Kills;
+                            NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
                             AddToKillingSpree(lastHitterCharacter);
                         }
                 }
+                character.LastHitter = null;
             }
-            else
-                lastHitterCharacter = null;
         }
-
-        public Character GetLastHitter(Character character)
-        {
-            if (LastHitterDictionary.ContainsKey(character))
-            {
-                LastHitterDictionary.Remove(character, out Character lasthittercharacter);
-                if (lasthittercharacter.Player.Exists)
-                {
-                    if (character.Lobby == lasthittercharacter.Lobby)
-                        return lasthittercharacter;
-                }
-            }
-            return null;
-        }*/
     }
 
 }

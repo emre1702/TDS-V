@@ -9,16 +9,18 @@ namespace TDS.Manager.Maps
     using System.Threading.Tasks;
     using System.Xml;
     using GTANetworkAPI;
+    using TDS.Dto;
     using TDS.Enum;
+    using TDS.Instance.Lobby;
     using TDS.Manager.Logs;
     using TDS.Manager.Utility;
 
     static partial class Maps
     {
-        /*private static readonly XmlReaderSettings settings = new XmlReaderSettings();
+        private static readonly XmlReaderSettings settings = new XmlReaderSettings();
 
-        public static List<Instance.Map.Map> allMaps = new List<Instance.Map.Map>();
-        public static List<Instance.Map.MapSync> allMapsSync = new List<Instance.Map.MapSync>();
+        public static List<MapDto> allMaps = new List<MapDto>();
+        public static List<MapSynedDataDto> allMapsSync = new List<MapSynedDataDto>();
 
         public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string>();   // mapnames in lower case
         public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string>();
@@ -26,7 +28,7 @@ namespace TDS.Manager.Maps
         public static async Task LoadMaps()
         {
             settings.Async = true;
-            IEnumerable<string> directories = Directory.EnumerateDirectories(Setting.MapsPath);
+            IEnumerable<string> directories = Directory.EnumerateDirectories(SettingsManager.MapsPath);
             foreach (string dir in directories)
             {
                 string creator = Path.GetFileName(dir);
@@ -35,15 +37,15 @@ namespace TDS.Manager.Maps
                 {
                     string filename = Path.GetFileNameWithoutExtension(filepath);
                     MapCreator[filename] = creator;
-                    Instance.Map.Map map = new Instance.Map.Map();
+                    MapDto map = new MapDto();
                     if (await map.AddInfos(filename).ConfigureAwait(false))
                     {
-                        if (map.SyncData.Name != null)
+                        if (map.SyncedData.Name != null)
                         {
                             allMaps.Add(map);
-                            allMapsSync.Add(map.SyncData);
+                            allMapsSync.Add(map.SyncedData);
 
-                            MapPathByName[map.SyncData.Name.ToLower()] = filename;
+                            MapPathByName[map.SyncedData.Name.ToLower()] = filename;
                         }
                         else
                             Error.Log("Map " + filename + " got no name!", Environment.StackTrace, null);
@@ -52,10 +54,10 @@ namespace TDS.Manager.Maps
             }
         }
 
-        private static Vector3 GetCenterOfPositions(List<Vector3> poly, float zpos = -1)
+        private static Vector3 GetCenterOfPositions(IEnumerable<Vector3> poly, float zpos = -1)
         {
-            int length = poly.Count;
-            if (length <= 2)
+            int length = poly.Count();
+            if (poly.Count() <= 2)
                 return null;
 
             float centerX = 0.0f;
@@ -73,34 +75,31 @@ namespace TDS.Manager.Maps
             return new Vector3(centerX / length, centerY / length, centerZ / length);
         }
 
-        private static Vector3 GetCenterByLimits(Instance.Map.Map map, float zpos)
+        private static Vector3 GetCenterByLimits(MapDto map, float zpos)
         {
             return GetCenterOfPositions(map.MapLimits, zpos) ?? GetCenterBySpawns(map);
         }
 
-        private static Vector3 GetCenterBySpawns(Instance.Map.Map map)
+        private static Vector3 GetCenterBySpawns(MapDto map)
         {
             int amountteams = map.TeamSpawns.Count;
             if (amountteams == 1)
             {
-                foreach (KeyValuePair<int, List<Vector3>> entry in map.TeamSpawns)
-                {
-                    return entry.Value[0];
-                }
+                return map.TeamSpawns[0][0].Position;
             }
             else if (amountteams > 1)
             {
-                List<Vector3> positions = map.TeamSpawns.Select(entry => entry.Value[0]).ToList();
+                IEnumerable<Vector3> positions = map.TeamSpawns.Select(entry => entry[0].Position);
                 return GetCenterOfPositions(positions);
             }
             return new Vector3();
         }
 
-        private static Vector3 GetCenter(Instance.Map.Map map)
+        private static Vector3 GetCenter(MapDto map)
         {
             if (map.MapLimits.Count > 0)
             {
-                float zpos = map.TeamSpawns.Select(entry => entry.Value[0].Z).FirstOrDefault();
+                float zpos = map.TeamSpawns.Select(entry => entry[0].Position.Z).FirstOrDefault();
                 return GetCenterByLimits(map, zpos);
             }
             else
@@ -109,15 +108,15 @@ namespace TDS.Manager.Maps
             }
         }
 
-        private static async Task<bool> AddInfos(this Instance.Map.Map map, string mapfilename)
+        private static async Task<bool> AddInfos(this MapDto map, string mapfilename)
         {
-            string path = Setting.MapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
+            string path = SettingsManager.MapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
             try
             {
                 using (XmlReader reader = XmlReader.Create(path, settings))
                 {
-                    Instance.Map.MapSync syncdata = new Instance.Map.MapSync();
-                    map.SyncData = syncdata;
+                    MapSynedDataDto syncdata = new MapSynedDataDto();
+                    map.SyncedData = syncdata;
                     while (await reader.ReadAsync().ConfigureAwait(false))
                     {
                         if (reader.NodeType == XmlNodeType.Element)
@@ -149,15 +148,15 @@ namespace TDS.Manager.Maps
                             else if (reader.Name.StartsWith("team"))
                             {
                                 int teamnumber = Convert.ToInt32(reader.Name.Substring(4));
-                                if (!map.TeamSpawns.ContainsKey(teamnumber))
+                                if (map.TeamSpawns.Count < teamnumber)
                                 {
-                                    map.TeamSpawns[teamnumber] = new List<Vector3>();
-                                    map.TeamRots[teamnumber] = new List<Vector3>();
+                                    map.TeamSpawns.Add(new List<PositionRotationDto>()); 
                                 }
-                                Vector3 spawn = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat());
-                                map.TeamSpawns[teamnumber].Add(spawn);
-                                Vector3 rot = new Vector3(0, 0, reader["rot"].ToFloat());
-                                map.TeamRots[teamnumber].Add(rot);
+                                map.TeamSpawns[teamnumber-1].Add(new PositionRotationDto
+                                {
+                                    Position = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat()),
+                                    Rotation = reader["rot"].ToFloat()
+                                });
                             }
                         }
                     }
@@ -175,13 +174,15 @@ namespace TDS.Manager.Maps
             }
         }
 
-        /*public static async Task<Instance.Map.Map> GetMapClass ( string mapname, Arena lobby ) {
-			Instance.Map.Map map = new Instance.Map.Map ();
-			if ( await map.AddInfos ( MapPathByName[mapname.ToLower()] ).ConfigureAwait ( false ) ) {
-				return map;
-			}
-            return lobby.GetRandomMap ();
-		}*/
+        public static async Task<MapDto> GetMapClass(string mapname, Arena lobby)
+        {
+            MapDto map = new MapDto();
+            if (await map.AddInfos(MapPathByName[mapname.ToLower()]).ConfigureAwait(false))
+            {
+                return map;
+            }
+            return lobby.GetRandomMap();
+        }
 
         // WAS ALREADY DEACTIVATED 
         /*private static Map getMapDataOther ( string path ) {
