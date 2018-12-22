@@ -1,1 +1,1 @@
-# TDS-World - Team Deathmatch Server
+# TDS-V - Team Deathmatch Server
