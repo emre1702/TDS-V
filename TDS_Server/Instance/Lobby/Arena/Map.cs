@@ -87,19 +87,6 @@ namespace TDS_Server.Instance.Lobby {
             mapsJson = JsonConvert.SerializeObject ( themapssync );
 		}
 
-		public Map GetRandomMap () {
-            Map nextmap = maps[manager.utility.Utility.Rnd.Next ( 0, maps.Count )];
-            return nextmap;
-		}
-
-        
-
-		
-
-		
-
-		
-
 		*/
     }
 

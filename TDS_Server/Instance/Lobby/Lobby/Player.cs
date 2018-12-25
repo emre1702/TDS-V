@@ -7,6 +7,7 @@ using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Common.Default;
+using System.Linq;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -39,8 +40,8 @@ namespace TDS_Server.Instance.Lobby
             SetPlayerTeam(character, Teams[teamindex]);
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, Id);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.SyncPlayersSameLobby, JsonConvert.SerializeObject(players));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, syncedLobbySettings, players.Select(p => p.Client).ToList(), SyncedTeamDatas);
+
             Manager.Logs.Rest.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
             return true;
         }

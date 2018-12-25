@@ -1,10 +1,10 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Default;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
+using TDS_Common.Dto;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -12,6 +12,7 @@ namespace TDS_Server.Instance.Lobby
     {
         protected readonly Teams[] Teams;
         protected readonly List<TDSPlayer>[] TeamPlayers;
+        protected readonly SyncedTeamDataDto[] SyncedTeamDatas;
 
         protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {

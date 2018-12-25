@@ -11,5 +11,7 @@ namespace TDS_Server.Entity
         public string NewMapsPath { get; set; }
         public bool ErrorToPlayerOnNonExistentCommand { get; set; }
         public bool ToChatOnNonExistentCommand { get; set; }
+        public int DistanceToSpotToPlant { get; set; }
+        public int DistanceToSpotToDefuse { get; set; }
     }
 }

@@ -8,13 +8,13 @@ namespace TDS_Common.Instance.Utility
     /// <summary>
     /// Timer-class
     /// </summary>
-    public class Timer
+    public class TDSTimer
     {
 
         /// <summary>A sorted List of Timers</summary>
-        private static readonly List<Timer> timer = new List<Timer>();
+        private static readonly List<TDSTimer> timer = new List<TDSTimer>();
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
-        private static readonly List<Timer> insertAfterList = new List<Timer>();
+        private static readonly List<TDSTimer> insertAfterList = new List<TDSTimer>();
         /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
         private static readonly Stopwatch stopwatch = new Stopwatch();
         private static Action<string> logger;
@@ -52,7 +52,7 @@ namespace TDS_Common.Instance.Utility
         /// <param name="executeafterms">Execute after milliseconds.</param>
         /// <param name="executes">Amount of executes. Use 0 for infinitely.</param>
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
-        public Timer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
+        public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
             ulong executeatms = executeafterms + GetCurrentMs();
             Func = thefunc;
@@ -177,7 +177,7 @@ namespace TDS_Common.Instance.Utility
                 {
                     if (timer[i].executeAtMs <= tick)
                     {
-                        Timer thetimer = timer[i];
+                        TDSTimer thetimer = timer[i];
                         timer.RemoveAt(i);   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
                         if (thetimer.HandleException)
                             thetimer.ExecuteMeSafe();
@@ -194,7 +194,7 @@ namespace TDS_Common.Instance.Utility
             // Put the timers back in the list
             if (insertAfterList.Count > 0)
             {
-                foreach (Timer timer in insertAfterList)
+                foreach (TDSTimer timer in insertAfterList)
                 {
                     timer.InsertSorted();
                 }

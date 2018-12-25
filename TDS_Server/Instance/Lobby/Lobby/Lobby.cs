@@ -1,6 +1,6 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
-using System.Linq;
+using TDS_Common.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 
@@ -19,6 +19,8 @@ namespace TDS_Server.Instance.Lobby
 
         protected readonly uint Dimension;
         protected readonly Vector3 SpawnPoint;
+
+        private SyncedLobbySettingsDto syncedLobbySettings;
 
         public Lobby(Lobbies entity)
         {
@@ -41,6 +43,18 @@ namespace TDS_Server.Instance.Lobby
                 Teams[team.Index] = team;
                 TeamPlayers[team.Index] = new List<TDSPlayer>();
             }
+
+            syncedLobbySettings = new SyncedLobbySettingsDto()
+            {
+                Id = entity.Id,
+                BombDefuseTimeMs = entity.BombDefuseTimeMs,
+                BombPlantTimeMs = entity.BombPlantTimeMs,
+                SpawnAgainAfterDeathMs = entity.SpawnAgainAfterDeathMs,
+                CountdownTime = entity.CountdownTime,
+                RoundTime = entity.RoundTime,
+                BombDetonateTimeMs = entity.BombDetonateTimeMs,
+                DieAfterOutsideMapLimitTime = entity.DieAfterOutsideMapLimitTime,
+            };
         }
 
         public virtual void Start()

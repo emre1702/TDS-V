@@ -9,13 +9,13 @@ namespace TDS_Client.Manager.Utility
 
         public TimerManager()
         {
-            Timer.Init(RAGE.Chat.Output);
+            TDSTimer.Init(RAGE.Chat.Output);
             Tick += OnUpdateFunc;
         }
 
         public static void OnUpdateFunc(List<TickNametagData> _)
         {
-            Timer.OnUpdateFunc();
+            TDSTimer.OnUpdateFunc();
         }
     }
 }

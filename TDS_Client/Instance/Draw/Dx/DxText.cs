@@ -24,7 +24,7 @@ namespace TDS_Client.Instance.Draw.Dx
         private int endScaleStartTick;
         private int endScaleEndTick;
 
-        public DxText(string text, float x, float y, float scale, Color color, Font font, Alignment alignment, bool relative = true) : base()
+        public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon, Alignment alignment = Alignment.Left, bool relative = true) : base()
         {
             this.text = text;
             position = new Point(
@@ -68,6 +68,20 @@ namespace TDS_Client.Instance.Draw.Dx
             return (int) Ui.EndTextCommandGetWidth(1);
         }
 
+        public void SetText(string text)
+        {
+            if (alignment == Alignment.Right)
+                position.X += GetStringWidth(this.text, scale, font);
+            this.text = text;
+            if (alignment == Alignment.Right)
+                position.X -= GetStringWidth(text, scale, font);
+        }
+
+        public void SetScale(float scale)
+        {
+            this.scale = scale;
+        }
+
         protected override void Draw(int currentTick)
         {
             int alpha = color.A;
@@ -76,8 +90,15 @@ namespace TDS_Client.Instance.Draw.Dx
 
             float scale = this.scale;
             if (endScale.HasValue)
+            {
                 scale = GetBlendValue(currentTick, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
-
+                if (endScale.Value == scale)
+                {
+                    this.scale = endScale.Value;
+                    endScale = null;
+                }
+            }
+                
             UIText.Draw(text, position, scale, color, font, alignment == Alignment.Center);
         }
 

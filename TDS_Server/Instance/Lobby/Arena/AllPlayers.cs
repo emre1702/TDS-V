@@ -6,6 +6,8 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
+using System.Linq;
+using TDS_Common.Dto;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -63,15 +65,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void SendPlayerAmountInFightInfo(Client player)
         {
-            List<int> amountinteams = new List<int>();
-            List<int> amountaliveinteams = new List<int>();
-            for (int i = 1; i < TeamPlayers.Length; i++)
-            {
-                amountinteams.Add(TeamPlayers[i].Count);
-                amountaliveinteams.Add(AlivePlayers[i].Count);
-            }
-            //PlayerAmountInFightSync(player, amountinteams, amountaliveinteams);
-#warning Implement with Client implementation
+            SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Select(t => t.AmountPlayers).ToArray();
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, amounts);
         }
     }
 }

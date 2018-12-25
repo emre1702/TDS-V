@@ -32,11 +32,13 @@ namespace TDS_Server.Entity
         public uint? MoneyPerKill { get; set; }
         public uint? MoneyPerAssist { get; set; }
         public uint? MoneyPerDamage { get; set; }
-        public uint? DurationRound { get; set; }
+        public uint? RoundTime { get; set; }
+        public uint? CountdownTime { get; set; }
         public uint? BombDetonateTimeMs { get; set; }
         public uint? BombDefuseTimeMs { get; set; }
         public uint? BombPlantTimeMs { get; set; }
         public bool? MixTeamsAfterRound { get; set; }
+        public uint? DieAfterOutsideMapLimitTime { get; set; }
         public DateTime? CreateTimestamp { get; set; }
 
         public virtual Players OwnerNavigation { get; set; }

@@ -19,7 +19,7 @@ namespace TDS_Server.Instance.Lobby
 
     partial class Arena
     {
-        private Timer nextRoundStatusTimer;
+        private TDSTimer nextRoundStatusTimer;
         private readonly Dictionary<ERoundStatus, uint> durationsDict = new Dictionary<ERoundStatus, uint>
         {
             [ERoundStatus.Mapchoose] = 4 * 1000,
@@ -48,7 +48,7 @@ namespace TDS_Server.Instance.Lobby
             nextRoundStatusTimer?.Kill();
             if (!IsEmpty())
             {
-                nextRoundStatusTimer = new Timer(() =>
+                nextRoundStatusTimer = new TDSTimer(() =>
                 {
                     if (IsEmpty())
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);

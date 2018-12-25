@@ -1,9 +1,5 @@
 ﻿using RAGE.Game;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -17,7 +13,7 @@ namespace TDS_Client.Instance.Draw.Dx
         private Alignment alignment;
         private bool relativePos;
 
-        public DxRectangle(float x, float y, int width, int height, Color color, Alignment alignment = Alignment.Left, bool relativePos = true) : base()
+        public DxRectangle(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.Left, bool relativePos = true) : base()
         {
             xpos = GetRelativeX(x, relativePos);
             ypos = GetRelativeY(y, relativePos);
@@ -52,7 +48,7 @@ namespace TDS_Client.Instance.Draw.Dx
             alignment = newalignment;
         }
 
-        public void SetWidth(int width)
+        public void SetWidth(float width)
         {
             Alignment currentalignment = alignment;
             SetAlignment(Alignment.Center);
@@ -60,7 +56,7 @@ namespace TDS_Client.Instance.Draw.Dx
             SetAlignment(currentalignment);
         }
 
-        public void SetHeight(int height)
+        public void SetHeight(float height)
         {
             ypos -= sizey / 2;
             sizey = height;

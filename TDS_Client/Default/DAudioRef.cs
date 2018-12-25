@@ -6,6 +6,6 @@ namespace TDS_Client.Default
 {
     static class DAudioRef
     {
-        public const string HUD_MINI_GAME_SOUNDSET = "HUD_MINI_GAME_SOUNDSET";
+        public static string HUD_MINI_GAME_SOUNDSET => "HUD_MINI_GAME_SOUNDSET";
     }
 }

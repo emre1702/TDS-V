@@ -7,13 +7,13 @@ namespace TDS_Server.Manager.Utility
     {
         public TimerManager()
         {
-            Timer.Init(NAPI.Util.ConsoleOutput);
+            TDSTimer.Init(NAPI.Util.ConsoleOutput);
         }
 
         [ServerEvent(Event.Update)]
         public static void OnUpdateFunc()
         {
-            Timer.OnUpdateFunc();
+            TDSTimer.OnUpdateFunc();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Interface
 {
@@ -19,5 +20,7 @@ namespace TDS_Client.Interface
         string SCOREBOARD_DEATHS { get; }
         string SCOREBOARD_TEAMS { get; }
         string SCOREBOARD_LOBBY { get; }
+
+        ELanguage Enum { get; }
     }  
 }

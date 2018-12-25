@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Interface;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Instance.Language
 {
@@ -23,5 +24,7 @@ namespace TDS_Client.Instance.Language
         public override IMapCreatorMenuTexts MAPCREATOR_MENU => new MapCreatorMenuTextsGerman();
 
         public override IOrderTexts ORDER => new OrderTextsGerman();
+
+        public new ELanguage Enum => ELanguage.German;
     }
 }

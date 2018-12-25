@@ -51,6 +51,8 @@
                 //Map.SendPlayerHisRatings(character);
                 //Gang.CheckPlayerGang(character);
 
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.LoadSettings, SettingsManager.SyncedSettings);
+
                 Logs.Rest.Log(Enum.ELogType.Login, player, true);    
             }
         }

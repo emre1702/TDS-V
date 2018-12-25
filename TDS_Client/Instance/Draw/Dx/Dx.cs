@@ -7,7 +7,7 @@ namespace TDS_Client.Instance.Draw.Dx
 {
     class Dx
     {
-        protected bool Activated = true;
+        public bool Activated { get; set; }
         protected ScreenResolutionType ScreenRes
         {
             get => Game.ScreenResolution;
@@ -15,8 +15,9 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private static List<Dx> dxDraws = new List<Dx>();
 
-        public Dx()
+        public Dx(bool activated = true)
         {
+            Activated = activated;
             dxDraws.Add(this);
         }
 
@@ -32,7 +33,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected virtual void Draw(int currentTick) { }
 
-        public void Remove()
+        public virtual void Remove()
         {
             dxDraws.Remove(this);
         }

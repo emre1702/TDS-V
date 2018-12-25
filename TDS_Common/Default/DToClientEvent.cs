@@ -9,6 +9,7 @@ namespace TDS_Common.Default
         public const string AmountInFightSync = "AmountInFightSync_Server";
 
         public const string BombDetonated = "BombDetonated_Server";
+        public const string BombPlanted = "BombPlanted_Server";
 
         public const string CountdownStart = "CountdownStart_Server";
 
@@ -23,12 +24,15 @@ namespace TDS_Common.Default
         public const string JoinSameLobby = "JoinSameLobby_Server";
 
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
+        public const string LoadSettings = "LoadSettings_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
 
         public const string MapChange = "MapChange_Server";
         public const string MapVotingSyncOnPlayerJoin = "MapVotingSyncOnPlayerJoin_Server";
 
+        public const string PlayerGotBomb = "PlayerGotBomb_Server";
         public const string PlayerMoneyChange = "PlayerMoneyChange_Server";
+        public const string PlayerPlantedBomb = "PlayerPlantedBomb_Server";
         public const string PlayerSpectateMode = "PlayerSpectateMode_Server";
         public const string PlayerTeamChange = "PlayerTeamChange_Server";
         public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
@@ -40,7 +44,8 @@ namespace TDS_Common.Default
         public const string RoundEnd = "RoundEnd_Server";
 
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
-        public const string SyncLobbySettings = "SyncLobbySettings_Server";
-        public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
+        public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
+
+        //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
     }
 }

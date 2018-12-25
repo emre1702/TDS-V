@@ -7,7 +7,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        protected readonly Dictionary<TDSPlayer, Timer> DeathSpawnTimer = new Dictionary<TDSPlayer, Timer>();
+        protected readonly Dictionary<TDSPlayer, TDSTimer> DeathSpawnTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {

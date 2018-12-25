@@ -12,7 +12,7 @@ namespace TDS_Server.Instance
     partial class Damagesys
     {
 
-        private static readonly Dictionary<TDSPlayer, Timer> sDeadTimer = new Dictionary<TDSPlayer, Timer>();
+        private static readonly Dictionary<TDSPlayer, TDSTimer> sDeadTimer = new Dictionary<TDSPlayer, TDSTimer>();
         public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint>(),
                                         PlayerKills = new Dictionary<Client, uint>();
 

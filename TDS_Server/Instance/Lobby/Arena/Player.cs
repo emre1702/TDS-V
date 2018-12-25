@@ -23,16 +23,13 @@ namespace TDS_Server.Instance.Lobby {
             character.CurrentRoundStats = new RoundStatsDto();
             SpectateOtherSameTeam(character);
 
-            //string mapname = currentMap != null ? currentMap.SyncData.Name : "unknown";
-            //NAPI.ClientEvent.TriggerClientEvent(character.Client, DCustomEvent.SyncLobbySettings, spectator, mapname, JsonConvert.SerializeObject(Teams), JsonConvert.SerializeObject(teamColorsList),
-            //                    countdownTime, roundTime, bombDetonateTime, bombPlantTime, bombDefuseTime,
-            //                    RoundEndTime, true);
-#warning Implement after client implementation
-
             if (teamindex != 0)
                 AddPlayerAsPlayer(character);
 
             SendPlayerRoundInfoOnJoin(character);
+
+            string mapname = currentMap == null ? "-" : currentMap.SyncedData.Name;
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.SyncCurrentMapName, mapname);
 
             return true;
         }
@@ -86,7 +83,7 @@ namespace TDS_Server.Instance.Lobby {
                 DropBomb();
             }
 
-            removeSpectatorsTimer[character] = new Timer(() =>
+            removeSpectatorsTimer[character] = new TDSTimer(() =>
             {
                 PlayerCantBeSpectatedAnymore(character);
                 SpectateOtherSameTeam(character);
@@ -152,21 +149,5 @@ namespace TDS_Server.Instance.Lobby {
                     break;
             }
         }
-
-
-        /*
-
-
-        
-
-
-        
-
-        public static void PlayerAmountInFightSync ( Client player, List<uint> amountinteam, List<uint> amountaliveinteam ) {
-            NAPI.ClientEvent.TriggerClientEvent ( player, "onClientPlayerAmountInFightSync", JsonConvert.SerializeObject ( amountinteam ), 1, JsonConvert.SerializeObject ( amountaliveinteam ) );
-        }
-
-        */
-
     }
 }

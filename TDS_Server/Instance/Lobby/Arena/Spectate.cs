@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private readonly Dictionary<TDSPlayer, Timer> removeSpectatorsTimer = new Dictionary<TDSPlayer, Timer>();
+        private readonly Dictionary<TDSPlayer, TDSTimer> removeSpectatorsTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
         protected override void SpectateOtherSameTeam(TDSPlayer character, bool next = true)
         {

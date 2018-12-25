@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.Lobby
 
                 if (--character.Lifes == 0 && spawnPlayer)
                 {
-                    DeathSpawnTimer[character] = new Timer(() =>
+                    DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
                         SpectateOtherSameTeam(character);
                         NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerSpectateMode);

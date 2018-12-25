@@ -1,4 +1,7 @@
-﻿using RAGE.Ui;
+﻿using Newtonsoft.Json;
+using RAGE.Ui;
+using System.Collections.Generic;
+using System.Linq;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
@@ -32,6 +35,11 @@ namespace TDS_Client.Manager.Browser
             browser.ExecuteJs("showBloodscreen();");
         }
 
+        public static void PlaySound(string soundname)
+        {
+            browser.ExecuteJs($"playSound({soundname})");
+        }
+
         public static void PlayHitsound()
         {
             browser.ExecuteJs("playHitsound();");
@@ -49,7 +57,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void OpenMapMenuInBrowser(string mapslistjson)
         {
-            browser.ExecuteJs($"openMapMenu('{Settings.MyLanguage}', '{mapslistjson}');");
+            browser.ExecuteJs($"openMapMenu('{Settings.Language.Enum}', '{mapslistjson}');");
         }
 
         public static void CloseMapMenuInBrowser()
@@ -100,6 +108,22 @@ namespace TDS_Client.Manager.Browser
                 browser.ExecuteJs("hideRoundEndReason();");
                 RoundEndReasonShowing = false;
             }
+        }
+
+        public static void LoadPlayersForChat(List<RAGE.Elements.Player> players)
+        {
+            IEnumerable<string> names = players.Select(p => p.Name);
+            browser.ExecuteJs($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
+        }
+
+        public static void AddPlayerForChat(RAGE.Elements.Player player)
+        {
+            browser.ExecuteJs($"addNameForChat(`{player.Name}`)");
+        }
+
+        public static void RemovePlayerForChat(RAGE.Elements.Player player)
+        {
+            browser.ExecuteJs($"removeNameForChat(`{player.Name}`)");
         }
     }
 }

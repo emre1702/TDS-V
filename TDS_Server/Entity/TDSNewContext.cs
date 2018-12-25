@@ -44,7 +44,8 @@ namespace TDS_Server.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo");
             }
         }
 
@@ -213,6 +214,8 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.BombPlantTimeMs).HasDefaultValueSql("'3000'");
 
+                entity.Property(e => e.CountdownTime).HasDefaultValueSql("'5'");
+
                 entity.Property(e => e.CreateTimestamp).HasColumnType("timestamp");
 
                 entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("'0'");
@@ -223,7 +226,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("'900'");
 
-                entity.Property(e => e.DurationRound).HasDefaultValueSql("'240'");
+                entity.Property(e => e.DieAfterOutsideMapLimitTime).HasDefaultValueSql("'10'");
 
                 entity.Property(e => e.IsOfficial).HasColumnType("bit(1)");
 
@@ -236,6 +239,8 @@ namespace TDS_Server.Entity
                     .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.Password).HasColumnType("varchar(100)");
+
+                entity.Property(e => e.RoundTime).HasDefaultValueSql("'240'");
 
                 entity.Property(e => e.SpawnAgainAfterDeathMs)
                     .HasColumnName("SpawnAgainAfterDeathMS")
@@ -601,6 +606,10 @@ namespace TDS_Server.Entity
                 entity.ToTable("settings");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DistanceToSpotToDefuse).HasColumnType("int(5)");
+
+                entity.Property(e => e.DistanceToSpotToPlant).HasColumnType("int(5)");
 
                 entity.Property(e => e.ErrorToPlayerOnNonExistentCommand).HasColumnType("bit(1)");
 
