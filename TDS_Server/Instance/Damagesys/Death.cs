@@ -92,8 +92,9 @@ namespace TDS_Server.Instance
             }
         }
 
-        public void CheckLastHitter(TDSPlayer character)
+        public void CheckLastHitter(TDSPlayer character, out TDSPlayer killer)
         {
+            killer = null;
             if (character.LastHitter != null)
             {
                 TDSPlayer lastHitterCharacter = character.LastHitter;
@@ -105,6 +106,7 @@ namespace TDS_Server.Instance
                             ++lastHitterCharacter.CurrentRoundStats.Kills;
                             NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
                             AddToKillingSpree(lastHitterCharacter);
+                            killer = lastHitterCharacter;
                         }
                 }
                 character.LastHitter = null;

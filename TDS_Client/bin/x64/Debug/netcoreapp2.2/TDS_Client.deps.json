@@ -9,6 +9,7 @@
       "TDS_Client/1.0.0": {
         "dependencies": {
           "TDS_Common": "1.0.0",
+          "Newtonsoft.Json": "12.0.0.0",
           "rage-sharp": "1.0.0.0"
         },
         "runtime": {
@@ -16,8 +17,20 @@
         }
       },
       "TDS_Common/1.0.0": {
+        "dependencies": {
+          "NeoSmart.Hashing": "0.1.0.0",
+          "xxHash": "0.3.0.0"
+        },
         "runtime": {
           "TDS_Common.dll": {}
+        }
+      },
+      "Newtonsoft.Json/12.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.1.22727"
+          }
         }
       },
       "rage-sharp/1.0.0.0": {
@@ -25,6 +38,22 @@
           "rage-sharp.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "NeoSmart.Hashing.Reference/0.1.0.0": {
+        "runtime": {
+          "NeoSmart.Hashing.dll": {
+            "assemblyVersion": "0.1.0.0",
+            "fileVersion": "0.1.0.0"
+          }
+        }
+      },
+      "xxHash.Reference/0.3.0.0": {
+        "runtime": {
+          "xxHash.dll": {
+            "assemblyVersion": "0.3.0.0",
+            "fileVersion": "0.3.0.0"
           }
         }
       },
@@ -125,30 +154,6 @@
             "locale": "zh-Hant"
           }
         }
-      },
-      "NeoSmart.Hashing/0.1.0.0": {
-        "runtime": {
-          "NeoSmart.Hashing.dll": {
-            "assemblyVersion": "0.1.0.0",
-            "fileVersion": "0.1.0.0"
-          }
-        }
-      },
-      "xxHash/0.3.0.0": {
-        "runtime": {
-          "xxHash.dll": {
-            "assemblyVersion": "0.3.0.0",
-            "fileVersion": "0.3.0.0"
-          }
-        }
-      },
-      "Newtonsoft.Json/12.0.0.0": {
-        "runtime": {
-          "Newtonsoft.Json.dll": {
-            "assemblyVersion": "12.0.0.0",
-            "fileVersion": "12.0.1.22727"
-          }
-        }
       }
     }
   },
@@ -163,7 +168,22 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Newtonsoft.Json/12.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
     "rage-sharp/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NeoSmart.Hashing.Reference/0.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "xxHash.Reference/0.3.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -174,21 +194,6 @@
       "sha512": ""
     },
     "Microsoft.CodeAnalysis.CSharp/2.10.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "NeoSmart.Hashing/0.1.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "xxHash/0.3.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Newtonsoft.Json/12.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

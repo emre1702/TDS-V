@@ -9,6 +9,8 @@ namespace TDS_Server.Instance.Lobby
     using TDS_Server.Manager.Utility;
     using TDS_Common.Instance.Utility;
     using TDS_Common.Default;
+    using TDS_Common.Enum;
+    using Newtonsoft.Json;
 
     partial class Arena
     {
@@ -63,7 +65,7 @@ namespace TDS_Server.Instance.Lobby
                     BombToHand(character);
                 else
                     BombToBack(character);
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, currentMap.BombPlantPlaces);
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, JsonConvert.SerializeObject(currentMap.BombPlantPlaces));
             }
         }
 

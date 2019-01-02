@@ -1,17 +1,22 @@
 using GTANetworkAPI;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Lobby {
+namespace TDS_Server.Instance.Lobby
+{
 
-	partial class Arena {
+    partial class Arena
+    {
 
         private MapDto currentMap;
         private List<MapDto> maps;
         private List<Blip> mapBlips = new List<Blip>();
         private int[] spawnCounter;
+        private string mapsJson;
 
         private MapDto GetNextMap()
         {
@@ -55,13 +60,13 @@ namespace TDS_Server.Instance.Lobby {
         private PositionRotationDto GetMapRandomSpawnData(Teams team)
         {
             int teamindex = (int)team.Index;
-            int index = ++spawnCounter[teamindex-1];
-            if (index >= currentMap.TeamSpawns[teamindex-1].Count)
+            int index = ++spawnCounter[teamindex - 1];
+            if (index >= currentMap.TeamSpawns[teamindex - 1].Count)
             {
                 index = 0;
-                spawnCounter[teamindex-1] = 0;
+                spawnCounter[teamindex - 1] = 0;
             }
-            return currentMap.TeamSpawns[teamindex-1][index];
+            return currentMap.TeamSpawns[teamindex - 1][index];
         }
 
         private void DeleteMapBlips()
@@ -73,21 +78,10 @@ namespace TDS_Server.Instance.Lobby {
             mapBlips = new List<Blip>();
         }
 
-        /*private static readonly Dictionary<uint, Lobby> sDimensionsUsed = new Dictionary<uint, Lobby> ();
-		
-        private string mapsJson;      
-
-		private readonly Dictionary<int, uint> spawnCounter = new Dictionary<int, uint> ();
-		
-		
-
-
-		public void SetMapList ( List<Map> themaps, List<MapSync> themapssync ) {
+        public void SetMapList(List<MapDto> themaps, string syncjson = null)
+        {
             maps = themaps;
-            mapsJson = JsonConvert.SerializeObject ( themapssync );
-		}
-
-		*/
+            mapsJson = syncjson != null ? syncjson : JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());
+        }
     }
-
 }

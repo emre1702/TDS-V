@@ -13,7 +13,7 @@ namespace TDS_Server.Instance.Lobby
             SpectateablePlayers[character.Team.Index].Remove(character);
         }
 
-        private void KillPlayer(Client player, string reason)
+        public void KillPlayer(Client player, string reason)
         {
             player.Kill();
             player.SendChatMessage(reason);

@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
 {
     static class Choice
     {
-        private static HtmlWindow browser;
+        public static HtmlWindow Browser;
 
         public static void JoinLobby(int index, int teamindex)
         {
@@ -18,22 +18,22 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Start()
         {
-            browser = new HtmlWindow("package://TDS-V/window/choice/index.html");
-            Cursor.Visible = true;
+            Browser = new HtmlWindow(Constants.LobbyChoiceBrowserPath);
+            CursorManager.Visible = true;
         }
 
         public static void Stop()
         {
-            if (browser == null)
+            if (Browser == null)
                 return;
-            browser.Destroy();
-            browser = null;
-            Cursor.Visible = false;
+            Browser.Destroy();
+            Browser = null;
+            CursorManager.Visible = false;
         }
 
         public static void SyncLanguageTexts()
         {
-            browser.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");
+            Browser.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");
         }
     }
 }

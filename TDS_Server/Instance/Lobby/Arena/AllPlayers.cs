@@ -1,13 +1,10 @@
 using GTANetworkAPI;
-using System.Collections.Generic;
-using TDS_Server.Default;
-using TDS_Server.Enum;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using System.Linq;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
+using Newtonsoft.Json;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -32,11 +29,11 @@ namespace TDS_Server.Instance.Lobby
                 uint damagereward = 0;
                 
                 if (LobbyEntity.MoneyPerKill.HasValue)
-                    killreward = character.CurrentRoundStats.Kills * LobbyEntity.MoneyPerKill.Value;
+                    killreward = (uint)(character.CurrentRoundStats.Kills * LobbyEntity.MoneyPerKill.Value);
                 if (LobbyEntity.MoneyPerAssist.HasValue)
-                    assistreward = character.CurrentRoundStats.Assists * LobbyEntity.MoneyPerAssist.Value;
+                    assistreward = (uint)(character.CurrentRoundStats.Assists * LobbyEntity.MoneyPerAssist.Value);
                 if (LobbyEntity.MoneyPerDamage.HasValue)
-                    damagereward = character.CurrentRoundStats.Damage * LobbyEntity.MoneyPerDamage.Value;
+                    damagereward = (uint)(character.CurrentRoundStats.Damage * LobbyEntity.MoneyPerDamage.Value);
 
                 character.GiveMoney(killreward + assistreward + damagereward);
                 NAPI.Chat.SendChatMessageToPlayer(character.Client, Utils.GetReplaced(character.Language.ROUND_REWARD_INFO,
@@ -66,7 +63,7 @@ namespace TDS_Server.Instance.Lobby
         private void SendPlayerAmountInFightInfo(Client player)
         {
             SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Select(t => t.AmountPlayers).ToArray();
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, amounts);
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonConvert.SerializeObject(amounts));
         }
     }
 }

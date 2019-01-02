@@ -12,7 +12,8 @@ using TDS_Server.Manager.Utility;
 namespace TDS_Server.Manager.Maps
 {
 
-    static partial class Maps
+#warning Add map creator
+    static partial class MapsManager
     {
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {

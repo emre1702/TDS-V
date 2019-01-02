@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.Lobby
     partial class FightLobby
     {
 
-        private void DeathInfoSync(Client player, uint teamID, Client killer, uint weapon)
+        protected void DeathInfoSync(Client player, uint teamindex, Client killer, uint weapon)
         {
             Dictionary<ILanguage, string> killstr;
             if (killer != null)
@@ -33,7 +33,7 @@ namespace TDS_Server.Instance.Lobby
 
             FuncIterateAllPlayers((targetcharacter, targetteam) =>
             {
-                targetcharacter.Client.TriggerEvent(DToClientEvent.Death, player, teamID, killstr[targetcharacter.Language]);
+                targetcharacter.Client.TriggerEvent(DToClientEvent.Death, player, teamindex, killstr[targetcharacter.Language]);
             });
         }
 

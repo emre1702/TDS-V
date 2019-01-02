@@ -31,7 +31,7 @@ namespace TDS_Client.Instance.Draw.Dx
             frontRect = new DxRectangle(x+1, y+1, 0, 0, progressColor, alignment, relativePos);
         }
 
-        protected override void Draw(int tick)
+        protected override void Draw()
         {
             if (filling)
                 frontRect.SetWidth(progress * width);

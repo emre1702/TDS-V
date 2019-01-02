@@ -1,12 +1,13 @@
-﻿using System;
+﻿using NeoSmart.Hashing.XXHash;
+using System.Text;
 
 namespace TDS_Common.Manager.Utility
 {
     public class CommonUtils
     {
-        public static string MSToMinutesSeconds(int ms)
+        public static string HashPWClient(string pw)
         {
-            return TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss");
+            return XXHash64.Hash(Encoding.Default.GetBytes(pw)).ToString();
         }
     }
 }

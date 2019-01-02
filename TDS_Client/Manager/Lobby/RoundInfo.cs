@@ -11,7 +11,7 @@ namespace TDS_Client.Manager.Lobby
 {
     static class RoundInfo
     {
-        private static int startedTick;
+        private static ulong startedTick;
 
         private static readonly DxTextRectangle timeDisplay = new DxTextRectangle("00:00", 0.5f, 0.025f, 0.06f, 0.05f, 
                             Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignment: Alignment.Center, activated: false);
@@ -19,9 +19,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static bool RefreshOnTick { get; set; }
 
-        public static void Start(int alreadywastedms)
+        public static void Start(ulong alreadywastedms)
         {
-            startedTick = Environment.TickCount - alreadywastedms;
+            startedTick = TimerManager.ElapsedTicks - alreadywastedms;
 
             timeDisplay.Activated = true;
             RefreshOnTick = true;
@@ -66,8 +66,8 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            int timems = (int) Settings.RoundTime*1000 - (Environment.TickCount - startedTick);
-            timeDisplay.SetText(CommonUtils.MSToMinutesSeconds(timems));
+            ulong timems = Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick);
+            timeDisplay.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
         public static void RefreshTeamText(int index)
@@ -76,9 +76,9 @@ namespace TDS_Client.Manager.Lobby
             teamDisplays[index].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
-        public static void SetRoundTimeLeft(int lefttimems)
+        public static void SetRoundTimeLeft(ulong lefttimems)
         {
-            startedTick = Environment.TickCount - (int)(Settings.RoundTime * 1000 - lefttimems);
+            startedTick = TimerManager.ElapsedTicks - (Settings.RoundTime * 1000 - lefttimems);
         }
 
         public static void OnePlayerDied(int teamindex, string killinfostr)

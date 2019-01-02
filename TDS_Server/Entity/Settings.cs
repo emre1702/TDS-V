@@ -13,5 +13,8 @@ namespace TDS_Server.Entity
         public bool ToChatOnNonExistentCommand { get; set; }
         public int DistanceToSpotToPlant { get; set; }
         public int DistanceToSpotToDefuse { get; set; }
+        public int SavePlayerDataCooldownMinutes { get; set; }
+        public int SaveLogsCooldownMinutes { get; set; }
+        public int SaveSeasonsCooldownMinutes { get; set; }
     }
 }

@@ -10,15 +10,15 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        protected readonly Teams[] Teams;
+        protected Teams[] Teams { get; set; }
         protected readonly List<TDSPlayer>[] TeamPlayers;
-        protected readonly SyncedTeamDataDto[] SyncedTeamDatas;
+        protected SyncedTeamDataDto[] SyncedTeamDatas { get; set; }
 
         protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {
             TeamPlayers[team.Index].Add(character);
             character.Client.SetSkin(team.SkinHash);
-            if (character.Team.Id != team.Id)
+            if (character.Team == null || character.Team.Id != team.Id)
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Index);
             character.Team = team;
         }
@@ -55,7 +55,7 @@ namespace TDS_Server.Instance.Lobby
         protected void MixTeams()
         {
             ClearTeamPlayersLists();
-            foreach (TDSPlayer character in players)
+            foreach (TDSPlayer character in Players)
             {
                 if (character.Team.IsSpectatorTeam)
                     TeamPlayers[0].Add(character);  // because he is already in that team

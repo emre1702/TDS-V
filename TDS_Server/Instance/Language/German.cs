@@ -11,6 +11,8 @@ namespace TDS_Server.Instance.Language
         public override string BOMB_PLANTED => "Bombe wurde platziert.";
 
         public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
+        public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben.";
+        public override string COMMAND_USED_WRONG => "Der Befehl wurde falsch benutzt.";
         public override string COMMITED_SUICIDE => "Du hast Selbstmord begangen.";
         public override string CONNECTING => "Verbindet ...";
 

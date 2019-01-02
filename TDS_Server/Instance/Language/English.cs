@@ -11,6 +11,8 @@ namespace TDS_Server.Instance.Language
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
+        public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too less arguments for this command.";
+        public virtual string COMMAND_USED_WRONG => "The command usage was wrong.";
         public virtual string COMMITED_SUICIDE => "You commited suicide.";
         public virtual string CONNECTING => "connecting ...";
 

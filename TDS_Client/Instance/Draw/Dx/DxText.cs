@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
     class DxText : Dx
     {
-        private string text;
+        public string Text;
         private Point position;
         private float scale;
         private Color color;
@@ -17,16 +18,16 @@ namespace TDS_Client.Instance.Draw.Dx
         private Alignment alignment;
 
         private int? endAlpha;
-        private int endAlphaStartTick;
-        private int endAlphaEndTick;
+        private ulong endAlphaStartTick;
+        private ulong endAlphaEndTick;
 
         private float? endScale;
-        private int endScaleStartTick;
-        private int endScaleEndTick;
+        private ulong endScaleStartTick;
+        private ulong endScaleEndTick;
 
         public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon, Alignment alignment = Alignment.Left, bool relative = true) : base()
         {
-            this.text = text;
+            this.Text = text;
             position = new Point(
                 GetAbsoluteX(x, relative),
                 GetAbsoluteY(y, relative)
@@ -41,17 +42,17 @@ namespace TDS_Client.Instance.Draw.Dx
             this.alignment = alignment;
         }
 
-        public void BlendAlpha(int endAlpha, int msToEnd)
+        public void BlendAlpha(int endAlpha, ulong msToEnd)
         {
             this.endAlpha = endAlpha;
-            endAlphaStartTick = Environment.TickCount;
+            endAlphaStartTick = TimerManager.ElapsedTicks;
             endAlphaEndTick = endAlphaStartTick + msToEnd;
         }
 
-        public void BlendScale(float endScale, int msToEnd)
+        public void BlendScale(float endScale, ulong msToEnd)
         {
             this.endScale = endScale;
-            endScaleStartTick = Environment.TickCount;
+            endScaleStartTick = TimerManager.ElapsedTicks;
             endScaleEndTick = endScaleStartTick + msToEnd;
         }
 
@@ -71,8 +72,8 @@ namespace TDS_Client.Instance.Draw.Dx
         public void SetText(string text)
         {
             if (alignment == Alignment.Right)
-                position.X += GetStringWidth(this.text, scale, font);
-            this.text = text;
+                position.X += GetStringWidth(this.Text, scale, font);
+            this.Text = text;
             if (alignment == Alignment.Right)
                 position.X -= GetStringWidth(text, scale, font);
         }
@@ -82,16 +83,16 @@ namespace TDS_Client.Instance.Draw.Dx
             this.scale = scale;
         }
 
-        protected override void Draw(int currentTick)
+        protected override void Draw()
         {
             int alpha = color.A;
             if (endAlpha.HasValue)
-                alpha = GetBlendValue(currentTick, color.A, endAlpha.Value, endAlphaStartTick, endAlphaEndTick);
+                alpha = GetBlendValue(TimerManager.ElapsedTicks, color.A, endAlpha.Value, endAlphaStartTick, endAlphaEndTick);
 
             float scale = this.scale;
             if (endScale.HasValue)
             {
-                scale = GetBlendValue(currentTick, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
+                scale = GetBlendValue(TimerManager.ElapsedTicks, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
                 if (endScale.Value == scale)
                 {
                     this.scale = endScale.Value;
@@ -99,7 +100,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 }
             }
                 
-            UIText.Draw(text, position, scale, color, font, alignment == Alignment.Center);
+            UIText.Draw(Text, position, scale, color, font, alignment == Alignment.Center);
         }
 
         public override EDxType GetDxType()

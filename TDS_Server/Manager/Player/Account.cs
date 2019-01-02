@@ -13,6 +13,7 @@
     using TDS_Server.Manager.Utility;
     using TDS_Server.Default;
     using TDS_Common.Default;
+    using TDS_Common.Enum;
 
     class Account : Script
     {
@@ -56,7 +57,7 @@
             //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   
         }
 
-        [RemoteEvent("onPlayerTryRegister")]
+        [RemoteEvent(DToServerEvent.TryRegister)]
         public static async void OnPlayerTryRegisterEvent(Client player, string password, string email)
         {
             if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
@@ -72,7 +73,7 @@
             OfflineMessagesManager.CheckOfflineMessages(player);
         }
 
-        [RemoteEvent("onPlayerTryLogin")]
+        [RemoteEvent(DToServerEvent.TryLogin)]
         public static async void OnPlayerTryLoginEvent(Client player, string password)
         {
             uint id = await Player.GetPlayerIDByScname(player.SocialClubName);
@@ -84,7 +85,7 @@
                 NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().ACCOUNT_DOESNT_EXIST);
         }
 
-        [RemoteEvent("onPlayerLanguageChange")]
+        [RemoteEvent(DToServerEvent.LanguageChange)]
         public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
             if (Enum.IsDefined(typeof(ELanguage), language))

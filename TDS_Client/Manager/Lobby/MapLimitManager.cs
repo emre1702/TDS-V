@@ -13,6 +13,11 @@ namespace TDS_Client.Manager.Lobby
             currentMapLimit = new MapLimit(edges);
         }
 
+        public static void Start()
+        {
+            currentMapLimit?.Start();
+        }
+
         public static void Stop()
         {
             currentMapLimit?.Remove();

@@ -2,6 +2,8 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "@sindresorhus/is": {
       "integrity": "sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==",
       "resolved": "https://registry.npmjs.org/@sindresorhus/is/-/is-0.7.0.tgz",
@@ -426,39 +428,6 @@
         "js-tokens": "3.0.2"
       },
       "resolved": "https://registry.npmjs.org/babel-code-frame/-/babel-code-frame-6.26.0.tgz",
-      "version": "6.26.0"
-    },
-    "babel-core": {
-      "dependencies": {
-        "babylon": {
-          "integrity": "sha512-q/UEjfGJ2Cm3oKV71DJz9d25TPnq5rhBVL2Q4fA5wcC3jcrdn7+SssEybFIxwAvvP+YCsCYNKughoF33GxgycQ==",
-          "resolved": "https://registry.npmjs.org/babylon/-/babylon-6.18.0.tgz",
-          "version": "6.18.0"
-        }
-      },
-      "integrity": "sha1-rzL3izGm/O8RnIew/Y2XU/A6C7g=",
-      "requires": {
-        "babel-code-frame": "6.26.0",
-        "babel-generator": "6.26.1",
-        "babel-helpers": "6.24.1",
-        "babel-messages": "6.23.0",
-        "babel-register": "6.26.0",
-        "babel-runtime": "6.26.0",
-        "babel-template": "6.26.0",
-        "babel-traverse": "6.26.0",
-        "babel-types": "6.26.0",
-        "babylon": "6.18.0",
-        "convert-source-map": "1.5.1",
-        "debug": "2.6.9",
-        "json5": "0.5.1",
-        "lodash": "4.17.5",
-        "minimatch": "3.0.4",
-        "path-is-absolute": "1.0.1",
-        "private": "0.1.8",
-        "slash": "1.0.0",
-        "source-map": "0.5.7"
-      },
-      "resolved": "https://registry.npmjs.org/babel-core/-/babel-core-6.26.0.tgz",
       "version": "6.26.0"
     },
     "babel-generator": {
@@ -2374,6 +2343,7 @@
       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-4.0.0.tgz",
       "version": "4.0.0"
     },
+    "env": "0.0.2",
     "errno": {
       "integrity": "sha512-MfrRBDWzIWifgq6tJj60gkAwtLNb6sQPlcFrSOflcP1aFmmruKQ2wRnze/8V6kgyz7H3FF8Npzv78mZ7XLLflg==",
       "requires": {
@@ -3827,6 +3797,7 @@
       "resolved": "https://registry.npmjs.org/html-comment-regex/-/html-comment-regex-1.1.1.tgz",
       "version": "1.1.1"
     },
+    "html-minifier": "^3.5.21",
     "http-cache-semantics": {
       "integrity": "sha512-5ai2iksyV8ZXmnZhHH4rWPoxxistEexSi5936zIQ1bnNTW5VnA85B6P/VpXiRM017IgRvb2kKo1a//y+0wSp3w==",
       "resolved": "https://registry.npmjs.org/http-cache-semantics/-/http-cache-semantics-3.8.1.tgz",
@@ -7478,6 +7449,7 @@
       "resolved": "https://registry.npmjs.org/watchpack/-/watchpack-1.5.0.tgz",
       "version": "1.5.0"
     },
+    "web-resource-inliner": "^4.2.1",
     "webpack": {
       "dependencies": {
         "arr-diff": {

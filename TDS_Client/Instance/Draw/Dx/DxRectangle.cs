@@ -63,7 +63,7 @@ namespace TDS_Client.Instance.Draw.Dx
             ypos += height / 2;
         }
 
-        protected override void Draw(int tick)
+        protected override void Draw()
         {
             Graphics.DrawRect(xpos, ypos, sizex, sizey, color.R, color.G, color.B, color.A, 0);
         }

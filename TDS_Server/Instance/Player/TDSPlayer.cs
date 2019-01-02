@@ -3,14 +3,15 @@ using GTANetworkMethods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Default;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
-using TDS_Server.Enum;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
+using TDS_Common.Enum;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Instance.Player
 {
@@ -22,6 +23,8 @@ namespace TDS_Server.Instance.Player
             set
             {
                 fEntity = value;
+                if (fLangEnumBeforeLogin != ELanguage.English)
+                    fEntity.Playersettings.Language = (byte)fLangEnumBeforeLogin;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.Playerstats.Money);
             }
         }
@@ -58,8 +61,20 @@ namespace TDS_Server.Instance.Player
         }
         public ELanguage LanguageEnum
         {
-            get => (ELanguage)Entity.Playersettings.Language;
-            set => Entity.Playersettings.Language = (byte) value;
+            get
+            {
+                if (Entity == null || Entity.Playersettings == null)
+                    return fLangEnumBeforeLogin;
+                return (ELanguage)Entity.Playersettings.Language;
+            }
+            set
+            {
+                if (Entity == null || Entity.Playersettings == null)
+                    fLangEnumBeforeLogin = value;
+                else
+                    Entity.Playersettings.Language = (byte)value;
+            }
+                
         }
         public AdminLevel AdminLevel
         {
@@ -81,9 +96,17 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer LastHitter { get; set; }
         public TDSPlayer Spectates { get; set; }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
+        public bool LoggedIn => Entity != null && Entity.Playerstats != null ? Entity.Playerstats.LoggedIn : false;
+        public uint PlayMinutes
+        {
+            get => Entity.Playerstats.PlayTime;
+            set => Entity.Playerstats.PlayTime = value;
+        }
 
         private Players fEntity { get; set; }
         private Teams fTeam { get; set; }
+        private int LastSaveTick;
+        private ELanguage fLangEnumBeforeLogin = ELanguage.English;
 
 
         public TDSPlayer(Client client)
@@ -125,7 +148,7 @@ namespace TDS_Server.Instance.Player
                 Money += money;
             }
             else
-                Error.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
+                ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
                                 Environment.StackTrace, Client);
         }
 
@@ -172,6 +195,24 @@ namespace TDS_Server.Instance.Player
                 Client.Armor = Client.Armor + healtharmor <= 100 ? Client.Armor + healtharmor : 100;
             }
             #endregion Armor
+        }
+
+        public Task<int> SaveData(TDSNewContext dbcontext)
+        {
+            if (Entity == null || !Entity.Playerstats.LoggedIn)
+                return null;
+
+            dbcontext.Players.Attach(Entity).State = EntityState.Modified;
+#warning Check if this also updates PlayerSettings etc.
+            return dbcontext.SaveChangesAsync();
+        }
+
+        public Task<int> CheckSaveData(TDSNewContext dbcontext)
+        {
+            if (Environment.TickCount - LastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
+                return null;
+            LastSaveTick = Environment.TickCount;
+            return SaveData(dbcontext);
         }
     }
 }

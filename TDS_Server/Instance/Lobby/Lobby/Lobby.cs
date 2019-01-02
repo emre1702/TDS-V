@@ -13,9 +13,12 @@ namespace TDS_Server.Instance.Lobby
 
         protected readonly Lobbies LobbyEntity;
 
-        public uint Id { get => LobbyEntity.Id; }
-        public bool IsOfficial { get => LobbyEntity.IsOfficial; }
-        public int StartTotalHP { get => LobbyEntity.StartArmor + LobbyEntity.StartHealth; }
+        public uint Id => LobbyEntity.Id;
+        public string Name => LobbyEntity.Name;
+        public bool IsOfficial => LobbyEntity.IsOfficial;
+        public string CreatorName => LobbyEntity.OwnerNavigation.Name;
+        public string OwnerName => CreatorName;
+        public int StartTotalHP => LobbyEntity.StartArmor + LobbyEntity.StartHealth;
 
         protected readonly uint Dimension;
         protected readonly Vector3 SpawnPoint;
@@ -38,10 +41,18 @@ namespace TDS_Server.Instance.Lobby
 
             Teams = new Teams[entity.Teams.Count];
             TeamPlayers = new List<TDSPlayer>[entity.Teams.Count];
+            SyncedTeamDatas = new SyncedTeamDataDto[entity.Teams.Count];
             foreach (Teams team in entity.Teams)
             {
                 Teams[team.Index] = team;
                 TeamPlayers[team.Index] = new List<TDSPlayer>();
+                SyncedTeamDatas[team.Index] = new SyncedTeamDataDto()
+                {
+                    Index = (int)team.Index,
+                    Name = team.Name,
+                    Color = System.Drawing.Color.FromArgb(team.ColorR, team.ColorG, team.ColorB),
+                    AmountPlayers = new SyncedTeamPlayerAmountDto()
+                };
             }
 
             syncedLobbySettings = new SyncedLobbySettingsDto()
@@ -54,6 +65,7 @@ namespace TDS_Server.Instance.Lobby
                 RoundTime = entity.RoundTime,
                 BombDetonateTimeMs = entity.BombDetonateTimeMs,
                 DieAfterOutsideMapLimitTime = entity.DieAfterOutsideMapLimitTime,
+                InLobbyWithMaps = this is Arena
             };
         }
 
@@ -67,7 +79,7 @@ namespace TDS_Server.Instance.Lobby
             LobbiesByIndex.Remove(LobbyEntity.Id);
             dimensionsUsed.Remove(Dimension);
 
-            foreach (TDSPlayer character in players)
+            foreach (TDSPlayer character in Players)
             {
                 RemovePlayer(character);
             }
@@ -97,7 +109,7 @@ namespace TDS_Server.Instance.Lobby
 
         protected bool IsEmpty()
         {
-            return players.Count == 0;
+            return Players.Count == 0;
         }
     }
 }

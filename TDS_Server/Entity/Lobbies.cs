@@ -7,6 +7,7 @@ namespace TDS_Server.Entity
     {
         public Lobbies()
         {
+            LobbyMaps = new HashSet<LobbyMaps>();
             LobbyWeapons = new HashSet<LobbyWeapons>();
             Playerbans = new HashSet<Playerbans>();
             Playerlobbystats = new HashSet<Playerlobbystats>();
@@ -29,9 +30,9 @@ namespace TDS_Server.Entity
         public bool IsTemporary { get; set; }
         public bool IsOfficial { get; set; }
         public uint? SpawnAgainAfterDeathMs { get; set; }
-        public uint? MoneyPerKill { get; set; }
-        public uint? MoneyPerAssist { get; set; }
-        public uint? MoneyPerDamage { get; set; }
+        public float? MoneyPerKill { get; set; }
+        public float? MoneyPerAssist { get; set; }
+        public float? MoneyPerDamage { get; set; }
         public uint? RoundTime { get; set; }
         public uint? CountdownTime { get; set; }
         public uint? BombDetonateTimeMs { get; set; }
@@ -42,6 +43,7 @@ namespace TDS_Server.Entity
         public DateTime? CreateTimestamp { get; set; }
 
         public virtual Players OwnerNavigation { get; set; }
+        public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }
         public virtual ICollection<Playerbans> Playerbans { get; set; }
         public virtual ICollection<Playerlobbystats> Playerlobbystats { get; set; }

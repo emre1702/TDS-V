@@ -55,3 +55,8 @@ B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\Debug\netcoreapp2.2\TDS_Server.csproj.CopyComplete
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\Debug\netcoreapp2.2\TDS_Server.dll
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\Debug\netcoreapp2.2\TDS_Server.pdb
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\Microsoft.CodeAnalysis.dll
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\Microsoft.CodeAnalysis.CSharp.dll
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\Microsoft.CodeAnalysis.VisualBasic.dll
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\System.Text.Encoding.CodePages.dll
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp2.2\Bootstrapper.pdb

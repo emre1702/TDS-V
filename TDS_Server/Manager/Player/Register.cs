@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
+using TDS_Common.Enum;
 using TDS_Server.Entity;
+using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Player
@@ -17,20 +19,19 @@ namespace TDS_Server.Manager.Player
                     Name = player.Name,
                     Scname = player.SocialClubName,
 #warning TODO: Check if password is already hashed to SHA512
-                    Password = Utils.ToSHA512(password),
+                    Password = Utils.HashPWServer(password),
 #warning TODO: Make that nullable at client
                     Email = email,
 
                     IsVip = false
                 };
-#warning TODO: Check if adding them to dbplayer is enough 
-                dbplayer.Playerlobbystats.Add(new Playerlobbystats());
                 dbplayer.Playersettings = new Playersettings {
                     Id = dbplayer.Id,
 #warning TODO: Check if we need that with Id = dbplayer.Id
                     AllowDataTransfer = false,
 #warning TODO: Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
-                    HitsoundOn = true
+                    HitsoundOn = true,
+                    Language = (byte)ELanguage.English
                 };
                 dbplayer.Playerstats = new Playerstats
 #warning TODO: Do we need Id = ... here?
@@ -40,7 +41,7 @@ namespace TDS_Server.Manager.Player
                 context.Players.Add(dbplayer);
                 await context.SaveChangesAsync();
 
-                Logs.Rest.Log(Enum.ELogType.Register, player, true);
+                RestLogsManager.Log(Enum.ELogType.Register, player, true);
 
                 Login.LoginPlayer(player, dbplayer.Id, password);
             }

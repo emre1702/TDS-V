@@ -6,15 +6,17 @@ namespace TDS_Client.Manager.Utility
 {
     class TimerManager : Script
     {
+        public static ulong ElapsedTicks;
 
         public TimerManager()
         {
-            TDSTimer.Init(RAGE.Chat.Output);
+            TDSTimer.Init(RAGE.Chat.Output, () => ElapsedTicks);
             Tick += OnUpdateFunc;
         }
 
         public static void OnUpdateFunc(List<TickNametagData> _)
         {
+            ++ElapsedTicks;
             TDSTimer.OnUpdateFunc();
         }
     }

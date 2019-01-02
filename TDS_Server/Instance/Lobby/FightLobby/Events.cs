@@ -23,7 +23,7 @@ namespace TDS_Server.Instance.Lobby
             // was alive //
             if (character.Lifes > 0)
             {
-                DeathInfoSync(character.Client, character.Team.Id, killer, weapon);
+                DeathInfoSync(character.Client, character.Team.Index, killer, weapon);
 
                 if (--character.Lifes == 0 && spawnPlayer)
                 {

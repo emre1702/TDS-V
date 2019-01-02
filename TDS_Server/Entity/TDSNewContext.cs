@@ -23,12 +23,14 @@ namespace TDS_Server.Entity
         public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
+        public virtual DbSet<LobbyMaps> LobbyMaps { get; set; }
         public virtual DbSet<LobbyWeapons> LobbyWeapons { get; set; }
         public virtual DbSet<LogsAdmin> LogsAdmin { get; set; }
         public virtual DbSet<LogsChat> LogsChat { get; set; }
         public virtual DbSet<LogsError> LogsError { get; set; }
         public virtual DbSet<LogsRest> LogsRest { get; set; }
         public virtual DbSet<LogsTypes> LogsTypes { get; set; }
+        public virtual DbSet<Maps> Maps { get; set; }
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<Playerbans> Playerbans { get; set; }
         public virtual DbSet<Playerlobbystats> Playerlobbystats { get; set; }
@@ -45,7 +47,7 @@ namespace TDS_Server.Entity
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo");
+                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo;TreatTinyAsBoolean=false");
             }
         }
 
@@ -216,7 +218,9 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.CountdownTime).HasDefaultValueSql("'5'");
 
-                entity.Property(e => e.CreateTimestamp).HasColumnType("timestamp");
+                entity.Property(e => e.CreateTimestamp)
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
 
                 entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("'0'");
 
@@ -261,6 +265,33 @@ namespace TDS_Server.Entity
                     .HasConstraintName("FK_lobbies_players");
             });
 
+            modelBuilder.Entity<LobbyMaps>(entity =>
+            {
+                entity.HasKey(e => new { e.LobbyId, e.MapId })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("lobby_maps");
+
+                entity.HasIndex(e => e.MapId)
+                    .HasName("FK_lobbies_maps_maps");
+
+                entity.Property(e => e.LobbyId).HasColumnName("LobbyID");
+
+                entity.Property(e => e.MapId)
+                    .HasColumnName("MapID")
+                    .HasColumnType("int(10)");
+
+                entity.HasOne(d => d.Lobby)
+                    .WithMany(p => p.LobbyMaps)
+                    .HasForeignKey(d => d.LobbyId)
+                    .HasConstraintName("FK_lobbies_maps_lobbies");
+
+                entity.HasOne(d => d.Map)
+                    .WithMany(p => p.LobbyMaps)
+                    .HasForeignKey(d => d.MapId)
+                    .HasConstraintName("FK_lobbies_maps_maps");
+            });
+
             modelBuilder.Entity<LobbyWeapons>(entity =>
             {
                 entity.HasKey(e => new { e.Lobby, e.Hash })
@@ -291,7 +322,7 @@ namespace TDS_Server.Entity
                     .HasColumnName("AsVIP")
                     .HasColumnType("bit(1)");
 
-                entity.Property(e => e.Lobby).HasColumnType("int(10)");
+                entity.Property(e => e.Reason).HasColumnType("varchar(1000)");
 
                 entity.Property(e => e.Timestamp)
                     .HasColumnType("timestamp")
@@ -325,7 +356,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Info)
                     .IsRequired()
-                    .HasColumnType("varchar(200)");
+                    .HasColumnType("text");
 
                 entity.Property(e => e.StackTrace).HasColumnType("text");
 
@@ -363,6 +394,37 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
+            });
+
+            modelBuilder.Entity<Maps>(entity =>
+            {
+                entity.ToTable("maps");
+
+                entity.HasIndex(e => e.CreatorId)
+                    .HasName("FK_maps_players");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("Name");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(10)");
+
+                entity.Property(e => e.CreateTimestamp)
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
+
+                entity.Property(e => e.CreatorId).HasColumnName("CreatorID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Maps)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK_maps_players");
             });
 
             modelBuilder.Entity<Offlinemessages>(entity =>
@@ -595,6 +657,8 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Money).HasDefaultValueSql("'0'");
 
+                entity.Property(e => e.PlayTime).HasDefaultValueSql("'0'");
+
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.Playerstats)
                     .HasForeignKey<Playerstats>(d => d.Id)
@@ -624,6 +688,18 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.NewMapsPath)
                     .IsRequired()
                     .HasColumnType("varchar(300)");
+
+                entity.Property(e => e.SaveLogsCooldownMinutes)
+                    .HasColumnType("int(10)")
+                    .HasDefaultValueSql("'1'");
+
+                entity.Property(e => e.SavePlayerDataCooldownMinutes)
+                    .HasColumnType("int(10)")
+                    .HasDefaultValueSql("'20'");
+
+                entity.Property(e => e.SaveSeasonsCooldownMinutes)
+                    .HasColumnType("int(10)")
+                    .HasDefaultValueSql("'30'");
 
                 entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit(1)");
             });

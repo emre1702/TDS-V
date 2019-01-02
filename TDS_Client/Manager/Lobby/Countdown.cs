@@ -48,7 +48,7 @@ namespace TDS_Client.Manager.Lobby
             PlaySound();
         }
 
-        private static void End()
+        public static void End()
         {
             if (text == null)
                 text = new DxText("GO", 0.5f, 0.2f, 2f, Color.White, alignment: Alignment.Center);
@@ -60,7 +60,7 @@ namespace TDS_Client.Manager.Lobby
             countdownTimer = new TDSTimer(Stop, 2000, 1);
         }
 
-        private static void Stop()
+        public static void Stop()
         {
             text?.Remove();
             text = null;

@@ -1,13 +1,14 @@
 ﻿using System;
 using TDS_Client.Default;
 using TDS_Client.Instance.Draw.Scaleform;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw
 {
     class MidsizedMessage
     {
-        private static int initTimeMs;
-        private static int msgDurationMs;
+        private static ulong initTimeMs;
+        private static ulong msgDurationMs;
         private static bool animatedOut;
         private static int msgBgColor;
         private static BasicScaleform fmidsizedScaleform;
@@ -22,22 +23,22 @@ namespace TDS_Client.Manager.Draw
             }
         }
 
-        public static void ShowMidsizedMessage(string title, string message, int time = 5000)
+        public static void ShowMidsizedMessage(string title, string message, ulong time = 5000)
         {
             midsizedScaleform.Call(DScaleformFunction.SHOW_MIDSIZED_MESSAGE, title, message);
             InitCommonSettings(time);
         }
 
-        public static void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, int time = 5000)
+        public static void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, ulong time = 5000)
         {
             midsizedScaleform.Call(DScaleformFunction.SHOW_SHARD_MIDSIZED_MESSAGE, title, message, bgColor, useDarkerShard, condensed);
             InitCommonSettings(time);
             msgBgColor = bgColor;
         }
 
-        private static void InitCommonSettings(int time)
+        private static void InitCommonSettings(ulong time)
         {
-            initTimeMs = Environment.TickCount;
+            initTimeMs = TimerManager.ElapsedTicks;
             msgDurationMs = time;
             animatedOut = false;
         }
@@ -50,7 +51,7 @@ namespace TDS_Client.Manager.Draw
                 return;
 
             fmidsizedScaleform.RenderFullscreen();
-            if (Environment.TickCount - initTimeMs > msgDurationMs)
+            if (TimerManager.ElapsedTicks - initTimeMs > msgDurationMs)
             {
                 if (!animatedOut)
                 {

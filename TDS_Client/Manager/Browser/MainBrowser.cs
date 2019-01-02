@@ -2,8 +2,10 @@
 using RAGE.Ui;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Browser
 {
@@ -12,9 +14,11 @@ namespace TDS_Client.Manager.Browser
         private static HtmlWindow browser;
         private static bool RoundEndReasonShowing;
 
+        public static bool IsChatOpen { get; private set; }
+
         public static void Load()
         {
-            browser = new HtmlWindow("package://TDS-V/window/main/index.html");
+            browser = new HtmlWindow(Constants.MainBrowserPath);
             browser.MarkAsChat();
         }
 
@@ -87,7 +91,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void ToggleCanVoteForMapWithNumpadInBrowser(bool canvote)
         {
-            browser.ExecuteJs($"toggleCanVoteForMapWithNumpad({(canvote ? 1 : 0)});");
+            browser.ExecuteJs($"toggleCanVoteForMapWithNumpad({canvote});");
         }
 
         public static void LoadOrderNamesInBrowser(string ordernamesjson)
@@ -103,27 +107,36 @@ namespace TDS_Client.Manager.Browser
 
         public static void HideRoundEndReason()
         {
-            if (RoundEndReasonShowing)
-            {
-                browser.ExecuteJs("hideRoundEndReason();");
-                RoundEndReasonShowing = false;
-            }
+            if (!RoundEndReasonShowing)
+                return;
+            browser.ExecuteJs("hideRoundEndReason();");
+            RoundEndReasonShowing = false;
         }
 
-        public static void LoadPlayersForChat(List<RAGE.Elements.Player> players)
+        public static void LoadPlayersForChat(List<Player> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
             browser.ExecuteJs($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
         }
 
-        public static void AddPlayerForChat(RAGE.Elements.Player player)
+        public static void AddPlayerForChat(Player player)
         {
             browser.ExecuteJs($"addNameForChat(`{player.Name}`)");
         }
 
-        public static void RemovePlayerForChat(RAGE.Elements.Player player)
+        public static void RemovePlayerForChat(Player player)
         {
             browser.ExecuteJs($"removeNameForChat(`{player.Name}`)");
+        }
+
+        public static void LoadUserName()
+        {
+            browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
+        }
+
+        public static void LoadMoney()
+        {
+            browser.ExecuteJs($"setMoney({AccountData.Money})");
         }
     }
 }

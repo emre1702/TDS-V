@@ -15,7 +15,7 @@ using TDS_Common.Default;
 namespace TDS_Server.Manager.Maps
 {
 
-    static partial class Maps
+    static partial class MapsManager
     {
 
         private static Dictionary<string, uint[]> mapRatingDict = new Dictionary<string, uint[]>();
@@ -41,15 +41,11 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async void SendPlayerHisRatingsAsync(TDSPlayer character)
+        public static void SendPlayerHisRatings(TDSPlayer character)
         {
-            using (var dbcontext = new TDSNewContext())
+            if (character.Entity.Playermapratings.Any())
             {
-                List<Playermapratings> list = await dbcontext.Playermapratings.Where(rating => rating.Id == character.Entity.Id).ToListAsync();
-                if (list.Count > 0)
-                {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(list));
-                }
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.Playermapratings));
             }
         }
 

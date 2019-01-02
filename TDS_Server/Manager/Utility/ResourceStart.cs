@@ -2,6 +2,7 @@
 {
 
     using System;
+    using System.Linq;
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using TDS_Server.Entity;
@@ -24,17 +25,24 @@
             {
                 using (var dbcontext = new TDSNewContext())
                 {
-                    dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                    foreach (var stat in dbcontext.Playerstats.Where(s => s.LoggedIn))
+                    {
+                        stat.LoggedIn = false;
+                    }
+                    dbcontext.SaveChanges();
 
                     await SettingsManager.Load(dbcontext);
                     CommandsManager.LoadCommands(dbcontext);
 
                     NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
 
-                    BansManager.RemoveExpiredBans(dbcontext);
-                    //await Maps.LoadMaps();
-                    await LobbyManager.LoadAllLobbies();
+                    await BansManager.RemoveExpiredBans(dbcontext);
 
+                    using (var dbcontextwithmaps = new TDSNewContext())
+                    {
+                        await MapsManager.LoadMaps(dbcontextwithmaps);
+                        await LobbyManager.LoadAllLobbies(dbcontextwithmaps);
+                    }
 
                     // Gang.LoadGangFromDatabase ();
 

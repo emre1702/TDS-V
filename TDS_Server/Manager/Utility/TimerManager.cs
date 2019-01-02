@@ -1,4 +1,6 @@
 ﻿using GTANetworkAPI;
+using System;
+using TDS.server.manager.utility;
 using TDS_Common.Instance.Utility;
 
 namespace TDS_Server.Manager.Utility
@@ -7,7 +9,8 @@ namespace TDS_Server.Manager.Utility
     {
         public TimerManager()
         {
-            TDSTimer.Init(NAPI.Util.ConsoleOutput);
+            TDSTimer.Init(NAPI.Util.ConsoleOutput, () => (ulong)Environment.TickCount & int.MaxValue);
+            new TDSTimer(MinuteTimer.Execute, 60 * 1000, 0);
         }
 
         [ServerEvent(Event.Update)]

@@ -7,6 +7,7 @@ namespace TDS_Common.Dto
 {
     public class SyncedTeamDataDto
     {
+        public int Index { get; set; }
         public string Name { get; set; }
         public Color Color { get; set; }
         public SyncedTeamPlayerAmountDto AmountPlayers { get; set; }        

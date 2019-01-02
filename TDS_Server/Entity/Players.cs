@@ -8,6 +8,7 @@ namespace TDS_Server.Entity
         public Players()
         {
             Lobbies = new HashSet<Lobbies>();
+            Maps = new HashSet<Maps>();
             OfflinemessagesSource = new HashSet<Offlinemessages>();
             OfflinemessagesTarget = new HashSet<Offlinemessages>();
             PlayerbansAdminNavigation = new HashSet<Playerbans>();
@@ -29,6 +30,7 @@ namespace TDS_Server.Entity
         public virtual Playersettings Playersettings { get; set; }
         public virtual Playerstats Playerstats { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }
+        public virtual ICollection<Maps> Maps { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
         public virtual ICollection<Playerbans> PlayerbansAdminNavigation { get; set; }

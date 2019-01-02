@@ -14,14 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TDS_Common\TDS_Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\RAGEMP\dotnet\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="rage-sharp">
       <HintPath>C:\RAGEMP\dotnet\rage-sharp.dll</HintPath>
     </Reference>

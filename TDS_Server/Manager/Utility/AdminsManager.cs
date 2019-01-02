@@ -10,6 +10,7 @@ namespace TDS_Server.Manager.Utility
     using TDS_Server.Manager.Player;
     using System;
     using TDS_Server.Interface;
+    using TDS_Common.Enum;
 
     class AdminLevel
     {

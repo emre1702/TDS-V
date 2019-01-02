@@ -8,6 +8,7 @@ using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Common.Default;
 using System.Linq;
+using TDS_Server.Manager.Logs;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -27,11 +28,10 @@ namespace TDS_Server.Instance.Lobby
 
             #region Remove from old lobby
             Lobby oldlobby = character.CurrentLobby;
-            if (oldlobby != null)
-                oldlobby.RemovePlayer(character);
+            oldlobby?.RemovePlayer(character);
             #endregion
             character.CurrentLobby = this;
-            players.Add(character);
+            Players.Add(character);
 
             character.Client.Dimension = Dimension;
             character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
@@ -40,9 +40,9 @@ namespace TDS_Server.Instance.Lobby
             SetPlayerTeam(character, Teams[teamindex]);
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, syncedLobbySettings, players.Select(p => p.Client).ToList(), SyncedTeamDatas);
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client).ToList(), JsonConvert.SerializeObject(SyncedTeamDatas));
 
-            Manager.Logs.Rest.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
+            RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
             return true;
         }
 
@@ -50,8 +50,9 @@ namespace TDS_Server.Instance.Lobby
         {
             await SavePlayerLobbyStats(character);
 
-            players.Remove(character);
-            TeamPlayers[character.Team.Index].Remove(character);
+            Players.Remove(character);
+            if (character.Team != null)
+                TeamPlayers[character.Team.Index].Remove(character);
 
             character.CurrentLobby = null;
             character.CurrentLobbyStats = null;
@@ -68,7 +69,6 @@ namespace TDS_Server.Instance.Lobby
                 DeathSpawnTimer.Remove(character);
             }
 
-
             if (IsEmpty())
             {
                 if (LobbyEntity.IsTemporary)
@@ -76,7 +76,7 @@ namespace TDS_Server.Instance.Lobby
             }
 
             SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, character.Client);
-            Manager.Logs.Rest.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
+            RestLogsManager.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
         }
 
         private async Task SavePlayerLobbyStats(TDSPlayer character)

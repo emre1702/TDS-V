@@ -30,6 +30,10 @@ namespace TDS_Client.Instance.Lobby
             minY = edges.Min(v => v.Y);
             maxX = edges.Max(v => v.X);
             maxY = edges.Max(v => v.Y);
+        }
+
+        public void Start()
+        {
             checkTimer = new TDSTimer(Check, 1000, 0);
         }
 

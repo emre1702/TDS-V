@@ -14,7 +14,7 @@ namespace TDS_Client.Instance.Language
         public virtual string SCOREBOARD_KILLS => "Kills";
         public virtual string SCOREBOARD_ASSISTS => "Assists";
         public virtual string SCOREBOARD_DEATHS => "Deaths";
-        public virtual string SCOREBOARD_TEAMS => "Team";
+        public virtual string SCOREBOARD_TEAM => "Team";
         public virtual string SCOREBOARD_LOBBY => "Lobby";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();

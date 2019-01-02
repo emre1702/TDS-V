@@ -11,9 +11,11 @@ using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 
-namespace TDS_Server.Instance.Lobby {
+namespace TDS_Server.Instance.Lobby
+{
 
-    partial class Arena {
+    partial class Arena
+    {
 
         public override async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
@@ -40,11 +42,12 @@ namespace TDS_Server.Instance.Lobby {
             {
                 RemovePlayerFromAlive(character, false);
                 PlayerCantBeSpectatedAnymore(character);
-                //Damagesys.CheckLastHitter(character, out Character killercharacter);
-                //DeathInfoSync(character.Player, character.Team, killercharacter?.Player, (uint)WeaponHash.Unarmed);
-                //
-                //Damagesys.PlayerSpree.Remove(character);
-            } 
+                DmgSys.CheckLastHitter(character, out TDSPlayer killercharacter);
+
+                DeathInfoSync(character.Client, character.Team.Index, killercharacter?.Client, (uint)WeaponHash.Unarmed);
+
+                DmgSys.PlayerSpree.Remove(character);
+            }
             else
                 RemoveAsSpectator(character);
             base.RemovePlayer(character);
@@ -62,7 +65,7 @@ namespace TDS_Server.Instance.Lobby {
                 NAPI.Player.SpawnPlayer(player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
 
             RemoveAsSpectator(character);
-            
+
             player.Freeze(freeze);
             GivePlayerWeapons(player);
 
@@ -90,7 +93,7 @@ namespace TDS_Server.Instance.Lobby {
 
             }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
 
-            RoundCheckForEnoughAlive();  
+            RoundCheckForEnoughAlive();
         }
 
         private void StartRoundForPlayer(TDSPlayer player)
@@ -119,7 +122,7 @@ namespace TDS_Server.Instance.Lobby {
                 int teamsinround = GetTeamAmountStillInRound();
                 if (teamsinround < 2)
                 {
-                    currentRoundEndBecauseOfPlayer = character;
+                    CurrentRoundEndBecauseOfPlayer = character;
                     SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
                 }
                 else

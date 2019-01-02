@@ -11,7 +11,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        private readonly List<TDSPlayer> players = new List<TDSPlayer>();
+        public readonly List<TDSPlayer> Players = new List<TDSPlayer>();
 
         protected void SendAllPlayerEvent(string eventname, uint? teamindex, params object[] args)
         {
@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        protected void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, uint? teamindex = null)
+        public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, uint? teamindex = null)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
             FuncIterateAllPlayers((character, team) =>

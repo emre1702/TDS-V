@@ -20,7 +20,7 @@ namespace TDS_Client.Manager.Lobby
         private static EPlantDefuseStatus playerStatus;
         private static bool gotBomb;
         private static List<Vector3> plantSpots;
-        private static int plantDefuseStartTick;
+        private static ulong plantDefuseStartTick;
 
         private static DxProgressRectangle progressRect;
 
@@ -40,7 +40,7 @@ namespace TDS_Client.Manager.Lobby
                 plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
-            RoundInfo.SetRoundTimeLeft((int)Settings.BombDetonateTimeMs);
+            RoundInfo.SetRoundTimeLeft((ulong)Settings.BombDetonateTimeMs);
         }
 
         public static void CheckPlantDefuse()
@@ -71,7 +71,7 @@ namespace TDS_Client.Manager.Lobby
         private static void UpdatePlantDefuseProgress()
         {
             Pad.DisableControlAction(0, (int)Control.Attack, true);
-            int mswasted = Environment.TickCount - plantDefuseStartTick;
+            ulong mswasted = TimerManager.ElapsedTicks - plantDefuseStartTick;
             uint mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
             if (mswasted < mstoplantordefuse)
             {
@@ -126,7 +126,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnPlantSpot())
                 return;
-            plantDefuseStartTick = Environment.TickCount;
+            plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Planting;
             progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, alignment: Alignment.Center);
             Events.CallRemote(DToServerEvent.StartPlanting);
@@ -136,7 +136,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnDefuseSpot())
                 return;
-            plantDefuseStartTick = Environment.TickCount;
+            plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Defusing;
             progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, alignment: Alignment.Center);
             Events.CallRemote(DToServerEvent.StartDefusing);

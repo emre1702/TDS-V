@@ -9,5 +9,11 @@ namespace TDS_Server.Instance.Utility
     {
         public string Command;
         public ECommandUsageRight WithRight;
+
+        public bool AsAdmin => WithRight == ECommandUsageRight.Admin;
+        public bool AsDonator => WithRight == ECommandUsageRight.Donator;
+        public bool AsLobbyOwner => WithRight == ECommandUsageRight.LobbyOwner;
+        public bool AsUser => WithRight == ECommandUsageRight.User;
+        public bool AsVIP => WithRight == ECommandUsageRight.VIP;
     }
 }

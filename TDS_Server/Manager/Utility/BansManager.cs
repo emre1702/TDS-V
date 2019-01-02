@@ -2,13 +2,14 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Manager.Utility
 {
     static class BansManager
     {
 
-        public static async void RemoveExpiredBans(TDSNewContext dbcontext)
+        public static async Task RemoveExpiredBans(TDSNewContext dbcontext)
         {
             dbcontext.RemoveRange(
                 await dbcontext.Playerbans
@@ -16,6 +17,7 @@ namespace TDS_Server.Manager.Utility
 #warning  todo: Check if that works right
                     .ToListAsync()
             );
+            await dbcontext.SaveChangesAsync();
         }
     }
 }

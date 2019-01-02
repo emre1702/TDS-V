@@ -1,3 +1,4 @@
+using TDS_Common.Enum;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby.Interfaces;
@@ -17,7 +18,8 @@ namespace TDS_Server.Instance.Lobby
 
             durationsDict[ERoundStatus.Round] = entity.RoundTime.Value * 1000;
 
-            spawnCounter = new int[entity.Teams.Count-1];
+            if (entity.Teams.Count > 1)
+                spawnCounter = new int[entity.Teams.Count-1];
         }
 
         public override void Start()

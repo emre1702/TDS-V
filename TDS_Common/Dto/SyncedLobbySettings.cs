@@ -14,5 +14,6 @@ namespace TDS_Common.Dto
         public uint? RoundTime;
         public uint? BombDetonateTimeMs;
         public uint? DieAfterOutsideMapLimitTime;
+        public bool InLobbyWithMaps;
     }
 }

@@ -4,10 +4,10 @@
     using System.Collections.Generic;
 	using GTANetworkAPI;
     using TDS_Server.Interface;
-    using TDS_Server.Enum;
     using TDS_Server.Instance.Language;
     using TDS_Server.Manager.Player;
     using TDS_Server.Instance.Player;
+    using TDS_Common.Enum;
 
     static class LangUtils
 	{
@@ -16,6 +16,22 @@
             [ELanguage.German] = new German(),
             [ELanguage.English] = new English()
         };
+
+        public static void SendAllChatMessage(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in languageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+            
+            foreach (Client client in NAPI.Pools.GetAllPlayers())
+            {
+                TDSPlayer player = client.GetChar();
+                if (player.LoggedIn)
+                    NAPI.Chat.SendChatMessageToPlayer(client, returndict[player.Language]);
+            }
+        }
 
         public static ILanguage GetLang (this Client player)
         {
@@ -58,66 +74,5 @@
             }
             return returndict;
         }
-
-        /* public static void SendLangMessage(this Client player, Func<ILanguage, string> propertygetter)
-         {
-             NAPI.Chat.SendChatMessageToPlayer(player, propertygetter(player.GetLang()));
-         }*/
-
-
-
-        /*public static string GetLang(this Client player, string type, params string[] args)
-		{
-			return GetLang(player.GetChar(), type, args);
-		}
-
-		public static string GetLang(Language language, string type, params string[] args)
-		{
-			if ( args.Length == 0 )
-				return langData[language][type];
-			return GetReplaced(langData[language][type], args);
-		}
-
-		public static void SendLangMessage(this Character character, string type, params string[] args)
-		{
-			NAPI.Chat.SendChatMessageToPlayer(character.Player, character.GetLang(type, args));
-		}
-
-		public static void SendLangMessage(this Client player, string type, params string[] args)
-		{
-			NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang(type, args));
-		}
-
-		public static void SendLangNotification(this Character character, string type, params string[] args)
-		{
-			NAPI.Notification.SendNotificationToPlayer(character.Player, character.GetLang(type, args));
-		}
-
-		public static void SendLangNotification(this Client player, string type, params string[] args)
-		{
-			NAPI.Notification.SendNotificationToPlayer(player, player.GetLang(type, args));
-		}
-
-
-		public static void SendMessageToAll(string type, params string[] args)
-		{
-			Dictionary<Language, string> texts = GetLangDictionary(type, args);
-			List<Client> players = NAPI.Pools.GetAllPlayers();
-			foreach ( Client player in players )
-			{
-				NAPI.Chat.SendChatMessageToPlayer(player, texts[player.GetChar().Language]);
-			}
-		}
-
-		public static void SendNotificationToAll(string type, params string[] args)
-		{
-			Dictionary<Language, string> texts = GetLangDictionary(type, args);
-			List<Client> players = NAPI.Pools.GetAllPlayers();
-			foreach ( Client player in players )
-			{
-				NAPI.Notification.SendNotificationToPlayer(player, texts[player.GetChar().Language]);
-			}
-		}*/
     }
-
 }

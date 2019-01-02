@@ -16,8 +16,8 @@ namespace TDS_Common.Instance.Utility
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
         private static readonly List<TDSTimer> insertAfterList = new List<TDSTimer>();
         /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
-        private static readonly Stopwatch stopwatch = new Stopwatch();
         private static Action<string> logger;
+        private static Func<ulong> tickGetter;
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
@@ -34,15 +34,15 @@ namespace TDS_Common.Instance.Utility
         /// <summary>Use this to check if the timer is still running.</summary>
         public bool IsRunning => !willRemoved;
         /// <summary>The remaining ms to execute</summary>
-        public ulong RemainingMsToExecute => executeAtMs - GetCurrentMs();
+        public ulong RemainingMsToExecute => executeAtMs - tickGetter();
 
         /// <summary>
         /// Needs to be used once at server and once and client
         /// </summary>
-        public static void Init(Action<string> thelogger)
+        public static void Init(Action<string> thelogger, Func<ulong> theTickGetter)
         {
             logger = thelogger;
-            stopwatch.Start();
+            tickGetter = theTickGetter;
         }
 
         /// <summary>
@@ -54,22 +54,13 @@ namespace TDS_Common.Instance.Utility
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
         public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
-            ulong executeatms = executeafterms + GetCurrentMs();
+            ulong executeatms = executeafterms + tickGetter();
             Func = thefunc;
             ExecuteAfterMs = executeafterms;
             executeAtMs = executeatms;
             ExecutesLeft = executes;
             HandleException = handleexception;
             insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
-        }
-
-        /// <summary>
-        /// Method to get the elapsed milliseconds.
-        /// </summary>
-        /// <returns>Elapsed milliseconds</returns>
-        private static ulong GetCurrentMs()
-        {
-            return (ulong)stopwatch.ElapsedMilliseconds;
         }
 
         /// <summary>
@@ -138,7 +129,7 @@ namespace TDS_Common.Instance.Utility
         {
             if (changeexecutems)
             {
-                executeAtMs = GetCurrentMs();
+                executeAtMs = tickGetter();
             }
             if (HandleException)
                 ExecuteMeSafe();
@@ -170,7 +161,7 @@ namespace TDS_Common.Instance.Utility
         /// </summary>
         public static void OnUpdateFunc()
         {
-            ulong tick = GetCurrentMs();
+            ulong tick = tickGetter();
             for (int i = timer.Count - 1; i >= 0; i--)
             {
                 if (!timer[i].willRemoved)

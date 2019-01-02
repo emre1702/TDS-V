@@ -17,7 +17,7 @@
             string changedmessage = character.TeamChatColor + character.Client.Name + "{220|220|220}: " + message;
             character.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
             if (character.CurrentLobby.IsOfficial)
-                Chat.Log(message, character); 
+                ChatLogsManager.Log(message, character); 
         }
 
         // [DisableDefaultChat] 
@@ -38,35 +38,35 @@
         {
             string changedmessage = "[GLOBAL] " + character.TeamChatColor + character.Client.Name + "{220|220|220}: " + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
-            Chat.Log(message, character, isglobal: true);   
+            ChatLogsManager.Log(message, character, isglobal: true);   
         }
 
        public static void SendAdminMessage(TDSPlayer character, string message)
        {
             string changedmessage = character.AdminLevel.FontColor + "[" + character.AdminLevelName + "] {255|255|255}" + character.Client.Name + ": {220|220|220}" + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
-            Chat.Log(message, character, isglobal: true, isadminchat: true);
+            ChatLogsManager.Log(message, character, isglobal: true, isadminchat: true);
        }
 
         public static void SendAdminChat(TDSPlayer character, string message)
         {
             string changedmessage = "[ADMINCHAT] " + character.AdminLevel.FontColor + character.Client.Name + ": {220|220|220}" + message;
             AdminsManager.SendChatMessageToAdmins(changedmessage);
-            Chat.Log(message, character, isadminchat: true);
+            ChatLogsManager.Log(message, character, isadminchat: true);
         }
 
         public static void SendTeamChat(TDSPlayer character, string message)
         {
             string changedmessage = "[TEAM] " + character.TeamChatColor + character.Client.Name + ": {220|220|220}" + message;
             character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team.Index);
-            Chat.Log(message, character, isteamchat: true);
+            ChatLogsManager.Log(message, character, isteamchat: true);
         }
 
         public static void SendPrivateMessage(TDSPlayer character, TDSPlayer targetcharacter, string message)
         {
             string changedmessage = "[PM] {253|132|85}" + character.Client.SocialClubName + ": {220|220|220}" + message;
             NAPI.Chat.SendChatMessageToPlayer(targetcharacter.Client, changedmessage);
-            Chat.Log(message, character, target: targetcharacter);
+            ChatLogsManager.Log(message, character, target: targetcharacter);
         }
 
     }

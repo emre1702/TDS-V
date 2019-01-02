@@ -3,6 +3,9 @@ namespace TDS_Server.Manager.Commands
 
     using GTANetworkAPI;
     using TDS_Server.CustomAttribute;
+    using TDS_Server.Default;
+    using TDS_Server.Enum;
+    using TDS_Server.Instance.Lobby;
     using TDS_Server.Instance.Player;
     using TDS_Server.Instance.Utility;
     using TDS_Server.Manager.Logs;
@@ -12,37 +15,78 @@ namespace TDS_Server.Manager.Commands
     {
 
         //#region Chat
-        [TDSCommand("adminsay")]
-        public static void AdminSay(TDSPlayer character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        [TDSCommand(DAdminCommand.AdminSay)]
+        public static void AdminSay(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
         {
-            ChatManager.SendAdminMessage(character, text); 
+            ChatManager.SendAdminMessage(player, text); 
         }
 
-        [TDSCommand("adminchat")]
-        public static void AdminChat(TDSPlayer character, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        [TDSCommand(DAdminCommand.AdminChat)]
+        public static void AdminChat(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
         {
-            ChatManager.SendAdminChat(character, text);
+            ChatManager.SendAdminChat(player, text);
         }
 
-        /*[TDSCommand("next")]
-         public static void NextMap(Character character, TDSCommandInfos cmdinfos)
-         {
-             //if (character.CurrentLobby is IRound roundlobby)  // Todo: Activate after implementing
-             //{
-                 // LOG //
-                 Admin.Log(Enum.ELogType.Next, character, "Lobby: " + roundlobby.Id,   (AdminLogType.NEXT, character.UID, 0, lobby.Name);
-                 if (!character.CurrentLobby.IsPlayerLobbyOwner(character)) 
-                 /////////
-                 currentRoundEndBecauseOfPlayer = character;
-                 roundlobby.EndRoundEarlier(RoundEndReason.COMMAND, player.Name);
+        [TDSCommand(DAdminCommand.NextMap)]
+        public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos)
+        {
+            if (!(player.CurrentLobby is Arena arena))
+                return;
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Next, player, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
+            arena.CurrentRoundEndBecauseOfPlayer = player;
+            arena.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Command);
+        }
 
-             //}
-         }*/
+        [TDSCommand(DAdminCommand.LobbyKick)]
+        public static async void LobbyKick(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
+        {
+            if (player == target)
+                return;
+            if (target.CurrentLobby is null)
+                return;
+            if (!cmdinfos.AsLobbyOwner)
+            {
+                AdminLogsManager.Log(ELogType.Kick_Lobby, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
+            }
+            else
+            {
+                if (player.CurrentLobby != target.CurrentLobby)
+                {
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.TARGET_NOT_IN_SAME_LOBBY);
+                    return;
+                }
+                target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
+            }
+            target.CurrentLobby.RemovePlayer(target);
+            await LobbyManager.GetLobby(0).AddPlayer(target, 0);
+        }
+
+        [TDSCommand(DAdminCommand.LobbyBan)]
+        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
+        {
+            if (player.CurrentLobby.Id == 0)
+                return;
+            if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
+                return;
+            /*if (hours == 0)
+            {
+                character.Lobby.UnBanPlayer(character, target, targetname, targetUID, reason);
+            }
+            else if (hours == -1)
+            {
+                character.Lobby.PermaBanPlayer(character, target, targetname, targetUID, reason);
+            }
+            else
+            {
+                character.Lobby.TimeBanPlayer(character, target, targetname, targetUID, hours, reason);
+            }*/
+        }
+
+
 
         /*private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
-			{ "next", 1 },
-			{ "lobbykick", 1 },
-			{ "kick", 1 },
 			{ "ban (time)", 1 },
 			{ "ban (unban)", 2 },
 			{ "ban (permanent)", 3 },
@@ -61,66 +105,6 @@ namespace TDS_Server.Manager.Commands
 			{ "object", 2 }
 		};
 
-		#region Lobby
-
-		[CommandDescription( "Kicks a player from the lobby." )]
-		[CommandGroup( "supporter/lobby-owner/VIP" )]
-		[Command( "lobbykick" )]
-		public static void LobbyKickPlayer ( Client player, Client target, [RemainingText] string reason ) {
-			if ( player != target ) {
-				Character character = player.GetChar();
-				if ( character.IsAdminLevel( neededLevels["lobbykick"], true, true ) ) {
-					// LOG //
-					Character targetcharacter = target.GetChar();
-					if ( character.IsLobbyOwner ) {
-						if ( character.Lobby == targetcharacter.Lobby )
-							Log.LobbyOwner( "lobbykick", player, target, ref character.Lobby.Name );
-						else
-							player.SendLangNotification( "target_not_in_same_lobby" );
-					} else if ( character.AdminLvl >= neededLevels["kick"] )
-						AdminLog.Log( AdminLogType.LOBBYKICK, character.UID, targetcharacter.UID, character.Lobby.Name );
-					else
-						Log.VIP( "lobbykick", player, target, character.Lobby.Name );
-					/////////
-					ServerLanguage.SendMessageToAll( "lobbykick", target.Name, player.Name, reason );
-					targetcharacter.Lobby.RemovePlayerDerived( targetcharacter );
-					MainMenu.Join( targetcharacter );
-				}
-			}
-		}
-
-		[CommandDescription( "Bans or unbans a player from the lobby. Can be used for breaking a lobby-rule or if a lobby-owner doesn't want a player in his lobby." )]
-		[CommandGroup( "supporter/lobby-owner" )]
-		[Command( "lobbyban" )]
-		public static void LobbyBanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
-			try {
-				if ( Account.PlayerUIDs.ContainsKey( targetname ) ) {
-					Character character = player.GetChar();
-					if ( hours == -1 && character.IsAdminLevel( neededLevels["lobbyban (permanent)"], true ) || hours == 0 && character.IsAdminLevel( neededLevels["lobbyban (unban)"], true ) || hours > 0 && character.IsAdminLevel( neededLevels["lobbyban (time)"], true ) ) {
-						if ( reason.Length > 3 ) {
-							if ( character.Lobby.BanAllowed ) {
-								uint targetUID = Account.PlayerUIDs[targetname];
-								Client target = NAPI.Player.GetPlayerFromName( targetname );
-								if ( hours == 0 ) {
-									character.Lobby.UnBanPlayer( character, target, targetname, targetUID, reason );
-								} else if ( hours == -1 ) {
-									character.Lobby.PermaBanPlayer( character, target, targetname, targetUID, reason );
-								} else {
-									character.Lobby.TimeBanPlayer( character, target, targetname, targetUID, hours, reason );
-								}
-							} else
-								character.SendLangNotification( "not_possible_in_this_lobby" );
-						} else
-							character.SendLangNotification( "reason_missing" );
-					} else
-						character.SendLangNotification( "adminlvl_not_high_enough" );
-				} else
-					player.SendLangNotification( "player_doesnt_exist" );
-			} catch ( Exception ex ) {
-				Log.Error( ex.ToString() );
-			}
-		}
-		#endregion
 
 		#region Kick
 		[CommandDescription( "Kicks a player from the server." )]

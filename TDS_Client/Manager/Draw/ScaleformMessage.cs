@@ -1,13 +1,14 @@
 ﻿using System;
 using TDS_Client.Default;
 using TDS_Client.Instance.Draw.Scaleform;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw.Scaleform
 {
     static class ScaleformMessage
     {
-        private static int initTimeMs;
-        private static int msgDurationMs;
+        private static ulong initTimeMs;
+        private static ulong msgDurationMs;
         private static bool animatedOut;
         private static BasicScaleform fscaleform;
 
@@ -20,33 +21,33 @@ namespace TDS_Client.Manager.Draw.Scaleform
             }
         }
 
-        public static void ShowWeaponPurchasedMessage(string title, string weaponName, int weaponHash, int time = 5000)
+        public static void ShowWeaponPurchasedMessage(string title, string weaponName, int weaponHash, ulong time = 5000)
         {
             scaleform.Call(DScaleformFunction.SHOW_WEAPON_PURCHASED, title, weaponName, weaponHash);
             InitCommonSettings(time);
         }
 
-        public static void ShowPlaneMessage(string title, string planeName, string planeHash, int time = 5000)
+        public static void ShowPlaneMessage(string title, string planeName, string planeHash, ulong time = 5000)
         {
             scaleform.Call(DScaleformFunction.SHOW_PLANE_MESSAGE, title, planeName, planeHash);
             InitCommonSettings(time);
         }
 
-        public static void ShowShardMessage(string title, string message, string titleColor, int bgColor, int time = 5000)
+        public static void ShowShardMessage(string title, string message, string titleColor, int bgColor, ulong time = 5000)
         {
             scaleform.Call(DScaleformFunction.SHOW_SHARD_CENTERED_MP_MESSAGE, title, message, titleColor, bgColor);
             InitCommonSettings(time);
         }
 
-        public static void ShowWastedMessage(int time = 5000)
+        public static void ShowWastedMessage(ulong time = 5000)
         {
             scaleform.Call(DScaleformFunction.SHOW_WASTED_MP_MESSAGE);
             InitCommonSettings(time);
         }
 
-        private static void InitCommonSettings(int time)
+        private static void InitCommonSettings(ulong time)
         {
-            initTimeMs = Environment.TickCount;
+            initTimeMs = TimerManager.ElapsedTicks;
             msgDurationMs = time;
             animatedOut = false;
         }
@@ -59,7 +60,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
                 return;
 
             fscaleform.RenderFullscreen();
-            if (Environment.TickCount - initTimeMs > msgDurationMs)
+            if (TimerManager.ElapsedTicks - initTimeMs > msgDurationMs)
             {
                 if (!animatedOut)
                 {

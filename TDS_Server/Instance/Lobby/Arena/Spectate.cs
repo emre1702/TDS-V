@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Common.Instance.Utility;
@@ -34,10 +32,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 foreach (TDSPlayer spectator in character.Spectators.ToList())  // ToList because the list gets changed in both methods
                 {
-                    if (spectator.Team.IsSpectatorTeam)
-                        SpectateOtherAllTeams(spectator);
-                    else
-                        SpectateOtherSameTeam(spectator);
+                    SpectateNext(spectator, true);
                 }
             }
             

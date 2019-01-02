@@ -25,15 +25,17 @@
             return DateTime.UtcNow.AddHours(2).AddSeconds(seconds).ToString("dd-MM-yyyy HH:mm:ss");
         }
 
-        public static string ToSHA512(string input)
+        public static string HashPWServer(string pw)
         {
-            byte[] hashbytes = SHA512.Create().ComputeHash(Encoding.Default.GetBytes(input));
-            StringBuilder sb = new StringBuilder();
+            byte[] hashbytes = SHA512.Create().ComputeHash(Encoding.Default.GetBytes(pw));
+            hashbytes = SHA384.Create().ComputeHash(hashbytes);
             for (int i = 0; hashbytes != null && i < hashbytes.Length; i++)
             {
-                sb.AppendFormat("{0:x2}", hashbytes[i]);
+                strbuilder.AppendFormat("{0:x2}", hashbytes[i]);
             }
-            return sb.ToString();
+            string result = strbuilder.ToString();
+            strbuilder.Clear();
+            return result;
         }
 
         public static float ToFloat(this string str)

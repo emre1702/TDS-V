@@ -4,34 +4,34 @@ namespace TDS_Client.Instance.Language
 {
     class LoginRegisterTextsEnglish : ILoginRegisterTexts
     {
-        public virtual string TAB_LOGIN => "Login";
+        public virtual string tab_login => "Login";
 
-        public virtual string TAB_REGISTER => "Register";
+        public virtual string tab_register => "Register";
 
-        public virtual string USERNAME => "Username";
+        public virtual string username => "Username";
 
-        public virtual string PASSWORD => "Password";
+        public virtual string password => "Password";
 
-        public virtual string LOGIN_TITLE => "Welcome back";
+        public virtual string login_title => "Welcome back";
 
-        public virtual string LOGIN_FORGOT_PW => "Password forgotten?";
+        public virtual string login_forgot_pw => "Password forgotten?";
 
-        public virtual string LOGIN_BUTTON => "Login";
+        public virtual string login_button => "Login";
 
-        public virtual string REGISTER_TITLE => "Register at TDS";
+        public virtual string register_title => "Register at TDS";
 
-        public virtual string REGISTER_EMAIL => "E-Mail Address for password reset";
+        public virtual string register_email => "E-Mail Address for password reset";
 
-        public virtual string REGISTER_CONFIRM_PW => "Confirm password";
+        public virtual string register_confirm_pw => "Confirm password";
 
-        public virtual string REGISTER_BUTTON => "Send";
+        public virtual string register_button => "Send";
 
-        public virtual string FORGOTPW_TITLE => "Reset your password";
+        public virtual string forgotpw_title => "Reset your password";
 
-        public virtual string FORGOTPW_EMAIL => "E-Mail Address";
+        public virtual string forgotpw_email => "E-Mail Address";
 
-        public virtual string FORGOTPW_RESET => "Reset";
+        public virtual string forgotpw_reset => "Reset";
 
-        public virtual string PASSWORD_HAS_TO_BE_SAME => "Both passwords have to be the same";
+        public virtual string password_has_to_be_same => "Both passwords have to be the same";
     }
 }

@@ -35,11 +35,10 @@ namespace TDS_Server.Manager.Utility {
 
             using (var dbcontext = new TDSNewContext())
             {
-                dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-
                 int amountnewentries = await dbcontext
                     .Offlinemessages
                     .Where(msg => msg.SourceId == entity.Id && msg.AlreadyLoadedOnce)
+                    .AsNoTracking()
                     .CountAsync();
 
                 if (amountnewentries > 0)

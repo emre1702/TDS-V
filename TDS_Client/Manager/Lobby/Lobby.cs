@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TDS_Client.Manager.Browser;
 using TDS_Common.Dto;
 
 namespace TDS_Client.Manager.Lobby
@@ -21,36 +22,33 @@ namespace TDS_Client.Manager.Lobby
                 return;
             }
             inMainMenu = false;
-
             //SetMapInfo
-            
         }
 
         private static void Left()
         {
             RoundInfo.Stop();
-            /*
-             * toggleFightMode( false );
-		removeBombThings();
-		removeRoundThings( true );
-        stopCountdownCamera();
-        closeMapVotingMenu();  
-        clearMapVotingsInBrowser();
-        removeRoundInfo();
-        stopMapCreator();
-        hideRoundEndReason();*/
+            Round.InFight = false;
+            Bomb.Reset();
+            Round.Reset(true);
+            CameraManager.StopCountdown();
+            MapVoting.CloseMenu();
+            MainBrowser.ClearMapVotingsInBrowser();
+            RoundInfo.Stop();
+            /*stopMapCreator();
+            hideRoundEndReason();*/
         }
 
         private static void JoinedMainmenu()
         {
             inMainMenu = true;
             RAGE.Game.Cam.DoScreenFadeIn(100);
-            //startLobbyChoiceBrowser();
+            Choice.Start();
         }
 
         private static void LeftMainMenu()
         {
-            //destroyLobbyChoiceBrowser();
+            Choice.Stop();
         }
 
         /*mp.events.add( "onClientPlayerJoinMapCreatorLobby", () => {

@@ -7,6 +7,17 @@ namespace TDS_Server.Instance.Lobby
 
     partial class FightLobby
     {
+        public void SpectateNext(TDSPlayer player, bool forward)
+        {
+            if (player.Lifes > 0)
+                return;
+
+            if (player.Team.IsSpectatorTeam)
+                SpectateOtherAllTeams(player, forward);
+            else
+                SpectateOtherSameTeam(player, forward);
+        }
+
         protected void RemoveAsSpectator(TDSPlayer character)
         {
             character.Client.StopSpectating();
@@ -67,7 +78,6 @@ namespace TDS_Server.Instance.Lobby
                 character.Client.Spectate(nextPlayer.Client);
             }
         }
-
         
         private TDSPlayer GetNextSpectatePlayerInSameTeam(TDSPlayer start)
         {

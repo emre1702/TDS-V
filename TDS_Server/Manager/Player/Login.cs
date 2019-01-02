@@ -8,6 +8,10 @@
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Utility;
     using TDS_Common.Default;
+    using TDS_Server.Instance.Lobby;
+    using TDS_Server.Manager.Logs;
+    using TDS_Server.Manager.Maps;
+    using Newtonsoft.Json;
 
     static class Login
     {
@@ -17,25 +21,22 @@
             using (var dbcontext = new TDSNewContext())
             {
                 Players entity = await dbcontext.Players
+                                        .Include(p => p.Playerstats)
                                         .Include(p => p.Playersettings)
                                         .Include(p => p.OfflinemessagesTarget)
-                                        .AsNoTracking()
+                                        .Include(p => p.Playermapratings)
                                         .FirstOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
+                    NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
                     return;
                 }
 
-                if (Utils.ToSHA512(password) != entity.Password)
+                if (Utils.HashPWServer(password) != entity.Password)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().WRONG_PASSWORD);
+                    NAPI.Notification.SendNotificationToPlayer(player, player.GetLang().WRONG_PASSWORD);
                     return;
                 }
-
-                TDSPlayer character = player.GetChar();
-                dbcontext.Attach(entity.Playerstats);
-                character.Entity = entity;
 
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(player);
@@ -43,17 +44,19 @@
                 player.Team = 1;        // To be able to use custom damagesystem
                 entity.Playerstats.LoggedIn = true;
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl);
-                //MainMenu.Join(character);
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, JsonConvert.SerializeObject(SettingsManager.SyncedSettings));
+                LobbyEvents.JoinLobbyEvent(player, 0, 0);
 
                 await dbcontext.SaveChangesAsync();
 
-                //Map.SendPlayerHisRatings(character);
+                TDSPlayer character = player.GetChar();
+                MapsManager.SendPlayerHisRatings(character);
+
+                character.Entity = entity;
+
                 //Gang.CheckPlayerGang(character);
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.LoadSettings, SettingsManager.SyncedSettings);
-
-                Logs.Rest.Log(Enum.ELogType.Login, player, true);    
+                RestLogsManager.Log(Enum.ELogType.Login, player, true);    
             }
         }
     }

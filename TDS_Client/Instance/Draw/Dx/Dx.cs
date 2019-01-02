@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -23,15 +24,14 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static void RenderAll()
         {
-            int tick = Environment.TickCount;
             foreach (Dx draw in dxDraws)
             {
                 if (draw.Activated)
-                    draw.Draw(tick);
+                    draw.Draw();
             }
         }
 
-        protected virtual void Draw(int currentTick) { }
+        protected virtual void Draw() { }
 
         public virtual void Remove()
         {
@@ -43,7 +43,7 @@ namespace TDS_Client.Instance.Draw.Dx
             return EDxType.None;
         }
 
-        protected static int GetBlendValue(int currenttick, int start, int end, int starttick, int endtick)
+        protected static int GetBlendValue(ulong currenttick, int start, int end, ulong starttick, ulong endtick)
         {
             float progress = (currenttick - starttick) / (endtick - starttick);
             if (progress > 1)
@@ -51,7 +51,7 @@ namespace TDS_Client.Instance.Draw.Dx
             return (int)Math.Floor(start + progress * (end - start));
         }
 
-        protected static float GetBlendValue(int currenttick, float start, float end, int starttick, int endtick)
+        protected static float GetBlendValue(ulong currenttick, float start, float end, ulong starttick, ulong endtick)
         {
             float progress = (currenttick - starttick) / (endtick - starttick);
             if (progress > 1)

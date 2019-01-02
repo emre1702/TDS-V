@@ -8,9 +8,16 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutputPath>C:\RAGEMP\server-files\bridge\resources\tds\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
+    <Compile Remove="client\registerlogin\**" />
     <Compile Remove="server\**" />
+    <EmbeddedResource Remove="client\registerlogin\**" />
     <EmbeddedResource Remove="server\**" />
+    <None Remove="client\registerlogin\**" />
     <None Remove="server\**" />
   </ItemGroup>
 

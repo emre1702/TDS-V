@@ -11,9 +11,6 @@ namespace TDS_Client.Manager.Lobby
     {
         private static bool inFight;
 
-        //public static bool IsSpectator;
-        //private static string currentMap;
-
         public static bool InFight
         {
             get => inFight;
@@ -23,11 +20,13 @@ namespace TDS_Client.Manager.Lobby
                     MapLimitManager.Stop();
             }
         }
+        public static bool IsSpectator { get; set; }
 
         public static void Reset(bool removemapinfo)
         {
-            //StopSpectate();
-            //StopCountdown();
+            InFight = false;
+            Spectate.Stop();
+            Countdown.Stop();
             if (removemapinfo)
                 MapInfo.RemoveMapInfo();
         }

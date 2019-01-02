@@ -13,6 +13,7 @@ using TDS_Server.Interface;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
+using TDS_Common.Enum;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -37,9 +38,9 @@ namespace TDS_Server.Instance.Lobby
         };
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
-        private TDSPlayer currentRoundEndBecauseOfPlayer;
+        public TDSPlayer CurrentRoundEndBecauseOfPlayer;
 
-        private void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
+        public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
             currentRoundStatus = status;
             if (status == ERoundStatus.RoundEnd)
@@ -179,7 +180,7 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundEndReason.Command:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, currentRoundEndBecauseOfPlayer.Client.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer.Client.Name ?? "-");
                     });
                 case ERoundEndReason.NewPlayer:
                     return LangUtils.GetLangDictionary(lang =>
