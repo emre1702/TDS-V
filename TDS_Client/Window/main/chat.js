@@ -90,6 +90,30 @@ chatAPI["show"] = ( toggle ) => {
     chatdata.active = toggle;
 };
 
+function replaceRGBColor(input) {
+    let index = input.indexOf("!{");
+    while (index != -1) {
+        let endindex = input.indexOf("}", index + 2);
+        if (endindex == -1)
+            break;
+        let colorstr = input.substring(index, endindex + 1);
+        let rgbarr = colorstr.substring(2, colorstr.length-1).split("|");
+        let rgbcolor;
+        if (rgbarr.length == 1)
+            rgbcolor = rgbarr[0];
+        else if (rgbarr.length < 3)
+            rgbcolor = `rgb(${(0 in rgbarr ? rgbarr[0] : 0)}, ${(1 in rgbarr ? rgbarr[1] : 0)}, 0)`; 
+        else if (rgbarr.length == 3)
+            rgbcolor = `rgb(${rgbarr[0]}, ${rgbarr[1]}, ${rgbarr[2]})`;
+        else if (rgbarr.length == 4)
+            rgbcolor = `rgba(${rgbarr[0]}, ${rgbarr[1]}, ${rgbarr[2]}, ${rgbarr[3]})`;
+        let replacement = "</span><span style='color: " + rgbcolor + ";'>";
+        input = input.replace(colorstr, replacement);
+        index = input.indexOf("!{", index + replacement.length);
+    }
+    return input;
+}
+
 function formatMsg( input, ismentioned ) {
     let start = ""; 
     if ( ismentioned )
@@ -104,6 +128,7 @@ function formatMsg( input, ismentioned ) {
         }
         replaced = replaced.replace( /#n#/g, '<br>' );
     }
+    replaced = replaceRGBColor(replaced);
 
     if ( ismentioned )
         replaced += "</span>";
