@@ -22,11 +22,12 @@ namespace TDS_Server.Entity
         public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public sbyte AdminLvl { get; set; }
+        public byte AdminLvl { get; set; }
         public bool IsVip { get; set; }
         public sbyte Donation { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
+        public virtual Adminlevels AdminLvlNavigation { get; set; }
         public virtual Playersettings Playersettings { get; set; }
         public virtual Playerstats Playerstats { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }

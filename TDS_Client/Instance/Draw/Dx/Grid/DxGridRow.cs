@@ -1,4 +1,5 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Enum;
@@ -14,7 +15,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         public Color TextColor;
         public float Scale;
         public Font Font;
-        public Alignment Alignment;
+        public UIResText.Alignment Alignment;
         public bool RelativePos;
 
         public float Height => height ?? Grid.RowHeight;
@@ -25,7 +26,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public bool UseColorForWholeRow = true;
 
-        public DxGridRow(float? height, Color backColor, Color textColor, string text = null, float scale = 1f, Font font = Font.ChaletLondon, Alignment alignment = Alignment.Left, bool relative = true) : base(false)
+        public DxGridRow(float? height, Color backColor, Color textColor, string text = null, float scale = 1f, Font font = Font.ChaletLondon, UIResText.Alignment alignment = UIResText.Alignment.Left, bool relative = true) : base(false)
         {
             this.height = height;
             BackColor = backColor;
@@ -41,7 +42,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         {
             if (UseColorForWholeRow)
             {
-                if (Grid.Alignment == Alignment.Left)
+                if (Grid.Alignment == UIResText.Alignment.Left)
                     Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
                 else
                     Graphics.DrawRect(Grid.X - Grid.Width / 2, Y - Height / 2, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
@@ -54,7 +55,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             }
             if (text != null)
             {
-                if (Grid.Alignment == Alignment.Left)
+                if (Grid.Alignment == UIResText.Alignment.Left)
                     UIText.Draw(text, new Point(GetAbsoluteX(Grid.X, RelativePos), GetAbsoluteY(Grid.Y, RelativePos)), Scale, TextColor, Font, false);
                 else
                     UIText.Draw(text, new Point(GetAbsoluteX(Grid.X - Grid.Width / 2, RelativePos), GetAbsoluteY(Grid.Y - Height / 2, RelativePos)), Scale, TextColor, Font, true);

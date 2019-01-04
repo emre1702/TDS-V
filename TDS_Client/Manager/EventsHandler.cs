@@ -20,6 +20,8 @@ using RAGE.Ui;
 using TDS_Common.Enum;
 using System.Linq;
 using System;
+using Newtonsoft.Json.Linq;
+using TDS_Client.Instance.Draw.Dx;
 
 namespace TDS_Client.Manager
 {
@@ -37,6 +39,7 @@ namespace TDS_Client.Manager
         private void LoadOnStart()
         {
             Settings.Load();
+            Dx.RefreshResolution();
         }
         #endregion Load on start
 
@@ -53,6 +56,7 @@ namespace TDS_Client.Manager
         private void OnTickMethod(List<TickNametagData> nametags)
         {
             ScaleformMessage.Render();
+            Dx.RenderAll();
             if (Bomb.CheckPlantDefuseOnTick)
                 Bomb.CheckPlantDefuse();
             if (RoundInfo.RefreshOnTick)
@@ -142,7 +146,7 @@ namespace TDS_Client.Manager
         {
             SyncedLobbySettingsDto settings = JsonConvert.DeserializeObject<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
-            Players.Load((List<Player>)args[1]);
+            Players.Load(ClientUtils.GetTriggeredPlayersList(args[1]));
             Team.CurrentLobbyTeams = JsonConvert.DeserializeObject<SyncedTeamDataDto[]>((string)args[2]);
             Lobby.Lobby.Joined(settings);
         }
@@ -159,32 +163,34 @@ namespace TDS_Client.Manager
 
         private void OnMapChangeMethod(object[] args)
         {
-            Cam.DoScreenFadeIn(Settings.RoundEndTime / 2);
+            Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = JsonConvert.DeserializeObject<Vector3[]>((string)args[1]);
-            if (maplimit.Length > 0)
+            var maplimit = JsonConvert.DeserializeObject<List<Vector3>>((string)args[1]);
+            if (maplimit.Count > 0)
                 MapLimitManager.Load(maplimit);
-            CameraManager.SetToMapCenter((Vector3)args[1]);
+            CameraManager.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
             Round.InFight = false;
         }
 
         private void OnCountdownStartMethod(object[] args)
         {
             CameraManager.Stop();
-            if (args.Length == 0)
+            uint mstimetoplayer = (uint)(Settings.CountdownTime * 1000 * 0.9);
+            if (args == null)
             {
                 Countdown.Start();
-                CameraManager.SetTimerTowardsPlayer((uint)(Settings.CountdownTime * 0.1));
+                CameraManager.SetGoTowardsPlayer(mstimetoplayer);
             }
             else
             {
-                int resttime = (int)args[0];
-                Countdown.StartAfterwards((uint)Math.Ceiling((double)Settings.CountdownTime - resttime) / 1000);
-                if (resttime > Settings.CountdownTime * 0.1)
-                    CameraManager.SetGoTowardsPlayer((int)(Settings.CountdownTime - resttime));
+                uint remainingms = (uint)args[0];
+                Countdown.StartAfterwards(remainingms);
+                uint timeofcountdowncameraisatplayer = Settings.CountdownTime * 1000 - mstimetoplayer;
+                if (remainingms < timeofcountdowncameraisatplayer)
+                    CameraManager.SetGoTowardsPlayer(remainingms);
                 else
-                    CameraManager.SetTimerTowardsPlayer((uint)(Settings.CountdownTime * 0.1 - resttime));
+                    CameraManager.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
             }
             if (Round.IsSpectator)
             {
@@ -255,7 +261,7 @@ namespace TDS_Client.Manager
 
         private void OnBombPlantedMethod(object[] args)
         {
-            Bomb.BombPlanted((Vector3)args[0], (bool)args[1]);
+            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1]);
         }
 
         private void OnBombDetonatedMethod(object[] args)
@@ -273,8 +279,10 @@ namespace TDS_Client.Manager
             SyncedTeamPlayerAmountDto[] list = JsonConvert.DeserializeObject<SyncedTeamPlayerAmountDto[]>((string)args[0]);
             foreach (var team in Team.CurrentLobbyTeams)
             {
-                team.AmountPlayers = list[team.Index];
+                if (team.Index != 0)
+                    team.AmountPlayers = list[team.Index-1];
             }
+            RoundInfo.RefreshAllTeamTexts();
         }
 
         private void OnSyncCurrentMapNameMethod(object[] args)

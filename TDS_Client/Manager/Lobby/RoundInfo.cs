@@ -1,6 +1,8 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System;
 using System.Drawing;
+using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
@@ -13,8 +15,7 @@ namespace TDS_Client.Manager.Lobby
     {
         private static ulong startedTick;
 
-        private static readonly DxTextRectangle timeDisplay = new DxTextRectangle("00:00", 0.5f, 0.025f, 0.06f, 0.05f, 
-                            Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignment: Alignment.Center, activated: false);
+        private static DxTextRectangle timeDisplay;
         private static DxTextRectangle[] teamDisplays;
 
         public static bool RefreshOnTick { get; set; }
@@ -23,57 +24,88 @@ namespace TDS_Client.Manager.Lobby
         {
             startedTick = TimerManager.ElapsedTicks - alreadywastedms;
 
+            if (teamDisplays != null)
+                Stop();
+
+            if (timeDisplay == null)
+                timeDisplay = new DxTextRectangle("00:00", 0.5f, 0f, 0.06f, 0.05f,
+                            Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
             timeDisplay.Activated = true;
             RefreshOnTick = true;
 
             var teams = Team.CurrentLobbyTeams;
             int showamountleft = (int) Math.Ceiling((teams.Length - 1) / 2d);
             int showamountright = teams.Length - showamountleft - 1;
+            teamDisplays = new DxTextRectangle[teams.Length - 1];
             for (int i = 0; i < showamountleft; ++i)
             {
                 float x = 0.5f - 0.06f*0.5f - 0.13f*i - 0.13f * 0.5f;
-                teamDisplays[i] = new DxTextRectangle(teams[i+1].Name, x, 0.03f, 0.13f, 0.06f, Color.White, teams[i+1].Color, 0.41f, alignment: Alignment.Center);
+                var team = teams[i + 1];
+                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
             }
             for (int j = 0; j < showamountright; ++j)
             {
                 float x = 0.5f + 0.06f*0.5f + 0.13f * j + 0.13f * 0.5f;
                 int i = j + showamountleft;
-                teamDisplays[i] = new DxTextRectangle(teams[i+1].Name, x, 0.03f, 0.13f, 0.06f, Color.White, teams[i+1].Color, 0.41f, alignment: Alignment.Center);
+                var team = teams[i + 1];
+                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
             }
         }
 
         public static void Stop()
         {
             RefreshOnTick = false;
-            timeDisplay.Activated = false;
-            foreach (var display in teamDisplays)
+            if (timeDisplay != null)
+                timeDisplay.Activated = false;
+            if (teamDisplays != null)
             {
-                display.Remove();
+                foreach (var display in teamDisplays)
+                {
+                    display.Remove();
+                }
             }
-
         }
 
         private static void Remove()
         {
             RefreshOnTick = false;
-            timeDisplay.Activated = false;
-            foreach (var display in teamDisplays)
+            if (timeDisplay != null)
+                timeDisplay.Activated = false;
+            if (teamDisplays != null)
             {
-                display.Remove();
+                foreach (var display in teamDisplays)
+                {
+                    display.Remove();
+                }
+                teamDisplays = null;
             }
-            teamDisplays = null;
         }
 
         public static void RefreshTime()
         {
             ulong timems = Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick);
-            timeDisplay.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
+            timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
+        }
+
+        public static void RefreshAllTeamTexts()
+        {
+            foreach (var team in Team.CurrentLobbyTeams)
+            {
+                if (team.Index == 0)
+                    continue;
+                RefreshTeamText(team.Index);
+            }
         }
 
         public static void RefreshTeamText(int index)
         {
+            if (teamDisplays == null)
+                return;
             SyncedTeamDataDto team = Team.CurrentLobbyTeams[index];
-            teamDisplays[index].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
+            RAGE.Chat.Output((team == null).ToString());
+            RAGE.Chat.Output((team?.AmountPlayers == null).ToString());
+            RAGE.Chat.Output(index + " - " + teamDisplays.Length + " - " + (team?.Name ?? "?") + (team?.AmountPlayers?.Amount.ToString() ?? "?"));
+            teamDisplays[index-1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
         public static void SetRoundTimeLeft(ulong lefttimems)

@@ -9,6 +9,7 @@ namespace TDS_Server.Entity
         {
             Adminlevelnames = new HashSet<Adminlevelnames>();
             Commands = new HashSet<Commands>();
+            Players = new HashSet<Players>();
         }
 
         public byte Level { get; set; }
@@ -18,5 +19,6 @@ namespace TDS_Server.Entity
 
         public virtual ICollection<Adminlevelnames> Adminlevelnames { get; set; }
         public virtual ICollection<Commands> Commands { get; set; }
+        public virtual ICollection<Players> Players { get; set; }
     }
 }

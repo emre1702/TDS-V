@@ -31,7 +31,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (++startindextoiterate == Teams.Length - 1)
                     startindextoiterate = 0;
-            } while (Teams[startindex].IsSpectatorTeam && startindextoiterate != startindex);
+            } while (Teams[startindex].Index == 0 && startindextoiterate != startindex);
 
             return Teams[startindextoiterate];
         }
@@ -48,10 +48,12 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (++startindextoiterate >= Teams.Length - 1)
                     startindextoiterate = 0;
-            } while ((Teams[startindex].IsSpectatorTeam || SpectateablePlayers[startindex].Count == 0) && startindextoiterate != startindex);
+            } while ((startindextoiterate == 0 || SpectateablePlayers[startindextoiterate - 1].Count == 0) && startindextoiterate != startindex);
+            if (startindextoiterate == 0)
+                startindextoiterate = 1;
             Teams team = Teams[startindextoiterate];
 
-            return SpectateablePlayers[team.Index].Count == 0 ? null : team;
+            return SpectateablePlayers[team.Index-1].Count == 0 ? null : team;
         }
 
         private Teams GetPreviousNonSpectatorTeamWithPlayers(Teams start)
@@ -66,10 +68,12 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (--startindextoiterate < 0)
                     startindextoiterate = Teams.Length - 1;
-            } while ((Teams[startindex].IsSpectatorTeam || SpectateablePlayers[startindex].Count == 0) && startindextoiterate != startindex);
+            } while ((startindextoiterate == 0 || SpectateablePlayers[startindextoiterate - 1].Count == 0) && startindextoiterate != startindex);
+            if (startindextoiterate == 0)
+                startindextoiterate = Teams.Length - 1;
             Teams team = Teams[startindextoiterate];
 
-            return SpectateablePlayers[team.Index].Count == 0 ? null : team;
+            return SpectateablePlayers[team.Index-1].Count == 0 ? null : team;
         }
     }
 }

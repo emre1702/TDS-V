@@ -177,7 +177,7 @@ function loadNamesForChat( names ) {
 }
 
 function addNameForChat( name ) {
-    chatdata.playernames.push( username );
+    chatdata.playernames.push(name);
 }
 
 function removeNameForChat(name) {
@@ -234,4 +234,4 @@ $( document ).ready( function () {
     } );
 
     mp.trigger( "ChatLoaded_Browser" );
-} );
+});

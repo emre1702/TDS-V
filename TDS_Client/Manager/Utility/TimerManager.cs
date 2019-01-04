@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Client.Instance.Draw.Dx;
 using TDS_Common.Instance.Utility;
 using static RAGE.Events;
 
@@ -10,14 +11,19 @@ namespace TDS_Client.Manager.Utility
 
         public TimerManager()
         {
-            TDSTimer.Init(RAGE.Chat.Output, () => ElapsedTicks);
+            TDSTimer.Init(RAGE.Chat.Output, GetTick);
             Tick += OnUpdateFunc;
+            ElapsedTicks = GetTick();
+
+            new TDSTimer(Dx.RefreshResolution, 1000, 0);
         }
 
         public static void OnUpdateFunc(List<TickNametagData> _)
         {
-            ++ElapsedTicks;
+            ElapsedTicks = GetTick();
             TDSTimer.OnUpdateFunc();
         }
+
+        private static ulong GetTick() => (ulong)RAGE.Game.Misc.GetGameTimer();
     }
 }

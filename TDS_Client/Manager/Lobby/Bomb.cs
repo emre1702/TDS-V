@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using RAGE.Game;
+using RAGE.NUI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -128,7 +129,8 @@ namespace TDS_Client.Manager.Lobby
                 return;
             plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Planting;
-            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, alignment: Alignment.Center);
+            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
+                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             Events.CallRemote(DToServerEvent.StartPlanting);
         }
 
@@ -138,7 +140,8 @@ namespace TDS_Client.Manager.Lobby
                 return;
             plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Defusing;
-            progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, alignment: Alignment.Center);
+            progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
+                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             Events.CallRemote(DToServerEvent.StartDefusing);
         }
 
@@ -165,7 +168,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             dataChanged = false;
             CheckPlantDefuseOnTick = false;
-            progressRect.Remove();
+            progressRect?.Remove();
             progressRect = null;
             gotBomb = false;
             plantSpots = null;

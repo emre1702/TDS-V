@@ -1,8 +1,11 @@
 ﻿using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
+using RAGE.NUI;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
@@ -14,16 +17,16 @@ namespace TDS_Client.Instance.Lobby
     class MapLimit
     {
         private float minX, minY, maxX, maxY;
-        private Vector3[] edges;
+        private List<Vector3> edges;
         private int maxOutsideCounter;
 
         private int outsideCounter;
         private DxText info;
         private TDSTimer checkTimer;
 
-        public MapLimit(Vector3[] edges)
+        public MapLimit(List<Vector3> edges)
         {
-            if (edges.Length == 0)
+            if (edges.Count == 0)
                 return;
             this.edges = edges;
             minX = edges.Min(v => v.X);
@@ -34,7 +37,13 @@ namespace TDS_Client.Instance.Lobby
 
         public void Start()
         {
+            maxOutsideCounter = (int) Settings.DieAfterOutsideMapLimitTime;
             checkTimer = new TDSTimer(Check, 1000, 0);
+        }
+
+        public void Stop()
+        {
+            checkTimer?.Kill();
         }
 
         public void Remove()
@@ -48,7 +57,7 @@ namespace TDS_Client.Instance.Lobby
 
         private void Check()
         {
-            if (edges == null || !IsWithin())
+            if (edges == null || IsWithin())
             {
                 Reset();
                 return;
@@ -68,9 +77,10 @@ namespace TDS_Client.Instance.Lobby
         private void RefreshInfo()
         {
             if (info == null)
-                info = new DxText(Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString()), 0.5f, 0.5f, 1.2f, Color.White, alignment: Alignment.Center);
+                info = new DxText(Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString()), 0.5f, 0.5f, 1.2f, Color.White, 
+                    alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             else
-                info.SetText(Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString()));
+                info.Text = Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString());
         }
 
         private bool IsWithin() => IsWithin(Player.LocalPlayer.Position);
@@ -81,7 +91,7 @@ namespace TDS_Client.Instance.Lobby
                 return false;
 
             bool inside = false;
-            for (int i = 0, j = edges.Length-1; i < edges.Length; j = i++)
+            for (int i = 0, j = edges.Count-1; i < edges.Count; j = i++)
             {
                 Vector3 iPoint = edges[i];
                 Vector3 jPoint = edges[j];

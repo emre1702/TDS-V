@@ -31,7 +31,7 @@ namespace TDS_Client.Instance.Draw.Dx
             this.relative = relative;
         }
 
-        protected override void Draw()
+        public override void Draw()
         {
             Graphics.DrawLine(startX, startY, startZ, endX, endY, endZ, color.R, color.G, color.B, color.A);
         }

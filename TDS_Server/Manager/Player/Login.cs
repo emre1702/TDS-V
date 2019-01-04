@@ -25,6 +25,7 @@
                                         .Include(p => p.Playersettings)
                                         .Include(p => p.OfflinemessagesTarget)
                                         .Include(p => p.Playermapratings)
+                                        .AsNoTracking()
                                         .FirstOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
@@ -38,21 +39,26 @@
                     return;
                 }
 
-                if (entity.AdminLvl > 0)
-                    AdminsManager.SetOnline(player);
-
                 player.Team = 1;        // To be able to use custom damagesystem
                 entity.Playerstats.LoggedIn = true;
 
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, JsonConvert.SerializeObject(SettingsManager.SyncedSettings));
-                LobbyEvents.JoinLobbyEvent(player, 0, 0);
-
-                await dbcontext.SaveChangesAsync();
 
                 TDSPlayer character = player.GetChar();
-                MapsManager.SendPlayerHisRatings(character);
-
                 character.Entity = entity;
+
+                if (entity.AdminLvl > 0)
+                    AdminsManager.SetOnline(character);
+
+                dbcontext.Playerstats.Attach(entity.Playerstats);
+                dbcontext.Entry(entity.Playerstats).Property(x => x.LoggedIn).IsModified = true;
+                await dbcontext.SaveChangesAsync();
+
+                if (character.ChatLoaded)
+                    OfflineMessagesManager.CheckOfflineMessages(character);
+
+                MapsManager.SendPlayerHisRatings(character);
+                LobbyEvents.JoinLobbyEvent(player, 0, 0);
 
                 //Gang.CheckPlayerGang(character);
 

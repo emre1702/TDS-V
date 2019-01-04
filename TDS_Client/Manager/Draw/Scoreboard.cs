@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using RAGE.Game;
+using RAGE.NUI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -73,7 +74,7 @@ namespace TDS_Client.Manager.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(null, team.Color, Color.Black, alignment: Alignment.Center);
+                DxGridRow row = new DxGridRow(null, team.Color, Color.Black, alignment: UIResText.Alignment.Centered);
 
                 DxGridCell namecell = new DxGridCell(playerdata.Name, row, columns[0]);
                 row.AddCell(namecell);
@@ -144,7 +145,7 @@ namespace TDS_Client.Manager.Draw
 
         private static void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(null, Color.FromArgb(187, 20, 20, 20), Color.White, alignment: Alignment.Center);
+            DxGridRow header = new DxGridRow(null, Color.FromArgb(187, 20, 20, 20), Color.White, alignment: UIResText.Alignment.Centered);
             grid.SetHeader(header);
             header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_NAME, header, columns[0]));
             header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_PLAYTIME, header, columns[1]));

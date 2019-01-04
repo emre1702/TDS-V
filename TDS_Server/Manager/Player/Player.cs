@@ -14,29 +14,17 @@ namespace TDS_Server.Manager.Player
 {
     static class Player
     {
-        private static ConditionalWeakTable<Client, Players> clientEntities = new ConditionalWeakTable<Client, Players>();
-        private static readonly ConditionalWeakTable<Client, TDSPlayer> clientPlayers = new ConditionalWeakTable<Client, TDSPlayer>();
-
-        public static Client GetClient(this Players character)
-        {
-            foreach (KeyValuePair<Client, Players> entry in clientEntities)
-            {
-                if (entry.Value == character)
-                {
-                    return entry.Key;
-                }
-            }
-            return null;
-        }
+        private static readonly Dictionary<Client, TDSPlayer> clientPlayers = new Dictionary<Client, TDSPlayer>();
 
         public static TDSPlayer GetChar(this Client client)
         {
-           return clientPlayers.GetValue(client, (Client c) =>
-           {
+            if (!clientPlayers.ContainsKey(client))
+            {
                 TDSPlayer player = new TDSPlayer(client);
-                clientPlayers.Add(c, player);
+                clientPlayers[client] = player;
                 return player;
-           });
+            }
+            return clientPlayers[client];
         }
 
         public static Players GetEntity(this Client client)
@@ -44,13 +32,13 @@ namespace TDS_Server.Manager.Player
             return GetChar(client)?.Entity;
         }
 
-        public static Client GetPlayer(uint id)
+        public static TDSPlayer GetPlayer(uint id)
         {
             foreach (var entry in clientPlayers)
             {
                 if (entry.Value.Entity.Id == id)
                 {
-                    return entry.Value.Client;
+                    return entry.Value;
                 }
             }
             return null;
@@ -76,27 +64,13 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<uint> GetPlayerIDByScname(string scname)
         {
-            // Check our cache first
-            var idobj = clientEntities
-                        .Where(pl => pl.Value.Scname == scname)
-                        .Select(pl => new { ID = pl.Value.Id })
-                        .FirstOrDefault();
-            bool exists = idobj != null;
-            if (!exists)
+            using (var dbcontext = new TDSNewContext())
             {
-                // Now check the database
-                using (var dbcontext = new TDSNewContext())
-                {
-                    idobj = (await dbcontext.Players
-                                .Where(p => p.Scname == scname)
-                                .Select(p => new { ID = p.Id })
-                                .ToListAsync()
-                            ).FirstOrDefault();
-                    exists = idobj != null;
-
-                }
+                return await dbcontext.Players
+                            .Where(p => p.Scname == scname)
+                            .Select(p => p.Id)
+                            .FirstOrDefaultAsync();
             }
-            return exists ? idobj.ID : 0;
         }
 
         public static void GiveMoney(this Client player, int money)

@@ -10,7 +10,8 @@ namespace TDS_Server.Instance.Lobby
         {
             base.RemovePlayer(character);
 
-            SpectateablePlayers[character.Team.Index].Remove(character);
+            if (character.Team.Index != 0)
+                SpectateablePlayers[character.Team.Index-1].Remove(character);
         }
 
         public void KillPlayer(Client player, string reason)

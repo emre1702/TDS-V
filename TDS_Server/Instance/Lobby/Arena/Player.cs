@@ -10,6 +10,8 @@ using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
+using TDS_Common.Dto;
+using System.Linq;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -56,10 +58,12 @@ namespace TDS_Server.Instance.Lobby
         private void SetPlayerReadyForRound(TDSPlayer character, bool freeze = true)
         {
             Client player = character.Client;
-            if (!character.Team.IsSpectatorTeam)
+            if (character.Team.Index != 0)
             {
                 PositionRotationDto spawndata = GetMapRandomSpawnData(character.Team);
                 NAPI.Player.SpawnPlayer(player, spawndata.Position, spawndata.Rotation);
+                if (!SpectateablePlayers[character.Team.Index - 1].Contains(character))
+                    SpectateablePlayers[character.Team.Index - 1].Add(character);
             }
             else
                 NAPI.Player.SpawnPlayer(player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
@@ -69,9 +73,6 @@ namespace TDS_Server.Instance.Lobby
             player.Freeze(freeze);
             GivePlayerWeapons(player);
 
-            if (!SpectateablePlayers[character.Team.Index].Contains(character))
-                SpectateablePlayers[character.Team.Index].Add(character);
-
             if (removeSpectatorsTimer.ContainsKey(character))
                 removeSpectatorsTimer.Remove(character);
 
@@ -80,7 +81,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void RemovePlayerFromAlive(TDSPlayer character, bool removespectators = true)
         {
-            AlivePlayers[character.Team.Index].Remove(character);
+            AlivePlayers[character.Team.Index-1].Remove(character);
+            --SyncedTeamDatas[character.Team.Index].AmountPlayers.AmountAlive;
             if (bombAtPlayer == character)
             {
                 DropBomb();
@@ -98,11 +100,10 @@ namespace TDS_Server.Instance.Lobby
 
         private void StartRoundForPlayer(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team.IsSpectatorTeam);
-            if (!player.Team.IsSpectatorTeam)
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team.Index == 0);
+            if (player.Team.Index != 0)
             {
-                player.Lifes = LobbyEntity.AmountLifes.Value;
-                AlivePlayers[player.Team.Index].Add(player);
+                SetPlayerAlive(player);
                 player.Client.Freeze(false);
             }
             player.LastHitter = null;
@@ -136,7 +137,8 @@ namespace TDS_Server.Instance.Lobby
         {
             if (currentMap != null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name, JsonConvert.SerializeObject(currentMap.MapLimits), currentMap.MapCenter);
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name, 
+                    JsonConvert.SerializeObject(currentMap.MapLimits), JsonConvert.SerializeObject(currentMap.MapCenter));
             }
 
             SendPlayerAmountInFightInfo(player.Client);
@@ -151,6 +153,21 @@ namespace TDS_Server.Instance.Lobby
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer.RemainingMsToExecute);
                     break;
             }
+        }
+
+        private void SendPlayerAmountInFightInfo(Client player)
+        {
+            SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Skip(1).Select(t => t.AmountPlayers).ToArray();
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonConvert.SerializeObject(amounts));
+        }
+
+        private void SetPlayerAlive(TDSPlayer player)
+        {
+            player.Lifes = LobbyEntity.AmountLifes.Value;
+            AlivePlayers[player.Team.Index - 1].Add(player);
+            var teamamountdata = SyncedTeamDatas[player.Team.Index].AmountPlayers;
+            ++teamamountdata.Amount;
+            ++teamamountdata.AmountAlive;
         }
     }
 }

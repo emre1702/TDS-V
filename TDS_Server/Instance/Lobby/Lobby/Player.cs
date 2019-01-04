@@ -18,18 +18,23 @@ namespace TDS_Server.Instance.Lobby
         {
             using (var dbcontext = new TDSNewContext())
             {
-                if (LobbyEntity.Id != 0) {
+                if (LobbyEntity.Id != 0)
+                {
                     if (await IsPlayerBaned(character, dbcontext))
                         return false;
+                }
 
-                    AddPlayerLobbyStats(character, dbcontext);
+                #region Remove from old lobby
+                Lobby oldlobby = character.CurrentLobby;
+                oldlobby?.RemovePlayer(character);
+                #endregion
+
+                if (LobbyEntity.Id != 0)
+                {
+                    await AddPlayerLobbyStats(character, dbcontext);
                 }
             }
 
-            #region Remove from old lobby
-            Lobby oldlobby = character.CurrentLobby;
-            oldlobby?.RemovePlayer(character);
-            #endregion
             character.CurrentLobby = this;
             Players.Add(character);
 
@@ -40,7 +45,7 @@ namespace TDS_Server.Instance.Lobby
             SetPlayerTeam(character, Teams[teamindex]);
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client).ToList(), JsonConvert.SerializeObject(SyncedTeamDatas));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(SyncedTeamDatas));
 
             RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
             return true;
@@ -76,7 +81,8 @@ namespace TDS_Server.Instance.Lobby
             }
 
             SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, character.Client);
-            RestLogsManager.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
+            if (Id != 0)
+                RestLogsManager.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
         }
 
         private async Task SavePlayerLobbyStats(TDSPlayer character)
@@ -87,13 +93,11 @@ namespace TDS_Server.Instance.Lobby
             {
                 Playerlobbystats stats = character.CurrentLobbyStats;
                 dbcontext.Playerlobbystats.Attach(stats);
-                dbcontext.Entry(stats).State = EntityState.Modified;
                 await dbcontext.SaveChangesAsync();
-                dbcontext.Entry(stats).State = EntityState.Detached;
             }
         }
 
-        private async void AddPlayerLobbyStats(TDSPlayer character, TDSNewContext dbcontext)
+        private async Task AddPlayerLobbyStats(TDSPlayer character, TDSNewContext dbcontext)
         {
             Playerlobbystats stats = await dbcontext.Playerlobbystats.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (stats == null)
@@ -102,7 +106,6 @@ namespace TDS_Server.Instance.Lobby
                 character.Entity.Playerlobbystats.Add(stats);
                 await dbcontext.SaveChangesAsync();
             }
-            dbcontext.Entry(stats).State = EntityState.Detached;
             character.CurrentLobbyStats = stats;
         }
 

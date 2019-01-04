@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
-        public static ILanguage Language { get; private set; }
+        public static ILanguage Language { get; private set; } = languagesDict[LanguageEnum];
         public static bool ShowBloodscreen = true;
         public static bool HitsoundOn = true;
 
@@ -53,6 +53,7 @@ namespace TDS_Client.Manager.Utility
         public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs.Value;
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
         public static uint CountdownTime => syncedLobbySettings.CountdownTime.Value;
+        public static int MapChooseTime => syncedSettings.MapChooseTime;
         public static uint RoundTime => syncedLobbySettings.RoundTime.Value;
         public static int RoundEndTime => syncedSettings.RoundEndTime;
         public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime.Value;

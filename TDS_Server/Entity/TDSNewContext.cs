@@ -299,14 +299,21 @@ namespace TDS_Server.Entity
 
                 entity.ToTable("lobby_weapons");
 
+                entity.HasIndex(e => e.Hash)
+                    .HasName("FK_lobby_weapons_weapons_hash");
+
                 entity.Property(e => e.Damage).HasColumnType("smallint(5)");
 
                 entity.Property(e => e.HeadMultiplicator).HasDefaultValueSql("'1'");
 
+                entity.HasOne(d => d.HashNavigation)
+                    .WithMany(p => p.LobbyWeapons)
+                    .HasForeignKey(d => d.Hash)
+                    .HasConstraintName("FK_lobby_weapons_weapons_hash");
+
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.LobbyWeapons)
                     .HasForeignKey(d => d.Lobby)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_lobby_weapons_lobbies");
             });
 
@@ -322,7 +329,7 @@ namespace TDS_Server.Entity
                     .HasColumnName("AsVIP")
                     .HasColumnType("bit(1)");
 
-                entity.Property(e => e.Reason).HasColumnType("varchar(1000)");
+                entity.Property(e => e.Reason).HasColumnType("varchar(500)");
 
                 entity.Property(e => e.Timestamp)
                     .HasColumnType("timestamp")
@@ -372,11 +379,10 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Ip)
-                    .IsRequired()
                     .HasColumnName("IP")
-                    .HasColumnType("varchar(20)");
+                    .HasColumnType("varchar(200)");
 
-                entity.Property(e => e.Serial).HasColumnType("varchar(100)");
+                entity.Property(e => e.Serial).HasColumnType("varchar(200)");
 
                 entity.Property(e => e.Timestamp)
                     .HasColumnType("timestamp")
@@ -582,17 +588,18 @@ namespace TDS_Server.Entity
             {
                 entity.ToTable("players");
 
+                entity.HasIndex(e => e.AdminLvl)
+                    .HasName("FK_players_adminlevels");
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AdminLvl)
-                    .HasColumnType("tinyint(1)")
-                    .HasDefaultValueSql("'0'");
+                entity.Property(e => e.AdminLvl).HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Donation)
                     .HasColumnType("tinyint(3)")
                     .HasDefaultValueSql("'0'");
 
-                entity.Property(e => e.Email).HasColumnType("varchar(100)");
+                entity.Property(e => e.Email).HasColumnType("varchar(300)");
 
                 entity.Property(e => e.IsVip)
                     .HasColumnName("IsVIP")
@@ -604,7 +611,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasColumnType("varchar(100)");
+                    .HasColumnType("varchar(300)");
 
                 entity.Property(e => e.RegisterTimestamp)
                     .HasColumnType("timestamp")
@@ -614,6 +621,12 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnName("SCName")
                     .HasColumnType("varchar(255)");
+
+                entity.HasOne(d => d.AdminLvlNavigation)
+                    .WithMany(p => p.Players)
+                    .HasForeignKey(d => d.AdminLvl)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_players_adminlevels");
             });
 
             modelBuilder.Entity<Playersettings>(entity =>
@@ -713,11 +726,11 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.IsSpectatorTeam).HasColumnType("bit(1)");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.SkinHash).HasColumnType("int(10)");
 
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)

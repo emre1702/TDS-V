@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using RAGE.Elements;
+using System.Linq;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
@@ -31,10 +32,20 @@ namespace TDS_Client.Manager.Damage
 
         public static void OnWeaponShot(Vector3 targetPos, Player target, CancelEventArgs cancel)
         {
-            if (target == null)
-                return;
             cancel.Cancel = true;
-            CallRemote(DToServerEvent.HitOtherPlayer, target, false);
+
+            Vector3 startpos = Player.LocalPlayer.GetBoneCoords(6286, 0, 0, 0);
+            Vector3 endpos = Vector3.Lerp(startpos, targetPos, 1.05f);
+            int rayHandle = RAGE.Game.Shapetest.StartShapeTestRay(startpos.X, startpos.Y, startpos.Z, endpos.X, endpos.Y, endpos.Z, 8, Player.LocalPlayer.Handle, 0);
+            int hit = 0;
+            int hitEntityHandle = 0;
+            RAGE.Game.Shapetest.GetShapeTestResult(rayHandle, ref hit, endpos, startpos, ref hitEntityHandle);
+            if (hit != 0)
+            {
+                Player hitted = Entities.Players.All.FirstOrDefault(p => p.Handle == hitEntityHandle);
+                if (hitted != null)
+                    CallRemote(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+            }
         }
 
         public static void Reset()

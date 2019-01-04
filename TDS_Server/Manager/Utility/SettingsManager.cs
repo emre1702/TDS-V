@@ -27,7 +27,8 @@ namespace TDS_Server.Manager.Utility
             {
                 DistanceToSpotToPlant = settings.DistanceToSpotToPlant,
                 DistanceToSpotToDefuse = settings.DistanceToSpotToDefuse,
-                RoundEndTime = 8 * 1000
+                RoundEndTime = 8 * 1000,
+                MapChooseTime = 4 * 1000
             };
         }
     }

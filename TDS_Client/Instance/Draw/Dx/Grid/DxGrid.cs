@@ -1,4 +1,5 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +14,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         public int ScrollIndex;
 
         public float X, Y, Width, BodyHeight;
-        public Alignment Alignment;
+        public UIResText.Alignment Alignment;
         public float RowHeight;
 
         public DxGridRow Header { get; private set; }
@@ -24,8 +25,8 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         private int maxRows;
         
 
-        public DxGrid(float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon, 
-            Alignment alignment = Alignment.Center, int maxRows = 25) : base()
+        public DxGrid(float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
+            UIResText.Alignment alignment = UIResText.Alignment.Centered, int maxRows = 25) : base()
         {
             X = x;
             Y = y;
@@ -40,7 +41,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             RowHeight = BodyHeight / maxRows;
         }
 
-        protected override void Draw()
+        public override void Draw()
         {
             CheckScroll();
             if (Header != null && Header.Activated)

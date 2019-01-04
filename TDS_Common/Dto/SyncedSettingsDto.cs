@@ -5,5 +5,6 @@
         public int DistanceToSpotToPlant;
         public int DistanceToSpotToDefuse;
         public int RoundEndTime;
+        public int MapChooseTime;
     }
 }

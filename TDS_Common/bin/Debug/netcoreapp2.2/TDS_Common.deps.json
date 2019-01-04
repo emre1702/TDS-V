@@ -7,8 +7,28 @@
   "targets": {
     ".NETCoreApp,Version=v2.2": {
       "TDS_Common/1.0.0": {
+        "dependencies": {
+          "NeoSmart.Hashing": "0.1.0.0",
+          "xxHash": "0.3.0.0"
+        },
         "runtime": {
           "TDS_Common.dll": {}
+        }
+      },
+      "NeoSmart.Hashing/0.1.0.0": {
+        "runtime": {
+          "NeoSmart.Hashing.dll": {
+            "assemblyVersion": "0.1.0.0",
+            "fileVersion": "0.1.0.0"
+          }
+        }
+      },
+      "xxHash/0.3.0.0": {
+        "runtime": {
+          "xxHash.dll": {
+            "assemblyVersion": "0.3.0.0",
+            "fileVersion": "0.3.0.0"
+          }
         }
       }
     }
@@ -16,6 +36,16 @@
   "libraries": {
     "TDS_Common/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NeoSmart.Hashing/0.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "xxHash/0.3.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

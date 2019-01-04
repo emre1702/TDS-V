@@ -21,7 +21,7 @@ namespace TDS_Server.Instance.Lobby
     partial class Arena
     {
         private TDSTimer nextRoundStatusTimer;
-        private readonly Dictionary<ERoundStatus, uint> durationsDict = new Dictionary<ERoundStatus, uint>
+        public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
         {
             [ERoundStatus.Mapchoose] = 4 * 1000,
             [ERoundStatus.Countdown] = 5 * 1000,
@@ -55,7 +55,7 @@ namespace TDS_Server.Instance.Lobby
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);
                     else
                         SetRoundStatus(nextStatus);
-                }, durationsDict[nextStatus]);
+                }, DurationsDict[status]);
                 roundStatusMethod[status]();
             }
             else if (currentRoundStatus != ERoundStatus.RoundEnd)
@@ -65,6 +65,7 @@ namespace TDS_Server.Instance.Lobby
         private void StartMapChoose()
         {
             ClearBombRound();
+            ClearTeamPlayersAmounts();
             MapDto nextMap = GetNextMap();
             if (nextMap.SyncedData.Type == EMapType.Bomb)
                 StartBombMapChoose(nextMap);
@@ -72,7 +73,7 @@ namespace TDS_Server.Instance.Lobby
             CreateMapLimitBlips(nextMap);
             if (LobbyEntity.MixTeamsAfterRound.Value)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, JsonConvert.SerializeObject(nextMap.MapLimits), nextMap.MapCenter);
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, JsonConvert.SerializeObject(nextMap.MapLimits), JsonConvert.SerializeObject(nextMap.MapCenter));
             currentMap = nextMap;
         }
 
@@ -83,13 +84,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void StartRound()
         {
-            FuncIterateAllPlayers((player, team) =>
-            {
-                StartRoundForPlayer(player);
-            });
-
-            List<int> amountplayersinplayingteams = TeamPlayers.Skip(1).Select(list => list.Count).ToList(); 
-            PlayerAmountInFightSync(amountplayersinplayingteams);            
+            StartRoundForAllPlayer();       
 
             if (currentMap.SyncedData.Type == EMapType.Bomb)
                 StartRoundBomb();
@@ -112,6 +107,7 @@ namespace TDS_Server.Instance.Lobby
 
             FuncIterateAllPlayers((character, team) =>
             {
+                Console.WriteLine(character.Client.Name);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
             });
 
@@ -165,17 +161,17 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundEndReason.Time:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam?.Name ?? "-");
                     });
                 case ERoundEndReason.BombExploded:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Name ?? "-");
                     });
                 case ERoundEndReason.BombDefused:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Name ?? "-");
                     });
                 case ERoundEndReason.Command:
                     return LangUtils.GetLangDictionary(lang =>

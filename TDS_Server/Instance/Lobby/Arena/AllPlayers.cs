@@ -5,6 +5,7 @@ using System.Linq;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -19,9 +20,10 @@ namespace TDS_Server.Instance.Lobby
             if (!LobbyEntity.MoneyPerKill.HasValue && !LobbyEntity.MoneyPerAssist.HasValue && !LobbyEntity.MoneyPerDamage.HasValue)
                 return;
 
+            StringBuilder strbuilder = new StringBuilder();
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.IsSpectatorTeam)
+                if (team.Index == 0)
                     return;
                     
                 uint killreward = 0;
@@ -36,13 +38,17 @@ namespace TDS_Server.Instance.Lobby
                     damagereward = (uint)(character.CurrentRoundStats.Damage * LobbyEntity.MoneyPerDamage.Value);
 
                 character.GiveMoney(killreward + assistreward + damagereward);
-                NAPI.Chat.SendChatMessageToPlayer(character.Client, Utils.GetReplaced(character.Language.ROUND_REWARD_INFO,
-                    killreward == 0 ? "-" : killreward.ToString(),
-                    assistreward == 0 ? "-" : assistreward.ToString(),
-                    damagereward == 0 ? "-" : damagereward.ToString(),
-                    killreward + assistreward + damagereward)
-                );
 
+                strbuilder.Append("#o#____________________#n#");
+                strbuilder.AppendFormat (character.Language.ROUND_REWARD_INFO,
+                        killreward == 0 ? "-" : killreward.ToString(),
+                        assistreward == 0 ? "-" : assistreward.ToString(),
+                        damagereward == 0 ? "-" : damagereward.ToString(),
+                        killreward + assistreward + damagereward);
+                strbuilder.Append("#n##o#____________________");
+
+                NAPI.Chat.SendChatMessageToPlayer(character.Client, strbuilder.ToString());
+                strbuilder.Clear();
             });
         }
 
@@ -50,20 +56,28 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (!team.IsSpectatorTeam)
+                if (team.Index != 0)
+                {
                     RemoveAsSpectator(character);
+                    SpectateablePlayers[team.Index - 1].Add(character);
+                }  
                 SetPlayerReadyForRound(character);
-                SpectateablePlayers[team.Index].Add(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
             });
             if (currentMap.SyncedData.Type == EMapType.Bomb)
                 GiveBombToRandomTerrorist();
         }
 
-        private void SendPlayerAmountInFightInfo(Client player)
+        private void StartRoundForAllPlayer()
         {
-            SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Select(t => t.AmountPlayers).ToArray();
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonConvert.SerializeObject(amounts));
+            FuncIterateAllPlayers((player, team) =>
+            {
+                StartRoundForPlayer(player);
+            });
+
+            SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Skip(1).Select(t => t.AmountPlayers).ToArray();
+            string json = JsonConvert.SerializeObject(amounts);
+            SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json); 
         }
     }
 }

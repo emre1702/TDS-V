@@ -9,11 +9,10 @@
     using Microsoft.EntityFrameworkCore;
     using TDS_Server.Entity;
     using TDS_Server.Interface;
-    using TDS_Server.Enum;
     using TDS_Server.Manager.Utility;
-    using TDS_Server.Default;
     using TDS_Common.Default;
     using TDS_Common.Enum;
+    using TDS_Server.Instance.Player;
 
     class Account : Script
     {
@@ -25,33 +24,30 @@
         {
             StringBuilder builder = new StringBuilder();
             ILanguage lang = player.GetLang();
-            builder.Append("#o#__________________________________________#w#");
-            for (int i = 1; i <= lang.WELCOME_MESSAGE.Length; i++)
-            {
-                builder.Append(lang.WELCOME_MESSAGE[i]);
-            }
-            builder.Append("#n##o#__________________________________________");
+            builder.Append("#o#__________________________________________#w# \\ ");
+            builder.AppendJoin(" \\ ", lang.WELCOME_MESSAGE);
+            builder.Append(" \\ #o#__________________________________________");
             player.SendChatMessage(builder.ToString());
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
+        public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
         {
-            Players entity = player.GetEntity();
-            if (entity == null)
+            TDSPlayer player = client.GetChar();
+            if (player.Entity == null)
                 return;
 
-            if (!entity.Playerstats.LoggedIn)
+            if (!player.LoggedIn)
                 return;
 
-            entity.Playerstats.LoggedIn = false;
-            if (entity.AdminLvl > 0)
+            player.Entity.Playerstats.LoggedIn = false;
+            if (player.AdminLevel.Level > 0)
                 AdminsManager.SetOffline(player);
 
             using (var dbcontext = new TDSNewContext())
             {
+                dbcontext.Entry(player.Entity).State = EntityState.Modified;
                 dbcontext.SaveChangesAsync();
-                dbcontext.Entry(entity).State = EntityState.Detached;
             }
 #warning Check that after Client implementation
             //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   
@@ -66,11 +62,14 @@
         }
 
 # warning TODO check parameter (hitsoundon and language removed) + check if event gets triggered AFTER Login!!
-        [RemoteEvent("onPlayerChatLoad")]
+        [RemoteEvent(DToServerEvent.ChatLoaded)]
         public static void OnPlayerChatLoadEvent(Client player)
         {
             SendWelcomeMessage(player);
-            OfflineMessagesManager.CheckOfflineMessages(player);
+            TDSPlayer character = player.GetChar();
+            character.ChatLoaded = true;
+            if (character.Entity != null)
+                OfflineMessagesManager.CheckOfflineMessages(character);
         }
 
         [RemoteEvent(DToServerEvent.TryLogin)]

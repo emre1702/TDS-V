@@ -1,4 +1,4 @@
-﻿let roundEndReason = $( "#round_end_reason" );
+﻿let roundEndReason = $("#round_end_reason");
 let roundEndReasonContainer = $( "#round_end_reason_container" );
 let myMapRating = {}
 let currentMap;

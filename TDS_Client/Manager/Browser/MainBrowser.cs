@@ -41,7 +41,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void PlaySound(string soundname)
         {
-            browser.ExecuteJs($"playSound({soundname})");
+            browser.ExecuteJs($"playSound('{soundname}')");
         }
 
         public static void PlayHitsound()

@@ -16,7 +16,7 @@ namespace TDS_Server.Instance.Lobby
             roundStatusMethod[ERoundStatus.Round] = StartRound;
             roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
-            durationsDict[ERoundStatus.Round] = entity.RoundTime.Value * 1000;
+            DurationsDict[ERoundStatus.Round] = entity.RoundTime.Value * 1000;
 
             if (entity.Teams.Count > 1)
                 spawnCounter = new int[entity.Teams.Count-1];

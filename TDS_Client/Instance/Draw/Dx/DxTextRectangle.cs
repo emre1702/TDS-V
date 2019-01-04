@@ -1,5 +1,7 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System.Drawing;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -10,22 +12,34 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxTextRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
-            int textOffsetAbsoluteX = 1, Alignment alignment = Alignment.Left, bool relativePos = true, bool activated = true) : base(activated)
+            int textOffsetAbsoluteX = 1, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true, bool activated = true) : base(activated)
         {
-            rect = new DxRectangle(x, y, width, height, rectColor, alignment, relativePos);
-            this.text = new DxText(text, x + textOffsetAbsoluteX, y, textScale, textColor, textFont, alignment, relativePos);
+            rect = new DxRectangle(x, y, width, height, rectColor, alignmentX, alignmentY, relativePos)
+            {
+                Activated = false
+            };
+            this.text = new DxText(text, x + (relativePos ? GetRelativeX(textOffsetAbsoluteX, false) : textOffsetAbsoluteX), y, textScale, textColor, textFont, alignmentX, alignmentY, relativePos)
+            {
+                Activated = false
+            };
+        }
+
+        public override void Draw()
+        {
+            rect.Draw();
+            text.Draw();
         }
 
         public void SetText(string text)
         {
-            this.text.SetText(text);
+            this.text.Text = text;
         }
 
         public override void Remove()
         {
             base.Remove();
-            text.Remove();
-            rect.Remove();
+            text?.Remove();
+            rect?.Remove();
             text = null;
             rect = null;
         }

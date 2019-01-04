@@ -18,7 +18,6 @@ namespace TDS_Server.Manager.Player
                 {
                     Name = player.Name,
                     Scname = player.SocialClubName,
-#warning TODO: Check if password is already hashed to SHA512
                     Password = Utils.HashPWServer(password),
 #warning TODO: Make that nullable at client
                     Email = email,

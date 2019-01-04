@@ -9,10 +9,9 @@ namespace TDS_Client.Instance.Draw.Dx
     class Dx
     {
         public bool Activated { get; set; }
-        protected ScreenResolutionType ScreenRes
-        {
-            get => Game.ScreenResolution;
-        }
+
+        protected static int ResX;
+        protected static int ResY;
 
         private static List<Dx> dxDraws = new List<Dx>();
 
@@ -24,14 +23,20 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static void RenderAll()
         {
-            foreach (Dx draw in dxDraws)
+            for (int i = dxDraws.Count - 1; i >= 0; --i)
             {
+                Dx draw = dxDraws[i];
                 if (draw.Activated)
                     draw.Draw();
             }
         }
 
-        protected virtual void Draw() { }
+        public static void RefreshResolution()
+        {
+            RAGE.Game.Graphics.GetActiveScreenResolution(ref ResX, ref ResY);
+        }
+
+        public virtual void Draw() { }
 
         public virtual void Remove()
         {
@@ -61,22 +66,27 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected float GetRelativeX(float x, bool relative)
         {
-            return relative ? x : x / ScreenRes.Width;
+            return relative ? x : x / ResX;
         }
 
         protected float GetRelativeY(float y, bool relative)
         {
-            return relative ? y : y / ScreenRes.Height;
+            return relative ? y : y / ResY;
         }
 
         protected int GetAbsoluteX(float x, bool relative)
         {
-            return (int) (relative ? x * ScreenRes.Width : x);
+            return (int) (relative ? x * ResX : x);
         }
 
         protected int GetAbsoluteY(float y, bool relative)
         {
-            return (int) (relative ? y * ScreenRes.Height : y);
+            return (int) (relative ? y * ResY : y);
+        }
+
+        protected void GetResolution(ref int x, ref int y)
+        {
+            RAGE.Game.Graphics.GetActiveScreenResolution(ref x, ref y);
         }
     }
 }

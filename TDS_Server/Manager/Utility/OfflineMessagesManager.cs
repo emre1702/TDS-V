@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TDS_Server.Entity;
+using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Utility {
@@ -29,22 +30,25 @@ namespace TDS_Server.Manager.Utility {
         }
         #endregion
 
-        public static async void CheckOfflineMessages(Client player)
+        public static async void CheckOfflineMessages(TDSPlayer player)
         {
-            Players entity = player.GetEntity();
-
             using (var dbcontext = new TDSNewContext())
             {
                 int amountnewentries = await dbcontext
                     .Offlinemessages
-                    .Where(msg => msg.SourceId == entity.Id && msg.AlreadyLoadedOnce)
+                    .Where(msg => msg.SourceId == player.Entity.Id && msg.AlreadyLoadedOnce)
+                    .AsNoTracking()
+                    .CountAsync();
+                int amountentries = await dbcontext
+                    .Offlinemessages
                     .AsNoTracking()
                     .CountAsync();
 
+
                 if (amountnewentries > 0)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player,
-                        Utils.GetReplaced(player.GetLang().GOT_UNREAD_OFFLINE_MESSAGES, entity.OfflinemessagesSource.Count, amountnewentries.ToString())
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client,
+                        Utils.GetReplaced(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountentries.ToString(), amountnewentries.ToString())
                     );
                 }
             }

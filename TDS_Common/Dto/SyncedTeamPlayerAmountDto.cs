@@ -4,6 +4,7 @@ using System.Text;
 
 namespace TDS_Common.Dto
 {
+    [Serializable]
     public class SyncedTeamPlayerAmountDto
     {
         public uint Amount;

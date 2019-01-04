@@ -46,7 +46,7 @@
         public static Client FindPlayer(string name)
         {
             Client player = NAPI.Player.GetPlayerFromName(name);
-            if (player.Exists)
+            if (player != null && player.Exists)
                 return player;
             name = name.ToLower();
             return NAPI.Pools.GetAllPlayers().Find(c => c.Name.ToLower().StartsWith(name));
@@ -59,13 +59,18 @@
                 strbuilder.Append(str);
                 for (int i = 0; i < args.Length; ++i)
                 {
-                    strbuilder.Replace("{" + (i + 1) + "}", args[i].ToString());
+                    strbuilder.Replace("{" + i + "}", args[i] == null ? "?" : args[i].ToString());
                 }
                 string result = strbuilder.ToString();
                 strbuilder.Clear();
                 return result;
             }
             return str;
+        }
+
+        public static string Formatted(this string str, params object[] args)
+        {
+            return string.Format(str, args);
         }
 
         public static string DurationTo(this DateTime time1, DateTime time2)

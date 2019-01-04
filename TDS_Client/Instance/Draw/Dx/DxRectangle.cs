@@ -1,5 +1,7 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System.Drawing;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -10,10 +12,11 @@ namespace TDS_Client.Instance.Draw.Dx
             sizex, 
             sizey;
         private Color color;
-        private Alignment alignment;
+        private UIResText.Alignment alignmentX;
+        private EAlignmentY alignmentY;
         private bool relativePos;
 
-        public DxRectangle(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.Left, bool relativePos = true) : base()
+        public DxRectangle(float x, float y, float width, float height, Color color, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true) : base()
         {
             xpos = GetRelativeX(x, relativePos);
             ypos = GetRelativeY(y, relativePos);
@@ -21,37 +24,42 @@ namespace TDS_Client.Instance.Draw.Dx
             sizey = GetRelativeY(height, relativePos);
 
             this.color = color;
-            this.alignment = alignment;
+            this.alignmentX = alignmentX;
+            this.alignmentY = alignmentY;
             this.relativePos = relativePos;
 
-            if (alignment == Alignment.Left)
+            if (alignmentX == UIResText.Alignment.Left)
                 xpos += sizex / 2;
-            else if (alignment == Alignment.Right)
+            else if (alignmentX == UIResText.Alignment.Right)
                 xpos -= sizex / 2;
-            ypos += sizey / 2;
+
+            if (alignmentY == EAlignmentY.Top)
+                ypos += sizey / 2;
+            else if (alignmentY == EAlignmentY.Bottom)
+                ypos -= sizey / 2;
         }
 
-        public void SetAlignment(Alignment newalignment)
+        public void SetAlignment(UIResText.Alignment newalignmentX)
         {
             // convert old back
-            if (alignment == Alignment.Left)
+            if (alignmentX == UIResText.Alignment.Left)
                 xpos -= sizex / 2;
-            else if (alignment == Alignment.Right)
+            else if (alignmentX == UIResText.Alignment.Right)
                 xpos += sizex / 2;
 
             // align new
-            if (newalignment == Alignment.Left)
+            if (newalignmentX == UIResText.Alignment.Left)
                 xpos += sizex / 2;
-            else if (newalignment == Alignment.Right)
+            else if (newalignmentX == UIResText.Alignment.Right)
                 xpos -= sizex / 2;
 
-            alignment = newalignment;
+            alignmentX = newalignmentX;
         }
 
         public void SetWidth(float width)
         {
-            Alignment currentalignment = alignment;
-            SetAlignment(Alignment.Center);
+            UIResText.Alignment currentalignment = alignmentX;
+            SetAlignment(UIResText.Alignment.Centered);
             sizex = width;
             SetAlignment(currentalignment);
         }
@@ -63,7 +71,7 @@ namespace TDS_Client.Instance.Draw.Dx
             ypos += height / 2;
         }
 
-        protected override void Draw()
+        public override void Draw()
         {
             Graphics.DrawRect(xpos, ypos, sizex, sizey, color.R, color.G, color.B, color.A, 0);
         }

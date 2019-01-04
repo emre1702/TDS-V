@@ -11,7 +11,7 @@ namespace TDS_Server.Manager.Commands
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Utility;
 
-    class AdminCommand : Script
+    class AdminCommand
     {
 
         //#region Chat

@@ -1,4 +1,4 @@
-﻿let moneyText = $( "#money" );
+﻿let moneyText = $("#money");
 let bloodscreen = $( "#bloodscreen" );
 let hitsound = $( "#audio_hit" );
 let killmessagesBox = $( "#kill_messages_box" );

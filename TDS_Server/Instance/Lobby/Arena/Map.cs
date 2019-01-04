@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 Blip blip = NAPI.Blip.CreateBlip(pos: entry[0].Position, dimension: Dimension);
                 blip.Sprite = 491;
-                Teams team = Teams[i++];
+                Teams team = Teams[++i];
                 blip.Color = team.BlipColor;
                 blip.Name = "Spawn " + team.Name;
                 mapBlips.Add(blip);

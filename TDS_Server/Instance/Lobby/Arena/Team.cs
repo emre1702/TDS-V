@@ -35,14 +35,14 @@ namespace TDS_Server.Instance.Lobby
         private Teams GetTeamWithHighestHP()
         {
             int highesthealth = 0;
-            Teams teamwithhighesthealth = null;
+            Teams teamwithhighesthealth = Teams[1];
 
             foreach (Teams team in Teams)
             {
-                if (team.IsSpectatorTeam)
+                if (team.Index == 0)
                     continue;
                 int teamhealth = 0;
-                foreach (var player in AlivePlayers[team.Index])
+                foreach (var player in AlivePlayers[team.Index-1])
                 {
                     teamhealth += player.Client.Health + player.Client.Armor;
                 }

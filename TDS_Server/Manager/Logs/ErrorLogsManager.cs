@@ -22,6 +22,7 @@ namespace TDS_Server.Manager.Logs
                     Timestamp = DateTime.Now
                 }
             );
+            Console.WriteLine(info + "\n" + stacktrace);
         }
 
         public static async Task Save(TDSNewContext dbcontext)

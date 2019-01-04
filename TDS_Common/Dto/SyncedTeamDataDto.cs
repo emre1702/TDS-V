@@ -5,6 +5,7 @@ using System.Text;
 
 namespace TDS_Common.Dto
 {
+    [Serializable]
     public class SyncedTeamDataDto
     {
         public int Index { get; set; }

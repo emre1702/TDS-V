@@ -32,6 +32,7 @@
                     dbcontext.SaveChanges();
 
                     await SettingsManager.Load(dbcontext);
+                    AdminsManager.Init(dbcontext);
                     CommandsManager.LoadCommands(dbcontext);
 
                     NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);

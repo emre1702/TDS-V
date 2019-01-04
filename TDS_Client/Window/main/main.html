@@ -15,7 +15,7 @@
     </head>
     <body>
         <span id="money">$0</span>
-        <img src="../pic/blood.png" id="bloodscreen" tabIndex="-1" />
+        <img src="../pic/blood.png" id="bloodscreen" alt=" " tabIndex="-1" />
         <div id="kill_messages_box"></div>
 
         <div id="mapmenu">
@@ -64,22 +64,23 @@
             <span id="map_rating_stars" class="rating"></span>
         </div>
 
+        <audio id="audio_1" preload="auto">
+            <source src="../sounds/1.mp3" type="audio/mp3" />
+        </audio>
+        <audio id="audio_2" preload="auto">
+            <source src="../sounds/2.mp3" type="audio/mp3" />
+        </audio>
+        <audio id="audio_3" preload="auto">
+            <source src="../sounds/3.mp3" type="audio/mp3" />
+        </audio>
+        <audio id="audio_go" preload="auto">
+            <source src="../sounds/go.mp3" type="audio/mp3" />
+        </audio>
+        <audio id="audio_hit" preload="auto">
+            <source src="../sounds/hit.mp3" type="audio/mp3" />
+        </audio>
+
         <script src="index.js"></script>
     </body>
 </html>
 
-<audio id="audio_1" preload="auto" volume="0.1">
-    <source src="../sounds/1.wav" type="audio/wav" />
-</audio>
-<audio id="audio_2" preload="auto" volume="0.1">
-    <source src="../sounds/2.wav" type="audio/wav" />
-</audio>
-<audio id="audio_3" preload="auto" volume="0.1">
-    <source src="../sounds/3.wav" type="audio/wav" />
-</audio>
-<audio id="audio_go" preload="auto" volume="0.2">
-    <source src="../sounds/go.wav" type="audio/wav" />
-</audio>
-<audio id="audio_hit" preload="auto" volume="0.3">
-    <source src="../sounds/hit.wav" type="audio/wav" />
-</audio>

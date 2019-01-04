@@ -51,7 +51,11 @@ namespace TDS_Server.Instance.Lobby
                 blip.Sprite = 433;
                 bombPlantBlips.Add(blip);
             }
-            bomb = NAPI.Object.CreateObject(1764669601, currentMap.BombPlantPlaces[0], new Vector3(), 255, Dimension);
+            bomb = NAPI.Object.CreateObject(1764669601, map.BombPlantPlaces[0], new Vector3(), 255, Dimension);
+
+            int terroristID = Utils.Rnd.Next(2) + 1;
+            terroristTeam = Teams[terroristID];
+            counterTerroristTeam = Teams[terroristID == 1 ? 2 : 1];
         }
 
         private void GiveBombToRandomTerrorist()
@@ -121,14 +125,13 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.IsSpectatorTeam)
+                if (team.Index == 0)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == terroristTeam)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
                 else
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_GOOD);
             });
-
             if (bombAtPlayer == null)
                 GiveBombToRandomTerrorist();
         }
@@ -176,7 +179,7 @@ namespace TDS_Server.Instance.Lobby
                         bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.Value);
                         FuncIterateAllPlayers((targetcharacter, team) =>
                         {
-                            NAPI.ClientEvent.TriggerClientEvent(targetcharacter.Client, DToClientEvent.BombPlanted, playerpos, team == counterTerroristTeam);
+                            NAPI.ClientEvent.TriggerClientEvent(targetcharacter.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(playerpos), team == counterTerroristTeam);
                         });
                         SendBombDefuseInfos();
                         break;

@@ -1,6 +1,8 @@
 ﻿using RAGE.Game;
+using RAGE.NUI;
 using System;
 using System.Drawing;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -25,13 +27,14 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxProgressRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color backColor, Color progressColor,
-            float textScale = 1.0f, Font textFont = Font.ChaletLondon, int textOffsetAbsoluteX = 1, bool filling = true, Alignment alignment = Alignment.Left, bool relativePos = true) : base()
+            float textScale = 1.0f, Font textFont = Font.ChaletLondon, int textOffsetAbsoluteX = 1, bool filling = true,
+            UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true) : base()
         {
-            backTextRect = new DxTextRectangle(text, x, y, width, height, textColor, backColor, textScale, textFont, textOffsetAbsoluteX, alignment, relativePos);
-            frontRect = new DxRectangle(x+1, y+1, 0, 0, progressColor, alignment, relativePos);
+            backTextRect = new DxTextRectangle(text, x, y, width, height, textColor, backColor, textScale, textFont, textOffsetAbsoluteX, alignmentX, alignmentY, relativePos);
+            frontRect = new DxRectangle(x+1, y+1, 0, 0, progressColor, alignmentX, alignmentY, relativePos);
         }
 
-        protected override void Draw()
+        public override void Draw()
         {
             if (filling)
                 frontRect.SetWidth(progress * width);

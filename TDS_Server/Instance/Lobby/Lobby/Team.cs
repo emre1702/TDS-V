@@ -16,8 +16,10 @@ namespace TDS_Server.Instance.Lobby
 
         protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {
+            if (character.Team != null)
+                TeamPlayers[character.Team.Index].Remove(character);
             TeamPlayers[team.Index].Add(character);
-            character.Client.SetSkin(team.SkinHash);
+            character.Client.SetSkin((PedHash)team.SkinHash);
             if (character.Team == null || character.Team.Id != team.Id)
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Index);
             character.Team = team;
@@ -30,12 +32,13 @@ namespace TDS_Server.Instance.Lobby
 
         protected Teams GetTeamWithFewestPlayer()
         {
-            int teamindexwithfewest = 0;
-            int fewestamount = -1;
-            for (int i = 0; i < TeamPlayers.Length; ++i) {
+            int teamindexwithfewest = 1;
+            int fewestamount = int.MaxValue;
+            int length = TeamPlayers.Length;
+            for (int i = 1; i < length; ++i) {
                 List<TDSPlayer> entry = TeamPlayers[i];
-                if (entry.Count > fewestamount
-                    || entry.Count == fewestamount && Utils.Rnd.Next(2) == 1)
+                if (entry.Count < fewestamount
+                    || entry.Count == fewestamount && Utils.Rnd.Next(length - 1) == 1)
                 {
                     fewestamount = entry.Count;
                     teamindexwithfewest = i;
@@ -57,10 +60,21 @@ namespace TDS_Server.Instance.Lobby
             ClearTeamPlayersLists();
             foreach (TDSPlayer character in Players)
             {
-                if (character.Team.IsSpectatorTeam)
+                if (character.Team == null)
+                    continue;
+                if (character.Team.Index == 0)
                     TeamPlayers[0].Add(character);  // because he is already in that team
                 else
                     SetPlayerTeam(character, GetTeamWithFewestPlayer());
+            }
+        }
+
+        protected void ClearTeamPlayersAmounts()
+        {
+            foreach (var team in SyncedTeamDatas)
+            {
+                team.AmountPlayers.AmountAlive = 0;
+                team.AmountPlayers.Amount = 0;
             }
         }
     }

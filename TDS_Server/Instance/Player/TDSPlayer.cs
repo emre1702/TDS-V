@@ -19,7 +19,7 @@ namespace TDS_Server.Instance.Player
     {
         public Players Entity
         {
-            get => GetEntity();
+            get => fEntity;
             set
             {
                 fEntity = value;
@@ -76,7 +76,7 @@ namespace TDS_Server.Instance.Player
             }
                 
         }
-        public AdminLevel AdminLevel
+        public AdminLevelDto AdminLevel
         {
             get => AdminsManager.AdminLevels[Entity.AdminLvl];
         }
@@ -102,8 +102,9 @@ namespace TDS_Server.Instance.Player
             get => Entity.Playerstats.PlayTime;
             set => Entity.Playerstats.PlayTime = value;
         }
+        public bool ChatLoaded { get; set; }
 
-        private Players fEntity { get; set; }
+        private Players fEntity;
         private Teams fTeam { get; set; }
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
@@ -200,7 +201,7 @@ namespace TDS_Server.Instance.Player
         public Task<int> SaveData(TDSNewContext dbcontext)
         {
             if (Entity == null || !Entity.Playerstats.LoggedIn)
-                return null;
+                return System.Threading.Tasks.Task.FromResult(0);
 
             dbcontext.Players.Attach(Entity).State = EntityState.Modified;
 #warning Check if this also updates PlayerSettings etc.
@@ -210,7 +211,7 @@ namespace TDS_Server.Instance.Player
         public Task<int> CheckSaveData(TDSNewContext dbcontext)
         {
             if (Environment.TickCount - LastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
-                return null;
+                return System.Threading.Tasks.Task.FromResult(0);
             LastSaveTick = Environment.TickCount;
             return SaveData(dbcontext);
         }

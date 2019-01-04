@@ -19,13 +19,12 @@ namespace TDS_Client.Manager.Browser
         {
             //Settings.LoadSettings();
             MainBrowser.LoadUserName();
-            Events.CallRemote(DToServerEvent.ChatLoaded, Settings.Language, Settings.HitsoundOn);
+            CallRemote(DToServerEvent.ChatLoaded);
         }
 
         public static void CommandUsed(string msg)
         {
-            string[] args = msg.Split(' ');
-            Events.CallRemote(DToServerEvent.CommandUsed, args[0], args.Skip(1).ToArray());
+            CallRemote(DToServerEvent.CommandUsed, msg);
         }
     }
 }

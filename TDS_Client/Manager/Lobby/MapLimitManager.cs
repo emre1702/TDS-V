@@ -1,4 +1,5 @@
 ﻿using RAGE;
+using System.Collections.Generic;
 using TDS_Client.Instance.Lobby;
 
 namespace TDS_Client.Manager.Lobby
@@ -7,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
     {
         private static MapLimit currentMapLimit;
 
-        public static void Load(Vector3[] edges)
+        public static void Load(List<Vector3> edges)
         {
             currentMapLimit?.Remove();
             currentMapLimit = new MapLimit(edges);
@@ -20,8 +21,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Stop()
         {
-            currentMapLimit?.Remove();
-            currentMapLimit = null;
+            currentMapLimit?.Stop();
         }
     }
 }
