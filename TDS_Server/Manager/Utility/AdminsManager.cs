@@ -25,7 +25,7 @@ namespace TDS_Server.Manager.Utility
                 .Select(lvl => new AdminLevelDto
                             {
                                 Level = lvl.Level,
-                                FontColor = "{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
+                                FontColor = "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
                             })
                 .AsNoTracking()
                 .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);

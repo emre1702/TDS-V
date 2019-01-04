@@ -37,7 +37,7 @@ namespace TDS_Server.Instance.Player
             set
             {
                 fTeam = value;
-                TeamChatColor = "{" + value.ColorR + "|" + value.ColorG + "|" + value.ColorB + "}"; 
+                TeamChatColor = "!{" + value.ColorR + "|" + value.ColorG + "|" + value.ColorB + "}"; 
             }
         }
         public sbyte Lifes { get; set; } = 0;
