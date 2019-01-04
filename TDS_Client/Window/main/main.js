@@ -28,7 +28,7 @@ function playHitsound() {
 }
 
 function showBloodscreen() {
-    bloodscreen.stop().show(0).hide(2500);
+    bloodscreen.stop().show().hide(2500);
 }
 
 function formatMsg( input ) {
