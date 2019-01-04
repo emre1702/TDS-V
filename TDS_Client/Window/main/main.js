@@ -1,9 +1,17 @@
 ﻿let moneyText = $("#money");
 let bloodscreen = $( "#bloodscreen" );
-let hitsound = $( "#audio_hit" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = "ENGLISH";
-let ordersDiv = $( "#orders" );
+let ordersDiv = $("#orders");
+let hitsound = $("#audio_hit");
+let hitsounds = [
+    hitsound, hitsound.clone(true),
+    hitsound.clone(true), hitsound.clone(true),
+    hitsound.clone(true), hitsound.clone(true),
+    hitsound.clone(true), hitsound.clone(true),
+    hitsound.clone(true), hitsound.clone(true)];
+let hitsoundcounter = 0;
+let hitsoundsamount = hitsounds.length;
 
 function setMoney( money ) {
     moneyText.text( "$" + money );
@@ -14,7 +22,9 @@ function playSound( soundname ) {
 }
 
 function playHitsound() {
-    hitsound.trigger( "play" ).volume = 0.05;
+    hitsounds[hitsoundcounter++].trigger("play").volume = 0.05;
+    if (hitsoundcounter == hitsoundsamount)
+        hitsoundcounter = 0;
 }
 
 function showBloodscreen() {
