@@ -102,9 +102,6 @@ namespace TDS_Client.Manager.Lobby
             if (teamDisplays == null)
                 return;
             SyncedTeamDataDto team = Team.CurrentLobbyTeams[index];
-            RAGE.Chat.Output((team == null).ToString());
-            RAGE.Chat.Output((team?.AmountPlayers == null).ToString());
-            RAGE.Chat.Output(index + " - " + teamDisplays.Length + " - " + (team?.Name ?? "?") + (team?.AmountPlayers?.Amount.ToString() ?? "?"));
             teamDisplays[index-1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
