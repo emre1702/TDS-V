@@ -15,7 +15,7 @@ namespace TDS_Client.Manager.Utility
             Tick += OnUpdateFunc;
             ElapsedTicks = GetTick();
 
-            new TDSTimer(Dx.RefreshResolution, 1000, 0);
+            new TDSTimer(Dx.RefreshResolution, 10000, 0);
         }
 
         public static void OnUpdateFunc(List<TickNametagData> _)
