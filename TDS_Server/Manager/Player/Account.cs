@@ -22,12 +22,10 @@
 
         private static void SendWelcomeMessage(Client player)
         {
-            StringBuilder builder = new StringBuilder();
             ILanguage lang = player.GetLang();
-            builder.Append("#o#__________________________________________#w# \\ ");
-            builder.AppendJoin(" \\ ", lang.WELCOME_MESSAGE);
-            builder.Append(" \\ #o#__________________________________________");
-            player.SendChatMessage(builder.ToString());
+            NAPI.Chat.SendChatMessageToPlayer(player, "#o#__________________________________________");
+            NAPI.Chat.SendChatMessageToPlayer(player, string.Join("#n#", lang.WELCOME_MESSAGE));
+            NAPI.Chat.SendChatMessageToPlayer(player, "#o#__________________________________________");
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
