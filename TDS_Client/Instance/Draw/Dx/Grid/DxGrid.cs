@@ -9,7 +9,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 {
     class DxGrid : Dx
     {
-        //private List<DxGridColumn> columns = new List<DxGridColumn>();
+        public List<DxGridColumn> Columns = new List<DxGridColumn>();
         private List<DxGridRow> rows = new List<DxGridRow>();
         public int ScrollIndex;
 
@@ -44,15 +44,19 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         public override void Draw()
         {
             CheckScroll();
+            float atYTopPos = Y - BodyHeight / 2;
             if (Header != null && Header.Activated)
-                Header.DrawAsHeader();
-            float atYPos = Y;
+            {
+                Header.Y = atYTopPos;
+                atYTopPos = Header.Draw();
+            }   
+            
             for (int i = 0; i < Math.Min(rows.Count, maxRows); ++i)
             {
                 int index = i + ScrollIndex;
-                DxGridRow row = rows[i];
-                row.Y = atYPos;
-                atYPos = row.Draw();
+                DxGridRow row = rows[index];
+                row.Y = atYTopPos + row.Height / 2;
+                atYTopPos = row.Draw();
             }
         }
 
@@ -67,11 +71,6 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             rows.Add(row);
             row.Grid = this;
         }
-
-        /*public void AddColumn(DxGridColumn column)
-        {
-            columns.Add(column);
-        }*/
 
         public void AddCell(DxGridCell cell)
         {

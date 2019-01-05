@@ -15,10 +15,11 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         public Color TextColor;
         public float Scale;
         public Font Font;
-        public UIResText.Alignment Alignment;
+        public UIResText.Alignment TextAlignment;
         public bool RelativePos;
 
         public float Height => height ?? Grid.RowHeight;
+        public float TextHeight;
 
         public DxGrid Grid;
 
@@ -26,7 +27,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public bool UseColorForWholeRow = true;
 
-        public DxGridRow(float? height, Color backColor, Color textColor, string text = null, float scale = 1f, Font font = Font.ChaletLondon, UIResText.Alignment alignment = UIResText.Alignment.Left, bool relative = true) : base(false)
+        public DxGridRow(float? height, Color backColor, Color textColor, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool relative = true) : base(false)
         {
             this.height = height;
             BackColor = backColor;
@@ -34,19 +35,37 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             this.text = text;
             Scale = scale;
             Font = font;
-            Alignment = alignment;
+            TextAlignment = textAlignment;
             RelativePos = relative;
+
+            TextHeight = Ui.GetTextScaleHeight(scale, (int)font);
         }
 
-        public float Draw()
+        private void DrawBackground()
+        {
+            if (Grid.Alignment == UIResText.Alignment.Left)
+                Graphics.DrawRect(Grid.X - Grid.Width / 2, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+            else if (Grid.Alignment == UIResText.Alignment.Centered)
+                Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+            else
+                Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+        }
+
+        private void DrawText()
+        {
+            if (TextAlignment == UIResText.Alignment.Left)
+                UIResText.Draw(text, GetAbsoluteX(Grid.X - Grid.Width / 2, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+            else if (TextAlignment == UIResText.Alignment.Centered)
+                UIResText.Draw(text, GetAbsoluteX(Grid.X, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+            else if (TextAlignment == UIResText.Alignment.Right)
+                UIResText.Draw(text, GetAbsoluteX(Grid.X + Grid.Width / 2, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+        }
+
+        public new float Draw()
         {
             if (UseColorForWholeRow)
-            {
-                if (Grid.Alignment == UIResText.Alignment.Left)
-                    Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
-                else
-                    Graphics.DrawRect(Grid.X - Grid.Width / 2, Y - Height / 2, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
-            }
+                DrawBackground();
+
             foreach (var cell in Cells)
             {
                 if (!UseColorForWholeRow)
@@ -54,19 +73,9 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
                 cell.Draw();
             }
             if (text != null)
-            {
-                if (Grid.Alignment == UIResText.Alignment.Left)
-                    UIText.Draw(text, new Point(GetAbsoluteX(Grid.X, RelativePos), GetAbsoluteY(Grid.Y, RelativePos)), Scale, TextColor, Font, false);
-                else
-                    UIText.Draw(text, new Point(GetAbsoluteX(Grid.X - Grid.Width / 2, RelativePos), GetAbsoluteY(Grid.Y - Height / 2, RelativePos)), Scale, TextColor, Font, true);
-            }
-            return Y + Height;
-        }
+                DrawText();
 
-        public void DrawAsHeader()
-        {
-            Y = Grid.Y;
-            Draw();
+            return Y + Height / 2;
         }
 
         public void AddCell(DxGridCell cell)

@@ -80,9 +80,9 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             float textheight = Ui.GetTextScaleHeight(scale, (int)font);
             if (alignmentY == EAlignmentY.Center)
-                yPos -= GetAbsoluteY(textheight / 2, true);
+                yPos -= GetAbsoluteY(textheight / 2, true) - 5;
             else if (alignmentY == EAlignmentY.Bottom)
-                yPos -= GetAbsoluteY(textheight, true);
+                yPos -= GetAbsoluteY(textheight, true) - 5;
         }
 
         public void SetScale(float scale)

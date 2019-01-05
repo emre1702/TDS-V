@@ -19,6 +19,8 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         private Font? font;
         private UIResText.Alignment? alignment;
 
+        private float? textHeight;
+
         public Color BackColor
         {
             get => backColor ?? Row.BackColor;
@@ -41,13 +43,34 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             this.scale = scale;
             this.font = font;
             this.alignment = alignment;
+
+            if (scale.HasValue && font.HasValue)
+                textHeight = Ui.GetTextScaleHeight(scale.Value, (int)font.Value);
+
+            row.AddCell(this);
         }
 
         public new void Draw()
         {
-            int x = GetAbsoluteX(column.X + column.Width / 2, column.RelativePos);
-            int y = GetAbsoluteY(Row.Y + Row.Height / 2, Row.RelativePos);
-            UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, this.alignment ?? Row.Alignment, false, false, 0);
+            int y = GetAbsoluteY(Row.Y, Row.RelativePos) - 5;
+            y -= GetAbsoluteY((textHeight ?? Row.TextHeight) / 2, true);
+            UIResText.Alignment align = alignment ?? Row.TextAlignment;
+            if (align == UIResText.Alignment.Left)
+            {
+                int x = GetAbsoluteX(column.X, column.RelativePos);
+                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+            }
+            else if (align == UIResText.Alignment.Centered)
+            {
+                int x = GetAbsoluteX(column.X + column.Width / 2, column.RelativePos);
+                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+            }
+            else
+            {
+                int x = GetAbsoluteX(column.X + column.Width, column.RelativePos);
+                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+            }
+                
         }
 
         public void DrawBackground()

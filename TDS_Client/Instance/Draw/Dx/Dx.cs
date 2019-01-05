@@ -6,6 +6,8 @@ using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
+    // UIResText.Draw is top aligned
+    // Graphics.DrawRect is center aligned (X & Y)
     class Dx
     {
         public bool Activated { get; set; }
@@ -76,17 +78,12 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected int GetAbsoluteX(float x, bool relative)
         {
-            return (int) (relative ? x * ResX : x);
+            return (int) Math.Round(relative ? x * ResX : x);
         }
 
         protected int GetAbsoluteY(float y, bool relative)
         {
-            return (int) (relative ? y * ResY : y);
-        }
-
-        protected void GetResolution(ref int x, ref int y)
-        {
-            RAGE.Game.Graphics.GetActiveScreenResolution(ref x, ref y);
+            return (int)Math.Round(relative ? y * ResY : y);
         }
     }
 }
