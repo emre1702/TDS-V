@@ -17,11 +17,6 @@ namespace TDS_Client.Manager.Draw
 {
     class Scoreboard : Script
     {
-        private const float maxPlayers = 25,
-                            completeWidth = 0.4f,
-                            bodyHeight = 0.37f,
-                            titleHeight = 0.03f;
-
         private static DxGrid grid;
         private static bool isActivated;
         private static ulong lastLoadedTick;
@@ -44,7 +39,7 @@ namespace TDS_Client.Manager.Draw
 
         public Scoreboard()
         {
-            grid = new DxGrid(0.5f, 0.5f, 0.4f, 0.37f, Color.FromArgb(187, 10, 10, 10));
+            grid = new DxGrid(0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
             CreateColumns();
             CreateTitle();
             CreateBody();
@@ -55,16 +50,20 @@ namespace TDS_Client.Manager.Draw
         {
             grid.Header.Activated = false;
 
-            Color backLobbyOfficialColor = Color.FromArgb(187, 10, 10, 150);
-            Color backLobbyColor = Color.FromArgb(187, 10, 10, 190);
+            Color backLobbyOfficialColor = Color.FromArgb(187, 190, 190, 190);
+            Color backLobbyColor = Color.FromArgb(187, 140, 140, 140);
 
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.White, $"{entry.LobbyName} ({entry.PlayersCount})");
+                DxGridRow lobbynamerow = new DxGridRow(null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black, 
+                    $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
                 grid.AddRow(lobbynamerow);
-                DxGridRow lobbyplayersrow = new DxGridRow(null, Color.DarkGray, Color.White, entry.PlayersStr);
-                grid.AddRow(lobbyplayersrow);
+                if (entry.PlayersStr != null)
+                {
+                    DxGridRow lobbyplayersrow = new DxGridRow(null, Color.DarkGray, Color.White, entry.PlayersStr, scale: 0.25f);
+                    grid.AddRow(lobbyplayersrow);
+                }
             }
         }
 
@@ -74,20 +73,14 @@ namespace TDS_Client.Manager.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(null, team.Color, Color.Black, alignment: UIResText.Alignment.Centered);
-
-                DxGridCell namecell = new DxGridCell(playerdata.Name, row, columns[0]);
-                row.AddCell(namecell);
-                DxGridCell playtimecell = new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
-                row.AddCell(playtimecell);
-                DxGridCell killscell = new DxGridCell(playerdata.Kills.ToString(), row, columns[2]);
-                row.AddCell(killscell);
-                DxGridCell assistscell = new DxGridCell(playerdata.Assists.ToString(), row, columns[3]);
-                row.AddCell(assistscell);
-                DxGridCell deathscell = new DxGridCell(playerdata.Deaths.ToString(), row, columns[4]);
-                row.AddCell(deathscell);
-                DxGridCell teamcell = new DxGridCell(team.Name, row, columns[5]);
-                row.AddCell(teamcell);
+                DxGridRow row = new DxGridRow(null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
+                grid.AddRow(row);
+                new DxGridCell(playerdata.Name, row, columns[0]);
+                new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
+                new DxGridCell(playerdata.Kills.ToString(), row, columns[2]);
+                new DxGridCell(playerdata.Assists.ToString(), row, columns[3]);
+                new DxGridCell(playerdata.Deaths.ToString(), row, columns[4]);
+                new DxGridCell(team.Name, row, columns[5]);
             }
 
             AddMainmenuData(lobbylist);
@@ -135,24 +128,24 @@ namespace TDS_Client.Manager.Draw
 
         private static void CreateColumns()
         {
-            columns[0] = new DxGridColumn(0.3f);
-            columns[1] = new DxGridColumn(0.15f);
-            columns[2] = new DxGridColumn(0.1f);
-            columns[3] = new DxGridColumn(0.1f);
-            columns[4] = new DxGridColumn(0.1f);
-            columns[5] = new DxGridColumn(0.25f);
+            columns[0] = new DxGridColumn(0.3f, grid);
+            columns[1] = new DxGridColumn(0.15f, grid);
+            columns[2] = new DxGridColumn(0.1f, grid);
+            columns[3] = new DxGridColumn(0.1f, grid);
+            columns[4] = new DxGridColumn(0.1f, grid);
+            columns[5] = new DxGridColumn(0.25f, grid);
         }
 
         private static void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(null, Color.FromArgb(187, 20, 20, 20), Color.White, alignment: UIResText.Alignment.Centered);
+            DxGridRow header = new DxGridRow(0.035f, Color.FromArgb(187, 20, 20, 20), Color.White, textAlignment: UIResText.Alignment.Centered);
             grid.SetHeader(header);
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_NAME, header, columns[0]));
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_PLAYTIME, header, columns[1]));
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_KILLS, header, columns[2]));
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_ASSISTS, header, columns[3]));
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_DEATHS, header, columns[4]));
-            header.AddCell(new DxGridCell(Settings.Language.SCOREBOARD_TEAM, header, columns[5]));
+            new DxGridCell(Settings.Language.SCOREBOARD_NAME, header, columns[0]);
+            new DxGridCell(Settings.Language.SCOREBOARD_PLAYTIME, header, columns[1]);
+            new DxGridCell(Settings.Language.SCOREBOARD_KILLS, header, columns[2]);
+            new DxGridCell(Settings.Language.SCOREBOARD_ASSISTS, header, columns[3]);
+            new DxGridCell(Settings.Language.SCOREBOARD_DEATHS, header, columns[4]);
+            new DxGridCell(Settings.Language.SCOREBOARD_TEAM, header, columns[5]);
         }
 
         private static void CreateBody() {}
