@@ -13,7 +13,7 @@ namespace TDS_Client.Instance.Draw.Dx
     {
         public string Text;
         private int xPos;
-        private int yPos;
+        public int Y;
         private float scale;
         private Color color;
         private Font font;
@@ -38,7 +38,7 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             this.Text = text;
             this.xPos = GetAbsoluteX(x, relative);
-            this.yPos = GetAbsoluteY(y, relative);
+            this.Y = GetAbsoluteY(y, relative);
             this.scale = scale;
             this.color = color;
             this.font = font;
@@ -80,9 +80,9 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             float textheight = Ui.GetTextScaleHeight(scale, (int)font);
             if (alignmentY == EAlignmentY.Center)
-                yPos -= GetAbsoluteY(textheight / 2, true) - 5;
+                Y -= GetAbsoluteY(textheight / 2, true) - 5;
             else if (alignmentY == EAlignmentY.Bottom)
-                yPos -= GetAbsoluteY(textheight, true) - 5;
+                Y -= GetAbsoluteY(textheight, true) - 5;
         }
 
         public void SetScale(float scale)
@@ -113,7 +113,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 
             }
                 
-            UIResText.Draw(Text, xPos, yPos, font, scale, color, alignmentX, dropShadow, outline, wordWrap);
+            UIResText.Draw(Text, xPos, Y, font, scale, color, alignmentX, dropShadow, outline, wordWrap);
         }
 
         public override EDxType GetDxType()
