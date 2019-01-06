@@ -39,6 +39,7 @@ namespace TDS_Server.Instance.Lobby
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
         public TDSPlayer CurrentRoundEndBecauseOfPlayer;
+        private Teams currentRoundEndWinnerTeam;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
@@ -98,16 +99,16 @@ namespace TDS_Server.Instance.Lobby
                 return;
             }
 
-            Teams winnerTeam = GetRoundWinnerTeam();
-            Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(winnerTeam);
+            currentRoundEndWinnerTeam = GetRoundWinnerTeam();
+            Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(currentRoundEndWinnerTeam);
 
             FuncIterateAllPlayers((character, team) =>
             {
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
+                if (character.Lifes > 0 && currentRoundEndWinnerTeam != null && team != currentRoundEndWinnerTeam && currentRoundEndReason != ERoundEndReason.Death)
+                    character.Client.Kill();
+                character.Lifes = 0;
             });
-
-            if (winnerTeam != null && currentRoundEndReason != ERoundEndReason.Death)
-                KillAllAlive((int)winnerTeam.Index);
 
             foreach (List<TDSPlayer> entry in AlivePlayers)
                 entry.Clear();

@@ -25,7 +25,6 @@ namespace TDS_Server.Instance.Lobby
         }
 
         //[DisableDefaultOnDeathRespawn] 
-        #warning Add this after version 0.4
         [ServerEvent(Event.PlayerDeath)]
         public static void OnPlayerDeath(Client player, Client killer, uint reason)
         {

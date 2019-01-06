@@ -26,6 +26,12 @@ namespace TDS_Server.Instance.Lobby
         {
             if (character.Lifes > 0)
             {
+                if (currentRoundStatus == Enum.ERoundStatus.RoundEnd && character.Team != currentRoundEndWinnerTeam)
+                {
+                    DmgSys.OnPlayerDeath(character, CurrentRoundEndBecauseOfPlayer.Client, weapon);
+                    return;
+                }
+
                 if (bombAtPlayer == character)
                     DropBomb();
 
