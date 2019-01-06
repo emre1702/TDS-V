@@ -103,6 +103,7 @@ namespace TDS_Server.Instance.Player
             set => Entity.Playerstats.PlayTime = value;
         }
         public bool ChatLoaded { get; set; }
+        public int KillingSpree { get; set; }
 
         private Players fEntity;
         private Teams fTeam { get; set; }

@@ -98,6 +98,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
             }
             RewardAllPlayer();
+            SaveAllPlayerLobbyStats();
 
             foreach (List<TDSPlayer> entry in AlivePlayers)
                 entry.Clear();
@@ -107,7 +108,6 @@ namespace TDS_Server.Instance.Lobby
 
             FuncIterateAllPlayers((character, team) =>
             {
-                Console.WriteLine(character.Client.Name);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
             });
 

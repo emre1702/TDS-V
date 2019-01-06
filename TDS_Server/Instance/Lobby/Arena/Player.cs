@@ -47,8 +47,7 @@ namespace TDS_Server.Instance.Lobby
                 DmgSys.CheckLastHitter(character, out TDSPlayer killercharacter);
 
                 DeathInfoSync(character.Client, character.Team.Index, killercharacter?.Client, (uint)WeaponHash.Unarmed);
-
-                DmgSys.PlayerSpree.Remove(character);
+                character.KillingSpree = 0;
             }
             else
                 RemoveAsSpectator(character);

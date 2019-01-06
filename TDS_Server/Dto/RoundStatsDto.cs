@@ -6,7 +6,6 @@
         public uint Kills { get; set; }
         public uint Assists { get; set; }
         public uint Damage { get; set; }
-        public uint Deaths { get; set; }
 
         public RoundStatsDto()
         {
@@ -18,7 +17,6 @@
             Kills = 0;
             Assists = 0;
             Damage = 0;
-            Deaths = 0;
         }
     }
 }

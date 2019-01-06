@@ -13,51 +13,47 @@ namespace TDS_Server.Instance
     {
 
         private static readonly Dictionary<TDSPlayer, TDSTimer> sDeadTimer = new Dictionary<TDSPlayer, TDSTimer>();
-        public Dictionary<Client, uint> PlayerAssists = new Dictionary<Client, uint>(),
-                                        PlayerKills = new Dictionary<Client, uint>();
 
         public void OnPlayerDeath(TDSPlayer player, Client killer, uint weapon)
         {
-            if (!sDeadTimer.ContainsKey(player))
+            if (sDeadTimer.ContainsKey(player))
+                return;
+            player.Client.Freeze(true);
+
+            player.KillingSpree = 0;
+
+            if (player.Lifes <= 0)
+                return;
+
+            // Death //
+            ++player.CurrentLobbyStats.Deaths;
+            ++player.CurrentLobbyStats.TotalDeaths;
+
+            TDSPlayer killercharacter = GetKiller(player, killer);
+            killer = killercharacter.Client;
+
+            // Kill //
+            if (killercharacter != player)
             {
-                player.Client.Freeze(true);
-
-                TDSPlayer killercharacter = GetKiller(player, killer.GetChar());
-                killer = killercharacter.Client;
-
-                PlayerSpree.Remove(player);
-
-                if (player.Lifes > 0)
-                {
-                    // Kill //
-                    if (killercharacter != player)
-                    {
-                        ++killercharacter.CurrentRoundStats.Kills;
-                        if (!PlayerKills.ContainsKey(killer))
-                            PlayerKills.TryAdd(killer, 0);
-                        PlayerKills[killer]++;
-
-                        // Killingspree //
-                        AddToKillingSpree(killercharacter);
-                    }
-
-                    // Death //
-                    ++player.CurrentRoundStats.Deaths;
-
-                    // Assist //
-                    CheckForAssist(player, killer);
-                }
+                ++killercharacter.CurrentRoundStats.Kills;
+                ++killercharacter.KillingSpree;
             }
+
+            // Assist //
+            CheckForAssist(player, killer);
         }
 
-        private TDSPlayer GetKiller(TDSPlayer player, TDSPlayer possiblekiller)
+        private TDSPlayer GetKiller(TDSPlayer player, Client possiblekiller)
         {
-            if (player.Client != possiblekiller.Client && possiblekiller.Client != null && possiblekiller.Client.Exists)
-                return possiblekiller;
+            // It's the killer from the Death event //
+            if (player.Client != possiblekiller && possiblekiller != null && possiblekiller.Exists)
+                return possiblekiller.GetChar();
 
+            // It's the last hitter //
             if (player.LastHitter != null)
                 return player.LastHitter;
 
+            // It's a suicide //
             return player;
         }
 
@@ -74,13 +70,8 @@ namespace TDS_Server.Instance
                         Client target = targetcharacter.Client;
                         if (target.Exists && targetcharacter.CurrentLobby == character.CurrentLobby && killer != target)
                         {
-                            if (targetcharacter.CurrentLobby is Arena)
-                                ++targetcharacter.CurrentRoundStats.Assists;
+                           ++targetcharacter.CurrentRoundStats.Assists;
                             NAPI.Notification.SendNotificationToPlayer(target, Utils.GetReplaced(character.Language.GOT_ASSIST, character.Client.Name));
-
-                            if (!PlayerAssists.ContainsKey(target))
-                                PlayerAssists[target] = 0;
-                            PlayerAssists[target]++;
                         }
                         if (killer != target ||
                             halfarmorhp % 2 != 0 ||
@@ -104,8 +95,8 @@ namespace TDS_Server.Instance
                         if (lastHitterCharacter.Lifes > 0)
                         {
                             ++lastHitterCharacter.CurrentRoundStats.Kills;
+                            ++lastHitterCharacter.KillingSpree;
                             NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
-                            AddToKillingSpree(lastHitterCharacter);
                             killer = lastHitterCharacter;
                         }
                 }

@@ -9,11 +9,14 @@ using TDS_Server.Instance.Player;
 using TDS_Common.Default;
 using System.Linq;
 using TDS_Server.Manager.Logs;
+using TDS_Server.Dto;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
+        private static readonly TDSNewContext playerLobbyStatsContext = new TDSNewContext();
+
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
             using (var dbcontext = new TDSNewContext())
@@ -31,7 +34,7 @@ namespace TDS_Server.Instance.Lobby
 
                 if (LobbyEntity.Id != 0)
                 {
-                    await AddPlayerLobbyStats(character, dbcontext);
+                    await AddPlayerLobbyStats(character);
                 }
             }
 
@@ -53,7 +56,8 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual async void RemovePlayer(TDSPlayer character)
         {
-            await SavePlayerLobbyStats(character);
+            SavePlayerLobbyStats(character);
+            await playerLobbyStatsContext.SaveChangesAsync();
 
             Players.Remove(character);
             if (character.Team != null)
@@ -85,26 +89,41 @@ namespace TDS_Server.Instance.Lobby
                 RestLogsManager.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
         }
 
-        private async Task SavePlayerLobbyStats(TDSPlayer character)
+        private static void SavePlayerLobbyStats(TDSPlayer character)
         {
             if (character.CurrentLobbyStats == null)
                 return;
-            using (var dbcontext = new TDSNewContext())
-            {
-                Playerlobbystats stats = character.CurrentLobbyStats;
-                dbcontext.Playerlobbystats.Attach(stats);
-                await dbcontext.SaveChangesAsync();
-            }
+
+            Playerlobbystats to = character.CurrentLobbyStats;
+            RoundStatsDto from = character.CurrentRoundStats;
+            to.Kills += from.Kills;
+            to.Assists += from.Assists;
+            to.Damage += from.Damage;
+            to.TotalKills += from.Kills;
+            to.TotalAssists += from.Assists;
+            to.TotalDamage += from.Damage;
         }
 
-        private async Task AddPlayerLobbyStats(TDSPlayer character, TDSNewContext dbcontext)
+        protected async void SaveAllPlayerLobbyStats()
         {
-            Playerlobbystats stats = await dbcontext.Playerlobbystats.FindAsync(character.Entity.Id, LobbyEntity.Id);
+            FuncIterateAllPlayers((player, team) =>
+            {
+                if (team.Index == 0)
+                    return;
+                SavePlayerLobbyStats(player);
+            });
+            await playerLobbyStatsContext.SaveChangesAsync();
+        }
+
+        private async Task AddPlayerLobbyStats(TDSPlayer character)
+        {
+            Playerlobbystats stats = await playerLobbyStatsContext.Playerlobbystats.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (stats == null)
             {
                 stats = new Playerlobbystats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };
                 character.Entity.Playerlobbystats.Add(stats);
-                await dbcontext.SaveChangesAsync();
+                await playerLobbyStatsContext.Playerlobbystats.AddAsync(stats);
+                await playerLobbyStatsContext.SaveChangesAsync();
             }
             character.CurrentLobbyStats = stats;
         }
