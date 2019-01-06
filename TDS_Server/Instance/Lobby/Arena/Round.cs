@@ -98,11 +98,11 @@ namespace TDS_Server.Instance.Lobby
                 return;
             }
 
-            foreach (List<TDSPlayer> entry in AlivePlayers)
-                entry.Clear();
-
             Teams winnerTeam = GetRoundWinnerTeam();
             Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(winnerTeam);
+
+            foreach (List<TDSPlayer> entry in AlivePlayers)
+                entry.Clear();
 
             FuncIterateAllPlayers((character, team) =>
             {
