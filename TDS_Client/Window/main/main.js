@@ -1,5 +1,4 @@
-﻿let moneyText = $("#money");
-let bloodscreen = $( "#bloodscreen" );
+﻿let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = 9;
 let ordersDiv = $("#orders");
@@ -13,10 +12,6 @@ let hitsounds = [
 let hitsoundcounter = 0;
 let hitsoundsamount = hitsounds.length;
 
-function setMoney( money ) {
-    moneyText.text( "$" + money );
-}
-
 function playSound( soundname ) {
     $( "#audio_" + soundname ).trigger("play").volume = 0.05;
 }
@@ -27,13 +22,28 @@ function playHitsound() {
         hitsoundcounter = 0;
 }
 
+let bloodscreentimeout;
 function showBloodscreen() {
-    bloodscreen.stop().css("opacity", 1);
-    bloodscreen.css("display", "block");
-    bloodscreen.fadeOut(2500);
+    if (bloodscreentimeout) {
+        clearTimeout(bloodscreentimeout);
+        let dom = bloodscreen.get()[0];
+        dom.style.animation = "none";
+        dom.offsetHeight;
+        dom.style.animation = "BloodscreenAnim 2.5s";
+    } else {
+        bloodscreen.css({
+            "display": "block",
+            "animation": "BloodscreenAnim 2.5s"
+        });
+    }
+    bloodscreentimeout = setTimeout(function () {
+        bloodscreen.css("display", "none");
+        bloodscreentimeout = null;
+        //bloodscreen.removeClass("bloodscreen_show").removeClass("bloodscreen_hide_transition");
+    }, 2500);
 }
 
-function formatMsg( input ) {
+function formatMsgKill( input ) {
     var start = '<span style="color: white;">';
 
     let replaced = input;
@@ -62,7 +72,7 @@ function removeThis( element ) {
 }
 
 function addKillMessage( msg ) {
-    let child = $( "<text>" + formatMsg( msg ) + "<br></text>" );
+    let child = $("<text>" + formatMsgKill( msg ) + "<br></text>" );
     killmessagesBox.append( child );
     child.delay ( 11000 ).fadeOut( 4000, child.remove );
 }
