@@ -72,9 +72,9 @@ namespace TDS_Server.Manager.Utility
                 SyncedScoreboardLobbyDataDto entry = new SyncedScoreboardLobbyDataDto()
                 {
                     Name = player.Client.Name,
-                    //PlaytimeMinutes = player.Playtime,
-                    Kills = player.CurrentLobbyStats.Kills,
-                    Assists = player.CurrentLobbyStats.Assists,
+                    PlaytimeMinutes = player.PlayMinutes,
+                    Kills = player.CurrentLobbyStats.Kills + player.CurrentRoundStats.Kills,
+                    Assists = player.CurrentLobbyStats.Assists + player.CurrentRoundStats.Assists,
                     Deaths = player.CurrentLobbyStats.Deaths,
                     TeamIndex = player.Team.Index
                 };
