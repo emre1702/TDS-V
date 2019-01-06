@@ -51,6 +51,8 @@ namespace TDS_Server.Instance.Lobby
                     teamwithhighesthealth = team;
                     highesthealth = teamhealth;
                 }
+                else if (teamhealth == highesthealth)
+                    teamwithhighesthealth = null;
             }
 
             return teamwithhighesthealth;
