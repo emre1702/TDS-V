@@ -15,6 +15,8 @@ namespace TDS_Server.Manager.Utility
         public static int SaveLogsCooldownMinutes => settings.SaveLogsCooldownMinutes;
         public static int SavePlayerDataCooldownMinutes => settings.SavePlayerDataCooldownMinutes;
         public static int SaveSeasonsCooldownMinutes => settings.SaveSeasonsCooldownMinutes;
+        public static int DistanceToSpotToDefuse => settings.DistanceToSpotToDefuse;
+        public static int DistanceToSpotToPlant => settings.DistanceToSpotToPlant;
         public static SyncedSettingsDto SyncedSettings { get; private set; }
 
         private static Settings settings;
