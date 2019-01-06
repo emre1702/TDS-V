@@ -97,8 +97,6 @@ namespace TDS_Server.Instance.Lobby
                 Remove();
                 return;
             }
-            RewardAllPlayer();
-            SaveAllPlayerLobbyStats();
 
             foreach (List<TDSPlayer> entry in AlivePlayers)
                 entry.Clear();
@@ -117,6 +115,8 @@ namespace TDS_Server.Instance.Lobby
             if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
                 StopBombRound();
 
+            RewardAllPlayer();
+            SaveAllPlayerLobbyStats();
         }
 
         private void RoundCheckForEnoughAlive()
