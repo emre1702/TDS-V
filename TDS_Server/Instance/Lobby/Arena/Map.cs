@@ -71,11 +71,14 @@ namespace TDS_Server.Instance.Lobby
 
         private void DeleteMapBlips()
         {
-            foreach (Blip blip in mapBlips)
+            NAPI.Task.Run(() =>
             {
-                blip.Delete();
-            }
-            mapBlips = new List<Blip>();
+                foreach (Blip blip in mapBlips)
+                {
+                    blip.Delete();
+                }
+                mapBlips = new List<Blip>();
+            });
         }
 
         public void SetMapList(List<MapDto> themaps, string syncjson = null)
