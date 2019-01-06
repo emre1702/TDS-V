@@ -41,7 +41,7 @@ namespace TDS_Client.Manager.Lobby
                 plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
-            RoundInfo.SetRoundTimeLeft((ulong)Settings.BombDetonateTimeMs);
+            RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs);
         }
 
         public static void CheckPlantDefuse()
