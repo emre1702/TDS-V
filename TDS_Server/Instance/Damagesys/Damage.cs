@@ -117,13 +117,6 @@ namespace TDS_Server.Instance
                 if (source.Entity.Playersettings.HitsoundOn)
                     NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
             }
-            
-            if (target.Client.Health == 0)
-            {
-#warning todo Check if we need that
-                //target.Player.Kill();
-                //OnPlayerDeath(hittedcharacter.Player, player, (uint)weapon);
-            }
         }
 
         public void UpdateLastHitter(TDSPlayer target, TDSPlayer source, int damage)

@@ -90,15 +90,6 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-#warning Todo check if thats needed after all lobbies implementation
-        /*private static uint GetFreeID()
-        {
-            uint tryid = 0;
-            while (LobbiesByIndex.ContainsKey(tryid))
-                ++tryid;
-            return tryid;
-        }*/
-
         private static uint GetFreeDimension()
         {
             uint tryid = 0;
