@@ -73,6 +73,7 @@ namespace TDS_Server.Instance.Language
         public override string ROUND_END_DEATH_ALL_INFO => "Alle sind tot!<br>Kein Team gewinnt!";
         public override string ROUND_END_NEW_PLAYER_INFO => "Genug Spieler drin ...<br>Runde startet!";
         public override string ROUND_END_TIME_INFO => "Zeit um!<br>Team {0} gewinnt mit den meisten HP übrig!";
+        public override string ROUND_END_TIME_TIE_INFO => "Zeit um!<br>Unentschieden!";
         public override string ROUND_MISSION_BOMB_BAD => "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!";
         public override string ROUND_MISSION_BOMB_GOOD => "Ziel: Verhinde die Bomben-Explosion oder töte alle Gegner!";
         public override string ROUND_MISSION_BOMG_SPECTATOR => "Ziel: Bombe legen & verteidigen oder entschärfen - oder alle Gegner töten.";

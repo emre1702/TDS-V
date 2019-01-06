@@ -67,6 +67,7 @@
         string ROUND_END_DEATH_ALL_INFO { get; }
         string ROUND_END_NEW_PLAYER_INFO { get; }
         string ROUND_END_TIME_INFO { get; }
+        string ROUND_END_TIME_TIE_INFO { get; }
         string ROUND_MISSION_BOMB_BAD { get; }
         string ROUND_MISSION_BOMB_GOOD { get; }
         string ROUND_MISSION_BOMG_SPECTATOR { get; }

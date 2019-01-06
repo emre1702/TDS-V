@@ -161,7 +161,7 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundEndReason.Time:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam?.Name ?? "-");
+                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Name) : lang.ROUND_END_TIME_TIE_INFO;
                     });
                 case ERoundEndReason.BombExploded:
                     return LangUtils.GetLangDictionary(lang =>
