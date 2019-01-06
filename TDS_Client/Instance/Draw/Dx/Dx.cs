@@ -12,8 +12,8 @@ namespace TDS_Client.Instance.Draw.Dx
     {
         public bool Activated { get; set; }
 
-        protected static int ResX;
-        protected static int ResY;
+        public static int ResX;
+        public static int ResY;
 
         private static List<Dx> dxDraws = new List<Dx>();
 
