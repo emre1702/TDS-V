@@ -167,7 +167,7 @@ namespace TDS_Server.Manager.Maps
                             }
                             else if (reader.Name == "english" || reader.Name == "german")
                             {
-                                syncdata.Description[reader.Name == "english" ? ELanguage.English : ELanguage.German] = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                                syncdata.Description[reader.Name == "english" ? (int)ELanguage.English : (int)ELanguage.German] = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                             }
                             else if (reader.Name == "limit")
                             {

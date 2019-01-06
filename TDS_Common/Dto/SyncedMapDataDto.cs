@@ -9,9 +9,9 @@ namespace TDS_Common.Dto
     {
         public string Name = "unknown";
         public EMapType Type = EMapType.Normal;
-        public Dictionary<ELanguage, string> Description = new Dictionary<ELanguage, string> {
-            [ELanguage.English] = "No info available.",
-            [ELanguage.German] = "Keine Info verfügbar."
+        public Dictionary<int, string> Description = new Dictionary<int, string> {
+            [(int)ELanguage.English] = "No info available.",
+            [(int)ELanguage.German] = "Keine Info verfügbar."
         };
         public string CreatorName;
     }

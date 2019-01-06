@@ -1,7 +1,7 @@
 ﻿let moneyText = $("#money");
 let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
-let language = "ENGLISH";
+let language = 9;
 let ordersDiv = $("#orders");
 let hitsound = $("#audio_hit");
 let hitsounds = [
