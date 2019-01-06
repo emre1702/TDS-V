@@ -102,6 +102,7 @@ namespace TDS_Server.Instance.Lobby
             to.TotalKills += from.Kills;
             to.TotalAssists += from.Assists;
             to.TotalDamage += from.Damage;
+            from.Clear();
         }
 
         protected async void SaveAllPlayerLobbyStats()
