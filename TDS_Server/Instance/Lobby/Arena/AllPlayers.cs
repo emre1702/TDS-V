@@ -79,5 +79,16 @@ namespace TDS_Server.Instance.Lobby
             string json = JsonConvert.SerializeObject(amounts);
             SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json); 
         }
+
+        private void KillAllAlive(int exceptindex)
+        {
+            for (int i = 0; i < AlivePlayers.Length; ++i)
+            {
+                if (i == exceptindex - 1)
+                    continue;
+                foreach (var player in AlivePlayers[i])
+                    player.Client.Kill();
+            }
+        }
     }
 }

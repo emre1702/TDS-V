@@ -101,13 +101,16 @@ namespace TDS_Server.Instance.Lobby
             Teams winnerTeam = GetRoundWinnerTeam();
             Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(winnerTeam);
 
-            foreach (List<TDSPlayer> entry in AlivePlayers)
-                entry.Clear();
-
             FuncIterateAllPlayers((character, team) =>
             {
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
             });
+
+            if (winnerTeam != null && currentRoundEndReason != ERoundEndReason.Death)
+                KillAllAlive((int)winnerTeam.Index);
+
+            foreach (List<TDSPlayer> entry in AlivePlayers)
+                entry.Clear();
 
             DmgSys.Clear();
 
