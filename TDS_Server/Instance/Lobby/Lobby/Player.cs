@@ -56,9 +56,12 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual async void RemovePlayer(TDSPlayer character)
         {
-            SavePlayerLobbyStats(character);
-            await playerLobbyStatsContext.SaveChangesAsync();
-
+            if (character.Lifes == 0)
+            {
+                SavePlayerLobbyStats(character);
+                await playerLobbyStatsContext.SaveChangesAsync();
+            }
+            
             Players.Remove(character);
             if (character.Team != null)
                 TeamPlayers[character.Team.Index].Remove(character);
