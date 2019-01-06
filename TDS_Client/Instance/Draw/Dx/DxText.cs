@@ -34,7 +34,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relative = true,
-            bool dropShadow = false, bool outline = false, int wordWrap = 0) : base()
+            bool dropShadow = false, bool outline = false, int wordWrap = 999) : base()
         {
             this.Text = text;
             this.xPos = GetAbsoluteX(x, relative);
