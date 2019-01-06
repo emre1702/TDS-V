@@ -123,10 +123,9 @@ namespace TDS_Server.Instance.Lobby
         [RemoteEvent(DToServerEvent.StopDefusing)]
         public void OnPlayerStopDefusingEvent(Client player)
         {
-            TDSPlayer character = player.GetChar();
-            if (!(character.CurrentLobby is Arena arena))
+            if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
-            arena.StopBombDefusing(character);
+            arena.StopBombDefusing(player);
         }
         #endregion
 
