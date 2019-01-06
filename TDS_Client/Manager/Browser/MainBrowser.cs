@@ -133,10 +133,5 @@ namespace TDS_Client.Manager.Browser
         {
             browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
         }
-
-        public static void LoadMoney()
-        {
-            browser.ExecuteJs($"setMoney({AccountData.Money})");
-        }
     }
 }

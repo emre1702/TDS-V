@@ -251,7 +251,7 @@ namespace TDS_Client.Manager
         private void OnPlayerMoneyChangeMethod(object[] args)
         {
             AccountData.Money = (int)args[0];
-            MainBrowser.LoadMoney();
+            MoneyDisplay.Refresh();
         }
 
         private void OnPlayerPlantedBombMethod(object[] args)
@@ -329,6 +329,7 @@ namespace TDS_Client.Manager
             MainBrowser.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
+            MoneyDisplay.Start();
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)
