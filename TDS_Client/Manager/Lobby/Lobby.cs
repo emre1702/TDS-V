@@ -32,7 +32,7 @@ namespace TDS_Client.Manager.Lobby
             Bomb.Reset();
             Round.Reset(true);
             CameraManager.StopCountdown();
-            MapVoting.CloseMenu();
+            MapManager.CloseMenu();
             MainBrowser.ClearMapVotingsInBrowser();
             RoundInfo.Stop();
             /*stopMapCreator();

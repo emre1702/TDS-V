@@ -1,11 +1,12 @@
-﻿using TDS_Client.Manager.Browser;
+﻿using System;
+using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using Events = RAGE.Events;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class MapVoting
+    static class MapManager
     {
         private static bool open;
         private static uint lobbyIdAtLastLoad;
@@ -13,7 +14,7 @@ namespace TDS_Client.Manager.Lobby
         private static string lastMapsJson;
         private static bool loadedFavorites;
 
-        public static void ToggleMenu()
+        public static void ToggleMenu(ConsoleKey _)
         {
             if (!open)
             {

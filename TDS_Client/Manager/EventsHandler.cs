@@ -303,14 +303,14 @@ namespace TDS_Client.Manager
         private void OnMapListRequestMethod(object[] args)
         {
             //List<SyncedMapDataDto> maps = JsonConvert.DeserializeObject<List<SyncedMapDataDto>>((string)args[0]);
-            MapVoting.LoadMapList((string)args[0]);
+            MapManager.LoadMapList((string)args[0]);
         }
 
         private void OnAddVoteToMapServerMethod(object[] args)
         {
             string newmapname = (string)args[0];
             string oldmapname = (string)args[1];
-            MapVoting.AddVote(newmapname, oldmapname);
+            MapManager.AddVote(newmapname, oldmapname);
         }
 
         private void OnStartRegisterLoginMethod(object[] args)
@@ -387,7 +387,7 @@ namespace TDS_Client.Manager
 
         private void OnCloseMapVotingMenuMethod(object[] args)
         {
-            MapVoting.CloseMenu();
+            MapManager.CloseMenu();
         }
 
         private void OnAddMapToVotingMethod(object[] args)
