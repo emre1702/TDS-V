@@ -54,6 +54,7 @@
         string PERMAMUTE_INFO { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
+        string PLAYER_ISNT_BANED { get; }
         string PLAYER_NOT_MUTED { get; }
 
         string REASON_MISSING { get; }
