@@ -2,21 +2,15 @@ namespace TDS_Server.Enum
 {
     enum ELogType
     {
-        Permaban = 1,
-        Permaban_Lobby,
-        Timeban,
-        Timeban_Lobby,
-        Unban,
-        Unban_Lobby,
-        Kick,
-        Kick_Lobby,
-        Permamute,
-        Timemute,
-        Unmute,
-        Next,
-        Login,
-        Register,
-        Lobby_Join,
-        Lobby_Leave
+        Kick = 1,
+        Ban = 2,
+        Mute = 3,
+        Next = 4,
+        Login = 5,
+        Register = 6,
+        Lobby_Join = 7,
+        Lobby_Leave = 8,
+        Lobby_Kick = 9,
+        Lobby_Ban = 10
     }
 }
