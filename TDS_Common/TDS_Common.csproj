@@ -22,4 +22,8 @@
     </Reference>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /Y /Q /S &quot;$(TargetPath)&quot; &quot;C:\RAGEMP\server-files\bridge\runtime\&quot;&#xD;&#xA;xcopy /Y /Q /S &quot;$(ProjDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client&quot;" />
+  </Target>
+
 </Project>
