@@ -357,8 +357,7 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.ChooseLobbyToJoin, OnChooseLobbyToJoinMethod);
             Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
-            Add(DFromBrowserEvent.AddMapToVoting, OnAddMapToVotingMethod);
-            Add(DFromBrowserEvent.AddVoteToMap, OnAddVoteToMapMethod);
+            Add(DFromBrowserEvent.MapVote, OnMapVoteMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
@@ -366,6 +365,7 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.ChatInputToggled, OnChatInputToggledMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
+            Add(DFromBrowserEvent.ToggleMapFavouriteState, OnToggleMapFavouriteStateMethod);
         }
 
         private void OnAddRatingToMapMethod(object[] args)
@@ -390,16 +390,10 @@ namespace TDS_Client.Manager
             MapManager.CloseMenu();
         }
 
-        private void OnAddMapToVotingMethod(object[] args)
+        private void OnMapVoteMethod(object[] args)
         {
             string mapname = (string)args[0];
-            CallRemote(DToServerEvent.AddMapToVoting, mapname);
-        }
-
-        private void OnAddVoteToMapMethod(object[] args)
-        {
-            string mapname = (string)args[0];
-            CallRemote(DToServerEvent.AddVoteToMap, mapname);
+            CallRemote(DToServerEvent.MapVote, mapname);
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -441,6 +435,13 @@ namespace TDS_Client.Manager
         private void OnSyncRegisterLoginLanguageTextsMethod(object[] args)
         {
             RegisterLogin.SyncLanguage();
+        }
+
+        private void OnToggleMapFavouriteStateMethod(object[] args)
+        {
+            string mapname = (string)args[0];
+            bool isfavourite = (bool)args[1];
+            #warning todo Add map favourite after finding out how to save it
         }
 
         /*// triggered by browser //

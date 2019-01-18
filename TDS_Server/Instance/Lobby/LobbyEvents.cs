@@ -149,24 +149,14 @@ namespace TDS_Server.Instance.Lobby
             arena.SendMapsForVoting(player);
         }
 
-        [RemoteEvent(DToServerEvent.AddMapToVoting)]
+        [RemoteEvent(DToServerEvent.MapVote)]
         public void OnMapVotingRequestEvent(Client client, string mapname)
         {
             TDSPlayer player = client.GetChar();
             if (!(player.CurrentLobby is Arena arena))
                 return;
 
-            arena.AddMapToVoting(player, mapname);
-        }
-
-        [RemoteEvent(DToServerEvent.AddVoteToMap)]
-        public void OnVoteForMapEvent(Client client, string mapname)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!(player.CurrentLobby is Arena arena))
-                return;
-
-            arena.AddVoteToMap(client, mapname);
+            arena.MapVote(player, mapname);
         }
         #endregion MapVote
         #endregion Remote

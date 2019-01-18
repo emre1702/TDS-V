@@ -24,9 +24,10 @@ $("#tabs").tabs({
     heightStyle: "fill"
 });
 
-$(".tab_list").each(function (index, value) {
+$(".tab_list").each(function (_index, _value) {
+    $(this).
     $(this).selectable({
-        selected: function (event, ui) {
+        selected: function (_event, ui) {
             $(".ui-selected").removeClass("ui-selected");
             $(ui.selected).addClass("ui-selected");
             let mapname = ui.selected.innerHTML;
@@ -55,7 +56,7 @@ mapVoteButton.click(function (event) {
         return;
     if (lastMapName !== "") {
         votedMapName = lastMapName;
-        mp.trigger("onMapMenuVote", votedMapName);
+        mp.trigger("MapVote_Browser", votedMapName);
         setMapVotingCooldown();
     }
 });
@@ -68,12 +69,12 @@ mapFavouriteButton.click(function (event) {
     if (index === -1) {
         favouriteMaps.push(lastMapName);
         mapFavouriteButton.removeClass("add_map_to_favourites_notselected").addClass("add_map_to_favourites_selected");
-        mp.trigger("onClientToggleMapFavourite", lastMapName, true);
+        mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, true);
         favouriteMapsList.append($("<div>" + lastMapName + "</div>"));
     } else {
         favouriteMaps.splice(index, 1);
         mapFavouriteButton.removeClass("add_map_to_favourites_selected").addClass("add_map_to_favourites_notselected");
-        mp.trigger("onClientToggleMapFavourite", lastMapName, false);
+        mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, false);
         favouriteMapsList.children("div:contains('" + lastMapName + "')").remove();
     }
     favouriteMapsList.selectable("refresh");
@@ -225,7 +226,7 @@ $("body").keydown(function (event) {
             let index = 9 - (0x69 - key) - 1;   // -1 because of indexing starting at 0
             if (votings.length > index) {
                 votedMapName = votings[index].name;
-                mp.trigger("onMapMenuVote", votedMapName);
+                mp.trigger("MapVote_Browser", votedMapName);
                 setMapVotingCooldown();
             }
         }

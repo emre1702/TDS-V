@@ -23,7 +23,21 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public void AddVoteToMap(Client player, string mapname)
+        public void MapVote(TDSPlayer player, string mapname)
+        {
+            if (!mapVotes.ContainsKey(mapname))
+            {
+                if (mapVotes.Count >= 9)
+                {
+                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
+                    return;
+                }
+                mapVotes[mapname] = 0;
+            }
+            AddVoteToMap(player.Client, mapname);
+        }
+
+        private void AddVoteToMap(Client player, string mapname)
         {
             if (playerVotes.ContainsKey(player))
             {
@@ -34,7 +48,7 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 if (--mapVotes[oldvote] <= 0)
                 {
-                    mapVotes.Remove(oldvote, out uint _);
+                    mapVotes.Remove(oldvote);
                 }
                 SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapname, oldvote);
             }
@@ -42,20 +56,6 @@ namespace TDS_Server.Instance.Lobby
                 SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapname);
             playerVotes[player] = mapname;
             mapVotes[mapname]++;
-        }
-
-        public void AddMapToVoting(TDSPlayer player, string mapname)
-        {
-            if (!mapVotes.ContainsKey(mapname))
-            {
-                if (mapVotes.Count < 9)
-                {
-                    mapVotes[mapname] = 0;
-                    AddVoteToMap(player.Client, mapname);
-                }
-                else
-                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
-            }
         }
 
         private MapDto GetVotedMap()
