@@ -489,22 +489,9 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.EndTimestamp).HasColumnType("timestamp");
 
-                entity.Property(e => e.Ip)
-                    .IsRequired()
-                    .HasColumnName("IP")
-                    .HasColumnType("varchar(50)");
-
                 entity.Property(e => e.Reason)
                     .IsRequired()
                     .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.Scname)
-                    .IsRequired()
-                    .HasColumnType("varchar(100)");
-
-                entity.Property(e => e.Serial)
-                    .IsRequired()
-                    .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.StartTimestamp)
                     .HasColumnType("timestamp")

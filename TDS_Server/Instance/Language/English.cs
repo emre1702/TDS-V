@@ -55,10 +55,11 @@ namespace TDS_Server.Instance.Language
 
         public virtual string PERMABAN_INFO => "{0} was baned permanently by {1}. Reason: {2}";
         public virtual string PERMABAN_YOU_INFO => "You were baned permanently by {0}. Reason: {1}";
-        public virtual string PERMABAN_LOBBY_INFO => "{0} was baned permanently in lobby by {1}. Reason: {2}";
+        public virtual string PERMABAN_LOBBY_INFO => "{0} was baned permanently in lobby '{1}' by {2}. Reason: {3}";
         public virtual string PERMAMUTE_INFO => "{0} was muted permanently by {1}. Reason: {2}";
         public virtual string PLAYER_ALREADY_MUTED => "The player is already muted!";
         public virtual string PLAYER_DOESNT_EXIST => "The player doesn't exist!";
+        public virtual string PLAYER_ISNT_BANED => "The player isn't banned.";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
 
         public virtual string REASON_MISSING => "The reason is missing!";
@@ -88,13 +89,13 @@ namespace TDS_Server.Instance.Language
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
         public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
-        public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby by {2}. Reason: {3}";
+        public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
         public virtual string TIMEMUTE_INFO => "{0} was muted for {1} minutes by {2}. Reason: {3}";
-        public virtual string TOO_LONG_OUTSIDE_MAP => "You've been too long outside the map!";
+        public virtual string TOO_LONG_OUTSIDE_MAP => "You've been too long outside the map.";
 
         public virtual string UNBAN_INFO => "{0} was unbaned by {1}. Reason: {2}";
-        public virtual string UNBAN_LOBBY_INFO => "{0} was unbaned in lobby by {1}. Reason: {2}";
-        public virtual string UNBAN_YOU_LOBBY_INFO => "You got unbaned in lobby {0} by {1}. Reason: {2}";    
+        public virtual string UNBAN_LOBBY_INFO => "{0} was unbaned in lobby '{1}' by {2}. Reason: {3}";
+        public virtual string UNBAN_YOU_LOBBY_INFO => "You got unbaned in lobby '{0}' by {1}. Reason: {2}";    
         public virtual string UNMUTE_INFO => "{0} was unmuted by {1}. Reason: {2}";
 
         public virtual string[] WELCOME_MESSAGE => new string[] {

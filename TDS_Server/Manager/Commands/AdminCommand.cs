@@ -2,6 +2,7 @@ namespace TDS_Server.Manager.Commands
 {
 
     using GTANetworkAPI;
+    using System;
     using TDS_Server.CustomAttribute;
     using TDS_Server.Default;
     using TDS_Server.Enum;
@@ -14,7 +15,6 @@ namespace TDS_Server.Manager.Commands
     class AdminCommand
     {
 
-        //#region Chat
         [TDSCommand(DAdminCommand.AdminSay)]
         public static void AdminSay(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
         {
@@ -47,7 +47,7 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                AdminLogsManager.Log(ELogType.Kick_Lobby, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Lobby_Kick, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
                 LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
             }
             else
@@ -70,17 +70,77 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
-            /*if (hours == 0)
-            {
-                character.Lobby.UnBanPlayer(character, target, targetname, targetUID, reason);
-            }
+            if (hours == 0)
+                player.CurrentLobby.UnbanPlayer(player, target, reason);
             else if (hours == -1)
-            {
-                character.Lobby.PermaBanPlayer(character, target, targetname, targetUID, reason);
-            }
+                player.CurrentLobby.BanPlayer(player, target, null, reason);
             else
+                player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Ban)]
+        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
+        {
+            /*try
             {
-                character.Lobby.TimeBanPlayer(character, target, targetname, targetUID, hours, reason);
+                if (Account.PlayerUIDs.ContainsKey(targetname))
+                {
+                    Character character = player.GetChar();
+                    if (hours == -1 && character.IsAdminLevel(neededLevels["ban (permanent)"]) || hours == 0 && character.IsAdminLevel(neededLevels["ban (unban)"]) || hours > 0 && character.IsAdminLevel(neededLevels["ban (time)"]))
+                    {
+                        if (reason.Length > 3)
+                        {
+                            uint targetadminlvl = 0;
+                            string targetaddress = "-";
+                            uint targetUID = Account.PlayerUIDs[targetname];
+                            Client target = NAPI.Player.GetPlayerFromName(targetname);
+                            if (target != null && target.GetChar().LoggedIn)
+                            {
+                                Character targetcharacter = target.GetChar();
+                                targetadminlvl = targetcharacter.AdminLvl;
+                                targetaddress = target.Address;
+                            }
+                            else
+                            {
+                                DataTable targetdata = await Database.ExecResult($"SELECT adminlvl FROM player WHERE uid = {targetUID}").ConfigureAwait(false);
+                                targetadminlvl = Convert.ToUInt16(targetdata.Rows[0]["adminlvl"]);
+                                if (target != null)
+                                    targetaddress = target.Address;
+                            }
+                            if (targetadminlvl <= character.AdminLvl)
+                            {
+                                if (hours == 0)
+                                {
+#pragma warning disable CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
+                                    Account.UnBanPlayer(character, target, targetname, reason, targetUID);
+#pragma warning restore CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
+                                }
+                                else if (hours == -1)
+                                {
+                                    Account.PermaBanPlayer(character, target, targetname, targetaddress, reason, targetUID);
+                                }
+                                else
+                                {
+                                    Account.TimeBanPlayer(character, target, targetname, targetaddress, reason, hours, targetUID);
+                                }
+                            }
+                            else
+                                character.SendLangNotification("adminlvl_not_high_enough");
+                        }
+                        else
+                            character.SendLangNotification("reason_missing");
+                    }
+                    else
+                        character.SendLangNotification("adminlvl_not_high_enough");
+                }
+                else
+                    player.SendLangNotification("player_doesnt_exist");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }*/
         }
 
@@ -132,55 +192,7 @@ namespace TDS_Server.Manager.Commands
 		#endregion
 
 		#region Ban
-		[CommandDescription( "Ban or unban a player. Use hours for types - 0 = unban, -1 = permaban, >0 = timeban." )]
-		[CommandGroup( "administrator" )]
-		[CommandAlias( "tban" )]
-		[CommandAlias( "timeban" )]
-		[CommandAlias( "pban" )]
-		[CommandAlias( "permaban" )]
-		[Command( "ban" )]
-		public async void BanPlayer ( Client player, string targetname, int hours, [RemainingText] string reason ) {
-			try {
-				if ( Account.PlayerUIDs.ContainsKey( targetname ) ) {
-					Character character = player.GetChar();
-					if ( hours == -1 && character.IsAdminLevel( neededLevels["ban (permanent)"] ) || hours == 0 && character.IsAdminLevel( neededLevels["ban (unban)"] ) || hours > 0 && character.IsAdminLevel( neededLevels["ban (time)"] ) ) {
-						if ( reason.Length > 3 ) {
-							uint targetadminlvl = 0;
-							string targetaddress = "-";
-							uint targetUID = Account.PlayerUIDs[targetname];
-							Client target = NAPI.Player.GetPlayerFromName( targetname );
-							if ( target != null && target.GetChar().LoggedIn ) {
-								Character targetcharacter = target.GetChar();
-								targetadminlvl = targetcharacter.AdminLvl;
-								targetaddress = target.Address;
-							} else {
-								DataTable targetdata = await Database.ExecResult( $"SELECT adminlvl FROM player WHERE uid = {targetUID}" ).ConfigureAwait( false );
-								targetadminlvl = Convert.ToUInt16( targetdata.Rows[0]["adminlvl"] );
-								if ( target != null )
-									targetaddress = target.Address;
-							}
-							if ( targetadminlvl <= character.AdminLvl ) {
-								if ( hours == 0 ) {
-#pragma warning disable CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
-									Account.UnBanPlayer( character, target, targetname, reason, targetUID );
-#pragma warning restore CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
-								} else if ( hours == -1 ) {
-									Account.PermaBanPlayer( character, target, targetname, targetaddress, reason, targetUID);
-								} else {
-									Account.TimeBanPlayer( character, target, targetname, targetaddress, reason, hours, targetUID);
-								}
-							} else
-								character.SendLangNotification( "adminlvl_not_high_enough" );
-						} else
-							character.SendLangNotification( "reason_missing" );
-					} else
-						character.SendLangNotification( "adminlvl_not_high_enough" );
-				} else
-					player.SendLangNotification( "player_doesnt_exist" );
-			} catch ( Exception ex ) {
-				Log.Error( ex.ToString() );
-			}
-		}
+		
 		#endregion
 
 		#region mute

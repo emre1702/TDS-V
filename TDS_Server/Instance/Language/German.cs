@@ -56,10 +56,11 @@ namespace TDS_Server.Instance.Language
 
         public override string PERMABAN_INFO => "{0} wurde permanent von {1} gebannt. Grund: {2}";
         public override string PERMABAN_YOU_INFO => "Du wurdest permanent von {0} gebannt. Grund: {1}";
-        public override string PERMABAN_LOBBY_INFO => "{0} wurde permanent aus der Lobby von {1} gebannt. Grund: {2}";
+        public override string PERMABAN_LOBBY_INFO => "{0} wurde permanent aus der Lobby '{1}' von {2} gebannt. Grund: {3}";
         public override string PERMAMUTE_INFO => "{0} wurde von {1} permanent gemutet. Grund: {2}";
         public override string PLAYER_ALREADY_MUTED => "Der Spieler ist bereits gemutet!";
         public override string PLAYER_DOESNT_EXIST => "Der Spieler existiert nicht!";
+        public override string PLAYER_ISNT_BANED => "Der Spieler ist nicht gebannt.";
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
 
         public override string REASON_MISSING => "Die Begründung fehlt!";
@@ -89,13 +90,13 @@ namespace TDS_Server.Instance.Language
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";
         public override string TIMEBAN_YOU_INFO => "Du wurdest für {0} Stunden von {1} gebannt. Grund: {2}";
-        public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby von {2} gebannt. Grund: {3}";
+        public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby '{2}' von {3} gebannt. Grund: {4}";
         public override string TIMEMUTE_INFO => "{0} wurde von {1} für {2} Minuten gemutet. Grund: {3}";
-        public override string TOO_LONG_OUTSIDE_MAP => "Du warst zu lange außerhalb der Map!";
+        public override string TOO_LONG_OUTSIDE_MAP => "Du warst zu lange außerhalb der Map.";
 
         public override string UNBAN_INFO => "{0} wurde von {1} entbannt. Grund: {2}";
-        public override string UNBAN_LOBBY_INFO => "{0} wurde in der Lobby von {1} entbannt. Grund: {2}";
-        public override string UNBAN_YOU_LOBBY_INFO => "Du wurdest in der Lobby {0} von {1} entbannt. Grund: {2}";
+        public override string UNBAN_LOBBY_INFO => "{0} wurde in der Lobby '{1}' von {2} entbannt. Grund: {3}";
+        public override string UNBAN_YOU_LOBBY_INFO => "Du wurdest in der Lobby '{0}' von {1} entbannt. Grund: {2}";
         public override string UNMUTE_INFO => "{0} wurde von {1} entmutet. Grund: {2}";
 
         public override string[] WELCOME_MESSAGE => new string[] {
