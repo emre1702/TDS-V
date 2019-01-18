@@ -6,7 +6,12 @@ namespace TDS_Server.CustomAttribute
     class TDSCommand : Attribute
     {
         public string Command;
+        public int Priority = 0;
 
-        public TDSCommand(string command) => this.Command = command;
+        public TDSCommand(string command, int priority = 0)
+        {
+            this.Command = command;
+            this.Priority = priority;
+        }
     }
 }

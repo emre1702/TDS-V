@@ -20,16 +20,23 @@ namespace TDS_Server.Manager.Commands
         private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
         private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
 
+        private class CommandData
+        {
+            public List<CommandMethodData> MethodDatas = new List<CommandMethodData>();
+            public int? ToOneStringAfterParameterCount = null;
+        }
+
         private class CommandMethodData
         {
             public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
             public CommandDefaultMethod Method;    // only used when UseImplicitTypes == false
             public CommandEmptyDefaultMethod MethodEmpty;   // only used when UseImplicitTypes == false
-            public int? ToOneStringAfterParameterCount = null;
             public Type[] ParameterTypes;
+            public int Priority;
         }
 
-        private static readonly Dictionary<string, CommandMethodData> methoddataByCommand = new Dictionary<string, CommandMethodData>();  // this is the primary Dictionary for commands!
+
+        private static readonly Dictionary<string, CommandData> commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
         private static readonly Dictionary<string, Entity.Commands> commandsDict = new Dictionary<string, Entity.Commands>();
         private static readonly Dictionary<string, string> commandByAlias = new Dictionary<string, string>();
         private static readonly Dictionary<Type, Func<string, object>> typeConverter = new Dictionary<Type, Func<string, object>>();
@@ -60,38 +67,54 @@ namespace TDS_Server.Manager.Commands
                    .ToList();
             foreach (MethodInfo method in methods)
             {
-                CommandMethodData methoddata = new CommandMethodData();
-                methoddata.MethodDefault = method;
-                string cmd = method.GetCustomAttribute<TDSCommand>().Command;
+                var attribute = method.GetCustomAttribute<TDSCommand>();
+                string cmd = attribute.Command;
                 if (!commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
                     continue;
+
+                CommandData commanddata;
+                if (commandDataByCommand.ContainsKey(cmd))
+                    commanddata = commandDataByCommand[cmd];
+                else
+                    commanddata = new CommandData();
+                CommandMethodData methoddata = new CommandMethodData();
+                commanddata.MethodDatas.Add(methoddata);
+
+                methoddata.MethodDefault = method;
+                
                 var parameters = method.GetParameters().Skip(AmountDefaultParams);
-                methoddata.ParameterTypes = parameters.Select(p => p.ParameterType).ToArray();
+                Type[] parametertypes = parameters.Select(p => p.ParameterType).ToArray();
 
                 foreach (var parameter in parameters)
                 {
                     #region TDSRemainingText attribute
-                    if (parameter.CustomAttributes.Any(d => d.AttributeType == typeof(TDSRemainingText)))
-                        methoddata.ToOneStringAfterParameterCount = parameter.Position;
+                    if (!commanddata.ToOneStringAfterParameterCount.HasValue)
+                        if (parameter.CustomAttributes.Any(d => d.AttributeType == typeof(TDSRemainingText)))
+                            commanddata.ToOneStringAfterParameterCount = parameter.Position;
                     #endregion TDSRemainingText attribute
 
                     #region Save parameter types
                     // Don't need Type for parameters beginning at ToOneStringAfterParameterCount (because they are always strings)
-                    if (!methoddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= methoddata.ToOneStringAfterParameterCount.Value)
-                        methoddata.ParameterTypes[parameter.Position - AmountDefaultParams] = parameter.ParameterType;
+                    if (!commanddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= commanddata.ToOneStringAfterParameterCount.Value)
+                        parametertypes[parameter.Position - AmountDefaultParams] = parameter.ParameterType;
                     #endregion Save parameter types
                 }
+                methoddata.ParameterTypes = parametertypes;
 
                 if (!UseImplicitTypes)
                 {
-                    if (methoddata.ParameterTypes.Length == 0)
+                    if (parametertypes.Length == 0)
                         methoddata.MethodEmpty = (CommandEmptyDefaultMethod)method.CreateDelegate(typeof(CommandEmptyDefaultMethod));
                     else
                         methoddata.Method = (CommandDefaultMethod)method.CreateDelegate(typeof(CommandDefaultMethod));
                 }
 
-                methoddataByCommand[cmd] = methoddata;
+                commandDataByCommand[cmd] = commanddata;
+            }
 
+            foreach (var commanddata in commandDataByCommand.Values)
+            {
+                commanddata.MethodDatas.Sort((a, b) => -1 * a.Priority.CompareTo(b.Priority));
             }
         }
 
@@ -109,83 +132,114 @@ namespace TDS_Server.Manager.Commands
                 if (commandByAlias.ContainsKey(cmd))
                     cmd = commandByAlias[cmd];
 
-                #region If the command doesn't exist 
-                if (!methoddataByCommand.ContainsKey(cmd))
-                {
-                    if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
-                        NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_DOESNT_EXIST);
-                    if (SettingsManager.ToChatOnNonExistentCommand)
-                        ChatManager.OnLobbyChatMessage(player, "/" + cmd + " " + string.Join(' ', args));
+                if (!CheckCommandExists(character, cmd, args))
                     return;
-                }
-                #endregion
 
                 Entity.Commands entity = commandsDict[cmd];
 
-                bool canuse = CheckRights(character, entity, cmdinfos);
-                if (!canuse)
-                {
-                    NAPI.Chat.SendChatMessageToPlayer(player, character.Language.NOT_ALLOWED);
+                if (!CheckRights(character, entity, cmdinfos))
                     return;
-                }
 
-                CommandMethodData methoddata = methoddataByCommand[cmd];
+                CommandData commanddata = commandDataByCommand[cmd];
 
-                #region Check arguments count
-                if ((args?.Length ?? 0) < methoddata.ParameterTypes.Length)
-                {
-                    NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_TOO_LESS_ARGUMENTS);
+                if (IsInvalidArgsCount(character, commanddata, args))
                     return;
-                }
-                #endregion Check arguments count
 
-                #region Handle TDSRemainingText
-                if (methoddata.ToOneStringAfterParameterCount.HasValue)
-                {
-                    int index = methoddata.ToOneStringAfterParameterCount.Value - AmountDefaultParams;
-                    args[index] = string.Join(' ', args.Skip(index));
-                    args = args.Take(index + 1).ToArray();
-                }
-                #endregion Handle TDSRemainingText
+                HandleRemaingText(commanddata, args);
 
-                #region Handle arguments type convertings (from string)
-                for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
+                int amountmethods = commanddata.MethodDatas.Count;
+                for (int methodindex = 0; methodindex < amountmethods; ++methodindex) 
                 {
-                    args[i] = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
-                    #region Check if player exists
-                    if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
+                    var methoddata = commanddata.MethodDatas[methodindex];
+                    bool wrongmethod = false;
+
+                    bool dontstop = HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args, ref wrongmethod);
+                    if (!dontstop)
+                        return;
+
+                    if (wrongmethod)
+                        continue;
+
+                    if (UseImplicitTypes)
                     {
-                        if (args[i] == null)
-                        {
-                            NAPI.Chat.SendChatMessageToPlayer(player, character.Language.PLAYER_DOESNT_EXIST);
-                            return;
-                        }
+                        object[] newargs = new object[(args?.Length ?? 0) + AmountDefaultParams];
+                        newargs[0] = character;
+                        newargs[1] = cmdinfos;
+                        if (args != null)
+                            args.CopyTo(newargs, 2);
+                        methoddata.MethodDefault.Invoke(null, newargs);
                     }
-                    #endregion Check if player exists
-                }
-                #endregion Handle arguments type convertings (from string)
-
-                if (UseImplicitTypes)
-                {
-                    object[] newargs = new object[(args?.Length ?? 0) + AmountDefaultParams];
-                    newargs[0] = character;
-                    newargs[1] = cmdinfos;
-                    if (args != null)
-                        args.CopyTo(newargs, 2);
-                    methoddata.MethodDefault.Invoke(null, newargs);
-                }
-                else
-                {
-                    if (args != null)
-                        methoddata.Method.Invoke(character, cmdinfos, args);
                     else
-                        methoddata.MethodEmpty.Invoke(character, cmdinfos);
+                    {
+                        if (args != null)
+                            methoddata.Method.Invoke(character, cmdinfos, args);
+                        else
+                            methoddata.MethodEmpty.Invoke(character, cmdinfos);
+                    }
                 }
+                
             }
             catch(Exception ex)
             {
                 NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_USED_WRONG);
             }
+        }
+
+        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[] args, ref bool wrongmethod)
+        {
+            for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
+            {
+                args[i] = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
+                #region Check if player exists
+                if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
+                {
+                    if (args[i] == null)
+                    {
+                        if (methodindex + 1 == amountmethodsavailable)
+                        {
+                            NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
+                            return false;
+                        }
+                        wrongmethod = true;
+                        break;
+                    }
+                }
+                #endregion Check if player exists
+            }
+            return true;
+        }
+
+        private static void HandleRemaingText(CommandData commanddata, object[] args)
+        {
+            if (commanddata.ToOneStringAfterParameterCount.HasValue)
+            {
+                int index = commanddata.ToOneStringAfterParameterCount.Value - AmountDefaultParams;
+                args[index] = string.Join(' ', args.Skip(index));
+                args = args.Take(index + 1).ToArray();
+            }
+        }
+
+        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object[] args)
+        {
+            if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool CheckCommandExists(TDSPlayer player, string cmd, object[] args)
+        {
+            if (!commandDataByCommand.ContainsKey(cmd))
+            {
+                if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_DOESNT_EXIST);
+                if (SettingsManager.ToChatOnNonExistentCommand)
+                    ChatManager.OnLobbyChatMessage(player.Client, "/" + cmd + " " + string.Join(' ', args));
+                return false;
+            }
+            return true;
         }
 
         private static bool CheckRights(TDSPlayer character, Entity.Commands entity, TDSCommandInfos cmdinfos)
@@ -240,6 +294,9 @@ namespace TDS_Server.Manager.Commands
                 cmdinfos.WithRight = ECommandUsageRight.User;
             }
             #endregion
+
+            if (!canuse)
+                NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.NOT_ALLOWED);
 
             return canuse;
         }
