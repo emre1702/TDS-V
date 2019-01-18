@@ -56,6 +56,7 @@ namespace TDS_Server.Instance.Language
         public virtual string PERMABAN_INFO => "{0} was baned permanently by {1}. Reason: {2}";
         public virtual string PERMABAN_YOU_INFO => "You were baned permanently by {0}. Reason: {1}";
         public virtual string PERMABAN_LOBBY_INFO => "{0} was baned permanently in lobby '{1}' by {2}. Reason: {3}";
+        public virtual string PERMABAN_LOBBY_YOU_INFO => "You was baned for {0} hours from lobby '{1}' by {2}. Reason {3}";
         public virtual string PERMAMUTE_INFO => "{0} was muted permanently by {1}. Reason: {2}";
         public virtual string PLAYER_ALREADY_MUTED => "The player is already muted!";
         public virtual string PLAYER_DOESNT_EXIST => "The player doesn't exist!";
@@ -90,6 +91,7 @@ namespace TDS_Server.Instance.Language
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
         public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
         public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
+        public virtual string TIMEBAN_LOBBY_YOU_INFO => "You were baned for {0} hours from lobby '{1}' by {2}. Reason: {3}";
         public virtual string TIMEMUTE_INFO => "{0} was muted for {1} minutes by {2}. Reason: {3}";
         public virtual string TOO_LONG_OUTSIDE_MAP => "You've been too long outside the map.";
 

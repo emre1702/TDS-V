@@ -2,9 +2,12 @@ namespace TDS_Server.Manager.Commands
 {
 
     using GTANetworkAPI;
+    using Microsoft.EntityFrameworkCore;
     using System;
+    using System.Linq;
     using TDS_Server.CustomAttribute;
     using TDS_Server.Default;
+    using TDS_Server.Entity;
     using TDS_Server.Enum;
     using TDS_Server.Instance.Lobby;
     using TDS_Server.Instance.Player;
@@ -63,7 +66,7 @@ namespace TDS_Server.Manager.Commands
             await LobbyManager.GetLobby(0).AddPlayer(target, 0);
         }
 
-        [TDSCommand(DAdminCommand.LobbyBan)]
+        [TDSCommand(DAdminCommand.LobbyBan, 1)]
         public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
         {
             if (player.CurrentLobby.Id == 0)
@@ -78,6 +81,35 @@ namespace TDS_Server.Manager.Commands
                 player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.LobbyBan, 0)]
+        public static async void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
+        {
+            if (player.CurrentLobby.Id == 0)
+                return;
+            if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
+                return;
+
+            Players target;
+            using (var dbcontext = new TDSNewContext())
+            {
+                target = await dbcontext.Players.Where(p => p.Name == targetname).FirstOrDefaultAsync();
+                if (target == null)
+                {
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
+                    return;
+                }
+            }
+
+            if (hours == 0)
+                player.CurrentLobby.UnbanPlayer(player, target, reason);
+            else if (hours == -1)
+                player.CurrentLobby.BanPlayer(player, target, null, reason);
+            else
+                player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Lobby_Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Ban)]

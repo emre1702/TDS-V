@@ -51,6 +51,7 @@
         string PERMABAN_INFO { get; }
         string PERMABAN_YOU_INFO { get; }
         string PERMABAN_LOBBY_INFO { get; }
+        string PERMABAN_LOBBY_YOU_INFO { get; }
         string PERMAMUTE_INFO { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
@@ -85,6 +86,7 @@
         string TIMEBAN_INFO { get; }
         string TIMEBAN_YOU_INFO { get; }
         string TIMEBAN_LOBBY_INFO { get; }
+        string TIMEBAN_LOBBY_YOU_INFO { get; }
         string TIMEMUTE_INFO { get; }
         string TOO_LONG_OUTSIDE_MAP { get; }
 

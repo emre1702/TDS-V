@@ -9,11 +9,22 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        public async void BanPlayer(TDSPlayer admin, TDSPlayer target, DateTime? endTime, string reason)
+        public void BanPlayer(TDSPlayer admin, TDSPlayer target, DateTime? endTime, string reason)
+        {
+            if (Players.Contains(target))
+                RemovePlayer(target);
+            BanPlayer(admin, target.Entity, endTime, reason);
+            if (endTime.HasValue)
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.TIMEBAN_LOBBY_YOU_INFO.Formatted(endTime.Value.Minute / 60, LobbyEntity.Name, admin.AdminLevelName, reason));
+            else
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.PERMABAN_LOBBY_YOU_INFO.Formatted(LobbyEntity.Name, admin.AdminLevelName, reason));
+        }
+
+        public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason)
         {
             using (var dbcontext = new TDSNewContext())
             {
-                Playerbans ban = await dbcontext.Playerbans.FindAsync(target.Entity.Id, LobbyEntity.Id);
+                Playerbans ban = await dbcontext.Playerbans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban != null)
                 {
                     ban.Admin = admin.Entity.Id;
@@ -25,7 +36,7 @@ namespace TDS_Server.Instance.Lobby
                 {
                     ban = new Playerbans()
                     {
-                        Id = target.Entity.Id,
+                        Id = target.Id,
                         ForLobby = LobbyEntity.Id,
                         Admin = admin.Entity.Id,
                         EndTimestamp = endTime,
@@ -36,18 +47,32 @@ namespace TDS_Server.Instance.Lobby
                 await dbcontext.SaveChangesAsync();
             }
             if (endTime.HasValue)
-                SendAllPlayerLangMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Client.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+            {
+                if (LobbyEntity.IsOfficial)
+                    LangUtils.SendAllChatMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime.Value.Minute / 60), LobbyEntity.Name, admin.AdminLevelName, reason));
+                else
+                    SendAllPlayerLangMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime.Value.Minute / 60), LobbyEntity.Name, admin.AdminLevelName, reason));
+            }
             else
-                SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Client.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
-            if (Players.Contains(target))
-                RemovePlayer(target);
+            {
+                if (LobbyEntity.IsOfficial)
+                    LangUtils.SendAllChatMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+                else
+                    SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+            }
         }
 
-        public async void UnbanPlayer(TDSPlayer admin, TDSPlayer target, string reason)
+        public void UnbanPlayer(TDSPlayer admin, TDSPlayer target, string reason)
+        {
+            UnbanPlayer(admin, target.Entity, reason);
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.UNBAN_YOU_LOBBY_INFO.Formatted(LobbyEntity.Name, admin.AdminLevelName, reason));
+        }
+
+        public async void UnbanPlayer(TDSPlayer admin, Players target, string reason)
         {
             using (var dbcontext = new TDSNewContext())
             {
-                Playerbans ban = await dbcontext.Playerbans.FindAsync(target.Entity.Id, LobbyEntity.Id);
+                Playerbans ban = await dbcontext.Playerbans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban == null)
                 {
                     NAPI.Chat.SendChatMessageToPlayer(admin.Client, admin.Language.PLAYER_ISNT_BANED);
@@ -56,8 +81,10 @@ namespace TDS_Server.Instance.Lobby
                 dbcontext.Playerbans.Remove(ban);
                 await dbcontext.SaveChangesAsync();
             }
-            SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Client.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
-            NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.UNBAN_YOU_LOBBY_INFO.Formatted(LobbyEntity.Name, admin.AdminLevelName, reason));
+            if (LobbyEntity.IsOfficial)
+                LangUtils.SendAllChatMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+            else
+                SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
         }
 
         private async Task<bool> IsPlayerBaned(TDSPlayer character, TDSNewContext dbcontext)
