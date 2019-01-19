@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TDS_Server.Entity
 {
-    public partial class Playersettings
+    public partial class PlayerSettings
     {
         public uint Id { get; set; }
         public bool HitsoundOn { get; set; }

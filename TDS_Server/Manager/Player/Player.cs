@@ -44,9 +44,9 @@ namespace TDS_Server.Manager.Player
             return null;
         }
 
-        public static Playersettings GetSettings(this Client player)
+        public static PlayerSettings GetSettings(this Client player)
         {
-            return player.GetChar().Entity.Playersettings;
+            return player.GetChar().Entity.PlayerSettings;
         }
 
         public static async Task<Players> GetEntityByID(uint id)

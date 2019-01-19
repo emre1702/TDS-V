@@ -9,15 +9,15 @@ namespace TDS_Server.Manager.Utility
     static class BansManager
     {
 
-        public static async Task RemoveExpiredBans(TDSNewContext dbcontext)
+        public static void RemoveExpiredBans(TDSNewContext dbcontext)
         {
             dbcontext.RemoveRange(
-                await dbcontext.Playerbans
+                dbcontext.PlayerBans
                     .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
 #warning  todo: Check if that works right
-                    .ToListAsync()
+                    .ToList()
             );
-            await dbcontext.SaveChangesAsync();
+            dbcontext.SaveChanges();
         }
     }
 }

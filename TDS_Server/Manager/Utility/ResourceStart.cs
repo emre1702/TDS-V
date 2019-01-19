@@ -6,6 +6,7 @@
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using TDS_Server.Entity;
+    using TDS_Server.Instance;
     using TDS_Server.Manager.Commands;
     using TDS_Server.Manager.Maps;
 
@@ -25,25 +26,23 @@
             {
                 using (var dbcontext = new TDSNewContext())
                 {
-                    foreach (var stat in dbcontext.Playerstats.Where(s => s.LoggedIn))
+                    foreach (var stat in dbcontext.PlayerStats.Where(s => s.LoggedIn))
                     {
                         stat.LoggedIn = false;
                     }
                     dbcontext.SaveChanges();
 
-                    await SettingsManager.Load(dbcontext);
+                    SettingsManager.Load(dbcontext);
                     AdminsManager.Init(dbcontext);
                     CommandsManager.LoadCommands(dbcontext);
+                    Damagesys.LoadDefaults(dbcontext);
 
                     NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
 
-                    await BansManager.RemoveExpiredBans(dbcontext);
+                    BansManager.RemoveExpiredBans(dbcontext);
 
-                    using (var dbcontextwithmaps = new TDSNewContext())
-                    {
-                        await MapsManager.LoadMaps(dbcontextwithmaps);
-                        await LobbyManager.LoadAllLobbies(dbcontextwithmaps);
-                    }
+                    await MapsManager.LoadMaps(dbcontext);
+                    LobbyManager.LoadAllLobbies(dbcontext);
 
                     // Gang.LoadGangFromDatabase ();
 

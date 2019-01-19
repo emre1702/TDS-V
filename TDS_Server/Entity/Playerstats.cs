@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TDS_Server.Entity
 {
-    public partial class Playerstats
+    public partial class PlayerStats
     {
         public uint Id { get; set; }
         public uint Money { get; set; }

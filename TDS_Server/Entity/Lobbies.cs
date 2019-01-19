@@ -9,8 +9,8 @@ namespace TDS_Server.Entity
         {
             LobbyMaps = new HashSet<LobbyMaps>();
             LobbyWeapons = new HashSet<LobbyWeapons>();
-            Playerbans = new HashSet<Playerbans>();
-            Playerlobbystats = new HashSet<Playerlobbystats>();
+            PlayerBans = new HashSet<PlayerBans>();
+            PlayerLobbyStats = new HashSet<PlayerLobbyStats>();
             Teams = new HashSet<Teams>();
         }
 
@@ -21,7 +21,7 @@ namespace TDS_Server.Entity
         public string Password { get; set; }
         public sbyte StartHealth { get; set; }
         public sbyte StartArmor { get; set; }
-        public sbyte? AmountLifes { get; set; }
+        public byte? AmountLifes { get; set; }
         public float DefaultSpawnX { get; set; }
         public float DefaultSpawnY { get; set; }
         public float DefaultSpawnZ { get; set; }
@@ -43,10 +43,11 @@ namespace TDS_Server.Entity
         public DateTime? CreateTimestamp { get; set; }
 
         public virtual Players OwnerNavigation { get; set; }
+        public virtual LobbyTypes TypeNavigation { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }
-        public virtual ICollection<Playerbans> Playerbans { get; set; }
-        public virtual ICollection<Playerlobbystats> Playerlobbystats { get; set; }
+        public virtual ICollection<PlayerBans> PlayerBans { get; set; }
+        public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual ICollection<Teams> Teams { get; set; }
     }
 }

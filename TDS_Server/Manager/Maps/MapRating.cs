@@ -30,11 +30,11 @@ namespace TDS_Server.Manager.Maps
             uint playerid = player.GetEntity().Id;
             using (var dbcontext = new TDSNewContext())
             {
-                Playermapratings maprating = await dbcontext.Playermapratings.FindAsync(playerid, mapname);
+                PlayerMapRatings maprating = await dbcontext.PlayerMapRatings.FindAsync(playerid, mapname);
                 if (maprating == null)
                 {
-                    maprating = new Playermapratings { Id = playerid, MapName = mapname };
-                    await dbcontext.Playermapratings.AddAsync(maprating);
+                    maprating = new PlayerMapRatings { Id = playerid, MapName = mapname };
+                    await dbcontext.PlayerMapRatings.AddAsync(maprating);
                 }
                 maprating.Rating = rating;
                 await dbcontext.SaveChangesAsync();
@@ -43,9 +43,9 @@ namespace TDS_Server.Manager.Maps
 
         public static void SendPlayerHisRatings(TDSPlayer character)
         {
-            if (character.Entity.Playermapratings.Any())
+            if (character.Entity.PlayerMapRatings.Any())
             {
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.Playermapratings));
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
             }
         }
 

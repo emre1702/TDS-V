@@ -108,83 +108,58 @@ namespace TDS_Server.Manager.Commands
                 player.CurrentLobby.BanPlayer(player, target, null, reason);
             else
                 player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
-        [TDSCommand(DAdminCommand.Ban)]
-        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
+        [TDSCommand(DAdminCommand.Ban, 1)]
+        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
         {
-            /*try
+            if (hours == 0)
+                LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
+            else if (hours == -1)
+                LobbyManager.MainMenu.BanPlayer(player, target, null, reason);
+            else
+                LobbyManager.MainMenu.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Ban, 0)]
+        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
+        {
+            Players target;
+            using (var dbcontext = new TDSNewContext())
             {
-                if (Account.PlayerUIDs.ContainsKey(targetname))
+                target = await dbcontext.Players.Where(p => p.Name == targetname).FirstOrDefaultAsync();
+                if (target == null)
                 {
-                    Character character = player.GetChar();
-                    if (hours == -1 && character.IsAdminLevel(neededLevels["ban (permanent)"]) || hours == 0 && character.IsAdminLevel(neededLevels["ban (unban)"]) || hours > 0 && character.IsAdminLevel(neededLevels["ban (time)"]))
-                    {
-                        if (reason.Length > 3)
-                        {
-                            uint targetadminlvl = 0;
-                            string targetaddress = "-";
-                            uint targetUID = Account.PlayerUIDs[targetname];
-                            Client target = NAPI.Player.GetPlayerFromName(targetname);
-                            if (target != null && target.GetChar().LoggedIn)
-                            {
-                                Character targetcharacter = target.GetChar();
-                                targetadminlvl = targetcharacter.AdminLvl;
-                                targetaddress = target.Address;
-                            }
-                            else
-                            {
-                                DataTable targetdata = await Database.ExecResult($"SELECT adminlvl FROM player WHERE uid = {targetUID}").ConfigureAwait(false);
-                                targetadminlvl = Convert.ToUInt16(targetdata.Rows[0]["adminlvl"]);
-                                if (target != null)
-                                    targetaddress = target.Address;
-                            }
-                            if (targetadminlvl <= character.AdminLvl)
-                            {
-                                if (hours == 0)
-                                {
-#pragma warning disable CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
-                                    Account.UnBanPlayer(character, target, targetname, reason, targetUID);
-#pragma warning restore CS4014 // Da dieser Aufruf nicht abgewartet wird, wird die Ausführung der aktuellen Methode fortgesetzt, bevor der Aufruf abgeschlossen ist
-                                }
-                                else if (hours == -1)
-                                {
-                                    Account.PermaBanPlayer(character, target, targetname, targetaddress, reason, targetUID);
-                                }
-                                else
-                                {
-                                    Account.TimeBanPlayer(character, target, targetname, targetaddress, reason, hours, targetUID);
-                                }
-                            }
-                            else
-                                character.SendLangNotification("adminlvl_not_high_enough");
-                        }
-                        else
-                            character.SendLangNotification("reason_missing");
-                    }
-                    else
-                        character.SendLangNotification("adminlvl_not_high_enough");
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
+                    return;
                 }
-                else
-                    player.SendLangNotification("player_doesnt_exist");
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }*/
+
+            if (hours == 0)
+                LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
+            else if (hours == -1)
+                LobbyManager.MainMenu.BanPlayer(player, target, null, reason);
+            else
+                LobbyManager.MainMenu.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Kick)]
+        public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos)
+        {
+
         }
 
 
-
         /*private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
-			{ "ban (time)", 1 },
-			{ "ban (unban)", 2 },
-			{ "ban (permanent)", 3 },
-			{ "lobbyban (time)", 1 },
-			{ "lobbyban (unban)", 2 },
-			{ "lobbyban (permanent)", 2 },
 			{ "mute (time)", 1 },
 			{ "mute (unmute)", 1 },
 			{ "mute (permaunmute)", 2 },

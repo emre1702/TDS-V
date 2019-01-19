@@ -11,10 +11,10 @@ namespace TDS_Server.Entity
             Maps = new HashSet<Maps>();
             OfflinemessagesSource = new HashSet<Offlinemessages>();
             OfflinemessagesTarget = new HashSet<Offlinemessages>();
-            PlayerbansAdminNavigation = new HashSet<Playerbans>();
-            PlayerbansIdNavigation = new HashSet<Playerbans>();
-            Playerlobbystats = new HashSet<Playerlobbystats>();
-            Playermapratings = new HashSet<Playermapratings>();
+            PlayerBansAdminNavigation = new HashSet<PlayerBans>();
+            PlayerBansIdNavigation = new HashSet<PlayerBans>();
+            PlayerLobbyStats = new HashSet<PlayerLobbyStats>();
+            PlayerMapRatings = new HashSet<PlayerMapRatings>();
         }
 
         public uint Id { get; set; }
@@ -22,21 +22,20 @@ namespace TDS_Server.Entity
         public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public byte AdminLvl { get; set; }
+        public sbyte AdminLvl { get; set; }
         public bool IsVip { get; set; }
         public sbyte Donation { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
-        public virtual Adminlevels AdminLvlNavigation { get; set; }
-        public virtual Playersettings Playersettings { get; set; }
-        public virtual Playerstats Playerstats { get; set; }
+        public virtual PlayerSettings PlayerSettings { get; set; }
+        public virtual PlayerStats PlayerStats { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }
         public virtual ICollection<Maps> Maps { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
-        public virtual ICollection<Playerbans> PlayerbansAdminNavigation { get; set; }
-        public virtual ICollection<Playerbans> PlayerbansIdNavigation { get; set; }
-        public virtual ICollection<Playerlobbystats> Playerlobbystats { get; set; }
-        public virtual ICollection<Playermapratings> Playermapratings { get; set; }
+        public virtual ICollection<PlayerBans> PlayerBansAdminNavigation { get; set; }
+        public virtual ICollection<PlayerBans> PlayerBansIdNavigation { get; set; }
+        public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
+        public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
     }
 }

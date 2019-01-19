@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TDS_Server.Entity
 {
-    public partial class Playermapratings
+    public partial class PlayerMapRatings
     {
         public uint Id { get; set; }
         public string MapName { get; set; }

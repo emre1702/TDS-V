@@ -11,14 +11,14 @@ namespace TDS_Server.Entity
             CommandsInfo = new HashSet<CommandsInfo>();
         }
 
-        public ushort Id { get; set; }
+        public byte Id { get; set; }
         public string Command { get; set; }
         public byte? NeededAdminLevel { get; set; }
         public byte? NeededDonation { get; set; }
         public bool? VipCanUse { get; set; }
         public bool? LobbyOwnerCanUse { get; set; }
 
-        public virtual Adminlevels NeededAdminLevelNavigation { get; set; }
+        public virtual AdminLevels NeededAdminLevelNavigation { get; set; }
         public virtual ICollection<CommandsAlias> CommandsAlias { get; set; }
         public virtual ICollection<CommandsInfo> CommandsInfo { get; set; }
     }

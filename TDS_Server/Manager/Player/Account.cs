@@ -38,7 +38,7 @@
             if (!player.LoggedIn)
                 return;
 
-            player.Entity.Playerstats.LoggedIn = false;
+            player.Entity.PlayerStats.LoggedIn = false;
             if (player.AdminLevel.Level > 0)
                 AdminsManager.SetOffline(player);
 
@@ -105,7 +105,7 @@
                 if (playerID != 0)
                 {
                     isPlayerRegistered = true;
-                    var ban = await dbcontext.Playerbans.FindAsync(playerID, 0);    // MainMenu ban => server ban
+                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
                     if (ban != null)
                     {
                         if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)

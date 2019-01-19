@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Player
 
                     IsVip = false
                 };
-                dbplayer.Playersettings = new Playersettings {
+                dbplayer.PlayerSettings = new PlayerSettings {
                     Id = dbplayer.Id,
 #warning TODO: Check if we need that with Id = dbplayer.Id
                     AllowDataTransfer = false,
@@ -32,7 +32,7 @@ namespace TDS_Server.Manager.Player
                     HitsoundOn = true,
                     Language = (byte)ELanguage.English
                 };
-                dbplayer.Playerstats = new Playerstats
+                dbplayer.PlayerStats = new PlayerStats
 #warning TODO: Do we need Id = ... here?
                 {
                     LoggedIn = false

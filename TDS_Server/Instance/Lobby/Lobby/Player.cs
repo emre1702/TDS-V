@@ -97,7 +97,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.CurrentLobbyStats == null)
                 return;
 
-            Playerlobbystats to = character.CurrentLobbyStats;
+            PlayerLobbyStats to = character.CurrentLobbyStats;
             RoundStatsDto from = character.CurrentRoundStats;
             to.Kills += from.Kills;
             to.Assists += from.Assists;
@@ -121,12 +121,12 @@ namespace TDS_Server.Instance.Lobby
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)
         {
-            Playerlobbystats stats = await playerLobbyStatsContext.Playerlobbystats.FindAsync(character.Entity.Id, LobbyEntity.Id);
+            PlayerLobbyStats stats = await playerLobbyStatsContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (stats == null)
             {
-                stats = new Playerlobbystats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };
-                character.Entity.Playerlobbystats.Add(stats);
-                await playerLobbyStatsContext.Playerlobbystats.AddAsync(stats);
+                stats = new PlayerLobbyStats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };
+                character.Entity.PlayerLobbyStats.Add(stats);
+                await playerLobbyStatsContext.PlayerLobbyStats.AddAsync(stats);
                 await playerLobbyStatsContext.SaveChangesAsync();
             }
             character.CurrentLobbyStats = stats;

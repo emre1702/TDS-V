@@ -20,7 +20,8 @@ namespace TDS_Server.Manager.Utility
 
         public async static void Init(TDSNewContext dbcontext)
         {
-            AdminLevels = await dbcontext.Adminlevels
+#warning TODO FAST
+            /*AdminLevels = await dbcontext.AdminLevels
                 .OrderBy(lvl => lvl.Level)
                 .Select(lvl => new AdminLevelDto
                             {
@@ -28,9 +29,9 @@ namespace TDS_Server.Manager.Utility
                                 FontColor = "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
                             })
                 .AsNoTracking()
-                .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);
+                .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);*/
 
-            foreach (var entry in await dbcontext.Adminlevelnames.ToListAsync())
+            foreach (var entry in await dbcontext.AdminLevelNames.ToListAsync())
             {
                 AdminLevels[entry.Level].Names[(ELanguage)entry.Language] = entry.Name;
             }

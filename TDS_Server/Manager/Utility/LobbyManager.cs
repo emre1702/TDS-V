@@ -14,19 +14,21 @@ namespace TDS_Server.Manager.Utility
     {
         public static List<Lobby> Lobbies = new List<Lobby>();
 
-        public static async Task LoadAllLobbies(TDSNewContext dbcontext)
+        public static Lobby MainMenu => Lobbies[0];
+
+        public static void LoadAllLobbies(TDSNewContext dbcontext)
         {
             dbcontext.RemoveRange(dbcontext.Lobbies.Where(l => l.IsTemporary));
-            await dbcontext.SaveChangesAsync();
+            dbcontext.SaveChanges();
 
-            List<Lobbies> lobbies = await dbcontext.Lobbies
+            List<Lobbies> lobbies = dbcontext.Lobbies
                 .Include(l => l.Teams)
                 .Include(l => l.LobbyWeapons)
                 .Include(l => l.LobbyMaps)
                 .ThenInclude((LobbyMaps map) => map.Map)
                 .Include(l => l.OwnerNavigation)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToList();
             foreach (Lobbies lobbysetting in lobbies)
             {
                 ELobbyType type = (ELobbyType)lobbysetting.Type;

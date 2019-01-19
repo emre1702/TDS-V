@@ -7,10 +7,12 @@ namespace TDS_Server.Dto
         public short Damage;
         public float HeadMultiplier;
 
+        public DamageDto() { }
+
         public DamageDto(LobbyWeapons weapon)
         {
-            Damage = weapon.Damage;
-            HeadMultiplier = weapon.HeadMultiplicator;
+            Damage = weapon.Damage.Value;
+            HeadMultiplier = weapon.HeadMultiplicator.Value;
         }
     }
 }

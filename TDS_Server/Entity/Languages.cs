@@ -7,16 +7,16 @@ namespace TDS_Server.Entity
     {
         public Languages()
         {
-            Adminlevelnames = new HashSet<Adminlevelnames>();
+            AdminLevelNames = new HashSet<AdminLevelNames>();
             CommandsInfo = new HashSet<CommandsInfo>();
-            Playersettings = new HashSet<Playersettings>();
+            PlayerSettings = new HashSet<PlayerSettings>();
         }
 
         public byte Id { get; set; }
         public string Language { get; set; }
 
-        public virtual ICollection<Adminlevelnames> Adminlevelnames { get; set; }
+        public virtual ICollection<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual ICollection<CommandsInfo> CommandsInfo { get; set; }
-        public virtual ICollection<Playersettings> Playersettings { get; set; }
+        public virtual ICollection<PlayerSettings> PlayerSettings { get; set; }
     }
 }

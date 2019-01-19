@@ -10,6 +10,6 @@ namespace TDS_Server.Entity
         public byte? NeededDonatorLevel { get; set; }
         public bool VipcanUse { get; set; }
 
-        public Adminlevels NeededAdminLevelNavigation { get; set; }
+        public AdminLevels NeededAdminLevelNavigation { get; set; }
     }
 }

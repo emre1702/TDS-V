@@ -5,7 +5,7 @@ namespace TDS_Server.Entity
 {
     public partial class CommandsInfo
     {
-        public ushort Id { get; set; }
+        public byte Id { get; set; }
         public byte Language { get; set; }
         public string Info { get; set; }
 

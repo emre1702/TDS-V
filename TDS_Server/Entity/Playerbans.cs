@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TDS_Server.Entity
 {
-    public partial class Playerbans
+    public partial class PlayerBans
     {
         public uint Id { get; set; }
         public uint ForLobby { get; set; }

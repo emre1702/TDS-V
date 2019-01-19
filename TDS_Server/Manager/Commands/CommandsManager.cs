@@ -55,10 +55,11 @@ namespace TDS_Server.Manager.Commands
             foreach (Entity.Commands command in await dbcontext.Commands.Include(c => c.CommandsAlias).AsNoTracking().ToListAsync())
             {
                 commandsDict[command.Command] = command;
-                foreach (CommandsAlias alias in command.CommandsAlias)
-                {
-                    commandByAlias[alias.Alias] = command.Command;
-                }
+#warning TODO fast
+                //foreach (CommandsAlias alias in command.CommandsAlias)
+                //{
+                //    commandByAlias[alias.Alias] = command.Command;
+                //}
             }
 
             List<MethodInfo> methods = Assembly.GetExecutingAssembly().GetTypes()
@@ -124,7 +125,7 @@ namespace TDS_Server.Manager.Commands
             TDSPlayer character = player.GetChar();
             try
             {
-                if (!character.Entity.Playerstats.LoggedIn)
+                if (!character.Entity.PlayerStats.LoggedIn)
                     return;
 
                 object[] args = GetArgs(msg, out string cmd);

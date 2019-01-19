@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Dto;
 using TDS_Server.Entity;
@@ -21,9 +22,9 @@ namespace TDS_Server.Manager.Utility
 
         private static Settings settings;
 
-        public static async Task Load(TDSNewContext dbcontext)
+        public static void Load(TDSNewContext dbcontext)
         {
-            settings = await dbcontext.Settings.AsNoTracking().SingleAsync();
+            settings = dbcontext.Settings.AsNoTracking().Single();
 
             SyncedSettings = new SyncedSettingsDto()
             {

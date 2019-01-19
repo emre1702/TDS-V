@@ -3,22 +3,20 @@ using System.Collections.Generic;
 
 namespace TDS_Server.Entity
 {
-    public partial class Adminlevels
+    public partial class AdminLevels
     {
-        public Adminlevels()
+        public AdminLevels()
         {
-            Adminlevelnames = new HashSet<Adminlevelnames>();
+            AdminLevelNames = new HashSet<AdminLevelNames>();
             Commands = new HashSet<Commands>();
-            Players = new HashSet<Players>();
         }
 
         public byte Level { get; set; }
-        public sbyte ColorR { get; set; }
-        public sbyte ColorG { get; set; }
-        public sbyte ColorB { get; set; }
+        public byte ColorR { get; set; }
+        public byte ColorG { get; set; }
+        public byte ColorB { get; set; }
 
-        public virtual ICollection<Adminlevelnames> Adminlevelnames { get; set; }
+        public virtual ICollection<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual ICollection<Commands> Commands { get; set; }
-        public virtual ICollection<Players> Players { get; set; }
     }
 }

@@ -21,10 +21,10 @@
             using (var dbcontext = new TDSNewContext())
             {
                 Players entity = await dbcontext.Players
-                                        .Include(p => p.Playerstats)
-                                        .Include(p => p.Playersettings)
+                                        .Include(p => p.PlayerStats)
+                                        .Include(p => p.PlayerSettings)
                                         .Include(p => p.OfflinemessagesTarget)
-                                        .Include(p => p.Playermapratings)
+                                        .Include(p => p.PlayerMapRatings)
                                         .AsNoTracking()
                                         .FirstOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
@@ -40,7 +40,7 @@
                 }
 
                 player.Team = 1;        // To be able to use custom damagesystem
-                entity.Playerstats.LoggedIn = true;
+                entity.PlayerStats.LoggedIn = true;
 
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, JsonConvert.SerializeObject(SettingsManager.SyncedSettings));
 
@@ -50,8 +50,8 @@
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(character);
 
-                dbcontext.Playerstats.Attach(entity.Playerstats);
-                dbcontext.Entry(entity.Playerstats).Property(x => x.LoggedIn).IsModified = true;
+                dbcontext.PlayerStats.Attach(entity.PlayerStats);
+                dbcontext.Entry(entity.PlayerStats).Property(x => x.LoggedIn).IsModified = true;
                 await dbcontext.SaveChangesAsync();
 
                 if (character.ChatLoaded)

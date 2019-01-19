@@ -24,13 +24,13 @@ namespace TDS_Server.Instance.Player
             {
                 fEntity = value;
                 if (fLangEnumBeforeLogin != ELanguage.English)
-                    fEntity.Playersettings.Language = (byte)fLangEnumBeforeLogin;
-                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.Playerstats.Money);
+                    fEntity.PlayerSettings.Language = (byte)fLangEnumBeforeLogin;
+                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.PlayerStats.Money);
             }
         }
         public Client Client { get; }
         public Lobby.Lobby CurrentLobby { get; set; }
-        public Playerlobbystats CurrentLobbyStats { get; set; }
+        public PlayerLobbyStats CurrentLobbyStats { get; set; }
         public Teams Team
         {
             get => fTeam;
@@ -48,12 +48,12 @@ namespace TDS_Server.Instance.Player
         public string TeamChatColor { get; set; }
         public uint? MuteTime
         {
-            get => Entity.Playerstats.MuteTime;
-            set => Entity.Playerstats.MuteTime = value;
+            get => Entity.PlayerStats.MuteTime;
+            set => Entity.PlayerStats.MuteTime = value;
         }
         public bool IsPermamuted
         {
-            get => Entity.Playerstats.MuteTime.HasValue && this.Entity.Playerstats.MuteTime.Value == 0;
+            get => Entity.PlayerStats.MuteTime.HasValue && this.Entity.PlayerStats.MuteTime.Value == 0;
         }
         public ILanguage Language
         {
@@ -63,22 +63,22 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (Entity == null || Entity.Playersettings == null)
+                if (Entity == null || Entity.PlayerSettings == null)
                     return fLangEnumBeforeLogin;
-                return (ELanguage)Entity.Playersettings.Language;
+                return (ELanguage)Entity.PlayerSettings.Language;
             }
             set
             {
-                if (Entity == null || Entity.Playersettings == null)
+                if (Entity == null || Entity.PlayerSettings == null)
                     fLangEnumBeforeLogin = value;
                 else
-                    Entity.Playersettings.Language = (byte)value;
+                    Entity.PlayerSettings.Language = (byte)value;
             }
                 
         }
         public AdminLevelDto AdminLevel
         {
-            get => AdminsManager.AdminLevels[Entity.AdminLvl];
+            get => AdminsManager.AdminLevels[(byte)Entity.AdminLvl];
         }
         public string AdminLevelName
         {
@@ -87,20 +87,20 @@ namespace TDS_Server.Instance.Player
         public RoundStatsDto CurrentRoundStats { get; set; }
         public int Money
         {
-            get => (int)Entity.Playerstats.Money;
+            get => (int)Entity.PlayerStats.Money;
             set {
-                Entity.Playerstats.Money = (uint)value;
+                Entity.PlayerStats.Money = (uint)value;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
             }
         }
         public TDSPlayer LastHitter { get; set; }
         public TDSPlayer Spectates { get; set; }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
-        public bool LoggedIn => Entity != null && Entity.Playerstats != null ? Entity.Playerstats.LoggedIn : false;
+        public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
         public uint PlayMinutes
         {
-            get => Entity.Playerstats.PlayTime;
-            set => Entity.Playerstats.PlayTime = value;
+            get => Entity.PlayerStats.PlayTime;
+            set => Entity.PlayerStats.PlayTime = value;
         }
         public bool ChatLoaded { get; set; }
         public int KillingSpree { get; set; }
@@ -201,7 +201,7 @@ namespace TDS_Server.Instance.Player
 
         public Task<int> SaveData(TDSNewContext dbcontext)
         {
-            if (Entity == null || !Entity.Playerstats.LoggedIn)
+            if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return System.Threading.Tasks.Task.FromResult(0);
 
             dbcontext.Players.Attach(Entity).State = EntityState.Modified;

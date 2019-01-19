@@ -162,7 +162,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void SetPlayerAlive(TDSPlayer player)
         {
-            player.Lifes = LobbyEntity.AmountLifes.Value;
+            player.Lifes = (sbyte)LobbyEntity.AmountLifes.Value;
             AlivePlayers[player.Team.Index - 1].Add(player);
             var teamamountdata = SyncedTeamDatas[player.Team.Index].AmountPlayers;
             ++teamamountdata.Amount;
