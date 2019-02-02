@@ -329,8 +329,9 @@ namespace TDS_Server.Manager.Commands
 
         private static TDSPlayer GetTDSPlayerByName(string name)
         {
-            Client player = Utils.FindPlayer(name);
-            return player?.GetChar();
+            Client client = Utils.FindPlayer(name);
+            TDSPlayer player = client?.GetChar();
+            return player != null && player.LoggedIn ? player : null;
         }
 
         private static Client GetClientByName(string name)
