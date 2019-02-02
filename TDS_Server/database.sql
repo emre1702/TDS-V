@@ -69,20 +69,26 @@ CREATE TABLE IF NOT EXISTS `commands` (
   PRIMARY KEY (`ID`),
   KEY `FK_commands_adminlevels` (`NeededAdminLevel`),
   CONSTRAINT `FK_commands_adminlevels` FOREIGN KEY (`NeededAdminLevel`) REFERENCES `admin_levels` (`Level`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.commands: ~9 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.commands: ~11 rows (ungefähr)
 /*!40000 ALTER TABLE `commands` DISABLE KEYS */;
 INSERT INTO `commands` (`ID`, `Command`, `NeededAdminLevel`, `NeededDonation`, `VipCanUse`, `LobbyOwnerCanUse`) VALUES
-	(1, 'AdminSay', 1, 0, b'0', b'0'),
-	(2, 'AdminChat', 1, 0, b'0', b'0'),
-	(3, 'Ban', 2, 0, b'0', b'0'),
-	(4, 'Goto', 2, 0, b'0', b'1'),
-	(5, 'Kick', 1, 0, b'1', b'0'),
-	(6, 'LobbyBan', 1, 0, b'0', b'1'),
-	(7, 'LobbyKick', 1, 0, b'1', b'1'),
-	(8, 'Mute', 1, 0, b'1', b'0'),
-	(9, 'NextMap', 1, 0, b'1', b'1');
+	(1, 'AdminSay', 1, NULL, b'0', b'0'),
+	(2, 'AdminChat', 1, NULL, b'0', b'0'),
+	(3, 'Ban', 2, NULL, b'0', b'0'),
+	(4, 'Goto', 2, NULL, b'0', b'1'),
+	(5, 'Kick', 1, NULL, b'1', b'0'),
+	(6, 'LobbyBan', 1, NULL, b'0', b'1'),
+	(7, 'LobbyKick', 1, NULL, b'1', b'1'),
+	(8, 'Mute', 1, NULL, b'1', b'0'),
+	(9, 'NextMap', 1, NULL, b'1', b'1'),
+	(10, 'LobbyLeave', NULL, NULL, NULL, NULL),
+	(11, 'Suicide', NULL, NULL, NULL, NULL),
+	(12, 'GlobalChat', NULL, NULL, NULL, NULL),
+	(13, 'TeamChat', NULL, NULL, NULL, NULL),
+	(14, 'PrivateChat', NULL, NULL, NULL, NULL),
+	(15, 'Position', NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `commands` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle tdsnew.commands_alias
@@ -126,7 +132,36 @@ INSERT INTO `commands_alias` (`Alias`, `Command`) VALUES
 	('RMute', 8),
 	('TimeMute', 8),
 	('TMute', 8),
-	('EndRound', 9);
+	('EndRound', 9),
+	('Back', 10),
+	('Leave', 10),
+	('LeaveLobby', 10),
+	('Mainmenu', 10),
+	('Dead', 11),
+	('Death', 11),
+	('Die', 11),
+	('Kill', 11),
+	('AllChat', 12),
+	('AllSay', 12),
+	('G', 12),
+	('GChat', 12),
+	('PublicChat', 12),
+	('PublicSay', 12),
+	('TChat', 13),
+	('TeamSay', 13),
+	('TSay', 13),
+	('MSG', 14),
+	('PChat', 14),
+	('PM', 14),
+	('PrivateSay', 14),
+	('Coord', 15),
+	('Coordinate', 15),
+	('Coordinates', 15),
+	('CurrentPos', 15),
+	('CurrentPosition', 15),
+	('GetPos', 15),
+	('GetPosition', 15),
+	('Pos', 15);
 /*!40000 ALTER TABLE `commands_alias` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle tdsnew.commands_info
@@ -140,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `commands_info` (
   CONSTRAINT `FK_commands_info_languages` FOREIGN KEY (`Language`) REFERENCES `languages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.commands_info: ~18 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.commands_info: ~17 rows (ungefähr)
 /*!40000 ALTER TABLE `commands_info` DISABLE KEYS */;
 INSERT INTO `commands_info` (`ID`, `Language`, `Info`) VALUES
 	(1, 7, 'Schreibt öffentlich als ein Admin.'),
@@ -160,7 +195,19 @@ INSERT INTO `commands_info` (`ID`, `Language`, `Info`) VALUES
 	(8, 7, 'Mutet einen Spieler im normalen Chat.'),
 	(8, 9, 'Mutes a player in the normal chat.'),
 	(9, 7, 'Beendet die jetzige Runde in der jeweiligen Lobby.'),
-	(9, 9, 'Ends the current round in the lobby.');
+	(9, 9, 'Ends the current round in the lobby.'),
+	(10, 7, 'Verlässt die jetzige Lobby.'),
+	(10, 9, 'Leaves the current lobby.'),
+	(11, 7, 'Tötet den Nutzer (Selbstmord).'),
+	(11, 9, 'Kills the user (suicide).'),
+	(12, 7, 'Globaler Chat, welcher überall gelesen werden kann.'),
+	(12, 9, 'Global chat which can be read everywhere.'),
+	(13, 7, 'Sendet die Nachricht nur zum eigenen Team.'),
+	(13, 9, 'Sends the message to the current team only.'),
+	(14, 7, 'Private Nachricht an einen bestimmten Spieler.'),
+	(14, 9, 'Private message to a specific player.'),
+	(15, 7, 'Gibt die Position des Spielers aus.'),
+	(15, 9, 'Outputs the position of the player.');
 /*!40000 ALTER TABLE `commands_info` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle tdsnew.killingspree_rewards
@@ -172,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `killingspree_rewards` (
   PRIMARY KEY (`KillsAmount`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.killingspree_rewards: ~4 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.killingspree_rewards: ~3 rows (ungefähr)
 /*!40000 ALTER TABLE `killingspree_rewards` DISABLE KEYS */;
 INSERT INTO `killingspree_rewards` (`KillsAmount`, `HealthOrArmor`, `OnlyHealth`, `OnlyArmor`) VALUES
 	(3, 30, NULL, NULL),
@@ -282,7 +329,7 @@ CREATE TABLE IF NOT EXISTS `lobby_weapons` (
   CONSTRAINT `FK_lobby_weapons_weapons` FOREIGN KEY (`Hash`) REFERENCES `weapons` (`Hash`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.lobby_weapons: ~1 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.lobby_weapons: ~0 rows (ungefähr)
 /*!40000 ALTER TABLE `lobby_weapons` DISABLE KEYS */;
 INSERT INTO `lobby_weapons` (`Hash`, `Lobby`, `Ammo`, `Damage`, `HeadMultiplicator`) VALUES
 	(3220176749, 1, 9999, NULL, NULL);
@@ -533,7 +580,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
--- Exportiere Daten aus Tabelle tdsnew.settings: ~1 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.settings: ~0 rows (ungefähr)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`ID`, `GamemodeName`, `MapsPath`, `NewMapsPath`, `ErrorToPlayerOnNonExistentCommand`, `ToChatOnNonExistentCommand`, `DistanceToSpotToPlant`, `DistanceToSpotToDefuse`, `SavePlayerDataCooldownMinutes`, `SaveLogsCooldownMinutes`, `SaveSeasonsCooldownMinutes`) VALUES
 	(1, 'tdm', 'bridge/resources/TDS-V/maps/', 'bridge/resources/TDS-V/newmaps/', b'1', b'0', 3, 3, 1, 1, 1);
@@ -555,7 +602,7 @@ CREATE TABLE IF NOT EXISTS `teams` (
   CONSTRAINT `FK_teams_lobbies` FOREIGN KEY (`Lobby`) REFERENCES `lobbies` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.teams: ~3 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.teams: ~2 rows (ungefähr)
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
 INSERT INTO `teams` (`ID`, `Index`, `Name`, `Lobby`, `ColorR`, `ColorG`, `ColorB`, `BlipColor`, `SkinHash`) VALUES
 	(0, 0, 'Spectator', NULL, 255, 255, 255, 4, 1004114196),
@@ -663,7 +710,7 @@ CREATE TABLE IF NOT EXISTS `weapon_types` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.weapon_types: ~9 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.weapon_types: ~8 rows (ungefähr)
 /*!40000 ALTER TABLE `weapon_types` DISABLE KEYS */;
 INSERT INTO `weapon_types` (`ID`, `Name`) VALUES
 	(1, 'Melee'),

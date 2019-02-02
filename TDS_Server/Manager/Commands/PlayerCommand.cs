@@ -1,8 +1,73 @@
 using GTANetworkAPI;
+using TDS_Server.CustomAttribute;
+using TDS_Server.Default;
+using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Commands {
 
 	class PlayerCommand : Script {
+
+        [TDSCommand(DPlayerCommand.LobbyLeave)]
+        public static async void LobbyLeave(TDSPlayer player, TDSCommandInfos _)
+        {
+            if (player.CurrentLobby.Id == 0)
+                return;
+
+            player.CurrentLobby.RemovePlayer(player);
+            await LobbyManager.MainMenu.AddPlayer(player, 0);
+        }
+
+        [TDSCommand(DPlayerCommand.Suicide)]
+        public static void Suicide(TDSPlayer player, TDSCommandInfos _)
+        {
+            if (!(player.CurrentLobby is FightLobby fightLobby))
+                return;
+            if (player.Lifes == 0)
+                return;
+            fightLobby.KillPlayer(player.Client, player.Language.COMMITED_SUICIDE);
+        }
+
+        [TDSCommand(DPlayerCommand.GlobalChat)]
+        public static void GlobalChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText]  string message)
+        {
+            ChatManager.SendGlobalMessage(player, message);
+        }
+
+        [TDSCommand(DPlayerCommand.TeamChat)]
+        public static void TeamChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText]  string message)
+        {
+            ChatManager.SendTeamChat(player, message);
+        }
+
+        [TDSCommand(DPlayerCommand.PrivateChat)]
+        public static void PrivateChat(TDSPlayer player, TDSCommandInfos _, TDSPlayer target, [TDSRemainingText] string message)
+        {
+            if (player == target)
+                return;
+            ChatManager.SendPrivateMessage(player, target, message);
+        }
+
+        [TDSCommand(DPlayerCommand.Position)]
+        public static void OutputCurrentPosition(TDSPlayer player, TDSCommandInfos _)
+        {
+            if (player.Client.IsInVehicle)
+            {
+                Vector3 pos = player.Client.Vehicle.Position;
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                Vector3 rot = player.Client.Vehicle.Rotation;
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+            }
+            else
+            {
+                Vector3 pos = player.Client.Position;
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                Vector3 rot = player.Client.Rotation;
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+            }
+        }
 
         /*#region Lobby
         [CommandAlias ( "leavelobby" )]
@@ -10,26 +75,13 @@ namespace TDS_Server.Manager.Commands {
         [CommandDescription ( "Leaves the lobby" )]
         [CommandGroup ( "user" )]
         [Command ( "leave" )]
-		public static void Leave ( Client player ) {
-            Character character = player.GetChar ();
-			if ( character.Lobby != MainMenu.TheLobby ) {
-                character.Lobby.RemovePlayerDerived ( character );
-                MainMenu.Join ( character );
-			}
-		}
+
 
         [CommandDescription ( "Commits suicide" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "suicide" )]
         [Command ( "kill" )]
-		public static void Kill ( Client player ) {
-			Character character = player.GetChar ();
-			if ( character.Lobby is FightLobby lobby ) {
-				if ( character.Lifes > 0 ) {
-					lobby.KillPlayer ( player, "commited_suicide" );
-				}
-			}
-		}
+
 
         [CommandDescription ( "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu." )]
         [CommandGroup ( "user" )]
@@ -43,19 +95,12 @@ namespace TDS_Server.Manager.Commands {
 				lobby.GangLobby.Join ( character );
 			}
 		}
-        #endregion
 
-        #region Chat
         [CommandDescription ( "Writes in global-chat" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "globalsay" )]
         [CommandAlias ( "global" )]
         [Command ( "globalchat" )]
-		public static void GlobalChat ( Client player, [RemainingText] string text ) {
-            Character character = player.GetChar ();
-            if ( player.GetChar().LoggedIn )
-			    Chat.SendGlobalMessage ( character, text );
-		}
 
         [CommandDescription ( "Writes in team-chat" )]
         [CommandGroup ( "user" )]
@@ -63,28 +108,12 @@ namespace TDS_Server.Manager.Commands {
         [CommandAlias ( "teamsay" )]
         [CommandAlias ( "team" )]
         [Command ( "teamchat" )]
-		public static void TeamChat ( Client player, [RemainingText] string text ) {
-            Character character = player.GetChar ();
-            if ( character.LoggedIn )
-                Chat.SendTeamChat ( character, text );
-		}
 
         [CommandDescription ( "Writes a private-message to a player." )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "message" )]
         [CommandAlias ( "pm" )]
         [Command ( "msg" )]
-        public static void PrivateMessage ( Client player, Client target, [RemainingText] string text ) {
-            Character character = player.GetChar ();
-            if ( character.LoggedIn && player != target ) {
-                Character targetcharacter = target.GetChar ();
-                if ( target.GetChar ().LoggedIn )
-                    Chat.SendPrivateMessage ( character, targetcharacter, text );
-                else
-                    player.SendLangNotification ( "target_not_logged_in" );
-            }
-        }
-		#endregion
 
 		#region Utility
         [CommandDescription ( "Outputs your position and rotation." )]
@@ -93,20 +122,6 @@ namespace TDS_Server.Manager.Commands {
         [CommandAlias ( "rot" )]
         [CommandAlias ( "getrot" )]
 		[Command ( "pos", Description = "Gets your position and rotation", Group = "user" )]
-		public void SendPlayerPosition ( Client sender ) {
-			if ( NAPI.Player.IsPlayerInAnyVehicle ( sender ) ) {
-				Vehicle veh = NAPI.Player.GetPlayerVehicle ( sender );
-				Vector3 pos = NAPI.Entity.GetEntityPosition ( veh );
-                NAPI.Chat.SendChatMessageToPlayer ( sender, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = NAPI.Entity.GetEntityRotation ( veh );
-                NAPI.Chat.SendChatMessageToPlayer ( sender, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
-			} else {
-				Vector3 pos = NAPI.Entity.GetEntityPosition ( sender );
-				NAPI.Chat.SendChatMessageToPlayer ( sender, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z );
-				Vector3 rot = NAPI.Entity.GetEntityRotation ( sender );
-				NAPI.Chat.SendChatMessageToPlayer ( sender, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z );
-			}
-		}
 
         [CommandDescription ( "Checks if a map-name is already taken (needed to know for new maps)" )]
         [CommandGroup ( "user" )]
