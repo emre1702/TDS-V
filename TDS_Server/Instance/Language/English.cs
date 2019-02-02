@@ -43,6 +43,7 @@ namespace TDS_Server.Instance.Language
         public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
 
         public virtual string MAP_WON_VOTING => "The map {0} won the voting!";
+        public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";
 
         public virtual string NOT_ALLOWED => "You are not allowed to do that!";
         public virtual string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "There can be only 6 maps in voting!";

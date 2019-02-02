@@ -11,6 +11,7 @@ namespace TDS_Server.Enum
         Lobby_Join = 7,
         Lobby_Leave = 8,
         Lobby_Kick = 9,
-        Lobby_Ban = 10
+        Lobby_Ban = 10,
+        Goto = 11
     }
 }

@@ -13,6 +13,7 @@
     using TDS_Common.Default;
     using TDS_Common.Enum;
     using TDS_Server.Instance.Player;
+    using System.Threading.Tasks;
 
     class Account : Script
     {
@@ -124,30 +125,40 @@
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, isPlayerRegistered);
         }
 
-        /*public static void ChangePlayerMuteTime(Character admincharacter, Client target, uint targetUID, int minutes, string reason)
+        public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
-            Client admin = admincharacter.Player;
-            Database.Exec($"UPDATE player SET mutetime={targetUID} WHERE uid = {targetUID}");
-            if (target != null && target.Exists && target.GetChar().LoggedIn)
-                target.GetChar().MuteTime = minutes;
+            ChangePlayerMuteTime(admin, target.Entity, minutes, reason);
+        }
+
+        public static async void ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
+        {
+            OutputMuteInfo(admin.Client.Name, target.Name, minutes, reason);
+
+            using (var dbcontext = new TDSNewContext())
+            {
+                target.PlayerStats.MuteTime = minutes == -1 ? (uint?)null : (uint)minutes;
+                dbcontext.PlayerStats.Add(target.PlayerStats);
+                dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
+
+                await dbcontext.SaveChangesAsync();
+            }
+        }
+
+        private static void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)
+        {
             switch (minutes)
             {
                 case -1:
-                    ServerLanguage.SendMessageToAll("permamute", GetNameByUID(targetUID), admin.Name, reason);
-                    AdminLog.Log(AdminLogType.PERMAMUTE, admincharacter.UID, targetUID, reason);
+                    LangUtils.SendAllChatMessage(lang => lang.PERMAMUTE_INFO.Formatted(targetName, adminName, reason));
                     break;
                 case 0:
-                    ServerLanguage.SendMessageToAll("unmute", GetNameByUID(targetUID), admin.Name, reason);
-                    AdminLog.Log(AdminLogType.UNMUTE, admincharacter.UID, targetUID, reason);
+                    LangUtils.SendAllChatMessage(lang => lang.UNMUTE_INFO.Formatted(targetName, adminName, reason));
                     break;
                 default:
-                    ServerLanguage.SendMessageToAll("timemute", GetNameByUID(targetUID), minutes.ToString(), admin.Name, reason);
-                    AdminLog.Log(AdminLogType.TIMEMUTE, admincharacter.UID, targetUID, reason, minutes);
+                    LangUtils.SendAllChatMessage(lang => lang.TIMEMUTE_INFO.Formatted(targetName, adminName, minutes, reason));
                     break;
             }
-
-
-        }*/
+        }
 
     }
 

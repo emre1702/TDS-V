@@ -12,6 +12,7 @@
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Maps;
     using Newtonsoft.Json;
+    using TDS_Server.Enum;
 
     static class Login
     {
@@ -62,7 +63,7 @@
 
                 //Gang.CheckPlayerGang(character);
 
-                RestLogsManager.Log(Enum.ELogType.Login, player, true);    
+                RestLogsManager.Log(ELogType.Login, player, true);    
             }
         }
     }

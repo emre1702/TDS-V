@@ -44,6 +44,7 @@ namespace TDS_Server.Instance.Language
         public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";
 
         public override string MAP_WON_VOTING => "Die Map {0} hat das Voting gewonnen!";
+        public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";
 
         public override string NOT_ALLOWED => "Du bist dazu nicht befugt!";
         public override string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "Es dürfen nur 6 Maps im Voting sein!";

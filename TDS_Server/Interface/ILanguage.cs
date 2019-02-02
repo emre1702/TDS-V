@@ -38,6 +38,7 @@
         string LOBBY_DOESNT_EXIST { get; }
 
         string MAP_WON_VOTING { get; }
+        string MUTETIME_INVALID { get; }
 
         string NOT_ALLOWED { get; }
         string NOT_MORE_MAPS_FOR_VOTING_ALLOWED { get; }

@@ -2,7 +2,9 @@
 {
     using GTANetworkAPI;
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -79,6 +81,16 @@
             return $"{(int)(span.TotalMinutes / 60)}:{(int)Math.Ceiling(span.TotalMinutes % 60)}";
         }
 
+        public static uint? GetVehicleFreeSeat(Vehicle veh)
+        {
+            HashSet<int> occupiedSeats = veh.Occupants.Select(o => o.VehicleSeat).ToHashSet();
+            for (int i = veh.MaxOccupants - 1; i >= 0; --i)
+            {
+                if (!occupiedSeats.Contains(i))
+                    return (uint?)i;
+            }
+            return null;
+        }
     }
 
 }

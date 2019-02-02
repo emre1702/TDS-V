@@ -5,6 +5,7 @@ namespace TDS_Server.Manager.Commands
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using TDS_Server.CustomAttribute;
     using TDS_Server.Default;
     using TDS_Server.Entity;
@@ -13,6 +14,7 @@ namespace TDS_Server.Manager.Commands
     using TDS_Server.Instance.Player;
     using TDS_Server.Instance.Utility;
     using TDS_Server.Manager.Logs;
+    using TDS_Server.Manager.Player;
     using TDS_Server.Manager.Utility;
 
     class AdminCommand
@@ -44,6 +46,8 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.LobbyKick)]
         public static async void LobbyKick(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
         {
+            if (!IsReasonValid(reason, player))
+                return;
             if (player == target)
                 return;
             if (target.CurrentLobby is null)
@@ -69,6 +73,8 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.LobbyBan, 1)]
         public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
         {
+            if (!IsReasonValid(reason, player))
+                return;
             if (player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
@@ -86,21 +92,17 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.LobbyBan, 0)]
         public static async void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
         {
+            if (!IsReasonValid(reason, player))
+                return;
+
             if (player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
 
-            Players target;
-            using (var dbcontext = new TDSNewContext())
-            {
-                target = await dbcontext.Players.Where(p => p.Name == targetname).FirstOrDefaultAsync();
-                if (target == null)
-                {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
-                    return;
-                }
-            }
+            Players target = await GetDatabasePlayerByName(targetname, player);
+            if (target == null)
+                return;
 
             if (hours == 0)
                 player.CurrentLobby.UnbanPlayer(player, target, reason);
@@ -116,6 +118,9 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Ban, 1)]
         public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
         {
+            if (!IsReasonValid(reason, player))
+                return;
+
             if (hours == 0)
                 LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
             else if (hours == -1)
@@ -130,16 +135,12 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Ban, 0)]
         public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
         {
-            Players target;
-            using (var dbcontext = new TDSNewContext())
-            {
-                target = await dbcontext.Players.Where(p => p.Name == targetname).FirstOrDefaultAsync();
-                if (target == null)
-                {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
-                    return;
-                }
-            }
+            if (!IsReasonValid(reason, player))
+                return;
+
+            Players target = await GetDatabasePlayerByName(targetname, player);
+            if (target == null)
+                return;
 
             if (hours == 0)
                 LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
@@ -153,17 +154,132 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Kick)]
-        public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos)
+        public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
         {
+            if (!IsReasonValid(reason, player))
+                return;
 
+            LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.Client.Name, player.Client.Name, reason));
+            target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.Client.Name, reason));
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Kick, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Mute, 1)]
+        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText] string reason)
+        {
+            if (!IsReasonValid(reason, player))
+                return;
+            if (!IsMuteTimeValid(minutes, player))
+                return;
+
+            Account.ChangePlayerMuteTime(player, target, minutes, reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Mute, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Mute, 0)]
+        public static async void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, int minutes, [TDSRemainingText] string reason)
+        {
+            if (!IsReasonValid(reason, player))
+                return;
+            if (!IsMuteTimeValid(minutes, player))
+                return;
+
+            Players target = await GetDatabasePlayerByName(targetname, player);
+            if (target == null)
+                return;
+
+            Account.ChangePlayerMuteTime(player, target, minutes, reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Mute, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+        }
+
+        [TDSCommand(DAdminCommand.Goto)]
+        public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target)
+        {
+            Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
+
+            #region Admin is in vehicle 
+            if (player.Client.IsInVehicle)
+            {
+                NAPI.Entity.SetEntityPosition(player.Client.Vehicle, targetpos.Around(2f));
+                return;
+            }
+            #endregion
+
+            #region Target is in vehicle and we want to sit in it
+            if (target.Client.IsInVehicle)
+            {
+                uint? freeSeat = Utils.GetVehicleFreeSeat(target.Client.Vehicle);
+                if (freeSeat.HasValue)
+                {
+                    NAPI.Player.SetPlayerIntoVehicle(player.Client, target.Client.Vehicle, (int)freeSeat.Value);
+                    return;
+                }
+            }
+            #endregion
+
+            #region Normal 
+            NAPI.Entity.SetEntityPosition(player.Client, targetpos.Around(2f));
+            #endregion
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Goto, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP);
+        }
+
+        [TDSCommand(DAdminCommand.Goto)]
+        public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z)
+        {
+            Vector3 pos = new Vector3(x, y, z);
+            NAPI.Entity.SetEntityPosition(player.Client, pos);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.Goto, player, (TDSPlayer)null, cmdinfos.AsDonator, cmdinfos.AsVIP);
+        }
+
+        private static bool IsReasonValid(string reason, TDSPlayer outputTo)
+        {
+            if (reason.Length < 3)
+            {
+                if (outputTo != null)
+                    NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.REASON_MISSING);
+                return false;
+            }
+            return true;
+        }
+
+        private static bool IsMuteTimeValid(int muteTime, TDSPlayer outputTo)
+        {
+            if (muteTime < -1)
+            {
+                if (outputTo != null)
+                    NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.MUTETIME_INVALID);
+                return false;
+            }
+            return true;
+        }
+
+        private static async Task<Players> GetDatabasePlayerByName(string name, TDSPlayer outputTo)
+        {
+            Players target = null;
+            using (var dbcontext = new TDSNewContext())
+            {
+                target = await dbcontext.Players.Where(p => p.Name == name).FirstOrDefaultAsync();
+                if (target == null)
+                {
+                    if (outputTo != null)
+                        NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.PLAYER_DOESNT_EXIST);
+                }
+            }
+            return target;
         }
 
 
         /*private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
-			{ "mute (time)", 1 },
-			{ "mute (unmute)", 1 },
-			{ "mute (permaunmute)", 2 },
-			{ "mute (permanent)", 2 },
 			{ "goto", 2 },
 			{ "xyz", 2 },
 			{ "cveh", 2 },
@@ -172,154 +288,7 @@ namespace TDS_Server.Manager.Commands
 			{ "object", 2 }
 		};
 
-
-		#region Kick
-		[CommandDescription( "Kicks a player from the server." )]
-		[CommandGroup( "supporter/VIP" )]
-		[CommandAlias( "rkick" )]
-		[Command( "kick" )]
-		public static void KickPlayer ( Client player, Client target, [RemainingText] string reason ) {
-			if ( player != target ) {
-				Character character = player.GetChar();
-				if ( character.IsAdminLevel( neededLevels["kick"], false, true ) ) {
-					Character targetcharacter = target.GetChar();
-					if ( character.AdminLvl > targetcharacter.AdminLvl ) {
-						// LOG //
-						if ( character.AdminLvl >= neededLevels["kick"] )
-							AdminLog.Log( AdminLogType.KICK, character.UID, targetcharacter.UID, character.Lobby.Name + ": " + reason );
-						else
-							Log.VIP( "kick", player, target, character.Lobby.Name );
-						/////////
-						ServerLanguage.SendMessageToAll( "kick", target.Name, player.Name, reason );
-						target.Kick( target.GetLang( "youkick", player.Name, reason ) );
-					}
-				}
-			}
-		}
-		#endregion
-
-		#region Ban
 		
-		#endregion
-
-		#region mute
-		[CommandDescription( "Mute or unmute a player. Use minutes for types - 0 = unmute, -1 = permamute, >0 = timemute." )]
-		[CommandAlias( "pmute" )]
-		[CommandAlias( "permamute" )]
-		[CommandAlias( "tmute" )]
-		[CommandAlias( "timemute" )]
-		[Command( "mute" )]
-		public async void MutePlayer ( Client player, string targetname, int minutes, [RemainingText] string reason ) {
-			try {
-				if ( Account.PlayerUIDs.ContainsKey( targetname ) ) {
-					Character character = player.GetChar();
-					if ( minutes == -1 && character.IsAdminLevel( neededLevels["mute (permanent)"] ) || minutes == 0 && character.IsAdminLevel( neededLevels["mute (unmute)"] ) || minutes > 0 && character.IsAdminLevel( neededLevels["mute (time)"] ) ) {
-						uint targetadminlvl = 0;
-						int mutetime = 0;
-						uint targetUID = Account.PlayerUIDs[targetname];
-						Client target = NAPI.Player.GetPlayerFromName( targetname );
-						if ( target != null && target.GetChar().LoggedIn ) {
-							Character targetcharacter = target.GetChar();
-							targetadminlvl = targetcharacter.AdminLvl;
-							mutetime = targetcharacter.MuteTime;
-						} else {
-							DataTable targetdata = await Database.ExecResult( $"SELECT adminlvl, mutetime FROM player WHERE uid = {targetUID}" ).ConfigureAwait( false );
-							targetadminlvl = Convert.ToUInt16( targetdata.Rows[0]["adminlvl"] );
-							mutetime = Convert.ToInt32( targetdata.Rows[0]["mutetime"] );
-						}
-						if ( targetadminlvl <= character.AdminLvl ) {
-							if ( minutes == 0 ) {
-								switch ( mutetime ) {
-									case 0:
-										character.SendLangNotification( "player_not_muted" );
-										break;
-									case -1:
-										if ( character.IsAdminLevel( neededLevels["mute (permaunmute)"] ) )
-											Account.ChangePlayerMuteTime( character, target, targetUID, minutes, reason );
-										else
-											character.SendLangNotification( "adminlvl_not_high_enough" );
-										break;
-									default:
-										Account.ChangePlayerMuteTime( character, target, targetUID, minutes, reason );
-										break;
-								}
-							} else if ( minutes == -1 ) {
-								if ( mutetime != -1 )
-									Account.ChangePlayerMuteTime( character, target, targetUID, minutes, reason );
-								else
-									character.SendLangNotification( "player_already_muted" );
-							} else {
-								switch ( mutetime ) {
-									case -1:
-										character.SendLangNotification( "player_already_muted" );
-										break;
-									case 0:
-										Account.ChangePlayerMuteTime( character, target, targetUID, minutes, reason );
-										break;
-									default:
-										character.SendLangNotification( "player_already_muted" );
-										break;
-								}
-
-							}
-						} else
-							character.SendLangNotification( "adminlvl_not_high_enough" );
-					} else
-						character.SendLangNotification( "adminlvl_not_high_enough" );
-				} else
-					player.SendLangNotification( "player_doesnt_exist" );
-			} catch ( Exception ex ) {
-				Log.Error( ex.ToString() );
-			}
-		}
-		#endregion
-
-		#region Utility 
-		[CommandDescription( "Warps to another player." )]
-		[CommandGroup( "administrator/lobby-owner" )]
-		[CommandAlias( "gotoplayer" )]
-		[CommandAlias( "warpto" )]
-		[Command( "goto" )]
-		public void GotoPlayer ( Client player, Client target ) {
-			if ( player.IsAdminLevel( neededLevels["goto"], true ) ) {
-				if ( target.GetChar().Lobby == player.GetChar().Lobby ) {
-					Vector3 playerpos = NAPI.Entity.GetEntityPosition( target );
-					if ( player.IsInVehicle ) {
-						NAPI.Entity.SetEntityPosition( player.Vehicle, new Vector3( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
-					} else if ( target.IsInVehicle ) {
-						List<Client> usersInCar = target.Vehicle.Occupants;
-						if ( usersInCar.Count < NAPI.Vehicle.GetVehicleMaxOccupants( (VehicleHash)(target.Vehicle.Model) ) ) {
-							Dictionary<int, bool> occupiedseats = new Dictionary<int, bool>();
-							foreach ( Client occupant in usersInCar ) {
-								occupiedseats[occupant.VehicleSeat] = true;
-							}
-							for ( int i = 0; i < NAPI.Vehicle.GetVehicleMaxOccupants( (VehicleHash)(target.Vehicle.Model) ); i++ ) {
-								if ( !occupiedseats.ContainsKey( i ) ) {
-									NAPI.Player.SetPlayerIntoVehicle( player, target.Vehicle, i );
-									return;
-								}
-							}
-						}
-						NAPI.Entity.SetEntityPosition( player, new Vector3( playerpos.X + 1, playerpos.Y + 1, playerpos.Z + 1 ) );
-					} else {
-						NAPI.Entity.SetEntityPosition( player, new Vector3( playerpos.X + 1, playerpos.Y, playerpos.Z ) );
-					}
-				} else
-					player.SendLangNotification( "target_not_in_same_lobby" );
-			} else
-				player.SendLangNotification( "adminlvl_not_high_enough" );
-		}
-
-		[CommandDescription( "Warps to a point." )]
-		[CommandGroup( "administrator/lobby-owner" )]
-		[CommandAlias( "gotoxyz" )]
-		[CommandAlias( "gotopos" )]
-		[Command( "xyz" )]
-		public void GotoXYZ ( Client player, float x, float y, float z ) {
-			if ( player.IsAdminLevel( neededLevels["xyz"], true ) ) {
-				NAPI.Entity.SetEntityPosition( player, new Vector3( x, y, z ) );
-			}
-		}
 
 		[CommandDescription( "Creates a vehicle." )]
 		[CommandGroup( "administrator/lobby-owner" )]
