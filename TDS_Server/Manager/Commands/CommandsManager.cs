@@ -54,12 +54,12 @@ namespace TDS_Server.Manager.Commands
 
             foreach (Entity.Commands command in await dbcontext.Commands.Include(c => c.CommandsAlias).AsNoTracking().ToListAsync())
             {
-                commandsDict[command.Command] = command;
-#warning TODO fast
-                //foreach (CommandsAlias alias in command.CommandsAlias)
-                //{
-                //    commandByAlias[alias.Alias] = command.Command;
-                //}
+                commandsDict[command.Command.ToLower()] = command;
+
+                foreach (CommandsAlias alias in command.CommandsAlias)
+                {
+                    commandByAlias[alias.Alias.ToLower()] = command.Command.ToLower();
+                }
             }
 
             List<MethodInfo> methods = Assembly.GetExecutingAssembly().GetTypes()
@@ -69,7 +69,7 @@ namespace TDS_Server.Manager.Commands
             foreach (MethodInfo method in methods)
             {
                 var attribute = method.GetCustomAttribute<TDSCommand>();
-                string cmd = attribute.Command;
+                string cmd = attribute.Command.ToLower();
                 if (!commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
                     continue;
 
@@ -307,10 +307,10 @@ namespace TDS_Server.Manager.Commands
             int cmdendindex = msg.IndexOf(' ');
             if (cmdendindex == -1)
             {
-                cmd = msg;
+                cmd = msg.ToLower();
                 return null;
             }
-            cmd = msg.Substring(0, cmdendindex);
+            cmd = msg.Substring(0, cmdendindex).ToLower();
             return msg.Substring(cmdendindex + 1).Split(' ');
         }
 
