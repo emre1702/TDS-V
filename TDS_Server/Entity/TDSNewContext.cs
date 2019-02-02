@@ -35,6 +35,7 @@ namespace TDS_Server.Entity
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
+        public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
@@ -557,6 +558,33 @@ namespace TDS_Server.Entity
                     .WithMany(p => p.PlayerLobbyStats)
                     .HasForeignKey(d => d.Lobby)
                     .HasConstraintName("FK_playerlobbystats_lobbies");
+            });
+
+            modelBuilder.Entity<PlayerMapFavourites>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.MapId })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("player_map_favourites");
+
+                entity.HasIndex(e => e.MapId)
+                    .HasName("FK_player_map_favourites_maps");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.MapId)
+                    .HasColumnName("MapID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithMany(p => p.PlayerMapFavourites)
+                    .HasForeignKey(d => d.Id)
+                    .HasConstraintName("FK_player_map_favourites_players");
+
+                entity.HasOne(d => d.Map)
+                    .WithMany(p => p.PlayerMapFavourites)
+                    .HasForeignKey(d => d.MapId)
+                    .HasConstraintName("FK_player_map_favourites_maps");
             });
 
             modelBuilder.Entity<PlayerMapRatings>(entity =>

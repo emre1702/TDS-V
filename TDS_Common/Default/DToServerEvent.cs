@@ -31,6 +31,7 @@ namespace TDS_Common.Default
         public const string StopDefusing = "StopDefusing_Client";
         public const string StopPlanting = "StopPlanting_Client";
 
+        public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
         public const string TryLogin = "TryLogin_Client";
         public const string TryRegister = "TryRegister_Client";
 

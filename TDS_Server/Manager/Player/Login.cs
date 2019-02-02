@@ -26,6 +26,7 @@
                                         .Include(p => p.PlayerSettings)
                                         .Include(p => p.OfflinemessagesTarget)
                                         .Include(p => p.PlayerMapRatings)
+                                        .Include(p => p.PlayerMapFavourites)
                                         .AsNoTracking()
                                         .FirstOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
@@ -60,6 +61,8 @@
 
                 MapsManager.SendPlayerHisRatings(character);
                 LobbyEvents.JoinLobbyEvent(player, 0, 0);
+
+                MapFavourites.LoadPlayerFavourites(character);
 
                 //Gang.CheckPlayerGang(character);
 

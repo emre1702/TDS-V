@@ -120,6 +120,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+            Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
@@ -169,6 +170,12 @@ namespace TDS_Client.Manager
             Player player = (Player)args[0];
             Players.Remove(player);
             VoiceManager.RemovePlayer(player);
+        }
+
+        private void OnLoadMapFavouritesMethod(object[] args)
+        {
+            string mapFavouritesJson = (string)args[0];
+            MapManager.LoadedMapFavourites(mapFavouritesJson);
         }
 
         private void OnMapChangeMethod(object[] args)
@@ -452,7 +459,7 @@ namespace TDS_Client.Manager
         {
             string mapname = (string)args[0];
             bool isfavourite = (bool)args[1];
-            #warning todo Add map favourite after finding out how to save it
+            CallRemote(DToServerEvent.ToggleMapFavouriteState, mapname, isfavourite);
         }
 
         /*// triggered by browser //

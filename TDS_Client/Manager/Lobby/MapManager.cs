@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
@@ -12,7 +13,6 @@ namespace TDS_Client.Manager.Lobby
         private static uint lobbyIdAtLastLoad;
 #warning reset that when the lobby gets removed (so a new one with same Id won't get used)
         private static string lastMapsJson;
-        private static bool loadedFavorites;
 
         public static void ToggleMenu(ConsoleKey _)
         {
@@ -42,18 +42,6 @@ namespace TDS_Client.Manager.Lobby
             }
 
             Events.CallRemote(DToServerEvent.MapsListRequest);  
-            
-            if (!loadedFavorites)
-            {
-                /*string favoritesJson = mp.storage.data.mapFavorites;
-                if(favouritesstr != undefined) {
-                    mapvotingdata.favourites = JSON.parse(favouritesstr);
-                    loadMapFavouritesInBrowser(favouritesstr);
-                } else 
-                loadMapFavouritesInBrowser("[]");
-
-                mapvotingdata.favouritesloaded = true;*/
-            }
         }
 
         public static void CloseMenu()
@@ -75,6 +63,11 @@ namespace TDS_Client.Manager.Lobby
         public static void AddVote(string newmap, string oldmap)
         {
             MainBrowser.AddVoteToMapInMapMenuBrowser(newmap, oldmap);
+        }
+
+        public static void LoadedMapFavourites(string mapFavouritesJson)
+        {
+            MainBrowser.LoadMapFavouritesInBrowser(mapFavouritesJson);
         }
     }
 }

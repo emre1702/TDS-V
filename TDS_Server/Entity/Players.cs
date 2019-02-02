@@ -14,6 +14,7 @@ namespace TDS_Server.Entity
             PlayerBansAdminNavigation = new HashSet<PlayerBans>();
             PlayerBansIdNavigation = new HashSet<PlayerBans>();
             PlayerLobbyStats = new HashSet<PlayerLobbyStats>();
+            PlayerMapFavourites = new HashSet<PlayerMapFavourites>();
             PlayerMapRatings = new HashSet<PlayerMapRatings>();
         }
 
@@ -36,6 +37,7 @@ namespace TDS_Server.Entity
         public virtual ICollection<PlayerBans> PlayerBansAdminNavigation { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansIdNavigation { get; set; }
         public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
+        public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
     }
 }

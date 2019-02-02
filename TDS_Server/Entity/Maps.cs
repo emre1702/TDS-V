@@ -8,6 +8,7 @@ namespace TDS_Server.Entity
         public Maps()
         {
             LobbyMaps = new HashSet<LobbyMaps>();
+            PlayerMapFavourites = new HashSet<PlayerMapFavourites>();
         }
 
         public int Id { get; set; }
@@ -17,5 +18,6 @@ namespace TDS_Server.Entity
 
         public virtual Players Creator { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
+        public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace TDS_Common.Default
         public const string JoinSameLobby = "JoinSameLobby_Server";
 
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
+        public const string LoadMapFavourites = "LoadMapFavourites_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
 
         public const string MapChange = "MapChange_Server";
