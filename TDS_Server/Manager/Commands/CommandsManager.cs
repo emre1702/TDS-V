@@ -81,6 +81,7 @@ namespace TDS_Server.Manager.Commands
                 CommandMethodData methoddata = new CommandMethodData();
                 commanddata.MethodDatas.Add(methoddata);
 
+                methoddata.Priority = attribute.Priority;
                 methoddata.MethodDefault = method;
                 
                 var parameters = method.GetParameters().Skip(AmountDefaultParams);
