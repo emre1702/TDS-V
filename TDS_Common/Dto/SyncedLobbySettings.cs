@@ -7,6 +7,7 @@ namespace TDS_Common.Dto
     public class SyncedLobbySettingsDto
     {
         public uint Id;
+        public string Name;
         public uint? SpawnAgainAfterDeathMs;
         public uint? BombDefuseTimeMs;
         public uint? BombPlantTimeMs;

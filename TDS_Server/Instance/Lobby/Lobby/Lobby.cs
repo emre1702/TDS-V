@@ -58,6 +58,7 @@ namespace TDS_Server.Instance.Lobby
             syncedLobbySettings = new SyncedLobbySettingsDto()
             {
                 Id = entity.Id,
+                Name = entity.Name,
                 BombDefuseTimeMs = entity.BombDefuseTimeMs,
                 BombPlantTimeMs = entity.BombPlantTimeMs,
                 SpawnAgainAfterDeathMs = entity.SpawnAgainAfterDeathMs,

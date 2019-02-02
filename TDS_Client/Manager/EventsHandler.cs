@@ -149,6 +149,7 @@ namespace TDS_Client.Manager
             Players.Load(ClientUtils.GetTriggeredPlayersList(args[1]));
             Team.CurrentLobbyTeams = JsonConvert.DeserializeObject<SyncedTeamDataDto[]>((string)args[2]);
             Lobby.Lobby.Joined(settings);
+            DiscordManager.Update();
         }
 
         private void OnJoinSameLobbyMethod(object[] args)
@@ -271,7 +272,8 @@ namespace TDS_Client.Manager
 
         private void OnPlayerTeamChangeMethod(object[] args)
         {
-            // setVoiceChatRoom( teamUID );
+            string teamName = (string)args[0];
+            DiscordManager.Update();
         }
 
         private void OnAmountInFightSyncMethod(object[] args)

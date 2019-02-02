@@ -21,7 +21,7 @@ namespace TDS_Server.Instance.Lobby
             TeamPlayers[team.Index].Add(character);
             character.Client.SetSkin((PedHash)team.SkinHash);
             if (character.Team == null || character.Team.Id != team.Id)
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Index);
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Name);
             character.Team = team;
         }
 

@@ -44,6 +44,7 @@ namespace TDS_Client.Manager.Utility
         private static SyncedLobbySettingsDto syncedLobbySettings;
 
         public static uint LobbyId => syncedLobbySettings.Id;
+        public static string LobbyName => syncedLobbySettings != null ? syncedLobbySettings.Name : "Mainmenu";
 
         public static int DistanceToSpotToPlant => syncedSettings.DistanceToSpotToPlant;
         public static int DistanceToSpotToDefuse => syncedSettings.DistanceToSpotToDefuse;
