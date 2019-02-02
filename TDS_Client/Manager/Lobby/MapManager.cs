@@ -11,7 +11,6 @@ namespace TDS_Client.Manager.Lobby
     {
         private static bool open;
         private static uint lobbyIdAtLastLoad;
-#warning reset that when the lobby gets removed (so a new one with same Id won't get used)
         private static string lastMapsJson;
 
         public static void ToggleMenu(ConsoleKey _)
