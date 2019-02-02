@@ -104,11 +104,13 @@ namespace TDS_Server.Manager.Commands
 
                 if (!UseImplicitTypes)
                 {
+#pragma warning disable
                     if (parametertypes.Length == 0)
                         methoddata.MethodEmpty = (CommandEmptyDefaultMethod)method.CreateDelegate(typeof(CommandEmptyDefaultMethod));
                     else
                         methoddata.Method = (CommandDefaultMethod)method.CreateDelegate(typeof(CommandDefaultMethod));
                 }
+#pragma warning enable
 
                 commandDataByCommand[cmd] = commanddata;
             }
@@ -172,15 +174,17 @@ namespace TDS_Server.Manager.Commands
                     }
                     else
                     {
+#pragma warning disable
                         if (args != null)
                             methoddata.Method.Invoke(character, cmdinfos, args);
                         else
                             methoddata.MethodEmpty.Invoke(character, cmdinfos);
+#pragma warning enable
                     }
                 }
                 
             }
-            catch(Exception ex)
+            catch
             {
                 NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_USED_WRONG);
             }

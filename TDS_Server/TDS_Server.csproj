@@ -39,4 +39,8 @@
     </Reference>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /Y /Q /S &quot;$(ProjDir)JavaScript\*.js&quot; &quot;C:\RAGEMP\server-files\packages\TDS-V\&quot;" />
+  </Target>
+
 </Project>

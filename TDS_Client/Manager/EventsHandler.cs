@@ -40,6 +40,7 @@ namespace TDS_Client.Manager
         {
             Settings.Load();
             Dx.RefreshResolution();
+            VoiceManager.Init();
         }
         #endregion Load on start
 
@@ -51,6 +52,7 @@ namespace TDS_Client.Manager
             OnPlayerSpawn += OnPlayerSpawnMethod;
             OnPlayerDeath += OnPlayerDeathMethod;
             OnBrowserDomReady += OnBrowserDomReadyMethod;
+            OnPlayerQuit += OnPlayerQuitMethod;
         }
 
         private void OnTickMethod(List<TickNametagData> nametags)
@@ -97,6 +99,11 @@ namespace TDS_Client.Manager
 
             else if ( browser === mapcreatordata.browser )
                 mapcreatordata.browser.execute( "loadLanguage (`" + JSON.stringify( getLang( "mapcreator_menu" ) ) + "`);" );*/
+        }
+
+        private void OnPlayerQuitMethod(Player player)
+        {
+            
         }
         #endregion RAGE events
 
@@ -159,7 +166,9 @@ namespace TDS_Client.Manager
 
         private void OnLeaveSameLobbyMethod(object[] args)
         {
-            Players.Remove((Player)args[0]);
+            Player player = (Player)args[0];
+            Players.Remove(player);
+            VoiceManager.RemovePlayer(player);
         }
 
         private void OnMapChangeMethod(object[] args)
