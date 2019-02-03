@@ -15,10 +15,11 @@ namespace TDS_Client.Manager.Lobby
 
         public static void ToggleMenu(ConsoleKey _)
         {
+            if (ChatManager.IsOpen)
+                return;
+
             if (!open)
             {
-                if (MainBrowser.IsChatOpen)
-                    return;
                 if (!Settings.InLobbyWithMaps)
                     return;
                 OpenMenu();

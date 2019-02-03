@@ -14,8 +14,6 @@ namespace TDS_Client.Manager.Browser
         private static HtmlWindow browser;
         private static bool RoundEndReasonShowing;
 
-        public static bool IsChatOpen { get; private set; }
-
         public static void Load()
         {
             browser = new HtmlWindow(Constants.MainBrowserPath);
