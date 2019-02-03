@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `commands` (
   CONSTRAINT `FK_commands_adminlevels` FOREIGN KEY (`NeededAdminLevel`) REFERENCES `admin_levels` (`Level`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.commands: ~11 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.commands: ~15 rows (ungefähr)
 /*!40000 ALTER TABLE `commands` DISABLE KEYS */;
 INSERT INTO `commands` (`ID`, `Command`, `NeededAdminLevel`, `NeededDonation`, `VipCanUse`, `LobbyOwnerCanUse`) VALUES
 	(1, 'AdminSay', 1, NULL, b'0', b'0'),
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `commands_alias` (
   CONSTRAINT `FK_commands_alias_commands` FOREIGN KEY (`Command`) REFERENCES `commands` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.commands_alias: ~31 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.commands_alias: ~60 rows (ungefähr)
 /*!40000 ALTER TABLE `commands_alias` DISABLE KEYS */;
 INSERT INTO `commands_alias` (`Alias`, `Command`) VALUES
 	('Announce', 1),
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `commands_info` (
   CONSTRAINT `FK_commands_info_languages` FOREIGN KEY (`Language`) REFERENCES `languages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Exportiere Daten aus Tabelle tdsnew.commands_info: ~17 rows (ungefähr)
+-- Exportiere Daten aus Tabelle tdsnew.commands_info: ~30 rows (ungefähr)
 /*!40000 ALTER TABLE `commands_info` DISABLE KEYS */;
 INSERT INTO `commands_info` (`ID`, `Language`, `Info`) VALUES
 	(1, 7, 'Schreibt öffentlich als ein Admin.'),
@@ -431,6 +431,7 @@ CREATE TABLE IF NOT EXISTS `maps` (
   `CreateTimestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`ID`),
   KEY `FK_maps_players` (`CreatorID`),
+  KEY `Name` (`Name`),
   CONSTRAINT `FK_maps_players` FOREIGN KEY (`CreatorID`) REFERENCES `players` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -519,6 +520,20 @@ CREATE TABLE IF NOT EXISTS `player_lobby_stats` (
 /*!40000 ALTER TABLE `player_lobby_stats` DISABLE KEYS */;
 /*!40000 ALTER TABLE `player_lobby_stats` ENABLE KEYS */;
 
+-- Exportiere Struktur von Tabelle tdsnew.player_map_favourites
+CREATE TABLE IF NOT EXISTS `player_map_favourites` (
+  `ID` int(11) unsigned NOT NULL,
+  `MapID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`,`MapID`),
+  KEY `FK_player_map_favourites_maps` (`MapID`),
+  CONSTRAINT `FK_player_map_favourites_maps` FOREIGN KEY (`MapID`) REFERENCES `maps` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_player_map_favourites_players` FOREIGN KEY (`ID`) REFERENCES `players` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Exportiere Daten aus Tabelle tdsnew.player_map_favourites: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `player_map_favourites` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_map_favourites` ENABLE KEYS */;
+
 -- Exportiere Struktur von Tabelle tdsnew.player_map_ratings
 CREATE TABLE IF NOT EXISTS `player_map_ratings` (
   `ID` int(10) unsigned NOT NULL,
@@ -583,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- Exportiere Daten aus Tabelle tdsnew.settings: ~0 rows (ungefähr)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`ID`, `GamemodeName`, `MapsPath`, `NewMapsPath`, `ErrorToPlayerOnNonExistentCommand`, `ToChatOnNonExistentCommand`, `DistanceToSpotToPlant`, `DistanceToSpotToDefuse`, `SavePlayerDataCooldownMinutes`, `SaveLogsCooldownMinutes`, `SaveSeasonsCooldownMinutes`) VALUES
-	(1, 'tdm', 'bridge/resources/TDS-V/maps/', 'bridge/resources/TDS-V/newmaps/', b'1', b'0', 3, 3, 1, 1, 1);
+	(1, 'tdm', 'bridge/resources/tds/maps/', 'bridge/resources/tds/newmaps/', b'1', b'0', 3, 3, 1, 1, 1);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle tdsnew.teams

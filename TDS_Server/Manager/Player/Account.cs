@@ -106,7 +106,7 @@
                 if (playerID != 0)
                 {
                     isPlayerRegistered = true;
-                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
+                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, (uint) 0);    // MainMenu ban => server ban
                     if (ban != null)
                     {
                         if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)

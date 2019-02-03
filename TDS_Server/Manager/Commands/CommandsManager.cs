@@ -12,6 +12,7 @@ using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -48,7 +49,7 @@ namespace TDS_Server.Manager.Commands
         private const bool UseImplicitTypes = true;
         
 
-        public static async void LoadCommands(TDSNewContext dbcontext)
+        public static async Task LoadCommands(TDSNewContext dbcontext)
         {
             LoadConverters();
 

@@ -27,6 +27,8 @@ namespace TDS_Server.Manager.Logs
 
         public static async Task Save(TDSNewContext dbcontext)
         {
+            if (notsavederrorlogs.Count == 0)
+                return;
             await dbcontext.AddRangeAsync(notsavederrorlogs);
             await dbcontext.SaveChangesAsync();
             notsavederrorlogs.Clear();

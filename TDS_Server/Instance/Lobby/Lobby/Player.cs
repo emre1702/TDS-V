@@ -67,6 +67,7 @@ namespace TDS_Server.Instance.Lobby
                 TeamPlayers[character.Team.Index].Remove(character);
 
             character.CurrentLobby = null;
+            character.PreviousLobby = this;
             character.CurrentLobbyStats = null;
             character.Lifes = 0;
             if (character.Client.Exists)

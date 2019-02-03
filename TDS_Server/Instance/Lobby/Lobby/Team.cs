@@ -16,8 +16,8 @@ namespace TDS_Server.Instance.Lobby
 
         protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {
-            if (character.Team != null)
-                TeamPlayers[character.Team.Index].Remove(character);
+            if (character.PreviousLobby != null && character.Team != null)
+                character.PreviousLobby.TeamPlayers[character.Team.Index].Remove(character);
             TeamPlayers[team.Index].Add(character);
             character.Client.SetSkin((PedHash)team.SkinHash);
             if (character.Team == null || character.Team.Id != team.Id)

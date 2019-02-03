@@ -34,7 +34,7 @@
 
                     SettingsManager.Load(dbcontext);
                     AdminsManager.Init(dbcontext);
-                    CommandsManager.LoadCommands(dbcontext);
+                    await CommandsManager.LoadCommands(dbcontext);
                     Damagesys.LoadDefaults(dbcontext);
 
                     NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);

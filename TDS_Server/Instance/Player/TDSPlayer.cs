@@ -30,6 +30,7 @@ namespace TDS_Server.Instance.Player
         }
         public Client Client { get; }
         public Lobby.Lobby CurrentLobby { get; set; }
+        public Lobby.Lobby PreviousLobby { get; set; }
         public PlayerLobbyStats CurrentLobbyStats { get; set; }
         public Teams Team
         {
