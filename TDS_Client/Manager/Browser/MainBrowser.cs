@@ -20,13 +20,6 @@ namespace TDS_Client.Manager.Browser
             Browser.MarkAsChat();
         }
 
-        private static void Notify(string text)
-        {
-            RAGE.Game.Ui.SetNotificationTextEntry("STRING");
-            RAGE.Game.Ui.AddTextComponentSubstringPlayerName(text);
-            RAGE.Game.Ui.DrawNotification(false, false);
-        }
-
         #region Events
         public static void OnLoadOwnMapRatings(string datajson)
         {
