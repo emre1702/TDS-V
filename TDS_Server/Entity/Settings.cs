@@ -16,5 +16,6 @@ namespace TDS_Server.Entity
         public int SavePlayerDataCooldownMinutes { get; set; }
         public int SaveLogsCooldownMinutes { get; set; }
         public int SaveSeasonsCooldownMinutes { get; set; }
+        public int TeamOrderCooldownMs { get; set; }
     }
 }

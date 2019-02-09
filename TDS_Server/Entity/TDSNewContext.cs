@@ -389,11 +389,10 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Ip)
-                    .IsRequired()
                     .HasColumnName("IP")
-                    .HasColumnType("varchar(20)");
+                    .HasColumnType("varchar(50)");
 
-                entity.Property(e => e.Serial).HasColumnType("varchar(100)");
+                entity.Property(e => e.Serial).HasColumnType("varchar(200)");
 
                 entity.Property(e => e.Timestamp)
                     .HasColumnType("timestamp")
@@ -419,6 +418,9 @@ namespace TDS_Server.Entity
 
                 entity.HasIndex(e => e.CreatorId)
                     .HasName("FK_maps_players");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("Name");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -718,6 +720,8 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.SavePlayerDataCooldownMinutes).HasColumnType("int(11)");
 
                 entity.Property(e => e.SaveSeasonsCooldownMinutes).HasColumnType("int(11)");
+
+                entity.Property(e => e.TeamOrderCooldownMs).HasColumnType("int(11)");
 
                 entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit(1)");
             });

@@ -24,6 +24,7 @@ namespace TDS_Common.Default
 
         public const string RequestPlayersForScoreboard = "RequestPlayersForScoreboard_Client";
 
+        public const string SendTeamOrder = "SendTeamOrder_Client";
         public const string StartDefusing = "StartDefusing_Client";
         public const string StartPlanting = "StartPlanting_Client";
 

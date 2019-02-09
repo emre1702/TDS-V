@@ -11,19 +11,26 @@ namespace TDS_Client.Manager.Browser
 {
     static class MainBrowser
     {
-        private static HtmlWindow browser;
-        private static bool RoundEndReasonShowing;
+        public static HtmlWindow Browser { get; set; }
+        private static bool roundEndReasonShowing;
 
         public static void Load()
         {
-            browser = new HtmlWindow(Constants.MainBrowserPath);
-            browser.MarkAsChat();
+            Browser = new HtmlWindow(Constants.MainBrowserPath);
+            Browser.MarkAsChat();
+        }
+
+        private static void Notify(string text)
+        {
+            RAGE.Game.Ui.SetNotificationTextEntry("STRING");
+            RAGE.Game.Ui.AddTextComponentSubstringPlayerName(text);
+            RAGE.Game.Ui.DrawNotification(false, false);
         }
 
         #region Events
         public static void OnLoadOwnMapRatings(string datajson)
         {
-            browser.ExecuteJs($"loadMyMapRatings(`{datajson}`);");
+            Browser.ExecuteJs($"loadMyMapRatings(`{datajson}`);");
         }
 
         public static void OnSendMapRating(string currentmap, int rating)
@@ -34,102 +41,102 @@ namespace TDS_Client.Manager.Browser
 
         public static void ShowBloodscreen()
         {
-            browser.ExecuteJs("showBloodscreen();");
+            Browser.ExecuteJs("showBloodscreen();");
         }
 
         public static void PlaySound(string soundname)
         {
-            browser.ExecuteJs($"playSound('{soundname}')");
+            Browser.ExecuteJs($"playSound('{soundname}')");
         }
 
         public static void PlayHitsound()
         {
-            browser.ExecuteJs("playHitsound();");
+            Browser.ExecuteJs("playHitsound();");
         }
 
         public static void AddKillMessage(string msg)
         {
-            browser.ExecuteJs($"addKillMessage('{msg}');");
+            Browser.ExecuteJs($"addKillMessage('{msg}');");
         }
 
         public static void SendAlert(string msg)
         {
-            browser.ExecuteJs($"alert('{msg}');");
+            Browser.ExecuteJs($"alert('{msg}');");
         }
 
         public static void OpenMapMenuInBrowser(string mapslistjson)
         {
-            browser.ExecuteJs($"openMapMenu('{(int)Settings.Language.Enum}', '{mapslistjson}');");
+            Browser.ExecuteJs($"openMapMenu('{(int)Settings.Language.Enum}', '{mapslistjson}');");
         }
 
         public static void CloseMapMenuInBrowser()
         {
-            browser.ExecuteJs("closeMapMenu();");
+            Browser.ExecuteJs("closeMapMenu();");
         }
 
         public static void LoadMapVotingsForMapBrowser(string mapvotesjson)
         {
-            browser.ExecuteJs($"loadMapVotings('{mapvotesjson}');");
+            Browser.ExecuteJs($"loadMapVotings('{mapvotesjson}');");
         }
         
         public static void ClearMapVotingsInBrowser()
         {
-            browser.ExecuteJs("clearMapVotings();");
+            Browser.ExecuteJs("clearMapVotings();");
         }
 
         public static void AddVoteToMapInMapMenuBrowser(string mapname, string oldvotemapname)
         {
-            browser.ExecuteJs($"addVoteToMapVoting('{mapname}', '{oldvotemapname}');");
+            Browser.ExecuteJs($"addVoteToMapVoting('{mapname}', '{oldvotemapname}');");
         }
 
         public static void LoadMapFavouritesInBrowser(string mapfavouritesjson)
         {
-            browser.ExecuteJs($"loadFavouriteMaps('{mapfavouritesjson}');");
+            Browser.ExecuteJs($"loadFavouriteMaps('{mapfavouritesjson}');");
         }
 
         public static void ToggleCanVoteForMapWithNumpadInBrowser(bool canvote)
         {
-            browser.ExecuteJs($"toggleCanVoteForMapWithNumpad({canvote});");
+            Browser.ExecuteJs($"toggleCanVoteForMapWithNumpad({canvote});");
         }
 
         public static void LoadOrderNamesInBrowser(string ordernamesjson)
         {
-            browser.ExecuteJs($"loadOrderNames('{ordernamesjson}');");
+            Browser.ExecuteJs($"loadOrderNames('{ordernamesjson}');");
         }
 
         public static void ShowRoundEndReason(string reason, string currentmap)
         {
-            RoundEndReasonShowing = true;
-            browser.ExecuteJs($"showRoundEndReason(`{reason}`, `{currentmap}`);");
+            roundEndReasonShowing = true;
+            Browser.ExecuteJs($"showRoundEndReason(`{reason}`, `{currentmap}`);");
         }
 
         public static void HideRoundEndReason()
         {
-            if (!RoundEndReasonShowing)
+            if (!roundEndReasonShowing)
                 return;
-            browser.ExecuteJs("hideRoundEndReason();");
-            RoundEndReasonShowing = false;
+            Browser.ExecuteJs("hideRoundEndReason();");
+            roundEndReasonShowing = false;
         }
 
         public static void LoadPlayersForChat(List<Player> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
-            browser.ExecuteJs($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
+            Browser.ExecuteJs($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
         }
 
         public static void AddPlayerForChat(Player player)
         {
-            browser.ExecuteJs($"addNameForChat(`{player.Name}`)");
+            Browser.ExecuteJs($"addNameForChat(`{player.Name}`)");
         }
 
         public static void RemovePlayerForChat(Player player)
         {
-            browser.ExecuteJs($"removeNameForChat(`{player.Name}`)");
+            Browser.ExecuteJs($"removeNameForChat(`{player.Name}`)");
         }
 
         public static void LoadUserName()
         {
-            browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
+            Browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
         }
     }
 }

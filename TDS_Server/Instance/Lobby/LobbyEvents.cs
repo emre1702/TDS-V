@@ -4,6 +4,7 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Common.Default;
 using System;
+using TDS_Common.Enum;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -90,6 +91,15 @@ namespace TDS_Server.Instance.Lobby
                 return;
 
             arena.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
+        }
+
+        [RemoteEvent(DToServerEvent.SendTeamOrder)]
+        public void SendTeamOrder(Client client, int teamOrderInt)
+        {
+            if (!System.Enum.TryParse(teamOrderInt.ToString(), out ETeamOrder teamOrder))
+                return;
+            TDSPlayer player = client.GetChar();
+            player.CurrentLobby?.SendTeamOrder(player, teamOrder);
         }
 
         #region Bomb

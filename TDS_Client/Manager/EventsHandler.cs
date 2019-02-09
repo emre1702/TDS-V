@@ -41,6 +41,7 @@ namespace TDS_Client.Manager
             Settings.Load();
             Dx.RefreshResolution();
             VoiceManager.Init();
+            Team.Init();
         }
         #endregion Load on start
 
@@ -380,7 +381,6 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
-            Add(DFromBrowserEvent.ChatInputToggled, OnChatInputToggledMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.ToggleMapFavouriteState, OnToggleMapFavouriteStateMethod);
@@ -436,11 +436,6 @@ namespace TDS_Client.Manager
         {
             string msg = (string)args[0];
             ChatManager.CommandUsed(msg);
-        }
-
-        private void OnChatInputToggledMethod(object[] args)
-        {
-            ChatManager.IsOpen = (bool)args[0];
         }
 
         private void OnLanguageChangeMethod(object[] args)

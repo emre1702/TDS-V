@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Lobby
             else
             {
                 uint i = teamIndex.Value;
-                Teams team = Teams[teamIndex.Value];
+                Teams team = Teams[i];
                 for (int j = TeamPlayers[i].Count - 1; j >= 0; --j)
                 {
                     func(TeamPlayers[i][j], team);

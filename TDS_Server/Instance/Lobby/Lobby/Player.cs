@@ -133,20 +133,6 @@ namespace TDS_Server.Instance.Lobby
             character.CurrentLobbyStats = stats;
         }
 
-#warning Todo: improve that for enum! ordershort as string won't work!
-        private void SendTeamOrder(TDSPlayer character, string ordershort)
-        {
-            Teams team = character.Team;
-            SendAllPlayerLangMessage(lang =>
-            {
-                return $"[TEAM] {{{team.ColorR}|{team.ColorG}|{team.ColorB}}} {character.Client.Name}{{150|0|0}}: {ordershort}";
-            }, character.Team.Index);
-
-            //string teamfontcolor = character.Lobby.TeamColorStrings[character.Team] ?? "w";
-            //string beforemessage = "[TEAM] #" + teamfontcolor + "#" + character.Player.SocialClubName + "#r#: ";
-            //SendAllPlayerLangMessage(ordershort, character.Team, beforemessage);
-        }
-
         public bool IsPlayerLobbyOwner(TDSPlayer character)
         {
             return character.CurrentLobby == this && LobbyEntity.Owner == character.Entity.Id;

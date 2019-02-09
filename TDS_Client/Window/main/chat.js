@@ -71,7 +71,7 @@ chatAPI["clear"] = () => {
 };
 
 chatAPI["activate"] = ( toggle ) => {
-    enableChatInput( toggle );
+    //enableChatInput( toggle );
     chatdata.active = toggle;
 };
 
@@ -84,8 +84,8 @@ chatAPI["show"] = ( toggle ) => {
         $( "#chat_choice" ).hide();
     }
 
-    if ( !toggle && chatdata.inputshowing )
-        enableChatInput( false );
+    //if ( !toggle && chatdata.inputshowing )
+    //    enableChatInput( false );
 
     chatdata.active = toggle;
 };
@@ -217,13 +217,7 @@ $( document ).ready( function () {
         setTimeout( function () { chatdata.autocompleteon = false; }, 500 ); } );
 
     $( "body" ).keydown( function ( event ) {
-        if ( event.which === 84 && !chatdata.inputshowing && chatdata.active ) {   // open chat-input
-            event.preventDefault();
-            enableChatInput( true );
-        } else if ( event.which === chatdata.globalsaykeycode && !chatdata.inputshowing && chatdata.active ) {    // open globalchat-input
-            event.preventDefault();
-            enableChatInput( true, "/globalsay " );
-        } else if ( event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon ) {   // send message and close input
+        if ( event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon ) {   // send message and close input
             event.preventDefault();
             let msg = chatdata.maininput.val();
             if ( msg ) {
@@ -234,11 +228,12 @@ $( document ).ready( function () {
                         mp.trigger("CommandUsed_Browser", msg);
                     }
                 } else {
-                    mp.invoke( "chatMessage", msg + chatdata.chatends[chatdata.chosenchatbody] );
+                    mp.invoke("chatMessage", msg + chatdata.chatends[chatdata.chosenchatbody]);
+                    mp.trigger("ChatUsed_Browser");
                 }
             }
 
-            enableChatInput( false );
+            //enableChatInput( false );
         }
     } );
 

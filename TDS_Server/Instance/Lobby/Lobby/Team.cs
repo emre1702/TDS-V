@@ -5,6 +5,9 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
+using System;
+using TDS_Server.Interface;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -14,10 +17,18 @@ namespace TDS_Server.Instance.Lobby
         protected readonly List<TDSPlayer>[] TeamPlayers;
         protected SyncedTeamDataDto[] SyncedTeamDatas { get; set; }
 
+        private static readonly Dictionary<ETeamOrder, Func<ILanguage, string>> teamOrderDict = new Dictionary<ETeamOrder, Func<ILanguage, string>>
+        {
+            [ETeamOrder.Attack] = lang => lang.ORDER_ATTACK,
+            [ETeamOrder.StayBack] = lang => lang.ORDER_STAY_BACK,
+            [ETeamOrder.GoToBomb] = lang => lang.ORDER_GO_TO_BOMB,
+            [ETeamOrder.SpreadOut] = lang => lang.ORDER_SPREAD_OUT,
+        };
+
         protected void SetPlayerTeam(TDSPlayer character, Teams team)
         {
-            if (character.PreviousLobby != null && character.Team != null)
-                character.PreviousLobby.TeamPlayers[character.Team.Index].Remove(character);
+            if (character.Team != null && character.Team.Lobby == LobbyEntity.Id)
+                TeamPlayers[character.Team.Index].Remove(character);
             TeamPlayers[team.Index].Add(character);
             character.Client.SetSkin((PedHash)team.SkinHash);
             if (character.Team == null || character.Team.Id != team.Id)
@@ -76,6 +87,21 @@ namespace TDS_Server.Instance.Lobby
                 team.AmountPlayers.AmountAlive = 0;
                 team.AmountPlayers.Amount = 0;
             }
+        }
+
+        public void SendTeamOrder(TDSPlayer character, ETeamOrder teamOrder)
+        {
+            if (!teamOrderDict.ContainsKey(teamOrder))
+                return;
+
+            Teams team = character.Team;
+            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);
+        
+            string str = $"[TEAM] {{{team.ColorR}|{team.ColorG}|{team.ColorB}}} {character.Client.Name}{{150|0|0}}: ";
+            FuncIterateAllPlayers((target, _) =>
+            {
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, str + texts[target.Language]);
+            }, team.Index);
         }
     }
 }

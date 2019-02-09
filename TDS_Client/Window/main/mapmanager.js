@@ -19,67 +19,95 @@ let currentlyonfavourite = false;
 let votingmapslisttabsid = "#tabs-4";
 var canvoteformapwithnumpad = true;
 
-$("#tabs").tabs({
-    collapsible: true,
-    heightStyle: "fill"
-});
+$(document).ready(function () {
+    mapMenuDiv = $("#mapmenu");
+    normalMapsList = $("#tabs-1");
+    bombMapsList = $("#tabs-2");
+    favouriteMapsList = $("#tabs-3");
+    votingMapsList = $(votingmapslisttabsid);
+    mapInfo = $("#map_info");
+    mapVoteButton = $("#choose_map_button");
+    mapFavouriteButton = $("#add_map_to_favourites");
+    mapVotingDiv = $("#mapvoting");
 
-$(".tab_list").each(function (_index, _value) {
-    $(this).
-    $(this).selectable({
-        selected: function (_event, ui) {
-            $(".ui-selected").removeClass("ui-selected");
-            $(ui.selected).addClass("ui-selected");
-            let mapname = ui.selected.innerHTML;
-            setFavouriteButtonSelectedByMap(mapname);
-            for (let i = 0; i < mapDatas.length; ++i) {
-                if (mapname === mapDatas[i].Name) {
-                    lastMapName = mapname;
-                    if (!mapSpecificThingsShowing) {
-                        mapVoteButton.show(0);
-                        mapInfo.show(0);
-                        mapFavouriteButton.show(0);
-                        mapSpecificThingsShowing = true;
+    $("#tabs").tabs({
+        collapsible: true,
+        heightStyle: "fill"
+    });
+
+    $(".tab_list").each(function (_index, _value) {
+        $(this).selectable({
+            selected: function (_event, ui) {
+                $(".ui-selected").removeClass("ui-selected");
+                $(ui.selected).addClass("ui-selected");
+                let mapname = ui.selected.innerHTML;
+                setFavouriteButtonSelectedByMap(mapname);
+                for (let i = 0; i < mapDatas.length; ++i) {
+                    if (mapname === mapDatas[i].Name) {
+                        lastMapName = mapname;
+                        if (!mapSpecificThingsShowing) {
+                            mapVoteButton.show(0);
+                            mapInfo.show(0);
+                            mapFavouriteButton.show(0);
+                            mapSpecificThingsShowing = true;
+                        }
+                        mapInfo.html(mapDatas[i].Description[language]);
+                        return;
                     }
-                    mapInfo.html(mapDatas[i].Description[language]);
+                }
+            },
+            autoRefresh: false
+        });
+    });
+
+    mapVoteButton.click(function (event) {
+        event.preventDefault();
+        if (votingInCooldown)
+            return;
+        if (lastMapName !== "") {
+            votedMapName = lastMapName;
+            mp.trigger("MapVote_Browser", votedMapName);
+            setMapVotingCooldown();
+        }
+    });
+
+    mapFavouriteButton.click(function (event) {
+        event.preventDefault();
+        if (lastMapName === "")
+            return;
+        let index = favouriteMaps.indexOf(lastMapName);
+        if (index === -1) {
+            favouriteMaps.push(lastMapName);
+            mapFavouriteButton.removeClass("add_map_to_favourites_notselected").addClass("add_map_to_favourites_selected");
+            mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, true);
+            favouriteMapsList.append($("<div>" + lastMapName + "</div>"));
+        } else {
+            favouriteMaps.splice(index, 1);
+            mapFavouriteButton.removeClass("add_map_to_favourites_selected").addClass("add_map_to_favourites_notselected");
+            mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, false);
+            favouriteMapsList.children("div:contains('" + lastMapName + "')").remove();
+        }
+        favouriteMapsList.selectable("refresh");
+    });
+
+    $("body").keydown(function (event) {
+        let key = event.which;
+        // map-voting //
+        if (canvoteformapwithnumpad) {
+            if (key >= 0x61 && key <= 0x69) {
+                if (votingInCooldown)
                     return;
+                event.preventDefault();
+                let index = 9 - (0x69 - key) - 1;   // -1 because of indexing starting at 0
+                if (votings.length > index) {
+                    votedMapName = votings[index].name;
+                    mp.trigger("MapVote_Browser", votedMapName);
+                    setMapVotingCooldown();
                 }
             }
-        },
-        autoRefresh: false
-    });
+        }
+    });    
 });
-
-mapVoteButton.click(function (event) {
-    event.preventDefault();
-    if (votingInCooldown)
-        return;
-    if (lastMapName !== "") {
-        votedMapName = lastMapName;
-        mp.trigger("MapVote_Browser", votedMapName);
-        setMapVotingCooldown();
-    }
-});
-
-mapFavouriteButton.click(function (event) {
-    event.preventDefault();
-    if (lastMapName === "")
-        return;
-    let index = favouriteMaps.indexOf(lastMapName);
-    if (index === -1) {
-        favouriteMaps.push(lastMapName);
-        mapFavouriteButton.removeClass("add_map_to_favourites_notselected").addClass("add_map_to_favourites_selected");
-        mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, true);
-        favouriteMapsList.append($("<div>" + lastMapName + "</div>"));
-    } else {
-        favouriteMaps.splice(index, 1);
-        mapFavouriteButton.removeClass("add_map_to_favourites_selected").addClass("add_map_to_favourites_notselected");
-        mp.trigger("ToggleMapFavouriteState_Browser", lastMapName, false);
-        favouriteMapsList.children("div:contains('" + lastMapName + "')").remove();
-    }
-    favouriteMapsList.selectable("refresh");
-});
-
 
 function openMapMenu(mylang, mapdatasjson) {
     mapMenuDiv.show(1000);
@@ -214,24 +242,6 @@ function setMapVotingCooldown() {
     mapVoteButton.disabled = true;
     setTimeout(() => { votingInCooldown = false; mapVoteButton.disabled = false; }, 1500);
 }
-
-$("body").keydown(function (event) {
-    let key = event.which;
-    // map-voting //
-    if (canvoteformapwithnumpad) {
-        if (key >= 0x61 && key <= 0x69) {
-            if (votingInCooldown)
-                return;
-            event.preventDefault();
-            let index = 9 - (0x69 - key) - 1;   // -1 because of indexing starting at 0
-            if (votings.length > index) {
-                votedMapName = votings[index].name;
-                mp.trigger("MapVote_Browser", votedMapName);
-                setMapVotingCooldown();
-            }
-        }
-    }
-});
 
 function setFavouriteButtonSelectedByMap(mapname) {
     if (favouriteMaps.indexOf(mapname) !== -1) {

@@ -6,5 +6,6 @@
         public int DistanceToSpotToDefuse;
         public int RoundEndTime;
         public int MapChooseTime;
+        public int TeamOrderCooldownMs;
     }
 }

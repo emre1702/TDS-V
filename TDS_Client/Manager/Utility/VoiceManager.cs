@@ -1,4 +1,5 @@
 ﻿using RAGE;
+using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
@@ -20,8 +21,8 @@ namespace TDS_Client.Manager.Utility
             //if (!Voice.Allowed)
             //    return;
 
-            BindManager.Add(ConsoleKey.C, Start, EKeyPressState.Down);
-            BindManager.Add(ConsoleKey.C, Stop, EKeyPressState.Up);
+            BindManager.Add(Control.PushToTalk, Start, EKeyPressState.Down);
+            BindManager.Add(Control.PushToTalk, Stop, EKeyPressState.Up);
         }
 
         public static void AddPlayer(Player player)
@@ -38,12 +39,12 @@ namespace TDS_Client.Manager.Utility
             Events.CallRemote(DToServerEvent.VoiceToRemove, player);
         }
 
-        private static void Start(ConsoleKey _)
+        private static void Start(Control _)
         {
             Voice.Muted = false;
         }
 
-        private static void Stop(ConsoleKey _)
+        private static void Stop(Control _)
         {
             Voice.Muted = true;
         }
