@@ -243,7 +243,7 @@ namespace TDS_Server.Manager.Commands
                 if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
                     NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_DOESNT_EXIST);
                 if (SettingsManager.ToChatOnNonExistentCommand)
-                    ChatManager.OnLobbyChatMessage(player.Client, "/" + cmd + " " + string.Join(' ', args));
+                    ChatManager.SendLobbyMessage(player, "/" + cmd + " " + string.Join(' ', args), false);
                 return false;
             }
             return true;

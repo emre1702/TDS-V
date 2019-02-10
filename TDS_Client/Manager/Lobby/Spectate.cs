@@ -13,12 +13,12 @@ namespace TDS_Client.Manager.Lobby
 
         private static void Next(ConsoleKey _)
         {
-            Events.CallRemote(DToServerEvent.SpectateNext, true);
+            EventsSender.Send(DToServerEvent.SpectateNext, true);
         }
 
         private static void Previous(ConsoleKey _)
         {
-            Events.CallRemote(DToServerEvent.SpectateNext, false);
+            EventsSender.Send(DToServerEvent.SpectateNext, false);
         }
 
         public static void Start()

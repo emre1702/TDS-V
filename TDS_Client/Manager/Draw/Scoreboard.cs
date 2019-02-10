@@ -107,7 +107,7 @@ namespace TDS_Client.Manager.Draw
             {
                 lastLoadedTick = tick;
                 grid.ClearRows();
-                CallRemote(DToServerEvent.RequestPlayersForScoreboard);
+                EventsSender.Send(DToServerEvent.RequestPlayersForScoreboard);
             }
 
             IsActivated = true;

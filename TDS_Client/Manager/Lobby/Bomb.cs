@@ -100,9 +100,9 @@ namespace TDS_Client.Manager.Lobby
             if (ShouldPlantDefuseStop())
             {
                 if (playerStatus == EPlantDefuseStatus.Planting)
-                    Events.CallRemote(DToServerEvent.StopPlanting);
+                    EventsSender.Send(DToServerEvent.StopPlanting);
                 else if (playerStatus == EPlantDefuseStatus.Defusing)
-                    Events.CallRemote(DToServerEvent.StopDefusing);
+                    EventsSender.Send(DToServerEvent.StopDefusing);
                 playerStatus = EPlantDefuseStatus.None;
                 progressRect.Remove();
                 progressRect = null;
@@ -131,7 +131,7 @@ namespace TDS_Client.Manager.Lobby
             playerStatus = EPlantDefuseStatus.Planting;
             progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
-            Events.CallRemote(DToServerEvent.StartPlanting);
+            EventsSender.Send(DToServerEvent.StartPlanting);
         }
 
         private static void CheckDefuseStart()
@@ -142,7 +142,7 @@ namespace TDS_Client.Manager.Lobby
             playerStatus = EPlantDefuseStatus.Defusing;
             progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
-            Events.CallRemote(DToServerEvent.StartDefusing);
+            EventsSender.Send(DToServerEvent.StartDefusing);
         }
 
         private static bool IsOnPlantSpot()

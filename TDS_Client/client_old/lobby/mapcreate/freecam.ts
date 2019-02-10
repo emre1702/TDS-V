@@ -147,7 +147,7 @@ function freecamOnUpdate () {
 			}
 
 			if ( to != null && freecamdata.CameraObject != null ) {
-				mp.events.callRemote( "setFreecamObjectPositionTo", to );
+				mp.EventsSender.Send( "setFreecamObjectPositionTo", to );
 				//API.setEntityPosition(CameraObject,to); //GTMP BUG: If the camera goes out from the streaming distace of the object's spawn position->System.NullReferenceException
 			}
 

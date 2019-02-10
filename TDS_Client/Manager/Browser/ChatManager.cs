@@ -25,7 +25,7 @@ namespace TDS_Client.Manager.Browser
         {
             //Settings.LoadSettings();
             MainBrowser.LoadUserName();
-            CallRemote(DToServerEvent.ChatLoaded);
+            EventsSender.Send(DToServerEvent.ChatLoaded);
         }
 
         private static void OpenLobbyChatInput(Control _)

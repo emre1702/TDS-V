@@ -45,6 +45,9 @@ namespace TDS_Client.Instance.Draw.Dx
             this.alignmentX = alignmentX;
             this.alignmentY = alignmentY;
             this.relative = relative;
+            this.dropShadow = dropShadow;
+            this.outline = outline;
+            this.wordWrap = wordWrap;
 
             ApplyTextAlignmentY();
         }

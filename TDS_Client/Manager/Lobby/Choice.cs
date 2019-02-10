@@ -12,8 +12,8 @@ namespace TDS_Client.Manager.Lobby
 
         public static void JoinLobby(int index, int teamindex)
         {
-            Events.CallRemote(DToServerEvent.JoinLobby, index, teamindex);
-            //callRemoteCooldown("joinMapCreatorLobby");
+            EventsSender.Send(DToServerEvent.JoinLobby, index, teamindex);
+            //EventsSender.SendCooldown("joinMapCreatorLobby");
         }
 
         public static void Start()

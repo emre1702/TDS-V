@@ -28,7 +28,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void OnSendMapRating(string currentmap, int rating)
         {
-            RAGE.Events.CallRemote(DToServerEvent.AddRatingToMap, currentmap, rating);
+            EventsSender.Send(DToServerEvent.AddRatingToMap, currentmap, rating);
         }
         #endregion
 

@@ -32,7 +32,7 @@ namespace TDS_Client.Manager.Utility
                 languageEnum = value;
                 Language = languagesDict[languageEnum];
                 Scoreboard.LoadLanguage();
-                Events.CallRemote(DToServerEvent.LanguageChange, (byte)LanguageEnum);
+                EventsSender.Send(DToServerEvent.LanguageChange, (byte)LanguageEnum);
             }
         }
 
@@ -110,7 +110,7 @@ namespace TDS_Client.Manager.Utility
                 case PlayerSetting.LANGUAGE:
                     settingsdata.language = value;
                     mp.storage.data.language = value;
-                    callRemoteCooldown( "onPlayerLanguageChange", value );
+                    EventsSender.SendCooldown( "onPlayerLanguageChange", value );
                     if ( mainbrowserdata.angularloaded ) {
                         loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
                         mainbrowserdata.angular.call( `syncLanguage('${settingsdata.language}');` );

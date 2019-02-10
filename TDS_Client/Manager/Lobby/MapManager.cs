@@ -42,7 +42,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             }
 
-            Events.CallRemote(DToServerEvent.MapsListRequest);  
+            EventsSender.Send(DToServerEvent.MapsListRequest);  
         }
 
         public static void CloseMenu()

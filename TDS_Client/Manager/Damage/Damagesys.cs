@@ -44,7 +44,7 @@ namespace TDS_Client.Manager.Damage
             {
                 Player hitted = Entities.Players.All.FirstOrDefault(p => p.Handle == hitEntityHandle);
                 if (hitted != null)
-                    CallRemote(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+                    EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
             }
         }
 

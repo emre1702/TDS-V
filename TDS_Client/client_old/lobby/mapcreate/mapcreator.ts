@@ -38,7 +38,7 @@ mp.events.add(ECustomBrowserRemoteEvents.GotoPositionByMapCreator, ( x: number, 
 } );
 
 mp.events.add( "CheckMapName", ( name ) => {
-    callRemoteCooldown( "checkMapName", name );
+    EventsSender.SendCooldown( "checkMapName", name );
 } );
 
 mp.events.add( "SendMapNameCheckResult", ( alreadyinuse ) => {
@@ -46,7 +46,7 @@ mp.events.add( "SendMapNameCheckResult", ( alreadyinuse ) => {
 } );
 
 mp.events.add( "SendMapFromCreator", ( mapjson ) => {
-    callRemoteCooldown( "sendMapFromCreator", mapjson );
+    EventsSender.SendCooldown( "sendMapFromCreator", mapjson );
 } );*/
 
 

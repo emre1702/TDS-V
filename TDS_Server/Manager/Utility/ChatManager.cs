@@ -8,8 +8,6 @@
 
     class ChatManager : Script
     {
-#warning TODO: Add dirty chat
-
         public ChatManager() { }
 
         [RemoteEvent(DToServerEvent.LobbyChatMessage)]

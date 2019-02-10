@@ -413,7 +413,7 @@ namespace TDS_Client.Manager
         private void OnMapVoteMethod(object[] args)
         {
             string mapname = (string)args[0];
-            CallRemote(DToServerEvent.MapVote, mapname);
+            EventsSender.Send(DToServerEvent.MapVote, mapname);
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -437,7 +437,7 @@ namespace TDS_Client.Manager
         private void OnCommandUsedMethod(object[] args)
         {
             string msg = (string)args[0];
-            CallRemote(DToServerEvent.CommandUsed, msg);
+            EventsSender.Send(DToServerEvent.CommandUsed, msg);
         }
 
         private void OnChatUsedMethod(object[] args)
@@ -445,7 +445,7 @@ namespace TDS_Client.Manager
             ChatManager.CloseChatInput();
             string msg = (string)args[0];
             bool isDirty = (bool)args[1];
-            CallRemote(DToServerEvent.LobbyChatMessage, msg, isDirty);
+            EventsSender.Send(DToServerEvent.LobbyChatMessage, msg, isDirty);
         }
 
         private void OnLanguageChangeMethod(object[] args)
@@ -464,7 +464,7 @@ namespace TDS_Client.Manager
         {
             string mapname = (string)args[0];
             bool isfavourite = (bool)args[1];
-            CallRemote(DToServerEvent.ToggleMapFavouriteState, mapname, isfavourite);
+            EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapname, isfavourite);
         }
 
         /*// triggered by browser //

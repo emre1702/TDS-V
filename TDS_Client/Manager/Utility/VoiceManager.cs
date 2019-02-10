@@ -30,13 +30,13 @@ namespace TDS_Client.Manager.Utility
             sendingToPlayers.Add(player);
             player.AutoVolume = true;
             player.Voice3d = voice3d;
-            Events.CallRemote(DToServerEvent.VoiceToAdd, player);
+            EventsSender.Send(DToServerEvent.VoiceToAdd, player);
         }
 
         public static void RemovePlayer(Player player)
         {
             sendingToPlayers.Remove(player);
-            Events.CallRemote(DToServerEvent.VoiceToRemove, player);
+            EventsSender.Send(DToServerEvent.VoiceToRemove, player);
         }
 
         private static void Start(Control _)

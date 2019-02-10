@@ -2,7 +2,6 @@
 {
     class RoundStatsDto
     {
-#warning Add roundstats to player after the round
         public uint Kills { get; set; }
         public uint Assists { get; set; }
         public uint Damage { get; set; }

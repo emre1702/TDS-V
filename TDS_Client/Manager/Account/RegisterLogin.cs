@@ -15,16 +15,18 @@ namespace TDS_Client.Manager.Account
 
         public static void TryLogin(string password)
         {
-            Events.CallRemote(DToServerEvent.TryLogin, CommonUtils.HashPWClient(password));
+            EventsSender.Send(DToServerEvent.TryLogin, CommonUtils.HashPWClient(password));
         }
 
         public static void TryRegister(string password, string email)
         {
-            Events.CallRemote(DToServerEvent.TryRegister, CommonUtils.HashPWClient(password), email);
+            EventsSender.Send(DToServerEvent.TryRegister, CommonUtils.HashPWClient(password), email);
         }
 
-        public static void Start(string name, bool isregistered)
+        public static void Start(string theName, bool isregistered)
         {
+            name = theName;
+            isRegistered = isregistered;
             Browser = new HtmlWindow(Constants.RegisterLoginBrowserPath);
             CursorManager.Visible = true;
         }

@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Lobby
         private static void GiveOrder(ConsoleKey key)
         {
             ETeamOrder order = GetTeamOrderByKey(key);
-            Events.CallRemote(DToServerEvent.SendTeamOrder, (int)order);
+            EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
         }
 
         private static ETeamOrder GetTeamOrderByKey(ConsoleKey key)

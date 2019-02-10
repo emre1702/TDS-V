@@ -30,6 +30,10 @@ namespace TDS_Client.Instance.Draw.Dx
             float textScale = 1.0f, Font textFont = Font.ChaletLondon, int textOffsetAbsoluteX = 1, bool filling = true,
             UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true) : base()
         {
+            this.width = width;
+            this.height = height;
+            this.filling = filling;
+
             backTextRect = new DxTextRectangle(text, x, y, width, height, textColor, backColor, textScale, textFont, textOffsetAbsoluteX, alignmentX, alignmentY, relativePos);
             frontRect = new DxRectangle(x+1, y+1, 0, 0, progressColor, alignmentX, alignmentY, relativePos);
         }

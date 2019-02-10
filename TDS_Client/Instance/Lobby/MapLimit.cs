@@ -67,7 +67,7 @@ namespace TDS_Client.Instance.Lobby
                 RefreshInfo();
             else if (outsideCounter == 0)
             {
-                Events.CallRemote(DToServerEvent.OutsideMapLimit);
+                EventsSender.Send(DToServerEvent.OutsideMapLimit);
                 Reset();
                 checkTimer?.Kill();
                 checkTimer = null;
