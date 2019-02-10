@@ -16,9 +16,6 @@ namespace TDS_Client.Manager.Browser
 
         public ChatManager()
         {
-            Add(DFromBrowserEvent.ChatUsed, CloseChatInput);
-            Add(DFromBrowserEvent.CommandUsed, CloseChatInput);
-
             Chat.Show(false);
             BindManager.Add(Control.MpTextChatAll, OpenLobbyChatInput);
             BindManager.Add(Control.MpTextChatTeam, OpenTeamChatInput);
@@ -29,11 +26,6 @@ namespace TDS_Client.Manager.Browser
             //Settings.LoadSettings();
             MainBrowser.LoadUserName();
             CallRemote(DToServerEvent.ChatLoaded);
-        }
-
-        public static void CommandUsed(string msg)
-        {
-            CallRemote(DToServerEvent.CommandUsed, msg);
         }
 
         private static void OpenLobbyChatInput(Control _)
@@ -65,7 +57,7 @@ namespace TDS_Client.Manager.Browser
                 MainBrowser.Browser.ExecuteJs($"enableChatInput(1, '{cmd}')");
         }
 
-        private static void CloseChatInput(object[] args)
+        public static void CloseChatInput()
         {
             IsOpen = false;
             MainBrowser.Browser.ExecuteJs($"enableChatInput(0);");

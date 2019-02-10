@@ -31,13 +31,13 @@ namespace TDS_Server.Manager.Commands {
         }
 
         [TDSCommand(DPlayerCommand.GlobalChat)]
-        public static void GlobalChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText]  string message)
+        public static void GlobalChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText] string message)
         {
             ChatManager.SendGlobalMessage(player, message);
         }
 
         [TDSCommand(DPlayerCommand.TeamChat)]
-        public static void TeamChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText]  string message)
+        public static void TeamChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText] string message)
         {
             ChatManager.SendTeamChat(player, message);
         }

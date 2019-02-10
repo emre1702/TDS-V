@@ -48,8 +48,6 @@
                 dbcontext.Entry(player.Entity).State = EntityState.Modified;
                 dbcontext.SaveChangesAsync();
             }
-#warning Check that after Client implementation
-            //NAPI.ClientEvent.TriggerClientEventForAll ( "onClientPlayerQuit", player.Value );   
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]

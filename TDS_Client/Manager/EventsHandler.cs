@@ -380,10 +380,12 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
-            Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.ToggleMapFavouriteState, OnToggleMapFavouriteStateMethod);
+
+            Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
+            Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
         }
 
         private void OnAddRatingToMapMethod(object[] args)
@@ -435,7 +437,15 @@ namespace TDS_Client.Manager
         private void OnCommandUsedMethod(object[] args)
         {
             string msg = (string)args[0];
-            ChatManager.CommandUsed(msg);
+            CallRemote(DToServerEvent.CommandUsed, msg);
+        }
+
+        private void OnChatUsedMethod(object[] args)
+        {
+            ChatManager.CloseChatInput();
+            string msg = (string)args[0];
+            bool isDirty = (bool)args[1];
+            CallRemote(DToServerEvent.LobbyChatMessage, msg, isDirty);
         }
 
         private void OnLanguageChangeMethod(object[] args)

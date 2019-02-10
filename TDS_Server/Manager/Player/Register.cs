@@ -25,15 +25,12 @@ namespace TDS_Server.Manager.Player
                     IsVip = false
                 };
                 dbplayer.PlayerSettings = new PlayerSettings {
-                    Id = dbplayer.Id,
-#warning TODO: Check if we need that with Id = dbplayer.Id
                     AllowDataTransfer = false,
 #warning TODO: Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
                     HitsoundOn = true,
                     Language = (byte)ELanguage.English
                 };
                 dbplayer.PlayerStats = new PlayerStats
-#warning TODO: Do we need Id = ... here?
                 {
                     LoggedIn = false
                 };

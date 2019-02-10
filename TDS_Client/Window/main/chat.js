@@ -228,8 +228,7 @@ $( document ).ready( function () {
                         mp.trigger("CommandUsed_Browser", msg);
                     }
                 } else {
-                    mp.invoke("chatMessage", msg + chatdata.chatends[chatdata.chosenchatbody]);
-                    mp.trigger("ChatUsed_Browser");
+                    mp.trigger("ChatUsed_Browser", msg, chatdata.chosenchatbody == 1);
                 }
             }
 

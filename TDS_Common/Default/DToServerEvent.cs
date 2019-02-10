@@ -16,6 +16,7 @@ namespace TDS_Common.Default
         public const string JoinLobby = "JoinLobby_Client";
 
         public const string LanguageChange = "LanguageChange_Client";
+        public const string LobbyChatMessage = "LobbyChatMessage_Client";
 
         public const string MapsListRequest = "MapsListRequest_Client";
         public const string MapVote = "MapVote_Client";

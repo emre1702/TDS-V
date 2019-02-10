@@ -2,9 +2,9 @@
 {
 
     using GTANetworkAPI;
+    using TDS_Common.Default;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Logs;
-    using TDS_Server.Manager.Player;
 
     class ChatManager : Script
     {
@@ -12,26 +12,18 @@
 
         public ChatManager() { }
 
-        private static void OnLobbyChatMessageFunc(TDSPlayer character, string message)
+        [RemoteEvent(DToServerEvent.LobbyChatMessage)]
+        public static void SendLobbyMessage(TDSPlayer player, string message, bool isDirty)
         {
-            string changedmessage = character.TeamChatColor + character.Client.Name + "!{220|220|220}: " + message;
-            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
-            if (character.CurrentLobby.IsOfficial)
-                ChatLogsManager.Log(message, character); 
-        }
-
-        // [DisableDefaultChat] 
-        [ServerEvent(Event.ChatMessage)]
-        public static void OnLobbyChatMessage(Client player, string message)
-        {
-            TDSPlayer character = player.GetChar();
-            if (character.Entity != null)
-                if (!character.MuteTime.HasValue)
-                    OnLobbyChatMessageFunc(character, message);
-                else if (character.IsPermamuted)
-                    player.SendNotification(character.Language.STILL_PERMAMUTED);
-                else
-                    player.SendNotification(Utils.GetReplaced(character.Language.STILL_MUTED, character.MuteTime.Value));
+            //if (!character.MuteTime.HasValue)
+            string changedmessage = player.TeamChatColor + player.Client.Name + "!{220|220|220}: " + message;
+            player.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
+            if (player.CurrentLobby.IsOfficial && !isDirty)
+                ChatLogsManager.Log(message, player);
+            //else if (character.IsPermamuted)
+            //    player.SendNotification(character.Language.STILL_PERMAMUTED);
+            //else
+            //    player.SendNotification(Utils.GetReplaced(character.Language.STILL_MUTED, character.MuteTime.Value));
         }
 
         public static void SendGlobalMessage(TDSPlayer character, string message)
