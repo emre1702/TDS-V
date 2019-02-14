@@ -27,25 +27,34 @@ namespace TDS_Client.Manager.Lobby
             if (teamDisplays != null)
                 Stop();
 
+            CreateTimeDisplay();
+            CreateTeamsDisplays();
+        }
+
+        private static void CreateTimeDisplay()
+        {
             if (timeDisplay == null)
                 timeDisplay = new DxTextRectangle("00:00", 0.5f, 0f, 0.06f, 0.05f,
                             Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
             timeDisplay.Activated = true;
             RefreshOnTick = true;
+        }
 
+        private static void CreateTeamsDisplays()
+        {
             var teams = Team.CurrentLobbyTeams;
-            int showamountleft = (int) Math.Ceiling((teams.Length - 1) / 2d);
+            int showamountleft = (int)Math.Ceiling((teams.Length - 1) / 2d);
             int showamountright = teams.Length - showamountleft - 1;
             teamDisplays = new DxTextRectangle[teams.Length - 1];
             for (int i = 0; i < showamountleft; ++i)
             {
-                float x = 0.5f - 0.06f*0.5f - 0.13f*i - 0.13f * 0.5f;
+                float x = 0.5f - 0.06f * 0.5f - 0.13f * i - 0.13f * 0.5f;
                 var team = teams[i + 1];
                 teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
             }
             for (int j = 0; j < showamountright; ++j)
             {
-                float x = 0.5f + 0.06f*0.5f + 0.13f * j + 0.13f * 0.5f;
+                float x = 0.5f + 0.06f * 0.5f + 0.13f * j + 0.13f * 0.5f;
                 int i = j + showamountleft;
                 var team = teams[i + 1];
                 teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
