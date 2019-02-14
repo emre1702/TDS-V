@@ -135,7 +135,11 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
+            Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
+            Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
+            Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
+            Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
         }
@@ -244,6 +248,21 @@ namespace TDS_Client.Manager
             MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
         }
 
+        private void OnSetAssistsForRoundStatsMethod(object[] args)
+        {
+            RoundInfo.CurrentAssists = (uint)args[0];
+        }
+
+        private void OnSetDamageForRoundStatsMethod(object[] args)
+        {
+            RoundInfo.CurrentDamage = (uint)args[0];
+        }
+
+        private void OnSetKillsForRoundStatsMethod(object[] args)
+        {
+            RoundInfo.CurrentKills = (uint)args[0];
+        }
+
         private void OnPlayerSpectateModeMethod(object[] args)
         {
             Round.IsSpectator = true;
@@ -337,6 +356,11 @@ namespace TDS_Client.Manager
             string scname = (string)args[0];
             bool isregistered = (bool)args[1];
             RegisterLogin.Start(scname, isregistered);
+        }
+
+        private void OnStopRoundStatsMethod(object[] args)
+        {
+            RoundInfo.StopDeathmatchInfo();
         }
 
         private void OnRegisterLoginSuccessfulMethod(object[] args)

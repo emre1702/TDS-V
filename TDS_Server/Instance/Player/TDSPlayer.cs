@@ -85,7 +85,16 @@ namespace TDS_Server.Instance.Player
         {
             get => AdminLevel.Names[LanguageEnum];
         }
-        public RoundStatsDto CurrentRoundStats { get; set; }
+        public RoundStatsDto CurrentRoundStats {
+            get => _currentRoundStats;
+            set
+            {
+                _currentRoundStats = value;
+                if (value == null)
+                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.ClearRoundStats);
+
+            }
+        }
         public int Money
         {
             get => (int)Entity.PlayerStats.Money;
@@ -110,6 +119,7 @@ namespace TDS_Server.Instance.Player
         private Teams fTeam { get; set; }
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
+        private RoundStatsDto _currentRoundStats;
 
 
         public TDSPlayer(Client client)

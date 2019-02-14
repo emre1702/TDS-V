@@ -1,5 +1,4 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
+﻿using RAGE.NUI;
 using System;
 using System.Drawing;
 using TDS_Client.Enum;
@@ -7,16 +6,46 @@ using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
-using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {
     static class RoundInfo
     {
         private static ulong startedTick;
+        private static uint _currentAssists;
+        private static uint _currentDamage;
+        private static uint _currentKills;
 
         private static DxTextRectangle timeDisplay;
         private static DxTextRectangle[] teamDisplays;
+
+        public static uint CurrentAssists
+        {
+            get => _currentAssists;
+            set
+            {
+                _currentAssists = value;
+                ShowDeathmatchInfo();
+            }
+        }
+        public static uint CurrentDamage
+        {
+            get => _currentDamage;
+            set
+            {
+                _currentDamage = value;
+                ShowDeathmatchInfo();
+            }
+        }
+        public static uint CurrentKills
+        {
+            get => _currentKills;
+            set
+            {
+                _currentKills = value;
+                ShowDeathmatchInfo();
+            }
+        }
 
         public static bool RefreshOnTick { get; set; }
 
@@ -75,6 +104,11 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
+        public static void StopDeathmatchInfo()
+        {
+            // stop damage, assists and kills display here
+        }
+
         private static void Remove()
         {
             RefreshOnTick = false;
@@ -124,6 +158,11 @@ namespace TDS_Client.Manager.Lobby
             --Team.CurrentLobbyTeams[teamindex].AmountPlayers.AmountAlive;
             RefreshTeamText(teamindex);
             MainBrowser.AddKillMessage(killinfostr);
+        }
+
+        private static void ShowDeathmatchInfo()
+        {
+            // show info of kills, damage, assists if not already showing
         }
 
 

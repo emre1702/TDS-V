@@ -24,7 +24,7 @@ namespace TDS_Server.Instance.Lobby
             if (!await base.AddPlayer(character, teamindex))
                 return false;
 
-            character.CurrentRoundStats = new RoundStatsDto();
+            character.CurrentRoundStats = new RoundStatsDto(character);
             SpectateOtherSameTeam(character);
 
             if (teamindex != 0)

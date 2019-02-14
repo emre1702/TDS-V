@@ -6,6 +6,10 @@ namespace TDS_Common.Default
 {
     public class DToClientEvent
     {
+        public const string SetAssistsForRoundStats = "SetAssistsForRoundStats_Server";
+        public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
+        public const string SetKillsForRoundStats = "SetKillsForRoundStats_Server";
+
         public const string AddVoteToMap = "AddVoteToMap_Server";
         public const string AmountInFightSync = "AmountInFightSync_Server";
 
@@ -47,6 +51,7 @@ namespace TDS_Common.Default
         public const string RoundEnd = "RoundEnd_Server";
 
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
+        public const string StopRoundStats = "StopRoundStats_Server";
         public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
 
