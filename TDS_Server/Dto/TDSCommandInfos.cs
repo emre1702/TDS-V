@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TDS_Server.Enum;
 
-namespace TDS_Server.Instance.Utility
+namespace TDS_Server.Instance.Dto
 {
     class TDSCommandInfos
     {

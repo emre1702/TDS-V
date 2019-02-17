@@ -90,9 +90,6 @@ namespace TDS_Server.Instance.Player
             set
             {
                 _currentRoundStats = value;
-                if (value == null)
-                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.ClearRoundStats);
-
             }
         }
         public int Money
