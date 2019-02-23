@@ -2,6 +2,7 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Linq;
+using TDS_Client.Instance.Draw;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
@@ -14,6 +15,8 @@ namespace TDS_Client.Manager.Damage
     static class Damagesys
     {
         private static int lastTotalHP = 0;
+
+        public static int CurrentWeaponDamage;
 
         // Body parts: https://pastebin.com/AGQWgCct
 
@@ -46,8 +49,9 @@ namespace TDS_Client.Manager.Damage
                 //////////
                 return;
             }
-                
-            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false, CurrentWeaponDamage);
+
+            FloatingDamageInfo.Create(hitted, CurrentWeaponDamage);
 
             // debug //
             if (target == hitted)

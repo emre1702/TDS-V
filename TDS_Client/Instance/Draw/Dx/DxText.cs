@@ -52,6 +52,12 @@ namespace TDS_Client.Instance.Draw.Dx
             ApplyTextAlignmentY();
         }
 
+        public void SetRelativeY(float y)
+        {
+            Y = GetAbsoluteY(y, relative);
+            ApplyTextAlignmentY();
+        }
+
         public void BlendAlpha(int endAlpha, ulong msToEnd)
         {
             this.endAlpha = endAlpha;

@@ -5,6 +5,7 @@ namespace TDS_Server.Instance
     using TDS_Server.Dto;
     using TDS_Server.Instance.Player;
     using TDS_Common.Default;
+    using System;
 
     partial class Damagesys
     {
@@ -93,7 +94,7 @@ namespace TDS_Server.Instance
         private readonly Dictionary<WeaponHash, DamageDto> damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
-        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer source = null)
+        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer source, int clientHasSentThisDamage)
         {
             if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
@@ -106,6 +107,11 @@ namespace TDS_Server.Instance
             }
 
             int damage = GetDamage(weapon, headshot);
+            if (damage != clientHasSentThisDamage)
+            {
+                Manager.Logs.ErrorLogsManager.Log("Source has sent " + clientHasSentThisDamage + " damage, but the damage had to be " + damage, Environment.StackTrace, source);
+            }
+
             target.Damage(ref damage);
 
             if (source != null)
@@ -130,7 +136,7 @@ namespace TDS_Server.Instance
             lasthitterdict[source] = currentDamage + damage;
         }
 
-        private int GetDamage(WeaponHash hash, bool headshot)
+        public int GetDamage(WeaponHash hash, bool headshot = false)
         {
             if (!damagesDict.ContainsKey(hash))
                 return 0;

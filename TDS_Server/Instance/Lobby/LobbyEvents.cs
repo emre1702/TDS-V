@@ -69,7 +69,7 @@ namespace TDS_Server.Instance.Lobby
 
         #region Damagesys
         [RemoteEvent(DToServerEvent.HitOtherPlayer)]
-        public void OnPlayerHitOtherPlayer(Client player, string hittedName, bool headshot)
+        public void OnPlayerHitOtherPlayer(Client player, string hittedName, bool headshot, int clientHasSentThisDamage)
         {
             TDSPlayer character = player.GetChar();
             Client hitted = NAPI.Player.GetPlayerFromName(hittedName);
@@ -78,7 +78,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.CurrentLobby is FightLobby fightlobby)
             {
                 WeaponHash currentweapon = player.CurrentWeapon;
-                fightlobby.DamagedPlayer(hitted.GetChar(), character, currentweapon, headshot);
+                fightlobby.DamagedPlayer(hitted.GetChar(), character, currentweapon, headshot, clientHasSentThisDamage);
             }
         }
         #endregion Damagesys

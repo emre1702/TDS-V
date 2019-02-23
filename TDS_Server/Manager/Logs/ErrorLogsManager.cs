@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Entity;
+using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Logs
@@ -19,6 +20,20 @@ namespace TDS_Server.Manager.Logs
                     Info = info,
                     StackTrace = stacktrace,
                     Source = source?.GetEntity()?.Id,
+                    Timestamp = DateTime.Now
+                }
+            );
+            Console.WriteLine(info + "\n" + stacktrace);
+        }
+
+        public static void Log(string info, string stacktrace, TDSPlayer source)
+        {
+            notsavederrorlogs.Add(
+                new LogsError
+                {
+                    Info = info,
+                    StackTrace = stacktrace,
+                    Source = source?.Entity?.Id,
                     Timestamp = DateTime.Now
                 }
             );

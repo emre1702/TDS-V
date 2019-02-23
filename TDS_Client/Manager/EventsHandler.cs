@@ -22,6 +22,7 @@ using System.Linq;
 using System;
 using Newtonsoft.Json.Linq;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Instance.Draw;
 
 namespace TDS_Client.Manager
 {
@@ -64,8 +65,12 @@ namespace TDS_Client.Manager
                 Bomb.CheckPlantDefuse();
             if (RoundInfo.RefreshOnTick)
                 RoundInfo.RefreshTime();
-            Damagesys.ShowBloodscreenIfNecessary();
-            if (!Round.InFight)
+            if (Round.InFight)
+            {
+                Damagesys.ShowBloodscreenIfNecessary();
+                FloatingDamageInfo.UpdateAllPositions();
+            }
+            else
             {
                 Pad.DisableControlAction(0, (int)Control.Attack, true);
                 Pad.DisableControlAction(0, (int)Control.Attack2, true);
@@ -132,6 +137,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
             Add(DToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
+            Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
@@ -310,6 +316,13 @@ namespace TDS_Client.Manager
         {
             string teamName = (string)args[0];
             DiscordManager.Update();
+        }
+
+        private void OnPlayerWeaponChangeMethod(object[] args)
+        {
+            //int weaponHash = (int)args[0];
+            int damage = (int)args[1];
+            Damagesys.CurrentWeaponDamage = damage;
         }
 
         private void OnAmountInFightSyncMethod(object[] args)

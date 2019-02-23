@@ -1,7 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Default;
 using TDS_Server.Instance.Player;
-using TDS_Server.Instance.Utility;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 
@@ -36,10 +35,9 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public virtual void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
+        public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-#warning todo Check if its needed
-            //NAPI.ClientEvent.TriggerClientEvent(character.Player, "onClientPlayerWeaponChange", (int)newweapon);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerWeaponChange, newWeapon, DmgSys.GetDamage(newWeapon));
         }
     }
 }
