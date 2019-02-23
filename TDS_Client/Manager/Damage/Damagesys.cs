@@ -1,11 +1,13 @@
 ﻿using RAGE;
 using RAGE.Elements;
+using RAGE.Game;
 using System.Linq;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using static RAGE.Events;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Damage
 {
@@ -34,23 +36,36 @@ namespace TDS_Client.Manager.Damage
         {
             cancel.Cancel = true;
 
-            Vector3 startpos = Player.LocalPlayer.GetBoneCoords(6286, 0, 0, 0);
-            Vector3 endpos = Vector3.Lerp(startpos, targetPos, 1.05f);
-            int rayHandle = RAGE.Game.Shapetest.StartShapeTestRay(startpos.X, startpos.Y, startpos.Z, endpos.X, endpos.Y, endpos.Z, 8, Player.LocalPlayer.Handle, 0);
-            int hit = 0;
-            int hitEntityHandle = 0;
-            RAGE.Game.Shapetest.GetShapeTestResult(rayHandle, ref hit, endpos, startpos, ref hitEntityHandle);
-            if (hit != 0)
+            Player hitted = GetHittedPlayer(targetPos);
+            if (hitted != null)
             {
-                Player hitted = Entities.Players.All.FirstOrDefault(p => p.Handle == hitEntityHandle);
-                if (hitted != null)
-                    EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+                EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+
+                // debug //
+                if (target == hitted)
+                    Chat.Output("Target and hitted are the same!");
+                else
+                    Chat.Output("Target and hitted are different!");
+                //////////
             }
         }
 
-        public static void Reset()
+        private static Player GetHittedPlayer(Vector3 targetPos)
         {
-            lastTotalHP = 0;
+            Vector3 startpos = Player.LocalPlayer.GetBoneCoords(6286, 0, 0, 0);
+            Vector3 endpos = Vector3.Lerp(startpos, targetPos, 1.05f);
+            int rayHandle = Shapetest.StartShapeTestRay(startpos.X, startpos.Y, startpos.Z, endpos.X, endpos.Y, endpos.Z, 8, Player.LocalPlayer.Handle, 0);
+            int hit = 0;
+            int hitEntityHandle = 0;
+            Shapetest.GetShapeTestResult(rayHandle, ref hit, endpos, startpos, ref hitEntityHandle);
+            if (hit != 0)
+                return Entities.Players.All.FirstOrDefault(p => p.Handle == hitEntityHandle);
+            return null;
+        }
+
+        public static void ResetLastHP()
+        {
+            lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
         }
        
     }

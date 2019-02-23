@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Manager.Damage;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -29,6 +30,7 @@ namespace TDS_Client.Manager.Lobby
             Countdown.Stop();
             if (removemapinfo)
                 MapInfo.RemoveMapInfo();
+            Damagesys.ResetLastHP();
         }
     }
 }
