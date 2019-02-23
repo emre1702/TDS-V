@@ -37,17 +37,23 @@ namespace TDS_Client.Manager.Damage
             cancel.Cancel = true;
 
             Player hitted = GetHittedPlayer(targetPos);
-            if (hitted != null)
-            {
-                EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
 
+            if (hitted == null)
+            {
                 // debug //
-                if (target == hitted)
-                    Chat.Output("Target and hitted are the same!");
-                else
-                    Chat.Output("Target and hitted are different!");
+                Chat.Output("Target is there, hitted is null!");
                 //////////
+                return;
             }
+                
+            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false);
+
+            // debug //
+            if (target == hitted)
+                Chat.Output("Target and hitted are the same!");
+            else
+                Chat.Output("Target and hitted are different!");
+            //////////
         }
 
         private static Player GetHittedPlayer(Vector3 targetPos)
