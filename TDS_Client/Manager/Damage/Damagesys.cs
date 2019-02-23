@@ -41,7 +41,8 @@ namespace TDS_Client.Manager.Damage
             if (hitted == null)
             {
                 // debug //
-                Chat.Output("Target is there, hitted is null!");
+                if (target != null)
+                    Chat.Output("Target is there, hitted is null!");
                 //////////
                 return;
             }
