@@ -53,7 +53,7 @@ namespace TDS_Server.Manager.Maps
                         MapPathByName[map.SyncedData.Name.ToLower()] = filename;
                     }
                     else
-                        ErrorLogsManager.Log("Map " + filename + " got no name!", Environment.StackTrace, null);
+                        ErrorLogsManager.Log("Map " + filename + " got no name!", Environment.StackTrace, (Client)null);
                 }
             }
             allMapsSyncJson = JsonConvert.SerializeObject(allMapsSync);
@@ -207,7 +207,7 @@ namespace TDS_Server.Manager.Maps
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log($"Error in Manager.Map.GetMapClass ({path})\n{ex.ToString()}", Environment.StackTrace, null);
+                ErrorLogsManager.Log($"Error in Manager.Map.GetMapClass ({path})\n{ex.ToString()}", Environment.StackTrace, (Client)null);
                 return false;
             }
         }
