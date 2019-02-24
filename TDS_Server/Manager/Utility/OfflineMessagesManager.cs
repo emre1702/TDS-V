@@ -14,7 +14,7 @@ namespace TDS_Server.Manager.Utility {
     static class OfflineMessagesManager {
 
         #region AddOfflineMessage
-        public static void AddOfflineMessage(uint playerid, uint sourceid, string message)
+        public static async void AddOfflineMessage(uint playerid, uint sourceid, string message)
         {
             using (var dbcontext = new TDSNewContext())
             {
@@ -24,8 +24,8 @@ namespace TDS_Server.Manager.Utility {
                     SourceId = sourceid,
                     Message = message
                 };
-                dbcontext.Offlinemessages.AddAsync(msg);
-                dbcontext.SaveChangesAsync();
+                await dbcontext.Offlinemessages.AddAsync(msg);
+                await dbcontext.SaveChangesAsync();
             }
         }
         #endregion

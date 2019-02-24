@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Lobby
     {
         public static SyncedTeamDataDto[] CurrentLobbyTeams;
         public static List<Player> SameTeamPlayers = new List<Player>();
-        public static string CurrentTeamName = "Login/Register";
+        public static string CurrentTeamName { get; set; } = "Login/Register";
 
         private static bool activated;
 

@@ -12,7 +12,7 @@ namespace TDS_Server.Manager.Player
 
         public static async void RegisterPlayer(Client player, string password, string email)
         {
-            using (TDSNewContext context = new TDSNewContext())
+            using (TDSNewContext dbContext = new TDSNewContext())
             {
                 Players dbplayer = new Players
                 {
@@ -34,8 +34,8 @@ namespace TDS_Server.Manager.Player
                 {
                     LoggedIn = false
                 };
-                context.Players.Add(dbplayer);
-                await context.SaveChangesAsync();
+                dbContext.Players.Add(dbplayer);
+                await dbContext.SaveChangesAsync();
 
                 RestLogsManager.Log(Enum.ELogType.Register, player, true);
 

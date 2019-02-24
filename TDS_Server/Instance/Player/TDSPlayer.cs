@@ -203,12 +203,21 @@ namespace TDS_Server.Instance.Player
             #endregion Armor
         }
 
+        public async void SaveData()
+        {
+            using (TDSNewContext dbContext = new TDSNewContext())
+            {
+                await SaveData(dbContext);
+            }
+        }
+
         public Task<int> SaveData(TDSNewContext dbcontext)
         {
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return System.Threading.Tasks.Task.FromResult(0);
 
-            dbcontext.Players.Attach(Entity).State = EntityState.Modified;
+            dbcontext.Players.Add(Entity);
+            dbcontext.Entry(Entity).State = EntityState.Modified;
 #warning Check if this also updates PlayerSettings etc.
             return dbcontext.SaveChangesAsync();
         }

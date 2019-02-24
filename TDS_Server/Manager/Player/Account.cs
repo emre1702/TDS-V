@@ -30,7 +30,7 @@
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
+        public static async void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
         {
             TDSPlayer player = client.GetChar();
             if (player.Entity == null)
@@ -43,11 +43,7 @@
             if (player.AdminLevel.Level > 0)
                 AdminsManager.SetOffline(player);
 
-            using (var dbcontext = new TDSNewContext())
-            {
-                dbcontext.Entry(player.Entity).State = EntityState.Modified;
-                dbcontext.SaveChangesAsync();
-            }
+            player.SaveData();
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
@@ -115,7 +111,8 @@
                             player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
                             return;
                         }
-                        dbcontext.Remove(ban); 
+                        dbcontext.Remove(ban);
+                        await dbcontext.SaveChangesAsync();
                     }
                 }
             }

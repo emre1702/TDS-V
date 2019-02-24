@@ -67,7 +67,7 @@ namespace TDS_Server.Instance.Lobby
 
         }
 
-        protected virtual void Remove()
+        protected async virtual void Remove()
         {
             LobbiesByIndex.Remove(LobbyEntity.Id);
             dimensionsUsed.Remove(Dimension);
@@ -80,6 +80,7 @@ namespace TDS_Server.Instance.Lobby
             using (TDSNewContext dbcontext = new TDSNewContext())
             {
                 dbcontext.Remove(LobbyEntity);
+                await dbcontext.SaveChangesAsync();
             }
         }
 

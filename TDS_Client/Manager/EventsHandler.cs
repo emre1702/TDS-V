@@ -335,7 +335,7 @@ namespace TDS_Client.Manager
 
         private void OnPlayerTeamChangeMethod(object[] args)
         {
-            string teamName = (string)args[0];
+            Team.CurrentTeamName = (string)args[0];
             DiscordManager.Update();
         }
 
