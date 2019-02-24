@@ -26,7 +26,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (removeSpectatorsTimer.ContainsKey(character))
                 removeSpectatorsTimer.Remove(character);
-            character.Team.SpectateablePlayers.Remove(character);
+            character.Team.SpectateablePlayers?.Remove(character);
 
             if (character.Spectators.Any())
             {

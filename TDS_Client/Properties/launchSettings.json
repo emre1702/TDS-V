@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "TDS_Client": {
+      "commandName": "Executable",
+      "executablePath": "C:\\RAGEMP\\ragemp_v.exe",
+      "workingDirectory": "C:\\RAGEMP\\client_resources\\127.0.0.1_22005\\cs_packages\\TDS_Client"
+    }
+  }
+}

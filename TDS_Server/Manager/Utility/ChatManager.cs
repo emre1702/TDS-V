@@ -5,14 +5,23 @@
     using TDS_Common.Default;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Logs;
+    using TDS_Server.Manager.Player;
 
     class ChatManager : Script
     {
         public ChatManager() { }
 
         [RemoteEvent(DToServerEvent.LobbyChatMessage)]
+        public static void SendLobbyMessage(Client client, string message, bool isDirty)
+        {
+            TDSPlayer player = client.GetChar();
+            SendLobbyMessage(player, message, isDirty);
+        }
+
         public static void SendLobbyMessage(TDSPlayer player, string message, bool isDirty)
         {
+            if (!player.LoggedIn)
+                return;
             //if (!character.MuteTime.HasValue)
             string changedmessage = player.Team.ChatColor + player.Client.Name + "!{220|220|220}: " + message;
             player.CurrentLobby.SendAllPlayerChatMessage(changedmessage);

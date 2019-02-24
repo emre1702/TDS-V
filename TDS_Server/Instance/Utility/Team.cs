@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Utility
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter;
 
-        public bool IsSpectator => Entity.Id == 0;
+        public bool IsSpectator => Entity.Index == 0;
 
         public Team(Teams entity)
         {

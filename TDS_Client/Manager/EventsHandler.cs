@@ -507,6 +507,7 @@ namespace TDS_Client.Manager
 
         private void OnCommandUsedMethod(object[] args)
         {
+            ChatManager.CloseChatInput();
             string msg = (string)args[0];
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
         }

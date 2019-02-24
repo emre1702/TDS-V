@@ -26,7 +26,8 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.TryRegister] = new CooldownEventDto(DToServerEvent.TryRegister, 1000),
         };
 
-        public static void Send(string eventName, params object[] args) {
+        public static void Send(string eventName, params object[] args)
+        {
             if (!cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
                 Events.CallRemote(eventName, args);

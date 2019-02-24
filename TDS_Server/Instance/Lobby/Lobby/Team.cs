@@ -40,7 +40,7 @@ namespace TDS_Server.Instance.Lobby
 
         protected Team GetTeamWithFewestPlayer()
         {
-            return Teams.MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+            return Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
         }
 
         private void ClearTeamPlayersLists()

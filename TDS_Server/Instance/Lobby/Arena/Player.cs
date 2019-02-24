@@ -59,8 +59,8 @@ namespace TDS_Server.Instance.Lobby
             {
                 PositionRotationDto spawndata = GetMapRandomSpawnData(character.Team);
                 NAPI.Player.SpawnPlayer(player, spawndata.Position, spawndata.Rotation);
-                if (!character.Team.SpectateablePlayers.Contains(character))
-                    character.Team.SpectateablePlayers.Add(character);
+                if (character.Team.SpectateablePlayers != null && !character.Team.SpectateablePlayers.Contains(character))
+                    character.Team.SpectateablePlayers?.Add(character);
             }
             else
                 NAPI.Player.SpawnPlayer(player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);

@@ -83,7 +83,7 @@ namespace TDS_Server.Instance.Lobby
         private TDSPlayer GetNextSpectatePlayerInSameTeam(TDSPlayer start)
         {
             List<TDSPlayer> teamlist = start.Team.SpectateablePlayers;
-            if (teamlist.Count == 0)
+            if (teamlist == null || teamlist.Count == 0)
                 return null;
             int startindex = teamlist.IndexOf(start) + 1;
             if (startindex >= teamlist.Count - 1)
@@ -94,7 +94,7 @@ namespace TDS_Server.Instance.Lobby
         private TDSPlayer GetPreviousSpectatePlayerInSameTeam(TDSPlayer start)
         {
             List<TDSPlayer> teamlist = start.Team.SpectateablePlayers;
-            if (teamlist.Count == 0)
+            if (teamlist == null || teamlist.Count == 0)
                 return null;
             int startindex = teamlist.IndexOf(start) - 1;
             if (startindex < 0)

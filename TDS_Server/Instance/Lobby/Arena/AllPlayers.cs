@@ -59,7 +59,7 @@ namespace TDS_Server.Instance.Lobby
                 if (!team.IsSpectator)
                 {
                     RemoveAsSpectator(character);
-                    team.SpectateablePlayers.Add(character);
+                    team.SpectateablePlayers?.Add(character);
                 }  
                 SetPlayerReadyForRound(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 

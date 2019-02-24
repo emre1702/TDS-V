@@ -40,8 +40,8 @@ namespace TDS_Server.Instance.Player
             {
                 if (value != _team)
                 {
-                    _team.RemovePlayer(this);
-                    value.AddPlayer(this);
+                    _team?.RemovePlayer(this);
+                    value?.AddPlayer(this);
                 }
                 _team = value;
             }
