@@ -48,8 +48,8 @@ namespace TDS_Server.Instance.Lobby
             }
 
             base.OnPlayerDeath(character, killer, weapon, false);
+            RoundCheckForEnoughAlive();
 
-            
         }
     }
 }

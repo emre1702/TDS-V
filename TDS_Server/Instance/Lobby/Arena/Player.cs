@@ -50,6 +50,7 @@ namespace TDS_Server.Instance.Lobby
             else
                 RemoveAsSpectator(character);
             base.RemovePlayer(character);
+            RoundCheckForEnoughAlive();
         }
 
         private void SetPlayerReadyForRound(TDSPlayer character, bool freeze = true)
@@ -91,8 +92,6 @@ namespace TDS_Server.Instance.Lobby
                 SpectateOtherSameTeam(character);
 
             }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
-
-            RoundCheckForEnoughAlive();
         }
 
         private void StartRoundForPlayer(TDSPlayer player)
