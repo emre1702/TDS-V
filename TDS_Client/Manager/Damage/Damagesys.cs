@@ -47,6 +47,15 @@ namespace TDS_Client.Manager.Damage
                 //////////
                 return;
             }
+
+            if (Team.SameTeamPlayers.Contains(hitted))
+            {
+                // debug //
+                Chat.Output("Hitted a team member");
+                //////////
+                return;
+            }
+
             EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false, CurrentWeaponDamage);
 
             FloatingDamageInfo.Create(hitted, CurrentWeaponDamage);
