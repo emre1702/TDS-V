@@ -148,7 +148,7 @@ namespace TDS_Client.Manager.Lobby
             teamDisplays[index-1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
-        public static void SetRoundTimeLeft(ulong lefttimems)
+        public static void SetRoundTimeLeft(uint lefttimems)
         {
             startedTick = TimerManager.ElapsedTicks - (Settings.RoundTime * 1000 - lefttimems);
         }

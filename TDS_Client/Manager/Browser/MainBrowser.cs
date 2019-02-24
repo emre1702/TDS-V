@@ -131,5 +131,15 @@ namespace TDS_Client.Manager.Browser
         {
             Browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
         }
+
+        public static void StartBombTick(uint msToDetonate, uint startAtMs)
+        {
+            Browser.ExecuteJs($"startBombTickSound({msToDetonate}, {startAtMs})");
+        }
+
+        public static void StopBombTick()
+        {
+            Browser.ExecuteJs("stopBombTickSound()");
+        }
     }
 }

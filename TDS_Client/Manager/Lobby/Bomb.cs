@@ -1,12 +1,12 @@
 ﻿using RAGE;
 using RAGE.Game;
 using RAGE.NUI;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -29,11 +29,13 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Detonate()
         {
+            Chat.Output("EXPLODE BOMB");
             Cam.ShakeGameplayCam(DShakeName.LARGE_EXPLOSION_SHAKE, 1.0f);
             new TDSTimer(() => Cam.StopGameplayCamShaking(true), 4000, 1);
+            MainBrowser.StopBombTick();
         }
 
-        public static void BombPlanted(Vector3 pos, bool candefuse)
+        public static void BombPlanted(Vector3 pos, bool candefuse, uint? startAtMs)
         {
             if (candefuse)
             {
@@ -41,7 +43,17 @@ namespace TDS_Client.Manager.Lobby
                 plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
-            RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs);
+            if (startAtMs.HasValue)
+            {
+                startAtMs += 100;  // 100 because trigger etc. propably took some time
+                RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs - startAtMs.Value);      
+                MainBrowser.StartBombTick(Settings.BombDetonateTimeMs, startAtMs.Value);
+            }  
+            else
+            {
+                RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs);
+                MainBrowser.StartBombTick(Settings.BombDetonateTimeMs, 0);
+            }       
         }
 
         public static void CheckPlantDefuse()
@@ -174,6 +186,8 @@ namespace TDS_Client.Manager.Lobby
             plantSpots = null;
             playerStatus = EPlantDefuseStatus.None;
             plantDefuseStartTick = 0;
+            if (plantedPos != null)
+                MainBrowser.StopBombTick();
             plantedPos = null;
         }
     }

@@ -1,7 +1,11 @@
-﻿let bloodscreen = $( "#bloodscreen" );
+﻿import { setInterval, clearTimeout } from "timers";
+
+let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = 9;
 let ordersDiv = $("#orders");
+let bloodscreentimeout;
+
 let hitsound = $("#audio_hit");
 let hitsounds = [
     hitsound, hitsound.clone(true),
@@ -11,6 +15,24 @@ let hitsounds = [
     hitsound.clone(true), hitsound.clone(true)];
 let hitsoundcounter = 0;
 let hitsoundsamount = hitsounds.length;
+
+let bombTickSound = $("#audio_bombTick");
+let bombTickSounds = [
+    bombTickSound, bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true),
+    bombTickSound.clone(true), bombTickSound.clone(true)];
+let bombTickCounter = 0;
+let bombTickAmount = bombTickSounds.length;
+let bombTickTimeout;
 
 function playSound( soundname ) {
     $( "#audio_" + soundname ).trigger("play").volume = 0.05;
@@ -22,7 +44,25 @@ function playHitsound() {
         hitsoundcounter = 0;
 }
 
-let bloodscreentimeout;
+function playBombTickSound() {
+    hitsounds[bombTickCounter++].trigger("play").volume = 0.05;
+    if (bombTickCounter == bombTickAmount)
+        bombTickCounter = 0;
+}
+
+function startBombTickSound(msToEnd, startAtMs) {
+    let atPercentage = startAtMs / msToEnd;
+    let currentSpeed = 3000 - 2950 * atPercentage;
+    bombTickTimeout = setTimeout(() => startBombTickSound(msToEnd, startAtMs + currentSpeed), currentSpeed);
+}
+
+function stopBombTickSound() {
+    if (bombTickTimeout != null) {
+        clearTimeout(bombTickTimeout);
+        bombTickTimeout = null;
+    }
+}
+
 function showBloodscreen() {
     if (bloodscreentimeout) {
         clearTimeout(bloodscreentimeout);

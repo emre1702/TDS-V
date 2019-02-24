@@ -308,7 +308,7 @@ namespace TDS_Client.Manager
 
         private void OnBombPlantedMethod(object[] args)
         {
-            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1]);
+            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (ulong?)args[2] : null);
         }
 
         private void OnBombDetonatedMethod(object[] args)

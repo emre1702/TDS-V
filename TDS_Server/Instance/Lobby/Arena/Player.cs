@@ -147,6 +147,8 @@ namespace TDS_Server.Instance.Lobby
                     break;
                 case ERoundStatus.Round:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer.RemainingMsToExecute);
+                    if (bombDetonateTimer != null)
+                        NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(bomb.Position), false, bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute);
                     break;
             }
         }
