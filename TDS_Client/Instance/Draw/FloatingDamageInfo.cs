@@ -49,7 +49,7 @@ namespace TDS_Client.Instance.Draw
             Graphics.GetScreenCoordFromWorldCoord(targetPosition.X, targetPosition.Y, targetPosition.Z + 1, ref screenX, ref screenY);
 
             float percentage = elapsedTicks / Constants.ShowFloatingDamageInfoMs;
-            screenY += percentage * 5;
+            screenY -= percentage * 0.05f;
 
             if (text == null)
                 text = new DxText(damage.ToString(), screenX, screenY, 0.4f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Bottom, dropShadow: true, outline: true);
