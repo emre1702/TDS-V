@@ -22,8 +22,6 @@ namespace TDS_Client.Manager.Damage
 
         public static void ShowBloodscreenIfNecessary()
         {
-            if (!Round.InFight)
-                return;
             if (!Settings.ShowBloodscreen)
                 return;
             int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
