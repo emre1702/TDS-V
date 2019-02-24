@@ -1,6 +1,7 @@
 ﻿using RAGE;
 using RAGE.Elements;
 using System.Collections.Generic;
+using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
@@ -63,6 +64,14 @@ namespace TDS_Client.Manager.Utility
         public static void Load()
         {
             Player.LocalPlayer.SetCanAttackFriendly(false, false);
+
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Flying), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Lung), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Shooting), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Stamina), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Stealth), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Strength), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Wheelie), 100, false);
         }
 
         public static void LoadSyncedSettings(SyncedSettingsDto loadedSyncedSettings)
