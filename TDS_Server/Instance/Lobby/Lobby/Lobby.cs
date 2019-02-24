@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TDS_Common.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -39,20 +40,11 @@ namespace TDS_Server.Instance.Lobby
             LobbiesByIndex[entity.Id] = this;
             dimensionsUsed.Add(Dimension);
 
-            Teams = new Teams[entity.Teams.Count];
-            TeamPlayers = new List<TDSPlayer>[entity.Teams.Count];
-            SyncedTeamDatas = new SyncedTeamDataDto[entity.Teams.Count];
-            foreach (Teams team in entity.Teams)
+            Teams = new Team[entity.Teams.Count];
+            foreach (Teams teamEntity in entity.Teams)
             {
-                Teams[team.Index] = team;
-                TeamPlayers[team.Index] = new List<TDSPlayer>();
-                SyncedTeamDatas[team.Index] = new SyncedTeamDataDto()
-                {
-                    Index = (int)team.Index,
-                    Name = team.Name,
-                    Color = System.Drawing.Color.FromArgb(team.ColorR, team.ColorG, team.ColorB),
-                    AmountPlayers = new SyncedTeamPlayerAmountDto()
-                };
+                Team team = new Team(teamEntity);
+                Teams[team.Entity.Index] = team;
             }
 
             syncedLobbySettings = new SyncedLobbySettingsDto()

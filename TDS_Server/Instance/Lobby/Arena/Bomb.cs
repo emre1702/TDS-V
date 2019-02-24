@@ -3,7 +3,6 @@ namespace TDS_Server.Instance.Lobby
     using System.Collections.Generic;
     using GTANetworkAPI;
     using TDS_Server.Dto;
-    using TDS_Server.Entity;
     using TDS_Server.Enum;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Utility;
@@ -11,6 +10,7 @@ namespace TDS_Server.Instance.Lobby
     using TDS_Common.Default;
     using TDS_Common.Enum;
     using Newtonsoft.Json;
+    using TDS_Server.Instance.Utility;
 
     partial class Arena
     {
@@ -28,8 +28,8 @@ namespace TDS_Server.Instance.Lobby
         // id: -263709501
 
         private static readonly Dictionary<Lobby, ColShape> lobbyBombTakeCol = new Dictionary<Lobby, ColShape>();
-        private Teams terroristTeam;
-        private Teams counterTerroristTeam;
+        private Team terroristTeam;
+        private Team counterTerroristTeam;
 
         private List<Object> bombPlantPlaces = new List<Object>();
         private List<Blip> bombPlantBlips = new List<Blip>();
@@ -60,12 +60,12 @@ namespace TDS_Server.Instance.Lobby
 
         private void GiveBombToRandomTerrorist()
         {
-            int amount = TeamPlayers[terroristTeam.Index].Count;
+            int amount = terroristTeam.Players.Count;
             if (amount == 0)
                 return;
 
             int rnd = Utils.Rnd.Next(amount);
-            TDSPlayer character = TeamPlayers[terroristTeam.Index][rnd];
+            TDSPlayer character = terroristTeam.Players[rnd];
             if (character.Client.CurrentWeapon == WeaponHash.Unarmed)
                 BombToHand(character);
             else
@@ -80,13 +80,13 @@ namespace TDS_Server.Instance.Lobby
 
         private void SendBombDefuseInfos()
         {
-            FuncIterateAllPlayers((character, team) =>
+            counterTerroristTeam.FuncIterate((character, team) =>
             {
                 foreach (string str in character.Language.DEFUSE_INFO)
                 {
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, str);
                 }
-            }, counterTerroristTeam.Index);
+            });
         }
 
         private void BombToHand(TDSPlayer character)
@@ -125,7 +125,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.Index == 0)
+                if (team.Entity.Index == 0)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == terroristTeam)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
@@ -139,12 +139,12 @@ namespace TDS_Server.Instance.Lobby
         private void DetonateBomb()
         {
             NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);
-            FuncIterateAllPlayers((character, team) =>
+            counterTerroristTeam.FuncIterate((character, team) =>
             {
                 DmgSys.UpdateLastHitter(character, planter, LobbyEntity.StartHealth + LobbyEntity.StartArmor);
                 character.Client.Kill();
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombDetonated);
-            }, counterTerroristTeam.Index);
+            });
             // TERROR WON //
             if (currentRoundStatus == ERoundStatus.Round)
                 SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombExploded);
@@ -195,11 +195,11 @@ namespace TDS_Server.Instance.Lobby
             if (playerpos.DistanceTo(bomb.Position) > SettingsManager.DistanceToSpotToDefuse)
                 return;
 
-            FuncIterateAllPlayers((targetcharacter, team) =>
+            terroristTeam.FuncIterate((targetcharacter, team) =>
             {
                 DmgSys.UpdateLastHitter(targetcharacter, character, LobbyEntity.StartArmor + LobbyEntity.StartHealth);
                 targetcharacter.Client.Kill();
-            }, terroristTeam.Index);
+            });
             character.Client.StopAnimation();
 
             // COUNTER-TERROR WON //

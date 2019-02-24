@@ -48,7 +48,7 @@ namespace TDS_Server.Instance.Lobby
             SetPlayerTeam(character, Teams[teamindex]);
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(SyncedTeamDatas));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
             RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
             return true;
@@ -64,7 +64,7 @@ namespace TDS_Server.Instance.Lobby
             
             Players.Remove(character);
             if (character.Team != null)
-                TeamPlayers[character.Team.Index].Remove(character);
+                character.Team.Players.Remove(character);
 
             character.CurrentLobby = null;
             character.PreviousLobby = this;
@@ -113,7 +113,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((player, team) =>
             {
-                if (team.Index == 0)
+                if (team.Entity.Index == 0)
                     return;
                 SavePlayerLobbyStats(player);
             });

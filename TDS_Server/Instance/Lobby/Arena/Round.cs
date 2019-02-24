@@ -11,6 +11,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Enum;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -36,7 +37,7 @@ namespace TDS_Server.Instance.Lobby
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
         public TDSPlayer CurrentRoundEndBecauseOfPlayer;
-        private Teams currentRoundEndWinnerTeam;
+        private Team currentRoundEndWinnerTeam;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
@@ -129,7 +130,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private Teams GetRoundWinnerTeam()
+        private Team GetRoundWinnerTeam()
         {
             switch (currentRoundEndReason)
             {
@@ -149,30 +150,30 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private Dictionary<ILanguage, string> GetRoundEndReasonText(Teams winnerTeam)
+        private Dictionary<ILanguage, string> GetRoundEndReasonText(Team winnerTeam)
         {
             switch (currentRoundEndReason)
             {
                 case ERoundEndReason.Death:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_DEATH_INFO, winnerTeam.Name) : lang.ROUND_END_DEATH_ALL_INFO;
+                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_DEATH_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_DEATH_ALL_INFO;
                     });
 
                 case ERoundEndReason.Time:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Name) : lang.ROUND_END_TIME_TIE_INFO;
+                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_TIME_TIE_INFO;
                     });
                 case ERoundEndReason.BombExploded:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Entity.Name ?? "-");
                     });
                 case ERoundEndReason.BombDefused:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Entity.Name ?? "-");
                     });
                 case ERoundEndReason.Command:
                     return LangUtils.GetLangDictionary(lang =>

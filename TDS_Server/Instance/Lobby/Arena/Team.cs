@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -22,7 +23,7 @@ namespace TDS_Server.Instance.Lobby
             return amount;
         }
 
-        private Teams GetTeamStillInRound(int minalive = 1)
+        private Team GetTeamStillInRound(int minalive = 1)
         {
             for (int i = 0; i < AlivePlayers.Length; ++i)
             {
@@ -32,17 +33,17 @@ namespace TDS_Server.Instance.Lobby
             return null;
         }
 
-        private Teams GetTeamWithHighestHP()
+        private Team GetTeamWithHighestHP()
         {
             int highesthealth = 0;
-            Teams teamwithhighesthealth = Teams[1];
+            Team teamwithhighesthealth = Teams[1];
 
-            foreach (Teams team in Teams)
+            foreach (Team team in Teams)
             {
-                if (team.Index == 0)
+                if (team.Entity.Index == 0)
                     continue;
                 int teamhealth = 0;
-                foreach (var player in AlivePlayers[team.Index-1])
+                foreach (var player in AlivePlayers[team.Entity.Index -1])
                 {
                     teamhealth += player.Client.Health + player.Client.Armor;
                 }

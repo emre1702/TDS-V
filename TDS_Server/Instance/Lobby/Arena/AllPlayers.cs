@@ -23,7 +23,7 @@ namespace TDS_Server.Instance.Lobby
             StringBuilder strbuilder = new StringBuilder();
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.Index == 0)
+                if (team.IsSpectator)
                     return;
                     
                 uint killreward = 0;
@@ -56,10 +56,10 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.Index != 0)
+                if (!team.IsSpectator)
                 {
                     RemoveAsSpectator(character);
-                    SpectateablePlayers[team.Index - 1].Add(character);
+                    team.SpectateablePlayers.Add(character);
                 }  
                 SetPlayerReadyForRound(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
@@ -75,7 +75,7 @@ namespace TDS_Server.Instance.Lobby
                 StartRoundForPlayer(player);
             });
 
-            SyncedTeamPlayerAmountDto[] amounts = SyncedTeamDatas.Skip(1).Select(t => t.AmountPlayers).ToArray();
+            SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = JsonConvert.SerializeObject(amounts);
             SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json); 
         }

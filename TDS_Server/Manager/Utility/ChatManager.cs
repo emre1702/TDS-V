@@ -14,7 +14,7 @@
         public static void SendLobbyMessage(TDSPlayer player, string message, bool isDirty)
         {
             //if (!character.MuteTime.HasValue)
-            string changedmessage = player.TeamChatColor + player.Client.Name + "!{220|220|220}: " + message;
+            string changedmessage = player.Team.ChatColor + player.Client.Name + "!{220|220|220}: " + message;
             player.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
             if (player.CurrentLobby.IsOfficial && !isDirty)
                 ChatLogsManager.Log(message, player);
@@ -26,7 +26,7 @@
 
         public static void SendGlobalMessage(TDSPlayer character, string message)
         {
-            string changedmessage = "[GLOBAL] " + character.TeamChatColor + character.Client.Name + "!{220|220|220}: " + message;
+            string changedmessage = "[GLOBAL] " + character.Team.ChatColor + character.Client.Name + "!{220|220|220}: " + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
             ChatLogsManager.Log(message, character, isglobal: true);   
         }
@@ -47,8 +47,8 @@
 
         public static void SendTeamChat(TDSPlayer character, string message)
         {
-            string changedmessage = "[TEAM] " + character.TeamChatColor + character.Client.Name + ": !{220|220|220}" + message;
-            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team.Index);
+            string changedmessage = "[TEAM] " + character.Team.ChatColor + character.Client.Name + ": !{220|220|220}" + message;
+            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team);
             ChatLogsManager.Log(message, character, isteamchat: true);
         }
 

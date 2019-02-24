@@ -76,7 +76,7 @@ namespace TDS_Server.Manager.Utility
                     Kills = player.CurrentLobbyStats.Kills + player.CurrentRoundStats.Kills,
                     Assists = player.CurrentLobbyStats.Assists + player.CurrentRoundStats.Assists,
                     Deaths = player.CurrentLobbyStats.Deaths,
-                    TeamIndex = player.Team.Index
+                    TeamIndex = player.Team.Entity.Index
                 };
                 list.Add(entry);
             }

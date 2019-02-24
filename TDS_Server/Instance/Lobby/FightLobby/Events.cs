@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.Lobby
     {
         public override void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
         {
-            if (character.Team.Index == 0)
+            if (character.Team.IsSpectator)
             {
                 SpectateOtherAllTeams(character);
                 return;
@@ -22,7 +22,7 @@ namespace TDS_Server.Instance.Lobby
             // was alive //
             if (character.Lifes > 0)
             {
-                DeathInfoSync(character.Client, character.Team.Index, killer, weapon);
+                DeathInfoSync(character, killer, weapon);
 
                 if (--character.Lifes == 0 && spawnPlayer)
                 {

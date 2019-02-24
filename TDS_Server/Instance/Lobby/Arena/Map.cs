@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
+using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
@@ -15,7 +16,6 @@ namespace TDS_Server.Instance.Lobby
         private MapDto currentMap;
         private List<MapDto> maps;
         private List<Blip> mapBlips = new List<Blip>();
-        private int[] spawnCounter;
         private string mapsJson;
 
         private MapDto GetNextMap()
@@ -39,9 +39,9 @@ namespace TDS_Server.Instance.Lobby
             {
                 Blip blip = NAPI.Blip.CreateBlip(pos: entry[0].Position, dimension: Dimension);
                 blip.Sprite = 491;
-                Teams team = Teams[++i];
-                blip.Color = team.BlipColor;
-                blip.Name = "Spawn " + team.Name;
+                Team team = Teams[++i];
+                blip.Color = team.Entity.BlipColor;
+                blip.Name = "Spawn " + team.Entity.Name;
                 mapBlips.Add(blip);
             }
         }
@@ -57,16 +57,15 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private PositionRotationDto GetMapRandomSpawnData(Teams team)
+        private PositionRotationDto GetMapRandomSpawnData(Team team)
         {
-            int teamindex = (int)team.Index;
-            int index = ++spawnCounter[teamindex - 1];
-            if (index >= currentMap.TeamSpawns[teamindex - 1].Count)
+            int index = team.SpawnCounter++;
+            if (index >= currentMap.TeamSpawns[team.Entity.Index - 1].Count)
             {
                 index = 0;
-                spawnCounter[teamindex - 1] = 0;
+                team.SpawnCounter = 0;
             }
-            return currentMap.TeamSpawns[teamindex - 1][index];
+            return currentMap.TeamSpawns[team.Entity.Index - 1][index];
         }
 
         private void DeleteMapBlips()

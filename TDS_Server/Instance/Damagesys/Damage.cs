@@ -102,7 +102,7 @@ namespace TDS_Server.Instance
             {
                 if (target.CurrentLobby != source.CurrentLobby)
                     return;
-                if (target.Team.Id == source.Team.Id)
+                if (target.Team == source.Team)
                     return;
             }
 

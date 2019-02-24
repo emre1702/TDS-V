@@ -12,6 +12,7 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Player
 {
@@ -32,21 +33,12 @@ namespace TDS_Server.Instance.Player
         public Lobby.Lobby CurrentLobby { get; set; }
         public Lobby.Lobby PreviousLobby { get; set; }
         public PlayerLobbyStats CurrentLobbyStats { get; set; }
-        public Teams Team
-        {
-            get => fTeam;
-            set
-            {
-                fTeam = value;
-                TeamChatColor = "!{" + value.ColorR + "|" + value.ColorG + "|" + value.ColorB + "}"; 
-            }
-        }
+        public Team Team { get; set; }
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner
         {
             get => CurrentLobby.IsPlayerLobbyOwner(this);
         }
-        public string TeamChatColor { get; set; }
         public uint? MuteTime
         {
             get => Entity.PlayerStats.MuteTime;
@@ -85,13 +77,7 @@ namespace TDS_Server.Instance.Player
         {
             get => AdminLevel.Names[LanguageEnum];
         }
-        public RoundStatsDto CurrentRoundStats {
-            get => _currentRoundStats;
-            set
-            {
-                _currentRoundStats = value;
-            }
-        }
+        public RoundStatsDto CurrentRoundStats { get; set; }
         public int Money
         {
             get => (int)Entity.PlayerStats.Money;
@@ -113,11 +99,8 @@ namespace TDS_Server.Instance.Player
         public int KillingSpree { get; set; }
 
         private Players fEntity;
-        private Teams fTeam { get; set; }
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
-        private RoundStatsDto _currentRoundStats;
-
 
         public TDSPlayer(Client client)
         {
