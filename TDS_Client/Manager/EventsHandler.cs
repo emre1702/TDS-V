@@ -120,6 +120,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
             Add(DToClientEvent.BombDetonated, OnBombDetonatedMethod);
+            Add(DToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
             Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
@@ -136,6 +137,8 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerMoneyChange, OnPlayerMoneyChangeMethod);
             Add(DToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
             Add(DToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
+            Add(DToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
+            Add(DToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
@@ -148,6 +151,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
+            Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
         }
 
         private void OnLoadOwnMapRatingsMethod(object[] args)
@@ -312,6 +316,23 @@ namespace TDS_Client.Manager
             Bomb.Detonate();
         }
 
+        private void OnClearTeamPlayersMethod(object[] args)
+        {
+            Team.SameTeamPlayers.Clear();
+        }
+
+        private void OnPlayerJoinedTeamMethod(object[] args)
+        {
+            Player player = (Player)args[0];
+            Team.SameTeamPlayers.Add(player);
+        }
+
+        private void OnPlayerLeftTeamMethod(object[] args)
+        {
+            Player player = (Player)args[0];
+            Team.SameTeamPlayers.Remove(player);
+        }
+
         private void OnPlayerTeamChangeMethod(object[] args)
         {
             string teamName = (string)args[0];
@@ -403,6 +424,19 @@ namespace TDS_Client.Manager
                 Scoreboard.AddLobbyData(playerlist, lobbylist);
             }
             
+        }
+
+        private void OnSyncTeamPlayersMethod(object[] args)
+        {
+            Team.SameTeamPlayers.Clear();
+            IEnumerable<int> listOfPlayerHandles = JsonConvert.DeserializeObject<IEnumerable<int>>(args[0].ToString());
+            foreach (var handle in listOfPlayerHandles)
+            {
+                Player player = Entities.Players.GetAtHandle(handle);
+                if (player != null)
+                    Team.SameTeamPlayers.Add(player);
+            }
+
         }
         #endregion From Server events
 

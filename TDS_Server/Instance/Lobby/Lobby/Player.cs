@@ -63,8 +63,6 @@ namespace TDS_Server.Instance.Lobby
             }
             
             Players.Remove(character);
-            if (character.Team != null)
-                character.Team.Players.Remove(character);
 
             character.CurrentLobby = null;
             character.PreviousLobby = this;

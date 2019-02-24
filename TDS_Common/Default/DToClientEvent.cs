@@ -16,6 +16,7 @@ namespace TDS_Common.Default
         public const string BombDetonated = "BombDetonated_Server";
         public const string BombPlanted = "BombPlanted_Server";
 
+        public const string ClearTeamPlayers = "ClearTeamPlayers_Server";
         public const string CountdownStart = "CountdownStart_Server";
 
         public const string Death = "Death_Server";
@@ -41,6 +42,8 @@ namespace TDS_Common.Default
         public const string PlayerMoneyChange = "PlayerMoneyChange_Server";
         public const string PlayerPlantedBomb = "PlayerPlantedBomb_Server";
         public const string PlayerSpectateMode = "PlayerSpectateMode_Server";
+        public const string PlayerJoinedTeam = "PlayerJoinedTeam_Server";
+        public const string PlayerLeftTeam = "PlayerLeftTeam_Server";
         public const string PlayerTeamChange = "PlayerTeamChange_Server";
         public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
 
@@ -54,6 +57,7 @@ namespace TDS_Common.Default
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
+        public const string SyncTeamPlayers = "SyncTeamPlayers_Server";
 
         //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
     }

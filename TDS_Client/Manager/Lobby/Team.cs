@@ -1,17 +1,19 @@
-﻿using RAGE;
-using RAGE.Game;
+﻿using RAGE.Game;
 using System;
+using System.Collections.Generic;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Lobby
 {
     static class Team
     {
         public static SyncedTeamDataDto[] CurrentLobbyTeams;
+        public static List<Player> SameTeamPlayers = new List<Player>();
         public static string CurrentTeamName = "Login/Register";
 
         private static bool activated;

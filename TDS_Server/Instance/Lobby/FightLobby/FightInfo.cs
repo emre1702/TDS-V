@@ -37,7 +37,7 @@ namespace TDS_Server.Instance.Lobby
 
             FuncIterateAllPlayers((targetcharacter, targetteam) =>
             {
-                targetcharacter.Client.TriggerEvent(DToClientEvent.Death, player, player.Team.Entity.Index, killstr[targetcharacter.Language]);
+                targetcharacter.Client.TriggerEvent(DToClientEvent.Death, player.Client, player.Team.Entity.Index, killstr[targetcharacter.Language]);
             });
         }
     }

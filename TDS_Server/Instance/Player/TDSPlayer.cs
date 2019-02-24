@@ -33,7 +33,19 @@ namespace TDS_Server.Instance.Player
         public Lobby.Lobby CurrentLobby { get; set; }
         public Lobby.Lobby PreviousLobby { get; set; }
         public PlayerLobbyStats CurrentLobbyStats { get; set; }
-        public Team Team { get; set; }
+        public Team Team
+        {
+            get => _team;
+            set
+            {
+                if (value != _team)
+                {
+                    _team.RemovePlayer(this);
+                    value.AddPlayer(this);
+                }
+                _team = value;
+            }
+        }
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner
         {
@@ -101,6 +113,7 @@ namespace TDS_Server.Instance.Player
         private Players fEntity;
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
+        private Team _team;
 
         public TDSPlayer(Client client)
         {

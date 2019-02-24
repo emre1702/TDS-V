@@ -27,11 +27,8 @@ namespace TDS_Server.Instance.Lobby
 
         protected void SetPlayerTeam(TDSPlayer character, Team team)
         {
-            if (character.Team != null && character.Team.Entity.Lobby == LobbyEntity.Id)
-                character.Team.Players.Remove(character);
-            character.Team.Players.Add(character);
             character.Client.SetSkin((PedHash)team.Entity.SkinHash);
-            if (character.Team == null || character.Team != team)
+            if (character.Team != team)
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Entity.Name);
             character.Team = team;
         }
@@ -43,14 +40,14 @@ namespace TDS_Server.Instance.Lobby
 
         protected Team GetTeamWithFewestPlayer()
         {
-            return Teams.MinBy(t => t.Players.Count).FirstOrDefault();
+            return Teams.MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
         }
 
         private void ClearTeamPlayersLists()
         {
             foreach (var entry in Teams)
             {
-                entry.Players.Clear();
+                entry.ClearPlayers();
             }
         }
 
@@ -62,7 +59,7 @@ namespace TDS_Server.Instance.Lobby
                 if (character.Team == null)
                     continue;
                 if (character.Team.Entity.Index == 0)
-                    character.Team.Players.Add(character);  // because he is already in that team
+                    character.Team.AddPlayer(character);  // because he is already in that team
                 else
                     SetPlayerTeam(character, GetTeamWithFewestPlayer());
             }

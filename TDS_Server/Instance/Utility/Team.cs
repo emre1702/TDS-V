@@ -1,5 +1,9 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
@@ -25,6 +29,8 @@ namespace TDS_Server.Instance.Utility
         public List<TDSPlayer> AlivePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter;
+
+        public bool IsSpectator => Entity.Id == 0;
 
         public Team(Teams entity)
         {
@@ -53,7 +59,36 @@ namespace TDS_Server.Instance.Utility
             }
         }
 
-        public bool IsSpectator => Entity.Id == 0;
+        public void AddPlayer(TDSPlayer player)
+        {
+            
+            foreach (var target in Players)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client);
+            }
+            Players.Add(player);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, JsonConvert.SerializeObject(Players.Select(p => p.Client.Value)));
+        }
+
+        public void RemovePlayer(TDSPlayer player)
+        {
+            Players.Remove(player);
+            foreach (var target in Players)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client);
+            }
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
+        }
+
+        public void ClearPlayers()
+        {
+            FuncIterate((player, team) =>
+            {
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
+            });
+            Players.Clear();
+
+        }
 
         public static bool operator ==(Team a, Team b)
         {
