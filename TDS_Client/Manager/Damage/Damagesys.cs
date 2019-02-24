@@ -56,6 +56,10 @@ namespace TDS_Client.Manager.Damage
                 Chat.Output("Target and hitted are the same!");
             else
                 Chat.Output("Target and hitted are different!");
+            
+            int damagedBone = 0;
+            hitted.GetLastDamageBone(ref damagedBone);
+            Chat.Output("Hitted Bone: " + damagedBone);
             //////////
         }
 
