@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
@@ -14,14 +15,12 @@ namespace TDS_Server.Instance.Lobby
     {
         public readonly List<TDSPlayer> Players = new List<TDSPlayer>();
 
-        protected void SendAllPlayerEvent(string eventname, Team team, params object[] args)
+        public void SendAllPlayerEvent(string eventname, Team team, params object[] args)
         {
             if (team == null)
-            {
-                FuncIterateAllPlayers((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Client, eventname, args); });
-            }
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Select(p => p.Client).ToArray(), eventname, args);
             else
-                team.FuncIterate((character, teamID) => { NAPI.ClientEvent.TriggerClientEvent(character.Client, eventname, args); });
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
         }
 
         protected void FuncIterateAllPlayers(Action<TDSPlayer, Team> func)
