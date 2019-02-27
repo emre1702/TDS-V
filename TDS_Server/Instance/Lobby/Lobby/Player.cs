@@ -51,33 +51,35 @@ namespace TDS_Server.Instance.Lobby
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
             RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
+
+            PlayerJoinedLobby?.Invoke(this, character);
             return true;
         }
 
-        public virtual async void RemovePlayer(TDSPlayer character)
+        public virtual async void RemovePlayer(TDSPlayer player)
         {
-            if (character.Lifes == 0)
+            if (player.Lifes == 0)
             {
-                SavePlayerLobbyStats(character);
+                SavePlayerLobbyStats(player);
                 await playerLobbyStatsContext.SaveChangesAsync();
             }
             
-            Players.Remove(character);
+            Players.Remove(player);
 
-            character.CurrentLobby = null;
-            character.PreviousLobby = this;
-            character.CurrentLobbyStats = null;
-            character.Lifes = 0;
-            if (character.Client.Exists)
+            player.CurrentLobby = null;
+            player.PreviousLobby = this;
+            player.CurrentLobbyStats = null;
+            player.Lifes = 0;
+            if (player.Client.Exists)
             {
-                character.Client.Freeze(true);
-                character.Client.StopSpectating();
-                character.Client.Transparency = 255;
+                player.Client.Freeze(true);
+                player.Client.StopSpectating();
+                player.Client.Transparency = 255;
             }
-            if (DeathSpawnTimer.ContainsKey(character))
+            if (DeathSpawnTimer.ContainsKey(player))
             {
-                DeathSpawnTimer[character].Kill();
-                DeathSpawnTimer.Remove(character);
+                DeathSpawnTimer[player].Kill();
+                DeathSpawnTimer.Remove(player);
             }
 
             if (IsEmpty())
@@ -86,9 +88,11 @@ namespace TDS_Server.Instance.Lobby
                     Remove();
             }
 
-            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, character.Client);
+            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Client);
             if (Id != 0)
-                RestLogsManager.Log(ELogType.Lobby_Leave, character.Client, false, LobbyEntity.IsOfficial);
+                RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
+
+            PlayerLeftLobby?.Invoke(this, player);
         }
 
         private static void SavePlayerLobbyStats(TDSPlayer character)

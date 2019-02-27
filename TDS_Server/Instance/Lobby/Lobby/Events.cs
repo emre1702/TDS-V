@@ -7,6 +7,12 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
+        public delegate void PlayerJoinedLobbyDelegate(Lobby lobby, TDSPlayer player);
+        public static event PlayerJoinedLobbyDelegate PlayerJoinedLobby;
+
+        public delegate void PlayerLeftLobbyDelegate(Lobby lobby, TDSPlayer player);
+        public static event PlayerLeftLobbyDelegate PlayerLeftLobby;
+
         protected readonly Dictionary<TDSPlayer, TDSTimer> DeathSpawnTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
