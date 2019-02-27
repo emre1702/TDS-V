@@ -1,4 +1,4 @@
-﻿import { setInterval, clearTimeout } from "timers";
+﻿import { clearTimeout } from "timers";
 
 let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
@@ -51,8 +51,11 @@ function playBombTickSound() {
 }
 
 function startBombTickSound(msToEnd, startAtMs) {
+    playBombTickSound();
     let atPercentage = startAtMs / msToEnd;
     let currentSpeed = 3000 - 2950 * atPercentage;
+    if (bombTickTimeout != null)
+        clearTimeout(bombTickTimeout);
     bombTickTimeout = setTimeout(() => startBombTickSound(msToEnd, startAtMs + currentSpeed), currentSpeed);
 }
 
