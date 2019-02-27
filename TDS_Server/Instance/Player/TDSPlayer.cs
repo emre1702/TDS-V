@@ -216,7 +216,7 @@ namespace TDS_Server.Instance.Player
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return System.Threading.Tasks.Task.FromResult(0);
 
-            dbcontext.Players.Add(Entity);
+            dbcontext.Players.Attach(Entity);
             dbcontext.Entry(Entity).State = EntityState.Modified;
 #warning Check if this also updates PlayerSettings etc.
             return dbcontext.SaveChangesAsync();
