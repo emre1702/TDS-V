@@ -60,5 +60,15 @@ namespace TDS_Common.Default
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";
 
         //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
+
+
+
+        // Workarounds //
+        public const string AttachEntityToEntityWorkaround = "AttachEntityToEntityWorkaround_Server";
+        public const string DetachEntityWorkaround = "DetachEntityWorkaround_Server";
+        public const string FreezePlayerWorkaround = "FreezePlayerWorkaround_Server";
+        public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";
+        public const string SetPlayerTeamWorkaround = "SetPlayerTeamWorkaround_Server";
+        public const string UnspectatePlayerWorkaround = "UnspectatePlayerWorkaround_Server";
     }
 }

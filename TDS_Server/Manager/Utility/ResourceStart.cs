@@ -34,6 +34,7 @@
 
                     SettingsManager.Load(dbcontext);
                     AdminsManager.Init(dbcontext);
+                    Workaround.Init();
                     await CommandsManager.LoadCommands(dbcontext);
                     Damagesys.LoadDefaults(dbcontext);
 
