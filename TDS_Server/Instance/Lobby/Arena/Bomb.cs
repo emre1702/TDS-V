@@ -139,6 +139,7 @@ namespace TDS_Server.Instance.Lobby
         private void DetonateBomb()
         {
             NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);
+#warning use 0x172AA1B624FA1013 as Hash instead (in planned "workaround" class)
             counterTerroristTeam.FuncIterate((character, team) =>
             {
                 DmgSys.UpdateLastHitter(character, planter, LobbyEntity.StartHealth + LobbyEntity.StartArmor);
