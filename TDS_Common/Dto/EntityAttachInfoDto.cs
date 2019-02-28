@@ -6,7 +6,7 @@ namespace TDS_Common.Dto
     {
         public int EntityValue;
         public int TargetValue;
-        public string Bone;
+        public int Bone;
         public float PositionOffsetX;
         public float PositionOffsetY;
         public float PositionOffsetZ;

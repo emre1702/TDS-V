@@ -34,6 +34,7 @@ namespace TDS_Client.Manager
             AddRAGEEvents();
             AddToClientEvents();
             AddFromBrowserEvents();
+            Workaround.AddEvents();
         }
 
         #region Load on start

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 
@@ -37,13 +38,13 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.UnspectatePlayerWorkaround);
         }
 
-        public static void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, string bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby lobby = null)
+        public static void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby lobby = null)
         {
             var infoDto = new EntityAttachInfoDto
             {
                 EntityValue = entity.Value,
                 TargetValue = entityTarget.Value,
-                Bone = bone,
+                Bone = (int)bone,
                 PositionOffsetX = positionOffset.X,
                 PositionOffsetY = positionOffset.Y,
                 PositionOffsetZ = positionOffset.Z,

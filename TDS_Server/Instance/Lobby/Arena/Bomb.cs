@@ -53,9 +53,8 @@ namespace TDS_Server.Instance.Lobby
             }
             bomb = NAPI.Object.CreateObject(1764669601, map.BombPlantPlaces[0], new Vector3(), 255, Dimension);
 
-            int terroristID = Utils.Rnd.Next(2) + 1;
-            terroristTeam = Teams[terroristID];
-            counterTerroristTeam = Teams[terroristID == 1 ? 2 : 1];
+            terroristTeam = Teams[2];
+            counterTerroristTeam = Teams[1];
         }
 
         private void GiveBombToRandomTerrorist()
@@ -93,9 +92,10 @@ namespace TDS_Server.Instance.Lobby
         {
             Workaround.DetachEntity(bomb);
             Workaround.SetEntityCollisionless(bomb, true, this);
-            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_R_Finger01", new Vector3(0.1, 0, 0), new Vector3(), this);
+            Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
+#warning Disable punching
             bombAtPlayer = character;
         }
 
@@ -103,7 +103,7 @@ namespace TDS_Server.Instance.Lobby
         {
             Workaround.DetachEntity(bomb);
             Workaround.SetEntityCollisionless(bomb, true, this);
-            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_Pelvis", new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), this);
+            Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
             bombAtPlayer = character;
