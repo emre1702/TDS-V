@@ -260,17 +260,17 @@ namespace TDS_Client.Manager
 
         private void OnSetAssistsForRoundStatsMethod(object[] args)
         {
-            RoundInfo.CurrentAssists = (uint)args[0];
+            RoundInfo.CurrentAssists = (int)args[0];
         }
 
         private void OnSetDamageForRoundStatsMethod(object[] args)
         {
-            RoundInfo.CurrentDamage = (uint)args[0];
+            RoundInfo.CurrentDamage = (int)args[0];
         }
 
         private void OnSetKillsForRoundStatsMethod(object[] args)
         {
-            RoundInfo.CurrentKills = (uint)args[0];
+            RoundInfo.CurrentKills = (int)args[0];
         }
 
         private void OnPlayerSpectateModeMethod(object[] args)

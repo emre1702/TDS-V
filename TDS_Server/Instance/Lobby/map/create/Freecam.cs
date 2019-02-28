@@ -16,7 +16,7 @@
 
 			NAPI.ClientEvent.TriggerClientEvent ( player, "startFreecam", obj.Handle );
 
-			NAPI.Player.FreezePlayer ( player, true );
+            Workaround.FreezePlayer(character.Client, true);
 			NAPI.Entity.SetEntityPosition ( player, new Vector3 ( 0.0, 0.0, 200.0 ) );
 			NAPI.Entity.SetEntityTransparency ( player, 0 );
 		}

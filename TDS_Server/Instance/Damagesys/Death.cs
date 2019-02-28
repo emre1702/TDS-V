@@ -18,7 +18,7 @@ namespace TDS_Server.Instance
         {
             if (sDeadTimer.ContainsKey(player))
                 return;
-            player.Client.Freeze(true);
+            Workaround.FreezePlayer(player.Client, true);
 
             player.KillingSpree = 0;
 

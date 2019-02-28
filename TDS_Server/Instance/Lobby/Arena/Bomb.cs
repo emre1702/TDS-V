@@ -93,7 +93,7 @@ namespace TDS_Server.Instance.Lobby
         {
             bomb.Detach();
             bomb.Collisionless = true;
-            bomb.AttachTo(character.Client, "SKEL_R_Finger01", new Vector3(0.1, 0, 0), new Vector3());
+            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_R_Finger01", new Vector3(0.1, 0, 0), new Vector3());
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
             bombAtPlayer = character;
@@ -103,7 +103,7 @@ namespace TDS_Server.Instance.Lobby
         {
             bomb.Detach();
             bomb.Collisionless = true;
-            bomb.AttachTo(character.Client, "SKEL_Pelvis", new Vector3(0, 0, 0.24), new Vector3(270, 0, 0));
+            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_Pelvis", new Vector3(0, 0, 0.24), new Vector3(270, 0, 0));
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
             bombAtPlayer = character;
@@ -138,8 +138,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void DetonateBomb()
         {
-            NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);
-#warning use 0x172AA1B624FA1013 as Hash instead (in planned "workaround" class)
+            // NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
+
             counterTerroristTeam.FuncIterate((character, team) =>
             {
                 DmgSys.UpdateLastHitter(character, planter, LobbyEntity.StartHealth + LobbyEntity.StartArmor);

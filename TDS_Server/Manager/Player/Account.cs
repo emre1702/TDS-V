@@ -1,10 +1,8 @@
 ﻿namespace TDS_Server.Manager.Player
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using TDS_Server.Entity;
@@ -13,7 +11,6 @@
     using TDS_Common.Default;
     using TDS_Common.Enum;
     using TDS_Server.Instance.Player;
-    using System.Threading.Tasks;
 
     class Account : Script
     {
@@ -30,7 +27,7 @@
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public static async void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
+        public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
         {
             TDSPlayer player = client.GetChar();
             if (player.Entity == null)
@@ -89,7 +86,7 @@
         public static async void OnPlayerConnected(Client player)
         {
             player.Position = new Vector3(0, 0, 1000).Around(10);
-            player.Freeze(true);
+            Workaround.FreezePlayer(player, true);
             #warning TODO Make the name settable
             player.Name = player.SocialClubName;
 

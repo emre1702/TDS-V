@@ -10,6 +10,7 @@ using TDS_Common.Instance.Utility;
 using TDS_Common.Dto;
 using System.Linq;
 using TDS_Server.Instance.Utility;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -68,7 +69,7 @@ namespace TDS_Server.Instance.Lobby
 
             RemoveAsSpectator(character);
 
-            player.Freeze(freeze);
+            Workaround.FreezePlayer(player, freeze);
             GivePlayerWeapons(player);
 
             if (removeSpectatorsTimer.ContainsKey(character))
@@ -100,7 +101,7 @@ namespace TDS_Server.Instance.Lobby
             if (!player.Team.IsSpectator)
             {
                 SetPlayerAlive(player);
-                player.Client.Freeze(false);
+                Workaround.FreezePlayer(player.Client, false);
             }
             player.LastHitter = null;
         }

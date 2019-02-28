@@ -2,7 +2,6 @@
 {
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
-    using TDS_Server.Default;
     using TDS_Server.Entity;
     using TDS_Server.Instance.Language;
     using TDS_Server.Instance.Player;
@@ -41,7 +40,7 @@
                     return;
                 }
 
-                player.Team = 1;        // To be able to use custom damagesystem
+                Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
                 entity.PlayerStats.LoggedIn = true;
 
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, JsonConvert.SerializeObject(SettingsManager.SyncedSettings));
@@ -66,7 +65,7 @@
 
                 //Gang.CheckPlayerGang(character);
 
-                RestLogsManager.Log(ELogType.Login, player, true);    
+                RestLogsManager.Log(ELogType.Login, player, true);
             }
         }
     }

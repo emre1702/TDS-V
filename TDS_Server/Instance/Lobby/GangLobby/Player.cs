@@ -5,7 +5,7 @@
 			if ( !base.AddPlayer ( character, spectator ) )
 				return false;
 
-            character.Player.Freeze ( false );
+            Workaround.FreezePlayer(player.Client, false);
 
             if ( character.Gang != null ) {
                 SetPlayerTeam ( character, character.Gang );

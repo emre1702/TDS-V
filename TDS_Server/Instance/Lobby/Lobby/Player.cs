@@ -10,6 +10,7 @@ using TDS_Common.Default;
 using System.Linq;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Dto;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -43,7 +44,7 @@ namespace TDS_Server.Instance.Lobby
 
             character.Client.Dimension = Dimension;
             character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
-            character.Client.Freeze(true);
+            Workaround.FreezePlayer(character.Client, true);
 
             SetPlayerTeam(character, Teams[teamindex]);
 
@@ -72,8 +73,8 @@ namespace TDS_Server.Instance.Lobby
             player.Lifes = 0;
             if (player.Client.Exists)
             {
-                player.Client.Freeze(true);
-                player.Client.StopSpectating();
+                Workaround.FreezePlayer(player.Client, true);
+                Workaround.UnspectatePlayer(player.Client);
                 player.Client.Transparency = 255;
             }
             if (DeathSpawnTimer.ContainsKey(player))

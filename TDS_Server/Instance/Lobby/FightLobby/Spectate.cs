@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -21,7 +22,7 @@ namespace TDS_Server.Instance.Lobby
 
         protected void RemoveAsSpectator(TDSPlayer character)
         {
-            character.Client.StopSpectating();
+            Workaround.UnspectatePlayer(character.Client);
             if (character.Spectates == null)
                 return;
             TDSPlayer spectating = character.Spectates;
@@ -48,7 +49,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer == null)
             {
-                character.Client.StopSpectating();
+                Workaround.UnspectatePlayer(character.Client);
             }
             else
             {
@@ -71,7 +72,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer == null)
             {
-                character.Client.StopSpectating();
+                Workaround.UnspectatePlayer(character.Client);
             }
             else
             {
