@@ -91,9 +91,9 @@ namespace TDS_Server.Instance.Lobby
 
         private void BombToHand(TDSPlayer character)
         {
-            bomb.Detach();
-            bomb.Collisionless = true;
-            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_R_Finger01", new Vector3(0.1, 0, 0), new Vector3());
+            Workaround.DetachEntity(bomb);
+            Workaround.SetEntityCollisionless(bomb, true, this);
+            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_R_Finger01", new Vector3(0.1, 0, 0), new Vector3(), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
             bombAtPlayer = character;
@@ -101,9 +101,9 @@ namespace TDS_Server.Instance.Lobby
 
         private void BombToBack(TDSPlayer character)
         {
-            bomb.Detach();
-            bomb.Collisionless = true;
-            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_Pelvis", new Vector3(0, 0, 0.24), new Vector3(270, 0, 0));
+            Workaround.DetachEntity(bomb);
+            Workaround.SetEntityCollisionless(bomb, true, this);
+            Workaround.AttachEntityToEntity(bomb, character.Client, "SKEL_Pelvis", new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
             bombAtPlayer = character;
@@ -163,7 +163,7 @@ namespace TDS_Server.Instance.Lobby
                 if (playerpos.DistanceTo(plantpos) > SettingsManager.DistanceToSpotToPlant)
                     continue;
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
-                bomb.Detach();
+                Workaround.DetachEntity(bomb);
                 bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
                 bomb.Rotation = new Vector3(270, 0, 0);
                 bombPlantPlaces[i].Delete();
@@ -261,7 +261,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void DropBomb()
         {
-            bomb.Detach();
+            Workaround.DetachEntity(bomb); 
             bomb.FreezePosition = true;
             bomb.Position = bombAtPlayer.Client.Position;
             bombAtPlayer = null;
