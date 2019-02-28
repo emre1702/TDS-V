@@ -9,7 +9,7 @@ namespace TDS_Server.Instance.Lobby
         public static bool operator ==(Lobby lobby1, Lobby lobby2)
         {
             if (lobby1 is null)
-                return false;
+                return lobby2 is null;
             if (lobby2 is null)
                 return false;
             return lobby1.Id == lobby2.Id;
@@ -18,7 +18,7 @@ namespace TDS_Server.Instance.Lobby
         public static bool operator !=(Lobby lobby1, Lobby lobby2)
         {
             if (lobby1 is null)
-                return true;
+                return !(lobby2 is null);
             if (lobby2 is null)
                 return true;
             return lobby1.Id != lobby2.Id;
