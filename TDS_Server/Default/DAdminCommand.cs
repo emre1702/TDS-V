@@ -10,6 +10,6 @@
         public const string LobbyBan = "lobbyban";
         public const string LobbyKick = "lobbykick";
         public const string Mute = "mute";
-        public const string NextMap = "next";
+        public const string NextMap = "nextmap";
     }
 }
