@@ -9,7 +9,7 @@ namespace TDS_Client.Manager.Utility
     {
         public static void Update()
         {
-            RAGE.Discord.Update("TDS-V", $"{Settings.LobbyName} - {Team.CurrentTeamName}");
+            RAGE.Discord.Update($"TDS-V - {Settings.LobbyName}", $"{Team.CurrentTeamName}");
         }
     }
 }
