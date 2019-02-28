@@ -657,11 +657,12 @@ namespace TDS_Server.Entity
             {
                 entity.ToTable("players");
 
+                entity.HasIndex(e => e.AdminLvl)
+                    .HasName("FK_players_admin_levels");
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AdminLvl)
-                    .HasColumnType("tinyint(1)")
-                    .HasDefaultValueSql("'0'");
+                entity.Property(e => e.AdminLvl).HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Donation)
                     .HasColumnType("tinyint(3)")
@@ -689,6 +690,11 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnName("SCName")
                     .HasColumnType("varchar(255)");
+
+                entity.HasOne(d => d.AdminLvlNavigation)
+                    .WithMany(p => p.Players)
+                    .HasForeignKey(d => d.AdminLvl)
+                    .HasConstraintName("FK_players_admin_levels");
             });
 
             modelBuilder.Entity<Settings>(entity =>
