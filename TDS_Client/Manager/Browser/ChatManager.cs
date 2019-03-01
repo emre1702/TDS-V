@@ -21,6 +21,15 @@ namespace TDS_Client.Manager.Browser
             BindManager.Add(Control.MpTextChatTeam, OpenTeamChatInput);
         }
 
+        public static void OnUpdate()
+        {
+            if (IsOpen)
+            {
+                Pad.DisableControlAction(1, 199, true);
+                Pad.DisableControlAction(1, 200, true);
+            }
+        }
+
         public static void Loaded()
         {
             //Settings.LoadSettings();

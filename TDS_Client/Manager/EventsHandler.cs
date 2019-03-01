@@ -76,6 +76,7 @@ namespace TDS_Client.Manager
                 Pad.DisableControlAction(0, (int)Control.Attack, true);
                 Pad.DisableControlAction(0, (int)Control.Attack2, true);
             }
+            ChatManager.OnUpdate();
         }
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
