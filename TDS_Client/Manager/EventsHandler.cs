@@ -168,6 +168,7 @@ namespace TDS_Client.Manager
             DeathmatchInfo.HittedOpponent();
         }
 
+        // Join always means we also left another lobby (except on login)
         private void OnJoinLobbyMethod(object[] args)
         {
             SyncedLobbySettingsDto settings = JsonConvert.DeserializeObject<SyncedLobbySettingsDto>((string)args[0]);
@@ -176,6 +177,7 @@ namespace TDS_Client.Manager
             Team.CurrentLobbyTeams = JsonConvert.DeserializeObject<SyncedTeamDataDto[]>((string)args[2]);
             Lobby.Lobby.Joined(settings);
             DiscordManager.Update();
+            MainBrowser.HideRoundEndReason();
         }
 
         private void OnJoinSameLobbyMethod(object[] args)
