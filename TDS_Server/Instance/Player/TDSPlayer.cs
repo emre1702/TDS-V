@@ -203,6 +203,14 @@ namespace TDS_Server.Instance.Player
             #endregion Armor
         }
 
+        public void SetTeam(Team team, bool withOtherThings)
+        {
+            if (withOtherThings)
+                this.Team = team;
+            else
+                this._team = team;
+        }
+
         public async void SaveData()
         {
             using (TDSNewContext dbContext = new TDSNewContext())

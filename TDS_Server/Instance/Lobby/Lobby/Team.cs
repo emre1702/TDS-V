@@ -48,7 +48,10 @@ namespace TDS_Server.Instance.Lobby
             foreach (var entry in Teams)
             {
                 entry.ClearPlayers();
+                entry.AlivePlayers?.Clear();
+                entry.SpectateablePlayers?.Clear();
             }
+
         }
 
         protected void MixTeams()
@@ -58,7 +61,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (character.Team == null)
                     continue;
-                if (character.Team.Entity.Index == 0)
+                if (character.Team.IsSpectator)
                     character.Team.AddPlayer(character);  // because he is already in that team
                 else
                     SetPlayerTeam(character, GetTeamWithFewestPlayer());

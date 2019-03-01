@@ -24,7 +24,7 @@ namespace TDS_Server.Instance.Utility
             }
         }
         public string ChatColor;
-        public List<TDSPlayer> Players { get; set; } = new List<TDSPlayer>();
+        public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
         public List<TDSPlayer> SpectateablePlayers { get; set; }
         public List<TDSPlayer> AlivePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
@@ -61,7 +61,6 @@ namespace TDS_Server.Instance.Utility
 
         public void AddPlayer(TDSPlayer player)
         {
-            
             foreach (var target in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client);
@@ -86,8 +85,11 @@ namespace TDS_Server.Instance.Utility
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
             });
+            foreach (var player in Players)
+            {
+                player.SetTeam(null, false);
+            }
             Players.Clear();
-
         }
 
         public static bool operator ==(Team a, Team b)
