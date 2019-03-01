@@ -18,6 +18,7 @@ namespace TDS_Client.Manager.Lobby
     {
         private static bool dataChanged;
         private static Vector3 plantedPos;
+        private static bool bombPlanted;
         private static EPlantDefuseStatus playerStatus;
         private static bool gotBomb;
         private static List<Vector3> plantSpots;
@@ -44,6 +45,7 @@ namespace TDS_Client.Manager.Lobby
                 plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
+            bombPlanted = true;
             if (startAtMs.HasValue)
             {
                 startAtMs += 100;  // 100 because trigger etc. propably took some time
@@ -189,8 +191,9 @@ namespace TDS_Client.Manager.Lobby
             plantSpots = null;
             playerStatus = EPlantDefuseStatus.None;
             plantDefuseStartTick = 0;
-            if (plantedPos != null)
+            if (bombPlanted)
                 MainBrowser.StopBombTick();
+            bombPlanted = false;
             plantedPos = null;
         }
     }
