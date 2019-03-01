@@ -310,30 +310,26 @@ namespace TDS_Server.Instance.Lobby
             if (currentMap == null || currentMap.SyncedData.Type != EMapType.Bomb)
                 return;
 
-            NAPI.Task.Run(() =>
+            foreach (Object place in bombPlantPlaces)
             {
-                foreach (Object place in bombPlantPlaces)
-                {
-                    place.Delete();
-                }
-                foreach (Blip blip in bombPlantBlips)
-                {
-                    blip.Delete();
-                }
-                if (bomb != null)
-                {
-                    bomb.Delete();
-                    bomb = null;
-                }
-                if (plantBlip != null)
-                {
-                    plantBlip.Delete();
-                    plantBlip = null;
-                }
-                bombPlantPlaces = new List<Object>();
-                bombPlantBlips = new List<Blip>();
-            });
-            
+                place.Delete();
+            }
+            foreach (Blip blip in bombPlantBlips)
+            {
+                blip.Delete();
+            }
+            if (bomb != null)
+            {
+                bomb.Delete();
+                bomb = null;
+            }
+            if (plantBlip != null)
+            {
+                plantBlip.Delete();
+                plantBlip = null;
+            }
+            bombPlantPlaces = new List<Object>();
+            bombPlantBlips = new List<Blip>();            
         }
     }
 
