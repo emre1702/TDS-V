@@ -49,10 +49,10 @@ namespace TDS_Server.Instance.Language
         public virtual string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "There can be only 6 maps in voting!";
         public virtual string NOT_POSSIBLE_IN_THIS_LOBBY => "Not possible in this lobby!";
 
-        public virtual string ORDER_ATTACK => "{0}Attack! Go go go!";
-        public virtual string ORDER_GO_TO_BOMB => "{0}Go to the bomb!";
-        public virtual string ORDER_SPREAD_OUT => "{0}Spread out!";
-        public virtual string ORDER_STAY_BACK => "{0}Stay back!";
+        public virtual string ORDER_ATTACK => "Attack! Go go go!";
+        public virtual string ORDER_GO_TO_BOMB => "Go to the bomb!";
+        public virtual string ORDER_SPREAD_OUT => "Spread out!";
+        public virtual string ORDER_STAY_BACK => "Stay back!";
 
         public virtual string PERMABAN_INFO => "{0} was baned permanently by {1}. Reason: {2}";
         public virtual string PERMABAN_YOU_INFO => "You were baned permanently by {0}. Reason: {1}";

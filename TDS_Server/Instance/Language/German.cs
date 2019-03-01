@@ -50,10 +50,10 @@ namespace TDS_Server.Instance.Language
         public override string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "Es dürfen nur 6 Maps im Voting sein!";
         public override string NOT_POSSIBLE_IN_THIS_LOBBY => "In dieser Lobby nicht möglich!";
 
-        public override string ORDER_ATTACK => "{0}Angriff! Los los los!";
-        public override string ORDER_GO_TO_BOMB => "{0}Geht zur Bombe!";
-        public override string ORDER_SPREAD_OUT => "{0}Teilt euch auf!";
-        public override string ORDER_STAY_BACK => "{0}Bleibt zurück!";
+        public override string ORDER_ATTACK => "Angriff! Los los los!";
+        public override string ORDER_GO_TO_BOMB => "Geht zur Bombe!";
+        public override string ORDER_SPREAD_OUT => "Teilt euch auf!";
+        public override string ORDER_STAY_BACK => "Bleibt zurück!";
 
         public override string PERMABAN_INFO => "{0} wurde permanent von {1} gebannt. Grund: {2}";
         public override string PERMABAN_YOU_INFO => "Du wurdest permanent von {0} gebannt. Grund: {1}";
