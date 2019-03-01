@@ -1,6 +1,4 @@
-﻿import { clearTimeout } from "timers";
-
-let bloodscreen = $( "#bloodscreen" );
+﻿let bloodscreen = $( "#bloodscreen" );
 let killmessagesBox = $( "#kill_messages_box" );
 let language = 9;
 let ordersDiv = $("#orders");
