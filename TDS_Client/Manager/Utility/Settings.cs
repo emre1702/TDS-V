@@ -63,7 +63,7 @@ namespace TDS_Client.Manager.Utility
         public static uint RoundTime => syncedLobbySettings.RoundTime.Value;
         public static int RoundEndTime => syncedSettings.RoundEndTime;
         public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime.Value;
-        public static bool InLobbyWithMaps => syncedLobbySettings.InLobbyWithMaps;
+        public static bool InLobbyWithMaps => syncedLobbySettings == null ? syncedLobbySettings.InLobbyWithMaps : false;
 
         public static void Load()
         {

@@ -25,12 +25,12 @@ namespace TDS_Server.Instance.Lobby
             [ETeamOrder.SpreadOut] = lang => lang.ORDER_SPREAD_OUT,
         };
 
-        protected void SetPlayerTeam(TDSPlayer character, Team team)
+        protected void SetPlayerTeam(TDSPlayer character, Team team, bool withOtherThings = true)
         {
             character.Client.SetSkin((PedHash)team.Entity.SkinHash);
             if (character.Team != team)
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerTeamChange, team.Entity.Name);
-            character.Team = team;
+            character.SetTeam(team, withOtherThings);
         }
 
         /*private int GetAmountTeamsWithPlayers()
@@ -61,10 +61,11 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (character.Team == null)
                     continue;
-                if (character.Team.IsSpectator)
-                    character.Team.AddPlayer(character);  // because he is already in that team
-                else
-                    SetPlayerTeam(character, GetTeamWithFewestPlayer());
+                if (!character.Team.IsSpectator)
+                {
+                    SetPlayerTeam(character, GetTeamWithFewestPlayer(), false);
+                }
+                character.Team.AddPlayer(character);
             }
         }
 

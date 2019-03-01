@@ -85,10 +85,6 @@ namespace TDS_Server.Instance.Utility
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
             });
-            foreach (var player in Players)
-            {
-                player.SetTeam(null, false);
-            }
             Players.Clear();
         }
 
