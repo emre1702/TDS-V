@@ -25,9 +25,9 @@ namespace TDS_Server.Instance.Lobby
 
         protected void FuncIterateAllPlayers(Action<TDSPlayer, Team> func)
         {
-            foreach (var team in Teams)
+            foreach (var player in Players)
             {
-                team.FuncIterate(func);
+                func(player, player.Team);
             }
         }
 

@@ -101,6 +101,7 @@ namespace TDS_Client.Manager.Lobby
                 {
                     display.Remove();
                 }
+                teamDisplays = null;
             }
         }
 
@@ -126,7 +127,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            ulong timems = Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick);
+            double timems = Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick);
             timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
