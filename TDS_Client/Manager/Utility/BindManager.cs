@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Utility
             Events.Tick += OnTick;
 
             Add(ConsoleKey.End, CursorManager.ManuallyToggleCursor);
-            Add(ConsoleKey.F5, MapManager.ToggleMenu);
+            Add(ConsoleKey.F3, MapManager.ToggleMenu);
         }
 
         public static void Add(ConsoleKey key, Action<ConsoleKey> method, EKeyPressState pressState = EKeyPressState.Down)
