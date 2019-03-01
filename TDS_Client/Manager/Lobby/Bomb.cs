@@ -141,7 +141,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Planting;
-            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
+            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f, 
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             EventsSender.Send(DToServerEvent.StartPlanting);
         }
@@ -152,7 +152,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Defusing;
-            progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.08f, 0.02f, Color.White, Color.Black, Color.ForestGreen, 
+            progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             EventsSender.Send(DToServerEvent.StartDefusing);
         }
