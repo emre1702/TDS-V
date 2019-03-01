@@ -43,7 +43,7 @@ function playHitsound() {
 }
 
 function playBombTickSound() {
-    hitsounds[bombTickCounter++].trigger("play").volume = 0.05;
+    bombTickSounds[bombTickCounter++].trigger("play").volume = 0.05;
     if (bombTickCounter == bombTickAmount)
         bombTickCounter = 0;
 }
