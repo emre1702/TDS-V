@@ -101,7 +101,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void CheckPlantDefuseStart()
         {
-            if (!Pad.IsControlPressed(0, (int)Control.Attack))
+            if (!Pad.IsDisabledControlPressed(0, (int)Control.Attack))
                 return;
             if (gotBomb)
                 CheckPlantStart();
