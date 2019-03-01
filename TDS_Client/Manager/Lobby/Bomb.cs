@@ -26,6 +26,7 @@ namespace TDS_Client.Manager.Lobby
         private static DxProgressRectangle progressRect;
 
         public static bool CheckPlantDefuseOnTick { get; private set; }
+        public static bool BombOnHand { get; set; }
 
         public static void Detonate()
         {
@@ -79,6 +80,7 @@ namespace TDS_Client.Manager.Lobby
             CheckPlantDefuseOnTick = false;
             progressRect.Remove();
             progressRect = null;
+            BombOnHand = false;
         }
 
         private static void UpdatePlantDefuseProgress()
@@ -179,6 +181,7 @@ namespace TDS_Client.Manager.Lobby
             if (!dataChanged)
                 return;
             dataChanged = false;
+            BombOnHand = false;
             CheckPlantDefuseOnTick = false;
             progressRect?.Remove();
             progressRect = null;

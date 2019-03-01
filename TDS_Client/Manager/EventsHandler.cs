@@ -64,6 +64,8 @@ namespace TDS_Client.Manager
             Dx.RenderAll();
             if (Bomb.CheckPlantDefuseOnTick)
                 Bomb.CheckPlantDefuse();
+            if (Bomb.BombOnHand)
+                ClientUtils.DisableAttack();
             if (RoundInfo.RefreshOnTick)
                 RoundInfo.RefreshTime();
             if (Round.InFight)
@@ -72,10 +74,7 @@ namespace TDS_Client.Manager
                 FloatingDamageInfo.UpdateAllPositions();
             }
             else
-            {
-                Pad.DisableControlAction(0, (int)Control.Attack, true);
-                Pad.DisableControlAction(0, (int)Control.Attack2, true);
-            }
+                ClientUtils.DisableAttack();
             ChatManager.OnUpdate();
         }
 
@@ -121,6 +120,8 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.AddVoteToMap, OnAddVoteToMapServerMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
+            Add(DToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
+            Add(DToClientEvent.BombOnHand, OnBombOnHandMethod);
             Add(DToClientEvent.BombDetonated, OnBombDetonatedMethod);
             Add(DToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
@@ -311,6 +312,16 @@ namespace TDS_Client.Manager
         private void OnBombPlantedMethod(object[] args)
         {
             Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (uint?)args[2] : null);
+        }
+
+        private void OnBombNotOnHandMethod(object[] args)
+        {
+            Bomb.BombOnHand = false;
+        }
+
+        private void OnBombOnHandMethod(object[] args)
+        {
+            Bomb.BombOnHand = true;
         }
 
         private void OnBombDetonatedMethod(object[] args)

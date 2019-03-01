@@ -14,6 +14,8 @@ namespace TDS_Common.Default
         public const string AmountInFightSync = "AmountInFightSync_Server";
 
         public const string BombDetonated = "BombDetonated_Server";
+        public const string BombNotOnHand = "BombNotOnHand_Server";
+        public const string BombOnHand = "BombOnHand_Server";
         public const string BombPlanted = "BombPlanted_Server";
 
         public const string ClearTeamPlayers = "ClearTeamPlayers_Server";

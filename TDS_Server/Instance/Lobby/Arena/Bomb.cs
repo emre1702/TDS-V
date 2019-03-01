@@ -95,7 +95,7 @@ namespace TDS_Server.Instance.Lobby
             Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
-#warning Disable punching
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombOnHand);
             bombAtPlayer = character;
         }
 
@@ -106,6 +106,7 @@ namespace TDS_Server.Instance.Lobby
             Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), this);
             if (bombAtPlayer != character)
                 SendBombPlantInfos(character);
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombNotOnHand);
             bombAtPlayer = character;
         }
 
