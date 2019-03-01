@@ -128,9 +128,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            double timems = Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick);
-            if (timems <= 0 || timems > 100000)
-                Chat.Output("RefreshTime ms: " + timems);
+            double timems = Math.Max(0, Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick));
             timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
