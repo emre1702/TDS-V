@@ -122,8 +122,9 @@ function addKillMessage( msg ) {
 
 function loadOrderNames( ordernamesjson ) {
     ordersDiv.empty();
-    let ordernames = JSON.parse( ordernamesjson );
-    for ( let i = 0; i < ordernames.length && i < 9; ++i ) {
-        ordersDiv.append( $( "<div>"+(i + 1) + ". " + ordernames[i]+"</div>" ) );
-    }
+    let ordernames = JSON.parse(ordernamesjson);
+    let i = 0;
+    Object.keys(ordernames).forEach(function (key) {
+        ordersDiv.append($("<div>" + (++i) + ". " + ordernames[key] + "</div>"));
+    });
 }

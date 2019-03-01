@@ -1,14 +1,17 @@
 ﻿using RAGE;
 using RAGE.Elements;
+using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
 using TDS_Client.Manager.Draw;
+using TDS_Client.Manager.Lobby;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -33,6 +36,7 @@ namespace TDS_Client.Manager.Utility
                 languageEnum = value;
                 Language = languagesDict[languageEnum];
                 Scoreboard.LoadLanguage();
+                Team.LoadOrderNames();
                 EventsSender.Send(DToServerEvent.LanguageChange, (byte)LanguageEnum);
             }
         }
@@ -65,13 +69,13 @@ namespace TDS_Client.Manager.Utility
         {
             Player.LocalPlayer.SetCanAttackFriendly(false, false);
 
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Flying), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Lung), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Shooting), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Stamina), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Stealth), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Strength), 100, false);
-            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(DPedStat.Wheelie), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Flying), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Lung), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Shooting), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Stamina), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Stealth), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Strength), 100, false);
+            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Wheelie), 100, false);
         }
 
         public static void LoadSyncedSettings(SyncedSettingsDto loadedSyncedSettings)

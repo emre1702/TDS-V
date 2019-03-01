@@ -1,4 +1,5 @@
-﻿using RAGE.Game;
+﻿using Newtonsoft.Json;
+using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Manager.Browser;
@@ -28,7 +29,13 @@ namespace TDS_Client.Manager.Lobby
                 ++i;
             }
         }
-        
+
+        public static void LoadOrderNames()
+        {
+            MainBrowser.LoadOrderNamesInBrowser(JsonConvert.SerializeObject(Settings.Language.ORDER));
+        }
+
+
         public static void ToggleOrderMode(ConsoleKey _)
         {
             activated = !activated;
