@@ -211,6 +211,11 @@ function removeNameForChat(name) {
         chatdata.playernames.splice( index, 1 );
 }
 
+function isNullOrWhitespace(input) {
+    if (typeof input === 'undefined' || input == null) return true;
+    return input.replace(/\s/g, '').length < 1;
+}
+
 $( document ).ready( function () {
 
     addAutocomplete( chatdata.maininput, chatdata.playernames, () => { chatdata.autocompleteon = true; return false; }, () => {
@@ -220,7 +225,7 @@ $( document ).ready( function () {
         if ( event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon ) {   // send message and close input
             event.preventDefault();
             let msg = chatdata.maininput.val();
-            if ( msg ) {
+            if (!isNullOrWhitespace(msg)) {
                 msg = msg.replace( /\\/g, "\\\\" ).replace( /\"/g, "\\\"" );
                 if ( msg[0] === "/" ) {
                     msg = msg.substr( 1 );
@@ -230,7 +235,8 @@ $( document ).ready( function () {
                 } else {
                     mp.trigger("ChatUsed_Browser", msg, chatdata.chosenchatbody == 1);
                 }
-            }
+            } else 
+                mp.trigger("CloseChat_Browser");
 
             //enableChatInput( false );
         }

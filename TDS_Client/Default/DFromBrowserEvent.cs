@@ -8,6 +8,7 @@
         public const string ChatLoaded = "ChatLoaded_Browser";
         public const string ChatUsed = "ChatUsed_Browser";
         public const string ChooseLobbyToJoin = "ChooseLobbyToJoin_Browser";
+        public const string CloseChat = "CloseChat_Browser";
         public const string CloseMapVotingMenu = "CloseMapVotingMenu_Browser";
         public const string CommandUsed = "CommandUsed_Browser";
 

@@ -459,6 +459,7 @@ namespace TDS_Client.Manager
 
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
+            Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
         }
 
         private void OnAddRatingToMapMethod(object[] args)
@@ -521,6 +522,12 @@ namespace TDS_Client.Manager
             bool isDirty = (bool)args[1];
             EventsSender.Send(DToServerEvent.LobbyChatMessage, msg, isDirty);
         }
+
+        private void OnCloseChatMethod(object[] args)
+        {
+            ChatManager.CloseChatInput();
+        }
+
 
         private void OnLanguageChangeMethod(object[] args)
         {
