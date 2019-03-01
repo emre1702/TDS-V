@@ -14,8 +14,9 @@ namespace TDS_Client.Instance.Draw.Dx
         private bool filling;
         private float progress;
 
-        private DxTextRectangle backTextRect;
+        private DxRectangle backRect;
         private DxRectangle frontRect;
+        private DxText text;
 
         /// <summary>
         /// The progress between 0 and 1
@@ -34,8 +35,13 @@ namespace TDS_Client.Instance.Draw.Dx
             this.height = height;
             this.filling = filling;
 
-            backTextRect = new DxTextRectangle(text, x, y, width, height, textColor, backColor, textScale, textFont, textOffsetAbsoluteX, alignmentX, alignmentY, relativePos);
+            backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos);
             frontRect = new DxRectangle(x+1, y+1, 0, height-2, progressColor, alignmentX, alignmentY, relativePos);
+
+            float textX = getTextX(x, width, alignmentX);
+            float textY = getTextY(y, height, alignmentY);
+
+            this.text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true);
         }
 
         public override void Draw()
@@ -49,10 +55,32 @@ namespace TDS_Client.Instance.Draw.Dx
         public override void Remove()
         {
             base.Remove();
-            backTextRect.Remove();
+            backRect.Remove();
             frontRect.Remove();
-            backTextRect = null;
+            text.Remove();
+            backRect = null;
             frontRect = null;
+            text = null;
+        }
+
+        private float getTextX(float x, float width, UIResText.Alignment alignment)
+        {
+            if (alignment == UIResText.Alignment.Centered)
+                return x;
+            else if (alignment == UIResText.Alignment.Left)
+                return x + width / 2;
+            else
+                return x - width / 2;
+        }
+
+        private float getTextY(float y, float height, EAlignmentY alignment)
+        {
+            if (alignment == EAlignmentY.Center)
+                return y;
+            else if (alignment == EAlignmentY.Top)
+                return y + height / 2;
+            else
+                return y - height / 2;
         }
     }
 }
