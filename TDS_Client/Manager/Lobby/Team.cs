@@ -44,13 +44,16 @@ namespace TDS_Client.Manager.Lobby
 
         private static void GiveOrder(ConsoleKey key)
         {
+            if (!activated)
+                return;
             ETeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
+            ToggleOrderMode(ConsoleKey.NoName);
         }
 
         private static ETeamOrder GetTeamOrderByKey(ConsoleKey key)
         {
-            return (ETeamOrder)(ConsoleKey.NumPad1 - key);
+            return (ETeamOrder)(key - ConsoleKey.NumPad1);
         }
     }
 }
