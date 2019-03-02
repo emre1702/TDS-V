@@ -24,6 +24,8 @@
                 return;
             //if (!character.MuteTime.HasValue)
             string changedmessage = player.Team.ChatColor + player.Client.Name + "!{220|220|220}: " + message;
+            if (isDirty)
+                changedmessage = "!{160|50|0}[DIRTY] " + changedmessage;
             player.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
             if (player.CurrentLobby.IsOfficial && !isDirty)
                 ChatLogsManager.Log(message, player);
