@@ -57,6 +57,10 @@ namespace TDS_Server.Instance.Player
             get => Entity.PlayerStats.MuteTime;
             set => Entity.PlayerStats.MuteTime = value;
         }
+        public bool IsMuted
+        {
+            get => Entity.PlayerStats.MuteTime.HasValue;
+        }
         public bool IsPermamuted
         {
             get => Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;

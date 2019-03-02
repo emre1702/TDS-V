@@ -15,7 +15,12 @@
         public static void SendLobbyMessage(Client client, string message, bool isDirty)
         {
             TDSPlayer player = client.GetChar();
-            SendLobbyMessage(player, message, isDirty);
+            if (player.IsPermamuted)
+                player.Client.SendNotification(player.Language.STILL_PERMAMUTED);
+            else if (player.IsMuted)
+                player.Client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime.Value.ToString()));
+            else 
+                SendLobbyMessage(player, message, isDirty);
         }
 
         public static void SendLobbyMessage(TDSPlayer player, string message, bool isDirty)
