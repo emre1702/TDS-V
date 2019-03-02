@@ -22,7 +22,8 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxTextRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
-            int textOffsetAbsoluteX = 0, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true, bool activated = true) : base(activated)
+            int textOffsetAbsoluteX = 0, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true, 
+            int amountLines = 1, bool activated = true) : base(activated)
         {
             rect = new DxRectangle(x, y, width, height, rectColor, alignmentX, alignmentY, relativePos)
             {
@@ -38,7 +39,7 @@ namespace TDS_Client.Instance.Draw.Dx
             scale = textScale;
             this.relativePos = relativePos;
             float textY = relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY();
-            this.text = new DxText(text, x + (relativePos ? GetRelativeX(textOffsetAbsoluteX, false) : textOffsetAbsoluteX), textY, textScale, textColor, textFont, alignmentX, EAlignmentY.Center, relativePos)
+            this.text = new DxText(text, x + (relativePos ? GetRelativeX(textOffsetAbsoluteX, false) : textOffsetAbsoluteX), textY, textScale, textColor, textFont, alignmentX, EAlignmentY.Center, relativePos, amountLines: amountLines)
             {
                 Activated = false
             };

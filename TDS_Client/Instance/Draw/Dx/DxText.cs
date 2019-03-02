@@ -23,6 +23,7 @@ namespace TDS_Client.Instance.Draw.Dx
         private bool dropShadow;
         private bool outline;
         private int wordWrap;
+        private int amountLines;
 
         private int? endAlpha;
         private ulong endAlphaStartTick;
@@ -34,7 +35,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relative = true,
-            bool dropShadow = false, bool outline = false, int wordWrap = 999) : base()
+            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 1) : base()
         {
             this.Text = text;
             this.xPos = GetAbsoluteX(x, relative);
@@ -48,6 +49,7 @@ namespace TDS_Client.Instance.Draw.Dx
             this.dropShadow = dropShadow;
             this.outline = outline;
             this.wordWrap = wordWrap;
+            this.amountLines = amountLines;
 
             ApplyTextAlignmentY();
         }
@@ -89,9 +91,9 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             float textheight = Ui.GetTextScaleHeight(scale, (int)font);
             if (alignmentY == EAlignmentY.Center)
-                Y -= GetAbsoluteY(textheight / 2, true) - 5;
+                Y -= GetAbsoluteY(textheight * amountLines / 2, true);
             else if (alignmentY == EAlignmentY.Bottom)
-                Y -= GetAbsoluteY(textheight, true) - 5;
+                Y -= GetAbsoluteY(textheight * amountLines, true);
         }
 
         public void SetScale(float scale)

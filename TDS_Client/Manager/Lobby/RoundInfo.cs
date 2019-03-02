@@ -80,14 +80,14 @@ namespace TDS_Client.Manager.Lobby
             {
                 float x = 0.5f - 0.06f * 0.5f - 0.13f * i - 0.13f * 0.5f;
                 var team = teams[i + 1];
-                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
+                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top, amountLines: 2);
             }
             for (int j = 0; j < showamountright; ++j)
             {
                 float x = 0.5f + 0.06f * 0.5f + 0.13f * j + 0.13f * 0.5f;
                 int i = j + showamountleft;
                 var team = teams[i + 1];
-                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top);
+                teamDisplays[i] = new DxTextRectangle(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, Color.White, team.Color, 0.41f, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Top, amountLines: 2);
             }
         }
 
