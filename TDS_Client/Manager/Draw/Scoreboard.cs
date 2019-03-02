@@ -76,7 +76,6 @@ namespace TDS_Client.Manager.Draw
                 DxGridRow row = new DxGridRow(null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 grid.AddRow(row);
                 new DxGridCell(playerdata.Name, row, columns[0]);
-                Chat.Output("AddLobbyData Minutes: " + playerdata.PlaytimeMinutes);
                 new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
                 new DxGridCell(playerdata.Kills.ToString(), row, columns[2]);
                 new DxGridCell(playerdata.Assists.ToString(), row, columns[3]);
