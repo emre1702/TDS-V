@@ -62,10 +62,14 @@ namespace TDS_Client.Manager
         {
             ScaleformMessage.Render();
             Dx.RenderAll();
-            if (Bomb.CheckPlantDefuseOnTick)
-                Bomb.CheckPlantDefuse();
-            if (Bomb.BombOnHand)
-                ClientUtils.DisableAttack();
+            if (Bomb.DataChanged)
+            {
+                if (Bomb.CheckPlantDefuseOnTick)
+                    Bomb.CheckPlantDefuse();
+                Bomb.UpdatePlantDefuseProgress();
+                if (Bomb.BombOnHand)
+                    ClientUtils.DisableAttack();
+            }
             if (RoundInfo.RefreshOnTick)
                 RoundInfo.RefreshTime();
             if (Round.InFight)

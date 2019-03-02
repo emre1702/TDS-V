@@ -26,6 +26,7 @@ namespace TDS_Client.Manager.Lobby
         public static void Reset(bool removemapinfo)
         {
             InFight = false;
+            IsSpectator = false;
             Spectate.Stop();
             Countdown.Stop();
             if (removemapinfo)

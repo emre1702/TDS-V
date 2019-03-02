@@ -56,11 +56,11 @@ namespace TDS_Client.Instance.Draw.Dx
             alignmentX = newalignmentX;
         }
 
-        public void SetWidth(float width)
+        public void SetWidth(float width, bool relativePos)
         {
             UIResText.Alignment currentalignment = alignmentX;
             SetAlignment(UIResText.Alignment.Centered);
-            sizex = width;
+            sizex = GetRelativeX(width, relativePos);
             SetAlignment(currentalignment);
         }
 

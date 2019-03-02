@@ -16,22 +16,21 @@ namespace TDS_Client.Manager.Lobby
 {
     static class Bomb
     {
-        private static bool dataChanged;
         private static Vector3 plantedPos;
-        private static bool bombPlanted;
         private static EPlantDefuseStatus playerStatus;
         private static bool gotBomb;
+        private static bool bombPlanted;
         private static List<Vector3> plantSpots;
         private static ulong plantDefuseStartTick;
 
         private static DxProgressRectangle progressRect;
 
+        public static bool DataChanged;
         public static bool CheckPlantDefuseOnTick { get; private set; }
         public static bool BombOnHand { get; set; }
 
         public static void Detonate()
         {
-            Chat.Output("EXPLODE BOMB");
             Cam.ShakeGameplayCam(DShakeName.LARGE_EXPLOSION_SHAKE, 1.0f);
             new TDSTimer(() => Cam.StopGameplayCamShaking(true), 4000, 1);
             MainBrowser.StopBombTick();
@@ -39,9 +38,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static void BombPlanted(Vector3 pos, bool candefuse, uint? startAtMs)
         {
+            DataChanged = true;
             if (candefuse)
             {
-                dataChanged = true;
                 plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
@@ -69,7 +68,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void LocalPlayerGotBomb(List<Vector3> spotstoplant)
         {
-            dataChanged = true;
+            DataChanged = true;
             gotBomb = true;
             plantSpots = spotstoplant;
             CheckPlantDefuseOnTick = true;
@@ -85,14 +84,16 @@ namespace TDS_Client.Manager.Lobby
             BombOnHand = false;
         }
 
-        private static void UpdatePlantDefuseProgress()
+        public static void UpdatePlantDefuseProgress()
         {
-            Pad.DisableControlAction(0, (int)Control.Attack, true);
+            if (playerStatus != EPlantDefuseStatus.Planting)
+                return;
             ulong mswasted = TimerManager.ElapsedTicks - plantDefuseStartTick;
-            uint mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
+            float mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
             if (mswasted < mstoplantordefuse)
             {
                 float progress = mswasted / mstoplantordefuse;
+                Chat.Output("mswasted: " + mswasted + " - " + mstoplantordefuse + " - " + progress);
                 progressRect.Progress = progress;
             }
             else
@@ -123,8 +124,6 @@ namespace TDS_Client.Manager.Lobby
                 progressRect.Remove();
                 progressRect = null;
             } 
-            else
-                UpdatePlantDefuseProgress();
         }
 
         private static bool ShouldPlantDefuseStop()
@@ -180,9 +179,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Reset()
         {
-            if (!dataChanged)
+            if (!DataChanged)
                 return;
-            dataChanged = false;
+            DataChanged = false;
             BombOnHand = false;
             CheckPlantDefuseOnTick = false;
             progressRect?.Remove();
