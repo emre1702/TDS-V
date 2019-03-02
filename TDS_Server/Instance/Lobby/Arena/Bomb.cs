@@ -140,12 +140,11 @@ namespace TDS_Server.Instance.Lobby
         private void DetonateBomb()
         {
             // NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
-
+            SendAllPlayerEvent(DToClientEvent.BombDetonated, null);
             counterTerroristTeam.FuncIterate((character, team) =>
             {
                 DmgSys.UpdateLastHitter(character, planter, LobbyEntity.StartHealth + LobbyEntity.StartArmor);
                 character.Client.Kill();
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombDetonated);
             });
             // TERROR WON //
             if (currentRoundStatus == ERoundStatus.Round)
@@ -156,36 +155,46 @@ namespace TDS_Server.Instance.Lobby
         {
             if (player.Client.Dead)
                 return;
+            player.Client.StopAnimation();
 
             Vector3 playerpos = player.Client.Position;
+            int i = GetPlantPosIndex(playerpos);
+            if (i == -1)
+                return;
+
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
+            Workaround.DetachEntity(bomb);
+            bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
+            bomb.Rotation = new Vector3(270, 0, 0);
+            bombPlantPlaces[i].Delete();
+            bombPlantPlaces[i] = NAPI.Object.CreateObject(-263709501, currentMap.BombPlantPlaces[i], new Vector3(), 255, Dimension);
+            bombPlantBlips[i].Color = 49;
+            //bombPlantBlips[i].Flashing = true;
+            #warning Implement after new Bridge version
+            bombAtPlayer = null;
+            planter = player;
+            bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.Value);
+
+            FuncIterateAllPlayers((target, team) =>
+            {
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.BOMB_PLANTED);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(playerpos), team == counterTerroristTeam);
+            });
+
+            SendBombDefuseInfos();
+        }
+
+        private int GetPlantPosIndex(Vector3 pos)
+        {
             for (int i = 0; i < currentMap.BombPlantPlaces.Count; ++i)
             {
                 Vector3 plantpos = currentMap.BombPlantPlaces[i];
-                if (playerpos.DistanceTo(plantpos) > SettingsManager.DistanceToSpotToPlant)
-                    continue;
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
-                Workaround.DetachEntity(bomb);
-                bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
-                bomb.Rotation = new Vector3(270, 0, 0);
-                bombPlantPlaces[i].Delete();
-                bombPlantPlaces[i] = NAPI.Object.CreateObject(-263709501, currentMap.BombPlantPlaces[i], new Vector3(), 255, Dimension);
-                bombPlantBlips[i].Color = 49;
-                //bombPlantBlips[i].Flashing = true;
-                #warning Implement after new Bridge version
-                bombAtPlayer = null;
-                planter = player;
-                bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.Value);
-
-                FuncIterateAllPlayers((target, team) =>
+                if (pos.DistanceTo(plantpos) <= SettingsManager.DistanceToSpotToPlant)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.BOMB_PLANTED);
-                    NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(playerpos), team == counterTerroristTeam);
-                });
-
-                SendBombDefuseInfos();
-                break;
+                    return i;
+                }
             }
-            player.Client.StopAnimation();
+            return -1;
         }
 
         private void DefuseBomb(TDSPlayer character)
