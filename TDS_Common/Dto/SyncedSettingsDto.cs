@@ -1,6 +1,6 @@
 ﻿namespace TDS_Common.Dto
 {
-    public class SyncedSettingsDto
+    public class SyncedServerSettingsDto
     {
         public int DistanceToSpotToPlant;
         public int DistanceToSpotToDefuse;

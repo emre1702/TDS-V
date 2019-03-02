@@ -12,6 +12,7 @@
     using TDS_Server.Manager.Maps;
     using Newtonsoft.Json;
     using TDS_Server.Enum;
+    using TDS_Common.Dto;
 
     static class Login
     {
@@ -26,7 +27,6 @@
                                         .Include(p => p.OfflinemessagesTarget)
                                         .Include(p => p.PlayerMapRatings)
                                         .Include(p => p.PlayerMapFavourites)
-                                        .AsNoTracking()
                                         .FirstOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
@@ -43,7 +43,13 @@
                 Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
                 entity.PlayerStats.LoggedIn = true;
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, JsonConvert.SerializeObject(SettingsManager.SyncedSettings));
+                SyncedPlayerSettings syncedPlayerSettings = new SyncedPlayerSettings
+                {
+                    Language = entity.PlayerSettings.Language
+                };
+
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, 
+                    JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(syncedPlayerSettings));
 
                 TDSPlayer character = player.GetChar();
                 character.Entity = entity;
@@ -51,8 +57,6 @@
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(character);
 
-                dbcontext.PlayerStats.Attach(entity.PlayerStats);
-                dbcontext.Entry(entity.PlayerStats).Property(x => x.LoggedIn).IsModified = true;
                 await dbcontext.SaveChangesAsync();
 
                 if (character.ChatLoaded)

@@ -18,7 +18,7 @@ namespace TDS_Server.Manager.Utility
         public static int SaveSeasonsCooldownMinutes => settings.SaveSeasonsCooldownMinutes;
         public static int DistanceToSpotToDefuse => settings.DistanceToSpotToDefuse;
         public static int DistanceToSpotToPlant => settings.DistanceToSpotToPlant;
-        public static SyncedSettingsDto SyncedSettings { get; private set; }
+        public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
         private static Settings settings;
 
@@ -26,7 +26,7 @@ namespace TDS_Server.Manager.Utility
         {
             settings = dbcontext.Settings.AsNoTracking().Single();
 
-            SyncedSettings = new SyncedSettingsDto()
+            SyncedSettings = new SyncedServerSettingsDto()
             {
                 DistanceToSpotToPlant = settings.DistanceToSpotToPlant,
                 DistanceToSpotToDefuse = settings.DistanceToSpotToDefuse,

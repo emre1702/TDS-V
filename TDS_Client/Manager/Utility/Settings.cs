@@ -27,6 +27,7 @@ namespace TDS_Client.Manager.Utility
         };
 
         private static ELanguage languageEnum = ELanguage.English;
+        private static bool languageManuallyChanged;
 
         public static ELanguage LanguageEnum
         {
@@ -34,10 +35,15 @@ namespace TDS_Client.Manager.Utility
             set
             {
                 languageEnum = value;
+                languageManuallyChanged = true;
                 Language = languagesDict[languageEnum];
                 Scoreboard.LoadLanguage();
                 Team.LoadOrderNames();
-                EventsSender.Send(DToServerEvent.LanguageChange, (byte)LanguageEnum);
+                if (syncedPlayerSettings != null)
+                {
+                    syncedPlayerSettings.Language = (byte)value;
+                    EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
+                }
             }
         }
 
@@ -45,23 +51,24 @@ namespace TDS_Client.Manager.Utility
         public static bool ShowBloodscreen = true;
         public static bool HitsoundOn = true;
 
-        private static SyncedSettingsDto syncedSettings;
+        private static SyncedServerSettingsDto syncedServerSettings;
         private static SyncedLobbySettingsDto syncedLobbySettings;
+        private static SyncedPlayerSettings syncedPlayerSettings;
 
         public static uint LobbyId => syncedLobbySettings.Id;
         public static string LobbyName => syncedLobbySettings != null ? syncedLobbySettings.Name : "Mainmenu";
 
-        public static int DistanceToSpotToPlant => syncedSettings.DistanceToSpotToPlant;
-        public static int DistanceToSpotToDefuse => syncedSettings.DistanceToSpotToDefuse;
+        public static int DistanceToSpotToPlant => syncedServerSettings.DistanceToSpotToPlant;
+        public static int DistanceToSpotToDefuse => syncedServerSettings.DistanceToSpotToDefuse;
 
         //public static uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public static uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
         public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs.Value;
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
         public static uint CountdownTime => syncedLobbySettings.CountdownTime.Value;
-        public static int MapChooseTime => syncedSettings.MapChooseTime;
+        public static int MapChooseTime => syncedServerSettings.MapChooseTime;
         public static uint RoundTime => syncedLobbySettings.RoundTime.Value;
-        public static int RoundEndTime => syncedSettings.RoundEndTime;
+        public static int RoundEndTime => syncedServerSettings.RoundEndTime;
         public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime.Value;
         public static bool InLobbyWithMaps => syncedLobbySettings == null ? syncedLobbySettings.InLobbyWithMaps : false;
 
@@ -78,9 +85,21 @@ namespace TDS_Client.Manager.Utility
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Wheelie), 100, false);
         }
 
-        public static void LoadSyncedSettings(SyncedSettingsDto loadedSyncedSettings)
+        public static void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
         {
-            syncedSettings = loadedSyncedSettings;
+            syncedServerSettings = loadedSyncedSettings;
+        }
+
+        public static void LoadUserSettings(SyncedPlayerSettings loadedSyncedSettings)
+        {
+            if (!languageManuallyChanged || LanguageEnum == (ELanguage)loadedSyncedSettings.Language)
+                LanguageEnum = (ELanguage)loadedSyncedSettings.Language;
+            else
+            {
+                loadedSyncedSettings.Language = (byte)LanguageEnum;
+                EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
+            }
+            syncedPlayerSettings = loadedSyncedSettings;
         }
 
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
