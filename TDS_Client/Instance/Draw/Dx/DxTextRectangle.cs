@@ -11,14 +11,12 @@ namespace TDS_Client.Instance.Draw.Dx
         private DxText text;
         private DxRectangle rect;
 
-        private float x;
-        private float y;
-        private float width;
-        private float height;
-        private string textString;
-        private Font font;
-        private float scale;
-        private bool relativePos;
+        private readonly float y;
+        private readonly float height;
+        private readonly string textString;
+        private readonly Font font;
+        private readonly float scale;
+        private readonly bool relativePos;
 
         public DxTextRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
@@ -30,9 +28,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 Activated = false
             };
 
-            this.x = x;
             this.y = y;
-            this.width = width;
             this.height = height;
             textString = text;
             font = textFont;

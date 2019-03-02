@@ -27,7 +27,9 @@
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
+        #pragma warning disable IDE0060 // Remove unused parameter
         public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
+        #pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer player = client.GetChar();
             if (player.Entity == null)
@@ -51,7 +53,6 @@
             Register.RegisterPlayer(player, password, email);
         }
 
-# warning TODO check parameter (hitsoundon and language removed)
         [RemoteEvent(DToServerEvent.ChatLoaded)]
         public static void OnPlayerChatLoadEvent(Client player)
         {

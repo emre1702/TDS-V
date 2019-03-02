@@ -18,6 +18,7 @@ namespace TDS_Server.Instance.Player
 {
     class TDSPlayer
     {
+
         public Players Entity
         {
             get => fEntity;
@@ -58,7 +59,7 @@ namespace TDS_Server.Instance.Player
         }
         public bool IsPermamuted
         {
-            get => Entity.PlayerStats.MuteTime.HasValue && this.Entity.PlayerStats.MuteTime.Value == 0;
+            get => Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
         }
         public ILanguage Language
         {
@@ -78,12 +79,13 @@ namespace TDS_Server.Instance.Player
                     fLangEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = (byte)value;
+                SaveSettings();
             }
                 
         }
         public AdminLevelDto AdminLevel
         {
-            get => AdminsManager.AdminLevels[(byte)Entity.AdminLvl];
+            get => AdminsManager.AdminLevels[Entity.AdminLvl];
         }
         public string AdminLevelName
         {
@@ -118,32 +120,6 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer(Client client)
         {
             Client = client;
-        }
-
-        /// <summary>
-        /// Get the EF Entity for a player.
-        /// First look for it in playerEntities (caching) - if it's not there, search for it in the Database.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        private Players GetEntity()
-        {
-            if (fEntity != null)
-            {
-                return fEntity;
-            }
-            else
-            {
-                using (var dbcontext = new TDSNewContext())
-                {
-                    Players entity = dbcontext.Players.FirstOrDefault(p => p.Scname == Client.SocialClubName);
-                    if (entity != null)
-                    {
-                        fEntity = entity;
-                    }
-                    return entity;
-                }
-            }
         }
 
         #region Money
@@ -226,7 +202,13 @@ namespace TDS_Server.Instance.Player
 
             dbcontext.Players.Attach(Entity);
             dbcontext.Entry(Entity).State = EntityState.Modified;
-#warning Check if this also updates PlayerSettings etc.
+
+            dbcontext.PlayerLobbyStats.AttachRange(Entity.PlayerLobbyStats);
+            dbcontext.Entry(Entity.PlayerLobbyStats).State = EntityState.Modified;
+
+            dbcontext.PlayerStats.Attach(Entity.PlayerStats);
+            dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
+
             return dbcontext.SaveChangesAsync();
         }
 
@@ -236,6 +218,16 @@ namespace TDS_Server.Instance.Player
                 return System.Threading.Tasks.Task.FromResult(0);
             LastSaveTick = Environment.TickCount;
             return SaveData(dbcontext);
+        }
+
+        private async void SaveSettings()
+        {
+            using (TDSNewContext dbContext = new TDSNewContext())
+            {
+                dbContext.PlayerSettings.Attach(Entity.PlayerSettings);
+                dbContext.Entry(Entity.PlayerSettings).State = EntityState.Modified;
+                await SaveData(dbContext);
+            }
         }
     }
 }

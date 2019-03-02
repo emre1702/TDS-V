@@ -9,14 +9,11 @@ namespace TDS_Client.Instance.Draw.Dx
 {
     class DxProgressRectangle : Dx
     {
-        private float width;
-        private float height;
-        private float textScale;
-        private Font textFont;
+        private readonly float width;
 
-        private bool filling;
+        private readonly bool filling;
         private float progress;
-        private bool relativePos;
+        private readonly bool relativePos;
 
         private DxRectangle backRect;
         private DxRectangle frontRect;
@@ -36,16 +33,15 @@ namespace TDS_Client.Instance.Draw.Dx
             UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true) : base()
         {
             this.width = width;
-            this.height = height;
             this.filling = filling;
             this.relativePos = relativePos;
 
-            float textX = getTextX(x, width, alignmentX);
-            float textY = getTextY(y, height, alignmentY);
+            float textX = GetTextX(x, width, alignmentX);
+            float textY = GetTextY(y, height, alignmentY);
 
             this.text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true);
 
-            float frontRectX = getFrontRectX(x, width, alignmentX, relativePos) + frontRectOffsetAbsoluteX;
+            float frontRectX = GetFrontRectX(x, width, alignmentX, relativePos) + frontRectOffsetAbsoluteX;
             float frontRectY = GetAbsoluteY(y, relativePos);
             float frontRectWidth = GetAbsoluteX(width, relativePos) - frontRectOffsetAbsoluteX * 2;
             float frontRectHeight = GetAbsoluteY(height, relativePos) - frontRectOffsetAbsoluteY * 2;
@@ -56,10 +52,10 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public override void Draw()
         {
-            /*if (filling)
+            if (filling)
                 frontRect.SetWidth(progress * width, relativePos);
             else
-                frontRect.SetWidth(width - width * progress, relativePos);*/
+                frontRect.SetWidth(width - width * progress, relativePos);
         }
 
         public override void Remove()
@@ -73,7 +69,7 @@ namespace TDS_Client.Instance.Draw.Dx
             text = null;
         }
 
-        private float getFrontRectX(float x, float width, UIResText.Alignment alignment, bool relativePos)
+        private float GetFrontRectX(float x, float width, UIResText.Alignment alignment, bool relativePos)
         {
             if (alignment == UIResText.Alignment.Centered)
                 return GetAbsoluteX(x - width / 2, relativePos);
@@ -83,7 +79,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 return GetAbsoluteX(x - width, relativePos);
         }
 
-        private float getTextX(float x, float width, UIResText.Alignment alignment)
+        private float GetTextX(float x, float width, UIResText.Alignment alignment)
         {
             if (alignment == UIResText.Alignment.Centered)
                 return x;
@@ -93,7 +89,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 return x - width / 2;
         }
 
-        private float getTextY(float y, float height, EAlignmentY alignment)
+        private float GetTextY(float y, float height, EAlignmentY alignment)
         {
             if (alignment == EAlignmentY.Center)
                 return y;

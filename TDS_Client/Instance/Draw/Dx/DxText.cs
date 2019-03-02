@@ -12,18 +12,18 @@ namespace TDS_Client.Instance.Draw.Dx
     class DxText : Dx
     {
         public string Text;
-        private int xPos;
+        private readonly int xPos;
         public int Y;
         private float scale;
-        private Color color;
-        private Font font;
-        private UIResText.Alignment alignmentX;
-        private EAlignmentY alignmentY;
-        private bool relative;
-        private bool dropShadow;
-        private bool outline;
-        private int wordWrap;
-        private int amountLines;
+        private readonly Color color;
+        private readonly Font font;
+        private readonly UIResText.Alignment alignmentX;
+        private readonly EAlignmentY alignmentY;
+        private readonly bool relative;
+        private readonly bool dropShadow;
+        private readonly bool outline;
+        private readonly int wordWrap;
+        private readonly int amountLines;
 
         private int? endAlpha;
         private ulong endAlphaStartTick;
@@ -74,7 +74,7 @@ namespace TDS_Client.Instance.Draw.Dx
             endScaleEndTick = endScaleStartTick + msToEnd;
         }
 
-        private static int GetStringWidth(string text, float scale, Font font)
+        /*private static int GetStringWidth(string text, float scale, Font font)
         {
             Ui.BeginTextCommandWidth("STRING");
             for (int i = 0; i < text.Length; i += 99)
@@ -85,7 +85,7 @@ namespace TDS_Client.Instance.Draw.Dx
             Ui.SetTextFont((int)font);
             Ui.SetTextScale(scale, scale);
             return (int) Ui.EndTextCommandGetWidth(1);
-        }
+        }*/
 
         private void ApplyTextAlignmentY()
         {
@@ -106,9 +106,9 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             ulong elapsedticks = TimerManager.ElapsedTicks;
 
-            int alpha = color.A;
+            Color theColor = color;
             if (endAlpha.HasValue)
-                alpha = GetBlendValue(elapsedticks, color.A, endAlpha.Value, endAlphaStartTick, endAlphaEndTick);
+                theColor = Color.FromArgb(GetBlendValue(elapsedticks, color.A, endAlpha.Value, endAlphaStartTick, endAlphaEndTick), color);
 
             float scale = this.scale;
             if (endScale.HasValue)
@@ -123,8 +123,8 @@ namespace TDS_Client.Instance.Draw.Dx
                     scale = GetBlendValue(elapsedticks, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
                 
             }
-                
-            UIResText.Draw(Text, xPos, Y, font, scale, color, alignmentX, dropShadow, outline, wordWrap);
+
+            UIResText.Draw(Text, xPos, Y, font, scale, theColor, alignmentX, dropShadow, outline, wordWrap);
         }
 
         public override EDxType GetDxType()

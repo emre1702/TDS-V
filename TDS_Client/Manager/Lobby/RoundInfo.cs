@@ -111,21 +111,6 @@ namespace TDS_Client.Manager.Lobby
             // stop damage, assists and kills display here
         }
 
-        private static void Remove()
-        {
-            RefreshOnTick = false;
-            if (timeDisplay != null)
-                timeDisplay.Activated = false;
-            if (teamDisplays != null)
-            {
-                foreach (var display in teamDisplays)
-                {
-                    display.Remove();
-                }
-                teamDisplays = null;
-            }
-        }
-
         public static void RefreshTime()
         {
             double timems = Math.Max(0, Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick));

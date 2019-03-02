@@ -1,4 +1,3 @@
-B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\x64\Debug\netcoreapp2.2\TDS_Server.csprojAssemblyReference.cache
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\x64\Debug\netcoreapp2.2\TDS_Server.Properties.Resources.resources
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\x64\Debug\netcoreapp2.2\TDS_Server.csproj.GenerateResource.cache
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\x64\Debug\netcoreapp2.2\TDS_Server.csproj.CoreCompileInputs.cache

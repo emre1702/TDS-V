@@ -21,7 +21,7 @@ namespace TDS_Client.Manager.Draw
         private static bool isActivated;
         private static ulong lastLoadedTick;
 
-        private static DxGridColumn[] columns = new DxGridColumn[6];
+        private readonly static DxGridColumn[] columns = new DxGridColumn[6];
 
         public static bool IsActivated
         {
@@ -97,7 +97,7 @@ namespace TDS_Client.Manager.Draw
             grid.Header.Cells[5].SetText(Settings.Language.SCOREBOARD_TEAM);
         }
 
-        public static void PressedScoreboardKey(Control key)
+        public static void PressedScoreboardKey(Control _)
         {
             if (IsActivated)
                 return;
@@ -113,7 +113,7 @@ namespace TDS_Client.Manager.Draw
             IsActivated = true;
         }
 
-        public static void ReleasedScoreboardKey(Control key)
+        public static void ReleasedScoreboardKey(Control _)
         {
             if (!IsActivated)
                 return;

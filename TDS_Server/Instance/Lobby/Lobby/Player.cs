@@ -16,8 +16,6 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        private static readonly TDSNewContext playerLobbyStatsContext = new TDSNewContext();
-
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
             using (var dbcontext = new TDSNewContext())
@@ -57,12 +55,11 @@ namespace TDS_Server.Instance.Lobby
             return true;
         }
 
-        public virtual async void RemovePlayer(TDSPlayer player)
+        public virtual void RemovePlayer(TDSPlayer player)
         {
             if (player.Lifes == 0)
             {
                 SavePlayerLobbyStats(player);
-                await playerLobbyStatsContext.SaveChangesAsync();
             }
             
             Players.Remove(player);
@@ -112,7 +109,7 @@ namespace TDS_Server.Instance.Lobby
             from.Clear();
         }
 
-        protected async void SaveAllPlayerLobbyStats()
+        protected void SaveAllPlayerLobbyStats()
         {
             FuncIterateAllPlayers((player, team) =>
             {
@@ -120,20 +117,23 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 SavePlayerLobbyStats(player);
             });
-            await playerLobbyStatsContext.SaveChangesAsync();
         }
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)
         {
-            PlayerLobbyStats stats = await playerLobbyStatsContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
-            if (stats == null)
+            using (TDSNewContext dbContext = new TDSNewContext())
             {
-                stats = new PlayerLobbyStats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };
-                character.Entity.PlayerLobbyStats.Add(stats);
-                await playerLobbyStatsContext.PlayerLobbyStats.AddAsync(stats);
-                await playerLobbyStatsContext.SaveChangesAsync();
+                PlayerLobbyStats stats = await dbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
+                if (stats == null)
+                {
+                    stats = new PlayerLobbyStats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };
+                    character.Entity.PlayerLobbyStats.Add(stats);
+                    await dbContext.PlayerLobbyStats.AddAsync(stats);
+                    await dbContext.SaveChangesAsync();
+                }
+                character.CurrentLobbyStats = stats;
             }
-            character.CurrentLobbyStats = stats;
+            
         }
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)
