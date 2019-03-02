@@ -97,6 +97,11 @@ namespace TDS_Client.Manager.Browser
             Browser.ExecuteJs($"loadOrderNames('{ordernamesjson}');");
         }
 
+        public static void ToggleOrders(bool show)
+        {
+            Browser.ExecuteJs($"toggleOrders({show})");
+        }
+
         public static void ShowRoundEndReason(string reason, string currentmap)
         {
             roundEndReasonShowing = true;

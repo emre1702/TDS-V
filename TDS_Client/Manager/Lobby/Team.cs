@@ -40,6 +40,7 @@ namespace TDS_Client.Manager.Lobby
         {
             activated = !activated;
             MainBrowser.ToggleCanVoteForMapWithNumpadInBrowser(!activated);
+            MainBrowser.ToggleOrders(activated);
         }
 
         private static void GiveOrder(ConsoleKey key)

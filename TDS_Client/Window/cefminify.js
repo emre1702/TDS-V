@@ -13,7 +13,7 @@ let files = [
         css: ["main/chat.css", "main/main.css", "main/mapmanager.css", "main/roundend.css"],
         reserved: ["setMoney", "playSound", "playHitsound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
             "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings",
-            "enableChatInput", "startBombTickSound", "stopBombTickSound"]
+            "enableChatInput", "startBombTickSound", "stopBombTickSound", "toggleOrders"]
     },
     { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     { path: "mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], css: ["mapcreator/mapcreator.css"],

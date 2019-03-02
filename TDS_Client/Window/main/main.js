@@ -120,9 +120,18 @@ function addKillMessage( msg ) {
 
 function loadOrderNames( ordernamesjson ) {
     ordersDiv.empty();
+    alert(ordernamesjson);
     let ordernames = JSON.parse(ordernamesjson);
+    alert(ordernames);
     let i = 0;
     Object.keys(ordernames).forEach(function (key) {
         ordersDiv.append($("<div>" + (++i) + ". " + ordernames[key] + "</div>"));
     });
+}
+
+function toggleOrders(bool) {
+    if (bool)
+        ordersDiv.show(1000);
+    else 
+        ordersDiv.hide(1000);
 }
