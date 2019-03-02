@@ -16,6 +16,7 @@ namespace TDS_Client.Instance.Language
         public override string SCOREBOARD_DEATHS => "Tode";
         public override string SCOREBOARD_TEAM => "Team";
         public override string SCOREBOARD_LOBBY => "Lobby";
+        public override string BOMB_PLANTED => "Die Bombe wurde platziert!";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

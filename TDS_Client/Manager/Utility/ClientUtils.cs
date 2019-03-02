@@ -26,5 +26,12 @@ namespace TDS_Client.Manager.Utility
             Pad.DisableControlAction(1, 263, true);
             Pad.DisableControlAction(1, 264, true);
         }
+
+        public static void Notify(string msg)
+        {
+            Ui.SetNotificationTextEntry("STRING");
+            Ui.AddTextComponentSubstringPlayerName(msg);
+            Ui.DrawNotification(false, false);
+        }
     }
 }

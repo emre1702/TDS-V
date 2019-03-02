@@ -19,6 +19,7 @@ namespace TDS_Client.Interface
         string SCOREBOARD_ASSISTS { get; }
         string SCOREBOARD_DEATHS { get; }
         string SCOREBOARD_TEAM { get; }
+        string BOMB_PLANTED { get; }
 
         ELanguage Enum { get; }
     }  

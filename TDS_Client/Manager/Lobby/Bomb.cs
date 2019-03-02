@@ -55,7 +55,8 @@ namespace TDS_Client.Manager.Lobby
             {
                 RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs);
                 MainBrowser.StartBombTick(Settings.BombDetonateTimeMs, 0);
-            }       
+            }
+            ClientUtils.Notify(Settings.Language.BOMB_PLANTED);
         }
 
         public static void CheckPlantDefuse()
