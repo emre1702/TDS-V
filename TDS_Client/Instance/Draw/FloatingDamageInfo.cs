@@ -4,6 +4,7 @@ using RAGE.Game;
 using RAGE.NUI;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
@@ -31,10 +32,6 @@ namespace TDS_Client.Instance.Draw
             };
             damageInfos.Add(damageInfo);
         } 
-
-        ~FloatingDamageInfo() {
-            text.Remove();
-        }
         
         private void UpdatePosition()
         {
@@ -61,11 +58,21 @@ namespace TDS_Client.Instance.Draw
         {
             if (damageInfos.Count == 0)
                 return;
-            damageInfos.RemoveAll(x => x.remove);
+            var removeInfos = damageInfos.Where(x => x.remove);
+            foreach (var info in removeInfos)
+            {
+                info.Remove();
+                damageInfos.Remove(info);
+            }
             foreach (var damageInfo in damageInfos)
             {
                 damageInfo.UpdatePosition();
             }
+        }
+
+        private void Remove()
+        {
+            text.Remove();
         }
     }
 }
