@@ -207,9 +207,12 @@ namespace TDS_Server.Instance.Player
             dbcontext.Players.Attach(Entity);
             dbcontext.Entry(Entity).State = EntityState.Modified;
 
-            dbcontext.PlayerLobbyStats.AttachRange(Entity.PlayerLobbyStats);
-            dbcontext.Entry(Entity.PlayerLobbyStats).State = EntityState.Modified;
-
+            if (Entity.PlayerLobbyStats.Count > 0)
+            {
+                dbcontext.PlayerLobbyStats.AttachRange(Entity.PlayerLobbyStats);
+                dbcontext.Entry(Entity.PlayerLobbyStats).State = EntityState.Modified;
+            }
+            
             dbcontext.PlayerStats.Attach(Entity.PlayerStats);
             dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
 
