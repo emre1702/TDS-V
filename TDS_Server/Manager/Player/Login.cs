@@ -43,7 +43,7 @@
                 Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
                 entity.PlayerStats.LoggedIn = true;
 
-                SyncedPlayerSettings syncedPlayerSettings = new SyncedPlayerSettings
+                SyncedPlayerSettingsDto syncedPlayerSettings = new SyncedPlayerSettingsDto
                 {
                     Language = entity.PlayerSettings.Language
                 };

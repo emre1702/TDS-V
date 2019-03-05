@@ -3,6 +3,7 @@ using RAGE.Ui;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Manager.Account;
+using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using Player = RAGE.Elements.Player;
@@ -13,6 +14,7 @@ namespace TDS_Client.Manager.Browser
     {
         public static HtmlWindow Browser { get; set; }
         private static bool roundEndReasonShowing;
+        private static Queue<string> executeQueue = new Queue<string>();
 
         public static void Load()
         {
@@ -20,10 +22,28 @@ namespace TDS_Client.Manager.Browser
             Browser.MarkAsChat();
         }
 
+        private static void Execute(string execStr)
+        {
+            if (Browser == null)
+                executeQueue.Enqueue(execStr);
+            else
+                Browser.ExecuteJs(execStr);
+        }
+
         #region Events
+        public static void OnLoaded()
+        {
+            Team.LoadOrderNames();
+            foreach (var execStr in executeQueue)
+            {
+                Browser.ExecuteJs(execStr);
+            }
+            executeQueue = null;
+        }
+
         public static void OnLoadOwnMapRatings(string datajson)
         {
-            Browser.ExecuteJs($"loadMyMapRatings(`{datajson}`);");
+            Execute($"loadMyMapRatings(`{datajson}`);");
         }
 
         public static void OnSendMapRating(string currentmap, int rating)
@@ -34,117 +54,117 @@ namespace TDS_Client.Manager.Browser
 
         public static void ShowBloodscreen()
         {
-            Browser.ExecuteJs("showBloodscreen();");
+            Execute("showBloodscreen();");
         }
 
         public static void PlaySound(string soundname)
         {
-            Browser.ExecuteJs($"playSound('{soundname}')");
+            Execute($"playSound('{soundname}')");
         }
 
         public static void PlayHitsound()
         {
-            Browser.ExecuteJs("playHitsound();");
+            Execute("playHitsound();");
         }
 
         public static void AddKillMessage(string msg)
         {
-            Browser.ExecuteJs($"addKillMessage('{msg}');");
+            Execute($"addKillMessage('{msg}');");
         }
 
         public static void SendAlert(string msg)
         {
-            Browser.ExecuteJs($"alert('{msg}');");
+            Execute($"alert('{msg}');");
         }
 
         public static void OpenMapMenuInBrowser(string mapslistjson)
         {
-            Browser.ExecuteJs($"openMapMenu('{(int)Settings.Language.Enum}', '{mapslistjson}');");
+            Execute($"openMapMenu('{(int)Settings.Language.Enum}', '{mapslistjson}');");
         }
 
         public static void CloseMapMenuInBrowser()
         {
-            Browser.ExecuteJs("closeMapMenu();");
+            Execute("closeMapMenu();");
         }
 
         public static void LoadMapVotingsForMapBrowser(string mapvotesjson)
         {
-            Browser.ExecuteJs($"loadMapVotings('{mapvotesjson}');");
+            Execute($"loadMapVotings('{mapvotesjson}');");
         }
         
         public static void ClearMapVotingsInBrowser()
         {
-            Browser.ExecuteJs("clearMapVotings();");
+            Execute("clearMapVotings();");
         }
 
         public static void AddVoteToMapInMapMenuBrowser(string mapname, string oldvotemapname)
         {
-            Browser.ExecuteJs($"addVoteToMapVoting('{mapname}', '{oldvotemapname}');");
+            Execute($"addVoteToMapVoting('{mapname}', '{oldvotemapname}');");
         }
 
         public static void LoadMapFavouritesInBrowser(string mapfavouritesjson)
         {
-            Browser.ExecuteJs($"loadFavouriteMaps('{mapfavouritesjson}');");
+            Execute($"loadFavouriteMaps('{mapfavouritesjson}');");
         }
 
         public static void ToggleCanVoteForMapWithNumpadInBrowser(bool canvote)
         {
-            Browser.ExecuteJs($"toggleCanVoteForMapWithNumpad({canvote});");
+            Execute($"toggleCanVoteForMapWithNumpad({canvote});");
         }
 
         public static void LoadOrderNamesInBrowser(string ordernamesjson)
         {
-            Browser.ExecuteJs($"loadOrderNames('{ordernamesjson}');");
+            Execute($"loadOrderNames('{ordernamesjson}');");
         }
 
         public static void ToggleOrders(bool show)
         {
-            Browser.ExecuteJs($"toggleOrders({show})");
+            Execute($"toggleOrders({show})");
         }
 
         public static void ShowRoundEndReason(string reason, string currentmap)
         {
             roundEndReasonShowing = true;
-            Browser.ExecuteJs($"showRoundEndReason(`{reason}`, `{currentmap}`);");
+            Execute($"showRoundEndReason(`{reason}`, `{currentmap}`);");
         }
 
         public static void HideRoundEndReason()
         {
             if (!roundEndReasonShowing)
                 return;
-            Browser.ExecuteJs("hideRoundEndReason();");
+            Execute("hideRoundEndReason();");
             roundEndReasonShowing = false;
         }
 
         public static void LoadPlayersForChat(List<Player> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
-            Browser.ExecuteJs($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
+            Execute($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
         }
 
         public static void AddPlayerForChat(Player player)
         {
-            Browser.ExecuteJs($"addNameForChat(`{player.Name}`)");
+            Execute($"addNameForChat(`{player.Name}`)");
         }
 
         public static void RemovePlayerForChat(Player player)
         {
-            Browser.ExecuteJs($"removeNameForChat(`{player.Name}`)");
+            Execute($"removeNameForChat(`{player.Name}`)");
         }
 
         public static void LoadUserName()
         {
-            Browser.ExecuteJs($"loadUserName('{Player.LocalPlayer.Name}')");
+            Execute($"loadUserName('{Player.LocalPlayer.Name}')");
         }
 
         public static void StartBombTick(uint msToDetonate, uint startAtMs)
         {
-            Browser.ExecuteJs($"startBombTickSound({msToDetonate}, {startAtMs})");
+            Execute($"startBombTickSound({msToDetonate}, {startAtMs})");
         }
 
         public static void StopBombTick()
         {
-            Browser.ExecuteJs("stopBombTickSound()");
+            Execute("stopBombTickSound()");
         }
     }
 }

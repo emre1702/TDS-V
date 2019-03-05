@@ -53,7 +53,7 @@ namespace TDS_Client.Manager.Utility
 
         private static SyncedServerSettingsDto syncedServerSettings;
         private static SyncedLobbySettingsDto syncedLobbySettings;
-        private static SyncedPlayerSettings syncedPlayerSettings;
+        private static SyncedPlayerSettingsDto syncedPlayerSettings;
 
         public static uint LobbyId => syncedLobbySettings.Id;
         public static string LobbyName => syncedLobbySettings != null ? syncedLobbySettings.Name : "Mainmenu";
@@ -90,7 +90,7 @@ namespace TDS_Client.Manager.Utility
             syncedServerSettings = loadedSyncedSettings;
         }
 
-        public static void LoadUserSettings(SyncedPlayerSettings loadedSyncedSettings)
+        public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
             if (!languageManuallyChanged || LanguageEnum == (ELanguage)loadedSyncedSettings.Language)
                 LanguageEnum = (ELanguage)loadedSyncedSettings.Language;

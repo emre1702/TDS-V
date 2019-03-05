@@ -10,14 +10,18 @@ namespace TDS_Client.Manager.Draw
     {
         private static DxText moneyText;
 
-        public static void Start()
+        private static void Start()
         {
+            if (moneyText != null)
+                return;
             moneyText = new DxText("0", Dx.ResX - 5, Dx.ResY - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom, 
                 font: Font.Pricedown, dropShadow: true, outline: true, relative: false); 
         }
 
         public static void Refresh()
         {
+            if (moneyText == null)
+                Start();
             moneyText.Text = AccountData.Money.ToString();
         }
     }

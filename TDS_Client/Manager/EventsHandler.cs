@@ -103,6 +103,8 @@ namespace TDS_Client.Manager
                 RegisterLogin.SendDataToBrowser();
             else if (browser == Choice.Browser)
                 Choice.SyncLanguageTexts();
+            else if (browser == MainBrowser.Browser)
+                MainBrowser.OnLoaded();
 
             /*
              * else if ( browser === mainbrowserdata.browser )
@@ -421,12 +423,12 @@ namespace TDS_Client.Manager
             int adminlvl = (int)args[0];
             AccountData.AdminLevel = adminlvl;
             Settings.LoadSyncedSettings(JsonConvert.DeserializeObject<SyncedServerSettingsDto>(args[1].ToString()));
-            Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettings>(args[2].ToString()));
+            ClientUtils.Notify(args[2].ToString());
+            Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
-            MoneyDisplay.Start();
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)

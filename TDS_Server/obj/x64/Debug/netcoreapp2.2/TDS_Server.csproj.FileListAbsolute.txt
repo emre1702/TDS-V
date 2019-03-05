@@ -60,3 +60,4 @@ C:\RAGEMP\server-files\bridge\resources\tds\netcoreapp2.2\TDS_Server.runtimeconf
 C:\RAGEMP\server-files\bridge\resources\tds\netcoreapp2.2\TDS_Server.runtimeconfig.dev.json
 C:\RAGEMP\server-files\bridge\resources\tds\netcoreapp2.2\TDS_Server.dll
 C:\RAGEMP\server-files\bridge\resources\tds\netcoreapp2.2\TDS_Server.pdb
+B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\obj\x64\Debug\netcoreapp2.2\TDS_Server.csprojAssemblyReference.cache
