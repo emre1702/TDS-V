@@ -45,11 +45,13 @@ namespace TDS_Server.Instance.Lobby
                 PlayerCantBeSpectatedAnymore(character);
                 DmgSys.CheckLastHitter(character, out TDSPlayer killercharacter);
 
-                DeathInfoSync(character, killercharacter?.Client, (uint)WeaponHash.Unarmed);
+                DeathInfoSync(character, killercharacter, (uint)WeaponHash.Unarmed);
                 character.KillingSpree = 0;
             }
             else
                 RemoveAsSpectator(character);
+            if (planter == character)
+                planter = null;
             base.RemovePlayer(character);
             RoundCheckForEnoughAlive();
         }

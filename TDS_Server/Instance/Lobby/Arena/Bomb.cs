@@ -143,8 +143,13 @@ namespace TDS_Server.Instance.Lobby
             SendAllPlayerEvent(DToClientEvent.BombDetonated, null);
             counterTerroristTeam.FuncIterate((character, team) =>
             {
-                DmgSys.UpdateLastHitter(character, planter, LobbyEntity.StartHealth + LobbyEntity.StartArmor);
-                character.Client.Kill();
+                if (character.Lifes == 0)
+                    return;
+                int damage = character.Client.Health + character.Client.Armor;
+                DmgSys.UpdateLastHitter(character, planter, damage);
+                character.Damage(ref damage);
+                if (planter != null)
+                    planter.CurrentRoundStats.Damage += (uint)damage;
             });
             // TERROR WON //
             if (currentRoundStatus == ERoundStatus.Round)

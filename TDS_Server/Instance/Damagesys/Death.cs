@@ -14,16 +14,16 @@ namespace TDS_Server.Instance
 
         private static readonly Dictionary<TDSPlayer, TDSTimer> sDeadTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
-        public void OnPlayerDeath(TDSPlayer player, Client killer, uint weapon)
+        public TDSPlayer OnPlayerDeath(TDSPlayer player, Client killer, uint weapon)
         {
             if (sDeadTimer.ContainsKey(player))
-                return;
+                return null;
             Workaround.FreezePlayer(player.Client, true);
 
             player.KillingSpree = 0;
 
             if (player.Lifes <= 0)
-                return;
+                return null;
 
             // Death //
             ++player.CurrentLobbyStats.Deaths;
@@ -41,6 +41,8 @@ namespace TDS_Server.Instance
 
             // Assist //
             CheckForAssist(player, killer);
+
+            return killercharacter;
         }
 
         private TDSPlayer GetKiller(TDSPlayer player, Client possiblekiller)

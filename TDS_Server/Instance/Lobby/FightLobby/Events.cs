@@ -8,7 +8,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class FightLobby
     {
-        public override void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
+        public override void OnPlayerDeath(TDSPlayer character, Client possibleKillerClient, uint weapon, bool spawnPlayer = true)
         {
             if (character.Team.IsSpectator)
             {
@@ -16,8 +16,8 @@ namespace TDS_Server.Instance.Lobby
                 return;
             }
 
-            DmgSys.OnPlayerDeath(character, killer, weapon);
-            base.OnPlayerDeath(character, killer, weapon, false);
+            TDSPlayer killer = DmgSys.OnPlayerDeath(character, possibleKillerClient, weapon);
+            base.OnPlayerDeath(character, possibleKillerClient, weapon, false);
 
             // was alive //
             if (character.Lifes > 0)

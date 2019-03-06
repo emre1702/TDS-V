@@ -116,7 +116,6 @@ namespace TDS_Server.Instance
 
             if (source != null)
             {
-                target.LastHitter = source;
                 UpdateLastHitter(target, source, damage);
                 source.CurrentRoundStats.Damage += (uint) damage;
 
@@ -127,6 +126,8 @@ namespace TDS_Server.Instance
 
         public void UpdateLastHitter(TDSPlayer target, TDSPlayer source, int damage)
         {
+            if (source == null)
+                return;
             if (!allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int> lasthitterdict))
             {
                 lasthitterdict = new Dictionary<TDSPlayer, int>();
@@ -134,6 +135,7 @@ namespace TDS_Server.Instance
             }
             lasthitterdict.TryGetValue(source, out int currentDamage);
             lasthitterdict[source] = currentDamage + damage;
+            target.LastHitter = source;
         }
 
         public int GetDamage(WeaponHash hash, bool headshot = false)
