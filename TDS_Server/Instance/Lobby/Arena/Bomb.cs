@@ -129,7 +129,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.Entity.Index == 0)
+                if (team.IsSpectator)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == terroristTeam)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
