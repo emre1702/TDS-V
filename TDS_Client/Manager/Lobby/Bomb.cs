@@ -87,14 +87,13 @@ namespace TDS_Client.Manager.Lobby
 
         public static void UpdatePlantDefuseProgress()
         {
-            if (playerStatus != EPlantDefuseStatus.Planting)
+            if (playerStatus == EPlantDefuseStatus.None)
                 return;
             ulong mswasted = TimerManager.ElapsedTicks - plantDefuseStartTick;
             float mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
             if (mswasted < mstoplantordefuse)
             {
                 float progress = mswasted / mstoplantordefuse;
-                Chat.Output("mswasted: " + mswasted + " - " + mstoplantordefuse + " - " + progress);
                 progressRect.Progress = progress;
             }
             else
