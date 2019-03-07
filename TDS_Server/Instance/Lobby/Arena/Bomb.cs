@@ -31,8 +31,8 @@ namespace TDS_Server.Instance.Lobby
         private Team terroristTeam;
         private Team counterTerroristTeam;
 
-        private List<Object> bombPlantPlaces = new List<Object>();
-        private List<Blip> bombPlantBlips = new List<Blip>();
+        private readonly List<BombPlantPlaceDto> bombPlantPlaces = new List<BombPlantPlaceDto>();
+
         private Object bomb;
         private TDSPlayer bombAtPlayer;
         private TDSTimer bombDetonateTimer,
@@ -45,11 +45,14 @@ namespace TDS_Server.Instance.Lobby
         {
             foreach (Vector3 bombplace in map.BombPlantPlaces)
             {
-                Object place = NAPI.Object.CreateObject(-51423166, bombplace, new Vector3(), 255, Dimension);
-                bombPlantPlaces.Add(place);
-                Blip blip = NAPI.Blip.CreateBlip(bombplace, Dimension);
-                blip.Sprite = 433;
-                bombPlantBlips.Add(blip);
+                BombPlantPlaceDto dto = new BombPlantPlaceDto
+                {
+                    Object = NAPI.Object.CreateObject(-51423166, bombplace, new Vector3(), 255, Dimension),
+                    Blip = NAPI.Blip.CreateBlip(bombplace, Dimension),
+                    Position = bombplace
+                };
+                dto.Blip.Sprite = 433;
+                bombPlantPlaces.Add(dto);
             }
             bomb = NAPI.Object.CreateObject(1764669601, map.BombPlantPlaces[0], new Vector3(), 255, Dimension);
 
@@ -163,17 +166,17 @@ namespace TDS_Server.Instance.Lobby
             player.Client.StopAnimation();
 
             Vector3 playerpos = player.Client.Position;
-            int i = GetPlantPosIndex(playerpos);
-            if (i == -1)
+            var plantPlace = GetPlantPos(playerpos);
+            if (plantPlace == null)
                 return;
 
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
             Workaround.DetachEntity(bomb);
             bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
             bomb.Rotation = new Vector3(270, 0, 0);
-            bombPlantPlaces[i].Delete();
-            bombPlantPlaces[i] = NAPI.Object.CreateObject(-263709501, currentMap.BombPlantPlaces[i], new Vector3(), 255, Dimension);
-            bombPlantBlips[i].Color = 49;
+            plantPlace.Object.Delete();
+            plantPlace.Object = NAPI.Object.CreateObject(-263709501, currentMap.BombPlantPlaces[i], new Vector3(), 255, Dimension);
+            plantPlace.Blip.Color = 49;
             //bombPlantBlips[i].Flashing = true;
             #warning Implement after new Bridge version
             bombAtPlayer = null;
@@ -189,17 +192,12 @@ namespace TDS_Server.Instance.Lobby
             SendBombDefuseInfos();
         }
 
-        private int GetPlantPosIndex(Vector3 pos)
+        private BombPlantPlaceDto GetPlantPos(Vector3 pos)
         {
-            for (int i = 0; i < currentMap.BombPlantPlaces.Count; ++i)
-            {
-                Vector3 plantpos = currentMap.BombPlantPlaces[i];
-                if (pos.DistanceTo(plantpos) <= SettingsManager.DistanceToSpotToPlant)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            foreach (var place in bombPlantPlaces)
+                if (pos.DistanceTo(place.Position) < SettingsManager.DistanceToSpotToPlant)
+                    return place;
+            return null;
         }
 
         private void DefuseBomb(TDSPlayer character)
@@ -324,13 +322,9 @@ namespace TDS_Server.Instance.Lobby
             if (currentMap == null || currentMap.SyncedData.Type != EMapType.Bomb)
                 return;
 
-            foreach (Object place in bombPlantPlaces)
+            foreach (var place in bombPlantPlaces)
             {
                 place.Delete();
-            }
-            foreach (Blip blip in bombPlantBlips)
-            {
-                blip.Delete();
             }
             if (bomb != null)
             {
@@ -342,8 +336,7 @@ namespace TDS_Server.Instance.Lobby
                 plantBlip.Delete();
                 plantBlip = null;
             }
-            bombPlantPlaces = new List<Object>();
-            bombPlantBlips = new List<Blip>();            
+            bombPlantPlaces.Clear();          
         }
     }
 
