@@ -175,7 +175,7 @@ namespace TDS_Server.Instance.Lobby
             bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
             bomb.Rotation = new Vector3(270, 0, 0);
             plantPlace.Object.Delete();
-            plantPlace.Object = NAPI.Object.CreateObject(-263709501, currentMap.BombPlantPlaces[i], new Vector3(), 255, Dimension);
+            plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, Dimension);
             plantPlace.Blip.Color = 49;
             //bombPlantBlips[i].Flashing = true;
             #warning Implement after new Bridge version

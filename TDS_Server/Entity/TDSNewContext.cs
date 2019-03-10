@@ -617,7 +617,11 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.AllowDataTransfer).HasColumnType("bit(1)");
 
-                entity.Property(e => e.HitsoundOn).HasColumnType("bit(1)");
+                entity.Property(e => e.Bloodscreen).HasColumnType("bit(1)");
+
+                entity.Property(e => e.FloatingDamageInfo).HasColumnType("bit(1)");
+
+                entity.Property(e => e.Hitsound).HasColumnType("bit(1)");
 
                 entity.Property(e => e.Language).HasDefaultValueSql("'9'");
 

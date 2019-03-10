@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Damage
 
         public static void ShowBloodscreenIfNecessary()
         {
-            if (!Settings.ShowBloodscreen)
+            if (!Settings.Bloodscreen)
                 return;
             int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
             if (currentTotalHP == lastTotalHP)
@@ -57,8 +57,7 @@ namespace TDS_Client.Manager.Damage
             }
 
             EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false, CurrentWeaponDamage);
-
-            FloatingDamageInfo.Create(hitted, CurrentWeaponDamage);
+            DeathmatchInfo.HittedOpponent(hitted, CurrentWeaponDamage);
 
             // debug //
             if (target == hitted)

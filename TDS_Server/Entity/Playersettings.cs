@@ -6,8 +6,10 @@ namespace TDS_Server.Entity
     public partial class PlayerSettings
     {
         public uint Id { get; set; }
-        public bool HitsoundOn { get; set; }
         public byte Language { get; set; }
+        public bool Hitsound { get; set; }
+        public bool Bloodscreen { get; set; }
+        public bool FloatingDamageInfo { get; set; }
         public bool AllowDataTransfer { get; set; }
 
         public virtual Players IdNavigation { get; set; }

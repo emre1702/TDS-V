@@ -45,7 +45,10 @@
 
                 SyncedPlayerSettingsDto syncedPlayerSettings = new SyncedPlayerSettingsDto
                 {
-                    Language = entity.PlayerSettings.Language
+                    Language = entity.PlayerSettings.Language,
+                    Hitsound = entity.PlayerSettings.Hitsound,
+                    Bloodscreen = entity.PlayerSettings.Bloodscreen,
+                    FloatingDamageInfo = entity.PlayerSettings.FloatingDamageInfo
                 };
 
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, 

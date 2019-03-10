@@ -21,14 +21,16 @@ namespace TDS_Server.Manager.Player
                     Password = Utils.HashPWServer(password),
 #warning TODO: Make that nullable at client
                     Email = email,
-
                     IsVip = false
                 };
                 dbplayer.PlayerSettings = new PlayerSettings {
                     AllowDataTransfer = false,
 #warning TODO: Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
-                    HitsoundOn = true,
-                    Language = (byte)ELanguage.English
+                    Language = (byte)ELanguage.English,
+                    Hitsound = true,
+                    Bloodscreen = true,
+                    FloatingDamageInfo = true
+                    
                 };
                 dbplayer.PlayerStats = new PlayerStats
                 {

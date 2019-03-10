@@ -119,8 +119,8 @@ namespace TDS_Server.Instance
                 UpdateLastHitter(target, source, damage);
                 source.CurrentRoundStats.Damage += (uint) damage;
 
-                if (source.Entity.PlayerSettings.HitsoundOn)
-                    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
+                //if (source.Entity.PlayerSettings.HitsoundOn)
+                //    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
             }
         }
 

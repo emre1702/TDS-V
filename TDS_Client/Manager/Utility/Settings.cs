@@ -48,8 +48,9 @@ namespace TDS_Client.Manager.Utility
         }
 
         public static ILanguage Language { get; private set; } = languagesDict[LanguageEnum];
-        public static bool ShowBloodscreen = true;
-        public static bool HitsoundOn = true;
+        public static bool Bloodscreen => syncedPlayerSettings.Bloodscreen;
+        public static bool Hitsound => syncedPlayerSettings.Hitsound;
+        public static bool FloatingDamageInfo => syncedPlayerSettings.FloatingDamageInfo;
 
         private static SyncedServerSettingsDto syncedServerSettings;
         private static SyncedLobbySettingsDto syncedLobbySettings;

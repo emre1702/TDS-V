@@ -132,7 +132,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
-            Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
+            //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
@@ -169,10 +169,10 @@ namespace TDS_Client.Manager
             MainBrowser.OnLoadOwnMapRatings(datajson);
         }
 
-        private void OnHitOpponentMethod(object[] args)
+        /*private void OnHitOpponentMethod(object[] args)
         {
             DeathmatchInfo.HittedOpponent();
-        }
+        }*/
 
         // Join always means we also left another lobby (except on login)
         private void OnJoinLobbyMethod(object[] args)
