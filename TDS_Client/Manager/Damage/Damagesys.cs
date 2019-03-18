@@ -39,15 +39,6 @@ namespace TDS_Client.Manager.Damage
 
             Player hitted = GetHittedPlayer(targetPos);
 
-            if (hitted == null)
-            {
-                // debug //
-                if (target != null)
-                    Chat.Output("Target is there, hitted is null!");
-                //////////
-                return;
-            }
-
             if (Team.SameTeamPlayers.Contains(hitted))
             {
                 // debug //
@@ -56,19 +47,13 @@ namespace TDS_Client.Manager.Damage
                 return;
             }
 
-            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, false, CurrentWeaponDamage);
+            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, IsHeadshot(hitted, targetPos), CurrentWeaponDamage);
             DeathmatchInfo.HittedOpponent(hitted, CurrentWeaponDamage);
+        }
 
-            // debug //
-            if (target == hitted)
-                Chat.Output("Target and hitted are the same!");
-            else
-                Chat.Output("Target and hitted are different!");
-            
-            int damagedBone = 0;
-            hitted.GetLastDamageBone(ref damagedBone);
-            Chat.Output("Hitted Bone: " + damagedBone);
-            //////////
+        private static bool IsHeadshot(Player hitted, Vector3 pos)
+        {
+            return false;
         }
 
         private static Player GetHittedPlayer(Vector3 targetPos)
