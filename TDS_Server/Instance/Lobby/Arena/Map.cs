@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Utility;
@@ -28,7 +29,7 @@ namespace TDS_Server.Instance.Lobby
 
         public MapDto GetRandomMap()
         {
-            MapDto nextmap = maps[Utils.Rnd.Next(0, maps.Count)];
+            MapDto nextmap = maps[CommonUtils.Rnd.Next(0, maps.Count)];
             return nextmap;
         }
 

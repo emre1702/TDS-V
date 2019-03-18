@@ -11,7 +11,6 @@
     static class Utils
     {
         private static readonly StringBuilder strbuilder = new StringBuilder();
-        public static readonly Random Rnd = new Random();
         private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
 
         public static uint GetTimespan(int seconds = 0)

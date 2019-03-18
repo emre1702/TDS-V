@@ -11,6 +11,7 @@ namespace TDS_Server.Instance.Lobby
     using TDS_Common.Enum;
     using Newtonsoft.Json;
     using TDS_Server.Instance.Utility;
+    using TDS_Common.Manager.Utility;
 
     partial class Arena
     {
@@ -66,7 +67,7 @@ namespace TDS_Server.Instance.Lobby
             if (amount == 0)
                 return;
 
-            int rnd = Utils.Rnd.Next(amount);
+            int rnd = CommonUtils.Rnd.Next(amount);
             TDSPlayer character = terroristTeam.Players[rnd];
             if (character.Client.CurrentWeapon == WeaponHash.Unarmed)
                 BombToHand(character);
