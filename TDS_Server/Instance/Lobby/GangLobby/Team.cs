@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿namespace TDS_Server.Instance.Lobby
+{
 
-namespace TDS_Server.server.instance.lobby {
-
-    partial class GangLobby {
+    partial class GangLobby
+    {
 
         /*private Dictionary<Gang, int> gangTeamID = new Dictionary<Gang, int> ();
 

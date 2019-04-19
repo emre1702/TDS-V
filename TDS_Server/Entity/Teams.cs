@@ -5,6 +5,11 @@ namespace TDS_Server.Entity
 {
     public partial class Teams
     {
+        public Teams()
+        {
+            Gangs = new HashSet<Gangs>();
+        }
+
         public uint Id { get; set; }
         public byte Index { get; set; }
         public string Name { get; set; }
@@ -16,5 +21,6 @@ namespace TDS_Server.Entity
         public int SkinHash { get; set; }
 
         public virtual Lobbies LobbyNavigation { get; set; }
+        public virtual ICollection<Gangs> Gangs { get; set; }
     }
 }

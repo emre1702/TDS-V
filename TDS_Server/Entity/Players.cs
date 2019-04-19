@@ -26,9 +26,11 @@ namespace TDS_Server.Entity
         public byte AdminLvl { get; set; }
         public bool IsVip { get; set; }
         public sbyte Donation { get; set; }
+        public uint GangId { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
         public virtual AdminLevels AdminLvlNavigation { get; set; }
+        public virtual Gangs Gang { get; set; }
         public virtual PlayerSettings PlayerSettings { get; set; }
         public virtual PlayerStats PlayerStats { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }

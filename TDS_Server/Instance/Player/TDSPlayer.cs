@@ -13,6 +13,7 @@ using TDS_Common.Enum;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Utility;
+using TDS_Server.Instance.GangTeam;
 
 namespace TDS_Server.Instance.Player
 {
@@ -46,6 +47,18 @@ namespace TDS_Server.Instance.Player
                 }
                 _team = value;
             }
+        }
+        public Gang Gang
+        {
+            get
+            {
+                if (_gang == null)
+                {
+                    _gang = Gang.None;
+                }
+                return _gang;
+            }
+            set => _gang = value;
         }
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner
@@ -120,6 +133,7 @@ namespace TDS_Server.Instance.Player
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
         private Team _team;
+        private Gang _gang;
 
         public TDSPlayer(Client client)
         {

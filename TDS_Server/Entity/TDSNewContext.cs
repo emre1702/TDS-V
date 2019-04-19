@@ -20,6 +20,7 @@ namespace TDS_Server.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<CommandsAlias> CommandsAlias { get; set; }
         public virtual DbSet<CommandsInfo> CommandsInfo { get; set; }
+        public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
@@ -155,6 +156,28 @@ namespace TDS_Server.Entity
                     .WithMany(p => p.CommandsInfo)
                     .HasForeignKey(d => d.Language)
                     .HasConstraintName("FK_commands_info_languages");
+            });
+
+            modelBuilder.Entity<Gangs>(entity =>
+            {
+                entity.ToTable("gangs");
+
+                entity.HasIndex(e => e.TeamId)
+                    .HasName("FK_gang_teams");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Short)
+                    .IsRequired()
+                    .HasColumnType("varchar(5)");
+
+                entity.Property(e => e.TeamId).HasColumnName("TeamID");
+
+                entity.HasOne(d => d.Team)
+                    .WithMany(p => p.Gangs)
+                    .HasForeignKey(d => d.TeamId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_gang_teams");
             });
 
             modelBuilder.Entity<KillingspreeRewards>(entity =>
@@ -664,6 +687,9 @@ namespace TDS_Server.Entity
                 entity.HasIndex(e => e.AdminLvl)
                     .HasName("FK_players_admin_levels");
 
+                entity.HasIndex(e => e.GangId)
+                    .HasName("FK_players_gangs");
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AdminLvl).HasDefaultValueSql("'0'");
@@ -673,6 +699,8 @@ namespace TDS_Server.Entity
                     .HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Email).HasColumnType("varchar(100)");
+
+                entity.Property(e => e.GangId).HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.IsVip)
                     .HasColumnName("IsVIP")
@@ -699,6 +727,11 @@ namespace TDS_Server.Entity
                     .WithMany(p => p.Players)
                     .HasForeignKey(d => d.AdminLvl)
                     .HasConstraintName("FK_players_admin_levels");
+
+                entity.HasOne(d => d.Gang)
+                    .WithMany(p => p.Players)
+                    .HasForeignKey(d => d.GangId)
+                    .HasConstraintName("FK_players_gangs");
             });
 
             modelBuilder.Entity<Settings>(entity =>

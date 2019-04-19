@@ -1,10 +1,15 @@
-﻿namespace TDS_Server.server.instance.lobby {
+﻿using TDS_Server.Entity;
 
-    /*partial class GangLobby : FightLobby {
+namespace TDS_Server.Instance.Lobby
+{
 
-        public GangLobby ( string name, int id = -1 ) : base ( name, id ) {
+    partial class GangLobby : FightLobby
+    {
+
+        public GangLobby(Lobbies lobbyEntity) : base(lobbyEntity)
+        {
 
         }
 
-    }*/
+    }
 }

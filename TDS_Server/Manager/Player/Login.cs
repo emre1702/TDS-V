@@ -13,6 +13,7 @@
     using Newtonsoft.Json;
     using TDS_Server.Enum;
     using TDS_Common.Dto;
+    using TDS_Server.Instance.GangTeam;
 
     static class Login
     {
@@ -59,7 +60,8 @@
 
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(character);
-
+                character.Gang = Gang.GetFromId(entity.GangId);
+                
                 await dbcontext.SaveChangesAsync();
 
                 if (character.ChatLoaded)
@@ -69,8 +71,6 @@
                 LobbyEvents.JoinLobbyEvent(player, 0, 0);
 
                 MapFavourites.LoadPlayerFavourites(character);
-
-                //Gang.CheckPlayerGang(character);
 
                 RestLogsManager.Log(ELogType.Login, player, true);
             }
