@@ -38,7 +38,7 @@ namespace TDS_Server.Instance.Player
         public Team Team
         {
             get => _team;
-            set
+            private set
             {
                 if (value != _team)
                 {
