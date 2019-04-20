@@ -75,7 +75,7 @@ namespace TDS_Server.Manager.Commands
         {
             if (!IsReasonValid(reason, player))
                 return;
-            if (player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
@@ -95,12 +95,12 @@ namespace TDS_Server.Manager.Commands
             if (!IsReasonValid(reason, player))
                 return;
 
-            if (player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
 
-            Players target = await GetDatabasePlayerByName(targetname, player);
+            Players? target = await GetDatabasePlayerByName(targetname, player);
             if (target == null)
                 return;
 
@@ -138,7 +138,7 @@ namespace TDS_Server.Manager.Commands
             if (!IsReasonValid(reason, player))
                 return;
 
-            Players target = await GetDatabasePlayerByName(targetname, player);
+            Players? target = await GetDatabasePlayerByName(targetname, player);
             if (target == null)
                 return;
 
@@ -188,7 +188,7 @@ namespace TDS_Server.Manager.Commands
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Players target = await GetDatabasePlayerByName(targetname, player);
+            Players? target = await GetDatabasePlayerByName(targetname, player);
             if (target == null)
                 return;
 
@@ -238,7 +238,7 @@ namespace TDS_Server.Manager.Commands
             NAPI.Entity.SetEntityPosition(player.Client, pos);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Goto, player, (TDSPlayer)null, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                AdminLogsManager.Log(ELogType.Goto, player, (TDSPlayer?)null, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         private static bool IsReasonValid(string reason, TDSPlayer outputTo)
@@ -263,9 +263,9 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static async Task<Players> GetDatabasePlayerByName(string name, TDSPlayer outputTo)
+        private static async Task<Players?> GetDatabasePlayerByName(string name, TDSPlayer outputTo)
         {
-            Players target = null;
+            Players? target = null;
             using (var dbcontext = new TDSNewContext())
             {
                 target = await dbcontext.Players.Where(p => p.Name == name).FirstOrDefaultAsync();

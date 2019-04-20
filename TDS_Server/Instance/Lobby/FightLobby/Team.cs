@@ -37,12 +37,12 @@ namespace TDS_Server.Instance.Lobby
             return Teams[startindextoiterate];
         }
 
-        private Team GetNextNonSpectatorTeamWithPlayers(Team start)
+        private Team? GetNextNonSpectatorTeamWithPlayers(Team? start)
         {
-            return GetNextNonSpectatorTeamWithPlayers(start.Entity.Index);
+            return GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private Team GetNextNonSpectatorTeamWithPlayers(uint startindex)
+        private Team? GetNextNonSpectatorTeamWithPlayers(uint startindex)
         {
             uint startindextoiterate = startindex;
             do
@@ -53,16 +53,18 @@ namespace TDS_Server.Instance.Lobby
             if (startindextoiterate == 0)
                 startindextoiterate = 1;
             Team team = Teams[startindextoiterate];
+            if (team.SpectateablePlayers == null)
+                return null;
 
             return team.SpectateablePlayers.Count == 0 ? null : team;
         }
 
-        private Team GetPreviousNonSpectatorTeamWithPlayers(Team start)
+        private Team? GetPreviousNonSpectatorTeamWithPlayers(Team? start)
         {
-            return GetPreviousNonSpectatorTeamWithPlayers(start.Entity.Index);
+            return GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private Team GetPreviousNonSpectatorTeamWithPlayers(uint startindex)
+        private Team? GetPreviousNonSpectatorTeamWithPlayers(uint startindex)
         {
             int startindextoiterate = (int) startindex;
             do
@@ -73,6 +75,8 @@ namespace TDS_Server.Instance.Lobby
             if (startindextoiterate == 0)
                 startindextoiterate = Teams.Length - 1;
             Team team = Teams[startindextoiterate];
+            if (team.SpectateablePlayers == null)
+                return null;
 
             return team.SpectateablePlayers.Count == 0 ? null : team;
         }

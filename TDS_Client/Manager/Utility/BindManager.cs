@@ -29,17 +29,17 @@ namespace TDS_Client.Manager.Utility
         {
             if (!bindedKeys.ContainsKey(key))
                 bindedKeys[key] = new List<KeyBindDto>();
-            bindedKeys[key].Add(new KeyBindDto() { Method = method, OnPressState = pressState });
+            bindedKeys[key].Add(new KeyBindDto(method: method, onPressState: pressState));
         }
 
         public static void Add(Control control, Action<Control> method, EKeyPressState pressState = EKeyPressState.Down, bool OnEnabled = true, bool OnDisabled = false)
         {
             if (!bindedControls.ContainsKey(control))
                 bindedControls[control] = new List<ControlBindDto>();
-            bindedControls[control].Add(new ControlBindDto() { Method = method, OnPressState = pressState, OnEnabled = OnEnabled, OnDisabled = OnDisabled });
+            bindedControls[control].Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
         }
 
-        public static void Remove(ConsoleKey key, Action<ConsoleKey> method = null, EKeyPressState pressState = EKeyPressState.None)
+        public static void Remove(ConsoleKey key, Action<ConsoleKey>? method = null, EKeyPressState pressState = EKeyPressState.None)
         {
             if (!bindedKeys.ContainsKey(key))
                 return;
@@ -51,7 +51,7 @@ namespace TDS_Client.Manager.Utility
                 bindedKeys[key].Remove(entry);
         }
 
-        public static void Remove(Control control, Action<Control> method = null, EKeyPressState pressState = EKeyPressState.None)
+        public static void Remove(Control control, Action<Control>? method = null, EKeyPressState pressState = EKeyPressState.None)
         {
             if (!bindedControls.ContainsKey(control))
                 return;

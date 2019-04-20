@@ -88,7 +88,7 @@
         {
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
-            #warning TODO Make the name settable
+            //todo TODO Make the name settable
             player.Name = player.SocialClubName;
 
             bool isPlayerRegistered = false;
@@ -105,7 +105,7 @@
                         {
                             string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
                             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
-                            #warning Test line break and display
+                            //todo Test line break and display
                             player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
                             return;
                         }
@@ -120,6 +120,8 @@
 
         public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
+            if (target.Entity == null)
+                return;
             ChangePlayerMuteTime(admin, target.Entity, minutes, reason);
         }
 

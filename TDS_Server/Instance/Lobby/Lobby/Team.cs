@@ -82,6 +82,8 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!teamOrderDict.ContainsKey(teamOrder))
                 return;
+            if (character.Team == null)
+                return;
 
             Team team = character.Team;
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);

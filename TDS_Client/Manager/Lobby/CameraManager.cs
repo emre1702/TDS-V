@@ -9,7 +9,7 @@ namespace TDS_Client.Manager.Lobby
     static class CameraManager
     {
         private static int cam = Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
-        private static TDSTimer timer;
+        private static TDSTimer? timer;
 
         public static void SetToMapCenter(Vector3 mapcenter)
         {
@@ -37,9 +37,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Stop()
         {
-            if (timer == null)
-                return;
-            timer.Kill();
+            timer?.Kill();
             timer = null;
         }
     }

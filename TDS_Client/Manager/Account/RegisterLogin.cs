@@ -9,7 +9,7 @@ namespace TDS_Client.Manager.Account
 {
     static class RegisterLogin
     {
-        public static HtmlWindow Browser;
+        public static HtmlWindow? Browser;
         private static string name;
         private static bool isRegistered;
 
@@ -33,19 +33,19 @@ namespace TDS_Client.Manager.Account
 
         public static void Stop()
         {
-            Browser.Destroy();
+            Browser?.Destroy();
             Browser = null;
             CursorManager.Visible = false;
         }
 
         public static void SendDataToBrowser()
         {
-            Browser.ExecuteJs($"setLoginPanelData(`{name}`, {isRegistered}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser?.ExecuteJs($"setLoginPanelData(`{name}`, {isRegistered}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
 
         public static void SyncLanguage()
         {
-            Browser.ExecuteJs($"loadLanguage(`{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser?.ExecuteJs($"loadLanguage(`{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
     }
 }

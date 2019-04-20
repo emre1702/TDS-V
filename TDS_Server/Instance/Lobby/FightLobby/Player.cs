@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.Lobby
         {
             base.RemovePlayer(character);
 
-            character.Team.SpectateablePlayers?.Remove(character);
+            character.Team?.SpectateablePlayers?.Remove(character);
         }
 
         public void KillPlayer(Client player, string reason)

@@ -19,19 +19,18 @@ namespace TDS_Client.Instance.Draw
         private float damage;
         private ulong startTicks;
         private Vector3 targetPosition;
-        private DxText text;
+        private DxText? text;
         private bool remove = false;
 
-        public static void Create(Player target, float damage)
+        public FloatingDamageInfo(Player target, float damage)
         {
-            FloatingDamageInfo damageInfo = new FloatingDamageInfo()
-            {
-                damage = damage,
-                startTicks = TimerManager.ElapsedTicks,
-                targetPosition = target.Position
-            };
-            damageInfos.Add(damageInfo);
-        } 
+            this.damage = damage;
+            startTicks = TimerManager.ElapsedTicks;
+            targetPosition = target.Position;
+
+            damageInfos.Add(this);
+        }
+
         
         private void UpdatePosition()
         {
@@ -72,7 +71,7 @@ namespace TDS_Client.Instance.Draw
 
         private void Remove()
         {
-            text.Remove();
+            text?.Remove();
         }
     }
 }

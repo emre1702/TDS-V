@@ -27,26 +27,26 @@ namespace TDS_Server.Manager.Player
             return clientPlayers[client];
         }
 
-        public static Players GetEntity(this Client client)
+        public static Players? GetEntity(this Client client)
         {
-            return GetChar(client)?.Entity;
+            return GetChar(client).Entity;
         }
 
-        public static TDSPlayer GetPlayer(uint id)
+        public static TDSPlayer? GetPlayer(uint id)
         {
             foreach (var entry in clientPlayers)
             {
-                if (entry.Value.Entity.Id == id)
-                {
+                if (entry.Value.Entity == null)
+                    continue;
+                if ((entry.Value.Entity?.Id ?? 0) == id)
                     return entry.Value;
-                }
             }
             return null;
         }
 
-        public static PlayerSettings GetSettings(this Client player)
+        public static PlayerSettings? GetSettings(this Client player)
         {
-            return player.GetChar().Entity.PlayerSettings;
+            return player.GetChar().Entity?.PlayerSettings;
         }
 
         public static async Task<Players> GetEntityByID(uint id)

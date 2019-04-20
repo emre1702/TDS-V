@@ -16,7 +16,7 @@ namespace TDS_Client.Manager.Damage
                 MainBrowser.PlayHitsound();
 
             if (Settings.FloatingDamageInfo)
-                FloatingDamageInfo.Create(hitted, damage);
+                new FloatingDamageInfo(hitted, damage);
         }
 
         /*

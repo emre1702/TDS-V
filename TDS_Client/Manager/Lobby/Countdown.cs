@@ -14,8 +14,8 @@ namespace TDS_Client.Manager.Lobby
 {
     static class Countdown
     {
-        private static DxText text;
-        private static TDSTimer countdownTimer;
+        private static DxText? text;
+        private static TDSTimer? countdownTimer;
         private static uint currentCountdownTime;
 
         private static string[] countdownSounds = new string[] { "go", "1", "2", "3" };
@@ -81,6 +81,8 @@ namespace TDS_Client.Manager.Lobby
                 End();
                 return;
             }
+            if (text == null)
+                return;
             text.Text = currentCountdownTime.ToString();
             text.SetScale(2f);
             text.BlendScale(6f, 1000);

@@ -11,7 +11,7 @@ namespace TDS_Client.Manager.Draw
         private static ulong msgDurationMs;
         private static bool animatedOut;
         private static int msgBgColor;
-        private static BasicScaleform fmidsizedScaleform;
+        private static BasicScaleform? fmidsizedScaleform;
 
         private static BasicScaleform midsizedScaleform
         {

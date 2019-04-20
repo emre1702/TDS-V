@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Browser
     {
         public static HtmlWindow Browser { get; set; }
         private static bool roundEndReasonShowing;
-        private static Queue<string> executeQueue = new Queue<string>();
+        private readonly static Queue<string> executeQueue = new Queue<string>();
 
         public static void Load()
         {
@@ -38,7 +38,7 @@ namespace TDS_Client.Manager.Browser
             {
                 Browser.ExecuteJs(execStr);
             }
-            executeQueue = null;
+            executeQueue.Clear();
         }
 
         public static void OnLoadOwnMapRatings(string datajson)

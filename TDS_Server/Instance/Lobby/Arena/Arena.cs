@@ -16,7 +16,10 @@ namespace TDS_Server.Instance.Lobby
             roundStatusMethod[ERoundStatus.Round] = StartRound;
             roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
-            DurationsDict[ERoundStatus.Round] = entity.RoundTime.Value * 1000;
+            DurationsDict[ERoundStatus.Round] = (entity.RoundTime.HasValue ? entity.RoundTime.Value : 360) * 1000;
+
+            terroristTeam = Teams[2];
+            counterTerroristTeam = Teams[1];
         }
 
         public override void Start()

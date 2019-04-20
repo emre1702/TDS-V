@@ -53,7 +53,7 @@ namespace TDS_Server.Manager.Maps
                         MapPathByName[map.SyncedData.Name.ToLower()] = filename;
                     }
                     else
-                        ErrorLogsManager.Log("Map " + filename + " got no name!", Environment.StackTrace, (Client)null);
+                        ErrorLogsManager.Log("Map " + filename + " got no name!", Environment.StackTrace, (Client?)null);
                 }
             }
             allMapsSyncJson = JsonConvert.SerializeObject(allMapsSync);
@@ -90,7 +90,7 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        private static Vector3 GetCenterOfPositions(IEnumerable<Vector3> poly, float zpos = -1)
+        private static Vector3? GetCenterOfPositions(IEnumerable<Vector3> poly, float zpos = -1)
         {
             int length = poly.Count();
             if (poly.Count() <= 2)
@@ -111,12 +111,12 @@ namespace TDS_Server.Manager.Maps
             return new Vector3(centerX / length, centerY / length, centerZ / length);
         }
 
-        private static Vector3 GetCenterByLimits(MapDto map, float zpos)
+        private static Vector3? GetCenterByLimits(MapDto map, float zpos)
         {
             return GetCenterOfPositions(map.MapLimits, zpos) ?? GetCenterBySpawns(map);
         }
 
-        private static Vector3 GetCenterBySpawns(MapDto map)
+        private static Vector3? GetCenterBySpawns(MapDto map)
         {
             int amountteams = map.TeamSpawns.Count;
             if (amountteams == 1)
@@ -128,10 +128,10 @@ namespace TDS_Server.Manager.Maps
                 IEnumerable<Vector3> positions = map.TeamSpawns.Select(entry => entry[0].Position);
                 return GetCenterOfPositions(positions);
             }
-            return new Vector3();
+            return null;
         }
 
-        private static Vector3 GetCenter(MapDto map)
+        private static Vector3? GetCenter(MapDto map)
         {
             if (map.MapLimits.Count > 0)
             {
@@ -149,65 +149,66 @@ namespace TDS_Server.Manager.Maps
             string path = SettingsManager.MapsPath + MapCreator[mapfilename] + "/" + mapfilename + ".xml";
             try
             {
-                using (XmlReader reader = XmlReader.Create(path, xmlReaderSettings))
+                using XmlReader reader = XmlReader.Create(path, xmlReaderSettings);
+
+                while (await reader.ReadAsync().ConfigureAwait(false))
                 {
-                    SyncedMapDataDto syncdata = new SyncedMapDataDto();
-                    map.SyncedData = syncdata;
-                    while (await reader.ReadAsync().ConfigureAwait(false))
+                    if (reader.NodeType != XmlNodeType.Element)
+                        continue;
+
+                    switch (reader.Name.ToLower())
                     {
-                        if (reader.NodeType == XmlNodeType.Element)
-                        {
-                            if (reader.Name == "map")
+                        case "map":
+                            map.SyncedData.Name = reader["name"];
+                            if (reader.GetAttribute("type") != null)
+                                map.SyncedData.Type = reader["type"] == "normal" ? EMapType.Normal : EMapType.Bomb;
+                            map.CreatorID = Convert.ToUInt32(reader["creatorid"]);
+                            //Todo Add minplayers and maxplayers to maps
+                            break;
+
+                        case "english":
+                        case "german":
+                            map.SyncedData.Description[reader.Name == "english" ? (int)ELanguage.English : (int)ELanguage.German] 
+                                = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                            break;
+
+                        case "limit":
+                            Vector3 pos = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), 0);
+                            map.MapLimits.Add(pos);
+                            break;
+
+                        case "center":
+                            map.MapCenter = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat());
+                            break;
+
+                        case "bomb":
+                            Vector3 bombPos = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat());
+                            map.BombPlantPlaces.Add(bombPos);
+                            break;
+
+                        case string startsWithTeam when startsWithTeam.StartsWith("team"):
+                            int teamnumber = Convert.ToInt32(reader.Name.Substring(4));
+                            if (map.TeamSpawns.Count < teamnumber)
                             {
-                                syncdata.Name = reader["name"];
-                                if (reader.GetAttribute("type") != null)
-                                    syncdata.Type = reader["type"] == "normal" ? EMapType.Normal : EMapType.Bomb;
-                                map.CreatorID = Convert.ToUInt32(reader["creatorid"]);
-                                #warning Add minplayers and maxplayers to maps
+                                map.TeamSpawns.Add(new List<PositionRotationDto>());
                             }
-                            else if (reader.Name == "english" || reader.Name == "german")
-                            {
-                                syncdata.Description[reader.Name == "english" ? (int)ELanguage.English : (int)ELanguage.German] = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                            }
-                            else if (reader.Name == "limit")
-                            {
-                                Vector3 pos = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), 0);
-                                map.MapLimits.Add(pos);
-                            }
-                            else if (reader.Name == "center")
-                            {
-                                map.MapCenter = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat());
-                            }
-                            else if (reader.Name == "bomb")
-                            {
-                                Vector3 pos = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat());
-                                map.BombPlantPlaces.Add(pos);
-                            }
-                            else if (reader.Name.StartsWith("team"))
-                            {
-                                int teamnumber = Convert.ToInt32(reader.Name.Substring(4));
-                                if (map.TeamSpawns.Count < teamnumber)
-                                {
-                                    map.TeamSpawns.Add(new List<PositionRotationDto>()); 
-                                }
-                                map.TeamSpawns[teamnumber-1].Add(new PositionRotationDto
-                                {
-                                    Position = new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat()),
-                                    Rotation = reader["rot"].ToFloat()
-                                });
-                            }
-                        }
+                            map.TeamSpawns[teamnumber - 1].Add(new PositionRotationDto
+                            (
+                                position: new Vector3(reader["x"].ToFloat(), reader["y"].ToFloat(), reader["z"].ToFloat()),
+                                rotation: reader["rot"].ToFloat()
+                            ));
+                            break;
                     }
                 }
                 if (map.MapCenter == null)
                 {
-                    map.MapCenter = GetCenter(map);
+                    map.MapCenter = GetCenter(map) ?? new Vector3();
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log($"Error in Manager.Map.GetMapClass ({path})\n{ex.ToString()}", Environment.StackTrace, (Client)null);
+                ErrorLogsManager.Log($"Error in Manager.Map.GetMapClass ({path})\n{ex.ToString()}", Environment.StackTrace, (Client?)null);
                 return false;
             }
         }

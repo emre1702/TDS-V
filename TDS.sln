@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client", "TDS_Client\TD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Common", "TDS_Common\TDS_Common.csproj", "{FADB6D4A-1502-4912-A565-FD5F2F009387}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Server_DB", "TDS_Server_DB\TDS_Server_DB.csproj", "{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,18 @@ Global
 		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|x64.ActiveCfg = Debug|Any CPU
 		{FADB6D4A-1502-4912-A565-FD5F2F009387}.Server|x64.Build.0 = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|x64.Build.0 = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Release|x64.ActiveCfg = Release|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Release|x64.Build.0 = Release|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|x64.ActiveCfg = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

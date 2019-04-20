@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace TDS_Common.Dto
 {
@@ -11,5 +12,20 @@ namespace TDS_Common.Dto
         public uint Assists;
         public uint Deaths;
         public uint TeamIndex;
+
+        [JsonIgnore]
+        public string Json;
+
+        public SyncedScoreboardLobbyDataDto(string name, uint playtimeMinutes, uint kills, uint assists, uint deaths, uint teamIndex)
+        {
+            Name = name;
+            PlaytimeMinutes = playtimeMinutes;
+            Kills = kills;
+            Assists = assists;
+            Deaths = deaths;
+            TeamIndex = teamIndex;
+
+            Json = JsonConvert.SerializeObject(this);
+        }
     }
 }

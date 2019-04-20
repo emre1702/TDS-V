@@ -48,7 +48,8 @@ namespace TDS_Client.Manager.Draw
 
         public static void AddMainmenuData(List<SyncedScoreboardMainmenuLobbyDataDto> list)
         {
-            grid.Header.Activated = false;
+            if (grid.Header != null)
+                grid.Header.Activated = false;
 
             Color backLobbyOfficialColor = Color.FromArgb(187, 190, 190, 190);
             Color backLobbyColor = Color.FromArgb(187, 140, 140, 140);
@@ -56,13 +57,11 @@ namespace TDS_Client.Manager.Draw
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black, 
+                DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black, 
                     $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
-                grid.AddRow(lobbynamerow);
                 if (entry.PlayersStr != null)
                 {
-                    DxGridRow lobbyplayersrow = new DxGridRow(null, Color.DarkGray, Color.White, entry.PlayersStr, scale: 0.25f);
-                    grid.AddRow(lobbyplayersrow);
+                    DxGridRow lobbyplayersrow = new DxGridRow(grid, null, Color.DarkGray, Color.White, entry.PlayersStr, scale: 0.25f);
                 }
             }
         }
@@ -73,8 +72,7 @@ namespace TDS_Client.Manager.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
-                grid.AddRow(row);
+                DxGridRow row = new DxGridRow(grid, null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 new DxGridCell(playerdata.Name, row, columns[0]);
                 new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
                 new DxGridCell(playerdata.Kills.ToString(), row, columns[2]);
@@ -84,11 +82,14 @@ namespace TDS_Client.Manager.Draw
             }
 
             AddMainmenuData(lobbylist);
-            grid.Header.Activated = true;
+            if (grid.Header != null)
+                grid.Header.Activated = true;
         }
 
         public static void LoadLanguage()
         {
+            if (grid.Header == null)
+                return;
             grid.Header.Cells[0].SetText(Settings.Language.SCOREBOARD_NAME);
             grid.Header.Cells[1].SetText(Settings.Language.SCOREBOARD_PLAYTIME);
             grid.Header.Cells[2].SetText(Settings.Language.SCOREBOARD_KILLS);
@@ -138,8 +139,7 @@ namespace TDS_Client.Manager.Draw
 
         private static void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(0.035f, Color.FromArgb(187, 20, 20, 20), Color.White, textAlignment: UIResText.Alignment.Centered);
-            grid.SetHeader(header);
+            DxGridRow header = new DxGridRow(grid, 0.035f, Color.FromArgb(187, 20, 20, 20), Color.White, textAlignment: UIResText.Alignment.Centered, isHeader: true);
             new DxGridCell(Settings.Language.SCOREBOARD_NAME, header, columns[0]);
             new DxGridCell(Settings.Language.SCOREBOARD_PLAYTIME, header, columns[1]);
             new DxGridCell(Settings.Language.SCOREBOARD_KILLS, header, columns[2]);

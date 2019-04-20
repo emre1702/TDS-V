@@ -1,5 +1,4 @@
 using GTANetworkAPI;
-using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using System.Linq;
 using TDS_Common.Dto;
@@ -23,7 +22,9 @@ namespace TDS_Server.Instance.Lobby
             StringBuilder strbuilder = new StringBuilder();
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.IsSpectator)
+                if (character.CurrentRoundStats == null)
+                    return;
+                if (team == null || team.IsSpectator)
                     return;
                     
                 uint killreward = 0;
@@ -56,7 +57,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (!team.IsSpectator)
+                if (team != null && !team.IsSpectator)
                 {
                     RemoveAsSpectator(character);
                     team.SpectateablePlayers?.Add(character);
@@ -64,7 +65,7 @@ namespace TDS_Server.Instance.Lobby
                 SetPlayerReadyForRound(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
             });
-            if (currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
                 GiveBombToRandomTerrorist();
         }
 

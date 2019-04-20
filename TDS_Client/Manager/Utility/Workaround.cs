@@ -58,7 +58,7 @@ namespace TDS_Client.Manager.Utility
 
         private static void UnspectatePlayerWorkaroundMethod(object[] args)
         {
-#warning Add unspectatePlayer workaround (need a spectate system for this)
+//todo Add unspectatePlayer workaround (need a spectate system for this)
         }
     }
 }

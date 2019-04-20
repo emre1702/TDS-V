@@ -6,7 +6,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        public static bool operator ==(Lobby lobby1, Lobby lobby2)
+        public static bool operator ==(Lobby? lobby1, Lobby? lobby2)
         {
             if (lobby1 is null)
                 return lobby2 is null;
@@ -15,7 +15,7 @@ namespace TDS_Server.Instance.Lobby
             return lobby1.Id == lobby2.Id;
         }
 
-        public static bool operator !=(Lobby lobby1, Lobby lobby2)
+        public static bool operator !=(Lobby? lobby1, Lobby? lobby2)
         {
             if (lobby1 is null)
                 return !(lobby2 is null);

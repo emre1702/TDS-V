@@ -16,3 +16,4 @@ TDS_Client/packages/*
 TDS_Client/bin/*
 TDS-CP-Server/bin/*
 TDS-CP-Server/obj/*
+/TDS_Server_DB/DB.config

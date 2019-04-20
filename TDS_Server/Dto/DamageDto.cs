@@ -11,8 +11,8 @@ namespace TDS_Server.Dto
 
         public DamageDto(LobbyWeapons weapon)
         {
-            Damage = weapon.Damage.Value;
-            HeadMultiplier = weapon.HeadMultiplicator.Value;
+            Damage = weapon.Damage ?? 0;
+            HeadMultiplier = weapon.HeadMultiplicator ?? 0;
         }
     }
 }

@@ -23,10 +23,10 @@ namespace TDS_Server.Manager.Utility
             AdminLevels = dbcontext.AdminLevels
                 .OrderBy(lvl => lvl.Level)
                 .Select(lvl => new AdminLevelDto
-                            {
-                                Level = lvl.Level,
-                                FontColor = "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
-                            })
+                            (
+                                lvl.Level,
+                                "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
+                            ))
                 .AsNoTracking()
                 .ToDictionary(lvl => lvl.Level, lvl => lvl);
 

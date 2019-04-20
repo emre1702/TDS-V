@@ -9,15 +9,15 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 {
     class DxGrid : Dx
     {
-        public List<DxGridColumn> Columns = new List<DxGridColumn>();
-        private List<DxGridRow> rows = new List<DxGridRow>();
+        public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
+        private readonly List<DxGridRow> rows = new List<DxGridRow>();
         public int ScrollIndex;
 
         public float X, Y, Width, BodyHeight;
         public UIResText.Alignment Alignment;
         public float RowHeight;
 
-        public DxGridRow Header { get; private set; }
+        public DxGridRow? Header { get; private set; }
 
         private float bodyTextScale;
         private Color bodyBackColor;
@@ -64,21 +64,26 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         {
             Header = row;
             row.Grid = this;
+            children.Add(row);
         }
 
         public void AddRow(DxGridRow row)
         {
             rows.Add(row);
             row.Grid = this;
+            children.Add(row);
         }
 
         public void AddCell(DxGridCell cell)
         {
             cell.Row.AddCell(cell);
+            children.Add(cell);
         }
 
         public void ClearRows()
         {
+            foreach (var row in rows)
+                row.Remove();
             rows.Clear();
         }
 

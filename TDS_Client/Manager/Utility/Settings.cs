@@ -64,14 +64,14 @@ namespace TDS_Client.Manager.Utility
 
         //public static uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public static uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
-        public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs.Value;
+        public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs ?? 0;
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
-        public static uint CountdownTime => syncedLobbySettings.CountdownTime.Value;
+        public static uint CountdownTime => syncedLobbySettings.CountdownTime ?? 0;
         public static int MapChooseTime => syncedServerSettings.MapChooseTime;
-        public static uint RoundTime => syncedLobbySettings.RoundTime.Value;
+        public static uint RoundTime => syncedLobbySettings.RoundTime ?? 0;
         public static int RoundEndTime => syncedServerSettings.RoundEndTime;
-        public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime.Value;
-        public static bool InLobbyWithMaps => syncedLobbySettings == null ? syncedLobbySettings.InLobbyWithMaps : false;
+        public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime ?? 0;
+        public static bool InLobbyWithMaps => syncedLobbySettings?.InLobbyWithMaps ?? false;
 
         public static void Load()
         {
@@ -111,9 +111,9 @@ namespace TDS_Client.Manager.Utility
         public static uint GetPlantOrDefuseTime(EPlantDefuseStatus status)
         {
             if (status == EPlantDefuseStatus.Defusing)
-                return syncedLobbySettings.BombDefuseTimeMs.Value;
+                return syncedLobbySettings.BombDefuseTimeMs ?? 0;
             else if (status == EPlantDefuseStatus.Planting)
-                return syncedLobbySettings.BombPlantTimeMs.Value;
+                return syncedLobbySettings.BombPlantTimeMs ?? 0;
             return 0;
         }
 

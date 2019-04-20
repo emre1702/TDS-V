@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Utility {
             {
                 int amountnewentries = await dbcontext
                     .Offlinemessages
-                    .Where(msg => msg.SourceId == player.Entity.Id && msg.AlreadyLoadedOnce)
+                    .Where(msg => player.Entity != null && msg.SourceId == player.Entity.Id && msg.AlreadyLoadedOnce)
                     .AsNoTracking()
                     .CountAsync();
                 int amountentries = await dbcontext

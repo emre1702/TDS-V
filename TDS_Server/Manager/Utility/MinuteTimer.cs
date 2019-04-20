@@ -16,7 +16,7 @@
 
         public static async void Execute()
         {
-            Client exceptionsource = null;
+            Client? exceptionsource = null;
             int currenttick = Environment.TickCount;
             ++counter;
 

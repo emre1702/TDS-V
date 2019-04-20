@@ -8,7 +8,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 {
     class DxGridRow : Dx
     {
-        public string text;
+        public string? text;
         public float Y;
         private float? height;
         public Color BackColor;
@@ -27,8 +27,9 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public bool UseColorForWholeRow = true;
 
-        public DxGridRow(float? height, Color backColor, Color textColor, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool relative = true) : base(false)
+        public DxGridRow(DxGrid grid, float? height, Color backColor, Color textColor, string? text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool isHeader = false, bool relative = true) : base(false)
         {
+            this.Grid = grid;
             this.height = height;
             BackColor = backColor;
             TextColor = textColor;
@@ -39,6 +40,11 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             RelativePos = relative;
 
             TextHeight = Ui.GetTextScaleHeight(scale, (int)font);
+
+            if (isHeader)
+                grid.SetHeader(this);
+            else 
+                grid.AddRow(this);
         }
 
         private void DrawBackground()

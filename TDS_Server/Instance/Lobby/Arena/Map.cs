@@ -14,14 +14,14 @@ namespace TDS_Server.Instance.Lobby
     partial class Arena
     {
 
-        private MapDto currentMap;
-        private List<MapDto> maps;
+        private MapDto? currentMap;
+        private List<MapDto> maps = new List<MapDto>();
         private List<Blip> mapBlips = new List<Blip>();
-        private string mapsJson;
+        private string mapsJson = string.Empty;
 
         private MapDto GetNextMap()
         {
-            MapDto map = GetVotedMap();
+            MapDto? map = GetVotedMap();
             if (map != null)
                 return map;
             return GetRandomMap();
@@ -58,8 +58,12 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private PositionRotationDto GetMapRandomSpawnData(Team team)
+        private PositionRotationDto? GetMapRandomSpawnData(Team? team)
         {
+            if (currentMap == null)
+                return null;
+            if (team == null)
+                return null;
             int index = team.SpawnCounter++;
             if (index >= currentMap.TeamSpawns[team.Entity.Index - 1].Count)
             {
@@ -81,7 +85,7 @@ namespace TDS_Server.Instance.Lobby
             });
         }
 
-        public void SetMapList(List<MapDto> themaps, string syncjson = null)
+        public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
             maps = themaps;
             mapsJson = syncjson != null ? syncjson : JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());

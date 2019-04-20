@@ -94,7 +94,7 @@ namespace TDS_Server.Instance
         private readonly Dictionary<WeaponHash, DamageDto> damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
-        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer source, int clientHasSentThisDamage)
+        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer? source, int clientHasSentThisDamage)
         {
             if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
@@ -117,14 +117,15 @@ namespace TDS_Server.Instance
             if (source != null)
             {
                 UpdateLastHitter(target, source, damage);
-                source.CurrentRoundStats.Damage += (uint) damage;
+                if (source.CurrentRoundStats != null)
+                    source.CurrentRoundStats.Damage += (uint) damage;
 
                 //if (source.Entity.PlayerSettings.HitsoundOn)
                 //    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
             }
         }
 
-        public void UpdateLastHitter(TDSPlayer target, TDSPlayer source, int damage)
+        public void UpdateLastHitter(TDSPlayer target, TDSPlayer? source, int damage)
         {
             if (source == null)
                 return;

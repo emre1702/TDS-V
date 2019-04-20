@@ -29,40 +29,38 @@ namespace TDS_Server.Instance.Lobby
         // id: -263709501
 
         private static readonly Dictionary<Lobby, ColShape> lobbyBombTakeCol = new Dictionary<Lobby, ColShape>();
-        private Team terroristTeam;
-        private Team counterTerroristTeam;
+        private readonly Team terroristTeam;
+        private readonly Team counterTerroristTeam;
 
         private readonly List<BombPlantPlaceDto> bombPlantPlaces = new List<BombPlantPlaceDto>();
 
-        private Object bomb;
-        private TDSPlayer bombAtPlayer;
-        private TDSTimer bombDetonateTimer,
+        private Object? bomb;
+        private TDSPlayer? bombAtPlayer;
+        private TDSTimer? bombDetonateTimer,
                       bombPlantDefuseTimer;
-        private TDSPlayer planter;
-        private Blip plantBlip;
-        private Marker bombTakeMarker;
+        private TDSPlayer? planter;
+        private Blip? plantBlip;
+        private Marker? bombTakeMarker;
 
         private void StartBombMapChoose(MapDto map)
         {
             foreach (Vector3 bombplace in map.BombPlantPlaces)
             {
-                BombPlantPlaceDto dto = new BombPlantPlaceDto
-                {
-                    Object = NAPI.Object.CreateObject(-51423166, bombplace, new Vector3(), 255, Dimension),
-                    Blip = NAPI.Blip.CreateBlip(bombplace, Dimension),
-                    Position = bombplace
-                };
+                BombPlantPlaceDto dto = new BombPlantPlaceDto(
+                    obj: NAPI.Object.CreateObject(-51423166, bombplace, new Vector3(), 255, Dimension), 
+                    blip: NAPI.Blip.CreateBlip(bombplace, Dimension),
+                    pos: bombplace
+                );
                 dto.Blip.Sprite = 433;
                 bombPlantPlaces.Add(dto);
             }
             bomb = NAPI.Object.CreateObject(1764669601, map.BombPlantPlaces[0], new Vector3(), 255, Dimension);
-
-            terroristTeam = Teams[2];
-            counterTerroristTeam = Teams[1];
         }
 
         private void GiveBombToRandomTerrorist()
         {
+            if (currentMap == null)
+                return;
             int amount = terroristTeam.Players.Count;
             if (amount == 0)
                 return;
@@ -94,6 +92,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void BombToHand(TDSPlayer character)
         {
+            if (bomb == null)
+                return;
             Workaround.DetachEntity(bomb);
             Workaround.SetEntityCollisionless(bomb, true, this);
             Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), this);
@@ -105,6 +105,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void BombToBack(TDSPlayer character)
         {
+            if (bomb == null)
+                return;
             Workaround.DetachEntity(bomb);
             Workaround.SetEntityCollisionless(bomb, true, this);
             Workaround.AttachEntityToEntity(bomb, character.Client, EBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), this);
@@ -130,7 +132,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((character, team) =>
             {
-                if (team.IsSpectator)
+                if (team == null || team.IsSpectator)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == terroristTeam)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
@@ -152,7 +154,7 @@ namespace TDS_Server.Instance.Lobby
                 int damage = character.Client.Health + character.Client.Armor;
                 DmgSys.UpdateLastHitter(character, planter, damage);
                 character.Damage(ref damage);
-                if (planter != null)
+                if (planter != null && planter.CurrentRoundStats != null)
                     planter.CurrentRoundStats.Damage += (uint)damage;
             });
             // TERROR WON //
@@ -163,6 +165,8 @@ namespace TDS_Server.Instance.Lobby
         private void PlantBomb(TDSPlayer player)
         {
             if (player.Client.Dead)
+                return;
+            if (bomb == null)
                 return;
             player.Client.StopAnimation();
 
@@ -179,10 +183,10 @@ namespace TDS_Server.Instance.Lobby
             plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, Dimension);
             plantPlace.Blip.Color = 49;
             //bombPlantBlips[i].Flashing = true;
-            #warning Implement after new Bridge version
+            //Todo Implement after new Bridge version
             bombAtPlayer = null;
             planter = player;
-            bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.Value);
+            bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.HasValue ? LobbyEntity.BombDetonateTimeMs.Value : 50);
 
             FuncIterateAllPlayers((target, team) =>
             {
@@ -193,7 +197,7 @@ namespace TDS_Server.Instance.Lobby
             SendBombDefuseInfos();
         }
 
-        private BombPlantPlaceDto GetPlantPos(Vector3 pos)
+        private BombPlantPlaceDto? GetPlantPos(Vector3 pos)
         {
             foreach (var place in bombPlantPlaces)
                 if (pos.DistanceTo(place.Position) < SettingsManager.DistanceToSpotToPlant)
@@ -204,6 +208,8 @@ namespace TDS_Server.Instance.Lobby
         private void DefuseBomb(TDSPlayer character)
         {
             if (character.Client.Dead)
+                return;
+            if (bomb == null)
                 return;
 
             Vector3 playerpos = character.Client.Position;
@@ -237,7 +243,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
 
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), LobbyEntity.BombPlantTimeMs.Value);
+            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), LobbyEntity.BombPlantTimeMs.HasValue ? LobbyEntity.BombPlantTimeMs.Value : 50);
         }
 
         public void StopBombPlanting(Client client)
@@ -263,7 +269,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
                 return;
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), LobbyEntity.BombDefuseTimeMs.Value);
+            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), LobbyEntity.BombDefuseTimeMs.HasValue ? LobbyEntity.BombDefuseTimeMs.Value : 50);
         }
 
         public void StopBombDefusing(Client client)
@@ -275,6 +281,10 @@ namespace TDS_Server.Instance.Lobby
 
         private void DropBomb()
         {
+            if (bombAtPlayer == null)
+                return;
+            if (bomb == null)
+                return;
             Workaround.DetachEntity(bomb); 
             bomb.FreezePosition = true;
             bomb.Position = bombAtPlayer.Client.Position;
@@ -287,12 +297,14 @@ namespace TDS_Server.Instance.Lobby
 
         private void TakeBomb(TDSPlayer character)
         {
+            if (bomb == null)
+                return;
             if (character.Client.CurrentWeapon == WeaponHash.Unarmed)
                 BombToHand(character);
             else
                 BombToBack(character);
             bomb.FreezePosition = false;
-            bombTakeMarker.Delete();
+            bombTakeMarker?.Delete();
             bombTakeMarker = null;
             lobbyBombTakeCol.Remove(this, out ColShape col);
             NAPI.ColShape.DeleteColShape(col);
@@ -311,7 +323,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 lobbyBombTakeCol.Remove(this, out ColShape col);
                 NAPI.ColShape.DeleteColShape(col);
-                bombTakeMarker.Delete();
+                bombTakeMarker?.Delete();
                 bombTakeMarker = null;
             }
             bombAtPlayer = null;

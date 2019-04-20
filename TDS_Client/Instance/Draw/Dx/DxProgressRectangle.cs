@@ -48,6 +48,10 @@ namespace TDS_Client.Instance.Draw.Dx
             frontRect = new DxRectangle(frontRectX, frontRectY, frontRectWidth, frontRectHeight, progressColor, UIResText.Alignment.Left, alignmentY, false);
 
             backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos);
+
+            children.Add(frontRect);
+            children.Add(backRect);
+            children.Add(this.text);
         }
 
         public override void Draw()
@@ -56,17 +60,6 @@ namespace TDS_Client.Instance.Draw.Dx
                 frontRect.SetWidth(progress * width, relativePos);
             else
                 frontRect.SetWidth(width - width * progress, relativePos);
-        }
-
-        public override void Remove()
-        {
-            base.Remove();
-            backRect.Remove();
-            frontRect.Remove();
-            text.Remove();
-            backRect = null;
-            frontRect = null;
-            text = null;
         }
 
         private float GetFrontRectX(float x, float width, UIResText.Alignment alignment, bool relativePos)

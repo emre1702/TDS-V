@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (currentRoundStatus == Enum.ERoundStatus.RoundEnd && character.Team != currentRoundEndWinnerTeam)
                 {
-                    DmgSys.OnPlayerDeath(character, CurrentRoundEndBecauseOfPlayer.Client, weapon);
+                    DmgSys.OnPlayerDeath(character, CurrentRoundEndBecauseOfPlayer?.Client, weapon);
                     return;
                 }
 
@@ -43,7 +43,7 @@ namespace TDS_Server.Instance.Lobby
                     DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
                         SetPlayerReadyForRound(character, false);
-                    }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
+                    }, LobbyEntity.SpawnAgainAfterDeathMs ?? 50);
                 }
             }
 

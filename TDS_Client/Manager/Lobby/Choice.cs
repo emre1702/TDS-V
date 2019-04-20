@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
 {
     static class Choice
     {
-        public static HtmlWindow Browser;
+        public static HtmlWindow? Browser;
 
         public static void JoinLobby(int index, int teamindex)
         {
@@ -33,7 +33,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void SyncLanguageTexts()
         {
-            Browser.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");
+            Browser?.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");
         }
     }
 }

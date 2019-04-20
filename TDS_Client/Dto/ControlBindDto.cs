@@ -13,5 +13,13 @@ namespace TDS_Client.Dto
 
         public bool OnDown => OnPressState == EKeyPressState.Both || OnPressState == EKeyPressState.Down;
         public bool OnUp => OnPressState == EKeyPressState.Both || OnPressState == EKeyPressState.Up;
+
+        public ControlBindDto(Action<Control> method, EKeyPressState onPressState, bool onEnabled, bool onDisabled)
+        {
+            Method = method;
+            OnPressState = onPressState;
+            OnEnabled = onEnabled;
+            OnDisabled = onDisabled;
+        }
     }
 }

@@ -1,0 +1,3 @@
+Scaffold-DbContext [ConnectionString] Microsoft.EntityFrameworkCore.SqlServer -o %~dp0Entity -f
+
+optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[0].ConnectionString);

@@ -30,17 +30,23 @@ namespace TDS_Server.Manager.Commands
         private class CommandMethodData
         {
             public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
-            public CommandDefaultMethod Method;    // only used when UseImplicitTypes == false
-            public CommandEmptyDefaultMethod MethodEmpty;   // only used when UseImplicitTypes == false
-            public Type[] ParameterTypes;
+            public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
+            public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
+            public Type[] ParameterTypes = new Type[0];
             public int Priority;
+
+            public CommandMethodData(MethodInfo methodDefault, int priority)
+            {
+                MethodDefault = methodDefault;
+                Priority = priority;
+            }
         }
 
 
         private static readonly Dictionary<string, CommandData> commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
         private static readonly Dictionary<string, Entity.Commands> commandsDict = new Dictionary<string, Entity.Commands>();
         private static readonly Dictionary<string, string> commandByAlias = new Dictionary<string, string>();
-        private static readonly Dictionary<Type, Func<string, object>> typeConverter = new Dictionary<Type, Func<string, object>>();
+        private static readonly Dictionary<Type, Func<string, object?>> typeConverter = new Dictionary<Type, Func<string, object?>>();
 
         private const int AmountDefaultParams = 2;
 
@@ -79,11 +85,12 @@ namespace TDS_Server.Manager.Commands
                     commanddata = commandDataByCommand[cmd];
                 else
                     commanddata = new CommandData();
-                CommandMethodData methoddata = new CommandMethodData();
+                CommandMethodData methoddata = new CommandMethodData
+                (
+                    priority: attribute.Priority,
+                    methodDefault: method
+                );
                 commanddata.MethodDatas.Add(methoddata);
-
-                methoddata.Priority = attribute.Priority;
-                methoddata.MethodDefault = method;
                 
                 var parameters = method.GetParameters().Skip(AmountDefaultParams);
                 Type[] parametertypes = parameters.Select(p => p.ParameterType).ToArray();
@@ -129,11 +136,11 @@ namespace TDS_Server.Manager.Commands
             TDSPlayer character = player.GetChar();
             try
             {
-                if (!character.Entity.PlayerStats.LoggedIn)
+                if (character.Entity == null || !character.Entity.PlayerStats.LoggedIn)
                     return;
 
-                object[] args = GetArgs(msg, out string cmd);
-                TDSCommandInfos cmdinfos = new TDSCommandInfos { Command = cmd };
+                object?[]? args = GetArgs(msg, out string cmd);
+                TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (commandByAlias.ContainsKey(cmd))
                     cmd = commandByAlias[cmd];
 
@@ -192,11 +199,15 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[] args, ref bool wrongmethod)
+        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object?[]? args, ref bool wrongmethod)
         {
+            if (args == null)
+                return true;
             for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
             {
-                args[i] = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
+                if (args == null || args[i] == null)
+                    continue;
+                args[i] = typeConverter[methoddata.ParameterTypes[i]]((string)(args[i] ?? string.Empty));
                 #region Check if player exists
                 if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
                 {
@@ -216,8 +227,10 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static void HandleRemaingText(CommandData commanddata, object[] args)
+        private static void HandleRemaingText(CommandData commanddata, object?[]? args)
         {
+            if (args == null)
+                return;
             if (commanddata.ToOneStringAfterParameterCount.HasValue)
             {
                 int index = commanddata.ToOneStringAfterParameterCount.Value - AmountDefaultParams;
@@ -226,7 +239,7 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object[] args)
+        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object?[]? args)
         {
             if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
             {
@@ -236,7 +249,7 @@ namespace TDS_Server.Manager.Commands
             return false;
         }
 
-        private static bool CheckCommandExists(TDSPlayer player, string cmd, object[] args)
+        private static bool CheckCommandExists(TDSPlayer player, string cmd, object?[]? args)
         {
             if (!commandDataByCommand.ContainsKey(cmd))
             {
@@ -268,7 +281,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.NeededAdminLevel.HasValue)
             {
                 needright = true;
-                canuse = character.Entity.AdminLvl >= entity.NeededAdminLevel.Value;
+                canuse = (character.Entity?.AdminLvl ?? 0) >= entity.NeededAdminLevel.Value;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Admin;
             }
@@ -278,7 +291,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.NeededDonation.HasValue)
             {
                 needright = true;
-                canuse = character.Entity.Donation >= entity.NeededDonation.Value;
+                canuse = (character.Entity?.Donation ?? 0) >= entity.NeededDonation.Value;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.VIP;
             }
@@ -288,7 +301,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.VipCanUse.HasValue)
             {
                 needright = true;
-                canuse = character.Entity.IsVip;
+                canuse = character.Entity?.IsVip ?? false;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Donator;
             }
@@ -308,7 +321,7 @@ namespace TDS_Server.Manager.Commands
             return canuse;
         }
 
-        private static object[] GetArgs(string msg, out string cmd)
+        private static object?[]? GetArgs(string msg, out string cmd)
         {
             int cmdendindex = msg.IndexOf(' ');
             if (cmdendindex == -1)
@@ -325,22 +338,22 @@ namespace TDS_Server.Manager.Commands
         {
             typeConverter[typeof(string)] = str => str;
             typeConverter[typeof(char)] = str => str[0];
-            typeConverter[typeof(TDSPlayer)] = GetTDSPlayerByName;
-            typeConverter[typeof(Client)] = GetClientByName;
+            typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
+            typeConverter[typeof(Client?)] = GetClientByName;
             typeConverter[typeof(int)] = str => Convert.ToInt32(str);
             typeConverter[typeof(float)] = str => Convert.ToSingle(str);
             typeConverter[typeof(double)] = str => Convert.ToDouble(str);
             typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1" ? true : false;
         }
 
-        private static TDSPlayer GetTDSPlayerByName(string name)
+        private static TDSPlayer? GetTDSPlayerByName(string name)
         {
-            Client client = Utils.FindPlayer(name);
-            TDSPlayer player = client?.GetChar();
+            Client? client = Utils.FindPlayer(name);
+            TDSPlayer? player = client?.GetChar();
             return player != null && player.LoggedIn ? player : null;
         }
 
-        private static Client GetClientByName(string name)
+        private static Client? GetClientByName(string name)
         {
             return Utils.FindPlayer(name);
         }

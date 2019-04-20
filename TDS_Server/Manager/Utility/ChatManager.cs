@@ -18,7 +18,7 @@
             if (player.IsPermamuted)
                 player.Client.SendNotification(player.Language.STILL_PERMAMUTED);
             else if (player.IsMuted)
-                player.Client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime.Value.ToString()));
+                player.Client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?"));
             else 
                 SendLobbyMessage(player, message, isDirty);
         }
@@ -28,11 +28,11 @@
             if (!player.LoggedIn)
                 return;
             //if (!character.MuteTime.HasValue)
-            string changedmessage = player.Team.ChatColor + player.Client.Name + "!{220|220|220}: " + message;
+            string changedmessage = (player.Team?.ChatColor ?? string.Empty) + player.Client.Name + "!{220|220|220}: " + message;
             if (isDirty)
                 changedmessage = "!{160|50|0}[DIRTY] " + changedmessage;
-            player.CurrentLobby.SendAllPlayerChatMessage(changedmessage);
-            if (player.CurrentLobby.IsOfficial && !isDirty)
+            player.CurrentLobby?.SendAllPlayerChatMessage(changedmessage);
+            if ((player.CurrentLobby?.IsOfficial ?? false) && !isDirty)
                 ChatLogsManager.Log(message, player);
             //else if (character.IsPermamuted)
             //    player.SendNotification(character.Language.STILL_PERMAMUTED);
@@ -42,7 +42,7 @@
 
         public static void SendGlobalMessage(TDSPlayer character, string message)
         {
-            string changedmessage = "[GLOBAL] " + character.Team.ChatColor + character.Client.Name + "!{220|220|220}: " + message;
+            string changedmessage = "[GLOBAL] " + (character.Team?.ChatColor ?? string.Empty) + character.Client.Name + "!{220|220|220}: " + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
             ChatLogsManager.Log(message, character, isglobal: true);   
         }
@@ -63,8 +63,10 @@
 
         public static void SendTeamChat(TDSPlayer character, string message)
         {
+            if (character.Team == null)
+                return;
             string changedmessage = "[TEAM] " + character.Team.ChatColor + character.Client.Name + ": !{220|220|220}" + message;
-            character.CurrentLobby.SendAllPlayerChatMessage(changedmessage, character.Team);
+            character.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, character.Team);
             ChatLogsManager.Log(message, character, isteamchat: true);
         }
 

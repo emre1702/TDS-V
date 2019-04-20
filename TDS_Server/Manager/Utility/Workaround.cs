@@ -38,22 +38,21 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.UnspectatePlayerWorkaround);
         }
 
-        public static void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby lobby = null)
+        public static void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
         {
             var infoDto = new EntityAttachInfoDto
-            {
-                EntityValue = entity.Value,
-                TargetValue = entityTarget.Value,
-                Bone = (int)bone,
-                PositionOffsetX = positionOffset.X,
-                PositionOffsetY = positionOffset.Y,
-                PositionOffsetZ = positionOffset.Z,
-                RotationOffsetX = rotationOffset.X,
-                RotationOffsetY = rotationOffset.Y,
-                RotationOffsetZ = rotationOffset.Z,
-                LobbyId = lobby?.Id
-            };
-            infoDto.Json = JsonConvert.SerializeObject(infoDto);
+            (
+                EntityValue: entity.Value,
+                TargetValue: entityTarget.Value,
+                Bone: (int)bone,
+                PositionOffsetX: positionOffset.X,
+                PositionOffsetY: positionOffset.Y,
+                PositionOffsetZ: positionOffset.Z,
+                RotationOffsetX: rotationOffset.X,
+                RotationOffsetY: rotationOffset.Y,
+                RotationOffsetZ: rotationOffset.Z,
+                LobbyId: lobby?.Id
+            );
             attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby == null)
@@ -85,17 +84,16 @@ namespace TDS_Server.Manager.Utility
             attachedEntitiesInfos.Remove(entity);
         }
 
-        public static void SetEntityCollisionless(GTANetworkAPI.Entity entity, bool collisionless, Lobby lobby = null)
+        public static void SetEntityCollisionless(GTANetworkAPI.Entity entity, bool collisionless, Lobby? lobby = null)
         {
             var info = new EntityCollisionlessInfoDto
-            {
-                EntityValue = entity.Value,
-                Collisionless = collisionless
-            };
-            info.Json = JsonConvert.SerializeObject(info);
+            (
+                EntityValue: entity.Value,
+                Collisionless: collisionless
+            );
             collisionslessEntitiesInfos[entity] = info;
 
-            if (lobby == null)
+            if (lobby is null)
                 NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetEntityCollisionlessWorkaround, collisionslessEntitiesInfos[entity].Json);
             else
             {

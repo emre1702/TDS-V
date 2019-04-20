@@ -39,6 +39,9 @@ namespace TDS_Client.Instance.Draw.Dx
             {
                 Activated = false
             };
+
+            children.Add(this.text);
+            children.Add(rect);
         }
 
         private float GetTextRelativePosY()
@@ -63,15 +66,6 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             this.text.Text = text;
             this.text.Y = GetAbsoluteY(relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), relativePos);
-        }
-
-        public override void Remove()
-        {
-            base.Remove();
-            text?.Remove();
-            rect?.Remove();
-            text = null;
-            rect = null;
         }
     }
 }

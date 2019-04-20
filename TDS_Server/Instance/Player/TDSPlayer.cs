@@ -20,22 +20,24 @@ namespace TDS_Server.Instance.Player
     class TDSPlayer
     {
 
-        public Players Entity
+        public Players? Entity
         {
             get => fEntity;
             set
             {
                 fEntity = value;
+                if (fEntity == null)
+                    return;
                 if (fLangEnumBeforeLogin != ELanguage.English)
                     fEntity.PlayerSettings.Language = (byte)fLangEnumBeforeLogin;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.PlayerStats.Money);
             }
         }
         public Client Client { get; }
-        public Lobby.Lobby CurrentLobby { get; set; }
-        public Lobby.Lobby PreviousLobby { get; set; }
-        public PlayerLobbyStats CurrentLobbyStats { get; set; }
-        public Team Team
+        public Lobby.Lobby? CurrentLobby { get; set; }
+        public Lobby.Lobby? PreviousLobby { get; set; }
+        public PlayerLobbyStats? CurrentLobbyStats { get; set; }
+        public Team? Team
         {
             get => _team;
             private set
@@ -63,20 +65,29 @@ namespace TDS_Server.Instance.Player
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner
         {
-            get => CurrentLobby.IsPlayerLobbyOwner(this);
+            get => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
         }
         public uint? MuteTime
         {
-            get => Entity.PlayerStats.MuteTime;
-            set => Entity.PlayerStats.MuteTime = value;
+            get => Entity?.PlayerStats.MuteTime ?? 0;
+            set
+            {
+                if (Entity != null)
+                    Entity.PlayerStats.MuteTime = value;
+            }
         }
         public bool IsMuted
         {
-            get => Entity.PlayerStats.MuteTime.HasValue;
+            get => Entity?.PlayerStats.MuteTime.HasValue ?? false;
         }
         public bool IsPermamuted
         {
-            get => Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
+            get
+            {
+                if (Entity == null)
+                    return false;
+                return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
+            }
         }
         public ILanguage Language
         {
@@ -102,38 +113,51 @@ namespace TDS_Server.Instance.Player
         }
         public AdminLevelDto AdminLevel
         {
-            get => AdminsManager.AdminLevels[Entity.AdminLvl];
+            get
+            {
+                if (Entity == null)
+                    return AdminsManager.AdminLevels[0];
+                return AdminsManager.AdminLevels[Entity.AdminLvl];
+            } 
         }
         public string AdminLevelName
         {
             get => AdminLevel.Names[LanguageEnum];
         }
-        public RoundStatsDto CurrentRoundStats { get; set; }
+        public RoundStatsDto? CurrentRoundStats { get; set; }
         public int Money
         {
-            get => (int)Entity.PlayerStats.Money;
-            set {
+            get => (int)(Entity?.PlayerStats.Money ?? 0);
+            set
+            {
+                if (Entity == null)
+                    return;
                 Entity.PlayerStats.Money = (uint)value;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
             }
         }
-        public TDSPlayer LastHitter { get; set; }
-        public TDSPlayer Spectates { get; set; }
+        public TDSPlayer? LastHitter { get; set; }
+        public TDSPlayer? Spectates { get; set; }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
         public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
         public uint PlayMinutes
         {
-            get => Entity.PlayerStats.PlayTime;
-            set => Entity.PlayerStats.PlayTime = value;
+            get => Entity?.PlayerStats.PlayTime ?? 0;
+            set
+            {
+                if (Entity == null)
+                    return;
+                Entity.PlayerStats.PlayTime = value;
+            }
         }
         public bool ChatLoaded { get; set; }
         public int KillingSpree { get; set; }
 
-        private Players fEntity;
+        private Players? fEntity;
         private int LastSaveTick;
         private ELanguage fLangEnumBeforeLogin = ELanguage.English;
-        private Team _team;
-        private Gang _gang;
+        private Team? _team;
+        private Gang? _gang;
 
         public TDSPlayer(Client client)
         {
@@ -243,6 +267,8 @@ namespace TDS_Server.Instance.Player
 
         private async void SaveSettings()
         {
+            if (Entity == null)
+                return;
             using (TDSNewContext dbContext = new TDSNewContext())
             {
                 dbContext.PlayerSettings.Attach(Entity.PlayerSettings);

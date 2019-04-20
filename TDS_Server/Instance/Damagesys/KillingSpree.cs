@@ -22,6 +22,8 @@ namespace TDS_Server.Instance
         {
             if (!sSpreeReward.ContainsKey(character.KillingSpree))
                 return;
+            if (character.CurrentLobby == null)
+                return;
 
             Tuple<string, int, int> reward = sSpreeReward[character.KillingSpree];
             string rewardtyp = reward.Item1;
@@ -35,11 +37,6 @@ namespace TDS_Server.Instance
                 });
                 character.AddHPArmor(bonus);
             }
-        }
-
-        public void AddToKillingSpree(TDSPlayer character)
-        {
-            
         }
     }
 

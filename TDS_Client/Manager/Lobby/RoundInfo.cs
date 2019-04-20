@@ -17,8 +17,8 @@ namespace TDS_Client.Manager.Lobby
         private static int _currentDamage;
         private static int _currentKills;
 
-        private static DxTextRectangle timeDisplay;
-        private static DxTextRectangle[] teamDisplays;
+        private static DxTextRectangle? timeDisplay;
+        private static DxTextRectangle[]? teamDisplays;
 
         public static int CurrentAssists
         {

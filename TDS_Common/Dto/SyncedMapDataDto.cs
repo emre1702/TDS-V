@@ -13,6 +13,6 @@ namespace TDS_Common.Dto
             [(int)ELanguage.English] = "No info available.",
             [(int)ELanguage.German] = "Keine Info verfügbar."
         };
-        public string CreatorName;
+        public string CreatorName = "unknown";
     }
 }

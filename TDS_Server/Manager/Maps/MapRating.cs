@@ -27,13 +27,15 @@ namespace TDS_Server.Manager.Maps
             //if (!DoesMapNameExist(mapname))
                 //return;
 
-            uint playerid = player.GetEntity().Id;
+            uint? playerid = player.GetEntity()?.Id;
+            if (playerid == null)
+                return;
             using (var dbcontext = new TDSNewContext())
             {
                 PlayerMapRatings maprating = await dbcontext.PlayerMapRatings.FindAsync(playerid, mapname);
                 if (maprating == null)
                 {
-                    maprating = new PlayerMapRatings { Id = playerid, MapName = mapname };
+                    maprating = new PlayerMapRatings { Id = playerid.Value, MapName = mapname };
                     await dbcontext.PlayerMapRatings.AddAsync(maprating);
                 }
                 maprating.Rating = rating;
@@ -43,10 +45,12 @@ namespace TDS_Server.Manager.Maps
 
         public static void SendPlayerHisRatings(TDSPlayer character)
         {
-            if (character.Entity.PlayerMapRatings.Any())
-            {
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
-            }
+            if (character.Entity == null)
+                return;
+            if (!character.Entity.PlayerMapRatings.Any())
+                return;
+
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
         }
 
     }

@@ -19,12 +19,12 @@ namespace TDS_Client.Instance.Draw.Dx
             endZ;
         private Color color;
         private bool relative;
-        private bool is3D;
+        //private bool is3D;
 
 
         public DxLine(float startX, float startY, float? startZ, float endX, float endY, float? endZ, Color color, bool relative = true) : base()
         {
-            if (is3D)
+            if (startZ.HasValue && endZ.HasValue)
             {
                 this.startX = startX;
                 this.startY = startY;

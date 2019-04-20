@@ -13,5 +13,11 @@ namespace TDS_Server.Dto
         public string FontColor;
         public Dictionary<ELanguage, string> Names = new Dictionary<ELanguage, string>();
         public List<TDSPlayer> PlayersOnline = new List<TDSPlayer>();
+
+        public AdminLevelDto(byte level, string fontColor)
+        {
+            Level = level;
+            FontColor = fontColor;
+        }
     }
 }

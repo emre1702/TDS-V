@@ -21,14 +21,14 @@ namespace TDS_Client.Instance.Lobby
         private int maxOutsideCounter;
 
         private int outsideCounter;
-        private DxText info;
-        private TDSTimer checkTimer;
+        private DxText? info;
+        private TDSTimer? checkTimer;
 
         public MapLimit(List<Vector3> edges)
         {
+            this.edges = edges;
             if (edges.Count == 0)
                 return;
-            this.edges = edges;
             minX = edges.Min(v => v.X);
             minY = edges.Min(v => v.Y);
             maxX = edges.Max(v => v.X);
@@ -52,7 +52,7 @@ namespace TDS_Client.Instance.Lobby
             checkTimer = null;
             info?.Remove();
             info = null;
-            edges = null;
+            edges.Clear();
         }
 
         private void Check()

@@ -43,7 +43,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 RemovePlayerFromAlive(character, false);
                 PlayerCantBeSpectatedAnymore(character);
-                DmgSys.CheckLastHitter(character, out TDSPlayer killercharacter);
+                DmgSys.CheckLastHitter(character, out TDSPlayer? killercharacter);
 
                 DeathInfoSync(character, killercharacter, (uint)WeaponHash.Unarmed);
                 character.KillingSpree = 0;
@@ -59,9 +59,11 @@ namespace TDS_Server.Instance.Lobby
         private void SetPlayerReadyForRound(TDSPlayer character, bool freeze = true)
         {
             Client player = character.Client;
-            if (!character.Team.IsSpectator)
+            if (character.Team != null && !character.Team.IsSpectator)
             {
-                PositionRotationDto spawndata = GetMapRandomSpawnData(character.Team);
+                PositionRotationDto? spawndata = GetMapRandomSpawnData(character.Team);
+                if (spawndata == null)
+                    return;
                 NAPI.Player.SpawnPlayer(player, spawndata.Position, spawndata.Rotation);
                 if (character.Team.SpectateablePlayers != null && !character.Team.SpectateablePlayers.Contains(character))
                     character.Team.SpectateablePlayers?.Add(character);
@@ -77,13 +79,17 @@ namespace TDS_Server.Instance.Lobby
             if (removeSpectatorsTimer.ContainsKey(character))
                 removeSpectatorsTimer.Remove(character);
 
-            character.CurrentRoundStats.Clear();
+            character.CurrentRoundStats?.Clear();
         }
 
         private void RemovePlayerFromAlive(TDSPlayer character, bool removespectators = true)
         {
-            character.Team.AlivePlayers.Remove(character);
-            --character.Team.SyncedTeamData.AmountPlayers.AmountAlive;
+            if (character.Team != null)
+            {
+                character.Team.AlivePlayers?.Remove(character);
+                --character.Team.SyncedTeamData.AmountPlayers.AmountAlive;
+            }
+
             if (bombAtPlayer == character)
             {
                 DropBomb();
@@ -94,13 +100,13 @@ namespace TDS_Server.Instance.Lobby
                 PlayerCantBeSpectatedAnymore(character);
                 SpectateOtherSameTeam(character);
 
-            }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
+            }, LobbyEntity.SpawnAgainAfterDeathMs ?? 50);
         }
 
         private void StartRoundForPlayer(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team.IsSpectator);
-            if (!player.Team.IsSpectator)
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team == null || player.Team.IsSpectator);
+            if (player.Team != null && !player.Team.IsSpectator)
             {
                 SetPlayerAlive(player);
                 Workaround.FreezePlayer(player.Client, false);
@@ -146,11 +152,11 @@ namespace TDS_Server.Instance.Lobby
             switch (currentRoundStatus)
             {
                 case ERoundStatus.Countdown:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, nextRoundStatusTimer.RemainingMsToExecute);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
                 case ERoundStatus.Round:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer.RemainingMsToExecute);
-                    if (bombDetonateTimer != null)
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    if (bombDetonateTimer != null && bomb != null)
                         NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(bomb.Position), false, bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute);
                     break;
             }
@@ -164,7 +170,9 @@ namespace TDS_Server.Instance.Lobby
 
         private void SetPlayerAlive(TDSPlayer player)
         {
-            player.Lifes = (sbyte)LobbyEntity.AmountLifes.Value;
+            if (player.Team == null || player.Team.AlivePlayers == null)
+                return;
+            player.Lifes = (sbyte)(LobbyEntity.AmountLifes ?? 0);
             player.Team.AlivePlayers.Add(player);
             var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
             ++teamamountdata.Amount;

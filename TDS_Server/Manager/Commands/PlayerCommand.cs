@@ -13,7 +13,7 @@ namespace TDS_Server.Manager.Commands {
         [TDSCommand(DPlayerCommand.LobbyLeave)]
         public static async void LobbyLeave(TDSPlayer player, TDSCommandInfos _)
         {
-            if (player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
                 return;
 
             player.CurrentLobby.RemovePlayer(player);

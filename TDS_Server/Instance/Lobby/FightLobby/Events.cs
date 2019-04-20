@@ -10,13 +10,13 @@ namespace TDS_Server.Instance.Lobby
     {
         public override void OnPlayerDeath(TDSPlayer character, Client possibleKillerClient, uint weapon, bool spawnPlayer = true)
         {
-            if (character.Team.IsSpectator)
+            if (character.Team == null || character.Team.IsSpectator)
             {
                 SpectateOtherAllTeams(character);
                 return;
             }
 
-            TDSPlayer killer = DmgSys.OnPlayerDeath(character, possibleKillerClient, weapon);
+            TDSPlayer? killer = DmgSys.OnPlayerDeath(character, possibleKillerClient, weapon);
             base.OnPlayerDeath(character, possibleKillerClient, weapon, false);
 
             // was alive //
@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Lobby
                     {
                         SpectateOtherSameTeam(character);
                         NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerSpectateMode);
-                    }, LobbyEntity.SpawnAgainAfterDeathMs.Value);
+                    }, LobbyEntity.SpawnAgainAfterDeathMs ?? 50);
                 }
             }
         }

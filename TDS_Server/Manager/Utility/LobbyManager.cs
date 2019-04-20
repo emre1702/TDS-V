@@ -42,7 +42,7 @@ namespace TDS_Server.Manager.Utility
                         lobby = new Arena(lobbysetting);
                         break;
                     //case ELobbyType.GangLobby:
-#warning todo Add after implementation of lobbies
+//todo todo Add after implementation of lobbies
                         //lobby = new GangLobby(lobbysetting);
                         //break;
                     //case ELobbyType.MapCreateLobby:

@@ -20,7 +20,7 @@ namespace TDS_Server.Manager.Utility
 
         private async void SaveAllInDatabase()
         {
-            Client exceptionsource = null;
+            Client? exceptionsource = null;
             try
             {
                 using (var dbcontext = new TDSNewContext())

@@ -47,19 +47,19 @@ namespace TDS_Server.Instance.Lobby
                 Teams[team.Entity.Index] = team;
             }
 
-            syncedLobbySettings = new SyncedLobbySettingsDto()
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                BombDefuseTimeMs = entity.BombDefuseTimeMs,
-                BombPlantTimeMs = entity.BombPlantTimeMs,
-                SpawnAgainAfterDeathMs = entity.SpawnAgainAfterDeathMs,
-                CountdownTime = entity.CountdownTime,
-                RoundTime = entity.RoundTime,
-                BombDetonateTimeMs = entity.BombDetonateTimeMs,
-                DieAfterOutsideMapLimitTime = entity.DieAfterOutsideMapLimitTime,
-                InLobbyWithMaps = this is Arena
-            };
+            syncedLobbySettings = new SyncedLobbySettingsDto
+            (
+                Id: entity.Id,
+                Name: entity.Name,
+                BombDefuseTimeMs: entity.BombDefuseTimeMs,
+                BombPlantTimeMs: entity.BombPlantTimeMs,
+                SpawnAgainAfterDeathMs: entity.SpawnAgainAfterDeathMs,
+                CountdownTime: entity.CountdownTime,
+                RoundTime: entity.RoundTime,
+                BombDetonateTimeMs: entity.BombDetonateTimeMs,
+                DieAfterOutsideMapLimitTime: entity.DieAfterOutsideMapLimitTime,
+                InLobbyWithMaps: this is Arena
+            );
         }
 
         public virtual void Start()

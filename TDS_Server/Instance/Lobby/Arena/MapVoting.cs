@@ -58,7 +58,7 @@ namespace TDS_Server.Instance.Lobby
             mapVotes[mapname]++;
         }
 
-        private MapDto GetVotedMap()
+        private MapDto? GetVotedMap()
         {
             if (mapVotes.Count > 0)
             {
@@ -83,15 +83,6 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.MapVotingSyncOnPlayerJoin, JsonConvert.SerializeObject(mapVotes));
             }
         }
-
-        /*
-		
-
-        
-
-		
-
-		*/
     }
 
 }

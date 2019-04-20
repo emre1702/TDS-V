@@ -540,7 +540,7 @@ namespace TDS_Client.Manager
         // DEBUG //
         private class BoneInfo
         {
-            public string Text;
+            public string Text = string.Empty;
             public float OffsetX;
             public float OffsetY;
             public Color Color;
@@ -581,7 +581,9 @@ namespace TDS_Client.Manager
                         {
                             EPedBone boneId = (EPedBone)boneIdObject;
                             int boneIndex = ped.GetBoneIndex((int)boneId);
-                            bonesTextInfo[boneIndex] = GetPedBoneInfo(ped, pedScreenX, pedScreenY, boneIndex, boneId);
+                            var boneInfo = GetPedBoneInfo(ped, pedScreenX, pedScreenY, boneIndex, boneId); ;
+                            if (boneInfo != null)
+                                bonesTextInfo[boneIndex] = boneInfo;
                         }
                         pedToRenderBones = ped;
                         Chat.Output("Ped Bones initialized");
@@ -593,7 +595,7 @@ namespace TDS_Client.Manager
         }
 
         // DEBUG //
-        private static BoneInfo GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
+        private static BoneInfo? GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
         {
             
             if (boneIndex == -1)
@@ -671,7 +673,9 @@ namespace TDS_Client.Manager
                 {
                     float pedScreenX = -1, pedScreenY = -1;
                     RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(pedToRenderBones.Position.X, pedToRenderBones.Position.Y, pedToRenderBones.Position.Z, ref pedScreenX, ref pedScreenY);
-                    bonesTextInfo[boneIndex] = GetPedBoneInfo(pedToRenderBones, pedScreenX, pedScreenY, boneIndex, boneId);
+                    var boneInfo = GetPedBoneInfo(pedToRenderBones, pedScreenX, pedScreenY, boneIndex, boneId);
+                    if (boneInfo != null)
+                        bonesTextInfo[boneIndex] = boneInfo;
                     info = bonesTextInfo[boneIndex];
                 }
                 if (info == null)

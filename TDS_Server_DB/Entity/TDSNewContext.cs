@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -20,6 +21,7 @@ namespace TDS_Server.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<CommandsAlias> CommandsAlias { get; set; }
         public virtual DbSet<CommandsInfo> CommandsInfo { get; set; }
+        public virtual DbSet<GangMembers> GangMembers { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
@@ -50,8 +52,7 @@ namespace TDS_Server.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Host=localhost;Port=3306;Database=TDSNew;Username=root;Password=ajagrebo;TreatTinyAsBoolean=false");
+                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[0].ConnectionString);
             }
         }
 
@@ -105,9 +106,9 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnType("varchar(50)");
 
-                entity.Property(e => e.LobbyOwnerCanUse).HasColumnType("bit(1)");
+                entity.Property(e => e.LobbyOwnerCanUse).HasColumnType("bit");
 
-                entity.Property(e => e.VipCanUse).HasColumnType("bit(1)");
+                entity.Property(e => e.VipCanUse).HasColumnType("bit");
 
                 entity.HasOne(d => d.NeededAdminLevelNavigation)
                     .WithMany(p => p.Commands)
@@ -187,13 +188,13 @@ namespace TDS_Server.Entity
 
                 entity.ToTable("killingspree_rewards");
 
-                entity.Property(e => e.KillsAmount).HasColumnType("int(11)");
+                entity.Property(e => e.KillsAmount).HasColumnType("int");
 
-                entity.Property(e => e.HealthOrArmor).HasColumnType("smallint(3)");
+                entity.Property(e => e.HealthOrArmor).HasColumnType("smallint");
 
-                entity.Property(e => e.OnlyArmor).HasColumnType("smallint(3)");
+                entity.Property(e => e.OnlyArmor).HasColumnType("smallint");
 
-                entity.Property(e => e.OnlyHealth).HasColumnType("smallint(3)");
+                entity.Property(e => e.OnlyHealth).HasColumnType("smallint");
             });
 
             modelBuilder.Entity<Languages>(entity =>
@@ -231,7 +232,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.CountdownTime).HasDefaultValueSql("'5'");
 
-                entity.Property(e => e.CreateTimestamp).HasColumnType("timestamp");
+                entity.Property(e => e.CreateTimestamp).HasColumnType("datetime");
 
                 entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("'0'");
 
@@ -243,12 +244,12 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.DieAfterOutsideMapLimitTime).HasDefaultValueSql("'10'");
 
-                entity.Property(e => e.IsOfficial).HasColumnType("bit(1)");
+                entity.Property(e => e.IsOfficial).HasColumnType("bit");
 
-                entity.Property(e => e.IsTemporary).HasColumnType("bit(1)");
+                entity.Property(e => e.IsTemporary).HasColumnType("bit");
 
                 entity.Property(e => e.MixTeamsAfterRound)
-                    .HasColumnType("bit(1)")
+                    .HasColumnType("bit")
                     .HasDefaultValueSql("'b\\'0\\''");
 
                 entity.Property(e => e.MoneyPerAssist).HasDefaultValueSql("'10'");
@@ -337,7 +338,7 @@ namespace TDS_Server.Entity
                 entity.HasIndex(e => e.Lobby)
                     .HasName("FK_lobby_weapons_lobbies");
 
-                entity.Property(e => e.Damage).HasColumnType("smallint(3)");
+                entity.Property(e => e.Damage).HasColumnType("smallint");
 
                 entity.HasOne(d => d.HashNavigation)
                     .WithMany(p => p.LobbyWeapons)
@@ -356,17 +357,17 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AsDonator).HasColumnType("bit(1)");
+                entity.Property(e => e.AsDonator).HasColumnType("bit");
 
                 entity.Property(e => e.AsVip)
                     .HasColumnName("AsVIP")
-                    .HasColumnType("bit(1)");
+                    .HasColumnType("bit");
 
                 entity.Property(e => e.Reason).HasColumnType("varchar(500)");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
             });
 
             modelBuilder.Entity<LogsChat>(entity =>
@@ -375,17 +376,17 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.IsAdminChat).HasColumnType("bit(1)");
+                entity.Property(e => e.IsAdminChat).HasColumnType("bit");
 
-                entity.Property(e => e.IsTeamChat).HasColumnType("bit(1)");
+                entity.Property(e => e.IsTeamChat).HasColumnType("bit");
 
                 entity.Property(e => e.Message)
                     .IsRequired()
                     .HasColumnType("varchar(300)");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
             });
 
             modelBuilder.Entity<LogsError>(entity =>
@@ -401,8 +402,8 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.StackTrace).HasColumnType("text");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
             });
 
             modelBuilder.Entity<LogsRest>(entity =>
@@ -418,8 +419,8 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.Serial).HasColumnType("varchar(200)");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
             });
 
             modelBuilder.Entity<LogsTypes>(entity =>
@@ -447,11 +448,11 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasColumnType("int(10)");
+                    .HasColumnType("int");
 
                 entity.Property(e => e.CreateTimestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
 
                 entity.Property(e => e.CreatorId).HasColumnName("CreatorID");
 
@@ -476,7 +477,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AlreadyLoadedOnce).HasColumnType("bit(1)");
+                entity.Property(e => e.AlreadyLoadedOnce).HasColumnType("bit");
 
                 entity.Property(e => e.Message)
                     .IsRequired()
@@ -487,8 +488,8 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.TargetId).HasColumnName("TargetID");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
 
                 entity.HasOne(d => d.Source)
                     .WithMany(p => p.OfflinemessagesSource)
@@ -518,15 +519,15 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.ForLobby).HasDefaultValueSql("'0'");
 
-                entity.Property(e => e.EndTimestamp).HasColumnType("timestamp");
+                entity.Property(e => e.EndTimestamp).HasColumnType("datetime");
 
                 entity.Property(e => e.Reason)
                     .IsRequired()
                     .HasColumnType("varchar(300)");
 
                 entity.Property(e => e.StartTimestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
 
                 entity.HasOne(d => d.AdminNavigation)
                     .WithMany(p => p.PlayerBansAdminNavigation)
@@ -599,7 +600,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.MapId)
                     .HasColumnName("MapID")
-                    .HasColumnType("int(11)");
+                    .HasColumnType("int");
 
                 entity.HasOne(d => d.IdNavigation)
                     .WithMany(p => p.PlayerMapFavourites)
@@ -638,13 +639,13 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AllowDataTransfer).HasColumnType("bit(1)");
+                entity.Property(e => e.AllowDataTransfer).HasColumnType("bit");
 
-                entity.Property(e => e.Bloodscreen).HasColumnType("bit(1)");
+                entity.Property(e => e.Bloodscreen).HasColumnType("bit");
 
-                entity.Property(e => e.FloatingDamageInfo).HasColumnType("bit(1)");
+                entity.Property(e => e.FloatingDamageInfo).HasColumnType("bit");
 
-                entity.Property(e => e.Hitsound).HasColumnType("bit(1)");
+                entity.Property(e => e.Hitsound).HasColumnType("bit");
 
                 entity.Property(e => e.Language).HasDefaultValueSql("'9'");
 
@@ -667,10 +668,10 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.LastLoginTimestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
 
-                entity.Property(e => e.LoggedIn).HasColumnType("bit(1)");
+                entity.Property(e => e.LoggedIn).HasColumnType("bit");
 
                 entity.Property(e => e.Money).HasDefaultValueSql("'0'");
 
@@ -695,7 +696,7 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.AdminLvl).HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Donation)
-                    .HasColumnType("tinyint(3)")
+                    .HasColumnType("tinyint")
                     .HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Email).HasColumnType("varchar(100)");
@@ -704,7 +705,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.IsVip)
                     .HasColumnName("IsVIP")
-                    .HasColumnType("bit(1)");
+                    .HasColumnType("bit");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -715,8 +716,8 @@ namespace TDS_Server.Entity
                     .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.RegisterTimestamp)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("'current_timestamp()'");
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("'GETDATE()'");
 
                 entity.Property(e => e.Scname)
                     .IsRequired()
@@ -740,11 +741,11 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.DistanceToSpotToDefuse).HasColumnType("int(11)");
+                entity.Property(e => e.DistanceToSpotToDefuse).HasColumnType("int");
 
-                entity.Property(e => e.DistanceToSpotToPlant).HasColumnType("int(11)");
+                entity.Property(e => e.DistanceToSpotToPlant).HasColumnType("int");
 
-                entity.Property(e => e.ErrorToPlayerOnNonExistentCommand).HasColumnType("bit(1)");
+                entity.Property(e => e.ErrorToPlayerOnNonExistentCommand).HasColumnType("bit");
 
                 entity.Property(e => e.GamemodeName)
                     .IsRequired()
@@ -758,15 +759,15 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnType("varchar(300)");
 
-                entity.Property(e => e.SaveLogsCooldownMinutes).HasColumnType("int(11)");
+                entity.Property(e => e.SaveLogsCooldownMinutes).HasColumnType("int");
 
-                entity.Property(e => e.SavePlayerDataCooldownMinutes).HasColumnType("int(11)");
+                entity.Property(e => e.SavePlayerDataCooldownMinutes).HasColumnType("int");
 
-                entity.Property(e => e.SaveSeasonsCooldownMinutes).HasColumnType("int(11)");
+                entity.Property(e => e.SaveSeasonsCooldownMinutes).HasColumnType("int");
 
-                entity.Property(e => e.TeamOrderCooldownMs).HasColumnType("int(11)");
+                entity.Property(e => e.TeamOrderCooldownMs).HasColumnType("int");
 
-                entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit(1)");
+                entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit");
             });
 
             modelBuilder.Entity<Teams>(entity =>
@@ -782,7 +783,7 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnType("varchar(100)");
 
-                entity.Property(e => e.SkinHash).HasColumnType("int(11)");
+                entity.Property(e => e.SkinHash).HasColumnType("int");
 
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
@@ -797,7 +798,7 @@ namespace TDS_Server.Entity
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasColumnType("tinyint(1)");
+                    .HasColumnType("tinyint");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -814,7 +815,7 @@ namespace TDS_Server.Entity
                 entity.HasIndex(e => e.Type)
                     .HasName("FK_weapons_weapon_types");
 
-                entity.Property(e => e.DefaultDamage).HasColumnType("smallint(6)");
+                entity.Property(e => e.DefaultDamage).HasColumnType("smallint");
 
                 entity.Property(e => e.DefaultHeadMultiplicator).HasDefaultValueSql("'1'");
 
@@ -822,7 +823,7 @@ namespace TDS_Server.Entity
                     .IsRequired()
                     .HasColumnType("varchar(200)");
 
-                entity.Property(e => e.Type).HasColumnType("tinyint(1)");
+                entity.Property(e => e.Type).HasColumnType("tinyint");
 
                 entity.HasOne(d => d.TypeNavigation)
                     .WithMany(p => p.Weapons)

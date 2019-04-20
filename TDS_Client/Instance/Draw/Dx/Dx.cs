@@ -1,6 +1,8 @@
-﻿using RAGE.NUI;
+﻿using Microsoft.Win32.SafeHandles;
+using RAGE.NUI;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
 
@@ -8,7 +10,7 @@ namespace TDS_Client.Instance.Draw.Dx
 {
     // UIResText.Draw is top aligned
     // Graphics.DrawRect is center aligned (X & Y)
-    class Dx
+    abstract class Dx : IDisposable
     {
         public bool Activated { get; set; }
 
@@ -17,10 +19,17 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private readonly static List<Dx> dxDraws = new List<Dx>();
 
+        protected readonly List<Dx> children = new List<Dx>();
+
         public Dx(bool activated = true)
         {
             Activated = activated;
             dxDraws.Add(this);
+        }
+
+        ~Dx()
+        {
+            Dispose(false);
         }
 
         public static void RenderAll()
@@ -43,6 +52,7 @@ namespace TDS_Client.Instance.Draw.Dx
         public virtual void Remove()
         {
             dxDraws.Remove(this);
+            Dispose(true);
         }
 
         public virtual EDxType GetDxType()
@@ -85,5 +95,29 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             return (int)Math.Round(relative ? y * ResY : y);
         }
+
+        #region IDisposable Support
+        private bool disposed = false; // To detect redundant calls
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+            disposed = true;
+
+            if (disposing)
+            {
+                foreach (var child in children)
+                    if (!child.disposed)
+                        child.Remove();
+            }
+        }
+        #endregion
     }
 }

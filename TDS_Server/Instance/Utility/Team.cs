@@ -23,10 +23,10 @@ namespace TDS_Server.Instance.Utility
                 ChatColor = "!{" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "}";
             }
         }
-        public string ChatColor;
+        public string ChatColor { get; private set; }
         public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
-        public List<TDSPlayer> SpectateablePlayers { get; set; }
-        public List<TDSPlayer> AlivePlayers { get; set; }
+        public List<TDSPlayer>? SpectateablePlayers { get; set; }
+        public List<TDSPlayer>? AlivePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter;
 
@@ -34,7 +34,8 @@ namespace TDS_Server.Instance.Utility
 
         public Team(Teams entity)
         {
-            Entity = entity;
+            _entity = entity;
+            ChatColor = "!{" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "}";
 
             if (!IsSpectator)
             {
@@ -42,13 +43,13 @@ namespace TDS_Server.Instance.Utility
                 AlivePlayers = new List<TDSPlayer>();
             }
 
-            SyncedTeamData = new SyncedTeamDataDto()
-            {
-                Index = (int)Entity.Index,
-                Name = Entity.Name,
-                Color = System.Drawing.Color.FromArgb(Entity.ColorR, Entity.ColorG, Entity.ColorB),
-                AmountPlayers = new SyncedTeamPlayerAmountDto()
-            };
+            SyncedTeamData = new SyncedTeamDataDto
+            (
+                index: (int)Entity.Index,
+                name: Entity.Name,
+                color: System.Drawing.Color.FromArgb(Entity.ColorR, Entity.ColorG, Entity.ColorB),
+                amountPlayers: new SyncedTeamPlayerAmountDto()
+            );
         }
 
         public void FuncIterate(Action<TDSPlayer, Team> func)
@@ -88,18 +89,16 @@ namespace TDS_Server.Instance.Utility
             Players.Clear();
         }
 
-        public static bool operator ==(Team a, Team b)
+        public static bool operator ==(Team? a, Team? b)
         {
-            if (a is null && b is null)
-                return true;
             if (a is null)
-                return false;
+                return (b is null);
             if (b is null)
                 return false;
             return a.Entity.Id == b.Entity.Id;
         }
 
-        public static bool operator !=(Team a, Team b)
+        public static bool operator !=(Team? a, Team? b)
         {
             return !(a == b);
         }

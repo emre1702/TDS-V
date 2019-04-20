@@ -60,7 +60,7 @@ namespace TDS_Server.Instance.Lobby
             else
             {
                 NAPI.Chat.SendChatMessageToPlayer(player, player.GetChar().Language.LOBBY_DOESNT_EXIST);
-                #warning Remove lobby at client view and check, why he saw this lobby
+                //todo Remove lobby at client view and check, why he saw this lobby
             }
         }
         #endregion Lobby

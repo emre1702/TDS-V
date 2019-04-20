@@ -14,7 +14,7 @@ namespace TDS_Server.Instance.Lobby
             if (player.Lifes > 0)
                 return;
 
-            if (player.Team.IsSpectator)
+            if (player.Team == null || player.Team.IsSpectator)
                 SpectateOtherAllTeams(player, forward);
             else
                 SpectateOtherSameTeam(player, forward);
@@ -38,12 +38,12 @@ namespace TDS_Server.Instance.Lobby
         protected virtual void SpectateOtherSameTeam(TDSPlayer character, bool next = true)
         {
             TDSPlayer currentlySpectating = character.Spectates ?? character;
-            TDSPlayer nextPlayer;
+            TDSPlayer? nextPlayer;
             if (next)
                 nextPlayer = GetNextSpectatePlayerInSameTeam(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInSameTeam(currentlySpectating);
-            nextPlayer = nextPlayer ?? character;
+            nextPlayer ??= character;
 
             currentlySpectating.Spectators.Remove(character);
             character.Spectates = nextPlayer;
@@ -61,12 +61,12 @@ namespace TDS_Server.Instance.Lobby
         protected virtual void SpectateOtherAllTeams(TDSPlayer character, bool next = true)
         {
             TDSPlayer currentlySpectating = character.Spectates ?? character;
-            TDSPlayer nextPlayer;
+            TDSPlayer? nextPlayer;
             if (next)
                 nextPlayer = GetNextSpectatePlayerInAllTeams(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
-            nextPlayer = nextPlayer ?? character;
+            nextPlayer ??= character;
 
             currentlySpectating.Spectators.Remove(character);
             character.Spectates = nextPlayer;
@@ -81,9 +81,9 @@ namespace TDS_Server.Instance.Lobby
             }
         }
         
-        private TDSPlayer GetNextSpectatePlayerInSameTeam(TDSPlayer start)
+        private TDSPlayer? GetNextSpectatePlayerInSameTeam(TDSPlayer start)
         {
-            List<TDSPlayer> teamlist = start.Team.SpectateablePlayers;
+            List<TDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
             if (teamlist == null || teamlist.Count == 0)
                 return null;
             int startindex = teamlist.IndexOf(start) + 1;
@@ -92,9 +92,9 @@ namespace TDS_Server.Instance.Lobby
             return teamlist[startindex];
         }
 
-        private TDSPlayer GetPreviousSpectatePlayerInSameTeam(TDSPlayer start)
+        private TDSPlayer? GetPreviousSpectatePlayerInSameTeam(TDSPlayer start)
         {
-            List<TDSPlayer> teamlist = start.Team.SpectateablePlayers;
+            List<TDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
             if (teamlist == null || teamlist.Count == 0)
                 return null;
             int startindex = teamlist.IndexOf(start) - 1;
@@ -103,37 +103,45 @@ namespace TDS_Server.Instance.Lobby
             return teamlist[startindex];
         }
 
-        private TDSPlayer GetNextSpectatePlayerInAllTeams(TDSPlayer start)
+        private TDSPlayer? GetNextSpectatePlayerInAllTeams(TDSPlayer start)
         {
-            uint teamIndex = start.Team.Entity.Index;
+            uint teamIndex = start.Team?.Entity.Index ?? 0;
             if (teamIndex == 0)
                 ++teamIndex;
-            List<TDSPlayer> teamlist = Teams[teamIndex].SpectateablePlayers;
+            List<TDSPlayer>? teamlist = Teams[teamIndex].SpectateablePlayers;
+            if (teamlist == null)
+                return null;
             int charIndex = teamlist.IndexOf(start) + 1;
             if (teamlist.Count == 0 || charIndex >= teamlist.Count - 1)
             {
-                Team team = GetNextNonSpectatorTeamWithPlayers(start.Team);
+                Team? team = GetNextNonSpectatorTeamWithPlayers(start.Team);
                 if (team == null)
                     return null;
                 teamlist = team.SpectateablePlayers;
+                if (teamlist == null)
+                    return null;
                 charIndex = 0;
             }
             return teamlist[charIndex];
         }
 
-        private TDSPlayer GetPreviousSpectatePlayerInAllTeams(TDSPlayer start)
+        private TDSPlayer? GetPreviousSpectatePlayerInAllTeams(TDSPlayer start)
         {
-            uint teamIndex = start.Team.Entity.Index;
+            uint teamIndex = start.Team?.Entity.Index ?? 0;
             if (teamIndex == 0)
                 teamIndex = (uint)(Teams.Length - 1);
-            List<TDSPlayer> teamlist = Teams[teamIndex].SpectateablePlayers;
+            List<TDSPlayer>? teamlist = Teams[teamIndex].SpectateablePlayers;
+            if (teamlist == null)
+                return null;
             int charIndex = teamlist.IndexOf(start) - 1;
             if (teamlist.Count == 0 || charIndex < 0)
             {
-                Team team = GetPreviousNonSpectatorTeamWithPlayers(start.Team);
+                Team? team = GetPreviousNonSpectatorTeamWithPlayers(start.Team);
                 if (team == null)
                     return null;
                 teamlist = team.SpectateablePlayers;
+                if (teamlist == null)
+                    return null;
                 charIndex = teamlist.Count - 1;
             }
             return teamlist[charIndex];

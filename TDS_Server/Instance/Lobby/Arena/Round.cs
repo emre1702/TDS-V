@@ -18,7 +18,7 @@ namespace TDS_Server.Instance.Lobby
 
     partial class Arena
     {
-        private TDSTimer nextRoundStatusTimer;
+        private TDSTimer? nextRoundStatusTimer;
         public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
         {
             [ERoundStatus.Mapchoose] = 4 * 1000,
@@ -36,8 +36,8 @@ namespace TDS_Server.Instance.Lobby
         };
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
-        public TDSPlayer CurrentRoundEndBecauseOfPlayer;
-        private Team currentRoundEndWinnerTeam;
+        public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
+        private Team? currentRoundEndWinnerTeam;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
@@ -70,7 +70,7 @@ namespace TDS_Server.Instance.Lobby
                 StartBombMapChoose(nextMap);
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
-            if (LobbyEntity.MixTeamsAfterRound.Value)
+            if (LobbyEntity.MixTeamsAfterRound ?? false)
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, JsonConvert.SerializeObject(nextMap.MapLimits), JsonConvert.SerializeObject(nextMap.MapCenter));
             currentMap = nextMap;
@@ -85,7 +85,7 @@ namespace TDS_Server.Instance.Lobby
         {
             StartRoundForAllPlayer();       
 
-            if (currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
                 StartRoundBomb();
         }
 
@@ -98,7 +98,7 @@ namespace TDS_Server.Instance.Lobby
             }
 
             currentRoundEndWinnerTeam = GetRoundWinnerTeam();
-            Dictionary<ILanguage, string> reasondict = GetRoundEndReasonText(currentRoundEndWinnerTeam);
+            Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(currentRoundEndWinnerTeam);
 
             FuncIterateAllPlayers((character, team) =>
             {
@@ -130,7 +130,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private Team GetRoundWinnerTeam()
+        private Team? GetRoundWinnerTeam()
         {
             switch (currentRoundEndReason)
             {
@@ -150,7 +150,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private Dictionary<ILanguage, string> GetRoundEndReasonText(Team winnerTeam)
+        private Dictionary<ILanguage, string>? GetRoundEndReasonText(Team? winnerTeam)
         {
             switch (currentRoundEndReason)
             {
@@ -178,7 +178,7 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundEndReason.Command:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer.Client.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.Client.Name ?? "-");
                     });
                 case ERoundEndReason.NewPlayer:
                     return LangUtils.GetLangDictionary(lang =>

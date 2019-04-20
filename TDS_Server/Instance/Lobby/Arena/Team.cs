@@ -23,7 +23,7 @@ namespace TDS_Server.Instance.Lobby
             return amount;
         }
 
-        private Team GetTeamStillInRound(int minalive = 1)
+        private Team? GetTeamStillInRound(int minalive = 1)
         {
             for (int i = 0; i < AlivePlayers.Length; ++i)
             {
@@ -33,10 +33,10 @@ namespace TDS_Server.Instance.Lobby
             return null;
         }
 
-        private Team GetTeamWithHighestHP()
+        private Team? GetTeamWithHighestHP()
         {
             int highesthealth = 0;
-            Team teamwithhighesthealth = Teams[1];
+            Team? teamwithhighesthealth = Teams[1];
 
             foreach (Team team in Teams)
             {

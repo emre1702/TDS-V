@@ -14,7 +14,7 @@ namespace TDS_Server.Manager.Utility
             dbcontext.RemoveRange(
                 dbcontext.PlayerBans
                     .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
-#warning  todo: Check if that works right
+//todo  todo: Check if that works right
                     .ToList()
             );
             dbcontext.SaveChanges();

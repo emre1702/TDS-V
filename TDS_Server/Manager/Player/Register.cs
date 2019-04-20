@@ -19,13 +19,13 @@ namespace TDS_Server.Manager.Player
                     Name = player.Name,
                     Scname = player.SocialClubName,
                     Password = Utils.HashPWServer(password),
-#warning TODO: Make that nullable at client
+                    //Todo Make that nullable at client
                     Email = email,
                     IsVip = false
                 };
                 dbplayer.PlayerSettings = new PlayerSettings {
                     AllowDataTransfer = false,
-#warning TODO: Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
+                    //Todo Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
                     Language = (byte)ELanguage.English,
                     Hitsound = true,
                     Bloodscreen = true,

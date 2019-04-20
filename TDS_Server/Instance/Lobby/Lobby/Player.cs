@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.Lobby
                 }
 
                 #region Remove from old lobby
-                Lobby oldlobby = character.CurrentLobby;
+                Lobby? oldlobby = character.CurrentLobby;
                 oldlobby?.RemovePlayer(character);
                 #endregion
 
@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.Lobby
             SetPlayerTeam(character, Teams[teamindex]);
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, JsonConvert.SerializeObject(syncedLobbySettings), Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, syncedLobbySettings.Json, Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
             RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
 
@@ -98,8 +98,10 @@ namespace TDS_Server.Instance.Lobby
             if (character.CurrentLobbyStats == null)
                 return;
 
-            PlayerLobbyStats to = character.CurrentLobbyStats;
-            RoundStatsDto from = character.CurrentRoundStats;
+            PlayerLobbyStats? to = character.CurrentLobbyStats;
+            RoundStatsDto? from = character.CurrentRoundStats;
+            if (to == null || from == null)
+                return;
             to.Kills += from.Kills;
             to.Assists += from.Assists;
             to.Damage += from.Damage;
@@ -113,7 +115,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((player, team) =>
             {
-                if (team.Entity.Index == 0)
+                if (team == null || team.Entity.Index == 0)
                     return;
                 SavePlayerLobbyStats(player);
             });
@@ -121,6 +123,8 @@ namespace TDS_Server.Instance.Lobby
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)
         {
+            if (character.Entity == null)
+                return;
             using (TDSNewContext dbContext = new TDSNewContext())
             {
                 PlayerLobbyStats stats = await dbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
@@ -138,6 +142,8 @@ namespace TDS_Server.Instance.Lobby
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)
         {
+            if (character.Entity == null)
+                return false;
             return character.CurrentLobby == this && LobbyEntity.Owner == character.Entity.Id;
         }
     }

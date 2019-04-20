@@ -14,6 +14,8 @@ namespace TDS_Server.Manager.Maps
     {
         public static void LoadPlayerFavourites(TDSPlayer player)
         {
+            if (player.Entity == null)
+                return;
             List<int> mapIDs = player.Entity.PlayerMapFavourites
                 .Select(m => m.MapId)
                 .ToList();
@@ -23,7 +25,9 @@ namespace TDS_Server.Manager.Maps
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]
         public static async void ToggleMapFavouriteState(Client player, string mapName, bool isFavourite)
         {
-            Players entity = player.GetEntity();
+            Players? entity = player.GetEntity();
+            if (entity == null)
+                return;
             
             using (var dbcontext = new TDSNewContext())
             {

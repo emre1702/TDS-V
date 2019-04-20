@@ -15,15 +15,15 @@ namespace TDS_Server.Instance.Lobby
     {
         public readonly List<TDSPlayer> Players = new List<TDSPlayer>();
 
-        public void SendAllPlayerEvent(string eventname, Team team, params object[] args)
+        public void SendAllPlayerEvent(string eventname, Team? team, params object[] args)
         {
-            if (team == null)
+            if (team is null)
                 NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Select(p => p.Client).ToArray(), eventname, args);
             else
                 NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
         }
 
-        protected void FuncIterateAllPlayers(Action<TDSPlayer, Team> func)
+        protected void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
         {
             foreach (var player in Players)
             {
@@ -31,19 +31,25 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, Team targetTeam = null)
+        public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, Team? targetTeam = null)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
-            targetTeam.FuncIterate((character, team) =>
-            {
-                NAPI.Chat.SendChatMessageToPlayer(character.Client, texts[character.Language]);
-            });
+            if (targetTeam is null)
+                FuncIterateAllPlayers((player, team) =>
+                {
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, texts[player.Language]);
+                });
+            else
+                targetTeam.FuncIterate((player, team) =>
+                {
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, texts[player.Language]);
+                });
         }
 
-        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team targetTeam = null)
+        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team? targetTeam = null)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
-            if (targetTeam == null)
+            if (targetTeam is null)
             {
                 FuncIterateAllPlayers((character, teamID) =>
                 {
@@ -59,9 +65,9 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public void SendAllPlayerChatMessage(string msg, Team targetTeam = null)
+        public void SendAllPlayerChatMessage(string msg, Team? targetTeam = null)
         {
-            if (targetTeam == null)
+            if (targetTeam is null)
             {
                 FuncIterateAllPlayers((character, teamID) =>
                 {

@@ -16,14 +16,14 @@ namespace TDS_Client.Manager.Lobby
 {
     static class Bomb
     {
-        private static Vector3 plantedPos;
+        private static Vector3? plantedPos;
         private static EPlantDefuseStatus playerStatus;
         private static bool gotBomb;
         private static bool bombPlanted;
-        private static List<Vector3> plantSpots;
+        private static List<Vector3>? plantSpots;
         private static ulong plantDefuseStartTick;
 
-        private static DxProgressRectangle progressRect;
+        private static DxProgressRectangle? progressRect;
 
         public static bool DataChanged;
         public static bool CheckPlantDefuseOnTick { get; private set; }
@@ -80,7 +80,7 @@ namespace TDS_Client.Manager.Lobby
             gotBomb = false;
             playerStatus = EPlantDefuseStatus.None;
             CheckPlantDefuseOnTick = false;
-            progressRect.Remove();
+            progressRect?.Remove();
             progressRect = null;
             BombOnHand = false;
         }
@@ -88,6 +88,8 @@ namespace TDS_Client.Manager.Lobby
         public static void UpdatePlantDefuseProgress()
         {
             if (playerStatus == EPlantDefuseStatus.None)
+                return;
+            if (progressRect == null)
                 return;
             ulong mswasted = TimerManager.ElapsedTicks - plantDefuseStartTick;
             float mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
@@ -121,7 +123,7 @@ namespace TDS_Client.Manager.Lobby
                 else if (playerStatus == EPlantDefuseStatus.Defusing)
                     EventsSender.Send(DToServerEvent.StopDefusing);
                 playerStatus = EPlantDefuseStatus.None;
-                progressRect.Remove();
+                progressRect?.Remove();
                 progressRect = null;
             } 
         }
@@ -162,6 +164,8 @@ namespace TDS_Client.Manager.Lobby
 
         private static bool IsOnPlantSpot()
         {
+            if (plantSpots == null)
+                return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
             foreach (Vector3 pos in plantSpots)
             {
@@ -173,6 +177,8 @@ namespace TDS_Client.Manager.Lobby
 
         private static bool IsOnDefuseSpot()
         {
+            if (plantedPos == null)
+                return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
             return Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, plantedPos.X, plantedPos.Y, plantedPos.Z, true) <= Settings.DistanceToSpotToDefuse;
         }
