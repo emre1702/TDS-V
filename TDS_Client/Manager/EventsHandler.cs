@@ -28,6 +28,7 @@ using System.Drawing;
 using RAGE.NUI;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Manager.Utility;
+using TDS_Common.Dto.Map;
 
 namespace TDS_Client.Manager
 {
@@ -218,8 +219,8 @@ namespace TDS_Client.Manager
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = JsonConvert.DeserializeObject<List<Vector3>>((string)args[1]);
-            if (maplimit.Count > 0)
+            var maplimit = JsonConvert.DeserializeObject<MapPositionDto[]>((string)args[1]);
+            if (maplimit.Length > 0)
                 MapLimitManager.Load(maplimit);
             CameraManager.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
             Round.InFight = false;
@@ -312,7 +313,7 @@ namespace TDS_Client.Manager
 
         private void OnPlayerGotBombMethod(object[] args)
         {
-            Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<List<Vector3>>((string)args[0]));
+            Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<MapPositionDto[]>((string)args[0]));
         }
 
         private void OnPlayerMoneyChangeMethod(object[] args)

@@ -11,6 +11,7 @@ using TDS_Common.Dto;
 using System.Linq;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
+using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -61,10 +62,10 @@ namespace TDS_Server.Instance.Lobby
             Client player = character.Client;
             if (character.Team != null && !character.Team.IsSpectator)
             {
-                PositionRotationDto? spawndata = GetMapRandomSpawnData(character.Team);
+                MapPositionDto? spawndata = GetMapRandomSpawnData(character.Team);
                 if (spawndata == null)
                     return;
-                NAPI.Player.SpawnPlayer(player, spawndata.Position, spawndata.Rotation);
+                NAPI.Player.SpawnPlayer(player, spawndata.ToVector3(), spawndata.Rotation ?? 0);
                 if (character.Team.SpectateablePlayers != null && !character.Team.SpectateablePlayers.Contains(character))
                     character.Team.SpectateablePlayers?.Add(character);
             }
@@ -142,8 +143,8 @@ namespace TDS_Server.Instance.Lobby
         {
             if (currentMap != null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name, 
-                    JsonConvert.SerializeObject(currentMap.MapLimits), JsonConvert.SerializeObject(currentMap.MapCenter));
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name,
+                    currentMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(currentMap.LimitInfo.Center));
             }
 
             SendPlayerAmountInFightInfo(player.Client);

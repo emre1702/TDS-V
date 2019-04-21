@@ -61,7 +61,10 @@
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log(ex.Message, Environment.StackTrace, exceptionsource);
+                if (exceptionsource == null)
+                    ErrorLogsManager.Log(ex.Message, Environment.StackTrace);
+                else
+                    ErrorLogsManager.Log(ex.Message, Environment.StackTrace, exceptionsource);
             }
         }
 

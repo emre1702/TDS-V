@@ -4,10 +4,10 @@ namespace TDS_Server.Instance.Lobby
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;
-    using TDS_Server.Dto;
     using TDS_Server.Manager.Utility;
     using TDS_Common.Default;
     using TDS_Server.Instance.Player;
+    using TDS_Common.Dto.Map;
 
     partial class Arena
     {
@@ -58,7 +58,7 @@ namespace TDS_Server.Instance.Lobby
             mapVotes[mapname]++;
         }
 
-        private MapDto? GetVotedMap()
+        private MapFileDto? GetVotedMap()
         {
             if (mapVotes.Count > 0)
             {

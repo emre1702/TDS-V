@@ -12,6 +12,7 @@ using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Utility;
+using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -65,14 +66,14 @@ namespace TDS_Server.Instance.Lobby
         {
             ClearBombRound();
             ClearTeamPlayersAmounts();
-            MapDto nextMap = GetNextMap();
+            MapFileDto nextMap = GetNextMap();
             if (nextMap.SyncedData.Type == EMapType.Bomb)
                 StartBombMapChoose(nextMap);
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             if (LobbyEntity.MixTeamsAfterRound ?? false)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, JsonConvert.SerializeObject(nextMap.MapLimits), JsonConvert.SerializeObject(nextMap.MapCenter));
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
             currentMap = nextMap;
         }
 

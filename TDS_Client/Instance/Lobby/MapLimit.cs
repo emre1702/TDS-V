@@ -9,6 +9,7 @@ using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
+using TDS_Common.Dto.Map;
 using TDS_Common.Instance.Utility;
 using Player = RAGE.Elements.Player;
 
@@ -17,17 +18,17 @@ namespace TDS_Client.Instance.Lobby
     class MapLimit
     {
         private float minX, minY, maxX, maxY;
-        private List<Vector3> edges;
+        private MapPositionDto[] edges;
         private int maxOutsideCounter;
 
         private int outsideCounter;
         private DxText? info;
         private TDSTimer? checkTimer;
 
-        public MapLimit(List<Vector3> edges)
+        public MapLimit(MapPositionDto[] edges)
         {
             this.edges = edges;
-            if (edges.Count == 0)
+            if (edges.Length == 0)
                 return;
             minX = edges.Min(v => v.X);
             minY = edges.Min(v => v.Y);
@@ -52,7 +53,6 @@ namespace TDS_Client.Instance.Lobby
             checkTimer = null;
             info?.Remove();
             info = null;
-            edges.Clear();
         }
 
         private void Check()
@@ -91,10 +91,10 @@ namespace TDS_Client.Instance.Lobby
                 return false;
 
             bool inside = false;
-            for (int i = 0, j = edges.Count-1; i < edges.Count; j = i++)
+            for (int i = 0, j = edges.Length-1; i < edges.Length; j = i++)
             {
-                Vector3 iPoint = edges[i];
-                Vector3 jPoint = edges[j];
+                MapPositionDto iPoint = edges[i];
+                MapPositionDto jPoint = edges[j];
                 bool intersect = ((iPoint.Y > point.Y) != (jPoint.Y > point.Y))
                         && (point.X < (jPoint.X - iPoint.X) * (point.Y - iPoint.Y) / (jPoint.Y - iPoint.Y) + iPoint.X);
                 if (intersect)

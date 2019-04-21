@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Common.Dto.Map;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
@@ -54,7 +55,7 @@ namespace TDS_Server.Manager.Utility
                 }
                 Lobbies.Add(lobby);
 
-                List<MapDto> lobbymaplist = new List<MapDto>();
+                List<MapFileDto> lobbymaplist = new List<MapFileDto>();
                 if (lobby is Arena arena)
                 {
                     bool added = false;
@@ -62,13 +63,13 @@ namespace TDS_Server.Manager.Utility
                     {
                         if (mapassignment.MapId < 0)
                         {
-                            arena.SetMapList(MapsManager.allMaps, MapsManager.allMapsSyncJson);
+                            arena.SetMapList(MapsManager.AllMaps);
                             added = true;
                             break;
                         }
                         else
                         {
-                            lobbymaplist.Add(MapsManager.allMaps.FirstOrDefault(m => m.SyncedData.Name == mapassignment.Map.Name));
+                            lobbymaplist.Add(MapsManager.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapassignment.Map.Name));
                         }
                     }
                     if (!added)

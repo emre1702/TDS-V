@@ -12,7 +12,7 @@ namespace TDS_Server.Manager.Logs
     {
         private static readonly List<LogsError> notsavederrorlogs = new List<LogsError>();
 
-        public static void Log(string info, string stacktrace, Client? source)
+        public static void Log(string info, string stacktrace, Client source)
         {
             notsavederrorlogs.Add(
                 new LogsError
@@ -26,7 +26,7 @@ namespace TDS_Server.Manager.Logs
             Console.WriteLine(info + "\n" + stacktrace);
         }
 
-        public static void Log(string info, string stacktrace, TDSPlayer? source)
+        public static void Log(string info, string stacktrace, TDSPlayer? source = null)
         {
             notsavederrorlogs.Add(
                 new LogsError

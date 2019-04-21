@@ -6,6 +6,7 @@ namespace TDS_Server.Instance
     using TDS_Server.Instance.Player;
     using TDS_Common.Default;
     using System;
+    using TDS_Server.Manager.Logs;
 
     partial class Damagesys
     {
@@ -109,7 +110,7 @@ namespace TDS_Server.Instance
             int damage = GetDamage(weapon, headshot);
             if (damage != clientHasSentThisDamage)
             {
-                Manager.Logs.ErrorLogsManager.Log("Source has sent " + clientHasSentThisDamage + " damage, but the damage had to be " + damage, Environment.StackTrace, source);
+                ErrorLogsManager.Log("Source has sent " + clientHasSentThisDamage + " damage, but the damage had to be " + damage, Environment.StackTrace, source);
             }
 
             target.Damage(ref damage);

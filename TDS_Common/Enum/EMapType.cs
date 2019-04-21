@@ -1,7 +1,13 @@
-﻿namespace TDS_Common.Enum
+﻿using System.Xml.Serialization;
+
+namespace TDS_Common.Enum
 {
     public enum EMapType
     {
-        Normal, Bomb
+        [XmlEnum("normal")]
+        Normal,
+
+        [XmlEnum("bomb")]
+        Bomb
     }
 }

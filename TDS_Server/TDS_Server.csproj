@@ -6,7 +6,7 @@
     <AssemblyName>TDS_Server</AssemblyName>
     <RootNamespace>TDS_Server</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
-	<LangVersion>8.0</LangVersion>
+	<LangVersion>preview</LangVersion>
 	<NullableContextOptions>enable</NullableContextOptions>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -27,6 +27,7 @@
   <ItemGroup>
     <PackageReference Include="morelinq" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>

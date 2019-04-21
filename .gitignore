@@ -7,13 +7,15 @@ TDS_Server/packages/*
 TDS_Server/bin/*
 TDS_Server/client/*
 TDS_Server/server/*
-TDS_Server/efcore.bat
 TDS_Common/obj/*
 TDS_Common/packages/*
 TDS_Common/bin/*
 TDS_Client/obj/*
 TDS_Client/packages/*
 TDS_Client/bin/*
+TDS_Server_DB/obj/*
+TDS_Server_DB/packages/*
+TDS_Server_DB/bin/*
 TDS-CP-Server/bin/*
 TDS-CP-Server/obj/*
 /TDS_Server_DB/DB.config

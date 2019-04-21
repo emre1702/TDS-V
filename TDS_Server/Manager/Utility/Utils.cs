@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using TDS_Common.Dto.Map;
 
     static class Utils
     {
@@ -89,6 +90,11 @@
                     return (uint?)i;
             }
             return null;
+        }
+
+        public static Vector3 ToVector3(this MapPositionDto pos)
+        {
+            return new Vector3(pos.X, pos.Y, pos.Z ?? 0);
         }
     }
 

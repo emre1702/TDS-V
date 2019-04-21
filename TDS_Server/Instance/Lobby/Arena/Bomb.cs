@@ -12,6 +12,7 @@ namespace TDS_Server.Instance.Lobby
     using Newtonsoft.Json;
     using TDS_Server.Instance.Utility;
     using TDS_Common.Manager.Utility;
+    using TDS_Common.Dto.Map;
 
     partial class Arena
     {
@@ -42,19 +43,22 @@ namespace TDS_Server.Instance.Lobby
         private Blip? plantBlip;
         private Marker? bombTakeMarker;
 
-        private void StartBombMapChoose(MapDto map)
+        private void StartBombMapChoose(MapFileDto map)
         {
-            foreach (Vector3 bombplace in map.BombPlantPlaces)
+            if (map.BombInfo == null || map.BombInfo.PlantPositions.Length == 0)
+                return;
+            foreach (MapPositionDto bombplace in map.BombInfo.PlantPositions)
             {
+                Vector3 pos = bombplace.ToVector3();
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
-                    obj: NAPI.Object.CreateObject(-51423166, bombplace, new Vector3(), 255, Dimension), 
-                    blip: NAPI.Blip.CreateBlip(bombplace, Dimension),
-                    pos: bombplace
+                    obj: NAPI.Object.CreateObject(-51423166, pos, new Vector3(), 255, Dimension), 
+                    blip: NAPI.Blip.CreateBlip(pos, Dimension),
+                    pos: pos
                 );
                 dto.Blip.Sprite = 433;
                 bombPlantPlaces.Add(dto);
             }
-            bomb = NAPI.Object.CreateObject(1764669601, map.BombPlantPlaces[0], new Vector3(), 255, Dimension);
+            bomb = NAPI.Object.CreateObject(1764669601, map.BombInfo.PlantPositions[0].ToVector3(), new Vector3(), 255, Dimension);
         }
 
         private void GiveBombToRandomTerrorist()
@@ -71,7 +75,7 @@ namespace TDS_Server.Instance.Lobby
                 BombToHand(character);
             else
                 BombToBack(character);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, JsonConvert.SerializeObject(currentMap.BombPlantPlaces));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, currentMap.BombInfo?.PlantPositionsJson ?? "{}");
         }
 
         private void SendBombPlantInfos(TDSPlayer character)
