@@ -95,9 +95,10 @@ $( document ).ready( function () {
 
 			case "register":
 				$this.find( "input:not(:hidden)[id=register_password_again]" ).each( function () {
-					var password = $this.find( "input[id=register_password]" ).val();
+                    let password = $this.find("input[id=register_password]").val();
+                    let email = $this.find("input[id=register_email]").val();
 					if ( password === $( this ).val() ) {
-                        mp.trigger( "TryRegister_Browser", password, $this.find( "input[id=register_email]" ).val() );
+                        mp.trigger("TryRegister_Browser", password, email);
 					} else {
 						alert( langdata["password_has_to_be_same"] );
 						event.preventDefault();
@@ -114,10 +115,6 @@ function setLoginPanelData( playername, isreg, lang ) {
 	$( "[data-lang=username]" ).each( function () {
 		$( this ).addClass( 'active highlight' );
 		$( this ).next( "input" ).val( playername );
-	} );
-
-	$( "[data-disable]" ).each( function () {
-		$( this ).prop( "disabled", true );
 	} );
 
 	isregistered = isreg;
