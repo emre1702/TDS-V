@@ -46,7 +46,7 @@
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Client player, string password, string email)
+        public static async void OnPlayerTryRegisterEvent(Client player, string password, string? email)
         {
             if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
                 return;

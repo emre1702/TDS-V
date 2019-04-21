@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System.ComponentModel.DataAnnotations;
 using TDS_Common.Enum;
 using TDS_Server.Entity;
 using TDS_Server.Manager.Logs;
@@ -10,16 +11,18 @@ namespace TDS_Server.Manager.Player
     static class Register
     {
 
-        public static async void RegisterPlayer(Client player, string password, string email)
+        public static async void RegisterPlayer(Client player, string password, string? email)
         {
             using (TDSNewContext dbContext = new TDSNewContext())
             {
+                if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
+                    email = null;
+
                 Players dbplayer = new Players
                 {
                     Name = player.Name,
                     Scname = player.SocialClubName,
                     Password = Utils.HashPWServer(password),
-                    //Todo Make that nullable at client
                     Email = email,
                     IsVip = false
                 };
