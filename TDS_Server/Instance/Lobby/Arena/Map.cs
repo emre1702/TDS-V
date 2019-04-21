@@ -30,8 +30,13 @@ namespace TDS_Server.Instance.Lobby
 
         public MapFileDto GetRandomMap()
         {
-            MapFileDto nextmap = maps[CommonUtils.Rnd.Next(0, maps.Count)];
-            return nextmap;
+            var mapsConsideringPlayersAmount = maps
+                .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
+                .ToArray();
+            if (mapsConsideringPlayersAmount.Length > 0)
+                return mapsConsideringPlayersAmount[CommonUtils.Rnd.Next(0, mapsConsideringPlayersAmount.Length)];
+
+            return maps[CommonUtils.Rnd.Next(0, maps.Count)];
         }
 
         private void CreateTeamSpawnBlips(MapFileDto map)

@@ -13,10 +13,10 @@ namespace TDS_Common.Dto.Map
         public EMapType Type { get; set; } = EMapType.Normal;
 
         [XmlAttribute("minplayers")]
-        public int MinPlayers { get; set; } = int.MinValue;
+        public uint MinPlayers { get; set; } = 0;
 
         [XmlAttribute("maxplayers")]
-        public int MaxPlayers { get; set; } = int.MaxValue;
+        public uint MaxPlayers { get; set; } = uint.MaxValue;
 
         [XmlAttribute("creatorid")]
         public uint? CreatorId { get; set; }
