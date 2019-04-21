@@ -1,10 +1,13 @@
-﻿namespace TDS_Server.server.instance.lobby {
+﻿using TDS_Server.Entity;
 
-    /*partial class MapCreateLobby : Lobby {
-
-        public MapCreateLobby ( string name, int id = -1 ) : base ( name, id ) {
+namespace TDS_Server.Instance.Lobby
+{
+    partial class MapCreateLobby : Lobby
+    {
+        public MapCreateLobby(Lobbies entity) : base(entity)
+        {
 
         }
-
-    }*/
+    }
+    
 }

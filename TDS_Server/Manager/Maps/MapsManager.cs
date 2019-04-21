@@ -6,19 +6,13 @@ namespace TDS_Server.Manager.Maps
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
-    using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
-    using TDS_Common.Dto;
     using TDS_Common.Dto.Map;
     using TDS_Common.Enum;
-    using TDS_Server.Dto;
     using TDS_Server.Entity;
-    using TDS_Server.Enum;
-    using TDS_Server.Instance.Lobby;
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Utility;
 
