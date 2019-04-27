@@ -2,7 +2,6 @@ using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using TDS_Server.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Common.Default;
@@ -12,6 +11,7 @@ using System.Linq;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Dto.Map;
+using TDS_Server.Manager.Helper;
 
 namespace TDS_Server.Instance.Lobby
 {

@@ -8,11 +8,11 @@ namespace TDS_Server.Instance.Lobby
     using TDS_Server.Manager.Utility;
     using TDS_Common.Instance.Utility;
     using TDS_Common.Default;
-    using TDS_Common.Enum;
     using Newtonsoft.Json;
     using TDS_Server.Instance.Utility;
     using TDS_Common.Manager.Utility;
     using TDS_Common.Dto.Map;
+    using TDS_Server.Manager.Helper;
 
     partial class Arena
     {

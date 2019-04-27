@@ -14,7 +14,7 @@
         private static readonly StringBuilder strbuilder = new StringBuilder();
         private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
 
-        public static uint GetTimespan(int seconds = 0)
+        public static uint GetTimespanSinceStart(int seconds = 0)
         {
             TimeSpan t = DateTime.Now.AddSeconds(seconds) - startDateTime;
             return (uint)t.TotalSeconds;
@@ -22,9 +22,7 @@
 
         public static string GetTimestamp(int seconds = 0)
         {
-            if (seconds == 0)
-                return DateTime.UtcNow.AddHours(2).ToString("dd-MM-yyyy HH:mm:ss");
-            return DateTime.UtcNow.AddHours(2).AddSeconds(seconds).ToString("dd-MM-yyyy HH:mm:ss");
+            return DateTime.Now.ToString("s");
         }
 
         public static string HashPWServer(string pw)
@@ -90,11 +88,6 @@
                     return (uint?)i;
             }
             return null;
-        }
-
-        public static Vector3 ToVector3(this MapPositionDto pos)
-        {
-            return new Vector3(pos.X, pos.Y, pos.Z ?? 0);
         }
     }
 

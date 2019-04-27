@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using TDS_Common.Dto.Map;
@@ -84,6 +85,11 @@ namespace TDS_Server.Manager.Helper
                 return GetCenterOfMapPositions(positions);
             }
             return null;
+        }
+
+        public static Vector3 ToVector3(this MapPositionDto pos)
+        {
+            return new Vector3(pos.X, pos.Y, pos.Z ?? 0);
         }
     }
 }

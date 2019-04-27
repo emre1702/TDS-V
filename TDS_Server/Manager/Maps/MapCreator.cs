@@ -1,22 +1,43 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map;
+using TDS_Server.Entity;
+using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Maps
 {
     static class MapCreator
     {
-        public static bool Create(string mapXml)
+        private static List<MapDto> newCreatedMaps = new List<MapDto>();
+
+        public async static Task<bool> Create(TDSPlayer creator, string mapJson)
         {
             var serializer = new XmlSerializer(typeof(MapDto));
-            using var stringReader = new StringReader(mapXml);
-            using var xmlReader = XmlReader.Create(stringReader);
-            if (!serializer.CanDeserialize(xmlReader))
-                return false;
-            serializer.Deserialize(xmlReader);
+            try
+            {
+                var mapDto = (MapDto)JsonConvert.DeserializeObject(mapJson);
+                string mapPath = SettingsManager.NewMapsPath + mapDto.Info.Name + "_" + mapDto.SyncedData.CreatorName + "_" + Utils.GetTimestamp();
+                var memoryStream = new MemoryStream();
+                serializer.Serialize(memoryStream, mapDto);
 
-            return true;
+                string mapXml = await (new StreamReader(memoryStream).ReadToEndAsync());
+                string prettyMapXml = XmlHelper.GetPretty(mapXml);
+                await File.WriteAllTextAsync(mapPath, prettyMapXml);
+
+                newCreatedMaps.Add(mapDto);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 
