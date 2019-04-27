@@ -65,7 +65,7 @@ namespace TDS_Server.Instance.Lobby
                 SetPlayerReadyForRound(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
             });
-            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap?.IsBomb ?? false)
                 GiveBombToRandomTerrorist();
         }
 

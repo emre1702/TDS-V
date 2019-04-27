@@ -34,7 +34,7 @@ namespace TDS_Server.Instance.Lobby
             nextRoundStatusTimer?.Kill();
             nextRoundStatusTimer = null;
 
-            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap?.IsBomb ?? false)
                 StopBombRound();
         }
     }

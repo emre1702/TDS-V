@@ -4,7 +4,7 @@ namespace TDS_Common.Dto.Map
 {
 #pragma warning disable CS8618 // Non-nullable field is uninitialized.
     [XmlRoot("TDSMap")]
-    public class MapFileDto
+    public class MapDto
     {
         [XmlElement("map")]
         public MapInfoDto Info { get; set; }
@@ -24,6 +24,9 @@ namespace TDS_Common.Dto.Map
 
         [XmlIgnore]
         public SyncedMapDataDto SyncedData => new SyncedMapDataDto();
+
+        [XmlIgnore]
+        public bool IsBomb => Info.Type == Enum.EMapType.Bomb;
 
 
     }

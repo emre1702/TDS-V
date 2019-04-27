@@ -66,14 +66,14 @@ namespace TDS_Server.Instance.Lobby
         {
             ClearBombRound();
             ClearTeamPlayersAmounts();
-            MapFileDto nextMap = GetNextMap();
-            if (nextMap.SyncedData.Type == EMapType.Bomb)
+            MapDto nextMap = GetNextMap();
+            if (nextMap.IsBomb)
                 StartBombMapChoose(nextMap);
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             if (LobbyEntity.MixTeamsAfterRound ?? false)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.SyncedData.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
             currentMap = nextMap;
         }
 
@@ -86,7 +86,7 @@ namespace TDS_Server.Instance.Lobby
         {
             StartRoundForAllPlayer();       
 
-            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap?.IsBomb ?? false)
                 StartRoundBomb();
         }
 
@@ -115,7 +115,7 @@ namespace TDS_Server.Instance.Lobby
             DmgSys.Clear();
 
             DeleteMapBlips();
-            if (currentMap != null && currentMap.SyncedData.Type == EMapType.Bomb)
+            if (currentMap?.IsBomb ?? false)
                 StopBombRound();
 
             RewardAllPlayer();

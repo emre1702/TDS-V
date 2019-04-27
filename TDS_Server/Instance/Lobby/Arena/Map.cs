@@ -15,20 +15,20 @@ namespace TDS_Server.Instance.Lobby
     partial class Arena
     {
 
-        private MapFileDto? currentMap;
-        private List<MapFileDto> maps = new List<MapFileDto>();
+        private MapDto? currentMap;
+        private List<MapDto> maps = new List<MapDto>();
         private List<Blip> mapBlips = new List<Blip>();
         private string mapsJson = string.Empty;
 
-        private MapFileDto GetNextMap()
+        private MapDto GetNextMap()
         {
-            MapFileDto? map = GetVotedMap();
+            MapDto? map = GetVotedMap();
             if (map != null)
                 return map;
             return GetRandomMap();
         }
 
-        public MapFileDto GetRandomMap()
+        public MapDto GetRandomMap()
         {
             var mapsConsideringPlayersAmount = maps
                 .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Lobby
             return maps[CommonUtils.Rnd.Next(0, maps.Count)];
         }
 
-        private void CreateTeamSpawnBlips(MapFileDto map)
+        private void CreateTeamSpawnBlips(MapDto map)
         {
             int i = 0;
             foreach (var teamspawn in map.TeamSpawnsList.TeamSpawns)
@@ -53,7 +53,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private void CreateMapLimitBlips(MapFileDto map)
+        private void CreateMapLimitBlips(MapDto map)
         {
             foreach (MapPositionDto edge in map.LimitInfo.Edges)
             {
@@ -92,7 +92,7 @@ namespace TDS_Server.Instance.Lobby
             });
         }
 
-        public void SetMapList(List<MapFileDto> themaps, string? syncjson = null)
+        public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
             maps = themaps;
             mapsJson = syncjson != null ? syncjson : JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());

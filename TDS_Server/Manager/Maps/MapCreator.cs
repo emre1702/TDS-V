@@ -1,20 +1,26 @@
-using GTANetworkAPI;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using TDS_Server.Default;
-using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
-using TDS_Server.Manager.Utility;
+using System.Xml;
+using System.Xml.Serialization;
+using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Manager.Maps
 {
-
-//todo Add map creator
-    static partial class MapsManager
+    static class MapCreator
     {
+        public static bool Create(string mapXml)
+        {
+            var serializer = new XmlSerializer(typeof(MapDto));
+            using var stringReader = new StringReader(mapXml);
+            using var xmlReader = XmlReader.Create(stringReader);
+            if (!serializer.CanDeserialize(xmlReader))
+                return false;
+            serializer.Deserialize(xmlReader);
+
+            return true;
+        }
+
+
+
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {
             StringBuilder builder = new StringBuilder();

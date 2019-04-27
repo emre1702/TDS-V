@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Utility
                 }
                 Lobbies.Add(lobby);
 
-                List<MapFileDto> lobbymaplist = new List<MapFileDto>();
+                List<MapDto> lobbymaplist = new List<MapDto>();
                 if (lobby is Arena arena)
                 {
                     bool added = false;

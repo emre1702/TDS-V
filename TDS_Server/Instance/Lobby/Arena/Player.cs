@@ -32,7 +32,7 @@ namespace TDS_Server.Instance.Lobby
 
             SendPlayerRoundInfoOnJoin(character);
 
-            string mapname = currentMap == null ? "-" : currentMap.SyncedData.Name;
+            string mapname = currentMap == null ? "-" : currentMap.Info.Name;
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.SyncCurrentMapName, mapname);
 
             return true;
@@ -143,7 +143,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (currentMap != null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.SyncedData.Name,
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, currentMap.Info.Name,
                     currentMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(currentMap.LimitInfo.Center));
             }
 

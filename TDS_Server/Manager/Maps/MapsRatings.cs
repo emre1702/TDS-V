@@ -15,15 +15,12 @@ using TDS_Common.Default;
 namespace TDS_Server.Manager.Maps
 {
 
-    static partial class MapsManager
+    static class MapsRatings
     {
-
-        private static Dictionary<string, uint[]> mapRatingDict = new Dictionary<string, uint[]>();
-        private static Dictionary<uint, Dictionary<string, uint>> playerMapRating = new Dictionary<uint, Dictionary<string, uint>>();
-
 
         public static async void AddPlayerMapRating(Client player, string mapname, byte rating)
         {
+            //todo AddPlayerMapRating
             //if (!DoesMapNameExist(mapname))
                 //return;
 

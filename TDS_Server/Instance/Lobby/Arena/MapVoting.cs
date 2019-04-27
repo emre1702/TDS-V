@@ -58,7 +58,7 @@ namespace TDS_Server.Instance.Lobby
             mapVotes[mapname]++;
         }
 
-        private MapFileDto? GetVotedMap()
+        private MapDto? GetVotedMap()
         {
             if (mapVotes.Count > 0)
             {
@@ -69,9 +69,7 @@ namespace TDS_Server.Instance.Lobby
                 });
                 mapVotes.Clear();
                 playerVotes.Clear();
-                for (int i = 0; i < maps.Count; ++i)
-                    if (maps[i].SyncedData.Name == wonmap)
-                        return maps[i];
+                return maps.FirstOrDefault(m => m.Info.Name == wonmap);
             }
             return null;
         }

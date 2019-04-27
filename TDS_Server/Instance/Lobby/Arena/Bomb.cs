@@ -43,7 +43,7 @@ namespace TDS_Server.Instance.Lobby
         private Blip? plantBlip;
         private Marker? bombTakeMarker;
 
-        private void StartBombMapChoose(MapFileDto map)
+        private void StartBombMapChoose(MapDto map)
         {
             if (map.BombInfo == null || map.BombInfo.PlantPositions.Length == 0)
                 return;
@@ -336,7 +336,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void ClearBombRound()
         {
-            if (currentMap == null || currentMap.SyncedData.Type != EMapType.Bomb)
+            if (!currentMap?.IsBomb ?? true)
                 return;
 
             foreach (var place in bombPlantPlaces)
