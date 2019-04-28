@@ -1,12 +1,10 @@
-using TDS_Common.Enum;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
-using TDS_Server.Instance.Lobby.Interfaces;
 
 namespace TDS_Server.Instance.Lobby
 {
 
-    partial class Arena : FightLobby, IRound
+    partial class Arena : FightLobby
     {
 
         public Arena(Lobbies entity) : base(entity)

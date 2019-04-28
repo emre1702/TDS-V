@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using TDS_Server.Entity;
-using TDS_Server.Instance.Lobby.Interfaces;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
-    partial class FightLobby : Lobby, IFight
+    partial class FightLobby : Lobby
     {
         protected readonly Damagesys DmgSys;
 
