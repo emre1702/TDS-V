@@ -42,7 +42,8 @@
 
                     BansManager.RemoveExpiredBans(dbcontext);
 
-                    MapsManager.LoadMaps(dbcontext);
+                    MapsLoader.LoadMaps(dbcontext);
+                    MapCreator.LoadNewMaps();
                     LobbyManager.LoadAllLobbies(dbcontext);
 
                     // Gang.LoadGangFromDatabase ();

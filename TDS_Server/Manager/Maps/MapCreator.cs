@@ -22,7 +22,12 @@ namespace TDS_Server.Manager.Maps
             try
             {
                 var mapDto = (MapDto)JsonConvert.DeserializeObject(mapJson);
-                string mapPath = SettingsManager.NewMapsPath + mapDto.Info.Name + "_" + mapDto.SyncedData.CreatorName + "_" + Utils.GetTimestamp();
+                mapDto.LoadSyncedData();
+                mapDto.SyncedData.CreatorName = creator.Client.Name;
+
+                string mapPath = SettingsManager.NewMapsPath + mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp();
+                mapPath = Utils.MakeValidFileName(mapPath);
+
                 var memoryStream = new MemoryStream();
                 serializer.Serialize(memoryStream, mapDto);
 
@@ -38,6 +43,11 @@ namespace TDS_Server.Manager.Maps
             {
                 return false;
             }
+        }
+
+        public static void LoadNewMaps()
+        {
+            newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
         }
 
 

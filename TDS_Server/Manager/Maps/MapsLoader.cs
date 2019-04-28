@@ -22,30 +22,11 @@ namespace TDS_Server.Manager.Maps
                                                                                                                          //public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string>();
 
         private static readonly XmlReaderSettings _xmlReaderSettings = new XmlReaderSettings() { Async = true };
+        private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
         public static void LoadMaps(TDSNewContext dbcontext)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(MapDto));
-            var directoryInfo = new DirectoryInfo(SettingsManager.MapsPath);
-
-            foreach (var fileInfo in directoryInfo.EnumerateFiles("*.xml", SearchOption.AllDirectories))
-            {
-                using XmlReader reader = XmlReader.Create(fileInfo.OpenRead(), _xmlReaderSettings);
-                if (!serializer.CanDeserialize(reader))
-                {
-                    ErrorLogsManager.Log($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
-                    continue;
-                }
-
-                MapDto map = (MapDto) serializer.Deserialize(reader);
-                AllMaps.Add(map);
-
-                if (map.LimitInfo.Center == null)
-                    map.LimitInfo.Center = map.GetCenter();
-
-                map.CreateJsons();
-                map.LoadSyncedData();
-            }
+            AllMaps = LoadMapsInDirectory(SettingsManager.MapsPath);
 
             dbcontext.Maps.Include(m => m.Creator).Load();
 
@@ -53,7 +34,41 @@ namespace TDS_Server.Manager.Maps
 
             // Load name of creators for Maps //
             LoadCreatorNames(dbcontext);
-        }        
+        }  
+
+        public static List<MapDto> LoadMapsInDirectory(string path)
+        {
+            var list = new List<MapDto>();
+            var directoryInfo = new DirectoryInfo(path);
+            foreach (var fileInfo in directoryInfo.EnumerateFiles("*.xml", SearchOption.AllDirectories))
+            {
+                MapDto? map = LoadMap(fileInfo);
+                if (map == null)
+                    continue;
+                list.Add(map);
+            }
+            return list;
+        }
+        
+        public static MapDto? LoadMap(FileInfo fileInfo)
+        {
+            using XmlReader reader = XmlReader.Create(fileInfo.OpenRead(), _xmlReaderSettings);
+            if (!_xmlSerializer.CanDeserialize(reader))
+            {
+                ErrorLogsManager.Log($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
+                return null;
+            }
+
+            MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
+            AllMaps.Add(map);
+
+            if (map.LimitInfo.Center == null)
+                map.LimitInfo.Center = map.GetCenter();
+
+            map.CreateJsons();
+            map.LoadSyncedData();
+            return map;
+        }
 
         private static void SaveMapsInDB(TDSNewContext dbContext)
         {

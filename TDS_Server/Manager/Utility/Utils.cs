@@ -4,9 +4,11 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Text.RegularExpressions;
     using TDS_Common.Dto.Map;
 
     static class Utils
@@ -88,6 +90,14 @@
                     return (uint?)i;
             }
             return null;
+        }
+
+        public static string MakeValidFileName(string name)
+        {
+            string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
+            string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
+
+            return Regex.Replace(name, invalidRegStr, "_");
         }
     }
 
