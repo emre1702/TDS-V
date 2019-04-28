@@ -71,7 +71,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 1)]
-        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
+        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
@@ -79,18 +79,18 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
-            if (hours == 0)
+            if (length == DateTime.MinValue)
                 player.CurrentLobby.UnbanPlayer(player, target, reason);
-            else if (hours == -1)
+            else if (length == DateTime.MaxValue)
                 player.CurrentLobby.BanPlayer(player, target, null, reason);
             else
-                player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+                player.CurrentLobby.BanPlayer(player, target, length, reason);
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 0)]
-        public static async void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
+        public static async void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
@@ -104,36 +104,36 @@ namespace TDS_Server.Manager.Commands
             if (target == null)
                 return;
 
-            if (hours == 0)
+            if (length == DateTime.MinValue)
                 player.CurrentLobby.UnbanPlayer(player, target, reason);
-            else if (hours == -1)
+            else if (length == DateTime.MaxValue)
                 player.CurrentLobby.BanPlayer(player, target, null, reason);
             else
-                player.CurrentLobby.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+                player.CurrentLobby.BanPlayer(player, target, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Ban, 1)]
-        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, float hours, [TDSRemainingText] string reason)
+        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
 
-            if (hours == 0)
+            if (length == DateTime.MinValue)
                 LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
-            else if (hours == -1)
+            else if (length == DateTime.MaxValue)
                 LobbyManager.MainMenu.BanPlayer(player, target, null, reason);
             else
-                LobbyManager.MainMenu.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+                LobbyManager.MainMenu.BanPlayer(player, target, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Ban, 0)]
-        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, float hours, [TDSRemainingText] string reason)
+        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
@@ -142,12 +142,12 @@ namespace TDS_Server.Manager.Commands
             if (target == null)
                 return;
 
-            if (hours == 0)
+            if (length == DateTime.MinValue)
                 LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
-            else if (hours == -1)
+            else if (length == DateTime.MaxValue)
                 LobbyManager.MainMenu.BanPlayer(player, target, null, reason);
             else
-                LobbyManager.MainMenu.BanPlayer(player, target, DateTime.Now.AddHours(hours), reason);
+                LobbyManager.MainMenu.BanPlayer(player, target, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
