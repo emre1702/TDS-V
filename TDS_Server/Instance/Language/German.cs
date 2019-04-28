@@ -42,6 +42,7 @@ namespace TDS_Server.Instance.Language
         public override string KILLING_SPREE_HEALTHARMOR => "{0} hat einen {1}er Killingspree und kriegt dafür {2} Leben/Weste.";
 
         public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";
+        public override string LOBBY_ERROR_REMOVE => "Die Lobby hatte einen Fehler und wurde entfernt. Der/die Entwickler wurde(n) benachrichtigt.";
 
         public override string MAP_WON_VOTING => "Die Map {0} hat das Voting gewonnen!";
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";

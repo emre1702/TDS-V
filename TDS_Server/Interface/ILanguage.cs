@@ -36,6 +36,7 @@
         string KILLING_SPREE_HEALTHARMOR { get; }
 
         string LOBBY_DOESNT_EXIST { get; }
+        string LOBBY_ERROR_REMOVE { get; }
 
         string MAP_WON_VOTING { get; }
         string MUTETIME_INVALID { get; }

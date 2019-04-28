@@ -11,12 +11,13 @@ namespace TDS_Server.Instance.Lobby
 
         public Arena(Lobbies entity) : base(entity)
         {
-            roundStatusMethod[ERoundStatus.Mapchoose] = StartMapChoose;
+            roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
+            roundStatusMethod[ERoundStatus.NewMapChoose] = StartNewMapChoose;
             roundStatusMethod[ERoundStatus.Countdown] = StartRoundCountdown;
             roundStatusMethod[ERoundStatus.Round] = StartRound;
             roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
-            DurationsDict[ERoundStatus.Round] = (entity.RoundTime.HasValue ? entity.RoundTime.Value : 360) * 1000;
+            DurationsDict[ERoundStatus.Round] = (entity.RoundTime ?? 360) * 1000;
 
             terroristTeam = Teams[2];
             counterTerroristTeam = Teams[1];
@@ -25,7 +26,7 @@ namespace TDS_Server.Instance.Lobby
         public override void Start()
         {
             base.Start();
-            SetRoundStatus(ERoundStatus.Mapchoose);
+            SetRoundStatus(ERoundStatus.NewMapChoose);
         }
 
         protected override void Remove()

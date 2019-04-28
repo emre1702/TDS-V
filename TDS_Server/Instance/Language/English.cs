@@ -41,6 +41,7 @@ namespace TDS_Server.Instance.Language
         public virtual string KILLING_SPREE_HEALTHARMOR => "{0} has got a {1}-killingspree and gets a {2} life/armor bonus.";
 
         public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
+        public virtual string LOBBY_ERROR_REMOVE => "The lobby has got an error and got removed. The developer are informed.";
 
         public virtual string MAP_WON_VOTING => "The map {0} won the voting!";
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";

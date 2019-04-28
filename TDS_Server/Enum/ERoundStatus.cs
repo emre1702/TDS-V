@@ -2,6 +2,6 @@
 {
     public enum ERoundStatus
     {
-        None, Mapchoose, Countdown, Round, RoundEnd
+        None, MapClear, NewMapChoose, Countdown, Round, RoundEnd
     }
 }

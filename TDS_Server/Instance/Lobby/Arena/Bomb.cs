@@ -336,9 +336,6 @@ namespace TDS_Server.Instance.Lobby
 
         private void ClearBombRound()
         {
-            if (!currentMap?.IsBomb ?? true)
-                return;
-
             foreach (var place in bombPlantPlaces)
             {
                 place.Delete();

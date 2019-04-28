@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Dto.Map;
+using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
@@ -54,31 +55,43 @@ namespace TDS_Server.Manager.Utility
                         break;
                 }
                 Lobbies.Add(lobby);
-
-                List<MapDto> lobbymaplist = new List<MapDto>();
                 if (lobby is Arena arena)
                 {
-                    bool added = false;
-                    foreach (var mapassignment in lobbysetting.LobbyMaps)
-                    {
-                        if (mapassignment.MapId < 0)
-                        {
-                            arena.SetMapList(MapsManager.AllMaps);
-                            added = true;
-                            break;
-                        }
-                        else
-                        {
-                            lobbymaplist.Add(MapsManager.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapassignment.Map.Name));
-                        }
-                    }
-                    if (!added)
-                        arena.SetMapList(lobbymaplist);
-                    lobbymaplist.Clear();
-
+                    AddMapsToArena(arena, lobbysetting);
                 }
                 
             }
+        }
+
+        private static void AddMapsToArena(Arena arena, Lobbies lobbySetting)
+        {
+            List<MapDto> lobbyMapsList = new List<MapDto>();
+            foreach (var mapAssignment in lobbySetting.LobbyMaps)
+            {
+                // All 
+                if (mapAssignment.MapId == -1)
+                {
+                    arena.SetMapList(MapsLoader.AllMaps);
+                    return;
+                }
+
+                // All Normals
+                if (mapAssignment.MapId == -2)
+                {
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == EMapType.Normal).ToList());
+                    return;
+                }
+
+                // All Bombs
+                if (mapAssignment.MapId == -3)
+                {
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == EMapType.Bomb).ToList());
+                    return;
+                }
+
+                lobbyMapsList.Add(MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name));
+            }
+            arena.SetMapList(lobbyMapsList);
         }
 
         public static Lobby GetLobby(uint id)

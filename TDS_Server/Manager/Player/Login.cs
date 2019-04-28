@@ -67,7 +67,7 @@
                 if (character.ChatLoaded)
                     OfflineMessagesManager.CheckOfflineMessages(character);
 
-                MapsManager.SendPlayerHisRatings(character);
+                MapsRatings.SendPlayerHisRatings(character);
                 LobbyEvents.JoinLobbyEvent(player, 0, 0);
 
                 MapFavourites.LoadPlayerFavourites(character);

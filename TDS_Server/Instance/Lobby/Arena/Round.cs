@@ -13,6 +13,7 @@ using TDS_Common.Instance.Utility;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Utility;
 using TDS_Common.Dto.Map;
+using TDS_Server.Manager.Logs;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -22,7 +23,8 @@ namespace TDS_Server.Instance.Lobby
         private TDSTimer? nextRoundStatusTimer;
         public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
         {
-            [ERoundStatus.Mapchoose] = 4 * 1000,
+            [ERoundStatus.MapClear] = 1 * 1000,
+            [ERoundStatus.NewMapChoose] = 4 * 1000,
             [ERoundStatus.Countdown] = 5 * 1000,
             [ERoundStatus.Round] = 4 * 60 * 1000,
             [ERoundStatus.RoundEnd] = 8 * 1000,
@@ -30,10 +32,11 @@ namespace TDS_Server.Instance.Lobby
         private readonly Dictionary<ERoundStatus, Action> roundStatusMethod = new Dictionary<ERoundStatus, Action>();
         private readonly Dictionary<ERoundStatus, ERoundStatus> nextRoundStatsDict = new Dictionary<ERoundStatus, ERoundStatus>
         {
-            [ERoundStatus.Mapchoose] = ERoundStatus.Countdown,
+            [ERoundStatus.MapClear] = ERoundStatus.NewMapChoose,
+            [ERoundStatus.NewMapChoose] = ERoundStatus.Countdown,
             [ERoundStatus.Countdown] = ERoundStatus.Round,
             [ERoundStatus.Round] = ERoundStatus.RoundEnd,
-            [ERoundStatus.RoundEnd] = ERoundStatus.Mapchoose
+            [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
         };
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
@@ -56,16 +59,30 @@ namespace TDS_Server.Instance.Lobby
                     else
                         SetRoundStatus(nextStatus);
                 }, DurationsDict[status]);
-                roundStatusMethod[status]();
+                try
+                {
+                    roundStatusMethod[status]();
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: "+ ex.Message, ex.StackTrace);
+                    SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
+                    Remove();
+                }
             }
             else if (currentRoundStatus != ERoundStatus.RoundEnd)
                 roundStatusMethod[ERoundStatus.RoundEnd]();
         }
 
-        private void StartMapChoose()
+        private void StartMapClear()
         {
-            ClearBombRound();
+            if (currentMap?.IsBomb ?? false)
+                ClearBombRound();
             ClearTeamPlayersAmounts();
+        }
+
+        private void StartNewMapChoose()
+        {
             MapDto nextMap = GetNextMap();
             if (nextMap.IsBomb)
                 StartBombMapChoose(nextMap);
