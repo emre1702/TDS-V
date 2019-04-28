@@ -421,7 +421,7 @@ namespace TDS_Server.Manager.Commands
 
                 #region Unmute
                 case string _ when IsUnmute(time):       // unmute
-                    return DateTime.MaxValue;
+                    return DateTime.MinValue;
                 #endregion
 
                 default:
