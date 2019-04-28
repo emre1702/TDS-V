@@ -19,22 +19,25 @@ namespace TDS_Server.Manager.Commands
 {
     class CommandsManager : Script
     {
-        private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
-        private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
+        // private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
+        // private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
 
         private class CommandData
         {
             public List<CommandMethodData> MethodDatas = new List<CommandMethodData>();
-            public int? ToOneStringAfterParameterCount = null;
         }
 
         private class CommandMethodData
         {
             public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
-            public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
-            public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
+            // public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
+            // public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
             public Type[] ParameterTypes = new Type[0];
             public int Priority;
+            public int? ToOneStringAfterParameterCount = null;
+            public bool HasCommandInfos = false;
+
+            public int AmountDefaultParams => 1 + (HasCommandInfos ? 1 : 0);
 
             public CommandMethodData(MethodInfo methodDefault, int priority)
             {
@@ -49,11 +52,11 @@ namespace TDS_Server.Manager.Commands
         private static readonly Dictionary<string, string> commandByAlias = new Dictionary<string, string>();
         private static readonly Dictionary<Type, Func<string, object?>> typeConverter = new Dictionary<Type, Func<string, object?>>();
 
-        private const int AmountDefaultParams = 2;
+        // private const int AmountDefaultParams = 2;
 
         // With implicit types it's much slower than direct call (Test: 8ms in 10000) - but then you can use Methods with implicit types (e.g. AdminSay([defaultParams], string text, int number))
         // Without implicit types it's much faster but you can only use Methods with signature Method([defaultParams]) or Method([defaultParams], object[] args)
-        private const bool UseImplicitTypes = true;
+        // private const bool UseImplicitTypes = true;
         
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
@@ -92,34 +95,41 @@ namespace TDS_Server.Manager.Commands
                     methodDefault: method
                 );
                 commanddata.MethodDatas.Add(methoddata);
-                
-                var parameters = method.GetParameters().Skip(AmountDefaultParams);
+
+                var methodParams = method.GetParameters();
+                if (methodParams.Length >= 2)
+                {
+                    if (methodParams[1].ParameterType == typeof(TDSCommandInfos))
+                        methoddata.HasCommandInfos = true;
+                }
+
+                var parameters = method.GetParameters().Skip(methoddata.AmountDefaultParams);
                 Type[] parametertypes = parameters.Select(p => p.ParameterType).ToArray();
 
                 foreach (var parameter in parameters)
                 {
                     #region TDSRemainingText attribute
-                    if (!commanddata.ToOneStringAfterParameterCount.HasValue)
+                    if (!methoddata.ToOneStringAfterParameterCount.HasValue)
                         if (parameter.CustomAttributes.Any(d => d.AttributeType == typeof(TDSRemainingText)))
-                            commanddata.ToOneStringAfterParameterCount = parameter.Position;
+                            methoddata.ToOneStringAfterParameterCount = parameter.Position;
                     #endregion TDSRemainingText attribute
 
                     #region Save parameter types
                     // Don't need Type for parameters beginning at ToOneStringAfterParameterCount (because they are always strings)
-                    if (!commanddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= commanddata.ToOneStringAfterParameterCount.Value)
-                        parametertypes[parameter.Position - AmountDefaultParams] = parameter.ParameterType;
+                    if (!methoddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= methoddata.ToOneStringAfterParameterCount.Value)
+                        parametertypes[parameter.Position - methoddata.AmountDefaultParams] = parameter.ParameterType;
                     #endregion Save parameter types
                 }
                 methoddata.ParameterTypes = parametertypes;
 
-                if (!UseImplicitTypes)
+                /*if (!UseImplicitTypes)
                 {
 #pragma warning disable
                     if (parametertypes.Length == 0)
                         methoddata.MethodEmpty = (CommandEmptyDefaultMethod)method.CreateDelegate(typeof(CommandEmptyDefaultMethod));
                     else
                         methoddata.Method = (CommandDefaultMethod)method.CreateDelegate(typeof(CommandDefaultMethod));
-                }
+                }*/
 #pragma warning enable
 
                 commandDataByCommand[cmd] = commanddata;
@@ -158,13 +168,12 @@ namespace TDS_Server.Manager.Commands
                 if (IsInvalidArgsCount(character, commanddata, args))
                     return;
 
-                args = HandleRemaingText(commanddata, args);
-
                 int amountmethods = commanddata.MethodDatas.Count;
                 for (int methodindex = 0; methodindex < amountmethods; ++methodindex) 
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
 
+                    args = HandleRemaingText(methoddata, args);
                     var handleArgumentsResult = await HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args);
                     if (handleArgumentsResult.IsWrongMethod)
                         continue;
@@ -172,15 +181,16 @@ namespace TDS_Server.Manager.Commands
                     if (!handleArgumentsResult.Worked)
                         return;
 
-                    if (UseImplicitTypes)
-                    {
-                        object[] newargs = new object[(args?.Length ?? 0) + AmountDefaultParams];
-                        newargs[0] = character;
+                    //if (UseImplicitTypes)
+                    //{
+                    object[] newargs = new object[(args?.Length ?? 0) + methoddata.AmountDefaultParams];
+                    newargs[0] = character;
+                    if (methoddata.HasCommandInfos)
                         newargs[1] = cmdinfos;
-                        if (args != null)
-                            args.CopyTo(newargs, 2);
-                        methoddata.MethodDefault.Invoke(null, newargs);
-                    }
+                    if (args != null)
+                        args.CopyTo(newargs, methoddata.AmountDefaultParams);
+                    methoddata.MethodDefault.Invoke(null, newargs);
+                    /*}
                     else
                     {
 #pragma warning disable
@@ -189,7 +199,7 @@ namespace TDS_Server.Manager.Commands
                         else
                             methoddata.MethodEmpty.Invoke(character, cmdinfos);
 #pragma warning enable
-                    }
+                    }*/
                 }
                 
             }
@@ -218,7 +228,7 @@ namespace TDS_Server.Manager.Commands
                     #region Check if player exists
                     if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
                     {
-                        // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client 
+                        // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
                         if (methodindex + 1 == amountmethodsavailable)
                         {
                             NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
@@ -235,11 +245,11 @@ namespace TDS_Server.Manager.Commands
             return new HandleArgumentsResult { Worked = true };
         }
 
-        private static object[]? HandleRemaingText(CommandData commanddata, object[]? args)
+        private static object[]? HandleRemaingText(CommandMethodData methodData, object[]? args)
         {
-            if (args != null && commanddata.ToOneStringAfterParameterCount.HasValue)
+            if (args != null && methodData.ToOneStringAfterParameterCount.HasValue)
             {
-                int index = commanddata.ToOneStringAfterParameterCount.Value - AmountDefaultParams;
+                int index = methodData.ToOneStringAfterParameterCount.Value - methodData.AmountDefaultParams;
                 args[index] = string.Join(' ', args.Skip(index));
                 return args.Take(index + 1).ToArray();
             }
