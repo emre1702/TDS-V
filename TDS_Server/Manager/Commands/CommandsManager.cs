@@ -27,6 +27,12 @@ namespace TDS_Server.Manager.Commands
             public List<CommandMethodData> MethodDatas = new List<CommandMethodData>();
         }
 
+        private class HandleArgumentsResult
+        {
+            public bool Worked;
+            public bool IsWrongMethod;
+        }
+
         private class CommandMethodData
         {
             public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
@@ -183,13 +189,8 @@ namespace TDS_Server.Manager.Commands
 
                     //if (UseImplicitTypes)
                     //{
-                    object[] newargs = new object[(args?.Length ?? 0) + methoddata.AmountDefaultParams];
-                    newargs[0] = character;
-                    if (methoddata.HasCommandInfos)
-                        newargs[1] = cmdinfos;
-                    if (args != null)
-                        args.CopyTo(newargs, methoddata.AmountDefaultParams);
-                    methoddata.MethodDefault.Invoke(null, newargs);
+                    object[] finalInvokeArgs = GetFinalInvokeArgs(methoddata, character, cmdinfos, args);
+                    methoddata.MethodDefault.Invoke(null, finalInvokeArgs);
                     /*}
                     else
                     {
@@ -217,10 +218,8 @@ namespace TDS_Server.Manager.Commands
             {
                 if (args == null || args[i] == null)
                     continue;
-                object? converterReturn = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
-                object? arg = converterReturn;
-                if (converterReturn != null && converterReturn is Task<object?>)
-                    arg = await (Task<object?>)converterReturn;
+
+                object? arg = await GetConvertedArg(args[i], methoddata.ParameterTypes[i]);
 
                 #region Check for null
                 if (arg == null)
@@ -350,10 +349,24 @@ namespace TDS_Server.Manager.Commands
             return msg.Substring(cmdendindex + 1).Split(' ');
         }
 
-        private class HandleArgumentsResult
+        private static object[] GetFinalInvokeArgs(CommandMethodData methodData, TDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
         {
-            public bool Worked;
-            public bool IsWrongMethod;
+            object[] newargs = new object[(args?.Length ?? 0) + methodData.AmountDefaultParams];
+            newargs[0] = cmdUser;
+            if (methodData.HasCommandInfos)
+                newargs[1] = cmdInfos;
+            if (args != null)
+                args.CopyTo(newargs, methodData.AmountDefaultParams);
+            return newargs;
+        }
+
+        private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
+        {
+            object? converterReturn = typeConverter[theType]((string)notConvertedArg);
+            object? arg = converterReturn;
+            if (converterReturn != null && converterReturn is Task<object?>)
+                arg = await(Task<object?>)converterReturn;
+            return arg;
         }
 
         #region Converters 
