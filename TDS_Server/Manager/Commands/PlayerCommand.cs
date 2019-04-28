@@ -11,7 +11,7 @@ namespace TDS_Server.Manager.Commands {
 	class PlayerCommand : Script {
 
         [TDSCommand(DPlayerCommand.LobbyLeave)]
-        public static async void LobbyLeave(TDSPlayer player, TDSCommandInfos _)
+        public static async void LobbyLeave(TDSPlayer player)
         {
             if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
                 return;
@@ -21,7 +21,7 @@ namespace TDS_Server.Manager.Commands {
         }
 
         [TDSCommand(DPlayerCommand.Suicide)]
-        public static void Suicide(TDSPlayer player, TDSCommandInfos _)
+        public static void Suicide(TDSPlayer player)
         {
             if (!(player.CurrentLobby is FightLobby fightLobby))
                 return;
@@ -31,19 +31,19 @@ namespace TDS_Server.Manager.Commands {
         }
 
         [TDSCommand(DPlayerCommand.GlobalChat)]
-        public static void GlobalChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText] string message)
+        public static void GlobalChat(TDSPlayer player, [TDSRemainingText] string message)
         {
             ChatManager.SendGlobalMessage(player, message);
         }
 
         [TDSCommand(DPlayerCommand.TeamChat)]
-        public static void TeamChat(TDSPlayer player, TDSCommandInfos _, [TDSRemainingText] string message)
+        public static void TeamChat(TDSPlayer player, [TDSRemainingText] string message)
         {
             ChatManager.SendTeamChat(player, message);
         }
 
         [TDSCommand(DPlayerCommand.PrivateChat)]
-        public static void PrivateChat(TDSPlayer player, TDSCommandInfos _, TDSPlayer target, [TDSRemainingText] string message)
+        public static void PrivateChat(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
         {
             if (player == target)
                 return;
@@ -51,7 +51,7 @@ namespace TDS_Server.Manager.Commands {
         }
 
         [TDSCommand(DPlayerCommand.Position)]
-        public static void OutputCurrentPosition(TDSPlayer player, TDSCommandInfos _)
+        public static void OutputCurrentPosition(TDSPlayer player)
         {
             if (player.Client.IsInVehicle)
             {

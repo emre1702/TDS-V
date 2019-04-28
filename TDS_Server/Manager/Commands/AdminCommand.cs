@@ -21,13 +21,13 @@ namespace TDS_Server.Manager.Commands
     {
 
         [TDSCommand(DAdminCommand.AdminSay)]
-        public static void AdminSay(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        public static void AdminSay(TDSPlayer player, [TDSRemainingText] string text)
         {
             ChatManager.SendAdminMessage(player, text); 
         }
 
         [TDSCommand(DAdminCommand.AdminChat)]
-        public static void AdminChat(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string text)
+        public static void AdminChat(TDSPlayer player, [TDSRemainingText] string text)
         {
             ChatManager.SendAdminChat(player, text);
         }
