@@ -90,7 +90,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 0)]
-        public static async void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, DateTime length, [TDSRemainingText] string reason)
+        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
@@ -100,19 +100,15 @@ namespace TDS_Server.Manager.Commands
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
 
-            Players? target = await GetDatabasePlayerByName(targetname, player);
-            if (target == null)
-                return;
-
             if (length == DateTime.MinValue)
-                player.CurrentLobby.UnbanPlayer(player, target, reason);
+                player.CurrentLobby.UnbanPlayer(player, dbTarget, reason);
             else if (length == DateTime.MaxValue)
-                player.CurrentLobby.BanPlayer(player, target, null, reason);
+                player.CurrentLobby.BanPlayer(player, dbTarget, null, reason);
             else
-                player.CurrentLobby.BanPlayer(player, target, length, reason);
+                player.CurrentLobby.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Lobby_Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Lobby_Ban, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Ban, 1)]
@@ -133,24 +129,20 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Ban, 0)]
-        public async void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, DateTime length, [TDSRemainingText] string reason)
+        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
 
-            Players? target = await GetDatabasePlayerByName(targetname, player);
-            if (target == null)
-                return;
-
             if (length == DateTime.MinValue)
-                LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
+                LobbyManager.MainMenu.UnbanPlayer(player, dbTarget, reason);
             else if (length == DateTime.MaxValue)
-                LobbyManager.MainMenu.BanPlayer(player, target, null, reason);
+                LobbyManager.MainMenu.BanPlayer(player, dbTarget, null, reason);
             else
-                LobbyManager.MainMenu.BanPlayer(player, target, length, reason);
+                LobbyManager.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Ban, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Ban, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Kick)]
@@ -181,21 +173,17 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Mute, 0)]
-        public static async void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, string targetname, int minutes, [TDSRemainingText] string reason)
+        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText] string reason)
         {
             if (!IsReasonValid(reason, player))
                 return;
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Players? target = await GetDatabasePlayerByName(targetname, player);
-            if (target == null)
-                return;
-
-            Account.ChangePlayerMuteTime(player, target, minutes, reason);
+            Account.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Mute, player, target.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Mute, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
         }
 
         [TDSCommand(DAdminCommand.Goto)]
@@ -262,22 +250,6 @@ namespace TDS_Server.Manager.Commands
             }
             return true;
         }
-
-        private static async Task<Players?> GetDatabasePlayerByName(string name, TDSPlayer outputTo)
-        {
-            Players? target = null;
-            using (var dbcontext = new TDSNewContext())
-            {
-                target = await dbcontext.Players.Where(p => p.Name == name).FirstOrDefaultAsync();
-                if (target == null)
-                {
-                    if (outputTo != null)
-                        NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.PLAYER_DOESNT_EXIST);
-                }
-            }
-            return target;
-        }
-
 
         /*private static readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
 			{ "goto", 2 },

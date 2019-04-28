@@ -132,7 +132,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         [RemoteEvent(DToServerEvent.CommandUsed)] 
-        public static void UseCommand(Client player, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        public static async void UseCommand(Client player, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             TDSPlayer character = player.GetChar();
             try
@@ -164,14 +164,13 @@ namespace TDS_Server.Manager.Commands
                 for (int methodindex = 0; methodindex < amountmethods; ++methodindex) 
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
-                    bool wrongmethod = false;
 
-                    bool dontstop = HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args, ref wrongmethod);
-                    if (!dontstop)
-                        return;
-
-                    if (wrongmethod)
+                    var handleArgumentsResult = await HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args);
+                    if (handleArgumentsResult.IsWrongMethod)
                         continue;
+
+                    if (!handleArgumentsResult.Worked)
+                        return;
 
                     if (UseImplicitTypes)
                     {
@@ -200,15 +199,19 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[]? args, ref bool wrongmethod)
+        private static async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[]? args)
         {
             if (args == null)
-                return true;
+                return new HandleArgumentsResult { Worked = true };
             for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
             {
                 if (args == null || args[i] == null)
                     continue;
-                object? arg = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
+                object? converterReturn = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
+                object? arg = converterReturn;
+                if (converterReturn != null && converterReturn is Task<object?>)
+                    arg = await (Task<object?>)converterReturn;
+
                 #region Check for null
                 if (arg == null)
                 {
@@ -219,10 +222,9 @@ namespace TDS_Server.Manager.Commands
                         if (methodindex + 1 == amountmethodsavailable)
                         {
                             NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
-                            return false;
+                            return new HandleArgumentsResult();
                         }
-                        wrongmethod = true;
-                        return true;
+                        return new HandleArgumentsResult { IsWrongMethod = true };
                     }
                     #endregion Check if player exists
                 }
@@ -230,7 +232,7 @@ namespace TDS_Server.Manager.Commands
 
                 args[i] = arg ?? string.Empty;  // arg shouldn't be able to be null
             }
-            return true;
+            return new HandleArgumentsResult { Worked = true };
         }
 
         private static object[]? HandleRemaingText(CommandData commanddata, object[]? args)
@@ -338,6 +340,12 @@ namespace TDS_Server.Manager.Commands
             return msg.Substring(cmdendindex + 1).Split(' ');
         }
 
+        private class HandleArgumentsResult
+        {
+            public bool Worked;
+            public bool IsWrongMethod;
+        }
+
         #region Converters 
         private static void LoadConverters()
         {
@@ -350,6 +358,7 @@ namespace TDS_Server.Manager.Commands
             typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
             typeConverter[typeof(Client?)] = GetClientByName;
             typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
+            typeConverter[typeof(Players?)] = GetDatabasePlayerByName;
         }
 
         private static TDSPlayer? GetTDSPlayerByName(string name)
@@ -362,6 +371,12 @@ namespace TDS_Server.Manager.Commands
         private static Client? GetClientByName(string name)
         {
             return Utils.FindPlayer(name);
+        }
+
+        private static async Task<Players?> GetDatabasePlayerByName(string name)
+        {
+            using var dbcontext = new TDSNewContext();
+            return await dbcontext.Players.Where(p => p.Name == name).FirstOrDefaultAsync();
         }
 
         private static DateTime? GetDateTimeByString(string time)
