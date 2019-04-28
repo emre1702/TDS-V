@@ -13,6 +13,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Common.Default;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Dto;
+using System.Globalization;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -139,7 +140,7 @@ namespace TDS_Server.Manager.Commands
                 if (character.Entity == null || !character.Entity.PlayerStats.LoggedIn)
                     return;
 
-                object?[]? args = GetArgs(msg, out string cmd);
+                object[]? args = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (commandByAlias.ContainsKey(cmd))
                     cmd = commandByAlias[cmd];
@@ -157,7 +158,7 @@ namespace TDS_Server.Manager.Commands
                 if (IsInvalidArgsCount(character, commanddata, args))
                     return;
 
-                HandleRemaingText(commanddata, args);
+                args = HandleRemaingText(commanddata, args);
 
                 int amountmethods = commanddata.MethodDatas.Count;
                 for (int methodindex = 0; methodindex < amountmethods; ++methodindex) 
@@ -199,7 +200,7 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object?[]? args, ref bool wrongmethod)
+        private static bool HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[]? args, ref bool wrongmethod)
         {
             if (args == null)
                 return true;
@@ -207,39 +208,43 @@ namespace TDS_Server.Manager.Commands
             {
                 if (args == null || args[i] == null)
                     continue;
-                args[i] = typeConverter[methoddata.ParameterTypes[i]]((string)(args[i] ?? string.Empty));
-                #region Check if player exists
-                if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
+                object? arg = typeConverter[methoddata.ParameterTypes[i]]((string)args[i]);
+                #region Check for null
+                if (arg == null)
                 {
-                    if (args[i] == null)
+                    #region Check if player exists
+                    if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
                     {
+                        // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client 
                         if (methodindex + 1 == amountmethodsavailable)
                         {
                             NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
                             return false;
                         }
                         wrongmethod = true;
-                        break;
+                        return true;
                     }
+                    #endregion Check if player exists
                 }
-                #endregion Check if player exists
+                #endregion
+
+                args[i] = arg ?? string.Empty;  // arg shouldn't be able to be null
             }
             return true;
         }
 
-        private static void HandleRemaingText(CommandData commanddata, object?[]? args)
+        private static object[]? HandleRemaingText(CommandData commanddata, object[]? args)
         {
-            if (args == null)
-                return;
-            if (commanddata.ToOneStringAfterParameterCount.HasValue)
+            if (args != null && commanddata.ToOneStringAfterParameterCount.HasValue)
             {
                 int index = commanddata.ToOneStringAfterParameterCount.Value - AmountDefaultParams;
                 args[index] = string.Join(' ', args.Skip(index));
-                args = args.Take(index + 1).ToArray();
+                return args.Take(index + 1).ToArray();
             }
+            return args;
         }
 
-        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object?[]? args)
+        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object[]? args)
         {
             if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
             {
@@ -249,7 +254,7 @@ namespace TDS_Server.Manager.Commands
             return false;
         }
 
-        private static bool CheckCommandExists(TDSPlayer player, string cmd, object?[]? args)
+        private static bool CheckCommandExists(TDSPlayer player, string cmd, object[]? args)
         {
             if (!commandDataByCommand.ContainsKey(cmd))
             {
@@ -321,7 +326,7 @@ namespace TDS_Server.Manager.Commands
             return canuse;
         }
 
-        private static object?[]? GetArgs(string msg, out string cmd)
+        private static object[]? GetArgs(string msg, out string cmd)
         {
             int cmdendindex = msg.IndexOf(' ');
             if (cmdendindex == -1)
@@ -338,12 +343,13 @@ namespace TDS_Server.Manager.Commands
         {
             typeConverter[typeof(string)] = str => str;
             typeConverter[typeof(char)] = str => str[0];
-            typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
-            typeConverter[typeof(Client?)] = GetClientByName;
             typeConverter[typeof(int)] = str => Convert.ToInt32(str);
             typeConverter[typeof(float)] = str => Convert.ToSingle(str);
             typeConverter[typeof(double)] = str => Convert.ToDouble(str);
-            typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1" ? true : false;
+            typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1";
+            typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
+            typeConverter[typeof(Client?)] = GetClientByName;
+            typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
         }
 
         private static TDSPlayer? GetTDSPlayerByName(string name)
@@ -356,6 +362,91 @@ namespace TDS_Server.Manager.Commands
         private static Client? GetClientByName(string name)
         {
             return Utils.FindPlayer(name);
+        }
+
+        private static DateTime? GetDateTimeByString(string time)
+        {
+            return GetTime(time);
+        }
+
+        private static DateTime? GetTime(string time)
+        {
+            switch (time)
+            {
+                #region Seconds
+                case string _ when time.EndsWith("s", true, CultureInfo.CurrentCulture):    // seconds
+                    if (!double.TryParse(time[0..^1], out double seconds))
+                        return null;
+                    return DateTime.Now.AddSeconds(seconds);
+                case string _ when time.EndsWith("sec", true, CultureInfo.CurrentCulture):    // seconds
+                    if (!double.TryParse(time[0..^3], out double secs))
+                        return null;
+                    return DateTime.Now.AddSeconds(secs);
+                #endregion
+
+                #region Minutes
+                case string _ when time.EndsWith("m", true, CultureInfo.CurrentCulture):    // minutes
+                    if (!double.TryParse(time[0..^1], out double minutes))
+                        return null;
+                    return DateTime.Now.AddMinutes(minutes);
+                case string _ when time.EndsWith("min", true, CultureInfo.CurrentCulture):    // minutes
+                    if (!double.TryParse(time[0..^3], out double mins))
+                        return null;
+                    return DateTime.Now.AddMinutes(mins);
+                #endregion
+
+                #region Hours
+                case string _ when time.EndsWith("h", true, CultureInfo.CurrentCulture):    // hours
+                    if (!double.TryParse(time[0..^1], out double hours))
+                        return null;
+                    return DateTime.Now.AddHours(hours);
+                case string _ when time.EndsWith("st", true, CultureInfo.CurrentCulture):    // hours
+                    if (!double.TryParse(time[0..^2], out double hours2))
+                        return null;
+                    return DateTime.Now.AddHours(hours2);
+                #endregion
+
+                #region Days
+                case string _ when time.EndsWith("d", true, CultureInfo.CurrentCulture):    // days
+                case string _ when time.EndsWith("t", true, CultureInfo.CurrentCulture):    // days
+                    if (!double.TryParse(time[0..^1], out double days))
+                        return null;
+                    return DateTime.Now.AddDays(days);
+                #endregion
+
+                #region Perma
+                case string _ when IsPerma(time):       // perma
+                    return DateTime.MaxValue;
+                #endregion
+
+                #region Unmute
+                case string _ when IsUnmute(time):       // unmute
+                    return DateTime.MaxValue;
+                #endregion
+
+                default:
+                    return null;
+
+            };
+        }
+
+        private static bool IsPerma(string time)
+        {
+            return time == "-1"
+                || time == "-"
+                || time.Equals("perma", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("permamute", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("permaban", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("never", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        private static bool IsUnmute(string time)
+        {
+            return time == "0"
+                || time.Equals("unmute", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("unban", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("stop", StringComparison.CurrentCultureIgnoreCase)
+                || time.Equals("no", StringComparison.CurrentCultureIgnoreCase);
         }
         #endregion
     }
