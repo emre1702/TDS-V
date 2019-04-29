@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
@@ -48,6 +49,11 @@ namespace TDS_Server.Manager.Maps
         public static void LoadNewMaps()
         {
             newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
+        }
+
+        public static MapDto GetRandomNewMap()
+        {
+            return newCreatedMaps[CommonUtils.Rnd.Next(newCreatedMaps.Count)];
         }
 
 
