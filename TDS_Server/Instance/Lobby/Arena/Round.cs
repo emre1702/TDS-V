@@ -79,7 +79,7 @@ namespace TDS_Server.Instance.Lobby
             if (currentMap?.IsBomb ?? false)
                 ClearBombRound();
             ClearTeamPlayersAmounts();
-            SendAllPlayerEvent(DToClientEvent.MapClear);
+            SendAllPlayerEvent(DToClientEvent.MapClear, null);
         }
 
         private void StartNewMapChoose()
