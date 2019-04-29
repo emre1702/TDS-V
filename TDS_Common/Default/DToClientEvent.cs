@@ -36,6 +36,7 @@ namespace TDS_Common.Default
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
 
         public const string MapChange = "MapChange_Server";
+        public const string MapClear = "MapClear_Server";
         public const string MapsListRequest = "MapsListRequest_Server";
         public const string MapVotingSyncOnPlayerJoin = "MapVotingSyncOnPlayerJoin_Server";
 

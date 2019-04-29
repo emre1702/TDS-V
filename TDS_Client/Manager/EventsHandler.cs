@@ -18,9 +18,6 @@ using Pad = RAGE.Game.Pad;
 using Control = RAGE.Game.Control;
 using RAGE.Ui;
 using TDS_Common.Enum;
-using System.Linq;
-using System;
-using Newtonsoft.Json.Linq;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Instance.Draw;
 using TDS_Client.Enum;
@@ -149,6 +146,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
+            Add(DToClientEvent.MapClear, OnMapClearMethod);
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
             Add(DToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
             Add(DToClientEvent.PlayerAdminLevelChange, OnPlayerAdminLevelChangeMethod);
@@ -224,6 +222,11 @@ namespace TDS_Client.Manager
                 MapLimitManager.Load(maplimit);
             CameraManager.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
             Round.InFight = false;
+        }
+
+        private void OnMapClearMethod(object[] args)
+        {
+
         }
 
         private void OnCountdownStartMethod(object[] args)
