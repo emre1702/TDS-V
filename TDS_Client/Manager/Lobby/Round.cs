@@ -23,15 +23,20 @@ namespace TDS_Client.Manager.Lobby
         }
         public static bool IsSpectator { get; set; }
 
-        public static void Reset(bool removemapinfo)
+        public static void StopFight()
         {
             InFight = false;
             IsSpectator = false;
-            Spectate.Stop();
+            Damagesys.ResetLastHP();
             Countdown.Stop();
+        }
+
+        public static void Reset(bool removemapinfo)
+        {
+            StopFight();
+            Spectate.Stop();
             if (removemapinfo)
                 MapInfo.RemoveMapInfo();
-            Damagesys.ResetLastHP();
         }
     }
 }

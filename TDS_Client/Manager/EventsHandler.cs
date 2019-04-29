@@ -226,7 +226,7 @@ namespace TDS_Client.Manager
 
         private void OnMapClearMethod(object[] args)
         {
-
+            Round.Reset(false);
         }
 
         private void OnCountdownStartMethod(object[] args)
@@ -274,7 +274,7 @@ namespace TDS_Client.Manager
         {
             Cam.DoScreenFadeOut(Settings.RoundEndTime / 2);
             Bomb.Reset();
-            Round.Reset(false);
+            Round.StopFight();
             Countdown.Stop();
             CameraManager.StopCountdown();
             RoundInfo.Stop();
