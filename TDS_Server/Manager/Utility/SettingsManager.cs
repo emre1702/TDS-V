@@ -22,9 +22,9 @@ namespace TDS_Server.Manager.Utility
 
         private static Settings settings;
 
-        public static void Load(TDSNewContext dbcontext)
+        public static async Task Load(TDSNewContext dbcontext)
         {
-            settings = dbcontext.Settings.AsNoTracking().Single();
+            settings = await dbcontext.Settings.AsNoTracking().SingleAsync();
 
             SyncedSettings = new SyncedServerSettingsDto()
             {

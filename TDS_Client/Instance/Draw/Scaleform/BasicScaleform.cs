@@ -6,10 +6,7 @@ namespace TDS_Client.Instance.Draw.Scaleform
     {
         private int handle;
 
-        public BasicScaleform(string scaleformName)
-        {
-            handle = Graphics.RequestScaleformMovie(scaleformName);
-        }
+        public BasicScaleform(string scaleformName) => handle = Graphics.RequestScaleformMovie(scaleformName);
 
         public void Call(string functionName, params object[] args)
         {

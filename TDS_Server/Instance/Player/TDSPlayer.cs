@@ -63,10 +63,7 @@ namespace TDS_Server.Instance.Player
             set => _gang = value;
         }
         public sbyte Lifes { get; set; } = 0;
-        public bool IsLobbyOwner
-        {
-            get => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
-        }
+        public bool IsLobbyOwner => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
         public uint? MuteTime
         {
             get => Entity?.PlayerStats.MuteTime ?? 0;
@@ -76,10 +73,7 @@ namespace TDS_Server.Instance.Player
                     Entity.PlayerStats.MuteTime = value;
             }
         }
-        public bool IsMuted
-        {
-            get => Entity?.PlayerStats.MuteTime.HasValue ?? false;
-        }
+        public bool IsMuted => Entity?.PlayerStats.MuteTime.HasValue ?? false;
         public bool IsPermamuted
         {
             get
@@ -89,10 +83,7 @@ namespace TDS_Server.Instance.Player
                 return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
             }
         }
-        public ILanguage Language
-        {
-            get => LangUtils.GetLang(LanguageEnum);
-        }
+        public ILanguage Language => LangUtils.GetLang(LanguageEnum);
         public ELanguage LanguageEnum
         {
             get
@@ -120,10 +111,7 @@ namespace TDS_Server.Instance.Player
                 return AdminsManager.AdminLevels[Entity.AdminLvl];
             } 
         }
-        public string AdminLevelName
-        {
-            get => AdminLevel.Names[LanguageEnum];
-        }
+        public string AdminLevelName => AdminLevel.Names[LanguageEnum];
         public RoundStatsDto? CurrentRoundStats { get; set; }
         public int Money
         {
@@ -159,10 +147,7 @@ namespace TDS_Server.Instance.Player
         private Team? _team;
         private Gang? _gang;
 
-        public TDSPlayer(Client client)
-        {
-            Client = client;
-        }
+        public TDSPlayer(Client client) => Client = client;
 
         #region Money
         public void GiveMoney(int money)

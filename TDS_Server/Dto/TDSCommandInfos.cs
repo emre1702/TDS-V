@@ -16,9 +16,6 @@ namespace TDS_Server.Instance.Dto
         public bool AsUser => WithRight == ECommandUsageRight.User;
         public bool AsVIP => WithRight == ECommandUsageRight.VIP;
 
-        public TDSCommandInfos(string command)
-        {
-            Command = command;
-        }
+        public TDSCommandInfos(string command) => Command = command;
     }
 }

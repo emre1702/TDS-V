@@ -33,7 +33,7 @@ namespace TDS_Server.Manager.Maps
                 serializer.Serialize(memoryStream, mapDto);
 
                 string mapXml = await (new StreamReader(memoryStream).ReadToEndAsync());
-                string prettyMapXml = XmlHelper.GetPretty(mapXml);
+                string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml);
 
                 newCreatedMaps.Add(mapDto);

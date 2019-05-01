@@ -6,6 +6,7 @@ namespace TDS_Server.Manager.Maps
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
     using Microsoft.EntityFrameworkCore;
@@ -24,16 +25,16 @@ namespace TDS_Server.Manager.Maps
         private static readonly XmlReaderSettings _xmlReaderSettings = new XmlReaderSettings() { Async = true };
         private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
-        public static void LoadMaps(TDSNewContext dbcontext)
+        public static async Task LoadMaps(TDSNewContext dbcontext)
         {
             AllMaps = LoadMapsInDirectory(SettingsManager.MapsPath);
 
-            dbcontext.Maps.Include(m => m.Creator).Load();
+            await dbcontext.Maps.Include(m => m.Creator).LoadAsync();
 
-            SaveMapsInDB(dbcontext);
+            await SaveMapsInDB(dbcontext);
 
             // Load name of creators for Maps //
-            LoadCreatorNames(dbcontext);
+            await LoadCreatorNames(dbcontext);
         }  
 
         public static List<MapDto> LoadMapsInDirectory(string path)
@@ -70,7 +71,7 @@ namespace TDS_Server.Manager.Maps
             return map;
         }
 
-        private static void SaveMapsInDB(TDSNewContext dbContext)
+        private static async Task SaveMapsInDB(TDSNewContext dbContext)
         {
             dbContext.Maps.RemoveRange(
                dbContext.Maps.Where(
@@ -78,30 +79,30 @@ namespace TDS_Server.Manager.Maps
                )
            );
 
-            if (dbContext.Maps.Where(m => m.Id > 0).Count() != AllMaps.Count)
+            if ((await dbContext.Maps.Where(m => m.Id > 0).CountAsync()) != AllMaps.Count)
             {
                 foreach (var map in AllMaps)
                 {
-                    if (dbContext.Maps.Where(m => m.Name == map.Info.Name).Any())
+                    if (await dbContext.Maps.Where(m => m.Name == map.Info.Name).AnyAsync())
                         continue;
 
-                    if (map.Info.CreatorId == null || dbContext.Players.Find(map.Info.CreatorId) == null)
-                        dbContext.Maps.Add(new Maps() { Name = map.Info.Name, CreatorId = null });
+                    if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
+                        await dbContext.Maps.AddAsync(new Maps() { Name = map.Info.Name, CreatorId = null });
                     else
-                        dbContext.Maps.Add(new Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
+                        await dbContext.Maps.AddAsync(new Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
                 }
             }
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
-        private static void LoadCreatorNames(TDSNewContext dbContext)
+        private static async Task LoadCreatorNames(TDSNewContext dbContext)
         {
             foreach (var map in AllMaps)
             {
-                map.SyncedData.CreatorName = dbContext.Maps
+                map.SyncedData.CreatorName = await dbContext.Maps
                     .Where(m => m.Name == map.Info.Name)
                     .Select(m => m.Creator.Name)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
             }
         }
        

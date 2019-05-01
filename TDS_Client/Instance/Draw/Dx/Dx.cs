@@ -27,10 +27,7 @@ namespace TDS_Client.Instance.Draw.Dx
             dxDraws.Add(this);
         }
 
-        ~Dx()
-        {
-            Dispose(false);
-        }
+        ~Dx() => Dispose(false);
 
         public static void RenderAll()
         {

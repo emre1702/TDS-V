@@ -24,32 +24,26 @@
         {
             try
             {
-                using (var dbcontext = new TDSNewContext())
+                using var dbcontext = new TDSNewContext();
+                foreach (var stat in await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync())
                 {
-                    foreach (var stat in dbcontext.PlayerStats.Where(s => s.LoggedIn))
-                    {
-                        stat.LoggedIn = false;
-                    }
-                    dbcontext.SaveChanges();
-
-                    SettingsManager.Load(dbcontext);
-                    AdminsManager.Init(dbcontext);
-                    Workaround.Init();
-                    await CommandsManager.LoadCommands(dbcontext);
-                    Damagesys.LoadDefaults(dbcontext);
-
-                    NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
-
-                    BansManager.RemoveExpiredBans(dbcontext);
-
-                    MapsLoader.LoadMaps(dbcontext);
-                    MapCreator.LoadNewMaps();
-                    LobbyManager.LoadAllLobbies(dbcontext);
-
-                    // Gang.LoadGangFromDatabase ();
-
-                    // Season.LoadSeason ();
+                    stat.LoggedIn = false;
                 }
+                await dbcontext.SaveChangesAsync();
+
+                await SettingsManager.Load(dbcontext);
+                await AdminsManager.Init(dbcontext);
+                Workaround.Init();
+                await CommandsManager.LoadCommands(dbcontext);
+                Damagesys.LoadDefaults(dbcontext);
+
+                NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
+
+                await BansManager.RemoveExpiredBans(dbcontext);
+
+                await MapsLoader.LoadMaps(dbcontext);
+                MapCreator.LoadNewMaps();
+                await LobbyManager.LoadAllLobbies(dbcontext);
             }
             catch (Exception ex)
             {

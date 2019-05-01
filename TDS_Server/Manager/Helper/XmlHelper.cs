@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -8,7 +10,7 @@ namespace TDS_Server.Manager.Helper
 {
     static class XmlHelper
     {
-        public static string GetPretty(string xml)
+        public static async Task<string> GetPrettyAsync(string xml)
         {
             var stringBuilder = new StringBuilder();
 
@@ -20,7 +22,7 @@ namespace TDS_Server.Manager.Helper
             settings.NewLineOnAttributes = true;
 
             using var xmlWriter = XmlWriter.Create(stringBuilder, settings);
-            element.Save(xmlWriter);
+            await element.SaveAsync(xmlWriter, CancellationToken.None);
 
             return stringBuilder.ToString();
         }

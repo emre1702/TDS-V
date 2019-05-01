@@ -12,15 +12,16 @@ namespace TDS_Server.Manager.Utility
     using TDS_Common.Enum;
     using TDS_Server.Dto;
     using TDS_Server.Instance.Player;
+    using System.Threading.Tasks;
 
     static class AdminsManager
     {
 
         public static Dictionary<byte, AdminLevelDto> AdminLevels = new Dictionary<byte, AdminLevelDto>();
 
-        public static void Init(TDSNewContext dbcontext)
+        public static async Task Init(TDSNewContext dbcontext)
         {
-            AdminLevels = dbcontext.AdminLevels
+            AdminLevels = await dbcontext.AdminLevels
                 .OrderBy(lvl => lvl.Level)
                 .Select(lvl => new AdminLevelDto
                             (
@@ -28,9 +29,9 @@ namespace TDS_Server.Manager.Utility
                                 "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
                             ))
                 .AsNoTracking()
-                .ToDictionary(lvl => lvl.Level, lvl => lvl);
+                .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);
 
-            foreach (var entry in dbcontext.AdminLevelNames.ToList())
+            foreach (var entry in await dbcontext.AdminLevelNames.ToListAsync())
             {
                 AdminLevels[entry.Level].Names[(ELanguage)entry.Language] = entry.Name;
             }
