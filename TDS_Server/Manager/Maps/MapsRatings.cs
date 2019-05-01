@@ -29,7 +29,7 @@ namespace TDS_Server.Manager.Maps
                 return;
             using (var dbcontext = new TDSNewContext())
             {
-                PlayerMapRatings maprating = await dbcontext.PlayerMapRatings.FindAsync(playerid, mapname);
+                PlayerMapRatings? maprating = await dbcontext.PlayerMapRatings.FindAsync(playerid, mapname);
                 if (maprating == null)
                 {
                     maprating = new PlayerMapRatings { Id = playerid.Value, MapName = mapname };

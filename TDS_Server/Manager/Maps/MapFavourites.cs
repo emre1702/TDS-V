@@ -38,7 +38,7 @@ namespace TDS_Server.Manager.Maps
                 if (mapId == 0)
                     return;
 
-                PlayerMapFavourites favourite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
+                PlayerMapFavourites? favourite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
                 #region Add Favourite
                 if (favourite == null && isFavourite)

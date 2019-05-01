@@ -127,7 +127,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
             using (TDSNewContext dbContext = new TDSNewContext())
             {
-                PlayerLobbyStats stats = await dbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
+                PlayerLobbyStats? stats = await dbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
                 if (stats == null)
                 {
                     stats = new PlayerLobbyStats { Id = character.Entity.Id, Lobby = LobbyEntity.Id };

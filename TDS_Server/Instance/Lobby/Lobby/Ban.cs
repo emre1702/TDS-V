@@ -37,7 +37,7 @@ namespace TDS_Server.Instance.Lobby
         {
             using (var dbcontext = new TDSNewContext())
             {
-                PlayerBans ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+                PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban != null)
                 {
                     ban.Admin = admin.Entity?.Id ?? 0;
@@ -92,7 +92,7 @@ namespace TDS_Server.Instance.Lobby
         {
             using (var dbcontext = new TDSNewContext())
             {
-                PlayerBans ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+                PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban == null)
                 {
                     NAPI.Chat.SendChatMessageToPlayer(admin.Client, admin.Language.PLAYER_ISNT_BANED);
@@ -113,7 +113,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (character.Entity == null)
                 return false;
-            PlayerBans ban = await dbcontext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id);
+            PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (ban == null)
                 return false;
 

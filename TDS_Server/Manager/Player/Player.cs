@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Player
             return player.GetChar().Entity?.PlayerSettings;
         }
 
-        public static async Task<Players> GetEntityByID(uint id)
+        public static async Task<Players?> GetEntityByID(uint id)
         {
             using (var dbcontext = new TDSNewContext())
             {
