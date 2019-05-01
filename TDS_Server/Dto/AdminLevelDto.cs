@@ -1,13 +1,10 @@
-﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Dto
 {
-    class AdminLevelDto
+    internal class AdminLevelDto
     {
         public byte Level;
         public string FontColor;

@@ -1,21 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using GTANetworkAPI;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Utility
 {
-
-    class Scoreboard : Script
+    internal class Scoreboard : Script
     {
-
         [RemoteEvent(DToServerEvent.RequestPlayersForScoreboard)]
         public static void SendDataToPlayer(Client client)
         {
@@ -33,7 +29,6 @@ namespace TDS_Server.Manager.Utility
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.CurrentLobby?.Id);
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries.Select(e => e.Json)), JsonConvert.SerializeObject(lobbydata.Select(l => l.Json)));
             }
-
         }
 
         private static List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
@@ -76,7 +71,7 @@ namespace TDS_Server.Manager.Utility
                     kills: (player.CurrentLobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0),
                     assists: (player.CurrentLobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0),
                     deaths: player.CurrentLobbyStats?.Deaths ?? 0,
-                    teamIndex: player.Team?.Entity.Index ?? 0 
+                    teamIndex: player.Team?.Entity.Index ?? 0
                 );
                 list.Add(entry);
             }

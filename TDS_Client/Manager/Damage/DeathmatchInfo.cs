@@ -1,14 +1,11 @@
 ﻿using RAGE.Elements;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TDS_Client.Instance.Draw;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Damage
 {
-    static class DeathmatchInfo
+    internal static class DeathmatchInfo
     {
         public static void HittedOpponent(Player hitted, int damage)
         {

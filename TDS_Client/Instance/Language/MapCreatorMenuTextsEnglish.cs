@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Instance.Language
 {
-    class MapCreatorMenuTextsEnglish : IMapCreatorMenuTexts
+    internal class MapCreatorMenuTextsEnglish : IMapCreatorMenuTexts
     {
         public virtual string GENERAL => "General";
 
@@ -12,7 +12,7 @@ namespace TDS_Client.Instance.Language
 
         public virtual string MAP_LIMIT => "Map-limit";
 
-        public virtual string MAP_EDGES=> "Map-edges";
+        public virtual string MAP_EDGES => "Map-edges";
 
         public virtual string BOMB_PLACES => "Bomb-spots";
 

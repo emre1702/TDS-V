@@ -52,9 +52,9 @@
     width: 100%;
 }
 
-.ui-selectee:hover {
-    background: rgb(17, 17, 17);
-}
+    .ui-selectee:hover {
+        background: rgb(17, 17, 17);
+    }
 
 #rightside {
     position: absolute;
@@ -91,23 +91,21 @@
 
 .add_map_to_favourites_notselected {
     opacity: 0.5;
-    
 }
 
-.add_map_to_favourites_notselected:hover{
-    background-size: 105% 105%;
-    opacity: 1.0;
-}
+    .add_map_to_favourites_notselected:hover {
+        background-size: 105% 105%;
+        opacity: 1.0;
+    }
 
 .add_map_to_favourites_selected {
     opacity: 1.0;
-    
 }
 
-.add_map_to_favourites_selected:hover {
-    background-size: 105% 105%;
-    opacity: 0.7;
-}
+    .add_map_to_favourites_selected:hover {
+        background-size: 105% 105%;
+        opacity: 0.7;
+    }
 
 #choose_map_button {
     position: absolute;
@@ -139,6 +137,6 @@ button {
     background: linear-gradient(to bottom, #008a00 1%,#005700 65%,#002400 100%); /* Chrome10-25,Safari5.1-6 */
 }
 
-.button-available:hover, .button-available:focus {
-    background: linear-gradient(to bottom, #00b709 0%,#007f04 65%,#014900 100%);
-}
+    .button-available:hover, .button-available:focus {
+        background: linear-gradient(to bottom, #00b709 0%,#007f04 65%,#014900 100%);
+    }

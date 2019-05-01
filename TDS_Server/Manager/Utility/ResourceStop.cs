@@ -7,10 +7,8 @@ using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Utility
 {
-
-    class ResourceStop : Script
+    internal class ResourceStop : Script
     {
-
         [ServerEvent(Event.ResourceStop)]
         public void OnResourceStop()
         {
@@ -73,5 +71,4 @@ namespace TDS_Server.Manager.Utility
                 NAPI.Entity.DeleteEntity(obj);
         }
     }
-
 }

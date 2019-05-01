@@ -10,7 +10,7 @@ using Events = RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
 {
-    class BindManager : Events.Script
+    internal class BindManager : Events.Script
     {
         private static readonly Dictionary<ConsoleKey, List<KeyBindDto>> bindedKeys = new Dictionary<ConsoleKey, List<KeyBindDto>>();
         private static readonly Dictionary<Control, List<ControlBindDto>> bindedControls = new Dictionary<Control, List<ControlBindDto>>();
@@ -43,8 +43,8 @@ namespace TDS_Client.Manager.Utility
         {
             if (!bindedKeys.ContainsKey(key))
                 return;
-            var entry = bindedKeys[key].FirstOrDefault(b => 
-                    (method == null || b.Method == method) 
+            var entry = bindedKeys[key].FirstOrDefault(b =>
+                    (method == null || b.Method == method)
                     && (pressState == EKeyPressState.None || b.OnPressState == pressState)
             );
             if (entry != null)
@@ -67,7 +67,6 @@ namespace TDS_Client.Manager.Utility
         {
             foreach (var entry in bindedKeys)
             {
-
                 bool isDown = Input.IsDown((int)entry.Key);
                 if (lastKeyDownState.ContainsKey(entry.Key))
                     if (lastKeyDownState[entry.Key] == isDown)
@@ -94,6 +93,5 @@ namespace TDS_Client.Manager.Utility
                         bind.Method(entry.Key);
             }
         }
-
     }
 }

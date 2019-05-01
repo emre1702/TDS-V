@@ -3,10 +3,8 @@ using TDS_Server.Enum;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class Arena : FightLobby
     {
-
         public Arena(Lobbies entity) : base(entity)
         {
             roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;

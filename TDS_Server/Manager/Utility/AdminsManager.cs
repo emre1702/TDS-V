@@ -1,22 +1,19 @@
 namespace TDS_Server.Manager.Utility
 {
-
-    using System.Collections.Generic;
     using GTANetworkAPI;
-    using TDS_Server.Entity;
-    using System.Linq;
     using Microsoft.EntityFrameworkCore;
-    using TDS_Server.Manager.Player;
     using System;
-    using TDS_Server.Interface;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using TDS_Common.Enum;
     using TDS_Server.Dto;
+    using TDS_Server.Entity;
     using TDS_Server.Instance.Player;
-    using System.Threading.Tasks;
+    using TDS_Server.Interface;
 
-    static class AdminsManager
+    internal static class AdminsManager
     {
-
         public static Dictionary<byte, AdminLevelDto> AdminLevels = new Dictionary<byte, AdminLevelDto>();
 
         public static async Task Init(TDSNewContext dbcontext)
@@ -79,5 +76,4 @@ namespace TDS_Server.Manager.Utility
             CallMethodForAdmins(player => NAPI.Notification.SendNotificationToPlayer(player.Client, propertygetter(player.Language)));
         }
     }
-
 }

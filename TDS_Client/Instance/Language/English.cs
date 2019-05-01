@@ -3,7 +3,7 @@ using TDS_Common.Enum;
 
 namespace TDS_Client.Instance.Language
 {
-    class English : ILanguage
+    internal class English : ILanguage
     {
         public virtual string DEFUSING => "Defusing ...";
         public virtual string PLANTING => "Planting ...";

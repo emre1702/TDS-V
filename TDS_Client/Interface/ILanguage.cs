@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using TDS_Common.Enum;
+﻿using TDS_Common.Enum;
 
 namespace TDS_Client.Interface
 {
-    interface ILanguage
+    internal interface ILanguage
     {
         ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
         ILobbyChoiceTexts LOBBY_CHOICE_TEXTS { get; }
@@ -22,5 +21,5 @@ namespace TDS_Client.Interface
         string BOMB_PLANTED { get; }
 
         ELanguage Enum { get; }
-    }  
+    }
 }

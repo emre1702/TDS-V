@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Interface
 {
-    interface ILoginRegisterTexts
+    internal interface ILoginRegisterTexts
     {
         string tab_login { get; }
         string tab_register { get; }

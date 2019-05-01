@@ -2,7 +2,7 @@
 
 namespace TDS_Server.Dto
 {
-    class BombPlantPlaceDto
+    internal class BombPlantPlaceDto
     {
         public Object Object;
         public Blip Blip;

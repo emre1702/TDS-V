@@ -30,7 +30,6 @@ namespace TDS_Server.Instance.Lobby
                 else
                     NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.PERMABAN_YOU_INFO.Formatted(admin.AdminLevelName, reason));
             }
-                
         }
 
         public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason)

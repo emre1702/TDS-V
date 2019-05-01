@@ -1,16 +1,14 @@
 namespace TDS_Server.Instance
 {
-    using System.Collections.Generic;
     using GTANetworkAPI;
+    using System;
+    using System.Collections.Generic;
     using TDS_Server.Dto;
     using TDS_Server.Instance.Player;
-    using TDS_Common.Default;
-    using System;
     using TDS_Server.Manager.Logs;
 
     partial class Damagesys
     {
-
         /*private static readonly Dictionary<WeaponHash, int> sDamageDictionary = new Dictionary<WeaponHash, int>
         {
             //[ Handguns ]//
@@ -89,7 +87,7 @@ namespace TDS_Server.Instance
 			[API.Shared.GetHashKey ( "WEAPON_SMG_MK2" )] = 22,
 			[API.Shared.GetHashKey ( "WEAPON_ASSAULTRIFLE_MK2" )] = 30,
 			[API.Shared.GetHashKey ( "WEAPON_CARBINERIFLE_MK2" )] = 32,
-			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28  
+			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
         };*/
 
         private readonly Dictionary<WeaponHash, DamageDto> damagesDict = new Dictionary<WeaponHash, DamageDto>();
@@ -119,7 +117,7 @@ namespace TDS_Server.Instance
             {
                 UpdateLastHitter(target, source, damage);
                 if (source.CurrentRoundStats != null)
-                    source.CurrentRoundStats.Damage += (uint) damage;
+                    source.CurrentRoundStats.Damage += (uint)damage;
 
                 //if (source.Entity.PlayerSettings.HitsoundOn)
                 //    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
@@ -148,6 +146,6 @@ namespace TDS_Server.Instance
             if (headshot)
                 damage = (int)(damage * damagesDict[hash].HeadMultiplier);
             return damage;
-        }        
+        }
     }
 }

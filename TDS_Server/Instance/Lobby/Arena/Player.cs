@@ -1,24 +1,22 @@
 using GTANetworkAPI;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Threading.Tasks;
+using TDS_Common.Default;
+using TDS_Common.Dto;
+using TDS_Common.Dto.Map;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
-using TDS_Common.Default;
-using TDS_Common.Instance.Utility;
-using TDS_Common.Dto;
-using System.Linq;
 using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Utility;
-using TDS_Common.Dto.Map;
 using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class Arena
     {
-
         public override async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
             if (!await base.AddPlayer(character, teamindex))
@@ -100,7 +98,6 @@ namespace TDS_Server.Instance.Lobby
             {
                 PlayerCantBeSpectatedAnymore(character);
                 SpectateOtherSameTeam(character);
-
             }, LobbyEntity.SpawnAgainAfterDeathMs ?? 50);
         }
 
@@ -155,6 +152,7 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundStatus.Countdown:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
+
                 case ERoundStatus.Round:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     if (bombDetonateTimer != null && bomb != null)

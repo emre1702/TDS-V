@@ -1,15 +1,12 @@
-﻿using GTANetworkAPI;
-using System.Collections.Generic;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
-	partial class Gang {
-
-		/*public void SendAllOnlinePlayerLangMessage ( string type, params string[] args ) {
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
+    partial class Gang
+    {
+        /*public void SendAllOnlinePlayerLangMessage ( string type, params string[] args ) {
 			Dictionary<Language, string> lang = ServerLanguage.GetLangDictionary( type, args );
 			foreach ( Character character in membersOnline ) {
 				NAPI.Chat.SendChatMessageToPlayer( character.Player, lang[character.Language] );
-			}		
+			}
 		}
 
 		public void SendAllOnlinePlayerLangNotification ( string type, params string[] args ) {
@@ -30,10 +27,9 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 
 			foreach ( KeyValuePair<uint, uint> entry in membersRank ) {
 				if ( !membersdone.Contains( entry.Key ) ) {
-					OfflineMessages.AddOfflineMessage( entry.Key, lang[Language.ENGLISH], "Gang" );		
+					OfflineMessages.AddOfflineMessage( entry.Key, lang[Language.ENGLISH], "Gang" );
 				}
 			}
 		}*/
-
-	}
+    }
 }

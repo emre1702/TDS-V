@@ -1,15 +1,12 @@
 ﻿using RAGE;
 using RAGE.Game;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
-    class DxLine : Dx
+    internal class DxLine : Dx
     {
         private float startX,
             startY,
@@ -17,10 +14,10 @@ namespace TDS_Client.Instance.Draw.Dx
             endX,
             endY,
             endZ;
+
         private Color color;
         private bool relative;
         //private bool is3D;
-
 
         public DxLine(float startX, float startY, float? startZ, float endX, float endY, float? endZ, Color color, bool relative = true) : base()
         {
@@ -32,7 +29,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 this.endX = endX;
                 this.endY = endY;
                 this.endZ = endZ.Value;
-            } 
+            }
             else
             {
                 Vector3 worldStart = ClientUtils.GetWorldCoordFromScreenCoord(GetRelativeX(startX, relative), GetRelativeY(startY, relative));
@@ -45,7 +42,7 @@ namespace TDS_Client.Instance.Draw.Dx
                 this.endY = worldEnd.Y;
                 this.endZ = worldEnd.Z;
             }
-            
+
             this.color = color;
             this.relative = relative;
         }

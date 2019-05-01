@@ -1,9 +1,6 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Server.Instance.Player;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -49,7 +46,6 @@ namespace TDS_Server.Instance.Lobby
 
             base.OnPlayerDeath(character, killer, weapon, false);
             RoundCheckForEnoughAlive();
-
         }
     }
 }

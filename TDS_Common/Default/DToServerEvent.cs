@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Common.Default
+﻿namespace TDS_Common.Default
 {
     public class DToServerEvent
     {

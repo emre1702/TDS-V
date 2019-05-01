@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
-using RAGE;
 using RAGE.Ui;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Choice
+    internal static class Choice
     {
         public static HtmlWindow? Browser;
 

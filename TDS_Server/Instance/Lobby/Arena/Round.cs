@@ -2,25 +2,22 @@ using GTANetworkAPI;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Dto;
-using TDS_Server.Entity;
+using TDS_Common.Default;
+using TDS_Common.Dto.Map;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
-using TDS_Server.Interface;
-using TDS_Server.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Instance.Utility;
-using TDS_Common.Enum;
 using TDS_Server.Instance.Utility;
-using TDS_Common.Dto.Map;
+using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class Arena
     {
         private TDSTimer? nextRoundStatusTimer;
+
         public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
         {
             [ERoundStatus.MapClear] = 1 * 1000,
@@ -29,7 +26,9 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.Round] = 4 * 60 * 1000,
             [ERoundStatus.RoundEnd] = 8 * 1000,
         };
+
         private readonly Dictionary<ERoundStatus, Action> roundStatusMethod = new Dictionary<ERoundStatus, Action>();
+
         private readonly Dictionary<ERoundStatus, ERoundStatus> nextRoundStatsDict = new Dictionary<ERoundStatus, ERoundStatus>
         {
             [ERoundStatus.MapClear] = ERoundStatus.NewMapChoose,
@@ -38,6 +37,7 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.Round] = ERoundStatus.RoundEnd,
             [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
         };
+
         private ERoundStatus currentRoundStatus = ERoundStatus.None;
         private ERoundEndReason currentRoundEndReason;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
@@ -65,7 +65,7 @@ namespace TDS_Server.Instance.Lobby
                 }
                 catch (Exception ex)
                 {
-                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: "+ ex.Message, ex.StackTrace);
+                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace);
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     Remove();
                 }
@@ -102,7 +102,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void StartRound()
         {
-            StartRoundForAllPlayer();       
+            StartRoundForAllPlayer();
 
             if (currentMap?.IsBomb ?? false)
                 StartRoundBomb();
@@ -155,12 +155,16 @@ namespace TDS_Server.Instance.Lobby
             {
                 case ERoundEndReason.Death:
                     return GetTeamStillInRound();
+
                 case ERoundEndReason.Time:
                     return GetTeamWithHighestHP();
+
                 case ERoundEndReason.BombExploded:
                     return terroristTeam;
+
                 case ERoundEndReason.BombDefused:
                     return counterTerroristTeam;
+
                 case ERoundEndReason.Command:
                 case ERoundEndReason.NewPlayer:
                 case ERoundEndReason.Empty:

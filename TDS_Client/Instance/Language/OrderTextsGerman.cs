@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Instance.Language
+﻿namespace TDS_Client.Instance.Language
 {
-    class OrderTextsGerman : OrderTextsEnglish
+    internal class OrderTextsGerman : OrderTextsEnglish
     {
         public override string ATTACK => "Angriff! Los los los!";
 

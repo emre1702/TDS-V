@@ -1,10 +1,8 @@
-﻿using RAGE;
-using RAGE.Game;
+﻿using RAGE.Game;
 using RAGE.NUI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Instance.Draw.Dx.Grid;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
@@ -15,7 +13,7 @@ using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Draw
 {
-    class Scoreboard : Script
+    internal class Scoreboard : Script
     {
         private static DxGrid grid;
         private static bool isActivated;
@@ -57,7 +55,7 @@ namespace TDS_Client.Manager.Draw
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black, 
+                DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black,
                     $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
                 if (entry.PlayersStr != null)
                 {
@@ -148,8 +146,12 @@ namespace TDS_Client.Manager.Draw
             new DxGridCell(Settings.Language.SCOREBOARD_TEAM, header, columns[5]);
         }
 
-        private static void CreateBody() {}
+        private static void CreateBody()
+        {
+        }
 
-        private static void CreateFooter() {}
+        private static void CreateFooter()
+        {
+        }
     }
 }

@@ -1,11 +1,10 @@
-﻿using RAGE.Game;
-using System.Drawing;
+﻿using System.Drawing;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class MapInfo
+    internal static class MapInfo
     {
         public static string CurrentMap => mapInfo?.Text ?? "-";
 

@@ -2,18 +2,16 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Maps
 {
-    static class MapCreator
+    internal static class MapCreator
     {
         private static List<MapDto> newCreatedMaps = new List<MapDto>();
 
@@ -55,8 +53,6 @@ namespace TDS_Server.Manager.Maps
         {
             return newCreatedMaps[CommonUtils.Rnd.Next(newCreatedMaps.Count)];
         }
-
-
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {
@@ -160,7 +156,6 @@ namespace TDS_Server.Manager.Maps
             else
                 filenames = GetOwnNewMapFileNames(uid);
             NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RequestNewMapsList, JsonConvert.SerializeObject(filenames));
-
         }*/
     }
 }

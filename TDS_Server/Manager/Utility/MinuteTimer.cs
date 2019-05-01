@@ -1,16 +1,14 @@
 ﻿namespace TDS_Server.Manager.Utility
 {
-
+    using GTANetworkAPI;
     using System;
     using System.Collections.Generic;
-    using GTANetworkAPI;
     using TDS_Server.Entity;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Player;
-    using TDS_Server.Manager.Utility;
 
-    class MinuteTimer 
+    internal class MinuteTimer
     {
         private static int counter = 0;
 
@@ -25,6 +23,7 @@
                 using (var dbcontext = new TDSNewContext())
                 {
                     #region Save player data
+
                     List<Client> clients = NAPI.Pools.GetAllPlayers();
                     foreach (Client client in clients)
                     {
@@ -39,10 +38,13 @@
                             --player.MuteTime;
                         await player.CheckSaveData(dbcontext);
                     }
+
                     #endregion Save player data
+
                     exceptionsource = null;
 
                     #region Save logs
+
                     // log-save //
                     if (counter % SettingsManager.SaveLogsCooldownMinutes == 0)
                     {
@@ -51,6 +53,7 @@
                         await ErrorLogsManager.Save(dbcontext);
                         await RestLogsManager.Save(dbcontext);
                     }
+
                     #endregion Save logs
 
                     if (counter % SettingsManager.SaveSeasonsCooldownMinutes == 0)
@@ -67,7 +70,5 @@
                     ErrorLogsManager.Log(ex.Message, Environment.StackTrace, exceptionsource);
             }
         }
-
     }
-
 }

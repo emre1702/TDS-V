@@ -1,8 +1,6 @@
-﻿using TDS_Client.Interface;
-
-namespace TDS_Client.Instance.Language
+﻿namespace TDS_Client.Instance.Language
 {
-    class LoginRegisterTextsGerman : LoginRegisterTextsEnglish
+    internal class LoginRegisterTextsGerman : LoginRegisterTextsEnglish
     {
         public override string tab_login => "Login";
 

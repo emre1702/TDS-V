@@ -1,5 +1,4 @@
-﻿using RAGE.Elements;
-using RAGE.Game;
+﻿using RAGE.Game;
 using TDS_Client.Default;
 using TDS_Client.Manager.Draw.Scaleform;
 using TDS_Client.Manager.Utility;
@@ -7,7 +6,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Damage
 {
-    static class Death
+    internal static class Death
     {
         public static void PlayerSpawn()
         {

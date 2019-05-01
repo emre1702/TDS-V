@@ -1,11 +1,7 @@
 namespace TDS_Server.Manager.Commands
 {
-
     using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using TDS_Server.CustomAttribute;
     using TDS_Server.Default;
     using TDS_Server.Entity;
@@ -17,13 +13,12 @@ namespace TDS_Server.Manager.Commands
     using TDS_Server.Manager.Player;
     using TDS_Server.Manager.Utility;
 
-    class AdminCommand
+    internal class AdminCommand
     {
-
         [TDSCommand(DAdminCommand.AdminSay)]
         public static void AdminSay(TDSPlayer player, [TDSRemainingText] string text)
         {
-            ChatManager.SendAdminMessage(player, text); 
+            ChatManager.SendAdminMessage(player, text);
         }
 
         [TDSCommand(DAdminCommand.AdminChat)]
@@ -191,13 +186,13 @@ namespace TDS_Server.Manager.Commands
         {
             Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
 
-            #region Admin is in vehicle 
+            #region Admin is in vehicle
             if (player.Client.IsInVehicle)
             {
                 NAPI.Entity.SetEntityPosition(player.Client.Vehicle, targetpos.Around(2f));
                 return;
             }
-            #endregion
+            #endregion Admin is in vehicle
 
             #region Target is in vehicle and we want to sit in it
             if (target.Client.IsInVehicle)
@@ -209,11 +204,11 @@ namespace TDS_Server.Manager.Commands
                     return;
                 }
             }
-            #endregion
+            #endregion Target is in vehicle and we want to sit in it
 
-            #region Normal 
+            #region Normal
             NAPI.Entity.SetEntityPosition(player.Client, targetpos.Around(2f));
-            #endregion
+            #endregion Normal
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Goto, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -260,8 +255,6 @@ namespace TDS_Server.Manager.Commands
 			{ "object", 2 }
 		};
 
-		
-
 		[CommandDescription( "Creates a vehicle." )]
 		[CommandGroup( "administrator/lobby-owner" )]
 		[CommandAlias( "createvehicle" )]
@@ -292,8 +285,6 @@ namespace TDS_Server.Manager.Commands
 		}
 		#endregion
 
-
-		
 		#endregion
 
 		#region RCON
@@ -310,7 +301,5 @@ namespace TDS_Server.Manager.Commands
 			}
 		}
 		#endregion*/
-
     }
-
 }

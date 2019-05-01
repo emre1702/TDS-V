@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Manager.Browser;
@@ -11,7 +10,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Team
+    internal static class Team
     {
         public static SyncedTeamDataDto[] CurrentLobbyTeams;
         public static List<Player> SameTeamPlayers = new List<Player>();
@@ -34,7 +33,6 @@ namespace TDS_Client.Manager.Lobby
         {
             MainBrowser.LoadOrderNamesInBrowser(JsonConvert.SerializeObject(Settings.Language.ORDER));
         }
-
 
         public static void ToggleOrderMode(ConsoleKey _)
         {

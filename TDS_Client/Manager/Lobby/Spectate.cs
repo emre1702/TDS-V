@@ -1,13 +1,10 @@
-﻿using RAGE;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Spectate
+    internal static class Spectate
     {
         private static bool binded;
 

@@ -1,18 +1,18 @@
-﻿using System;
-using TDS_Client.Default;
+﻿using TDS_Client.Default;
 using TDS_Client.Instance.Draw.Scaleform;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw.Scaleform
 {
-    static class ScaleformMessage
+    internal static class ScaleformMessage
     {
         private static ulong initTimeMs;
         private static ulong msgDurationMs;
         private static bool animatedOut;
         private static BasicScaleform? fscaleform;
 
-        private static BasicScaleform scaleform {
+        private static BasicScaleform scaleform
+        {
             get
             {
                 if (fscaleform == null)
@@ -74,7 +74,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
                     fscaleform.Destroy();
                     fscaleform = null;
                 }
-            }  
+            }
         }
     }
 }

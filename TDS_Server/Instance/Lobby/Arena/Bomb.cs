@@ -1,23 +1,22 @@
 namespace TDS_Server.Instance.Lobby
 {
-    using System.Collections.Generic;
     using GTANetworkAPI;
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using TDS_Common.Default;
+    using TDS_Common.Dto.Map;
+    using TDS_Common.Instance.Utility;
+    using TDS_Common.Manager.Utility;
     using TDS_Server.Dto;
     using TDS_Server.Enum;
     using TDS_Server.Instance.Player;
-    using TDS_Server.Manager.Utility;
-    using TDS_Common.Instance.Utility;
-    using TDS_Common.Default;
-    using Newtonsoft.Json;
     using TDS_Server.Instance.Utility;
-    using TDS_Common.Manager.Utility;
-    using TDS_Common.Dto.Map;
     using TDS_Server.Manager.Helper;
+    using TDS_Server.Manager.Utility;
 
     partial class Arena
     {
-
-        // BOMB DATA: 
+        // BOMB DATA:
         // name: prop_bomb_01_s
         // id: 1764669601
 
@@ -37,8 +36,10 @@ namespace TDS_Server.Instance.Lobby
 
         private Object? bomb;
         private TDSPlayer? bombAtPlayer;
+
         private TDSTimer? bombDetonateTimer,
                       bombPlantDefuseTimer;
+
         private TDSPlayer? planter;
         private Blip? plantBlip;
         private Marker? bombTakeMarker;
@@ -51,7 +52,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 Vector3 pos = bombplace.ToVector3();
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
-                    obj: NAPI.Object.CreateObject(-51423166, pos, new Vector3(), 255, Dimension), 
+                    obj: NAPI.Object.CreateObject(-51423166, pos, new Vector3(), 255, Dimension),
                     blip: NAPI.Blip.CreateBlip(pos, Dimension),
                     pos: pos
                 );
@@ -289,7 +290,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
             if (bomb == null)
                 return;
-            Workaround.DetachEntity(bomb); 
+            Workaround.DetachEntity(bomb);
             bomb.FreezePosition = true;
             bomb.Position = bombAtPlayer.Client.Position;
             bombAtPlayer = null;
@@ -313,7 +314,6 @@ namespace TDS_Server.Instance.Lobby
             lobbyBombTakeCol.Remove(this, out ColShape col);
             NAPI.ColShape.DeleteColShape(col);
         }
-
 
         private void StopBombRound()
         {
@@ -350,8 +350,7 @@ namespace TDS_Server.Instance.Lobby
                 plantBlip.Delete();
                 plantBlip = null;
             }
-            bombPlantPlaces.Clear();          
+            bombPlantPlaces.Clear();
         }
     }
-
 }

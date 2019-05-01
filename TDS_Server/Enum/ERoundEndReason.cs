@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Enum
 {
-    enum ERoundEndReason
+    internal enum ERoundEndReason
     {
         Death, Time, BombExploded, BombDefused, Command, NewPlayer, Empty
     }

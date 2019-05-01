@@ -2,8 +2,6 @@ using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Entity;
-using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
@@ -73,7 +71,7 @@ namespace TDS_Server.Instance.Lobby
                 {
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
                 });
-            } 
+            }
             else
             {
                 targetTeam.FuncIterate((character, teamID) =>

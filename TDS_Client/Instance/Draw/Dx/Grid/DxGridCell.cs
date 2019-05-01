@@ -1,14 +1,11 @@
 ﻿using RAGE.Game;
 using RAGE.NUI;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx.Grid
 {
-    class DxGridCell : Dx
+    internal class DxGridCell : Dx
     {
         private string text;
         public DxGridRow Row;
@@ -70,7 +67,6 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
                 int x = GetAbsoluteX(column.X + column.Width, column.RelativePos);
                 UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
             }
-                
         }
 
         public void DrawBackground()

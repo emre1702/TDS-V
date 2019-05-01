@@ -4,18 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
-using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class Arena
     {
-
         private MapDto? currentMap;
         private List<MapDto> maps = new List<MapDto>();
         private List<Blip> mapBlips = new List<Blip>();

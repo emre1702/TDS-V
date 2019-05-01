@@ -7,7 +7,7 @@ using TDS_Common.Enum;
 
 namespace TDS_Server.Manager.Helper
 {
-    static class MapHelper
+    internal static class MapHelper
     {
         public static void LoadSyncedData(this MapDto map)
         {
@@ -31,7 +31,6 @@ namespace TDS_Server.Manager.Helper
 
             float zpos = map.GetCenterZPos();
             return map.GetCenterByLimits(zpos);
-
         }
 
         private static float GetCenterZPos(this MapDto map)
@@ -58,7 +57,6 @@ namespace TDS_Server.Manager.Helper
             float centerX = 0.0f;
             float centerY = 0.0f;
             float centerZ = 0.0f;
-
 
             foreach (MapPositionDto point in positions)
             {

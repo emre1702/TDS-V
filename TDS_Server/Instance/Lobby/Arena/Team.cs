@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using TDS_Server.Entity;
-using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class Arena
     {
         /// <summary>
@@ -28,7 +24,7 @@ namespace TDS_Server.Instance.Lobby
             for (int i = 0; i < AlivePlayers.Length; ++i)
             {
                 if (AlivePlayers[i].Count >= minalive)
-                    return Teams[i+1];
+                    return Teams[i + 1];
             }
             return null;
         }
@@ -43,7 +39,7 @@ namespace TDS_Server.Instance.Lobby
                 if (team.Entity.Index == 0)
                     continue;
                 int teamhealth = 0;
-                foreach (var player in AlivePlayers[team.Entity.Index -1])
+                foreach (var player in AlivePlayers[team.Entity.Index - 1])
                 {
                     teamhealth += player.Client.Health + player.Client.Armor;
                 }

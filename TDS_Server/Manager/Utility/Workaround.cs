@@ -1,5 +1,4 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Dto;
@@ -9,7 +8,7 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Utility
 {
-    static class Workaround
+    internal static class Workaround
     {
         private static readonly Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto> attachedEntitiesInfos = new Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto>();
         private static readonly Dictionary<Lobby, List<GTANetworkAPI.Entity>> attachedEntitiesPerLobby = new Dictionary<Lobby, List<GTANetworkAPI.Entity>>();
@@ -101,7 +100,7 @@ namespace TDS_Server.Manager.Utility
                 if (!collisionslessEntitiesPerLobby.ContainsKey(lobby))
                     collisionslessEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
                 collisionslessEntitiesPerLobby[lobby].Add(entity);
-            }    
+            }
         }
 
         private static void PlayerJoinedLobby(Lobby lobby, TDSPlayer player)
@@ -131,7 +130,6 @@ namespace TDS_Server.Manager.Utility
 
         private static void PlayerLeftLobby(Lobby lobby, TDSPlayer player)
         {
-
         }
     }
 }

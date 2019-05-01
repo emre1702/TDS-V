@@ -1,18 +1,16 @@
 ﻿namespace TDS_Server.Manager.Utility
 {
-
-    using System;
-    using System.Linq;
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
     using TDS_Server.Entity;
     using TDS_Server.Instance;
     using TDS_Server.Manager.Commands;
     using TDS_Server.Manager.Maps;
 
-    class ResourceStart : Script
+    internal class ResourceStart : Script
     {
-
         public ResourceStart()
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
@@ -51,5 +49,4 @@
             }
         }
     }
-
 }

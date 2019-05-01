@@ -1,10 +1,9 @@
 using GTANetworkAPI;
-using TDS_Common.Default;
-using System.Linq;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Text;
+using TDS_Common.Default;
+using TDS_Common.Dto;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -26,11 +25,11 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 if (team == null || team.IsSpectator)
                     return;
-                    
+
                 uint killreward = 0;
                 uint assistreward = 0;
                 uint damagereward = 0;
-                
+
                 if (LobbyEntity.MoneyPerKill.HasValue)
                     killreward = (uint)(character.CurrentRoundStats.Kills * LobbyEntity.MoneyPerKill.Value);
                 if (LobbyEntity.MoneyPerAssist.HasValue)
@@ -41,7 +40,7 @@ namespace TDS_Server.Instance.Lobby
                 character.GiveMoney(killreward + assistreward + damagereward);
 
                 strbuilder.Append("#o#____________________#n#");
-                strbuilder.AppendFormat (character.Language.ROUND_REWARD_INFO,
+                strbuilder.AppendFormat(character.Language.ROUND_REWARD_INFO,
                         killreward == 0 ? "-" : killreward.ToString(),
                         assistreward == 0 ? "-" : assistreward.ToString(),
                         damagereward == 0 ? "-" : damagereward.ToString(),
@@ -61,9 +60,9 @@ namespace TDS_Server.Instance.Lobby
                 {
                     RemoveAsSpectator(character);
                     team.SpectateablePlayers?.Add(character);
-                }  
+                }
                 SetPlayerReadyForRound(character);
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart); 
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart);
             });
             if (currentMap?.IsBomb ?? false)
                 GiveBombToRandomTerrorist();
@@ -78,7 +77,7 @@ namespace TDS_Server.Instance.Lobby
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = JsonConvert.SerializeObject(amounts);
-            SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json); 
+            SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json);
         }
     }
 }

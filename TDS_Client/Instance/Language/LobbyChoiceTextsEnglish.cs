@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Instance.Language
 {
-    class LobbyChoiceTextsEnglish : ILobbyChoiceTexts
+    internal class LobbyChoiceTextsEnglish : ILobbyChoiceTexts
     {
         public virtual string ARENA => "Arena";
 

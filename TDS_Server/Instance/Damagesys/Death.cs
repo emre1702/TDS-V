@@ -1,17 +1,14 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Instance.Lobby;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
-using TDS_Common.Instance.Utility;
 
 namespace TDS_Server.Instance
 {
-
     partial class Damagesys
     {
-
         private static readonly Dictionary<TDSPlayer, TDSTimer> sDeadTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
         public TDSPlayer? OnPlayerDeath(TDSPlayer player, Client? killer, uint weapon)
@@ -31,7 +28,6 @@ namespace TDS_Server.Instance
                 ++player.CurrentLobbyStats.Deaths;
                 ++player.CurrentLobbyStats.TotalDeaths;
             }
-            
 
             TDSPlayer killercharacter = GetKiller(player, killer);
             killer = killercharacter.Client;
@@ -100,7 +96,6 @@ namespace TDS_Server.Instance
             TDSPlayer lastHitterCharacter = character.LastHitter;
             character.LastHitter = null;
 
-
             if (!lastHitterCharacter.Client.Exists)
                 return;
 
@@ -115,8 +110,6 @@ namespace TDS_Server.Instance
             ++lastHitterCharacter.KillingSpree;
             NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
             killer = lastHitterCharacter;
-
         }
     }
-
 }

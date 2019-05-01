@@ -38,69 +38,66 @@ var createlobby = "<div class='text-field'>	\
                         <input type='number' id='time-scale' required min='0' max='1' value='1.0' step='0.1' />	\
                     </div>";
 
-$(document).ready ( function() {
-    
-    function hightlightOnFocus ( e ) {
-        var $this = $( this ),
-			label = $this.prev( 'label' );
+$(document).ready(function () {
+    function hightlightOnFocus(e) {
+        var $this = $(this),
+            label = $this.prev('label');
 
-		if ( e.type === 'keyup' ) {
-			if ( $this.val() === '' ) {
-				label.removeClass( 'active highlight' );
-			} else {
-				label.addClass( 'active highlight' );
-			}
-		} else if ( e.type === 'blur' ) {
-			if ( $this.val() === '' ) {
-				label.removeClass( 'active highlight' );
-			} else {
-				label.removeClass( 'highlight' );
-			}
-		} else if ( e.type === 'focus' ) {
-			if ( $this.val() === '' ) {
-				label.removeClass( 'highlight' );
-			} else {
-				label.addClass( 'highlight' );
-			}
-		}
+        if (e.type === 'keyup') {
+            if ($this.val() === '') {
+                label.removeClass('active highlight');
+            } else {
+                label.addClass('active highlight');
+            }
+        } else if (e.type === 'blur') {
+            if ($this.val() === '') {
+                label.removeClass('active highlight');
+            } else {
+                label.removeClass('highlight');
+            }
+        } else if (e.type === 'focus') {
+            if ($this.val() === '') {
+                label.removeClass('highlight');
+            } else {
+                label.addClass('highlight');
+            }
+        }
     }
-    
-    $( '.form' ).find( 'input, textarea' ).on( 'keyup blur focus', hightlightOnFocus );
-    
-    function addHighlight ( ) {
-        var $this = $( this ),
-			label = $this.prev( 'label' );
 
-         if ( $this.val() === '' ) {
-            label.removeClass( 'active highlight' );
-         } else {
-             label.addClass( 'active highlight' );
-         }
+    $('.form').find('input, textarea').on('keyup blur focus', hightlightOnFocus);
+
+    function addHighlight() {
+        var $this = $(this),
+            label = $this.prev('label');
+
+        if ($this.val() === '') {
+            label.removeClass('active highlight');
+        } else {
+            label.addClass('active highlight');
+        }
     }
-    $( '.form' ).find( 'input, textarea' ).each( addHighlight );
-     
-    
-    $( "button:not([type='submit'])" ).click( function ( event ) {
+    $('.form').find('input, textarea').each(addHighlight);
+
+    $("button:not([type='submit'])").click(function (event) {
         event.preventDefault();
-        var clickedbutton = $( this ).attr( "data-eventtype" );
-		switch ( clickedbutton ) {
-
-			case "join_arena":
-				$( "#lobby_choice" ).hide();
-                $( "#team_choice" ).show();
+        var clickedbutton = $(this).attr("data-eventtype");
+        switch (clickedbutton) {
+            case "join_arena":
+                $("#lobby_choice").hide();
+                $("#team_choice").show();
                 break;
 
-			case "join_arena_player":
-                mp.trigger( "ChooseLobbyToJoin_Browser", 1, 1);
+            case "join_arena_player":
+                mp.trigger("ChooseLobbyToJoin_Browser", 1, 1);
                 break;
 
             case "join_arena_spectator":
-                mp.trigger( "ChooseLobbyToJoin_Browser", 1, 0);
+                mp.trigger("ChooseLobbyToJoin_Browser", 1, 0);
                 break;
-                
+
             case "join_arena_back":
-                $( "#team_choice" ).hide();
-                $( "#lobby_choice" ).show();
+                $("#team_choice").hide();
+                $("#lobby_choice").show();
                 break;
 
             case "join_gang":
@@ -108,63 +105,62 @@ $(document).ready ( function() {
                 break;
 
             case "custom_lobby":
-				$( "#lobby_choice" ).hide();
-				$( "#custom_lobby" ).fadeIn( 2000 );
+                $("#lobby_choice").hide();
+                $("#custom_lobby").fadeIn(2000);
                 break;
 
             //case "join_mapcreator_lobby":
             //    mp.trigger( "joinMapCreatorLobby" );
             //    break;
-                
-			case "lang_english":
-                mp.trigger( "LanguageChange_Browser", 9 );
-                mp.trigger( "SyncChoiceLanguageTexts_Browser" );
+
+            case "lang_english":
+                mp.trigger("LanguageChange_Browser", 9);
+                mp.trigger("SyncChoiceLanguageTexts_Browser");
                 break;
-            
-			case "lang_german":
-                mp.trigger( "LanguageChange_Browser", 7 );
-                mp.trigger( "SyncChoiceLanguageTexts_Browser" );
+
+            case "lang_german":
+                mp.trigger("LanguageChange_Browser", 7);
+                mp.trigger("SyncChoiceLanguageTexts_Browser");
                 break;
-                
+
             case "custom_lobby_back":
-                $( "#custom_lobby" ).hide();
-                $( "#lobby_choice" ).show();
+                $("#custom_lobby").hide();
+                $("#lobby_choice").show();
                 break;
-                
+
             case "custom_lobby_own":
-                $( "#custom_lobby_setting_form" ).empty();
-                $( "#custom_lobby_setting_form" ).append ( createlobby );
-                $( '.form' ).find( 'input, textarea' ).on( 'keyup blur focus', hightlightOnFocus );
-                $( '.form' ).find( 'input, textarea' ).each( addHighlight );
+                $("#custom_lobby_setting_form").empty();
+                $("#custom_lobby_setting_form").append(createlobby);
+                $('.form').find('input, textarea').on('keyup blur focus', hightlightOnFocus);
+                $('.form').find('input, textarea').each(addHighlight);
                 break;
-        }
-    } );
-    
-	$( "form" ).submit( function ( e ) {
-		e.preventDefault();
-		var name = $( '#lobby_name' ).val();
-		var mode = $( '#lobby_mode :selected' ).text();
-		var password = $( '#lobby_password' ).val();
-		var roundtime = $( '#round_time' ).val();
-		var countdowntime = $( '#countdown_time' ).val();
-		var maxplayers = $( '#max_players' ).val();
-		var armor = $( '#armor' ).val();
-		var health = $( '#health' ).val();
-		var timescale = $( '#time-scale' ).val();
-		mp.trigger( "createLobby", name, mode, password, roundtime, countdowntime, maxplayers, armor, health, timescale );
-		
-	} );
-    
-    $( "form" ).validate ({
-        errorPlacement: function(error, element) {
-            $('#validate-error').html ( "<div class='validate-error'>"+error.text()+"</div>" );
         }
     });
-} );
 
-function setLobbyChoiceLanguage( lang ) {
-	var langdata = JSON.parse( lang );
-	$( "[data-lang]" ).each( function () {
-		$( this ).html( langdata[$( this ).attr( "data-lang" )] + ( $( this ).prop("required" ) ? "*" : "" ) );
-	} );
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var name = $('#lobby_name').val();
+        var mode = $('#lobby_mode :selected').text();
+        var password = $('#lobby_password').val();
+        var roundtime = $('#round_time').val();
+        var countdowntime = $('#countdown_time').val();
+        var maxplayers = $('#max_players').val();
+        var armor = $('#armor').val();
+        var health = $('#health').val();
+        var timescale = $('#time-scale').val();
+        mp.trigger("createLobby", name, mode, password, roundtime, countdowntime, maxplayers, armor, health, timescale);
+    });
+
+    $("form").validate({
+        errorPlacement: function (error, element) {
+            $('#validate-error').html("<div class='validate-error'>" + error.text() + "</div>");
+        }
+    });
+});
+
+function setLobbyChoiceLanguage(lang) {
+    var langdata = JSON.parse(lang);
+    $("[data-lang]").each(function () {
+        $(this).html(langdata[$(this).attr("data-lang")] + ($(this).prop("required") ? "*" : ""));
+    });
 }

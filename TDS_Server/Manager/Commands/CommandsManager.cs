@@ -2,22 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using TDS_Common.Default;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
+using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
-using TDS_Common.Default;
-using System.Threading.Tasks;
-using TDS_Server.Instance.Dto;
-using System.Globalization;
 
 namespace TDS_Server.Manager.Commands
 {
-    class CommandsManager : Script
+    internal class CommandsManager : Script
     {
         // private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
         // private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
@@ -36,9 +36,11 @@ namespace TDS_Server.Manager.Commands
         private class CommandMethodData
         {
             public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
+
             // public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
             // public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
             public Type[] ParameterTypes = new Type[0];
+
             public int Priority;
             public int? ToOneStringAfterParameterCount = null;
             public bool HasCommandInfos = false;
@@ -52,7 +54,6 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-
         private static readonly Dictionary<string, CommandData> commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
         private static readonly Dictionary<string, Entity.Commands> commandsDict = new Dictionary<string, Entity.Commands>();
         private static readonly Dictionary<string, string> commandByAlias = new Dictionary<string, string>();
@@ -63,7 +64,6 @@ namespace TDS_Server.Manager.Commands
         // With implicit types it's much slower than direct call (Test: 8ms in 10000) - but then you can use Methods with implicit types (e.g. AdminSay([defaultParams], string text, int number))
         // Without implicit types it's much faster but you can only use Methods with signature Method([defaultParams]) or Method([defaultParams], object[] args)
         // private const bool UseImplicitTypes = true;
-        
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
         {
@@ -115,15 +115,19 @@ namespace TDS_Server.Manager.Commands
                 foreach (var parameter in parameters)
                 {
                     #region TDSRemainingText attribute
+
                     if (!methoddata.ToOneStringAfterParameterCount.HasValue)
                         if (parameter.CustomAttributes.Any(d => d.AttributeType == typeof(TDSRemainingText)))
                             methoddata.ToOneStringAfterParameterCount = parameter.Position;
+
                     #endregion TDSRemainingText attribute
 
                     #region Save parameter types
+
                     // Don't need Type for parameters beginning at ToOneStringAfterParameterCount (because they are always strings)
                     if (!methoddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= methoddata.ToOneStringAfterParameterCount.Value)
                         parametertypes[parameter.Position - methoddata.AmountDefaultParams] = parameter.ParameterType;
+
                     #endregion Save parameter types
                 }
                 methoddata.ParameterTypes = parametertypes;
@@ -147,7 +151,7 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        [RemoteEvent(DToServerEvent.CommandUsed)] 
+        [RemoteEvent(DToServerEvent.CommandUsed)]
         public static async void UseCommand(Client player, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             TDSPlayer character = player.GetChar();
@@ -175,7 +179,7 @@ namespace TDS_Server.Manager.Commands
                     return;
 
                 int amountmethods = commanddata.MethodDatas.Count;
-                for (int methodindex = 0; methodindex < amountmethods; ++methodindex) 
+                for (int methodindex = 0; methodindex < amountmethods; ++methodindex)
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
 
@@ -202,7 +206,6 @@ namespace TDS_Server.Manager.Commands
 #pragma warning enable
                     }*/
                 }
-                
             }
             catch
             {
@@ -222,9 +225,11 @@ namespace TDS_Server.Manager.Commands
                 object? arg = await GetConvertedArg(args[i], methoddata.ParameterTypes[i]);
 
                 #region Check for null
+
                 if (arg == null)
                 {
                     #region Check if player exists
+
                     if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
                     {
                         // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
@@ -235,9 +240,11 @@ namespace TDS_Server.Manager.Commands
                         }
                         return new HandleArgumentsResult { IsWrongMethod = true };
                     }
+
                     #endregion Check if player exists
                 }
-                #endregion
+
+                #endregion Check for null
 
                 args[i] = arg ?? string.Empty;  // arg shouldn't be able to be null
             }
@@ -284,6 +291,7 @@ namespace TDS_Server.Manager.Commands
             bool needright = false;
 
             #region Lobby-Owner Check
+
             if (!canuse && entity.LobbyOwnerCanUse.HasValue)
             {
                 needright = true;
@@ -291,9 +299,11 @@ namespace TDS_Server.Manager.Commands
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.LobbyOwner;
             }
-            #endregion
+
+            #endregion Lobby-Owner Check
 
             #region Admin Check
+
             if (!canuse && entity.NeededAdminLevel.HasValue)
             {
                 needright = true;
@@ -301,9 +311,11 @@ namespace TDS_Server.Manager.Commands
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Admin;
             }
-            #endregion
+
+            #endregion Admin Check
 
             #region Donator Check
+
             if (!canuse && entity.NeededDonation.HasValue)
             {
                 needright = true;
@@ -311,9 +323,11 @@ namespace TDS_Server.Manager.Commands
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.VIP;
             }
-            #endregion
+
+            #endregion Donator Check
 
             #region VIP Check
+
             if (!canuse && entity.VipCanUse.HasValue)
             {
                 needright = true;
@@ -321,15 +335,18 @@ namespace TDS_Server.Manager.Commands
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Donator;
             }
-            #endregion
+
+            #endregion VIP Check
 
             #region User Check
+
             if (!needright)
             {
                 canuse = true;
                 cmdinfos.WithRight = ECommandUsageRight.User;
             }
-            #endregion
+
+            #endregion User Check
 
             if (!canuse)
                 NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.NOT_ALLOWED);
@@ -365,11 +382,12 @@ namespace TDS_Server.Manager.Commands
             object? converterReturn = typeConverter[theType]((string)notConvertedArg);
             object? arg = converterReturn;
             if (converterReturn != null && converterReturn is Task<object?>)
-                arg = await(Task<object?>)converterReturn;
+                arg = await (Task<object?>)converterReturn;
             return arg;
         }
 
-        #region Converters 
+        #region Converters
+
         private static void LoadConverters()
         {
             typeConverter[typeof(string)] = str => str;
@@ -412,59 +430,73 @@ namespace TDS_Server.Manager.Commands
             switch (time)
             {
                 #region Seconds
+
                 case string _ when time.EndsWith("s", true, CultureInfo.CurrentCulture):    // seconds
                     if (!double.TryParse(time[0..^1], out double seconds))
                         return null;
                     return DateTime.Now.AddSeconds(seconds);
+
                 case string _ when time.EndsWith("sec", true, CultureInfo.CurrentCulture):    // seconds
                     if (!double.TryParse(time[0..^3], out double secs))
                         return null;
                     return DateTime.Now.AddSeconds(secs);
-                #endregion
+
+                #endregion Seconds
 
                 #region Minutes
+
                 case string _ when time.EndsWith("m", true, CultureInfo.CurrentCulture):    // minutes
                     if (!double.TryParse(time[0..^1], out double minutes))
                         return null;
                     return DateTime.Now.AddMinutes(minutes);
+
                 case string _ when time.EndsWith("min", true, CultureInfo.CurrentCulture):    // minutes
                     if (!double.TryParse(time[0..^3], out double mins))
                         return null;
                     return DateTime.Now.AddMinutes(mins);
-                #endregion
+
+                #endregion Minutes
 
                 #region Hours
+
                 case string _ when time.EndsWith("h", true, CultureInfo.CurrentCulture):    // hours
                     if (!double.TryParse(time[0..^1], out double hours))
                         return null;
                     return DateTime.Now.AddHours(hours);
+
                 case string _ when time.EndsWith("st", true, CultureInfo.CurrentCulture):    // hours
                     if (!double.TryParse(time[0..^2], out double hours2))
                         return null;
                     return DateTime.Now.AddHours(hours2);
-                #endregion
+
+                #endregion Hours
 
                 #region Days
+
                 case string _ when time.EndsWith("d", true, CultureInfo.CurrentCulture):    // days
                 case string _ when time.EndsWith("t", true, CultureInfo.CurrentCulture):    // days
                     if (!double.TryParse(time[0..^1], out double days))
                         return null;
                     return DateTime.Now.AddDays(days);
-                #endregion
+
+                #endregion Days
 
                 #region Perma
+
                 case string _ when IsPerma(time):       // perma
                     return DateTime.MaxValue;
-                #endregion
+
+                #endregion Perma
 
                 #region Unmute
+
                 case string _ when IsUnmute(time):       // unmute
                     return DateTime.MinValue;
-                #endregion
+
+                #endregion Unmute
 
                 default:
                     return null;
-
             };
         }
 
@@ -486,6 +518,7 @@ namespace TDS_Server.Manager.Commands
                 || time.Equals("stop", StringComparison.CurrentCultureIgnoreCase)
                 || time.Equals("no", StringComparison.CurrentCultureIgnoreCase);
         }
-        #endregion
+
+        #endregion Converters
     }
 }

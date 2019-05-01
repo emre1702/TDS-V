@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Server.Entity;
-using TDS_Server.Instance.Utility;
+﻿using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class FightLobby
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="start"></param>
         /// <param name="index"></param>
@@ -20,7 +16,7 @@ namespace TDS_Server.Instance.Lobby
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="startindex"></param>
         /// <param name="index"></param>
@@ -66,7 +62,7 @@ namespace TDS_Server.Instance.Lobby
 
         private Team? GetPreviousNonSpectatorTeamWithPlayers(uint startindex)
         {
-            int startindextoiterate = (int) startindex;
+            int startindextoiterate = (int)startindex;
             do
             {
                 if (--startindextoiterate < 0)

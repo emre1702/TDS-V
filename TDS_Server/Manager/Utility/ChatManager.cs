@@ -1,15 +1,16 @@
 ﻿namespace TDS_Server.Manager.Utility
 {
-
     using GTANetworkAPI;
     using TDS_Common.Default;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Player;
 
-    class ChatManager : Script
+    internal class ChatManager : Script
     {
-        public ChatManager() { }
+        public ChatManager()
+        {
+        }
 
         [RemoteEvent(DToServerEvent.LobbyChatMessage)]
         public static void SendLobbyMessage(Client client, string message, bool isDirty)
@@ -19,7 +20,7 @@
                 player.Client.SendNotification(player.Language.STILL_PERMAMUTED);
             else if (player.IsMuted)
                 player.Client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?"));
-            else 
+            else
                 SendLobbyMessage(player, message, isDirty);
         }
 
@@ -44,15 +45,15 @@
         {
             string changedmessage = "[GLOBAL] " + (character.Team?.ChatColor ?? string.Empty) + character.Client.Name + "!{220|220|220}: " + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
-            ChatLogsManager.Log(message, character, isglobal: true);   
+            ChatLogsManager.Log(message, character, isglobal: true);
         }
 
-       public static void SendAdminMessage(TDSPlayer character, string message)
-       {
+        public static void SendAdminMessage(TDSPlayer character, string message)
+        {
             string changedmessage = character.AdminLevel.FontColor + "[" + character.AdminLevelName + "] !{255|255|255}" + character.Client.Name + ": !{220|220|220}" + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
             ChatLogsManager.Log(message, character, isglobal: true, isadminchat: true);
-       }
+        }
 
         public static void SendAdminChat(TDSPlayer character, string message)
         {
@@ -76,7 +77,5 @@
             NAPI.Chat.SendChatMessageToPlayer(targetcharacter.Client, changedmessage);
             ChatLogsManager.Log(message, character, target: targetcharacter);
         }
-
     }
-
 }

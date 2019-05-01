@@ -32,10 +32,10 @@ body {
     border-bottom: 2px solid #000000;
 }
 
-.header span {
-    display: table-cell;
-    vertical-align: middle;
-}
+    .header span {
+        display: table-cell;
+        vertical-align: middle;
+    }
 
 input[type="number"] {
     text-align: center;
@@ -64,26 +64,26 @@ input[type="number"] {
     border-right: 1px solid #000000;
 }
 
-#mapcreatortab button {
-    display: table-row;
-    background-color: inherit;
-    color: white;
-    width: 100%;
-    border: none;
-    outline: none;
-    text-align: center;
-    height: 10%;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    #mapcreatortab button {
+        display: table-row;
+        background-color: inherit;
+        color: white;
+        width: 100%;
+        border: none;
+        outline: none;
+        text-align: center;
+        height: 10%;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-#mapcreatortab button:hover {
-    background-color: var(--secondary-color-hover); 
-}
+        #mapcreatortab button:hover {
+            background-color: var(--secondary-color-hover);
+        }
 
-#mapcreatortab button.active {
-    background-color: var(--primary-color); 
-}
+        #mapcreatortab button.active {
+            background-color: var(--primary-color);
+        }
 
 .tabcontent {
     display: none;
@@ -94,40 +94,40 @@ input[type="number"] {
     height: 100%;
 }
 
-.tabcontent > div  {
-    margin-top: 2%;
-}
+    .tabcontent > div {
+        margin-top: 2%;
+    }
 
-.tabcontent span:not(.button_same_line) {
-    display: inline-block;
-    height: 100%;
-    margin-left: 3%;
-    margin-right: 7%;
-    vertical-align: middle;
-}
+    .tabcontent span:not(.button_same_line) {
+        display: inline-block;
+        height: 100%;
+        margin-left: 3%;
+        margin-right: 7%;
+        vertical-align: middle;
+    }
 
-.tabcontent input {
-    display: inline-block;
-    box-sizing: border-box;
-    border-radius: 10px;
-    height: 100%;
-}
+    .tabcontent input {
+        display: inline-block;
+        box-sizing: border-box;
+        border-radius: 10px;
+        height: 100%;
+    }
 
-.tabcontent textarea{
-    display: inline-block;
-    box-sizing: border-box;
-    border-radius: 10px;
-    height: 100%;
-    width: 60%;
-}
+    .tabcontent textarea {
+        display: inline-block;
+        box-sizing: border-box;
+        border-radius: 10px;
+        height: 100%;
+        width: 60%;
+    }
 
-.tabcontent input[type="text"] {
-    width: 55%;
-}
+    .tabcontent input[type="text"] {
+        width: 55%;
+    }
 
-.tabcontent input[type="number"] {
-    width: 35%;
-}
+    .tabcontent input[type="number"] {
+        width: 35%;
+    }
 
 .more_height_content {
     height: 25%;
@@ -140,7 +140,7 @@ input[type="number"] {
 }
 
 .tabtable {
-    width: 100%; 
+    width: 100%;
 }
 
 table, th, td {
@@ -208,4 +208,3 @@ button[disabled] {
     display: inline-block;
     width: 50%;
 }
-

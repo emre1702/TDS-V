@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Manager.Utility
+﻿namespace TDS_Client.Manager.Utility
 {
-    class Constants
+    internal class Constants
     {
         public static string LobbyChoiceBrowserPath => "package://Window/choice/index.html";
         public static string MainBrowserPath => "package://Window/main/index.html";

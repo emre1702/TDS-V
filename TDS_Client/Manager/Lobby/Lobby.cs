@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Client.Manager.Browser;
+﻿using TDS_Client.Manager.Browser;
 using TDS_Common.Dto;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Lobby
+    internal static class Lobby
     {
         private static bool inMainMenu;
 
@@ -14,7 +11,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (inMainMenu)
                 LeftMainMenu();
-            else 
+            else
                 Left();
             if (settings.Id == 0)
             {

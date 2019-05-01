@@ -13,8 +13,10 @@ namespace TDS_Common.Dto
         public float RotationOffsetX;
         public float RotationOffsetY;
         public float RotationOffsetZ;
+
         [JsonIgnore]
         public uint? LobbyId;
+
         [JsonIgnore]
         public string Json;
 

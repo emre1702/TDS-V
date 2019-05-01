@@ -2,7 +2,6 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Linq;
-using TDS_Client.Instance.Draw;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
@@ -12,7 +11,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Damage
 {
-    static class Damagesys
+    internal static class Damagesys
     {
         private static int lastTotalHP = 0;
 
@@ -75,6 +74,5 @@ namespace TDS_Client.Manager.Damage
         {
             lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
         }
-       
     }
 }

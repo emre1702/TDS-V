@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
@@ -12,7 +11,7 @@ using TDS_Server.Manager.Maps;
 
 namespace TDS_Server.Manager.Utility
 {
-    static class LobbyManager
+    internal static class LobbyManager
     {
         public static List<Lobby> Lobbies = new List<Lobby>();
 
@@ -40,15 +39,16 @@ namespace TDS_Server.Manager.Utility
                     case ELobbyType.FightLobby:
                         lobby = new FightLobby(lobbysetting);
                         break;
+
                     case ELobbyType.Arena:
                         lobby = new Arena(lobbysetting);
                         break;
                     //case ELobbyType.GangLobby:
-//todo todo Add after implementation of lobbies
-                        //lobby = new GangLobby(lobbysetting);
-                        //break;
+                    //todo todo Add after implementation of lobbies
+                    //lobby = new GangLobby(lobbysetting);
+                    //break;
                     //case ELobbyType.MapCreateLobby:
-         
+
                     //    break;
                     default:
                         lobby = new Lobby(lobbysetting);
@@ -59,7 +59,6 @@ namespace TDS_Server.Manager.Utility
                 {
                     AddMapsToArena(arena, lobbysetting);
                 }
-                
             }
         }
 
@@ -68,7 +67,7 @@ namespace TDS_Server.Manager.Utility
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
             {
-                // All 
+                // All
                 if (mapAssignment.MapId == -1)
                 {
                     arena.SetMapList(MapsLoader.AllMaps);
@@ -99,6 +98,5 @@ namespace TDS_Server.Manager.Utility
             Lobby.LobbiesByIndex.TryGetValue(id, out Lobby lobby);
             return lobby;
         }
-
     }
 }

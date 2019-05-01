@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Client.Manager.Lobby;
+﻿using TDS_Client.Manager.Lobby;
 
 namespace TDS_Client.Manager.Utility
 {
-    class DiscordManager
+    internal class DiscordManager
     {
         public static void Update()
         {

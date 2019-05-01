@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Interface
+﻿namespace TDS_Client.Interface
 {
-    interface ILobbyChoiceTexts
+    internal interface ILobbyChoiceTexts
     {
         string ARENA { get; }
         string GANG { get; }

@@ -1,11 +1,9 @@
-﻿using RAGE;
-using System.Collections.Generic;
-using TDS_Client.Instance.Lobby;
+﻿using TDS_Client.Instance.Lobby;
 using TDS_Common.Dto.Map;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class MapLimitManager
+    internal static class MapLimitManager
     {
         private static MapLimit currentMapLimit;
 

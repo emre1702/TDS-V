@@ -1,35 +1,34 @@
-﻿using RAGE;
+﻿using Newtonsoft.Json;
+using RAGE;
 using RAGE.Elements;
-using Cam = RAGE.Game.Cam;
+using RAGE.NUI;
+using RAGE.Ui;
 using System.Collections.Generic;
+using System.Drawing;
 using TDS_Client.Default;
+using TDS_Client.Enum;
+using TDS_Client.Instance.Draw;
+using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Draw.Scaleform;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using static RAGE.Events;
-using Newtonsoft.Json;
-using TDS_Client.Manager.Account;
-using TDS_Client.Manager.Draw;
-using Pad = RAGE.Game.Pad;
-using Control = RAGE.Game.Control;
-using RAGE.Ui;
+using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Client.Instance.Draw.Dx;
-using TDS_Client.Instance.Draw;
-using TDS_Client.Enum;
-using System.Drawing;
-using RAGE.NUI;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Manager.Utility;
-using TDS_Common.Dto.Map;
+using static RAGE.Events;
+using Cam = RAGE.Game.Cam;
+using Control = RAGE.Game.Control;
 
 namespace TDS_Client.Manager
 {
-    class EventsHandler : Script
+    internal class EventsHandler : Script
     {
         public EventsHandler()
         {
@@ -41,6 +40,7 @@ namespace TDS_Client.Manager
         }
 
         #region Load on start
+
         private void LoadOnStart()
         {
             Settings.Load();
@@ -48,9 +48,11 @@ namespace TDS_Client.Manager
             VoiceManager.Init();
             Team.Init();
         }
+
         #endregion Load on start
 
         #region RAGE events
+
         private void AddRAGEEvents()
         {
             Tick += OnTickMethod;
@@ -116,18 +118,18 @@ namespace TDS_Client.Manager
             /*
              * else if ( browser === mainbrowserdata.browser )
                 loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
-
             else if ( browser === mapcreatordata.browser )
                 mapcreatordata.browser.execute( "loadLanguage (`" + JSON.stringify( getLang( "mapcreator_menu" ) ) + "`);" );*/
         }
 
         private void OnPlayerQuitMethod(Player player)
         {
-            
         }
+
         #endregion RAGE events
 
-        #region From Server events 
+        #region From Server events
+
         private void AddToClientEvents()
         {
             Add(DToClientEvent.AddVoteToMap, OnAddVoteToMapServerMethod);
@@ -173,7 +175,7 @@ namespace TDS_Client.Manager
 
         private void OnLoadOwnMapRatingsMethod(object[] args)
         {
-            string datajson = (string) args[0];
+            string datajson = (string)args[0];
             MainBrowser.OnLoadOwnMapRatings(datajson);
         }
 
@@ -253,7 +255,6 @@ namespace TDS_Client.Manager
                 Spectate.Start();
                 MainBrowser.HideRoundEndReason();
             }
-
         }
 
         private void OnRoundStartMethod(object[] args)
@@ -386,7 +387,7 @@ namespace TDS_Client.Manager
             foreach (var team in Team.CurrentLobbyTeams)
             {
                 if (team.Index != 0)
-                    team.AmountPlayers = list[team.Index-1];
+                    team.AmountPlayers = list[team.Index - 1];
             }
             RoundInfo.RefreshAllTeamTexts();
         }
@@ -458,7 +459,6 @@ namespace TDS_Client.Manager
                 var lobbylist = JsonConvert.DeserializeObject<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 Scoreboard.AddLobbyData(playerlist, lobbylist);
             }
-            
         }
 
         private void OnSyncTeamPlayersMethod(object[] args)
@@ -471,11 +471,12 @@ namespace TDS_Client.Manager
                 if (player != null)
                     Team.SameTeamPlayers.Add(player);
             }
-
         }
+
         #endregion From Server events
 
-        #region From Browser events 
+        #region From Browser events
+
         private void AddFromBrowserEvents()
         {
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
@@ -580,7 +581,7 @@ namespace TDS_Client.Manager
                             pedToRenderBones = ped;
                             return;
                         }
-                            
+
                         foreach (var boneIdObject in System.Enum.GetValues(typeof(EPedBone)))
                         {
                             EPedBone boneId = (EPedBone)boneIdObject;
@@ -601,7 +602,6 @@ namespace TDS_Client.Manager
         // DEBUG //
         private static BoneInfo? GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
         {
-            
             if (boneIndex == -1)
             {
                 Chat.Output("Bone " + System.Enum.GetName(typeof(EPedBone), boneId) + " is not at the Ped");
@@ -699,8 +699,8 @@ namespace TDS_Client.Manager
                 DxLine line = new DxLine(boneScreenX, boneScreenY, null, boneTextScreenX, boneTextScreenY, null, info.Color);
                 dxLines.Add(line);
             }
-
         }
+
         // DEBUG END
 
         private void OnChatUsedMethod(object[] args)
@@ -715,7 +715,6 @@ namespace TDS_Client.Manager
         {
             ChatManager.CloseChatInput();
         }
-
 
         private void OnLanguageChangeMethod(object[] args)
         {
@@ -748,6 +747,7 @@ namespace TDS_Client.Manager
             }
             mp.storage.data.mapfavourites = JSON.stringify( mapvotingdata.favourites );
         } );*/
-        #endregion Browser events 
+        #endregion From Browser events
+
     }
 }

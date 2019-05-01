@@ -4,14 +4,13 @@ namespace TDS_Server.Instance.Lobby
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;
-    using TDS_Server.Manager.Utility;
     using TDS_Common.Default;
-    using TDS_Server.Instance.Player;
     using TDS_Common.Dto.Map;
+    using TDS_Server.Instance.Player;
+    using TDS_Server.Manager.Utility;
 
     partial class Arena
     {
-
         private readonly Dictionary<string, uint> mapVotes = new Dictionary<string, uint>();
         private readonly Dictionary<Client, string> playerVotes = new Dictionary<Client, string>();
 
@@ -82,5 +81,4 @@ namespace TDS_Server.Instance.Lobby
             }
         }
     }
-
 }

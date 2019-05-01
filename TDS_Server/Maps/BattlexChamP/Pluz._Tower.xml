@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TDSMap>
   <!--map-info-->
-  <map name="Pluz. Tower" type="normal" minplayers="0" maxplayers="12" creatorid="2"/>
+  <map name="Pluz. Tower" type="normal" minplayers="0" maxplayers="12" creatorid="2" />
   <description>
     <english>So massive as his D</english>
     <german>So Dick wie sein Dick</german>
@@ -43,7 +43,4 @@
     <!-- map-center -->
     <center x="-101.5982" y="-972.3945" z="114.1366" />
   </limit>
-
-
-
 </TDSMap>

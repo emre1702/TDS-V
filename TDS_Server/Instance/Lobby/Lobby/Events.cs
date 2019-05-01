@@ -1,16 +1,18 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Instance.Player;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
         public delegate void PlayerJoinedLobbyDelegate(Lobby lobby, TDSPlayer player);
+
         public static event PlayerJoinedLobbyDelegate PlayerJoinedLobby;
 
         public delegate void PlayerLeftLobbyDelegate(Lobby lobby, TDSPlayer player);
+
         public static event PlayerLeftLobbyDelegate PlayerLeftLobby;
 
         protected readonly Dictionary<TDSPlayer, TDSTimer> DeathSpawnTimer = new Dictionary<TDSPlayer, TDSTimer>();
@@ -27,7 +29,7 @@ namespace TDS_Server.Instance.Lobby
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="character"></param>
         /// <param name="killer"></param>

@@ -1,5 +1,4 @@
 ﻿using RAGE;
-using RAGE.Elements;
 using RAGE.Game;
 using RAGE.NUI;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Draw
 {
-    class FloatingDamageInfo
+    internal class FloatingDamageInfo
     {
         private static List<FloatingDamageInfo> damageInfos = new List<FloatingDamageInfo>();
 
@@ -31,7 +30,6 @@ namespace TDS_Client.Instance.Draw
             damageInfos.Add(this);
         }
 
-        
         private void UpdatePosition()
         {
             ulong elapsedTicks = TimerManager.ElapsedTicks - startTicks;

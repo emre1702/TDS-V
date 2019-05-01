@@ -1,13 +1,11 @@
 ﻿using RAGE;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using TDS_Client.Dto;
 using TDS_Common.Default;
 
 namespace TDS_Client.Manager.Utility
 {
-    static class EventsSender
+    internal static class EventsSender
     {
         private static readonly Dictionary<string, CooldownEventDto> cooldownEventsDict = new Dictionary<string, CooldownEventDto>
         {

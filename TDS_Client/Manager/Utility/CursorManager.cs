@@ -1,11 +1,10 @@
 ﻿using RAGE;
 using RAGE.Ui;
 using System;
-using static RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
 {
-    class CursorManager
+    internal class CursorManager
     {
         private static int cursorOpenedCounter;
 
@@ -27,7 +26,7 @@ namespace TDS_Client.Manager.Utility
                     cursorOpenedCounter = 0;
                 }
             }
-        } 
+        }
 
         public static void ManuallyToggleCursor(ConsoleKey _)
         {

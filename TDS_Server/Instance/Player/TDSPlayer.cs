@@ -1,25 +1,22 @@
 using GTANetworkAPI;
-using GTANetworkMethods;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using TDS_Common.Default;
+using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Entity;
+using TDS_Server.Instance.GangTeam;
+using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Enum;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Instance.GangTeam;
 
 namespace TDS_Server.Instance.Player
 {
-    class TDSPlayer
+    internal class TDSPlayer
     {
-
         public Players? Entity
         {
             get => fEntity;
@@ -33,10 +30,12 @@ namespace TDS_Server.Instance.Player
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.PlayerStats.Money);
             }
         }
+
         public Client Client { get; }
         public Lobby.Lobby? CurrentLobby { get; set; }
         public Lobby.Lobby? PreviousLobby { get; set; }
         public PlayerLobbyStats? CurrentLobbyStats { get; set; }
+
         public Team? Team
         {
             get => _team;
@@ -50,6 +49,7 @@ namespace TDS_Server.Instance.Player
                 _team = value;
             }
         }
+
         public Gang Gang
         {
             get
@@ -62,8 +62,10 @@ namespace TDS_Server.Instance.Player
             }
             set => _gang = value;
         }
+
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
+
         public uint? MuteTime
         {
             get => Entity?.PlayerStats.MuteTime ?? 0;
@@ -73,7 +75,9 @@ namespace TDS_Server.Instance.Player
                     Entity.PlayerStats.MuteTime = value;
             }
         }
+
         public bool IsMuted => Entity?.PlayerStats.MuteTime.HasValue ?? false;
+
         public bool IsPermamuted
         {
             get
@@ -83,7 +87,9 @@ namespace TDS_Server.Instance.Player
                 return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
             }
         }
+
         public ILanguage Language => LangUtils.GetLang(LanguageEnum);
+
         public ELanguage LanguageEnum
         {
             get
@@ -100,8 +106,8 @@ namespace TDS_Server.Instance.Player
                     Entity.PlayerSettings.Language = (byte)value;
                 SaveSettings();
             }
-                
         }
+
         public AdminLevelDto AdminLevel
         {
             get
@@ -109,10 +115,12 @@ namespace TDS_Server.Instance.Player
                 if (Entity == null)
                     return AdminsManager.AdminLevels[0];
                 return AdminsManager.AdminLevels[Entity.AdminLvl];
-            } 
+            }
         }
+
         public string AdminLevelName => AdminLevel.Names[LanguageEnum];
         public RoundStatsDto? CurrentRoundStats { get; set; }
+
         public int Money
         {
             get => (int)(Entity?.PlayerStats.Money ?? 0);
@@ -124,10 +132,12 @@ namespace TDS_Server.Instance.Player
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
             }
         }
+
         public TDSPlayer? LastHitter { get; set; }
         public TDSPlayer? Spectates { get; set; }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
         public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
+
         public uint PlayMinutes
         {
             get => Entity?.PlayerStats.PlayTime ?? 0;
@@ -138,6 +148,7 @@ namespace TDS_Server.Instance.Player
                 Entity.PlayerStats.PlayTime = value;
             }
         }
+
         public bool ChatLoaded { get; set; }
         public int KillingSpree { get; set; }
 
@@ -150,6 +161,7 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer(Client client) => Client = client;
 
         #region Money
+
         public void GiveMoney(int money)
         {
             if (money >= 0 || Money > money * -1)
@@ -165,7 +177,8 @@ namespace TDS_Server.Instance.Player
         {
             GiveMoney((int)money);
         }
-        #endregion
+
+        #endregion Money
 
         public void Damage(ref int damage)
         {
@@ -186,6 +199,7 @@ namespace TDS_Server.Instance.Player
         public void AddHPArmor(int healtharmor)
         {
             #region HP
+
             if (Client.Health + healtharmor <= 100)
             {
                 Client.Health += healtharmor;
@@ -196,13 +210,16 @@ namespace TDS_Server.Instance.Player
                 healtharmor -= 100 - Client.Health;
                 Client.Health = 100;
             }
+
             #endregion HP
 
             #region Armor
+
             if (healtharmor > 0)
             {
                 Client.Armor = Client.Armor + healtharmor <= 100 ? Client.Armor + healtharmor : 100;
             }
+
             #endregion Armor
         }
 
@@ -235,7 +252,7 @@ namespace TDS_Server.Instance.Player
                 dbcontext.PlayerLobbyStats.AttachRange(Entity.PlayerLobbyStats);
                 dbcontext.Entry(Entity.PlayerLobbyStats).State = EntityState.Modified;
             }
-            
+
             dbcontext.PlayerStats.Attach(Entity.PlayerStats);
             dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
 

@@ -10,7 +10,7 @@ using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Maps
 {
-    class MapFavourites : Script
+    internal class MapFavourites : Script
     {
         public static void LoadPlayerFavourites(TDSPlayer player)
         {
@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Maps
             Players? entity = player.GetEntity();
             if (entity == null)
                 return;
-            
+
             using (var dbcontext = new TDSNewContext())
             {
                 int mapId = await dbcontext.Maps
@@ -41,6 +41,7 @@ namespace TDS_Server.Manager.Maps
                 PlayerMapFavourites? favourite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
                 #region Add Favourite
+
                 if (favourite == null && isFavourite)
                 {
                     favourite = new PlayerMapFavourites { Id = entity.Id, MapId = mapId };
@@ -49,15 +50,18 @@ namespace TDS_Server.Manager.Maps
                     await dbcontext.SaveChangesAsync();
                     return;
                 }
+
                 #endregion Add Favourite
 
                 #region Remove Favourite
+
                 if (favourite != null && !isFavourite)
                 {
                     dbcontext.PlayerMapFavourites.Remove(favourite);
                     await dbcontext.SaveChangesAsync();
                     return;
                 }
+
                 #endregion Remove Favourite
             }
         }

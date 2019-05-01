@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace TDS.server.manager.utility {
     class Season {
-
         private const int stopSeasonAfterMonths = 3;
 
 		class SeasonTops {
@@ -54,7 +53,6 @@ namespace TDS.server.manager.utility {
         }
 
         public static void SaveSeason ( ) {
-
         }
 
         private static bool DidSeasonEnd ( DataRow row, int currentmonth ) {
@@ -63,14 +61,12 @@ namespace TDS.server.manager.utility {
                 currentmonth += 12;
             if ( currentmonth - lastmonth >= stopSeasonAfterMonths ) {
                 return true;
-            }   
+            }
             return false;
         }
 
         private static void LoadSeasonData ( DataRow row ) {
-
         }
-
 
         public async static void LoadSeason ( ) {
             int currentmonth = DateTime.Now.Month;
@@ -83,8 +79,6 @@ namespace TDS.server.manager.utility {
                     LoadSeasonData ( row );
             } else
                 Database.Exec ( $"INSERT INTO season (month) VALUES ({currentmonth})" );
-
-            
         }
     }
 }

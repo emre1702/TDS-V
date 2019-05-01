@@ -5,7 +5,7 @@ using static RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
 {
-    class TimerManager : Script
+    internal class TimerManager : Script
     {
         public static ulong ElapsedTicks;
 

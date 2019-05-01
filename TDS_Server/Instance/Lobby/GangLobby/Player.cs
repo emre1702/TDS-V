@@ -6,7 +6,6 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class GangLobby
     {
-
         public async override Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
         {
             //teamindex = character.Gang.Index;

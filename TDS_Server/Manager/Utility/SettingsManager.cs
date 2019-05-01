@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Dto;
 using TDS_Server.Entity;
 
 namespace TDS_Server.Manager.Utility
 {
-    class SettingsManager
+    internal class SettingsManager
     {
         public static string GamemodeName => settings.GamemodeName;
         public static string MapsPath => settings.MapsPath;

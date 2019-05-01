@@ -1,16 +1,13 @@
 ﻿using RAGE;
 using RAGE.Game;
-using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
-using TDS_Client.Manager.Lobby;
 using TDS_Common.Default;
-using TDS_Common.Instance.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
 {
-    class VoiceManager
+    internal class VoiceManager
     {
         private const bool voice3d = true;
 

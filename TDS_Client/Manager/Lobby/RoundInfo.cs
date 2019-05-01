@@ -1,5 +1,4 @@
-﻿using RAGE;
-using RAGE.NUI;
+﻿using RAGE.NUI;
 using System;
 using System.Drawing;
 using TDS_Client.Enum;
@@ -10,7 +9,7 @@ using TDS_Common.Dto;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class RoundInfo
+    internal static class RoundInfo
     {
         private static ulong startedTick;
         private static int _currentAssists;
@@ -29,6 +28,7 @@ namespace TDS_Client.Manager.Lobby
                 ShowDeathmatchInfo();
             }
         }
+
         public static int CurrentDamage
         {
             get => _currentDamage;
@@ -38,6 +38,7 @@ namespace TDS_Client.Manager.Lobby
                 ShowDeathmatchInfo();
             }
         }
+
         public static int CurrentKills
         {
             get => _currentKills;
@@ -113,7 +114,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            double timems = Math.Max(0, Settings.RoundTime*1000 - (TimerManager.ElapsedTicks - startedTick));
+            double timems = Math.Max(0, Settings.RoundTime * 1000 - (TimerManager.ElapsedTicks - startedTick));
             timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
@@ -132,7 +133,7 @@ namespace TDS_Client.Manager.Lobby
             if (teamDisplays == null)
                 return;
             SyncedTeamDataDto team = Team.CurrentLobbyTeams[index];
-            teamDisplays[index-1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
+            teamDisplays[index - 1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
         public static void SetRoundTimeLeft(uint lefttimems)
@@ -152,7 +153,6 @@ namespace TDS_Client.Manager.Lobby
             // show info of kills, damage, assists if not already showing
         }
 
-
         /*
        mp.events.add( "onClientPlayerAmountInFightSync", ( amountinteam, isroundstarted, amountaliveinteam ) => {
    log( "onClientPlayerAmountInFightSync" );
@@ -165,7 +165,7 @@ namespace TDS_Client.Manager.Lobby
        roundinfo.amountinteams[i] = Number.parseInt( amountinteam[i] );
        if ( isroundstarted == 0 )
            roundinfo.aliveinteams[i] = Number.parseInt ( amountinteam[i] );
-       else 
+       else
            roundinfo.aliveinteams[i] = Number.parseInt ( amountaliveinteam[i] );
    }
    refreshRoundInfoTeamData();

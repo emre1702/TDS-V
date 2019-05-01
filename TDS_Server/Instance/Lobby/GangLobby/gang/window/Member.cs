@@ -1,7 +1,5 @@
-﻿using GTANetworkAPI;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
     /*public class GangInvitation {
         public Client Player;
         public Gang Gang;
@@ -9,7 +7,6 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
     }
 
     partial class Gang {
-
         private static List<GangInvitation> gangInvitations = new List<GangInvitation> ();
 
         public void InviteMember ( Character character, string targetname ) {
@@ -31,7 +28,6 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 
         private void SendInvitation ( Client player, Client target ) {
             gangInvitations.Add ( new GangInvitation { Player = player, Gang = this, Inviter = player.Name } );
-
         }
 
         public void AcceptInvitation ( Character character ) {
@@ -47,7 +43,5 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 
             AddMember ( character );
         }
-
-
     }*/
 }

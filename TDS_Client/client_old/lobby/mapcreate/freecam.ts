@@ -1,5 +1,5 @@
-﻿// SOURCE: 
-// https://github.com/TheVektor/freecam/blob/master/freecam/client/fc_client.js 
+﻿// SOURCE:
+// https://github.com/TheVektor/freecam/blob/master/freecam/client/fc_client.js
 
 /*let freecamdata = {
 	CameraObject: null,
@@ -18,8 +18,6 @@
 	keyupevent: null,
 	onupdateevent: null
 }
-
-
 
 function freecamKeyDown( sender, e ) {
 	if ( freecamdata.freecamMode ) {
@@ -43,10 +41,9 @@ function freecamKeyDown( sender, e ) {
 			}
 		} else
 			mapcreatorKeyDown( e );
-	} 
+	}
 	if ( e.KeyCode === Keys.F )
 		toggleFreecam();
-
 }
 
 function freecamKeyUp( sender, e ) {
@@ -68,11 +65,8 @@ function freecamKeyUp( sender, e ) {
 			}
 		} else
 			mapcreatorKeyUp( e );
-
 	}
-	
 }
-
 
 function toggleFreecam() {
 	if ( freecamdata.freecamMode ) {
@@ -103,8 +97,6 @@ function toggleFreecam() {
 		stopMapCreatorMenu();
 	}
 }
-
-
 
 function freecamOnUpdate () {
 	if ( freecamdata.toggleControl ) {
@@ -164,7 +156,6 @@ function freecamOnUpdate () {
 	}
 }
 
-
 function startFreecam ( object ) {
 	freecamdata.CameraObject = object;
 	freecamdata.cam = API.createCamera( API.getEntityPosition( API.getLocalPlayer() ), new Vector3( 0.0, 0.0, 0.0 ) );
@@ -179,7 +170,6 @@ function startFreecam ( object ) {
 	freecamdata.keydownevent = API.onKeyDown.connect( freecamKeyDown );
 }
 
-
 function stopFreecam() {
 	if ( freecamdata.keydownevent != null ) {
 		freecamdata.keydownevent.disconnect();
@@ -193,7 +183,7 @@ function stopFreecam() {
 		freecamdata.onupdateevent.disconnect();
 		freecamdata.onupdateevent = null;
 	}
-		
+
 	freecamdata = {
 		CameraObject: null,
 		cam: null,
@@ -217,7 +207,6 @@ function stopFreecam() {
 	stopMapCreatorMenu();
 }
 
-
 API.onServerEventTrigger.connect( function ( name, args ) {
 	if ( name == "startFreecam" ) {
 		startFreecam( args[0] );
@@ -226,5 +215,5 @@ API.onServerEventTrigger.connect( function ( name, args ) {
 	}
 	// if ( name == "toggleFreecamControls" ) {
 	//	freecamdata.toggleControl = args[0];
-//	} 
+//	}
 } ); */

@@ -1,16 +1,12 @@
-﻿using Microsoft.Win32.SafeHandles;
-using RAGE.NUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using TDS_Client.Enum;
-using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
     // UIResText.Draw is top aligned
     // Graphics.DrawRect is center aligned (X & Y)
-    abstract class Dx : IDisposable
+    internal abstract class Dx : IDisposable
     {
         public bool Activated { get; set; }
 
@@ -44,7 +40,9 @@ namespace TDS_Client.Instance.Draw.Dx
             RAGE.Game.Graphics.GetActiveScreenResolution(ref ResX, ref ResY);
         }
 
-        public virtual void Draw() { }
+        public virtual void Draw()
+        {
+        }
 
         public virtual void Remove()
         {
@@ -85,7 +83,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected int GetAbsoluteX(float x, bool relative)
         {
-            return (int) Math.Round(relative ? x * ResX : x);
+            return (int)Math.Round(relative ? x * ResX : x);
         }
 
         protected int GetAbsoluteY(float y, bool relative)
@@ -94,6 +92,7 @@ namespace TDS_Client.Instance.Draw.Dx
         }
 
         #region IDisposable Support
+
         private bool disposed = false; // To detect redundant calls
 
         public void Dispose()
@@ -115,6 +114,7 @@ namespace TDS_Client.Instance.Draw.Dx
                         child.Remove();
             }
         }
-        #endregion
+
+        #endregion IDisposable Support
     }
 }

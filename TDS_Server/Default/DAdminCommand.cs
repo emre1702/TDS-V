@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Default
 {
-    class DAdminCommand
+    internal class DAdminCommand
     {
         public const string AdminSay = "adminsay";
         public const string AdminChat = "adminchat";

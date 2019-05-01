@@ -1,38 +1,45 @@
 namespace TDS_Common.Instance.Utility
 {
-
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
 
     /// <summary>
     /// Timer-class
     /// </summary>
     public class TDSTimer
     {
-
         /// <summary>A sorted List of Timers</summary>
         private static readonly List<TDSTimer> timer = new List<TDSTimer>();
+
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
         private static readonly List<TDSTimer> insertAfterList = new List<TDSTimer>();
+
         /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
         private static Action<string> logger;
+
         private static Func<ulong> tickGetter;
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
+
         /// <summary>After how many milliseconds (after the last execution) the timer should get called. Can be changed dynamically</summary>
         public readonly uint ExecuteAfterMs;
+
         /// <summary>When the Timer is ready to execute (Stopwatch is used).</summary>
         private ulong executeAtMs;
+
         /// <summary>How many executes the timer has left - use 0 for infinitely. Can be changed dynamically</summary>
         public uint ExecutesLeft;
+
         /// <summary>If the Timer should handle exceptions with a try-catch-finally. Can be changed dynamically</summary>
         public bool HandleException;
+
         /// <summary>If the Timer will get removed.</summary>
         private bool willRemoved = false;
+
         /// <summary>Use this to check if the timer is still running.</summary>
         public bool IsRunning => !willRemoved;
+
         /// <summary>The remaining ms to execute</summary>
         public ulong RemainingMsToExecute => executeAtMs - tickGetter();
 
@@ -92,7 +99,7 @@ namespace TDS_Common.Instance.Utility
         }
 
         /// <summary>
-        /// Executes a timer with try-catch-finally. 
+        /// Executes a timer with try-catch-finally.
         /// </summary>
         private void ExecuteMeSafe()
         {
@@ -195,7 +202,7 @@ namespace TDS_Common.Instance.Utility
     }
 }
 
-/* Examples: 
+/* Examples:
 
 	// Yes, the method can be private //
 	private void testTimerFunc ( Client player, string text ) {

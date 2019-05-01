@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Entity;
@@ -8,11 +7,11 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Logs
 {
-    static class AdminLogsManager
+    internal static class AdminLogsManager
     {
         private static readonly List<LogsAdmin> notsavedadminlogs = new List<LogsAdmin>();
 
-        public static void Log (ELogType cmd, TDSPlayer? source, TDSPlayer? target, bool asdonator = false, bool asvip = false, string? reason = null)
+        public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, bool asdonator = false, bool asvip = false, string? reason = null)
         {
             notsavedadminlogs.Add(
                 new LogsAdmin

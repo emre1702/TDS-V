@@ -1,18 +1,18 @@
 ﻿namespace TDS_Server.Manager.Player
 {
+    using GTANetworkAPI;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Globalization;
     using System.Linq;
-    using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
-    using TDS_Server.Entity;
-    using TDS_Server.Interface;
-    using TDS_Server.Manager.Utility;
     using TDS_Common.Default;
     using TDS_Common.Enum;
+    using TDS_Server.Entity;
     using TDS_Server.Instance.Player;
+    using TDS_Server.Interface;
+    using TDS_Server.Manager.Utility;
 
-    class Account : Script
+    internal class Account : Script
     {
         public Account()
         {
@@ -27,9 +27,9 @@
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
-        #pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer player = client.GetChar();
             if (player.Entity == null)
@@ -79,7 +79,7 @@
         public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
             if (Enum.IsDefined(typeof(ELanguage), language))
-                player.GetChar().LanguageEnum = (ELanguage) language;
+                player.GetChar().LanguageEnum = (ELanguage)language;
         }
 
         //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
@@ -98,7 +98,7 @@
                 if (playerID != 0)
                 {
                     isPlayerRegistered = true;
-                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, (uint) 0);    // MainMenu ban => server ban
+                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, (uint)0);    // MainMenu ban => server ban
                     if (ban != null)
                     {
                         if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
@@ -146,15 +146,15 @@
                 case -1:
                     LangUtils.SendAllChatMessage(lang => lang.PERMAMUTE_INFO.Formatted(targetName, adminName, reason));
                     break;
+
                 case 0:
                     LangUtils.SendAllChatMessage(lang => lang.UNMUTE_INFO.Formatted(targetName, adminName, reason));
                     break;
+
                 default:
                     LangUtils.SendAllChatMessage(lang => lang.TIMEMUTE_INFO.Formatted(targetName, adminName, minutes, reason));
                     break;
             }
         }
-
     }
-
 }

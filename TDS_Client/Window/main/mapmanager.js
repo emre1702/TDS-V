@@ -106,7 +106,7 @@ $(document).ready(function () {
                 }
             }
         }
-    });    
+    });
 });
 
 function openMapMenu(mylang, mapdatasjson) {

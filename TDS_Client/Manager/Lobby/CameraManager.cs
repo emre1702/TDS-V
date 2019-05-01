@@ -1,12 +1,11 @@
 ﻿using RAGE;
-using RAGE.Elements;
 using RAGE.Game;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Instance.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class CameraManager
+    internal static class CameraManager
     {
         private static int cam = Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
         private static TDSTimer? timer;

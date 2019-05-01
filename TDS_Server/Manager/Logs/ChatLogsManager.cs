@@ -6,14 +6,15 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Logs
 {
-    static class ChatLogsManager
+    internal static class ChatLogsManager
     {
         private static readonly List<LogsChat> notsavedchatlogs = new List<LogsChat>();
 
-        public static void Log (string chat, TDSPlayer source, TDSPlayer? target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
+        public static void Log(string chat, TDSPlayer source, TDSPlayer? target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
         {
             notsavedchatlogs.Add(
-                new LogsChat {
+                new LogsChat
+                {
                     Source = source.Entity?.Id ?? 0,
                     Target = target?.Entity?.Id ?? null,
                     Message = chat,

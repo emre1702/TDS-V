@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
-	partial class Gang {
-		/*public static void CreateGang ( Character character, string name, string shortname ) {
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
+    partial class Gang
+    {
+        /*public static void CreateGang ( Character character, string name, string shortname ) {
 			uint ganguid = gangByUID.Keys.Max () + 1;
 			uint owneruid = character.UID;
 
@@ -40,5 +39,5 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 				playerMemberOfGang.Remove ( entry.Key );
 			}
 		}*/
-	}
+    }
 }

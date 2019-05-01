@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TDS_Server.Dto
+﻿namespace TDS_Server.Dto
 {
     /*[Serializable]
     class CreatedMapDto

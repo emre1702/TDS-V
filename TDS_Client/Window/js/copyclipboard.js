@@ -1,5 +1,5 @@
-﻿function copyTextToClipboard( text ) {
-    var textArea = document.createElement( "textarea" );
+﻿function copyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
 
     //
     // *** This styling is an extra step which is likely not required. ***
@@ -37,13 +37,12 @@
     // Avoid flash of white box if rendered for any reason.
     textArea.style.background = 'transparent';
 
-
     textArea.value = text;
 
-    document.body.appendChild( textArea );
+    document.body.appendChild(textArea);
 
     textArea.select();
 
-    document.execCommand( 'copy' );
-    document.body.removeChild( textArea );
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
 }

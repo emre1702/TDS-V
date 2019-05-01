@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
-	partial class Gang {
-
-		/*private Dictionary<GangActivity, uint> allowedAtRank = new Dictionary<GangActivity, uint>
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
+    partial class Gang
+    {
+        /*private Dictionary<GangActivity, uint> allowedAtRank = new Dictionary<GangActivity, uint>
 		{
 			{ GangActivity.INVITE, 2 },
 			{ GangActivity.UNINVITE, 2 },
@@ -39,5 +36,5 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 				allowedAtRank[key] = tonumber;
 			}
 		}*/
-	}
+    }
 }

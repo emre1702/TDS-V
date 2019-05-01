@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
-	/*partial class Gang {
-
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
+    /*partial class Gang {
 		private Dictionary<string, int> vehicleAmounts = new Dictionary<string, int> ();
 		private object vehicleAmountsLocker = new object();
 
 		private void AddVehicle ( string name, int amount ) {
 			if ( !vehicleAmounts.ContainsKey ( name ) )
 				vehicleAmounts[name] = amount;
-			else 
+			else
 				vehicleAmounts[name] += amount;
 		}
 
@@ -34,6 +29,5 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
 				RemoveVehicle ( row["vehicle"].ToString (), Convert.ToInt32 ( row["amount"] ) );
 			}
 		}
-
 	}*/
 }

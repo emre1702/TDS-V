@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Interface
 {
-    interface ILanguage
+    internal interface ILanguage
     {
         string ACCOUNT_DOESNT_EXIST { get; }
         string ADMINLVL_NOT_HIGH_ENOUGH { get; }
@@ -100,8 +100,5 @@
         string[] WELCOME_MESSAGE { get; }
 
         string WRONG_PASSWORD { get; }
-        
-        
-        
     }
 }

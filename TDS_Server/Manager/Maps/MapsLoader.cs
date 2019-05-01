@@ -1,6 +1,6 @@
 namespace TDS_Server.Manager.Maps
 {
-
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -9,14 +9,13 @@ namespace TDS_Server.Manager.Maps
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
-    using Microsoft.EntityFrameworkCore;
     using TDS_Common.Dto.Map;
     using TDS_Server.Entity;
     using TDS_Server.Manager.Helper;
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Utility;
 
-    static class MapsLoader
+    internal static class MapsLoader
     {
         public static List<MapDto> AllMaps = new List<MapDto>();
         public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string>();   // mapnames in lower case
@@ -35,7 +34,7 @@ namespace TDS_Server.Manager.Maps
 
             // Load name of creators for Maps //
             await LoadCreatorNames(dbcontext);
-        }  
+        }
 
         public static List<MapDto> LoadMapsInDirectory(string path)
         {
@@ -50,7 +49,7 @@ namespace TDS_Server.Manager.Maps
             }
             return list;
         }
-        
+
         public static MapDto? LoadMap(FileInfo fileInfo)
         {
             using XmlReader reader = XmlReader.Create(fileInfo.OpenRead(), _xmlReaderSettings);
@@ -105,7 +104,5 @@ namespace TDS_Server.Manager.Maps
                     .FirstOrDefaultAsync();
             }
         }
-       
     }
-
 }

@@ -2,22 +2,21 @@
 {
     using GTANetworkAPI;
     using Microsoft.EntityFrameworkCore;
-    using TDS_Server.Entity;
-    using TDS_Server.Instance.Language;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Manager.Utility;
+    using Newtonsoft.Json;
     using TDS_Common.Default;
+    using TDS_Common.Dto;
+    using TDS_Server.Entity;
+    using TDS_Server.Enum;
+    using TDS_Server.Instance.GangTeam;
+    using TDS_Server.Instance.Language;
     using TDS_Server.Instance.Lobby;
+    using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Logs;
     using TDS_Server.Manager.Maps;
-    using Newtonsoft.Json;
-    using TDS_Server.Enum;
-    using TDS_Common.Dto;
-    using TDS_Server.Instance.GangTeam;
+    using TDS_Server.Manager.Utility;
 
-    static class Login
+    internal static class Login
     {
-
         public static async void LoginPlayer(Client player, uint id, string password)
         {
             using (var dbcontext = new TDSNewContext())
@@ -52,7 +51,7 @@
                     FloatingDamageInfo = entity.PlayerSettings.FloatingDamageInfo
                 };
 
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl, 
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl,
                     JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(syncedPlayerSettings));
 
                 TDSPlayer character = player.GetChar();
@@ -61,7 +60,7 @@
                 if (entity.AdminLvl > 0)
                     AdminsManager.SetOnline(character);
                 character.Gang = Gang.GetFromId(entity.GangId);
-                
+
                 await dbcontext.SaveChangesAsync();
 
                 if (character.ChatLoaded)
@@ -76,5 +75,4 @@
             }
         }
     }
-
 }

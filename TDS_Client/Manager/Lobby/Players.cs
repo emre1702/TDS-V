@@ -4,7 +4,7 @@ using TDS_Client.Manager.Browser;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Players
+    internal static class Players
     {
         public static List<Player> PlayersSameLobby = new List<Player>();
 

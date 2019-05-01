@@ -5,12 +5,13 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
-    class DxRectangle : Dx
+    internal class DxRectangle : Dx
     {
-        private float xpos, 
-            ypos, 
-            sizex, 
+        private float xpos,
+            ypos,
+            sizex,
             sizey;
+
         private readonly Color color;
         private UIResText.Alignment alignmentX;
 

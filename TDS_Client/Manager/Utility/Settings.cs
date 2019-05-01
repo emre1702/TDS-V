@@ -1,6 +1,4 @@
-﻿using RAGE;
-using RAGE.Elements;
-using RAGE.Game;
+﻿using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Default;
 using TDS_Client.Enum;
@@ -15,7 +13,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
 {
-    static class Settings
+    internal static class Settings
     {
         public const int ScreenFadeInTimeAfterSpawn = 2000;
         public const int ScreenFadeOutTimeAfterSpawn = 2000;
@@ -65,8 +63,10 @@ namespace TDS_Client.Manager.Utility
         //public static uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public static uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
         public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs ?? 0;
+
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
         public static uint CountdownTime => syncedLobbySettings.CountdownTime ?? 0;
+
         public static int MapChooseTime => syncedServerSettings.MapChooseTime;
         public static uint RoundTime => syncedLobbySettings.RoundTime ?? 0;
         public static int RoundEndTime => syncedServerSettings.RoundEndTime;
@@ -117,7 +117,6 @@ namespace TDS_Client.Manager.Utility
             return 0;
         }
 
-
         /*function loadSettings() {
             let savedlang = mp.storage.data.language;
             let savedhitsound = mp.storage.data.hitsound;
@@ -137,7 +136,7 @@ namespace TDS_Client.Manager.Utility
             if ( typeof savedbloodscreen !== "undefined" )
                 settingsdata.bloodscreen = savedbloodscreen;
         }
-        
+
          mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
             switch ( setting as PlayerSetting ) {
                 case PlayerSetting.LANGUAGE:
@@ -159,7 +158,7 @@ namespace TDS_Client.Manager.Utility
                     settingsdata.bloodscreen = value;
                     mp.storage.data.blodscreen = value;
                     break;
-            } 
+            }
         } );
         */
     }

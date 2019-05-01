@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
-using TDS_Common.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -35,7 +35,6 @@ namespace TDS_Server.Instance.Lobby
                     SpectateNext(spectator, true);
                 }
             }
-            
         }
     }
 }

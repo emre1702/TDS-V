@@ -1,16 +1,16 @@
 ﻿namespace TDS_Server.Manager.Utility
 {
+    using GTANetworkAPI;
     using System;
     using System.Collections.Generic;
-	using GTANetworkAPI;
-    using TDS_Server.Interface;
-    using TDS_Server.Instance.Language;
-    using TDS_Server.Manager.Player;
-    using TDS_Server.Instance.Player;
     using TDS_Common.Enum;
+    using TDS_Server.Instance.Language;
+    using TDS_Server.Instance.Player;
+    using TDS_Server.Interface;
+    using TDS_Server.Manager.Player;
 
-    static class LangUtils
-	{
+    internal static class LangUtils
+    {
         private static readonly Dictionary<ELanguage, ILanguage> languageByID = new Dictionary<ELanguage, ILanguage>
         {
             [ELanguage.German] = new German(),
@@ -24,7 +24,7 @@
             {
                 returndict[lang] = langgetter(lang);
             }
-            
+
             foreach (Client client in NAPI.Pools.GetAllPlayers())
             {
                 TDSPlayer player = client.GetChar();
@@ -33,17 +33,17 @@
             }
         }
 
-        public static ILanguage GetLang (this Client player)
+        public static ILanguage GetLang(this Client player)
         {
             return languageByID[player.GetChar().LanguageEnum];
         }
 
-		public static ILanguage GetLang (this TDSPlayer character)
-		{
+        public static ILanguage GetLang(this TDSPlayer character)
+        {
             return languageByID[character.LanguageEnum];
         }
 
-        public static ILanguage GetLang (this Type language)
+        public static ILanguage GetLang(this Type language)
         {
             foreach (ILanguage lang in languageByID.Values)
             {
@@ -65,7 +65,7 @@
             return languageByID[language];
         }
 
-        public static Dictionary<ILanguage, string> GetLangDictionary (Func<ILanguage, string> langgetter)
+        public static Dictionary<ILanguage, string> GetLangDictionary(Func<ILanguage, string> langgetter)
         {
             Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
             foreach (ILanguage lang in languageByID.Values)

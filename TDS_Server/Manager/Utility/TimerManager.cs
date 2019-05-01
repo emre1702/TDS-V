@@ -4,7 +4,7 @@ using TDS_Common.Instance.Utility;
 
 namespace TDS_Server.Manager.Utility
 {
-    class TimerManager : Script
+    internal class TimerManager : Script
     {
         public TimerManager()
         {

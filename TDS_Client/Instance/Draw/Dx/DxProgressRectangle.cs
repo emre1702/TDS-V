@@ -1,5 +1,4 @@
-﻿using RAGE;
-using RAGE.Game;
+﻿using RAGE.Game;
 using RAGE.NUI;
 using System;
 using System.Drawing;
@@ -7,7 +6,7 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
-    class DxProgressRectangle : Dx
+    internal class DxProgressRectangle : Dx
     {
         private readonly float width;
 
@@ -22,7 +21,8 @@ namespace TDS_Client.Instance.Draw.Dx
         /// <summary>
         /// The progress between 0 and 1
         /// </summary>
-        public float Progress {
+        public float Progress
+        {
             get => progress;
             set => progress = Math.Min(1, Math.Max(0, value));
         }

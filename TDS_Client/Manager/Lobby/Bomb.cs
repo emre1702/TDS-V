@@ -1,7 +1,6 @@
 ﻿using RAGE;
 using RAGE.Game;
 using RAGE.NUI;
-using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
@@ -15,7 +14,7 @@ using TDS_Common.Instance.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Bomb
+    internal static class Bomb
     {
         private static Vector3? plantedPos;
         private static EPlantDefuseStatus playerStatus;
@@ -49,9 +48,9 @@ namespace TDS_Client.Manager.Lobby
             if (startAtMs.HasValue)
             {
                 startAtMs += 100;  // 100 because trigger etc. propably took some time
-                RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs - startAtMs.Value);      
+                RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs - startAtMs.Value);
                 MainBrowser.StartBombTick(Settings.BombDetonateTimeMs, startAtMs.Value);
-            }  
+            }
             else
             {
                 RoundInfo.SetRoundTimeLeft(Settings.BombDetonateTimeMs);
@@ -65,7 +64,7 @@ namespace TDS_Client.Manager.Lobby
             if (playerStatus == EPlantDefuseStatus.None)
                 CheckPlantDefuseStart();
             else
-                CheckPlantDefuseStop();                                    
+                CheckPlantDefuseStop();
         }
 
         public static void LocalPlayerGotBomb(MapPositionDto[] spotstoplant)
@@ -111,7 +110,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             if (gotBomb)
                 CheckPlantStart();
-            else 
+            else
                 CheckDefuseStart();
         }
 
@@ -126,7 +125,7 @@ namespace TDS_Client.Manager.Lobby
                 playerStatus = EPlantDefuseStatus.None;
                 progressRect?.Remove();
                 progressRect = null;
-            } 
+            }
         }
 
         private static bool ShouldPlantDefuseStop()
@@ -147,7 +146,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             plantDefuseStartTick = TimerManager.ElapsedTicks;
             playerStatus = EPlantDefuseStatus.Planting;
-            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f, 
+            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             EventsSender.Send(DToServerEvent.StartPlanting);
         }

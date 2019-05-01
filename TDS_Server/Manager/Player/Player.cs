@@ -1,18 +1,14 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using TDS_Server.Default;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Logs;
 
 namespace TDS_Server.Manager.Player
 {
-    static class Player
+    internal static class Player
     {
         private static readonly Dictionary<Client, TDSPlayer> clientPlayers = new Dictionary<Client, TDSPlayer>();
 

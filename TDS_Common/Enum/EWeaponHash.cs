@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Common.Enum
+﻿namespace TDS_Common.Enum
 {
     public enum EWeaponHash : uint
     {

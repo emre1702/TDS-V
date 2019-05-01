@@ -8,7 +8,7 @@ using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Logs
 {
-    static class ErrorLogsManager
+    internal static class ErrorLogsManager
     {
         private static readonly List<LogsError> notsavederrorlogs = new List<LogsError>();
 

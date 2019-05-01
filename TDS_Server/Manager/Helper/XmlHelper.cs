@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -8,7 +6,7 @@ using System.Xml.Linq;
 
 namespace TDS_Server.Manager.Helper
 {
-    static class XmlHelper
+    internal static class XmlHelper
     {
         public static async Task<string> GetPrettyAsync(string xml)
         {
@@ -26,7 +24,5 @@ namespace TDS_Server.Manager.Helper
 
             return stringBuilder.ToString();
         }
-
-        
     }
 }

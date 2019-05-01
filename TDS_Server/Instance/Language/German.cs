@@ -2,7 +2,7 @@
 
 namespace TDS_Server.Instance.Language
 {
-    class German : English, ILanguage
+    internal class German : English, ILanguage
     {
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ADMINLVL_NOT_HIGH_ENOUGH => "Dein Adminlevel ist nicht hoch genug dafür.";
@@ -18,7 +18,8 @@ namespace TDS_Server.Instance.Language
 
         public override string DEATH_KILLED_INFO => "{0} hat {1} mit {2} getötet";
         public override string DEATH_DIED_INFO => "{0} ist gestorben";
-        public override string[] DEFUSE_INFO => new string[] 
+
+        public override string[] DEFUSE_INFO => new string[]
         {
             "Runden-Zeit hat sich verändert. Nun musst du entweder alle Gegner töten oder die Bombe entschärfen.",
             "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und halte die linke Maustaste gedrückt."
@@ -111,6 +112,7 @@ namespace TDS_Server.Instance.Language
             "#n#Du kannst den Cursor mit ENDE umschalten.",
             "#n#Viel Spaß wünscht das #b#TDS-Team#w#!"
         };
+
         public override string WRONG_PASSWORD => "Falsches Passwort!";
     }
 }

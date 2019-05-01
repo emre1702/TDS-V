@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TDSMap>
   <!--map-info-->
-  <map name="Pluz. Investment" type="normal" minplayers="0" maxplayers="16" creatorid="2"/>
+  <map name="Pluz. Investment" type="normal" minplayers="0" maxplayers="16" creatorid="2" />
   <!--description-->
   <!--map-limit-->
   <limit>

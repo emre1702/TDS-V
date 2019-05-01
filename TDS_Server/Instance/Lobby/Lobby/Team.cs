@@ -1,15 +1,14 @@
 using GTANetworkAPI;
-using System.Collections.Generic;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
-using System;
-using TDS_Server.Interface;
-using TDS_Server.Instance.Utility;
-using System.Linq;
 using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TDS_Common.Default;
+using TDS_Common.Enum;
+using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
+using TDS_Server.Interface;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -51,7 +50,6 @@ namespace TDS_Server.Instance.Lobby
                 entry.AlivePlayers?.Clear();
                 entry.SpectateablePlayers?.Clear();
             }
-
         }
 
         protected void MixTeams()
@@ -87,7 +85,7 @@ namespace TDS_Server.Instance.Lobby
 
             Team team = character.Team;
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);
-        
+
             string str = $"[TEAM] {team.ChatColor}{character.Client.Name}: !{{150|0|0}}";
             team.FuncIterate((target, _) =>
             {

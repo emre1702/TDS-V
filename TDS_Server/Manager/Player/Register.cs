@@ -7,10 +7,8 @@ using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Player
 {
-
-    static class Register
+    internal static class Register
     {
-
         public static async void RegisterPlayer(Client player, string password, string? email)
         {
             using (TDSNewContext dbContext = new TDSNewContext())
@@ -26,14 +24,14 @@ namespace TDS_Server.Manager.Player
                     Email = email,
                     IsVip = false
                 };
-                dbplayer.PlayerSettings = new PlayerSettings {
+                dbplayer.PlayerSettings = new PlayerSettings
+                {
                     AllowDataTransfer = false,
                     //Todo Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
                     Language = (byte)ELanguage.English,
                     Hitsound = true,
                     Bloodscreen = true,
                     FloatingDamageInfo = true
-                    
                 };
                 dbplayer.PlayerStats = new PlayerStats
                 {
@@ -48,5 +46,4 @@ namespace TDS_Server.Manager.Player
             }
         }
     }
-
 }

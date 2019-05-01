@@ -10,7 +10,7 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Utility
 {
-    class Team
+    internal class Team
     {
         private Teams _entity;
 
@@ -23,6 +23,7 @@ namespace TDS_Server.Instance.Utility
                 ChatColor = "!{" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "}";
             }
         }
+
         public string ChatColor { get; private set; }
         public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
         public List<TDSPlayer>? SpectateablePlayers { get; set; }

@@ -2,7 +2,6 @@
 using RAGE.Ui;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
@@ -10,7 +9,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Browser
 {
-    static class MainBrowser
+    internal static class MainBrowser
     {
         public static HtmlWindow Browser { get; set; }
         private static bool roundEndReasonShowing;
@@ -31,6 +30,7 @@ namespace TDS_Client.Manager.Browser
         }
 
         #region Events
+
         public static void OnLoaded()
         {
             Team.LoadOrderNames();
@@ -50,7 +50,8 @@ namespace TDS_Client.Manager.Browser
         {
             EventsSender.Send(DToServerEvent.AddRatingToMap, currentmap, rating);
         }
-        #endregion
+
+        #endregion Events
 
         public static void ShowBloodscreen()
         {
@@ -91,7 +92,7 @@ namespace TDS_Client.Manager.Browser
         {
             Execute($"loadMapVotings('{mapvotesjson}');");
         }
-        
+
         public static void ClearMapVotingsInBrowser()
         {
             Execute("clearMapVotings();");

@@ -4,7 +4,7 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx.Grid
 {
-    class DxGridColumn : Dx
+    internal class DxGridColumn : Dx
     {
         public float X { get; set; }
         public float Width;
@@ -17,7 +17,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             RelativePos = relativePos;
             RelativeWidth = relativeWidth;
 
-            X = grid.X + grid.Columns.Sum(c => c.RelativeWidth ? c.Width : c.Width*grid.Width);
+            X = grid.X + grid.Columns.Sum(c => c.RelativeWidth ? c.Width : c.Width * grid.Width);
             if (grid.Alignment == UIResText.Alignment.Centered)
                 X -= grid.Width / 2;
             else if (grid.Alignment == UIResText.Alignment.Right)

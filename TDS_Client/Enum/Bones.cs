@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Enum
+﻿namespace TDS_Client.Enum
 {
-    enum EPedBone: uint
+    internal enum EPedBone : uint
     {
         SKEL_ROOT = 0,
         FB_R_Brow_Out_000 = 1356,

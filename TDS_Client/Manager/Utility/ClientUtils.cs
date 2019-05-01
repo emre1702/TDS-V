@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
@@ -12,7 +11,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
 {
-    static class ClientUtils
+    internal static class ClientUtils
     {
         public static List<Player> GetTriggeredPlayersList(object argobj)
         {

@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class FightLobby
     {
         public void SpectateNext(TDSPlayer player, bool forward)
@@ -55,7 +53,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 nextPlayer.Spectators.Add(character);
                 character.Client.Spectate(nextPlayer.Client);
-            } 
+            }
         }
 
         protected virtual void SpectateOtherAllTeams(TDSPlayer character, bool next = true)
@@ -80,7 +78,7 @@ namespace TDS_Server.Instance.Lobby
                 character.Client.Spectate(nextPlayer.Client);
             }
         }
-        
+
         private TDSPlayer? GetNextSpectatePlayerInSameTeam(TDSPlayer start)
         {
             List<TDSPlayer>? teamlist = start.Team?.SpectateablePlayers;

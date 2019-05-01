@@ -1,10 +1,6 @@
 namespace TDS_Server.Instance.Lobby
 {
-
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
     using TDS_Server.Entity;
 
     partial class FightLobby
@@ -22,5 +18,4 @@ namespace TDS_Server.Instance.Lobby
             }
         }
     }
-
 }

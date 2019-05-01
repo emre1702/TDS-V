@@ -1,15 +1,14 @@
 using GTANetworkAPI;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
-using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Manager.Commands {
-
-	class PlayerCommand : Script {
-
+namespace TDS_Server.Manager.Commands
+{
+    internal class PlayerCommand : Script
+    {
         [TDSCommand(DPlayerCommand.LobbyLeave)]
         public static async void LobbyLeave(TDSPlayer player)
         {
@@ -75,14 +74,10 @@ namespace TDS_Server.Manager.Commands {
         [CommandDescription ( "Leaves the lobby" )]
         [CommandGroup ( "user" )]
         [Command ( "leave" )]
-
-
         [CommandDescription ( "Commits suicide" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "suicide" )]
         [Command ( "kill" )]
-
-
         [CommandDescription ( "Join the gangwar lobby (only for open-world for map-creation). Use it in mainmenu." )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "gwlobby" )]
@@ -101,14 +96,12 @@ namespace TDS_Server.Manager.Commands {
         [CommandAlias ( "globalsay" )]
         [CommandAlias ( "global" )]
         [Command ( "globalchat" )]
-
         [CommandDescription ( "Writes in team-chat" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "t" )]
         [CommandAlias ( "teamsay" )]
         [CommandAlias ( "team" )]
         [Command ( "teamchat" )]
-
         [CommandDescription ( "Writes a private-message to a player." )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "message" )]
@@ -116,22 +109,24 @@ namespace TDS_Server.Manager.Commands {
         [Command ( "msg" )]
 
 		#region Utility
+
         [CommandDescription ( "Outputs your position and rotation." )]
         [CommandGroup ( "user" )]
         [CommandAlias( "getpos" )]
         [CommandAlias ( "rot" )]
         [CommandAlias ( "getrot" )]
 		[Command ( "pos", Description = "Gets your position and rotation", Group = "user" )]
-
         [CommandDescription ( "Checks if a map-name is already taken (needed to know for new maps)" )]
         [CommandGroup ( "user" )]
         [Command ( "checkmapname" )]
 		public void CheckMapName ( Client player, string mapname ) {
 			NAPI.Notification.SendNotificationToPlayer ( player, Map.DoesMapNameExist ( mapname ) ? "map-name already taken" : "map-name is available" );
 		}
-        #endregion
+
+        #endregion Utility
 
         #region Deathmatch
+
         [CommandDescription ( "Activates/deactivates the hitsound" )]
         [CommandGroup ( "user" )]
         [CommandAlias ( "hitglocke" )]
@@ -149,7 +144,8 @@ namespace TDS_Server.Manager.Commands {
                 NAPI.ClientEvent.TriggerClientEvent ( player, "onPlayerSettingChange", PlayerSetting.HITSOUND, false );
             }
 		}
-		#endregion
+
+		#endregion Deathmatch
 
         [RemoteEvent ( "testit" )]
         public static void TestitEvent ( Client player, params object[] args ) {
@@ -230,24 +226,31 @@ namespace TDS_Server.Manager.Commands {
                 case 8:
                     player.TriggerEvent ( "testit", new bool[] { true, false, true } );
                     break;
+
                 case 9:
                     player.TriggerEvent ( "testit", new string[] { "hi", "my" } );
                     break;
+
                 case 10:
                     player.TriggerEvent ( "testit", new int[] { 0, 1, 2 } );
                     break;
+
                 case 11:
                     player.TriggerEvent ( "testit", new uint[] { 0, 1, 2 } );
                     break;
+
                 case 12:
                     player.TriggerEvent ( "testit", new Vector3[] { player.Position, new Vector3 ( 0, 0, 0 ) } );
                     break;
+
                 case 13:
                     player.TriggerEvent ( "testit", new System.Collections.Generic.List<Vector3> { player.Position, new Vector3 ( 0, 0, 0 ) } );
                     break;
+
                 case 14:
                     player.TriggerEvent ( "testit", new double[] { 0.1, 1.2, 2.3 } );
                     break;
+
                 case 15:
                     player.TriggerEvent ( "testit", new float[] { 0.1f, 1.2f, 2.3f } );
                     break;
@@ -266,9 +269,7 @@ namespace TDS_Server.Manager.Commands {
                     NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{255 0 0}}{b}!" );
                     NAPI.Chat.SendChatMessageToPlayer ( player, $"Hallo !{{255 0 0}}{b}!", false );
                     break;
-                    
             }
         }*/
     }
-
 }

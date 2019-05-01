@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TDSMap>
   <!--map-info-->
-  <map name="Pluz. Investment Bomb" type="bomb" minplayers="0" maxplayers="16" creatorid="2"/>
+  <map name="Pluz. Investment Bomb" type="bomb" minplayers="0" maxplayers="16" creatorid="2" />
   <!--description-->
   <!--map-limit-->
   <limit>
@@ -33,7 +33,7 @@
       <spawn x="42.38531" y="333.9159" z="115.3873" rot="76.55231" />
     </team>
   </teamspawns>
-  
+
   <bomb>
     <plantpos x="-32.31925" y="372.3923" z="113.7553" />
     <plantpos x="-58.06178" y="303.3601" z="111.6444" />

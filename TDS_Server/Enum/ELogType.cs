@@ -1,6 +1,6 @@
 namespace TDS_Server.Enum
 {
-    enum ELogType
+    internal enum ELogType
     {
         Kick = 1,
         Ban = 2,

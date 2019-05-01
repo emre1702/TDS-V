@@ -1,10 +1,5 @@
-﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
     /*public partial class Gang {
         private static Dictionary<uint, Gang> gangByUID = new Dictionary<uint, Gang> ();
         private static Dictionary<uint, Gang> playerMemberOfGang = new Dictionary<uint, Gang> ();

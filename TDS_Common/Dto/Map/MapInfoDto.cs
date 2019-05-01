@@ -4,6 +4,7 @@ using TDS_Common.Enum;
 namespace TDS_Common.Dto.Map
 {
 #pragma warning disable CS8618 // Non-nullable field is uninitialized.
+
     public class MapInfoDto
     {
         [XmlAttribute("name")]
@@ -21,5 +22,6 @@ namespace TDS_Common.Dto.Map
         [XmlAttribute("creatorid")]
         public uint? CreatorId { get; set; }
     }
+
 #pragma warning enable CS8618 // Non-nullable field is uninitialized.
 }

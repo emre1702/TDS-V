@@ -2,7 +2,7 @@
 
 namespace TDS_Server.Instance.Language
 {
-    class English : ILanguage
+    internal class English : ILanguage
     {
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADMINLVL_NOT_HIGH_ENOUGH => "Your adminlevel isn't high enough for this action.";
@@ -18,6 +18,7 @@ namespace TDS_Server.Instance.Language
 
         public virtual string DEATH_KILLED_INFO => "{0} killed {1} with {2}";
         public virtual string DEATH_DIED_INFO => "{0} died";
+
         public virtual string[] DEFUSE_INFO => new string[] {
             "Round-time got changed. Now you have to kill all opponents or defuse the bomb.",
             "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and hold the left mouse button."
@@ -36,7 +37,7 @@ namespace TDS_Server.Instance.Language
 
         public virtual string KICK_INFO => "{0} was kicked by {1}. Reason: {2}";
         public virtual string KICK_YOU_INFO => "You were kicked by {0}. Reason: {1}";
-        public virtual string KICK_LOBBY_INFO => "{0} was kicked by {1} out of the lobby. Reason: {2}";    
+        public virtual string KICK_LOBBY_INFO => "{0} was kicked by {1} out of the lobby. Reason: {2}";
         public virtual string KICK_LOBBY_YOU_INFO => "You were kicked by {0} out of the lobby. Reason: {1}";
         public virtual string KILLING_SPREE_HEALTHARMOR => "{0} has got a {1}-killingspree and gets a {2} life/armor bonus.";
 
@@ -71,7 +72,7 @@ namespace TDS_Server.Instance.Language
         public virtual string REPORT_GOT_ANSWER_INFO => "A team-member answered your report with ID {0}.";
         public virtual string ROUND_END_BOMB_DEFUSED_INFO => "Bomb defused!<br>Team {0} wins!";
         public virtual string ROUND_END_BOMB_EXPLODED_INFO => "Bomb exploded!<br>Team {0} wins!";
-        public virtual string ROUND_END_COMMAND_INFO => "Map was skipped by {0}!";    
+        public virtual string ROUND_END_COMMAND_INFO => "Map was skipped by {0}!";
         public virtual string ROUND_END_DEATH_INFO => "All opponents are dead!<br>Team {0} wins!";
         public virtual string ROUND_END_DEATH_ALL_INFO => "All players are dead!<br>No team wins!";
         public virtual string ROUND_END_NEW_PLAYER_INFO => "Enough players in ...<br>Round starting!";
@@ -99,7 +100,7 @@ namespace TDS_Server.Instance.Language
 
         public virtual string UNBAN_INFO => "{0} was unbaned by {1}. Reason: {2}";
         public virtual string UNBAN_LOBBY_INFO => "{0} was unbaned in lobby '{1}' by {2}. Reason: {3}";
-        public virtual string UNBAN_YOU_LOBBY_INFO => "You got unbaned in lobby '{0}' by {1}. Reason: {2}";    
+        public virtual string UNBAN_YOU_LOBBY_INFO => "You got unbaned in lobby '{0}' by {1}. Reason: {2}";
         public virtual string UNMUTE_INFO => "{0} was unmuted by {1}. Reason: {2}";
 
         public virtual string[] WELCOME_MESSAGE => new string[] {
@@ -110,6 +111,7 @@ namespace TDS_Server.Instance.Language
             "#n#You can get/hide the cursor with END.",
             "#n#Have fun on TDS#w#!"
         };
+
         public virtual string WRONG_PASSWORD => "Wrong password!";
     }
 }

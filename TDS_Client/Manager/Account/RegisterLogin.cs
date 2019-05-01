@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using RAGE;
 using RAGE.Ui;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
@@ -7,7 +6,7 @@ using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Account
 {
-    static class RegisterLogin
+    internal static class RegisterLogin
     {
         public static HtmlWindow? Browser;
         private static string name;

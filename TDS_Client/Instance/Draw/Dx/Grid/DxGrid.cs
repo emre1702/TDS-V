@@ -7,7 +7,7 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx.Grid
 {
-    class DxGrid : Dx
+    internal class DxGrid : Dx
     {
         public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
         private readonly List<DxGridRow> rows = new List<DxGridRow>();
@@ -23,7 +23,6 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         private Color bodyBackColor;
         private Font bodyFont;
         private int maxRows;
-        
 
         public DxGrid(float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
             UIResText.Alignment alignment = UIResText.Alignment.Centered, int maxRows = 25) : base()
@@ -49,8 +48,8 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             {
                 Header.Y = atYTopPos;
                 atYTopPos = Header.Draw();
-            }   
-            
+            }
+
             for (int i = 0; i < Math.Min(rows.Count, maxRows); ++i)
             {
                 int index = i + ScrollIndex;
@@ -102,16 +101,14 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
                     ScrollIndex += change;
                 else
                     ScrollIndex = rowscount - maxRows;
-            } 
+            }
             else if (Pad.IsControlJustPressed(0, (int)Control.SelectPrevWeapon))
             {
-
                 if (ScrollIndex - change > 0)
                     ScrollIndex -= change;
                 else
                     ScrollIndex = 0;
             }
-
         }
 
         public override EDxType GetDxType()

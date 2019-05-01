@@ -1,9 +1,6 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
+﻿using RAGE.NUI;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Browser;
@@ -12,7 +9,7 @@ using TDS_Common.Instance.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class Countdown
+    internal static class Countdown
     {
         private static DxText? text;
         private static TDSTimer? countdownTimer;
@@ -42,7 +39,7 @@ namespace TDS_Client.Manager.Lobby
             countdownTimer = new TDSTimer(() =>
             {
                 if (currentCountdownTime > 1)
-                    countdownTimer = new TDSTimer(Refresh, 1000, currentCountdownTime-1);
+                    countdownTimer = new TDSTimer(Refresh, 1000, currentCountdownTime - 1);
                 Refresh();
             }, currentCountdownTime - timeremainingms, 1);
             text = new DxText(currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
@@ -59,7 +56,7 @@ namespace TDS_Client.Manager.Lobby
                 text.Text = "GO";
                 text.SetScale(2f);
             }
-                
+
             countdownTimer?.Kill();
             currentCountdownTime = 0;
             PlaySound();

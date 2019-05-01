@@ -1,14 +1,15 @@
 using GTANetworkAPI;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
-    class LobbyEvents : Script
+    internal class LobbyEvents : Script
     {
         #region Server
+
         [ServerEvent(Event.PlayerSpawn)]
         public static void OnPlayerSpawn(Client player)
         {
@@ -23,7 +24,7 @@ namespace TDS_Server.Instance.Lobby
             character.CurrentLobby?.OnPlayerDisconnected(character);
         }
 
-        //[DisableDefaultOnDeathRespawn] 
+        //[DisableDefaultOnDeathRespawn]
         [ServerEvent(Event.PlayerDeath)]
         public static void OnPlayerDeath(Client player, Client killer, uint reason)
         {
@@ -45,10 +46,13 @@ namespace TDS_Server.Instance.Lobby
             if (character.CurrentLobby is FightLobby fightlobby)
                 fightlobby.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
         }
+
         #endregion Server
 
         #region Remote
+
         #region Lobby
+
         [RemoteEvent(DToServerEvent.JoinLobby)]
         public static async void JoinLobbyEvent(Client player, uint index, uint teamindex)
         {
@@ -63,9 +67,11 @@ namespace TDS_Server.Instance.Lobby
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
         }
+
         #endregion Lobby
 
         #region Damagesys
+
         [RemoteEvent(DToServerEvent.HitOtherPlayer)]
         public void OnPlayerHitOtherPlayer(Client player, string hittedName, bool headshot, int clientHasSentThisDamage)
         {
@@ -79,6 +85,7 @@ namespace TDS_Server.Instance.Lobby
                 fightlobby.DamagedPlayer(hitted.GetChar(), character, currentweapon, headshot, clientHasSentThisDamage);
             }
         }
+
         #endregion Damagesys
 
         [RemoteEvent(DToServerEvent.OutsideMapLimit)]
@@ -101,6 +108,7 @@ namespace TDS_Server.Instance.Lobby
         }
 
         #region Bomb
+
         [RemoteEvent(DToServerEvent.StartPlanting)]
         public void OnPlayerStartPlantingEvent(Client player)
         {
@@ -134,9 +142,11 @@ namespace TDS_Server.Instance.Lobby
                 return;
             arena.StopBombDefusing(player);
         }
-        #endregion
+
+        #endregion Bomb
 
         #region Spectate
+
         [RemoteEvent(DToServerEvent.SpectateNext)]
         public void SpectateNextEvent(Client player, bool forward)
         {
@@ -145,9 +155,11 @@ namespace TDS_Server.Instance.Lobby
                 return;
             lobby.SpectateNext(character, forward);
         }
+
         #endregion Spectate
 
         #region MapVote
+
         [RemoteEvent(DToServerEvent.MapsListRequest)]
         public void OnMapsListRequestEvent(Client player)
         {
@@ -166,10 +178,10 @@ namespace TDS_Server.Instance.Lobby
 
             arena.MapVote(player, mapname);
         }
+
         #endregion MapVote
+
         #endregion Remote
-
-
 
         /*[RemoteEvent("joinMapCreatorLobby")]
         public void JoinMapCreatorLobbyEvent(Client player)
@@ -177,8 +189,8 @@ namespace TDS_Server.Instance.Lobby
             manager.lobby.MapCreatorLobby.Join(player.GetChar());
         }
 
+        #region MapCreate
 
-        #region MapCreate 
         [RemoteEvent("checkMapName")]
         public void OnCheckMapNameEvent(Client player, string mapname)
         {
@@ -198,32 +210,37 @@ namespace TDS_Server.Instance.Lobby
         {
             Map.RequestNewMapsList(player, requestall);
         }
-        #endregion
+
+        #endregion MapCreate
 
         #region MapRanking
+
         [RemoteEvent("addRatingToMap")]
         public void AddRatingToMapEvent(Client player, string mapname, uint rating)
         {
             Map.AddPlayerMapRating(player, mapname, rating);
         }
-        #endregion
 
-        
+        #endregion MapRanking
 
         #region Freecam
+
         //case "setFreecamObjectPositionTo":
         //player.GetChar ().Lobby.SetPlayerFreecamPos ( player, args[0] );    //TODO
-        //break; 
-        #endregion
+        //break;
+
+        #endregion Freecam
 
         #region Order
+
         [RemoteEvent("onPlayerGiveOrder")]
         public void OnPlayerGiveOrderEvent(Client player, string ordershort)
         {
             Character character = player.GetChar();
             character.Lobby.SendTeamOrder(character, ordershort);
         }
-        #endregion
+
+        #endregion Order
 
         */
     }

@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Instance.Language
 {
-    class LoginRegisterTextsEnglish : ILoginRegisterTexts
+    internal class LoginRegisterTextsEnglish : ILoginRegisterTexts
     {
         public virtual string tab_login => "Login";
 

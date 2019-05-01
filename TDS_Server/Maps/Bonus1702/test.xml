@@ -1,5 +1,5 @@
 <TDSMap>
-	<map name="Test-Map" type="normal" minplayers="0" maxplayers="999" creatorid="1"/>
+	<map name="Test-Map" type="normal" minplayers="0" maxplayers="999" creatorid="1" />
 
   <description>
     <german>Eine Test-Map, nichts besonderes</german>
@@ -30,5 +30,4 @@
     <pos x="-113.4633" y="117.7678" />
     <pos x="-130.5995" y="23.02" />
   </limit>
-
 </TDSMap>

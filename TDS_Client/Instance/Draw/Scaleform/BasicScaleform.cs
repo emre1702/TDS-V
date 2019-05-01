@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Instance.Draw.Scaleform
 {
-    class BasicScaleform
+    internal class BasicScaleform
     {
         private int handle;
 

@@ -1,21 +1,14 @@
 using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Server.Default;
+using TDS_Common.Default;
+using TDS_Server.Instance.Player;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using System.Linq;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
-
     partial class FightLobby
     {
-
         protected void DeathInfoSync(TDSPlayer player, TDSPlayer? killer, uint weapon)
         {
             Dictionary<ILanguage, string> killstr;
@@ -41,5 +34,4 @@ namespace TDS_Server.Instance.Lobby
             });
         }
     }
-
 }

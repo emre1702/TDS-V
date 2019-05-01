@@ -64,7 +64,6 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual void Start()
         {
-
         }
 
         protected async virtual void Remove()

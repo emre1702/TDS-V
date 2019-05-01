@@ -1,6 +1,5 @@
 namespace TDS_Server.Instance
 {
-
     using System;
     using System.Collections.Generic;
     using TDS_Server.Instance.Player;
@@ -8,7 +7,6 @@ namespace TDS_Server.Instance
 
     partial class Damagesys
     {
-
         private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
             new Dictionary<int, Tuple<string, int, int>>
             {
@@ -39,5 +37,4 @@ namespace TDS_Server.Instance
             }
         }
     }
-
 }

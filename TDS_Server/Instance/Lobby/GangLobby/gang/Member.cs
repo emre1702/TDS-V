@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
-    partial class Gang {
-
-		/*private List<Character> membersOnline = new List<Character>();
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
+    partial class Gang
+    {
+        /*private List<Character> membersOnline = new List<Character>();
 		private Dictionary<uint, uint> membersRank = new Dictionary<uint, uint>();
 
 		private void AddMember ( Character character ) {
@@ -12,7 +10,6 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
             Database.Exec ( $"INSERT INTO gangmember (memberuid, ganguid) VALUES ({character.UID}, {uid});" );
             membersRank[uid] = 1;
 			AddPlayerVehicle ( character.UID );
-
 
 			MemberCameOnline ( character );
 
@@ -27,7 +24,7 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
             RemoveMember ( character.UID, saveindb );
 
             if ( character.Lobby is GangLobby lobby ) {
-                lobby.SetPlayerTeam ( character, 0 );    
+                lobby.SetPlayerTeam ( character, 0 );
             }
         }
 
@@ -56,6 +53,5 @@ namespace TDS_Server.server.instance.lobby.ganglobby {
         {
             membersOnline.Remove ( character );
         }*/
-
     }
 }

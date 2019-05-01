@@ -1,9 +1,6 @@
-﻿using GTANetworkAPI;
-
-namespace TDS_Server.server.instance.lobby.ganglobby {
-
+﻿namespace TDS_Server.server.instance.lobby.ganglobby
+{
     /*class Events : Script {
-
         [RemoteEvent("inviteMemberToGang")]
         public static void InviteMember ( Client player, string targetname ) {
             Character character = player.GetChar ();

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Common.Default
+﻿namespace TDS_Common.Default
 {
     public class DToClientEvent
     {
@@ -64,10 +60,9 @@ namespace TDS_Common.Default
 
         //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
 
-
-
         // Workarounds //
         public const string AttachEntityToEntityWorkaround = "AttachEntityToEntityWorkaround_Server";
+
         public const string DetachEntityWorkaround = "DetachEntityWorkaround_Server";
         public const string FreezePlayerWorkaround = "FreezePlayerWorkaround_Server";
         public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";

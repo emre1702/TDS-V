@@ -6,7 +6,7 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx.Grid
 {
-    class DxGridRow : Dx
+    internal class DxGridRow : Dx
     {
         public string? text;
         public float Y;
@@ -43,7 +43,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
             if (isHeader)
                 grid.SetHeader(this);
-            else 
+            else
                 grid.AddRow(this);
         }
 

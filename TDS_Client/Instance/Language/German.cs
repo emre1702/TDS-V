@@ -3,7 +3,7 @@ using TDS_Common.Enum;
 
 namespace TDS_Client.Instance.Language
 {
-    class German : English
+    internal class German : English
     {
         public override string DEFUSING => "Entschärfung ...";
         public override string PLANTING => "Lege Bombe ...";

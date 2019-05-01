@@ -1,11 +1,10 @@
-﻿using System;
-using TDS_Client.Default;
+﻿using TDS_Client.Default;
 using TDS_Client.Instance.Draw.Scaleform;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw
 {
-    class MidsizedMessage
+    internal class MidsizedMessage
     {
         private static ulong initTimeMs;
         private static ulong msgDurationMs;

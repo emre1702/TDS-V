@@ -1,8 +1,6 @@
-﻿using TDS_Client.Interface;
-
-namespace TDS_Client.Instance.Language
+﻿namespace TDS_Client.Instance.Language
 {
-    class MapCreatorMenuTextsGerman : MapCreatorMenuTextsEnglish
+    internal class MapCreatorMenuTextsGerman : MapCreatorMenuTextsEnglish
     {
         public override string GENERAL => "Allgemein";
 

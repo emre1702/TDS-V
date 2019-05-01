@@ -2,12 +2,14 @@
 
 namespace TDS_Server.Dto
 {
-    class DamageDto
+    internal class DamageDto
     {
         public short Damage;
         public float HeadMultiplier;
 
-        public DamageDto() { }
+        public DamageDto()
+        {
+        }
 
         public DamageDto(LobbyWeapons weapon)
         {

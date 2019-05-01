@@ -1,28 +1,20 @@
 using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using TDS_Server.Default;
+using TDS_Common.Default;
 using TDS_Server.Entity;
-using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
-using TDS_Common.Default;
 
 namespace TDS_Server.Manager.Maps
 {
-
-    static class MapsRatings
+    internal static class MapsRatings
     {
-
         public static async void AddPlayerMapRating(Client player, string mapname, byte rating)
         {
             //todo AddPlayerMapRating
             //if (!DoesMapNameExist(mapname))
-                //return;
+            //return;
 
             uint? playerid = player.GetEntity()?.Id;
             if (playerid == null)
@@ -49,6 +41,5 @@ namespace TDS_Server.Manager.Maps
 
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
         }
-
     }
 }

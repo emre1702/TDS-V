@@ -1,15 +1,13 @@
 using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Default;
+using TDS_Common.Default;
+using TDS_Server.Dto;
 using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
-using TDS_Common.Default;
-using System.Linq;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Dto;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
@@ -27,9 +25,11 @@ namespace TDS_Server.Instance.Lobby
                 }
 
                 #region Remove from old lobby
+
                 Lobby? oldlobby = character.CurrentLobby;
                 oldlobby?.RemovePlayer(character);
-                #endregion
+
+                #endregion Remove from old lobby
 
                 if (LobbyEntity.Id != 0)
                 {
@@ -61,7 +61,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 SavePlayerLobbyStats(player);
             }
-            
+
             Players.Remove(player);
 
             player.CurrentLobby = null;
@@ -137,7 +137,6 @@ namespace TDS_Server.Instance.Lobby
                 }
                 character.CurrentLobbyStats = stats;
             }
-            
         }
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)

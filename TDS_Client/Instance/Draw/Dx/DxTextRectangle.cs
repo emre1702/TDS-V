@@ -6,7 +6,7 @@ using TDS_Client.Enum;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
-    class DxTextRectangle : Dx
+    internal class DxTextRectangle : Dx
     {
         private DxText text;
         private DxRectangle rect;
@@ -20,7 +20,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxTextRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
-            int textOffsetAbsoluteX = 0, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true, 
+            int textOffsetAbsoluteX = 0, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true,
             int amountLines = 1, bool activated = true) : base(activated)
         {
             rect = new DxRectangle(x, y, width, height, rectColor, alignmentX, alignmentY, relativePos)

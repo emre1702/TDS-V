@@ -49,7 +49,6 @@ mp.events.add( "SendMapFromCreator", ( mapjson ) => {
     EventsSender.SendCooldown( "sendMapFromCreator", mapjson );
 } );*/
 
-
 /* let mapcreatordata = {
 	main: {
 		menu: null as NativeUI.UIMenu,
@@ -80,7 +79,6 @@ mp.events.add( "SendMapFromCreator", ( mapjson ) => {
 	altdown: false
 };
 
-
 function startMapCreatorMenu() {
 	mapcreatordata.main.menu.Visible = true;
 	mapcreatordata.updateevent = API.onUpdate.connect( mapcreatorOnUpdate );
@@ -91,14 +89,14 @@ function stopMapCreatorMenu() {
 	if ( mapcreatordata.updateevent != null ) {
 		mapcreatordata.updateevent.disconnect();
 		mapcreatordata.updateevent = null;
-	}	
+	}
 	mapcreatorSelectEntity();
 }
 
 function toggleMapCreatorMenu() {
 	if ( mapcreatordata.main.menu.Visible )
 		stopMapCreatorMenu();
-	else 
+	else
 		startMapCreatorMenu();
 }
 
@@ -170,7 +168,6 @@ function mapcreatorOnUpdate() {
 		if ( rot != null ) {
 			API.setEntityRotation( mapcreatordata.selected, rot );
 		}
-
 	}
 }
 
@@ -218,21 +215,17 @@ function mapcreatorKeyUp( e ) {
 	else if ( e.KeyCode === Keys.Q )
 		mapcreatordata.qdown = false;
 
-
 	else if ( e.KeyCode === Keys.RShiftKey || e.KeyCode === Keys.ShiftKey )
 		mapcreatordata.shiftdown = false;
 	else if ( e.KeyCode === Keys.Menu || e.KeyCode === Keys.RMenu )
 		mapcreatordata.altdown = false;
-	
 }
-
 
 function createMapCreator () {
 	let menu = API.createMenu( "Map-Creator", res.Width, res.Height * 0.5, 6 );
 	menu.Visible = false;
 	let send = API.createColoredItem( "send", "Sends your map.", "00A000", "00E000" );
 	menu.AddItem( send );
-
 
 	let spawnpointmenu = API.addSubMenu( menu, "spawn-point", "Adds spawn-points." );
 	let teamlist = new List( String );
@@ -260,7 +253,6 @@ function createMapCreator () {
 	addspawnpoint.Activated.connect( addSpawnPoint );
 	addmaplimit.Activated.connect( addMapLimit );
 	send.Activated.connect( mapcreatorSendMap );
-
 }
 
 function addSpawnPoint ( sender, selectedItem ) {
@@ -308,14 +300,12 @@ function mapcreatorGetSpawnsList() {
 }
 
 function mapcreatorGetMapLimitList() {
-
 }
 
 function mapcreatorSendMap( sender, selectedItem ) {
 	if ( Object.keys( mapcreatordata.spawn.peds ).length > 0 ) {
 		let teamspawns = mapcreatorGetSpawnsList();
 	}
-	
 }
 
 function mapcreatorSelectEntity( ent: LocalHandle = null ) {
@@ -352,7 +342,6 @@ function mapcreatorSelectEntity( ent: LocalHandle = null ) {
 		}
 	}
 }
-
 
 function changeMapCreatorLanguage() {
 	mapcreatordata.main.send.Text = getLang( "mapcreator_menu", "send_text" );

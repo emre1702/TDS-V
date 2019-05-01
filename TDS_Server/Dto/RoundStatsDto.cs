@@ -4,7 +4,7 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Dto
 {
-    class RoundStatsDto
+    internal class RoundStatsDto
     {
         private TDSPlayer _player;
         private uint _kills;
@@ -14,11 +14,13 @@ namespace TDS_Server.Dto
         public uint Kills
         {
             get => _kills;
-            set {
+            set
+            {
                 _kills = value;
                 NAPI.ClientEvent.TriggerClientEvent(_player.Client, DToClientEvent.SetKillsForRoundStats, value);
             }
         }
+
         public uint Assists
         {
             get => _assists;
@@ -28,6 +30,7 @@ namespace TDS_Server.Dto
                 NAPI.ClientEvent.TriggerClientEvent(_player.Client, DToClientEvent.SetAssistsForRoundStats, value);
             }
         }
+
         public uint Damage
         {
             get => _damage;

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Server.Enum;
+﻿using TDS_Server.Enum;
 
 namespace TDS_Server.Instance.Dto
 {
-    class TDSCommandInfos
+    internal class TDSCommandInfos
     {
         public string Command;
         public ECommandUsageRight WithRight = ECommandUsageRight.User;

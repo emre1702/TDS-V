@@ -1,15 +1,12 @@
 ﻿using RAGE.Game;
 using RAGE.NUI;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
-    class DxText : Dx
+    internal class DxText : Dx
     {
         public string Text;
         private readonly int xPos;
@@ -118,10 +115,9 @@ namespace TDS_Client.Instance.Draw.Dx
                     this.scale = endScale.Value;
                     scale = this.scale;
                     endScale = null;
-                } 
+                }
                 else
                     scale = GetBlendValue(elapsedticks, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
-                
             }
 
             UIResText.Draw(Text, xPos, Y, font, scale, theColor, alignmentX, dropShadow, outline, wordWrap);

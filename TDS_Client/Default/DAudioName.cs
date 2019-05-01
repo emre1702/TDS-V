@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Default
+﻿namespace TDS_Client.Default
 {
-    class DAudioName
+    internal class DAudioName
     {
         public static string CHECKPOINT_NORMAL => "CHECKPOINT_NORMAL";
     }

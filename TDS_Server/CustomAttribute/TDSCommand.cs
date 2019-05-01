@@ -3,7 +3,7 @@ using System;
 namespace TDS_Server.CustomAttribute
 {
     [AttributeUsage(AttributeTargets.Method)]
-    class TDSCommand : Attribute
+    internal class TDSCommand : Attribute
     {
         public string Command;
         public int Priority = 0;

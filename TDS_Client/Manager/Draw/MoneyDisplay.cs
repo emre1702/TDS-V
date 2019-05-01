@@ -6,7 +6,7 @@ using TDS_Client.Manager.Account;
 
 namespace TDS_Client.Manager.Draw
 {
-    static class MoneyDisplay
+    internal static class MoneyDisplay
     {
         private static DxText? moneyText;
 
@@ -14,8 +14,8 @@ namespace TDS_Client.Manager.Draw
         {
             if (moneyText != null)
                 return moneyText;
-            return new DxText("0", Dx.ResX - 5, Dx.ResY - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom, 
-                font: Font.Pricedown, dropShadow: true, outline: true, relative: false); 
+            return new DxText("0", Dx.ResX - 5, Dx.ResY - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom,
+                font: Font.Pricedown, dropShadow: true, outline: true, relative: false);
         }
 
         public static void Refresh()

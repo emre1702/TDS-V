@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Default
+﻿namespace TDS_Client.Default
 {
-    class DScaleformFunction
+    internal class DScaleformFunction
     {
         public static string SHARD_ANIM_OUT => "SHARD_ANIM_OUT";
         public static string SHOW_MIDSIZED_MESSAGE => "SHOW_MIDSIZED_MESSAGE";

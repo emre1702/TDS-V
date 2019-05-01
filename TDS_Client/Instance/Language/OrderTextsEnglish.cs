@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Instance.Language
 {
-    class OrderTextsEnglish : IOrderTexts
+    internal class OrderTextsEnglish : IOrderTexts
     {
         public virtual string ATTACK => "Attack! Go go go!";
 

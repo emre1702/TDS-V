@@ -1,8 +1,7 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Default;
-using TDS_Server.Instance.Player;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {

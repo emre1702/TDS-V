@@ -6,7 +6,7 @@ using TDS_Common.Dto;
 
 namespace TDS_Client.Manager.Utility
 {
-    static class Workaround
+    internal static class Workaround
     {
         public static void AddEvents()
         {
@@ -23,8 +23,8 @@ namespace TDS_Client.Manager.Utility
             EntityAttachInfoDto info = JsonConvert.DeserializeObject<EntityAttachInfoDto>(args[0].ToString());
             info.EntityValue = Entities.Objects.GetAtRemote((ushort)info.EntityValue).Handle;
             info.TargetValue = Entities.Players.GetAtRemote((ushort)info.TargetValue).Handle;
-            RAGE.Game.Entity.AttachEntityToEntity(info.EntityValue, info.TargetValue, RAGE.Game.Ped.GetPedBoneIndex(info.TargetValue, info.Bone), 
-                info.PositionOffsetX, info.PositionOffsetY, info.PositionOffsetZ, 
+            RAGE.Game.Entity.AttachEntityToEntity(info.EntityValue, info.TargetValue, RAGE.Game.Ped.GetPedBoneIndex(info.TargetValue, info.Bone),
+                info.PositionOffsetX, info.PositionOffsetY, info.PositionOffsetZ,
                 info.RotationOffsetX, info.RotationOffsetY, info.RotationOffsetZ,
                 true, true, false, false, 0, true);
         }
@@ -58,7 +58,7 @@ namespace TDS_Client.Manager.Utility
 
         private static void UnspectatePlayerWorkaroundMethod(object[] args)
         {
-//todo Add unspectatePlayer workaround (need a spectate system for this)
+            //todo Add unspectatePlayer workaround (need a spectate system for this)
         }
     }
 }

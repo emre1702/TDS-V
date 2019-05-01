@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Interface
 {
-    interface IOrderTexts
+    internal interface IOrderTexts
     {
         string ATTACK { get; }
         string BACK { get; }

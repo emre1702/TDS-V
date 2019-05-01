@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Instance.Lobby
+﻿namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {

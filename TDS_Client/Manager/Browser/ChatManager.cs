@@ -1,16 +1,12 @@
 ﻿using RAGE;
 using RAGE.Game;
-using System.Linq;
-using TDS_Client.Default;
-using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
-using static RAGE.Events;
 using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Browser
 {
-    class ChatManager : Script
+    internal class ChatManager : Script
     {
         public static bool IsOpen { get; set; }
 
@@ -42,11 +38,9 @@ namespace TDS_Client.Manager.Browser
             OpenChatInput(null);
         }
 
-
         private static void OpenGlobalChatInput(Control _)
         {
             OpenChatInput("/globalsay ");
-
         }
 
         private static void OpenTeamChatInput(Control _)

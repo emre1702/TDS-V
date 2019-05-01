@@ -1,8 +1,6 @@
-﻿using TDS_Client.Interface;
-
-namespace TDS_Client.Instance.Language
+﻿namespace TDS_Client.Instance.Language
 {
-    class LobbyChoiceTextsGerman : LobbyChoiceTextsEnglish
+    internal class LobbyChoiceTextsGerman : LobbyChoiceTextsEnglish
     {
         public override string ARENA => "Arena";
 

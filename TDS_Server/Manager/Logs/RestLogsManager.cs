@@ -8,7 +8,7 @@ using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Manager.Logs
 {
-    static class RestLogsManager
+    internal static class RestLogsManager
     {
         private static readonly List<LogsRest> notsavedrestlogs = new List<LogsRest>();
 

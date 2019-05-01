@@ -1,14 +1,11 @@
-﻿using RAGE.Game;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
-using Events = RAGE.Events;
 
 namespace TDS_Client.Manager.Lobby
 {
-    static class MapManager
+    internal static class MapManager
     {
         private static bool open;
         private static uint lobbyIdAtLastLoad;
@@ -42,7 +39,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             }
 
-            EventsSender.Send(DToServerEvent.MapsListRequest);  
+            EventsSender.Send(DToServerEvent.MapsListRequest);
         }
 
         public static void CloseMenu()

@@ -9,9 +9,8 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
-    using TDS_Common.Dto.Map;
 
-    static class Utils
+    internal static class Utils
     {
         private static readonly StringBuilder strbuilder = new StringBuilder();
         private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
@@ -100,5 +99,4 @@
             return Regex.Replace(name, invalidRegStr, "_");
         }
     }
-
 }

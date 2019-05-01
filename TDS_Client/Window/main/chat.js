@@ -3,20 +3,19 @@ let chatdata = {
     maxentries: 40,
     active: true,
     inputshowing: false,
-    maininput: $( "#main-input" ),
+    maininput: $("#main-input"),
     bodies: [
-        $( "#normal-chat-body" ),
-        $( "#dirty-chat-body" )
+        $("#normal-chat-body"),
+        $("#dirty-chat-body")
     ],
     chatends: ["$normal$", "$dirty$"],
     chosentab: null,
     chosenchatbody: 0,
     myname: null,
-    globalsaykeycode: String.fromCharCode( 90 ) === "Z" ? 90 : Y,
+    globalsaykeycode: String.fromCharCode(90) === "Z" ? 90 : Y,
     playernames: [],
     autocompleteon: false
 };
-
 
 let colorreplace = [
     [/#r#/g, "rgb(222, 50, 50)"],
@@ -34,32 +33,31 @@ let colorreplace = [
     [/#dr#/g, "rgb(169, 25, 25)"]
 ];
 
-
-function updateScroll( chatbody = null ) {
+function updateScroll(chatbody = null) {
     chatbody = chatbody === null ? getChatBody() : chatbody;
-    chatbody.finish().animate( { scrollTop: chatbody.prop( "scrollHeight" ) }, "slow" );
+    chatbody.finish().animate({ scrollTop: chatbody.prop("scrollHeight") }, "slow");
 }
 
-function enableChatInput( enable, cmd = "" ) {
-    if ( !chatdata.active && enable )
+function enableChatInput(enable, cmd = "") {
+    if (!chatdata.active && enable)
         return;
 
-    if ( enable !== chatdata.inputshowing ) {
-        mp.invoke( "focus", enable );
+    if (enable !== chatdata.inputshowing) {
+        mp.invoke("focus", enable);
 
-        if ( enable ) {
+        if (enable) {
             chatdata.maininput.fadeIn();
-            chatdata.maininput.val( cmd );
-            setTimeout( () => {
+            chatdata.maininput.val(cmd);
+            setTimeout(() => {
                 chatdata.maininput.focus();
-            }, 100 );
+            }, 100);
         } else {
             chatdata.maininput.hide();
-            chatdata.maininput.val( "" );
+            chatdata.maininput.val("");
         }
 
         chatdata.inputshowing = enable;
-        mp.trigger( "ChatInputToggled_Browser", enable );
+        mp.trigger("ChatInputToggled_Browser", enable);
     }
 }
 let chatAPI = {};
@@ -67,21 +65,21 @@ let chatAPI = {};
 chatAPI["push"] = addMessage;
 
 chatAPI["clear"] = () => {
-    getChatBody().html( "" );
+    getChatBody().html("");
 };
 
-chatAPI["activate"] = ( toggle ) => {
+chatAPI["activate"] = (toggle) => {
     //enableChatInput( toggle );
     chatdata.active = toggle;
 };
 
-chatAPI["show"] = ( toggle ) => {
-    if ( toggle ) {
+chatAPI["show"] = (toggle) => {
+    if (toggle) {
         getChatBody().show();
-        $( "#chat_choice" ).show();
+        $("#chat_choice").show();
     } else {
         getChatBody().hide();
-        $( "#chat_choice" ).hide();
+        $("#chat_choice").hide();
     }
 
     //if ( !toggle && chatdata.inputshowing )
@@ -97,12 +95,12 @@ function replaceRGBColor(input) {
         if (endindex == -1)
             break;
         let colorstr = input.substring(index, endindex + 1);
-        let rgbarr = colorstr.substring(2, colorstr.length-1).split("|");
+        let rgbarr = colorstr.substring(2, colorstr.length - 1).split("|");
         let rgbcolor;
         if (rgbarr.length == 1)
             rgbcolor = rgbarr[0];
         else if (rgbarr.length < 3)
-            rgbcolor = `rgb(${(0 in rgbarr ? rgbarr[0] : 0)}, ${(1 in rgbarr ? rgbarr[1] : 0)}, 0)`; 
+            rgbcolor = `rgb(${(0 in rgbarr ? rgbarr[0] : 0)}, ${(1 in rgbarr ? rgbarr[1] : 0)}, 0)`;
         else if (rgbarr.length == 3)
             rgbcolor = `rgb(${rgbarr[0]}, ${rgbarr[1]}, ${rgbarr[2]})`;
         else if (rgbarr.length == 4)
@@ -114,101 +112,100 @@ function replaceRGBColor(input) {
     return input;
 }
 
-function formatMsg( input, ismentioned ) {
-    let start = ""; 
-    if ( ismentioned )
+function formatMsg(input, ismentioned) {
+    let start = "";
+    if (ismentioned)
         start = '<span style="background-color: rgba(255,178,102,0.6);">';
 
     start += '<span style="color: white;">';
 
     let replaced = input;
-    if ( input.indexOf( "#" ) !== -1 ) {
-        for ( let i = 0; i < colorreplace.length; ++i ) {
-            replaced = replaced.replace( colorreplace[i][0], "</span><span style='color: "+colorreplace[i][1] + ";'>" );
+    if (input.indexOf("#") !== -1) {
+        for (let i = 0; i < colorreplace.length; ++i) {
+            replaced = replaced.replace(colorreplace[i][0], "</span><span style='color: " + colorreplace[i][1] + ";'>");
         }
-        replaced = replaced.replace( /#n#/g, '<br>' );
+        replaced = replaced.replace(/#n#/g, '<br>');
     }
     replaced = replaceRGBColor(replaced);
 
-    if ( ismentioned )
+    if (ismentioned)
         replaced += "</span>";
 
     return start + replaced + "</span>";
 }
 
-function isMentioned( msg ) {
-    if ( chatdata.myname === null )
+function isMentioned(msg) {
+    if (chatdata.myname === null)
         return false;
-    let firstindex = msg.indexOf( "@" );
-    if ( firstindex === -1 )
+    let firstindex = msg.indexOf("@");
+    if (firstindex === -1)
         return false;
-    let lastindex = msg.indexOf( ":", firstindex + 1 );
-    if ( lastindex === -1 )
+    let lastindex = msg.indexOf(":", firstindex + 1);
+    if (lastindex === -1)
         return false;
-    let name = msg.substring( firstindex + 1, lastindex );
-    if ( name === chatdata.myname )
+    let name = msg.substring(firstindex + 1, lastindex);
+    if (name === chatdata.myname)
         return true;
     return false;
 }
 
-function addChildToChatBody( child, chatbody, index ) {
-    chatbody.append( child );
-    if ( ++chatdata.amountentries[index] >= chatdata.maxentries ) {
+function addChildToChatBody(child, chatbody, index) {
+    chatbody.append(child);
+    if (++chatdata.amountentries[index] >= chatdata.maxentries) {
         --chatdata.amountentries[index];
-        chatbody.find( "text:first" ).remove();
+        chatbody.find("text:first").remove();
     }
-    updateScroll ( chatbody );
+    updateScroll(chatbody);
 }
 
-function addMessage( msg ) {
+function addMessage(msg) {
     //if ( !msg.startsWith( "RAGE MP" ) )
     //    alert( msg );
-    let ismentioned = isMentioned( msg );
+    let ismentioned = isMentioned(msg);
 
     // output in the chatbody when ending with one of chatends //
-    for ( let i = 0; i < chatdata.chatends.length; ++i ) {
-        if ( msg.endsWith( chatdata.chatends[i] ) ) {
-            msg = msg.slice( 0, -chatdata.chatends[i].length );
-            let chatbody = getChatBody( i );
-            let formattedmsg = formatMsg( msg, ismentioned );
-            let child = $( "<text>" + formattedmsg + "</text>" );
-            addChildToChatBody( child, chatbody, i );
+    for (let i = 0; i < chatdata.chatends.length; ++i) {
+        if (msg.endsWith(chatdata.chatends[i])) {
+            msg = msg.slice(0, -chatdata.chatends[i].length);
+            let chatbody = getChatBody(i);
+            let formattedmsg = formatMsg(msg, ismentioned);
+            let child = $("<text>" + formattedmsg + "</text>");
+            addChildToChatBody(child, chatbody, i);
             return;
         }
     }
 
-    let formattedmsg = formatMsg( msg, ismentioned );
+    let formattedmsg = formatMsg(msg, ismentioned);
     // else output in all chatbodies //
-    for ( let i = 0; i < chatdata.bodies.length; ++i ) {
-        let chatbody = getChatBody( i );
-        let child = $( "<text>" + formattedmsg + "</text>" );
-        addChildToChatBody( child, chatbody, i );
+    for (let i = 0; i < chatdata.bodies.length; ++i) {
+        let chatbody = getChatBody(i);
+        let child = $("<text>" + formattedmsg + "</text>");
+        addChildToChatBody(child, chatbody, i);
     }
-
 }
 
-function getChatBody( index = -1 ) {
+function getChatBody(index = -1) {
     let theindex = index === -1 ? chatdata.chosenchatbody : index;
     return chatdata.bodies[theindex];
 }
 
-function loadUserName( username ) {
+function loadUserName(username) {
     chatdata.myname = username;
-    chatdata.playernames.push( username );
+    chatdata.playernames.push(username);
 }
 
-function loadNamesForChat( names ) {
-    chatdata.playernames = JSON.parse( names );
+function loadNamesForChat(names) {
+    chatdata.playernames = JSON.parse(names);
 }
 
-function addNameForChat( name ) {
+function addNameForChat(name) {
     chatdata.playernames.push(name);
 }
 
 function removeNameForChat(name) {
     let index = chatdata.playernames.indexOf(name);
     if (index != -1)
-        chatdata.playernames.splice( index, 1 );
+        chatdata.playernames.splice(index, 1);
 }
 
 function isNullOrWhitespace(input) {
@@ -216,47 +213,47 @@ function isNullOrWhitespace(input) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-$( document ).ready( function () {
+$(document).ready(function () {
+    addAutocomplete(chatdata.maininput, chatdata.playernames, () => { chatdata.autocompleteon = true; return false; }, () => {
+        setTimeout(function () { chatdata.autocompleteon = false; }, 500);
+    });
 
-    addAutocomplete( chatdata.maininput, chatdata.playernames, () => { chatdata.autocompleteon = true; return false; }, () => {
-        setTimeout( function () { chatdata.autocompleteon = false; }, 500 ); } );
-
-    $( "body" ).keydown( function ( event ) {
-        if ( event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon ) {   // send message and close input
+    $("body").keydown(function (event) {
+        if (event.which === 13 && chatdata.inputshowing && !chatdata.autocompleteon) {   // send message and close input
             event.preventDefault();
             let msg = chatdata.maininput.val();
             if (!isNullOrWhitespace(msg)) {
-                msg = msg.replace( /\\/g, "\\\\" ).replace( /\"/g, "\\\"" );
-                if ( msg[0] === "/" ) {
-                    msg = msg.substr( 1 );
+                msg = msg.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
+                if (msg[0] === "/") {
+                    msg = msg.substr(1);
                     if (msg.length > 0) {
                         mp.trigger("CommandUsed_Browser", msg);
                     }
                 } else {
                     mp.trigger("ChatUsed_Browser", msg, chatdata.chosenchatbody == 1);
                 }
-            } else 
+            } else
                 mp.trigger("CloseChat_Browser");
 
             //enableChatInput( false );
         }
-    } );
+    });
 
-    chatdata.chosentab = $( "#chat_choice div[data-chatID=0]" );
-    chatdata.chosentab.css( "background", "#04074e" );
+    chatdata.chosentab = $("#chat_choice div[data-chatID=0]");
+    chatdata.chosentab.css("background", "#04074e");
 
-    $( "#chat_choice div" ).click( function () {
-        if ( chatdata.chosenchatbody === $( this ).attr ( "data-chatID" ) )
+    $("#chat_choice div").click(function () {
+        if (chatdata.chosenchatbody === $(this).attr("data-chatID"))
             return;
 
-        chatdata.chosentab.css( "background", "#A9A9A9" );
-        chatdata.bodies[chatdata.chosenchatbody].hide( 400 );
+        chatdata.chosentab.css("background", "#A9A9A9");
+        chatdata.bodies[chatdata.chosenchatbody].hide(400);
 
-        chatdata.chosentab = $( this );
-        chatdata.chosentab.css( "background", "#04074e" );
-        chatdata.chosenchatbody = chatdata.chosentab.attr( "data-chatID" );
-        chatdata.bodies[chatdata.chosenchatbody].show( 400 );
-    } );
+        chatdata.chosentab = $(this);
+        chatdata.chosentab.css("background", "#04074e");
+        chatdata.chosenchatbody = chatdata.chosentab.attr("data-chatID");
+        chatdata.bodies[chatdata.chosenchatbody].show(400);
+    });
 
-    mp.trigger( "ChatLoaded_Browser" );
+    mp.trigger("ChatLoaded_Browser");
 });

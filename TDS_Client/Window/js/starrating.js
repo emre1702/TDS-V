@@ -133,9 +133,9 @@ var SimpleStarRating = (function () {
                 var starClicked = stars.indexOf(e.target);
                 if (starClicked !== -1) {
                     var starRating = starClicked + 1;
-                    setCurrentRating( starRating );
-                    if ( typeof onrate === 'function' )
-                        onrate( currentRating );
+                    setCurrentRating(starRating);
+                    if (typeof onrate === 'function')
+                        onrate(currentRating);
                     var evt = new CustomEvent('rate', {
                         detail: starRating
                     });

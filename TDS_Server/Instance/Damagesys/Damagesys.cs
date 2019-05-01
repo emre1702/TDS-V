@@ -1,12 +1,10 @@
 namespace TDS_Server.Instance
 {
     using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
     using TDS_Server.Dto;
     using TDS_Server.Entity;
-    using TDS_Server.Instance.Lobby;
 
     partial class Damagesys
     {
@@ -35,5 +33,4 @@ namespace TDS_Server.Instance
             );
         }
     }
-
 }

@@ -48,8 +48,8 @@
     font-weight: bolder;
 }
 
-.customdialog-close:hover, .customdialog-close:focus {
-    color: #AA0000;
-    text-decoration: none;
-    cursor: pointer;
-}
+    .customdialog-close:hover, .customdialog-close:focus {
+        color: #AA0000;
+        text-decoration: none;
+        cursor: pointer;
+    }

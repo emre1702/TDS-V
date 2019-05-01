@@ -1,8 +1,5 @@
 ﻿using RAGE;
-using RAGE.Elements;
-using RAGE.Game;
 using RAGE.NUI;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TDS_Client.Enum;
@@ -15,7 +12,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Lobby
 {
-    class MapLimit
+    internal class MapLimit
     {
         private float minX, minY, maxX, maxY;
         private MapPositionDto[] edges;
@@ -38,7 +35,7 @@ namespace TDS_Client.Instance.Lobby
 
         public void Start()
         {
-            maxOutsideCounter = (int) Settings.DieAfterOutsideMapLimitTime;
+            maxOutsideCounter = (int)Settings.DieAfterOutsideMapLimitTime;
             checkTimer = new TDSTimer(Check, 1000, 0);
         }
 
@@ -71,13 +68,13 @@ namespace TDS_Client.Instance.Lobby
                 Reset();
                 checkTimer?.Kill();
                 checkTimer = null;
-            }      
+            }
         }
 
         private void RefreshInfo()
         {
             if (info == null)
-                info = new DxText(Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString()), 0.5f, 0.5f, 1.2f, Color.White, 
+                info = new DxText(Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString()), 0.5f, 0.5f, 1.2f, Color.White,
                     alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             else
                 info.Text = Settings.Language.OUTSIDE_MAP_LIMIT.Replace("{1}", outsideCounter.ToString());
@@ -91,7 +88,7 @@ namespace TDS_Client.Instance.Lobby
                 return false;
 
             bool inside = false;
-            for (int i = 0, j = edges.Length-1; i < edges.Length; j = i++)
+            for (int i = 0, j = edges.Length - 1; i < edges.Length; j = i++)
             {
                 MapPositionDto iPoint = edges[i];
                 MapPositionDto jPoint = edges[j];
@@ -110,6 +107,6 @@ namespace TDS_Client.Instance.Lobby
             info?.Remove();
             info = null;
             outsideCounter = maxOutsideCounter;
-        }  
+        }
     }
 }
