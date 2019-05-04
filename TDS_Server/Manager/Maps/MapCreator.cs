@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.Maps
             {
                 var mapDto = (MapDto)JsonConvert.DeserializeObject(mapJson);
                 mapDto.LoadSyncedData();
-                mapDto.SyncedData.CreatorName = creator.Client.Name;
+                //mapDto.SyncedData.CreatorName = creator.Client.Name;
 
                 string mapPath = SettingsManager.NewMapsPath + mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp();
                 mapPath = Utils.MakeValidFileName(mapPath);

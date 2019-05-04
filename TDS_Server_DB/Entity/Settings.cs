@@ -17,5 +17,6 @@ namespace TDS_Server.Entity
         public int SaveLogsCooldownMinutes { get; set; }
         public int SaveSeasonsCooldownMinutes { get; set; }
         public int TeamOrderCooldownMs { get; set; }
+        public float ArenaNewMapProbabilityPercent { get; set; }   //todo Add to DB
     }
 }

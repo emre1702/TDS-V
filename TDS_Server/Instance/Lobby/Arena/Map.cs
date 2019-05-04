@@ -6,6 +6,8 @@ using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Maps;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -26,6 +28,8 @@ namespace TDS_Server.Instance.Lobby
 
         public MapDto GetRandomMap()
         {
+            if (IsOfficial && CommonUtils.Rnd.NextDouble() * 100 <= SettingsManager.ArenaNewMapProbabilityPercent)
+                return MapCreator.GetRandomNewMap();
             var mapsConsideringPlayersAmount = maps
                 .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
                 .ToArray();

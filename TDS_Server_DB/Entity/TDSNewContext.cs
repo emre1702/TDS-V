@@ -768,6 +768,8 @@ namespace TDS_Server.Entity
                 entity.Property(e => e.TeamOrderCooldownMs).HasColumnType("int");
 
                 entity.Property(e => e.ToChatOnNonExistentCommand).HasColumnType("bit");
+
+                entity.Property(e => e.ArenaNewMapProbabilityPercent);
             });
 
             modelBuilder.Entity<Teams>(entity =>
