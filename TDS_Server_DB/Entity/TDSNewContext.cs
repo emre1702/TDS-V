@@ -52,7 +52,7 @@ namespace TDS_Server.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[0].ConnectionString);
+                optionsBuilder.UseNpgsql(ConfigurationManager.ConnectionStrings[0].ConnectionString);
             }
         }
 

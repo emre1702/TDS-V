@@ -1,3 +1,3 @@
-Scaffold-DbContext [ConnectionString] Microsoft.EntityFrameworkCore.SqlServer -o %~dp0Entity -f
+Scaffold-DbContext [ConnetionString] Npgsql.EntityFrameworkCore.PostgreSQL -o %~dp0Entity -f
 
-optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[0].ConnectionString);
+optionsBuilder.UseNpgsql(ConfigurationManager.ConnectionStrings[0].ConnectionString);
