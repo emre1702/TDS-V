@@ -6,6 +6,9 @@ namespace TDS_Common.Dto.Map
 
     public class MapTeamSpawnsDto
     {
+        [XmlIgnore]
+        public uint TeamID { get; set; }
+
         [XmlArray("spawn")]
         public MapPositionDto[] Spawns { get; set; }
     }

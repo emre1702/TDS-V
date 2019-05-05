@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
@@ -39,17 +40,34 @@ namespace TDS_Server.Instance.Lobby
             return maps[CommonUtils.Rnd.Next(0, maps.Count)];
         }
 
+        /// <summary>
+        /// Creates a blip for every team-spawn "region".
+        /// If many spawns are at one position/region, only one blip will get created.
+        /// But if there are many spawn-regions, there will be multiple blips.
+        /// </summary>
+        /// <param name="map"></param>
         private void CreateTeamSpawnBlips(MapDto map)
         {
-            int i = 0;
-            foreach (var teamspawn in map.TeamSpawnsList.TeamSpawns)
+            foreach (var teamsSpawnList in map.TeamSpawnsList.TeamSpawns)
             {
-                Blip blip = NAPI.Blip.CreateBlip(pos: teamspawn.Spawns[0].ToVector3(), dimension: Dimension);
-                blip.Sprite = 491;
-                Team team = Teams[++i];
-                blip.Color = team.Entity.BlipColor;
-                blip.Name = "Spawn " + team.Entity.Name;
-                mapBlips.Add(blip);
+                if (Teams.Length < teamsSpawnList.TeamID)
+                    return;
+                List<Vector3> regions = new List<Vector3>();
+                foreach (var spawns in teamsSpawnList.Spawns)
+                {
+                    var position = spawns.ToVector3();
+                    if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
+                        continue;
+                    position.Add(position);
+
+                    Blip blip = NAPI.Blip.CreateBlip(pos: position, dimension: Dimension);
+                    blip.Sprite = 491;
+                    Team team = Teams[teamsSpawnList.TeamID];
+                    blip.Color = team.Entity.BlipColor;
+                    blip.Name = "Spawn " + team.Entity.Name;
+                    mapBlips.Add(blip);
+                }
+                
             }
         }
 

@@ -65,6 +65,12 @@ namespace TDS_Server.Manager.Maps
             if (map.LimitInfo.Center == null)
                 map.LimitInfo.Center = map.GetCenter();
 
+            uint teamId = 0;
+            foreach (var mapTeamSpawns in map.TeamSpawnsList.TeamSpawns)
+            {
+                mapTeamSpawns.TeamID = ++teamId;
+            }
+
             map.CreateJsons();
             map.LoadSyncedData();
             return map;
