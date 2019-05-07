@@ -30,7 +30,12 @@ namespace TDS_Server.Instance.Lobby
         public MapDto GetRandomMap()
         {
             if (IsOfficial && CommonUtils.Rnd.NextDouble() * 100 <= SettingsManager.ArenaNewMapProbabilityPercent)
-                return MapCreator.GetRandomNewMap();
+            {
+                var map = MapCreator.GetRandomNewMap();
+                if (map != null)
+                    return map;
+            }
+                
             var mapsConsideringPlayersAmount = maps
                 .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
                 .ToArray();

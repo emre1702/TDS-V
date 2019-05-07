@@ -58,8 +58,10 @@ namespace TDS_Server.Manager.Maps
             newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
         }
 
-        public static MapDto GetRandomNewMap()
+        public static MapDto? GetRandomNewMap()
         {
+            if (newCreatedMaps.Count == 0)
+                return null;
             return newCreatedMaps[CommonUtils.Rnd.Next(newCreatedMaps.Count)];
         }
 
