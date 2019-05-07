@@ -18,6 +18,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.MapsListRequest] = new CooldownEventDto(DToServerEvent.MapsListRequest, 1000),
             [DToServerEvent.MapVote] = new CooldownEventDto(DToServerEvent.MapVote, 500),
             [DToServerEvent.RequestPlayersForScoreboard] = new CooldownEventDto(DToServerEvent.RequestPlayersForScoreboard, 5000),
+            [DToServerEvent.SendMapRating] = new CooldownEventDto(DToServerEvent.SendMapRating, 2000),
             [DToServerEvent.SendTeamOrder] = new CooldownEventDto(DToServerEvent.SendTeamOrder, 2000),
             [DToServerEvent.ToggleMapFavouriteState] = new CooldownEventDto(DToServerEvent.ToggleMapFavouriteState, 500),
             [DToServerEvent.TryLogin] = new CooldownEventDto(DToServerEvent.TryLogin, 1000),

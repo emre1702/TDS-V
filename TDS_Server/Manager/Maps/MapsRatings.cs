@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Linq;
 using TDS_Common.Default;
+using TDS_Common.Dto.Map;
 using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
@@ -10,26 +11,25 @@ namespace TDS_Server.Manager.Maps
 {
     internal static class MapsRatings
     {
-        public static async void AddPlayerMapRating(Client player, string mapname, byte rating)
+        public static async void AddPlayerMapRating(Client player, string mapName, byte rating)
         {
-            //todo AddPlayerMapRating
-            //if (!DoesMapNameExist(mapname))
-            //return;
-
-            uint? playerid = player.GetEntity()?.Id;
-            if (playerid == null)
+            uint? playerId = player.GetEntity()?.Id;
+            if (playerId == null)
                 return;
-            using (var dbcontext = new TDSNewContext())
+
+            MapDto? map = MapsLoader.GetMapByName(mapName) ?? MapCreator.GetMapByName(mapName);
+            if (map == null)
+                return;
+            
+            using var dbcontext = new TDSNewContext();
+            PlayerMapRatings? maprating = await dbcontext.PlayerMapRatings.FindAsync(playerId, mapName);
+            if (maprating == null)
             {
-                PlayerMapRatings? maprating = await dbcontext.PlayerMapRatings.FindAsync(playerid, mapname);
-                if (maprating == null)
-                {
-                    maprating = new PlayerMapRatings { Id = playerid.Value, MapName = mapname };
-                    await dbcontext.PlayerMapRatings.AddAsync(maprating);
-                }
-                maprating.Rating = rating;
-                await dbcontext.SaveChangesAsync();
+                maprating = new PlayerMapRatings { Id = playerId.Value, MapName = mapName };
+                await dbcontext.PlayerMapRatings.AddAsync(maprating);
             }
+            maprating.Rating = rating;
+            await dbcontext.SaveChangesAsync();
         }
 
         public static void SendPlayerHisRatings(TDSPlayer character)

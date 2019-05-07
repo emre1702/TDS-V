@@ -76,15 +76,20 @@ namespace TDS_Server.Manager.Maps
             return map;
         }
 
+        public static MapDto? GetMapByName(string mapName)
+        {
+            return AllMaps.FirstOrDefault(m => m.Info.Name == mapName);
+        }
+
         private static async Task SaveMapsInDB(TDSNewContext dbContext)
         {
             dbContext.Maps.RemoveRange(
                dbContext.Maps.Where(
-                   m => m.Id > 0 && !MapPathByName.ContainsKey(m.Name.ToLower())
+                   m => m.Id > 0 && !m.InTesting && !MapPathByName.ContainsKey(m.Name.ToLower())
                )
-           );
+            );
 
-            if ((await dbContext.Maps.Where(m => m.Id > 0).CountAsync()) != AllMaps.Count)
+            if ((await dbContext.Maps.Where(m => m.Id > 0 && !m.InTesting).CountAsync()) != AllMaps.Count)
             {
                 foreach (var map in AllMaps)
                 {

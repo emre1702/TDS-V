@@ -16,6 +16,7 @@
 
         public const string MapVote = "MapVote_Browser";
 
+        public const string SendMapRating = "SendMapRating_Browser";
         public const string SyncChoiceLanguageTexts = "SyncChoiceLanguageTexts_Browser";
         public const string SyncRegisterLoginLanguageTexts = "SyncRegisterLoginLanguageTexts_Browser";
 

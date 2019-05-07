@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Instance.Lobby
@@ -180,6 +181,14 @@ namespace TDS_Server.Instance.Lobby
         }
 
         #endregion MapVote
+
+        #region Map Rating
+        [RemoteEvent(DToServerEvent.SendMapRating)]
+        public void SendMapRating(Client client, string mapName, int rating)
+        {
+            MapsRatings.AddPlayerMapRating(client, mapName, (byte)rating);
+        }
+        #endregion
 
         #endregion Remote
 

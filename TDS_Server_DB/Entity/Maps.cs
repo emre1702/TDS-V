@@ -15,6 +15,7 @@ namespace TDS_Server.Entity
         public string Name { get; set; }
         public uint? CreatorId { get; set; }
         public DateTime CreateTimestamp { get; set; }
+        public bool InTesting { get; set; }     //Todo Add to DB
 
         public virtual Players Creator { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }

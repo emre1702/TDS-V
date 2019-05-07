@@ -481,13 +481,14 @@ namespace TDS_Client.Manager
         {
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseLobbyToJoin, OnChooseLobbyToJoinMethod);
-            Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.MapVote, OnMapVoteMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.ToggleMapFavouriteState, OnToggleMapFavouriteStateMethod);
 
@@ -506,6 +507,13 @@ namespace TDS_Client.Manager
         private void OnChooseLobbyToJoinMethod(object[] args)
         {
             Choice.JoinLobby((int)args[0], (int)args[1]);
+        }
+
+        private void OnBrowserSendMapRatingMethod(object[] args)
+        {
+            string mapName = (string)args[0];
+            int rating = (int)args[1];
+            EventsSender.Send(DToServerEvent.SendMapRating, mapName, rating);
         }
 
         private void OnSyncChoiceLanguageTextsMethod(object[] args)

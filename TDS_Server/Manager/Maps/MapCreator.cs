@@ -1,10 +1,12 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Utility;
@@ -17,6 +19,8 @@ namespace TDS_Server.Manager.Maps
 
         public async static Task<bool> Create(TDSPlayer creator, string mapJson)
         {
+            if (creator.Entity == null)
+                return;
             var serializer = new XmlSerializer(typeof(MapDto));
             try
             {
@@ -33,6 +37,11 @@ namespace TDS_Server.Manager.Maps
                 string mapXml = await (new StreamReader(memoryStream).ReadToEndAsync());
                 string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml);
+
+                using var dbContext = new TDSNewContext();
+                var dbMap = new Entity.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name, InTesting = true };
+                await dbContext.Maps.AddAsync(dbMap);
+                await dbContext.SaveChangesAsync();
 
                 newCreatedMaps.Add(mapDto);
 
@@ -52,6 +61,11 @@ namespace TDS_Server.Manager.Maps
         public static MapDto GetRandomNewMap()
         {
             return newCreatedMaps[CommonUtils.Rnd.Next(newCreatedMaps.Count)];
+        }
+
+        public static MapDto? GetMapByName(string mapName)
+        {
+            return newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
