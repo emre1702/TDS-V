@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
     internal static class MapManager
     {
         private static bool open;
-        private static uint lobbyIdAtLastLoad;
+        private static int lobbyIdAtLastLoad;
         private static string lastMapsJson;
 
         public static void ToggleMenu(ConsoleKey _)

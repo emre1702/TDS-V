@@ -19,8 +19,8 @@ namespace TDS_Client.Instance.Lobby
         private int maxOutsideCounter;
 
         private int outsideCounter;
-        private DxText? info;
-        private TDSTimer? checkTimer;
+        private DxText info;
+        private TDSTimer checkTimer;
 
         public MapLimit(MapPositionDto[] edges)
         {

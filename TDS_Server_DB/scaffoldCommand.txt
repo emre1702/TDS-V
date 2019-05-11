@@ -1,3 +1,1 @@
-Scaffold-DbContext [ConnetionString] Npgsql.EntityFrameworkCore.PostgreSQL -o %~dp0Entity -f
-
-optionsBuilder.UseNpgsql(ConfigurationManager.ConnectionStrings[0].ConnectionString);
+Scaffold-DbContext "Server=localhost;Database=TDSNew;User ID=tdsv;Password=ajagrebo;" Npgsql.EntityFrameworkCore.PostgreSQL -o Entity -f -Project TDS_Server_DB

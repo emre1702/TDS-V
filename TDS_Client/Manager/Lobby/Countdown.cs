@@ -11,9 +11,9 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Countdown
     {
-        private static DxText? text;
-        private static TDSTimer? countdownTimer;
-        private static uint currentCountdownTime;
+        private static DxText text;
+        private static TDSTimer countdownTimer;
+        private static int currentCountdownTime;
 
         private static string[] countdownSounds = new string[] { "go", "1", "2", "3" };
 
@@ -25,23 +25,23 @@ namespace TDS_Client.Manager.Lobby
                 return;
             }
             countdownTimer?.Kill();
-            countdownTimer = new TDSTimer(Refresh, 1000, currentCountdownTime);
+            countdownTimer = new TDSTimer(Refresh, 1000, (uint)currentCountdownTime);
             currentCountdownTime = Settings.CountdownTime;
             text = new DxText(currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             text.BlendScale(6f, 1000);
             PlaySound();
         }
 
-        public static void StartAfterwards(uint timeremainingms)
+        public static void StartAfterwards(int timeremainingms)
         {
-            currentCountdownTime = (uint)Math.Ceiling((double)timeremainingms / 1000);
+            currentCountdownTime = (int)Math.Ceiling((double)timeremainingms / 1000);
             countdownTimer?.Kill();
             countdownTimer = new TDSTimer(() =>
             {
                 if (currentCountdownTime > 1)
-                    countdownTimer = new TDSTimer(Refresh, 1000, currentCountdownTime - 1);
+                    countdownTimer = new TDSTimer(Refresh, 1000, (uint)(currentCountdownTime - 1));
                 Refresh();
-            }, currentCountdownTime - timeremainingms, 1);
+            }, (uint)(currentCountdownTime - timeremainingms), 1);
             text = new DxText(currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             text.BlendScale(6f, 1000);
             PlaySound();

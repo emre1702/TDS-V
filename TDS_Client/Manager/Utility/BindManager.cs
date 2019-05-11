@@ -39,7 +39,7 @@ namespace TDS_Client.Manager.Utility
             bindedControls[control].Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
         }
 
-        public static void Remove(ConsoleKey key, Action<ConsoleKey>? method = null, EKeyPressState pressState = EKeyPressState.None)
+        public static void Remove(ConsoleKey key, Action<ConsoleKey> method = null, EKeyPressState pressState = EKeyPressState.None)
         {
             if (!bindedKeys.ContainsKey(key))
                 return;
@@ -51,7 +51,7 @@ namespace TDS_Client.Manager.Utility
                 bindedKeys[key].Remove(entry);
         }
 
-        public static void Remove(Control control, Action<Control>? method = null, EKeyPressState pressState = EKeyPressState.None)
+        public static void Remove(Control control, Action<Control> method = null, EKeyPressState pressState = EKeyPressState.None)
         {
             if (!bindedControls.ContainsKey(control))
                 return;

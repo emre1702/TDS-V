@@ -11,9 +11,9 @@ namespace TDS_Common.Dto.Map
         public float Y { get; set; }
 
         [XmlAttribute("z")]
-        public float? Z { get; set; }
+        public float Z { get; set; }
 
         [XmlAttribute("rot")]
-        public float? Rotation { get; set; }
+        public float Rotation { get; set; }
     }
 }

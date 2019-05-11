@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Damage
         {
             cancel.Cancel = true;
 
-            Player? hitted = GetHittedPlayer(targetPos);
+            Player hitted = GetHittedPlayer(targetPos);
             if (hitted == null)
                 return;
 
@@ -57,7 +57,7 @@ namespace TDS_Client.Manager.Damage
             return false;
         }
 
-        private static Player? GetHittedPlayer(Vector3 targetPos)
+        private static Player GetHittedPlayer(Vector3 targetPos)
         {
             Vector3 startpos = Player.LocalPlayer.GetBoneCoords(6286, 0, 0, 0);
             Vector3 endpos = Vector3.Lerp(startpos, targetPos, 1.05f);

@@ -1,23 +1,23 @@
+using System;
+using System.Collections.Generic;
+
 namespace TDS_Common.Instance.Utility
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Timer-class
     /// </summary>
     public class TDSTimer
     {
         /// <summary>A sorted List of Timers</summary>
-        private static readonly List<TDSTimer> timer = new List<TDSTimer>();
+        private static readonly List<TDSTimer> _timer = new List<TDSTimer>();
 
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
-        private static readonly List<TDSTimer> insertAfterList = new List<TDSTimer>();
+        private static readonly List<TDSTimer> _insertAfterList = new List<TDSTimer>();
 
         /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
-        private static Action<string> logger;
+        private static Action<string> _logger;
 
-        private static Func<ulong> tickGetter;
+        private static Func<ulong> _tickGetter;
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
@@ -26,7 +26,7 @@ namespace TDS_Common.Instance.Utility
         public readonly uint ExecuteAfterMs;
 
         /// <summary>When the Timer is ready to execute (Stopwatch is used).</summary>
-        private ulong executeAtMs;
+        private ulong _executeAtMs;
 
         /// <summary>How many executes the timer has left - use 0 for infinitely. Can be changed dynamically</summary>
         public uint ExecutesLeft;
@@ -35,21 +35,21 @@ namespace TDS_Common.Instance.Utility
         public bool HandleException;
 
         /// <summary>If the Timer will get removed.</summary>
-        private bool willRemoved = false;
+        private bool _willRemoved = false;
 
         /// <summary>Use this to check if the timer is still running.</summary>
-        public bool IsRunning => !willRemoved;
+        public bool IsRunning => !_willRemoved;
 
         /// <summary>The remaining ms to execute</summary>
-        public ulong RemainingMsToExecute => executeAtMs - tickGetter();
+        public ulong RemainingMsToExecute => _executeAtMs - _tickGetter();
 
         /// <summary>
         /// Needs to be used once at server and once and client
         /// </summary>
         public static void Init(Action<string> thelogger, Func<ulong> theTickGetter)
         {
-            logger = thelogger;
-            tickGetter = theTickGetter;
+            _logger = thelogger;
+            _tickGetter = theTickGetter;
         }
 
         /// <summary>
@@ -61,13 +61,13 @@ namespace TDS_Common.Instance.Utility
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
         public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
-            ulong executeatms = executeafterms + tickGetter();
+            ulong executeatms = executeafterms + _tickGetter();
             Func = thefunc;
             ExecuteAfterMs = executeafterms;
-            executeAtMs = executeatms;
+            _executeAtMs = executeatms;
             ExecutesLeft = executes;
             HandleException = handleexception;
-            insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
+            _insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace TDS_Common.Instance.Utility
         /// </summary>
         public void Kill()
         {
-            willRemoved = true;
+            _willRemoved = true;
         }
 
         /// <summary>
@@ -87,14 +87,14 @@ namespace TDS_Common.Instance.Utility
             if (ExecutesLeft == 1)
             {
                 ExecutesLeft = 0;
-                willRemoved = true;
+                _willRemoved = true;
             }
             else
             {
                 if (ExecutesLeft != 0)
                     ExecutesLeft--;
-                executeAtMs += ExecuteAfterMs;
-                insertAfterList.Add(this);
+                _executeAtMs += ExecuteAfterMs;
+                _insertAfterList.Add(this);
             }
         }
 
@@ -109,21 +109,21 @@ namespace TDS_Common.Instance.Utility
             }
             catch (Exception ex)
             {
-                logger?.Invoke(ex.ToString());
+                _logger?.Invoke(ex.ToString());
             }
             finally
             {
                 if (ExecutesLeft == 1)
                 {
                     ExecutesLeft = 0;
-                    willRemoved = true;
+                    _willRemoved = true;
                 }
                 else
                 {
                     if (ExecutesLeft != 0)
                         ExecutesLeft--;
-                    executeAtMs += ExecuteAfterMs;
-                    insertAfterList.Add(this);
+                    _executeAtMs += ExecuteAfterMs;
+                    _insertAfterList.Add(this);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace TDS_Common.Instance.Utility
         {
             if (changeexecutems)
             {
-                executeAtMs = tickGetter();
+                _executeAtMs = _tickGetter();
             }
             if (HandleException)
                 ExecuteMeSafe();
@@ -150,15 +150,15 @@ namespace TDS_Common.Instance.Utility
         private void InsertSorted()
         {
             bool putin = false;
-            for (int i = timer.Count - 1; i >= 0 && !putin; i--)
-                if (executeAtMs <= timer[i].executeAtMs)
+            for (int i = _timer.Count - 1; i >= 0 && !putin; i--)
+                if (_executeAtMs <= _timer[i]._executeAtMs)
                 {
-                    timer.Insert(i + 1, this);
+                    _timer.Insert(i + 1, this);
                     putin = true;
                 }
 
             if (!putin)
-                timer.Insert(0, this);
+                _timer.Insert(0, this);
         }
 
         /// <summary>
@@ -168,15 +168,15 @@ namespace TDS_Common.Instance.Utility
         /// </summary>
         public static void OnUpdateFunc()
         {
-            ulong tick = tickGetter();
-            for (int i = timer.Count - 1; i >= 0; i--)
+            ulong tick = _tickGetter();
+            for (int i = _timer.Count - 1; i >= 0; i--)
             {
-                if (!timer[i].willRemoved)
+                if (!_timer[i]._willRemoved)
                 {
-                    if (timer[i].executeAtMs <= tick)
+                    if (_timer[i]._executeAtMs <= tick)
                     {
-                        TDSTimer thetimer = timer[i];
-                        timer.RemoveAt(i);   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
+                        TDSTimer thetimer = _timer[i];
+                        _timer.RemoveAt(i);   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
                         if (thetimer.HandleException)
                             thetimer.ExecuteMeSafe();
                         else
@@ -186,17 +186,17 @@ namespace TDS_Common.Instance.Utility
                         break;
                 }
                 else
-                    timer.RemoveAt(i);
+                    _timer.RemoveAt(i);
             }
 
             // Put the timers back in the list
-            if (insertAfterList.Count > 0)
+            if (_insertAfterList.Count > 0)
             {
-                foreach (TDSTimer timer in insertAfterList)
+                foreach (TDSTimer timer in _insertAfterList)
                 {
                     timer.InsertSorted();
                 }
-                insertAfterList.Clear();
+                _insertAfterList.Clear();
             }
         }
     }

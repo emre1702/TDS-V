@@ -16,14 +16,14 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Bomb
     {
-        private static Vector3? plantedPos;
+        private static Vector3 plantedPos;
         private static EPlantDefuseStatus playerStatus;
         private static bool gotBomb;
         private static bool bombPlanted;
-        private static MapPositionDto[]? plantSpots;
+        private static MapPositionDto[] plantSpots;
         private static ulong plantDefuseStartTick;
 
-        private static DxProgressRectangle? progressRect;
+        private static DxProgressRectangle progressRect;
 
         public static bool DataChanged;
         public static bool CheckPlantDefuseOnTick { get; private set; }
@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Lobby
             MainBrowser.StopBombTick();
         }
 
-        public static void BombPlanted(Vector3 pos, bool candefuse, uint? startAtMs)
+        public static void BombPlanted(Vector3 pos, bool candefuse, int? startAtMs)
         {
             DataChanged = true;
             if (candefuse)
@@ -169,7 +169,7 @@ namespace TDS_Client.Manager.Lobby
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
             foreach (MapPositionDto pos in plantSpots)
             {
-                if (Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z ?? 0, pos.Z != null) <= Settings.DistanceToSpotToPlant)
+                if (Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z, pos.Z != 0) <= Settings.DistanceToSpotToPlant)
                     return true;
             }
             return false;

@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Draw
 {
     internal static class MoneyDisplay
     {
-        private static DxText? moneyText;
+        private static DxText moneyText;
 
         private static DxText GetMoneyText()
         {

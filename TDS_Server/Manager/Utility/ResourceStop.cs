@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Entity;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -21,23 +21,19 @@ namespace TDS_Server.Manager.Utility
             Client? exceptionsource = null;
             try
             {
-                using (var dbcontext = new TDSNewContext())
+                using var dbcontext = new TDSNewContext();
+                await AdminLogsManager.Save(dbcontext);
+                await ChatLogsManager.Save(dbcontext);
+                await ErrorLogsManager.Save(dbcontext);
+                await RestLogsManager.Save(dbcontext);
+
+                List<Client> players = NAPI.Pools.GetAllPlayers();
+                foreach (Client player in players)
                 {
-                    await AdminLogsManager.Save(dbcontext);
-                    await ChatLogsManager.Save(dbcontext);
-                    await ErrorLogsManager.Save(dbcontext);
-                    await RestLogsManager.Save(dbcontext);
-
-                    List<Client> players = NAPI.Pools.GetAllPlayers();
-                    foreach (Client player in players)
-                    {
-                        exceptionsource = player;
-                        await player.GetChar().SaveData(dbcontext);
-                    }
-                    exceptionsource = null;
-
-                    //Season.SaveSeason();
+                    exceptionsource = player;
+                    await player.GetChar().SaveData(dbcontext);
                 }
+                exceptionsource = null;
             }
             catch (Exception ex)
             {

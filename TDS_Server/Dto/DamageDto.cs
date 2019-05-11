@@ -1,4 +1,4 @@
-﻿using TDS_Server.Entity;
+﻿using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Dto
 {

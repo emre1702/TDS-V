@@ -1,12 +1,12 @@
+using GTANetworkAPI;
+using System;
+using System.Collections.Generic;
+using TDS_Server.Dto;
+using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
+
 namespace TDS_Server.Instance
 {
-    using GTANetworkAPI;
-    using System;
-    using System.Collections.Generic;
-    using TDS_Server.Dto;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Manager.Logs;
-
     partial class Damagesys
     {
         /*private static readonly Dictionary<WeaponHash, int> sDamageDictionary = new Dictionary<WeaponHash, int>
@@ -117,7 +117,7 @@ namespace TDS_Server.Instance
             {
                 UpdateLastHitter(target, source, damage);
                 if (source.CurrentRoundStats != null)
-                    source.CurrentRoundStats.Damage += (uint)damage;
+                    source.CurrentRoundStats.Damage += damage;
 
                 //if (source.Entity.PlayerSettings.HitsoundOn)
                 //    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);

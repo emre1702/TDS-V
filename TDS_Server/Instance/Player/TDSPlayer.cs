@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Player
 {
@@ -19,15 +19,15 @@ namespace TDS_Server.Instance.Player
     {
         public Players? Entity
         {
-            get => fEntity;
+            get => _entity;
             set
             {
-                fEntity = value;
-                if (fEntity == null)
+                _entity = value;
+                if (_entity == null)
                     return;
-                if (fLangEnumBeforeLogin != ELanguage.English)
-                    fEntity.PlayerSettings.Language = (byte)fLangEnumBeforeLogin;
-                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, fEntity.PlayerStats.Money);
+                if (_langEnumBeforeLogin != ELanguage.English)
+                    _entity.PlayerSettings.Language = (byte)_langEnumBeforeLogin;
+                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
         }
 
@@ -66,7 +66,7 @@ namespace TDS_Server.Instance.Player
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
 
-        public uint? MuteTime
+        public int? MuteTime
         {
             get => Entity?.PlayerStats.MuteTime ?? 0;
             set
@@ -95,13 +95,13 @@ namespace TDS_Server.Instance.Player
             get
             {
                 if (Entity == null || Entity.PlayerSettings == null)
-                    return fLangEnumBeforeLogin;
+                    return _langEnumBeforeLogin;
                 return (ELanguage)Entity.PlayerSettings.Language;
             }
             set
             {
                 if (Entity == null || Entity.PlayerSettings == null)
-                    fLangEnumBeforeLogin = value;
+                    _langEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = (byte)value;
                 SaveSettings();
@@ -123,12 +123,12 @@ namespace TDS_Server.Instance.Player
 
         public int Money
         {
-            get => (int)(Entity?.PlayerStats.Money ?? 0);
+            get => Entity?.PlayerStats.Money ?? 0;
             set
             {
                 if (Entity == null)
                     return;
-                Entity.PlayerStats.Money = (uint)value;
+                Entity.PlayerStats.Money = value;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
             }
         }
@@ -138,7 +138,7 @@ namespace TDS_Server.Instance.Player
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
         public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
 
-        public uint PlayMinutes
+        public int PlayMinutes
         {
             get => Entity?.PlayerStats.PlayTime ?? 0;
             set
@@ -152,9 +152,9 @@ namespace TDS_Server.Instance.Player
         public bool ChatLoaded { get; set; }
         public int KillingSpree { get; set; }
 
-        private Players? fEntity;
-        private int LastSaveTick;
-        private ELanguage fLangEnumBeforeLogin = ELanguage.English;
+        private Players? _entity;
+        private int _lastSaveTick;
+        private ELanguage _langEnumBeforeLogin = ELanguage.English;
         private Team? _team;
         private Gang? _gang;
 
@@ -233,10 +233,8 @@ namespace TDS_Server.Instance.Player
 
         public async void SaveData()
         {
-            using (TDSNewContext dbContext = new TDSNewContext())
-            {
-                await SaveData(dbContext);
-            }
+            using TDSNewContext dbContext = new TDSNewContext();
+            await SaveData(dbContext);
         }
 
         public Task<int> SaveData(TDSNewContext dbcontext)
@@ -261,9 +259,9 @@ namespace TDS_Server.Instance.Player
 
         public Task<int> CheckSaveData(TDSNewContext dbcontext)
         {
-            if (Environment.TickCount - LastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
+            if (Environment.TickCount - _lastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
                 return System.Threading.Tasks.Task.FromResult(0);
-            LastSaveTick = Environment.TickCount;
+            _lastSaveTick = Environment.TickCount;
             return SaveData(dbcontext);
         }
 
@@ -271,12 +269,10 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null)
                 return;
-            using (TDSNewContext dbContext = new TDSNewContext())
-            {
-                dbContext.PlayerSettings.Attach(Entity.PlayerSettings);
-                dbContext.Entry(Entity.PlayerSettings).State = EntityState.Modified;
-                await SaveData(dbContext);
-            }
+            using TDSNewContext dbContext = new TDSNewContext();
+            dbContext.PlayerSettings.Attach(Entity.PlayerSettings);
+            dbContext.Entry(Entity.PlayerSettings).State = EntityState.Modified;
+            await SaveData(dbContext);
         }
     }
 }

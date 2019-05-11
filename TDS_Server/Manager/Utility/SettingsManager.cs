@@ -1,38 +1,54 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IO;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using TDS_Common.Dto;
-using TDS_Server.Entity;
+using TDS_Server.Dto;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
 {
     internal class SettingsManager
     {
-        public static string GamemodeName => settings.GamemodeName;
-        public static string MapsPath => settings.MapsPath;
-        public static string NewMapsPath => settings.NewMapsPath;
-        public static bool ErrorToPlayerOnNonExistentCommand => settings.ErrorToPlayerOnNonExistentCommand;
-        public static bool ToChatOnNonExistentCommand => settings.ToChatOnNonExistentCommand;
-        public static int SaveLogsCooldownMinutes => settings.SaveLogsCooldownMinutes;
-        public static int SavePlayerDataCooldownMinutes => settings.SavePlayerDataCooldownMinutes;
-        public static int SaveSeasonsCooldownMinutes => settings.SaveSeasonsCooldownMinutes;
-        public static int DistanceToSpotToDefuse => settings.DistanceToSpotToDefuse;
-        public static int DistanceToSpotToPlant => settings.DistanceToSpotToPlant;
-        public static float ArenaNewMapProbabilityPercent => settings.ArenaNewMapProbabilityPercent;
+        public static string ConnectionString => _localSettings.ConnectionString.Value;
+        public static string GamemodeName => _serverSettings.GamemodeName;
+        public static string MapsPath => _serverSettings.MapsPath;
+        public static string NewMapsPath => _serverSettings.NewMapsPath;
+        public static bool ErrorToPlayerOnNonExistentCommand => _serverSettings.ErrorToPlayerOnNonExistentCommand;
+        public static bool ToChatOnNonExistentCommand => _serverSettings.ToChatOnNonExistentCommand;
+        public static int SaveLogsCooldownMinutes => _serverSettings.SaveLogsCooldownMinutes;
+        public static int SavePlayerDataCooldownMinutes => _serverSettings.SavePlayerDataCooldownMinutes;
+        public static int SaveSeasonsCooldownMinutes => _serverSettings.SaveSeasonsCooldownMinutes;
+        public static float DistanceToSpotToDefuse => _serverSettings.DistanceToSpotToDefuse;
+        public static float DistanceToSpotToPlant => _serverSettings.DistanceToSpotToPlant;
+        public static float ArenaNewMapProbabilityPercent => _serverSettings.ArenaNewMapProbabilityPercent;
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
-        private static Settings settings;
+        private static AppConfigDto _localSettings;
+        private static ServerSettings _serverSettings;
+
+        public static void LoadLocal()
+        {
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            using var fileStream = new FileStream(appName + ".config", FileMode.Open);
+            using var reader = XmlReader.Create(fileStream, new XmlReaderSettings() { Async = true });
+            var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
+
+            _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
+        }
 
         public static async Task Load(TDSNewContext dbcontext)
         {
-            settings = await dbcontext.Settings.AsNoTracking().SingleAsync();
+            _serverSettings = await dbcontext.ServerSettings.AsNoTracking().SingleAsync();
 
             SyncedSettings = new SyncedServerSettingsDto()
             {
-                DistanceToSpotToPlant = settings.DistanceToSpotToPlant,
-                DistanceToSpotToDefuse = settings.DistanceToSpotToDefuse,
+                DistanceToSpotToPlant = _serverSettings.DistanceToSpotToPlant,
+                DistanceToSpotToDefuse = _serverSettings.DistanceToSpotToDefuse,
                 RoundEndTime = 8 * 1000,
                 MapChooseTime = 4 * 1000,
-                TeamOrderCooldownMs = settings.TeamOrderCooldownMs
+                TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs
             };
         }
     }

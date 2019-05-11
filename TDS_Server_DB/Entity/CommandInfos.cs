@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
-    public partial class CommandsInfo
+    public partial class CommandInfos
     {
-        public byte Id { get; set; }
-        public byte Language { get; set; }
+        public short Id { get; set; }
+        public short Language { get; set; }
         public string Info { get; set; }
 
         public virtual Commands IdNavigation { get; set; }

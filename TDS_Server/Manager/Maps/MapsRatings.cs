@@ -1,11 +1,12 @@
 using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
 using TDS_Common.Default;
-using TDS_Common.Dto.Map;
-using TDS_Server.Entity;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Maps
 {
@@ -13,22 +14,25 @@ namespace TDS_Server.Manager.Maps
     {
         public static async void AddPlayerMapRating(Client player, string mapName, byte rating)
         {
-            uint? playerId = player.GetEntity()?.Id;
+            int? playerId = player.GetEntity()?.Id;
             if (playerId == null)
                 return;
 
             MapDto? map = MapsLoader.GetMapByName(mapName) ?? MapCreator.GetMapByName(mapName);
             if (map == null)
                 return;
-            
+
             using var dbcontext = new TDSNewContext();
-            PlayerMapRatings? maprating = await dbcontext.PlayerMapRatings.FindAsync(playerId, mapName);
+            var dbMap = await dbcontext.Maps.FirstOrDefaultAsync(m => m.Name == mapName);
+
+            PlayerMapRatings? maprating = await dbcontext.PlayerMapRatings.FindAsync(playerId, dbMap.Id);
             if (maprating == null)
             {
-                maprating = new PlayerMapRatings { Id = playerId.Value, MapName = mapName };
+                maprating = new PlayerMapRatings { PlayerId = playerId.Value, MapId = dbMap.Id };
                 await dbcontext.PlayerMapRatings.AddAsync(maprating);
             }
             maprating.Rating = rating;
+            map.SyncedData.Rating = rating;
             await dbcontext.SaveChangesAsync();
         }
 

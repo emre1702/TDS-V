@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class PlayerBans
     {
-        public uint Id { get; set; }
-        public uint ForLobby { get; set; }
-        public uint? Admin { get; set; }
+        public int PlayerId { get; set; }
+        public int LobbyId { get; set; }
+        public int? AdminId { get; set; }
         public string Reason { get; set; }
         public DateTime StartTimestamp { get; set; }
         public DateTime? EndTimestamp { get; set; }
 
-        public virtual Players AdminNavigation { get; set; }
-        public virtual Lobbies ForLobbyNavigation { get; set; }
-        public virtual Players IdNavigation { get; set; }
+        public virtual Players Admin { get; set; }
+        public virtual Lobbies Lobby { get; set; }
+        public virtual Players Player { get; set; }
     }
 }

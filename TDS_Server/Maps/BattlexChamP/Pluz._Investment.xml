@@ -1,15 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TDSMap>
-  <!--map-info-->
-  <map name="Pluz. Investment" type="normal" minplayers="0" maxplayers="16" creatorid="2" />
-  <!--description-->
-  <!--map-limit-->
-  <limit>
-    <pos x="-93.31409" y="309.2942" />
-    <pos x="-52.0885" y="391.8221" />
-    <pos x="51.05027" y="345.0258" />
-    <pos x="22.13651" y="275.9822" />
-  </limit>
+  <map name="Pluz. Investment" type="normal" minplayers="0" maxplayers="16">
+    <creatorid>2</creatorid>
+  </map>
 
   <teamspawns>
     <team>
@@ -33,4 +26,11 @@
       <spawn x="42.38531" y="333.9159" z="115.3873" rot="76.55231" />
     </team>
   </teamspawns>
+
+  <limit>
+    <pos x="-93.31409" y="309.2942" />
+    <pos x="-52.0885" y="391.8221" />
+    <pos x="51.05027" y="345.0258" />
+    <pos x="22.13651" y="275.9822" />
+  </limit>
 </TDSMap>

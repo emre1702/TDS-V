@@ -15,7 +15,9 @@ namespace TDS_Server.Instance.Lobby
                 return;
             if (IsEmpty())
                 return;
-            if (!LobbyEntity.MoneyPerKill.HasValue && !LobbyEntity.MoneyPerAssist.HasValue && !LobbyEntity.MoneyPerDamage.HasValue)
+            if (LobbyEntity.LobbyRewards == null)
+                return;
+            if (LobbyEntity.LobbyRewards.MoneyPerKill == 0 && LobbyEntity.LobbyRewards.MoneyPerAssist == 0 && LobbyEntity.LobbyRewards.MoneyPerDamage == 0)
                 return;
 
             StringBuilder strbuilder = new StringBuilder();
@@ -30,12 +32,12 @@ namespace TDS_Server.Instance.Lobby
                 uint assistreward = 0;
                 uint damagereward = 0;
 
-                if (LobbyEntity.MoneyPerKill.HasValue)
-                    killreward = (uint)(character.CurrentRoundStats.Kills * LobbyEntity.MoneyPerKill.Value);
-                if (LobbyEntity.MoneyPerAssist.HasValue)
-                    assistreward = (uint)(character.CurrentRoundStats.Assists * LobbyEntity.MoneyPerAssist.Value);
-                if (LobbyEntity.MoneyPerDamage.HasValue)
-                    damagereward = (uint)(character.CurrentRoundStats.Damage * LobbyEntity.MoneyPerDamage.Value);
+                if (LobbyEntity.LobbyRewards.MoneyPerKill != 0)
+                    killreward = (uint)(character.CurrentRoundStats.Kills * LobbyEntity.LobbyRewards.MoneyPerKill);
+                if (LobbyEntity.LobbyRewards.MoneyPerAssist != 0)
+                    assistreward = (uint)(character.CurrentRoundStats.Assists * LobbyEntity.LobbyRewards.MoneyPerAssist);
+                if (LobbyEntity.LobbyRewards.MoneyPerDamage != 0)
+                    damagereward = (uint)(character.CurrentRoundStats.Damage * LobbyEntity.LobbyRewards.MoneyPerDamage);
 
                 character.GiveMoney(killreward + assistreward + damagereward);
 
@@ -64,7 +66,7 @@ namespace TDS_Server.Instance.Lobby
                 SetPlayerReadyForRound(character);
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart);
             });
-            if (currentMap?.IsBomb ?? false)
+            if (_currentMap?.IsBomb ?? false)
                 GiveBombToRandomTerrorist();
         }
 

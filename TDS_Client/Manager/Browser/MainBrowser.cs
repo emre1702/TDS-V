@@ -158,7 +158,7 @@ namespace TDS_Client.Manager.Browser
             Execute($"loadUserName('{Player.LocalPlayer.Name}')");
         }
 
-        public static void StartBombTick(uint msToDetonate, uint startAtMs)
+        public static void StartBombTick(int msToDetonate, int startAtMs)
         {
             Execute($"startBombTickSound({msToDetonate}, {startAtMs})");
         }

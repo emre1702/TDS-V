@@ -1,9 +1,12 @@
-﻿namespace TDS_Server.Entity
+﻿using System;
+using System.Collections.Generic;
+
+namespace TDS_Server_DB.Entity
 {
-    public class AdminLevelNames
+    public partial class AdminLevelNames
     {
-        public byte Level { get; set; }
-        public byte Language { get; set; }
+        public short Level { get; set; }
+        public short Language { get; set; }
         public string Name { get; set; }
 
         public virtual Languages LanguageNavigation { get; set; }

@@ -1,19 +1,20 @@
+using GTANetworkAPI;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using TDS_Common.Default;
+using TDS_Common.Dto.Map;
+using TDS_Common.Instance.Utility;
+using TDS_Common.Manager.Utility;
+using TDS_Server.Dto;
+using TDS_Server.Dto.Map;
+using TDS_Server.Enum;
+using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
+using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Utility;
+
 namespace TDS_Server.Instance.Lobby
 {
-    using GTANetworkAPI;
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using TDS_Common.Default;
-    using TDS_Common.Dto.Map;
-    using TDS_Common.Instance.Utility;
-    using TDS_Common.Manager.Utility;
-    using TDS_Server.Dto;
-    using TDS_Server.Enum;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Instance.Utility;
-    using TDS_Server.Manager.Helper;
-    using TDS_Server.Manager.Utility;
-
     partial class Arena
     {
         // BOMB DATA:
@@ -64,7 +65,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void GiveBombToRandomTerrorist()
         {
-            if (currentMap == null)
+            if (_currentMap == null)
                 return;
             int amount = terroristTeam.Players.Count;
             if (amount == 0)
@@ -76,7 +77,7 @@ namespace TDS_Server.Instance.Lobby
                 BombToHand(character);
             else
                 BombToBack(character);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, currentMap.BombInfo?.PlantPositionsJson ?? "{}");
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, _currentMap.BombInfo?.PlantPositionsJson ?? "{}");
         }
 
         private void SendBombPlantInfos(TDSPlayer character)
@@ -160,10 +161,10 @@ namespace TDS_Server.Instance.Lobby
                 DmgSys.UpdateLastHitter(character, planter, damage);
                 character.Damage(ref damage);
                 if (planter != null && planter.CurrentRoundStats != null)
-                    planter.CurrentRoundStats.Damage += (uint)damage;
+                    planter.CurrentRoundStats.Damage += damage;
             });
             // TERROR WON //
-            if (currentRoundStatus == ERoundStatus.Round)
+            if (_currentRoundStatus == ERoundStatus.Round)
                 SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombExploded);
         }
 
@@ -191,7 +192,7 @@ namespace TDS_Server.Instance.Lobby
             //Todo Implement after new Bridge version
             bombAtPlayer = null;
             planter = player;
-            bombDetonateTimer = new TDSTimer(DetonateBomb, LobbyEntity.BombDetonateTimeMs.HasValue ? LobbyEntity.BombDetonateTimeMs.Value : 50);
+            bombDetonateTimer = new TDSTimer(DetonateBomb, (uint)_roundSettings.BombDetonateTimeMs);
 
             FuncIterateAllPlayers((target, team) =>
             {
@@ -236,7 +237,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (bomb == null)
                 return;
-            if (currentRoundStatus != ERoundStatus.Round)
+            if (_currentRoundStatus != ERoundStatus.Round)
                 return;
             if (bombDetonateTimer != null)
                 return;
@@ -248,7 +249,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
 
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), LobbyEntity.BombPlantTimeMs.HasValue ? LobbyEntity.BombPlantTimeMs.Value : 50);
+            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), (uint)_roundSettings.BombPlantTimeMs);
         }
 
         public void StopBombPlanting(Client client)
@@ -263,7 +264,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (bomb == null)
                 return;
-            if (currentRoundStatus != ERoundStatus.Round)
+            if (_currentRoundStatus != ERoundStatus.Round)
                 return;
             if (bombDetonateTimer == null)
                 return;
@@ -274,7 +275,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
                 return;
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), LobbyEntity.BombDefuseTimeMs.HasValue ? LobbyEntity.BombDefuseTimeMs.Value : 50);
+            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), (uint)_roundSettings.BombDefuseTimeMs);
         }
 
         public void StopBombDefusing(Client client)

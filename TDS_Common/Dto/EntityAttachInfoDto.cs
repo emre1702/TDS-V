@@ -15,7 +15,7 @@ namespace TDS_Common.Dto
         public float RotationOffsetZ;
 
         [JsonIgnore]
-        public uint? LobbyId;
+        public int? LobbyId;
 
         [JsonIgnore]
         public string Json;
@@ -23,7 +23,7 @@ namespace TDS_Common.Dto
         public EntityAttachInfoDto(int EntityValue, int TargetValue, int Bone,
             float PositionOffsetX, float PositionOffsetY, float PositionOffsetZ,
             float RotationOffsetX, float RotationOffsetY, float RotationOffsetZ,
-            uint? LobbyId)
+            int? LobbyId)
         {
             this.EntityValue = EntityValue;
             this.TargetValue = TargetValue;

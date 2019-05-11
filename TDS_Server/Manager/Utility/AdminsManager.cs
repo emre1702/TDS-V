@@ -1,20 +1,20 @@
+using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TDS_Common.Enum;
+using TDS_Server.Dto;
+using TDS_Server.Instance.Player;
+using TDS_Server.Interface;
+using TDS_Server_DB.Entity;
+
 namespace TDS_Server.Manager.Utility
 {
-    using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using TDS_Common.Enum;
-    using TDS_Server.Dto;
-    using TDS_Server.Entity;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Interface;
-
     internal static class AdminsManager
     {
-        public static Dictionary<byte, AdminLevelDto> AdminLevels = new Dictionary<byte, AdminLevelDto>();
+        public static Dictionary<short, AdminLevelDto> AdminLevels = new Dictionary<short, AdminLevelDto>();
 
         public static async Task Init(TDSNewContext dbcontext)
         {
@@ -61,19 +61,19 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        public static void SendChatMessageToAdmins(string msg, uint minadminlvl = 1)
+        public static void SendChatMessageToAdmins(string msg, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, msg));
+            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, msg), minadminlvl);
         }
 
-        public static void SendLangChatMessageToAdmins(Func<ILanguage, string> propertygetter, uint minadminlvl = 1)
+        public static void SendLangChatMessageToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, propertygetter(player.GetLang())));
+            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, propertygetter(player.GetLang())), minadminlvl);
         }
 
-        public static void SendLangNotificationToAdmins<T>(Func<ILanguage, string> propertygetter, uint minadminlvl = 1)
+        public static void SendLangNotificationToAdmins<T>(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Notification.SendNotificationToPlayer(player.Client, propertygetter(player.Language)));
+            CallMethodForAdmins(player => NAPI.Notification.SendNotificationToPlayer(player.Client, propertygetter(player.Language)), minadminlvl);
         }
     }
 }

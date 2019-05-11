@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
-    public partial class LogsTypes
+    public partial class LogTypes
     {
-        public byte Id { get; set; }
+        public short Id { get; set; }
         public string Name { get; set; }
     }
 }

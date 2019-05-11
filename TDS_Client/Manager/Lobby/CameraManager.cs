@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
     internal static class CameraManager
     {
         private static int cam = Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
-        private static TDSTimer? timer;
+        private static TDSTimer timer;
 
         public static void SetToMapCenter(Vector3 mapcenter)
         {
@@ -18,7 +18,7 @@ namespace TDS_Client.Manager.Lobby
             Cam.RenderScriptCams(true, true, Settings.MapChooseTime, true, true, 0);
         }
 
-        public static void SetGoTowardsPlayer(uint? time = null)
+        public static void SetGoTowardsPlayer(int? time = null)
         {
             //timer = null;
             Cam.RenderScriptCams(false, true, (int)(time ?? (Settings.CountdownTime * 0.9)), true, true, 0);

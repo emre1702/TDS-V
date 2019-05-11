@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Utility
             return list;
         }
 
-        private static List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(uint lobbyId)
+        private static List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(int lobbyId)
         {
             Lobby? lobby = LobbyManager.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
             if (lobby == null)
@@ -68,8 +68,8 @@ namespace TDS_Server.Manager.Utility
                 (
                     name: player.Client.Name,
                     playtimeMinutes: player.PlayMinutes,
-                    kills: (player.CurrentLobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0),
-                    assists: (player.CurrentLobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0),
+                    kills: (int)((player.CurrentLobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0)),
+                    assists: (int)((player.CurrentLobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0)),
                     deaths: player.CurrentLobbyStats?.Deaths ?? 0,
                     teamIndex: player.Team?.Entity.Index ?? 0
                 );

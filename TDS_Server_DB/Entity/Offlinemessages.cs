@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class Offlinemessages
     {
-        public uint Id { get; set; }
-        public uint TargetId { get; set; }
-        public uint SourceId { get; set; }
+        public int Id { get; set; }
+        public int TargetId { get; set; }
+        public int SourceId { get; set; }
         public string Message { get; set; }
-        public bool AlreadyLoadedOnce { get; set; }
+        public bool Seen { get; set; }
         public DateTime Timestamp { get; set; }
 
         public virtual Players Source { get; set; }

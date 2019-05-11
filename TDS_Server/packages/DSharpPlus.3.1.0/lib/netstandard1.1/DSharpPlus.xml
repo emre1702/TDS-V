@@ -83,18 +83,18 @@
         </member>
         <member name="P:DSharpPlus.BaseModule.Client">
             <summary>
-            Gets the instance of <see cref="T:DSharpPlus.DiscordClient"/> this module is attached to.
+            Gets the instance of <see cref="T:DSharpPlus.DiscordClient" /> this module is attached to.
             </summary>
         </member>
         <member name="M:DSharpPlus.BaseModule.Setup(DSharpPlus.DiscordClient)">
             <summary>
-            Initializes this module for given <see cref="T:DSharpPlus.DiscordClient"/> instance.
+            Initializes this module for given <see cref="T:DSharpPlus.DiscordClient" /> instance.
             </summary>
             <param name="client">Discord client to initialize for.</param>
         </member>
         <member name="T:DSharpPlus.EventArgs.DebugLogMessageEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DebugLogger.LogMessageReceived"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DebugLogger.LogMessageReceived" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.DebugLogMessageEventArgs.Level">
@@ -119,7 +119,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ChannelCreateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelCreated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelCreated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.ChannelCreateEventArgs.Channel">
@@ -134,7 +134,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ChannelDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.ChannelDeleteEventArgs.Channel">
@@ -149,7 +149,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ChannelPinsUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelPinsUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelPinsUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.ChannelPinsUpdateEventArgs.Channel">
@@ -164,7 +164,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ChannelUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ChannelUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.ChannelUpdateEventArgs.ChannelAfter">
@@ -184,7 +184,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ClientErrorEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ClientErrored"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.ClientErrored" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.ClientErrorEventArgs.Exception">
@@ -204,7 +204,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.DmChannelCreateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.DmChannelCreated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.DmChannelCreated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.DmChannelCreateEventArgs.Channel">
@@ -214,7 +214,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.DmChannelDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.DmChannelDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.DmChannelDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.DmChannelDeleteEventArgs.Channel">
@@ -224,7 +224,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildBanAddEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildBanAdded"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildBanAdded" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildBanAddEventArgs.Member">
@@ -239,7 +239,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildBanRemoveEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildBanRemoved"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildBanRemoved" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildBanRemoveEventArgs.Member">
@@ -254,7 +254,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildCreateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildCreated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildCreated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildCreateEventArgs.Guild">
@@ -264,7 +264,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildDeleteEventArgs.Guild">
@@ -279,7 +279,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildEmojisUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildEmojisUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildEmojisUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildEmojisUpdateEventArgs.EmojisAfter">
@@ -299,7 +299,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildIntegrationsUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildIntegrationsUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildIntegrationsUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildIntegrationsUpdateEventArgs.Guild">
@@ -309,7 +309,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildMemberAddEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberAdded"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberAdded" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildMemberAddEventArgs.Member">
@@ -324,7 +324,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildMemberRemoveEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberRemoved"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberRemoved" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildMemberRemoveEventArgs.Guild">
@@ -339,7 +339,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildMembersChunkEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMembersChunked"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMembersChunked" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildMembersChunkEventArgs.Guild">
@@ -354,7 +354,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildMemberUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildMemberUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildMemberUpdateEventArgs.Guild">
@@ -389,7 +389,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildRoleCreateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleCreated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleCreated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildRoleCreateEventArgs.Guild">
@@ -404,7 +404,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildRoleDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildRoleDeleteEventArgs.Guild">
@@ -419,7 +419,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildRoleUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildRoleUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildRoleUpdateEventArgs.Guild">
@@ -439,7 +439,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.GuildUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.GuildUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.GuildUpdateEventArgs.Guild">
@@ -449,7 +449,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.HeartbeatEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.Heartbeated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.Heartbeated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.HeartbeatEventArgs.Ping">
@@ -469,7 +469,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageAcknowledgeEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageAcknowledged"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageAcknowledged" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageAcknowledgeEventArgs.Message">
@@ -484,7 +484,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageBulkDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessagesBulkDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessagesBulkDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageBulkDeleteEventArgs.Messages">
@@ -499,7 +499,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageCreateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageCreated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageCreated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageCreateEventArgs.Message">
@@ -539,7 +539,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageDeleteEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageDeleted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageDeleted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageDeleteEventArgs.Message">
@@ -559,7 +559,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageReactionAddEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionAdded"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionAdded" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageReactionAddEventArgs.Message">
@@ -584,7 +584,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageReactionRemoveEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionRemoved"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionRemoved" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageReactionRemoveEventArgs.Message">
@@ -609,7 +609,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageReactionsClearEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionsCleared"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageReactionsCleared" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageReactionsClearEventArgs.Message">
@@ -624,7 +624,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.MessageUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.MessageUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.MessageUpdateEventArgs.Message">
@@ -664,7 +664,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.PresenceUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.PresenceUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.PresenceUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.PresenceUpdateEventArgs.Member">
@@ -699,12 +699,12 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.ReadyEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.Ready"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.Ready" /> event.
             </summary>
         </member>
         <member name="T:DSharpPlus.EventArgs.SocketCloseEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.SocketClosed"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.SocketClosed" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.SocketCloseEventArgs.CloseCode">
@@ -719,7 +719,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.SocketErrorEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.SocketErrored"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.SocketErrored" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.SocketErrorEventArgs.Exception">
@@ -729,7 +729,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.TypingStartEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.TypingStarted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.TypingStarted" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.TypingStartEventArgs.Channel">
@@ -749,7 +749,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.UnknownEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UnknownEvent"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UnknownEvent" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.UnknownEventArgs.EventName">
@@ -764,7 +764,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.UserSettingsUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UserSettingsUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UserSettingsUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.UserSettingsUpdateEventArgs.User">
@@ -794,7 +794,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.UserUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UserUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.UserUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.UserUpdateEventArgs.UserAfter">
@@ -834,7 +834,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.VoiceServerUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.VoiceServerUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.VoiceServerUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.VoiceServerUpdateEventArgs.Guild">
@@ -854,7 +854,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.VoiceStateUpdateEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.VoiceStateUpdated"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.DiscordClient.VoiceStateUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.VoiceStateUpdateEventArgs.User">
@@ -879,7 +879,7 @@
         </member>
         <member name="T:DSharpPlus.EventArgs.WebhooksUpdateEventArgs">
             <summary>
-            Represents arguments to <see cref="E:DSharpPlus.DiscordClient.WebhooksUpdated"/> event.
+            Represents arguments to <see cref="E:DSharpPlus.DiscordClient.WebhooksUpdated" /> event.
             </summary>
         </member>
         <member name="P:DSharpPlus.EventArgs.WebhooksUpdateEventArgs.Guild">
@@ -1326,7 +1326,7 @@
         <member name="M:DSharpPlus.DiscordClient.SyncGuildsAsync(DSharpPlus.Entities.DiscordGuild[])">
             <summary>
             Requests guild sync for specified guilds. Guild sync sends information about members and presences for a given guild, and makes gateway dispatch additional events.
-            
+
             This can only be done for user tokens.
             </summary>
             <param name="guilds">Guilds to send a sync request for.</param>
@@ -1339,7 +1339,7 @@
         </member>
         <member name="T:DSharpPlus.DiscordConfiguration">
             <summary>
-            Represents configuration for <see cref="T:DSharpPlus.DiscordClient"/> and <see cref="T:DSharpPlus.DiscordShardedClient"/>.
+            Represents configuration for <see cref="T:DSharpPlus.DiscordClient" /> and <see cref="T:DSharpPlus.DiscordShardedClient" />.
             </summary>
         </member>
         <member name="P:DSharpPlus.DiscordConfiguration.Token">
@@ -1349,12 +1349,12 @@
         </member>
         <member name="P:DSharpPlus.DiscordConfiguration.TokenType">
             <summary>
-            Sets the type of the token used to identify the client. This is typically <see cref="F:DSharpPlus.TokenType.Bot"/> for bots, and <see cref="F:DSharpPlus.TokenType.User"/> for selfbots and userbots.
+            Sets the type of the token used to identify the client. This is typically <see cref="F:DSharpPlus.TokenType.Bot" /> for bots, and <see cref="F:DSharpPlus.TokenType.User" /> for selfbots and userbots.
             </summary>
         </member>
         <member name="P:DSharpPlus.DiscordConfiguration.LogLevel">
             <summary>
-            Sets the maximum logging level for messages. Typically, the default value of <see cref="F:DSharpPlus.LogLevel.Info"/> is ok for most uses.
+            Sets the maximum logging level for messages. Typically, the default value of <see cref="F:DSharpPlus.LogLevel.Info" /> is ok for most uses.
             </summary>
         </member>
         <member name="P:DSharpPlus.DiscordConfiguration.UseInternalLogHandler">
@@ -1729,27 +1729,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplication.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplication"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplication" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplication.Equals(DSharpPlus.Entities.DiscordApplication)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplication"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplication" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordApplication" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordApplication"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordApplication"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordApplication" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordApplication" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplication.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplication.op_Equality(DSharpPlus.Entities.DiscordApplication,DSharpPlus.Entities.DiscordApplication)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplication"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplication" /> objects are equal.
             </summary>
             <param name="e1">First application to compare.</param>
             <param name="e2">Second application to compare.</param>
@@ -1757,7 +1757,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplication.op_Inequality(DSharpPlus.Entities.DiscordApplication,DSharpPlus.Entities.DiscordApplication)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplication"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplication" /> objects are not equal.
             </summary>
             <param name="e1">First application to compare.</param>
             <param name="e2">Second application to compare.</param>
@@ -1790,27 +1790,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplicationAsset.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplicationAsset.Equals(DSharpPlus.Entities.DiscordApplicationAsset)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplicationAsset.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordApplication" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplicationAsset.op_Equality(DSharpPlus.Entities.DiscordApplicationAsset,DSharpPlus.Entities.DiscordApplicationAsset)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> objects are equal.
             </summary>
             <param name="e1">First application asset to compare.</param>
             <param name="e2">Second application asset to compare.</param>
@@ -1818,7 +1818,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordApplicationAsset.op_Inequality(DSharpPlus.Entities.DiscordApplicationAsset,DSharpPlus.Entities.DiscordApplicationAsset)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordApplicationAsset" /> objects are not equal.
             </summary>
             <param name="e1">First application asset to compare.</param>
             <param name="e2">Second application asset to compare.</param>
@@ -2521,9 +2521,9 @@
             <returns></returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.GetMessagesAsync(System.Int32,System.Nullable{System.UInt64},System.Nullable{System.UInt64},System.Nullable{System.UInt64})">
-            <summary>  
+            <summary>
             Returns a list of messages. Only set ONE of the three parameters. They are Message ID's
-            </summary> 
+            </summary>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.DeleteMessagesAsync(System.Collections.Generic.IEnumerable{DSharpPlus.Entities.DiscordMessage},System.String)">
             <summary>
@@ -2645,27 +2645,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordChannel"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordChannel" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordChannel"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordChannel" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.Equals(DSharpPlus.Entities.DiscordChannel)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordChannel"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordChannel"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordChannel" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordChannel" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordChannel"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordChannel"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordChannel"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordChannel" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordChannel" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordChannel" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordChannel"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordChannel" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordChannel"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordChannel" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.op_Equality(DSharpPlus.Entities.DiscordChannel,DSharpPlus.Entities.DiscordChannel)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordChannel"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordChannel" /> objects are equal.
             </summary>
             <param name="e1">First channel to compare.</param>
             <param name="e2">Second channel to compare.</param>
@@ -2673,7 +2673,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordChannel.op_Inequality(DSharpPlus.Entities.DiscordChannel,DSharpPlus.Entities.DiscordChannel)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordChannel"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordChannel" /> objects are not equal.
             </summary>
             <param name="e1">First channel to compare.</param>
             <param name="e2">Second channel to compare.</param>
@@ -3321,7 +3321,7 @@
         </member>
         <member name="P:DSharpPlus.Entities.DiscordEmbedBuilder.EmbedFooter.IconUrl">
             <summary>
-            Gets or sets the Url 
+            Gets or sets the Url
             </summary>
         </member>
         <member name="T:DSharpPlus.Entities.DiscordEmbedField">
@@ -3482,27 +3482,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordEmoji" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.Equals(DSharpPlus.Entities.DiscordEmoji)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordEmoji" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordEmoji"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordEmoji" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordEmoji" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordEmoji" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordEmoji" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.op_Equality(DSharpPlus.Entities.DiscordEmoji,DSharpPlus.Entities.DiscordEmoji)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> objects are equal.
             </summary>
             <param name="e1">First emoji to compare.</param>
             <param name="e2">Second emoji to compare.</param>
@@ -3510,7 +3510,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.op_Inequality(DSharpPlus.Entities.DiscordEmoji,DSharpPlus.Entities.DiscordEmoji)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> objects are not equal.
             </summary>
             <param name="e1">First emoji to compare.</param>
             <param name="e2">Second emoji to compare.</param>
@@ -3520,32 +3520,32 @@
             <summary>
             Creates an emoji object from a unicode entity.
             </summary>
-            <param name="client"><see cref="T:DSharpPlus.DiscordClient"/> to attach to the object.</param>
+            <param name="client"><see cref="T:DSharpPlus.DiscordClient" /> to attach to the object.</param>
             <param name="unicode_entity">Unicode entity to create the object from.</param>
-            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> object.</returns>
+            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> object.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.FromUnicode(System.String)">
             <summary>
             Creates an emoji object from a unicode entity.
             </summary>
             <param name="unicode_entity">Unicode entity to create the object from.</param>
-            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> object.</returns>
+            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> object.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.FromGuildEmote(DSharpPlus.DiscordClient,System.UInt64)">
             <summary>
             Creates an emoji object from a guild emote.
             </summary>
-            <param name="client"><see cref="T:DSharpPlus.DiscordClient"/> to attach to the object.</param>
+            <param name="client"><see cref="T:DSharpPlus.DiscordClient" /> to attach to the object.</param>
             <param name="id">Id of the emote.</param>
-            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> object.</returns>
+            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> object.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordEmoji.FromName(DSharpPlus.DiscordClient,System.String)">
             <summary>
             Creates a DiscordEmoji from emote name that includes colons (eg. :thinking:). This method also supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild emoji (still specified by :name:).
             </summary>
-            <param name="client"><see cref="T:DSharpPlus.DiscordClient"/> to attach to the object.</param>
+            <param name="client"><see cref="T:DSharpPlus.DiscordClient" /> to attach to the object.</param>
             <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
-            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji"/> object.</returns>
+            <returns>Create <see cref="T:DSharpPlus.Entities.DiscordEmoji" /> object.</returns>
         </member>
         <member name="T:DSharpPlus.Entities.DiscordGuild">
             <summary>
@@ -3952,7 +3952,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.GrantRoleAsync(DSharpPlus.Entities.DiscordMember,DSharpPlus.Entities.DiscordRole,System.String)">
             <summary>
-            Grants a role to a member. 
+            Grants a role to a member.
             </summary>
             <param name="member">Member to grant the role to.</param>
             <param name="role">Role to grant.</param>
@@ -3961,7 +3961,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.RevokeRoleAsync(DSharpPlus.Entities.DiscordMember,DSharpPlus.Entities.DiscordRole,System.String)">
             <summary>
-            Revokes a role from a member. 
+            Revokes a role from a member.
             </summary>
             <param name="member">Member to revoke the role from.</param>
             <param name="role">Role to revoke.</param>
@@ -3980,7 +3980,7 @@
         <member name="M:DSharpPlus.Entities.DiscordGuild.SyncAsync">
             <summary>
             Sends a guild sync request for this guild. This fills the guild's member and presence information, and starts dispatching additional events.
-            
+
             This can only be done for user tokens.
             </summary>
             <returns></returns>
@@ -4005,27 +4005,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordGuild"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordGuild" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordGuild"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordGuild" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.Equals(DSharpPlus.Entities.DiscordGuild)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordGuild"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordGuild"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordGuild" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordGuild" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordGuild"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordGuild"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordGuild"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordGuild" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordGuild" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordGuild" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordGuild"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordGuild" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordGuild"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordGuild" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.op_Equality(DSharpPlus.Entities.DiscordGuild,DSharpPlus.Entities.DiscordGuild)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordGuild"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordGuild" /> objects are equal.
             </summary>
             <param name="e1">First member to compare.</param>
             <param name="e2">Second member to compare.</param>
@@ -4033,7 +4033,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordGuild.op_Inequality(DSharpPlus.Entities.DiscordGuild,DSharpPlus.Entities.DiscordGuild)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordGuild"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordGuild" /> objects are not equal.
             </summary>
             <param name="e1">First member to compare.</param>
             <param name="e2">Second member to compare.</param>
@@ -4403,7 +4403,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.GrantRoleAsync(DSharpPlus.Entities.DiscordRole,System.String)">
             <summary>
-            Grants a role to the member. 
+            Grants a role to the member.
             </summary>
             <param name="role">Role to grant.</param>
             <param name="reason">Reason for audit logs.</param>
@@ -4433,27 +4433,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMember"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMember" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordMember"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordMember" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.Equals(DSharpPlus.Entities.DiscordMember)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMember"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordMember"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMember" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordMember" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordMember"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordMember"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordMember"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordMember" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordMember" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordMember" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordMember"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordMember" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordMember"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordMember" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.op_Equality(DSharpPlus.Entities.DiscordMember,DSharpPlus.Entities.DiscordMember)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMember"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMember" /> objects are equal.
             </summary>
             <param name="e1">First member to compare.</param>
             <param name="e2">Second member to compare.</param>
@@ -4461,7 +4461,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMember.op_Inequality(DSharpPlus.Entities.DiscordMember,DSharpPlus.Entities.DiscordMember)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMember"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMember" /> objects are not equal.
             </summary>
             <param name="e1">First member to compare.</param>
             <param name="e2">Second member to compare.</param>
@@ -4473,7 +4473,7 @@
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.DiscordMessage.Channel">
-            <summary> 
+            <summary>
             Gets the channel in which the message was sent.
             </summary>
         </member>
@@ -4669,27 +4669,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMessage.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMessage"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMessage" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordMessage"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordMessage" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMessage.Equals(DSharpPlus.Entities.DiscordMessage)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMessage"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordMessage"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordMessage" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordMessage" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordMessage"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordMessage"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordMessage"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordMessage" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordMessage" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordMessage" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMessage.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordMessage"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordMessage" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordMessage"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordMessage" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMessage.op_Equality(DSharpPlus.Entities.DiscordMessage,DSharpPlus.Entities.DiscordMessage)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMessage"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMessage" /> objects are equal.
             </summary>
             <param name="e1">First message to compare.</param>
             <param name="e2">Second message to compare.</param>
@@ -4697,7 +4697,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordMessage.op_Inequality(DSharpPlus.Entities.DiscordMessage,DSharpPlus.Entities.DiscordMessage)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMessage"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordMessage" /> objects are not equal.
             </summary>
             <param name="e1">First message to compare.</param>
             <param name="e2">Second message to compare.</param>
@@ -4880,27 +4880,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordRole.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordRole"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordRole" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordRole"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordRole" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordRole.Equals(DSharpPlus.Entities.DiscordRole)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordRole"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordRole"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordRole" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordRole" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordRole"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordRole"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordRole"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordRole" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordRole" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordRole" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordRole.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordRole"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordRole" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordRole"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordRole" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordRole.op_Equality(DSharpPlus.Entities.DiscordRole,DSharpPlus.Entities.DiscordRole)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordRole"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordRole" /> objects are equal.
             </summary>
             <param name="e1">First role to compare.</param>
             <param name="e2">Second role to compare.</param>
@@ -4908,7 +4908,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordRole.op_Inequality(DSharpPlus.Entities.DiscordRole,DSharpPlus.Entities.DiscordRole)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordRole"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordRole" /> objects are not equal.
             </summary>
             <param name="e1">First role to compare.</param>
             <param name="e2">Second role to compare.</param>
@@ -4982,27 +4982,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordUser.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordUser"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordUser" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordUser"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordUser" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordUser.Equals(DSharpPlus.Entities.DiscordUser)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordUser"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordUser"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordUser" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordUser" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordUser"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordUser"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordUser"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordUser" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordUser" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordUser" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordUser.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordUser"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordUser" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordUser"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordUser" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordUser.op_Equality(DSharpPlus.Entities.DiscordUser,DSharpPlus.Entities.DiscordUser)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordUser"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordUser" /> objects are equal.
             </summary>
             <param name="e1">First user to compare.</param>
             <param name="e2">Second user to compare.</param>
@@ -5010,7 +5010,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordUser.op_Inequality(DSharpPlus.Entities.DiscordUser,DSharpPlus.Entities.DiscordUser)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordUser"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordUser" /> objects are not equal.
             </summary>
             <param name="e1">First user to compare.</param>
             <param name="e2">Second user to compare.</param>
@@ -5207,27 +5207,27 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordWebhook.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordWebhook" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.DiscordWebhook" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordWebhook.Equals(DSharpPlus.Entities.DiscordWebhook)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/> is equal to another <see cref="T:DSharpPlus.Entities.DiscordWebhook"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.DiscordWebhook" /> is equal to another <see cref="T:DSharpPlus.Entities.DiscordWebhook" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordWebhook"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordWebhook"/> is equal to this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.DiscordWebhook" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.DiscordWebhook" /> is equal to this <see cref="T:DSharpPlus.Entities.DiscordWebhook" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordWebhook.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.DiscordWebhook" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordWebhook"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.DiscordWebhook" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.DiscordWebhook.op_Equality(DSharpPlus.Entities.DiscordWebhook,DSharpPlus.Entities.DiscordWebhook)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordWebhook"/> objects are equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordWebhook" /> objects are equal.
             </summary>
             <param name="e1">First webhook to compare.</param>
             <param name="e2">Second webhook to compare.</param>
@@ -5235,7 +5235,7 @@
         </member>
         <member name="M:DSharpPlus.Entities.DiscordWebhook.op_Inequality(DSharpPlus.Entities.DiscordWebhook,DSharpPlus.Entities.DiscordWebhook)">
             <summary>
-            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordWebhook"/> objects are not equal.
+            Gets whether the two <see cref="T:DSharpPlus.Entities.DiscordWebhook" /> objects are not equal.
             </summary>
             <param name="e1">First webhook to compare.</param>
             <param name="e2">Second webhook to compare.</param>
@@ -5278,12 +5278,12 @@
         </member>
         <member name="M:DSharpPlus.Entities.Game.#ctor">
             <summary>
-            Creates a new, empty instance of a <see cref="T:DSharpPlus.Entities.Game"/>.
+            Creates a new, empty instance of a <see cref="T:DSharpPlus.Entities.Game" />.
             </summary>
         </member>
         <member name="M:DSharpPlus.Entities.Game.#ctor(System.String)">
             <summary>
-            Creates a new instance of a <see cref="T:DSharpPlus.Entities.Game"/> with specified name.
+            Creates a new instance of a <see cref="T:DSharpPlus.Entities.Game" /> with specified name.
             </summary>
             <param name="name"></param>
         </member>
@@ -5305,112 +5305,112 @@
         <member name="P:DSharpPlus.Entities.Game.Details">
             <summary>
             Gets or sets the details.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.State">
             <summary>
             Gets or sets game state.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.Application">
             <summary>
             Gets or sets the application for which the rich presence is for.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.Instance">
             <summary>
             Gets or sets instance status.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.LargeImage">
             <summary>
             Gets or sets large image for the rich presence.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.LargeImageText">
             <summary>
             Gets or sets the hovertext for large image.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.SmallImage">
             <summary>
             Gets or sets small image for the rich presence.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.SmallImageText">
             <summary>
             Gets or sets the hovertext for small image.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.CurrentPartySize">
             <summary>
             Gets or sets current party size.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.MaximumPartySize">
             <summary>
             Gets or sets maximum party size.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.PartyId">
             <summary>
             Gets or sets the party ID.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.StartTimestamp">
             <summary>
             Gets or sets the game start timestamp.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.EndTimestamp">
             <summary>
             Gets or sets the game end timestamp.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.JoinSecret">
             <summary>
             Gets or sets the secret value enabling users to join your game. Note that this works for RPC applications only.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.MatchSecret">
             <summary>
             Gets or sets the secret value enabling users to receive notifications whenever your game state changes. Requires instance set to true.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Game.SpectateSecret">
             <summary>
             Gets or sets the secret value enabling users to spectate your game. Note that this works for RPC applications only.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
@@ -5437,17 +5437,17 @@
         </member>
         <member name="P:DSharpPlus.Entities.Optional`1.HasValue">
             <summary>
-            Gets whether this <see cref="T:DSharpPlus.Entities.Optional`1"/> has a value.
+            Gets whether this <see cref="T:DSharpPlus.Entities.Optional`1" /> has a value.
             </summary>
         </member>
         <member name="P:DSharpPlus.Entities.Optional`1.Value">
             <summary>
-            Gets the value of this <see cref="T:DSharpPlus.Entities.Optional`1"/>.
+            Gets the value of this <see cref="T:DSharpPlus.Entities.Optional`1" />.
             </summary>
         </member>
         <member name="M:DSharpPlus.Entities.Optional`1.#ctor(`0)">
             <summary>
-            Creates a new <see cref="T:DSharpPlus.Entities.Optional`1"/> with specified value.
+            Creates a new <see cref="T:DSharpPlus.Entities.Optional`1" /> with specified value.
             </summary>
             <param name="value">Value of this option.</param>
         </member>
@@ -5459,30 +5459,30 @@
         </member>
         <member name="M:DSharpPlus.Entities.Optional`1.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.Optional`1"/> (or its value) are equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Entities.Optional`1" /> (or its value) are equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.Optional`1"/> or its value.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Entities.Optional`1" /> or its value.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.Optional`1.Equals(DSharpPlus.Entities.Optional{`0})">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Entities.Optional`1"/> is equal to another <see cref="T:DSharpPlus.Entities.Optional`1"/>.
+            Checks whether this <see cref="T:DSharpPlus.Entities.Optional`1" /> is equal to another <see cref="T:DSharpPlus.Entities.Optional`1" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Entities.Optional`1"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Entities.Optional`1"/> is equal to this <see cref="T:DSharpPlus.Entities.Optional`1"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Entities.Optional`1" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Entities.Optional`1" /> is equal to this <see cref="T:DSharpPlus.Entities.Optional`1" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.Optional`1.Equals(`0)">
             <summary>
-            Checks whether the value of this <see cref="T:DSharpPlus.Entities.Optional`1"/> is equal to specified object.
+            Checks whether the value of this <see cref="T:DSharpPlus.Entities.Optional`1" /> is equal to specified object.
             </summary>
             <param name="e">Object to compare to.</param>
-            <returns>Whether the object is equal to the value of this <see cref="T:DSharpPlus.Entities.Optional`1"/>.</returns>
+            <returns>Whether the object is equal to the value of this <see cref="T:DSharpPlus.Entities.Optional`1" />.</returns>
         </member>
         <member name="M:DSharpPlus.Entities.Optional`1.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Entities.Optional`1"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Entities.Optional`1" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.Optional`1"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Entities.Optional`1" />.</returns>
         </member>
         <member name="T:DSharpPlus.Entities.SnowflakeObject">
             <summary>
@@ -6318,56 +6318,56 @@
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Details">
             <summary>
             Gets or sets the details.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.State">
             <summary>
             Gets or sets game state.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.ApplicationId">
             <summary>
             Gets ID of the application for which this rich presence is for.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Instance">
             <summary>
             Gets or sets instance status.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Party">
             <summary>
             Gets or sets information about the current game's party.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Assets">
             <summary>
             Gets or sets information about assets related to this rich presence.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Timestamps">
             <summary>
             Gets or sets infromation about current game's timestamps.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
         <member name="P:DSharpPlus.Net.Abstractions.TransportGame.Secrets">
             <summary>
             Gets or sets infromation about current game's secret values.
-            
+
             This is a component of the rich presence, and, as such, can only be used by regular users.
             </summary>
         </member>
@@ -6513,9 +6513,9 @@
         </member>
         <member name="M:DSharpPlus.Net.BaseRestRequest.#ctor(DSharpPlus.BaseDiscordClient,DSharpPlus.Net.RateLimitBucket,System.Uri,DSharpPlus.Net.RestRequestMethod,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
-            Creates a new <see cref="T:DSharpPlus.Net.BaseRestRequest"/> with specified parameters.
+            Creates a new <see cref="T:DSharpPlus.Net.BaseRestRequest" /> with specified parameters.
             </summary>
-            <param name="client"><see cref="T:DSharpPlus.DiscordClient"/> from which this request originated.</param>
+            <param name="client"><see cref="T:DSharpPlus.DiscordClient" /> from which this request originated.</param>
             <param name="bucket">Rate limit bucket to place this request in.</param>
             <param name="url">Uri to which this request is going to be sent to.</param>
             <param name="method">Method to use for this request,</param>
@@ -6605,23 +6605,23 @@
         </member>
         <member name="M:DSharpPlus.Net.RateLimitBucket.Equals(System.Object)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Net.RateLimitBucket"/> is equal to another object.
+            Checks whether this <see cref="T:DSharpPlus.Net.RateLimitBucket" /> is equal to another object.
             </summary>
             <param name="obj">Object to compare to.</param>
-            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Net.RateLimitBucket"/>.</returns>
+            <returns>Whether the object is equal to this <see cref="T:DSharpPlus.Net.RateLimitBucket" />.</returns>
         </member>
         <member name="M:DSharpPlus.Net.RateLimitBucket.Equals(DSharpPlus.Net.RateLimitBucket)">
             <summary>
-            Checks whether this <see cref="T:DSharpPlus.Net.RateLimitBucket"/> is equal to another <see cref="T:DSharpPlus.Net.RateLimitBucket"/>.
+            Checks whether this <see cref="T:DSharpPlus.Net.RateLimitBucket" /> is equal to another <see cref="T:DSharpPlus.Net.RateLimitBucket" />.
             </summary>
-            <param name="e"><see cref="T:DSharpPlus.Net.RateLimitBucket"/> to compare to.</param>
-            <returns>Whether the <see cref="T:DSharpPlus.Net.RateLimitBucket"/> is equal to this <see cref="T:DSharpPlus.Net.RateLimitBucket"/>.</returns>
+            <param name="e"><see cref="T:DSharpPlus.Net.RateLimitBucket" /> to compare to.</param>
+            <returns>Whether the <see cref="T:DSharpPlus.Net.RateLimitBucket" /> is equal to this <see cref="T:DSharpPlus.Net.RateLimitBucket" />.</returns>
         </member>
         <member name="M:DSharpPlus.Net.RateLimitBucket.GetHashCode">
             <summary>
-            Gets the hash code for this <see cref="T:DSharpPlus.Net.RateLimitBucket"/>.
+            Gets the hash code for this <see cref="T:DSharpPlus.Net.RateLimitBucket" />.
             </summary>
-            <returns>The hash code for this <see cref="T:DSharpPlus.Net.RateLimitBucket"/>.</returns>
+            <returns>The hash code for this <see cref="T:DSharpPlus.Net.RateLimitBucket" />.</returns>
         </member>
         <member name="T:DSharpPlus.Net.RestClient">
             <summary>
@@ -6882,7 +6882,7 @@
         </member>
         <member name="M:DSharpPlus.RingBuffer`1.Contains(`0)">
             <summary>
-            Checks whether given item is present in the buffer. This method is not implemented. Use <see cref="M:DSharpPlus.RingBuffer`1.Contains(System.Func{`0,System.Boolean})"/> instead.
+            Checks whether given item is present in the buffer. This method is not implemented. Use <see cref="M:DSharpPlus.RingBuffer`1.Contains(System.Func{`0,System.Boolean})" /> instead.
             </summary>
             <param name="item">Item to check for.</param>
             <returns>Whether the buffer contains the item.</returns>
@@ -6904,7 +6904,7 @@
         </member>
         <member name="M:DSharpPlus.RingBuffer`1.Remove(`0)">
             <summary>
-            Removes an item from the buffer. This method is not implemented. Use <see cref="M:DSharpPlus.RingBuffer`1.Remove(System.Func{`0,System.Boolean})"/> instead.
+            Removes an item from the buffer. This method is not implemented. Use <see cref="M:DSharpPlus.RingBuffer`1.Remove(System.Func{`0,System.Boolean})" /> instead.
             </summary>
             <param name="item">Item to remove.</param>
             <returns>Whether an item was removed or not.</returns>
@@ -6940,21 +6940,21 @@
         </member>
         <member name="M:DSharpPlus.Utilities.GetDateTimeOffset(System.Int64)">
             <summary>
-            Helper method to create a <see cref="T:System.DateTimeOffset"/> from Unix time seconds for targets that do not support this natively.
+            Helper method to create a <see cref="T:System.DateTimeOffset" /> from Unix time seconds for targets that do not support this natively.
             </summary>
             <param name="unixtime">Unix time seconds to convert.</param>
-            <returns>Calculated <see cref="T:System.DateTimeOffset"/>.</returns>
+            <returns>Calculated <see cref="T:System.DateTimeOffset" />.</returns>
         </member>
         <member name="M:DSharpPlus.Utilities.GetUnixTime(System.DateTimeOffset)">
             <summary>
-            Helper method to calculate Unix time seconsd from a <see cref="T:System.DateTimeOffset"/> for targets that do not support this natively.
+            Helper method to calculate Unix time seconsd from a <see cref="T:System.DateTimeOffset" /> for targets that do not support this natively.
             </summary>
-            <param name="dto"><see cref="T:System.DateTimeOffset"/> to calculate Unix time for.</param>
+            <param name="dto"><see cref="T:System.DateTimeOffset" /> to calculate Unix time for.</param>
             <returns>Calculated Unix time.</returns>
         </member>
         <member name="M:DSharpPlus.Utilities.ToPermissionString(DSharpPlus.Permissions)">
             <summary>
-            Converts this <see cref="T:DSharpPlus.Permissions"/> into human-readable format.
+            Converts this <see cref="T:DSharpPlus.Permissions" /> into human-readable format.
             </summary>
             <param name="perm">Permissions enumeration to convert.</param>
             <returns>Human-readable permissions.</returns>

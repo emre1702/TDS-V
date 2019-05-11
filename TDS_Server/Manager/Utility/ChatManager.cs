@@ -1,11 +1,11 @@
-﻿namespace TDS_Server.Manager.Utility
-{
-    using GTANetworkAPI;
-    using TDS_Common.Default;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Manager.Logs;
-    using TDS_Server.Manager.Player;
+﻿using GTANetworkAPI;
+using TDS_Common.Default;
+using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
+using TDS_Server.Manager.Player;
 
+namespace TDS_Server.Manager.Utility
+{
     internal class ChatManager : Script
     {
         public ChatManager()

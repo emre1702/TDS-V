@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TDS_Common.Dto.Map
+namespace TDS_Server.Dto.Map
 {
     public class MapDescriptionsDto
     {

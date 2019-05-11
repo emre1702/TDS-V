@@ -7,16 +7,16 @@ namespace TDS_Common.Dto
     public class SyncedScoreboardLobbyDataDto
     {
         public string Name;
-        public uint PlaytimeMinutes;
-        public uint Kills;
-        public uint Assists;
-        public uint Deaths;
-        public uint TeamIndex;
+        public int PlaytimeMinutes;
+        public int Kills;
+        public int Assists;
+        public int Deaths;
+        public int TeamIndex;
 
         [JsonIgnore]
         public string Json;
 
-        public SyncedScoreboardLobbyDataDto(string name, uint playtimeMinutes, uint kills, uint assists, uint deaths, uint teamIndex)
+        public SyncedScoreboardLobbyDataDto(string name, int playtimeMinutes, int kills, int assists, int deaths, int teamIndex)
         {
             Name = name;
             PlaytimeMinutes = playtimeMinutes;

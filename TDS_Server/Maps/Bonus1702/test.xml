@@ -1,5 +1,7 @@
 <TDSMap>
-	<map name="Test-Map" type="normal" minplayers="0" maxplayers="999" creatorid="1" />
+  <map name="Test-Map" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>1</creatorid>
+  </map>
 
   <description>
     <german>Eine Test-Map, nichts besonderes</german>

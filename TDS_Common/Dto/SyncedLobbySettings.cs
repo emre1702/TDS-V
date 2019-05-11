@@ -4,22 +4,22 @@ namespace TDS_Common.Dto
 {
     public class SyncedLobbySettingsDto
     {
-        public uint Id;
+        public int Id;
         public string Name;
-        public uint? SpawnAgainAfterDeathMs;
-        public uint? BombDefuseTimeMs;
-        public uint? BombPlantTimeMs;
-        public uint? CountdownTime;
-        public uint? RoundTime;
-        public uint? BombDetonateTimeMs;
-        public uint? DieAfterOutsideMapLimitTime;
+        public int? SpawnAgainAfterDeathMs;
+        public int? BombDefuseTimeMs;
+        public int? BombPlantTimeMs;
+        public int? CountdownTime;
+        public int? RoundTime;
+        public int? BombDetonateTimeMs;
+        public int? DieAfterOutsideMapLimitTime;
         public bool InLobbyWithMaps;
 
         [JsonIgnore]
         public string Json;
 
-        public SyncedLobbySettingsDto(uint Id, string Name, uint? SpawnAgainAfterDeathMs, uint? BombDefuseTimeMs, uint? BombPlantTimeMs,
-            uint? CountdownTime, uint? RoundTime, uint? BombDetonateTimeMs, uint? DieAfterOutsideMapLimitTime, bool InLobbyWithMaps)
+        public SyncedLobbySettingsDto(int Id, string Name, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
+            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? DieAfterOutsideMapLimitTime, bool InLobbyWithMaps)
         {
             this.Id = Id;
             this.Name = Name;

@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
     {
         public static string CurrentMap => mapInfo?.Text ?? "-";
 
-        private static DxText? mapInfo;
+        private static DxText mapInfo;
 
         public static void SetMapInfo(string mapname)
         {

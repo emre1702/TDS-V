@@ -7,11 +7,11 @@ namespace TDS_Server.Dto
     internal class RoundStatsDto
     {
         private TDSPlayer _player;
-        private uint _kills;
-        private uint _assists;
-        private uint _damage;
+        private int _kills;
+        private int _assists;
+        private int _damage;
 
-        public uint Kills
+        public int Kills
         {
             get => _kills;
             set
@@ -21,7 +21,7 @@ namespace TDS_Server.Dto
             }
         }
 
-        public uint Assists
+        public int Assists
         {
             get => _assists;
             set
@@ -31,7 +31,7 @@ namespace TDS_Server.Dto
             }
         }
 
-        public uint Damage
+        public int Damage
         {
             get => _damage;
             set

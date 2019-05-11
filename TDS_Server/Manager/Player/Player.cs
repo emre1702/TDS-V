@@ -3,24 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Player
 {
     internal static class Player
     {
-        private static readonly Dictionary<Client, TDSPlayer> clientPlayers = new Dictionary<Client, TDSPlayer>();
+        private static readonly Dictionary<Client, TDSPlayer> _clientPlayers = new Dictionary<Client, TDSPlayer>();
 
         public static TDSPlayer GetChar(this Client client)
         {
-            if (!clientPlayers.ContainsKey(client))
+            if (!_clientPlayers.ContainsKey(client))
             {
                 TDSPlayer player = new TDSPlayer(client);
-                clientPlayers[client] = player;
+                _clientPlayers[client] = player;
                 return player;
             }
-            return clientPlayers[client];
+            return _clientPlayers[client];
         }
 
         public static Players? GetEntity(this Client client)
@@ -30,7 +30,7 @@ namespace TDS_Server.Manager.Player
 
         public static TDSPlayer? GetPlayer(uint id)
         {
-            foreach (var entry in clientPlayers)
+            foreach (var entry in _clientPlayers)
             {
                 if (entry.Value.Entity == null)
                     continue;
@@ -47,10 +47,8 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<Players?> GetEntityByID(uint id)
         {
-            using (var dbcontext = new TDSNewContext())
-            {
-                return await dbcontext.Players.FindAsync(id);
-            }
+            using var dbcontext = new TDSNewContext();
+            return await dbcontext.Players.FindAsync(id);
         }
 
         public static async Task<bool> DoesPlayerWithScnameExist(string scname)
@@ -58,15 +56,13 @@ namespace TDS_Server.Manager.Player
             return await GetPlayerIDByScname(scname) != 0;
         }
 
-        public static async Task<uint> GetPlayerIDByScname(string scname)
+        public static async Task<int> GetPlayerIDByScname(string scname)
         {
-            using (var dbcontext = new TDSNewContext())
-            {
-                return await dbcontext.Players
-                            .Where(p => p.Scname == scname)
-                            .Select(p => p.Id)
-                            .FirstOrDefaultAsync();
-            }
+            using var dbcontext = new TDSNewContext();
+            return await dbcontext.Players
+                .Where(p => p.Scname == scname)
+                .Select(p => p.Id)
+                .FirstOrDefaultAsync();
         }
 
         public static void GiveMoney(this Client player, int money)

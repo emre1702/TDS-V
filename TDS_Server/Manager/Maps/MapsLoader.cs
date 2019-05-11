@@ -1,27 +1,28 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+using TDS_Server.Dto.Map;
+using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Logs;
+using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
+
+using DB = TDS_Server_DB.Entity;
+
 namespace TDS_Server.Manager.Maps
 {
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using TDS_Common.Dto.Map;
-    using TDS_Server.Entity;
-    using TDS_Server.Manager.Helper;
-    using TDS_Server.Manager.Logs;
-    using TDS_Server.Manager.Utility;
-
     internal static class MapsLoader
     {
         public static List<MapDto> AllMaps = new List<MapDto>();
         public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string>();   // mapnames in lower case
                                                                                                                          //public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string>();
 
-        private static readonly XmlReaderSettings _xmlReaderSettings = new XmlReaderSettings() { Async = true };
         private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
         public static async Task LoadMaps(TDSNewContext dbcontext)
@@ -52,7 +53,7 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? LoadMap(FileInfo fileInfo)
         {
-            using XmlReader reader = XmlReader.Create(fileInfo.OpenRead(), _xmlReaderSettings);
+            using XmlReader reader = XmlReader.Create(fileInfo.OpenText());
             if (!_xmlSerializer.CanDeserialize(reader))
             {
                 ErrorLogsManager.Log($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
@@ -83,11 +84,10 @@ namespace TDS_Server.Manager.Maps
 
         private static async Task SaveMapsInDB(TDSNewContext dbContext)
         {
-            dbContext.Maps.RemoveRange(
-               dbContext.Maps.Where(
-                   m => m.Id > 0 && !m.InTesting && !MapPathByName.ContainsKey(m.Name.ToLower())
-               )
-            );
+            var removeMapsInDB = (await dbContext.Maps.Where(m => m.Id > 0 && !m.InTesting).ToListAsync())
+                            .Where(m => !MapPathByName.ContainsKey(m.Name.ToLower()));
+
+            dbContext.Maps.RemoveRange(removeMapsInDB);
 
             if ((await dbContext.Maps.Where(m => m.Id > 0 && !m.InTesting).CountAsync()) != AllMaps.Count)
             {
@@ -97,9 +97,9 @@ namespace TDS_Server.Manager.Maps
                         continue;
 
                     if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
-                        await dbContext.Maps.AddAsync(new Maps() { Name = map.Info.Name, CreatorId = null });
+                        await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = null });
                     else
-                        await dbContext.Maps.AddAsync(new Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
+                        await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
                 }
             }
             await dbContext.SaveChangesAsync();

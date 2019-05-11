@@ -2,25 +2,29 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
-using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Entity;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
+
+using DB = TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Maps
 {
     internal static class MapCreator
     {
-        private static List<MapDto> newCreatedMaps = new List<MapDto>();
+        private static List<MapDto> _newCreatedMaps = new List<MapDto>();
 
         public async static Task<bool> Create(TDSPlayer creator, string mapJson)
         {
             if (creator.Entity == null)
-                return;
+                return false;
             var serializer = new XmlSerializer(typeof(MapDto));
             try
             {
@@ -28,22 +32,25 @@ namespace TDS_Server.Manager.Maps
                 mapDto.LoadSyncedData();
                 //mapDto.SyncedData.CreatorName = creator.Client.Name;
 
-                string mapPath = SettingsManager.NewMapsPath + mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp();
-                mapPath = Utils.MakeValidFileName(mapPath);
+                string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
+                string mapPath = SettingsManager.NewMapsPath + Utils.MakeValidFileName(mapFileName);
 
-                var memoryStream = new MemoryStream();
-                serializer.Serialize(memoryStream, mapDto);
+                MemoryStream memStrm = new MemoryStream();
+                UTF8Encoding utf8e = new UTF8Encoding();
+                XmlTextWriter xmlSink = new XmlTextWriter(memStrm, utf8e);
+                serializer.Serialize(xmlSink, mapDto);
+                byte[] utf8EncodedData = memStrm.ToArray();
 
-                string mapXml = await (new StreamReader(memoryStream).ReadToEndAsync());
+                string mapXml = utf8e.GetString(utf8EncodedData);
                 string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml);
 
                 using var dbContext = new TDSNewContext();
-                var dbMap = new Entity.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name, InTesting = true };
+                var dbMap = new DB.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name, InTesting = true };
                 await dbContext.Maps.AddAsync(dbMap);
                 await dbContext.SaveChangesAsync();
 
-                newCreatedMaps.Add(mapDto);
+                _newCreatedMaps.Add(mapDto);
 
                 return true;
             }
@@ -55,19 +62,19 @@ namespace TDS_Server.Manager.Maps
 
         public static void LoadNewMaps()
         {
-            newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
+            _newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
         }
 
         public static MapDto? GetRandomNewMap()
         {
-            if (newCreatedMaps.Count == 0)
+            if (_newCreatedMaps.Count == 0)
                 return null;
-            return newCreatedMaps[CommonUtils.Rnd.Next(newCreatedMaps.Count)];
+            return _newCreatedMaps[CommonUtils.Rnd.Next(_newCreatedMaps.Count)];
         }
 
         public static MapDto? GetMapByName(string mapName)
         {
-            return newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            return _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)

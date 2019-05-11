@@ -29,7 +29,7 @@ namespace TDS_Server.Instance.Lobby
                     {
                         SpectateOtherSameTeam(character);
                         NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerSpectateMode);
-                    }, LobbyEntity.SpawnAgainAfterDeathMs ?? 50);
+                    }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
                 }
             }
         }

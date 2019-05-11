@@ -1,5 +1,5 @@
-using TDS_Server.Entity;
 using TDS_Server.Enum;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -7,13 +7,13 @@ namespace TDS_Server.Instance.Lobby
     {
         public Arena(Lobbies entity) : base(entity)
         {
-            roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
-            roundStatusMethod[ERoundStatus.NewMapChoose] = StartNewMapChoose;
-            roundStatusMethod[ERoundStatus.Countdown] = StartRoundCountdown;
-            roundStatusMethod[ERoundStatus.Round] = StartRound;
-            roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
+            _roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
+            _roundStatusMethod[ERoundStatus.NewMapChoose] = StartNewMapChoose;
+            _roundStatusMethod[ERoundStatus.Countdown] = StartRoundCountdown;
+            _roundStatusMethod[ERoundStatus.Round] = StartRound;
+            _roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
-            DurationsDict[ERoundStatus.Round] = (entity.RoundTime ?? 360) * 1000;
+            DurationsDict[ERoundStatus.Round] = (uint)entity.LobbyRoundSettings.RoundTime * 1000;
 
             terroristTeam = Teams[2];
             counterTerroristTeam = Teams[1];
@@ -28,10 +28,10 @@ namespace TDS_Server.Instance.Lobby
         protected override void Remove()
         {
             base.Remove();
-            nextRoundStatusTimer?.Kill();
-            nextRoundStatusTimer = null;
+            _nextRoundStatusTimer?.Kill();
+            _nextRoundStatusTimer = null;
 
-            if (currentMap?.IsBomb ?? false)
+            if (_currentMap?.IsBomb ?? false)
                 StopBombRound();
         }
     }

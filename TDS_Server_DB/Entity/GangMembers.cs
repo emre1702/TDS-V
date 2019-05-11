@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class GangMembers
     {

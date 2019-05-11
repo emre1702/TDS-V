@@ -18,7 +18,7 @@ namespace TDS_Client.Instance.Draw
         private float damage;
         private ulong startTicks;
         private Vector3 targetPosition;
-        private DxText? text;
+        private DxText text;
         private bool remove = false;
 
         public FloatingDamageInfo(Player target, float damage)

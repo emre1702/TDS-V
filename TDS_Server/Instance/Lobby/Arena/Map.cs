@@ -1,10 +1,10 @@
 using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Maps;
@@ -14,10 +14,10 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private MapDto? currentMap;
-        private List<MapDto> maps = new List<MapDto>();
-        private List<Blip> mapBlips = new List<Blip>();
-        private string mapsJson = string.Empty;
+        private MapDto? _currentMap;
+        private List<MapDto> _maps = new List<MapDto>();
+        private List<Blip> _mapBlips = new List<Blip>();
+        private string _mapsJson = string.Empty;
 
         private MapDto GetNextMap()
         {
@@ -35,14 +35,14 @@ namespace TDS_Server.Instance.Lobby
                 if (map != null)
                     return map;
             }
-                
-            var mapsConsideringPlayersAmount = maps
+
+            var mapsConsideringPlayersAmount = _maps
                 .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
                 .ToArray();
             if (mapsConsideringPlayersAmount.Length > 0)
                 return mapsConsideringPlayersAmount[CommonUtils.Rnd.Next(0, mapsConsideringPlayersAmount.Length)];
 
-            return maps[CommonUtils.Rnd.Next(0, maps.Count)];
+            return _maps[CommonUtils.Rnd.Next(0, _maps.Count)];
         }
 
         /// <summary>
@@ -70,9 +70,8 @@ namespace TDS_Server.Instance.Lobby
                     Team team = Teams[teamsSpawnList.TeamID];
                     blip.Color = team.Entity.BlipColor;
                     blip.Name = "Spawn " + team.Entity.Name;
-                    mapBlips.Add(blip);
+                    _mapBlips.Add(blip);
                 }
-                
             }
         }
 
@@ -83,18 +82,18 @@ namespace TDS_Server.Instance.Lobby
                 Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
                 blip.Sprite = 441;
                 blip.Name = "Limit";
-                mapBlips.Add(blip);
+                _mapBlips.Add(blip);
             }
         }
 
         private MapPositionDto? GetMapRandomSpawnData(Team? team)
         {
-            if (currentMap == null)
+            if (_currentMap == null)
                 return null;
             if (team == null)
                 return null;
             int index = team.SpawnCounter++;
-            var teamSpawns = currentMap.TeamSpawnsList.TeamSpawns[team.Entity.Index - 1].Spawns;
+            var teamSpawns = _currentMap.TeamSpawnsList.TeamSpawns[team.Entity.Index - 1].Spawns;
             if (index >= teamSpawns.Length)
             {
                 index = 0;
@@ -107,18 +106,18 @@ namespace TDS_Server.Instance.Lobby
         {
             NAPI.Task.Run(() =>
             {
-                foreach (Blip blip in mapBlips)
+                foreach (Blip blip in _mapBlips)
                 {
                     blip.Delete();
                 }
-                mapBlips = new List<Blip>();
+                _mapBlips = new List<Blip>();
             });
         }
 
         public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
-            maps = themaps;
-            mapsJson = syncjson != null ? syncjson : JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());
+            _maps = themaps;
+            _mapsJson = syncjson ?? JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());
         }
     }
 }

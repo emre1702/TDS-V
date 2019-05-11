@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Utility
 {

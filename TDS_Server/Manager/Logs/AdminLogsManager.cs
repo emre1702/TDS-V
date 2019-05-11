@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Logs
 {
     internal static class AdminLogsManager
     {
-        private static readonly List<LogsAdmin> notsavedadminlogs = new List<LogsAdmin>();
+        private static readonly List<LogAdmins> _notSavedAdminLogs = new List<LogAdmins>();
 
         public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, bool asdonator = false, bool asvip = false, string? reason = null)
         {
-            notsavedadminlogs.Add(
-                new LogsAdmin
+            _notSavedAdminLogs.Add(
+                new LogAdmins
                 {
                     Source = source?.Entity?.Id ?? 0,
                     Target = target?.Entity?.Id ?? null,
@@ -28,10 +28,10 @@ namespace TDS_Server.Manager.Logs
             );
         }
 
-        public static void Log(ELogType cmd, TDSPlayer? source, uint? targetid = null, bool asdonator = false, bool asvip = false, string? reason = null)
+        public static void Log(ELogType cmd, TDSPlayer? source, int? targetid = null, bool asdonator = false, bool asvip = false, string? reason = null)
         {
-            notsavedadminlogs.Add(
-                new LogsAdmin
+            _notSavedAdminLogs.Add(
+                new LogAdmins
                 {
                     Source = source?.Entity?.Id ?? 0,
                     Target = targetid,
@@ -47,11 +47,11 @@ namespace TDS_Server.Manager.Logs
 
         public static async Task Save(TDSNewContext dbcontext)
         {
-            if (notsavedadminlogs.Count == 0)
+            if (_notSavedAdminLogs.Count == 0)
                 return;
-            await dbcontext.AddRangeAsync(notsavedadminlogs);
+            await dbcontext.AddRangeAsync(_notSavedAdminLogs);
             await dbcontext.SaveChangesAsync();
-            notsavedadminlogs.Clear();
+            _notSavedAdminLogs.Clear();
         }
     }
 }

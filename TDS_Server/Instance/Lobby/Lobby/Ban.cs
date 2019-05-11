@@ -1,9 +1,9 @@
 using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Lobby
                 PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban != null)
                 {
-                    ban.Admin = admin.Entity?.Id ?? 0;
+                    ban.AdminId = admin.Entity?.Id ?? 0;
                     ban.StartTimestamp = DateTime.Now;
                     ban.EndTimestamp = endTime;
                     ban.Reason = reason;
@@ -48,9 +48,9 @@ namespace TDS_Server.Instance.Lobby
                 {
                     ban = new PlayerBans()
                     {
-                        Id = target.Id,
-                        ForLobby = LobbyEntity.Id,
-                        Admin = admin.Entity?.Id ?? 0,
+                        PlayerId = target.Id,
+                        LobbyId = LobbyEntity.Id,
+                        AdminId = admin.Entity?.Id ?? 0,
                         EndTimestamp = endTime,
                         Reason = reason
                     };

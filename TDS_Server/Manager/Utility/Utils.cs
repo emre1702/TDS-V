@@ -1,27 +1,27 @@
-﻿namespace TDS_Server.Manager.Utility
-{
-    using GTANetworkAPI;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Text.RegularExpressions;
+﻿using GTANetworkAPI;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
+namespace TDS_Server.Manager.Utility
+{
     internal static class Utils
     {
-        private static readonly StringBuilder strbuilder = new StringBuilder();
-        private static readonly DateTime startDateTime = new DateTime(2017, 7, 24);
+        private static readonly StringBuilder _strbuilder = new StringBuilder();
+        private static readonly DateTime _startDateTime = new DateTime(2017, 7, 24);
 
         public static uint GetTimespanSinceStart(int seconds = 0)
         {
-            TimeSpan t = DateTime.Now.AddSeconds(seconds) - startDateTime;
+            TimeSpan t = DateTime.Now.AddSeconds(seconds) - _startDateTime;
             return (uint)t.TotalSeconds;
         }
 
-        public static string GetTimestamp(int seconds = 0)
+        public static string GetTimestamp()
         {
             return DateTime.Now.ToString("s");
         }
@@ -32,10 +32,10 @@
             hashbytes = SHA384.Create().ComputeHash(hashbytes);
             for (int i = 0; hashbytes != null && i < hashbytes.Length; i++)
             {
-                strbuilder.AppendFormat("{0:x2}", hashbytes[i]);
+                _strbuilder.AppendFormat("{0:x2}", hashbytes[i]);
             }
-            string result = strbuilder.ToString();
-            strbuilder.Clear();
+            string result = _strbuilder.ToString();
+            _strbuilder.Clear();
             return result;
         }
 
@@ -57,13 +57,13 @@
         {
             if (args.Length > 0)
             {
-                strbuilder.Append(str);
+                _strbuilder.Append(str);
                 for (int i = 0; i < args.Length; ++i)
                 {
-                    strbuilder.Replace("{" + i + "}", args[i] == null ? "?" : args[i].ToString());
+                    _strbuilder.Replace("{" + i + "}", args[i] == null ? "?" : args[i].ToString());
                 }
-                string result = strbuilder.ToString();
-                strbuilder.Clear();
+                string result = _strbuilder.ToString();
+                _strbuilder.Clear();
                 return result;
             }
             return str;

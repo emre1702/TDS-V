@@ -8,12 +8,14 @@ using System.Reflection;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Server.CustomAttribute;
-using TDS_Server.Entity;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
+
+using DB = TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -54,10 +56,10 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static readonly Dictionary<string, CommandData> commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
-        private static readonly Dictionary<string, Entity.Commands> commandsDict = new Dictionary<string, Entity.Commands>();
-        private static readonly Dictionary<string, string> commandByAlias = new Dictionary<string, string>();
-        private static readonly Dictionary<Type, Func<string, object?>> typeConverter = new Dictionary<Type, Func<string, object?>>();
+        private static readonly Dictionary<string, CommandData> _commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
+        private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
+        private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
+        private static readonly Dictionary<Type, Func<string, object?>> _typeConverter = new Dictionary<Type, Func<string, object?>>();
 
         // private const int AmountDefaultParams = 2;
 
@@ -69,13 +71,13 @@ namespace TDS_Server.Manager.Commands
         {
             LoadConverters();
 
-            foreach (Entity.Commands command in await dbcontext.Commands.Include(c => c.CommandsAlias).AsNoTracking().ToListAsync())
+            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).AsNoTracking().ToListAsync())
             {
-                commandsDict[command.Command.ToLower()] = command;
+                _commandsDict[command.Command.ToLower()] = command;
 
-                foreach (CommandsAlias alias in command.CommandsAlias)
+                foreach (CommandAlias alias in command.CommandAlias)
                 {
-                    commandByAlias[alias.Alias.ToLower()] = command.Command.ToLower();
+                    _commandByAlias[alias.Alias.ToLower()] = command.Command.ToLower();
                 }
             }
 
@@ -87,12 +89,12 @@ namespace TDS_Server.Manager.Commands
             {
                 var attribute = method.GetCustomAttribute<TDSCommand>();
                 string cmd = attribute.Command.ToLower();
-                if (!commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
+                if (!_commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
                     continue;
 
                 CommandData commanddata;
-                if (commandDataByCommand.ContainsKey(cmd))
-                    commanddata = commandDataByCommand[cmd];
+                if (_commandDataByCommand.ContainsKey(cmd))
+                    commanddata = _commandDataByCommand[cmd];
                 else
                     commanddata = new CommandData();
                 CommandMethodData methoddata = new CommandMethodData
@@ -140,12 +142,11 @@ namespace TDS_Server.Manager.Commands
                     else
                         methoddata.Method = (CommandDefaultMethod)method.CreateDelegate(typeof(CommandDefaultMethod));
                 }*/
-#pragma warning enable
 
-                commandDataByCommand[cmd] = commanddata;
+                _commandDataByCommand[cmd] = commanddata;
             }
 
-            foreach (var commanddata in commandDataByCommand.Values)
+            foreach (var commanddata in _commandDataByCommand.Values)
             {
                 commanddata.MethodDatas.Sort((a, b) => -1 * a.Priority.CompareTo(b.Priority));
             }
@@ -162,18 +163,18 @@ namespace TDS_Server.Manager.Commands
 
                 object[]? args = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
-                if (commandByAlias.ContainsKey(cmd))
-                    cmd = commandByAlias[cmd];
+                if (_commandByAlias.ContainsKey(cmd))
+                    cmd = _commandByAlias[cmd];
 
                 if (!CheckCommandExists(character, cmd, args))
                     return;
 
-                Entity.Commands entity = commandsDict[cmd];
+                DB.Commands entity = _commandsDict[cmd];
 
                 if (!CheckRights(character, entity, cmdinfos))
                     return;
 
-                CommandData commanddata = commandDataByCommand[cmd];
+                CommandData commanddata = _commandDataByCommand[cmd];
 
                 if (IsInvalidArgsCount(character, commanddata, args))
                     return;
@@ -274,7 +275,7 @@ namespace TDS_Server.Manager.Commands
 
         private static bool CheckCommandExists(TDSPlayer player, string cmd, object[]? args)
         {
-            if (!commandDataByCommand.ContainsKey(cmd))
+            if (!_commandDataByCommand.ContainsKey(cmd))
             {
                 if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
                     NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_DOESNT_EXIST);
@@ -285,7 +286,7 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static bool CheckRights(TDSPlayer character, Entity.Commands entity, TDSCommandInfos cmdinfos)
+        private static bool CheckRights(TDSPlayer character, DB.Commands entity, TDSCommandInfos cmdinfos)
         {
             bool canuse = false;
             bool needright = false;
@@ -379,7 +380,7 @@ namespace TDS_Server.Manager.Commands
 
         private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
         {
-            object? converterReturn = typeConverter[theType]((string)notConvertedArg);
+            object? converterReturn = _typeConverter[theType]((string)notConvertedArg);
             object? arg = converterReturn;
             if (converterReturn != null && converterReturn is Task<object?>)
                 arg = await (Task<object?>)converterReturn;
@@ -390,16 +391,16 @@ namespace TDS_Server.Manager.Commands
 
         private static void LoadConverters()
         {
-            typeConverter[typeof(string)] = str => str;
-            typeConverter[typeof(char)] = str => str[0];
-            typeConverter[typeof(int)] = str => Convert.ToInt32(str);
-            typeConverter[typeof(float)] = str => Convert.ToSingle(str);
-            typeConverter[typeof(double)] = str => Convert.ToDouble(str);
-            typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1";
-            typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
-            typeConverter[typeof(Client?)] = GetClientByName;
-            typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
-            typeConverter[typeof(Players?)] = GetDatabasePlayerByName;
+            _typeConverter[typeof(string)] = str => str;
+            _typeConverter[typeof(char)] = str => str[0];
+            _typeConverter[typeof(int)] = str => Convert.ToInt32(str);
+            _typeConverter[typeof(float)] = str => Convert.ToSingle(str);
+            _typeConverter[typeof(double)] = str => Convert.ToDouble(str);
+            _typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1";
+            _typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
+            _typeConverter[typeof(Client?)] = GetClientByName;
+            _typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
+            _typeConverter[typeof(Players?)] = GetDatabasePlayerByName;
         }
 
         private static TDSPlayer? GetTDSPlayerByName(string name)

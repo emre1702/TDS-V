@@ -3,20 +3,23 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TDS_Common.Default;
-using TDS_Common.Dto.Map;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Dto.Map;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private TDSTimer? nextRoundStatusTimer;
+        private LobbyRoundSettings _roundSettings => LobbyEntity.LobbyRoundSettings;
+
+        private TDSTimer? _nextRoundStatusTimer;
 
         public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
         {
@@ -27,9 +30,9 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.RoundEnd] = 8 * 1000,
         };
 
-        private readonly Dictionary<ERoundStatus, Action> roundStatusMethod = new Dictionary<ERoundStatus, Action>();
+        private readonly Dictionary<ERoundStatus, Action> _roundStatusMethod = new Dictionary<ERoundStatus, Action>();
 
-        private readonly Dictionary<ERoundStatus, ERoundStatus> nextRoundStatsDict = new Dictionary<ERoundStatus, ERoundStatus>
+        private readonly Dictionary<ERoundStatus, ERoundStatus> _nextRoundStatsDict = new Dictionary<ERoundStatus, ERoundStatus>
         {
             [ERoundStatus.MapClear] = ERoundStatus.NewMapChoose,
             [ERoundStatus.NewMapChoose] = ERoundStatus.Countdown,
@@ -38,21 +41,21 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
         };
 
-        private ERoundStatus currentRoundStatus = ERoundStatus.None;
-        private ERoundEndReason currentRoundEndReason;
+        private ERoundStatus _currentRoundStatus = ERoundStatus.None;
+        private ERoundEndReason _currentRoundEndReason;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
-        private Team? currentRoundEndWinnerTeam;
+        private Team? _currentRoundEndWinnerTeam;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
-            currentRoundStatus = status;
+            _currentRoundStatus = status;
             if (status == ERoundStatus.RoundEnd)
-                currentRoundEndReason = roundEndReason;
-            ERoundStatus nextStatus = nextRoundStatsDict[status];
-            nextRoundStatusTimer?.Kill();
+                _currentRoundEndReason = roundEndReason;
+            ERoundStatus nextStatus = _nextRoundStatsDict[status];
+            _nextRoundStatusTimer?.Kill();
             if (!IsEmpty())
             {
-                nextRoundStatusTimer = new TDSTimer(() =>
+                _nextRoundStatusTimer = new TDSTimer(() =>
                 {
                     if (IsEmpty())
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);
@@ -61,7 +64,7 @@ namespace TDS_Server.Instance.Lobby
                 }, DurationsDict[status]);
                 try
                 {
-                    roundStatusMethod[status]();
+                    _roundStatusMethod[status]();
                 }
                 catch (Exception ex)
                 {
@@ -70,13 +73,13 @@ namespace TDS_Server.Instance.Lobby
                     Remove();
                 }
             }
-            else if (currentRoundStatus != ERoundStatus.RoundEnd)
-                roundStatusMethod[ERoundStatus.RoundEnd]();
+            else if (_currentRoundStatus != ERoundStatus.RoundEnd)
+                _roundStatusMethod[ERoundStatus.RoundEnd]();
         }
 
         private void StartMapClear()
         {
-            if (currentMap?.IsBomb ?? false)
+            if (_currentMap?.IsBomb ?? false)
                 ClearBombRound();
             ClearTeamPlayersAmounts();
             SendAllPlayerEvent(DToClientEvent.MapClear, null);
@@ -89,10 +92,10 @@ namespace TDS_Server.Instance.Lobby
                 StartBombMapChoose(nextMap);
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
-            if (LobbyEntity.MixTeamsAfterRound ?? false)
+            if (_roundSettings.MixTeamsAfterRound)
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
-            currentMap = nextMap;
+            _currentMap = nextMap;
         }
 
         private void StartRoundCountdown()
@@ -104,7 +107,7 @@ namespace TDS_Server.Instance.Lobby
         {
             StartRoundForAllPlayer();
 
-            if (currentMap?.IsBomb ?? false)
+            if (_currentMap?.IsBomb ?? false)
                 StartRoundBomb();
         }
 
@@ -116,13 +119,13 @@ namespace TDS_Server.Instance.Lobby
                 return;
             }
 
-            currentRoundEndWinnerTeam = GetRoundWinnerTeam();
-            Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(currentRoundEndWinnerTeam);
+            _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
+            Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
 
             FuncIterateAllPlayers((character, team) =>
             {
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
-                if (character.Lifes > 0 && currentRoundEndWinnerTeam != null && team != currentRoundEndWinnerTeam && currentRoundEndReason != ERoundEndReason.Death)
+                if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
                     character.Client.Kill();
                 character.Lifes = 0;
             });
@@ -133,7 +136,7 @@ namespace TDS_Server.Instance.Lobby
             DmgSys.Clear();
 
             DeleteMapBlips();
-            if (currentMap?.IsBomb ?? false)
+            if (_currentMap?.IsBomb ?? false)
                 StopBombRound();
 
             RewardAllPlayer();
@@ -151,7 +154,7 @@ namespace TDS_Server.Instance.Lobby
 
         private Team? GetRoundWinnerTeam()
         {
-            switch (currentRoundEndReason)
+            switch (_currentRoundEndReason)
             {
                 case ERoundEndReason.Death:
                     return GetTeamStillInRound();
@@ -175,7 +178,7 @@ namespace TDS_Server.Instance.Lobby
 
         private Dictionary<ILanguage, string>? GetRoundEndReasonText(Team? winnerTeam)
         {
-            switch (currentRoundEndReason)
+            switch (_currentRoundEndReason)
             {
                 case ERoundEndReason.Death:
                     return LangUtils.GetLangDictionary(lang =>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class Gangs
     {
@@ -10,8 +10,8 @@ namespace TDS_Server.Entity
             Players = new HashSet<Players>();
         }
 
-        public uint Id { get; set; }
-        public uint? TeamId { get; set; }
+        public int Id { get; set; }
+        public int TeamId { get; set; }
         public string Short { get; set; }
 
         public virtual Teams Team { get; set; }

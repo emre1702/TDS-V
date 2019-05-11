@@ -1,17 +1,17 @@
-﻿namespace TDS_Server.Manager.Player
-{
-    using GTANetworkAPI;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using TDS_Common.Default;
-    using TDS_Common.Enum;
-    using TDS_Server.Entity;
-    using TDS_Server.Instance.Player;
-    using TDS_Server.Interface;
-    using TDS_Server.Manager.Utility;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Globalization;
+using System.Linq;
+using TDS_Common.Default;
+using TDS_Common.Enum;
+using TDS_Server.Instance.Player;
+using TDS_Server.Interface;
+using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
 
+namespace TDS_Server.Manager.Player
+{
     internal class Account : Script
     {
         public Account()
@@ -46,11 +46,11 @@
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Client player, string password, string? email)
+        public static async void OnPlayerTryRegisterEvent(Client player, string password, string email)
         {
             if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
                 return;
-            Register.RegisterPlayer(player, password, email);
+            Register.RegisterPlayer(player, password, email.Length != 0 ? email : null);
         }
 
         [RemoteEvent(DToServerEvent.ChatLoaded)]
@@ -66,7 +66,7 @@
         [RemoteEvent(DToServerEvent.TryLogin)]
         public static async void OnPlayerTryLoginEvent(Client player, string password)
         {
-            uint id = await Player.GetPlayerIDByScname(player.SocialClubName);
+            int id = await Player.GetPlayerIDByScname(player.SocialClubName);
             if (id != 0)
             {
                 Login.LoginPlayer(player, id, password);
@@ -78,7 +78,7 @@
         [RemoteEvent(DToServerEvent.LanguageChange)]
         public void OnPlayerLanguageChangeEvent(Client player, byte language)
         {
-            if (Enum.IsDefined(typeof(ELanguage), language))
+            if (System.Enum.IsDefined(typeof(ELanguage), language))
                 player.GetChar().LanguageEnum = (ELanguage)language;
         }
 
@@ -94,11 +94,11 @@
             bool isPlayerRegistered = false;
             using (var dbcontext = new TDSNewContext())
             {
-                uint playerID = await dbcontext.Players.Where(p => p.Name == player.Name).Select(p => p.Id).FirstOrDefaultAsync();
+                int playerID = await dbcontext.Players.Where(p => p.Name == player.Name).Select(p => p.Id).FirstOrDefaultAsync();
                 if (playerID != 0)
                 {
                     isPlayerRegistered = true;
-                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, (uint)0);    // MainMenu ban => server ban
+                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
                     if (ban != null)
                     {
                         if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
@@ -129,14 +129,12 @@
         {
             OutputMuteInfo(admin.Client.Name, target.Name, minutes, reason);
 
-            using (var dbcontext = new TDSNewContext())
-            {
-                target.PlayerStats.MuteTime = minutes == -1 ? (uint?)null : (uint)minutes;
-                dbcontext.PlayerStats.Add(target.PlayerStats);
-                dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
+            using var dbcontext = new TDSNewContext();
+            target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
+            dbcontext.PlayerStats.Add(target.PlayerStats);
+            dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
-                await dbcontext.SaveChangesAsync();
-            }
+            await dbcontext.SaveChangesAsync();
         }
 
         private static void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)

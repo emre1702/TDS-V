@@ -10,14 +10,14 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
     internal class DxGrid : Dx
     {
         public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
-        private readonly List<DxGridRow> rows = new List<DxGridRow>();
+        private readonly List<DxGridRow> _rows = new List<DxGridRow>();
         public int ScrollIndex;
 
         public float X, Y, Width, BodyHeight;
         public UIResText.Alignment Alignment;
         public float RowHeight;
 
-        public DxGridRow? Header { get; private set; }
+        public DxGridRow Header { get; private set; }
 
         private float bodyTextScale;
         private Color bodyBackColor;
@@ -50,10 +50,10 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
                 atYTopPos = Header.Draw();
             }
 
-            for (int i = 0; i < Math.Min(rows.Count, maxRows); ++i)
+            for (int i = 0; i < Math.Min(_rows.Count, maxRows); ++i)
             {
                 int index = i + ScrollIndex;
-                DxGridRow row = rows[index];
+                DxGridRow row = _rows[index];
                 row.Y = atYTopPos + row.Height / 2;
                 atYTopPos = row.Draw();
             }
@@ -68,7 +68,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public void AddRow(DxGridRow row)
         {
-            rows.Add(row);
+            _rows.Add(row);
             row.Grid = this;
             children.Add(row);
         }
@@ -81,14 +81,14 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public void ClearRows()
         {
-            foreach (var row in rows)
+            foreach (var row in _rows)
                 row.Remove();
-            rows.Clear();
+            _rows.Clear();
         }
 
         private void CheckScroll()
         {
-            int rowscount = rows.Count;
+            int rowscount = _rows.Count;
             if (rowscount <= maxRows)
             {
                 ScrollIndex = 0;

@@ -10,11 +10,11 @@ namespace TDS_Server.Manager.Utility
 {
     internal static class Workaround
     {
-        private static readonly Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto> attachedEntitiesInfos = new Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto>();
-        private static readonly Dictionary<Lobby, List<GTANetworkAPI.Entity>> attachedEntitiesPerLobby = new Dictionary<Lobby, List<GTANetworkAPI.Entity>>();
+        private static readonly Dictionary<Entity, EntityAttachInfoDto> _attachedEntitiesInfos = new Dictionary<Entity, EntityAttachInfoDto>();
+        private static readonly Dictionary<Lobby, List<Entity>> _attachedEntitiesPerLobby = new Dictionary<Lobby, List<Entity>>();
 
-        private static readonly Dictionary<GTANetworkAPI.Entity, EntityCollisionlessInfoDto> collisionslessEntitiesInfos = new Dictionary<GTANetworkAPI.Entity, EntityCollisionlessInfoDto>();
-        private static readonly Dictionary<Lobby, List<GTANetworkAPI.Entity>> collisionslessEntitiesPerLobby = new Dictionary<Lobby, List<GTANetworkAPI.Entity>>();
+        private static readonly Dictionary<Entity, EntityCollisionlessInfoDto> _collisionslessEntitiesInfos = new Dictionary<Entity, EntityCollisionlessInfoDto>();
+        private static readonly Dictionary<Lobby, List<Entity>> _collisionslessEntitiesPerLobby = new Dictionary<Lobby, List<Entity>>();
 
         public static void Init()
         {
@@ -37,7 +37,7 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.UnspectatePlayerWorkaround);
         }
 
-        public static void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
+        public static void AttachEntityToEntity(Entity entity, Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
         {
             var infoDto = new EntityAttachInfoDto
             (
@@ -52,24 +52,24 @@ namespace TDS_Server.Manager.Utility
                 RotationOffsetZ: rotationOffset.Z,
                 LobbyId: lobby?.Id
             );
-            attachedEntitiesInfos[entity] = infoDto;
+            _attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby == null)
-                NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.AttachEntityToEntityWorkaround, attachedEntitiesInfos[entity].Json);
+                NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
             else
             {
-                lobby.SendAllPlayerEvent(DToClientEvent.AttachEntityToEntityWorkaround, null, attachedEntitiesInfos[entity].Json);
-                if (!attachedEntitiesPerLobby.ContainsKey(lobby))
-                    attachedEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
-                attachedEntitiesPerLobby[lobby].Add(entity);
+                lobby.SendAllPlayerEvent(DToClientEvent.AttachEntityToEntityWorkaround, null, _attachedEntitiesInfos[entity].Json);
+                if (!_attachedEntitiesPerLobby.ContainsKey(lobby))
+                    _attachedEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
+                _attachedEntitiesPerLobby[lobby].Add(entity);
             }
         }
 
         public static void DetachEntity(GTANetworkAPI.Entity entity, bool resetCollision = true)
         {
-            if (!attachedEntitiesInfos.ContainsKey(entity))
+            if (!_attachedEntitiesInfos.ContainsKey(entity))
                 return;
-            var info = attachedEntitiesInfos[entity];
+            var info = _attachedEntitiesInfos[entity];
             if (info.LobbyId.HasValue)
             {
                 Lobby lobby = LobbyManager.GetLobby(info.LobbyId.Value);
@@ -80,7 +80,7 @@ namespace TDS_Server.Manager.Utility
             else
                 NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.DetachEntityWorkaround, entity.Value, resetCollision);
 
-            attachedEntitiesInfos.Remove(entity);
+            _attachedEntitiesInfos.Remove(entity);
         }
 
         public static void SetEntityCollisionless(GTANetworkAPI.Entity entity, bool collisionless, Lobby? lobby = null)
@@ -90,41 +90,41 @@ namespace TDS_Server.Manager.Utility
                 EntityValue: entity.Value,
                 Collisionless: collisionless
             );
-            collisionslessEntitiesInfos[entity] = info;
+            _collisionslessEntitiesInfos[entity] = info;
 
             if (lobby is null)
-                NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetEntityCollisionlessWorkaround, collisionslessEntitiesInfos[entity].Json);
+                NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
             else
             {
-                lobby.SendAllPlayerEvent(DToClientEvent.SetEntityCollisionlessWorkaround, null, collisionslessEntitiesInfos[entity].Json);
-                if (!collisionslessEntitiesPerLobby.ContainsKey(lobby))
-                    collisionslessEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
-                collisionslessEntitiesPerLobby[lobby].Add(entity);
+                lobby.SendAllPlayerEvent(DToClientEvent.SetEntityCollisionlessWorkaround, null, _collisionslessEntitiesInfos[entity].Json);
+                if (!_collisionslessEntitiesPerLobby.ContainsKey(lobby))
+                    _collisionslessEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
+                _collisionslessEntitiesPerLobby[lobby].Add(entity);
             }
         }
 
         private static void PlayerJoinedLobby(Lobby lobby, TDSPlayer player)
         {
-            if (attachedEntitiesPerLobby.ContainsKey(lobby))
+            if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
-                attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (GTANetworkAPI.Entity entity in attachedEntitiesPerLobby[lobby])
+                _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
+                foreach (GTANetworkAPI.Entity entity in _attachedEntitiesPerLobby[lobby])
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.AttachEntityToEntityWorkaround, attachedEntitiesInfos[entity].Json);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                 }
-                if (attachedEntitiesPerLobby[lobby].Count == 0)
-                    attachedEntitiesPerLobby.Remove(lobby);
+                if (_attachedEntitiesPerLobby[lobby].Count == 0)
+                    _attachedEntitiesPerLobby.Remove(lobby);
             }
 
-            if (collisionslessEntitiesPerLobby.ContainsKey(lobby))
+            if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
             {
-                collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (GTANetworkAPI.Entity entity in collisionslessEntitiesPerLobby[lobby])
+                _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
+                foreach (GTANetworkAPI.Entity entity in _collisionslessEntitiesPerLobby[lobby])
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetEntityCollisionlessWorkaround, collisionslessEntitiesInfos[entity].Json);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
                 }
-                if (collisionslessEntitiesPerLobby[lobby].Count == 0)
-                    collisionslessEntitiesPerLobby.Remove(lobby);
+                if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
+                    _collisionslessEntitiesPerLobby.Remove(lobby);
             }
         }
 

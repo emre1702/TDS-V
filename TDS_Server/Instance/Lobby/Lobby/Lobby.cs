@@ -1,20 +1,20 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Dto;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        public static readonly Dictionary<uint, Lobby> LobbiesByIndex = new Dictionary<uint, Lobby>();
-        private static readonly HashSet<uint> dimensionsUsed = new HashSet<uint> { 0 };
+        public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
+        private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
         protected readonly Lobbies LobbyEntity;
 
-        public uint Id => LobbyEntity.Id;
+        public int Id => LobbyEntity.Id;
         public string Name => LobbyEntity.Name;
         public bool IsOfficial => LobbyEntity.IsOfficial;
         public string CreatorName => LobbyEntity.OwnerNavigation.Name;
@@ -24,7 +24,7 @@ namespace TDS_Server.Instance.Lobby
         protected readonly uint Dimension;
         protected readonly Vector3 SpawnPoint;
 
-        private SyncedLobbySettingsDto syncedLobbySettings;
+        private readonly SyncedLobbySettingsDto _syncedLobbySettings;
 
         public Lobby(Lobbies entity)
         {
@@ -38,7 +38,7 @@ namespace TDS_Server.Instance.Lobby
             );
 
             LobbiesByIndex[entity.Id] = this;
-            dimensionsUsed.Add(Dimension);
+            _dimensionsUsed.Add(Dimension);
 
             Teams = new Team[entity.Teams.Count];
             foreach (Teams teamEntity in entity.Teams)
@@ -47,16 +47,16 @@ namespace TDS_Server.Instance.Lobby
                 Teams[team.Entity.Index] = team;
             }
 
-            syncedLobbySettings = new SyncedLobbySettingsDto
+            _syncedLobbySettings = new SyncedLobbySettingsDto
             (
                 Id: entity.Id,
                 Name: entity.Name,
-                BombDefuseTimeMs: entity.BombDefuseTimeMs,
-                BombPlantTimeMs: entity.BombPlantTimeMs,
+                BombDefuseTimeMs: entity.LobbyRoundSettings?.BombDefuseTimeMs,
+                BombPlantTimeMs: entity.LobbyRoundSettings?.BombPlantTimeMs,
                 SpawnAgainAfterDeathMs: entity.SpawnAgainAfterDeathMs,
-                CountdownTime: entity.CountdownTime,
-                RoundTime: entity.RoundTime,
-                BombDetonateTimeMs: entity.BombDetonateTimeMs,
+                CountdownTime: entity.LobbyRoundSettings?.CountdownTime,
+                RoundTime: entity.LobbyRoundSettings?.RoundTime,
+                BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
                 DieAfterOutsideMapLimitTime: entity.DieAfterOutsideMapLimitTime,
                 InLobbyWithMaps: this is Arena
             );
@@ -69,24 +69,22 @@ namespace TDS_Server.Instance.Lobby
         protected async virtual void Remove()
         {
             LobbiesByIndex.Remove(LobbyEntity.Id);
-            dimensionsUsed.Remove(Dimension);
+            _dimensionsUsed.Remove(Dimension);
 
             foreach (TDSPlayer character in Players)
             {
                 RemovePlayer(character);
             }
 
-            using (TDSNewContext dbcontext = new TDSNewContext())
-            {
-                dbcontext.Remove(LobbyEntity);
-                await dbcontext.SaveChangesAsync();
-            }
+            using TDSNewContext dbcontext = new TDSNewContext();
+            dbcontext.Remove(LobbyEntity);
+            await dbcontext.SaveChangesAsync();
         }
 
         private static uint GetFreeDimension()
         {
             uint tryid = 0;
-            while (dimensionsUsed.Contains(tryid))
+            while (_dimensionsUsed.Contains(tryid))
                 ++tryid;
             return tryid;
         }

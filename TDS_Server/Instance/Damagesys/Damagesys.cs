@@ -1,14 +1,14 @@
+using GTANetworkAPI;
+using System.Collections.Generic;
+using System.Linq;
+using TDS_Server.Dto;
+using TDS_Server_DB.Entity;
+
 namespace TDS_Server.Instance
 {
-    using GTANetworkAPI;
-    using System.Collections.Generic;
-    using System.Linq;
-    using TDS_Server.Dto;
-    using TDS_Server.Entity;
-
     partial class Damagesys
     {
-        private static Dictionary<uint, DamageDto> defaultDamages;
+        private static Dictionary<long, DamageDto> defaultDamages;
 
         public Damagesys(ICollection<LobbyWeapons> weapons)
         {

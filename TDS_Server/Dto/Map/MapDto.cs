@@ -1,6 +1,8 @@
 ﻿using System.Xml.Serialization;
+using TDS_Common.Dto;
+using TDS_Common.Enum;
 
-namespace TDS_Common.Dto.Map
+namespace TDS_Server.Dto.Map
 {
 #pragma warning disable CS8618 // Non-nullable field is uninitialized.
 
@@ -26,7 +28,7 @@ namespace TDS_Common.Dto.Map
         public SyncedMapDataDto SyncedData => new SyncedMapDataDto();
 
         [XmlIgnore]
-        public bool IsBomb => Info.Type == Enum.EMapType.Bomb;
+        public bool IsBomb => Info.Type == EMapType.Bomb;
     }
 
 #pragma warning restore CS8618 // Non-nullable field is uninitialized.

@@ -21,9 +21,9 @@ namespace TDS_Server.Instance.Lobby
         /// <param name="startindex"></param>
         /// <param name="index"></param>
         /// <returns>Return the next team which is not spectator - if there is none, returns the spectator team</returns>
-        private Team GetNextNonSpectatorTeam(uint startindex)
+        private Team GetNextNonSpectatorTeam(short startindex)
         {
-            uint startindextoiterate = startindex;
+            short startindextoiterate = startindex;
             do
             {
                 if (++startindextoiterate == Teams.Length - 1)
@@ -38,9 +38,9 @@ namespace TDS_Server.Instance.Lobby
             return GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private Team? GetNextNonSpectatorTeamWithPlayers(uint startindex)
+        private Team? GetNextNonSpectatorTeamWithPlayers(short startindex)
         {
-            uint startindextoiterate = startindex;
+            short startindextoiterate = startindex;
             do
             {
                 if (++startindextoiterate >= Teams.Length - 1)
@@ -60,7 +60,7 @@ namespace TDS_Server.Instance.Lobby
             return GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private Team? GetPreviousNonSpectatorTeamWithPlayers(uint startindex)
+        private Team? GetPreviousNonSpectatorTeamWithPlayers(short startindex)
         {
             int startindextoiterate = (int)startindex;
             do

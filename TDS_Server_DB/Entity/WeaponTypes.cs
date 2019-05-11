@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class WeaponTypes
     {
@@ -10,7 +10,7 @@ namespace TDS_Server.Entity
             Weapons = new HashSet<Weapons>();
         }
 
-        public sbyte Id { get; set; }
+        public short Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Weapons> Weapons { get; set; }

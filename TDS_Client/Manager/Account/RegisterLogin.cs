@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Account
 {
     internal static class RegisterLogin
     {
-        public static HtmlWindow? Browser;
+        public static HtmlWindow Browser;
         private static string name;
         private static bool isRegistered;
 
@@ -17,9 +17,9 @@ namespace TDS_Client.Manager.Account
             EventsSender.Send(DToServerEvent.TryLogin, CommonUtils.HashPWClient(password));
         }
 
-        public static void TryRegister(string password, string? email)
+        public static void TryRegister(string password, string email)
         {
-            EventsSender.Send(DToServerEvent.TryRegister, CommonUtils.HashPWClient(password), email);
+            EventsSender.Send(DToServerEvent.TryRegister, CommonUtils.HashPWClient(password), email ?? string.Empty);
         }
 
         public static void Start(string theName, bool isregistered)

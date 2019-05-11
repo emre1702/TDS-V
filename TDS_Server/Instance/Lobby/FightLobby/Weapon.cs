@@ -1,8 +1,8 @@
+using GTANetworkAPI;
+using TDS_Server_DB.Entity;
+
 namespace TDS_Server.Instance.Lobby
 {
-    using GTANetworkAPI;
-    using TDS_Server.Entity;
-
     partial class FightLobby
     {
         public void GivePlayerWeapons(Client player)

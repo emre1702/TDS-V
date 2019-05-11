@@ -3,6 +3,7 @@ using RAGE;
 using RAGE.Elements;
 using RAGE.NUI;
 using RAGE.Ui;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Default;
@@ -234,7 +235,7 @@ namespace TDS_Client.Manager
         private void OnCountdownStartMethod(object[] args)
         {
             CameraManager.Stop();
-            uint mstimetoplayer = (uint)(Settings.CountdownTime * 1000 * 0.9);
+            int mstimetoplayer = (int)Math.Ceiling(Settings.CountdownTime * 1000 * 0.9);
             if (args == null)
             {
                 Countdown.Start();
@@ -242,9 +243,9 @@ namespace TDS_Client.Manager
             }
             else
             {
-                uint remainingms = (uint)args[0];
+                int remainingms = (int)args[0];
                 Countdown.StartAfterwards(remainingms);
-                uint timeofcountdowncameraisatplayer = Settings.CountdownTime * 1000 - mstimetoplayer;
+                int timeofcountdowncameraisatplayer = Settings.CountdownTime * 1000 - mstimetoplayer;
                 if (remainingms < timeofcountdowncameraisatplayer)
                     CameraManager.SetGoTowardsPlayer(remainingms);
                 else
@@ -333,7 +334,7 @@ namespace TDS_Client.Manager
 
         private void OnBombPlantedMethod(object[] args)
         {
-            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (uint?)args[2] : null);
+            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (int?)args[2] : null);
         }
 
         private void OnBombNotOnHandMethod(object[] args)
@@ -560,9 +561,9 @@ namespace TDS_Client.Manager
         }
 
         private static Ped pedToRenderBones;
-        private static List<DxText> dxTexts = new List<DxText>();
-        private static List<DxLine> dxLines = new List<DxLine>();
-        private static Dictionary<int, BoneInfo> bonesTextInfo = new Dictionary<int, BoneInfo>();
+        private static readonly List<DxText> dxTexts = new List<DxText>();
+        private static readonly List<DxLine> dxLines = new List<DxLine>();
+        private static readonly Dictionary<int, BoneInfo> bonesTextInfo = new Dictionary<int, BoneInfo>();
 
         // DEBUG END //
 
@@ -608,7 +609,7 @@ namespace TDS_Client.Manager
         }
 
         // DEBUG //
-        private static BoneInfo? GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
+        private static BoneInfo GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
         {
             if (boneIndex == -1)
             {
@@ -755,7 +756,7 @@ namespace TDS_Client.Manager
             }
             mp.storage.data.mapfavourites = JSON.stringify( mapvotingdata.favourites );
         } );*/
-        #endregion From Browser events
 
+        #endregion From Browser events
     }
 }

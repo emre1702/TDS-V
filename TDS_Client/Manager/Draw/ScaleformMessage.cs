@@ -9,7 +9,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
         private static ulong initTimeMs;
         private static ulong msgDurationMs;
         private static bool animatedOut;
-        private static BasicScaleform? fscaleform;
+        private static BasicScaleform fscaleform;
 
         private static BasicScaleform scaleform
         {

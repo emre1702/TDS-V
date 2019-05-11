@@ -54,23 +54,23 @@ namespace TDS_Client.Manager.Utility
         private static SyncedLobbySettingsDto syncedLobbySettings;
         private static SyncedPlayerSettingsDto syncedPlayerSettings;
 
-        public static uint LobbyId => syncedLobbySettings.Id;
+        public static int LobbyId => syncedLobbySettings.Id;
         public static string LobbyName => syncedLobbySettings != null ? syncedLobbySettings.Name : "Mainmenu";
 
-        public static int DistanceToSpotToPlant => syncedServerSettings.DistanceToSpotToPlant;
-        public static int DistanceToSpotToDefuse => syncedServerSettings.DistanceToSpotToDefuse;
+        public static float DistanceToSpotToPlant => syncedServerSettings.DistanceToSpotToPlant;
+        public static float DistanceToSpotToDefuse => syncedServerSettings.DistanceToSpotToDefuse;
 
         //public static uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public static uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
-        public static uint BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs ?? 0;
+        public static int BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs ?? 0;
 
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
-        public static uint CountdownTime => syncedLobbySettings.CountdownTime ?? 0;
+        public static int CountdownTime => syncedLobbySettings.CountdownTime ?? 0;
 
         public static int MapChooseTime => syncedServerSettings.MapChooseTime;
-        public static uint RoundTime => syncedLobbySettings.RoundTime ?? 0;
+        public static int RoundTime => syncedLobbySettings.RoundTime ?? 0;
         public static int RoundEndTime => syncedServerSettings.RoundEndTime;
-        public static uint DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime ?? 0;
+        public static int DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime ?? 0;
         public static bool InLobbyWithMaps => syncedLobbySettings?.InLobbyWithMaps ?? false;
 
         public static void Load()
@@ -108,7 +108,7 @@ namespace TDS_Client.Manager.Utility
             syncedLobbySettings = loadedSyncedLobbySettings;
         }
 
-        public static uint GetPlantOrDefuseTime(EPlantDefuseStatus status)
+        public static int GetPlantOrDefuseTime(EPlantDefuseStatus status)
         {
             if (status == EPlantDefuseStatus.Defusing)
                 return syncedLobbySettings.BombDefuseTimeMs ?? 0;

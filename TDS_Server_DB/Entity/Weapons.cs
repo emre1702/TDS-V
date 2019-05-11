@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class Weapons
     {
-        public Weapons()
-        {
-            LobbyWeapons = new HashSet<LobbyWeapons>();
-        }
-
-        public uint Hash { get; set; }
+        public long Hash { get; set; }
         public string Name { get; set; }
-        public sbyte Type { get; set; }
+        public short Type { get; set; }
         public short DefaultDamage { get; set; }
         public float DefaultHeadMultiplicator { get; set; }
 
         public virtual WeaponTypes TypeNavigation { get; set; }
-        public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }
+        public virtual LobbyWeapons LobbyWeapons { get; set; }
     }
 }

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Logs
 {
     internal static class ChatLogsManager
     {
-        private static readonly List<LogsChat> notsavedchatlogs = new List<LogsChat>();
+        private static readonly List<LogChats> _notSavedChatLogs = new List<LogChats>();
 
         public static void Log(string chat, TDSPlayer source, TDSPlayer? target = null, bool isglobal = false, bool isadminchat = false, bool isteamchat = false)
         {
-            notsavedchatlogs.Add(
-                new LogsChat
+            _notSavedChatLogs.Add(
+                new LogChats
                 {
                     Source = source.Entity?.Id ?? 0,
                     Target = target?.Entity?.Id ?? null,
@@ -28,11 +28,11 @@ namespace TDS_Server.Manager.Logs
 
         public static async Task Save(TDSNewContext dbcontext)
         {
-            if (notsavedchatlogs.Count == 0)
+            if (_notSavedChatLogs.Count == 0)
                 return;
-            await dbcontext.AddRangeAsync(notsavedchatlogs);
+            await dbcontext.AddRangeAsync(_notSavedChatLogs);
             await dbcontext.SaveChangesAsync();
-            notsavedchatlogs.Clear();
+            _notSavedChatLogs.Clear();
         }
     }
 }

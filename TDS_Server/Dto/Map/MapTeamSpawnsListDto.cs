@@ -1,12 +1,12 @@
 ﻿using System.Xml.Serialization;
 
-namespace TDS_Common.Dto.Map
+namespace TDS_Server.Dto.Map
 {
 #pragma warning disable CS8618 // Non-nullable field is uninitialized.
 
     public class MapTeamSpawnsListDto
     {
-        [XmlArray("team")]
+        [XmlElement("team")]
         public MapTeamSpawnsDto[] TeamSpawns { get; set; }
     }
 

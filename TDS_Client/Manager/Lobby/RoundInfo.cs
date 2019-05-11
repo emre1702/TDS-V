@@ -16,8 +16,8 @@ namespace TDS_Client.Manager.Lobby
         private static int _currentDamage;
         private static int _currentKills;
 
-        private static DxTextRectangle? timeDisplay;
-        private static DxTextRectangle[]? teamDisplays;
+        private static DxTextRectangle timeDisplay;
+        private static DxTextRectangle[] teamDisplays;
 
         public static int CurrentAssists
         {
@@ -114,7 +114,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            double timems = Math.Max(0, Settings.RoundTime * 1000 - (TimerManager.ElapsedTicks - startedTick));
+            double timems = Math.Max(0, (ulong)Settings.RoundTime * 1000 - (TimerManager.ElapsedTicks - startedTick));
             timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
@@ -136,9 +136,9 @@ namespace TDS_Client.Manager.Lobby
             teamDisplays[index - 1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
-        public static void SetRoundTimeLeft(uint lefttimems)
+        public static void SetRoundTimeLeft(int lefttimems)
         {
-            startedTick = TimerManager.ElapsedTicks - (Settings.RoundTime * 1000 - lefttimems);
+            startedTick = TimerManager.ElapsedTicks - ((ulong)Settings.RoundTime * 1000 - (ulong)lefttimems);
         }
 
         public static void OnePlayerDied(int teamindex, string killinfostr)

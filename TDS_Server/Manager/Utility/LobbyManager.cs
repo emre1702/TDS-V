@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Server.Entity;
+using TDS_Server.Dto.Map;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Manager.Maps;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -23,6 +23,8 @@ namespace TDS_Server.Manager.Utility
             await dbcontext.SaveChangesAsync();
 
             List<Lobbies> lobbies = await dbcontext.Lobbies
+                .Include(l => l.LobbyRewards)
+                .Include(l => l.LobbyRoundSettings)
                 .Include(l => l.Teams)
                 .Include(l => l.LobbyWeapons)
                 .Include(l => l.LobbyMaps)
@@ -44,9 +46,8 @@ namespace TDS_Server.Manager.Utility
                         lobby = new Arena(lobbysetting);
                         break;
                     //case ELobbyType.GangLobby:
-                    //todo todo Add after implementation of lobbies
-                    //lobby = new GangLobby(lobbysetting);
-                    //break;
+                    //    lobby = new GangLobby(lobbysetting);
+                    //    break;
                     //case ELobbyType.MapCreateLobby:
 
                     //    break;
@@ -93,7 +94,7 @@ namespace TDS_Server.Manager.Utility
             arena.SetMapList(lobbyMapsList);
         }
 
-        public static Lobby GetLobby(uint id)
+        public static Lobby GetLobby(int id)
         {
             Lobby.LobbiesByIndex.TryGetValue(id, out Lobby lobby);
             return lobby;

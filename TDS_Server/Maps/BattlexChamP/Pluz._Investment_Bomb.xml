@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TDSMap>
   <!--map-info-->
-  <map name="Pluz. Investment Bomb" type="bomb" minplayers="0" maxplayers="16" creatorid="2" />
+  <map name="Pluz. Investment Bomb" type="bomb" minplayers="0" maxplayers="16">
+    <creatorid>2</creatorid>
+  </map>
   <!--description-->
   <!--map-limit-->
   <limit>

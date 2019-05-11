@@ -177,7 +177,7 @@
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandsNextConfiguration">
             <summary>
-            Represents a configuration for <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule"/>.
+            Represents a configuration for <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule" />.
             </summary>
         </member>
         <member name="P:DSharpPlus.CommandsNext.CommandsNextConfiguration.StringPrefix">
@@ -232,7 +232,7 @@
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandsNextModule">
             <summary>
-            This is the class which handles command registration, management, and execution. 
+            This is the class which handles command registration, management, and execution.
             </summary>
         </member>
         <member name="E:DSharpPlus.CommandsNext.CommandsNextModule.CommandExecuted">
@@ -261,7 +261,7 @@
             DO NOT USE THIS MANUALLY.
             </summary>
             <param name="client">DO NOT USE THIS MANUALLY.</param>
-            <exception cref="T:System.InvalidOperationException"/>
+            <exception cref="T:System.InvalidOperationException" />
         </member>
         <member name="M:DSharpPlus.CommandsNext.CommandsNextModule.RegisterCommands(System.Reflection.Assembly)">
             <summary>
@@ -483,19 +483,19 @@
         </member>
         <member name="M:DSharpPlus.CommandsNext.DiscordClientExtensions.UseCommandsNext(DSharpPlus.DiscordClient,DSharpPlus.CommandsNext.CommandsNextConfiguration)">
             <summary>
-            Enables CommandsNext module on this <see cref="T:DSharpPlus.DiscordClient"/>.
+            Enables CommandsNext module on this <see cref="T:DSharpPlus.DiscordClient" />.
             </summary>
             <param name="client">Client to enable CommandsNext for.</param>
             <param name="cfg">CommandsNext configuration to use.</param>
-            <returns>Created <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule"/>.</returns>
+            <returns>Created <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DiscordClientExtensions.UseCommandsNext(DSharpPlus.DiscordShardedClient,DSharpPlus.CommandsNext.CommandsNextConfiguration)">
             <summary>
-            Enables CommandsNext module on all shards in this <see cref="T:DSharpPlus.DiscordShardedClient"/>.
+            Enables CommandsNext module on all shards in this <see cref="T:DSharpPlus.DiscordShardedClient" />.
             </summary>
             <param name="client">Client to enable CommandsNext for.</param>
             <param name="cfg">CommandsNext configuration to use.</param>
-            <returns>A dictionary of created <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule"/>, indexed by shard id..</returns>
+            <returns>A dictionary of created <see cref="T:DSharpPlus.CommandsNext.CommandsNextModule" />, indexed by shard id..</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DiscordClientExtensions.GetCommandsNext(DSharpPlus.DiscordClient)">
             <summary>
@@ -699,27 +699,27 @@
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollection.GetDependency``1">
             <summary>
-            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/>.
+            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" />.
             </summary>
             <typeparam name="T">Type of dependency to retrieve.</typeparam>
             <returns>Specified dependency.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollection.GetDependency(System.Type)">
             <summary>
-            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/>.
+            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" />.
             </summary>
             <param name="t">Type of dependency to retrieve.</param>
             <returns>Specified dependency</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollection.GetEnumerator">
             <summary>
-            Gets an enumerator for this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/>.
+            Gets an enumerator for this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" />.
             </summary>
             <returns>Enumerator of dependencies.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollection.System#Collections#IEnumerable#GetEnumerator">
             <summary>
-            Gets an enumerator for this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/>.
+            Gets an enumerator for this <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" />.
             </summary>
             <returns>Enumerator of dependencies.</returns>
         </member>
@@ -735,23 +735,23 @@
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.GetDependency``1">
             <summary>
-            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.
+            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.
             </summary>
             <typeparam name="T">Type of dependency to retrieve.</typeparam>
             <returns>Specified dependency.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.GetDependency(System.Type)">
             <summary>
-            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.
+            Retrieves a specified dependency from this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.
             </summary>
             <param name="t">Type of dependency to retrieve.</param>
             <returns>Specified dependency</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.Build">
             <summary>
-            Creates a new <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/> using information contained in this builder.
+            Creates a new <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" /> using information contained in this builder.
             </summary>
-            <returns>Built <see cref="T:DSharpPlus.CommandsNext.DependencyCollection"/>.</returns>
+            <returns>Built <see cref="T:DSharpPlus.CommandsNext.DependencyCollection" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.AddInstance``1(``0)">
             <summary>
@@ -759,7 +759,7 @@
             </summary>
             <typeparam name="T">Type of dependency to register.</typeparam>
             <param name="instance">Instance to register.</param>
-            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.</returns>
+            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.AddInstance``2(``1)">
             <summary>
@@ -768,14 +768,14 @@
             <typeparam name="TDep">Type of dependency to register.</typeparam>
             <typeparam name="TImpl">Type of implementation to register.</typeparam>
             <param name="instance">Instance to register.</param>
-            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.</returns>
+            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.Add``1">
             <summary>
             Constructs and adds a dependency by type.
             </summary>
             <typeparam name="T">Type of dependency.</typeparam>
-            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.</returns>
+            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.Add``2">
             <summary>
@@ -783,11 +783,11 @@
             </summary>
             <typeparam name="TDep">Type of dependency.</typeparam>
             <typeparam name="TImpl">Type of implementation.</typeparam>
-            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.</returns>
+            <returns>This <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.</returns>
         </member>
         <member name="M:DSharpPlus.CommandsNext.DependencyCollectionBuilder.Dispose">
             <summary>
-            Disposes this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder"/>.
+            Disposes this <see cref="T:DSharpPlus.CommandsNext.DependencyCollectionBuilder" />.
             </summary>
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandContext">
@@ -903,7 +903,7 @@
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandErrorEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.CommandsNext.CommandsNextModule.CommandErrored"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.CommandsNext.CommandsNextModule.CommandErrored" /> event.
             </summary>
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandEventArgs">
@@ -923,7 +923,7 @@
         </member>
         <member name="T:DSharpPlus.CommandsNext.CommandExecutionEventArgs">
             <summary>
-            Represents arguments for <see cref="E:DSharpPlus.CommandsNext.CommandsNextModule.CommandExecuted"/> event.
+            Represents arguments for <see cref="E:DSharpPlus.CommandsNext.CommandsNextModule.CommandExecuted" /> event.
             </summary>
         </member>
         <member name="T:DSharpPlus.CommandsNext.Exceptions.ChecksFailedException">
@@ -948,7 +948,7 @@
         </member>
         <member name="M:DSharpPlus.CommandsNext.Exceptions.ChecksFailedException.#ctor(System.String,DSharpPlus.CommandsNext.Command,DSharpPlus.CommandsNext.CommandContext,System.Collections.Generic.IEnumerable{DSharpPlus.CommandsNext.Attributes.CheckBaseAttribute})">
             <summary>
-            Creates a new <see cref="T:DSharpPlus.CommandsNext.Exceptions.ChecksFailedException"/>.
+            Creates a new <see cref="T:DSharpPlus.CommandsNext.Exceptions.ChecksFailedException" />.
             </summary>
             <param name="message">Message that describes the error.</param>
             <param name="command">Command that failed to execute.</param>
@@ -984,7 +984,7 @@
         </member>
         <member name="M:DSharpPlus.CommandsNext.Exceptions.CommandNotFoundException.#ctor(System.String,System.String)">
             <summary>
-            Creates a new <see cref="T:DSharpPlus.CommandsNext.Exceptions.CommandNotFoundException"/>.
+            Creates a new <see cref="T:DSharpPlus.CommandsNext.Exceptions.CommandNotFoundException" />.
             </summary>
             <param name="message">Message that describes the error.</param>
             <param name="command">Command that was not found.</param>

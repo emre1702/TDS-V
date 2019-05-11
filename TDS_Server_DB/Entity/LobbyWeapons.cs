@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Entity
+namespace TDS_Server_DB.Entity
 {
     public partial class LobbyWeapons
     {
-        public uint Hash { get; set; }
-        public uint Lobby { get; set; }
-        public uint Ammo { get; set; }
+        public long Hash { get; set; }
+        public int Lobby { get; set; }
+        public int Ammo { get; set; }
         public short? Damage { get; set; }
         public float? HeadMultiplicator { get; set; }
 

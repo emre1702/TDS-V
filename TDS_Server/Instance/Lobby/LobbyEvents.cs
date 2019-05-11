@@ -55,7 +55,7 @@ namespace TDS_Server.Instance.Lobby
         #region Lobby
 
         [RemoteEvent(DToServerEvent.JoinLobby)]
-        public static async void JoinLobbyEvent(Client player, uint index, uint teamindex)
+        public static async void JoinLobbyEvent(Client player, int index, uint teamindex)
         {
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
@@ -183,12 +183,14 @@ namespace TDS_Server.Instance.Lobby
         #endregion MapVote
 
         #region Map Rating
+
         [RemoteEvent(DToServerEvent.SendMapRating)]
         public void SendMapRating(Client client, string mapName, int rating)
         {
             MapsRatings.AddPlayerMapRating(client, mapName, (byte)rating);
         }
-        #endregion
+
+        #endregion Map Rating
 
         #endregion Remote
 

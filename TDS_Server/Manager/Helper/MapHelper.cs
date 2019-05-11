@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 
 namespace TDS_Server.Manager.Helper
 {
@@ -41,7 +42,7 @@ namespace TDS_Server.Manager.Helper
                 return 0;
             var spawn1 = teamSpawns1.Spawns.FirstOrDefault();
             var spawn2 = teamSpawns2.Spawns.FirstOrDefault();
-            return ((spawn1.Z ?? 0) + (spawn2.Z ?? 0)) / 2;
+            return (spawn1.Z + spawn2.Z) / 2;
         }
 
         private static MapPositionDto? GetCenterByLimits(this MapDto map, float zpos)
@@ -62,7 +63,7 @@ namespace TDS_Server.Manager.Helper
             {
                 centerX += point.X;
                 centerY += point.Y;
-                centerZ += Math.Abs(zpos - (-1)) < 0.001 ? (point.Z ?? 0) : zpos;
+                centerZ += Math.Abs(zpos - (-1)) < 0.001 ? point.Z : zpos;
             }
 
             return new MapPositionDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
@@ -87,7 +88,7 @@ namespace TDS_Server.Manager.Helper
 
         public static Vector3 ToVector3(this MapPositionDto pos)
         {
-            return new Vector3(pos.X, pos.Y, pos.Z ?? 0);
+            return new Vector3(pos.X, pos.Y, pos.Z);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using TDS_Server.Entity;
 using TDS_Server.Instance.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -11,6 +11,7 @@ namespace TDS_Server.Instance.Lobby
         public FightLobby(Lobbies entity) : base(entity)
         {
             DmgSys = new Damagesys(entity.LobbyWeapons);
+
             SpectateablePlayers = new List<TDSPlayer>[entity.Teams.Count - 1];
             AlivePlayers = new List<TDSPlayer>[entity.Teams.Count - 1];
             foreach (Teams team in entity.Teams)

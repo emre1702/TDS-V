@@ -48,7 +48,7 @@ namespace TDS_Client.Manager.Browser
             OpenChatInput("/teamsay ");
         }
 
-        private static void OpenChatInput(string? cmd)
+        private static void OpenChatInput(string cmd)
         {
             if (IsOpen)
                 return;
