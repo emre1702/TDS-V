@@ -1,5 +1,5 @@
 ﻿using System.Xml.Serialization;
-using TDS_Common.Enum;
+using TDS_Server.Enum;
 
 namespace TDS_Server.Dto.Map
 {

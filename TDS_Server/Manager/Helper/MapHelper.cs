@@ -15,7 +15,7 @@ namespace TDS_Server.Manager.Helper
             map.SyncedData.Name = map.Info.Name;
             map.SyncedData.Description[ELanguage.English] = map.Descriptions?.English;
             map.SyncedData.Description[ELanguage.German] = map.Descriptions?.German;
-            map.SyncedData.Type = map.Info.Type;
+            map.SyncedData.Type = (EMapType)(map.Info.Type);
         }
 
         public static void CreateJsons(this MapDto map)

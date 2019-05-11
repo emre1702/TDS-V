@@ -7,6 +7,7 @@ namespace TDS_Common.Manager.Utility
     public class CommonUtils
     {
         public static readonly Random Rnd = new Random();
+        public static bool IsServersided { get; set; }
 
         public static string HashPWClient(string pw)
         {

@@ -78,14 +78,14 @@ namespace TDS_Server.Manager.Utility
                 // All Normals
                 if (mapAssignment.MapId == -2)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == EMapType.Normal).ToList());
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Normal).ToList());
                     return;
                 }
 
                 // All Bombs
                 if (mapAssignment.MapId == -3)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == EMapType.Bomb).ToList());
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Bomb).ToList());
                     return;
                 }
 

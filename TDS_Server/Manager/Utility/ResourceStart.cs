@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using TDS_Server.Instance;
+using TDS_Server.Instance.GangTeam;
 using TDS_Server.Manager.Commands;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
@@ -44,6 +45,7 @@ namespace TDS_Server.Manager.Utility
                 await MapsLoader.LoadMaps(dbcontext);
                 MapCreator.LoadNewMaps();
                 await LobbyManager.LoadAllLobbies(dbcontext);
+                await Gang.LoadAll(dbcontext);
             }
             catch (Exception ex)
             {
