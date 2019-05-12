@@ -13,9 +13,6 @@ namespace TDS_Common.Dto
         public string PlayersStr;
         public int PlayersCount;
 
-        [JsonIgnore]
-        public string Json;
-
         public SyncedScoreboardMainmenuLobbyDataDto(int Id, string LobbyName, bool IsOfficial, string CreatorName, string PlayersStr, int PlayersCount)
         {
             this.Id = Id;
@@ -24,8 +21,6 @@ namespace TDS_Common.Dto
             this.CreatorName = CreatorName;
             this.PlayersStr = PlayersStr;
             this.PlayersCount = PlayersCount;
-
-            Json = JsonConvert.SerializeObject(this);
         }
     }
 }

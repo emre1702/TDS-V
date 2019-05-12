@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Utility
             if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
             {
                 var entries = GetDataForMainmenu();
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries.Select(e => e.Json)));
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries));
             }
             else
             {
@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Utility
                 if (entries == null)
                     return;
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.CurrentLobby?.Id);
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries.Select(e => e.Json)), JsonConvert.SerializeObject(lobbydata.Select(l => l.Json)));
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries), JsonConvert.SerializeObject(lobbydata));
             }
         }
 

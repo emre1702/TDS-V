@@ -185,31 +185,31 @@ function disableSendButton() {
 function checkMap() {
     let name = $("#map_name_input").val();
     if (name.length < 6) {
-        showDialog(langdata["map_name_atleast"].replace("{1}", "6"));
+        showDialog(langdata["MAP_NAME_ATLEAST_CHARS"].replace("{1}", "6"));
         return false;
     }
 
     let minplayers = parseInt($("#min_players").val());
     if (isNaN(minplayers) || minplayers < 0 || minplayers > 99) {
-        showDialog(langdata["map_min_players_min_max"].replace("{1}", "0").replace("{2}", "99"));
+        showDialog(langdata["MAP_MIN_PLAYERS_MIN_MAX"].replace("{1}", "0").replace("{2}", "99"));
         return false;
     }
 
     let maxplayers = parseInt($("#max_players").val());
     if (isNaN(maxplayers) || maxplayers < 2 || maxplayers > 999) {
-        showDialog(langdata["map_max_players_min_max"].replace("{1}", "2").replace("{2}", "999"));
+        showDialog(langdata["MAP_MAX_PLAYERS_MIN_MAX"].replace("{1}", "2").replace("{2}", "999"));
         return false;
     }
 
     let mapspawnrows = $("#team_spawns_table tr:not(:first-child)");
     if (mapspawnrows.length < 4) {
-        showDialog(langdata["map_team_spawns_min_per_team"].replace("{1}", "4"));
+        showDialog(langdata["MAP_TEAM_SPAWNS_MIN_PER_TEAM"].replace("{1}", "4"));
         return false;
     }
 
     let maplimitrows = $("#map_limit_table tr:not(:first-child)");
     if (maplimitrows.length !== 0 && (maplimitrows.length < 3 || maplimitrows.length > 20)) {
-        showDialog(langdata["map_limit_min_max"].replace("{1}", "3").replace("{2}", 20));
+        showDialog(langdata["MAP_LIMIT_MIN_MAX"].replace("{1}", "3").replace("{2}", 20));
         return false;
     }
 
@@ -217,7 +217,7 @@ function checkMap() {
     if (typeof $("#bomb_radio_switch").attr("checked") !== "undefined") {
         let bombplacesrows = $("#bomb_places_table tr:not(:first-child)");
         if (bombplacesrows.length === 0) {
-            showDialog(langdata["bomb_places_min"].replace("{1}", 1));
+            showDialog(langdata["BOMB_PLACES_MIN"].replace("{1}", 1));
             return false;
         }
     }
@@ -235,8 +235,8 @@ function loadResultOfMapNameCheck(alreadyinuse) {
     if (!alreadyinuse)
         checkMap();
     else {
-        alert(langdata['map_name_already_used']);
-        showDialog(langdata["map_name_already_used"]);
+        alert(langdata['MAP_NAME_ALREADY_USED']);
+        showDialog(langdata["MAP_NAME_ALREADY_USED"]);
     }
 }
 

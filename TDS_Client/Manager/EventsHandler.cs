@@ -60,7 +60,6 @@ namespace TDS_Client.Manager
             OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
             OnPlayerSpawn += OnPlayerSpawnMethod;
             OnPlayerDeath += OnPlayerDeathMethod;
-            OnBrowserDomReady += OnBrowserDomReadyMethod;
             OnPlayerQuit += OnPlayerQuitMethod;
         }
 
@@ -105,22 +104,6 @@ namespace TDS_Client.Manager
         private void OnPlayerDeathMethod(Player player, uint reason, Player killer, CancelEventArgs cancel)
         {
             Death.PlayerDeath(player);
-        }
-
-        private void OnBrowserDomReadyMethod(HtmlWindow browser)
-        {
-            if (browser == RegisterLogin.Browser)
-                RegisterLogin.SendDataToBrowser();
-            else if (browser == Choice.Browser)
-                Choice.SyncLanguageTexts();
-            else if (browser == MainBrowser.Browser)
-                MainBrowser.OnLoaded();
-
-            /*
-             * else if ( browser === mainbrowserdata.browser )
-                loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
-            else if ( browser === mapcreatordata.browser )
-                mapcreatordata.browser.execute( "loadLanguage (`" + JSON.stringify( getLang( "mapcreator_menu" ) ) + "`);" );*/
         }
 
         private void OnPlayerQuitMethod(Player player)
@@ -438,7 +421,6 @@ namespace TDS_Client.Manager
             int adminlvl = (int)args[0];
             AccountData.AdminLevel = adminlvl;
             Settings.LoadSyncedSettings(JsonConvert.DeserializeObject<SyncedServerSettingsDto>(args[1].ToString()));
-            ClientUtils.Notify(args[2].ToString());
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
@@ -727,9 +709,11 @@ namespace TDS_Client.Manager
 
         private void OnLanguageChangeMethod(object[] args)
         {
-            if (!System.Enum.IsDefined(typeof(ELanguage), (int)args[0]))
+            var languageID = Convert.ToByte(args[0]);
+            if (!System.Enum.IsDefined(typeof(ELanguage), languageID))
                 return;
-            Settings.LanguageEnum = (ELanguage)args[0];
+            
+            Settings.LanguageEnum = (ELanguage)languageID;
         }
 
         private void OnSyncRegisterLoginLanguageTextsMethod(object[] args)

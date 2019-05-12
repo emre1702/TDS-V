@@ -19,6 +19,7 @@ namespace TDS_Client.Manager.Lobby
         {
             Browser = new HtmlWindow(Constants.LobbyChoiceBrowserPath);
             CursorManager.Visible = true;
+            SyncLanguageTexts();
         }
 
         public static void Stop()

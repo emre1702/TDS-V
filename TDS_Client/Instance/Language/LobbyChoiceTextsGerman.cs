@@ -37,5 +37,7 @@
         public override string TIME_SCALE => "Zeit-Multiplikator";
 
         public override string CUSTOM_LOBBY_OWN => "Eigene Lobby";
+
+        public override string MODE => "Modus";
     }
 }

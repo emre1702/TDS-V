@@ -20,5 +20,6 @@
         string HEALTH { get; }
         string TIME_SCALE { get; }
         string CUSTOM_LOBBY_OWN { get; }
+        string MODE { get; }
     }
 }

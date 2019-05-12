@@ -28,6 +28,7 @@ namespace TDS_Client.Manager.Account
             isRegistered = isregistered;
             Browser = new HtmlWindow(Constants.RegisterLoginBrowserPath);
             CursorManager.Visible = true;
+            SendDataToBrowser();
         }
 
         public static void Stop()
@@ -37,9 +38,9 @@ namespace TDS_Client.Manager.Account
             CursorManager.Visible = false;
         }
 
-        public static void SendDataToBrowser()
+        private static void SendDataToBrowser()
         {
-            Browser?.ExecuteJs($"setLoginPanelData(`{name}`, {isRegistered}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser.ExecuteJs($"setLoginPanelData(`{name}`, {(isRegistered ? 1 : 0)}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
 
         public static void SyncLanguage()

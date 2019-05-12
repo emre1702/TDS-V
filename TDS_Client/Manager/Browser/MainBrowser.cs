@@ -19,6 +19,7 @@ namespace TDS_Client.Manager.Browser
         {
             Browser = new HtmlWindow(Constants.MainBrowserPath);
             Browser.MarkAsChat();
+            OnLoaded();
         }
 
         private static void Execute(string execStr)
@@ -31,7 +32,7 @@ namespace TDS_Client.Manager.Browser
 
         #region Events
 
-        public static void OnLoaded()
+        private static void OnLoaded()
         {
             Team.LoadOrderNames();
             foreach (var execStr in executeQueue)
@@ -110,7 +111,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void ToggleCanVoteForMapWithNumpadInBrowser(bool canvote)
         {
-            Execute($"toggleCanVoteForMapWithNumpad({canvote});");
+            Execute($"toggleCanVoteForMapWithNumpad({(canvote ? 1 : 0)});");
         }
 
         public static void LoadOrderNamesInBrowser(string ordernamesjson)
@@ -120,7 +121,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void ToggleOrders(bool show)
         {
-            Execute($"toggleOrders({show})");
+            Execute($"toggleOrders({(show ? 1 : 0)})");
         }
 
         public static void ShowRoundEndReason(string reason, string currentmap)

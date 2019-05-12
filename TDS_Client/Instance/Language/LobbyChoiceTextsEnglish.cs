@@ -39,5 +39,7 @@ namespace TDS_Client.Instance.Language
         public virtual string TIME_SCALE => "Time scale";
 
         public virtual string CUSTOM_LOBBY_OWN => "Own lobby";
+
+        public virtual string MODE => "Mode";
     }
 }

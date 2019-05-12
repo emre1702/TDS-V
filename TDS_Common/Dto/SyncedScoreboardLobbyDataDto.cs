@@ -13,9 +13,6 @@ namespace TDS_Common.Dto
         public int Deaths;
         public int TeamIndex;
 
-        [JsonIgnore]
-        public string Json;
-
         public SyncedScoreboardLobbyDataDto(string name, int playtimeMinutes, int kills, int assists, int deaths, int teamIndex)
         {
             Name = name;
@@ -24,8 +21,6 @@ namespace TDS_Common.Dto
             Assists = assists;
             Deaths = deaths;
             TeamIndex = teamIndex;
-
-            Json = JsonConvert.SerializeObject(this);
         }
     }
 }

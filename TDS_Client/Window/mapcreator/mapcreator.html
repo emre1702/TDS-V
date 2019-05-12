@@ -17,13 +17,13 @@
         <div id="body">
             <div id="leftside">
                 <div id="mapcreatortab">
-                    <button data-lang="general" onclick="openMapCreatorMenu(0);">General</button>
-                    <button data-lang="descriptions" onclick="openMapCreatorMenu(1);">Descriptions</button>
-                    <button data-lang="team_spawns" onclick="openMapCreatorMenu(2);">Team-spawns</button>
-                    <button data-lang="map_limit" onclick="openMapCreatorMenu(3);">Map-limit</button>
-                    <button data-lang="map_points" onclick="openMapCreatorMenu(4);">Map-points</button>
-                    <button data-lang="bomb_places" onclick="openMapCreatorMenu( 5 );" style="display: none;" class="bomb_content">Bomb-places</button>
-                    <button data-lang="last" onclick="openMapCreatorMenu(6);">Last</button>
+                    <button data-lang="GENERAL" onclick="openMapCreatorMenu(0);">General</button>
+                    <button data-lang="DESCRIPTIONS" onclick="openMapCreatorMenu(1);">Descriptions</button>
+                    <button data-lang="TEAM_SPAWNS" onclick="openMapCreatorMenu(2);">Team-spawns</button>
+                    <button data-lang="MAP_LIMIT" onclick="openMapCreatorMenu(3);">Map-limit</button>
+                    <button data-lang="MAP_EDGES" onclick="openMapCreatorMenu(4);">Map-edges</button>
+                    <button data-lang="BOMB_PLACES" onclick="openMapCreatorMenu( 5 );" style="display: none;" class="bomb_content">Bomb-places</button>
+                    <button data-lang="LAST" onclick="openMapCreatorMenu(6);">Last</button>
                 </div>
             </div>
             <div id="rightside">
@@ -33,16 +33,16 @@
                         <span>Type:</span>
                         <div id="map_type_switch" class="switch-toggle switch-candy">
                             <input id="normal_radio_switch" name="state-d" type="radio" checked onclick="toggleBombContents( false );">
-                            <label for="normal_radio_switch" onclick="" data-lang="normal">Normal</label>
+                            <label for="normal_radio_switch" onclick="" data-lang="NORMAL">Normal</label>
 
                             <input id="bomb_radio_switch" name="state-d" type="radio" onclick="toggleBombContents( true );">
-                            <label for="bomb_radio_switch" onclick="" data-lang="bomb">Bomb</label>
+                            <label for="bomb_radio_switch" onclick="" data-lang="BOMB">Bomb</label>
 
                             <a></a>
                         </div>
                     </div>
-                    <div><span data-lang="min_players">Min-players:</span><input id="min_players" type="number" min="0" max="99" /></div>
-                    <div><span data-lang="max_players">Max-players:</span><input id="max_players" type="number" min="2" max="999" /></div>
+                    <div><span data-lang="MIN_PLAYERS">Min-players:</span><input id="min_players" type="number" min="0" max="99" /></div>
+                    <div><span data-lang="MAX_PLAYERS">Max-players:</span><input id="max_players" type="number" min="2" max="999" /></div>
                 </div>
                 <div id="description_tabcontent" class="tabcontent">
                     <div class="more_height_content">
@@ -56,7 +56,7 @@
                     <div class="tabtablediv">
                         <table id="team_spawns_table" class="tabtable">
                             <tr>
-                                <th data-lang="team">Team</th>
+                                <th data-lang="TEAM">Team</th>
                                 <th>X</th>
                                 <th>Y</th>
                                 <th>Z</th>
@@ -65,10 +65,10 @@
                         </table>
                     </div>
                     <div>
-                        <button class="add_button" data-lang="add" onclick="addCurrentPosition(0);">Add</button>
-                        <button class="goto_button" data-lang="go" onclick="gotoPosition(0);">Go</button>
-                        <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
-                        <input id="team_number_teamspawns" type="number" min="1" max="10" placeholder="team" data-lang-placeholder="team" />
+                        <button class="add_button" data-lang="ADD" onclick="addCurrentPosition(0);">Add</button>
+                        <button class="goto_button" data-lang="GO" onclick="gotoPosition(0);">Go</button>
+                        <button class="remove_button" data-lang="REMOVE" onclick="removePosition();">Remove</button>
+                        <input id="team_number_teamspawns" type="number" min="1" max="10" placeholder="team" data-lang-placeholder="TEAM" />
                     </div>
                 </div>
                 <div id="map_limit_tabcontent" class="tabcontent">
@@ -82,14 +82,14 @@
                         </table>
                     </div>
                     <div>
-                        <button class="add_button" data-lang="add" onclick="addCurrentPosition(1);">Add</button>
-                        <button class="goto_button" data-lang="go" onclick="gotoPosition(1);">Go</button>
-                        <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
+                        <button class="add_button" data-lang="ADD" onclick="addCurrentPosition(1);">Add</button>
+                        <button class="goto_button" data-lang="GO" onclick="gotoPosition(1);">Go</button>
+                        <button class="remove_button" data-lang="REMOVE" onclick="removePosition();">Remove</button>
                     </div>
                 </div>
                 <div id="map_points_tabcontent" class="tabcontent">
                     <div>
-                        <span style="margin-right: 6%;" data-lang="map_center:">Map-center:</span>
+                        <span style="margin-right: 6%;" data-lang="MAP_CENTER">Map-center</span><span>:</span>
                     </div>
                     <div>
                         <span id="map_center_x">X: </span>
@@ -97,8 +97,8 @@
                         <span id="map_center_z">Z: </span>
                     </div>
                     <div>
-                        <button class="add_button" data-lang="add" onclick="addCurrentPosition(2);">Add</button>
-                        <button class="goto_button" data-lang="go" onclick="gotoPosition(2);">Go</button>
+                        <button class="add_button" data-lang="ADD" onclick="addCurrentPosition(2);">Add</button>
+                        <button class="goto_button" data-lang="GO" onclick="gotoPosition(2);">Go</button>
                     </div>
                 </div>
                 <div id="bomb_places_tabcontent" class="tabcontent">
@@ -112,16 +112,16 @@
                         </table>
                     </div>
                     <div>
-                        <button class="add_button" data-lang="add" onclick="addCurrentPosition(3);">Add</button>
-                        <button class="goto_button" data-lang="go" onclick="gotoPosition(3);">Go</button>
-                        <button class="remove_button" data-lang="remove" onclick="removePosition();">Remove</button>
+                        <button class="add_button" data-lang="ADD" onclick="addCurrentPosition(3);">Add</button>
+                        <button class="goto_button" data-lang="GO" onclick="gotoPosition(3);">Go</button>
+                        <button class="remove_button" data-lang="REMOVE" onclick="removePosition();">Remove</button>
                     </div>
                 </div>
                 <div id="last_tabcontent" class="tabcontent">
-                    <span id="last_information" data-lang="last_info"></span>
+                    <span id="last_information" data-lang="LAST_INFO"></span>
                     <div>
-                        <button id="send_map_button" class="add_button" data-lang="send" onclick="sendMap();" disabled>Send</button>
-                        <button id="check_map_button" class="goto_button" data-lang="check" onclick="checkMapName();">Check</button>
+                        <button id="send_map_button" class="add_button" data-lang="SEND" onclick="sendMap();" disabled>Send</button>
+                        <button id="check_map_button" class="goto_button" data-lang="CHECK" onclick="checkMapName();">Check</button>
                     </div>
                 </div>
             </div>
