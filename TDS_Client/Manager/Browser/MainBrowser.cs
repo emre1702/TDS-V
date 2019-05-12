@@ -101,7 +101,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void AddVoteToMapInMapMenuBrowser(string mapname, string oldvotemapname)
         {
-            Execute($"addVoteToMapVoting('{mapname}', '{oldvotemapname}');");
+            Execute($"addVoteToMapVoting('{mapname}', '{oldvotemapname ?? string.Empty}');");
         }
 
         public static void LoadMapFavouritesInBrowser(string mapfavouritesjson)

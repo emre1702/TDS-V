@@ -199,7 +199,7 @@ function removeVoteFromMap(mapname) {
 function addVoteToMapVoting(mapname, oldmapname) {
     if (votedMapName === mapname)
         $(".mapvoting_selected").removeClass("mapvoting_selected");
-    if (typeof oldmapname !== "undefined")
+    if (oldmapname !== "")
         removeVoteFromMap(oldmapname);
     let foundmap = false;
     for (let i = 0; i < votings.length && !foundmap; ++i) {

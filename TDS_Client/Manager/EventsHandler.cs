@@ -400,7 +400,7 @@ namespace TDS_Client.Manager
         private void OnAddVoteToMapServerMethod(object[] args)
         {
             string newmapname = (string)args[0];
-            string oldmapname = (string)args[1];
+            string oldmapname = args.Length > 1 ? (string)args[1] : null;
             MapManager.AddVote(newmapname, oldmapname);
         }
 
