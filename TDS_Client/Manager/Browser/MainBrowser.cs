@@ -81,7 +81,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void OpenMapMenuInBrowser(string mapslistjson)
         {
-            Execute($"openMapMenu('{(int)Settings.Language.Enum}', '{mapslistjson}');");
+            Execute($"openMapMenu('{(int)Settings.Language.Enum}', `{mapslistjson}`);");
         }
 
         public static void CloseMapMenuInBrowser()

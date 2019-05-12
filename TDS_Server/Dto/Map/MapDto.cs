@@ -25,7 +25,7 @@ namespace TDS_Server.Dto.Map
         public MapBombInfoDto? BombInfo { get; set; }
 
         [XmlIgnore]
-        public SyncedMapDataDto SyncedData => new SyncedMapDataDto();
+        public SyncedMapDataDto SyncedData = new SyncedMapDataDto();
 
         [XmlIgnore]
         public bool IsBomb => Info.Type == EMapType.Bomb;

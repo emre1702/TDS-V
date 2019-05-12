@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Maps
 {
     internal static class MapsLoader
     {
-        public static List<MapDto> AllMaps = new List<MapDto>();
+        public static List<MapDto> AllMaps { get; private set; } = new List<MapDto>();
         public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string>();   // mapnames in lower case
                                                                                                                          //public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string>();
 
