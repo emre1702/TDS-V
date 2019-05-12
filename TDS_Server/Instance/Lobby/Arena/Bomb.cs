@@ -192,7 +192,7 @@ namespace TDS_Server.Instance.Lobby
             //Todo Implement after new Bridge version
             bombAtPlayer = null;
             planter = player;
-            bombDetonateTimer = new TDSTimer(DetonateBomb, (uint)_roundSettings.BombDetonateTimeMs);
+            bombDetonateTimer = new TDSTimer(DetonateBomb, (uint)RoundSettings.BombDetonateTimeMs);
 
             FuncIterateAllPlayers((target, team) =>
             {
@@ -249,7 +249,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
 
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), (uint)_roundSettings.BombPlantTimeMs);
+            bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), (uint)RoundSettings.BombPlantTimeMs);
         }
 
         public void StopBombPlanting(Client client)
@@ -275,7 +275,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
                 return;
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
-            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), (uint)_roundSettings.BombDefuseTimeMs);
+            bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), (uint)RoundSettings.BombDefuseTimeMs);
         }
 
         public void StopBombDefusing(Client client)

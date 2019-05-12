@@ -17,7 +17,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private LobbyRoundSettings _roundSettings => LobbyEntity.LobbyRoundSettings;
+        private LobbyRoundSettings RoundSettings => LobbyEntity.LobbyRoundSettings;
 
         private TDSTimer? _nextRoundStatusTimer;
 
@@ -92,7 +92,7 @@ namespace TDS_Server.Instance.Lobby
                 StartBombMapChoose(nextMap);
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
-            if (_roundSettings.MixTeamsAfterRound)
+            if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
             _currentMap = nextMap;
