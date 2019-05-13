@@ -1,10 +1,13 @@
 ﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Server.Dto.Map;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Helper
 {
@@ -16,6 +19,12 @@ namespace TDS_Server.Manager.Helper
             map.SyncedData.Description[ELanguage.English] = map.Descriptions?.English;
             map.SyncedData.Description[ELanguage.German] = map.Descriptions?.German;
             map.SyncedData.Type = (EMapType)(map.Info.Type);
+        }
+
+        public static async Task LoadMapRatings(this MapDto map, TDSNewContext dbContext)
+        {
+            map.Ratings = await dbContext.PlayerMapRatings.Where(m => m.MapId == map.Info.Id).ToListAsync();
+            map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
         }
 
         public static void CreateJsons(this MapDto map)

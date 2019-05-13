@@ -50,6 +50,9 @@ namespace TDS_Server.Manager.Maps
                 await dbContext.Maps.AddAsync(dbMap);
                 await dbContext.SaveChangesAsync();
 
+                mapDto.Info.Id = dbMap.Id;
+                mapDto.RatingAverage = 5;
+
                 _newCreatedMaps.Add(mapDto);
 
                 return true;
@@ -60,9 +63,14 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static void LoadNewMaps()
+        public static async Task LoadNewMaps(TDSNewContext dbContext)
         {
-            _newCreatedMaps = MapsLoader.LoadMapsInDirectory(SettingsManager.NewMapsPath);
+            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, true);
+            foreach (var map in _newCreatedMaps)
+            {
+                // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
+                map.SyncedData.CreatorName = string.Empty;
+            }
         }
 
         public static MapDto? GetRandomNewMap()

@@ -1,6 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using TDS_Common.Dto;
 using TDS_Server.Enum;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Dto.Map
 {
@@ -25,7 +27,13 @@ namespace TDS_Server.Dto.Map
         public MapBombInfoDto? BombInfo { get; set; }
 
         [XmlIgnore]
-        public SyncedMapDataDto SyncedData = new SyncedMapDataDto();
+        public SyncedMapDataDto SyncedData { get; set; } = new SyncedMapDataDto();
+
+        [XmlIgnore]
+        public List<PlayerMapRatings> Ratings { get; set; } = new List<PlayerMapRatings>();
+
+        [XmlIgnore]
+        public double RatingAverage { get; set; }
 
         [XmlIgnore]
         public bool IsBomb => Info.Type == EMapType.Bomb;

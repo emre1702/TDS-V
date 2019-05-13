@@ -42,8 +42,8 @@ namespace TDS_Server.Manager.Utility
 
                 await BansManager.RemoveExpiredBans(dbcontext);
 
-                await MapsLoader.LoadMaps(dbcontext);
-                MapCreator.LoadNewMaps();
+                await MapsLoader.LoadDefaultMaps(dbcontext);
+                await MapCreator.LoadNewMaps(dbcontext);
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
             }
