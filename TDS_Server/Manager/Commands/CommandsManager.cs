@@ -71,7 +71,7 @@ namespace TDS_Server.Manager.Commands
         {
             LoadConverters();
 
-            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).AsNoTracking().ToListAsync())
+            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
             {
                 _commandsDict[command.Command.ToLower()] = command;
 

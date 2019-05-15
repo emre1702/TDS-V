@@ -25,7 +25,6 @@ namespace TDS_Server.Manager.Utility
                                 lvl.Level,
                                 "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
                             ))
-                .AsNoTracking()
                 .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);
 
             foreach (var entry in await dbcontext.AdminLevelNames.ToListAsync())

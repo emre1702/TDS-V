@@ -19,8 +19,10 @@ namespace TDS_Server.Manager.Utility
 
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
         {
+            dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             dbcontext.RemoveRange(await dbcontext.Lobbies.Where(l => l.IsTemporary).ToListAsync());
             await dbcontext.SaveChangesAsync();
+            dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             List<Lobbies> lobbies = await dbcontext.Lobbies
                 .Include(l => l.LobbyRewards)
@@ -30,7 +32,6 @@ namespace TDS_Server.Manager.Utility
                 .Include(l => l.LobbyMaps)
                 .ThenInclude((LobbyMaps map) => map.Map)
                 .Include(l => l.OwnerNavigation)
-                .AsNoTracking()
                 .ToListAsync();
             foreach (Lobbies lobbysetting in lobbies)
             {

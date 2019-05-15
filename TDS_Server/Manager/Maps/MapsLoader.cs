@@ -95,6 +95,7 @@ namespace TDS_Server.Manager.Maps
 
         private static async Task SaveMapsInDB(TDSNewContext dbContext, List<MapDto> maps, bool newMaps)
         {
+            dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             var removeMapsInDB = (await dbContext.Maps.Where(m => m.Id > 0 && m.InTesting == newMaps).ToListAsync())
                             .Where(m => !MapPathByName.ContainsKey(m.Name.ToLower()));
 
@@ -114,6 +115,7 @@ namespace TDS_Server.Manager.Maps
                 }
             }
             await dbContext.SaveChangesAsync();
+            dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         private static async Task LoadMapDBInfos(TDSNewContext dbContext, List<MapDto> maps)

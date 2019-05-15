@@ -30,6 +30,7 @@ namespace TDS_Server.Manager.Utility
                     stat.LoggedIn = false;
                 }
                 await dbcontext.SaveChangesAsync();
+                dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 await SettingsManager.Load(dbcontext);
 

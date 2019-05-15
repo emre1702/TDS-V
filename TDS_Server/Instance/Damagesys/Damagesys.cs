@@ -28,9 +28,16 @@ namespace TDS_Server.Instance
 
         public static void LoadDefaults(TDSNewContext dbcontext)
         {
-            defaultDamages = dbcontext.Weapons.Select(w => new { w.Hash, w.DefaultDamage, w.DefaultHeadMultiplicator }).ToDictionary(
-                w => w.Hash, w => new DamageDto { Damage = w.DefaultDamage, HeadMultiplier = w.DefaultHeadMultiplicator }
-            );
+            defaultDamages = dbcontext.Weapons
+                .Select(w => new { w.Hash, w.DefaultDamage, w.DefaultHeadMultiplicator })
+                .ToDictionary(
+                    w => w.Hash, 
+                    w => new DamageDto 
+                    { 
+                        Damage = w.DefaultDamage, 
+                        HeadMultiplier = w.DefaultHeadMultiplicator 
+                    }
+                );
         }
     }
 }
