@@ -12,7 +12,7 @@ using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
-
+using Z.EntityFramework.Plus;
 using DB = TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Maps
@@ -20,8 +20,6 @@ namespace TDS_Server.Manager.Maps
     internal static class MapsLoader
     {
         public static List<MapDto> AllMaps { get; private set; } = new List<MapDto>();
-        public static ConcurrentDictionary<string, string> MapPathByName = new ConcurrentDictionary<string, string>();   // mapnames in lower case
-                                                                                                                         //public static ConcurrentDictionary<string, string> MapCreator = new ConcurrentDictionary<string, string>();
 
         private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
@@ -96,23 +94,16 @@ namespace TDS_Server.Manager.Maps
         private static async Task SaveMapsInDB(TDSNewContext dbContext, List<MapDto> maps, bool newMaps)
         {
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            var removeMapsInDB = (await dbContext.Maps.Where(m => m.Id > 0 && m.InTesting == newMaps).ToListAsync())
-                            .Where(m => !MapPathByName.ContainsKey(m.Name.ToLower()));
 
-            dbContext.Maps.RemoveRange(removeMapsInDB);
+            var mapsToAdd = maps.Where(m => !dbContext.Maps.Any(map => map.Name == m.Info.Name));
 
-            if ((await dbContext.Maps.Where(m => m.Id > 0 && m.InTesting == newMaps).CountAsync()) != maps.Count)
+            foreach (var map in mapsToAdd)
             {
-                foreach (var map in maps)
-                {
-                    if (await dbContext.Maps.Where(m => m.Name == map.Info.Name).AnyAsync())
-                        continue;
 
-                    if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
-                        await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = null });
-                    else
-                        await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
-                }
+                if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = null });
+                else
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
             }
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
