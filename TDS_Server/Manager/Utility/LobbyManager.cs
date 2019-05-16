@@ -8,6 +8,7 @@ using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
+using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -20,7 +21,9 @@ namespace TDS_Server.Manager.Utility
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
         {
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            dbcontext.RemoveRange(await dbcontext.Lobbies.Where(l => l.IsTemporary).ToListAsync());
+            await dbcontext.Lobbies
+                .Where(l => l.IsTemporary)
+                .DeleteAsync();
             await dbcontext.SaveChangesAsync();
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 

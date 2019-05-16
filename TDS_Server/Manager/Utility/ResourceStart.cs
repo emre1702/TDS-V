@@ -7,6 +7,7 @@ using TDS_Server.Instance.GangTeam;
 using TDS_Server.Manager.Commands;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
+using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -25,10 +26,7 @@ namespace TDS_Server.Manager.Utility
             {
                 SettingsManager.LoadLocal();
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
-                foreach (var stat in await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync())
-                {
-                    stat.LoggedIn = false;
-                }
+                dbcontext.PlayerStats.Where(s => s.LoggedIn).Update(s => new PlayerStats { LoggedIn = false });
                 await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
