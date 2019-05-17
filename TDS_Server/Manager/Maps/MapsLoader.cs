@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Maps
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
 
-            await SaveMapsInDB(dbcontext, list, newMaps);
+            await SaveMapsInDB(dbcontext, list);
 
             // Load name of creator and Id for Maps //
             await LoadMapDBInfos(dbcontext, list);
@@ -91,7 +91,7 @@ namespace TDS_Server.Manager.Maps
             return AllMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
-        private static async Task SaveMapsInDB(TDSNewContext dbContext, List<MapDto> maps, bool newMaps)
+        private static async Task SaveMapsInDB(TDSNewContext dbContext, List<MapDto> maps)
         {
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
