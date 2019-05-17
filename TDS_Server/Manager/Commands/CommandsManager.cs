@@ -1,4 +1,5 @@
-﻿using GTANetworkAPI;
+﻿using AutoMapper;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,6 @@ namespace TDS_Server.Manager.Commands
         private static readonly Dictionary<string, CommandData> _commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
         private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
         private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
-        private static readonly Dictionary<Type, Func<string, object?>> _typeConverter = new Dictionary<Type, Func<string, object?>>();
 
         // private const int AmountDefaultParams = 2;
 
@@ -69,8 +69,6 @@ namespace TDS_Server.Manager.Commands
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
         {
-            LoadConverters();
-
             foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
             {
                 _commandsDict[command.Command.ToLower()] = command;
@@ -380,146 +378,11 @@ namespace TDS_Server.Manager.Commands
 
         private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
         {
-            object? converterReturn = _typeConverter[theType]((string)notConvertedArg);
+            object? converterReturn = Mapper.Map(notConvertedArg, typeof(string), theType);
             object? arg = converterReturn;
             if (converterReturn != null && converterReturn is Task<object?>)
                 arg = await (Task<object?>)converterReturn;
             return arg;
         }
-
-        #region Converters
-
-        private static void LoadConverters()
-        {
-            _typeConverter[typeof(string)] = str => str;
-            _typeConverter[typeof(char)] = str => str[0];
-            _typeConverter[typeof(int)] = str => Convert.ToInt32(str);
-            _typeConverter[typeof(float)] = str => Convert.ToSingle(str);
-            _typeConverter[typeof(double)] = str => Convert.ToDouble(str);
-            _typeConverter[typeof(bool)] = str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1";
-            _typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
-            _typeConverter[typeof(Client?)] = GetClientByName;
-            _typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
-            _typeConverter[typeof(Players?)] = GetDatabasePlayerByName;
-        }
-
-        private static TDSPlayer? GetTDSPlayerByName(string name)
-        {
-            Client? client = Utils.FindPlayer(name);
-            TDSPlayer? player = client?.GetChar();
-            return player != null && player.LoggedIn ? player : null;
-        }
-
-        private static Client? GetClientByName(string name)
-        {
-            return Utils.FindPlayer(name);
-        }
-
-        private static async Task<Players?> GetDatabasePlayerByName(string name)
-        {
-            using var dbcontext = new TDSNewContext();
-            return await dbcontext.Players.Where(p => p.Name == name).FirstOrDefaultAsync();
-        }
-
-        private static DateTime? GetDateTimeByString(string time)
-        {
-            return GetTime(time);
-        }
-
-        private static DateTime? GetTime(string time)
-        {
-            switch (time)
-            {
-                #region Seconds
-
-                case string _ when time.EndsWith("s", true, CultureInfo.CurrentCulture):    // seconds
-                    if (!double.TryParse(time[0..^1], out double seconds))
-                        return null;
-                    return DateTime.Now.AddSeconds(seconds);
-
-                case string _ when time.EndsWith("sec", true, CultureInfo.CurrentCulture):    // seconds
-                    if (!double.TryParse(time[0..^3], out double secs))
-                        return null;
-                    return DateTime.Now.AddSeconds(secs);
-
-                #endregion Seconds
-
-                #region Minutes
-
-                case string _ when time.EndsWith("m", true, CultureInfo.CurrentCulture):    // minutes
-                    if (!double.TryParse(time[0..^1], out double minutes))
-                        return null;
-                    return DateTime.Now.AddMinutes(minutes);
-
-                case string _ when time.EndsWith("min", true, CultureInfo.CurrentCulture):    // minutes
-                    if (!double.TryParse(time[0..^3], out double mins))
-                        return null;
-                    return DateTime.Now.AddMinutes(mins);
-
-                #endregion Minutes
-
-                #region Hours
-
-                case string _ when time.EndsWith("h", true, CultureInfo.CurrentCulture):    // hours
-                    if (!double.TryParse(time[0..^1], out double hours))
-                        return null;
-                    return DateTime.Now.AddHours(hours);
-
-                case string _ when time.EndsWith("st", true, CultureInfo.CurrentCulture):    // hours
-                    if (!double.TryParse(time[0..^2], out double hours2))
-                        return null;
-                    return DateTime.Now.AddHours(hours2);
-
-                #endregion Hours
-
-                #region Days
-
-                case string _ when time.EndsWith("d", true, CultureInfo.CurrentCulture):    // days
-                case string _ when time.EndsWith("t", true, CultureInfo.CurrentCulture):    // days
-                    if (!double.TryParse(time[0..^1], out double days))
-                        return null;
-                    return DateTime.Now.AddDays(days);
-
-                #endregion Days
-
-                #region Perma
-
-                case string _ when IsPerma(time):       // perma
-                    return DateTime.MaxValue;
-
-                #endregion Perma
-
-                #region Unmute
-
-                case string _ when IsUnmute(time):       // unmute
-                    return DateTime.MinValue;
-
-                #endregion Unmute
-
-                default:
-                    return null;
-            };
-        }
-
-        private static bool IsPerma(string time)
-        {
-            return time == "-1"
-                || time == "-"
-                || time.Equals("perma", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("permamute", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("permaban", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("never", StringComparison.CurrentCultureIgnoreCase);
-        }
-
-        private static bool IsUnmute(string time)
-        {
-            return time == "0"
-                || time.Equals("unmute", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("unban", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("stop", StringComparison.CurrentCultureIgnoreCase)
-                || time.Equals("no", StringComparison.CurrentCultureIgnoreCase);
-        }
-
-        #endregion Converters
     }
 }

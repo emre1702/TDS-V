@@ -5,6 +5,7 @@ using System.Linq;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Manager.Commands;
+using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
 using Z.EntityFramework.Plus;
@@ -24,9 +25,16 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
+                MappingManager.Init();
                 SettingsManager.LoadLocal();
+
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
-                dbcontext.PlayerStats.Where(s => s.LoggedIn).Update(s => new PlayerStats { LoggedIn = false });
+                //dbcontext.PlayerStats.Where(s => s.LoggedIn).Update(s => new PlayerStats { LoggedIn = false });  
+                //todo add after z.Entity update
+                foreach (var stat in await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync())
+                {
+                    stat.LoggedIn = false;
+                }
                 await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -36,8 +44,6 @@ namespace TDS_Server.Manager.Utility
                 Workaround.Init();
                 await CommandsManager.LoadCommands(dbcontext);
                 Damagesys.LoadDefaults(dbcontext);
-
-                NAPI.Server.SetGamemodeName(SettingsManager.GamemodeName);
 
                 await BansManager.RemoveExpiredBans(dbcontext);
 

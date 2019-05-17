@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
@@ -12,7 +13,6 @@ namespace TDS_Server.Manager.Utility
     internal class SettingsManager
     {
         public static string ConnectionString => _localSettings.ConnectionString.Value;
-        public static string GamemodeName => _serverSettings.GamemodeName;
         public static string MapsPath => _serverSettings.MapsPath;
         public static string NewMapsPath => _serverSettings.NewMapsPath;
         public static bool ErrorToPlayerOnNonExistentCommand => _serverSettings.ErrorToPlayerOnNonExistentCommand;
@@ -50,6 +50,8 @@ namespace TDS_Server.Manager.Utility
                 MapChooseTime = 4 * 1000,
                 TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs
             };
+
+            NAPI.Server.SetGamemodeName(_serverSettings.GamemodeName);
         }
     }
 }
