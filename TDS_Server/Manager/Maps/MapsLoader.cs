@@ -38,11 +38,10 @@ namespace TDS_Server.Manager.Maps
                 list = LoadMapsInDirectory(SettingsManager.NewMapsPath);
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
-
             await SaveMapsInDB(dbcontext, list);
 
             // Load name of creator and Id for Maps //
-            await LoadMapDBInfos(dbcontext, list);
+            LoadMapDBInfos(dbcontext, list);
 
             return list;
         }
@@ -101,24 +100,25 @@ namespace TDS_Server.Manager.Maps
             {
 
                 if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
-                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = null });
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = 0 });
                 else
-                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId ?? 0 });
             }
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        private static async Task LoadMapDBInfos(TDSNewContext dbContext, List<MapDto> maps)
+        private static void LoadMapDBInfos(TDSNewContext dbContext, List<MapDto> maps)
         {
             foreach (var map in maps)
             {
-                DB.Maps dbMap = await dbContext.Maps
+                DB.Maps dbMap = dbContext.Maps
                     .Where(m => m.Name == map.Info.Name)
-                    .FirstAsync();
+                    .Include(m => m.Creator)
+                    .First();
                 map.SyncedData.CreatorName = dbMap.Creator.Name;
                 map.Info.Id = dbMap.Id;
-                await map.LoadMapRatings(dbContext);
+                map.LoadMapRatings(dbContext);
             }
         }        
     }
