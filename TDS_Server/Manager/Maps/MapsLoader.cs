@@ -38,6 +38,7 @@ namespace TDS_Server.Manager.Maps
                 list = LoadMapsInDirectory(SettingsManager.NewMapsPath);
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
+            
             await SaveMapsInDB(dbcontext, list);
 
             // Load name of creator and Id for Maps //
@@ -100,9 +101,9 @@ namespace TDS_Server.Manager.Maps
             {
 
                 if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
-                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = 0 });
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = null });
                 else
-                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId ?? 0 });
+                    await dbContext.Maps.AddAsync(new DB.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
             }
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
