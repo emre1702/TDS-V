@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GTANetworkAPI;
+using System.Linq;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Mapping.Converter
@@ -8,7 +9,11 @@ namespace TDS_Server.Manager.Mapping.Converter
     {
         public Client? Convert(string name, Client? destination, ResolutionContext _)
         {
-            return Utils.FindClient(name);
+            Client? player = NAPI.Player.GetPlayerFromName(name);
+            if (player != null && player.Exists)
+                return player;
+            name = name.ToLower();
+            return NAPI.Pools.GetAllPlayers().FirstOrDefault(c => c.Name.ToLower().StartsWith(name));
         }
     }
 }

@@ -27,30 +27,6 @@ namespace TDS_Server.Manager.Player
         {
             return GetChar(client).Entity;
         }
-
-        public static TDSPlayer? GetPlayer(uint id)
-        {
-            foreach (var entry in _clientPlayers)
-            {
-                if (entry.Value.Entity == null)
-                    continue;
-                if ((entry.Value.Entity?.Id ?? 0) == id)
-                    return entry.Value;
-            }
-            return null;
-        }
-
-        public static PlayerSettings? GetSettings(this Client player)
-        {
-            return player.GetChar().Entity?.PlayerSettings;
-        }
-
-        public static async Task<Players?> GetEntityByID(uint id)
-        {
-            using var dbcontext = new TDSNewContext();
-            return await dbcontext.Players.FindAsync(id);
-        }
-
         public static async Task<bool> DoesPlayerWithScnameExist(string scname)
         {
             return await GetPlayerIDByScname(scname) != 0;
@@ -63,11 +39,6 @@ namespace TDS_Server.Manager.Player
                 .Where(p => p.Scname == scname)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();
-        }
-
-        public static void GiveMoney(this Client player, int money)
-        {
-            player.GetChar().GiveMoney(money);
         }
     }
 }

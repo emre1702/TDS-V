@@ -44,15 +44,6 @@ namespace TDS_Server.Manager.Utility
             return float.Parse(str, CultureInfo.InvariantCulture);
         }
 
-        public static Client? FindPlayer(string name)
-        {
-            Client? player = NAPI.Player.GetPlayerFromName(name);
-            if (player != null && player.Exists)
-                return player;
-            name = name.ToLower();
-            return NAPI.Pools.GetAllPlayers().FirstOrDefault(c => c.Name.ToLower().StartsWith(name));
-        }
-
         public static string GetReplaced(string str, params object[] args)
         {
             if (args.Length > 0)
