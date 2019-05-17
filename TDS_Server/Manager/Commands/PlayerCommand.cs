@@ -1,9 +1,13 @@
 using GTANetworkAPI;
+using System;
+using System.Diagnostics;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
+using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -66,6 +70,78 @@ namespace TDS_Server.Manager.Commands
                 Vector3 rot = player.Client.Rotation;
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
             }
+        }
+
+        [TDSCommand("test1")]
+        public static void TestCmd1(TDSPlayer player, TDSCommandInfos commandInfos, string a)
+        {
+            Console.WriteLine(a);
+        }
+
+        [TDSCommand("test2")]
+        public static void TestCmd2(TDSPlayer player, string a)
+        {
+            Console.WriteLine(a);
+        }
+
+        [TDSCommand("test3")]
+        public static void TestCmd3(TDSPlayer player, TDSCommandInfos commandInfos, DateTime? dateTime)
+        {
+            Console.WriteLine(dateTime.ToString());
+        }
+
+        [TDSCommand("test4", 2)]
+        public static void TestCmd4(TDSPlayer player, TDSCommandInfos commandInfos, DateTime dateTime)
+        {
+            Console.WriteLine(dateTime.ToString());
+        }
+
+        [TDSCommand("test4", 1)]
+        public static void TestCmd4(TDSPlayer player, TDSCommandInfos commandInfos, string a)
+        {
+            Console.WriteLine(a);
+        }
+
+        [TDSCommand("test5", 3)]
+        public static void TestCmd5(TDSPlayer player, TDSCommandInfos commandInfos, Players target)
+        {
+            Console.WriteLine("Players: " + target.Name);
+        }
+
+        [TDSCommand("test5", 2)]
+        public static void TestCmd5(TDSPlayer player, TDSCommandInfos commandInfos, TDSPlayer target)
+        {
+            Console.WriteLine("TDSPlayer: " + target.Client.Name);
+        }
+
+        [TDSCommand("test5", 1)]
+        public static void TestCmd5(TDSPlayer player, TDSCommandInfos commandInfos, Client target)
+        {
+            Console.WriteLine("Client: " + target.Name);
+        }
+
+        [TDSCommand("test6", 3)]
+        public static void TestCmd6(TDSPlayer player, TDSCommandInfos commandInfos, Players target)
+        {
+            Console.WriteLine("Players: " + target.Name);
+        }
+
+        [TDSCommand("test6", 2)]
+        public static void TestCmd6(TDSPlayer player, TDSCommandInfos commandInfos, TDSPlayer target)
+        {
+            Console.WriteLine("TDSPlayer: " + target.Client.Name);
+        }
+
+        [TDSCommand("test6", 1)]
+        public static void TestCmd6(TDSPlayer player, TDSCommandInfos commandInfos, Client target)
+        {
+            Console.WriteLine("Client: " + target.Name);
+        }
+
+        [TDSCommand("test6", 0)]
+        public static void TestCmd6(TDSPlayer player, TDSCommandInfos commandInfos, string target)
+        {
+            Console.WriteLine("String: " + target);
         }
 
         /*#region Lobby

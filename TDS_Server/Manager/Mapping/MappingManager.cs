@@ -14,12 +14,6 @@ namespace TDS_Server.Manager.Mapping
         {
             Mapper.Initialize(cfg =>
             {
-                /* 
-            _typeConverter[typeof(TDSPlayer?)] = GetTDSPlayerByName;
-            _typeConverter[typeof(Client?)] = GetClientByName;
-            _typeConverter[typeof(DateTime?)] = str => GetDateTimeByString(str);
-            _typeConverter[typeof(Players?)] = GetDatabasePlayerByName; */
-
                 cfg.CreateMap<string, string>().ConvertUsing(a => a);
                 cfg.CreateMap<string, char>().ConvertUsing(a => a[0]);
                 cfg.CreateMap<string, int>().ConvertUsing(str => Convert.ToInt32(str));
@@ -34,6 +28,13 @@ namespace TDS_Server.Manager.Mapping
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
             });
             Mapper.AssertConfigurationIsValid();
+        } 
+
+        public static Type GetCorrectDestType(Type sourceType)
+        {
+            if (sourceType == typeof(Players) || sourceType == typeof(Players?))
+                return typeof(Task<Players?>);
+            return sourceType;
         }
     }
 }

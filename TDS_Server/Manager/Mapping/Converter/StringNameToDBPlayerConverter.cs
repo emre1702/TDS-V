@@ -12,8 +12,10 @@ namespace TDS_Server.Manager.Mapping.Converter
     {
         public async Task<Players?> Convert(string name, Task<Players?> destination, ResolutionContext _)
         {
-            using var dbcontext = new TDSNewContext();
-            return await dbcontext.Players.FirstOrDefaultAsync(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            Players? ret = null;
+            using (var dbcontext = new TDSNewContext())
+                ret = await dbcontext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false);
+            return ret;
         }
     }
 }

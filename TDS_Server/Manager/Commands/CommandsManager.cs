@@ -3,15 +3,16 @@ using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -60,6 +61,7 @@ namespace TDS_Server.Manager.Commands
         private static readonly Dictionary<string, CommandData> _commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
         private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
         private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
+        private static readonly Dictionary<Type, Func<string, Task<object?>>> _typeConverter = new Dictionary<Type, Func<string, Task<object?>>>();
 
         // private const int AmountDefaultParams = 2;
 
@@ -68,7 +70,9 @@ namespace TDS_Server.Manager.Commands
         // private const bool UseImplicitTypes = true;
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
-        {
+        {            
+            LoadConverters();
+
             foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
             {
                 _commandsDict[command.Command.ToLower()] = command;
@@ -204,6 +208,7 @@ namespace TDS_Server.Manager.Commands
                             methoddata.MethodEmpty.Invoke(character, cmdinfos);
 #pragma warning enable
                     }*/
+                    break;
                 }
             }
             catch
@@ -216,38 +221,52 @@ namespace TDS_Server.Manager.Commands
         {
             if (args == null)
                 return new HandleArgumentsResult { Worked = true };
-            for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
+
+            try
             {
-                if (args == null || args[i] == null)
-                    continue;
-
-                object? arg = await GetConvertedArg(args[i], methoddata.ParameterTypes[i]);
-
-                #region Check for null
-
-                if (arg == null)
+                for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
                 {
-                    #region Check if player exists
+                    if (args == null || args[i] == null)
+                        continue;
 
-                    if (methoddata.ParameterTypes[i] == typeof(TDSPlayer) || methoddata.ParameterTypes[i] == typeof(Client))
+                    var parameterType = methoddata.ParameterTypes[i];
+                    object? arg = await GetConvertedArg(args[i], parameterType);
+
+                    #region Check for null
+
+                    if (arg == null)
                     {
-                        // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
-                        if (methodindex + 1 == amountmethodsavailable)
+                        #region Check if player exists
+
+                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(Client) || parameterType == typeof(Players))
                         {
-                            NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
-                            return new HandleArgumentsResult();
+                            // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
+                            if (methodindex + 1 == amountmethodsavailable)
+                            {
+                                NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
+                                return new HandleArgumentsResult();
+                            }
+                            return new HandleArgumentsResult { IsWrongMethod = true };
                         }
-                        return new HandleArgumentsResult { IsWrongMethod = true };
+
+                        #endregion Check if player exists
                     }
 
-                    #endregion Check if player exists
+                    #endregion Check for null
+
+                    object theArg = arg ?? string.Empty;
+                    args[i] = theArg;  // arg shouldn't be able to be null
                 }
-
-                #endregion Check for null
-
-                args[i] = arg ?? string.Empty;  // arg shouldn't be able to be null
+                return new HandleArgumentsResult { Worked = true };
             }
-            return new HandleArgumentsResult { Worked = true };
+            catch
+            {
+                if (methodindex + 1 == amountmethodsavailable)
+                    return new HandleArgumentsResult();
+                else 
+                    return new HandleArgumentsResult { IsWrongMethod = true };
+            }
+            
         }
 
         private static object[]? HandleRemaingText(CommandMethodData methodData, object[]? args)
@@ -362,7 +381,7 @@ namespace TDS_Server.Manager.Commands
                 return null;
             }
             cmd = msg.Substring(0, cmdendindex).ToLower();
-            return msg.Substring(cmdendindex + 1).Split(' ');
+            return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToArray();
         }
 
         private static object[] GetFinalInvokeArgs(CommandMethodData methodData, TDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
@@ -378,11 +397,26 @@ namespace TDS_Server.Manager.Commands
 
         private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
         {
+            theType = MappingManager.GetCorrectDestType(theType);
             object? converterReturn = Mapper.Map(notConvertedArg, typeof(string), theType);
-            object? arg = converterReturn;
-            if (converterReturn != null && converterReturn is Task<object?>)
-                arg = await (Task<object?>)converterReturn;
-            return arg;
+            if (converterReturn != null && converterReturn is Task<Players?> task)
+                return await task;
+            return converterReturn;
+        }
+
+        private static void LoadConverters()
+        {
+            _typeConverter[typeof(Players)] = GetDatabasePlayerByName;
+        }
+
+        private static async Task<object?> GetDatabasePlayerByName(string name)
+        {
+            object? result = null;
+            using (var dbcontext = new TDSNewContext())
+            {
+                result = await dbcontext.Players.Where(p => p.Name == name).Select(p => (object?)p).FirstOrDefaultAsync();
+            }
+            return result;
         }
     }
 }

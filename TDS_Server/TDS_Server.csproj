@@ -13,7 +13,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>C:\RAGEMP\server-files\bridge\resources\tds\</OutputPath>
-    <DefineConstants>IS_SERVERSIDE</DefineConstants>
+    <DefineConstants></DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
