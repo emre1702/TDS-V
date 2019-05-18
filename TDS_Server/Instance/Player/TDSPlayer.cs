@@ -151,6 +151,8 @@ namespace TDS_Server.Instance.Player
 
         public bool ChatLoaded { get; set; }
         public int KillingSpree { get; set; }
+        public TDSPlayer? InPrivateChatWith { get; set; }
+        public TDSPlayer? SentPrivateChatRequestTo { get; set; }
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -229,6 +231,38 @@ namespace TDS_Server.Instance.Player
                 this.Team = team;
             else
                 this._team = team;
+        }
+
+        public void ClosePrivateChat(bool disconnected)
+        {
+            if (InPrivateChatWith == null && SentPrivateChatRequestTo == null)
+                return;
+
+            if (InPrivateChatWith != null)
+            {
+                if (disconnected)
+                {
+                    InPrivateChatWith.Client.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
+                }
+                else
+                {
+                    Client.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
+                    InPrivateChatWith.Client.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
+                }
+                InPrivateChatWith.InPrivateChatWith = null;
+                InPrivateChatWith = null;
+            }
+            else if (SentPrivateChatRequestTo != null)
+            {
+                if (!disconnected)
+                { 
+                    Client.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
+                }
+                SentPrivateChatRequestTo.Client.SendNotification(
+                    SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(Client.Name)
+                );
+                SentPrivateChatRequestTo = null;
+            }
         }
 
         public async void SaveData()

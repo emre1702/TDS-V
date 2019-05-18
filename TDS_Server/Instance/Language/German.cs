@@ -6,6 +6,7 @@ namespace TDS_Server.Instance.Language
     {
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ADMINLVL_NOT_HIGH_ENOUGH => "Dein Adminlevel ist nicht hoch genug dafür.";
+        public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
         public override string BOMB_PLANT_INFO => "Um die Bombe zu platzieren, musst du zur Faust wechseln und die linke Maustaste auf einem der Bomben-Spots gedrückt halten.";
         public override string BOMB_PLANTED => "Bombe wurde platziert.";
@@ -49,6 +50,7 @@ namespace TDS_Server.Instance.Language
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";
 
         public override string NOT_ALLOWED => "Du bist dazu nicht befugt!";
+        public override string NOT_IN_PRIVATE_CHAT => "Du bist nicht in einem Privatchat.";
         public override string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "Es dürfen nur 6 Maps im Voting sein!";
         public override string NOT_POSSIBLE_IN_THIS_LOBBY => "In dieser Lobby nicht möglich!";
 
@@ -66,6 +68,14 @@ namespace TDS_Server.Instance.Language
         public override string PLAYER_DOESNT_EXIST => "Der Spieler existiert nicht!";
         public override string PLAYER_ISNT_BANED => "Der Spieler ist nicht gebannt.";
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
+        public override string PRIVATE_CHAT_CLOSED_PARTNER => "Dein Privatchat-Partner hat den Chat geschlossen.";
+        public override string PRIVATE_CHAT_CLOSED_YOU => "Du hast den Privatchat geschlossen.";
+        public override string PRIVATE_CHAT_DISCONNECTED => "Dein Privatchat-Partner ist disconnectet.";
+        public override string PRIVATE_CHAT_OPENED_WITH => "Privatchat mit {0} wurde geöffnet.";
+        public override string PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER => "Die Chat-Anfrage von {0} wurde zurückgezogen.";
+        public override string PRIVATE_CHAT_REQUEST_CLOSED_YOU => "Du hast die Chat-Anfrage zurückgezogen.";
+        public override string PRIVATE_CHAT_REQUEST_RECEIVED_FROM => "Du hast eine Privatchat-Anfrage von {0} bekommen.";
+        public override string PRIVATE_CHAT_REQUEST_SENT_TO => "Du hast eine Privatchat-Anfrage an {0} gesendet.";
 
         public override string REASON_MISSING => "Die Begründung fehlt!";
         public override string REPORT_ANSWERED_INFO => "Der Ersteller hat seinem Report mit der ID {0} geantwortet.";
@@ -90,6 +100,7 @@ namespace TDS_Server.Instance.Language
         public override string STILL_PERMABANED_IN_LOBBY => "Du wurdest von {0} aus dieser Lobby permanent gebannt. Grund: {1}";
         public override string STILL_PERMAMUTED => "Du bist noch permanent gemutet.";
 
+        public override string TARGET_ALREADY_IN_PRIVATE_CHAT => "Das Ziel ist bereits in einem Privatchat.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";

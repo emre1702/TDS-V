@@ -1,13 +1,9 @@
 using GTANetworkAPI;
-using System;
-using System.Diagnostics;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
-using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -45,8 +41,78 @@ namespace TDS_Server.Manager.Commands
             ChatManager.SendTeamChat(player, message);
         }
 
+        [TDSCommand(DPlayerCommand.OpenPrivateChat)]
+        public static void OpenPrivateChat(TDSPlayer player, TDSPlayer target)
+        {
+            // Am I already in chat?
+            if (player.InPrivateChatWith != null)
+            {
+                player.Client.SendNotification(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH.Formatted(player.InPrivateChatWith.Client.Name));
+                return;
+            }
+
+            // Did I already send a request?
+            if (player.SentPrivateChatRequestTo == target)
+                return;
+
+            // Withdraw my old request
+            if (player.SentPrivateChatRequestTo != null)
+            {
+                TDSPlayer oldTargett = player.SentPrivateChatRequestTo;
+                oldTargett.Client.SendNotification(oldTargett.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(player.Client.Name));
+                player.SentPrivateChatRequestTo = null;
+            }
+
+            // Is Target already in a private chat?
+            if (target.InPrivateChatWith != null)
+            {
+                player.Client.SendNotification(player.Language.TARGET_ALREADY_IN_PRIVATE_CHAT);
+                return;
+            }
+
+            // Send request
+            if (target.SentPrivateChatRequestTo != player)
+            {
+                player.Client.SendNotification(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO.Formatted(target.Client.Name));
+                target.Client.SendNotification(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM.Formatted(player.Client.Name));
+                player.SentPrivateChatRequestTo = target;
+            }
+            // Accept request
+            else
+            {
+                player.Client.SendNotification(player.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(target.Client.Name));
+                target.Client.SendNotification(target.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(player.Client.Name));
+                target.SentPrivateChatRequestTo = null;
+                player.InPrivateChatWith = target;
+                target.InPrivateChatWith = player;
+            }            
+        }
+
+        [TDSCommand(DPlayerCommand.ClosePrivateChat)]
+        public static void ClosePrivateChat(TDSPlayer player)
+        {
+            if (player.InPrivateChatWith == null && player.SentPrivateChatRequestTo == null)
+            {
+                player.Client.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                return;
+            }
+            player.ClosePrivateChat(false);
+        }
+
         [TDSCommand(DPlayerCommand.PrivateChat)]
-        public static void PrivateChat(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
+        public static void PrivateChat(TDSPlayer player, [TDSRemainingText] string message)
+        {
+            if (player.InPrivateChatWith == null)
+            {
+                player.Client.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                return;
+            }
+            string colorStr = "!{155|35|133}";
+            player.InPrivateChatWith.Client.SendChatMessage($"{colorStr}[{player.Client.Name}: {message}]");
+        }
+
+        [TDSCommand(DPlayerCommand.PrivateMessage)]
+        public static void PrivateMessage(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
         {
             if (player == target)
                 return;

@@ -4,6 +4,7 @@
     {
         string ACCOUNT_DOESNT_EXIST { get; }
         string ADMINLVL_NOT_HIGH_ENOUGH { get; }
+        string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
         string BOMB_PLANT_INFO { get; }
         string BOMB_PLANTED { get; }
@@ -42,6 +43,7 @@
         string MUTETIME_INVALID { get; }
 
         string NOT_ALLOWED { get; }
+        string NOT_IN_PRIVATE_CHAT { get; }
         string NOT_MORE_MAPS_FOR_VOTING_ALLOWED { get; }
         string NOT_POSSIBLE_IN_THIS_LOBBY { get; }
 
@@ -59,6 +61,15 @@
         string PLAYER_DOESNT_EXIST { get; }
         string PLAYER_ISNT_BANED { get; }
         string PLAYER_NOT_MUTED { get; }
+        string PRIVATE_CHAT_CLOSED_PARTNER { get; }
+        string PRIVATE_CHAT_CLOSED_YOU { get; }
+        string PRIVATE_CHAT_DISCONNECTED { get; }
+        string PRIVATE_CHAT_OPENED_WITH { get; }
+        string PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER { get; }
+        string PRIVATE_CHAT_REQUEST_CLOSED_YOU { get; }
+        string PRIVATE_CHAT_REQUEST_RECEIVED_FROM { get; }
+        string PRIVATE_CHAT_REQUEST_SENT_TO { get; }
+
 
         string REASON_MISSING { get; }
         string REPORT_ANSWERED_INFO { get; }
@@ -83,6 +94,7 @@
         string STILL_PERMABANED_IN_LOBBY { get; }
         string STILL_PERMAMUTED { get; }
 
+        string TARGET_ALREADY_IN_PRIVATE_CHAT { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
         string TIMEBAN_INFO { get; }

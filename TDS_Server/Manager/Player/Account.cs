@@ -41,6 +41,7 @@ namespace TDS_Server.Manager.Player
             player.Entity.PlayerStats.LoggedIn = false;
             if (player.AdminLevel.Level > 0)
                 AdminsManager.SetOffline(player);
+            player.ClosePrivateChat(true);
 
             player.SaveData();
         }

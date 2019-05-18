@@ -6,6 +6,7 @@ namespace TDS_Server.Instance.Language
     {
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADMINLVL_NOT_HIGH_ENOUGH => "Your adminlevel isn't high enough for this action.";
+        public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
         public virtual string BOMB_PLANT_INFO => "To plant the bomb you have to take your fists and hold the left mouse button on one of the bomb-spots.";
         public virtual string BOMB_PLANTED => "Bomb was planted!";
@@ -48,6 +49,7 @@ namespace TDS_Server.Instance.Language
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";
 
         public virtual string NOT_ALLOWED => "You are not allowed to do that!";
+        public virtual string NOT_IN_PRIVATE_CHAT => "You are not in a private chat.";
         public virtual string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "There can be only 6 maps in voting!";
         public virtual string NOT_POSSIBLE_IN_THIS_LOBBY => "Not possible in this lobby!";
 
@@ -65,6 +67,15 @@ namespace TDS_Server.Instance.Language
         public virtual string PLAYER_DOESNT_EXIST => "The player doesn't exist!";
         public virtual string PLAYER_ISNT_BANED => "The player isn't banned.";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
+        public virtual string PRIVATE_CHAT_CLOSED_PARTNER => "Your private chat partner closed the chat.";
+        public virtual string PRIVATE_CHAT_CLOSED_YOU => "You closed the private chat.";
+        public virtual string PRIVATE_CHAT_DISCONNECTED => "Your private chat partner disconnected.";
+        public virtual string PRIVATE_CHAT_OPENED_WITH => "Private chat with {0} opened.";
+        public virtual string PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER => "Chat request by {0} has been withdrawn.";
+        public virtual string PRIVATE_CHAT_REQUEST_CLOSED_YOU => "You've withdrawn the chat request.";
+        public virtual string PRIVATE_CHAT_REQUEST_RECEIVED_FROM => "You've received a private chat request from {0}.";
+        public virtual string PRIVATE_CHAT_REQUEST_SENT_TO => "You've sent a private chat request to {0}.";
+        
 
         public virtual string REASON_MISSING => "The reason is missing!";
         public virtual string REPORT_ANSWERED_INFO => "The creator answered to his report with ID {0}.";
@@ -89,6 +100,7 @@ namespace TDS_Server.Instance.Language
         public virtual string STILL_PERMABANED_IN_LOBBY => "You are still permanently baned by {0} in this lobby. Reason: {1}";
         public virtual string STILL_PERMAMUTED => "You are still permamuted.";
 
+        public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
