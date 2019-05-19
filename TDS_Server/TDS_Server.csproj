@@ -55,7 +55,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y /Q /S &quot;$(ProjectDir)JavaScript\*.js&quot; &quot;C:\RAGEMP\server-files\packages\tds\&quot;" />
+    <Exec Command="xcopy /Y /Q /S &quot;$(TargetPath)&quot; &quot;C:\RAGEMP\server-files\bridge\runtime\&quot;&#xD;&#xA;xcopy /Y /Q /S &quot;$(ProjectDir)JavaScript\*.js&quot; &quot;C:\RAGEMP\server-files\packages\tds\&quot;&#xD;&#xA;del &quot;C:\RAGEMP\server-files\bridge\runtime\TDS_Server.*&quot;" />
   </Target>
 
 </Project>
