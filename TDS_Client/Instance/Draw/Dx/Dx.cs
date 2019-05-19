@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
 
@@ -37,7 +38,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static void RefreshResolution()
         {
-            RAGE.Game.Graphics.GetActiveScreenResolution(ref ResX, ref ResY);
+            Graphics.GetScreenResolution(ref ResX, ref ResY);
         }
 
         public virtual void Draw()
