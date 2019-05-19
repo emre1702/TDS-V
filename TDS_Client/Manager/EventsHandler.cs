@@ -85,10 +85,6 @@ namespace TDS_Client.Manager
             else
                 ClientUtils.DisableAttack();
             ChatManager.OnUpdate();
-
-            // DEBUG //
-            RenderBonePositions();
-            // DEBUG END //
         }
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
@@ -206,7 +202,7 @@ namespace TDS_Client.Manager
             var maplimit = JsonConvert.DeserializeObject<MapPositionDto[]>((string)args[1]);
             if (maplimit.Length > 0)
                 MapLimitManager.Load(maplimit);
-            CameraManager.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
+            LobbyCam.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
             Round.InFight = false;
         }
 
@@ -217,12 +213,12 @@ namespace TDS_Client.Manager
 
         private void OnCountdownStartMethod(object[] args)
         {
-            CameraManager.Stop();
+            LobbyCam.Stop();
             int mstimetoplayer = (int)Math.Ceiling(Settings.CountdownTime * 1000 * 0.9);
             if (args == null)
             {
                 Countdown.Start();
-                CameraManager.SetGoTowardsPlayer(mstimetoplayer);
+                LobbyCam.SetGoTowardsPlayer(mstimetoplayer);
             }
             else
             {
@@ -230,9 +226,9 @@ namespace TDS_Client.Manager
                 Countdown.StartAfterwards(remainingms);
                 int timeofcountdowncameraisatplayer = Settings.CountdownTime * 1000 - mstimetoplayer;
                 if (remainingms < timeofcountdowncameraisatplayer)
-                    CameraManager.SetGoTowardsPlayer(remainingms);
+                    LobbyCam.SetGoTowardsPlayer(remainingms);
                 else
-                    CameraManager.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
+                    LobbyCam.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
             }
             if (Round.IsSpectator)
             {
@@ -244,7 +240,7 @@ namespace TDS_Client.Manager
         private void OnRoundStartMethod(object[] args)
         {
             Cam.DoScreenFadeIn(50);
-            CameraManager.StopCountdown();
+            LobbyCam.StopCountdown();
             Countdown.End();
             Round.IsSpectator = (bool)args[0];
             if (!Round.IsSpectator)
@@ -261,7 +257,7 @@ namespace TDS_Client.Manager
             Bomb.Reset();
             Round.StopFight();
             Countdown.Stop();
-            CameraManager.StopCountdown();
+            LobbyCam.StopCountdown();
             RoundInfo.Stop();
             MainBrowser.ClearMapVotingsInBrowser();
             MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
@@ -533,167 +529,13 @@ namespace TDS_Client.Manager
             ChatManager.Loaded();
         }
 
-        // DEBUG //
-        private class BoneInfo
-        {
-            public string Text = string.Empty;
-            public float OffsetX;
-            public float OffsetY;
-            public Color Color;
-        }
-
-        private static Ped pedToRenderBones;
-        private static readonly List<DxText> dxTexts = new List<DxText>();
-        private static readonly List<DxLine> dxLines = new List<DxLine>();
-        private static readonly Dictionary<int, BoneInfo> bonesTextInfo = new Dictionary<int, BoneInfo>();
-
-        // DEBUG END //
-
         private void OnCommandUsedMethod(object[] args)
         {
             ChatManager.CloseChatInput();
             string msg = (string)args[0];
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
-
-            // DEBUG //
-            string[] cmdWithArgs = msg.Split(' ');
-            switch (cmdWithArgs[0])
-            {
-                case "bonestest":
-
-                    var ped = new Ped(275618457, Player.LocalPlayer.Position.Around(1), dimension: Player.LocalPlayer.Dimension);
-                    new TDSTimer(() =>
-                    {
-                        float pedScreenX = -1, pedScreenY = -1;
-                        RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(ped.Position.X, ped.Position.Y, ped.Position.Z, ref pedScreenX, ref pedScreenY);
-                        if (pedScreenX == -1 || pedScreenY == -1)
-                        {
-                            Chat.Output("Ped is not on screen");
-                            pedToRenderBones = ped;
-                            return;
-                        }
-
-                        foreach (var boneIdObject in System.Enum.GetValues(typeof(EPedBone)))
-                        {
-                            EPedBone boneId = (EPedBone)boneIdObject;
-                            int boneIndex = ped.GetBoneIndex((int)boneId);
-                            var boneInfo = GetPedBoneInfo(ped, pedScreenX, pedScreenY, boneIndex, boneId); ;
-                            if (boneInfo != null)
-                                bonesTextInfo[boneIndex] = boneInfo;
-                        }
-                        pedToRenderBones = ped;
-                        Chat.Output("Ped Bones initialized");
-                    }, 2000, 1, true);
-                    break;
-            }
-
-            // DEBUG END //
         }
-
-        // DEBUG //
-        private static BoneInfo GetPedBoneInfo(Ped ped, float pedScreenX, float pedScreenY, int boneIndex, EPedBone boneId)
-        {
-            if (boneIndex == -1)
-            {
-                Chat.Output("Bone " + System.Enum.GetName(typeof(EPedBone), boneId) + " is not at the Ped");
-                return null;
-            }
-
-            Vector3 boneWorldPos = ped.GetWorldPositionOfBone(boneIndex);
-            if (boneWorldPos == null)
-            {
-                Chat.Output("Bone " + System.Enum.GetName(typeof(EPedBone), boneId) + " doesn't have a world position");
-                return null;
-            }
-
-            float boneScreenX = -1, boneScreenY = -1;
-            RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(boneWorldPos.X, boneWorldPos.Y, boneWorldPos.Z, ref boneScreenX, ref boneScreenY);
-            if (boneScreenX == -1 || boneScreenY == -1)
-            {
-                Chat.Output("Bone " + System.Enum.GetName(typeof(EPedBone), boneId) + " is not on screen");
-                return null;
-            }
-
-            BoneInfo info = new BoneInfo();
-            if (boneScreenX < pedScreenX)
-                info.OffsetX = -1 * CommonUtils.Rnd.Next(28000) / 100000f - 0.02f;
-            else
-                info.OffsetX = CommonUtils.Rnd.Next(28000) / 100000f + 0.02f;
-
-            if (boneScreenY < pedScreenY)
-                info.OffsetY = -1 * CommonUtils.Rnd.Next(28000) / 100000f - 0.02f;
-            else
-                info.OffsetY = CommonUtils.Rnd.Next(28000) / 100000f + 0.02f;
-
-            info.Color = ClientUtils.GetRandomColor();
-            info.Text = System.Enum.GetName(typeof(EPedBone), boneId);
-
-            return info;
-        }
-
-        private static void RenderBonePositions()
-        {
-            if (pedToRenderBones == null)
-                return;
-
-            dxTexts.ForEach(text => text.Remove());
-            dxTexts.Clear();
-            dxLines.ForEach(line => line.Remove());
-            dxLines.Clear();
-
-            foreach (var boneIdObject in System.Enum.GetValues(typeof(EPedBone)))
-            {
-                EPedBone boneId = (EPedBone)boneIdObject;
-                int boneIndex = pedToRenderBones.GetBoneIndex((int)boneId);
-                if (boneIndex == -1)
-                {
-                    continue;
-                }
-
-                Vector3 boneWorldPos = pedToRenderBones.GetWorldPositionOfBone(boneIndex);
-                if (boneWorldPos == null)
-                {
-                    continue;
-                }
-
-                float boneScreenX = -1, boneScreenY = -1;
-                RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(boneWorldPos.X, boneWorldPos.Y, boneWorldPos.Z, ref boneScreenX, ref boneScreenY);
-                if (boneScreenX == -1 || boneScreenY == -1)
-                {
-                    continue;
-                }
-
-                BoneInfo info = bonesTextInfo[boneIndex];
-                if (info == null)
-                {
-                    float pedScreenX = -1, pedScreenY = -1;
-                    RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(pedToRenderBones.Position.X, pedToRenderBones.Position.Y, pedToRenderBones.Position.Z, ref pedScreenX, ref pedScreenY);
-                    var boneInfo = GetPedBoneInfo(pedToRenderBones, pedScreenX, pedScreenY, boneIndex, boneId);
-                    if (boneInfo != null)
-                        bonesTextInfo[boneIndex] = boneInfo;
-                    info = bonesTextInfo[boneIndex];
-                }
-                if (info == null)
-                    continue;
-
-                float boneTextScreenX = boneScreenX, boneTextScreenY = boneScreenY;
-                boneTextScreenX += info.OffsetX;
-                boneTextScreenY += info.OffsetY;
-
-                DxText text = new DxText(info.Text, boneTextScreenX, boneTextScreenY, 0.25f, info.Color,
-                    alignmentX: UIResText.Alignment.Centered,
-                    alignmentY: EAlignmentY.Bottom,
-                    dropShadow: true,
-                    outline: true);
-                dxTexts.Add(text);
-
-                DxLine line = new DxLine(boneScreenX, boneScreenY, null, boneTextScreenX, boneTextScreenY, null, info.Color);
-                dxLines.Add(line);
-            }
-        }
-
-        // DEBUG END
-
+          
         private void OnChatUsedMethod(object[] args)
         {
             ChatManager.CloseChatInput();
