@@ -276,9 +276,9 @@ namespace TDS_Server.Instance.Player
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return Task.FromResult(0);
 
-            dbcontext.Entry(Entity).State = EntityState.Modified;
+            /*dbcontext.Entry(Entity).State = EntityState.Modified;
 
-            /*if (Entity.PlayerLobbyStats.Count > 0)
+            if (Entity.PlayerLobbyStats.Count > 0)
             {
                 foreach (var lobbyStats in Entity.PlayerLobbyStats)
                 {
