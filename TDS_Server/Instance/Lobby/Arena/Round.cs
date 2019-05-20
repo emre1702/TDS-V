@@ -163,10 +163,10 @@ namespace TDS_Server.Instance.Lobby
                     return GetTeamWithHighestHP();
 
                 case ERoundEndReason.BombExploded:
-                    return terroristTeam;
+                    return _terroristTeam;
 
                 case ERoundEndReason.BombDefused:
-                    return counterTerroristTeam;
+                    return _counterTerroristTeam;
 
                 case ERoundEndReason.Command:
                 case ERoundEndReason.NewPlayer:

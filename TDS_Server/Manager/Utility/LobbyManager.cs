@@ -21,9 +21,10 @@ namespace TDS_Server.Manager.Utility
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
         {
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            await dbcontext.Lobbies
+            //todo add after Z.Entity new update 
+            /*await dbcontext.Lobbies
                 .Where(l => l.IsTemporary)
-                .DeleteAsync();
+                .DeleteAsync();*/
             await dbcontext.SaveChangesAsync();
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 

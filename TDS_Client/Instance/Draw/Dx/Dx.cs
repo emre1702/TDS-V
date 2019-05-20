@@ -14,23 +14,23 @@ namespace TDS_Client.Instance.Draw.Dx
         public static int ResX;
         public static int ResY;
 
-        private readonly static List<Dx> dxDraws = new List<Dx>();
+        private readonly static List<Dx> _dxDraws = new List<Dx>();
 
-        protected readonly List<Dx> children = new List<Dx>();
+        protected readonly List<Dx> Children = new List<Dx>();
 
         public Dx(bool activated = true)
         {
             Activated = activated;
-            dxDraws.Add(this);
+            _dxDraws.Add(this);
         }
 
         ~Dx() => Dispose(false);
 
         public static void RenderAll()
         {
-            for (int i = dxDraws.Count - 1; i >= 0; --i)
+            for (int i = _dxDraws.Count - 1; i >= 0; --i)
             {
-                Dx draw = dxDraws[i];
+                Dx draw = _dxDraws[i];
                 if (draw.Activated)
                     draw.Draw();
             }
@@ -47,7 +47,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public virtual void Remove()
         {
-            dxDraws.Remove(this);
+            _dxDraws.Remove(this);
             Dispose(true);
         }
 
@@ -94,7 +94,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         #region IDisposable Support
 
-        private bool disposed = false; // To detect redundant calls
+        private bool _disposed = false; // To detect redundant calls
 
         public void Dispose()
         {
@@ -104,14 +104,14 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
+            if (_disposed)
                 return;
-            disposed = true;
+            _disposed = true;
 
             if (disposing)
             {
-                foreach (var child in children)
-                    if (!child.disposed)
+                foreach (var child in Children)
+                    if (!child._disposed)
                         child.Remove();
             }
         }

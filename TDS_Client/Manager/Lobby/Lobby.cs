@@ -5,11 +5,11 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Lobby
     {
-        private static bool inMainMenu;
+        private static bool _inMainMenu;
 
         public static void Joined(SyncedLobbySettingsDto settings)
         {
-            if (inMainMenu)
+            if (_inMainMenu)
                 LeftMainMenu();
             else
                 Left();
@@ -18,7 +18,7 @@ namespace TDS_Client.Manager.Lobby
                 JoinedMainmenu();
                 return;
             }
-            inMainMenu = false;
+            _inMainMenu = false;
             //SetMapInfo
         }
 
@@ -28,7 +28,7 @@ namespace TDS_Client.Manager.Lobby
             Round.InFight = false;
             Bomb.Reset();
             Round.Reset(true);
-            CameraManager.StopCountdown();
+            LobbyCam.StopCountdown();
             MapManager.CloseMenu();
             MainBrowser.ClearMapVotingsInBrowser();
             RoundInfo.Stop();
@@ -38,7 +38,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void JoinedMainmenu()
         {
-            inMainMenu = true;
+            _inMainMenu = true;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Choice.Start();
         }

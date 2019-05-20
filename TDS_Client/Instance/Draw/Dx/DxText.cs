@@ -9,66 +9,66 @@ namespace TDS_Client.Instance.Draw.Dx
     internal class DxText : Dx
     {
         public string Text;
-        private readonly int xPos;
+        private readonly int _xPos;
         public int Y;
-        private float scale;
-        private readonly Color color;
-        private readonly Font font;
-        private readonly UIResText.Alignment alignmentX;
-        private readonly EAlignmentY alignmentY;
-        private readonly bool relative;
-        private readonly bool dropShadow;
-        private readonly bool outline;
-        private readonly int wordWrap;
-        private readonly int amountLines;
+        private float _scale;
+        private readonly Color _color;
+        private readonly Font _font;
+        private readonly UIResText.Alignment _alignmentX;
+        private readonly EAlignmentY _alignmentY;
+        private readonly bool _relative;
+        private readonly bool _dropShadow;
+        private readonly bool _outline;
+        private readonly int _wordWrap;
+        private readonly int _amountLines;
 
-        private int? endAlpha;
-        private ulong endAlphaStartTick;
-        private ulong endAlphaEndTick;
+        private int? _endAlpha;
+        private ulong _endAlphaStartTick;
+        private ulong _endAlphaEndTick;
 
-        private float? endScale;
-        private ulong endScaleStartTick;
-        private ulong endScaleEndTick;
+        private float? _endScale;
+        private ulong _endScaleStartTick;
+        private ulong _endScaleEndTick;
 
         public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relative = true,
             bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 1) : base()
         {
-            this.Text = text;
-            this.xPos = GetAbsoluteX(x, relative);
-            this.Y = GetAbsoluteY(y, relative);
-            this.scale = scale;
-            this.color = color;
-            this.font = font;
-            this.alignmentX = alignmentX;
-            this.alignmentY = alignmentY;
-            this.relative = relative;
-            this.dropShadow = dropShadow;
-            this.outline = outline;
-            this.wordWrap = wordWrap;
-            this.amountLines = amountLines;
+            Text = text;
+            _xPos = GetAbsoluteX(x, relative);
+            Y = GetAbsoluteY(y, relative);
+            _scale = scale;
+            _color = color;
+            _font = font;
+            _alignmentX = alignmentX;
+            _alignmentY = alignmentY;
+            _relative = relative;
+            _dropShadow = dropShadow;
+            _outline = outline;
+            _wordWrap = wordWrap;
+            _amountLines = amountLines;
 
             ApplyTextAlignmentY();
         }
 
         public void SetRelativeY(float y)
         {
-            Y = GetAbsoluteY(y, relative);
+            Y = GetAbsoluteY(y, _relative);
             ApplyTextAlignmentY();
         }
 
         public void BlendAlpha(int endAlpha, ulong msToEnd)
         {
-            this.endAlpha = endAlpha;
-            endAlphaStartTick = TimerManager.ElapsedTicks;
-            endAlphaEndTick = endAlphaStartTick + msToEnd;
+            this._endAlpha = endAlpha;
+            _endAlphaStartTick = TimerManager.ElapsedTicks;
+            _endAlphaEndTick = _endAlphaStartTick + msToEnd;
         }
 
         public void BlendScale(float endScale, ulong msToEnd)
         {
-            this.endScale = endScale;
-            endScaleStartTick = TimerManager.ElapsedTicks;
-            endScaleEndTick = endScaleStartTick + msToEnd;
+            this._endScale = endScale;
+            _endScaleStartTick = TimerManager.ElapsedTicks;
+            _endScaleEndTick = _endScaleStartTick + msToEnd;
         }
 
         /*private static int GetStringWidth(string text, float scale, Font font)
@@ -86,41 +86,41 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private void ApplyTextAlignmentY()
         {
-            float textheight = Ui.GetTextScaleHeight(scale, (int)font);
-            if (alignmentY == EAlignmentY.Center)
-                Y -= GetAbsoluteY(textheight * amountLines / 2, true);
-            else if (alignmentY == EAlignmentY.Bottom)
-                Y -= GetAbsoluteY(textheight * amountLines, true);
+            float textheight = Ui.GetTextScaleHeight(_scale, (int)_font);
+            if (_alignmentY == EAlignmentY.Center)
+                Y -= GetAbsoluteY(textheight * _amountLines / 2, true);
+            else if (_alignmentY == EAlignmentY.Bottom)
+                Y -= GetAbsoluteY(textheight * _amountLines, true);
         }
 
         public void SetScale(float scale)
         {
-            this.scale = scale;
-            this.endScale = null;
+            this._scale = scale;
+            this._endScale = null;
         }
 
         public override void Draw()
         {
             ulong elapsedticks = TimerManager.ElapsedTicks;
 
-            Color theColor = color;
-            if (endAlpha.HasValue)
-                theColor = Color.FromArgb(GetBlendValue(elapsedticks, color.A, endAlpha.Value, endAlphaStartTick, endAlphaEndTick), color);
+            Color theColor = _color;
+            if (_endAlpha.HasValue)
+                theColor = Color.FromArgb(GetBlendValue(elapsedticks, _color.A, _endAlpha.Value, _endAlphaStartTick, _endAlphaEndTick), _color);
 
-            float scale = this.scale;
-            if (endScale.HasValue)
+            float scale = this._scale;
+            if (_endScale.HasValue)
             {
-                if (elapsedticks >= endScaleEndTick)
+                if (elapsedticks >= _endScaleEndTick)
                 {
-                    this.scale = endScale.Value;
-                    scale = this.scale;
-                    endScale = null;
+                    this._scale = _endScale.Value;
+                    scale = this._scale;
+                    _endScale = null;
                 }
                 else
-                    scale = GetBlendValue(elapsedticks, this.scale, endScale.Value, endScaleStartTick, endScaleEndTick);
+                    scale = GetBlendValue(elapsedticks, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
-            UIResText.Draw(Text, xPos, Y, font, scale, theColor, alignmentX, dropShadow, outline, wordWrap);
+            UIResText.Draw(Text, _xPos, Y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
         }
 
         public override EDxType GetDxType()

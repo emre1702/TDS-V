@@ -12,10 +12,10 @@ namespace TDS_Client.Manager.Utility
 {
     internal class BindManager : Events.Script
     {
-        private static readonly Dictionary<ConsoleKey, List<KeyBindDto>> bindedKeys = new Dictionary<ConsoleKey, List<KeyBindDto>>();
-        private static readonly Dictionary<Control, List<ControlBindDto>> bindedControls = new Dictionary<Control, List<ControlBindDto>>();
-        private static readonly Dictionary<ConsoleKey, bool> lastKeyDownState = new Dictionary<ConsoleKey, bool>();
-        private static readonly Dictionary<Control, bool> lastControlPressedState = new Dictionary<Control, bool>();
+        private static readonly Dictionary<ConsoleKey, List<KeyBindDto>> _bindedKeys = new Dictionary<ConsoleKey, List<KeyBindDto>>();
+        private static readonly Dictionary<Control, List<ControlBindDto>> _bindedControls = new Dictionary<Control, List<ControlBindDto>>();
+        private static readonly Dictionary<ConsoleKey, bool> _lastKeyDownState = new Dictionary<ConsoleKey, bool>();
+        private static readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
 
         public BindManager()
         {
@@ -27,65 +27,65 @@ namespace TDS_Client.Manager.Utility
 
         public static void Add(ConsoleKey key, Action<ConsoleKey> method, EKeyPressState pressState = EKeyPressState.Down)
         {
-            if (!bindedKeys.ContainsKey(key))
-                bindedKeys[key] = new List<KeyBindDto>();
-            bindedKeys[key].Add(new KeyBindDto(method: method, onPressState: pressState));
+            if (!_bindedKeys.ContainsKey(key))
+                _bindedKeys[key] = new List<KeyBindDto>();
+            _bindedKeys[key].Add(new KeyBindDto(method: method, onPressState: pressState));
         }
 
         public static void Add(Control control, Action<Control> method, EKeyPressState pressState = EKeyPressState.Down, bool OnEnabled = true, bool OnDisabled = false)
         {
-            if (!bindedControls.ContainsKey(control))
-                bindedControls[control] = new List<ControlBindDto>();
-            bindedControls[control].Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
+            if (!_bindedControls.ContainsKey(control))
+                _bindedControls[control] = new List<ControlBindDto>();
+            _bindedControls[control].Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
         }
 
         public static void Remove(ConsoleKey key, Action<ConsoleKey> method = null, EKeyPressState pressState = EKeyPressState.None)
         {
-            if (!bindedKeys.ContainsKey(key))
+            if (!_bindedKeys.ContainsKey(key))
                 return;
-            var entry = bindedKeys[key].FirstOrDefault(b =>
+            var entry = _bindedKeys[key].FirstOrDefault(b =>
                     (method == null || b.Method == method)
                     && (pressState == EKeyPressState.None || b.OnPressState == pressState)
             );
             if (entry != null)
-                bindedKeys[key].Remove(entry);
+                _bindedKeys[key].Remove(entry);
         }
 
         public static void Remove(Control control, Action<Control> method = null, EKeyPressState pressState = EKeyPressState.None)
         {
-            if (!bindedControls.ContainsKey(control))
+            if (!_bindedControls.ContainsKey(control))
                 return;
-            var entry = bindedControls[control].FirstOrDefault(b =>
+            var entry = _bindedControls[control].FirstOrDefault(b =>
                     (method == null || b.Method == method)
                     && (pressState == EKeyPressState.None || b.OnPressState == pressState)
             );
             if (entry != null)
-                bindedControls[control].Remove(entry);
+                _bindedControls[control].Remove(entry);
         }
 
         private static void OnTick(List<Events.TickNametagData> _)
         {
-            foreach (var entry in bindedKeys)
+            foreach (var entry in _bindedKeys)
             {
                 bool isDown = Input.IsDown((int)entry.Key);
-                if (lastKeyDownState.ContainsKey(entry.Key))
-                    if (lastKeyDownState[entry.Key] == isDown)
+                if (_lastKeyDownState.ContainsKey(entry.Key))
+                    if (_lastKeyDownState[entry.Key] == isDown)
                         continue;
-                lastKeyDownState[entry.Key] = isDown;
+                _lastKeyDownState[entry.Key] = isDown;
 
                 foreach (var bind in entry.Value)
                     if (isDown && bind.OnDown || !isDown && bind.OnUp)
                         bind.Method(entry.Key);
             }
 
-            foreach (var entry in bindedControls)
+            foreach (var entry in _bindedControls)
             {
                 bool isDownEnabled = Pad.IsControlPressed(0, (int)entry.Key);
                 bool isDownDisabled = Pad.IsDisabledControlPressed(0, (int)entry.Key);
-                if (lastControlPressedState.ContainsKey(entry.Key))
-                    if (lastControlPressedState[entry.Key] == (isDownEnabled || isDownDisabled))
+                if (_lastControlPressedState.ContainsKey(entry.Key))
+                    if (_lastControlPressedState[entry.Key] == (isDownEnabled || isDownDisabled))
                         continue;
-                lastControlPressedState[entry.Key] = (isDownEnabled || isDownDisabled);
+                _lastControlPressedState[entry.Key] = (isDownEnabled || isDownDisabled);
 
                 foreach (var bind in entry.Value)
                     if (bind.OnDown && (isDownEnabled && bind.OnEnabled || isDownDisabled && bind.OnDisabled)

@@ -1,4 +1,5 @@
 using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,7 +94,14 @@ namespace TDS_Server.Instance.Lobby
             PlayerLeftLobby?.Invoke(this, player);
         }
 
-        private static void SavePlayerLobbyStats(TDSPlayer character)
+        private static async void SavePlayerLobbyStats(TDSPlayer character)
+        {
+            using var dbContext = new TDSNewContext();
+            SavePlayerLobbyStats(character, dbContext);
+            await dbContext.SaveChangesAsync();
+        }
+
+        private static void SavePlayerLobbyStats(TDSPlayer character, TDSNewContext dbContext)
         {
             if (character.CurrentLobbyStats == null)
                 return;
@@ -109,16 +117,20 @@ namespace TDS_Server.Instance.Lobby
             to.TotalAssists += from.Assists;
             to.TotalDamage += from.Damage;
             from.Clear();
+
+            dbContext.Entry(to).State = EntityState.Modified;
         }
 
-        protected void SaveAllPlayerLobbyStats()
+        protected async Task SaveAllPlayerLobbyStats()
         {
+            using var dbContext = new TDSNewContext();
             FuncIterateAllPlayers((player, team) =>
             {
                 if (team == null || team.Entity.Index == 0)
                     return;
-                SavePlayerLobbyStats(player);
+                SavePlayerLobbyStats(player, dbContext);
             });
+            await dbContext.SaveChangesAsync();
         }
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)

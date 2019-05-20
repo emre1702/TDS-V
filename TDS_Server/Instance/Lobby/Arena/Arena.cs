@@ -15,8 +15,8 @@ namespace TDS_Server.Instance.Lobby
 
             DurationsDict[ERoundStatus.Round] = (uint)entity.LobbyRoundSettings.RoundTime * 1000;
 
-            terroristTeam = Teams[2];
-            counterTerroristTeam = Teams[1];
+            _terroristTeam = Teams[2];
+            _counterTerroristTeam = Teams[1];
         }
 
         public override void Start()

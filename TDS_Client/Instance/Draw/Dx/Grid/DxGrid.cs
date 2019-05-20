@@ -63,20 +63,20 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         {
             Header = row;
             row.Grid = this;
-            children.Add(row);
+            Children.Add(row);
         }
 
         public void AddRow(DxGridRow row)
         {
             _rows.Add(row);
             row.Grid = this;
-            children.Add(row);
+            Children.Add(row);
         }
 
         public void AddCell(DxGridCell cell)
         {
             cell.Row.AddCell(cell);
-            children.Add(cell);
+            Children.Add(cell);
         }
 
         public void ClearRows()

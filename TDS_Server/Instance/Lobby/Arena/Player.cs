@@ -49,8 +49,8 @@ namespace TDS_Server.Instance.Lobby
             }
             else
                 RemoveAsSpectator(character);
-            if (planter == character)
-                planter = null;
+            if (_planter == character)
+                _planter = null;
             base.RemovePlayer(character);
             RoundCheckForEnoughAlive();
         }
@@ -89,7 +89,7 @@ namespace TDS_Server.Instance.Lobby
                 --character.Team.SyncedTeamData.AmountPlayers.AmountAlive;
             }
 
-            if (bombAtPlayer == character)
+            if (_bombAtPlayer == character)
             {
                 DropBomb();
             }
@@ -155,8 +155,8 @@ namespace TDS_Server.Instance.Lobby
 
                 case ERoundStatus.Round:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
-                    if (bombDetonateTimer != null && bomb != null)
-                        NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(bomb.Position), false, bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute);
+                    if (_bombDetonateTimer != null && _bomb != null)
+                        NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(_bomb.Position), false, _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
                     break;
             }
         }

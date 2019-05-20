@@ -12,10 +12,12 @@ namespace TDS_Server.Manager.Utility
         public static async Task RemoveExpiredBans(TDSNewContext dbcontext)
         {
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            await dbcontext.PlayerBans
+            await Task.Delay(1);
+            //todo add after z.Entity update
+            /*await dbcontext.PlayerBans
                 .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
                 .DeleteAsync();
-            await dbcontext.SaveChangesAsync();
+            await dbcontext.SaveChangesAsync();*/
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
     }

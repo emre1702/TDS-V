@@ -85,6 +85,7 @@ namespace TDS_Client.Manager
             else
                 ClientUtils.DisableAttack();
             ChatManager.OnUpdate();
+            FreeCam.Render();
         }
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)

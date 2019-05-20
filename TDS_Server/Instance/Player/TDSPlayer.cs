@@ -274,18 +274,18 @@ namespace TDS_Server.Instance.Player
         public Task<int> SaveData(TDSNewContext dbcontext)
         {
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
-                return System.Threading.Tasks.Task.FromResult(0);
+                return Task.FromResult(0);
 
-            dbcontext.Players.Attach(Entity);
             dbcontext.Entry(Entity).State = EntityState.Modified;
 
             if (Entity.PlayerLobbyStats.Count > 0)
             {
-                dbcontext.PlayerLobbyStats.AttachRange(Entity.PlayerLobbyStats);
-                dbcontext.Entry(Entity.PlayerLobbyStats).State = EntityState.Modified;
+                foreach (var lobbyStats in Entity.PlayerLobbyStats)
+                {
+                    dbcontext.Entry(lobbyStats).State = EntityState.Modified;
+                }  
             }
 
-            dbcontext.PlayerStats.Attach(Entity.PlayerStats);
             dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
 
             return dbcontext.SaveChangesAsync();
@@ -294,7 +294,7 @@ namespace TDS_Server.Instance.Player
         public Task<int> CheckSaveData(TDSNewContext dbcontext)
         {
             if (Environment.TickCount - _lastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
-                return System.Threading.Tasks.Task.FromResult(0);
+                return Task.FromResult(0);
             _lastSaveTick = Environment.TickCount;
             return SaveData(dbcontext);
         }

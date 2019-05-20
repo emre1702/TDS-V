@@ -8,23 +8,23 @@ namespace TDS_Client.Instance.Draw.Dx
 {
     internal class DxProgressRectangle : Dx
     {
-        private readonly float width;
+        private readonly float _width;
 
-        private readonly bool filling;
-        private float progress;
-        private readonly bool relativePos;
+        private readonly bool _filling;
+        private float _progress;
+        private readonly bool _relativePos;
 
-        private DxRectangle backRect;
-        private DxRectangle frontRect;
-        private DxText text;
+        private readonly DxRectangle _backRect;
+        private readonly DxRectangle _frontRect;
+        private readonly DxText _text;
 
         /// <summary>
         /// The progress between 0 and 1
         /// </summary>
         public float Progress
         {
-            get => progress;
-            set => progress = Math.Min(1, Math.Max(0, value));
+            get => _progress;
+            set => _progress = Math.Min(1, Math.Max(0, value));
         }
 
         public DxProgressRectangle(string text, float x, float y, float width, float height,
@@ -32,34 +32,34 @@ namespace TDS_Client.Instance.Draw.Dx
             float textScale = 1.0f, Font textFont = Font.ChaletLondon, int frontRectOffsetAbsoluteX = 3, int frontRectOffsetAbsoluteY = 3, bool filling = true,
             UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true) : base()
         {
-            this.width = width;
-            this.filling = filling;
-            this.relativePos = relativePos;
+            this._width = width;
+            this._filling = filling;
+            this._relativePos = relativePos;
 
             float textX = GetTextX(x, width, alignmentX);
             float textY = GetTextY(y, height, alignmentY);
 
-            this.text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true);
+            this._text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true);
 
             float frontRectX = GetFrontRectX(x, width, alignmentX, relativePos) + frontRectOffsetAbsoluteX;
             float frontRectY = GetAbsoluteY(y, relativePos);
             float frontRectWidth = GetAbsoluteX(width, relativePos) - frontRectOffsetAbsoluteX * 2;
             float frontRectHeight = GetAbsoluteY(height, relativePos) - frontRectOffsetAbsoluteY * 2;
-            frontRect = new DxRectangle(frontRectX, frontRectY, frontRectWidth, frontRectHeight, progressColor, UIResText.Alignment.Left, alignmentY, false);
+            _frontRect = new DxRectangle(frontRectX, frontRectY, frontRectWidth, frontRectHeight, progressColor, UIResText.Alignment.Left, alignmentY, false);
 
-            backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos);
+            _backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos);
 
-            children.Add(frontRect);
-            children.Add(backRect);
-            children.Add(this.text);
+            Children.Add(_frontRect);
+            Children.Add(_backRect);
+            Children.Add(this._text);
         }
 
         public override void Draw()
         {
-            if (filling)
-                frontRect.SetWidth(progress * width, relativePos);
+            if (_filling)
+                _frontRect.SetWidth(_progress * _width, _relativePos);
             else
-                frontRect.SetWidth(width - width * progress, relativePos);
+                _frontRect.SetWidth(_width - _width * _progress, _relativePos);
         }
 
         private float GetFrontRectX(float x, float width, UIResText.Alignment alignment, bool relativePos)

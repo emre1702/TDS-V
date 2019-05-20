@@ -9,7 +9,7 @@ namespace TDS_Server.Instance.Lobby
         {
             base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
 
-            if (bombAtPlayer == character)
+            if (_bombAtPlayer == character)
             {
                 ToggleBombAtHand(character, oldweapon, newweapon);
             }

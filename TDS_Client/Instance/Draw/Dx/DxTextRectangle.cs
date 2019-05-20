@@ -40,8 +40,8 @@ namespace TDS_Client.Instance.Draw.Dx
                 Activated = false
             };
 
-            children.Add(this.text);
-            children.Add(rect);
+            Children.Add(this.text);
+            Children.Add(rect);
         }
 
         private float GetTextRelativePosY()

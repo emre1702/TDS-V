@@ -132,7 +132,6 @@ namespace TDS_Server.Manager.Player
 
             using var dbcontext = new TDSNewContext();
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
-            dbcontext.PlayerStats.Add(target.PlayerStats);
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
             await dbcontext.SaveChangesAsync();

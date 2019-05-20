@@ -4,14 +4,14 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Round
     {
-        private static bool inFight;
+        private static bool _inFight;
 
         public static bool InFight
         {
-            get => inFight;
+            get => _inFight;
             set
             {
-                inFight = value;
+                _inFight = value;
                 if (!value)
                     MapLimitManager.Stop();
             }

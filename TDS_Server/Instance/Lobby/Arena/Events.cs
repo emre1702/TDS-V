@@ -9,9 +9,9 @@ namespace TDS_Server.Instance.Lobby
         public override void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
         {
             base.OnPlayerEnterColShape(shape, character);
-            if (lobbyBombTakeCol.ContainsKey(this))
+            if (_lobbyBombTakeCol.ContainsKey(this))
             {
-                if (character.Lifes > 0 && character.Team == terroristTeam)
+                if (character.Lifes > 0 && character.Team == _terroristTeam)
                 {
                     TakeBomb(character);
                 }
@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 }
 
-                if (bombAtPlayer == character)
+                if (_bombAtPlayer == character)
                     DropBomb();
 
                 if (character.Lifes == 1)   // Will be dead

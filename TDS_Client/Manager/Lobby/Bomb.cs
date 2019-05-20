@@ -1,6 +1,7 @@
 ﻿using RAGE;
 using RAGE.Game;
 using RAGE.NUI;
+using System;
 using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
@@ -16,14 +17,14 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Bomb
     {
-        private static Vector3 plantedPos;
-        private static EPlantDefuseStatus playerStatus;
-        private static bool gotBomb;
-        private static bool bombPlanted;
-        private static MapPositionDto[] plantSpots;
-        private static ulong plantDefuseStartTick;
+        private static Vector3 _plantedPos;
+        private static EPlantDefuseStatus _playerStatus;
+        private static bool _gotBomb;
+        private static bool _bombPlanted;
+        private static MapPositionDto[] _plantSpots;
+        private static ulong _plantDefuseStartTick;
 
-        private static DxProgressRectangle progressRect;
+        private static DxProgressRectangle _progressRect;
 
         public static bool DataChanged;
         public static bool CheckPlantDefuseOnTick { get; private set; }
@@ -41,10 +42,10 @@ namespace TDS_Client.Manager.Lobby
             DataChanged = true;
             if (candefuse)
             {
-                plantedPos = pos;
+                _plantedPos = pos;
                 CheckPlantDefuseOnTick = true;
             }
-            bombPlanted = true;
+            _bombPlanted = true;
             if (startAtMs.HasValue)
             {
                 startAtMs += 100;  // 100 because trigger etc. propably took some time
@@ -61,7 +62,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void CheckPlantDefuse()
         {
-            if (playerStatus == EPlantDefuseStatus.None)
+            if (_playerStatus == EPlantDefuseStatus.None)
                 CheckPlantDefuseStart();
             else
                 CheckPlantDefuseStop();
@@ -70,45 +71,37 @@ namespace TDS_Client.Manager.Lobby
         public static void LocalPlayerGotBomb(MapPositionDto[] spotstoplant)
         {
             DataChanged = true;
-            gotBomb = true;
-            plantSpots = spotstoplant;
+            _gotBomb = true;
+            _plantSpots = spotstoplant;
             CheckPlantDefuseOnTick = true;
         }
 
         public static void LocalPlayerPlantedBomb()
         {
-            gotBomb = false;
-            playerStatus = EPlantDefuseStatus.None;
+            _gotBomb = false;
+            _playerStatus = EPlantDefuseStatus.None;
             CheckPlantDefuseOnTick = false;
-            progressRect?.Remove();
-            progressRect = null;
+            _progressRect?.Remove();
+            _progressRect = null;
             BombOnHand = false;
         }
 
         public static void UpdatePlantDefuseProgress()
         {
-            if (playerStatus == EPlantDefuseStatus.None)
+            if (_playerStatus == EPlantDefuseStatus.None)
                 return;
-            if (progressRect == null)
+            if (_progressRect == null)
                 return;
-            ulong mswasted = TimerManager.ElapsedTicks - plantDefuseStartTick;
-            float mstoplantordefuse = Settings.GetPlantOrDefuseTime(playerStatus);
-            if (mswasted < mstoplantordefuse)
-            {
-                float progress = mswasted / mstoplantordefuse;
-                progressRect.Progress = progress;
-            }
-            else
-            {
-                progressRect.Progress = 1;
-            }
+            ulong mswasted = TimerManager.ElapsedTicks - _plantDefuseStartTick;
+            float mstoplantordefuse = Settings.GetPlantOrDefuseTime(_playerStatus);
+            _progressRect.Progress = Math.Min(mswasted / mstoplantordefuse, 1);
         }
 
         private static void CheckPlantDefuseStart()
         {
             if (!Pad.IsDisabledControlPressed(0, (int)Control.Attack))
                 return;
-            if (gotBomb)
+            if (_gotBomb)
                 CheckPlantStart();
             else
                 CheckDefuseStart();
@@ -118,13 +111,13 @@ namespace TDS_Client.Manager.Lobby
         {
             if (ShouldPlantDefuseStop())
             {
-                if (playerStatus == EPlantDefuseStatus.Planting)
+                if (_playerStatus == EPlantDefuseStatus.Planting)
                     EventsSender.Send(DToServerEvent.StopPlanting);
-                else if (playerStatus == EPlantDefuseStatus.Defusing)
+                else if (_playerStatus == EPlantDefuseStatus.Defusing)
                     EventsSender.Send(DToServerEvent.StopDefusing);
-                playerStatus = EPlantDefuseStatus.None;
-                progressRect?.Remove();
-                progressRect = null;
+                _playerStatus = EPlantDefuseStatus.None;
+                _progressRect?.Remove();
+                _progressRect = null;
             }
         }
 
@@ -144,9 +137,9 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnPlantSpot())
                 return;
-            plantDefuseStartTick = TimerManager.ElapsedTicks;
-            playerStatus = EPlantDefuseStatus.Planting;
-            progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
+            _plantDefuseStartTick = TimerManager.ElapsedTicks;
+            _playerStatus = EPlantDefuseStatus.Planting;
+            _progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             EventsSender.Send(DToServerEvent.StartPlanting);
         }
@@ -155,19 +148,19 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnDefuseSpot())
                 return;
-            plantDefuseStartTick = TimerManager.ElapsedTicks;
-            playerStatus = EPlantDefuseStatus.Defusing;
-            progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
+            _plantDefuseStartTick = TimerManager.ElapsedTicks;
+            _playerStatus = EPlantDefuseStatus.Defusing;
+            _progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             EventsSender.Send(DToServerEvent.StartDefusing);
         }
 
         private static bool IsOnPlantSpot()
         {
-            if (plantSpots == null)
+            if (_plantSpots == null)
                 return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
-            foreach (MapPositionDto pos in plantSpots)
+            foreach (MapPositionDto pos in _plantSpots)
             {
                 if (Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z, pos.Z != 0) <= Settings.DistanceToSpotToPlant)
                     return true;
@@ -177,10 +170,10 @@ namespace TDS_Client.Manager.Lobby
 
         private static bool IsOnDefuseSpot()
         {
-            if (plantedPos == null)
+            if (_plantedPos == null)
                 return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
-            return Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, plantedPos.X, plantedPos.Y, plantedPos.Z, true) <= Settings.DistanceToSpotToDefuse;
+            return Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, _plantedPos.X, _plantedPos.Y, _plantedPos.Z, true) <= Settings.DistanceToSpotToDefuse;
         }
 
         public static void Reset()
@@ -190,16 +183,16 @@ namespace TDS_Client.Manager.Lobby
             DataChanged = false;
             BombOnHand = false;
             CheckPlantDefuseOnTick = false;
-            progressRect?.Remove();
-            progressRect = null;
-            gotBomb = false;
-            plantSpots = null;
-            playerStatus = EPlantDefuseStatus.None;
-            plantDefuseStartTick = 0;
-            if (bombPlanted)
+            _progressRect?.Remove();
+            _progressRect = null;
+            _gotBomb = false;
+            _plantSpots = null;
+            _playerStatus = EPlantDefuseStatus.None;
+            _plantDefuseStartTick = 0;
+            if (_bombPlanted)
                 MainBrowser.StopBombTick();
-            bombPlanted = false;
-            plantedPos = null;
+            _bombPlanted = false;
+            _plantedPos = null;
         }
     }
 }
