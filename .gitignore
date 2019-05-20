@@ -8,5 +8,5 @@ packages/*
 TDS_Server/client/*
 TDS_Server/server/*
 /TDS_Server_DB/DB.config
-/node_modules/*
+node_modules/*
 TDS_Client/Window/mainNew/node_modules/*
