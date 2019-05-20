@@ -278,13 +278,13 @@ namespace TDS_Server.Instance.Player
 
             dbcontext.Entry(Entity).State = EntityState.Modified;
 
-            if (Entity.PlayerLobbyStats.Count > 0)
+            /*if (Entity.PlayerLobbyStats.Count > 0)
             {
                 foreach (var lobbyStats in Entity.PlayerLobbyStats)
                 {
                     dbcontext.Entry(lobbyStats).State = EntityState.Modified;
                 }  
-            }
+            }*/
 
             dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
 
