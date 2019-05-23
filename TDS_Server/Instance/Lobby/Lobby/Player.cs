@@ -121,7 +121,7 @@ namespace TDS_Server.Instance.Lobby
             dbContext.Entry(to).State = EntityState.Modified;
         }
 
-        protected async Task SaveAllPlayerLobbyStats()
+        protected async void SaveAllPlayerLobbyStats()
         {
             using var dbContext = new TDSNewContext();
             FuncIterateAllPlayers((player, team) =>
