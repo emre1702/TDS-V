@@ -50,7 +50,7 @@ namespace TDS_Server.Manager.Maps
                 await dbContext.Maps.AddAsync(dbMap);
                 await dbContext.SaveChangesAsync();
 
-                mapDto.Info.Id = dbMap.Id;
+                mapDto.SyncedData.Id = dbMap.Id;
                 mapDto.RatingAverage = 5;
 
                 _newCreatedMaps.Add(mapDto);

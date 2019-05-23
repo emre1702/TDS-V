@@ -118,7 +118,7 @@ namespace TDS_Server.Manager.Maps
                     .Include(m => m.Creator)
                     .First();
                 map.SyncedData.CreatorName = dbMap.Creator.Name;
-                map.Info.Id = dbMap.Id;
+                map.SyncedData.Id = dbMap.Id;
                 map.LoadMapRatings(dbContext);
             }
         }        

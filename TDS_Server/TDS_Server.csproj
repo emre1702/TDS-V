@@ -6,9 +6,9 @@
     <AssemblyName>TDS_Server</AssemblyName>
     <RootNamespace>TDS_Server</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
-	<LangVersion>preview</LangVersion>
-	<NullableContextOptions>enable</NullableContextOptions>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <LangVersion>preview</LangVersion>
+	  <NullableContextOptions>enable</NullableContextOptions>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
