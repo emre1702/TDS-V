@@ -36,6 +36,7 @@ namespace TDS_Client.Instance.Draw
             if (elapsedTicks > Constants.ShowFloatingDamageInfoMs)
             {
                 remove = true;
+                Remove();
                 return;
             }
             float screenX = 0;
@@ -55,12 +56,8 @@ namespace TDS_Client.Instance.Draw
         {
             if (damageInfos.Count == 0)
                 return;
-            var removeInfos = damageInfos.Where(x => x.remove);
-            foreach (var info in removeInfos)
-            {
-                info.Remove();
-                damageInfos.Remove(info);
-            }
+
+            damageInfos.RemoveAll(x => x.remove);
             foreach (var damageInfo in damageInfos)
             {
                 damageInfo.UpdatePosition();
