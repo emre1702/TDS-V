@@ -1,0 +1,49 @@
+<div class="container mat-elevation-z24" cdkDrag>
+	<mat-toolbar color="primary" cdkDragHandle>
+		<button mat-icon-button (click)="snav.toggle()">
+			<mat-icon>menu</mat-icon>
+		</button>
+		<h1>{{ 'MapVoting' | language: settings.Lang }} {{ selectedMap ? " - " + selectedMap.Name : "" }}</h1>
+		<button mat-icon-button>
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-toolbar>
+
+	<mat-sidenav-container>
+		<mat-sidenav #snav mode="push" role="directory">
+			<mat-nav-list>
+				<mat-list-item (click)="changeToNav(nav)" *ngFor="let nav of getNavs()">{{ nav | language: settings.Lang }}</mat-list-item>
+			</mat-nav-list>
+		</mat-sidenav>
+
+		<mat-sidenav-content role="main">
+			<div id="left-content">
+				<mat-action-list>
+					<mat-list-item (click)="selectedMap = map" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav">
+						{{ map.Name }}
+					</mat-list-item>
+				</mat-action-list>
+			</div>
+			<mat-divider vertical class="vertical-divider-color"></mat-divider>
+			<div id="right-content" *ngIf="selectedMap">
+				<!-- <div id="map-title-row">
+						<div id="map-title" class="mat-title">{{ selectedMap.Name }}</div>
+				</div>-->
+				<div id="map-description" class="mat-body-1">
+					{{ selectedMap.Description[settings.LangValue] }}
+				</div>
+				<div id="map-action-row">
+					<button mat-icon-button (click)="settings.toggleMapIdToFavorite(selectedMap.Id)">
+						<mat-icon id="favorite-heart" [style.color]="settings.FavoriteMapIDs.has(selectedMap.Id) ? 'red' : 'initial'">
+							favorite
+						</mat-icon>
+					</button>
+					<div id="map-creator-hint" *ngIf="selectedMap.CreatorName">{{ "Creator" | language: settings.Lang }}: {{ selectedMap.CreatorName }}</div>
+					<button id="vote-button" class="background-color-primary" mat-button (click)="voting.voteForMapId(selectedMap.Id)" [disabled]="voting.votedForMapId == selectedMap.Id">
+						{{ 'Vote' | language: settings.Lang }}
+					</button>
+				</div>
+			</div>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>
