@@ -7,6 +7,7 @@ namespace TDS_Common.Dto
     [Serializable]
     public class SyncedMapDataDto
     {
+        public int Id = 0;
         public string Name = "unknown";
         public EMapType Type = EMapType.Normal;
 
