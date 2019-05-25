@@ -15,7 +15,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        public virtual async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
+        public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
             using (var dbcontext = new TDSNewContext())
             {
@@ -45,7 +45,8 @@ namespace TDS_Server.Instance.Lobby
             character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
             Workaround.FreezePlayer(character.Client, true);
 
-            SetPlayerTeam(character, Teams[teamindex]);
+            if (teamindex != null)
+                character.Team = Teams[teamindex.Value];
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json, Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
@@ -69,6 +70,8 @@ namespace TDS_Server.Instance.Lobby
             player.PreviousLobby = this;
             player.CurrentLobbyStats = null;
             player.Lifes = 0;
+            player.Team?.SyncRemovedPlayer(player);
+            player.Team = null;
             if (player.Client.Exists)
             {
                 Workaround.FreezePlayer(player.Client, true);

@@ -63,21 +63,13 @@ namespace TDS_Server.Instance.Utility
 
         public void AddPlayer(TDSPlayer player)
         {
-            foreach (var target in Players)
-            {
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client);
-            }
             Players.Add(player);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, JsonConvert.SerializeObject(Players.Select(p => p.Client.Value)));
+            player.Client.SetSkin((PedHash)Entity.SkinHash);
         }
 
         public void RemovePlayer(TDSPlayer player)
         {
             Players.Remove(player);
-            foreach (var target in Players)
-            {
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client);
-            }
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
         }
 
@@ -88,6 +80,31 @@ namespace TDS_Server.Instance.Utility
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
             });
             Players.Clear();
+        }
+
+        public void SyncAddedPlayer(TDSPlayer player)
+        {
+            foreach (var target in Players)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client);
+            }
+        }
+
+        public void SyncRemovedPlayer(TDSPlayer player)
+        {
+            foreach (var target in Players)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client);
+            }
+        }
+
+        public void SyncAllPlayers()
+        {
+            string json = JsonConvert.SerializeObject(Players.Select(p => p.Client.Value));
+            foreach (var player in Players)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
+            }
         }
 
         public static bool operator ==(Team? a, Team? b)

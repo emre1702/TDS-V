@@ -39,14 +39,15 @@ namespace TDS_Server.Instance.Player
         public Team? Team
         {
             get => _team;
-            private set
+            set
             {
                 if (value != _team)
                 {
                     _team?.RemovePlayer(this);
                     value?.AddPlayer(this);
+                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
+                    _team = value;
                 }
-                _team = value;
             }
         }
 
@@ -225,14 +226,6 @@ namespace TDS_Server.Instance.Player
             #endregion Armor
         }
 
-        public void SetTeam(Team team, bool withOtherThings)
-        {
-            if (withOtherThings)
-                this.Team = team;
-            else
-                this._team = team;
-        }
-
         public void ClosePrivateChat(bool disconnected)
         {
             if (InPrivateChatWith == null && SentPrivateChatRequestTo == null)
@@ -255,7 +248,7 @@ namespace TDS_Server.Instance.Player
             else if (SentPrivateChatRequestTo != null)
             {
                 if (!disconnected)
-                { 
+                {
                     Client.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
                 }
                 SentPrivateChatRequestTo.Client.SendNotification(
@@ -283,7 +276,7 @@ namespace TDS_Server.Instance.Player
                 foreach (var lobbyStats in Entity.PlayerLobbyStats)
                 {
                     dbcontext.Entry(lobbyStats).State = EntityState.Modified;
-                }  
+                }
             }*/
 
             dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;

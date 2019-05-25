@@ -17,16 +17,17 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        public override async Task<bool> AddPlayer(TDSPlayer character, uint teamindex)
+        public override async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
-            if (!await base.AddPlayer(character, teamindex))
+            // Give null for teamindex so Lobby.AddPlayer doesn't put the player into a team
+            if (!await base.AddPlayer(character, teamindex == 0 ? teamindex : null))
                 return false;
 
             character.CurrentRoundStats = new RoundStatsDto(character);
             SpectateOtherSameTeam(character);
 
             if (teamindex != 0)
-                AddPlayerAsPlayer(character);
+                AddPlayerAsPlayer(character, teamindex);
 
             SendPlayerRoundInfoOnJoin(character);
 
@@ -112,10 +113,12 @@ namespace TDS_Server.Instance.Lobby
             player.LastHitter = null;
         }
 
-        private void AddPlayerAsPlayer(TDSPlayer character)
+        private void AddPlayerAsPlayer(TDSPlayer character, uint? teamindex)
         {
-            Team team = GetTeamWithFewestPlayer();
-            SetPlayerTeam(character, team);
+            Team team = GetTeamWithFewestPlayer();  // Todo: Add "RandomTeams" Lobby setting and use teamindex instead of GetTeamWithFewestPlayer if it's true
+            character.Team = team;
+            team.SyncAddedPlayer(character);
+
             if (_currentRoundStatus == ERoundStatus.Countdown)
             {
                 SetPlayerReadyForRound(character);
