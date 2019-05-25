@@ -98,7 +98,7 @@ export class MapVotingComponent implements OnInit {
   }
 
   toggleMapIdToFavorite(mapId: number) {
-    this.settings.toggleMapIdToFavorite(this.selectedMap.Id);
+    this.settings.toggleMapIdToFavorite(mapId);
     this.changeDetector.detectChanges();
   }
 
