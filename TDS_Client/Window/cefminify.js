@@ -10,11 +10,11 @@ let cleancssrequire = require("clean-css");
 let files = [
     { path: "choice/", html: "choice.html", js: ["choice.js"], css: ["choice/choice.css"], reserved: ["setLobbyChoiceLanguage"] },
     {
-        path: "main/", html: "main.html", js: ["main.js", "mapmanager.js", "chat.js", "roundend.js"],
-        css: ["main/chat.css", "main/main.css", "main/mapmanager.css", "main/roundend.css"],
-        reserved: ["setMoney", "playSound", "playHitsound", "showBloodscreen", "addKillMessage", "alert", "openMapMenu", "closeMapMenu", "addVoteToMapVoting", "loadMapVotings", "clearMapVotings", "loadFavouriteMaps",
-            "toggleCanVoteForMapWithNumpad", "loadOrderNames", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings",
-            "enableChatInput", "startBombTickSound", "stopBombTickSound", "toggleOrders"]
+        path: "main/", html: "main.html", js: ["main.js", "chat.js", "roundend.js"],
+        css: ["main/chat.css", "main/main.css", "main/roundend.css"],
+        reserved: ["setMoney", "playSound", "playHitsound", "showBloodscreen", "addKillMessage", "alert",
+            "toggleCanVoteForMapWithNumpad", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", 
+            "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound"]
     },
     { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     {

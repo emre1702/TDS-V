@@ -23,29 +23,23 @@ namespace TDS_Server.Manager.Maps
         }
 
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]
-        public static async void ToggleMapFavouriteState(Client player, string mapName, bool isFavourite)
+        public static async void ToggleMapFavouriteState(Client player, int mapId, bool isFavorite)
         {
             Players? entity = player.GetEntity();
             if (entity == null)
                 return;
 
             using var dbcontext = new TDSNewContext();
-            int mapId = await dbcontext.Maps
-                .Where(m => m.Name == mapName)
-                .Select(m => m.Id)
-                .FirstOrDefaultAsync();
-            if (mapId == 0)
-                return;
 
-            PlayerMapFavourites? favourite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
+            PlayerMapFavourites? favorite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
             #region Add Favourite
 
-            if (favourite == null && isFavourite)
+            if (favorite == null && isFavorite)
             {
-                favourite = new PlayerMapFavourites { PlayerId = entity.Id, MapId = mapId };
-                dbcontext.PlayerMapFavourites.Add(favourite);
-                dbcontext.Entry(favourite).State = EntityState.Added;
+                favorite = new PlayerMapFavourites { PlayerId = entity.Id, MapId = mapId };
+                dbcontext.PlayerMapFavourites.Add(favorite);
+                dbcontext.Entry(favorite).State = EntityState.Added;
                 await dbcontext.SaveChangesAsync();
                 return;
             }
@@ -54,9 +48,9 @@ namespace TDS_Server.Manager.Maps
 
             #region Remove Favourite
 
-            if (favourite != null && !isFavourite)
+            if (favorite != null && !isFavorite)
             {
-                dbcontext.PlayerMapFavourites.Remove(favourite);
+                dbcontext.PlayerMapFavourites.Remove(favorite);
                 await dbcontext.SaveChangesAsync();
                 return;
             }

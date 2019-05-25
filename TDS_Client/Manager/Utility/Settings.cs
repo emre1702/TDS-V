@@ -4,6 +4,7 @@ using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
+using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using TDS_Common.Default;
@@ -18,25 +19,25 @@ namespace TDS_Client.Manager.Utility
         public const int ScreenFadeInTimeAfterSpawn = 2000;
         public const int ScreenFadeOutTimeAfterSpawn = 2000;
 
-        private static readonly Dictionary<ELanguage, ILanguage> languagesDict = new Dictionary<ELanguage, ILanguage>()
+        private static readonly Dictionary<ELanguage, ILanguage> _languagesDict = new Dictionary<ELanguage, ILanguage>()
         {
             [ELanguage.German] = new German(),
             [ELanguage.English] = new English()
         };
 
-        private static ELanguage languageEnum = ELanguage.English;
-        private static bool languageManuallyChanged;
+        private static ELanguage _languageEnum = ELanguage.English;
+        private static bool _languageManuallyChanged;
 
         public static ELanguage LanguageEnum
         {
-            get => languageEnum;
+            get => _languageEnum;
             set
             {
-                languageEnum = value;
-                languageManuallyChanged = true;
-                Language = languagesDict[languageEnum];
+                _languageEnum = value;
+                _languageManuallyChanged = true;
+                Language = _languagesDict[_languageEnum];
                 Scoreboard.LoadLanguage();
-                Team.LoadOrderNames();
+                Angular.LoadLanguage(_languageEnum);
                 if (syncedPlayerSettings != null)
                 {
                     syncedPlayerSettings.Language = (byte)value;
@@ -45,7 +46,7 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
-        public static ILanguage Language { get; private set; } = languagesDict[LanguageEnum];
+        public static ILanguage Language { get; private set; } = _languagesDict[LanguageEnum];
         public static bool Bloodscreen => syncedPlayerSettings.Bloodscreen;
         public static bool Hitsound => syncedPlayerSettings.Hitsound;
         public static bool FloatingDamageInfo => syncedPlayerSettings.FloatingDamageInfo;
@@ -93,7 +94,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
-            if (!languageManuallyChanged || LanguageEnum == (ELanguage)loadedSyncedSettings.Language)
+            if (!_languageManuallyChanged || LanguageEnum == (ELanguage)loadedSyncedSettings.Language)
                 LanguageEnum = (ELanguage)loadedSyncedSettings.Language;
             else
             {

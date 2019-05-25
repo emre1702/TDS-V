@@ -16,8 +16,8 @@ namespace TDS_Server.Manager.Helper
         public static void LoadSyncedData(this MapDto map)
         {
             map.SyncedData.Name = map.Info.Name;
-            map.SyncedData.Description[ELanguage.English] = map.Descriptions?.English;
-            map.SyncedData.Description[ELanguage.German] = map.Descriptions?.German;
+            map.SyncedData.Description[(int)ELanguage.English] = map.Descriptions?.English;
+            map.SyncedData.Description[(int)ELanguage.German] = map.Descriptions?.German;
             map.SyncedData.Type = (EMapType)(map.Info.Type);
         }
 

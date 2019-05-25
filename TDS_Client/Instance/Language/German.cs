@@ -24,8 +24,6 @@ namespace TDS_Client.Instance.Language
 
         public override IMapCreatorMenuTexts MAPCREATOR_MENU => new MapCreatorMenuTextsGerman();
 
-        public override IOrderTexts ORDER => new OrderTextsGerman();
-
         public new ELanguage Enum => ELanguage.German;
     }
 }

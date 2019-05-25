@@ -25,8 +25,6 @@ namespace TDS_Client.Instance.Language
 
         public virtual IMapCreatorMenuTexts MAPCREATOR_MENU => new MapCreatorMenuTextsEnglish();
 
-        public virtual IOrderTexts ORDER => new OrderTextsEnglish();
-
         public ELanguage Enum => ELanguage.English;
     }
 }

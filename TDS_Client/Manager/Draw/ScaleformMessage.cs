@@ -41,6 +41,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
 
         public static void ShowWastedMessage(ulong time = 5000)
         {
+            //todo Test this, showed "undefined"?
             scaleform.Call(DScaleformFunction.SHOW_WASTED_MP_MESSAGE);
             InitCommonSettings(time);
         }

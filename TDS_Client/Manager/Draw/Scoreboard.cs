@@ -72,6 +72,7 @@ namespace TDS_Client.Manager.Draw
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
                 DxGridRow row = new DxGridRow(grid, null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 new DxGridCell(playerdata.Name, row, columns[0]);
+
                 new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
                 new DxGridCell(playerdata.Kills.ToString(), row, columns[2]);
                 new DxGridCell(playerdata.Assists.ToString(), row, columns[3]);

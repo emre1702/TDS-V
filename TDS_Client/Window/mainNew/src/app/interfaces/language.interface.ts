@@ -7,4 +7,9 @@ export interface Language {
     Voting: string;
     Vote: string;
     Creator: string;
+
+    ATTACK: string;
+    BACK: string;
+    SPREAD_OUT: string;
+    TO_BOMB: string;
 }

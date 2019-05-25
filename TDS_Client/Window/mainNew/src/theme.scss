@@ -61,3 +61,15 @@ $cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 ::-webkit-scrollbar-corner {
   background: mat-color($dark-accent);
 }
+
+html, body, app-root {
+  overflow: hidden;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+  color: #e0e0e0;
+}
+
+/*.vertical-divider-color {
+  border-right-color: #e0e0e0;
+}*/

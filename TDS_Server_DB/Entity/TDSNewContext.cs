@@ -183,7 +183,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("lobbies");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("3");
 
@@ -387,9 +387,9 @@ namespace TDS_Server_DB.Entity
                     .HasName("Index_maps_name")
                     .ForNpgsqlHasMethod("hash");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("Id");
 
-                entity.Property(e => e.CreatorId).HasColumnName("CreatorID");
+                entity.Property(e => e.CreatorId).HasColumnName("CreatorId");
 
                 entity.Property(e => e.Name).IsRequired();
 
@@ -432,11 +432,11 @@ namespace TDS_Server_DB.Entity
 
                 entity.ToTable("player_bans");
 
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
+                entity.Property(e => e.PlayerId).HasColumnName("PlayerId");
 
-                entity.Property(e => e.LobbyId).HasColumnName("LobbyID");
+                entity.Property(e => e.LobbyId).HasColumnName("LobbyId");
 
-                entity.Property(e => e.AdminId).HasColumnName("AdminID");
+                entity.Property(e => e.AdminId).HasColumnName("AdminId");
 
                 entity.Property(e => e.EndTimestamp).HasColumnType("timestamp with time zone");
 

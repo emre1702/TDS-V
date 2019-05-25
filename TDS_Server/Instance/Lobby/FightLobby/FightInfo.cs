@@ -14,6 +14,7 @@ namespace TDS_Server.Instance.Lobby
             Dictionary<ILanguage, string> killstr;
             if (killer != null && player != killer)
             {
+                //Todo weaponname was empty, test it
                 string weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
                 killstr = LangUtils.GetLangDictionary((lang) =>
                 {

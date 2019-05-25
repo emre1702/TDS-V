@@ -1,6 +1,6 @@
 namespace TDS_Common.Enum
 {
-    public enum ELanguage : byte
+    public enum ELanguage
     {
         German = 7,
         English = 9

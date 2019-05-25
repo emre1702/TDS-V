@@ -7,7 +7,6 @@ namespace TDS_Client.Interface
         ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
         ILobbyChoiceTexts LOBBY_CHOICE_TEXTS { get; }
         IMapCreatorMenuTexts MAPCREATOR_MENU { get; }
-        IOrderTexts ORDER { get; }
 
         string OUTSIDE_MAP_LIMIT { get; }
         string PLANTING { get; }

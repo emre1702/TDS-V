@@ -3,7 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { MapVotingComponent } from './mapvoting/mapvoting.component';
+import { MapVotingComponent } from './components/mapvoting/mapvoting.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -14,13 +14,17 @@ import {
   MatIconModule,
   MatListModule
 } from "@angular/material";
-import { MapVotingNavPipe } from './mapvoting/pipes/mapvotingNav.pipe';
+import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
+import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
+import { OrderByPipe } from './pipes/orderby.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapVotingComponent,
+    TeamOrdersComponent,
+    OrderByPipe,
     MapVotingNavPipe,
     LanguagePipe
   ],

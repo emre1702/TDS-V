@@ -35,19 +35,20 @@ namespace TDS_Client.Manager.Lobby
 
             if (lobbyIdAtLastLoad == Settings.LobbyId)
             {
-                MainBrowser.OpenMapMenuInBrowser(lastMapsJson);
+                Angular.OpenMapMenu(lastMapsJson);
                 return;
             }
 
             EventsSender.Send(DToServerEvent.MapsListRequest);
         }
 
-        public static void CloseMenu()
+        public static void CloseMenu(bool sendToBrowser = true)
         {
             if (!open)
                 return;
             open = false;
-            MainBrowser.CloseMapMenuInBrowser();
+            if (sendToBrowser)
+                Angular.CloseMapMenu();
             CursorManager.Visible = false;
         }
 
@@ -55,17 +56,7 @@ namespace TDS_Client.Manager.Lobby
         {
             lastMapsJson = mapjson;
             lobbyIdAtLastLoad = Settings.LobbyId;
-            MainBrowser.OpenMapMenuInBrowser(mapjson);
-        }
-
-        public static void AddVote(string newmap, string oldmap)
-        {
-            MainBrowser.AddVoteToMapInMapMenuBrowser(newmap, oldmap);
-        }
-
-        public static void LoadedMapFavourites(string mapFavouritesJson)
-        {
-            MainBrowser.LoadMapFavouritesInBrowser(mapFavouritesJson);
+            Angular.OpenMapMenu(mapjson);
         }
     }
 }

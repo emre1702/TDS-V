@@ -264,6 +264,7 @@ namespace TDS_Server.Instance.Lobby
 
         public void StartBombDefusing(TDSPlayer character)
         {
+            //Todo StartBombDefusing was empty, test it
             if (_bomb == null)
                 return;
             if (_currentRoundStatus != ERoundStatus.Round)

@@ -38,13 +38,3 @@ text {
     position: relative;
 }
 
-#orders {
-    display: none;
-    position: absolute;
-    text-align: right;
-    right: 0.5%;
-    color: white;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    top: 60%;
-    font-size: 1.3em;
-}

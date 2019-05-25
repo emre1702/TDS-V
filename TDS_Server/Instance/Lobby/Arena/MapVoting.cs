@@ -1,18 +1,22 @@
 using GTANetworkAPI;
+using MoreLinq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
+using TDS_Common.Dto;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
-        private readonly Dictionary<Client, string> _playerVotes = new Dictionary<Client, string>();
+        //private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
+        private readonly List<MapVoteDto> _mapVotes = new List<MapVoteDto>();
+        private readonly Dictionary<Client, int> _playerVotes = new Dictionary<Client, int>();
 
         public void SendMapsForVoting(Client player)
         {
@@ -22,53 +26,63 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public void MapVote(TDSPlayer player, string mapname)
+        public void MapVote(TDSPlayer player, int mapId)
         {
-            if (!_mapVotes.ContainsKey(mapname))
+            if (_mapVotes.Any(m => m.Id == mapId))
             {
-                if (_mapVotes.Count >= 9)
-                {
-                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
-                    return;
-                }
-                _mapVotes[mapname] = 0;
+                AddVoteToMap(player.Client, mapId);
+                return;
             }
-            AddVoteToMap(player.Client, mapname);
+
+            if (_mapVotes.Count >= 9)
+            {
+                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
+                return;
+            }
+            MapDto? map = MapsLoader.GetMapById(mapId);
+            if (map == null)
+                map = MapCreator.GetMapById(mapId);
+            if (map == null)
+                return;
+            var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
+            _mapVotes.Add(mapVote);
+            SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, JsonConvert.SerializeObject(mapVote));
         }
 
-        private void AddVoteToMap(Client player, string mapname)
+        private void AddVoteToMap(Client player, int mapId)
         {
             if (_playerVotes.ContainsKey(player))
             {
-                string oldvote = _playerVotes[player];
+                int oldVote = _playerVotes[player];
                 _playerVotes.Remove(player);
 
-                if (oldvote == mapname)
-                    return;
-                if (--_mapVotes[oldvote] <= 0)
+                if (--_mapVotes[oldVote].AmountVotes <= 0)
                 {
-                    _mapVotes.Remove(oldvote);
+                    _mapVotes.RemoveAll(m => m.Id == oldVote);
+                    SendAllPlayerEvent(DToClientEvent.RemoveMapFromVoting, null, oldVote);
+                    SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId);
                 }
-                SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapname, oldvote);
+                else
+                    SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId, oldVote);
             }
             else
-                SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapname);
-            _playerVotes[player] = mapname;
-            _mapVotes[mapname]++;
+                SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId);
+            _playerVotes[player] = mapId;
+            ++_mapVotes[mapId].AmountVotes;
         }
 
         private MapDto? GetVotedMap()
         {
             if (_mapVotes.Count > 0)
             {
-                string wonmap = _mapVotes.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+                MapVoteDto wonMap = _mapVotes.MaxBy(vote => vote.AmountVotes).First();
                 SendAllPlayerLangNotification(lang =>
                 {
-                    return Utils.GetReplaced(lang.MAP_WON_VOTING, wonmap);
+                    return Utils.GetReplaced(lang.MAP_WON_VOTING, wonMap.Name);
                 });
                 _mapVotes.Clear();
                 _playerVotes.Clear();
-                return _maps.FirstOrDefault(m => m.Info.Name == wonmap);
+                return _maps.FirstOrDefault(m => m.SyncedData.Id == wonMap.Id);
             }
             return null;
         }

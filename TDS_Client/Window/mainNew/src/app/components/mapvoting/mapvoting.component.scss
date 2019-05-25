@@ -1,4 +1,5 @@
-.container {
+#map-menu-container {
+  position: absolute;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -9,7 +10,7 @@
   opacity: 0.9;
 }
 
-h1 {
+mat-toolbar > h1 {
   margin-left: 8px;
   flex: 1 1 auto;
 }
@@ -85,4 +86,21 @@ h1 {
 
 #map-title {
   text-align: center;
+}
+
+#votings-container {
+  position: absolute;
+  vertical-align: bottom;
+  text-align: right;
+  right: 0.5%;
+  color: #707070;
+  text-shadow: 1px 1px 0 #EEEEEE, 2px 2px 0 #707070;
+  bottom: 10%;
+  font-size: 1.6em;
+}
+
+.mapvoting_selected {
+  font-size: 1.7em;
+  border-color: green;
+
 }

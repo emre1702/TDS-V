@@ -80,6 +80,11 @@ namespace TDS_Server.Manager.Maps
             return _newCreatedMaps[CommonUtils.Rnd.Next(_newCreatedMaps.Count)];
         }
 
+        public static MapDto? GetMapById(int mapId)
+        {
+            return _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+        }
+
         public static MapDto? GetMapByName(string mapName)
         {
             return _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);

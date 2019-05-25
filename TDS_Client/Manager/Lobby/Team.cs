@@ -29,16 +29,10 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
-        public static void LoadOrderNames()
-        {
-            MainBrowser.LoadOrderNamesInBrowser(JsonConvert.SerializeObject(Settings.Language.ORDER));
-        }
-
         public static void ToggleOrderMode(ConsoleKey _)
         {
             activated = !activated;
-            MainBrowser.ToggleCanVoteForMapWithNumpadInBrowser(!activated);
-            MainBrowser.ToggleOrders(activated);
+            Angular.ToggleTeamOrderModus(activated);
         }
 
         private static void GiveOrder(ConsoleKey key)

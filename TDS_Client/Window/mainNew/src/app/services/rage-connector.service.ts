@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef, NgZone } from '@angular/core';
 
 declare const mp: {
   trigger(eventName: string, ...args: any): void;
@@ -9,24 +9,30 @@ declare const window: any;
   providedIn: 'root'
 })
 export class RageConnectorService {
-  private events = new Map<string, (...args: any) => void>();
-  private callbackEvents = new Map<string, (...args: any) => void>();
+  private static events: {[key: string]: ((...args: any) => void)[]} = {};
+  private static callbackEvents: {[key: string]: ((...args: any) => void)[]} = {};
+  private static zone: NgZone;
 
-  constructor() {
-    window.RageAngularEvent = this.rageEventHandler.bind(this);
+  constructor(zone: NgZone) {
+    RageConnectorService.zone = zone;
+    window.RageAngularEvent = RageConnectorService.rageEventHandler;
   }
 
-  public rageEventHandler(eventName: string, ...args: any) {
-    if (this.events.has(eventName)) {
-      this.events[eventName](...args);
-      return;
-    }
-    if (this.callbackEvents.has(eventName)) {
-      const callbackFunction = this.callbackEvents[eventName];
-      this.callbackEvents.delete(eventName);
-      callbackFunction(...args);
-      return;
-    }
+  public static rageEventHandler(eventName: string, ...args: any) {
+    RageConnectorService.zone.run(() => {
+      if (RageConnectorService.events[eventName]) {
+        for (const func of RageConnectorService.events[eventName]) {
+          func(...args);
+        }
+      }
+      if (RageConnectorService.callbackEvents[eventName]) {
+        const callbackFunctions = RageConnectorService.callbackEvents[eventName];
+        RageConnectorService.callbackEvents[eventName] = undefined;
+        for (const func of callbackFunctions) {
+          func(...args);
+        }
+      }
+    });
   }
 
   /**
@@ -37,7 +43,10 @@ export class RageConnectorService {
    * @param callback Any function
    */
   public listen(eventName: string, callback: (...args: any) => void) {
-    this.events[eventName] = callback;
+    if (!RageConnectorService.events[eventName]) {
+      RageConnectorService.events[eventName] = [];
+    }
+    RageConnectorService.events[eventName].push(callback);
   }
 
   public call(eventName: string, ...args: any) {
@@ -55,7 +64,10 @@ export class RageConnectorService {
    * @param callback Any function
    */
   public callCallback(eventName: string, args: any[], callback: (...args: any) => void) {
-    this.callCallback[eventName] = callback;
+    if (!RageConnectorService.callbackEvents[eventName]) {
+      RageConnectorService.callbackEvents[eventName] = [];
+    }
+    RageConnectorService.callbackEvents[eventName].push(callback);
     mp.trigger(eventName, ...args);
   }
 

@@ -28,11 +28,11 @@ namespace TDS_Server.Manager.Mapping
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
             });
             Mapper.AssertConfigurationIsValid();
-        } 
+        }
 
         public static Type GetCorrectDestType(Type sourceType)
         {
-            if (sourceType == typeof(Players) || sourceType == typeof(Players?))
+            if (sourceType == typeof(Players))
                 return typeof(Task<Players?>);
             return sourceType;
         }

@@ -2,6 +2,7 @@
 {
     public class DFromBrowserEvent
     {
+        public const string AddMapVote = "AddMapVote_Browser";
         public const string AddRatingToMap = "AddRatingToMap_Browser";
 
         public const string ChatInputToggled = "ChatInputToggled_Browser";
@@ -14,13 +15,11 @@
 
         public const string LanguageChange = "LanguageChange_Browser";
 
-        public const string MapVote = "MapVote_Browser";
-
         public const string SendMapRating = "SendMapRating_Browser";
         public const string SyncChoiceLanguageTexts = "SyncChoiceLanguageTexts_Browser";
         public const string SyncRegisterLoginLanguageTexts = "SyncRegisterLoginLanguageTexts_Browser";
 
-        public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Browser";
+        public const string ToggleMapFavorite = "ToggleMapFavorite_Browser";
         public const string TryLogin = "TryLogin_Browser";
         public const string TryRegister = "TryRegister_Browser";
     }

@@ -113,6 +113,7 @@ namespace TDS_Client.Manager
 
         private void AddToClientEvents()
         {
+            Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
             Add(DToClientEvent.AddVoteToMap, OnAddVoteToMapServerMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
@@ -142,6 +143,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
+            Add(DToClientEvent.RemoveMapFromVoting, OnRemoveMapFromVotingMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
             Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
@@ -191,8 +193,8 @@ namespace TDS_Client.Manager
 
         private void OnLoadMapFavouritesMethod(object[] args)
         {
-            string mapFavouritesJson = (string)args[0];
-            MapManager.LoadedMapFavourites(mapFavouritesJson);
+            string mapFavoritesJson = (string)args[0];
+            Angular.LoadFavoriteMaps(mapFavoritesJson);
         }
 
         private void OnMapChangeMethod(object[] args)
@@ -260,7 +262,7 @@ namespace TDS_Client.Manager
             Countdown.Stop();
             LobbyCam.StopCountdown();
             RoundInfo.Stop();
-            MainBrowser.ClearMapVotingsInBrowser();
+            Angular.ResetMapVoting();
             MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
         }
 
@@ -380,7 +382,8 @@ namespace TDS_Client.Manager
 
         private void OnMapVotingSyncOnPlayerJoinMethod(object[] args)
         {
-            MainBrowser.LoadMapVotingsForMapBrowser((string)args[0]);
+            string mapVotesJson = (string)args[0];
+            Angular.LoadMapVoting(mapVotesJson);
         }
 
         private void OnPlayerAdminLevelChangeMethod(object[] args)
@@ -394,11 +397,17 @@ namespace TDS_Client.Manager
             MapManager.LoadMapList((string)args[0]);
         }
 
+        private void OnAddMapToVotingMethod(object[] args)
+        {
+            string mapVoteJson = (string)args[0];
+            Angular.AddMapToVoting(mapVoteJson);
+        }
+
         private void OnAddVoteToMapServerMethod(object[] args)
         {
-            string newmapname = (string)args[0];
-            string oldmapname = args.Length > 1 ? (string)args[1] : null;
-            MapManager.AddVote(newmapname, oldmapname);
+            int newMapId = (int)args[0];
+            int oldMapId = args.Length > 1 ? (int)args[1] : -1;
+            Angular.AddVoteToMap(newMapId, oldMapId);
         }
 
         private void OnStartRegisterLoginMethod(object[] args)
@@ -421,8 +430,15 @@ namespace TDS_Client.Manager
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
+            Angular.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
+        }
+
+        private void OnRemoveMapFromVotingMethod(object[] args)
+        {
+            int mapId = (int)args[0];
+            Angular.RemoveMapFromVoting(mapId);
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)
@@ -459,10 +475,10 @@ namespace TDS_Client.Manager
 
         private void AddFromBrowserEvents()
         {
+            Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseLobbyToJoin, OnChooseLobbyToJoinMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
-            Add(DFromBrowserEvent.MapVote, OnMapVoteMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
@@ -470,11 +486,17 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
-            Add(DFromBrowserEvent.ToggleMapFavouriteState, OnToggleMapFavouriteStateMethod);
+            Add(DFromBrowserEvent.ToggleMapFavorite, OnToggleMapFavoriteMethod);
 
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+        }
+
+        private void OnAddMapVoteMethod(object[] args)
+        {
+            int mapId = (int)args[0];
+            EventsSender.Send(DToServerEvent.MapVote, mapId);
         }
 
         private void OnAddRatingToMapMethod(object[] args)
@@ -503,13 +525,7 @@ namespace TDS_Client.Manager
 
         private void OnCloseMapVotingMenuMethod(object[] args)
         {
-            MapManager.CloseMenu();
-        }
-
-        private void OnMapVoteMethod(object[] args)
-        {
-            string mapname = (string)args[0];
-            EventsSender.Send(DToServerEvent.MapVote, mapname);
+            MapManager.CloseMenu(false);
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -536,7 +552,7 @@ namespace TDS_Client.Manager
             string msg = (string)args[0];
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
         }
-          
+
         private void OnChatUsedMethod(object[] args)
         {
             ChatManager.CloseChatInput();
@@ -555,7 +571,7 @@ namespace TDS_Client.Manager
             var languageID = Convert.ToByte(args[0]);
             if (!System.Enum.IsDefined(typeof(ELanguage), languageID))
                 return;
-            
+
             Settings.LanguageEnum = (ELanguage)languageID;
         }
 
@@ -564,11 +580,11 @@ namespace TDS_Client.Manager
             RegisterLogin.SyncLanguage();
         }
 
-        private void OnToggleMapFavouriteStateMethod(object[] args)
+        private void OnToggleMapFavoriteMethod(object[] args)
         {
-            string mapname = (string)args[0];
-            bool isfavourite = (bool)args[1];
-            EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapname, isfavourite);
+            int mapId = (int)args[0];
+            bool isFavorite = (bool)args[1];
+            EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapId, isFavorite);
         }
 
         /*// triggered by browser //

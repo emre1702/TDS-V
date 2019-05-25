@@ -9,4 +9,9 @@ export class English implements Language {
     Voting = "Voting";
     Vote = "Vote";
     Creator = "Creator";
+
+    ATTACK = "Attack! Go go go!";
+    BACK = "Stay back!";
+    SPREAD_OUT = "Spread out!";
+    TO_BOMB = "Go to the bomb!";
 }

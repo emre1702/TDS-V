@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,11 +33,11 @@ namespace TDS_Server.Manager.Maps
             List<MapDto> list;
             if (!newMaps)
                 list = LoadMapsInDirectory(SettingsManager.MapsPath);
-            else 
+            else
                 list = LoadMapsInDirectory(SettingsManager.NewMapsPath);
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
-            
+
             await SaveMapsInDB(dbcontext, list);
 
             // Load name of creator and Id for Maps //
@@ -86,6 +85,11 @@ namespace TDS_Server.Manager.Maps
             return map;
         }
 
+        public static MapDto? GetMapById(int id)
+        {
+            return AllMaps.FirstOrDefault(m => m.SyncedData.Id == id);
+        }
+
         public static MapDto? GetMapByName(string mapName)
         {
             return AllMaps.FirstOrDefault(m => m.Info.Name == mapName);
@@ -121,6 +125,6 @@ namespace TDS_Server.Manager.Maps
                 map.SyncedData.Id = dbMap.Id;
                 map.LoadMapRatings(dbContext);
             }
-        }        
+        }
     }
 }

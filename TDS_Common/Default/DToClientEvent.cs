@@ -6,6 +6,7 @@
         public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
         public const string SetKillsForRoundStats = "SetKillsForRoundStats_Server";
 
+        public const string AddMapToVoting = "AddMapToVoting_Server";
         public const string AddVoteToMap = "AddVoteToMap_Server";
         public const string AmountInFightSync = "AmountInFightSync_Server";
 
@@ -47,6 +48,7 @@
         public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
 
         public const string RegisterLoginSuccessful = "RegisterLoginSuccessful_Server";
+        public const string RemoveMapFromVoting = "RemoveMapFromVoting_Server";
         public const string RequestNewMapsList = "RequestNewMapsList_Server";
 
         public const string RoundStart = "RoundStart_Server";

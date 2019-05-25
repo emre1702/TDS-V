@@ -12,8 +12,8 @@ namespace TDS_Client.Manager.Browser
     internal static class MainBrowser
     {
         public static HtmlWindow Browser { get; set; }
-        private static bool roundEndReasonShowing;
-        private readonly static Queue<string> executeQueue = new Queue<string>();
+        private static bool _roundEndReasonShowing;
+        private readonly static Queue<string> _executeQueue = new Queue<string>();
 
         public static void Load()
         {
@@ -25,7 +25,7 @@ namespace TDS_Client.Manager.Browser
         private static void Execute(string execStr)
         {
             if (Browser == null)
-                executeQueue.Enqueue(execStr);
+                _executeQueue.Enqueue(execStr);
             else
                 Browser.ExecuteJs(execStr);
         }
@@ -34,12 +34,11 @@ namespace TDS_Client.Manager.Browser
 
         private static void OnLoaded()
         {
-            Team.LoadOrderNames();
-            foreach (var execStr in executeQueue)
+            foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);
             }
-            executeQueue.Clear();
+            _executeQueue.Clear();
         }
 
         public static void OnLoadOwnMapRatings(string datajson)
@@ -79,63 +78,18 @@ namespace TDS_Client.Manager.Browser
             Execute($"alert('{msg}');");
         }
 
-        public static void OpenMapMenuInBrowser(string mapslistjson)
-        {
-            Execute($"openMapMenu('{(int)Settings.Language.Enum}', `{mapslistjson}`);");
-        }
-
-        public static void CloseMapMenuInBrowser()
-        {
-            Execute("closeMapMenu();");
-        }
-
-        public static void LoadMapVotingsForMapBrowser(string mapvotesjson)
-        {
-            Execute($"loadMapVotings('{mapvotesjson}');");
-        }
-
-        public static void ClearMapVotingsInBrowser()
-        {
-            Execute("clearMapVotings();");
-        }
-
-        public static void AddVoteToMapInMapMenuBrowser(string mapname, string oldvotemapname)
-        {
-            Execute($"addVoteToMapVoting('{mapname}', '{oldvotemapname ?? string.Empty}');");
-        }
-
-        public static void LoadMapFavouritesInBrowser(string mapfavouritesjson)
-        {
-            Execute($"loadFavouriteMaps('{mapfavouritesjson}');");
-        }
-
-        public static void ToggleCanVoteForMapWithNumpadInBrowser(bool canvote)
-        {
-            Execute($"toggleCanVoteForMapWithNumpad({(canvote ? 1 : 0)});");
-        }
-
-        public static void LoadOrderNamesInBrowser(string ordernamesjson)
-        {
-            Execute($"loadOrderNames('{ordernamesjson}');");
-        }
-
-        public static void ToggleOrders(bool show)
-        {
-            Execute($"toggleOrders({(show ? 1 : 0)})");
-        }
-
         public static void ShowRoundEndReason(string reason, string currentmap)
         {
-            roundEndReasonShowing = true;
+            _roundEndReasonShowing = true;
             Execute($"showRoundEndReason(`{reason}`, `{currentmap}`);");
         }
 
         public static void HideRoundEndReason()
         {
-            if (!roundEndReasonShowing)
+            if (!_roundEndReasonShowing)
                 return;
             Execute("hideRoundEndReason();");
-            roundEndReasonShowing = false;
+            _roundEndReasonShowing = false;
         }
 
         public static void LoadPlayersForChat(List<Player> players)

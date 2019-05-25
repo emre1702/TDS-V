@@ -6,4 +6,9 @@ export class German extends English {
     Favourites = "Favoriten";
     Vote = "Voten";
     Creator = "Ersteller";
+
+    ATTACK = "Angriff! Los los los!";
+    BACK = "Bleibt zurück!";
+    SPREAD_OUT = "Teilt euch auf!";
+    TO_BOMB = "Geht zur Bombe!";
 }

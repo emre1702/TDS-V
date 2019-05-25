@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Window\**" />
+    <EmbeddedResource Remove="Window\**" />
+    <None Remove="Window\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TDS_Common\TDS_Common.csproj" />
   </ItemGroup>
 
@@ -25,7 +31,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\&quot;&#xD;&#xA;xcopy /Y /Q /S &quot;$(ProjectDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\obj\&quot;" />
+    <Exec Command="xcopy /Y /Q /S &quot;$(ProjectDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\obj\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\Window\&quot;" />
   </Target>
 
 </Project>

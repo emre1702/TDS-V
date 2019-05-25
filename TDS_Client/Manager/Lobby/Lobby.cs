@@ -30,7 +30,7 @@ namespace TDS_Client.Manager.Lobby
             Round.Reset(true);
             LobbyCam.StopCountdown();
             MapManager.CloseMenu();
-            MainBrowser.ClearMapVotingsInBrowser();
+            Angular.ResetMapVoting();
             RoundInfo.Stop();
             /*stopMapCreator();
             hideRoundEndReason();*/

@@ -38,7 +38,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static void RefreshResolution()
         {
-            Graphics.GetScreenResolution(ref ResX, ref ResY);
+            Graphics.GetActiveScreenResolution(ref ResX, ref ResY);
         }
 
         public virtual void Draw()
