@@ -104,5 +104,10 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToBrowserEvent.ToggleTeamOrderModus, activated);
         }
+
+        public static void ToggleChatOpened(bool activated)
+        {
+            Execute(DToBrowserEvent.ToggleChatOpened, activated);
+        }
     }
 }

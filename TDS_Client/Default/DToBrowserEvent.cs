@@ -10,6 +10,7 @@
         public const string OpenMapMenu = "OpenMapMenu_Client";
         public const string ResetMapVoting = "ResetMapVoting_Client";
         public const string SetMapVotes = "SetMapVotes_Client";
+        public const string ToggleChatOpened = "ToggleChatOpened_Client";
         public const string ToggleTeamOrderModus = "ToggleTeamOrderModus_Client";
     }
 }

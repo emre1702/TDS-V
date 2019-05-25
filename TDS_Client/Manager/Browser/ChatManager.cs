@@ -8,7 +8,17 @@ namespace TDS_Client.Manager.Browser
 {
     internal class ChatManager : Script
     {
-        public static bool IsOpen { get; set; }
+        public static bool IsOpen
+        {
+            get => _isOpen;
+            set
+            {
+                _isOpen = value;
+                Angular.ToggleChatOpened(value);
+            }
+        }
+
+        private static bool _isOpen;
 
         public ChatManager()
         {

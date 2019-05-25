@@ -8,5 +8,6 @@ export enum DFromClientEvent {
   OpenMapMenu = "OpenMapMenu_Client",
   ResetMapVoting = "ResetMapVoting_Client",
   SetMapVotes = "SetMapVotes_Client",
+  ToggleChatOpened = "ToggleChatOpened_Client",
   ToggleTeamOrderModus = "ToggleTeamOrderModus_Client"
 }

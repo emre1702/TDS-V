@@ -61,9 +61,17 @@ export class SettingsService {
     public InTeamOrderModus = false;
     public InTeamOrderModusChanged = new EventEmitter();
 
+    public ChatOpened = false;
+    public ChatOpenedChange = new EventEmitter();
+
     public toggleInTeamOrderModus(bool: boolean) {
       this.InTeamOrderModus = bool;
       this.InTeamOrderModusChanged.emit(null);
+    }
+
+    public setChatOpened(bool: boolean) {
+      this.ChatOpened = bool;
+      this.ChatOpenedChange.emit(null);
     }
     ////////////////////////////////////////////////////
 
@@ -72,5 +80,6 @@ export class SettingsService {
       rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
       rageConnector.listen(DFromClientEvent.LoadFavoriteMaps, this.loadFavoriteMapIds.bind(this));
       rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
+      rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
     }
 }
