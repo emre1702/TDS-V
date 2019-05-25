@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Lobby
         {
             //currentMap = mapname;
             if (mapInfo == null)
-                mapInfo = new DxText(mapname, 0.01f, 0.99f, 0.2f, Color.White, alignmentX: RAGE.NUI.UIResText.Alignment.Left, alignmentY: EAlignmentY.Bottom);
+                mapInfo = new DxText(mapname, 0.01f, 0.995f, 0.2f, Color.White, alignmentX: RAGE.NUI.UIResText.Alignment.Left, alignmentY: EAlignmentY.Bottom);
             else
                 mapInfo.Text = mapname;
         }
