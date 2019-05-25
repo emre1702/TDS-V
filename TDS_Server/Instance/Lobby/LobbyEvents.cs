@@ -116,7 +116,8 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
                 return;
-            arena.StartBombPlanting(character);
+            if (!arena.StartBombPlanting(character))
+                player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
         }
 
         [RemoteEvent(DToServerEvent.StopPlanting)]
@@ -133,7 +134,8 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
                 return;
-            arena.StartBombDefusing(character);
+            if (!arena.StartBombDefusing(character))
+                player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
         }
 
         [RemoteEvent(DToServerEvent.StopDefusing)]

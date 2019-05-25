@@ -121,6 +121,13 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
+        public static void StopRequestByServer()
+        {
+            _playerStatus = EPlantDefuseStatus.None;
+            _progressRect?.Remove();
+            _progressRect = null;
+        }
+
         private static bool ShouldPlantDefuseStop()
         {
             uint weaponHash = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();

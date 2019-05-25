@@ -146,6 +146,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
+            Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
@@ -406,6 +407,11 @@ namespace TDS_Client.Manager
             string scname = (string)args[0];
             bool isregistered = (bool)args[1];
             RegisterLogin.Start(scname, isregistered);
+        }
+
+        private void OnStopBombPlantDefuseMethod(object[] args)
+        {
+            Bomb.StopRequestByServer();
         }
 
         private void OnStopRoundStatsMethod(object[] args)

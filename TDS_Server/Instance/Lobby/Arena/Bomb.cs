@@ -235,23 +235,24 @@ namespace TDS_Server.Instance.Lobby
             SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombDefused);
         }
 
-        public void StartBombPlanting(TDSPlayer character)
+        public bool StartBombPlanting(TDSPlayer character)
         {
             if (_bomb == null)
-                return;
+                return false;
             if (_currentRoundStatus != ERoundStatus.Round)
-                return;
+                return false;
             if (_bombDetonateTimer != null)
-                return;
+                return false;
             if (_bombPlantDefuseTimer != null)
-                return;
+                return false;
             if (character.Client.Dead)
-                return;
+                return false;
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
-                return;
+                return false;
 
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
             _bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(character), (uint)RoundSettings.BombPlantTimeMs);
+            return true;
         }
 
         public void StopBombPlanting(Client client)
@@ -262,23 +263,24 @@ namespace TDS_Server.Instance.Lobby
             client.StopAnimation();
         }
 
-        public void StartBombDefusing(TDSPlayer character)
+        public bool StartBombDefusing(TDSPlayer character)
         {
             //Todo StartBombDefusing was empty, test it
             if (_bomb == null)
-                return;
+                return false;
             if (_currentRoundStatus != ERoundStatus.Round)
-                return;
+                return false;
             if (_bombDetonateTimer == null)
-                return;
+                return false;
             if (_bombPlantDefuseTimer != null)
-                return;
+                return false;
             if (character.Client.Dead)
-                return;
+                return false;
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
-                return;
+                return false;
             character.Client.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(EAnimationFlag.Loop));
             _bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(character), (uint)RoundSettings.BombDefuseTimeMs);
+            return true;
         }
 
         public void StopBombDefusing(Client client)

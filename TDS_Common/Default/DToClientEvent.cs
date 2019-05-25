@@ -54,6 +54,7 @@
 
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
+        public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
