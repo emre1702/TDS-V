@@ -27,45 +27,35 @@ export class MapVotingService {
     this.mapsInVotingChanged.emit(null);
   }
 
-  private addVoteToMap(id: number, oldId: number) {
-    if (oldId >= 0) {
-      const oldMapIndex = this.mapsInVoting.findIndex(m => m.Id == oldId);
-      if (oldMapIndex >= 0)
-        this.mapsInVoting.splice(oldMapIndex, 1);
-    }
-
-    // Shouldn't happen
-    if (!this.mapsInVoting.some(m => m.Id == id)) {
-      const mapVote = new MapVoteDto();
-      mapVote.Id = id;
-      mapVote.AmountVotes = 0;
-      mapVote.Name = "?";
-      this.mapsInVoting.push(mapVote);
-    }
-    this.mapsInVoting.filter(m => m.Id == id)[0].AmountVotes++;
-  }
-
   private loadMapVoting(mapVoteJson: string) {
     this.mapsInVoting = JSON.parse(mapVoteJson);
+    this.mapsInVotingChanged.emit(null);
   }
 
   private resetMapVoting() {
     this.mapsInVoting = [];
     this.votedForMapId = undefined;
+    this.mapsInVotingChanged.emit(null);
   }
 
-  private removeMapFromVoting(mapId: number) {
+  private setMapVotes(mapId: number, amountVotes: number) {
     const index = this.mapsInVoting.findIndex(m => m.Id == mapId);
-    if (index >= 0)
+    if (index < 0)
+      return;
+    if (amountVotes <= 0) {
       this.mapsInVoting.splice(index, 1);
+    } else {
+      this.mapsInVoting[index].AmountVotes = amountVotes;
+    }
+    this.mapsInVotingChanged.emit(null);
   }
+
 
   constructor(private rageConnector: RageConnectorService) {
     console.log("Map voting listener started.");
     rageConnector.listen(DFromClientEvent.LoadMapVoting, this.loadMapVoting.bind(this));
     rageConnector.listen(DFromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
-    rageConnector.listen(DFromClientEvent.AddVoteToMap, this.addVoteToMap.bind(this));
     rageConnector.listen(DFromClientEvent.AddMapToVoting, this.addMapToVoting.bind(this));
-    rageConnector.listen(DFromClientEvent.RemoveMapFromVoting, this.removeMapFromVoting.bind(this));
+    rageConnector.listen(DFromClientEvent.SetMapVotes, this.setMapVotes.bind(this));
   }
 }

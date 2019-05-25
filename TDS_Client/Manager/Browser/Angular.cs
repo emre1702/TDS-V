@@ -80,14 +80,9 @@ namespace TDS_Client.Manager.Browser
             Execute(DToBrowserEvent.AddMapToVoting, mapVoteJson);
         }
 
-        public static void RemoveMapFromVoting(int mapId)
+        public static void SetMapVotes(int mapId, int amountVotes)
         {
-            Execute(DToBrowserEvent.RemoveMapFromVoting, mapId);
-        }
-
-        public static void AddVoteToMap(int mapId, int oldMapId)
-        {
-            Execute(DToBrowserEvent.AddVoteToMap, mapId, oldMapId);
+            Execute(DToBrowserEvent.SetMapVotes, mapId, amountVotes);
         }
 
         public static void LoadMapVoting(string mapVotesJson)

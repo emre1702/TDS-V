@@ -30,6 +30,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (_mapVotes.Any(m => m.Id == mapId))
             {
+                RemovePlayerVote(player.Client);
                 AddVoteToMap(player.Client, mapId);
                 return;
             }
@@ -39,37 +40,49 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
                 return;
             }
+
             MapDto? map = MapsLoader.GetMapById(mapId);
             if (map == null)
                 map = MapCreator.GetMapById(mapId);
             if (map == null)
                 return;
+
+            RemovePlayerVote(player.Client);
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
+            _playerVotes[player.Client] = mapId;
             SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, JsonConvert.SerializeObject(mapVote));
         }
 
         private void AddVoteToMap(Client player, int mapId)
         {
-            if (_playerVotes.ContainsKey(player))
-            {
-                int oldVote = _playerVotes[player];
-                _playerVotes.Remove(player);
-
-                MapVoteDto? oldVotedMap = _mapVotes.FirstOrDefault(m => m.Id == oldVote);
-                if (oldVotedMap != null && --oldVotedMap.AmountVotes <= 0)
-                {
-                    _mapVotes.RemoveAll(m => m.Id == oldVote);
-                    SendAllPlayerEvent(DToClientEvent.RemoveMapFromVoting, null, oldVote);
-                    SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId);
-                }
-                else
-                    SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId, oldVote);
-            }
-            else
-                SendAllPlayerEvent(DToClientEvent.AddVoteToMap, null, mapId);
             _playerVotes[player] = mapId;
-            ++_mapVotes.First(m => m.Id == mapId).AmountVotes;
+            var map = _mapVotes.First(m => m.Id == mapId);
+            ++map.AmountVotes;
+            SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, mapId, map.AmountVotes);
+        }
+
+        private void RemovePlayerVote(Client player)
+        {
+            if (!_playerVotes.ContainsKey(player))
+                return;
+
+            int oldVote = _playerVotes[player];
+            _playerVotes.Remove(player);
+
+            MapVoteDto? oldVotedMap = _mapVotes.FirstOrDefault(m => m.Id == oldVote);
+            if (oldVotedMap == null)
+            {
+                SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, oldVote, 0);
+                return;
+            }
+            if (--oldVotedMap.AmountVotes <= 0)
+            {
+                _mapVotes.RemoveAll(m => m.Id == oldVote);
+                SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, oldVote, 0);
+                return;
+            }
+            SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, oldVote, oldVotedMap.AmountVotes);
         }
 
         private MapDto? GetVotedMap()

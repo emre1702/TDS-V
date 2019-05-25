@@ -111,7 +111,6 @@ namespace TDS_Client.Manager
         private void AddToClientEvents()
         {
             Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
-            Add(DToClientEvent.AddVoteToMap, OnAddVoteToMapServerMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
             Add(DToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
@@ -140,12 +139,12 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
-            Add(DToClientEvent.RemoveMapFromVoting, OnRemoveMapFromVotingMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
             Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
             Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
+            Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
@@ -402,13 +401,6 @@ namespace TDS_Client.Manager
             Angular.AddMapToVoting(mapVoteJson);
         }
 
-        private void OnAddVoteToMapServerMethod(object[] args)
-        {
-            int newMapId = (int)args[0];
-            int oldMapId = args.Length > 1 ? (int)args[1] : -1;
-            Angular.AddVoteToMap(newMapId, oldMapId);
-        }
-
         private void OnStartRegisterLoginMethod(object[] args)
         {
             string scname = (string)args[0];
@@ -434,10 +426,11 @@ namespace TDS_Client.Manager
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
         }
 
-        private void OnRemoveMapFromVotingMethod(object[] args)
+        private void OnSetMapVotesMethod(object[] args)
         {
             int mapId = (int)args[0];
-            Angular.RemoveMapFromVoting(mapId);
+            int amountVotes = (int)args[1];
+            Angular.SetMapVotes(mapId, amountVotes);
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)
