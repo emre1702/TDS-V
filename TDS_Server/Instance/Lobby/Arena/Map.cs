@@ -63,7 +63,7 @@ namespace TDS_Server.Instance.Lobby
                     var position = spawns.ToVector3();
                     if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
                         continue;
-                    position.Add(position);
+                    regions.Add(position);
 
                     Blip blip = NAPI.Blip.CreateBlip(pos: position, dimension: Dimension);
                     blip.Sprite = 491;
