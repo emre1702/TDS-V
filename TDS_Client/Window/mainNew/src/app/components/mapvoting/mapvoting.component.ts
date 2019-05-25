@@ -115,6 +115,8 @@ export class MapVotingComponent implements OnInit {
       return;
 
     const voteIndex = parseInt(event.key, 10) - 1;
+    if (this.voting.mapsInVoting.length <= voteIndex)
+      return;
     this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex].Id);
   }
 }
