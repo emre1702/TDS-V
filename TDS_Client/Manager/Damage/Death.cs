@@ -11,6 +11,8 @@ namespace TDS_Client.Manager.Damage
         public static void PlayerSpawn()
         {
             Cam.DoScreenFadeIn(Settings.ScreenFadeInTimeAfterSpawn);
+            Graphics.StopScreenEffect(DEffectName.DEATHFAILMPIN);
+            Cam.SetCamEffect(0);
         }
 
         public static void PlayerDeath(Player player)
@@ -20,8 +22,9 @@ namespace TDS_Client.Manager.Damage
             Cam.DoScreenFadeOut(Settings.ScreenFadeOutTimeAfterSpawn);
             Misc.IgnoreNextRestart(true);
             Misc.SetFadeOutAfterDeath(false);
-            Audio.RequestScriptAudioBank(DAudioRef.HUD_MINI_GAME_SOUNDSET, true, 0);
-            Audio.PlaySoundFrontend(-1, DAudioName.CHECKPOINT_NORMAL, DAudioRef.HUD_MINI_GAME_SOUNDSET, true);
+            Audio.PlaySoundFrontend(-1, DAudioName.BED, DAudioRef.WASTEDSOUNDS, true);
+            Cam.SetCamEffect(1);
+            Graphics.StartScreenEffect(DEffectName.DEATHFAILMPIN, 0, true);
 
             ScaleformMessage.ShowWastedMessage();
         }

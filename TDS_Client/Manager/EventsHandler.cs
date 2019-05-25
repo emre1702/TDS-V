@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using RAGE;
 using RAGE.Elements;
-using RAGE.NUI;
-using RAGE.Ui;
+using RAGE.Game;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using TDS_Client.Default;
-using TDS_Client.Enum;
 using TDS_Client.Instance.Draw;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Account;
@@ -21,11 +18,11 @@ using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Common.Instance.Utility;
-using TDS_Common.Manager.Utility;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;
+using Player = RAGE.Elements.Player;
+using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager
 {
@@ -199,6 +196,8 @@ namespace TDS_Client.Manager
 
         private void OnMapChangeMethod(object[] args)
         {
+            Graphics.StopScreenEffect(DEffectName.DEATHFAILMPIN);
+            Cam.SetCamEffect(0);
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();

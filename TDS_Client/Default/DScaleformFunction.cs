@@ -7,6 +7,7 @@
         public static string SHOW_SHARD_MIDSIZED_MESSAGE => "SHOW_SHARD_MIDSIZED_MESSAGE";
         public static string SHOW_PLANE_MESSAGE => "SHOW_PLANE_MESSAGE";
         public static string SHOW_SHARD_CENTERED_MP_MESSAGE => "SHOW_SHARD_CENTERED_MP_MESSAGE";
+        public static string SHOW_SHARD_WASTED_MP_MESSAGE  = "SHOW_SHARD_WASTED_MP_MESSAGE";
         public static string SHOW_WASTED_MP_MESSAGE => "SHOW_WASTED_MP_MESSAGE";
         public static string SHOW_WEAPON_PURCHASED => "SHOW_WEAPON_PURCHASED";
 
