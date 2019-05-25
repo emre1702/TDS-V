@@ -17,7 +17,7 @@ export class OrderByPipe implements PipeTransform {
     return 0; // equal each other
   }
 
-  transform(input: any, [config = '+']): any {
+  transform(input: any, config: any = '+'): any {
 
     if (!Array.isArray(input)) return input;
 

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { MapDataDto } from './models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
@@ -8,6 +8,8 @@ import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
+import { OrderByPipe } from 'src/app/pipes/orderby.pipe';
+import { MapVoteDto } from './models/mapVoteDto';
 
 @Component({
   selector: 'app-mapvoting',
@@ -42,7 +44,7 @@ export class MapVotingComponent implements OnInit {
   @ViewChild('snav') snav: MatSidenav;
 
   constructor(public settings: SettingsService, public voting: MapVotingService, private rageConnector: RageConnectorService,
-              public changeDetector: ChangeDetectorRef) {
+              public changeDetector: ChangeDetectorRef, private orderByPipe: OrderByPipe) {
     this.rageConnector.listen(DFromClientEvent.OpenMapMenu, this.activate.bind(this));
     this.rageConnector.listen(DFromClientEvent.CloseMapMenu, () => this.deactivate(false));
   }
@@ -103,5 +105,16 @@ export class MapVotingComponent implements OnInit {
   voteForMapId(mapId: number) {
     this.voting.voteForMapId(mapId);
     this.changeDetector.detectChanges();
+  }
+
+  @HostListener("document:keyup", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (!event.code.startsWith("Numpad"))
+      return;
+    if (!this.voting.mapsInVoting.length || this.settings.InTeamOrderModus)
+      return;
+
+    const voteIndex = parseInt(event.key, 10) - 1;
+    this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex].Id);
   }
 }
