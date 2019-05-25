@@ -114,7 +114,10 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshTime()
         {
-            double timems = Math.Max(0, (ulong)Settings.RoundTime * 1000 - (TimerManager.ElapsedTicks - _startedTick));
+            var elapsedMs = (int)(TimerManager.ElapsedTicks - _startedTick);
+            double timems = 0;
+            if (Settings.RoundTime * 1000 > elapsedMs)
+                timems = (ulong)Settings.RoundTime * 1000 - (TimerManager.ElapsedTicks - _startedTick);
             _timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
