@@ -335,19 +335,19 @@ namespace TDS_Client.Manager
 
         private void OnClearTeamPlayersMethod(object[] args)
         {
-            Team.SameTeamPlayers.Clear();
+            Team.ClearSameTeam();
         }
 
         private void OnPlayerJoinedTeamMethod(object[] args)
         {
             Player player = (Player)args[0];
-            Team.SameTeamPlayers.Add(player);
+            Team.AddSameTeam(player);
         }
 
         private void OnPlayerLeftTeamMethod(object[] args)
         {
             Player player = (Player)args[0];
-            Team.SameTeamPlayers.Remove(player);
+            Team.RemoveSameTeam(player);
         }
 
         private void OnPlayerTeamChangeMethod(object[] args)
@@ -457,13 +457,13 @@ namespace TDS_Client.Manager
 
         private void OnSyncTeamPlayersMethod(object[] args)
         {
-            Team.SameTeamPlayers.Clear();
+            Team.ClearSameTeam();
             IEnumerable<int> listOfPlayerHandles = JsonConvert.DeserializeObject<IEnumerable<int>>(args[0].ToString());
             foreach (var handle in listOfPlayerHandles)
             {
                 Player player = Entities.Players.GetAtHandle(handle);
                 if (player != null)
-                    Team.SameTeamPlayers.Add(player);
+                    Team.AddSameTeam(player);
             }
         }
 

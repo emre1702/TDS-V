@@ -40,7 +40,7 @@ namespace TDS_Client.Manager.Damage
             if (hitted == null)
                 return;
 
-            if (Team.SameTeamPlayers.Contains(hitted))
+            if (Team.IsInSameTeam(hitted))
             {
                 // debug //
                 Chat.Output("Hitted a team member");

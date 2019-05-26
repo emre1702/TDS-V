@@ -1,10 +1,20 @@
-﻿using GTANetworkAPI;
+﻿using System.Threading.Tasks;
+using GTANetworkAPI;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class FightLobby
     {
+        public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex)
+        {
+            if (!await base.AddPlayer(player, teamindex))
+                return false;
+            player.Client.Invincible = false;
+
+            return true;
+        }
+
         public override void RemovePlayer(TDSPlayer character)
         {
             base.RemovePlayer(character);

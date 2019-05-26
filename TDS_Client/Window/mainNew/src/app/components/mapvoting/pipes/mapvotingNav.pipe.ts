@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { MapDataDto } from '../models/mapDataDto';
+import { MapDataDto } from '../../../models/mapDataDto';
 import { SettingsService } from '../../../services/settings.service';
 import { MapVotingService } from '../services/mapvoting.service';
 import { MapType } from '../enums/maptype.enum';

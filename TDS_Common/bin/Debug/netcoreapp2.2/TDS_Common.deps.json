@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    "signature": ""
   },
   "compilationOptions": {},
   "targets": {
@@ -9,7 +9,7 @@
       "TDS_Common/1.0.0": {
         "dependencies": {
           "NeoSmart.Hashing": "0.1.0.0",
-          "Newtonsoft.Json": "11.0.0.0",
+          "Newtonsoft.Json": "12.0.0.0",
           "xxHash": "0.3.0.0"
         },
         "runtime": {
@@ -24,11 +24,11 @@
           }
         }
       },
-      "Newtonsoft.Json/11.0.0.0": {
+      "Newtonsoft.Json/12.0.0.0": {
         "runtime": {
           "Newtonsoft.Json.dll": {
-            "assemblyVersion": "11.0.0.0",
-            "fileVersion": "11.0.2.21924"
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.1.22727"
           }
         }
       },
@@ -53,7 +53,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Newtonsoft.Json/11.0.0.0": {
+    "Newtonsoft.Json/12.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

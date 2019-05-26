@@ -1,0 +1,34 @@
+<form id="container" class="mat-elevation-z24 mat-app-background" cdkDrag>
+  <mat-toolbar color="primary" cdkDragHandle>
+    <mat-icon (click)="saveDescription()" *ngIf="editingDescriptionLang">save</mat-icon>
+    <h1>{{ 'MapCreator' | language: settings.Lang }}</h1>
+  </mat-toolbar>
+
+  <div id="main-content" *ngIf="editingDescriptionLang == undefined">
+    <mat-form-field color="accent">
+      <input matInput placeholder="{{ 'Name' | language: settings.Lang }}" min="3" max="100" type="text" required/>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
+      <mat-select required [value]="data.Type" (selectionChange)="onMapTypeChange($event)">
+        <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
+          {{ type | language: settings.Lang }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="description-nav-buttons-container" color="accent">
+      <button class="description-nav-button" mat-raised-button type="button" (click)="switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages(); let even = even; let i=index" >
+        {{ lang | language: settings.Lang }}
+      </button>
+    </div>
+  </div>
+
+  <div id="description-content" *ngIf="editingDescriptionLang">
+    <mat-form-field color="accent">
+      <textarea #descriptionTextArea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+        placeholder="{{ editingDescriptionLang | language: settings.Lang }}-{{ 'Description' | language: settings.Lang }}" maxlength="1000" type="text">{{ data.Description[getLanguageValue(editingDescriptionLang)] }}</textarea>
+    </mat-form-field>
+  </div>
+
+    <!--  -->
+</form>

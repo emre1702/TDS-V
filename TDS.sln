@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDSCPServer", "TDS-CP-Server\TDSCPServer.csproj", "{0BF6DD23-F50F-42D2-BA43-86F5DA2E59AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server", "TDS_Server\TDS_Server.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6B6B462A-3A21-4624-9E07-F09020BCF48C} = {6B6B462A-3A21-4624-9E07-F09020BCF48C}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client", "TDS_Client\TDS_Client.csproj", "{6B6B462A-3A21-4624-9E07-F09020BCF48C}"
 EndProject

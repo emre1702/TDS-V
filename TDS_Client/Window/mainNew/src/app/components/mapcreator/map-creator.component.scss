@@ -1,0 +1,56 @@
+#container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 1%;
+  right: 1%;
+  height: auto;
+  max-height: 60%;
+  width: 20%;
+  opacity: 0.95;
+  overflow-y: auto;
+}
+
+textarea {
+  max-height: 50%;
+  overflow-y: auto;
+}
+
+h1 {
+  margin-left: 8px;
+  flex: 1 1 auto;
+  text-align: center !important;
+}
+
+.mat-form-field:first-of-type {
+  margin-top: 5%;
+}
+
+.mat-form-field {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.mat-toolbar {
+  height: 10%;
+  text-align: center !important;
+}
+
+.description-nav-buttons-container {
+  overflow: hidden;
+  padding-right: 5%;
+}
+
+.description-nav-button {
+  float: left;
+  width: 45%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+}
+
+#main-content {
+  width: 100%;
+  height: 100%;
+}

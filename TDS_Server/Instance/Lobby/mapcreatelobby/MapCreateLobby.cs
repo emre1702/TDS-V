@@ -6,6 +6,8 @@ namespace TDS_Server.Instance.Lobby
     {
         public MapCreateLobby(Lobbies entity) : base(entity)
         {
+            LobbyEntity.IsTemporary = false;
+            LobbyEntity.IsOfficial = false;
         }
     }
 }

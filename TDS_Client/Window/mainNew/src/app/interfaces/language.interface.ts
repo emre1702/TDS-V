@@ -1,5 +1,6 @@
 export interface Language {
     MapVoting: string;
+    MapCreator: string;
     All: string;
     Normal: string;
     Bomb: string;
@@ -7,6 +8,11 @@ export interface Language {
     Voting: string;
     Vote: string;
     Creator: string;
+    Name: string;
+    German: string;
+    English: string;
+    Description: string;
+    Type: string;
 
     ATTACK: string;
     BACK: string;

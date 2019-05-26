@@ -1,6 +1,6 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { MapDataDto } from './models/mapDataDto';
+import { MapDataDto } from '../../models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from '../../services/rage-connector.service';
@@ -9,7 +9,6 @@ import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
 import { OrderByPipe } from 'src/app/pipes/orderby.pipe';
-import { MapVoteDto } from './models/mapVoteDto';
 
 @Component({
   selector: 'app-mapvoting',
@@ -32,7 +31,8 @@ import { MapVoteDto } from './models/mapVoteDto';
     )
   ],
   templateUrl: './mapvoting.component.html',
-  styleUrls: ['./mapvoting.component.scss']
+  styleUrls: ['./mapvoting.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapVotingComponent implements OnInit {
 
@@ -109,6 +109,8 @@ export class MapVotingComponent implements OnInit {
 
   @HostListener("document:keyup", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.code == undefined)
+      return;
     if (!event.code.startsWith("Numpad"))
       return;
     if (!this.voting.mapsInVoting.length || this.settings.InTeamOrderModus)

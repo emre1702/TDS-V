@@ -13,10 +13,10 @@ namespace TDS_Client.Manager.Lobby
     internal static class Team
     {
         public static SyncedTeamDataDto[] CurrentLobbyTeams;
-        public static List<Player> SameTeamPlayers { get; set; } = new List<Player>();
+        private static HashSet<Player> _sameTeamPlayers { get; set; } = new HashSet<Player>();
         public static string CurrentTeamName { get; set; } = "Login/Register";
 
-        private static bool activated;
+        private static bool _activated;
 
         public static void Init()
         {
@@ -29,15 +29,35 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
+        public static void AddSameTeam(Player player)
+        {
+            _sameTeamPlayers.Add(player);
+        }
+
+        public static void RemoveSameTeam(Player player)
+        {
+            _sameTeamPlayers.Remove(player);
+        }
+
+        public static void ClearSameTeam()
+        {
+            _sameTeamPlayers.Clear();
+        }
+
+        public static bool IsInSameTeam(Player player)
+        {
+            return _sameTeamPlayers.Contains(player);
+        }
+
         public static void ToggleOrderMode(ConsoleKey _)
         {
-            activated = !activated;
-            Angular.ToggleTeamOrderModus(activated);
+            _activated = !_activated;
+            Angular.ToggleTeamOrderModus(_activated);
         }
 
         private static void GiveOrder(ConsoleKey key)
         {
-            if (!activated)
+            if (!_activated)
                 return;
             ETeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);

@@ -12,18 +12,24 @@ import {
   MatToolbarModule,
   MatSidenavModule,
   MatIconModule,
-  MatListModule
+  MatListModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatOptionModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
 import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
 import { OrderByPipe } from './pipes/orderby.pipe';
+import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapVotingComponent,
     TeamOrdersComponent,
+    MapCreatorComponent,
     OrderByPipe,
     MapVotingNavPipe,
     LanguagePipe
@@ -37,8 +43,12 @@ import { OrderByPipe } from './pipes/orderby.pipe';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule
   ],
-  providers: [],
+  providers: [OrderByPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
