@@ -15,6 +15,10 @@ export class English implements Language {
     English = "English";
     Description = "description";
     Type = "Type";
+    TeamSpawns = "Team-spawns";
+    MapLimit = "Map-limit";
+    MapCenter = "Map-center";
+    BombPlaces = "Bomb-places";
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

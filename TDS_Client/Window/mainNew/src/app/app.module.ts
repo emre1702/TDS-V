@@ -16,7 +16,8 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatSelectModule,
-  MatOptionModule
+  MatOptionModule,
+  MatTableModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -46,7 +47,8 @@ import { MapCreatorComponent } from './components/mapcreator/map-creator.compone
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatTableModule
   ],
   providers: [OrderByPipe],
   bootstrap: [AppComponent],

@@ -11,6 +11,10 @@ export class German extends English {
   English = "Englisch";
   Description = "Beschreibung";
   Type = "Typ";
+  TeamSpawns = "Team-Spawns";
+  MapLimit = "Map-Limit";
+  MapCenter = "Map-Zentrum";
+  BombPlaces = "Bomben-Spots";
 
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";

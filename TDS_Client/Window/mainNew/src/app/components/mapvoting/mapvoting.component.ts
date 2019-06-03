@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { MapDataDto } from '../../models/mapDataDto';
+import { MapDataDto } from './models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from '../../services/rage-connector.service';

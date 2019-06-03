@@ -13,6 +13,10 @@ export interface Language {
     English: string;
     Description: string;
     Type: string;
+    TeamSpawns: string;
+    MapLimit: string;
+    MapCenter: string;
+    BombPlaces: string;
 
     ATTACK: string;
     BACK: string;
