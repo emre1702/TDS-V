@@ -11,6 +11,7 @@ export class English implements Language {
     Vote = "Vote";
     Creator = "Creator";
     Name = "Name";
+    MapSettings = "Map-settings";
     German = "German";
     English = "English";
     Description = "description";
@@ -19,6 +20,21 @@ export class English implements Language {
     MapLimit = "Map-limit";
     MapCenter = "Map-center";
     BombPlaces = "Bomb-places";
+    NumberShort = "No.";
+    Remove = "Remove";
+    AddPos = "Add position";
+    RemovePos = "Remove position";
+    Teleport = "Teleport";
+    MapCenterInfo = `This position is only used for the camera at the countdown.
+        Leave the inputs empty if you want the server to calculate the map-center by itself.`;
+    MinPlayers = "Min. players";
+    MaxPlayers = "Max. players";
+    CouldNotDeserialize = "Map could not be created. Please contact a developer.";
+    NameAlreadyExists = "The name already exists.";
+    Unknown = "Unknown error.";
+    Cooldown = "Please wait a bit before sending again.";
+    MapCreatedSuccessfully = "The map was successfully created/saved.";
+    SavedMapLoadSuccessful = "Loading map was successful.";
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

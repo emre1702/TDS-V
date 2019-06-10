@@ -4,6 +4,7 @@ using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -67,6 +68,15 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.Chat.SendChatMessageToPlayer(player, player.GetChar().Language.LOBBY_DOESNT_EXIST);
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
+        }
+
+        [RemoteEvent(DToServerEvent.JoinMapCreator)]
+        public static async void JoinMapCreatorEvent(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+           MapCreateLobby.Create(player);
         }
 
         #endregion Lobby
@@ -193,6 +203,46 @@ namespace TDS_Server.Instance.Lobby
         }
 
         #endregion Map Rating
+
+        #region MapCreator
+        [RemoteEvent(DToServerEvent.SendMapCreatorData)]
+        public async void OnSendMapCreatorData(Client client, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            EMapCreateError err = await MapCreator.Create(player, json, false);
+            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SendMapCreatorReturn, (int)err);
+        }
+
+        [RemoteEvent(DToServerEvent.SaveMapCreatorData)]
+        public async void OnSaveMapCreatorData(Client client, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            EMapCreateError err = await MapCreator.Create(player, json, true);
+            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SaveMapCreatorReturn, (int)err);
+        }
+
+        [RemoteEvent(DToServerEvent.LoadMySavedMap)]
+        public void OnLoadMySavedMap(Client client, string mapName)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            MapCreator.SendPlayerHisSavedMap(player, mapName);
+        }
+
+        [RemoteEvent(DToServerEvent.LoadMySavedMapNames)]
+        public void OnLoadMySavedMapNames(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            MapCreator.SendPlayerHisSavedMapNames(player);
+        }
+        #endregion MapCreator
 
         #endregion Remote
 

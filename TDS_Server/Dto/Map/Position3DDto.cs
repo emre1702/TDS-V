@@ -1,8 +1,9 @@
-﻿using System.Xml.Serialization;
+﻿using GTANetworkAPI;
+using System.Xml.Serialization;
 
 namespace TDS_Common.Dto.Map
 {
-    public class MapPositionDto
+    public class Position3DDto
     {
         [XmlAttribute("x")]
         public float X { get; set; }
@@ -13,7 +14,9 @@ namespace TDS_Common.Dto.Map
         [XmlAttribute("z")]
         public float Z { get; set; }
 
-        [XmlAttribute("rot")]
-        public float Rotation { get; set; }
+        public Vector3 ToVector3()
+        {
+            return new Vector3(X, Y, Z);
+        }
     }
 }

@@ -15,14 +15,14 @@ namespace TDS_Client.Instance.Lobby
     internal class MapLimit
     {
         private float minX, minY, maxX, maxY;
-        private MapPositionDto[] edges;
+        private Position4DDto[] edges;
         private int maxOutsideCounter;
 
         private int outsideCounter;
         private DxText info;
         private TDSTimer checkTimer;
 
-        public MapLimit(MapPositionDto[] edges)
+        public MapLimit(Position4DDto[] edges)
         {
             this.edges = edges;
             if (edges.Length == 0)
@@ -90,8 +90,8 @@ namespace TDS_Client.Instance.Lobby
             bool inside = false;
             for (int i = 0, j = edges.Length - 1; i < edges.Length; j = i++)
             {
-                MapPositionDto iPoint = edges[i];
-                MapPositionDto jPoint = edges[j];
+                Position4DDto iPoint = edges[i];
+                Position4DDto jPoint = edges[j];
                 bool intersect = ((iPoint.Y > point.Y) != (jPoint.Y > point.Y))
                         && (point.X < (jPoint.X - iPoint.X) * (point.Y - iPoint.Y) / (jPoint.Y - iPoint.Y) + iPoint.X);
                 if (intersect)

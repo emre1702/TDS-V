@@ -121,9 +121,12 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.Death, OnDeathMethod);
             //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
+            Add(DToClientEvent.JoinMapCreatorLobby, OnJoinMapCreatorLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
+            Add(DToClientEvent.LoadMySavedMap, OnLoadMySavedMapFromServerMethod);
+            Add(DToClientEvent.LoadMySavedMapNames, OnLoadMySavedMapNamesFromServerMethod);
             Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
             Add(DToClientEvent.MapClear, OnMapClearMethod);
@@ -141,6 +144,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
+            Add(DToClientEvent.SendMapCreatorReturn, OnSendMapCreatorReturnMethod);
             Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
             Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
@@ -176,6 +180,11 @@ namespace TDS_Client.Manager
             MainBrowser.HideRoundEndReason();
         }
 
+        private void OnJoinMapCreatorLobbyMethod(object[] args)
+        {
+            Lobby.Lobby.JoinedMapCreator();
+        }
+
         private void OnJoinSameLobbyMethod(object[] args)
         {
             Players.Load((Player)args[0]);
@@ -194,6 +203,18 @@ namespace TDS_Client.Manager
             Angular.LoadFavoriteMaps(mapFavoritesJson);
         }
 
+        private void OnLoadMySavedMapFromServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.LoadMySavedMap(json);
+        }
+
+        private void OnLoadMySavedMapNamesFromServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.LoadMySavedMapNames(json);
+        }
+
         private void OnMapChangeMethod(object[] args)
         {
             Graphics.StopScreenEffect(DEffectName.DEATHFAILMPIN);
@@ -201,7 +222,7 @@ namespace TDS_Client.Manager
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = JsonConvert.DeserializeObject<MapPositionDto[]>((string)args[1]);
+            var maplimit = JsonConvert.DeserializeObject<Position4DDto[]>((string)args[1]);
             if (maplimit.Length > 0)
                 MapLimitManager.Load(maplimit);
             LobbyCam.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
@@ -265,6 +286,12 @@ namespace TDS_Client.Manager
             MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
         }
 
+        private void OnSendMapCreatorReturnMethod(object[] args)
+        {
+            int err = (int)args[0];
+            Angular.SendMapCreatorReturn(err);
+        }
+
         private void OnSetAssistsForRoundStatsMethod(object[] args)
         {
             RoundInfo.CurrentAssists = (int)args[0];
@@ -299,7 +326,7 @@ namespace TDS_Client.Manager
 
         private void OnPlayerGotBombMethod(object[] args)
         {
-            Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<MapPositionDto[]>((string)args[0]));
+            Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<Position4DDto[]>((string)args[0]));
         }
 
         private void OnPlayerMoneyChangeMethod(object[] args)
@@ -476,14 +503,22 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseLobbyToJoin, OnChooseLobbyToJoinMethod);
+            Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
+            Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
+            Add(DFromBrowserEvent.LoadMySavedMap, OnLoadMySavedMapFromBrowserMethod);
+            Add(DFromBrowserEvent.LoadMySavedMapNames, OnLoadMySavedMapsFromBrowserMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
+            Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
+            Add(DFromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
+            Add(DFromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
             Add(DFromBrowserEvent.ToggleMapFavorite, OnToggleMapFavoriteMethod);
 
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
@@ -509,6 +544,11 @@ namespace TDS_Client.Manager
             Choice.JoinLobby((int)args[0], (int)args[1]);
         }
 
+        private void OnChooseMapCreatorToJoinMethod(object[] args)
+        {
+            Choice.JoinMapCreator();
+        }
+
         private void OnBrowserSendMapRatingMethod(object[] args)
         {
             string mapName = (string)args[0];
@@ -524,6 +564,22 @@ namespace TDS_Client.Manager
         private void OnCloseMapVotingMenuMethod(object[] args)
         {
             MapManager.CloseMenu(false);
+        }
+
+        private void OnGetCurrentPositionRotationMethod(object[] args)
+        {
+            Angular.SendCurrentPositionRotation();
+        }
+
+        private void OnLoadMySavedMapFromBrowserMethod(object[] args)
+        {
+            string mapName = (string)args[0];
+            EventsSender.Send(DToServerEvent.LoadMySavedMap, mapName);
+        }
+
+        private void OnLoadMySavedMapsFromBrowserMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LoadMySavedMapNames);
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -573,9 +629,44 @@ namespace TDS_Client.Manager
             Settings.LanguageEnum = (ELanguage)languageID;
         }
 
+        private void OnSaveMapCreatorDataMethod(object[] args)
+        {
+            string json = (string)args[0];
+            if (!EventsSender.Send(DToServerEvent.SaveMapCreatorData, json))
+                Angular.SaveMapCreatorReturn((int)EMapCreateError.Cooldown);
+        }
+
+        private void OnSendMapCreatorDataMethod(object[] args)
+        {
+            string json = (string)args[0];
+            if (!EventsSender.Send(DToServerEvent.SendMapCreatorData, json))
+                Angular.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
+        }
+
         private void OnSyncRegisterLoginLanguageTextsMethod(object[] args)
         {
             RegisterLogin.SyncLanguage();
+        }
+
+        private void OnTeleportToXYMethod(object[] args)
+        {
+            float x = (float)args[0];
+            float y = (float)args[1];
+            float z = 0;
+            Misc.GetGroundZFor3dCoord(x, y, 9000, ref z, false);
+            Player.LocalPlayer.Position = new Vector3(x, y, z);
+
+        }
+
+        private void OnTeleportToPositionRotationMethod(object[] args)
+        {
+            //todo Add check if we are in MapManager
+            float x = (float)args[0];
+            float y = (float)args[1];
+            float z = (float)args[2];
+            float rot = (float)args[3];
+            Player.LocalPlayer.Position = new Vector3(x, y, z);
+            Player.LocalPlayer.SetHeading(rot);
         }
 
         private void OnToggleMapFavoriteMethod(object[] args)

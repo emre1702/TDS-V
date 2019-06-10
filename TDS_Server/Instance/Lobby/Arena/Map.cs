@@ -77,7 +77,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void CreateMapLimitBlips(MapDto map)
         {
-            foreach (MapPositionDto edge in map.LimitInfo.Edges)
+            foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
                 Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
                 blip.Sprite = 441;
@@ -86,7 +86,7 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        private MapPositionDto? GetMapRandomSpawnData(Team? team)
+        private Position4DDto? GetMapRandomSpawnData(Team? team)
         {
             if (_currentMap == null)
                 return null;

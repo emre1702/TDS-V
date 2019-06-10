@@ -21,7 +21,7 @@ namespace TDS_Client.Manager.Lobby
         private static EPlantDefuseStatus _playerStatus;
         private static bool _gotBomb;
         private static bool _bombPlanted;
-        private static MapPositionDto[] _plantSpots;
+        private static Position4DDto[] _plantSpots;
         private static ulong _plantDefuseStartTick;
 
         private static DxProgressRectangle _progressRect;
@@ -68,7 +68,7 @@ namespace TDS_Client.Manager.Lobby
                 CheckPlantDefuseStop();
         }
 
-        public static void LocalPlayerGotBomb(MapPositionDto[] spotstoplant)
+        public static void LocalPlayerGotBomb(Position4DDto[] spotstoplant)
         {
             DataChanged = true;
             _gotBomb = true;
@@ -167,7 +167,7 @@ namespace TDS_Client.Manager.Lobby
             if (_plantSpots == null)
                 return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
-            foreach (MapPositionDto pos in _plantSpots)
+            foreach (Position4DDto pos in _plantSpots)
             {
                 if (Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z, pos.Z != 0) <= Settings.DistanceToSpotToPlant)
                     return true;

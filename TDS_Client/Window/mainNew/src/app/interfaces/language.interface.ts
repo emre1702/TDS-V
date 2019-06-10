@@ -11,12 +11,26 @@ export interface Language {
     Name: string;
     German: string;
     English: string;
+    MapSettings: string;
     Description: string;
     Type: string;
     TeamSpawns: string;
     MapLimit: string;
     MapCenter: string;
     BombPlaces: string;
+    NumberShort: string;
+    Remove: string;
+    AddPos: string;
+    Teleport: string;
+    MapCenterInfo: string;
+    MinPlayers: string;
+    MaxPlayers: string;
+    CouldNotDeserialize: string;
+    NameAlreadyExists: string;
+    Unknown: string;
+    Cooldown: string;
+    MapCreatedSuccessfully: string;
+    SavedMapLoadSuccessful: string;
 
     ATTACK: string;
     BACK: string;

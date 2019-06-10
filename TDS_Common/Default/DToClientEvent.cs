@@ -30,6 +30,8 @@
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
         public const string LoadMapFavourites = "LoadMapFavourites_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
+        public const string LoadMySavedMap = "LoadMySavedMap_Server";
+        public const string LoadMySavedMapNames = "LoadMySavedMapNames_Server";
 
         public const string MapChange = "MapChange_Server";
         public const string MapClear = "MapClear_Server";
@@ -52,6 +54,8 @@
         public const string RoundStart = "RoundStart_Server";
         public const string RoundEnd = "RoundEnd_Server";
 
+        public const string SaveMapCreatorReturn = "SaveMapCreatorReturn_Server";
+        public const string SendMapCreatorReturn = "SendMapCreatorReturn_Server";
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";

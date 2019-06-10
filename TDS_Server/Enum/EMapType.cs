@@ -5,9 +5,9 @@ namespace TDS_Server.Enum
     public enum EMapType
     {
         [XmlEnum("normal")]
-        Normal,
+        Normal = 0,
 
         [XmlEnum("bomb")]
-        Bomb
+        Bomb = 1
     }
 }

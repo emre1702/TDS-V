@@ -17,13 +17,19 @@ import {
   MatInputModule,
   MatSelectModule,
   MatOptionModule,
-  MatTableModule
+  MatTableModule,
+  MatAutocompleteModule,
+  MatSortModule,
+  MatDialogModule,
+  MatSnackBarModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
 import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
+import { FreeroamComponent } from './components/freeroam/freeroam.component';
+import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-dialog';
 
 @NgModule({
   declarations: [
@@ -31,9 +37,11 @@ import { MapCreatorComponent } from './components/mapcreator/map-creator.compone
     MapVotingComponent,
     TeamOrdersComponent,
     MapCreatorComponent,
+    FreeroamComponent,
     OrderByPipe,
     MapVotingNavPipe,
-    LanguagePipe
+    LanguagePipe,
+    LoadMapDialog
   ],
   imports: [
     BrowserModule,
@@ -47,9 +55,14 @@ import { MapCreatorComponent } from './components/mapcreator/map-creator.compone
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatOptionModule,
-    MatTableModule
+    MatTableModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatDialogModule
   ],
+  entryComponents: [LoadMapDialog],
   providers: [OrderByPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

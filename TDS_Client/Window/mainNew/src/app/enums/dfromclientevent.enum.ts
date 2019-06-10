@@ -9,5 +9,7 @@ export enum DFromClientEvent {
   ResetMapVoting = "ResetMapVoting_Client",
   SetMapVotes = "SetMapVotes_Client",
   ToggleChatOpened = "ToggleChatOpened_Client",
-  ToggleTeamOrderModus = "ToggleTeamOrderModus_Client"
+  ToggleFreeroam = "ToggleFreeroam_Client",
+  ToggleMapCreator = "ToggleMapCreator_Client",
+  ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
 }

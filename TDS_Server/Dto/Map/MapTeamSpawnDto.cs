@@ -11,7 +11,7 @@ namespace TDS_Server.Dto.Map
         public uint TeamID { get; set; }
 
         [XmlElement("spawn")]
-        public MapPositionDto[] Spawns { get; set; }
+        public Position4DDto[] Spawns { get; set; }
     }
 
 #pragma warning enable CS8618 // Non-nullable field is uninitialized.

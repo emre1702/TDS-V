@@ -48,6 +48,7 @@ namespace TDS_Server.Manager.Utility
 
                 await MapsLoader.LoadDefaultMaps(dbcontext);
                 await MapCreator.LoadNewMaps(dbcontext);
+                await MapCreator.LoadSavedMaps(dbcontext);
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
             }

@@ -1,25 +1,41 @@
-﻿using TDS_Client.Manager.Browser;
+﻿using TDS_Client.Enum;
+using TDS_Client.Manager.Browser;
 using TDS_Common.Dto;
 
 namespace TDS_Client.Manager.Lobby
 {
     internal static class Lobby
     {
-        private static bool _inMainMenu;
+        private static EDefaultLobby _inDefaultLobby = EDefaultLobby.None;
 
         public static void Joined(SyncedLobbySettingsDto settings)
         {
-            if (_inMainMenu)
-                LeftMainMenu();
-            else
-                Left();
-            if (settings.Id == 0)
+            switch (_inDefaultLobby)
             {
-                JoinedMainmenu();
-                return;
+                case EDefaultLobby.MainMenu:
+                    LeftMainMenu();
+                    break;
+                case EDefaultLobby.MapCreator:
+                    LeftMapCreator();
+                    break;
+                default:
+                    Left();
+                    break;
             }
-            _inMainMenu = false;
-            //SetMapInfo
+
+            switch (settings.Id)
+            {
+                case 0:
+                    JoinedMainmenu();
+                    return;
+                case 1:
+                    //_inDefaultLobby = EDefaultLobby.GangLobby;
+                    //JoinedGangLobby();
+                    break;
+                default:
+                    _inDefaultLobby = EDefaultLobby.None;
+                    break;
+            }
         }
 
         private static void Left()
@@ -32,15 +48,21 @@ namespace TDS_Client.Manager.Lobby
             MapManager.CloseMenu();
             Angular.ResetMapVoting();
             RoundInfo.Stop();
-            /*stopMapCreator();
-            hideRoundEndReason();*/
         }
 
         private static void JoinedMainmenu()
         {
-            _inMainMenu = true;
+            _inDefaultLobby = EDefaultLobby.MainMenu;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Choice.Start();
+        }
+
+        public static void JoinedMapCreator()
+        {
+            _inDefaultLobby = EDefaultLobby.MapCreator;
+            RAGE.Game.Cam.DoScreenFadeIn(100);
+            Angular.ToggleMapCreator(true);
+            Angular.ToggleFreeroam(true);
         }
 
         private static void LeftMainMenu()
@@ -48,8 +70,10 @@ namespace TDS_Client.Manager.Lobby
             Choice.Stop();
         }
 
-        /*mp.events.add( "onClientPlayerJoinMapCreatorLobby", () => {
-    startMapCreator();
-} );*/
+        private static void LeftMapCreator()
+        {
+            Angular.ToggleMapCreator(false);
+            Angular.ToggleFreeroam(false);
+        }
     }
 }

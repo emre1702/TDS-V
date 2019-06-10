@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Player = RAGE.Elements.Player;
 using RAGE.Ui;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using TDS_Client.Default;
@@ -100,6 +100,13 @@ namespace TDS_Client.Manager.Browser
             Execute(DToBrowserEvent.LoadFavoriteMaps, mapFavoritesJson);
         }
 
+        public static void SendCurrentPositionRotation()
+        {
+            var pos = Player.LocalPlayer.Position;
+            var rot = Player.LocalPlayer.GetHeading();
+            Execute(DFromBrowserEvent.GetCurrentPositionRotation, pos.X, pos.Y, pos.Z, rot);
+        }
+
         public static void ToggleTeamOrderModus(bool activated)
         {
             Execute(DToBrowserEvent.ToggleTeamOrderModus, activated);
@@ -109,5 +116,36 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToBrowserEvent.ToggleChatOpened, activated);
         }
+
+        public static void ToggleFreeroam(bool activated)
+        {
+            Execute(DToBrowserEvent.ToggleFreeroam, activated);
+        }
+
+        public static void ToggleMapCreator(bool activated)
+        {
+            Execute(DToBrowserEvent.ToggleMapCreator, activated);
+        }
+
+        public static void SendMapCreatorReturn(int err)
+        {
+            Execute(DFromBrowserEvent.SendMapCreatorData, err);
+        }
+
+        public static void SaveMapCreatorReturn(int err)
+        {
+            Execute(DFromBrowserEvent.SaveMapCreatorData, err);
+        }
+
+        public static void LoadMySavedMapNames(string json)
+        {
+            Execute(DFromBrowserEvent.LoadMySavedMapNames, json);
+        }
+
+        public static void LoadMySavedMap(string json)
+        {
+            Execute(DFromBrowserEvent.LoadMySavedMap, json);
+        }
     }
+
 }

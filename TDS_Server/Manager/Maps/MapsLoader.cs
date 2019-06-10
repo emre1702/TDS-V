@@ -25,16 +25,12 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadDefaultMaps(TDSNewContext dbcontext)
         {
-            AllMaps = await LoadMaps(dbcontext, false);
+            AllMaps = await LoadMaps(dbcontext, SettingsManager.MapsPath);
         }
 
-        public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, bool newMaps)
+        public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, string path)
         {
-            List<MapDto> list;
-            if (!newMaps)
-                list = LoadMapsInDirectory(SettingsManager.MapsPath);
-            else
-                list = LoadMapsInDirectory(SettingsManager.NewMapsPath);
+            List<MapDto> list = LoadMapsInDirectory(path);
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
 

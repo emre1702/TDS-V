@@ -109,9 +109,9 @@ $(document).ready(function () {
                 $("#custom_lobby").fadeIn(2000);
                 break;
 
-            //case "join_mapcreator_lobby":
-            //    mp.trigger( "joinMapCreatorLobby" );
-            //    break;
+            case "join_mapcreator_lobby":
+                mp.trigger("ChooseLobbyToJoin_Browser", -1, 0);
+                break;
 
             case "lang_english":
                 mp.trigger("LanguageChange_Browser", 9);

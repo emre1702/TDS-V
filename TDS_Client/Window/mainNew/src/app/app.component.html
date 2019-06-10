@@ -1,3 +1,6 @@
+<!-- If there is no *ngIf it's handled in the component itself -->
+
 <app-mapvoting></app-mapvoting>
-<app-teamorders></app-teamorders>
-<app-map-creator></app-map-creator>
+<app-teamorders *ngIf="settings.InTeamOrderModus"></app-teamorders>
+<app-map-creator *ngIf="showMapCreator"></app-map-creator>
+<app-freeroam *ngIf="showFreeroam"></app-freeroam>

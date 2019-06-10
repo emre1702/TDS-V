@@ -1,3 +1,4 @@
+using GTANetworkAPI;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Common.Default;
+using TDS_Common.Dto.Map;
+using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
@@ -17,23 +21,40 @@ using DB = TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Maps
 {
-    internal static class MapCreator
+    class MapCreator
     {
         private static List<MapDto> _newCreatedMaps = new List<MapDto>();
+        private static List<MapDto> _savedMaps = new List<MapDto>();
 
-        public async static Task<bool> Create(TDSPlayer creator, string mapJson)
+        public async static Task<EMapCreateError> Create(TDSPlayer creator, string mapJson, bool onlySave)
         {
             if (creator.Entity == null)
-                return false;
+                return EMapCreateError.Unknown;
             var serializer = new XmlSerializer(typeof(MapDto));
             try
             {
-                var mapDto = (MapDto)JsonConvert.DeserializeObject(mapJson);
+                MapCreateDataDto mapCreateData;
+                try
+                {
+                    mapCreateData = (MapCreateDataDto)JsonConvert.DeserializeObject(mapJson);
+                    if (mapCreateData == null)
+                        return EMapCreateError.CouldNotDeserialize;
+                }
+                catch
+                {
+                    return EMapCreateError.CouldNotDeserialize;
+                }
+
+                if (GetMapByName(mapCreateData.Name) != null || MapsLoader.GetMapByName(mapCreateData.Name) != null)
+                    return EMapCreateError.NameAlreadyExists;
+
+                var mapDto = new MapDto(creator, mapCreateData);
+
                 mapDto.LoadSyncedData();
                 //mapDto.SyncedData.CreatorName = creator.Client.Name;
 
                 string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
-                string mapPath = SettingsManager.NewMapsPath + Utils.MakeValidFileName(mapFileName);
+                string mapPath = (onlySave ? SettingsManager.SavedMapsPath : SettingsManager.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
 
                 MemoryStream memStrm = new MemoryStream();
                 UTF8Encoding utf8e = new UTF8Encoding();
@@ -45,32 +66,44 @@ namespace TDS_Server.Manager.Maps
                 string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml);
 
-                using var dbContext = new TDSNewContext();
-                var dbMap = new DB.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name, InTesting = true };
-                await dbContext.Maps.AddAsync(dbMap);
-                await dbContext.SaveChangesAsync();
+                if (!onlySave)
+                {
+                    using var dbContext = new TDSNewContext();
+                    var dbMap = new DB.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
+                    await dbContext.Maps.AddAsync(dbMap);
+                    await dbContext.SaveChangesAsync();
 
-                mapDto.SyncedData.Id = dbMap.Id;
-                mapDto.RatingAverage = 5;
+                    mapDto.SyncedData.Id = dbMap.Id;
+                    mapDto.RatingAverage = 5;
 
-                _newCreatedMaps.Add(mapDto);
+                    _newCreatedMaps.Add(mapDto);
+                }
+                else
+                {
+                    _savedMaps.Add(mapDto);
+                }
 
-                return true;
+                return EMapCreateError.MapCreatedSuccessfully;
             }
             catch
             {
-                return false;
+                return EMapCreateError.Unknown;
             }
         }
 
         public static async Task LoadNewMaps(TDSNewContext dbContext)
         {
-            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, true);
+            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NewMapsPath);
             foreach (var map in _newCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
                 map.SyncedData.CreatorName = string.Empty;
             }
+        }
+
+        public static async Task LoadSavedMaps(TDSNewContext dbContext)
+        {
+            _savedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.SavedMapsPath);
         }
 
         public static MapDto? GetRandomNewMap()
@@ -88,6 +121,23 @@ namespace TDS_Server.Manager.Maps
         public static MapDto? GetMapByName(string mapName)
         {
             return _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+        }
+
+        public static void SendPlayerHisSavedMap(TDSPlayer player, string mapName)
+        {
+            if (player.Entity == null)
+                return;
+            var map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            string json = JsonConvert.SerializeObject(map);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMySavedMap, json);
+        }
+
+        public static void SendPlayerHisSavedMapNames(TDSPlayer player)
+        {
+            if (player.Entity == null)
+                return;
+            string json = JsonConvert.SerializeObject(_savedMaps.Where(m => m.Info.CreatorId == player.Entity.Id).Select(m => m.Info.Name));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMySavedMapNames, json);
         }
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)

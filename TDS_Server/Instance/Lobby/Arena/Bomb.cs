@@ -49,7 +49,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (map.BombInfo == null || map.BombInfo.PlantPositions.Length == 0)
                 return;
-            foreach (MapPositionDto bombplace in map.BombInfo.PlantPositions)
+            foreach (Position3DDto bombplace in map.BombInfo.PlantPositions)
             {
                 Vector3 pos = bombplace.ToVector3();
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(

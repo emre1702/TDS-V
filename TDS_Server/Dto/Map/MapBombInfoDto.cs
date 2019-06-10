@@ -8,7 +8,7 @@ namespace TDS_Server.Dto.Map
     public class MapBombInfoDto
     {
         [XmlElement("plantpos")]
-        public MapPositionDto[] PlantPositions { get; set; }
+        public Position3DDto[] PlantPositions { get; set; }
 
         [XmlIgnore]
         public string PlantPositionsJson { get; set; }

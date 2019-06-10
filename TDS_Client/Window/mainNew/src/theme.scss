@@ -59,7 +59,7 @@ $cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 }
 
 ::-webkit-scrollbar-corner {
-  background: mat-color($dark-accent);
+  background: mat-color($dark-primary);
 }
 
 html, body, app-root {

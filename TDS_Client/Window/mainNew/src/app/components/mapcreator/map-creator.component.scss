@@ -17,20 +17,83 @@ textarea {
   overflow-y: auto;
 }
 
-h1 {
-  margin-left: 8px;
-  flex: 1 1 auto;
-  text-align: center !important;
+.mat-toolbar {
+  margin-bottom: 5%;
+
+  #back-nav {
+    float: left;
+  }
+
+  #save-nav {
+    float: right;
+  }
+
+  h1 {
+    flex: 1 1 auto;
+    text-align: center !important;
+  }
 }
 
-.mat-form-field:first-of-type {
-  margin-top: 5%;
+.positions-div {
+  height: 70vh;
+
+  .mat-table-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+    margin-right: 5%;
+    overflow: auto;
+    height: auto !important;
+  }
+
+ .mat-table-container {
+    max-height: 65%;
+  }
+
+  #team-spawns-top-row + .mat-table-container {
+    max-height: 55%;
+  }
+
+  .mat-table {
+    width: 100%;
+    max-width: 100%;
+    display: table;
+    border-collapse: collapse;
+    margin: 0px;
+    background: transparent;
+  }
 }
 
-.mat-form-field {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
+.positions-div.bomb-places-div {
+  height: 30vh;
+
+  .mat-table-container {
+    max-height: 70%;
+  }
+}
+
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}
+
+.mat-header-row {
+  min-height: 20px !important;
+  height: 4px !important;
+  line-height: 4px !important;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  padding: 0px 10px;
+  line-break: unset;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+  // border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mat-toolbar {
@@ -38,19 +101,104 @@ h1 {
   text-align: center !important;
 }
 
-.nav-buttons-container {
+.two-per-row-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   overflow: hidden;
   padding-right: 5%;
-}
 
-.nav-button {
-  float: left;
-  width: 45%;
-  margin-left: 5%;
-  margin-bottom: 5%;
+  .two-per-row-div {
+    width: 45% !important;
+    margin-left: 5%;
+    margin-bottom: 5%;
+  }
 }
 
 #main-content {
   width: 100%;
   height: 100%;
+
+  .mat-form-field {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+#team-spawns-top-row {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  overflow: hidden;
+
+  .mat-form-field {
+    width: 60%;
+    float: left;
+  }
+
+  button {
+    float: right;
+  }
+
+}
+
+#description-content {
+
+  .mat-form-field {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+  }
+}
+
+.positions-bottom-row {
+  position: absolute;
+  vertical-align: bottom;
+  bottom: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#main-bottom-buttons-row {
+  padding: 5%;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#map-center-div {
+  height: 20vh;
+
+  #map-center-info {
+    float: left;
+    margin-left: 5%;
+    margin-right: 2.5%;
+    width: 42.5%;
+  }
+
+  #map-center-positions-container {
+    float: right;
+    margin-left: 2.5%;
+    margin-right: 5%;
+    width: 42.5%;
+
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+#mapsettings-content {
+
+  .mat-form-field {
+    width: 100%;
+  }
 }

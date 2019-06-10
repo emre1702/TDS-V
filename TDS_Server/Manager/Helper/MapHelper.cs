@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Server.Dto.Map;
@@ -18,7 +17,7 @@ namespace TDS_Server.Manager.Helper
             map.SyncedData.Name = map.Info.Name;
             map.SyncedData.Description[(int)ELanguage.English] = map.Descriptions?.English;
             map.SyncedData.Description[(int)ELanguage.German] = map.Descriptions?.German;
-            map.SyncedData.Type = (EMapType)(map.Info.Type);
+            map.SyncedData.Type = (EMapType) (int)map.Info.Type;
         }
 
         public static void LoadMapRatings(this MapDto map, TDSNewContext dbContext)
@@ -34,7 +33,7 @@ namespace TDS_Server.Manager.Helper
             map.LimitInfo.EdgesJson = JsonConvert.SerializeObject(map.LimitInfo.Edges);
         }
 
-        public static MapPositionDto? GetCenter(this MapDto map)
+        public static Position3DDto? GetCenter(this MapDto map)
         {
             if (map.LimitInfo.Edges.Length == 0)
                 return map.GetCenterBySpawns();
@@ -54,12 +53,12 @@ namespace TDS_Server.Manager.Helper
             return (spawn1.Z + spawn2.Z) / 2;
         }
 
-        private static MapPositionDto? GetCenterByLimits(this MapDto map, float zpos)
+        private static Position3DDto? GetCenterByLimits(this MapDto map, float zpos)
         {
             return GetCenterOfMapPositions(map.LimitInfo.Edges, zpos) ?? GetCenterBySpawns(map);
         }
 
-        private static MapPositionDto? GetCenterOfMapPositions(MapPositionDto[] positions, float zpos = 0)
+        private static Position3DDto? GetCenterOfMapPositions(Position3DDto[] positions, float zpos = 0)
         {
             if (positions.Length <= 2)
                 return null;
@@ -68,34 +67,34 @@ namespace TDS_Server.Manager.Helper
             float centerY = 0.0f;
             float centerZ = 0.0f;
 
-            foreach (MapPositionDto point in positions)
+            foreach (Position3DDto point in positions)
             {
                 centerX += point.X;
                 centerY += point.Y;
                 centerZ += Math.Abs(zpos - (-1)) < 0.001 ? point.Z : zpos;
             }
 
-            return new MapPositionDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
+            return new Position3DDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
         }
 
-        private static MapPositionDto? GetCenterBySpawns(this MapDto map)
+        private static Position3DDto? GetCenterBySpawns(this MapDto map)
         {
             int amountteams = map.TeamSpawnsList.TeamSpawns.Length;
             if (amountteams == 1)
             {
-                return map.TeamSpawnsList.TeamSpawns[0].Spawns.FirstOrDefault();
+                return map.TeamSpawnsList.TeamSpawns[0].Spawns.FirstOrDefault().To3D();
             }
             else if (amountteams > 1)
             {
-                MapPositionDto[] positions = map.TeamSpawnsList.TeamSpawns
-                    .Select(entry => entry.Spawns[0])
+                Position3DDto[] positions = map.TeamSpawnsList.TeamSpawns
+                    .Select(entry => entry.Spawns[0].To3D())
                     .ToArray();
                 return GetCenterOfMapPositions(positions);
             }
             return null;
         }
 
-        public static Vector3 ToVector3(this MapPositionDto pos)
+        public static Vector3 ToVector3(this Position4DDto pos)
         {
             return new Vector3(pos.X, pos.Y, pos.Z);
         }

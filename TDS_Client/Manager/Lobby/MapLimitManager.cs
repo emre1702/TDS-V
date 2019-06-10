@@ -7,7 +7,7 @@ namespace TDS_Client.Manager.Lobby
     {
         private static MapLimit currentMapLimit;
 
-        public static void Load(MapPositionDto[] edges)
+        public static void Load(Position4DDto[] edges)
         {
             currentMapLimit?.Remove();
             currentMapLimit = new MapLimit(edges);

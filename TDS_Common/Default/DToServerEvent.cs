@@ -10,9 +10,12 @@
         public const string HitOtherPlayer = "HitOtherPlayer_Client";
 
         public const string JoinLobby = "JoinLobby_Client";
+        public const string JoinMapCreator = "JoinMapCreator_Client";
 
         public const string LanguageChange = "LanguageChange_Client";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
+        public const string LoadMySavedMap = "LoadMySavedMap_Client";
+        public const string LoadMySavedMapNames = "LoadMySavedMapNames_Client";
 
         public const string MapsListRequest = "MapsListRequest_Client";
         public const string MapVote = "MapVote_Client";
@@ -21,6 +24,8 @@
 
         public const string RequestPlayersForScoreboard = "RequestPlayersForScoreboard_Client";
 
+        public const string SaveMapCreatorData = "SaveMapCreatorData_Client";
+        public const string SendMapCreatorData = "SendMapCreatorData_Client";
         public const string SendMapRating = "SendMapRating_Client";
         public const string SendTeamOrder = "SendTeamOrder_Client";
         public const string StartDefusing = "StartDefusing_Client";

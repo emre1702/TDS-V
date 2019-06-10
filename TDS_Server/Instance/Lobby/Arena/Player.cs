@@ -61,7 +61,7 @@ namespace TDS_Server.Instance.Lobby
             Client player = character.Client;
             if (character.Team != null && !character.Team.IsSpectator)
             {
-                MapPositionDto? spawndata = GetMapRandomSpawnData(character.Team);
+                Position4DDto? spawndata = GetMapRandomSpawnData(character.Team);
                 if (spawndata == null)
                     return;
                 NAPI.Player.SpawnPlayer(player, spawndata.ToVector3(), spawndata.Rotation);

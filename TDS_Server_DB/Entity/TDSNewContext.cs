@@ -629,6 +629,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.NewMapsPath)
                     .IsRequired()
                     .HasMaxLength(300);
+
+                entity.Property(e => e.SavedMapsPath)
+                    .IsRequired()
+                    .HasMaxLength(300);
             });
 
             modelBuilder.Entity<Teams>(entity =>

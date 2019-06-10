@@ -15,6 +15,11 @@ namespace TDS_Client.Manager.Lobby
             //EventsSender.SendCooldown("joinMapCreatorLobby");
         }
 
+        public static void JoinMapCreator()
+        {
+            EventsSender.Send(DToServerEvent.JoinMapCreator);
+        }
+
         public static void Start()
         {
             Browser = new HtmlWindow(Constants.LobbyChoiceBrowserPath);
