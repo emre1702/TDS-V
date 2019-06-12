@@ -7,7 +7,7 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Choice
     {
-        public static HtmlWindow Browser;
+        private static HtmlWindow Browser;
 
         public static void JoinLobby(int index, int teamindex)
         {

@@ -58,13 +58,13 @@ export class MapCreatorComponent {
     this.rageConnector.callCallback(DToClientEvent.GetCurrentPositionRotation, null, (x: number, y: number, z: number, rot: number) => {
       const pos = new Position4D(x, y, z, rot);
       // need to create a new dataSource object, else table will not refresh
-      addFunc(pos);
+      addFunc.call(this, pos);
       this.changeDetector.detectChanges();
     });
   }
 
   removeSelectedPos(removeFunc: () => void) {
-    removeFunc();
+    removeFunc.call(this);
     this.changeDetector.detectChanges();
   }
 
@@ -93,6 +93,7 @@ export class MapCreatorComponent {
   addPosToMapCenter(pos: Position4D) {
     this.data.MapCenter.X = pos.X;
     this.data.MapCenter.Y = pos.Y;
+    this.data.MapCenter.Z = pos.Z;
   }
 
 

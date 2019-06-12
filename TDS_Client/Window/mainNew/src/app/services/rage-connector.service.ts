@@ -63,14 +63,17 @@ export class RageConnectorService {
    * @param args Any arguments
    * @param callback Any function
    */
-  public callCallback(eventName: string, args: any[], callback: (...args: any) => void) {
+  public callCallback(eventName: string, args: any[] | undefined, callback: (...args: any) => void) {
     if (typeof mp == "undefined") // testing without RAGE
       return;
     if (!RageConnectorService.callbackEvents[eventName]) {
       RageConnectorService.callbackEvents[eventName] = [];
     }
     RageConnectorService.callbackEvents[eventName].push(callback);
-    mp.trigger(eventName, ...args);
+    if (args)
+      mp.trigger(eventName, ...args);
+    else
+      mp.trigger(eventName);
   }
 
 }

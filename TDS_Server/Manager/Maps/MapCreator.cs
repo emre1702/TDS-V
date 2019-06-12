@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Maps
                 MapCreateDataDto mapCreateData;
                 try
                 {
-                    mapCreateData = (MapCreateDataDto)JsonConvert.DeserializeObject(mapJson);
+                    mapCreateData = JsonConvert.DeserializeObject<MapCreateDataDto>(mapJson);
                     if (mapCreateData == null)
                         return EMapCreateError.CouldNotDeserialize;
                 }
@@ -48,7 +48,8 @@ namespace TDS_Server.Manager.Maps
                 if (GetMapByName(mapCreateData.Name) != null || MapsLoader.GetMapByName(mapCreateData.Name) != null)
                     return EMapCreateError.NameAlreadyExists;
 
-                var mapDto = new MapDto(creator, mapCreateData);
+                var mapDto = new MapDto(mapCreateData);
+                mapDto.Info.CreatorId = creator.Entity.Id;
 
                 mapDto.LoadSyncedData();
                 //mapDto.SyncedData.CreatorName = creator.Client.Name;

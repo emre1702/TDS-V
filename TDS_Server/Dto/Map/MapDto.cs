@@ -13,7 +13,7 @@ namespace TDS_Server.Dto.Map
 #pragma warning disable CS8618 // Non-nullable field is uninitialized.
 
     [XmlRoot("TDSMap")]
-    internal class MapDto
+    public class MapDto
     {
         [XmlElement("map")]
         public MapInfoDto Info { get; set; }
@@ -42,12 +42,12 @@ namespace TDS_Server.Dto.Map
         [XmlIgnore]
         public bool IsBomb => Info.Type == EMapType.Bomb;
 
+        public MapDto() { }
 
-        public MapDto(TDSPlayer creator, MapCreateDataDto data)
+        public MapDto(MapCreateDataDto data)
         {
             Info = new MapInfoDto
             {
-                CreatorId = creator.Entity?.Id ?? 0,
                 Name = data.Name,
                 MinPlayers = data.MinPlayers,
                 MaxPlayers = data.MaxPlayers,

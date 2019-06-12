@@ -110,7 +110,7 @@ $(document).ready(function () {
                 break;
 
             case "join_mapcreator_lobby":
-                mp.trigger("ChooseLobbyToJoin_Browser", -1, 0);
+                mp.trigger("ChooseMapCreatorToJoin_Browser");
                 break;
 
             case "lang_english":

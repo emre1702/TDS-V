@@ -189,6 +189,9 @@
       <mat-form-field color="accent">
         <input matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [value]="data.MapCenter.Y"/>
       </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [value]="data.MapCenter.Z"/>
+      </mat-form-field>
     </div>
     <div class="positions-bottom-row">
         <button mat-raised-button type="button" (click)="addNewPos(addPosToMapCenter)">

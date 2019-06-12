@@ -144,6 +144,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
+            Add(DToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
             Add(DToClientEvent.SendMapCreatorReturn, OnSendMapCreatorReturnMethod);
             Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
             Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
@@ -284,6 +285,12 @@ namespace TDS_Client.Manager
             RoundInfo.Stop();
             Angular.ResetMapVoting();
             MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
+        }
+
+        private void OnSaveMapCreatorReturnMethod(object[] args)
+        {
+            int err = (int)args[0];
+            Angular.SaveMapCreatorReturn(err);
         }
 
         private void OnSendMapCreatorReturnMethod(object[] args)
