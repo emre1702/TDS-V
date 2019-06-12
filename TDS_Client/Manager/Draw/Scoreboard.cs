@@ -57,7 +57,7 @@ namespace TDS_Client.Manager.Draw
             {
                 DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black,
                     $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
-                if (entry.PlayersStr != null)
+                if (entry.PlayersStr.Length > 0)
                 {
                     DxGridRow lobbyplayersrow = new DxGridRow(grid, null, Color.DarkGray, Color.White, entry.PlayersStr, scale: 0.25f);
                 }
