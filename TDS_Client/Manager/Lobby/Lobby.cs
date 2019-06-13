@@ -27,7 +27,7 @@ namespace TDS_Client.Manager.Lobby
             {
                 case 0:
                     JoinedMainmenu();
-                    return;
+                    break;
                 case 1:
                     //_inDefaultLobby = EDefaultLobby.GangLobby;
                     //JoinedGangLobby();
@@ -47,7 +47,6 @@ namespace TDS_Client.Manager.Lobby
             LobbyCam.StopCountdown();
             MapManager.CloseMenu();
             Angular.ResetMapVoting();
-            RoundInfo.Stop();
         }
 
         private static void JoinedMainmenu()
