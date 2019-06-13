@@ -146,9 +146,12 @@ export class MapCreatorComponent {
   loadPossibleMaps() {
     this.rageConnector.callCallback(DToClientEvent.LoadMySavedMapNames, null, (possibleMapsJson: string) => {
       const possibleMaps = JSON.parse(possibleMapsJson) as string[];
+      console.log(possibleMaps);
+      console.log(possibleMapsJson);
       const dialogRef = this.dialog.open(LoadMapDialog, {data: possibleMaps});
 
       dialogRef.beforeClosed().subscribe(loadMapStr => {
+        console.log("load: " + loadMapStr);
         if (!loadMapStr)
           return;
 

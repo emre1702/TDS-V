@@ -35,6 +35,10 @@ export class English implements Language {
     Cooldown = "Please wait a bit before sending again.";
     MapCreatedSuccessfully = "The map was successfully created/saved.";
     SavedMapLoadSuccessful = "Loading map was successful.";
+    Cancel = "Cancel";
+    ChooseAMapFromList = "Choose a map from the list!";
+    Choose = "Choose";
+    Map = "Map";
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

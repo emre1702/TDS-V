@@ -1,11 +1,15 @@
-<h1 mat-dialog-title>Hi</h1>
+<h1 mat-dialog-title>{{ 'ChooseAMapFromList' | language: settings.Lang }}</h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <input matInput >  <!--[(ngModel)]="data.animal"-->
+  <mat-form-field color="accent">
+    <mat-label>{{ 'Map' | language: settings.Lang }}</mat-label>
+    <mat-select [value]="chosenMap">
+      <mat-option *ngFor="let maps of data" [value]="maps">
+        {{ maps }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="cancel()">No Thanks</button>
-  <button mat-button cdkFocusInitial>Ok</button>   <!-- [mat-dialog-close]="data.animal" -->
+  <button mat-button (click)="cancel()">{{ 'Cancel' | language: settings.Lang }}</button>
+  <button mat-button [mat-dialog-close]="chosenMap" cdkFocusInitial>{{ 'Choose' | language: settings.Lang }}</button>
 </div>

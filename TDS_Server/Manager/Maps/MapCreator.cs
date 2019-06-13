@@ -94,7 +94,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNewMaps(TDSNewContext dbContext)
         {
-            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NewMapsPath);
+            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NewMapsPath, false);
             foreach (var map in _newCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -104,7 +104,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadSavedMaps(TDSNewContext dbContext)
         {
-            _savedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.SavedMapsPath);
+            _savedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.SavedMapsPath, true);
         }
 
         public static MapDto? GetRandomNewMap()

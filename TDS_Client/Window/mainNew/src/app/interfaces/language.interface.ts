@@ -31,6 +31,10 @@ export interface Language {
     Cooldown: string;
     MapCreatedSuccessfully: string;
     SavedMapLoadSuccessful: string;
+    Cancel: string;
+    ChooseAMapFromList: string;
+    Choose: string;
+    Map: string;
 
     ATTACK: string;
     BACK: string;

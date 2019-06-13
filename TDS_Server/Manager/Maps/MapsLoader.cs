@@ -25,12 +25,12 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadDefaultMaps(TDSNewContext dbcontext)
         {
-            AllMaps = await LoadMaps(dbcontext, SettingsManager.MapsPath);
+            AllMaps = await LoadMaps(dbcontext, SettingsManager.MapsPath, false);
         }
 
-        public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, string path)
+        public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, string path, bool isOnlySaved)
         {
-            List<MapDto> list = LoadMapsInDirectory(path);
+            List<MapDto> list = LoadMapsInDirectory(path, isOnlySaved);
 
             await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
 
@@ -42,13 +42,13 @@ namespace TDS_Server.Manager.Maps
             return list;
         }
 
-        public static List<MapDto> LoadMapsInDirectory(string path)
+        public static List<MapDto> LoadMapsInDirectory(string path, bool isOnlySaved)
         {
             var list = new List<MapDto>();
             var directoryInfo = new DirectoryInfo(path);
-            foreach (var fileInfo in directoryInfo.EnumerateFiles("*.xml", SearchOption.AllDirectories))
+            foreach (var fileInfo in directoryInfo.EnumerateFiles("*.map", SearchOption.AllDirectories))
             {
-                MapDto? map = LoadMap(fileInfo);
+                MapDto? map = LoadMap(fileInfo, isOnlySaved);
                 if (map == null)
                     continue;
                 list.Add(map);
@@ -56,7 +56,7 @@ namespace TDS_Server.Manager.Maps
             return list;
         }
 
-        public static MapDto? LoadMap(FileInfo fileInfo)
+        public static MapDto? LoadMap(FileInfo fileInfo, bool isOnlySaved)
         {
             using XmlReader reader = XmlReader.Create(fileInfo.OpenText());
             if (!_xmlSerializer.CanDeserialize(reader))
@@ -66,6 +66,9 @@ namespace TDS_Server.Manager.Maps
             }
 
             MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
+
+            if (isOnlySaved)
+                return map;
 
             if (map.LimitInfo.Center == null)
                 map.LimitInfo.Center = map.GetCenter();
