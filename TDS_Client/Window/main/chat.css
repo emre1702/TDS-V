@@ -9,21 +9,21 @@
 }
 
 #chat_div {
-    position: relative;
+    position: absolute;
+    max-width: 35vw;
+    max-height: 35vh;
     font-family: Roboto, Arial;
+    user-select: none;
 }
 
-    #chat_div *::-webkit-scrollbar {
-        width: 0px; /* remove scrollbar space */
-        background: transparent; /* optional: just make scrollbar invisible */
-    }
+#chat_div *::-webkit-scrollbar {
+    width: 0px; /* remove scrollbar space */
+    background: transparent; /* optional: just make scrollbar invisible */
+}
 
 .chat-body {
     overflow-y: scroll;
-    left: 5px;
-    max-width: 35vw;
-    max-height: 35vh;
-    padding-left: 5px;
+    padding-left: 10px;
     font-size: 1.4em;
     color: white;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
@@ -38,10 +38,10 @@
     float: left;
     clear: both;
     white-space: pre-line;
-    position: relative;
     min-height: 20px;
     top: 0px;
     line-height: 1.1em;
+    user-select: none;
 }
 
 #main-input {
@@ -65,11 +65,11 @@
     overflow: hidden;
 }
 
-    #chat_choice div {
-        float: left;
-        background-color: darkgrey;
-        width: 10%;
-        position: relative;
-        transition: background 0.8s linear;
-        height: 5%;
-    }
+#chat_choice div {
+    float: left;
+    background-color: darkgrey;
+    width: 10%;
+    position: relative;
+    transition: background 0.8s linear;
+    height: 5%;
+}
