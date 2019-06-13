@@ -10,7 +10,7 @@ export class MapCreateDataDto {
     public Description: {
         [key in LanguageEnum]: string
     } = { [7]: "", [9]: "" };
-    public TeamSpawns: Position4D[][] = [];
+    public TeamSpawns: Position4D[][] = [[]];
     public MapEdges: Position3D[] = [];
     public BombPlaces: Position3D[] = [];
     public MapCenter: Position3D = new Position3D();
