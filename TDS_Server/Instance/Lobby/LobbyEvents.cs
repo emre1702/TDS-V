@@ -242,6 +242,18 @@ namespace TDS_Server.Instance.Lobby
                 return;
             MapCreator.SendPlayerHisSavedMapNames(player);
         }
+
+        [RemoteEvent(DToServerEvent.TeleportToPositionRotation)]
+        public void OnTeleportToPositionRotation(Client client, float x, float y, float z, float rot)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (player.CurrentLobby == null || !player.CurrentLobby.IsPlayerLobbyOwner(player))
+                return;
+            player.Client.Position = new Vector3(x, y, z);
+            player.Client.Rotation = new Vector3(0, 0, rot);
+        }
         #endregion MapCreator
 
         #endregion Remote

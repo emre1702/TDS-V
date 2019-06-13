@@ -661,8 +661,7 @@ namespace TDS_Client.Manager
             float y = (float)args[1];
             float z = 0;
             Misc.GetGroundZFor3dCoord(x, y, 9000, ref z, false);
-            Player.LocalPlayer.Position = new Vector3(x, y, z);
-
+            EventsSender.Send(DToServerEvent.TeleportToPositionRotation, x, y, z + 0.3, 0);
         }
 
         private void OnTeleportToPositionRotationMethod(object[] args)
@@ -672,8 +671,7 @@ namespace TDS_Client.Manager
             float y = (float)args[1];
             float z = (float)args[2];
             float rot = (float)args[3];
-            Player.LocalPlayer.Position = new Vector3(x, y, z);
-            Player.LocalPlayer.SetHeading(rot);
+            EventsSender.Send(DToServerEvent.TeleportToPositionRotation, x, y, z, rot);
         }
 
         private void OnToggleMapFavoriteMethod(object[] args)
