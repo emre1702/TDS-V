@@ -9,6 +9,8 @@
 }
 
 #chat_div {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     max-width: 35vw;
     max-height: 35vh;
@@ -22,6 +24,7 @@
 }
 
 .chat-body {
+    flex-grow: 1;
     overflow-y: scroll;
     padding-left: 10px;
     font-size: 1.4em;
@@ -63,6 +66,7 @@
     color: white;
     margin-top: 1vh;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 #chat_choice div {
