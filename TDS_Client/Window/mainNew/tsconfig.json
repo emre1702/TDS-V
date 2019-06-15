@@ -1,5 +1,8 @@
 {
   "compileOnSave": false,
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
