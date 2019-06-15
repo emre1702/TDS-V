@@ -7,6 +7,7 @@ using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using System.Globalization;
+using System;
 
 namespace TDS_Client.Manager.Browser
 {
@@ -44,11 +45,20 @@ namespace TDS_Client.Manager.Browser
                 else if (arg is bool b)
                     strBuilder.Append($", {(b ? 1 : 0)}");
                 else if (arg is float f)
+                {
+                    f = (float) Math.Floor(f * 100) / 100;
                     strBuilder.Append($", {f.ToString(CultureInfo.InvariantCulture)}");
+                }
                 else if (arg is double d)
+                {
+                    d = Math.Floor(d * 100) / 100;
                     strBuilder.Append($", {d.ToString(CultureInfo.InvariantCulture)}");
+                }
                 else if (arg is decimal de)
+                {
+                    de = Math.Floor(de * 100)/100;
                     strBuilder.Append($", {de.ToString(CultureInfo.InvariantCulture)}");
+                }
                 else
                     strBuilder.Append($", {arg.ToString()}");
             }
