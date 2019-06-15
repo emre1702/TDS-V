@@ -657,8 +657,8 @@ namespace TDS_Client.Manager
 
         private void OnTeleportToXYMethod(object[] args)
         {
-            float x = (float)args[0];
-            float y = (float)args[1];
+            float x = Convert.ToSingle(args[0]);
+            float y = Convert.ToSingle(args[1]);
             float z = 0;
             Misc.GetGroundZFor3dCoord(x, y, 9000, ref z, false);
             EventsSender.Send(DToServerEvent.TeleportToPositionRotation, x, y, z + 0.3, 0);
@@ -666,11 +666,10 @@ namespace TDS_Client.Manager
 
         private void OnTeleportToPositionRotationMethod(object[] args)
         {
-            //todo Add check if we are in MapManager
-            float x = (float)args[0];
-            float y = (float)args[1];
-            float z = (float)args[2];
-            float rot = (float)args[3];
+            float x = Convert.ToSingle(args[0]);
+            float y = Convert.ToSingle(args[1]);
+            float z = Convert.ToSingle(args[2]);
+            float rot = Convert.ToSingle(args[3]);
             EventsSender.Send(DToServerEvent.TeleportToPositionRotation, x, y, z, rot);
         }
 

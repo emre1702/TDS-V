@@ -6,6 +6,7 @@ using System.Text;
 using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
+using System.Globalization;
 
 namespace TDS_Client.Manager.Browser
 {
@@ -40,8 +41,14 @@ namespace TDS_Client.Manager.Browser
                     strBuilder.Append($", `{JsonConvert.SerializeObject(arg)}`");
                 else if (arg is char)
                     strBuilder.Append($", '{arg}'");
-                else if (arg is bool)
-                    strBuilder.Append($", {((bool)arg ? 1 : 0)}");
+                else if (arg is bool b)
+                    strBuilder.Append($", {(b ? 1 : 0)}");
+                else if (arg is float f)
+                    strBuilder.Append($", {f.ToString(CultureInfo.InvariantCulture)}");
+                else if (arg is double d)
+                    strBuilder.Append($", {d.ToString(CultureInfo.InvariantCulture)}");
+                else if (arg is decimal de)
+                    strBuilder.Append($", {de.ToString(CultureInfo.InvariantCulture)}");
                 else
                     strBuilder.Append($", {arg.ToString()}");
             }
