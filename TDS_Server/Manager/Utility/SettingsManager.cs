@@ -33,7 +33,7 @@ namespace TDS_Server.Manager.Utility
         {
             string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             using var fileStream = new FileStream(appName + ".config", FileMode.Open);
-            using var reader = XmlReader.Create(fileStream, new XmlReaderSettings() { Async = true });
+            using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
 
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
