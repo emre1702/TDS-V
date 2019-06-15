@@ -12,8 +12,8 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
 export class AppComponent {
   title = 'TDS-V Angular';
 
-  showMapCreator = false;
-  showFreeroam = false;
+  showMapCreator = true;
+  showFreeroam = true;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {

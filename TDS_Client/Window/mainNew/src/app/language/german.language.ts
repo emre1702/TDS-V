@@ -34,6 +34,15 @@ export class German extends English {
   ChooseAMapFromList = "Wähle eine Karte aus der Liste!";
   Choose = "Auswählen";
   Map = "Karte";
+  Chars = "Zeichen";
+  FreeroamMenu = "Freeroam-Menü";
+  Spawn = "Spawnen";
+
+  Car = "Auto";
+  Helicopter = "Helikopter";
+  Plane = "Flugzeug";
+  Bike = "Motorrad";
+  Boat = "Boot";
 
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";

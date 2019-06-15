@@ -73,3 +73,20 @@ html, body, app-root {
 /*.vertical-divider-color {
   border-right-color: #e0e0e0;
 }*/
+
+.mat-toolbar {
+  height: 3.5vh !important;
+
+  #back-nav {
+    float: left;
+  }
+
+  #save-nav {
+    float: right;
+  }
+
+  h1 {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

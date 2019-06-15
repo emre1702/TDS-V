@@ -15,6 +15,7 @@
         public const string CommandUsed = "CommandUsed_Browser";
 
         public const string GetCurrentPositionRotation = "GetCurrentPositionRotation_Browser";
+        public const string GetVehicle = "GetVehicle_Browser";
 
         public const string LanguageChange = "LanguageChange_Browser";
         public const string LoadMySavedMap = "LoadMySavedMap_Browser";

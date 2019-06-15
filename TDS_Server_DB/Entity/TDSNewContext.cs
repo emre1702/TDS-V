@@ -20,6 +20,8 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
+        public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
+        public virtual DbSet<FreeroamVehicleType> FreeroamVehicleType { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
@@ -48,9 +50,21 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<WeaponTypes> WeaponTypes { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
+        // Unable to generate entity type for table 'public.pg_stat_statements'. Please see the warning messages.
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseNpgsql("Server=localhost;Database=TDSNew;User ID=tdsv;Password=ajagrebo;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
+            modelBuilder.HasPostgresExtension("pg_stat_statements")
+                .HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
 
             modelBuilder.Entity<AdminLevelNames>(entity =>
             {
@@ -138,6 +152,32 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("FK_commands_admin_levels");
             });
 
+            modelBuilder.Entity<FreeroamDefaultVehicle>(entity =>
+            {
+                entity.HasKey(e => e.VehicleTypeId)
+                    .HasName("freeroam_default_vehicle_pkey");
+
+                entity.ToTable("freeroam_default_vehicle");
+
+                entity.Property(e => e.VehicleTypeId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Note).HasColumnType("character varying");
+
+                entity.HasOne(d => d.VehicleType)
+                    .WithOne(p => p.FreeroamDefaultVehicle)
+                    .HasForeignKey<FreeroamDefaultVehicle>(d => d.VehicleTypeId)
+                    .HasConstraintName("freeroam_default_vehicle_VehicleTypeId_fkey");
+            });
+
+            modelBuilder.Entity<FreeroamVehicleType>(entity =>
+            {
+                entity.ToTable("freeroam_vehicle_type");
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+            });
+
             modelBuilder.Entity<Gangs>(entity =>
             {
                 entity.ToTable("gangs");
@@ -183,7 +223,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("lobbies");
 
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"lobbies_ID_seq\"'::regclass)");
 
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("3");
 
@@ -387,9 +427,9 @@ namespace TDS_Server_DB.Entity
                     .HasName("Index_maps_name")
                     .ForNpgsqlHasMethod("hash");
 
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"maps_ID_seq\"'::regclass)");
 
-                entity.Property(e => e.CreatorId).HasColumnName("CreatorId");
+                entity.Property(e => e.CreateTimestamp).HasDefaultValueSql("now()");
 
                 entity.Property(e => e.Name).IsRequired();
 
@@ -431,12 +471,6 @@ namespace TDS_Server_DB.Entity
                     .HasName("player_bans_pkey");
 
                 entity.ToTable("player_bans");
-
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerId");
-
-                entity.Property(e => e.LobbyId).HasColumnName("LobbyId");
-
-                entity.Property(e => e.AdminId).HasColumnName("AdminId");
 
                 entity.Property(e => e.EndTimestamp).HasColumnType("timestamp with time zone");
 
@@ -632,7 +666,8 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.SavedMapsPath)
                     .IsRequired()
-                    .HasMaxLength(300);
+                    .HasMaxLength(300)
+                    .HasDefaultValueSql("'bridge/resources/tds/savedmaps/'::character varying");
             });
 
             modelBuilder.Entity<Teams>(entity =>
@@ -686,6 +721,10 @@ namespace TDS_Server_DB.Entity
             });
 
             modelBuilder.HasSequence<short>("ID_ID_seq");
+
+            modelBuilder.HasSequence<int>("lobbies_ID_seq");
+
+            modelBuilder.HasSequence<int>("maps_ID_seq");
 
             modelBuilder.HasSequence<short>("ServerSettings_ID_seq");
         }

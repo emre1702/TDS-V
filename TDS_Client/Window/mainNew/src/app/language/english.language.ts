@@ -39,6 +39,15 @@ export class English implements Language {
     ChooseAMapFromList = "Choose a map from the list!";
     Choose = "Choose";
     Map = "Map";
+    Chars = "characters";
+    FreeroamMenu = "Freeroam-menu";
+    Spawn = "Spawn";
+
+    Car = "Car";
+    Helicopter = "Helicopter";
+    Plane = "Plane";
+    Bike = "Bike";
+    Boat = "Boat";
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

@@ -12,6 +12,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.AddRatingToMap] = new CooldownEventDto(DToServerEvent.AddRatingToMap, 1000),
             [DToServerEvent.ChatLoaded] = new CooldownEventDto(DToServerEvent.ChatLoaded, 100000),
             [DToServerEvent.CommandUsed] = new CooldownEventDto(DToServerEvent.CommandUsed, 500),
+            [DToServerEvent.GetVehicle] = new CooldownEventDto(DToServerEvent.GetVehicle, 2000),
             [DToServerEvent.JoinLobby] = new CooldownEventDto(DToServerEvent.JoinLobby, 1000),
             [DToServerEvent.JoinMapCreator] = new CooldownEventDto(DToServerEvent.JoinMapCreator, 1000),
             [DToServerEvent.LanguageChange] = new CooldownEventDto(DToServerEvent.LanguageChange, 500),

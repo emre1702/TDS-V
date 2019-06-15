@@ -249,10 +249,21 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby == null || !player.CurrentLobby.IsPlayerLobbyOwner(player))
+            if (player.CurrentLobby == null || !(player.CurrentLobby is MapCreateLobby lobby))
                 return;
-            player.Client.Position = new Vector3(x, y, z);
-            player.Client.Rotation = new Vector3(0, 0, rot);
+            lobby.SetPosition(player, x, y, z, rot);
+        }
+
+        [RemoteEvent(DToServerEvent.GetVehicle)]
+        public void OnGetVehicle(Client client, int vehTypeNumber)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (player.CurrentLobby == null || !(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            EFreeroamVehicleType vehType = (EFreeroamVehicleType)vehTypeNumber;
+            lobby.GiveVehicle(player, vehType);
         }
         #endregion MapCreator
 

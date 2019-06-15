@@ -1,3 +1,31 @@
 <form id="container" class="mat-elevation-z24 mat-app-background" cdkDrag>
+  <mat-toolbar color="primary" cdkDragHandle>
+    <h1>{{ currentTitle | language: settings.Lang }}</h1>
+  </mat-toolbar>
+  <div id="container-content">
 
+    <div id="teleport-container">
+      <div id="teleport-position-container">
+        <mat-form-field color="accent">
+          <input matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [value]="teleportToPos.X"/>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [value]="teleportToPos.Y"/>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [value]="teleportToPos.Z"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="two-per-row-container">
+      <button mat-raised-button class="two-per-row-div" (click)="tpToPos()">{{ 'Teleport' | language: settings.Lang }}</button>
+      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Car)">{{ 'Car' | language: settings.Lang }}</button>
+      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Helicopter)">{{ 'Helicopter' | language: settings.Lang }}</button>
+      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Plane)">{{ 'Plane' | language: settings.Lang }}</button>
+      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike)">{{ 'Bike' | language: settings.Lang }}</button>
+      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat)">{{ 'Boat' | language: settings.Lang }}</button>
+    </div>
+  </div>
 </form>

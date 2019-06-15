@@ -2,7 +2,6 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  position: absolute;
   top: 1%;
   right: 1%;
   height: auto;
@@ -12,26 +11,16 @@
   overflow-y: auto;
 }
 
+#container-content {
+  padding: 20px;
+  height: auto;
+  overflow: hidden;
+}
+
+
 textarea {
   max-height: 50%;
   overflow-y: auto;
-}
-
-.mat-toolbar {
-  margin-bottom: 5%;
-
-  #back-nav {
-    float: left;
-  }
-
-  #save-nav {
-    float: right;
-  }
-
-  h1 {
-    flex: 1 1 auto;
-    text-align: center !important;
-  }
 }
 
 .positions-div {
@@ -40,8 +29,6 @@ textarea {
   .mat-table-container {
     display: flex;
     flex-direction: column;
-    margin-left: 5%;
-    margin-right: 5%;
     overflow: auto;
     height: auto !important;
   }
@@ -96,22 +83,24 @@ textarea {
   // border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.mat-toolbar {
-  height: 10%;
-  text-align: center !important;
-}
-
 .two-per-row-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   overflow: hidden;
-  padding-right: 5%;
+  justify-content: space-between;
 
   .two-per-row-div {
     width: 45% !important;
-    margin-left: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 15px;
+  }
+
+  .two-per-row-div:last-child {
+    margin-bottom: 0px;
+  }
+
+  .two-per-row-div:nth-last-child(2) {
+    margin-bottom: 0px;
   }
 }
 
@@ -120,16 +109,12 @@ textarea {
   height: 100%;
 
   .mat-form-field {
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
+    width: 100%;
   }
 }
 
 #team-spawns-top-row {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
+  width: 100%;
   overflow: hidden;
 
   .mat-form-field {
@@ -137,7 +122,7 @@ textarea {
     float: left;
   }
 
-  button {
+  .mat-raised-button {
     float: right;
   }
 
@@ -146,18 +131,14 @@ textarea {
 #description-content {
 
   .mat-form-field {
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
+    width: 100%;
   }
 }
 
 .positions-bottom-row {
   position: absolute;
   vertical-align: bottom;
-  bottom: 5%;
-  margin-left: 5%;
-  margin-right: 5%;
+  bottom: 20px;
   width: 90%;
   text-align: center;
   display: flex;
@@ -166,8 +147,8 @@ textarea {
 }
 
 #main-bottom-buttons-row {
-  padding: 5%;
-  width: 90%;
+  margin-top: 30px;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -175,19 +156,18 @@ textarea {
 }
 
 #map-center-div {
-  height: 20vh;
+  height: 27vh;
 
   #map-center-info {
     float: left;
-    margin-left: 5%;
     margin-right: 2.5%;
     width: 42.5%;
   }
 
   #map-center-positions-container {
+    height: 100%;
     float: right;
     margin-left: 2.5%;
-    margin-right: 5%;
     width: 42.5%;
 
     .mat-form-field {
@@ -201,4 +181,8 @@ textarea {
   .mat-form-field {
     width: 100%;
   }
+}
+
+.mat-form-field-with-hint {
+  margin-bottom: 20px;
 }

@@ -154,6 +154,7 @@ namespace TDS_Server.Instance.Player
         public int KillingSpree { get; set; }
         public TDSPlayer? InPrivateChatWith { get; set; }
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
+        public Vehicle? FreeroamVehicle { get; set; }
 
         private Players? _entity;
         private int _lastSaveTick;

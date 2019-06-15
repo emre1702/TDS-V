@@ -30,6 +30,7 @@ import { OrderByPipe } from './pipes/orderby.pipe';
 import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
 import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,8 @@ import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-di
     LoadMapDialog
   ],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     DragDropModule,

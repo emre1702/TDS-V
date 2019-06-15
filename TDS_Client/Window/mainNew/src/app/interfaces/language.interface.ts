@@ -35,6 +35,15 @@ export interface Language {
     ChooseAMapFromList: string;
     Choose: string;
     Map: string;
+    Chars: string;
+    FreeroamMenu: string;
+    Spawn: string;
+
+    Car: string;
+    Helicopter: string;
+    Plane: string;
+    Bike: string;
+    Boat: string;
 
     ATTACK: string;
     BACK: string;

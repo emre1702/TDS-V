@@ -11,6 +11,7 @@ import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { LoadMapDialog } from './loadmapdialog/load-map-dialog';
 import { MapCreateError } from './enums/mapcreateerror.enum';
 import { Position3D } from './models/position3d';
+import { FormControl, Validators } from '@angular/forms';
 
 enum MapCreatorNav {
   Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, BombPlaces
@@ -35,6 +36,12 @@ export class MapCreatorComponent {
 
   displayedColumns: string[] = ["id", "x", "y", "z", "rot"];
   displayedColumns2D: string[] = ["id", "x", "y"];
+
+  nameControl = new FormControl("", [
+    Validators.required,
+    Validators.minLength(Constants.MIN_MAP_CREATE_NAME_LENGTH),
+    Validators.maxLength(Constants.MAX_MAP_CREATE_NAME_LENGTH)
+  ]);
 
   @ViewChild("descriptionTextArea") descriptionTextArea: ElementRef;
 
@@ -290,6 +297,16 @@ export class MapCreatorComponent {
 
   isBombPlacesValid(): boolean {
     return this.data.Type != MapType.Bomb || this.data.BombPlaces.length > 0;
+  }
+
+
+
+  getMinNameLength() {
+    return Constants.MIN_MAP_CREATE_NAME_LENGTH;
+  }
+
+  getMaxNameLength() {
+    return Constants.MAX_MAP_CREATE_NAME_LENGTH;
   }
 
 }

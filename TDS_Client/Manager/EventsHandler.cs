@@ -513,6 +513,7 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
+            Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.LoadMySavedMap, OnLoadMySavedMapFromBrowserMethod);
             Add(DFromBrowserEvent.LoadMySavedMapNames, OnLoadMySavedMapsFromBrowserMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
@@ -576,6 +577,13 @@ namespace TDS_Client.Manager
         private void OnGetCurrentPositionRotationMethod(object[] args)
         {
             Angular.SendCurrentPositionRotation();
+        }
+
+        private void OnGetVehicleMethod(object[] args)
+        {
+            // convert because if it fails, there will be an error @clientside, not @serverside
+            EFreeroamVehicleType vehType = (EFreeroamVehicleType)(int)args[0];
+            EventsSender.Send(DToServerEvent.GetVehicle, (int)vehType);
         }
 
         private void OnLoadMySavedMapFromBrowserMethod(object[] args)
