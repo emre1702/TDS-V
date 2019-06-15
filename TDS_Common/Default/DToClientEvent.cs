@@ -56,7 +56,9 @@
 
         public const string SaveMapCreatorReturn = "SaveMapCreatorReturn_Server";
         public const string SendMapCreatorReturn = "SendMapCreatorReturn_Server";
+        public const string SetEntityInvincible = "SetEntityInvincible_Server";
         public const string SetMapVotes = "SetMapVotes_Server";
+        public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";

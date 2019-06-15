@@ -42,7 +42,7 @@ namespace TDS_Server.Instance.Lobby
             Players.Add(character);
 
             if (LobbyEntity.Id == 0)
-                character.Client.Invincible = true;
+                Workaround.SetPlayerInvincible(character.Client, true);
 
             character.Client.Dimension = Dimension;
             character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);

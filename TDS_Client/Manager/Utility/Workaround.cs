@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RAGE;
 using RAGE.Elements;
+using System;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 
@@ -14,6 +15,8 @@ namespace TDS_Client.Manager.Utility
             Events.Add(DToClientEvent.DetachEntityWorkaround, DetachEntityWorkaroundMethod);
             Events.Add(DToClientEvent.FreezePlayerWorkaround, FreezePlayerWorkaroundMethod);
             Events.Add(DToClientEvent.SetEntityCollisionlessWorkaround, SetEntityCollisionlessWorkaroundMethod);
+            Events.Add(DToClientEvent.SetEntityInvincible, SetEntityInvincibleMethod);
+            Events.Add(DToClientEvent.SetPlayerInvincible, SetPlayerInvincibleMethod);
             Events.Add(DToClientEvent.SetPlayerTeamWorkaround, SetPlayerTeamWorkaroundMethod);
             Events.Add(DToClientEvent.UnspectatePlayerWorkaround, UnspectatePlayerWorkaroundMethod);
         }
@@ -59,6 +62,21 @@ namespace TDS_Client.Manager.Utility
         private static void UnspectatePlayerWorkaroundMethod(object[] args)
         {
             //todo Add unspectatePlayer workaround (need a spectate system for this)
+        }
+
+        private static void SetEntityInvincibleMethod(object[] args)
+        {
+            ushort handle = Convert.ToUInt16(args[0]);
+            bool toggle = (bool)args[1];
+            var vehHandle = Entities.Vehicles.GetAtRemote(handle)?.Handle ?? -1;
+            if (vehHandle != -1)
+                RAGE.Game.Entity.SetEntityInvincible(vehHandle, toggle);
+        }
+
+        private static void SetPlayerInvincibleMethod(object[] args)
+        {
+            bool toggle = (bool)args[0];
+            Player.LocalPlayer.SetInvincible(toggle);
         }
     }
 }

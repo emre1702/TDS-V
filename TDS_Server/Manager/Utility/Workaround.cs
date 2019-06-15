@@ -60,12 +60,12 @@ namespace TDS_Server.Manager.Utility
             {
                 lobby.SendAllPlayerEvent(DToClientEvent.AttachEntityToEntityWorkaround, null, _attachedEntitiesInfos[entity].Json);
                 if (!_attachedEntitiesPerLobby.ContainsKey(lobby))
-                    _attachedEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
+                    _attachedEntitiesPerLobby[lobby] = new List<Entity>();
                 _attachedEntitiesPerLobby[lobby].Add(entity);
             }
         }
 
-        public static void DetachEntity(GTANetworkAPI.Entity entity, bool resetCollision = true)
+        public static void DetachEntity(Entity entity, bool resetCollision = true)
         {
             if (!_attachedEntitiesInfos.ContainsKey(entity))
                 return;
@@ -83,7 +83,7 @@ namespace TDS_Server.Manager.Utility
             _attachedEntitiesInfos.Remove(entity);
         }
 
-        public static void SetEntityCollisionless(GTANetworkAPI.Entity entity, bool collisionless, Lobby? lobby = null)
+        public static void SetEntityCollisionless(Entity entity, bool collisionless, Lobby? lobby = null)
         {
             var info = new EntityCollisionlessInfoDto
             (
@@ -98,9 +98,19 @@ namespace TDS_Server.Manager.Utility
             {
                 lobby.SendAllPlayerEvent(DToClientEvent.SetEntityCollisionlessWorkaround, null, _collisionslessEntitiesInfos[entity].Json);
                 if (!_collisionslessEntitiesPerLobby.ContainsKey(lobby))
-                    _collisionslessEntitiesPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
+                    _collisionslessEntitiesPerLobby[lobby] = new List<Entity>();
                 _collisionslessEntitiesPerLobby[lobby].Add(entity);
             }
+        }
+
+        public static void SetPlayerInvincible(Client player, bool invincible)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SetPlayerInvincible, invincible);
+        }
+
+        public static void SetEntityInvincible(Client invincibleAtClient, Entity entity, bool invincible)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, DToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
         }
 
         private static void PlayerJoinedLobby(Lobby lobby, TDSPlayer player)
@@ -108,7 +118,7 @@ namespace TDS_Server.Manager.Utility
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
                 _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (GTANetworkAPI.Entity entity in _attachedEntitiesPerLobby[lobby])
+                foreach (Entity entity in _attachedEntitiesPerLobby[lobby])
                 {
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                 }
@@ -119,7 +129,7 @@ namespace TDS_Server.Manager.Utility
             if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
             {
                 _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (GTANetworkAPI.Entity entity in _collisionslessEntitiesPerLobby[lobby])
+                foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
                 {
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
                 }

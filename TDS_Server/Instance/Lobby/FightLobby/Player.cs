@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -10,7 +11,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            player.Client.Invincible = false;
+            Workaround.SetPlayerInvincible(player.Client, false);
 
             return true;
         }

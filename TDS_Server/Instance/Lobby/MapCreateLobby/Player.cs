@@ -16,7 +16,7 @@ namespace TDS_Server.Instance.Lobby
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            player.Client.Invincible = true;
+            Workaround.SetPlayerInvincible(character.Client, true);
             player.Client.Position = new Vector3(-365.425, -131.809, 37.873);
             Workaround.FreezePlayer(player.Client, false);
 
@@ -53,7 +53,7 @@ namespace TDS_Server.Instance.Lobby
             var vehicle = NAPI.Vehicle.CreateVehicle((int)vehHash, pos, player.Client.Heading, 0, 0, player.Client.Name, dimension: Dimension);
             player.FreeroamVehicle = vehicle;
 
-            vehicle.Invincible = true;
+            Workaround.SetEntityInvincible(player.Client, vehicle, true);
 
             player.Client.SetIntoVehicle(vehicle, 0);
 
