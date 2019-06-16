@@ -41,12 +41,8 @@ namespace TDS_Client.Manager
 
         private void LoadOnStart()
         {
-            Settings.Load();
             Dx.RefreshResolution();
-            VoiceManager.Init();
-            Team.Init();
         }
-
         #endregion Load on start
 
         #region RAGE events
@@ -188,7 +184,9 @@ namespace TDS_Client.Manager
 
         private void OnJoinSameLobbyMethod(object[] args)
         {
-            Players.Load((Player)args[0]);
+            Player player = (Player)args[0];
+            Players.Load(player);
+            VoiceManager.AddPlayer(player);
         }
 
         private void OnLeaveSameLobbyMethod(object[] args)
@@ -464,6 +462,9 @@ namespace TDS_Client.Manager
             Angular.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
+            Settings.Load();
+            VoiceManager.Init();
+            Team.Init();
         }
 
         private void OnSetMapVotesMethod(object[] args)

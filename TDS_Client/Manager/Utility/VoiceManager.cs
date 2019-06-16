@@ -9,30 +9,27 @@ namespace TDS_Client.Manager.Utility
 {
     internal class VoiceManager
     {
-        private const bool voice3d = true;
-
-        private static readonly HashSet<Player> sendingToPlayers = new HashSet<Player>();
+        private static readonly HashSet<Player> _sendingToPlayers = new HashSet<Player>();
 
         public static void Init()
         {
             //if (!Voice.Allowed)
             //    return;
-
             BindManager.Add(Control.PushToTalk, Start, EKeyPressState.Down);
             BindManager.Add(Control.PushToTalk, Stop, EKeyPressState.Up);
         }
 
         public static void AddPlayer(Player player)
         {
-            sendingToPlayers.Add(player);
+            _sendingToPlayers.Add(player);
             player.AutoVolume = true;
-            player.Voice3d = voice3d;
+            player.Voice3d = Constants.Voice3D;
             EventsSender.Send(DToServerEvent.VoiceToAdd, player);
         }
 
         public static void RemovePlayer(Player player)
         {
-            sendingToPlayers.Remove(player);
+            _sendingToPlayers.Remove(player);
             EventsSender.Send(DToServerEvent.VoiceToRemove, player);
         }
 
