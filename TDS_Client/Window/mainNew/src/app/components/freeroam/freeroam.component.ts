@@ -22,7 +22,7 @@ export class FreeroamComponent {
 
   tpToPos(btn: MatButton) {
     btn._elementRef.nativeElement.blur();
-    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, this.teleportToPos.X, this.teleportToPos.Y, this.teleportToPos.Z);
+    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, this.teleportToPos.X, this.teleportToPos.Y, this.teleportToPos.Z, 0);
   }
 
   getVehicle(veh: Vehicle, btn: MatButton) {
