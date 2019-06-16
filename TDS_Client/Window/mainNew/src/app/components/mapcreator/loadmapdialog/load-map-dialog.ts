@@ -5,7 +5,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 @Component({
 // tslint:disable-next-line: component-selector
   selector: 'load-map-dialog',
-  templateUrl: 'load-map-dialog.html',
+  templateUrl: 'load-map-dialog.html'
 })
 // tslint:disable-next-line: component-class-suffix
 export class LoadMapDialog {

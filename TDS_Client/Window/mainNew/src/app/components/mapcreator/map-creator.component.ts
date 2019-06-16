@@ -145,7 +145,8 @@ export class MapCreatorComponent {
     this.rageConnector.callCallback(DToClientEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
       const errName = MapCreateError[err];
       this.snackBar.open(this.settings.Lang[errName], "OK", {
-        duration: undefined
+        duration: undefined,
+        panelClass: "mat-app-background"
       });
     });
   }
@@ -153,22 +154,22 @@ export class MapCreatorComponent {
   loadPossibleMaps() {
     this.rageConnector.callCallback(DToClientEvent.LoadMySavedMapNames, null, (possibleMapsJson: string) => {
       const possibleMaps = JSON.parse(possibleMapsJson) as string[];
-      console.log(possibleMaps);
-      console.log(possibleMapsJson);
-      const dialogRef = this.dialog.open(LoadMapDialog, {data: possibleMaps});
+      const dialogRef = this.dialog.open(LoadMapDialog, {data: possibleMaps, panelClass: "mat-app-background" });
 
       dialogRef.beforeClosed().subscribe(loadMapStr => {
-        console.log("load: " + loadMapStr);
         if (!loadMapStr)
           return;
 
         this.rageConnector.callCallback(DToClientEvent.LoadMySavedMap, loadMapStr, (json: string) => {
           this.data = JSON.parse(json);
           this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
-            duration: 5000
+            duration: 5000,
+            panelClass: "mat-app-background"
           });
         });
       });
+
+      this.changeDetector.detectChanges();
     });
   }
 
