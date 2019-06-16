@@ -50,16 +50,6 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<WeaponTypes> WeaponTypes { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
-        // Unable to generate entity type for table 'public.pg_stat_statements'. Please see the warning messages.
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Server=localhost;Database=TDSNew;User ID=tdsv;Password=ajagrebo;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

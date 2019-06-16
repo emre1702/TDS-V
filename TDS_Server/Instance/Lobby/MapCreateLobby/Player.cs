@@ -16,7 +16,7 @@ namespace TDS_Server.Instance.Lobby
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            Workaround.SetPlayerInvincible(character.Client, true);
+            Workaround.SetPlayerInvincible(player.Client, true);
             player.Client.Position = new Vector3(-365.425, -131.809, 37.873);
             Workaround.FreezePlayer(player.Client, false);
 
