@@ -28,9 +28,8 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static void RenderAll()
         {
-            for (int i = _dxDraws.Count - 1; i >= 0; --i)
+            foreach (Dx draw in _dxDraws)
             {
-                Dx draw = _dxDraws[i];
                 if (draw.Activated)
                     draw.Draw();
             }

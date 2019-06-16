@@ -28,10 +28,10 @@ namespace TDS_Client.Manager.Lobby
                 case 0:
                     JoinedMainmenu();
                     break;
-                case 1:
+                //case 1:
                     //_inDefaultLobby = EDefaultLobby.GangLobby;
                     //JoinedGangLobby();
-                    break;
+                //    break;
                 default:
                     _inDefaultLobby = EDefaultLobby.None;
                     break;
