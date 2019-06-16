@@ -10,8 +10,8 @@ namespace TDS_Server.Instance.Lobby
             player.RemoveAllWeapons();
             foreach (LobbyWeapons weapon in LobbyEntity.LobbyWeapons)
             {
-                if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
-                    continue;
+                //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
+                //    continue;
                 WeaponHash hash = (WeaponHash) ((uint)weapon.Hash);
                 player.GiveWeapon(hash, 0);
                 player.SetWeaponAmmo(hash, (int)weapon.Ammo);
