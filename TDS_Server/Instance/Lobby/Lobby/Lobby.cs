@@ -68,10 +68,12 @@ namespace TDS_Server.Instance.Lobby
 
         protected async virtual void Remove()
         {
+            if (IsOfficial)
+                return;
             LobbiesByIndex.Remove(LobbyEntity.Id);
             _dimensionsUsed.Remove(Dimension);
 
-            foreach (TDSPlayer character in Players)
+            foreach (TDSPlayer character in Players.ToArray())
             {
                 RemovePlayer(character);
             }

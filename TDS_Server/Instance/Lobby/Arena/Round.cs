@@ -28,6 +28,7 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.Countdown] = 5 * 1000,
             [ERoundStatus.Round] = 4 * 60 * 1000,
             [ERoundStatus.RoundEnd] = 8 * 1000,
+            [ERoundStatus.None] = 0
         };
 
         private readonly Dictionary<ERoundStatus, Action> _roundStatusMethod = new Dictionary<ERoundStatus, Action>();
@@ -39,6 +40,7 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.Countdown] = ERoundStatus.Round,
             [ERoundStatus.Round] = ERoundStatus.RoundEnd,
             [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
+            [ERoundStatus.None] = ERoundStatus.NewMapChoose
         };
 
         private ERoundStatus _currentRoundStatus = ERoundStatus.None;
@@ -64,17 +66,22 @@ namespace TDS_Server.Instance.Lobby
                 }, DurationsDict[status]);
                 try
                 {
-                    _roundStatusMethod[status]();
+                    if (_roundStatusMethod.ContainsKey(status))
+                        NAPI.Task.Run(_roundStatusMethod[status]);
                 }
                 catch (Exception ex)
                 {
                     ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace);
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
-                    Remove();
+                    NAPI.Task.Run(Remove);
                 }
             }
             else if (_currentRoundStatus != ERoundStatus.RoundEnd)
-                _roundStatusMethod[ERoundStatus.RoundEnd]();
+            {
+                NAPI.Task.Run(_roundStatusMethod[ERoundStatus.RoundEnd]);
+                NAPI.Task.Run(_roundStatusMethod[ERoundStatus.MapClear]);
+                _currentRoundStatus = ERoundStatus.None;
+            }
         }
 
         private void StartMapClear()

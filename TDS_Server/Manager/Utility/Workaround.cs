@@ -118,8 +118,13 @@ namespace TDS_Server.Manager.Utility
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
                 _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (Entity entity in _attachedEntitiesPerLobby[lobby])
+                foreach (Entity entity in _attachedEntitiesPerLobby[lobby].ToArray())
                 {
+                    if (!_attachedEntitiesInfos.ContainsKey(entity))
+                    {
+                        _attachedEntitiesPerLobby[lobby].Remove(entity);
+                        continue;
+                    }
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                 }
                 if (_attachedEntitiesPerLobby[lobby].Count == 0)

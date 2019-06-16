@@ -130,7 +130,10 @@ namespace TDS_Server.Instance.Lobby
                 if (teamsinround < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = character;
-                    SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
+                    if (_currentRoundStatus != ERoundStatus.None)
+                        SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
+                    else
+                        SetRoundStatus(ERoundStatus.NewMapChoose);
                 }
                 else
                 {

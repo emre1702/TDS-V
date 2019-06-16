@@ -22,12 +22,13 @@ namespace TDS_Server.Instance.Lobby
         public override void Start()
         {
             base.Start();
-            SetRoundStatus(ERoundStatus.NewMapChoose);
         }
 
         protected override void Remove()
         {
-            base.Remove();
+            if (IsOfficial)
+                return;
+             base.Remove();
             _nextRoundStatusTimer?.Kill();
             _nextRoundStatusTimer = null;
 
