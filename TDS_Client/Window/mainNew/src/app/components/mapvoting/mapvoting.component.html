@@ -49,7 +49,7 @@
 	</mat-sidenav-container>
 </div>
 
-<div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus">
+<div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus && settings.InFightLobby">
 	<div [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote.Id"
 			*ngFor="let mapvote of voting.mapsInVoting; let i = index">
 		{{ i + 1 }}. {{ mapvote.Name }} ({{ mapvote.AmountVotes }})

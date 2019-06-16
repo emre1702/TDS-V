@@ -44,7 +44,7 @@ export class MapVotingComponent implements OnInit {
   @ViewChild('snav') snav: MatSidenav;
 
   constructor(public settings: SettingsService, public voting: MapVotingService, private rageConnector: RageConnectorService,
-              public changeDetector: ChangeDetectorRef, private orderByPipe: OrderByPipe) {
+              public changeDetector: ChangeDetectorRef) {
     this.rageConnector.listen(DFromClientEvent.OpenMapMenu, this.activate.bind(this));
     this.rageConnector.listen(DFromClientEvent.CloseMapMenu, () => this.deactivate(false));
   }
@@ -54,6 +54,7 @@ export class MapVotingComponent implements OnInit {
     this.settings.LanguageChanged.on(null, () => this.changeDetector.detectChanges());
     this.settings.InTeamOrderModusChanged.on(null, () => this.changeDetector.detectChanges());
     this.settings.FavoriteMapsChanged.on(null, () => this.changeDetector.detectChanges());
+    this.settings.InFightLobbyChanged.on(null, () => this.changeDetector.detectChanges());
   }
 
   private activate(mapsJson: string) {

@@ -25,5 +25,7 @@ export class AppComponent {
       this.showFreeroam = bool;
       changeDetector.detectChanges();
     });
+
+    this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
   }
 }

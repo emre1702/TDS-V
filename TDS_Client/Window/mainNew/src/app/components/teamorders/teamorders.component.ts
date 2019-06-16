@@ -28,7 +28,9 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamOrdersComponent implements OnInit {
-  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
+  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {
+    settings.LanguageChanged.on(null, () => changeDetector.detectChanges());
+  }
 
   ngOnInit(): void {
     this.settings.LanguageChanged.on(null, () => this.changeDetector.detectChanges());

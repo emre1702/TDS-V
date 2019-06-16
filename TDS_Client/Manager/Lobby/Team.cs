@@ -59,6 +59,8 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!_activated)
                 return;
+            if (!Lobby.InFightLobby)
+                return;
             ETeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
             ToggleOrderMode(ConsoleKey.NoName);

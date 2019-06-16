@@ -12,6 +12,7 @@
         public const string SetMapVotes = "SetMapVotes_Client";
         public const string ToggleChatOpened = "ToggleChatOpened_Client";
         public const string ToggleFreeroam = "ToggleFreeroam_Client";
+        public const string ToggleInFightLobby = "ToggleInFightLobby_Client";
         public const string ToggleMapCreator = "ToggleMapCreator_Client";
         public const string ToggleTeamOrderModus = "ToggleTeamOrderModus_Client";
     }

@@ -64,6 +64,9 @@ export class SettingsService {
     public ChatOpened = false;
     public ChatOpenedChange = new EventEmitter();
 
+    public InFightLobby = false;
+    public InFightLobbyChanged = new EventEmitter();
+
     public toggleInTeamOrderModus(bool: boolean) {
       this.InTeamOrderModus = bool;
       this.InTeamOrderModusChanged.emit(null);
@@ -73,12 +76,18 @@ export class SettingsService {
       this.ChatOpened = bool;
       this.ChatOpenedChange.emit(null);
     }
+
+    public toggleInFightLobby(bool: boolean) {
+      this.InFightLobby = bool;
+      this.InFightLobbyChanged.emit(null);
+    }
     ////////////////////////////////////////////////////
 
     constructor(private rageConnector: RageConnectorService) {
       console.log("Settings listener started.");
       rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
       rageConnector.listen(DFromClientEvent.LoadFavoriteMaps, this.loadFavoriteMapIds.bind(this));
+      rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
       rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
       rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
     }

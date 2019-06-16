@@ -163,6 +163,11 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DFromBrowserEvent.LoadMySavedMap, json);
         }
+
+        public static void SyncInFightLobby(bool b)
+        {
+            Execute(DToBrowserEvent.ToggleInFightLobby, b);
+        }
     }
 
 }

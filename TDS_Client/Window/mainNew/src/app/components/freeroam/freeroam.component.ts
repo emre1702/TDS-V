@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
@@ -18,7 +18,9 @@ export class FreeroamComponent {
 
   VehicleEnum = Vehicle;
 
-  constructor(public settings: SettingsService, private rageConnector: RageConnectorService) { }
+  constructor(public settings: SettingsService, private rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
+    settings.LanguageChanged.on(null, () => changeDetector.detectChanges());
+  }
 
   tpToPos(btn: MatButton) {
     btn._elementRef.nativeElement.blur();

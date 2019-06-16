@@ -6,7 +6,18 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Lobby
     {
+        public static bool InFightLobby
+        {
+            get => _inFightLobby;
+            set
+            {
+                _inFightLobby = value;
+                Angular.SyncInFightLobby(value);
+            }
+        }
+
         private static EDefaultLobby _inDefaultLobby = EDefaultLobby.None;
+        private static bool _inFightLobby;
 
         public static void Joined(SyncedLobbySettingsDto settings)
         {
@@ -34,6 +45,7 @@ namespace TDS_Client.Manager.Lobby
                 //    break;
                 default:
                     _inDefaultLobby = EDefaultLobby.None;
+                    InFightLobby = true;
                     break;
             }
         }
@@ -52,6 +64,7 @@ namespace TDS_Client.Manager.Lobby
         private static void JoinedMainmenu()
         {
             _inDefaultLobby = EDefaultLobby.MainMenu;
+            InFightLobby = false;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Choice.Start();
         }
@@ -59,6 +72,7 @@ namespace TDS_Client.Manager.Lobby
         public static void JoinedMapCreator()
         {
             _inDefaultLobby = EDefaultLobby.MapCreator;
+            InFightLobby = false;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Angular.ToggleMapCreator(true);
             Angular.ToggleFreeroam(true);
