@@ -11,7 +11,7 @@ namespace TDS_Server.Manager.Logs
     {
         private static readonly List<LogAdmins> _notSavedAdminLogs = new List<LogAdmins>();
 
-        public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, bool asdonator = false, bool asvip = false, string? reason = null)
+        public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false)
         {
             _notSavedAdminLogs.Add(
                 new LogAdmins
@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Logs
             );
         }
 
-        public static void Log(ELogType cmd, TDSPlayer? source, int? targetid = null, bool asdonator = false, bool asvip = false, string? reason = null)
+        public static void Log(ELogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false)
         {
             _notSavedAdminLogs.Add(
                 new LogAdmins

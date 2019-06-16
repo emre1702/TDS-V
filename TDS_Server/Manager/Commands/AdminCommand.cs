@@ -28,12 +28,12 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.NextMap)]
-        public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos)
+        public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string reason)
         {
             if (!(player.CurrentLobby is Arena arena))
                 return;
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Next, player, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
+                AdminLogsManager.Log(ELogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
             arena.CurrentRoundEndBecauseOfPlayer = player;
             arena.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Command);
         }
@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                AdminLogsManager.Log(ELogType.Lobby_Kick, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
                 LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
             }
             else
@@ -81,7 +81,7 @@ namespace TDS_Server.Manager.Commands
             else
                 player.CurrentLobby.BanPlayer(player, target, length, reason);
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 0)]
@@ -103,7 +103,7 @@ namespace TDS_Server.Manager.Commands
                 player.CurrentLobby.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Lobby_Ban, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Lobby_Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Ban, 1)]
@@ -120,7 +120,7 @@ namespace TDS_Server.Manager.Commands
                 LobbyManager.MainMenu.BanPlayer(player, target, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Ban, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Ban, 0)]
@@ -137,7 +137,7 @@ namespace TDS_Server.Manager.Commands
                 LobbyManager.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Ban, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Kick)]
@@ -150,7 +150,7 @@ namespace TDS_Server.Manager.Commands
             target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.Client.Name, reason));
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Kick, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Mute, 1)]
@@ -164,7 +164,7 @@ namespace TDS_Server.Manager.Commands
             Account.ChangePlayerMuteTime(player, target, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Mute, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Mute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Mute, 0)]
@@ -178,11 +178,11 @@ namespace TDS_Server.Manager.Commands
             Account.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Mute, player, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP, reason);
+                AdminLogsManager.Log(ELogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Goto)]
-        public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target)
+        public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
         {
             Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
 
@@ -211,17 +211,17 @@ namespace TDS_Server.Manager.Commands
             #endregion Normal
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Goto, player, target, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                AdminLogsManager.Log(ELogType.Goto, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(DAdminCommand.Goto)]
-        public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z)
+        public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText] string reason)
         {
             Vector3 pos = new Vector3(x, y, z);
             NAPI.Entity.SetEntityPosition(player.Client, pos);
 
             if (!cmdinfos.AsLobbyOwner)
-                AdminLogsManager.Log(ELogType.Goto, player, (TDSPlayer?)null, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                AdminLogsManager.Log(ELogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         private static bool IsReasonValid(string reason, TDSPlayer outputTo)
