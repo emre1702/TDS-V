@@ -1,5 +1,6 @@
 using GTANetworkAPI;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Dto.Map;
@@ -38,11 +39,27 @@ namespace TDS_Server.Instance.Lobby
 
             var mapsConsideringPlayersAmount = _maps
                 .Where(m => m.Info.MinPlayers >= Players.Count && m.Info.MaxPlayers <= Players.Count)
-                .ToArray();
-            if (mapsConsideringPlayersAmount.Length > 0)
-                return mapsConsideringPlayersAmount[CommonUtils.Rnd.Next(0, mapsConsideringPlayersAmount.Length)];
+                .ToList();
+            if (mapsConsideringPlayersAmount.Count > 0)
+                return GetRandomMapFromList(mapsConsideringPlayersAmount);
 
-            return _maps[CommonUtils.Rnd.Next(0, _maps.Count)];
+            return GetRandomMapFromList(_maps);
+        }
+
+        private MapDto GetRandomMapFromList(List<MapDto> list)
+        {
+            var sumRatings = (int) Math.Floor(list.Sum(m => m.RatingAverage));
+            var chooseAtRating = CommonUtils.Rnd.Next(sumRatings) + 1;
+            double currentlyAtRating = 0;
+            foreach (var map in list)
+            {
+                currentlyAtRating += map.RatingAverage;
+                if (chooseAtRating <= currentlyAtRating)
+                    return map;
+            }
+
+            // if I did a mistake, just return anything
+            return list[CommonUtils.Rnd.Next(0, list.Count)];
         }
 
         /// <summary>
