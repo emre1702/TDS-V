@@ -3,6 +3,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
+import { MatButton } from '@angular/material';
 
 @Component({
   selector: 'app-freeroam',
@@ -19,11 +20,13 @@ export class FreeroamComponent {
 
   constructor(public settings: SettingsService, private rageConnector: RageConnectorService) { }
 
-  tpToPos() {
+  tpToPos(btn: MatButton) {
+    btn._elementRef.nativeElement.blur();
     this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, this.teleportToPos.X, this.teleportToPos.Y, this.teleportToPos.Z);
   }
 
-  getVehicle(veh: Vehicle) {
+  getVehicle(veh: Vehicle, btn: MatButton) {
+    btn._elementRef.nativeElement.blur();
     this.rageConnector.call(DToClientEvent.GetVehicle, veh);
   }
 

@@ -20,12 +20,12 @@
     </div>
 
     <div class="two-per-row-container">
-      <button mat-raised-button class="two-per-row-div" (click)="tpToPos()">{{ 'Teleport' | language: settings.Lang }}</button>
-      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Car)">{{ 'Car' | language: settings.Lang }}</button>
-      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Helicopter)">{{ 'Helicopter' | language: settings.Lang }}</button>
-      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Plane)">{{ 'Plane' | language: settings.Lang }}</button>
-      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike)">{{ 'Bike' | language: settings.Lang }}</button>
-      <button mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat)">{{ 'Boat' | language: settings.Lang }}</button>
+      <button #tpButton mat-raised-button class="two-per-row-div" (click)="tpToPos(tpButton)">{{ 'Teleport' | language: settings.Lang }}</button>
+      <button #carButton mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Car, carButton)">{{ 'Car' | language: settings.Lang }}</button>
+      <button #heliButton mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Helicopter, heliButton)">{{ 'Helicopter' | language: settings.Lang }}</button>
+      <button #planeButton mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Plane, planeButton)">{{ 'Plane' | language: settings.Lang }}</button>
+      <button #bikeButton mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike, bikeButton)">{{ 'Bike' | language: settings.Lang }}</button>
+      <button #boatButton mat-raised-button class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat, boatButton)">{{ 'Boat' | language: settings.Lang }}</button>
     </div>
   </div>
 </form>

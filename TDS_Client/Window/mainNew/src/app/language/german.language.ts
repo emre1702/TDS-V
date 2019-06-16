@@ -19,7 +19,7 @@ export class German extends English {
   NumberShort = "Nr.";
   Remove = "Entfernen";
   AddPos = "Position hinzufügen";
-  Teleport = "Teleportieren";
+  Teleport = "Teleport";
   MapCenterInfo = `Diese Position wird nur für die Kamera beim Countdown benutzt.
         Lass die Eingaben leer, falls der Server die Position selber berechnen soll.`;
   MinPlayers = "Min. Spieler";
