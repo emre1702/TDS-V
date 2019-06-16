@@ -62,7 +62,7 @@ namespace TDS_Server.Instance.Lobby
 
                 Workaround.SetEntityInvincible(player.Client, vehicle, true);
 
-                player.Client.SetIntoVehicle(vehicle, 0);
+                player.Client.SetIntoVehicle(vehicle, -1);
             });
         }
     }
