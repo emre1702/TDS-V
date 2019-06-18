@@ -85,7 +85,7 @@ namespace TDS_Server.Manager.Commands
                 target.SentPrivateChatRequestTo = null;
                 player.InPrivateChatWith = target;
                 target.InPrivateChatWith = player;
-            }            
+            }
         }
 
         [TDSCommand(DPlayerCommand.ClosePrivateChat)]
@@ -136,6 +136,12 @@ namespace TDS_Server.Manager.Commands
                 Vector3 rot = player.Client.Rotation;
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
             }
+        }
+
+        [TDSCommand(DPlayerCommand.UserId)]
+        public static void OutputUserId(TDSPlayer player)
+        {
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, "User id: " + (player.Entity?.Id.ToString() ?? "?"));
         }
 
         /*#region Lobby

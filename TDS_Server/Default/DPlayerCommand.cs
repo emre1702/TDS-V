@@ -11,5 +11,6 @@
         public const string PrivateChat = "PrivateChat";
         public const string Suicide = "Suicide";
         public const string TeamChat = "TeamChat";
+        public const string UserId = "UserId";
     }
 }
