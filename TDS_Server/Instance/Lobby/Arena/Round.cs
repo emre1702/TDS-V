@@ -6,6 +6,7 @@ using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Enum;
+using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
@@ -17,7 +18,9 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        private LobbyRoundSettings RoundSettings => LobbyEntity.LobbyRoundSettings;
+        public LobbyRoundSettings RoundSettings => LobbyEntity.LobbyRoundSettings;
+
+        public GameMode? CurrentGameMode;
 
         private TDSTimer? _nextRoundStatusTimer;
 
@@ -42,15 +45,21 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
             [ERoundStatus.None] = ERoundStatus.NewMapChoose
         };
+        private readonly Dictionary<EMapType, Func<Arena, MapDto, GameMode>> _gameModeByMapType
+            = new Dictionary<EMapType, Func<Arena, MapDto, GameMode>>
+        {
+            [EMapType.Normal] = (lobby, map) => new Normal(lobby, map),
+            [EMapType.Bomb] = (lobby, map) => new Bomb(lobby, map)
+        };
 
-        private ERoundStatus _currentRoundStatus = ERoundStatus.None;
+        public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
         private ERoundEndReason _currentRoundEndReason;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
         private Team? _currentRoundEndWinnerTeam;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
-            _currentRoundStatus = status;
+            CurrentRoundStatus = status;
             if (status == ERoundStatus.RoundEnd)
                 _currentRoundEndReason = roundEndReason;
             ERoundStatus nextStatus = _nextRoundStatsDict[status];
@@ -76,18 +85,17 @@ namespace TDS_Server.Instance.Lobby
                     NAPI.Task.Run(Remove);
                 }
             }
-            else if (_currentRoundStatus != ERoundStatus.RoundEnd)
+            else if (CurrentRoundStatus != ERoundStatus.RoundEnd)
             {
                 NAPI.Task.Run(_roundStatusMethod[ERoundStatus.RoundEnd]);
                 NAPI.Task.Run(_roundStatusMethod[ERoundStatus.MapClear]);
-                _currentRoundStatus = ERoundStatus.None;
+                CurrentRoundStatus = ERoundStatus.None;
             }
         }
 
         private void StartMapClear()
         {
-            if (_currentMap?.IsBomb ?? false)
-                ClearBombRound();
+            CurrentGameMode?.StartMapClear();
             ClearTeamPlayersAmounts();
             SendAllPlayerEvent(DToClientEvent.MapClear, null);
         }
@@ -95,8 +103,8 @@ namespace TDS_Server.Instance.Lobby
         private void StartNewMapChoose()
         {
             MapDto nextMap = GetNextMap();
-            if (nextMap.IsBomb)
-                StartBombMapChoose(nextMap);
+            CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap);
+            CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
@@ -108,14 +116,13 @@ namespace TDS_Server.Instance.Lobby
         private void StartRoundCountdown()
         {
             SetAllPlayersInCountdown();
+            CurrentGameMode?.StartRoundCountdown();
         }
 
         private void StartRound()
         {
             StartRoundForAllPlayer();
-
-            if (_currentMap?.IsBomb ?? false)
-                StartRoundBomb();
+            CurrentGameMode?.StartRound();
         }
 
         private void EndRound()
@@ -143,8 +150,7 @@ namespace TDS_Server.Instance.Lobby
             DmgSys.Clear();
 
             DeleteMapBlips();
-            if (_currentMap?.IsBomb ?? false)
-                StopBombRound();
+            CurrentGameMode?.StopRound();
 
             RewardAllPlayer();
             SaveAllPlayerLobbyStats();
@@ -161,6 +167,8 @@ namespace TDS_Server.Instance.Lobby
 
         private Team? GetRoundWinnerTeam()
         {
+            if (CurrentGameMode?.WinnerTeam != null)
+                return CurrentGameMode.WinnerTeam;
             switch (_currentRoundEndReason)
             {
                 case ERoundEndReason.Death:
@@ -168,12 +176,6 @@ namespace TDS_Server.Instance.Lobby
 
                 case ERoundEndReason.Time:
                     return GetTeamWithHighestHP();
-
-                case ERoundEndReason.BombExploded:
-                    return _terroristTeam;
-
-                case ERoundEndReason.BombDefused:
-                    return _counterTerroristTeam;
 
                 case ERoundEndReason.Command:
                 case ERoundEndReason.NewPlayer:

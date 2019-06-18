@@ -6,7 +6,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class FightLobby : Lobby
     {
-        protected readonly Damagesys DmgSys;
+        public readonly Damagesys DmgSys;
 
         public FightLobby(Lobbies entity) : base(entity)
         {

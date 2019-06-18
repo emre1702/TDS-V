@@ -14,7 +14,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
-        protected Team[] Teams { get; set; }
+        public Team[] Teams { get; set; }
 
         private static readonly Dictionary<ETeamOrder, Func<ILanguage, string>> teamOrderDict = new Dictionary<ETeamOrder, Func<ILanguage, string>>
         {

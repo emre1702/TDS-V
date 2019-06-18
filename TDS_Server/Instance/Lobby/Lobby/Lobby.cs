@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.Lobby
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
-        protected readonly Lobbies LobbyEntity;
+        public readonly Lobbies LobbyEntity;
 
         public int Id => LobbyEntity.Id;
         public string Name => LobbyEntity.Name;
@@ -21,7 +21,7 @@ namespace TDS_Server.Instance.Lobby
         public string OwnerName => CreatorName;
         public int StartTotalHP => LobbyEntity.StartArmor + LobbyEntity.StartHealth;
 
-        protected readonly uint Dimension;
+        public readonly uint Dimension;
         protected readonly Vector3 SpawnPoint;
 
         private readonly SyncedLobbySettingsDto _syncedLobbySettings;

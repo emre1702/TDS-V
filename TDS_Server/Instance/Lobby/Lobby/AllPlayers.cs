@@ -21,7 +21,7 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
         }
 
-        protected void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
+        public void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
         {
             foreach (var player in Players)
             {

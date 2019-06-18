@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
@@ -126,7 +127,9 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
                 return;
-            if (!arena.StartBombPlanting(character))
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            if (!bombMode.StartBombPlanting(character))
                 player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
         }
 
@@ -135,7 +138,9 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
-            arena.StopBombPlanting(player);
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            bombMode.StopBombPlanting(player);
         }
 
         [RemoteEvent(DToServerEvent.StartDefusing)]
@@ -144,7 +149,9 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
                 return;
-            if (!arena.StartBombDefusing(character))
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            if (!bombMode.StartBombDefusing(character))
                 player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
         }
 
@@ -153,7 +160,9 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
-            arena.StopBombDefusing(player);
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            bombMode.StopBombDefusing(player);
         }
 
         #endregion Bomb

@@ -37,22 +37,21 @@ namespace TDS_Server.Instance.Lobby
             return true;
         }
 
-        public override void RemovePlayer(TDSPlayer character)
+        public override void RemovePlayer(TDSPlayer player)
         {
-            if (character.Lifes > 0)
+            if (player.Lifes > 0)
             {
-                RemovePlayerFromAlive(character);
-                PlayerCantBeSpectatedAnymore(character);
-                DmgSys.CheckLastHitter(character, out TDSPlayer? killercharacter);
+                RemovePlayerFromAlive(player);
+                PlayerCantBeSpectatedAnymore(player);
+                DmgSys.CheckLastHitter(player, out TDSPlayer? killercharacter);
 
-                DeathInfoSync(character, killercharacter, (uint)WeaponHash.Unarmed);
-                character.KillingSpree = 0;
+                DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
+                player.KillingSpree = 0;
             }
             else
-                RemoveAsSpectator(character);
-            if (_planter == character)
-                _planter = null;
-            base.RemovePlayer(character);
+                RemoveAsSpectator(player);
+            CurrentGameMode?.RemovePlayer(player);
+            base.RemovePlayer(player);
             RoundCheckForEnoughAlive();
         }
 
@@ -82,23 +81,20 @@ namespace TDS_Server.Instance.Lobby
             character.CurrentRoundStats?.Clear();
         }
 
-        private void RemovePlayerFromAlive(TDSPlayer character)
+        private void RemovePlayerFromAlive(TDSPlayer player)
         {
-            if (character.Team != null)
+            if (player.Team != null)
             {
-                character.Team.AlivePlayers?.Remove(character);
-                --character.Team.SyncedTeamData.AmountPlayers.AmountAlive;
+                player.Team.AlivePlayers?.Remove(player);
+                --player.Team.SyncedTeamData.AmountPlayers.AmountAlive;
             }
 
-            if (_bombAtPlayer == character)
-            {
-                DropBomb();
-            }
+            CurrentGameMode?.RemovePlayerFromAlive(player);
 
-            _removeSpectatorsTimer[character] = new TDSTimer(() =>
+            _removeSpectatorsTimer[player] = new TDSTimer(() =>
             {
-                PlayerCantBeSpectatedAnymore(character);
-                SpectateOtherSameTeam(character);
+                PlayerCantBeSpectatedAnymore(player);
+                SpectateOtherSameTeam(player);
             }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
         }
 
@@ -119,7 +115,7 @@ namespace TDS_Server.Instance.Lobby
             character.Team = team;
             team.SyncAddedPlayer(character);
 
-            if (_currentRoundStatus == ERoundStatus.Countdown)
+            if (CurrentRoundStatus == ERoundStatus.Countdown)
             {
                 SetPlayerReadyForRound(character);
             }
@@ -130,7 +126,7 @@ namespace TDS_Server.Instance.Lobby
                 if (teamsinround < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = character;
-                    if (_currentRoundStatus != ERoundStatus.None)
+                    if (CurrentRoundStatus != ERoundStatus.None)
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
                     else
                         SetRoundStatus(ERoundStatus.NewMapChoose);
@@ -152,8 +148,9 @@ namespace TDS_Server.Instance.Lobby
 
             SendPlayerAmountInFightInfo(player.Client);
             SyncMapVotingOnJoin(player.Client);
+            CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
 
-            switch (_currentRoundStatus)
+            switch (CurrentRoundStatus)
             {
                 case ERoundStatus.Countdown:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
@@ -161,8 +158,6 @@ namespace TDS_Server.Instance.Lobby
 
                 case ERoundStatus.Round:
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
-                    if (_bombDetonateTimer != null && _bomb != null)
-                        NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(_bomb.Position), false, _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
                     break;
             }
         }

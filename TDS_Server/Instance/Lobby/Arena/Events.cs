@@ -9,27 +9,20 @@ namespace TDS_Server.Instance.Lobby
         public override void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
         {
             base.OnPlayerEnterColShape(shape, character);
-            if (_lobbyBombTakeCol.ContainsKey(this))
-            {
-                if (character.Lifes > 0 && character.Team == _terroristTeam)
-                {
-                    TakeBomb(character);
-                }
-            }
+            CurrentGameMode?.OnPlayerEnterColShape(shape, character);
         }
 
         public override void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
         {
             if (character.Lifes > 0)
             {
-                if (_currentRoundStatus == Enum.ERoundStatus.RoundEnd && character.Team != _currentRoundEndWinnerTeam)
+                if (CurrentRoundStatus == Enum.ERoundStatus.RoundEnd && character.Team != _currentRoundEndWinnerTeam)
                 {
                     DmgSys.OnPlayerDeath(character, CurrentRoundEndBecauseOfPlayer?.Client, weapon);
                     return;
                 }
 
-                if (_bombAtPlayer == character)
-                    DropBomb();
+                CurrentGameMode?.OnPlayerDeath(character);
 
                 if (character.Lifes == 1)   // Will be dead
                 {

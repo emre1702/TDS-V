@@ -12,13 +12,13 @@ namespace TDS_Server.Instance.Lobby
 
         protected override void SpectateOtherSameTeam(TDSPlayer character, bool next = true)
         {
-            if (_currentRoundStatus == ERoundStatus.Countdown || _currentRoundStatus == ERoundStatus.Round)
+            if (CurrentRoundStatus == ERoundStatus.Countdown || CurrentRoundStatus == ERoundStatus.Round)
                 base.SpectateOtherSameTeam(character, next);
         }
 
         protected override void SpectateOtherAllTeams(TDSPlayer character, bool next = true)
         {
-            if (_currentRoundStatus == ERoundStatus.Countdown || _currentRoundStatus == ERoundStatus.Round)
+            if (CurrentRoundStatus == ERoundStatus.Countdown || CurrentRoundStatus == ERoundStatus.Round)
                 base.SpectateOtherAllTeams(character, next);
         }
 
