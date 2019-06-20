@@ -34,9 +34,7 @@ namespace TDS_Server.Instance.Lobby
 
         public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
         {
-            using var dbContext = new TDSNewContext();
-            var list = await dbContext.FreeroamDefaultVehicle.ToListAsync();
-            long vehHash = await dbContext.FreeroamDefaultVehicle
+            long vehHash = await DbContext.FreeroamDefaultVehicle
                 .Where(v => v.VehicleTypeId == (short)vehType)
                 .Select(v => v.VehicleHash)
                 .FirstOrDefaultAsync();

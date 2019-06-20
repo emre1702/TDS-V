@@ -20,7 +20,6 @@ namespace TDS_Server.Manager.Utility
 
             try
             {
-                using var dbcontext = new TDSNewContext();
                 #region Save player data
 
                 List<Client> clients = NAPI.Pools.GetAllPlayers();
@@ -35,7 +34,7 @@ namespace TDS_Server.Manager.Utility
                     ++player.PlayMinutes;
                     if (player.MuteTime.HasValue && player.MuteTime > 0)
                         --player.MuteTime;
-                    await player.CheckSaveData(dbcontext);
+                    player.CheckSaveData();
                 }
 
                 #endregion Save player data
@@ -47,10 +46,7 @@ namespace TDS_Server.Manager.Utility
                 // log-save //
                 if (_counter % SettingsManager.SaveLogsCooldownMinutes == 0)
                 {
-                    await AdminLogsManager.Save(dbcontext);
-                    await ChatLogsManager.Save(dbcontext);
-                    await ErrorLogsManager.Save(dbcontext);
-                    await RestLogsManager.Save(dbcontext);
+                    await LogsManager.Save();
                 }
 
                 #endregion Save logs

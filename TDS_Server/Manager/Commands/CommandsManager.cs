@@ -70,7 +70,7 @@ namespace TDS_Server.Manager.Commands
         // private const bool UseImplicitTypes = true;
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
-        {            
+        {
             LoadConverters();
 
             foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
@@ -263,10 +263,10 @@ namespace TDS_Server.Manager.Commands
             {
                 if (methodindex + 1 == amountmethodsavailable)
                     return new HandleArgumentsResult();
-                else 
+                else
                     return new HandleArgumentsResult { IsWrongMethod = true };
             }
-            
+
         }
 
         private static object[]? HandleRemaingText(CommandMethodData methodData, object[]? args)
@@ -398,7 +398,7 @@ namespace TDS_Server.Manager.Commands
         private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
         {
             theType = MappingManager.GetCorrectDestType(theType);
-            object? converterReturn = Mapper.Map(notConvertedArg, typeof(string), theType);
+            object? converterReturn = MappingManager.Mapper.Map(notConvertedArg, typeof(string), theType);
             if (converterReturn != null && converterReturn is Task<Players?> task)
                 return await task;
             return converterReturn;
@@ -412,10 +412,10 @@ namespace TDS_Server.Manager.Commands
         private static async Task<object?> GetDatabasePlayerByName(string name)
         {
             object? result = null;
-            using (var dbcontext = new TDSNewContext())
-            {
-                result = await dbcontext.Players.Where(p => p.Name == name).Select(p => (object?)p).FirstOrDefaultAsync();
-            }
+            result = await Player.Player.DbContext.Players
+                .Where(p => p.Name == name)
+                .Select(p => (object?)p)
+                .FirstOrDefaultAsync();
             return result;
         }
     }

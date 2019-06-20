@@ -25,7 +25,6 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
-                MappingManager.Init();
                 SettingsManager.LoadLocal();
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);

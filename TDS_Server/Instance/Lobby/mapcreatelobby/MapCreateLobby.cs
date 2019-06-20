@@ -7,14 +7,13 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class MapCreateLobby : Lobby
     {
-        public MapCreateLobby(Lobbies entity) : base(entity) {}
+        private MapCreateLobby(Lobbies entity) : base(entity) {}
 
         public static async void Create(TDSPlayer player)
         {
             if (player.Entity == null)
                 return;
 
-            using var dbContext = new TDSNewContext();
             Lobbies entity = new Lobbies
             {
                 Name = "MapCreator-" + player.Client.Name,  // Todo after custom lobbies: They can't be named "MapCreator-*"
@@ -23,9 +22,9 @@ namespace TDS_Server.Instance.Lobby
                 Owner = player.Entity.Id,
                 IsTemporary = true
             };
-            await dbContext.Lobbies.AddAsync(entity);
-            await dbContext.SaveChangesAsync();
             MapCreateLobby lobby = new MapCreateLobby(entity);
+            lobby.DbContext.Add(entity);
+            await lobby.DbContext.SaveChangesAsync();
             await lobby.AddPlayer(player, 0);
         }
     }

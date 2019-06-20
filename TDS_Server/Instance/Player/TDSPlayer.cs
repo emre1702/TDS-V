@@ -17,16 +17,21 @@ namespace TDS_Server.Instance.Player
 {
     internal class TDSPlayer
     {
+        public TDSNewContext DbContext { get; private set; }
+
         public Players? Entity
         {
             get => _entity;
             set
             {
+                if (_entity != null)
+                    DbContext.Entry(_entity).State = EntityState.Detached;
                 _entity = value;
                 if (_entity == null)
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
                     _entity.PlayerSettings.Language = (byte)_langEnumBeforeLogin;
+                DbContext.Attach(value);
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
         }
@@ -34,7 +39,16 @@ namespace TDS_Server.Instance.Player
         public Client Client { get; }
         public Lobby.Lobby? CurrentLobby { get; set; }
         public Lobby.Lobby? PreviousLobby { get; set; }
-        public PlayerLobbyStats? CurrentLobbyStats { get; set; }
+        public PlayerLobbyStats? CurrentLobbyStats
+        {
+            get => _currentLobbyStats;
+            set
+            {
+                _currentLobbyStats = value;
+                if (value != null)
+                    DbContext.Attach(_currentLobbyStats);
+            }
+        }
 
         public Team? Team
         {
@@ -105,7 +119,6 @@ namespace TDS_Server.Instance.Player
                     _langEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = (byte)value;
-                SaveSettings();
             }
         }
 
@@ -161,8 +174,13 @@ namespace TDS_Server.Instance.Player
         private ELanguage _langEnumBeforeLogin = ELanguage.English;
         private Team? _team;
         private Gang? _gang;
+        private PlayerLobbyStats? _currentLobbyStats;
 
-        public TDSPlayer(Client client) => Client = client;
+        public TDSPlayer(Client client)
+        {
+            Client = client;
+            DbContext = new TDSNewContext();
+        }
 
         #region Money
 
@@ -259,48 +277,21 @@ namespace TDS_Server.Instance.Player
             }
         }
 
-        public async void SaveData()
-        {
-            using TDSNewContext dbContext = new TDSNewContext();
-            await SaveData(dbContext);
-        }
-
-        public Task<int> SaveData(TDSNewContext dbcontext)
+        public async Task SaveData()
         {
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
-                return Task.FromResult(0);
+                return;
 
-            /*dbcontext.Entry(Entity).State = EntityState.Modified;
-
-            if (Entity.PlayerLobbyStats.Count > 0)
-            {
-                foreach (var lobbyStats in Entity.PlayerLobbyStats)
-                {
-                    dbcontext.Entry(lobbyStats).State = EntityState.Modified;
-                }
-            }*/
-
-            dbcontext.Entry(Entity.PlayerStats).State = EntityState.Modified;
-
-            return dbcontext.SaveChangesAsync();
+            _lastSaveTick = Environment.TickCount;
+            await DbContext.SaveChangesAsync();
         }
 
-        public Task<int> CheckSaveData(TDSNewContext dbcontext)
+        public async void CheckSaveData()
         {
             if (Environment.TickCount - _lastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
-                return Task.FromResult(0);
-            _lastSaveTick = Environment.TickCount;
-            return SaveData(dbcontext);
-        }
-
-        private async void SaveSettings()
-        {
-            if (Entity == null)
                 return;
-            using TDSNewContext dbContext = new TDSNewContext();
-            dbContext.PlayerSettings.Attach(Entity.PlayerSettings);
-            dbContext.Entry(Entity.PlayerSettings).State = EntityState.Modified;
-            await SaveData(dbContext);
+
+            await SaveData();
         }
     }
 }

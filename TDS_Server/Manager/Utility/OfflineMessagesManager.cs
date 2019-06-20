@@ -9,33 +9,32 @@ namespace TDS_Server.Manager.Utility
 {
     internal static class OfflineMessagesManager
     {
-        #region AddOfflineMessage
+        public static TDSNewContext DbContext { get; set; }
+
+        static OfflineMessagesManager()
+        {
+            DbContext = new TDSNewContext();
+        }
 
         public static async void AddOfflineMessage(int playerid, int sourceid, string message)
         {
-            using var dbcontext = new TDSNewContext();
             Offlinemessages msg = new Offlinemessages()
             {
                 TargetId = playerid,
                 SourceId = sourceid,
                 Message = message
             };
-            await dbcontext.Offlinemessages.AddAsync(msg);
-            await dbcontext.SaveChangesAsync();
+            DbContext.Add(msg);
+            await DbContext.SaveChangesAsync();
         }
-
-        #endregion AddOfflineMessage
 
         public static async void CheckOfflineMessages(TDSPlayer player)
         {
-            using var dbcontext = new TDSNewContext();
-            int amountnewentries = await dbcontext
-                .Offlinemessages
+            int amountnewentries = await DbContext.Offlinemessages
                 .Where(msg => player.Entity != null && msg.SourceId == player.Entity.Id && !msg.Seen)
                 .AsNoTracking()
                 .CountAsync();
-            int amountentries = await dbcontext
-                .Offlinemessages
+            int amountentries = await DbContext.Offlinemessages
                 .AsNoTracking()
                 .CountAsync();
 

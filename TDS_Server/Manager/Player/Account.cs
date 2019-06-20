@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Player
 
         [ServerEvent(Event.PlayerDisconnected)]
 #pragma warning disable IDE0060 // Remove unused parameter
-        public static void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
+        public static async void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer player = client.GetChar();
@@ -43,7 +43,7 @@ namespace TDS_Server.Manager.Player
                 AdminsManager.SetOffline(player);
             player.ClosePrivateChat(true);
 
-            player.SaveData();
+            await player.SaveData();
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
@@ -93,26 +93,24 @@ namespace TDS_Server.Manager.Player
             player.Name = player.SocialClubName;
 
             bool isPlayerRegistered = false;
-            using (var dbcontext = new TDSNewContext())
+
+            int playerID = await Player.DbContext.Players.Where(p => p.Name == player.Name).Select(p => p.Id).FirstOrDefaultAsync();
+            if (playerID != 0)
             {
-                int playerID = await dbcontext.Players.Where(p => p.Name == player.Name).Select(p => p.Id).FirstOrDefaultAsync();
-                if (playerID != 0)
+                isPlayerRegistered = true;
+                var ban = await BansManager.DbContext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
+                if (ban != null)
                 {
-                    isPlayerRegistered = true;
-                    var ban = await dbcontext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
-                    if (ban != null)
+                    if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
                     {
-                        if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
-                        {
-                            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
-                            string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
-                            //todo Test line break and display
-                            player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
-                            return;
-                        }
-                        dbcontext.Remove(ban);
-                        await dbcontext.SaveChangesAsync();
+                        string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+                        string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
+                        //todo Test line break and display
+                        player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+                        return;
                     }
+                    BansManager.DbContext.Remove(ban);
+                    await BansManager.DbContext.SaveChangesAsync();
                 }
             }
 
@@ -123,7 +121,8 @@ namespace TDS_Server.Manager.Player
         {
             if (target.Entity == null)
                 return;
-            ChangePlayerMuteTime(admin, target.Entity, minutes, reason);
+            OutputMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
+            target.MuteTime = minutes == -1 ? (int?)null : minutes;
         }
 
         public static async void ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)

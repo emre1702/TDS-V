@@ -12,6 +12,7 @@ namespace TDS_Server.Instance.Lobby
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
+        public TDSNewContext DbContext { get; set; }
         public readonly Lobbies LobbyEntity;
 
         public int Id => LobbyEntity.Id;
@@ -28,7 +29,10 @@ namespace TDS_Server.Instance.Lobby
 
         public Lobby(Lobbies entity)
         {
+            DbContext = new TDSNewContext();
             LobbyEntity = entity;
+
+            DbContext.Attach(entity);
 
             Dimension = GetFreeDimension();
             SpawnPoint = new Vector3(
@@ -78,9 +82,8 @@ namespace TDS_Server.Instance.Lobby
                 RemovePlayer(character);
             }
 
-            using TDSNewContext dbcontext = new TDSNewContext();
-            dbcontext.Remove(LobbyEntity);
-            await dbcontext.SaveChangesAsync();
+            DbContext.Remove(LobbyEntity);
+            await DbContext.SaveChangesAsync();
         }
 
         private static uint GetFreeDimension()

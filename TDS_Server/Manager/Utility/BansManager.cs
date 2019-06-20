@@ -9,14 +9,18 @@ namespace TDS_Server.Manager.Utility
 {
     internal static class BansManager
     {
-        public static async Task RemoveExpiredBans(TDSNewContext dbcontext)
+        public static TDSNewContext DbContext { get; set; }
+
+        static BansManager()
         {
-            dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            await dbcontext.PlayerBans
+            DbContext = new TDSNewContext();
+        }
+
+        public static async Task RemoveExpiredBans()
+        {
+            await DbContext.PlayerBans
                 .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
                 .DeleteAsync();
-            await dbcontext.SaveChangesAsync();
-            dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
     }
 }

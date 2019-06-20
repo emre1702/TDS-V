@@ -34,30 +34,28 @@ namespace TDS_Server.Instance.Lobby
 
         public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason)
         {
-            using (var dbcontext = new TDSNewContext())
+            PlayerBans? ban = await DbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+            if (ban != null)
             {
-                PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
-                if (ban != null)
-                {
-                    ban.AdminId = admin.Entity?.Id ?? 0;
-                    ban.StartTimestamp = DateTime.Now;
-                    ban.EndTimestamp = endTime;
-                    ban.Reason = reason;
-                }
-                else
-                {
-                    ban = new PlayerBans()
-                    {
-                        PlayerId = target.Id,
-                        LobbyId = LobbyEntity.Id,
-                        AdminId = admin.Entity?.Id ?? 0,
-                        EndTimestamp = endTime,
-                        Reason = reason
-                    };
-                    await dbcontext.PlayerBans.AddAsync(ban);
-                }
-                await dbcontext.SaveChangesAsync();
+                ban.AdminId = admin.Entity?.Id ?? 0;
+                ban.StartTimestamp = DateTime.Now;
+                ban.EndTimestamp = endTime;
+                ban.Reason = reason;
             }
+            else
+            {
+                ban = new PlayerBans()
+                {
+                    PlayerId = target.Id,
+                    LobbyId = LobbyEntity.Id,
+                    AdminId = admin.Entity?.Id ?? 0,
+                    EndTimestamp = endTime,
+                    Reason = reason
+                };
+                await DbContext.PlayerBans.AddAsync(ban);
+            }
+            await DbContext.SaveChangesAsync();
+
             if (endTime.HasValue)
             {
                 if (LobbyEntity.IsOfficial && LobbyEntity.Id != 0)
@@ -89,17 +87,15 @@ namespace TDS_Server.Instance.Lobby
 
         public async void UnbanPlayer(TDSPlayer admin, Players target, string reason)
         {
-            using (var dbcontext = new TDSNewContext())
+            PlayerBans? ban = await DbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+            if (ban == null)
             {
-                PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
-                if (ban == null)
-                {
-                    NAPI.Chat.SendChatMessageToPlayer(admin.Client, admin.Language.PLAYER_ISNT_BANED);
-                    return;
-                }
-                dbcontext.PlayerBans.Remove(ban);
-                await dbcontext.SaveChangesAsync();
+                NAPI.Chat.SendChatMessageToPlayer(admin.Client, admin.Language.PLAYER_ISNT_BANED);
+                return;
             }
+            DbContext.PlayerBans.Remove(ban);
+            await DbContext.SaveChangesAsync();
+
             if (LobbyEntity.IsOfficial && LobbyEntity.Id != 0)
                 LangUtils.SendAllChatMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
             else if (LobbyEntity.Id == 0)
@@ -108,11 +104,11 @@ namespace TDS_Server.Instance.Lobby
                 SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
         }
 
-        private async Task<bool> IsPlayerBaned(TDSPlayer character, TDSNewContext dbcontext)
+        private async Task<bool> IsPlayerBaned(TDSPlayer character)
         {
             if (character.Entity == null)
                 return false;
-            PlayerBans? ban = await dbcontext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id);
+            PlayerBans? ban = await DbContext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (ban == null)
                 return false;
 
@@ -129,8 +125,8 @@ namespace TDS_Server.Instance.Lobby
             }
             else if (ban.EndTimestamp.HasValue)
             {
-                dbcontext.Remove(ban);
-                await dbcontext.SaveChangesAsync();
+                DbContext.Remove(ban);
+                await DbContext.SaveChangesAsync();
             }
             return false;
         }

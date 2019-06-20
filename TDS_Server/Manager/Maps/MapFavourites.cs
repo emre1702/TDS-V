@@ -12,11 +12,19 @@ namespace TDS_Server.Manager.Maps
 {
     internal class MapFavourites : Script
     {
+        public static TDSNewContext DbContext { get; set; }
+
+        static MapFavourites()
+        {
+            DbContext = new TDSNewContext();
+        }
+
         public static void LoadPlayerFavourites(TDSPlayer player)
         {
             if (player.Entity == null)
                 return;
-            List<int> mapIDs = player.Entity.PlayerMapFavourites
+            List<int> mapIDs = DbContext.PlayerMapFavourites
+                .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, JsonConvert.SerializeObject(mapIDs));
@@ -29,18 +37,15 @@ namespace TDS_Server.Manager.Maps
             if (entity == null)
                 return;
 
-            using var dbcontext = new TDSNewContext();
-
-            PlayerMapFavourites? favorite = await dbcontext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
+            PlayerMapFavourites? favorite = await DbContext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
             #region Add Favourite
 
             if (favorite == null && isFavorite)
             {
                 favorite = new PlayerMapFavourites { PlayerId = entity.Id, MapId = mapId };
-                dbcontext.PlayerMapFavourites.Add(favorite);
-                dbcontext.Entry(favorite).State = EntityState.Added;
-                await dbcontext.SaveChangesAsync();
+                DbContext.PlayerMapFavourites.Add(favorite);
+                await DbContext.SaveChangesAsync();
                 return;
             }
 
@@ -50,8 +55,8 @@ namespace TDS_Server.Manager.Maps
 
             if (favorite != null && !isFavorite)
             {
-                dbcontext.PlayerMapFavourites.Remove(favorite);
-                await dbcontext.SaveChangesAsync();
+                DbContext.PlayerMapFavourites.Remove(favorite);
+                await DbContext.SaveChangesAsync();
                 return;
             }
             #endregion

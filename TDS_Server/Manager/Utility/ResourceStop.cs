@@ -21,17 +21,13 @@ namespace TDS_Server.Manager.Utility
             Client? exceptionsource = null;
             try
             {
-                using var dbcontext = new TDSNewContext();
-                await AdminLogsManager.Save(dbcontext);
-                await ChatLogsManager.Save(dbcontext);
-                await ErrorLogsManager.Save(dbcontext);
-                await RestLogsManager.Save(dbcontext);
+                await LogsManager.Save();
 
                 List<Client> players = NAPI.Pools.GetAllPlayers();
                 foreach (Client player in players)
                 {
                     exceptionsource = player;
-                    await player.GetChar().SaveData(dbcontext);
+                    await player.GetChar().SaveData();
                 }
                 exceptionsource = null;
             }

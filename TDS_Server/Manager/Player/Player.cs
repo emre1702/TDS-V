@@ -10,7 +10,15 @@ namespace TDS_Server.Manager.Player
 {
     internal static class Player
     {
+        public static TDSNewContext DbContext { get; set; }
+
         private static readonly Dictionary<Client, TDSPlayer> _clientPlayers = new Dictionary<Client, TDSPlayer>();
+
+        static Player()
+        {
+            DbContext = new TDSNewContext();
+            DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        }
 
         public static TDSPlayer GetChar(this Client client)
         {
@@ -34,8 +42,7 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<int> GetPlayerIDByScname(string scname)
         {
-            using var dbcontext = new TDSNewContext();
-            return await dbcontext.Players
+            return await DbContext.Players
                 .Where(p => p.Scname == scname)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();

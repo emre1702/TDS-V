@@ -9,49 +9,36 @@ namespace TDS_Server.Manager.Logs
 {
     internal static class AdminLogsManager
     {
-        private static readonly List<LogAdmins> _notSavedAdminLogs = new List<LogAdmins>();
-
         public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false)
         {
-            _notSavedAdminLogs.Add(
-                new LogAdmins
-                {
-                    Source = source?.Entity?.Id ?? 0,
-                    Target = target?.Entity?.Id ?? null,
-                    Type = (byte)cmd,
-                    Lobby = target?.CurrentLobby?.Id ?? source?.CurrentLobby?.Id,
-                    AsDonator = asdonator,
-                    AsVip = asvip,
-                    Reason = reason,
-                    Timestamp = DateTime.Now
-                }
-            );
+            var log = new LogAdmins
+            {
+                Source = source?.Entity?.Id ?? 0,
+                Target = target?.Entity?.Id ?? null,
+                Type = (byte)cmd,
+                Lobby = target?.CurrentLobby?.Id ?? source?.CurrentLobby?.Id,
+                AsDonator = asdonator,
+                AsVip = asvip,
+                Reason = reason,
+                Timestamp = DateTime.Now
+            };
+            LogsManager.DbContext.Add(log);
         }
 
         public static void Log(ELogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false)
         {
-            _notSavedAdminLogs.Add(
-                new LogAdmins
-                {
-                    Source = source?.Entity?.Id ?? 0,
-                    Target = targetid,
-                    Type = (byte)cmd,
-                    Lobby = source?.CurrentLobby?.Id,
-                    AsDonator = asdonator,
-                    AsVip = asvip,
-                    Reason = reason,
-                    Timestamp = DateTime.Now
-                }
-            );
-        }
-
-        public static async Task Save(TDSNewContext dbcontext)
-        {
-            if (_notSavedAdminLogs.Count == 0)
-                return;
-            await dbcontext.AddRangeAsync(_notSavedAdminLogs);
-            await dbcontext.SaveChangesAsync();
-            _notSavedAdminLogs.Clear();
+            var log = new LogAdmins
+            {
+                Source = source?.Entity?.Id ?? 0,
+                Target = targetid,
+                Type = (byte)cmd,
+                Lobby = source?.CurrentLobby?.Id,
+                AsDonator = asdonator,
+                AsVip = asvip,
+                Reason = reason,
+                Timestamp = DateTime.Now
+            };
+            LogsManager.DbContext.Add(log);
         }
     }
 }
