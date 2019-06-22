@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
 
@@ -8,16 +9,16 @@ namespace TDS_Server.Instance
 {
     partial class Damagesys
     {
-        private static Dictionary<long, DamageDto> defaultDamages;
+        private static Dictionary<EWeaponHash, DamageDto> defaultDamages;
 
         public Damagesys(ICollection<LobbyWeapons> weapons)
         {
             foreach (LobbyWeapons weapon in weapons)
             {
                 if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
-                    damagesDict[(WeaponHash)weapon.Hash] = defaultDamages[weapon.Hash];
+                    damagesDict[weapon.Hash] = defaultDamages[weapon.Hash];
                 else
-                    damagesDict[(WeaponHash)weapon.Hash] = new DamageDto(weapon);
+                    damagesDict[weapon.Hash] = new DamageDto(weapon);
             }
         }
 
@@ -29,13 +30,12 @@ namespace TDS_Server.Instance
         public static void LoadDefaults(TDSNewContext dbcontext)
         {
             defaultDamages = dbcontext.Weapons
-                .Select(w => new { w.Hash, w.DefaultDamage, w.DefaultHeadMultiplicator })
                 .ToDictionary(
-                    w => w.Hash, 
-                    w => new DamageDto 
-                    { 
-                        Damage = w.DefaultDamage, 
-                        HeadMultiplier = w.DefaultHeadMultiplicator 
+                    w => w.Hash,
+                    w => new DamageDto
+                    {
+                        Damage = w.DefaultDamage,
+                        HeadMultiplier = w.DefaultHeadMultiplicator
                     }
                 );
         }

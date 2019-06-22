@@ -15,8 +15,8 @@ namespace TDS_Server_DB.Entity
         public string Command { get; set; }
         public short? NeededAdminLevel { get; set; }
         public short? NeededDonation { get; set; }
-        public bool? VipCanUse { get; set; }
-        public bool? LobbyOwnerCanUse { get; set; }
+        public bool VipCanUse { get; set; }
+        public bool LobbyOwnerCanUse { get; set; }
 
         public virtual AdminLevels NeededAdminLevelNavigation { get; set; }
         public virtual ICollection<CommandAlias> CommandAlias { get; set; }

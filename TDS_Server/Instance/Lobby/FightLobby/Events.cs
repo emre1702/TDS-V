@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
+using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.Player;
 
@@ -36,7 +37,7 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerWeaponChange, newWeapon, DmgSys.GetDamage(newWeapon));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerWeaponChange, newWeapon, DmgSys.GetDamage((EWeaponHash)newWeapon));
         }
     }
 }

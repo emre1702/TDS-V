@@ -310,7 +310,7 @@ namespace TDS_Server.Manager.Commands
 
             #region Lobby-Owner Check
 
-            if (!canuse && entity.LobbyOwnerCanUse.HasValue)
+            if (!canuse && entity.LobbyOwnerCanUse)
             {
                 needright = true;
                 canuse = character.IsLobbyOwner;
@@ -346,7 +346,7 @@ namespace TDS_Server.Manager.Commands
 
             #region VIP Check
 
-            if (!canuse && entity.VipCanUse.HasValue)
+            if (!canuse && entity.VipCanUse)
             {
                 needright = true;
                 canuse = character.Entity?.IsVip ?? false;

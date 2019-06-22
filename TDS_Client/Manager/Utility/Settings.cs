@@ -40,7 +40,7 @@ namespace TDS_Client.Manager.Utility
                 Angular.LoadLanguage(_languageEnum);
                 if (syncedPlayerSettings != null)
                 {
-                    syncedPlayerSettings.Language = (byte)value;
+                    syncedPlayerSettings.Language = value;
                     EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
                 }
             }
@@ -94,11 +94,11 @@ namespace TDS_Client.Manager.Utility
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
-            if (!_languageManuallyChanged || LanguageEnum == (ELanguage)loadedSyncedSettings.Language)
-                LanguageEnum = (ELanguage)loadedSyncedSettings.Language;
+            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language)
+                LanguageEnum = loadedSyncedSettings.Language;
             else
             {
-                loadedSyncedSettings.Language = (byte)LanguageEnum;
+                loadedSyncedSettings.Language = LanguageEnum;
                 EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
             }
             syncedPlayerSettings = loadedSyncedSettings;

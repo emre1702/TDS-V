@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql;
+using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Entity
 {
@@ -15,46 +19,74 @@ namespace TDS_Server_DB.Entity
         {
         }
 
+        static TDSNewContext()
+        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EPlayerRelation>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponHash>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELogType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELobbyType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELanguage>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<VehicleHash>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EFreeroamVehicleType>();
+        }
+
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual DbSet<AdminLevels> AdminLevels { get; set; }
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
-        public virtual DbSet<FreeroamVehicleType> FreeroamVehicleType { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
-        public virtual DbSet<KillingspreeRewards> KillingspreeRewards { get; set; }
-        public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
+        public virtual DbSet<LobbyKillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<LobbyMaps> LobbyMaps { get; set; }
         public virtual DbSet<LobbyRewards> LobbyRewards { get; set; }
         public virtual DbSet<LobbyRoundSettings> LobbyRoundSettings { get; set; }
-        public virtual DbSet<LobbyTypes> LobbyTypes { get; set; }
         public virtual DbSet<LobbyWeapons> LobbyWeapons { get; set; }
         public virtual DbSet<LogAdmins> LogAdmins { get; set; }
         public virtual DbSet<LogChats> LogChats { get; set; }
         public virtual DbSet<LogErrors> LogErrors { get; set; }
         public virtual DbSet<LogRests> LogRests { get; set; }
-        public virtual DbSet<LogTypes> LogTypes { get; set; }
         public virtual DbSet<Maps> Maps { get; set; }
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
+        public virtual DbSet<PlayerRelations> PlayerRelations { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
-        public virtual DbSet<WeaponTypes> WeaponTypes { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresExtension("pg_stat_statements")
-                .HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
+            #region Enum
+            modelBuilder.ForNpgsqlHasEnum<EPlayerRelation>();
+            modelBuilder.ForNpgsqlHasEnum<EWeaponHash>();
+            modelBuilder.ForNpgsqlHasEnum<EWeaponType>();
+            modelBuilder.ForNpgsqlHasEnum<ELogType>();
+            modelBuilder.ForNpgsqlHasEnum<ELobbyType>();
+            modelBuilder.ForNpgsqlHasEnum<ELanguage>();
+            modelBuilder.ForNpgsqlHasEnum<VehicleHash>();
+            modelBuilder.ForNpgsqlHasEnum<EFreeroamVehicleType>();
+            #endregion
+
+            #region Tables
+            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
 
             modelBuilder.Entity<AdminLevelNames>(entity =>
             {
@@ -65,11 +97,6 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.HasOne(d => d.LanguageNavigation)
-                    .WithMany(p => p.AdminLevelNames)
-                    .HasForeignKey(d => d.Language)
-                    .HasConstraintName("FK_admin_level_names_language");
 
                 entity.HasOne(d => d.LevelNavigation)
                     .WithMany(p => p.AdminLevelNames)
@@ -119,11 +146,6 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.CommandInfos)
                     .HasForeignKey(d => d.Id)
                     .HasConstraintName("command_infos_ID_fkey");
-
-                entity.HasOne(d => d.LanguageNavigation)
-                    .WithMany(p => p.CommandInfos)
-                    .HasForeignKey(d => d.Language)
-                    .HasConstraintName("command_infos_Language_fkey");
             });
 
             modelBuilder.Entity<Commands>(entity =>
@@ -144,28 +166,13 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<FreeroamDefaultVehicle>(entity =>
             {
-                entity.HasKey(e => e.VehicleTypeId)
-                    .HasName("freeroam_default_vehicle_pkey");
+                entity.HasKey(e => e.VehicleType);
 
                 entity.ToTable("freeroam_default_vehicle");
 
-                entity.Property(e => e.VehicleTypeId).ValueGeneratedOnAdd();
+                entity.Property(e => e.VehicleType);
 
                 entity.Property(e => e.Note).HasColumnType("character varying");
-
-                entity.HasOne(d => d.VehicleType)
-                    .WithOne(p => p.FreeroamDefaultVehicle)
-                    .HasForeignKey<FreeroamDefaultVehicle>(d => d.VehicleTypeId)
-                    .HasConstraintName("freeroam_default_vehicle_VehicleTypeId_fkey");
-            });
-
-            modelBuilder.Entity<FreeroamVehicleType>(entity =>
-            {
-                entity.ToTable("freeroam_vehicle_type");
-
-                entity.Property(e => e.Type)
-                    .IsRequired()
-                    .HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Gangs>(entity =>
@@ -186,27 +193,19 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("gangs_TeamID_fkey");
             });
 
-            modelBuilder.Entity<KillingspreeRewards>(entity =>
+            modelBuilder.Entity<LobbyKillingspreeRewards>(entity =>
             {
-                entity.HasKey(e => e.KillsAmount)
+                entity.HasKey(e => new { e.LobbyId, e.KillsAmount })
                     .HasName("killingspree_rewards_pkey");
 
                 entity.ToTable("killingspree_rewards");
 
                 entity.Property(e => e.KillsAmount).ValueGeneratedNever();
-            });
 
-            modelBuilder.Entity<Languages>(entity =>
-            {
-                entity.ToTable("languages");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Language)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.HasOne(d => d.Lobby)
+                    .WithMany(p => p.LobbyKillingspreeRewards)
+                    .HasForeignKey(d => d.LobbyId)
+                    .HasConstraintName("lobby_killingspree_rewards_LobbyID_fkey");
             });
 
             modelBuilder.Entity<Lobbies>(entity =>
@@ -239,11 +238,6 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.Lobbies)
                     .HasForeignKey(d => d.Owner)
                     .HasConstraintName("lobbies_Owner_fkey");
-
-                entity.HasOne(d => d.TypeNavigation)
-                    .WithMany(p => p.Lobbies)
-                    .HasForeignKey(d => d.Type)
-                    .HasConstraintName("lobbies_Type_fkey");
             });
 
             modelBuilder.Entity<LobbyMaps>(entity =>
@@ -315,19 +309,6 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("lobby_round_infos_LobbyID_fkey");
             });
 
-            modelBuilder.Entity<LobbyTypes>(entity =>
-            {
-                entity.ToTable("lobby_types");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-            });
-
             modelBuilder.Entity<LobbyWeapons>(entity =>
             {
                 entity.HasKey(e => e.Hash)
@@ -394,19 +375,6 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Serial).HasMaxLength(200);
 
                 entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
-            });
-
-            modelBuilder.Entity<LogTypes>(entity =>
-            {
-                entity.ToTable("log_types");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasDefaultValueSql("nextval('\"ID_ID_seq\"'::regclass)");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Maps>(entity =>
@@ -553,6 +521,26 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("player_map_ratings_PlayerID_fkey");
             });
 
+            modelBuilder.Entity<PlayerRelations>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.TargetId })
+                    .HasName("player_relations_pkey");
+
+                entity.Property(e => e.Relation).IsRequired();
+
+                entity.ToTable("player_relations");
+
+                entity.HasOne(d => d.Player)
+                    .WithMany(p => p.PlayerRelationsPlayer)
+                    .HasForeignKey(d => d.PlayerId)
+                    .HasConstraintName("player_relations_PlayerId_fkey");
+
+                entity.HasOne(d => d.Target)
+                    .WithMany(p => p.PlayerRelationsTarget)
+                    .HasForeignKey(d => d.TargetId)
+                    .HasConstraintName("player_relations_TargetId_fkey");
+            });
+
             modelBuilder.Entity<PlayerSettings>(entity =>
             {
                 entity.HasKey(e => e.PlayerId)
@@ -563,12 +551,6 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.PlayerId)
                     .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
-
-                entity.HasOne(d => d.LanguageNavigation)
-                    .WithMany(p => p.PlayerSettings)
-                    .HasForeignKey(d => d.Language)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("player_settings_Language_fkey");
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
@@ -676,18 +658,6 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("teams_Lobby_fkey");
             });
 
-            modelBuilder.Entity<WeaponTypes>(entity =>
-            {
-                entity.ToTable("weapon_types");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-            });
 
             modelBuilder.Entity<Weapons>(entity =>
             {
@@ -696,18 +666,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.ToTable("weapons");
 
-                entity.Property(e => e.Hash).ValueGeneratedNever();
+                entity.Property(e => e.Hash).IsRequired();
 
                 entity.Property(e => e.DefaultHeadMultiplicator).HasDefaultValueSql("1");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.HasOne(d => d.TypeNavigation)
-                    .WithMany(p => p.Weapons)
-                    .HasForeignKey(d => d.Type)
-                    .HasConstraintName("weapons_Type_fkey");
             });
 
             modelBuilder.HasSequence<short>("ID_ID_seq");
@@ -717,6 +678,326 @@ namespace TDS_Server_DB.Entity
             modelBuilder.HasSequence<int>("maps_ID_seq");
 
             modelBuilder.HasSequence<short>("ServerSettings_ID_seq");
+            #endregion
+
+            #region Seed data
+            modelBuilder.Entity<ServerSettings>().HasData(
+                new ServerSettings {  Id = 1, GamemodeName = "tdm", MapsPath = "bridge/resources/tds/maps/",
+                    NewMapsPath = "bridge/resources/tds/newmaps/", SavedMapsPath = "bridge/resources/tds/savedmaps/",
+                    ErrorToPlayerOnNonExistentCommand = true, ToChatOnNonExistentCommand = false,
+                    DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
+                    SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,
+                    ArenaNewMapProbabilityPercent = 2
+                }
+            );
+
+            modelBuilder.Seed(new List<Players> {
+                new Players { Id = 0, Scname = "System", Name = "System", Password = "" }
+            });
+
+            modelBuilder.Seed(new List<Lobbies> {
+                new Lobbies { Id = 0, Owner = 0, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true, SpawnAgainAfterDeathMs = 0 },
+                new Lobbies { Id = 1, Owner = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400, DieAfterOutsideMapLimitTime = 10 },
+                new Lobbies { Id = 2, Owner = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
+            });
+
+            modelBuilder.Seed(new List<AdminLevels> {
+                new AdminLevels { Level = 0, ColorR = 220, ColorG = 220, ColorB = 220 },
+                new AdminLevels { Level = 1, ColorR = 113, ColorG = 202, ColorB = 113 },
+                new AdminLevels { Level = 2, ColorR = 253, ColorG = 132, ColorB = 85 },
+                new AdminLevels { Level = 3, ColorR = 222, ColorG = 50, ColorB = 50 }
+            });
+
+            modelBuilder.Entity<Commands>().HasData(
+                new Commands { Id = 1, Command = "AdminSay", NeededAdminLevel = 1 },
+                new Commands { Id = 2, Command = "AdminChat", NeededAdminLevel = 1, VipCanUse = true },
+                new Commands { Id = 3, Command = "Ban", NeededAdminLevel = 2 },
+                new Commands { Id = 4, Command = "Goto", NeededAdminLevel = 2, LobbyOwnerCanUse = true },
+                new Commands { Id = 5, Command = "Kick", NeededAdminLevel = 1, VipCanUse = true },
+                new Commands { Id = 6, Command = "LobbyBan", NeededAdminLevel = 1, VipCanUse = true, LobbyOwnerCanUse = true },
+                new Commands { Id = 7, Command = "LobbyKick", NeededAdminLevel = 1, VipCanUse = true, LobbyOwnerCanUse = true },
+                new Commands { Id = 8, Command = "Mute", NeededAdminLevel = 1, VipCanUse = true },
+                new Commands { Id = 9, Command = "NextMap", NeededAdminLevel = 1, VipCanUse = true, LobbyOwnerCanUse = true },
+                new Commands { Id = 10, Command = "LobbyLeave" },
+                new Commands { Id = 11, Command = "Suicide" },
+                new Commands { Id = 12, Command = "GlobalChat" },
+                new Commands { Id = 13, Command = "TeamChat" },
+                new Commands { Id = 14, Command = "PrivateChat" },
+                new Commands { Id = 15, Command = "Position" },
+                new Commands { Id = 16, Command = "ClosePrivateChat" },
+                new Commands { Id = 17, Command = "OpenPrivateChat" },
+                new Commands { Id = 18, Command = "PrivateMessage" },
+                new Commands { Id = 19, Command = "UserId" }
+            );
+
+
+            modelBuilder.Seed(new List<AdminLevelNames> {
+                new AdminLevelNames { Level = 0, Language = ELanguage.English, Name = "User" },
+                new AdminLevelNames { Level = 0, Language = ELanguage.German, Name = "User" },
+                new AdminLevelNames { Level = 1, Language = ELanguage.English, Name = "Supporter" },
+                new AdminLevelNames { Level = 1, Language = ELanguage.German, Name = "Supporter" },
+                new AdminLevelNames { Level = 2, Language = ELanguage.English, Name = "Administrator" },
+                new AdminLevelNames { Level = 2, Language = ELanguage.German, Name = "Administrator" },
+                new AdminLevelNames { Level = 3, Language = ELanguage.English, Name = "Projectleader" },
+                new AdminLevelNames { Level = 3, Language = ELanguage.German, Name = "Projektleiter" }
+            });
+
+            modelBuilder.Entity<CommandAlias>().HasData(
+                new CommandAlias { Alias = "Announce", Command = 1 },
+                new CommandAlias { Alias = "Announcement", Command = 1 },
+                new CommandAlias { Alias = "ASay", Command = 1 },
+                new CommandAlias { Alias = "OChat", Command = 1 },
+                new CommandAlias { Alias = "OSay", Command = 1 },
+                new CommandAlias { Alias = "AChat", Command = 2 },
+                new CommandAlias { Alias = "ChatAdmin", Command = 2 },
+                new CommandAlias { Alias = "InternChat", Command = 2 },
+                new CommandAlias { Alias = "WriteAdmin", Command = 2 },
+                new CommandAlias { Alias = "PBan", Command = 3 },
+                new CommandAlias { Alias = "Permaban", Command = 3 },
+                new CommandAlias { Alias = "RBan", Command = 3 },
+                new CommandAlias { Alias = "TBan", Command = 3 },
+                new CommandAlias { Alias = "Timeban", Command = 3 },
+                new CommandAlias { Alias = "UBan", Command = 3 },
+                new CommandAlias { Alias = "UnBan", Command = 3 },
+                new CommandAlias { Alias = "GotoPlayer", Command = 4 },
+                new CommandAlias { Alias = "GotoXYZ", Command = 4 },
+                new CommandAlias { Alias = "Warp", Command = 4 },
+                new CommandAlias { Alias = "WarpTo", Command = 4 },
+                new CommandAlias { Alias = "WarpToPlayer", Command = 4 },
+                new CommandAlias { Alias = "XYZ", Command = 4 },
+                new CommandAlias { Alias = "RKick", Command = 5 },
+                new CommandAlias { Alias = "BanLobby", Command = 6 },
+                new CommandAlias { Alias = "KickLobby", Command = 7 },
+                new CommandAlias { Alias = "PermaMute", Command = 8 },
+                new CommandAlias { Alias = "PMute", Command = 8 },
+                new CommandAlias { Alias = "RMute", Command = 8 },
+                new CommandAlias { Alias = "TimeMute", Command = 8 },
+                new CommandAlias { Alias = "TMute", Command = 8 },
+                new CommandAlias { Alias = "EndRound", Command = 9 },
+                new CommandAlias { Alias = "Next", Command = 9 },
+                new CommandAlias { Alias = "Skip", Command = 9 },
+                new CommandAlias { Alias = "Back", Command = 10 },
+                new CommandAlias { Alias = "Leave", Command = 10 },
+                new CommandAlias { Alias = "LeaveLobby", Command = 10 },
+                new CommandAlias { Alias = "Mainmenu", Command = 10 },
+                new CommandAlias { Alias = "Dead", Command = 11 },
+                new CommandAlias { Alias = "Death", Command = 11 },
+                new CommandAlias { Alias = "Die", Command = 11 },
+                new CommandAlias { Alias = "Kill", Command = 11 },
+                new CommandAlias { Alias = "AllChat", Command = 12 },
+                new CommandAlias { Alias = "AllSay", Command = 12 },
+                new CommandAlias { Alias = "G", Command = 12 },
+                new CommandAlias { Alias = "GChat", Command = 12 },
+                new CommandAlias { Alias = "GlobalSay", Command = 12 },
+                new CommandAlias { Alias = "PublicChat", Command = 12 },
+                new CommandAlias { Alias = "PublicSay", Command = 12 },
+                new CommandAlias { Alias = "TChat", Command = 13 },
+                new CommandAlias { Alias = "TeamSay", Command = 13 },
+                new CommandAlias { Alias = "TSay", Command = 13 },
+                new CommandAlias { Alias = "PChat", Command = 14 },
+                new CommandAlias { Alias = "PrivateSay", Command = 14 },
+                new CommandAlias { Alias = "Coord", Command = 15 },
+                new CommandAlias { Alias = "Coordinate", Command = 15 },
+                new CommandAlias { Alias = "Coordinates", Command = 15 },
+                new CommandAlias { Alias = "CurrentPos", Command = 15 },
+                new CommandAlias { Alias = "CurrentPosition", Command = 15 },
+                new CommandAlias { Alias = "GetPos", Command = 15 },
+                new CommandAlias { Alias = "GetPosition", Command = 15 },
+                new CommandAlias { Alias = "Pos", Command = 15 },
+                new CommandAlias { Alias = "MSG", Command = 18 },
+                new CommandAlias { Alias = "PM", Command = 18 },
+                new CommandAlias { Alias = "PSay", Command = 18 },
+                new CommandAlias { Alias = "CPC", Command = 16 },
+                new CommandAlias { Alias = "ClosePM", Command = 16 },
+                new CommandAlias { Alias = "ClosePrivateSay", Command = 16 },
+                new CommandAlias { Alias = "StopPrivateChat", Command = 16 },
+                new CommandAlias { Alias = "StopPrivateSay", Command = 17 },
+                new CommandAlias { Alias = "OpenPrivateSay", Command = 17 },
+                new CommandAlias { Alias = "OpenPM", Command = 17 },
+                new CommandAlias { Alias = "OPC", Command = 17 },
+                new CommandAlias { Alias = "UID", Command = 19 }
+            );
+
+            modelBuilder.Entity<CommandInfos>().HasData(
+                new CommandInfos { Id = 1, Language = ELanguage.German, Info = "Schreibt öffentlich als ein Admin." },
+                new CommandInfos { Id = 1, Language = ELanguage.English, Info = "Writes public as an admin." },
+                new CommandInfos { Id = 2, Language = ELanguage.German, Info = "Schreibt intern nur den Admins." },
+                new CommandInfos { Id = 2, Language = ELanguage.English, Info = "Writes intern to admins only." },
+                new CommandInfos { Id = 3, Language = ELanguage.German, Info = "Bannt einen Spieler vom gesamten Server." },
+                new CommandInfos { Id = 3, Language = ELanguage.English, Info = "Bans a player out of the server." },
+                new CommandInfos { Id = 4, Language = ELanguage.German, Info = "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
+                new CommandInfos { Id = 4, Language = ELanguage.English, Info = "Warps the user to another player (maybe in his vehicle) or to the defined coordinates." },
+                new CommandInfos { Id = 5, Language = ELanguage.German, Info = "Kickt einen Spieler vom Server." },
+                new CommandInfos { Id = 5, Language = ELanguage.English, Info = "Kicks a player out of the server." },
+                new CommandInfos { Id = 6, Language = ELanguage.German, Info = "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                new CommandInfos { Id = 6, Language = ELanguage.English, Info = "Bans a player out of the lobby in which the command was used." },
+                new CommandInfos { Id = 7, Language = ELanguage.German, Info = "Kickt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                new CommandInfos { Id = 7, Language = ELanguage.English, Info = "Kicks a player out of the lobby in which the command was used." },
+                new CommandInfos { Id = 8, Language = ELanguage.German, Info = "Mutet einen Spieler im normalen Chat." },
+                new CommandInfos { Id = 8, Language = ELanguage.English, Info = "Mutes a player in the normal chat." },
+                new CommandInfos { Id = 9, Language = ELanguage.German, Info = "Beendet die jetzige Runde in der jeweiligen Lobby." },
+                new CommandInfos { Id = 9, Language = ELanguage.English, Info = "Ends the current round in the lobby." },
+                new CommandInfos { Id = 10, Language = ELanguage.German, Info = "Verlässt die jetzige Lobby." },
+                new CommandInfos { Id = 10, Language = ELanguage.English, Info = "Leaves the current lobby." },
+                new CommandInfos { Id = 11, Language = ELanguage.German, Info = "Tötet den Nutzer (Selbstmord)." },
+                new CommandInfos { Id = 11, Language = ELanguage.English, Info = "Kills the user (suicide)." },
+                new CommandInfos { Id = 12, Language = ELanguage.German, Info = "Globaler Chat, welcher überall gelesen werden kann." },
+                new CommandInfos { Id = 12, Language = ELanguage.English, Info = "Global chat which can be read everywhere." },
+                new CommandInfos { Id = 13, Language = ELanguage.German, Info = "Sendet die Nachricht nur zum eigenen Team." },
+                new CommandInfos { Id = 13, Language = ELanguage.English, Info = "Sends the message to the current team only." },
+                new CommandInfos { Id = 14, Language = ELanguage.German, Info = "Gibt die Position des Spielers aus." },
+                new CommandInfos { Id = 14, Language = ELanguage.English, Info = "Outputs the position of the player." },
+                new CommandInfos { Id = 15, Language = ELanguage.German, Info = "Sendet eine Nachricht im Privatchat." },
+                new CommandInfos { Id = 15, Language = ELanguage.English, Info = "Sends a message in private chat." },
+                new CommandInfos { Id = 16, Language = ELanguage.German, Info = "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
+                new CommandInfos { Id = 16, Language = ELanguage.English, Info = "Closes a private chat or withdraws a private chat request." },
+                new CommandInfos { Id = 17, Language = ELanguage.German, Info = "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
+                new CommandInfos { Id = 17, Language = ELanguage.English, Info = "Sends a private chat request or accepts the request of another user." },
+                new CommandInfos { Id = 18, Language = ELanguage.German, Info = "Private Nachricht an einen bestimmten Spieler." },
+                new CommandInfos { Id = 18, Language = ELanguage.English, Info = "Private message to a specific player." },
+                new CommandInfos { Id = 19, Language = ELanguage.German, Info = "Gibt dir deine User-Id aus." },
+                new CommandInfos { Id = 19, Language = ELanguage.English, Info = "Outputs your user-id to yourself." }
+            );
+
+            modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(
+                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Car, VehicleHash = VehicleHash.Pfister811 },
+                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Helicopter, VehicleHash = VehicleHash.AKULA },
+                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Plane, VehicleHash = VehicleHash.Pyro },
+                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Bike, VehicleHash = VehicleHash.Hakuchou2 },
+                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Boat, VehicleHash = VehicleHash.Speeder2 }
+            );
+
+            modelBuilder.Entity<LobbyKillingspreeRewards>().HasData(
+                new LobbyKillingspreeRewards { LobbyId = 1, KillsAmount = 3, HealthOrArmor = 30 },
+                new LobbyKillingspreeRewards { LobbyId = 1, KillsAmount = 5, HealthOrArmor = 50 },
+                new LobbyKillingspreeRewards { LobbyId = 1, KillsAmount = 10, HealthOrArmor = 100 },
+                new LobbyKillingspreeRewards { LobbyId = 1, KillsAmount = 15, HealthOrArmor = 100 }
+            );
+
+            modelBuilder.Seed(new List<Teams> {
+                new Teams { Id = 0, Index = 0, Name = "Spectator", Lobby = 0, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
+                new Teams { Id = 1, Index = 0, Name = "Spectator", Lobby = 1, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
+                new Teams { Id = 2, Index = 1, Name = "SWAT", Lobby = 1, ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
+                new Teams { Id = 3, Index = 2, Name = "Terrorist", Lobby = 1, ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
+                new Teams { Id = 4, Index = 0, Name = "None", Lobby = 2, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 }
+            });
+
+            modelBuilder.Seed(new List<Gangs> {
+                new Gangs { Id = 0, TeamId = 4, Short = "-" }
+            });
+
+            modelBuilder.Entity<LobbyMaps>().HasData(
+                new LobbyMaps { LobbyId = 1, MapId = -1 }
+            );
+
+            modelBuilder.Entity<LobbyRewards>().HasData(
+                new LobbyRewards { LobbyId = 1, MoneyPerKill = 20, MoneyPerAssist = 10, MoneyPerDamage = 0.1 },
+                new LobbyRewards { LobbyId = 2, MoneyPerKill = 20, MoneyPerAssist = 10, MoneyPerDamage = 0.1 }
+            );
+
+            modelBuilder.Entity<LobbyRoundSettings>().HasData(
+                new LobbyRoundSettings { LobbyId = 1, RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000, BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true }
+            );
+
+            modelBuilder.Entity<Weapons>().HasData(
+                new Weapons { Hash = EWeaponHash.SniperRifle, Type = EWeaponType.SniperRifle, DefaultDamage = 101, DefaultHeadMultiplicator = 2 },
+                new Weapons { Hash = EWeaponHash.FireExtinguisher, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CompactGrenadeLauncher, Type = EWeaponType.HeavyWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Snowball, Type = EWeaponType.ThrownWeapon, DefaultDamage = 10, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.VintagePistol, Type = EWeaponType.Handgun, DefaultDamage = 34, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CombatPDW, Type = EWeaponType.MachineGun, DefaultDamage = 28, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.HeavySniper, Type = EWeaponType.SniperRifle, DefaultDamage = 216, DefaultHeadMultiplicator = 2 },
+                new Weapons { Hash = EWeaponHash.SweeperShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 162, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MicroSMG, Type = EWeaponType.MachineGun, DefaultDamage = 21, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Wrench, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Pistol, Type = EWeaponType.Handgun, DefaultDamage = 26, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.PumpShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 58, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.APPistol, Type = EWeaponType.Handgun, DefaultDamage = 28, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Ball, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Molotov, Type = EWeaponType.ThrownWeapon, DefaultDamage = 10, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SMG, Type = EWeaponType.MachineGun, DefaultDamage = 22, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.StickyBomb, Type = EWeaponType.ThrownWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.PetrolCan, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.StunGun, Type = EWeaponType.Handgun, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.HeavyShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 117, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Minigun, Type = EWeaponType.HeavyWeapon, DefaultDamage = 30, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.GolfClub, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.FlareGun, Type = EWeaponType.Handgun, DefaultDamage = 50, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Flare, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.GrenadeLauncherSmoke, Type = EWeaponType.HeavyWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Hammer, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CombatPistol, Type = EWeaponType.Handgun, DefaultDamage = 27, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Gusenberg, Type = EWeaponType.MachineGun, DefaultDamage = 34, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CompactRifle, Type = EWeaponType.AssaultRifle, DefaultDamage = 34, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.HomingLauncher, Type = EWeaponType.HeavyWeapon, DefaultDamage = 150, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Nightstick, Type = EWeaponType.Melee, DefaultDamage = 35, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Railgun, Type = EWeaponType.HeavyWeapon, DefaultDamage = 50, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SawnOffShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 160, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.BullpupRifle, Type = EWeaponType.AssaultRifle, DefaultDamage = 32, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Firework, Type = EWeaponType.HeavyWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CombatMG, Type = EWeaponType.MachineGun, DefaultDamage = 28, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CarbineRifle, Type = EWeaponType.AssaultRifle, DefaultDamage = 32, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Crowbar, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Flashlight, Type = EWeaponType.Melee, DefaultDamage = 30, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Dagger, Type = EWeaponType.Melee, DefaultDamage = 45, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Grenade, Type = EWeaponType.ThrownWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.PoolCue, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Bat, Type = EWeaponType.Melee, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Pistol50, Type = EWeaponType.Handgun, DefaultDamage = 51, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Knife, Type = EWeaponType.Melee, DefaultDamage = 45, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MG, Type = EWeaponType.MachineGun, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.BullpupShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 112, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.BZGas, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Unarmed, Type = EWeaponType.Melee, DefaultDamage = 15, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.GrenadeLauncher, Type = EWeaponType.HeavyWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.NightVision, Type = EWeaponType.Rest, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Musket, Type = EWeaponType.Shotgun, DefaultDamage = 165, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.ProximityMine, Type = EWeaponType.ThrownWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.AdvancedRifle, Type = EWeaponType.AssaultRifle, DefaultDamage = 30, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.RPG, Type = EWeaponType.HeavyWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.PipeBomb, Type = EWeaponType.ThrownWeapon, DefaultDamage = 100, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MiniSMG, Type = EWeaponType.MachineGun, DefaultDamage = 22, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SNSPistol, Type = EWeaponType.Handgun, DefaultDamage = 28, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.AssaultRifle, Type = EWeaponType.AssaultRifle, DefaultDamage = 30, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SpecialCarbine, Type = EWeaponType.AssaultRifle, DefaultDamage = 32, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Revolver, Type = EWeaponType.Handgun, DefaultDamage = 110, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MarksmanRifle, Type = EWeaponType.SniperRifle, DefaultDamage = 65, DefaultHeadMultiplicator = 2 },
+                new Weapons { Hash = EWeaponHash.BattleAxe, Type = EWeaponType.Melee, DefaultDamage = 50, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.HeavyPistol, Type = EWeaponType.Handgun, DefaultDamage = 40, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.KnuckleDuster, Type = EWeaponType.Melee, DefaultDamage = 30, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MachinePistol, Type = EWeaponType.MachineGun, DefaultDamage = 20, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.MarksmanPistol, Type = EWeaponType.Handgun, DefaultDamage = 150, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Machete, Type = EWeaponType.Melee, DefaultDamage = 45, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SwitchBlade, Type = EWeaponType.Melee, DefaultDamage = 50, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.AssaultShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 192, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.DoubleBarrelShotgun, Type = EWeaponType.Shotgun, DefaultDamage = 166, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.AssaultSMG, Type = EWeaponType.MachineGun, DefaultDamage = 23, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Hatchet, Type = EWeaponType.Melee, DefaultDamage = 50, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Bottle, Type = EWeaponType.ThrownWeapon, DefaultDamage = 10, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.Parachute, Type = EWeaponType.Rest, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.SmokeGrenade, Type = EWeaponType.ThrownWeapon, DefaultDamage = 0, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.UpnAtomizer, Type = EWeaponType.Handgun, DefaultDamage = 80, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.UnholyHellbringer, Type = EWeaponType.MachineGun, DefaultDamage = 23, DefaultHeadMultiplicator = 1 },
+                new Weapons { Hash = EWeaponHash.CarbineRifleMK2, Type = EWeaponType.AssaultRifle, DefaultDamage = 32, DefaultHeadMultiplicator = 1 }
+            );
+
+            modelBuilder.Entity<LobbyWeapons>().HasData(
+                new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Lobby = 1, Ammo = 2000 },
+                new LobbyWeapons { Hash = EWeaponHash.Revolver, Lobby = 1, Ammo = 500 },
+                new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Lobby = 1, Ammo = 500 },
+                new LobbyWeapons { Hash = EWeaponHash.SMG, Lobby = 1, Ammo = 2000 },
+                new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Lobby = 1, Ammo = 2000 },
+                new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Lobby = 1, Ammo = 2000 },
+                new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Lobby = 1, Ammo = 2000 },
+                new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Lobby = 1, Ammo = 2000 }
+            );
+
+            modelBuilder.Entity<Maps>().HasData(
+                new Maps { Id = -3, Name = "All Bombs", CreatorId = 0 },
+                new Maps { Id = -2, Name = "All Normals", CreatorId = 0 },
+                new Maps { Id = -1, Name = "All", CreatorId = 0 }
+            );
+            #endregion
         }
     }
 }

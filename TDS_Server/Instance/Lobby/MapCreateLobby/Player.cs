@@ -34,15 +34,14 @@ namespace TDS_Server.Instance.Lobby
 
         public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
         {
-            long vehHash = await DbContext.FreeroamDefaultVehicle
-                .Where(v => v.VehicleTypeId == (short)vehType)
+            VehicleHash vehHash = await DbContext.FreeroamDefaultVehicle
+                .Where(v => v.VehicleType == vehType)
                 .Select(v => v.VehicleHash)
                 .FirstOrDefaultAsync();
             if (vehHash == default)
                 return;
 
             var pos = player.Client.Position;
-            uint model = (uint)vehHash;
 
             NAPI.Task.Run(() => {
                 if (player.FreeroamVehicle != null)
@@ -53,7 +52,7 @@ namespace TDS_Server.Instance.Lobby
                     player.FreeroamVehicle = null;
                 }
 
-                Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(model, pos, player.Client.Heading, 0, 0, player.Client.Name, dimension: Dimension);
+                Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Client.Heading, 0, 0, player.Client.Name, dimension: Dimension);
                 if (vehicle == null)
                     return;
                 player.FreeroamVehicle = vehicle;

@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Player
                 if (_entity == null)
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
-                    _entity.PlayerSettings.Language = (byte)_langEnumBeforeLogin;
+                    _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 DbContext.Attach(value);
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
@@ -111,14 +111,14 @@ namespace TDS_Server.Instance.Player
             {
                 if (Entity == null || Entity.PlayerSettings == null)
                     return _langEnumBeforeLogin;
-                return (ELanguage)Entity.PlayerSettings.Language;
+                return Entity.PlayerSettings.Language;
             }
             set
             {
                 if (Entity == null || Entity.PlayerSettings == null)
                     _langEnumBeforeLogin = value;
                 else
-                    Entity.PlayerSettings.Language = (byte)value;
+                    Entity.PlayerSettings.Language = value;
             }
         }
 

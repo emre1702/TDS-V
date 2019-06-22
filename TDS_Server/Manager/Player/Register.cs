@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Player
             {
                 AllowDataTransfer = false,
                 //Todo Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
-                Language = (byte)ELanguage.English,
+                Language = ELanguage.English,
                 Hitsound = true,
                 Bloodscreen = true,
                 FloatingDamageInfo = true
@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Player
             dbContext.Players.Add(dbplayer);
             await dbContext.SaveChangesAsync();
 
-            RestLogsManager.Log(Enum.ELogType.Register, player, true);
+            RestLogsManager.Log(ELogType.Register, player, true);
 
             Login.LoginPlayer(player, dbplayer.Id, password);
         }

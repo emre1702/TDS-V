@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Entity
 {
@@ -16,7 +17,7 @@ namespace TDS_Server_DB.Entity
 
         public int Id { get; set; }
         public int Owner { get; set; }
-        public short Type { get; set; }
+        public ELobbyType Type { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public short StartHealth { get; set; }
@@ -34,9 +35,9 @@ namespace TDS_Server_DB.Entity
         public int DieAfterOutsideMapLimitTime { get; set; }
 
         public virtual Players OwnerNavigation { get; set; }
-        public virtual LobbyTypes TypeNavigation { get; set; }
         public virtual LobbyRewards LobbyRewards { get; set; }
         public virtual LobbyRoundSettings LobbyRoundSettings { get; set; }
+        public virtual ICollection<LobbyKillingspreeRewards> LobbyKillingspreeRewards { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }
         public virtual ICollection<PlayerBans> PlayerBans { get; set; }

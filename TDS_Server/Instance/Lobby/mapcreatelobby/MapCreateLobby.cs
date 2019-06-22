@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
@@ -18,7 +19,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 Name = "MapCreator-" + player.Client.Name,  // Todo after custom lobbies: They can't be named "MapCreator-*"
                 Teams = new List<Teams> { new Teams { Index = 0, Name = player.Client.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
-                Type = (short) ELobbyType.MapCreateLobby,
+                Type = ELobbyType.MapCreateLobby,
                 Owner = player.Entity.Id,
                 IsTemporary = true
             };

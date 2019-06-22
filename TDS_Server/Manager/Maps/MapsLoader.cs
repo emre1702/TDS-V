@@ -120,7 +120,7 @@ namespace TDS_Server.Manager.Maps
                     .Where(m => m.Name == map.Info.Name)
                     .Include(m => m.Creator)
                     .First();
-                map.SyncedData.CreatorName = dbMap.Creator.Name;
+                map.SyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
                 map.SyncedData.Id = dbMap.Id;
                 map.LoadMapRatings(dbContext);
             }

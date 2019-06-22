@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Entity
 {
     public partial class LobbyWeapons
     {
-        public long Hash { get; set; }
+        public EWeaponHash Hash { get; set; }
         public int Lobby { get; set; }
         public int Ammo { get; set; }
         public short? Damage { get; set; }

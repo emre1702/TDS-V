@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Entity
 {
     public partial class FreeroamDefaultVehicle
     {
-        public short VehicleTypeId { get; set; }
-        public long VehicleHash { get; set; }
+        public EFreeroamVehicleType VehicleType { get; set; }
+        public VehicleHash VehicleHash { get; set; }
         public string Note { get; set; }
-
-        public virtual FreeroamVehicleType VehicleType { get; set; }
     }
 }

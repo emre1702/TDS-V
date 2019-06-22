@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 
@@ -31,7 +32,7 @@ namespace TDS_Server.Instance.Lobby
 
         public void DamagedPlayer(TDSPlayer target, TDSPlayer source, WeaponHash weapon, bool headshot, int clientHasSentThisDamage)
         {
-            DmgSys.DamagePlayer(target, weapon, headshot, source, clientHasSentThisDamage);
+            DmgSys.DamagePlayer(target, (EWeaponHash)weapon, headshot, source, clientHasSentThisDamage);
         }
     }
 }

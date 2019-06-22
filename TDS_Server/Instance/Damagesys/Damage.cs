@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
@@ -90,10 +91,10 @@ namespace TDS_Server.Instance
 			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
         };*/
 
-        private readonly Dictionary<WeaponHash, DamageDto> damagesDict = new Dictionary<WeaponHash, DamageDto>();
+        private readonly Dictionary<EWeaponHash, DamageDto> damagesDict = new Dictionary<EWeaponHash, DamageDto>();
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
-        public void DamagePlayer(TDSPlayer target, WeaponHash weapon, bool headshot, TDSPlayer? source, int clientHasSentThisDamage)
+        public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, bool headshot, TDSPlayer? source, int clientHasSentThisDamage)
         {
             if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
@@ -138,7 +139,7 @@ namespace TDS_Server.Instance
             target.LastHitter = source;
         }
 
-        public int GetDamage(WeaponHash hash, bool headshot = false)
+        public int GetDamage(EWeaponHash hash, bool headshot = false)
         {
             if (!damagesDict.ContainsKey(hash))
                 return 0;

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TDS_Server.Enum;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 
@@ -15,7 +13,7 @@ namespace TDS_Server.Manager.Logs
             {
                 Source = source?.Entity?.Id ?? 0,
                 Target = target?.Entity?.Id ?? null,
-                Type = (byte)cmd,
+                Type = cmd,
                 Lobby = target?.CurrentLobby?.Id ?? source?.CurrentLobby?.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,
@@ -31,7 +29,7 @@ namespace TDS_Server.Manager.Logs
             {
                 Source = source?.Entity?.Id ?? 0,
                 Target = targetid,
-                Type = (byte)cmd,
+                Type = cmd,
                 Lobby = source?.CurrentLobby?.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,

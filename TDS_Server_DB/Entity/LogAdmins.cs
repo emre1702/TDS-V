@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Entity
 {
     public partial class LogAdmins
     {
         public long Id { get; set; }
-        public short Type { get; set; }
+        public ELogType Type { get; set; }
         public int Source { get; set; }
         public int? Target { get; set; }
         public int? Lobby { get; set; }

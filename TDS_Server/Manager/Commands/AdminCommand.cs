@@ -1,5 +1,6 @@
 using GTANetworkAPI;
 using System;
+using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
 using TDS_Server.Enum;

@@ -1,6 +1,10 @@
-namespace TDS_Server.Enum
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace TDS_Common.Enum
 {
-    internal enum ELogType : short
+    public enum ELogType
     {
         Kick = 1,
         Ban = 2,

@@ -16,6 +16,8 @@ namespace TDS_Server_DB.Entity
             PlayerLobbyStats = new HashSet<PlayerLobbyStats>();
             PlayerMapFavourites = new HashSet<PlayerMapFavourites>();
             PlayerMapRatings = new HashSet<PlayerMapRatings>();
+            PlayerRelationsPlayer = new HashSet<PlayerRelations>();
+            PlayerRelationsTarget = new HashSet<PlayerRelations>();
         }
 
         public int Id { get; set; }
@@ -42,5 +44,7 @@ namespace TDS_Server_DB.Entity
         public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
+        public virtual ICollection<PlayerRelations> PlayerRelationsPlayer { get; set; }
+        public virtual ICollection<PlayerRelations> PlayerRelationsTarget { get; set; }
     }
 }

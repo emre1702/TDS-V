@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190622105811_Initial.cs" />
+    <Compile Remove="Migrations\20190622105811_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NetCore.App" Version="3.0.0-preview6-27804-01" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview5.19227.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview5.19227.1">
@@ -14,6 +19,16 @@
     <PackageReference Include="Npgsql" Version="4.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview5" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0-preview6.19303.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TDS_Common\TDS_Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>C:\RAGEMP\server-files\bridge\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -77,6 +77,11 @@
         Hatchet = 4191993645,
         Bottle = 4192643659,
         Parachute = 4222310262,
-        SmokeGrenade = 4256991824
+        SmokeGrenade = 4256991824,
+        UpnAtomizer = 2939590305,
+        UnholyHellbringer = 1198256469,
+        CarbineRifleMK2 = 4208062921,
+        SepcialCarbineMK2 = 2526821735,
+        BullpupRifleMK2 = 2228681469
     }
 }
