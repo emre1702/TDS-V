@@ -43,7 +43,7 @@ namespace TDS_Server.Manager.Utility
                 await CommandsManager.LoadCommands(dbcontext);
                 Damagesys.LoadDefaults(dbcontext);
 
-                await BansManager.RemoveExpiredBans(dbcontext);
+                await BansManager.RemoveExpiredBans();
 
                 await MapsLoader.LoadDefaultMaps(dbcontext);
                 await MapCreator.LoadNewMaps(dbcontext);
