@@ -10,11 +10,9 @@ namespace TDS_Server.Manager.Mapping
 {
     class MappingManager
     {
-        public static IMapper Mapper { get; set; }
-
-        static MappingManager()
+        public static void Init()
         {
-            var config = new MapperConfiguration(cfg =>
+            Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<string, string>().ConvertUsing(a => a);
                 cfg.CreateMap<string, char>().ConvertUsing(a => a[0]);
@@ -29,9 +27,7 @@ namespace TDS_Server.Manager.Mapping
                 cfg.CreateMap<string, Client?>().ConvertUsing<StringNameToClientConverter>();
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
             });
-            config.AssertConfigurationIsValid();
-
-            Mapper = config.CreateMapper();
+            Mapper.AssertConfigurationIsValid();
         }
 
         public static Type GetCorrectDestType(Type sourceType)
