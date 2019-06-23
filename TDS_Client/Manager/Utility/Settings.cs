@@ -99,7 +99,7 @@ namespace TDS_Client.Manager.Utility
             else
             {
                 loadedSyncedSettings.Language = LanguageEnum;
-                EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
+                EventsSender.Send(DToServerEvent.LanguageChange, loadedSyncedSettings.Language);
             }
             syncedPlayerSettings = loadedSyncedSettings;
         }
