@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using TDS_Common.Enum;
 
 namespace TDS_Common.Dto
 {
@@ -6,6 +7,8 @@ namespace TDS_Common.Dto
     {
         public int Id;
         public string Name;
+        public ELobbyType Type;
+        public bool IsOfficial;
         public int? SpawnAgainAfterDeathMs;
         public int? BombDefuseTimeMs;
         public int? BombPlantTimeMs;
@@ -18,11 +21,13 @@ namespace TDS_Common.Dto
         [JsonIgnore]
         public string Json;
 
-        public SyncedLobbySettingsDto(int Id, string Name, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
+        public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
             int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? DieAfterOutsideMapLimitTime, bool InLobbyWithMaps)
         {
             this.Id = Id;
             this.Name = Name;
+            this.Type = Type;
+            this.IsOfficial = IsOfficial;
             this.SpawnAgainAfterDeathMs = SpawnAgainAfterDeathMs;
             this.BombDefuseTimeMs = BombDefuseTimeMs;
             this.BombPlantTimeMs = BombPlantTimeMs;

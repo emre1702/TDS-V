@@ -21,8 +21,6 @@ namespace TDS_Server.Instance.Lobby
             player.Client.Position = new Vector3(-365.425, -131.809, 37.873);
             Workaround.FreezePlayer(player.Client, false);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.JoinMapCreatorLobby);
-
             return true;
         }
 

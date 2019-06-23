@@ -1,6 +1,7 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -16,38 +17,46 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
-        private static EDefaultLobby _inDefaultLobby = EDefaultLobby.None;
+        private static ELobbyType? _inLobbyType;
         private static bool _inFightLobby;
 
         public static void Joined(SyncedLobbySettingsDto settings)
         {
-            switch (_inDefaultLobby)
+            if (_inLobbyType != null)
             {
-                case EDefaultLobby.MainMenu:
-                    LeftMainMenu();
-                    break;
-                case EDefaultLobby.MapCreator:
-                    LeftMapCreator();
-                    break;
-                default:
-                    Left();
-                    break;
+                switch (_inLobbyType)
+                {
+                    case ELobbyType.MainMenu:
+                        LeftMainMenu();
+                        break;
+                    case ELobbyType.MapCreateLobby:
+                        LeftMapCreator();
+                        break;
+                    default:
+                        Left();
+                        break;
+                }
             }
 
-            switch (settings.Id)
+            switch (settings.Type)
             {
-                case 0:
+                case ELobbyType.MainMenu:
+                    InFightLobby = false;
                     JoinedMainmenu();
                     break;
-                //case 1:
-                    //_inDefaultLobby = EDefaultLobby.GangLobby;
-                    //JoinedGangLobby();
-                //    break;
-                default:
-                    _inDefaultLobby = EDefaultLobby.None;
+                case ELobbyType.MapCreateLobby:
+                    InFightLobby = false;
+                    JoinedMapCreator();
+                    break;
+
+                case ELobbyType.Arena:
+                case ELobbyType.FightLobby:
+                case ELobbyType.GangLobby:
                     InFightLobby = true;
                     break;
             }
+
+            _inLobbyType = settings.Type;
         }
 
         private static void Left()
@@ -63,15 +72,12 @@ namespace TDS_Client.Manager.Lobby
 
         private static void JoinedMainmenu()
         {
-            _inDefaultLobby = EDefaultLobby.MainMenu;
-            InFightLobby = false;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Choice.Start();
         }
 
-        public static void JoinedMapCreator()
+        private static void JoinedMapCreator()
         {
-            _inDefaultLobby = EDefaultLobby.MapCreator;
             InFightLobby = false;
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Angular.ToggleMapCreator(true);

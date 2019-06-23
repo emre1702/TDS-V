@@ -117,7 +117,6 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.Death, OnDeathMethod);
             //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
-            Add(DToClientEvent.JoinMapCreatorLobby, OnJoinMapCreatorLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
@@ -175,11 +174,6 @@ namespace TDS_Client.Manager
             Lobby.Lobby.Joined(settings);
             DiscordManager.Update();
             MainBrowser.HideRoundEndReason();
-        }
-
-        private void OnJoinMapCreatorLobbyMethod(object[] args)
-        {
-            Lobby.Lobby.JoinedMapCreator();
         }
 
         private void OnJoinSameLobbyMethod(object[] args)

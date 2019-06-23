@@ -24,7 +24,6 @@
         public const string HitOpponent = "HitOpponent_Server";
 
         public const string JoinLobby = "JoinLobby_Server";
-        public const string JoinMapCreatorLobby = "JoinMapCreatorLobby_Server";
         public const string JoinSameLobby = "JoinSameLobby_Server";
 
         public const string LeaveSameLobby = "LeaveSameLobby_Server";

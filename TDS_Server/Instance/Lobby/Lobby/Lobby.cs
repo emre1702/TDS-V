@@ -55,6 +55,8 @@ namespace TDS_Server.Instance.Lobby
             (
                 Id: entity.Id,
                 Name: entity.Name,
+                Type: entity.Type,
+                IsOfficial: entity.IsOfficial,
                 BombDefuseTimeMs: entity.LobbyRoundSettings?.BombDefuseTimeMs,
                 BombPlantTimeMs: entity.LobbyRoundSettings?.BombPlantTimeMs,
                 SpawnAgainAfterDeathMs: entity.SpawnAgainAfterDeathMs,
