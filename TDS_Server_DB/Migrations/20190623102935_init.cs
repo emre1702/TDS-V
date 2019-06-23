@@ -700,14 +700,6 @@ namespace TDS_Server_DB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" DROP IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" DROP IDENTITY");
-
 
             migrationBuilder.InsertData(
                 table: "admin_levels",
@@ -1202,13 +1194,13 @@ namespace TDS_Server_DB.Migrations
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 3)");
-            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 20)");
-            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 5)");
-            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 3");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 20");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 5");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
