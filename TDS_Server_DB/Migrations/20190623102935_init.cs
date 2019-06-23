@@ -750,12 +750,12 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsOfficial", "IsTemporary" },
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsTemporary" },
                 values: new object[] { 2, (short)1, true, "GangLobby", 0, null, 400, ELobbyType.GangLobby, true, false });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsOfficial", "IsTemporary" },
+                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsTemporary" },
                 values: new object[] { 1, (short)1, 10, true, "Arena", 0, null, 400, ELobbyType.Arena, true, false });
 
             migrationBuilder.InsertData(
