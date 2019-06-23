@@ -91,15 +91,20 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseLoggerFactory(new LoggerFactory(new List<ILoggerProvider> { new ConsoleLoggerProvider(new ConsoleLoggerSettings()) }, new LoggerFilterOptions { CaptureScopes = true, MinLevel = LogLevel.Warning }));
             if (!optionsBuilder.IsConfigured)
             {
+                var loggerFactory = LoggerFactory.Create(builder =>
+                    builder.AddConsole()
+                );
+
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+                optionsBuilder
+                    .UseLoggerFactory(loggerFactory)
+                    .EnableSensitiveDataLogging()
+                    .UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
             }
         }
 
@@ -258,8 +263,8 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.DefaultSpawnY).HasDefaultValueSql("0");
                 entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("900");
                 entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("0");
-                entity.Property(e => e.IsTemporary).HasDefaultValue(true);
-                entity.Property(e => e.IsOfficial).HasDefaultValue(false);
+                entity.Property(e => e.IsTemporary);
+                entity.Property(e => e.IsOfficial);
 
                 entity.Property(e => e.DieAfterOutsideMapLimitTime).HasDefaultValueSql("10");
 

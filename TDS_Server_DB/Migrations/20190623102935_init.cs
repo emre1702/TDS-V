@@ -288,8 +288,8 @@ namespace TDS_Server_DB.Migrations
                     DefaultSpawnZ = table.Column<float>(nullable: false, defaultValueSql: "900"),
                     AroundSpawnPoint = table.Column<float>(nullable: false, defaultValueSql: "3"),
                     DefaultSpawnRotation = table.Column<float>(nullable: false, defaultValueSql: "0"),
-                    IsTemporary = table.Column<bool>(nullable: false, defaultValue: true),
-                    IsOfficial = table.Column<bool>(nullable: false, defaultValue: false),
+                    IsTemporary = table.Column<bool>(nullable: false),
+                    IsOfficial = table.Column<bool>(nullable: false),
                     SpawnAgainAfterDeathMs = table.Column<int>(nullable: false, defaultValueSql: "400"),
                     CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
                     DieAfterOutsideMapLimitTime = table.Column<int>(nullable: false, defaultValueSql: "10")
