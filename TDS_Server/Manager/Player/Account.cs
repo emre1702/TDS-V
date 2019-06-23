@@ -73,11 +73,11 @@ namespace TDS_Server.Manager.Player
                 Login.LoginPlayer(player, id, password);
             }
             else
-                NAPI.Chat.SendChatMessageToPlayer(player, player.GetLang().ACCOUNT_DOESNT_EXIST);
+                NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
         }
 
         [RemoteEvent(DToServerEvent.LanguageChange)]
-        public void OnPlayerLanguageChangeEvent(Client player, byte language)
+        public void OnPlayerLanguageChangeEvent(Client player, int language)
         {
             if (System.Enum.IsDefined(typeof(ELanguage), language))
                 player.GetChar().LanguageEnum = (ELanguage)language;

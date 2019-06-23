@@ -154,6 +154,7 @@ namespace TDS_Server.Instance.Lobby
 
             RewardAllPlayer();
             SaveAllPlayerLobbyStats();
+            DbContext.SaveChangesAsync();
         }
 
         private void RoundCheckForEnoughAlive()

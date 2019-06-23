@@ -26,13 +26,10 @@ namespace TDS_Server_DB.Migrations
                 .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,sweeper_shotgun,micro_smg,wrench,pistol,pump_shotgun,ap_pistol,ball,molotov,smg,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,assault_rifle,special_carbine,revolver,marksman_rifle,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_m_k2,sepcial_carbine_m_k2,bullpup_rifle_m_k2")
                 .HasAnnotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .HasAnnotation("Npgsql:Enum:vehicle_hash", "adder,airbus,airtug,akuma,alpha,alpha_z1,ambulance,annihilator,apc,ardent,army_tanker,army_trailer,army_trailer2,asea,asea2,asterope,avarus,bagger,bale_trailer,baller,baller2,baller3,baller4,baller5,baller6,banshee,banshee2,barracks,barracks2,barracks3,bati,bati2,benson,besra,bestia_gts,b_f400,bf_injection,biff,bifta,bison,bison2,bison3,bjxl,blade,blazer,blazer2,blazer3,blazer4,blazer5,blimp,blimp2,blista,blista2,blista3,bmx,boat_trailer,bobcat_xl,bodhi2,bombushka,boxville,boxville2,boxville3,boxville4,boxville5,brawler,brickade,brioso,b_type,b_type2,b_type3,buccaneer,buccaneer2,buffalo,buffalo2,buffalo3,bulldozer,bullet,burrito,burrito2,burrito3,burrito4,burrito5,bus,buzzard,buzzard2,cable_car,caddy,caddy2,caddy3,camper,carbonizzare,carbon_rs,cargobob,cargobob2,cargobob3,cargobob4,cargo_plane,casco,cavalcade,cavalcade2,cheetah,cheetah2,chimera,chino,chino2,cliffhanger,coach,cog55,cog552,cog_cabrio,cognoscenti,cognoscenti2,comet2,comet3,contender,coquette,coquette2,coquette3,cruiser,crusader,cuban800,cutter,cyclone,daemon,daemon2,defiler,diablous,diablous2,dilettante,dilettante2,dinghy,dinghy2,dinghy3,dinghy4,d_loader,dock_trailer,docktug,dodo,dominator,dominator2,double,dubsta,dubsta2,dubsta3,dukes,dukes2,dump,dune,dune2,dune3,dune4,dune5,duster,elegy,elegy2,emperor,emperor2,emperor3,enduro,entity_xf,esskey,exemplar,f620,faction,faction2,faction3,faggio,faggio2,faggio3,fbi,fb_i2,fcr,fc_r2,felon,felon2,feltzer2,feltzer3,fire_truck,fixter,flatbed,forklift,fmj,f_q2,freight,freight_car,freight_cont1,freight_cont2,freight_grain,freight_trailer,frogger,frogger2,fugitive,furoregt,fusilade,futo,gargoyle,gauntlet,gauntlet2,g_burrito,g_burrito2,glendale,g_p1,grain_trailer,granger,gresley,guardian,habanero,hakuchou,hakuchou2,half_track,handler,hauler,hauler2,havok,hexer,hotknife,howard,hunter,huntley,hydra,infernus,infernus2,ingot,innovation,insurgent,insurgent2,insurgent3,intruder,issi2,itali_gtb,itali_gt_b2,jackal,j_b700,jester,jester2,jet,jetmax,journey,kalahari,khamelion,kuruma,kuruma2,landstalker,lazer,lectro,lguard,limo2,lurcher,luxor,luxor2,lynx,mamba,mammatus,manana,manchez,marquis,marshall,massacro,massacro2,maverick,mesa,mesa2,mesa3,metro_train,microlight,miljet,minivan,minivan2,mixer,mixer2,mogul,molotok,monroe,monster,moonbeam,moonbeam2,mower,mule,mule2,mule3,nemesis,nero,nero2,nightblade,nightshade,night_shark,nimbus,ninef,ninef2,nokota,omnis,oppressor,oracle,oracle2,osiris,packer,panto,paradise,patriot,p_bus,pcj,penetrator,penumbra,peyote,pfister811,phantom,phantom2,phantom3,phoenix,picador,pigalle,police,police2,police3,police4,policeb,police_old1,police_old2,police_t,polmav,pony,pony2,pounder,prairie,pranger,predator,premier,primo,primo2,prop_trailer,prototipo,pyro,radi,rake_trailer,rancher_xl,rancher_x_l2,rally_truck,rapid_gt,rapid_g_t2,rapid_g_t3,raptor,rat_bike,rat_loader,rat_loader2,r_e7_b,reaper,rebel,rebel2,regina,rental_bus,retinue,rhapsody,rhino,riot,ripley,rocoto,romero,rogue,rubble,ruffian,ruiner,ruiner2,ruiner3,rumpo,rumpo2,rumpo3,ruston,sabre_gt,sabre_g_t2,sadler,sadler2,sanchez,sanchez2,sanctus,sandking,sandking2,savage,schafter2,schafter3,schafter4,schafter5,schafter6,schwarzer,scorcher,scrap,seabreeze,seashark,seashark2,seashark3,seminole,sentinel,sentinel2,serrano,seven70,shamal,sheava,sheriff,sheriff2,shotaro,skylift,slam_van,slam_van2,slam_van3,sovereign,specter,specter2,speeder,speeder2,speedo,speedo2,squalo,stalion,stalion2,stanier,starling,stinger,stinger_gt,stockade,stockade3,stratum,stretch,stunt,submersible,submersible2,sultan,sultan_rs,suntrap,superd,supervolito,supervolito2,surano,surfer,surfer2,surge,swift2,swift,t20,taco,tailgater,tampa,tampa2,tampa3,tanker,tanker2,tanker_car,taxi,technical,technical2,technical3,tempesta,thrust,tip_truck,tip_truck2,titan,torero,tornado,tornado2,tornado3,tornado4,tornado5,tornado6,toro,toro2,tourbus,tow_truck,tow_truck2,t_r2,t_r3,t_r4,tractor,tractor2,tractor3,trailer_logs,trailer_large,trailers,trailers2,trailers3,trailers4,trailer_small,trailer_small2,trash,trash2,tr_flat,tri_bike,tri_bike2,tri_bike3,trophy_truck,trophy_truck2,tropic,tropic2,tropos,tug,tula,turismor,turismo2,tv_trailer,tyrus,utilli_truck,utilli_truck2,utilli_truck3,vacca,vader,vagner,valkyrie,valkyrie2,velum,velum2,verlierer2,vestra,vigero,vigilante,vindicator,virgo,virgo2,virgo3,visione,volatus,voltic,voltic2,voodoo,voodoo2,vortex,warrener,washington,wastelander,windsor,windsor2,wolfsbane,x_a21,xls,xl_s2,youga,youga2,zentorno,zion,zion2,zombie_a,zombie_b,z_type,akula,autarch,avenger,avenge_r2,barrage,chernobog,come_t4,come_t5,deluxo,g_t500,hermes,hustler,kamacho,khanjali,neon,pariah,raiden,revolter,riata,rio_t2,savestra,s_c1,sentine_l3,streiter,stromberg,thruster,viseris,volatol,yosemite,z190,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("Relational:Sequence:.ID_ID_seq", "'ID_ID_seq', '', '1', '1', '', '', 'Int16', 'False'")
-                .HasAnnotation("Relational:Sequence:.lobbies_ID_seq", "'lobbies_ID_seq', '', '1', '1', '', '', 'Int32', 'False'")
-                .HasAnnotation("Relational:Sequence:.maps_ID_seq", "'maps_ID_seq', '', '1', '1', '', '', 'Int32', 'False'")
-                .HasAnnotation("Relational:Sequence:.ServerSettings_ID_seq", "'ServerSettings_ID_seq', '', '1', '1', '', '', 'Int16', 'False'");
+                .HasAnnotation("Relational:Sequence:.EntityFrameworkHiLoSequence", "'EntityFrameworkHiLoSequence', '', '1', '10', '', '', 'Int64', 'False'");
 
             modelBuilder.Entity("TDS_Server_DB.Entity.AdminLevelNames", b =>
                 {
@@ -987,8 +984,8 @@ namespace TDS_Server_DB.Migrations
             modelBuilder.Entity("TDS_Server_DB.Entity.Gangs", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnName("ID")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID");
 
                     b.Property<string>("Short")
                         .IsRequired()
@@ -1002,20 +999,13 @@ namespace TDS_Server_DB.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("gangs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Short = "-",
-                            TeamId = 4
-                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Lobbies", b =>
                 {
                     b.Property<int>("Id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID");
 
                     b.Property<short?>("AmountLifes");
 
@@ -1029,9 +1019,13 @@ namespace TDS_Server_DB.Migrations
 
                     b.Property<float>("DefaultSpawnRotation");
 
-                    b.Property<float>("DefaultSpawnX");
+                    b.Property<float>("DefaultSpawnX")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("0");
 
-                    b.Property<float>("DefaultSpawnY");
+                    b.Property<float>("DefaultSpawnY")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("0");
 
                     b.Property<float>("DefaultSpawnZ")
                         .ValueGeneratedOnAdd()
@@ -1049,7 +1043,7 @@ namespace TDS_Server_DB.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<int>("Owner");
+                    b.Property<int>("OwnerId");
 
                     b.Property<string>("Password")
                         .HasMaxLength(100);
@@ -1070,30 +1064,11 @@ namespace TDS_Server_DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Owner");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("lobbies");
 
                     b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            AroundSpawnPoint = 0f,
-                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultSpawnRotation = 0f,
-                            DefaultSpawnX = 0f,
-                            DefaultSpawnY = 0f,
-                            DefaultSpawnZ = 0f,
-                            DieAfterOutsideMapLimitTime = 0,
-                            IsOfficial = true,
-                            IsTemporary = false,
-                            Name = "MainMenu",
-                            Owner = 0,
-                            SpawnAgainAfterDeathMs = 0,
-                            StartArmor = (short)0,
-                            StartHealth = (short)0,
-                            Type = ELobbyType.MainMenu
-                        },
                         new
                         {
                             Id = 1,
@@ -1108,7 +1083,7 @@ namespace TDS_Server_DB.Migrations
                             IsOfficial = true,
                             IsTemporary = false,
                             Name = "Arena",
-                            Owner = 0,
+                            OwnerId = 0,
                             SpawnAgainAfterDeathMs = 400,
                             StartArmor = (short)0,
                             StartHealth = (short)0,
@@ -1128,7 +1103,7 @@ namespace TDS_Server_DB.Migrations
                             IsOfficial = true,
                             IsTemporary = false,
                             Name = "GangLobby",
-                            Owner = 0,
+                            OwnerId = 0,
                             SpawnAgainAfterDeathMs = 400,
                             StartArmor = (short)0,
                             StartHealth = (short)0,
@@ -1356,7 +1331,9 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<bool>("AsDonator");
 
@@ -1387,7 +1364,9 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<bool>("IsAdminChat");
 
@@ -1415,7 +1394,9 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Info")
                         .IsRequired();
@@ -1437,7 +1418,9 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<IPAddress>("Ip")
                         .HasColumnName("IP");
@@ -1464,7 +1447,7 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("nextval('\"maps_ID_seq\"'::regclass)");
+                        .HasColumnName("ID");
 
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
@@ -1513,7 +1496,9 @@ namespace TDS_Server_DB.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Message")
                         .IsRequired();
@@ -1697,12 +1682,15 @@ namespace TDS_Server_DB.Migrations
             modelBuilder.Entity("TDS_Server_DB.Entity.Players", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnName("ID")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID");
 
-                    b.Property<short>("AdminLvl");
+                    b.Property<short>("AdminLvl")
+                        .HasDefaultValue((short)0);
 
-                    b.Property<short>("Donation");
+                    b.Property<short>("Donation")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue((short)0);
 
                     b.Property<string>("Email")
                         .HasMaxLength(100);
@@ -1710,7 +1698,9 @@ namespace TDS_Server_DB.Migrations
                     b.Property<int?>("GangId");
 
                     b.Property<bool>("IsVip")
-                        .HasColumnName("IsVIP");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("IsVIP")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1725,39 +1715,26 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("timestamp(4) without time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<string>("Scname")
+                    b.Property<string>("SCName")
                         .IsRequired()
                         .HasColumnName("SCName")
                         .HasMaxLength(255);
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_players");
 
                     b.HasIndex("AdminLvl");
 
                     b.HasIndex("GangId");
 
                     b.ToTable("players");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            AdminLvl = (short)0,
-                            Donation = (short)0,
-                            IsVip = false,
-                            Name = "System",
-                            Password = "",
-                            RegisterTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Scname = "System"
-                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.ServerSettings", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasDefaultValueSql("nextval('\"ServerSettings_ID_seq\"'::regclass)");
+                        .HasColumnName("ID");
 
                     b.Property<float>("ArenaNewMapProbabilityPercent");
 
@@ -1787,8 +1764,6 @@ namespace TDS_Server_DB.Migrations
 
                     b.Property<string>("SavedMapsPath")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("'bridge/resources/tds/savedmaps/'::character varying")
                         .HasMaxLength(300);
 
                     b.Property<int>("TeamOrderCooldownMs");
@@ -1822,8 +1797,8 @@ namespace TDS_Server_DB.Migrations
             modelBuilder.Entity("TDS_Server_DB.Entity.Teams", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnName("ID")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID");
 
                     b.Property<short>("BlipColor");
 
@@ -1850,18 +1825,6 @@ namespace TDS_Server_DB.Migrations
                     b.ToTable("teams");
 
                     b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            BlipColor = (short)4,
-                            ColorB = (short)255,
-                            ColorG = (short)255,
-                            ColorR = (short)255,
-                            Index = (short)0,
-                            Lobby = 0,
-                            Name = "Spectator",
-                            SkinHash = 1004114196
-                        },
                         new
                         {
                             Id = 1,
@@ -2535,9 +2498,9 @@ namespace TDS_Server_DB.Migrations
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Lobbies", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Players", "OwnerNavigation")
+                    b.HasOne("TDS_Server_DB.Entity.Players", "Owner")
                         .WithMany("Lobbies")
-                        .HasForeignKey("Owner")
+                        .HasForeignKey("OwnerId")
                         .HasConstraintName("lobbies_Owner_fkey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

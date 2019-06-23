@@ -638,7 +638,7 @@ namespace TDS_Client.Manager
 
         private void OnLanguageChangeMethod(object[] args)
         {
-            var languageID = Convert.ToByte(args[0]);
+            var languageID = Convert.ToInt32(args[0]);
             if (!System.Enum.IsDefined(typeof(ELanguage), languageID))
                 return;
 

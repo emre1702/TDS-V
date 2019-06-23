@@ -1,10 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Npgsql;
 using TDS_Common.Enum;
+
+/**
+ * Rules on migration:
+ * 1. Add migration in Package Manager Console with: "Add-Migration [name]"
+ * 2. Use all the migrations with "Update-Database"
+ * 3. Before using the first migration, use this sql code before ALL InsertData, BUT AFTER Admin_Levels!!, in the migration file (before you can't add ID 0):
+migrationBuilder.Sql("INSERT INTO players (\"ID\", \"SCName\", \"Name\", \"Password\") VALUES (0, 'System', 'System', '-')");
+migrationBuilder.Sql("INSERT INTO lobbies (\"ID\", \"OwnerId\", \"Type\", \"Name\", \"IsTemporary\", \"IsOfficial\", \"AmountLifes\", \"SpawnAgainAfterDeathMs\") " +
+    "VALUES (0, 0, 'main_menu', 'MainMenu', FALSE, TRUE, 0, 0)");
+migrationBuilder.Sql("INSERT INTO teams (\"ID\", \"Index\", \"Name\", \"Lobby\", \"ColorR\", \"ColorG\", \"ColorB\", \"BlipColor\", \"SkinHash\") " +
+    "VALUES (0, 0, 'Spectator', 0, 255, 255, 255, 4, 1004114196)");
+migrationBuilder.Sql("INSERT INTO gangs (\"ID\", \"TeamId\", \"Short\") VALUES (0, 0, '-')");
+ */
 
 namespace TDS_Server_DB.Entity
 {
@@ -74,6 +90,10 @@ namespace TDS_Server_DB.Entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ForNpgsqlUseIdentityByDefaultColumns();
+
             #region Enum
             modelBuilder.ForNpgsqlHasEnum<EPlayerRelation>();
             modelBuilder.ForNpgsqlHasEnum<EWeaponHash>();
@@ -86,6 +106,16 @@ namespace TDS_Server_DB.Entity
             #endregion
 
             #region Tables
+            modelBuilder.Entity<AdminLevels>(entity =>
+            {
+                entity.HasKey(e => e.Level)
+                    .HasName("admin_levels_pkey");
+
+                entity.ToTable("admin_levels");
+
+                entity.Property(e => e.Level).ValueGeneratedNever();
+            });
+
             modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
 
             modelBuilder.Entity<AdminLevelNames>(entity =>
@@ -102,16 +132,6 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.AdminLevelNames)
                     .HasForeignKey(d => d.Level)
                     .HasConstraintName("FK_admin_level_names_admin_level");
-            });
-
-            modelBuilder.Entity<AdminLevels>(entity =>
-            {
-                entity.HasKey(e => e.Level)
-                    .HasName("admin_levels_pkey");
-
-                entity.ToTable("admin_levels");
-
-                entity.Property(e => e.Level).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<CommandAlias>(entity =>
@@ -179,18 +199,19 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("gangs");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Short)
                     .IsRequired()
                     .HasMaxLength(5);
 
-                entity.Property(e => e.TeamId).HasColumnName("TeamID");
+                entity.Property(e => e.TeamId).HasColumnName("TeamId");
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.Gangs)
                     .HasForeignKey(d => d.TeamId)
-                    .HasConstraintName("gangs_TeamID_fkey");
+                    .HasConstraintName("gangs_TeamId_fkey");
             });
 
             modelBuilder.Entity<LobbyKillingspreeRewards>(entity =>
@@ -212,13 +233,18 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("lobbies");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"lobbies_ID_seq\"'::regclass)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("3");
 
                 entity.Property(e => e.CreateTimestamp).HasDefaultValueSql("now()");
 
+                entity.Property(e => e.DefaultSpawnX).HasDefaultValueSql("0");
+                entity.Property(e => e.DefaultSpawnY).HasDefaultValueSql("0");
                 entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("900");
+                entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("0");
+                entity.Property(e => e.IsTemporary).HasDefaultValue(true);
+                entity.Property(e => e.IsOfficial).HasDefaultValue(false);
 
                 entity.Property(e => e.DieAfterOutsideMapLimitTime).HasDefaultValueSql("10");
 
@@ -234,9 +260,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.StartHealth).HasDefaultValueSql("100");
 
-                entity.HasOne(d => d.OwnerNavigation)
+                entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Lobbies)
-                    .HasForeignKey(d => d.Owner)
+                    .HasForeignKey(d => d.OwnerId)
                     .HasConstraintName("lobbies_Owner_fkey");
             });
 
@@ -333,7 +359,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_admins");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
 
                 entity.Property(e => e.AsVip).HasColumnName("AsVIP");
 
@@ -346,7 +372,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_chats");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
 
@@ -357,7 +383,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_errors");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
 
                 entity.Property(e => e.Info).IsRequired();
 
@@ -368,7 +394,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_rests");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
 
                 entity.Property(e => e.Ip).HasColumnName("IP");
 
@@ -385,7 +411,7 @@ namespace TDS_Server_DB.Entity
                     .HasName("Index_maps_name")
                     .ForNpgsqlHasMethod("hash");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"maps_ID_seq\"'::regclass)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreateTimestamp).HasDefaultValueSql("now()");
 
@@ -402,7 +428,9 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("offlinemessages");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ForNpgsqlUseSequenceHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
 
@@ -581,11 +609,17 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("players");
 
+                entity.HasKey(e => e.Id).HasName("PK_players");
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Email).HasMaxLength(100);
 
-                entity.Property(e => e.IsVip).HasColumnName("IsVIP");
+                entity.Property(e => e.IsVip).HasColumnName("IsVIP").HasDefaultValue(false);
+
+                entity.Property(e => e.Donation).HasDefaultValue(0);
+
+                entity.Property(e => e.AdminLvl).HasDefaultValue(0);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -599,7 +633,7 @@ namespace TDS_Server_DB.Entity
                     .HasColumnType("timestamp(4) without time zone")
                     .HasDefaultValueSql("now()");
 
-                entity.Property(e => e.Scname)
+                entity.Property(e => e.SCName)
                     .IsRequired()
                     .HasColumnName("SCName")
                     .HasMaxLength(255);
@@ -621,8 +655,7 @@ namespace TDS_Server_DB.Entity
                 entity.ToTable("server_settings");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasDefaultValueSql("nextval('\"ServerSettings_ID_seq\"'::regclass)");
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.GamemodeName)
                     .IsRequired()
@@ -638,15 +671,15 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.SavedMapsPath)
                     .IsRequired()
-                    .HasMaxLength(300)
-                    .HasDefaultValueSql("'bridge/resources/tds/savedmaps/'::character varying");
+                    .HasMaxLength(300);
             });
 
             modelBuilder.Entity<Teams>(entity =>
             {
                 entity.ToTable("teams");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -670,14 +703,6 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.DefaultHeadMultiplicator).HasDefaultValueSql("1");
             });
-
-            modelBuilder.HasSequence<short>("ID_ID_seq");
-
-            modelBuilder.HasSequence<int>("lobbies_ID_seq");
-
-            modelBuilder.HasSequence<int>("maps_ID_seq");
-
-            modelBuilder.HasSequence<short>("ServerSettings_ID_seq");
             #endregion
 
             #region Seed data
@@ -691,24 +716,26 @@ namespace TDS_Server_DB.Entity
                 }
             );
 
-            modelBuilder.Seed(new List<Players> {
+            /*modelBuilder.Seed(new List<Players> {
                 new Players { Id = 0, Scname = "System", Name = "System", Password = "" }
-            });
+            });*/
 
-            modelBuilder.Seed(new List<Lobbies> {
-                new Lobbies { Id = 0, Owner = 0, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true, SpawnAgainAfterDeathMs = 0 },
-                new Lobbies { Id = 1, Owner = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400, DieAfterOutsideMapLimitTime = 10 },
-                new Lobbies { Id = 2, Owner = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
-            });
+            var seedLobbies = new List<Lobbies> {
+                //new Lobbies { Id = 0, OwnerId = 0, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true, SpawnAgainAfterDeathMs = 0 },
+                new Lobbies { Id = 1, OwnerId = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400, DieAfterOutsideMapLimitTime = 10 },
+                new Lobbies { Id = 2, OwnerId = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
+            };
+            modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 
-            modelBuilder.Seed(new List<AdminLevels> {
+            modelBuilder.Entity<AdminLevels>().HasData(
                 new AdminLevels { Level = 0, ColorR = 220, ColorG = 220, ColorB = 220 },
                 new AdminLevels { Level = 1, ColorR = 113, ColorG = 202, ColorB = 113 },
                 new AdminLevels { Level = 2, ColorR = 253, ColorG = 132, ColorB = 85 },
                 new AdminLevels { Level = 3, ColorR = 222, ColorG = 50, ColorB = 50 }
-            });
+            );
 
-            modelBuilder.Entity<Commands>().HasData(
+            var seedCommands = new List<Commands>
+            {
                 new Commands { Id = 1, Command = "AdminSay", NeededAdminLevel = 1 },
                 new Commands { Id = 2, Command = "AdminChat", NeededAdminLevel = 1, VipCanUse = true },
                 new Commands { Id = 3, Command = "Ban", NeededAdminLevel = 2 },
@@ -728,10 +755,11 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 17, Command = "OpenPrivateChat" },
                 new Commands { Id = 18, Command = "PrivateMessage" },
                 new Commands { Id = 19, Command = "UserId" }
-            );
+            };
+            modelBuilder.Entity<Commands>().HasData(seedCommands);
 
 
-            modelBuilder.Seed(new List<AdminLevelNames> {
+            modelBuilder.Entity<AdminLevelNames>().HasData(new List<AdminLevelNames> {
                 new AdminLevelNames { Level = 0, Language = ELanguage.English, Name = "User" },
                 new AdminLevelNames { Level = 0, Language = ELanguage.German, Name = "User" },
                 new AdminLevelNames { Level = 1, Language = ELanguage.English, Name = "Supporter" },
@@ -874,17 +902,18 @@ namespace TDS_Server_DB.Entity
                 new LobbyKillingspreeRewards { LobbyId = 1, KillsAmount = 15, HealthOrArmor = 100 }
             );
 
-            modelBuilder.Seed(new List<Teams> {
-                new Teams { Id = 0, Index = 0, Name = "Spectator", Lobby = 0, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
+            var seedTeams = new List<Teams> {
+                //new Teams { Id = 0, Index = 0, Name = "Spectator", Lobby = 0, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
                 new Teams { Id = 1, Index = 0, Name = "Spectator", Lobby = 1, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
                 new Teams { Id = 2, Index = 1, Name = "SWAT", Lobby = 1, ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
                 new Teams { Id = 3, Index = 2, Name = "Terrorist", Lobby = 1, ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
                 new Teams { Id = 4, Index = 0, Name = "None", Lobby = 2, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 }
-            });
+            };
+            modelBuilder.Entity<Teams>().HasData(seedTeams);
 
-            modelBuilder.Seed(new List<Gangs> {
+            /*modelBuilder.Seed(new List<Gangs> {
                 new Gangs { Id = 0, TeamId = 4, Short = "-" }
-            });
+            });*/
 
             modelBuilder.Entity<LobbyMaps>().HasData(
                 new LobbyMaps { LobbyId = 1, MapId = -1 }
@@ -997,6 +1026,44 @@ namespace TDS_Server_DB.Entity
                 new Maps { Id = -2, Name = "All Normals", CreatorId = 0 },
                 new Maps { Id = -1, Name = "All", CreatorId = 0 }
             );
+            #endregion
+
+            #region Autoincrement
+            /* Use this code at the before the first InsertData in the Up Method in the migration.
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" DROP IDENTITY");
+            */
+
+            /* Use this code at the END (or atleast after all InsertDatas) of the Up Method in the migration.
+               Maybe modify the "START WITH" numbers if you added more default rows.
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 3)");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 20)");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 5)");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            */
+
+
+            // Sql("DBCC CHECKIDENT ('Offers', RESEED, 100);");
+
+            /*modelBuilder.HasSequence<int>("players_ID_seq");
+
+            modelBuilder.HasSequence<int>("lobbies_ID_seq")
+                .StartsAt(seedLobbies.Count(l => l.Id > 0));
+
+            modelBuilder.HasSequence<int>("teams_ID_seq")
+                .StartsAt(seedTeams.Count(t => t.Id > 0));
+
+            modelBuilder.HasSequence<int>("gangs_ID_seq");
+
+            modelBuilder.HasSequence<int>("maps_ID_seq");*/
             #endregion
         }
     }

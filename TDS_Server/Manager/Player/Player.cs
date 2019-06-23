@@ -43,7 +43,7 @@ namespace TDS_Server.Manager.Player
         public static async Task<int> GetPlayerIDByScname(string scname)
         {
             return await DbContext.Players
-                .Where(p => p.Scname == scname)
+                .Where(p => p.SCName == scname)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();
         }

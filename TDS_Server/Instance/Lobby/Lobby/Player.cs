@@ -145,7 +145,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (character.Entity == null)
                 return false;
-            return character.CurrentLobby == this && LobbyEntity.Owner == character.Entity.Id;
+            return character.CurrentLobby == this && LobbyEntity.OwnerId == character.Entity.Id;
         }
     }
 }

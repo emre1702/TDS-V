@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.Lobby
                 Name = "MapCreator-" + player.Client.Name,  // Todo after custom lobbies: They can't be named "MapCreator-*"
                 Teams = new List<Teams> { new Teams { Index = 0, Name = player.Client.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = ELobbyType.MapCreateLobby,
-                Owner = player.Entity.Id,
+                OwnerId = player.Entity.Id,
                 IsTemporary = true
             };
             MapCreateLobby lobby = new MapCreateLobby(entity);

@@ -18,7 +18,7 @@ namespace TDS_Server.Manager.Player
             Players dbplayer = new Players
             {
                 Name = player.Name,
-                Scname = player.SocialClubName,
+                SCName = player.SocialClubName,
                 Password = Utils.HashPWServer(password),
                 Email = email,
                 IsVip = false

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -22,16 +23,13 @@ namespace TDS_Server_DB
             var pk = entnty.Metadata
                 .GetProperties()
                 .FirstOrDefault(property =>
-                    property.RequiresValueGenerator()
-                    && property.IsPrimaryKey()
-                    && property.ClrType.IsSignedInteger()
-                    && property.ClrType.IsDefaultValue(0)
+                   property.IsPrimaryKey()
                 );
-            if (pk != null)
+            if (pk != null && entnty.Property(pk.Name).Metadata.ValueGenerated == ValueGenerated.OnAdd)
             {
                 entnty.Property(pk.Name).ValueGeneratedNever();
                 entnty.HasData(data);
-                entnty.Property(pk.Name).UseNpgsqlIdentityColumn();
+                entnty.Property(pk.Name).ValueGeneratedOnAdd();
             }
             else
             {

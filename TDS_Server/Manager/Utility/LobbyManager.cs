@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Utility
                 .Include(l => l.LobbyWeapons)
                 .Include(l => l.LobbyMaps)
                 .ThenInclude((LobbyMaps map) => map.Map)
-                .Include(l => l.OwnerNavigation)
+                .Include(l => l.Owner)
                 .ToListAsync();
             foreach (Lobbies lobbysetting in lobbies)
             {
