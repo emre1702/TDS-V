@@ -1037,13 +1037,9 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("10");
 
-                    b.Property<bool>("IsOfficial")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
+                    b.Property<bool>("IsOfficial");
 
-                    b.Property<bool>("IsTemporary")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("IsTemporary");
 
                     b.Property<string>("Name")
                         .IsRequired()

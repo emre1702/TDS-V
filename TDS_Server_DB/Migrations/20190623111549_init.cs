@@ -700,7 +700,6 @@ namespace TDS_Server_DB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-
             migrationBuilder.InsertData(
                 table: "admin_levels",
                 columns: new[] { "Level", "ColorB", "ColorG", "ColorR" },
@@ -750,13 +749,13 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsTemporary" },
-                values: new object[] { 2, (short)1, true, "GangLobby", 0, null, 400, ELobbyType.GangLobby, true, false });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { 2, (short)1, true, false, "GangLobby", 0, null, 400, ELobbyType.GangLobby });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type", "IsTemporary" },
-                values: new object[] { 1, (short)1, 10, true, "Arena", 0, null, 400, ELobbyType.Arena, true, false });
+                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { 1, (short)1, 10, true, false, "Arena", 0, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "maps",

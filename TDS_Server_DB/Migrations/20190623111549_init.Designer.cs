@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190623102935_init")]
+    [Migration("20190623111549_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1039,13 +1039,9 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("10");
 
-                    b.Property<bool>("IsOfficial")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
+                    b.Property<bool>("IsOfficial");
 
-                    b.Property<bool>("IsTemporary")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("IsTemporary");
 
                     b.Property<string>("Name")
                         .IsRequired()

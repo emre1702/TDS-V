@@ -39,6 +39,13 @@ namespace TDS_Server_DB.Entity
 {
     public partial class TDSNewContext : DbContext
     {
+        private static string _connectionString;
+
+        public TDSNewContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         public TDSNewContext()
         {
         }
@@ -93,18 +100,18 @@ namespace TDS_Server_DB.Entity
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.EnableSensitiveDataLogging();
             if (!optionsBuilder.IsConfigured)
             {
+                /*optionsBuilder.EnableSensitiveDataLogging();
                 var loggerFactory = LoggerFactory.Create(builder =>
-                    builder.AddConsole()
-                );
+                    builder.AddConsole().SetMinimumLevel(LogLevel.Debug)
+                );*/
 
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder
-                    .UseLoggerFactory(loggerFactory)
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+                    //.UseLoggerFactory(loggerFactory)
+                    //.EnableSensitiveDataLogging()
+                    //.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+                    .UseNpgsql(_connectionString);
             }
         }
 
