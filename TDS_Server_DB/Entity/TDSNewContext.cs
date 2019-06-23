@@ -23,25 +23,15 @@ migrationBuilder.Sql("INSERT INTO teams (\"ID\", \"Index\", \"Name\", \"Lobby\",
     "VALUES (0, 0, 'Spectator', 0, 255, 255, 255, 4, 1004114196)");
 migrationBuilder.Sql("INSERT INTO gangs (\"ID\", \"TeamId\", \"Short\") VALUES (0, 0, '-')");
 
-        2. Use this code at the before the first InsertData in the Up Method in the migration.
-migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" DROP IDENTITY");
-migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" DROP IDENTITY");
-
-
-        3. Use this code at the END (or atleast after all InsertDatas) of the Up Method in the migration.
+        2. Use this code at the END (or atleast after all InsertDatas) of the Up Method in the migration.
            Maybe modify the "START WITH" numbers if you added more default rows.
-migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 3)");
-migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
-migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 20)");
-migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 5)");
-migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 3");
+migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 20");
+migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 5");
+migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
 
  */
 
@@ -104,6 +94,8 @@ namespace TDS_Server_DB.Entity
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.UseLoggerFactory(new LoggerFactory(new List<ILoggerProvider> { new ConsoleLoggerProvider(new ConsoleLoggerSettings()) }, new LoggerFilterOptions { CaptureScopes = true, MinLevel = LogLevel.Warning }));
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
