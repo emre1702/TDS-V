@@ -13,6 +13,7 @@ using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
 
 namespace TDS_Server.Instance.Lobby
 {

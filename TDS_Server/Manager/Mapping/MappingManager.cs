@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Mapping.Converter;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Mapping
 {

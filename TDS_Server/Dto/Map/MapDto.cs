@@ -7,6 +7,7 @@ using TDS_Common.Enum;
 using EMapType = TDS_Server.Enum.EMapType;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Dto.Map
 {

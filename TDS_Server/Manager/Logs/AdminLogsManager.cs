@@ -2,6 +2,7 @@
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Log;
 
 namespace TDS_Server.Manager.Logs
 {

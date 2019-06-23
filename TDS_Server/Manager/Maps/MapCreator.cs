@@ -70,7 +70,7 @@ namespace TDS_Server.Manager.Maps
                 if (!onlySave)
                 {
                     using var dbContext = new TDSNewContext();
-                    var dbMap = new DB.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
+                    var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
                     await dbContext.Maps.AddAsync(dbMap);
                     await dbContext.SaveChangesAsync();
 

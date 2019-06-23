@@ -1,5 +1,5 @@
 using GTANetworkAPI;
-using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -14,7 +14,7 @@ namespace TDS_Server.Instance.Lobby
                 //    continue;
                 WeaponHash hash = (WeaponHash) ((uint)weapon.Hash);
                 player.GiveWeapon(hash, 0);
-                player.SetWeaponAmmo(hash, (int)weapon.Ammo);
+                player.SetWeaponAmmo(hash, weapon.Ammo);
             }
         }
     }

@@ -7,6 +7,7 @@ using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Manager.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Log;
 
 namespace TDS_Server.Manager.Logs
 {

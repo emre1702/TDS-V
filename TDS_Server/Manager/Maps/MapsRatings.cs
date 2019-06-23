@@ -7,6 +7,7 @@ using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Maps
 {

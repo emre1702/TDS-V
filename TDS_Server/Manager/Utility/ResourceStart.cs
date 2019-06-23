@@ -8,6 +8,7 @@ using TDS_Server.Manager.Commands;
 using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility

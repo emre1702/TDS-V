@@ -4,6 +4,7 @@ using System.Linq;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
 
 namespace TDS_Server.Instance
 {

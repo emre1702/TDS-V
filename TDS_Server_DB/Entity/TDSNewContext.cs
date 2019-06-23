@@ -8,6 +8,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Npgsql;
 using TDS_Common.Enum;
+using TDS_Server_DB.Entity.Admin;
+using TDS_Server_DB.Entity.Command;
+using TDS_Server_DB.Entity.Gang;
+using TDS_Server_DB.Entity.Lobby;
+using TDS_Server_DB.Entity.Log;
+using TDS_Server_DB.Entity.Player;
+using TDS_Server_DB.Entity.Rest;
 
 /**
  * Rules on migration:

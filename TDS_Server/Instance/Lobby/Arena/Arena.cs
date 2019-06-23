@@ -1,5 +1,6 @@
 using TDS_Server.Enum;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
 
 namespace TDS_Server.Instance.Lobby
 {

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using TDS_Common.Dto;
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Manager.Utility
 {

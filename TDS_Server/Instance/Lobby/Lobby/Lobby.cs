@@ -4,6 +4,8 @@ using TDS_Common.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
+using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Instance.Lobby
 {

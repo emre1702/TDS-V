@@ -8,6 +8,7 @@ using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Lobby;
 using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
@@ -38,7 +39,7 @@ namespace TDS_Server.Manager.Utility
                 .ToListAsync();
             foreach (Lobbies lobbysetting in lobbies)
             {
-                ELobbyType type = (ELobbyType)lobbysetting.Type;
+                ELobbyType type = lobbysetting.Type;
                 Lobby lobby;
                 switch (type)
                 {

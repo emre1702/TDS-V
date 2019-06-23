@@ -16,7 +16,8 @@ using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
-
+using TDS_Server_DB.Entity.Command;
+using TDS_Server_DB.Entity.Player;
 using DB = TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Commands
@@ -59,7 +60,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         private static readonly Dictionary<string, CommandData> _commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
-        private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
+        private static readonly Dictionary<string, DB.Command.Commands> _commandsDict = new Dictionary<string, DB.Command.Commands>();
         private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
         private static readonly Dictionary<Type, Func<string, Task<object?>>> _typeConverter = new Dictionary<Type, Func<string, Task<object?>>>();
 
@@ -73,7 +74,7 @@ namespace TDS_Server.Manager.Commands
         {
             LoadConverters();
 
-            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
+            foreach (DB.Command.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
             {
                 _commandsDict[command.Command.ToLower()] = command;
 
@@ -171,7 +172,7 @@ namespace TDS_Server.Manager.Commands
                 if (!CheckCommandExists(character, cmd, args))
                     return;
 
-                DB.Commands entity = _commandsDict[cmd];
+                DB.Command.Commands entity = _commandsDict[cmd];
 
                 if (!CheckRights(character, entity, cmdinfos))
                     return;
@@ -303,7 +304,7 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static bool CheckRights(TDSPlayer character, DB.Commands entity, TDSCommandInfos cmdinfos)
+        private static bool CheckRights(TDSPlayer character, DB.Command.Commands entity, TDSCommandInfos cmdinfos)
         {
             bool canuse = false;
             bool needright = false;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Gang;
 
 namespace TDS_Server.Instance.GangTeam
 {
