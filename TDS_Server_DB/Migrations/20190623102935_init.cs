@@ -288,8 +288,8 @@ namespace TDS_Server_DB.Migrations
                     DefaultSpawnZ = table.Column<float>(nullable: false, defaultValueSql: "900"),
                     AroundSpawnPoint = table.Column<float>(nullable: false, defaultValueSql: "3"),
                     DefaultSpawnRotation = table.Column<float>(nullable: false, defaultValueSql: "0"),
-                    IsTemporary = table.Column<bool>(nullable: false, defaultValueSql: "TRUE"),
-                    IsOfficial = table.Column<bool>(nullable: false, defaultValueSql: "FALSE"),
+                    IsTemporary = table.Column<bool>(nullable: false, defaultValue: true),
+                    IsOfficial = table.Column<bool>(nullable: false, defaultValue: false),
                     SpawnAgainAfterDeathMs = table.Column<int>(nullable: false, defaultValueSql: "400"),
                     CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
                     DieAfterOutsideMapLimitTime = table.Column<int>(nullable: false, defaultValueSql: "10")
@@ -700,6 +700,15 @@ namespace TDS_Server_DB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" DROP IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" DROP IDENTITY");
+
+
             migrationBuilder.InsertData(
                 table: "admin_levels",
                 columns: new[] { "Level", "ColorB", "ColorG", "ColorR" },
@@ -749,13 +758,13 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "DefaultSpawnRotation", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { 2, (short)1, 0f, true, false, "GangLobby", 0, null, 400, ELobbyType.GangLobby });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { 2, (short)1, true, "GangLobby", 0, null, 400, ELobbyType.GangLobby });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "DefaultSpawnRotation", "DieAfterOutsideMapLimitTime", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { 1, (short)1, 0f, 10, true, false, "Arena", 0, null, 400, ELobbyType.Arena });
+                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { 1, (short)1, 10, true, "Arena", 0, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "maps",
@@ -1192,6 +1201,14 @@ namespace TDS_Server_DB.Migrations
                 principalTable: "gangs",
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 3)");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 20)");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY (START WITH 5)");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

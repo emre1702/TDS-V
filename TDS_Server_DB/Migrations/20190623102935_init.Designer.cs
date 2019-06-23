@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190623090245_init")]
+    [Migration("20190623102935_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -994,7 +994,7 @@ namespace TDS_Server_DB.Migrations
                         .HasMaxLength(5);
 
                     b.Property<int>("TeamId")
-                        .HasColumnName("TeamID");
+                        .HasColumnName("TeamId");
 
                     b.HasKey("Id");
 
@@ -1019,7 +1019,9 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("now()");
 
-                    b.Property<float>("DefaultSpawnRotation");
+                    b.Property<float>("DefaultSpawnRotation")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("0");
 
                     b.Property<float>("DefaultSpawnX")
                         .ValueGeneratedOnAdd()
@@ -1037,9 +1039,13 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("10");
 
-                    b.Property<bool>("IsOfficial");
+                    b.Property<bool>("IsOfficial")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
 
-                    b.Property<bool>("IsTemporary");
+                    b.Property<bool>("IsTemporary")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2493,7 +2499,7 @@ namespace TDS_Server_DB.Migrations
                     b.HasOne("TDS_Server_DB.Entity.Teams", "Team")
                         .WithMany("Gangs")
                         .HasForeignKey("TeamId")
-                        .HasConstraintName("gangs_TeamID_fkey")
+                        .HasConstraintName("gangs_TeamId_fkey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
