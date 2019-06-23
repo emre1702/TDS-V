@@ -3,6 +3,7 @@ using RAGE.NUI;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx.Grid
 {
@@ -27,12 +28,12 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public bool UseColorForWholeRow = true;
 
-        public DxGridRow(DxGrid grid, float? height, Color backColor, Color textColor, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool isHeader = false, bool relative = true) : base(false)
+        public DxGridRow(DxGrid grid, float? height, Color backColor, Color? textColor = null, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool isHeader = false, bool relative = true) : base(false)
         {
             this.Grid = grid;
             this.height = height;
             BackColor = backColor;
-            TextColor = textColor;
+            TextColor = textColor ?? backColor.GetContrast();
             this.text = text;
             Scale = scale;
             Font = font;

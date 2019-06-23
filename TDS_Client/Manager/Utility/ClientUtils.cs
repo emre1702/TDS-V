@@ -107,5 +107,13 @@ namespace TDS_Client.Manager.Utility
         {
             return Color.FromArgb(255, CommonUtils.Rnd.Next(255), CommonUtils.Rnd.Next(255), CommonUtils.Rnd.Next(255));
         }
+
+        public static Color GetContrast(this Color original)
+        {
+            var l = 0.2126 * (original.R / 255d) + 0.7152 * (original.G / 255d) + 0.0722 * (original.B / 255d);
+
+            return l < 0.4 ? Color.White : Color.Black;
+        }
+
     }
 }

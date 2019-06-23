@@ -55,11 +55,10 @@ namespace TDS_Client.Manager.Draw
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, Color.Black,
-                    $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
+                DxGridRow lobbynamerow = new DxGridRow(grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, text: $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: UIResText.Alignment.Left, scale: 0.3f);
                 if (entry.PlayersStr.Length > 0)
                 {
-                    DxGridRow lobbyplayersrow = new DxGridRow(grid, null, Color.DarkGray, Color.White, entry.PlayersStr, scale: 0.25f);
+                    DxGridRow lobbyplayersrow = new DxGridRow(grid, null, Color.DarkGray, text: entry.PlayersStr, scale: 0.25f);
                 }
             }
         }
@@ -70,7 +69,7 @@ namespace TDS_Client.Manager.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(grid, null, team.Color, Color.White, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
+                DxGridRow row = new DxGridRow(grid, null, team.Color, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 new DxGridCell(playerdata.Name, row, columns[0]);
 
                 new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
@@ -138,7 +137,7 @@ namespace TDS_Client.Manager.Draw
 
         private static void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(grid, 0.035f, Color.FromArgb(187, 20, 20, 20), Color.White, textAlignment: UIResText.Alignment.Centered, isHeader: true);
+            DxGridRow header = new DxGridRow(grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: UIResText.Alignment.Centered, isHeader: true);
             new DxGridCell(Settings.Language.SCOREBOARD_NAME, header, columns[0]);
             new DxGridCell(Settings.Language.SCOREBOARD_PLAYTIME, header, columns[1]);
             new DxGridCell(Settings.Language.SCOREBOARD_KILLS, header, columns[2]);
