@@ -690,6 +690,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Date).IsRequired().HasDefaultValueSql("CURRENT_DATE");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.AmountLogins).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.AmountRegistrations).IsRequired().HasDefaultValue(0);
             });
@@ -725,6 +726,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Id).HasColumnName("ID");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
             });
 
             modelBuilder.Entity<Teams>(entity =>

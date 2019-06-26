@@ -33,13 +33,16 @@ namespace TDS_Server.Manager.Stats
             CustomEventManager.OnPlayerLoggedOut += CheckPlayerPeak;
         }
 
-        public static void AddArenaRound(ERoundEndReason roundEndReason)
+        public static void AddArenaRound(ERoundEndReason roundEndReason, bool isOfficial)
         {
             if (roundEndReason == ERoundEndReason.Command
                 || roundEndReason == ERoundEndReason.Empty
                 || roundEndReason == ERoundEndReason.NewPlayer)
                 return;
-            ++Stats.ArenaRoundsPlayed;
+            if (isOfficial)
+                ++Stats.ArenaRoundsPlayed;
+            else
+                ++Stats.CustomArenaRoundsPlayed;
         }
 
         public static void CheckPlayerPeak(TDSPlayer _)

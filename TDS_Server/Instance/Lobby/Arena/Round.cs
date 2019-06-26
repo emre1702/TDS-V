@@ -158,11 +158,8 @@ namespace TDS_Server.Instance.Lobby
             SaveAllPlayerLobbyStats();
             DbContext.SaveChangesAsync();
 
-            if (IsOfficial)
-            {
-                ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason);
-                ServerDailyStatsManager.AddArenaRound(_currentRoundEndReason);
-            }
+            ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
+            ServerDailyStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
 
         }
 
