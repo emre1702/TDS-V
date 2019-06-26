@@ -69,6 +69,7 @@
         string PRIVATE_CHAT_REQUEST_CLOSED_YOU { get; }
         string PRIVATE_CHAT_REQUEST_RECEIVED_FROM { get; }
         string PRIVATE_CHAT_REQUEST_SENT_TO { get; }
+        string PRIVATE_MESSAGE_SENT { get; }
 
 
         string REASON_MISSING { get; }

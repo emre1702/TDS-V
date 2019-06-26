@@ -76,6 +76,7 @@ namespace TDS_Server.Instance.Language
         public override string PRIVATE_CHAT_REQUEST_CLOSED_YOU => "Du hast die Chat-Anfrage zurückgezogen.";
         public override string PRIVATE_CHAT_REQUEST_RECEIVED_FROM => "Du hast eine Privatchat-Anfrage von {0} bekommen.";
         public override string PRIVATE_CHAT_REQUEST_SENT_TO => "Du hast eine Privatchat-Anfrage an {0} gesendet.";
+        public override string PRIVATE_MESSAGE_SENT => "Die Privat-Nachricht wurde gesendet.";
 
         public override string REASON_MISSING => "Die Begründung fehlt!";
         public override string REPORT_ANSWERED_INFO => "Der Ersteller hat seinem Report mit der ID {0} geantwortet.";

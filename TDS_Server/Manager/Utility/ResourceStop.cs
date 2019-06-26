@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Stats;
@@ -19,18 +20,17 @@ namespace TDS_Server.Manager.Utility
 
         private async void SaveAllInDatabase()
         {
-            Client? exceptionsource = null;
+            TDSPlayer? exceptionsource = null;
             try
             {
                 await LogsManager.Save();
                 await ServerTotalStatsManager.Save();
                 await ServerDailyStatsManager.Save();
 
-                List<Client> players = NAPI.Pools.GetAllPlayers();
-                foreach (Client player in players)
+                foreach (TDSPlayer player in Player.Player.LoggedInPlayers)
                 {
                     exceptionsource = player;
-                    await player.GetChar().SaveData();
+                    await player.SaveData();
                 }
                 exceptionsource = null;
             }

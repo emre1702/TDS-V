@@ -46,6 +46,13 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.OpenPrivateChat)]
         public static void OpenPrivateChat(TDSPlayer player, TDSPlayer target)
         {
+            // Am I blocked?
+            if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.Client.Name));
+                return;
+            }
+
             // Am I already in chat?
             if (player.InPrivateChatWith != null)
             {
@@ -118,7 +125,13 @@ namespace TDS_Server.Manager.Commands
         {
             if (player == target)
                 return;
+            if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.Client.Name));
+                return;
+            }
             ChatManager.SendPrivateMessage(player, target, message);
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PRIVATE_MESSAGE_SENT);
         }
 
         [TDSCommand(DPlayerCommand.Position)]
@@ -159,7 +172,7 @@ namespace TDS_Server.Manager.Commands
                 return;
             }
 
-            string msg = string.Empty;
+            string msg;
             if (relation != null && relation.Relation == EPlayerRelation.Friend)
             {
                 msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.Client.Name);
@@ -170,6 +183,9 @@ namespace TDS_Server.Manager.Commands
                 player.DbContext.PlayerRelations.Add(relation);
                 msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.Client.Name);
             }
+
+            if (player.InPrivateChatWith == target)
+                player.ClosePrivateChat(false);
 
             relation.Relation = EPlayerRelation.Block;
             await player.DbContext.SaveChangesAsync();

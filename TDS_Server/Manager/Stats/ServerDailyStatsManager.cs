@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Stats
         {
             if (Player.Player.AmountLoggedInPlayers <= Stats.PlayerPeak)
                 return;
-            Stats.PlayerPeak = Player.Player.AmountLoggedInPlayers;
+            Stats.PlayerPeak = (short)Player.Player.AmountLoggedInPlayers;
         }
 
         public static Task Save()

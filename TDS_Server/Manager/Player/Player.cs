@@ -13,7 +13,8 @@ namespace TDS_Server.Manager.Player
     internal static class Player
     {
         public static TDSNewContext DbContext { get; set; }
-        public static short AmountLoggedInPlayers { get; private set; }
+        public static int AmountLoggedInPlayers => LoggedInPlayers.Count;
+        public static readonly List<TDSPlayer> LoggedInPlayers = new List<TDSPlayer>();
 
         private static readonly Dictionary<Client, TDSPlayer> _clientPlayers = new Dictionary<Client, TDSPlayer>();
 
@@ -22,8 +23,14 @@ namespace TDS_Server.Manager.Player
             DbContext = new TDSNewContext();
             DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-            CustomEventManager.OnPlayerLoggedInBefore += (_) => ++AmountLoggedInPlayers;
-            CustomEventManager.OnPlayerLoggedOutBefore += (_) => --AmountLoggedInPlayers;
+            CustomEventManager.OnPlayerLoggedInBefore += player =>
+            {
+                LoggedInPlayers.Add(player);
+            };
+            CustomEventManager.OnPlayerLoggedOutBefore += player =>
+            {
+                LoggedInPlayers.Remove(player);
+            };
         }
 
         public static List<TDSPlayer> GetAllTDSPlayer()

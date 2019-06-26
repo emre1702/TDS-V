@@ -32,7 +32,7 @@ namespace TDS_Server.Manager.Utility
             string changedmessage = (player.Team?.ChatColor ?? string.Empty) + player.Client.Name + "!{220|220|220}: " + message;
             if (isDirty)
                 changedmessage = "!{160|50|0}[DIRTY] " + changedmessage;
-            player.CurrentLobby?.SendAllPlayerChatMessage(changedmessage);
+            player.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, player.BlockingPlayerIds);
             if ((player.CurrentLobby?.IsOfficial ?? false) && !isDirty)
                 ChatLogsManager.Log(message, player);
             //else if (character.IsPermamuted)
@@ -44,7 +44,13 @@ namespace TDS_Server.Manager.Utility
         public static void SendGlobalMessage(TDSPlayer character, string message)
         {
             string changedmessage = "[GLOBAL] " + (character.Team?.ChatColor ?? string.Empty) + character.Client.Name + "!{220|220|220}: " + message;
-            NAPI.Chat.SendChatMessageToAll(changedmessage);
+            var blockingIds = character.BlockingPlayerIds;
+            foreach (var target in Player.Player.LoggedInPlayers)
+            {
+                if (blockingIds.Contains(target.Entity?.Id ?? 0))
+                    continue;
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, changedmessage);
+            }
             ChatLogsManager.Log(message, character, isglobal: true);
         }
 
@@ -67,7 +73,7 @@ namespace TDS_Server.Manager.Utility
             if (character.Team == null)
                 return;
             string changedmessage = "[TEAM] " + character.Team.ChatColor + character.Client.Name + ": !{220|220|220}" + message;
-            character.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, character.Team);
+            character.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, character.BlockingPlayerIds, character.Team);
             ChatLogsManager.Log(message, character, isteamchat: true);
         }
 

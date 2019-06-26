@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -169,6 +170,7 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer? InPrivateChatWith { get; set; }
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
         public Vehicle? FreeroamVehicle { get; set; }
+        public HashSet<int> BlockingPlayerIds => Entity?.PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet() ?? new HashSet<int>();
 
         private Players? _entity;
         private int _lastSaveTick;

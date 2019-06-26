@@ -75,6 +75,7 @@ namespace TDS_Server.Instance.Language
         public virtual string PRIVATE_CHAT_REQUEST_CLOSED_YOU => "You've withdrawn the chat request.";
         public virtual string PRIVATE_CHAT_REQUEST_RECEIVED_FROM => "You've received a private chat request from {0}.";
         public virtual string PRIVATE_CHAT_REQUEST_SENT_TO => "You've sent a private chat request to {0}.";
+        public virtual string PRIVATE_MESSAGE_SENT => "The private message has been sent.";
 
         public virtual string REASON_MISSING => "The reason is missing!";
         public virtual string REPORT_ANSWERED_INFO => "The creator answered to his report with ID {0}.";

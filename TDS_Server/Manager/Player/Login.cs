@@ -28,6 +28,7 @@ namespace TDS_Server.Manager.Player
                 .Include(p => p.OfflinemessagesTarget)
                 .Include(p => p.PlayerMapRatings)
                 .Include(p => p.PlayerMapFavourites)
+                .Include(p => p.PlayerRelationsTarget)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (entity == null)
