@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Npgsql;
 using TDS_Common.Enum;
 using TDS_Server_DB.Entity.Admin;
@@ -15,6 +10,7 @@ using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Log;
 using TDS_Server_DB.Entity.Player;
 using TDS_Server_DB.Entity.Rest;
+using TDS_Server_DB.Entity.Server;
 
 /**
  * Rules on migration:
@@ -101,7 +97,9 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
         public virtual DbSet<Players> Players { get; set; }
+        public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
+        public virtual DbSet<ServerTotalStats> ServerTotalStats { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
@@ -117,7 +115,6 @@ namespace TDS_Server_DB.Entity
                 optionsBuilder
                     //.UseLoggerFactory(loggerFactory)
                     //.EnableSensitiveDataLogging()
-                    //.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
                     .UseNpgsql(_connectionString);
             }
         }
@@ -684,6 +681,19 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("players_GangId_fkey");
             });
 
+            modelBuilder.Entity<ServerDailyStats>(entity =>
+            {
+                entity.ToTable("server_daily_stats");
+
+                entity.HasKey(e => e.Date).HasName("server_daily_stats_date_pkey");
+
+                entity.Property(e => e.Date).IsRequired().HasDefaultValueSql("CURRENT_DATE");
+                entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.AmountLogins).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.AmountRegistrations).IsRequired().HasDefaultValue(0);
+            });
+
             modelBuilder.Entity<ServerSettings>(entity =>
             {
                 entity.ToTable("server_settings");
@@ -706,6 +716,15 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.SavedMapsPath)
                     .IsRequired()
                     .HasMaxLength(300);
+            });
+
+            modelBuilder.Entity<ServerTotalStats>(entity =>
+            {
+                entity.ToTable("server_daily_stats");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
             });
 
             modelBuilder.Entity<Teams>(entity =>
@@ -1059,6 +1078,10 @@ namespace TDS_Server_DB.Entity
                 new Maps { Id = -3, Name = "All Bombs", CreatorId = 0 },
                 new Maps { Id = -2, Name = "All Normals", CreatorId = 0 },
                 new Maps { Id = -1, Name = "All", CreatorId = 0 }
+            );
+
+            modelBuilder.Entity<ServerTotalStats>().HasData(
+                new ServerTotalStats { Id = 1 }
             );
             #endregion
 

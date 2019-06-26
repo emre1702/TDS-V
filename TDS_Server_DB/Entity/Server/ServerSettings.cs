@@ -1,4 +1,4 @@
-﻿namespace TDS_Server_DB.Entity.Rest
+﻿namespace TDS_Server_DB.Entity.Server
 {
     public partial class ServerSettings
     {

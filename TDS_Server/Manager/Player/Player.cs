@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
@@ -12,6 +13,7 @@ namespace TDS_Server.Manager.Player
     internal static class Player
     {
         public static TDSNewContext DbContext { get; set; }
+        public static short AmountLoggedInPlayers { get; private set; }
 
         private static readonly Dictionary<Client, TDSPlayer> _clientPlayers = new Dictionary<Client, TDSPlayer>();
 
@@ -19,6 +21,14 @@ namespace TDS_Server.Manager.Player
         {
             DbContext = new TDSNewContext();
             DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+            CustomEventManager.OnPlayerLoggedInBefore += (_) => ++AmountLoggedInPlayers;
+            CustomEventManager.OnPlayerLoggedOutBefore += (_) => --AmountLoggedInPlayers;
+        }
+
+        public static List<TDSPlayer> GetAllTDSPlayer()
+        {
+            return _clientPlayers.Values.Where(p => p.LoggedIn).ToList();
         }
 
         public static TDSPlayer GetChar(this Client client)

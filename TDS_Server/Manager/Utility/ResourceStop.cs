@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
+using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
@@ -22,6 +23,8 @@ namespace TDS_Server.Manager.Utility
             try
             {
                 await LogsManager.Save();
+                await ServerTotalStatsManager.Save();
+                await ServerDailyStatsManager.Save();
 
                 List<Client> players = NAPI.Pools.GetAllPlayers();
                 foreach (Client player in players)

@@ -44,6 +44,8 @@ namespace TDS_Server.Manager.Player
                 AdminsManager.SetOffline(player);
             player.ClosePrivateChat(true);
 
+            CustomEventManager.SetPlayerLoggedOut(player);
+
             await player.SaveData();
         }
 

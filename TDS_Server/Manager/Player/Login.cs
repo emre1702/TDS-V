@@ -74,6 +74,8 @@ namespace TDS_Server.Manager.Player
             MapFavourites.LoadPlayerFavourites(character);
 
             RestLogsManager.Log(ELogType.Login, player, true);
+
+            CustomEventManager.SetPlayerLoggedIn(character);
         }
     }
 }
