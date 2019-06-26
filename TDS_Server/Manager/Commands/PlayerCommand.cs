@@ -1,9 +1,11 @@
 using GTANetworkAPI;
+using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -142,6 +144,37 @@ namespace TDS_Server.Manager.Commands
         public static void OutputUserId(TDSPlayer player)
         {
             NAPI.Chat.SendChatMessageToPlayer(player.Client, "User id: " + (player.Entity?.Id.ToString() ?? "?"));
+        }
+
+        [TDSCommand(DPlayerCommand.BlockUser)]
+        public static async void BlockUser(TDSPlayer player, TDSPlayer target)
+        {
+            if (player.Entity == null || target.Entity == null)
+                return;
+
+            var relation = await player.DbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+            if (relation != null && relation.Relation == EPlayerRelation.Block)
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.Client.Name));
+                return;
+            }
+
+            string msg = string.Empty;
+            if (relation != null && relation.Relation == EPlayerRelation.Friend)
+            {
+                msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.Client.Name);
+            }
+            else
+            {
+                relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
+                player.DbContext.PlayerRelations.Add(relation);
+                msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.Client.Name);
+            }
+
+            relation.Relation = EPlayerRelation.Block;
+            await player.DbContext.SaveChangesAsync();
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, msg);
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.Client.Name));
         }
 
         /*#region Lobby

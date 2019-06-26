@@ -2,6 +2,7 @@
 {
     internal class DPlayerCommand
     {
+        public const string BlockUser = "BlockUser";
         public const string ClosePrivateChat = "ClosePrivateChat";
         public const string GlobalChat = "GlobalChat";
         public const string LobbyLeave = "LobbyLeave";

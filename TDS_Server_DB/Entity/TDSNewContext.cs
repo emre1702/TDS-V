@@ -32,7 +32,7 @@ migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS
 migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 3");
 migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
 migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 20");
+migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 21");
 migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 5");
 migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
 
@@ -809,7 +809,8 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 16, Command = "ClosePrivateChat" },
                 new Commands { Id = 17, Command = "OpenPrivateChat" },
                 new Commands { Id = 18, Command = "PrivateMessage" },
-                new Commands { Id = 19, Command = "UserId" }
+                new Commands { Id = 19, Command = "UserId" },
+                new Commands { Id = 20, Command = "BlockUser" }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -898,7 +899,10 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "OpenPrivateSay", Command = 17 },
                 new CommandAlias { Alias = "OpenPM", Command = 17 },
                 new CommandAlias { Alias = "OPC", Command = 17 },
-                new CommandAlias { Alias = "UID", Command = 19 }
+                new CommandAlias { Alias = "UID", Command = 19 },
+                new CommandAlias { Alias = "Ignore", Command = 20 },
+                new CommandAlias { Alias = "IgnoreUser", Command = 20 },
+                new CommandAlias { Alias = "Block", Command = 20 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -939,7 +943,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 18, Language = ELanguage.German, Info = "Private Nachricht an einen bestimmten Spieler." },
                 new CommandInfos { Id = 18, Language = ELanguage.English, Info = "Private message to a specific player." },
                 new CommandInfos { Id = 19, Language = ELanguage.German, Info = "Gibt dir deine User-Id aus." },
-                new CommandInfos { Id = 19, Language = ELanguage.English, Info = "Outputs your user-id to yourself." }
+                new CommandInfos { Id = 19, Language = ELanguage.English, Info = "Outputs your user-id to yourself." },
+                new CommandInfos { Id = 20, Language = ELanguage.German, Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
+                new CommandInfos { Id = 20, Language = ELanguage.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(

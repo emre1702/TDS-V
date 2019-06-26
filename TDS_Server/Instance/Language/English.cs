@@ -75,7 +75,6 @@ namespace TDS_Server.Instance.Language
         public virtual string PRIVATE_CHAT_REQUEST_CLOSED_YOU => "You've withdrawn the chat request.";
         public virtual string PRIVATE_CHAT_REQUEST_RECEIVED_FROM => "You've received a private chat request from {0}.";
         public virtual string PRIVATE_CHAT_REQUEST_SENT_TO => "You've sent a private chat request to {0}.";
-        
 
         public virtual string REASON_MISSING => "The reason is missing!";
         public virtual string REPORT_ANSWERED_INFO => "The creator answered to his report with ID {0}.";
@@ -100,9 +99,12 @@ namespace TDS_Server.Instance.Language
         public virtual string STILL_PERMABANED_IN_LOBBY => "You are still permanently baned by {0} in this lobby. Reason: {1}";
         public virtual string STILL_PERMAMUTED => "You are still permamuted.";
 
+        public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
+        public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";
         public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
+        public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
         public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
         public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
@@ -125,5 +127,7 @@ namespace TDS_Server.Instance.Language
         };
 
         public virtual string WRONG_PASSWORD => "Wrong password!";
+
+        public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
     }
 }

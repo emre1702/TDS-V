@@ -100,9 +100,12 @@ namespace TDS_Server.Instance.Language
         public override string STILL_PERMABANED_IN_LOBBY => "Du wurdest von {0} aus dieser Lobby permanent gebannt. Grund: {1}";
         public override string STILL_PERMAMUTED => "Du bist noch permanent gemutet.";
 
+        public override string TARGET_ADDED_BLOCK => "Der Spieler {0} wurde von dir geblockt.";
+        public override string TARGET_ALREADY_BLOCKED => "Der Spieler {0} wurde bereits von dir geblockt.";
         public override string TARGET_ALREADY_IN_PRIVATE_CHAT => "Das Ziel ist bereits in einem Privatchat.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
+        public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";
         public override string TIMEBAN_YOU_INFO => "Du wurdest für {0} Stunden von {1} gebannt. Grund: {2}";
         public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby '{2}' von {3} gebannt. Grund: {4}";
@@ -125,5 +128,7 @@ namespace TDS_Server.Instance.Language
         };
 
         public override string WRONG_PASSWORD => "Falsches Passwort!";
+
+        public override string YOU_GOT_BLOCKED_BY => "Du wurde von {0} geblockt.";
     }
 }

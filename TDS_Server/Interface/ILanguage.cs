@@ -94,9 +94,12 @@
         string STILL_PERMABANED_IN_LOBBY { get; }
         string STILL_PERMAMUTED { get; }
 
+        string TARGET_ADDED_BLOCK { get; }
+        string TARGET_ALREADY_BLOCKED { get; }
         string TARGET_ALREADY_IN_PRIVATE_CHAT { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
+        string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
         string TIMEBAN_INFO { get; }
         string TIMEBAN_YOU_INFO { get; }
         string TIMEBAN_LOBBY_INFO { get; }
@@ -112,5 +115,7 @@
         string[] WELCOME_MESSAGE { get; }
 
         string WRONG_PASSWORD { get; }
+
+        string YOU_GOT_BLOCKED_BY { get; }
     }
 }
