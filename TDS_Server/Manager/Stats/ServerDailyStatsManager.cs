@@ -21,10 +21,10 @@ namespace TDS_Server.Manager.Stats
         public static async Task Init()
         {
             DbContext = new TDSNewContext();
-            Stats = await DbContext.ServerDailyStats.FirstOrDefaultAsync(s => s.Date == NpgsqlDate.Today);
+            Stats = await DbContext.ServerDailyStats.FirstOrDefaultAsync(s => s.Date.Date == DateTime.Today);
             if (Stats == null)
             {
-                Stats = new ServerDailyStats { Date = NpgsqlDate.Today };
+                Stats = new ServerDailyStats { Date = DateTime.Today };
                 DbContext.ServerDailyStats.Add(Stats);
                 await DbContext.SaveChangesAsync();
             }

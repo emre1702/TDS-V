@@ -687,7 +687,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.HasKey(e => e.Date).HasName("server_daily_stats_date_pkey");
 
-                entity.Property(e => e.Date).IsRequired().HasDefaultValueSql("CURRENT_DATE");
+                entity.Property(e => e.Date).IsRequired().HasColumnType("date").HasDefaultValueSql("CURRENT_DATE");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
@@ -721,7 +721,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
             {
-                entity.ToTable("server_daily_stats");
+                entity.ToTable("server_total_stats");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
