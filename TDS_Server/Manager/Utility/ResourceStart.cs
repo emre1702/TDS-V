@@ -32,11 +32,6 @@ namespace TDS_Server.Manager.Utility
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
 
                 dbcontext.PlayerStats.Where(s => s.LoggedIn).Update(s => new PlayerStats { LoggedIn = false });
-                foreach (var stat in await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync())
-                {
-                    stat.LoggedIn = false;
-                }
-                await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 ServerDailyStatsManager.Init();
