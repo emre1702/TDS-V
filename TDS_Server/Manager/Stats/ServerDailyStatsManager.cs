@@ -18,15 +18,15 @@ namespace TDS_Server.Manager.Stats
         public static TDSNewContext DbContext { get; private set; }
         public static ServerDailyStats Stats { get; private set; }
 
-        public static async Task Init()
+        public static void Init()
         {
             DbContext = new TDSNewContext();
-            Stats = await DbContext.ServerDailyStats.FirstOrDefaultAsync(s => s.Date.Date == DateTime.Today);
+            Stats = DbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
             if (Stats == null)
             {
                 Stats = new ServerDailyStats { Date = DateTime.Today };
                 DbContext.ServerDailyStats.Add(Stats);
-                await DbContext.SaveChangesAsync();
+                DbContext.SaveChanges();
             }
 
             CustomEventManager.OnPlayerLoggedIn += CheckPlayerPeak;
