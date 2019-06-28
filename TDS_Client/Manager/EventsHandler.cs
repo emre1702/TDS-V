@@ -127,6 +127,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.MapClear, OnMapClearMethod);
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
             Add(DToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
+            Add(DToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
             Add(DToClientEvent.PlayerAdminLevelChange, OnPlayerAdminLevelChangeMethod);
             Add(DToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
             Add(DToClientEvent.PlayerMoneyChange, OnPlayerMoneyChangeMethod);
@@ -403,6 +404,12 @@ namespace TDS_Client.Manager
         private void OnSyncCurrentMapNameMethod(object[] args)
         {
             MapInfo.SetMapInfo((string)args[0]);
+        }
+
+        private void OnPlayCustomSoundMethod(object[] args)
+        {
+            string soundName = (string)args[0];
+            MainBrowser.PlaySound(soundName);
         }
 
         private void OnMapVotingSyncOnPlayerJoinMethod(object[] args)

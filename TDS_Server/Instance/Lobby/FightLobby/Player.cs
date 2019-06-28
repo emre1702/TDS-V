@@ -22,6 +22,8 @@ namespace TDS_Server.Instance.Lobby
             base.RemovePlayer(character);
 
             character.Team?.SpectateablePlayers?.Remove(character);
+            character.LastKillAt = null;
+            character.KillingSpree = 0;
         }
 
         public void KillPlayer(Client player, string reason)

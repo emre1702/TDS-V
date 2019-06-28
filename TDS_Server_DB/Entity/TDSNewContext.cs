@@ -115,7 +115,8 @@ namespace TDS_Server_DB.Entity
                 optionsBuilder
                     //.UseLoggerFactory(loggerFactory)
                     //.EnableSensitiveDataLogging()
-                    .UseNpgsql(_connectionString);
+                    //.UseNpgsql(_connectionString);
+                    .UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
             }
         }
 
@@ -717,6 +718,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.SavedMapsPath)
                     .IsRequired()
                     .HasMaxLength(300);
+
+                entity.Property(e => e.KillingSpreeMaxSecondsUntilNextKill)
+                    .IsRequired()
+                    .HasDefaultValue(18);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
@@ -767,7 +772,7 @@ namespace TDS_Server_DB.Entity
                     ErrorToPlayerOnNonExistentCommand = true, ToChatOnNonExistentCommand = false,
                     DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
                     SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,
-                    ArenaNewMapProbabilityPercent = 2
+                    ArenaNewMapProbabilityPercent = 2, KillingSpreeMaxSecondsUntilNextKill = 18
                 }
             );
 

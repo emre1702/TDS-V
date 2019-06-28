@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
@@ -103,6 +104,13 @@ namespace TDS_Server.Instance.Lobby
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
                 });
             }
+        }
+
+        public void PlaySound(string soundName)
+        {
+            FuncIterateAllPlayers((player, team) =>
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, soundName)
+            );
         }
     }
 }

@@ -12,9 +12,10 @@ let files = [
     {
         path: "main/", html: "main.html", js: ["main.js", "chat.js", "roundend.js"],
         css: ["main/chat.css", "main/main.css", "main/roundend.css"],
-        reserved: ["setMoney", "playSound", "playHitsound", "showBloodscreen", "addKillMessage", "alert",
+        reserved: ["setMoney", "playSound", "playHitsound", "playKillstreakSound", "showBloodscreen", "addKillMessage", "alert",
             "toggleCanVoteForMapWithNumpad", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", 
-            "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound"]
+            "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound", 
+			"onKillstreakSoundEnded"]
     },
     { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     {

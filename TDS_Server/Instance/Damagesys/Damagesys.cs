@@ -10,17 +10,18 @@ namespace TDS_Server.Instance
 {
     partial class Damagesys
     {
-        private static Dictionary<EWeaponHash, DamageDto> defaultDamages;
+        private static Dictionary<EWeaponHash, DamageDto> _defaultDamages;
 
-        public Damagesys(ICollection<LobbyWeapons> weapons)
+        public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {
             foreach (LobbyWeapons weapon in weapons)
             {
                 if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
-                    damagesDict[weapon.Hash] = defaultDamages[weapon.Hash];
+                    damagesDict[weapon.Hash] = _defaultDamages[weapon.Hash];
                 else
                     damagesDict[weapon.Hash] = new DamageDto(weapon);
             }
+            InitKillingSpreeRewards(killingspreeRewards);
         }
 
         public void Clear()
@@ -30,7 +31,7 @@ namespace TDS_Server.Instance
 
         public static void LoadDefaults(TDSNewContext dbcontext)
         {
-            defaultDamages = dbcontext.Weapons
+            _defaultDamages = dbcontext.Weapons
                 .ToDictionary(
                     w => w.Hash,
                     w => new DamageDto

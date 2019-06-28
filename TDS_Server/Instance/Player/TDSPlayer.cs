@@ -166,10 +166,12 @@ namespace TDS_Server.Instance.Player
         }
 
         public bool ChatLoaded { get; set; }
-        public int KillingSpree { get; set; }
+        public short KillingSpree { get; set; }
         public TDSPlayer? InPrivateChatWith { get; set; }
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
         public Vehicle? FreeroamVehicle { get; set; }
+        public DateTime? LastKillAt { get; set; }
+
         public HashSet<int> BlockingPlayerIds => Entity?.PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet() ?? new HashSet<int>();
 
         private Players? _entity;

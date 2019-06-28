@@ -17,7 +17,7 @@ namespace TDS_Server.Instance
                 return null;
             Workaround.FreezePlayer(player.Client, true);
 
-            player.KillingSpree = 0;
+            KillingSpreeDeath(player);
 
             if (player.Lifes <= 0)
                 return null;
@@ -37,7 +37,7 @@ namespace TDS_Server.Instance
             {
                 if (killercharacter.CurrentRoundStats != null)
                     ++killercharacter.CurrentRoundStats.Kills;
-                ++killercharacter.KillingSpree;
+                KillingSpreeKill(killercharacter);
             }
 
             // Assist //
@@ -107,7 +107,7 @@ namespace TDS_Server.Instance
 
             if (lastHitterCharacter.CurrentRoundStats != null)
                 ++lastHitterCharacter.CurrentRoundStats.Kills;
-            ++lastHitterCharacter.KillingSpree;
+            KillingSpreeKill(lastHitterCharacter);
             NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
             killer = lastHitterCharacter;
         }

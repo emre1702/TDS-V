@@ -521,6 +521,21 @@ namespace TDS_Server_DB.Migrations
                         {
                             Alias = "UID",
                             Command = (short)19
+                        },
+                        new
+                        {
+                            Alias = "Ignore",
+                            Command = (short)20
+                        },
+                        new
+                        {
+                            Alias = "IgnoreUser",
+                            Command = (short)20
+                        },
+                        new
+                        {
+                            Alias = "Block",
+                            Command = (short)20
                         });
                 });
 
@@ -768,6 +783,18 @@ namespace TDS_Server_DB.Migrations
                             Id = (short)19,
                             Language = ELanguage.English,
                             Info = "Outputs your user-id to yourself."
+                        },
+                        new
+                        {
+                            Id = (short)20,
+                            Language = ELanguage.German,
+                            Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw."
+                        },
+                        new
+                        {
+                            Id = (short)20,
+                            Language = ELanguage.English,
+                            Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc."
                         });
                 });
 
@@ -935,6 +962,13 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = (short)19,
                             Command = "UserId",
+                            LobbyOwnerCanUse = false,
+                            VipCanUse = false
+                        },
+                        new
+                        {
+                            Id = (short)20,
+                            Command = "BlockUser",
                             LobbyOwnerCanUse = false,
                             VipCanUse = false
                         });
@@ -2437,6 +2471,10 @@ namespace TDS_Server_DB.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int>("KillingSpreeMaxSecondsUntilNextKill")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(18);
+
                     b.Property<string>("MapsPath")
                         .IsRequired()
                         .HasMaxLength(300);
@@ -2472,6 +2510,7 @@ namespace TDS_Server_DB.Migrations
                             DistanceToSpotToPlant = 3f,
                             ErrorToPlayerOnNonExistentCommand = true,
                             GamemodeName = "tdm",
+                            KillingSpreeMaxSecondsUntilNextKill = 18,
                             MapsPath = "bridge/resources/tds/maps/",
                             NewMapsPath = "bridge/resources/tds/newmaps/",
                             SaveLogsCooldownMinutes = 1,
