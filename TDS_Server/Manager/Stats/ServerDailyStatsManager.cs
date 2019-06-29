@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
@@ -29,32 +30,59 @@ namespace TDS_Server.Manager.Stats
                 DbContext.SaveChanges();
             }
 
-            CustomEventManager.OnPlayerLoggedIn += CheckPlayerPeak;
+            CustomEventManager.OnPlayerLoggedIn += PlayerLoggedIn;
             CustomEventManager.OnPlayerLoggedOut += CheckPlayerPeak;
+            CustomEventManager.OnPlayerRegistered += PlayerRegistered;
         }
 
-        public static void AddArenaRound(ERoundEndReason roundEndReason, bool isOfficial)
+        private static async Task CheckNewDay()
+        {
+            if (Stats.Date.Date == DateTime.Today)
+                return;
+            DbContext.Entry(Stats).State = EntityState.Detached;
+            Stats = new ServerDailyStats { Date = DateTime.Today };
+            DbContext.ServerDailyStats.Add(Stats);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public static async void AddArenaRound(ERoundEndReason roundEndReason, bool isOfficial)
         {
             if (roundEndReason == ERoundEndReason.Command
                 || roundEndReason == ERoundEndReason.Empty
                 || roundEndReason == ERoundEndReason.NewPlayer)
                 return;
+            await CheckNewDay();
             if (isOfficial)
                 ++Stats.ArenaRoundsPlayed;
             else
                 ++Stats.CustomArenaRoundsPlayed;
         }
 
-        public static void CheckPlayerPeak(TDSPlayer _)
+        private static async void PlayerLoggedIn(TDSPlayer player)
+        {
+            await CheckNewDay();
+            ++Stats.AmountLogins;
+            CheckPlayerPeak(player);
+        }
+
+        private static async void CheckPlayerPeak(TDSPlayer _)
         {
             if (Player.Player.AmountLoggedInPlayers <= Stats.PlayerPeak)
                 return;
+            await CheckNewDay();
             Stats.PlayerPeak = (short)Player.Player.AmountLoggedInPlayers;
         }
 
-        public static Task Save()
+        private static async void PlayerRegistered(Client _)
         {
-            return DbContext.SaveChangesAsync();
+            await CheckNewDay();
+            ++Stats.AmountRegistrations;
+        }
+
+        public static async Task Save()
+        {
+            await DbContext.SaveChangesAsync();
+            await CheckNewDay();
         }
     }
 }

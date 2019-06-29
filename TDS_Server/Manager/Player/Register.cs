@@ -41,6 +41,7 @@ namespace TDS_Server.Manager.Player
             await dbContext.SaveChangesAsync();
 
             RestLogsManager.Log(ELogType.Register, player, true);
+            CustomEventManager.SetPlayerRegistered(player);
 
             Login.LoginPlayer(player, dbplayer.Id, password);
         }
