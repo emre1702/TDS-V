@@ -197,6 +197,15 @@ namespace TDS_Server.Instance.Lobby
             to.TotalKills += from.Kills;
             to.TotalAssists += from.Assists;
             to.TotalDamage += from.Damage;
+
+            ++to.TotalRounds;
+            if (from.Kills > to.MostKillsInARound)
+                to.MostKillsInARound = from.Kills;
+            if (from.Damage > to.MostDamageInARound)
+                to.MostDamageInARound = from.Damage;
+            if (from.Assists > to.MostAssistsInARound)
+                to.MostAssistsInARound = from.Assists;
+
             from.Clear();
         }
     }
