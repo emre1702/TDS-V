@@ -37,6 +37,7 @@ namespace TDS_Server.Manager.Player
             {
                 LoggedIn = false
             };
+            dbplayer.PlayerTotalStats = new PlayerTotalStats();
             dbContext.Players.Add(dbplayer);
             await dbContext.SaveChangesAsync();
 

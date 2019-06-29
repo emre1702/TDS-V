@@ -39,6 +39,7 @@ namespace TDS_Server_DB.Entity.Player
         public virtual Gangs Gang { get; set; }
         public virtual PlayerSettings PlayerSettings { get; set; }
         public virtual PlayerStats PlayerStats { get; set; }
+        public virtual PlayerTotalStats PlayerTotalStats { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }
         public virtual ICollection<Maps> Maps { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }

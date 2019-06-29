@@ -637,6 +637,23 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("player_stats_PlayerID_fkey");
             });
 
+            modelBuilder.Entity<PlayerTotalStats>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId)
+                    .HasName("player_total_stats_pkey");
+
+                entity.ToTable("player_total_stats");
+
+                entity.Property(e => e.PlayerId)
+                    .HasColumnName("PlayerID")
+                    .ValueGeneratedNever();
+
+                entity.HasOne(d => d.Player)
+                   .WithOne(p => p.PlayerTotalStats)
+                   .HasForeignKey<PlayerTotalStats>(d => d.PlayerId)
+                   .HasConstraintName("player_total_stats_PlayerID_fkey");
+            });
+
             modelBuilder.Entity<Players>(entity =>
             {
                 entity.ToTable("players");

@@ -24,6 +24,7 @@ namespace TDS_Server.Manager.Player
             using var dbcontext = new TDSNewContext();
             Players entity = await dbcontext.Players
                 .Include(p => p.PlayerStats)
+                .Include(p => p.PlayerTotalStats)
                 .Include(p => p.PlayerSettings)
                 .Include(p => p.OfflinemessagesTarget)
                 .Include(p => p.PlayerMapRatings)

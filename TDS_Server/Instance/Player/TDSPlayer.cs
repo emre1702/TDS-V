@@ -171,6 +171,7 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
         public Vehicle? FreeroamVehicle { get; set; }
         public DateTime? LastKillAt { get; set; }
+        public PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
 
         public HashSet<int> BlockingPlayerIds => Entity?.PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet() ?? new HashSet<int>();
 
@@ -194,6 +195,8 @@ namespace TDS_Server.Instance.Player
             if (money >= 0 || Money > money * -1)
             {
                 Money += money;
+                if (TotalStats != null)
+                    TotalStats.Money += money;
             }
             else
                 ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
