@@ -155,7 +155,7 @@ namespace TDS_Server.Instance.Lobby
             CurrentGameMode?.StopRound();
 
             RewardAllPlayer();
-            SaveAllPlayerLobbyStats();
+            SaveAllPlayerRoundStats();
             DbContext.SaveChangesAsync();
 
             ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);

@@ -79,5 +79,15 @@ namespace TDS_Server.Instance.Lobby
             string json = JsonConvert.SerializeObject(amounts);
             SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json);
         }
+
+        protected void SaveAllPlayerRoundStats()
+        {
+            FuncIterateAllPlayers((player, team) =>
+            {
+                if (team == null || team.Entity.Index == 0)
+                    return;
+                SavePlayerRoundStats(player);
+            });
+        }
     }
 }

@@ -12,6 +12,7 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -48,7 +49,10 @@ namespace TDS_Server.Instance.Lobby
                 DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
             }
             else
+            {
+                SavePlayerRoundStats(player);
                 RemoveAsSpectator(player);
+            }
             CurrentGameMode?.RemovePlayer(player);
             base.RemovePlayer(player);
             RoundCheckForEnoughAlive();
@@ -176,6 +180,24 @@ namespace TDS_Server.Instance.Lobby
             var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
             ++teamamountdata.Amount;
             ++teamamountdata.AmountAlive;
+        }
+
+        private static void SavePlayerRoundStats(TDSPlayer character)
+        {
+            if (character.CurrentLobbyStats == null)
+                return;
+
+            PlayerLobbyStats? to = character.CurrentLobbyStats;
+            RoundStatsDto? from = character.CurrentRoundStats;
+            if (to == null || from == null)
+                return;
+            to.Kills += from.Kills;
+            to.Assists += from.Assists;
+            to.Damage += from.Damage;
+            to.TotalKills += from.Kills;
+            to.TotalAssists += from.Assists;
+            to.TotalDamage += from.Damage;
+            from.Clear();
         }
     }
 }

@@ -63,11 +63,6 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual void RemovePlayer(TDSPlayer player)
         {
-            if (player.Lifes == 0)
-            {
-                SavePlayerLobbyStats(player);
-            }
-
             Players.Remove(player);
 
             player.CurrentLobby = null;
@@ -99,34 +94,6 @@ namespace TDS_Server.Instance.Lobby
                 RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
 
             PlayerLeftLobby?.Invoke(this, player);
-        }
-
-        private static void SavePlayerLobbyStats(TDSPlayer character)
-        {
-            if (character.CurrentLobbyStats == null)
-                return;
-
-            PlayerLobbyStats? to = character.CurrentLobbyStats;
-            RoundStatsDto? from = character.CurrentRoundStats;
-            if (to == null || from == null)
-                return;
-            to.Kills += from.Kills;
-            to.Assists += from.Assists;
-            to.Damage += from.Damage;
-            to.TotalKills += from.Kills;
-            to.TotalAssists += from.Assists;
-            to.TotalDamage += from.Damage;
-            from.Clear();
-        }
-
-        protected void SaveAllPlayerLobbyStats()
-        {
-            FuncIterateAllPlayers((player, team) =>
-            {
-                if (team == null || team.Entity.Index == 0)
-                    return;
-                SavePlayerLobbyStats(player);
-            });
         }
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)
