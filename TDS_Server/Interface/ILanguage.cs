@@ -3,7 +3,6 @@
     internal interface ILanguage
     {
         string ACCOUNT_DOESNT_EXIST { get; }
-        string ADMINLVL_NOT_HIGH_ENOUGH { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
         string BOMB_PLANT_INFO { get; }
@@ -30,10 +29,11 @@
         string HITSOUND_ACTIVATED { get; }
         string HITSOUND_DEACTIVATED { get; }
 
+        string JOINED_LOBBY_MESSAGE { get; }
+
         string KICK_INFO { get; }
         string KICK_YOU_INFO { get; }
         string KICK_LOBBY_INFO { get; }
-        string KICK_LOBBY_YOU_INFO { get; }
         string KILLING_SPREE_HEALTHARMOR { get; }
 
         string LOBBY_DOESNT_EXIST { get; }

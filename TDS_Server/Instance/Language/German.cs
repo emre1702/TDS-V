@@ -5,7 +5,6 @@ namespace TDS_Server.Instance.Language
     internal class German : English, ILanguage
     {
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
-        public override string ADMINLVL_NOT_HIGH_ENOUGH => "Dein Adminlevel ist nicht hoch genug dafür.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
         public override string BOMB_PLANT_INFO => "Um die Bombe zu platzieren, musst du zur Faust wechseln und die linke Maustaste auf einem der Bomben-Spots gedrückt halten.";
@@ -37,10 +36,11 @@ namespace TDS_Server.Instance.Language
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
         public override string HITSOUND_DEACTIVATED => "Hitsound deaktiviert!";
 
+        public override string JOINED_LOBBY_MESSAGE => "Du bist in die Lobby \"{0}\" eingetreten.\nNutze '/{1}' zum Verlassen.";
+
         public override string KICK_INFO => "{0} wurde von {1} gekickt. Grund: {2}";
         public override string KICK_YOU_INFO => "Du wurdest von {0} gekickt. Grund: {1}";
         public override string KICK_LOBBY_INFO => "{0} wurde von {1} aus der Lobby gekickt. Grund: {2}";
-        public override string KICK_LOBBY_YOU_INFO => "Du wurdest von {0} aus der Lobby gekickt. Grund: {1}";
         public override string KILLING_SPREE_HEALTHARMOR => "{0} hat einen {1}er Killingspree und kriegt dafür {2} Leben/Weste.";
 
         public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";

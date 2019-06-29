@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Server.Default;
 using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
@@ -54,6 +55,7 @@ namespace TDS_Server.Instance.Lobby
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json, Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
             RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
+            NAPI.Notification.SendNotificationToPlayer(character.Client, string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
 
             PlayerJoinedLobby?.Invoke(this, character);
             return true;

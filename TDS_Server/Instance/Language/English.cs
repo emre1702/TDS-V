@@ -5,7 +5,6 @@ namespace TDS_Server.Instance.Language
     internal class English : ILanguage
     {
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
-        public virtual string ADMINLVL_NOT_HIGH_ENOUGH => "Your adminlevel isn't high enough for this action.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
         public virtual string BOMB_PLANT_INFO => "To plant the bomb you have to take your fists and hold the left mouse button on one of the bomb-spots.";
@@ -36,10 +35,11 @@ namespace TDS_Server.Instance.Language
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
         public virtual string HITSOUND_DEACTIVATED => "Hitsound deactivated!";
 
+        public virtual string JOINED_LOBBY_MESSAGE => "You joined lobby \"{0}\".\nUse '/{1}' to leave.";
+
         public virtual string KICK_INFO => "{0} was kicked by {1}. Reason: {2}";
         public virtual string KICK_YOU_INFO => "You were kicked by {0}. Reason: {1}";
         public virtual string KICK_LOBBY_INFO => "{0} was kicked by {1} out of the lobby. Reason: {2}";
-        public virtual string KICK_LOBBY_YOU_INFO => "You were kicked by {0} out of the lobby. Reason: {1}";
         public virtual string KILLING_SPREE_HEALTHARMOR => "{0} has got a {1}-killingspree and gets a {2} life/armor bonus.";
 
         public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
