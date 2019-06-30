@@ -61,8 +61,8 @@ namespace TDS_Server.Instance
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
-                if (player.KillingSpree <= 5)
-                    playLongTimeKillSound = false;
+                //if (player.KillingSpree <= 5)
+                //    playLongTimeKillSound = false;
             }
 
             if (playLongTimeKillSound)
