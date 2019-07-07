@@ -45,6 +45,31 @@ export interface Language {
     Bike: string;
     Boat: string;
 
+    Password: string;
+    StartHealth: string;
+    StartArmor: string;
+    AmountLifes: string;
+    SpawnAgainAfterDeathMs: string;
+    DieAfterOutsideMapLimitTime: string;
+    CreateLobby: string;
+    Send: string;
+    PasswordIncorrect: string;
+    JoinLobby: string;
+    MixTeamsAfterRound: string;
+    BombDetonateTimeMs: string;
+    BombDefuseTimeMs: string;
+    BombPlantTimeMs: string;
+    RoundTime: string;
+    CountdownTime: string;
+    Default: string;
+    Player: string;
+    Teams: string;
+    Times: string;
+
+    Arena: string;
+    Gang: string;
+    UserLobbies: string;
+
     ATTACK: string;
     BACK: string;
     SPREAD_OUT: string;

@@ -130,7 +130,7 @@ export class MapCreatorComponent {
     this.rageConnector.callCallback(DToClientEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
       const errName = MapCreateError[err];
       this.snackBar.open(this.settings.Lang[errName], "OK", {
-        duration: undefined
+        duration: undefined, panelClass: "mat-app-background"
       });
     });
   }

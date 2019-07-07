@@ -32,6 +32,7 @@
       140
     ],
     "curly": false,
+    "align": false,
     "triple-equals": false,
     "member-access": false,
     "member-ordering": [

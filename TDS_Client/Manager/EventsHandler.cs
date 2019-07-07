@@ -114,6 +114,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.BombDetonated, OnBombDetonatedMethod);
             Add(DToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
+            Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
             //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
@@ -150,6 +151,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
+            Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
         }
@@ -252,6 +254,12 @@ namespace TDS_Client.Manager
                 Spectate.Start();
                 MainBrowser.HideRoundEndReason();
             }
+        }
+
+        private void OnCreateCustomLobbyResponseMethod(object[] args)
+        {
+            string errorOrEmpty = (string)args[0];
+            Angular.CreateCustomLobbyReturn(errorOrEmpty);
         }
 
         private void OnRoundStartMethod(object[] args)
@@ -406,6 +414,12 @@ namespace TDS_Client.Manager
             MapInfo.SetMapInfo((string)args[0]);
         }
 
+        private void OnSyncNewCustomLobbyMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.AddNewCustomLobby(json);
+        }
+
         private void OnPlayCustomSoundMethod(object[] args)
         {
             string soundName = (string)args[0];
@@ -511,11 +525,14 @@ namespace TDS_Client.Manager
         {
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
-            Add(DFromBrowserEvent.ChooseLobbyToJoin, OnChooseLobbyToJoinMethod);
+            Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
+            Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
             Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
+            Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
+            Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
             Add(DFromBrowserEvent.LoadMySavedMap, OnLoadMySavedMapFromBrowserMethod);
             Add(DFromBrowserEvent.LoadMySavedMapNames, OnLoadMySavedMapsFromBrowserMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
@@ -549,7 +566,7 @@ namespace TDS_Client.Manager
             MainBrowser.OnSendMapRating(currentmap, rating);
         }
 
-        private void OnChooseLobbyToJoinMethod(object[] args)
+        private void OnChooseArenaToJoinMethod(object[] args)
         {
             Choice.JoinLobby((int)args[0], (int)args[1]);
         }
@@ -576,6 +593,12 @@ namespace TDS_Client.Manager
             MapManager.CloseMenu(false);
         }
 
+        private void OnCreateCustomLobbyMethod(object[] args)
+        {
+            string dataJson = (string)args[0];
+            EventsSender.Send(DToServerEvent.CreateCustomLobby, dataJson);
+        }
+
         private void OnGetCurrentPositionRotationMethod(object[] args)
         {
             Angular.SendCurrentPositionRotation();
@@ -587,6 +610,20 @@ namespace TDS_Client.Manager
             EFreeroamVehicleType vehType = (EFreeroamVehicleType)(int)args[0];
             EventsSender.Send(DToServerEvent.GetVehicle, (int)vehType);
         }
+
+        private void OnJoinCustomLobbyMethod(object[] args)
+        {
+            int lobbyId = (int)args[0];
+            EventsSender.Send(DToServerEvent.JoinLobby, lobbyId, 0);
+        }
+
+        private void OnJoinCustomLobbyWithPasswordMethod(object[] args)
+        {
+            int lobbyId = (int)args[0];
+            string password = (string)args[1];
+            EventsSender.Send(DToServerEvent.JoinLobby, lobbyId, 0, password);
+        }
+
 
         private void OnLoadMySavedMapFromBrowserMethod(object[] args)
         {

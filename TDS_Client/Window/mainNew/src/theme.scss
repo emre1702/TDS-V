@@ -94,3 +94,28 @@ html, body, app-root {
 .cdk-overlay-pane {
   opacity: 0.95;
 }
+
+.mat-app-background {
+  border: 4px outset mat-color($dark-primary) !important;
+}
+
+.border {
+  border: 4px outset mat-color($dark-primary) !important;
+}
+
+/*@font-face {
+  font-family: mainFont;
+  src: url(assets/pricedown.ttf);
+}*/
+
+* {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+*:not([placeholder]) {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+button:not([disabled]):hover {
+  opacity: 0.6 !important;
+}

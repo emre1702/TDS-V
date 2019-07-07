@@ -168,6 +168,16 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToBrowserEvent.ToggleInFightLobby, b);
         }
+
+        public static void CreateCustomLobbyReturn(string errorOrEmpty)
+        {
+            Execute(DFromBrowserEvent.CreateCustomLobby, errorOrEmpty);
+        }
+
+        public static void AddNewCustomLobby(string json)
+        {
+            Execute(DToBrowserEvent.AddCustomLobby, json);
+        }
     }
 
 }

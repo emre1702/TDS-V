@@ -21,7 +21,12 @@ import {
   MatAutocompleteModule,
   MatSortModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatRippleModule,
+  MatSliderModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatCheckboxModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -31,6 +36,9 @@ import { MapCreatorComponent } from './components/mapcreator/map-creator.compone
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
 import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CustomLobbyMenuComponent } from './components/lobbycreator/custom-lobby-menu.component';
+import { CustomLobbyPasswordDialog } from './components/lobbycreator/dialog/custom-lobby-password-dialog';
+import { LobbyChoiceComponent } from './components/lobbycreator/lobby-choice/lobby-choice.component';
 
 @NgModule({
   declarations: [
@@ -39,10 +47,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TeamOrdersComponent,
     MapCreatorComponent,
     FreeroamComponent,
+    CustomLobbyMenuComponent,
     OrderByPipe,
     MapVotingNavPipe,
     LanguagePipe,
-    LoadMapDialog
+    LoadMapDialog,
+    CustomLobbyPasswordDialog,
+    LobbyChoiceComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -63,9 +74,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatTableModule,
     MatAutocompleteModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    MatRippleModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatCheckboxModule
   ],
-  entryComponents: [LoadMapDialog],
+  entryComponents: [LoadMapDialog, CustomLobbyPasswordDialog],
   providers: [OrderByPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

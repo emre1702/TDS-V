@@ -16,6 +16,7 @@
 
         public const string ClearTeamPlayers = "ClearTeamPlayers_Server";
         public const string CountdownStart = "CountdownStart_Server";
+        public const string CreateCustomLobbyResponse = "CreateCustomLobbyResponse_Server";
 
         public const string Death = "Death_Server";
 
@@ -62,6 +63,7 @@
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
+        public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";

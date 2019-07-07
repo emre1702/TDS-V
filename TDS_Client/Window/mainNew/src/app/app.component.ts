@@ -14,6 +14,7 @@ export class AppComponent {
 
   showMapCreator = false;
   showFreeroam = false;
+  showLobbyChoice = true;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {
@@ -23,6 +24,11 @@ export class AppComponent {
 
     rageConnector.listen(DFromClientEvent.ToggleFreeroam, (bool: boolean) => {
       this.showFreeroam = bool;
+      changeDetector.detectChanges();
+    });
+
+    rageConnector.listen(DFromClientEvent.ToggleLobbyChoice, (bool: boolean) => {
+      this.showLobbyChoice = bool;
       changeDetector.detectChanges();
     });
 

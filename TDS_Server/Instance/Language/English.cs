@@ -15,6 +15,9 @@ namespace TDS_Server.Instance.Language
         public virtual string COMMAND_USED_WRONG => "The command usage was wrong.";
         public virtual string COMMITED_SUICIDE => "You commited suicide.";
         public virtual string CONNECTING => "connecting ...";
+        public virtual string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR => "This name is already taken.";
+        public virtual string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "This name is not allowed for lobbies.";
+        public virtual string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unknown error when creating the lobby.";
 
         public virtual string DEATH_KILLED_INFO => "{0} killed {1} with {2}";
         public virtual string DEATH_DIED_INFO => "{0} died";

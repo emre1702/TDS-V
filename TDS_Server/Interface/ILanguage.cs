@@ -13,6 +13,9 @@
         string COMMAND_USED_WRONG { get; }
         string COMMITED_SUICIDE { get; }
         string CONNECTING { get; }
+        string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR { get; }
+        string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR { get; }
+        string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR { get; }
 
         string DEATH_KILLED_INFO { get; }
         string DEATH_DIED_INFO { get; }

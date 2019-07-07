@@ -6,11 +6,13 @@
 
         public const string ChatLoaded = "ChatLoaded_Client";
         public const string CommandUsed = "CommandUsed_Client";
+        public const string CreateCustomLobby = "CreateCustomLobby_Client";
 
         public const string GetVehicle = "GetVehicle_Client";
 
         public const string HitOtherPlayer = "HitOtherPlayer_Client";
 
+        public const string JoinArena = "JoinArena_Client";
         public const string JoinLobby = "JoinLobby_Client";
         public const string JoinMapCreator = "JoinMapCreator_Client";
 

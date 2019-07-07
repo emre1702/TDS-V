@@ -5,7 +5,7 @@ using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
-using TDS_Server_DB.Entity;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -57,18 +57,37 @@ namespace TDS_Server.Instance.Lobby
         #region Lobby
 
         [RemoteEvent(DToServerEvent.JoinLobby)]
-        public static async void JoinLobbyEvent(Client player, int index, uint teamindex)
+        public static async void JoinLobbyEvent(Client client, int index, uint? teamindex, string? password = null)
         {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
                 Lobby lobby = Lobby.LobbiesByIndex[index];
-                await lobby.AddPlayer(player.GetChar(), teamindex);
+                if (password != null && lobby.LobbyEntity.Password != password)
+                {
+                    NAPI.Chat.SendChatMessageToPlayer(client, player.Language.WRONG_PASSWORD);
+                    return;
+                }
+
+                await lobby.AddPlayer(player, teamindex);
             }
             else
             {
-                NAPI.Chat.SendChatMessageToPlayer(player, player.GetChar().Language.LOBBY_DOESNT_EXIST);
+                NAPI.Chat.SendChatMessageToPlayer(client, player.Language.LOBBY_DOESNT_EXIST);
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
+        }
+
+        [RemoteEvent(DToServerEvent.JoinArena)]
+        public static async void JoinLobbyEvent(Client client, bool spectator)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            await LobbyManager.Arena.AddPlayer(player, spectator ? 0 : (uint?)null);
         }
 
         [RemoteEvent(DToServerEvent.JoinMapCreator)]
@@ -78,6 +97,15 @@ namespace TDS_Server.Instance.Lobby
             if (!player.LoggedIn)
                 return;
            MapCreateLobby.Create(player);
+        }
+
+        [RemoteEvent(DToServerEvent.CreateCustomLobby)]
+        public static async void CreateCustomLobbyEvent(Client client, string dataJson)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            await LobbyManager.CreateCustomLobby(player, dataJson);
         }
 
         #endregion Lobby

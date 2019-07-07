@@ -49,6 +49,31 @@ export class English implements Language {
     Bike = "Bike";
     Boat = "Boat";
 
+    Password = "Password";
+    StartHealth = "Start health";
+    StartArmor = "Start armor";
+    AmountLifes = "Amount lifes";
+    SpawnAgainAfterDeathMs = "Spawn after death time (ms)";
+    DieAfterOutsideMapLimitTime = "Die outside map after time (sec)";
+    CreateLobby = "Create lobby";
+    Send = "Send";
+    PasswordIncorrect = "The password is incorrect.";
+    JoinLobby = "Join lobby";
+    MixTeamsAfterRound = "Mix teams after round";
+    BombDetonateTimeMs = "Bomb detonate time (ms)";
+    BombDefuseTimeMs = "Bomb defuse time (ms)";
+    BombPlantTimeMs = "Bomb plant time (ms)";
+    RoundTime = "Round time (sec)";
+    CountdownTime = "Countdown time (sec)";
+    Default = "Default";
+    Player = "Player";
+    Teams = "Teams";
+    Times = "Times";
+
+    Arena = "Arena";
+    Gang = "Gang";
+    UserLobbies = "User-Lobbies";
+
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";
     SPREAD_OUT = "Spread out!";

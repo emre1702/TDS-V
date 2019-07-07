@@ -44,6 +44,27 @@ export class German extends English {
   Bike = "Motorrad";
   Boat = "Boot";
 
+  Password = "Passwort";
+  StartHealth = "Start HP";
+  StartArmor = "Start Weste";
+  AmountLifes = "Anzahl Leben";
+  SpawnAgainAfterDeathMs = "Wiederbelebung nach Tod Zeit (ms)";
+  DieAfterOutsideMapLimitTime = "Tod außerhalb der Map Zeit (sek)";
+  CreateLobby = "Erstelle Lobby";
+  Send = "Senden";
+  PasswordIncorrect = "Das Passwort ist falsch.";
+  JoinLobby = "Lobby beitreten";
+  MixTeamsAfterRound = "Teams nach der Runde mischen";
+  BombDetonateTimeMs = "Bomben-Explosions-Zeit(ms)";
+  BombDefuseTimeMs = "Bomben-Entschärfungs-Zeit (ms)";
+  BombPlantTimeMs = "Bomben-Platzierungs-Zeit (ms)";
+  RoundTime = "Runden-Zeit (sec)";
+  CountdownTime = "Countdown-Zeit (sec)";
+
+  Arena = "Arena";
+  Gang = "Gang";
+  UserLobbies = "Benutzer-Lobbies";
+
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";
   SPREAD_OUT = "Teilt euch auf!";

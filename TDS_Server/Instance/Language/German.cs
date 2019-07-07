@@ -15,6 +15,9 @@ namespace TDS_Server.Instance.Language
         public override string COMMAND_USED_WRONG => "Der Befehl wurde falsch benutzt.";
         public override string COMMITED_SUICIDE => "Du hast Selbstmord begangen.";
         public override string CONNECTING => "Verbindet ...";
+        public override string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR => "Dieser Name ist bereits in Benutzung.";
+        public override string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "Dieser Name ist nicht erlaubt für Lobbies.";
+        public override string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unbekannter Fehler beim Erstellen der Lobby.";
 
         public override string DEATH_KILLED_INFO => "{0} hat {1} mit {2} getötet";
         public override string DEATH_DIED_INFO => "{0} ist gestorben";
