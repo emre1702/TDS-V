@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.Lobby
     {
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
-            if (LobbyEntity.Id != 0)
+            if (LobbyEntity.Type != ELobbyType.MainMenu)
             {
                 if (await IsPlayerBaned(character))
                     return false;
@@ -33,7 +33,7 @@ namespace TDS_Server.Instance.Lobby
 
             #endregion Remove from old lobby
 
-            if (LobbyEntity.Id != 0)
+            if (LobbyEntity.Type != ELobbyType.MainMenu)
             {
                 await AddPlayerLobbyStats(character);
             }
@@ -41,7 +41,7 @@ namespace TDS_Server.Instance.Lobby
             character.CurrentLobby = this;
             Players.Add(character);
 
-            if (LobbyEntity.Id == 0)
+            if (LobbyEntity.Type == ELobbyType.MainMenu)
                 Workaround.SetPlayerInvincible(character.Client, true);
 
             character.Client.Dimension = Dimension;
@@ -54,8 +54,11 @@ namespace TDS_Server.Instance.Lobby
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json, Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
-            RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
-            NAPI.Notification.SendNotificationToPlayer(character.Client, string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
+            if (LobbyEntity.Type != ELobbyType.MainMenu)
+            {
+                RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
+                NAPI.Notification.SendNotificationToPlayer(character.Client, string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
+            }
 
             PlayerJoinedLobby?.Invoke(this, character);
             return true;
@@ -90,7 +93,7 @@ namespace TDS_Server.Instance.Lobby
             }
 
             SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Client);
-            if (Id != 0)
+            if (LobbyEntity.Type != ELobbyType.MainMenu)
                 RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
 
             PlayerLeftLobby?.Invoke(this, player);
