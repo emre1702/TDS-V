@@ -34,7 +34,7 @@ namespace TDS_Server.Instance
 
         private void InitKillingSpreeRewards(ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {
-            if (killingspreeRewards.Count == 0)
+            if (killingspreeRewards == null || killingspreeRewards.Count == 0)
                 return;
             _killingSpreeRewards = killingspreeRewards.ToDictionary(v => v.KillsAmount, v => v);
         }
@@ -57,7 +57,8 @@ namespace TDS_Server.Instance
 
             bool playLongTimeKillSound = true;
             var timeSpanSinceLastKill = DateTime.UtcNow - player.LastKillAt.Value;
-            if (timeSpanSinceLastKill.TotalSeconds <= SettingsManager.KillingSpreeMaxSecondsUntilNextKill)
+            //todo HIER WIRD AUCH SOUND ABGESPIELT, WENN LONG TIME KILL, ABER NICHT SHORT TIME KILL! Muss extra short time kill auch speichern
+            if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree && timeSpanSinceLastKill.TotalSeconds <= SettingsManager.KillingSpreeMaxSecondsUntilNextKill)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
@@ -65,7 +66,7 @@ namespace TDS_Server.Instance
                 //    playLongTimeKillSound = false;
             }
 
-            if (playLongTimeKillSound)
+            if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
@@ -76,7 +77,7 @@ namespace TDS_Server.Instance
 
 
 
-        private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
+        /*private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
             new Dictionary<int, Tuple<string, int, int>>
             {
                 [3] = new Tuple<string, int, int>("healtharmor", 30, 0),
@@ -104,6 +105,6 @@ namespace TDS_Server.Instance
                 });
                 character.AddHPArmor(bonus);
             }
-        }
+        }*/
     }
 }
