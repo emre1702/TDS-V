@@ -13,18 +13,24 @@ namespace TDS_Server.Instance.Lobby
         private int GetTeamAmountStillInRound(int minalive = 1)
         {
             int amount = 0;
-            foreach (var list in AlivePlayers)
-                if (list.Count >= minalive)
+            foreach (var team in Teams)
+            {
+                if (team.AlivePlayers == null)
+                    continue;
+                if (team.AlivePlayers.Count >= minalive)
                     ++amount;
+            }
             return amount;
         }
 
         private Team? GetTeamStillInRound(int minalive = 1)
         {
-            for (int i = 0; i < AlivePlayers.Length; ++i)
+            foreach (var team in Teams)
             {
-                if (AlivePlayers[i].Count >= minalive)
-                    return Teams[i + 1];
+                if (team.AlivePlayers == null)
+                    continue;
+                if (team.AlivePlayers.Count > 0)
+                    return team;
             }
             return null;
         }
@@ -36,10 +42,10 @@ namespace TDS_Server.Instance.Lobby
 
             foreach (Team team in Teams)
             {
-                if (team.Entity.Index == 0)
+                if (team.AlivePlayers == null)
                     continue;
                 int teamhealth = 0;
-                foreach (var player in AlivePlayers[team.Entity.Index - 1])
+                foreach (var player in team.AlivePlayers)
                 {
                     teamhealth += player.Client.Health + player.Client.Armor;
                 }

@@ -146,8 +146,10 @@ namespace TDS_Server.Instance.Lobby
                 character.Lifes = 0;
             });
 
-            foreach (List<TDSPlayer> entry in AlivePlayers)
-                entry.Clear();
+            foreach (var team in Teams)
+            {
+                team.AlivePlayers?.Clear();
+            }
 
             DmgSys.Clear();
 

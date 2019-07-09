@@ -45,7 +45,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (++startindextoiterate >= Teams.Length - 1)
                     startindextoiterate = 0;
-            } while ((startindextoiterate == 0 || SpectateablePlayers[startindextoiterate - 1].Count == 0) && startindextoiterate != startindex);
+            } while ((startindextoiterate == 0 || Teams[startindextoiterate - 1].SpectateablePlayers?.Count == 0) && startindextoiterate != startindex);
             if (startindextoiterate == 0)
                 startindextoiterate = 1;
             Team team = Teams[startindextoiterate];
@@ -67,7 +67,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (--startindextoiterate < 0)
                     startindextoiterate = Teams.Length - 1;
-            } while ((startindextoiterate == 0 || SpectateablePlayers[startindextoiterate - 1].Count == 0) && startindextoiterate != startindex);
+            } while ((startindextoiterate == 0 || Teams[startindextoiterate].SpectateablePlayers?.Count == 0) && startindextoiterate != startindex);
             if (startindextoiterate == 0)
                 startindextoiterate = Teams.Length - 1;
             Team team = Teams[startindextoiterate];
