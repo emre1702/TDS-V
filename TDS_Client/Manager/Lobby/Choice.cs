@@ -25,22 +25,6 @@ namespace TDS_Client.Manager.Lobby
             EventsSender.Send(DToServerEvent.JoinMapCreator);
         }
 
-        public static void Start()
-        {
-            Browser = new HtmlWindow(Constants.LobbyChoiceBrowserPath);
-            CursorManager.Visible = true;
-            SyncLanguageTexts();
-        }
-
-        public static void Stop()
-        {
-            if (Browser == null)
-                return;
-            Browser.Destroy();
-            Browser = null;
-            CursorManager.Visible = false;
-        }
-
         public static void SyncLanguageTexts()
         {
             Browser?.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");

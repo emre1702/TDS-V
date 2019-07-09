@@ -146,6 +146,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void ToggleLobbyChoiceMenu(bool activated)
         {
+            CursorManager.Visible = activated;
             Execute(DToBrowserEvent.ToggleLobbyChoice, activated);
         }
 
