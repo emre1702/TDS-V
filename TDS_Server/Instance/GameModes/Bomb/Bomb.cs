@@ -107,7 +107,7 @@ namespace TDS_Server.Instance.GameModes
             if (_bomb == null)
                 return;
             Workaround.DetachEntity(_bomb);
-            _bomb.FreezePosition = true;
+            //_bomb.FreezePosition = true;
             _bomb.Position = _bombAtPlayer.Client.Position;
             _bombAtPlayer = null;
             _bombTakeMarker = NAPI.Marker.CreateMarker(0, _bomb.Position, new Vector3(), new Vector3(), 1,
@@ -124,7 +124,7 @@ namespace TDS_Server.Instance.GameModes
                 BombToHand(character);
             else
                 BombToBack(character);
-            _bomb.FreezePosition = false;
+            //_bomb.FreezePosition = false;
             _bombTakeMarker?.Delete();
             _bombTakeMarker = null;
             _lobbyBombTakeCol.Remove(Lobby, out ColShape col);
