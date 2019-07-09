@@ -17,7 +17,7 @@ namespace TDS_Server.Manager.Logs
 
         public static Task Save()
         {
-            return DbContext.BulkSaveChangesAsync();
+            return DbContext.SaveChangesAsync();
         }
     }
 }

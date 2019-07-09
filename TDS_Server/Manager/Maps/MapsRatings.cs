@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Maps
             if (!character.Entity.PlayerMapRatings.Any())
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
+            //NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
         }
     }
 }

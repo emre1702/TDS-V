@@ -36,17 +36,17 @@ let killstreakSoundPlaying = false;
 let nextKillstreakSoundNames = [];
 
 function playSound(soundname) {
-    $("#audio_" + soundname).trigger("play").volume = 0.05;
+    $("#audio_" + soundname).trigger("play").volume = 0.015;
 }
 
 function playHitsound() {
-    hitsounds[hitsoundcounter++].trigger("play").volume = 0.05;
+    hitsounds[hitsoundcounter++].trigger("play").volume = 0.015;
     if (hitsoundcounter == hitsoundsamount)
         hitsoundcounter = 0;
 }
 
 function playBombTickSound() {
-    bombTickSounds[bombTickCounter++].trigger("play").volume = 0.05;
+    bombTickSounds[bombTickCounter++].trigger("play").volume = 0.015;
     if (bombTickCounter == bombTickAmount)
         bombTickCounter = 0;
 }
@@ -55,7 +55,7 @@ function playKillstreakSound(soundName) {
     if (killstreakSoundPlaying) {
         nextKillstreakSoundNames.push(soundName);
     } else {
-        $("#audio_" + soundname).trigger("play").volume = 0.05;
+        $("#audio_" + soundname).trigger("play").volume = 0.015;
         killstreakSoundPlaying = true;
     }
 }
