@@ -369,7 +369,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LobbyWeapons>(entity =>
             {
-                entity.HasKey(e => e.Hash)
+                entity.HasKey(e => new { e.Hash, e.Lobby })
                     .HasName("lobby_weapons_pkey");
 
                 entity.ToTable("lobby_weapons");
