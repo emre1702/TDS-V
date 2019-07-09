@@ -73,7 +73,7 @@ namespace TDS_Client.Manager.Lobby
         private static void JoinedMainmenu()
         {
             RAGE.Game.Cam.DoScreenFadeIn(100);
-            Choice.Start();
+            Angular.ToggleLobbyChoiceMenu(true);
         }
 
         private static void JoinedMapCreator()
@@ -86,7 +86,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void LeftMainMenu()
         {
-            Choice.Stop();
+            Angular.ToggleLobbyChoiceMenu(false);
         }
 
         private static void LeftMapCreator()

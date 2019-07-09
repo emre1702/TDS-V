@@ -46,11 +46,11 @@ export class MapCreatorComponent {
   @ViewChild("descriptionTextArea") descriptionTextArea: ElementRef;
 
   constructor(
-      public settings: SettingsService,
-      private rageConnector: RageConnectorService,
-      private changeDetector: ChangeDetectorRef,
-      public dialog: MatDialog,
-      private snackBar: MatSnackBar) {
+    public settings: SettingsService,
+    private rageConnector: RageConnectorService,
+    private changeDetector: ChangeDetectorRef,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar) {
     settings.LanguageChanged.on(null, () => changeDetector.detectChanges());
   }
 
@@ -127,6 +127,11 @@ export class MapCreatorComponent {
 
   sendDataToClient() {
     this.fixData();
+    alert(this.data.Name);
+    alert(this.data.MinPlayers);
+    this.changeDetector.detectChanges();
+    alert(this.data.Name);
+    alert(this.data.MinPlayers);
     this.rageConnector.callCallback(DToClientEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
       const errName = MapCreateError[err];
       this.snackBar.open(this.settings.Lang[errName], "OK", {
@@ -154,7 +159,7 @@ export class MapCreatorComponent {
   loadPossibleMaps() {
     this.rageConnector.callCallback(DToClientEvent.LoadMySavedMapNames, null, (possibleMapsJson: string) => {
       const possibleMaps = JSON.parse(possibleMapsJson) as string[];
-      const dialogRef = this.dialog.open(LoadMapDialog, {data: possibleMaps, panelClass: "mat-app-background" });
+      const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
 
       dialogRef.beforeClosed().subscribe(loadMapStr => {
         if (!loadMapStr)
@@ -174,11 +179,11 @@ export class MapCreatorComponent {
   }
 
   private fixData() {
-    if (typeof(this.data.MinPlayers) == "undefined")
+    if (typeof (this.data.MinPlayers) == "undefined")
       this.data.MinPlayers = 0;
     this.data.MinPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MinPlayers)));
 
-    if (typeof(this.data.MaxPlayers) == "undefined")
+    if (typeof (this.data.MaxPlayers) == "undefined")
       this.data.MaxPlayers = 999;
     this.data.MaxPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MaxPlayers)));
   }

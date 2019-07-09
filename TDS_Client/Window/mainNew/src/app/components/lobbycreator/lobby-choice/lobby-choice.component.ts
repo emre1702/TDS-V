@@ -47,8 +47,8 @@ export class LobbyChoiceComponent {
     return this.sanitizer.bypassSecurityTrustStyle("url(" + url + ") no-repeat");
   }
 
-  joinArena(spectator: boolean) {
-    this.rageConnector.call(DToClientEvent.ChooseArenaToJoin, spectator);  // lobby id, team index
+  joinArena() {
+    this.rageConnector.call(DToClientEvent.ChooseArenaToJoin, false);
   }
 
   joinGang() {

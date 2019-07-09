@@ -381,6 +381,11 @@ namespace TDS_Client.Manager
 
         private void OnPlayerLeftTeamMethod(object[] args)
         {
+            if (args[0] is string)
+            {
+                MainBrowser.Browser.ExecuteJs($"alert(`Fehler in OnPlayerLeftTeamMethod: {args[0]}`)");
+                return;
+            }
             Player player = (Player)args[0];
             Team.RemoveSameTeam(player);
         }
@@ -568,7 +573,8 @@ namespace TDS_Client.Manager
 
         private void OnChooseArenaToJoinMethod(object[] args)
         {
-            Choice.JoinLobby((int)args[0], (int)args[1]);
+            bool isSpectator = (bool)args[0];
+            Choice.JoinArena(isSpectator);
         }
 
         private void OnChooseMapCreatorToJoinMethod(object[] args)

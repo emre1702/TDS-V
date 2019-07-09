@@ -144,6 +144,11 @@ namespace TDS_Client.Manager.Browser
             Execute(DToBrowserEvent.ToggleMapCreator, activated);
         }
 
+        public static void ToggleLobbyChoiceMenu(bool activated)
+        {
+            Execute(DToBrowserEvent.ToggleLobbyChoice, activated);
+        }
+
         public static void SendMapCreatorReturn(int err)
         {
             Execute(DFromBrowserEvent.SendMapCreatorData, err);
