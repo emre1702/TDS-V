@@ -43,7 +43,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="2.6.0" />
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.0-preview5" />
   </ItemGroup>
 
   <ItemGroup>
