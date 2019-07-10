@@ -1,5 +1,6 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
+using TDS_Client.Manager.Damage;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
 
@@ -72,6 +73,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void JoinedMainmenu()
         {
+            Death.PlayerSpawn();
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Angular.ToggleLobbyChoiceMenu(true);
         }
