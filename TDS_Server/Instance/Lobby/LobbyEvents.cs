@@ -234,9 +234,9 @@ namespace TDS_Server.Instance.Lobby
         #region Map Rating
 
         [RemoteEvent(DToServerEvent.SendMapRating)]
-        public void SendMapRating(Client client, string mapName, int rating)
+        public void SendMapRating(Client client, int mapId, int rating)
         {
-            MapsRatings.AddPlayerMapRating(client, mapName, (byte)rating);
+            MapsRatings.AddPlayerMapRating(client, mapId, (byte)rating);
         }
 
         #endregion Map Rating

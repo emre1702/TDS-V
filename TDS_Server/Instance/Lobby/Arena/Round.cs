@@ -140,7 +140,7 @@ namespace TDS_Server.Instance.Lobby
 
             FuncIterateAllPlayers((character, team) =>
             {
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty);
+                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
                 if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
                     character.Client.Kill();
                 character.Lifes = 0;

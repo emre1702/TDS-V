@@ -20,21 +20,20 @@ namespace TDS_Server.Manager.Maps
             DbContext = new TDSNewContext();
         }
 
-        public static async void AddPlayerMapRating(Client player, string mapName, byte rating)
+        public static async void AddPlayerMapRating(Client player, int mapId, byte rating)
         {
             int? playerId = player.GetEntity()?.Id;
             if (playerId == null)
                 return;
 
-            MapDto? map = MapsLoader.GetMapByName(mapName) ?? MapCreator.GetMapByName(mapName);
+            MapDto? map = MapsLoader.GetMapById(mapId) ?? MapCreator.GetMapById(mapId);
             if (map == null)
                 return;
-            var dbMap = await DbContext.Maps.FirstOrDefaultAsync(m => m.Name == mapName);
 
-            PlayerMapRatings? maprating = await DbContext.PlayerMapRatings.FindAsync(playerId, dbMap.Id);
+            PlayerMapRatings? maprating = await DbContext.PlayerMapRatings.FindAsync(playerId, mapId);
             if (maprating == null)
             {
-                maprating = new PlayerMapRatings { PlayerId = playerId.Value, MapId = dbMap.Id };
+                maprating = new PlayerMapRatings { PlayerId = playerId.Value, MapId = mapId };
                 DbContext.PlayerMapRatings.Add(maprating);
             }
             maprating.Rating = rating;
@@ -49,7 +48,8 @@ namespace TDS_Server.Manager.Maps
             if (!character.Entity.PlayerMapRatings.Any())
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(character.Entity.PlayerMapRatings));
+            var ratingsDict = character.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(ratingsDict));
         }
     }
 }

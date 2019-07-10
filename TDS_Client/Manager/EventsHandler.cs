@@ -293,7 +293,9 @@ namespace TDS_Client.Manager
             LobbyCam.StopCountdown();
             RoundInfo.Stop();
             Angular.ResetMapVoting();
-            MainBrowser.ShowRoundEndReason((string)args[0], MapInfo.CurrentMap);
+            string reason = (string)args[0];
+            int mapId = (int)args[1];
+            MainBrowser.ShowRoundEndReason(reason, mapId);
         }
 
         private void OnSaveMapCreatorReturnMethod(object[] args)
@@ -591,9 +593,9 @@ namespace TDS_Client.Manager
 
         private void OnBrowserSendMapRatingMethod(object[] args)
         {
-            string mapName = (string)args[0];
-            int rating = (int)args[1];
-            EventsSender.Send(DToServerEvent.SendMapRating, mapName, rating);
+            int mapId = Convert.ToInt32(args[0]);
+            int rating = Convert.ToInt32(args[1]);
+            EventsSender.Send(DToServerEvent.SendMapRating, mapId, rating);
         }
 
         private void OnCloseMapVotingMenuMethod(object[] args)

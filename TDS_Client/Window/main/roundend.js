@@ -1,21 +1,21 @@
 ﻿let roundEndReason = $("#round_end_reason");
 let roundEndReasonContainer = $("#round_end_reason_container");
 let myMapRating = {}
-let currentMap;
+let currentMapId;
 let starRating = new SimpleStarRating($("#map_rating_stars")[0], function (rating) {
-    if (!(currentMap in myMapRating) || myMapRating[currentMap] !== rating) {
-        myMapRating[currentMap] = rating;
-        mp.trigger("SendMapRating_Browser", currentMap, rating);
+    if (!(currentMapId in myMapRating) || myMapRating[currentMapId] !== rating) {
+        myMapRating[currentMapId] = rating;
+        mp.trigger("SendMapRating_Browser", currentMapId, rating);
         starRating.disable();
     }
 });
 
-function showRoundEndReason(reason, mapname) {
+function showRoundEndReason(reason, mapId) {
     roundEndReason.html(reason);
     roundEndReasonContainer.css("display", "table");
-    currentMap = mapname;
-    if (mapname in myMapRating) {
-        starRating.setCurrentRating(myMapRating[mapname]);
+    currentMapId = mapId;
+    if (mapId in myMapRating) {
+        starRating.setCurrentRating(myMapRating[mapId]);
     } else
         starRating.setCurrentRating(0);
     starRating.enable();

@@ -78,10 +78,10 @@ namespace TDS_Client.Manager.Browser
             Execute($"alert('{msg}');");
         }
 
-        public static void ShowRoundEndReason(string reason, string currentmap)
+        public static void ShowRoundEndReason(string reason, int mapId)
         {
             _roundEndReasonShowing = true;
-            Execute($"showRoundEndReason(`{reason}`, `{currentmap}`);");
+            Execute($"showRoundEndReason(`{reason}`, {mapId});");
         }
 
         public static void HideRoundEndReason()
