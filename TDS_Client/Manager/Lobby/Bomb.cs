@@ -185,10 +185,10 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Reset()
         {
+            BombOnHand = false;
             if (!DataChanged)
                 return;
             DataChanged = false;
-            BombOnHand = false;
             CheckPlantDefuseOnTick = false;
             _progressRect?.Remove();
             _progressRect = null;
