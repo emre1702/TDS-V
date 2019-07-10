@@ -64,6 +64,8 @@
         string PLAYER_DOESNT_EXIST { get; }
         //string PLAYER_GOT_KILLINGSPREE_NOTIFICATION { get; }
         string PLAYER_ISNT_BANED { get; }
+        string PLAYER_LOGGED_IN { get; }
+        string PLAYER_LOGGED_OUT { get; }
         string PLAYER_NOT_MUTED { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }

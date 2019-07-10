@@ -70,6 +70,8 @@ namespace TDS_Server.Instance.Language
         public override string PLAYER_ALREADY_MUTED => "Der Spieler ist bereits gemutet!";
         public override string PLAYER_DOESNT_EXIST => "Der Spieler existiert nicht!";
         public override string PLAYER_ISNT_BANED => "Der Spieler ist nicht gebannt.";
+        public override string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~hat sich eingeloggt.";
+        public override string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~hat sich ausgeloggt.";
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
         public override string PRIVATE_CHAT_CLOSED_PARTNER => "Dein Privatchat-Partner hat den Chat geschlossen.";
         public override string PRIVATE_CHAT_CLOSED_YOU => "Du hast den Privatchat geschlossen.";
