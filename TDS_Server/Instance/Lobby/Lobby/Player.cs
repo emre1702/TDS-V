@@ -52,7 +52,9 @@ namespace TDS_Server.Instance.Lobby
                 character.Team = Teams[teamindex.Value];
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json, Players.Select(p => p.Client.Handle.Value).ToList(), JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
+                                                                                            JsonConvert.SerializeObject(Players.Select(p => p.Client.Handle.Value).ToList()),
+                                                                                            JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
 
             if (LobbyEntity.Type != ELobbyType.MainMenu)
             {
