@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
@@ -13,10 +14,10 @@ namespace TDS_Client.Manager.Utility
 {
     internal static class ClientUtils
     {
-        public static List<Player> GetTriggeredPlayersList(object argobj)
+        public static List<Player> GetTriggeredPlayersList(string objStr)
         {
-            List<ushort> arg = ((JArray)argobj).ToObject<List<ushort>>();
-            return arg.Select(s => Entities.Players.GetAtRemote(s)).ToList();
+            var list = JsonConvert.DeserializeObject<List<ushort>>(objStr);
+            return list.Select(s => Entities.Players.GetAtRemote(s)).ToList();
         }
 
         public static void DisableAttack()
