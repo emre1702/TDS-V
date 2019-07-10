@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TDS_Common.Enum;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
@@ -12,6 +13,8 @@ namespace TDS_Server.Manager.Player
     {
         public static async void RegisterPlayer(Client player, string password, string? email)
         {
+            while (!TDSNewContext.IsConfigured)
+                await Task.Delay(1000);
             using TDSNewContext dbContext = new TDSNewContext();
             if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                 email = null;

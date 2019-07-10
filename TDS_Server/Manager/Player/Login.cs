@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
-using TDS_Server.Enum;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
 using TDS_Server.Instance.Lobby;
@@ -21,6 +21,8 @@ namespace TDS_Server.Manager.Player
     {
         public static async void LoginPlayer(Client player, int id, string password)
         {
+            while (!TDSNewContext.IsConfigured)
+                await Task.Delay(1000);
             using var dbcontext = new TDSNewContext();
             Players entity = await dbcontext.Players
                 .Include(p => p.PlayerStats)

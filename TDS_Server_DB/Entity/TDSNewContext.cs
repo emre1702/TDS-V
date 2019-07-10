@@ -42,6 +42,8 @@ namespace TDS_Server_DB.Entity
 {
     public partial class TDSNewContext : DbContext
     {
+        public static bool IsConfigured { get; private set; }
+
         private static string _connectionString;
 
         public TDSNewContext(string connectionString)
@@ -1152,6 +1154,8 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.HasSequence<int>("maps_ID_seq");*/
             #endregion
+
+            IsConfigured = true;
         }
     }
 }
