@@ -60,6 +60,10 @@ export class German extends English {
   BombPlantTimeMs = "Bomben-Platzierungs-Zeit (ms)";
   RoundTime = "Runden-Zeit (sec)";
   CountdownTime = "Countdown-Zeit (sec)";
+  Default = "Standard";
+  Player = "Spieler";
+  Teams = "Teams";
+  Times = "Zeiten";
 
   Arena = "Arena";
   Gang = "Gang";
