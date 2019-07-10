@@ -56,11 +56,10 @@ namespace TDS_Server.Instance
             }
 
             bool playLongTimeKillSound = true;
-            var timeSpanSinceLastKill = DateTime.UtcNow - player.LastKillAt.Value;
-            //todo HIER WIRD AUCH SOUND ABGESPIELT, WENN LONG TIME KILL, ABER NICHT SHORT TIME KILL! Muss extra short time kill auch speichern
-            if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree && timeSpanSinceLastKill.TotalSeconds <= SettingsManager.KillingSpreeMaxSecondsUntilNextKill)
+
+            if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
             {
-                short playSoundIndex = Math.Min(player.KillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
+                short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
                 player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.PlayCustomSound, null, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;

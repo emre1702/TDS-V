@@ -166,7 +166,34 @@ namespace TDS_Server.Instance.Player
         }
 
         public bool ChatLoaded { get; set; }
-        public short KillingSpree { get; set; }
+        public short KillingSpree
+        {
+            get => _killingSpree;
+            set
+            {
+                if (_killingSpree + 1 == value)
+                {
+                    ++_shortTimeKillingSpree;
+                }
+                _killingSpree = value;
+            }
+        }
+        public short ShortTimeKillingSpree
+        {
+            get
+            {
+                if (LastKillAt == null)
+                    return _shortTimeKillingSpree;
+
+                var timeSpanSinceLastKill = DateTime.UtcNow - LastKillAt.Value;
+                if (timeSpanSinceLastKill.TotalSeconds <= SettingsManager.KillingSpreeMaxSecondsUntilNextKill)
+                {
+                    return _shortTimeKillingSpree;
+                }
+                _shortTimeKillingSpree = 1;
+                return 1;
+            }
+        }
         public TDSPlayer? InPrivateChatWith { get; set; }
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
         public Vehicle? FreeroamVehicle { get; set; }
@@ -181,6 +208,8 @@ namespace TDS_Server.Instance.Player
         private Team? _team;
         private Gang? _gang;
         private PlayerLobbyStats? _currentLobbyStats;
+        private short _killingSpree;
+        private short _shortTimeKillingSpree;
 
         public TDSPlayer(Client client)
         {
