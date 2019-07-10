@@ -145,14 +145,14 @@ namespace TDS_Server.Manager.Utility
                         },
                     LobbyWeapons = new List<LobbyWeapons>
                     {
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.Revolver,  Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.SMG, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Ammo = 2000 }
+                        new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Lobby = 1, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.Revolver, Lobby = 1, Ammo = 500 },
+                        new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Lobby = 1, Ammo = 500 },
+                        new LobbyWeapons { Hash = EWeaponHash.SMG, Lobby = 1, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Lobby = 1, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Lobby = 1, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Lobby = 1, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Lobby = 1, Ammo = 2000 }
                     },
                     Password = data.Password,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
@@ -215,13 +215,7 @@ namespace TDS_Server.Manager.Utility
                 Password = arena.LobbyEntity.Password,
                 SpawnAgainAfterDeathMs = arena.LobbyEntity.SpawnAgainAfterDeathMs,
                 StartArmor = arena.LobbyEntity.StartArmor,
-                StartHealth = arena.LobbyEntity.StartHealth,
-                BombDefuseTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
-                BombDetonateTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDetonateTimeMs,
-                BombPlantTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombPlantTimeMs,
-                CountdownTime = arena.LobbyEntity.LobbyRoundSettings.CountdownTime,
-                MixTeamsAfterRound = arena.LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound,
-                RoundTime = arena.LobbyEntity.LobbyRoundSettings.RoundTime
+                StartHealth = arena.LobbyEntity.StartHealth
             };
         }
 
