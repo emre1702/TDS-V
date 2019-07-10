@@ -25,11 +25,23 @@ namespace TDS_Server.Manager.Utility
                 returndict[lang] = langgetter(lang);
             }
 
-            foreach (Client client in NAPI.Pools.GetAllPlayers())
+            foreach (var player in Player.Player.LoggedInPlayers)
             {
-                TDSPlayer player = client.GetChar();
-                if (player.LoggedIn)
-                    NAPI.Chat.SendChatMessageToPlayer(client, returndict[player.Language]);
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, returndict[player.Language]);
+            }
+        }
+
+        public static void SendAllNotification(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in _languageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+
+            foreach (var player in Player.Player.LoggedInPlayers)
+            {
+                NAPI.Notification.SendNotificationToPlayer(player.Client, returndict[player.Language]);
             }
         }
 
