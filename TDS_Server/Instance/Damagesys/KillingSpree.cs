@@ -61,7 +61,7 @@ namespace TDS_Server.Instance
             if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree && timeSpanSinceLastKill.TotalSeconds <= SettingsManager.KillingSpreeMaxSecondsUntilNextKill)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
+                player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.PlayCustomSound, null, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;
             }
@@ -69,7 +69,7 @@ namespace TDS_Server.Instance
             if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
+                player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.PlayCustomSound, null, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
 
             player.LastKillAt = timeNow;
