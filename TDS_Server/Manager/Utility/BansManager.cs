@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server_DB.Entity;
-using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -18,9 +17,11 @@ namespace TDS_Server.Manager.Utility
 
         public static async Task RemoveExpiredBans()
         {
-            await DbContext.PlayerBans
+            var bans = await DbContext.PlayerBans
                 .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
-                .DeleteAsync();
+                .ToListAsync();
+            DbContext.PlayerBans.RemoveRange(bans);
+            await DbContext.SaveChangesAsync();
         }
     }
 }

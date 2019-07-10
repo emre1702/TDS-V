@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Dto
+﻿namespace TDS_Server.Dto
 {
     class CustomLobbyData
     {

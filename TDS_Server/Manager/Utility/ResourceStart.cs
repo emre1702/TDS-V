@@ -10,7 +10,6 @@ using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
-using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -31,7 +30,12 @@ namespace TDS_Server.Manager.Utility
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
 
-                dbcontext.PlayerStats.Where(s => s.LoggedIn).Update(s => new PlayerStats { LoggedIn = false });
+                var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync();
+                foreach (var stat in playerStats)
+                {
+                    stat.LoggedIn = false;
+                }
+                await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 ServerDailyStatsManager.Init();

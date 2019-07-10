@@ -555,7 +555,6 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
-            Add(DFromBrowserEvent.SyncChoiceLanguageTexts, OnSyncChoiceLanguageTextsMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
             Add(DFromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
@@ -595,11 +594,6 @@ namespace TDS_Client.Manager
             string mapName = (string)args[0];
             int rating = (int)args[1];
             EventsSender.Send(DToServerEvent.SendMapRating, mapName, rating);
-        }
-
-        private void OnSyncChoiceLanguageTextsMethod(object[] args)
-        {
-            Choice.SyncLanguageTexts();
         }
 
         private void OnCloseMapVotingMenuMethod(object[] args)

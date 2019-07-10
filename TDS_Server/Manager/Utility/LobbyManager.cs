@@ -8,14 +8,12 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
-using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
-using Z.EntityFramework.Plus;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -30,9 +28,8 @@ namespace TDS_Server.Manager.Utility
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
         {
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            await dbcontext.Lobbies
-                .Where(l => l.IsTemporary)
-                .DeleteAsync();
+            var temporaryLobbies = await dbcontext.Lobbies.Where(l => l.IsTemporary).ToListAsync();
+            dbcontext.Lobbies.RemoveRange(temporaryLobbies);
             await dbcontext.SaveChangesAsync();
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -215,7 +212,14 @@ namespace TDS_Server.Manager.Utility
                 Password = arena.LobbyEntity.Password,
                 SpawnAgainAfterDeathMs = arena.LobbyEntity.SpawnAgainAfterDeathMs,
                 StartArmor = arena.LobbyEntity.StartArmor,
-                StartHealth = arena.LobbyEntity.StartHealth
+                StartHealth = arena.LobbyEntity.StartHealth,
+
+                RoundTime = arena.LobbyEntity.LobbyRoundSettings.RoundTime,
+                MixTeamsAfterRound = arena.LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound,
+                CountdownTime = arena.LobbyEntity.LobbyRoundSettings.CountdownTime,
+                BombPlantTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombPlantTimeMs,
+                BombDetonateTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDetonateTimeMs,
+                BombDefuseTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
             };
         }
 

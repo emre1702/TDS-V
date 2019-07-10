@@ -92,7 +92,7 @@ namespace TDS_Server.Manager.Player
         {
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
-            //todo TODO Make the name settable
+            //todo Make the name settable
             player.Name = player.SocialClubName;
 
             bool isPlayerRegistered = false;

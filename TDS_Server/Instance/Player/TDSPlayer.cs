@@ -323,12 +323,12 @@ namespace TDS_Server.Instance.Player
             await DbContext.SaveChangesAsync();
         }
 
-        public void CheckSaveData()
+        public async void CheckSaveData()
         {
             if (Environment.TickCount - _lastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
                 return;
 
-            //await SaveData()  todo;
+            await SaveData();
         }
     }
 }

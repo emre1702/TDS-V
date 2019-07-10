@@ -28,7 +28,6 @@
         public const string SaveMapCreatorData = "SaveMapCreatorData_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Browser";
         public const string SendMapRating = "SendMapRating_Browser";
-        public const string SyncChoiceLanguageTexts = "SyncChoiceLanguageTexts_Browser";
         public const string SyncRegisterLoginLanguageTexts = "SyncRegisterLoginLanguageTexts_Browser";
 
         public const string TeleportToXY = "TeleportToXY_Browser";

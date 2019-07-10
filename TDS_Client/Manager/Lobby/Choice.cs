@@ -7,7 +7,6 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Choice
     {
-        private static HtmlWindow Browser;
 
         public static void JoinLobby(int index, int teamindex)
         {
@@ -23,11 +22,6 @@ namespace TDS_Client.Manager.Lobby
         public static void JoinMapCreator()
         {
             EventsSender.Send(DToServerEvent.JoinMapCreator);
-        }
-
-        public static void SyncLanguageTexts()
-        {
-            Browser?.ExecuteJs($"setLobbyChoiceLanguage(`{ JsonConvert.SerializeObject(Settings.Language.LOBBY_CHOICE_TEXTS) }`)");
         }
     }
 }
