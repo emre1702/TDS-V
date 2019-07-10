@@ -896,6 +896,7 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "AllSay", Command = 12 },
                 new CommandAlias { Alias = "G", Command = 12 },
                 new CommandAlias { Alias = "GChat", Command = 12 },
+                new CommandAlias { Alias = "Global", Command = 12 },
                 new CommandAlias { Alias = "GlobalSay", Command = 12 },
                 new CommandAlias { Alias = "PublicChat", Command = 12 },
                 new CommandAlias { Alias = "PublicSay", Command = 12 },
