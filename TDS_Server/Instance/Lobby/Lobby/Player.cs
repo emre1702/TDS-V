@@ -109,9 +109,9 @@ namespace TDS_Server.Instance.Lobby
             PlayerLobbyStats? stats = await character.DbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
             if (stats == null)
             {
-                stats = new PlayerLobbyStats { PlayerId = character.Entity.Id, LobbyId = LobbyEntity.Id };
+                stats = new PlayerLobbyStats { LobbyId = LobbyEntity.Id };
                 character.Entity.PlayerLobbyStats.Add(stats);
-                await character.DbContext.PlayerLobbyStats.AddAsync(stats);
+                await character.DbContext.SaveChangesAsync();
             }
             character.CurrentLobbyStats = stats;
         }
