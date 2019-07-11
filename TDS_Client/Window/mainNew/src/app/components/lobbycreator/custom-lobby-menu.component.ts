@@ -87,8 +87,8 @@ export class CustomLobbyMenuComponent {
     {
       title: "Teams", rows: [
         {
-          type: LobbySettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: "",
-          formControl: new FormControl("", [])
+          type: LobbySettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: false,
+          formControl: new FormControl(false, [])
         }
       ]
     },
