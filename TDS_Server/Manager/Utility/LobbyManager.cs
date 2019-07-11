@@ -137,19 +137,19 @@ namespace TDS_Server.Manager.Utility
                     IsTemporary = true,
                     LobbyMaps = new List<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyRoundSettings = new LobbyRoundSettings
-                        { RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000,
-                          BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true
+                        { RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
+                          BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound
                         },
                     LobbyWeapons = new List<LobbyWeapons>
                     {
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Lobby = 1, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.Revolver, Lobby = 1, Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Lobby = 1, Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.SMG, Lobby = 1, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Lobby = 1, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Lobby = 1, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Lobby = 1, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Lobby = 1, Ammo = 2000 }
+                        new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.Revolver, Ammo = 500 },
+                        new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Ammo = 500 },
+                        new LobbyWeapons { Hash = EWeaponHash.SMG, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Ammo = 2000 },
+                        new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Ammo = 2000 }
                     },
                     Password = data.Password,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
@@ -157,9 +157,9 @@ namespace TDS_Server.Manager.Utility
                     StartHealth = data.StartHealth,
                     Teams = new List<Teams>
                     {
-                        //new Teams { Index = 0, Name = "Spectator", Lobby = 1, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
-                        new Teams { Index = 0, Name = "SWAT", ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
-                        new Teams { Index = 1, Name = "Terrorist", ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
+                        new Teams { Index = 0, Name = "Spectator", ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
+                        new Teams { Index = 1, Name = "SWAT", ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
+                        new Teams { Index = 2, Name = "Terrorist", ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
                     },
                     Type = ELobbyType.Arena
                 };
@@ -169,6 +169,7 @@ namespace TDS_Server.Manager.Utility
                     dbContext.Lobbies.Add(entity);
                     await dbContext.SaveChangesAsync();
                 }
+                entity.Owner = player.Entity;
                 Arena arena = new Arena(entity);
 
                 Lobbies.Add(arena);
