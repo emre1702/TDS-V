@@ -8,6 +8,7 @@ namespace TDS_Server.Instance.Lobby
         public override void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
         {
             base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
+            CurrentGameMode?.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
         }
     }
 }
