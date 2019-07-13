@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { MapDataDto } from './models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
@@ -8,7 +8,6 @@ import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
-import { OrderByPipe } from 'src/app/pipes/orderby.pipe';
 
 @Component({
   selector: 'app-mapvoting',
@@ -18,13 +17,13 @@ import { OrderByPipe } from 'src/app/pipes/orderby.pipe';
       [
         transition(
           ':enter', [
-            style({transform: 'translateY(100%)', opacity: 0}),
-            animate('500ms', style({transform: 'translateY(0)', opacity: 0.9}))
+            style({ transform: 'translateY(100%)', opacity: 0 }),
+            animate('500ms', style({ transform: 'translateY(0)', opacity: 0.9 }))
           ]
         ),
         transition(
           ':leave', [
-            animate('500ms', style({transform: 'translateY(100%)', opacity: 0})),
+            animate('500ms', style({ transform: 'translateY(100%)', opacity: 0 })),
           ]
         )
       ]
@@ -34,7 +33,9 @@ import { OrderByPipe } from 'src/app/pipes/orderby.pipe';
   styleUrls: ['./mapvoting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapVotingComponent implements OnInit {
+export class MapVotingComponent implements OnInit, OnDestroy {
+  private static readonly Numpad1KeyCode = 97;
+  private static readonly Numpad9KeyCode = 105;
 
   active = false;
   data: MapDataDto[] = [];
@@ -44,17 +45,28 @@ export class MapVotingComponent implements OnInit {
   @ViewChild('snav') snav: MatSidenav;
 
   constructor(public settings: SettingsService, public voting: MapVotingService, private rageConnector: RageConnectorService,
-              public changeDetector: ChangeDetectorRef) {
+    public changeDetector: ChangeDetectorRef) {
     this.rageConnector.listen(DFromClientEvent.OpenMapMenu, this.activate.bind(this));
     this.rageConnector.listen(DFromClientEvent.CloseMapMenu, () => this.deactivate(false));
+    this.voting.mapsInVotingChanged.on(null, this.detectChanges.bind(this));
   }
 
   ngOnInit(): void {
-    this.voting.mapsInVotingChanged.on(null, () => this.changeDetector.detectChanges());
-    this.settings.LanguageChanged.on(null, () => this.changeDetector.detectChanges());
-    this.settings.InTeamOrderModusChanged.on(null, () => this.changeDetector.detectChanges());
-    this.settings.FavoriteMapsChanged.on(null, () => this.changeDetector.detectChanges());
-    this.settings.InFightLobbyChanged.on(null, () => this.changeDetector.detectChanges());
+    this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+    this.settings.InTeamOrderModusChanged.on(null, this.detectChanges.bind(this));
+    this.settings.FavoriteMapsChanged.on(null, this.detectChanges.bind(this));
+    this.settings.InFightLobbyChanged.on(null, this.detectChanges.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+    this.settings.InTeamOrderModusChanged.off(null, this.detectChanges.bind(this));
+    this.settings.FavoriteMapsChanged.off(null, this.detectChanges.bind(this));
+    this.settings.InFightLobbyChanged.off(null, this.detectChanges.bind(this));
+  }
+
+  private detectChanges() {
+    this.changeDetector.detectChanges();
   }
 
   private activate(mapsJson: string) {
@@ -110,14 +122,13 @@ export class MapVotingComponent implements OnInit {
 
   @HostListener("document:keyup", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.code == undefined)
-      return;
-    if (!event.code.startsWith("Numpad"))
-      return;
     if (!this.voting.mapsInVoting.length || this.settings.InTeamOrderModus)
       return;
-
-    const voteIndex = parseInt(event.key, 10) - 1;
+    // tslint:disable-next-line: deprecation
+    if (event.keyCode < MapVotingComponent.Numpad1KeyCode || event.keyCode > MapVotingComponent.Numpad9KeyCode)
+      return;
+    // tslint:disable-next-line: deprecation
+    const voteIndex = event.keyCode - MapVotingComponent.Numpad1KeyCode;
     if (this.voting.mapsInVoting.length <= voteIndex)
       return;
     this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex].Id);

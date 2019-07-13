@@ -28,6 +28,9 @@ namespace TDS_Server.Instance.Lobby
 
         public void MapVote(TDSPlayer player, int mapId)
         {
+            if (_playerVotes.ContainsKey(player.Client) && _playerVotes[player.Client] == mapId)
+                return;
+
             if (_mapVotes.Any(m => m.Id == mapId))
             {
                 RemovePlayerVote(player.Client);
