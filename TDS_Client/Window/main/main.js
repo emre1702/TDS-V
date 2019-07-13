@@ -31,22 +31,23 @@ let bombTickSounds = [
 let bombTickCounter = 0;
 let bombTickAmount = bombTickSounds.length;
 let bombTickTimeout;
+let volume = 0.5;
 
 let killstreakSoundPlaying = false;
 let nextKillstreakSoundNames = [];
 
 function playSound(soundname) {
-    $("#audio_" + soundname).trigger("play").volume = 0.05;
+    $("#audio_" + soundname).trigger("play").prop("volume", volume);
 }
 
 function playHitsound() {
-    hitsounds[hitsoundcounter++].trigger("play").volume = 0.05;
+    hitsounds[hitsoundcounter++].trigger("play").prop("volume", volume);
     if (hitsoundcounter == hitsoundsamount)
         hitsoundcounter = 0;
 }
 
 function playBombTickSound() {
-    bombTickSounds[bombTickCounter++].trigger("play").volume = 0.05;
+    bombTickSounds[bombTickCounter++].trigger("play").prop("volume", volume);
     if (bombTickCounter == bombTickAmount)
         bombTickCounter = 0;
 }
@@ -55,7 +56,7 @@ function playKillstreakSound(soundName) {
     if (killstreakSoundPlaying) {
         nextKillstreakSoundNames.push(soundName);
     } else {
-        $("#audio_" + soundname).trigger("play").volume = 0.05;
+        $("#audio_" + soundname).trigger("play").prop("volume", volume);
         killstreakSoundPlaying = true;
     }
 }
