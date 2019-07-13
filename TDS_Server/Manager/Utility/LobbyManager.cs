@@ -130,17 +130,16 @@ namespace TDS_Server.Manager.Utility
                 Lobbies entity = new Lobbies
                 {
                     Name = data.Name,
-                    OwnerId = player.Entity?.Id ?? 0,
                     AmountLifes = data.AmountLifes,
                     DieAfterOutsideMapLimitTime = data.DieAfterOutsideMapLimitTime,
                     IsOfficial = false,
                     IsTemporary = true,
-                    LobbyMaps = new List<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyRoundSettings = new LobbyRoundSettings
                         { RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
                           BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound
                         },
-                    LobbyWeapons = new List<LobbyWeapons>
+                    LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
+                    LobbyWeapons = new HashSet<LobbyWeapons>
                     {
                         new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Ammo = 2000 },
                         new LobbyWeapons { Hash = EWeaponHash.Revolver, Ammo = 500 },
@@ -155,7 +154,7 @@ namespace TDS_Server.Manager.Utility
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
                     StartHealth = data.StartHealth,
-                    Teams = new List<Teams>
+                    Teams = new HashSet<Teams>
                     {
                         new Teams { Index = 0, Name = "Spectator", ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
                         new Teams { Index = 1, Name = "SWAT", ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
@@ -163,13 +162,12 @@ namespace TDS_Server.Manager.Utility
                     },
                     Type = ELobbyType.Arena
                 };
+                //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                using (var dbContext = new TDSNewContext())
-                {
-                    dbContext.Lobbies.Add(entity);
-                    await dbContext.SaveChangesAsync();
-                }
-                entity.Owner = player.Entity;
+                player.Entity?.Lobbies.Add(entity);
+                await player.DbContext.SaveChangesAsync();
+                player.DbContext.Entry(entity).State = EntityState.Detached;
+
                 Arena arena = new Arena(entity);
 
                 Lobbies.Add(arena);
