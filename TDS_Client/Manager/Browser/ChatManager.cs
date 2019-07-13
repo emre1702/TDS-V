@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using RAGE.Game;
+using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using Script = RAGE.Events.Script;
@@ -31,8 +32,9 @@ namespace TDS_Client.Manager.Browser
         {
             if (IsOpen)
             {
-                Pad.DisableControlAction(1, 199, true);
-                Pad.DisableControlAction(1, 200, true);
+                Pad.DisableAllControlActions((int)EInputGroup.LOOK);
+                Pad.DisableAllControlActions((int)EInputGroup.MOVE);
+                Pad.DisableAllControlActions((int)EInputGroup.SUB);
             }
         }
 
