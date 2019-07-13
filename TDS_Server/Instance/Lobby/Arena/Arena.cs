@@ -15,6 +15,7 @@ namespace TDS_Server.Instance.Lobby
             _roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
 
             DurationsDict[ERoundStatus.Round] = (uint)entity.LobbyRoundSettings.RoundTime * 1000;
+            DurationsDict[ERoundStatus.Countdown] = (uint)entity.LobbyRoundSettings.CountdownTime * 1000;
         }
 
         public override void Start()

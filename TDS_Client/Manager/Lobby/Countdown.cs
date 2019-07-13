@@ -25,8 +25,8 @@ namespace TDS_Client.Manager.Lobby
                 return;
             }
             countdownTimer?.Kill();
-            countdownTimer = new TDSTimer(Refresh, 1000, (uint)currentCountdownTime);
             currentCountdownTime = Settings.CountdownTime;
+            countdownTimer = new TDSTimer(Refresh, 1000, (uint)currentCountdownTime);
             text = new DxText(currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
             text.BlendScale(6f, 1000);
             PlaySound();
