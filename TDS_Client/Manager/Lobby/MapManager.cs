@@ -7,16 +7,16 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class MapManager
     {
-        private static bool open;
-        private static int lobbyIdAtLastLoad;
-        private static string lastMapsJson;
+        private static bool _open;
+        private static int _lobbyIdAtLastLoad;
+        private static string _lastMapsJson;
 
         public static void ToggleMenu(ConsoleKey _)
         {
             if (ChatManager.IsOpen)
                 return;
 
-            if (!open)
+            if (!_open)
             {
                 if (!Settings.InLobbyWithMaps)
                     return;
@@ -31,11 +31,11 @@ namespace TDS_Client.Manager.Lobby
         private static void OpenMenu()
         {
             CursorManager.Visible = true;
-            open = true;
+            _open = true;
 
-            if (lobbyIdAtLastLoad == Settings.LobbyId)
+            if (_lobbyIdAtLastLoad == Settings.LobbyId)
             {
-                Angular.OpenMapMenu(lastMapsJson);
+                Angular.OpenMapMenu(_lastMapsJson);
                 return;
             }
 
@@ -44,9 +44,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static void CloseMenu(bool sendToBrowser = true)
         {
-            if (!open)
+            if (!_open)
                 return;
-            open = false;
+            _open = false;
             if (sendToBrowser)
                 Angular.CloseMapMenu();
             CursorManager.Visible = false;
@@ -54,8 +54,8 @@ namespace TDS_Client.Manager.Lobby
 
         public static void LoadMapList(string mapjson)
         {
-            lastMapsJson = mapjson;
-            lobbyIdAtLastLoad = Settings.LobbyId;
+            _lastMapsJson = mapjson;
+            _lobbyIdAtLastLoad = Settings.LobbyId;
             Angular.OpenMapMenu(mapjson);
         }
     }
