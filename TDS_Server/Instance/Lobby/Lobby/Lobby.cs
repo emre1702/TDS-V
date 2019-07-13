@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TDS_Common.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
@@ -79,6 +80,7 @@ namespace TDS_Server.Instance.Lobby
             if (IsOfficial)
                 return;
             LobbiesByIndex.Remove(LobbyEntity.Id);
+            LobbyManager.Lobbies.Remove(this);
             _dimensionsUsed.Remove(Dimension);
 
             foreach (TDSPlayer character in Players.ToArray())
