@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
@@ -10,7 +10,7 @@ import { MatButton } from '@angular/material';
   templateUrl: './freeroam.component.html',
   styleUrls: ['./freeroam.component.scss']
 })
-export class FreeroamComponent {
+export class FreeroamComponent implements OnInit, OnDestroy {
 
   currentTitle = "FreeroamMenu";
 
@@ -18,8 +18,18 @@ export class FreeroamComponent {
 
   VehicleEnum = Vehicle;
 
-  constructor(public settings: SettingsService, private rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
-    settings.LanguageChanged.on(null, () => changeDetector.detectChanges());
+  constructor(public settings: SettingsService, private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) { }
+
+  ngOnInit() {
+    this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+  }
+
+  private detectChanges() {
+    this.changeDetector.detectChanges();
   }
 
   tpToPos(btn: MatButton) {

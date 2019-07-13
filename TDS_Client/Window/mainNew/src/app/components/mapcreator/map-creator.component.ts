@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { LanguageEnum } from 'src/app/enums/language.enum';
@@ -23,7 +23,7 @@ enum MapCreatorNav {
   styleUrls: ['./map-creator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapCreatorComponent {
+export class MapCreatorComponent implements OnInit, OnDestroy {
   data = new MapCreateDataDto();
   mapCreatorNav = MapCreatorNav;
   currentNav = MapCreatorNav.Main;
@@ -51,9 +51,19 @@ export class MapCreatorComponent {
     private changeDetector: ChangeDetectorRef,
     public dialog: MatDialog,
     private snackBar: MatSnackBar) {
-    settings.LanguageChanged.on(null, () => changeDetector.detectChanges());
   }
 
+  ngOnInit() {
+    this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+  }
+
+  private detectChanges() {
+    this.changeDetector.detectChanges();
+  }
 
   removeLastTeam() {
     this.data.TeamSpawns.pop();
