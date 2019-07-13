@@ -38,7 +38,6 @@ namespace TDS_Server.Instance.Lobby
         {
             foreach (var entry in Teams)
             {
-                entry.ClearPlayers();
                 entry.AlivePlayers?.Clear();
                 entry.SpectateablePlayers?.Clear();
             }
