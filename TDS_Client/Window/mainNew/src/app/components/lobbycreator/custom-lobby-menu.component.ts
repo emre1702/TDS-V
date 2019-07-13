@@ -70,7 +70,7 @@ export class CustomLobbyMenuComponent {
       title: "Player", rows: [
         {
           type: LobbySettingType.number, dataSettingIndex: "StartHealth", defaultValue: 100,
-          formControl: new FormControl(100, [Validators.required, Validators.max(200), Validators.min(1)]), onlyInt: true
+          formControl: new FormControl(100, [Validators.required, Validators.max(100), Validators.min(1)]), onlyInt: true
         },
         {
           type: LobbySettingType.number, dataSettingIndex: "StartArmor", defaultValue: 100,
@@ -87,8 +87,8 @@ export class CustomLobbyMenuComponent {
     {
       title: "Teams", rows: [
         {
-          type: LobbySettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: false,
-          formControl: new FormControl(false, [])
+          type: LobbySettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: true,
+          formControl: new FormControl(true, [])
         }
       ]
     },
@@ -131,12 +131,7 @@ export class CustomLobbyMenuComponent {
 
   creating = true;
 
-  lobbyDatas: CustomLobbyData[] = [
-    {
-      Password: "asd", SpawnAgainAfterDeathMs: 100, StartArmor: 100, StartHealth: 100, OwnerName: "Bonus",
-      DieAfterOutsideMapLimitTime: 100, Name: "Bonus Lobby", AmountLifes: 100
-    }
-  ];
+  lobbyDatas: CustomLobbyData[] = [];
 
   constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
     public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
