@@ -194,6 +194,11 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToBrowserEvent.SyncAllCustomLobbies, json);
         }
+
+        public static void LeaveCustomLobbyMenu()
+        {
+            Execute(DToBrowserEvent.LeaveCustomLobbyMenu);
+        }
     }
 
 }

@@ -27,6 +27,7 @@
         public const string JoinLobby = "JoinLobby_Server";
         public const string JoinSameLobby = "JoinSameLobby_Server";
 
+        public const string LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Server";
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
         public const string LoadMapFavourites = "LoadMapFavourites_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";

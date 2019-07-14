@@ -120,6 +120,7 @@ namespace TDS_Client.Manager
             //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
+            Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMySavedMap, OnLoadMySavedMapFromServerMethod);
@@ -196,6 +197,11 @@ namespace TDS_Client.Manager
             Chat.Output(player.Name + " has been added");
             Players.Load(player);
             VoiceManager.AddPlayer(player);
+        }
+
+        private void OnLeaveCustomLobbyMenuMethod(object[] args)
+        {
+            Angular.LeaveCustomLobbyMenu();
         }
 
         private void OnLeaveSameLobbyMethod(object[] args)

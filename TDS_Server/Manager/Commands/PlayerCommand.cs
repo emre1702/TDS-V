@@ -1,4 +1,5 @@
 using GTANetworkAPI;
+using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
@@ -14,8 +15,17 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.LobbyLeave)]
         public static async void LobbyLeave(TDSPlayer player)
         {
-            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby == null)
                 return;
+            if (player.CurrentLobby.LobbyEntity.Type == ELobbyType.MainMenu)
+            {
+                if (LobbyManager.PlayerInCustomLobbyMenu.Contains(player))
+                {
+                    LobbyManager.SetPlayerInCustomLobbyMenu(player, false);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LeaveCustomLobbyMenu);
+                }
+                return;
+            }
 
             player.CurrentLobby.RemovePlayer(player);
             await LobbyManager.MainMenu.AddPlayer(player, 0);
