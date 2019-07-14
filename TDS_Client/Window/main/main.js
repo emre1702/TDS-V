@@ -31,7 +31,7 @@ let bombTickSounds = [
 let bombTickCounter = 0;
 let bombTickAmount = bombTickSounds.length;
 let bombTickTimeout;
-let volume = 0.5;
+let volume = 0.05;
 
 let killstreakSoundPlaying = false;
 let nextKillstreakSoundNames = [];
