@@ -164,11 +164,9 @@ namespace TDS_Server.Manager.Utility
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                player.Entity?.Lobbies.Add(entity);
-                await player.DbContext.SaveChangesAsync();
-                player.DbContext.Entry(entity).State = EntityState.Detached;
-
                 Arena arena = new Arena(entity);
+                arena.DbContext.Entry(entity).State = EntityState.Added;
+                await arena.DbContext.SaveChangesAsync();
 
                 Lobbies.Add(arena);
                 AddMapsToArena(arena, entity);

@@ -110,14 +110,15 @@ namespace TDS_Server_DB.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                /*optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.EnableSensitiveDataLogging();
                 var loggerFactory = LoggerFactory.Create(builder =>
-                    builder.AddConsole().SetMinimumLevel(LogLevel.Debug)
-                );*/
+                    builder.AddConsole()
+                            .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
+                );
 
                 optionsBuilder
-                    //.UseLoggerFactory(loggerFactory)
-                    //.EnableSensitiveDataLogging()
+                    .UseLoggerFactory(loggerFactory)
+                    .EnableSensitiveDataLogging()
                     //.UseNpgsql(_connectionString);
                     .UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
             }

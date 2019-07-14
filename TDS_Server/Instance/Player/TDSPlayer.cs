@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -46,6 +47,8 @@ namespace TDS_Server.Instance.Player
             get => _currentLobbyStats;
             set
             {
+                if (_currentLobbyStats != null)
+                    DbContext.Entry(_currentLobbyStats).State = EntityState.Detached;
                 _currentLobbyStats = value;
                 if (value != null)
                     DbContext.Attach(_currentLobbyStats);
@@ -211,6 +214,8 @@ namespace TDS_Server.Instance.Player
         private short _killingSpree;
         private short _shortTimeKillingSpree;
 
+        private SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
+
         public TDSPlayer(Client client)
         {
             Client = client;
@@ -320,7 +325,22 @@ namespace TDS_Server.Instance.Player
                 return;
 
             _lastSaveTick = Environment.TickCount;
-            await DbContext.SaveChangesAsync();
+            await _semaphoreSlime.WaitAsync();
+            try
+            {
+                if (CurrentLobbyStats != null && LobbyManager.GetLobby(CurrentLobbyStats.LobbyId) == null)
+                {
+                    DbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
+                    CurrentLobbyStats = null;
+                }
+                Console.WriteLine(new string('\n', 99));
+                await DbContext.SaveChangesAsync();
+                Console.WriteLine(new string('\n', 99));
+            }
+            finally
+            {
+                _semaphoreSlime.Release();
+            }
         }
 
         public async void CheckSaveData()

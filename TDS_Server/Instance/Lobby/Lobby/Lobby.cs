@@ -21,7 +21,7 @@ namespace TDS_Server.Instance.Lobby
         public int Id => LobbyEntity.Id;
         public string Name => LobbyEntity.Name;
         public bool IsOfficial => LobbyEntity.IsOfficial;
-        public string CreatorName => LobbyEntity.Owner.Name;
+        public string CreatorName => LobbyEntity.Owner?.Name ?? "?";
         public string OwnerName => CreatorName;
         public int StartTotalHP => LobbyEntity.StartArmor + LobbyEntity.StartHealth;
 
@@ -90,6 +90,7 @@ namespace TDS_Server.Instance.Lobby
 
             DbContext.Remove(LobbyEntity);
             await DbContext.SaveChangesAsync();
+            DbContext.Dispose();
         }
 
         private static uint GetFreeDimension()
