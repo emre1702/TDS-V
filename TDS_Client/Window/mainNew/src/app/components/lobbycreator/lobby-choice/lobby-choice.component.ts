@@ -33,7 +33,6 @@ export class LobbyChoiceComponent {
     { name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "/mainNew/assets/mapcreatorchoice.png" },
     { name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "/mainNew/assets/customlobbychoice.png" },
   ];
-  showCustomLobbyMenu = false;
 
   constructor(private rageConnector: RageConnectorService, public settings: SettingsService,
     private sanitizer: DomSanitizer, private changeDetector: ChangeDetectorRef) { }

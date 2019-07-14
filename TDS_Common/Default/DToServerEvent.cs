@@ -13,10 +13,12 @@
         public const string HitOtherPlayer = "HitOtherPlayer_Client";
 
         public const string JoinArena = "JoinArena_Client";
+        public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Client";
         public const string JoinLobby = "JoinLobby_Client";
         public const string JoinMapCreator = "JoinMapCreator_Client";
 
         public const string LanguageChange = "LanguageChange_Client";
+        public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
         public const string LoadMySavedMap = "LoadMySavedMap_Client";
         public const string LoadMySavedMapNames = "LoadMySavedMapNames_Client";

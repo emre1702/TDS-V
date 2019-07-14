@@ -180,9 +180,19 @@ namespace TDS_Client.Manager.Browser
             Execute(DFromBrowserEvent.CreateCustomLobby, errorOrEmpty);
         }
 
-        public static void AddNewCustomLobby(string json)
+        public static void AddCustomLobby(string json)
         {
             Execute(DToBrowserEvent.AddCustomLobby, json);
+        }
+
+        public static void RemoveCustomLobby(int lobbyId)
+        {
+            Execute(DToBrowserEvent.RemoveCustomLobby, lobbyId);
+        }
+
+        public static void SyncAllCustomLobbies(string json)
+        {
+            Execute(DToBrowserEvent.SyncAllCustomLobbies, json);
         }
     }
 

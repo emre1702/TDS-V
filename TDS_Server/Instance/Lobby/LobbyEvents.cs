@@ -108,6 +108,23 @@ namespace TDS_Server.Instance.Lobby
             await LobbyManager.CreateCustomLobby(player, dataJson);
         }
 
+        [RemoteEvent(DToServerEvent.JoinedCustomLobbiesMenu)]
+        public static void JoinedCustomLobbiesMenu(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            LobbyManager.SetPlayerInCustomLobbyMenu(player, true);
+        }
+
+        [RemoteEvent(DToServerEvent.LeftCustomLobbiesMenu)]
+        public static void LeftCustomLobbiesMenu(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            LobbyManager.SetPlayerInCustomLobbyMenu(player, false);
+        }
         #endregion Lobby
 
         #region Damagesys

@@ -106,6 +106,7 @@ namespace TDS_Client.Manager
 
         private void AddToClientEvents()
         {
+            Add(DToClientEvent.AddCustomLobby, OnAddCustomLobbyMethod);
             Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
@@ -139,6 +140,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
+            Add(DToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
             Add(DToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
@@ -150,8 +152,8 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
+            Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
             Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
-            Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
         }
@@ -189,14 +191,17 @@ namespace TDS_Client.Manager
                 Chat.Output(args[0] is Player ? "is Player" : "is not Player");
                 Chat.Output(args[0].GetType().Name);
             }
-            Player player = (Player)args[0];
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
+            Chat.Output(player.Name + " has been added");
             Players.Load(player);
             VoiceManager.AddPlayer(player);
         }
 
         private void OnLeaveSameLobbyMethod(object[] args)
         {
-            Player player = (Player)args[0];
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Remove(player);
             VoiceManager.RemovePlayer(player);
         }
@@ -396,7 +401,8 @@ namespace TDS_Client.Manager
 
         private void OnPlayerJoinedTeamMethod(object[] args)
         {
-            Player player = (Player)args[0];
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Team.AddSameTeam(player);
         }
 
@@ -407,7 +413,8 @@ namespace TDS_Client.Manager
                 MainBrowser.Browser.ExecuteJs($"alert(`Fehler in OnPlayerLeftTeamMethod: {args[0]}`)");
                 return;
             }
-            Player player = (Player)args[0];
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Team.RemoveSameTeam(player);
         }
 
@@ -435,15 +442,27 @@ namespace TDS_Client.Manager
             RoundInfo.RefreshAllTeamTexts();
         }
 
+        private void OnSyncAllCustomLobbiesMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.SyncAllCustomLobbies(json);
+        }
+
         private void OnSyncCurrentMapNameMethod(object[] args)
         {
             MapInfo.SetMapInfo((string)args[0]);
         }
 
-        private void OnSyncNewCustomLobbyMethod(object[] args)
+        private void OnAddCustomLobbyMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.AddNewCustomLobby(json);
+            Angular.AddCustomLobby(json);
+        }
+
+        private void OnRemoveCustomLobbyMethod(object[] args)
+        {
+            int lobbyId = (int)args[0];
+            Angular.RemoveCustomLobby(lobbyId);
         }
 
         private void OnPlayCustomSoundMethod(object[] args)
@@ -559,6 +578,8 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
+            Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
+            Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
             Add(DFromBrowserEvent.LoadMySavedMap, OnLoadMySavedMapFromBrowserMethod);
             Add(DFromBrowserEvent.LoadMySavedMapNames, OnLoadMySavedMapsFromBrowserMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
@@ -645,6 +666,15 @@ namespace TDS_Client.Manager
             EventsSender.Send(DToServerEvent.JoinLobby, lobbyId, 0, password);
         }
 
+        private void OnJoinedCustomLobbiesMenuMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.JoinedCustomLobbiesMenu);
+        }
+
+        private void OnLeftCustomLobbiesMenuMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
+        }
 
         private void OnLoadMySavedMapFromBrowserMethod(object[] args)
         {

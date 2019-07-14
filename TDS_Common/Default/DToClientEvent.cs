@@ -50,6 +50,7 @@
         public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
 
         public const string RegisterLoginSuccessful = "RegisterLoginSuccessful_Server";
+        public const string RemoveCustomLobby = "RemoveCustomLobby_Server";
         public const string RequestNewMapsList = "RequestNewMapsList_Server";
 
         public const string RoundStart = "RoundStart_Server";
@@ -63,8 +64,9 @@
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
-        public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
+        public const string AddCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";
 

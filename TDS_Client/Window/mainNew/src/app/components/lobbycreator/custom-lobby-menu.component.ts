@@ -153,6 +153,11 @@ export class CustomLobbyMenuComponent {
         changeDetector.detectChanges();
       }
     });
+
+    this.rageConnector.listen(DFromClientEvent.SyncAllCustomLobbies, (allCustomLobbyDatas: string) => {
+      this.lobbyDatas = JSON.parse(allCustomLobbyDatas);
+      changeDetector.detectChanges();
+    });
   }
 
   getLobbyDatas(): Array<CustomLobbyData> {
@@ -226,6 +231,7 @@ export class CustomLobbyMenuComponent {
 
   goBack() {
     this.settings.InUserLobbiesMenu = false;
+    this.rageConnector.call(DToClientEvent.LeftCustomLobbiesMenu);
     this.changeDetector.detectChanges();
   }
 

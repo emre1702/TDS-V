@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Utility
 {
     internal static class LobbyManager
     {
-        public static List<Lobby> Lobbies = new List<Lobby>();
+        public static List<Lobby> Lobbies { get; } = new List<Lobby>();
         private static List<TDSPlayer> _playerInCustomLobbyMenu = new List<TDSPlayer>();
 
         public static Lobby MainMenu => Lobbies[0];
@@ -168,12 +168,11 @@ namespace TDS_Server.Manager.Utility
                 arena.DbContext.Entry(entity).State = EntityState.Added;
                 await arena.DbContext.SaveChangesAsync();
 
-                Lobbies.Add(arena);
+                AddLobby(arena);
                 AddMapsToArena(arena, entity);
 
                 _playerInCustomLobbyMenu.Remove(player);
                 await arena.AddPlayer(player, null);
-                SyncNewCustomLobby(arena);
             }
             catch
             {
@@ -192,51 +191,79 @@ namespace TDS_Server.Manager.Utility
             return true;
         }
 
-        public static void SetPlayerInCustomLobbyMenu(TDSPlayer player)
+        public static void SetPlayerInCustomLobbyMenu(TDSPlayer player, bool isIn)
         {
-            _playerInCustomLobbyMenu.Add(player);
+            if (isIn)
+            {
+                _playerInCustomLobbyMenu.Add(player);
+                List<CustomLobbyData> lobbyDatas = Lobbies.Where(l => !l.IsOfficial && l.LobbyEntity.Type != ELobbyType.MapCreateLobby)
+                                                            .Select(l => GetCustomLobbyData(l))
+                                                            .ToList();
+
+                player.Client.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, JsonConvert.SerializeObject(lobbyDatas));
+            }
+            else
+                _playerInCustomLobbyMenu.Remove(player);
         }
 
-        private static CustomLobbyData GetCustomLobbyData(Arena arena)
+        public static void AddLobby(Lobby lobby)
         {
-            return new CustomLobbyData
+            Lobbies.Add(lobby);
+            if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
-                AmountLifes = arena.LobbyEntity.AmountLifes ?? 1,
-                DieAfterOutsideMapLimitTime = arena.LobbyEntity.DieAfterOutsideMapLimitTime,
-                LobbyId = arena.LobbyEntity.Id,
-                Name = arena.LobbyEntity.Name,
-                OwnerName = arena.OwnerName,
-                Password = arena.LobbyEntity.Password,
-                SpawnAgainAfterDeathMs = arena.LobbyEntity.SpawnAgainAfterDeathMs,
-                StartArmor = arena.LobbyEntity.StartArmor,
-                StartHealth = arena.LobbyEntity.StartHealth,
-
-                RoundTime = arena.LobbyEntity.LobbyRoundSettings.RoundTime,
-                MixTeamsAfterRound = arena.LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound,
-                CountdownTime = arena.LobbyEntity.LobbyRoundSettings.CountdownTime,
-                BombPlantTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombPlantTimeMs,
-                BombDetonateTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDetonateTimeMs,
-                BombDefuseTimeMs = arena.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
-            };
-        }
-
-        private static void SyncNewCustomLobby(Arena arena)
-        {
-            var data = GetCustomLobbyData(arena);
-            string json = JsonConvert.SerializeObject(data);
-
-            for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
-            {
-                TDSPlayer player = _playerInCustomLobbyMenu[i];
-                if (!player.LoggedIn)
+                string json = JsonConvert.SerializeObject(GetCustomLobbyData(lobby));
+                for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    _playerInCustomLobbyMenu.RemoveAt(i);
-                    continue;
+                    TDSPlayer player = _playerInCustomLobbyMenu[i];
+                    if (!player.LoggedIn)
+                    {
+                        _playerInCustomLobbyMenu.RemoveAt(i);
+                        continue;
+                    }
+                    player.Client.TriggerEvent(DToClientEvent.AddCustomLobby, json);
                 }
-                player.Client.TriggerEvent(DToClientEvent.SyncNewCustomLobby, json);
             }
         }
 
-        // todo After custom lobby testing: Add DToClientEvent.RemoveCustomLobby with id on lobby remove to remove the lobby from custom lobby menu.
+        public static void RemoveLobby(Lobby lobby)
+        {
+            Lobbies.Remove(lobby);
+            if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
+            {
+                for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
+                {
+                    TDSPlayer player = _playerInCustomLobbyMenu[i];
+                    if (!player.LoggedIn)
+                    {
+                        _playerInCustomLobbyMenu.RemoveAt(i);
+                        continue;
+                    }
+                    player.Client.TriggerEvent(DToClientEvent.RemoveCustomLobby, lobby.Id);
+                }
+            }
+        }
+
+        private static CustomLobbyData GetCustomLobbyData(Lobby lobby)
+        {
+            return new CustomLobbyData
+            {
+                AmountLifes = lobby.LobbyEntity.AmountLifes ?? 1,
+                DieAfterOutsideMapLimitTime = lobby.LobbyEntity.DieAfterOutsideMapLimitTime,
+                LobbyId = lobby.LobbyEntity.Id,
+                Name = lobby.LobbyEntity.Name,
+                OwnerName = lobby.OwnerName,
+                Password = lobby.LobbyEntity.Password,
+                SpawnAgainAfterDeathMs = lobby.LobbyEntity.SpawnAgainAfterDeathMs,
+                StartArmor = lobby.LobbyEntity.StartArmor,
+                StartHealth = lobby.LobbyEntity.StartHealth,
+
+                RoundTime = lobby.LobbyEntity.LobbyRoundSettings.RoundTime,
+                MixTeamsAfterRound = lobby.LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound,
+                CountdownTime = lobby.LobbyEntity.LobbyRoundSettings.CountdownTime,
+                BombPlantTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombPlantTimeMs,
+                BombDetonateTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombDetonateTimeMs,
+                BombDefuseTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
+            };
+        }
     }
 }

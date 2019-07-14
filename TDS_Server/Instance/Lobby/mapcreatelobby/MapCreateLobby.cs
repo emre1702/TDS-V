@@ -2,6 +2,7 @@
 using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
@@ -29,6 +30,8 @@ namespace TDS_Server.Instance.Lobby
             lobby.DbContext.Add(entity);
             await lobby.DbContext.SaveChangesAsync();
             await lobby.AddPlayer(player, 0);
+
+            LobbyManager.AddLobby(lobby);
         }
     }
 }

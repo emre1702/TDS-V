@@ -11,6 +11,7 @@ export enum DFromClientEvent {
   RemoveCustomLobby = "RemoveCustomLobby_Client",
   ResetMapVoting = "ResetMapVoting_Client",
   SetMapVotes = "SetMapVotes_Client",
+  SyncAllCustomLobbies = "SyncAllCustomLobbies_Client",
   ToggleChatOpened = "ToggleChatOpened_Client",
   ToggleFreeroam = "ToggleFreeroam_Client",
   ToggleInFightLobby = "ToggleInFightLobby_Client",

@@ -8,6 +8,8 @@ export enum DToClientEvent {
   GetVehicle = "GetVehicle_Browser",
   JoinCustomLobby = "JoinCustomLobby_Browser",
   JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser",
+  JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Browser",
+  LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser",
   LanguageChange = "LanguageChange_Browser",
   // RemoveMapVote = "RemoveMapVote_Browser",
   TeleportToPositionRotation = "TeleportToPositionRotation_Browser",

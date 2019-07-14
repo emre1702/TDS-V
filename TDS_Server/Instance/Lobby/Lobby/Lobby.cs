@@ -80,7 +80,7 @@ namespace TDS_Server.Instance.Lobby
             if (IsOfficial)
                 return;
             LobbiesByIndex.Remove(LobbyEntity.Id);
-            LobbyManager.Lobbies.Remove(this);
+            LobbyManager.RemoveLobby(this);
             _dimensionsUsed.Remove(Dimension);
 
             foreach (TDSPlayer character in Players.ToArray())
