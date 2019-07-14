@@ -116,6 +116,7 @@ namespace TDS_Server.Instance.Lobby
         {
             Team team = GetTeamWithFewestPlayer();  // Todo: Add "RandomTeams" Lobby setting and use teamindex instead of GetTeamWithFewestPlayer if it's true
             character.Team = team;
+            team.TempPlayers.Add(character);
             team.SyncAddedPlayer(character);
 
             if (CurrentRoundStatus == ERoundStatus.Countdown)

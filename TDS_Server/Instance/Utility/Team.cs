@@ -29,6 +29,7 @@ namespace TDS_Server.Instance.Utility
         public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
         public List<TDSPlayer>? SpectateablePlayers { get; set; }
         public List<TDSPlayer>? AlivePlayers { get; set; }
+        public List<TDSPlayer> TempPlayers { get; set; } = new List<TDSPlayer>();
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter;
 
@@ -87,7 +88,7 @@ namespace TDS_Server.Instance.Utility
         {
             foreach (var target in Players)
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client.Handle.Value);
             }
         }
 
@@ -95,7 +96,7 @@ namespace TDS_Server.Instance.Utility
         {
             foreach (var target in Players)
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client.Handle.Value);
             }
         }
 
