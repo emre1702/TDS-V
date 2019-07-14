@@ -20,10 +20,18 @@ namespace TDS_Server.Manager.Utility
     internal static class LobbyManager
     {
         public static List<Lobby> Lobbies { get; } = new List<Lobby>();
-        private static List<TDSPlayer> _playerInCustomLobbyMenu = new List<TDSPlayer>();
+        public static List<TDSPlayer> PlayerInCustomLobbyMenu { get; } = new List<TDSPlayer>();
 
-        public static Lobby MainMenu => Lobbies[0];
-        public static Arena Arena => (Arena)Lobbies[1];
+        public static Lobby MainMenu => Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MainMenu).First();
+        public static Arena Arena => Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.Arena).Cast<Arena>().First();
+
+        static LobbyManager()
+        {
+            CustomEventManager.OnPlayerLoggedOut += (player) =>
+            {
+                SetPlayerInCustomLobbyMenu(player, false);
+            };
+        }
 
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
         {
@@ -171,7 +179,7 @@ namespace TDS_Server.Manager.Utility
                 AddLobby(arena);
                 AddMapsToArena(arena, entity);
 
-                _playerInCustomLobbyMenu.Remove(player);
+                PlayerInCustomLobbyMenu.Remove(player);
                 await arena.AddPlayer(player, null);
             }
             catch
@@ -195,7 +203,7 @@ namespace TDS_Server.Manager.Utility
         {
             if (isIn)
             {
-                _playerInCustomLobbyMenu.Add(player);
+                PlayerInCustomLobbyMenu.Add(player);
                 List<CustomLobbyData> lobbyDatas = Lobbies.Where(l => !l.IsOfficial && l.LobbyEntity.Type != ELobbyType.MapCreateLobby)
                                                             .Select(l => GetCustomLobbyData(l))
                                                             .ToList();
@@ -203,7 +211,7 @@ namespace TDS_Server.Manager.Utility
                 player.Client.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, JsonConvert.SerializeObject(lobbyDatas));
             }
             else
-                _playerInCustomLobbyMenu.Remove(player);
+                PlayerInCustomLobbyMenu.Remove(player);
         }
 
         public static void AddLobby(Lobby lobby)
@@ -212,12 +220,12 @@ namespace TDS_Server.Manager.Utility
             if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
                 string json = JsonConvert.SerializeObject(GetCustomLobbyData(lobby));
-                for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
+                for (int i = PlayerInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    TDSPlayer player = _playerInCustomLobbyMenu[i];
+                    TDSPlayer player = PlayerInCustomLobbyMenu[i];
                     if (!player.LoggedIn)
                     {
-                        _playerInCustomLobbyMenu.RemoveAt(i);
+                        PlayerInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
                     player.Client.TriggerEvent(DToClientEvent.AddCustomLobby, json);
@@ -230,12 +238,12 @@ namespace TDS_Server.Manager.Utility
             Lobbies.Remove(lobby);
             if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
-                for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
+                for (int i = PlayerInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    TDSPlayer player = _playerInCustomLobbyMenu[i];
+                    TDSPlayer player = PlayerInCustomLobbyMenu[i];
                     if (!player.LoggedIn)
                     {
-                        _playerInCustomLobbyMenu.RemoveAt(i);
+                        PlayerInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
                     player.Client.TriggerEvent(DToClientEvent.RemoveCustomLobby, lobby.Id);
