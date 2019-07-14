@@ -35,7 +35,9 @@ namespace TDS_Client.Instance.Lobby
 
         public void Start()
         {
-            maxOutsideCounter = (int)Settings.DieAfterOutsideMapLimitTime;
+            Remove();
+            Reset();
+            maxOutsideCounter = Settings.DieAfterOutsideMapLimitTime;
             checkTimer = new TDSTimer(Check, 1000, 0);
         }
 
@@ -50,6 +52,15 @@ namespace TDS_Client.Instance.Lobby
             checkTimer = null;
             info?.Remove();
             info = null;
+        }
+
+        private void Reset()
+        {
+            if (outsideCounter == maxOutsideCounter)
+                return;
+            info?.Remove();
+            info = null;
+            outsideCounter = maxOutsideCounter;
         }
 
         private void Check()
@@ -98,15 +109,6 @@ namespace TDS_Client.Instance.Lobby
                     inside = !inside;
             }
             return inside;
-        }
-
-        private void Reset()
-        {
-            if (outsideCounter == maxOutsideCounter)
-                return;
-            info?.Remove();
-            info = null;
-            outsideCounter = maxOutsideCounter;
         }
     }
 }

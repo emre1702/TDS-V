@@ -23,6 +23,22 @@ namespace TDS_Server.Instance.Lobby
             return amount;
         }
 
+        private int GetTeamAmount(bool onlyCheckPlayerAmount)
+        {
+            if (!onlyCheckPlayerAmount)
+                return Teams.Length;
+            else
+            {
+                int amount = 0;
+                foreach (var team in Teams)
+                {
+                    if (team.Players.Count > 0)
+                        ++amount;
+                }
+                return amount;
+            }
+        }
+
         private Team? GetTeamStillInRound(int minalive = 1)
         {
             foreach (var team in Teams)

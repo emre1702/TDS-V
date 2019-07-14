@@ -144,11 +144,10 @@ namespace TDS_Client.Manager.Lobby
             _startedTick = TimerManager.ElapsedTicks - ((ulong)Settings.RoundTime * 1000 - (ulong)lefttimems);
         }
 
-        public static void OnePlayerDied(int teamindex, string killinfostr)
+        public static void OnePlayerDied(int teamindex)
         {
             --Team.CurrentLobbyTeams[teamindex].AmountPlayers.AmountAlive;
             RefreshTeamText(teamindex);
-            MainBrowser.AddKillMessage(killinfostr);
         }
 
         private static void ShowDeathmatchInfo()

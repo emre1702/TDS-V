@@ -276,11 +276,7 @@ namespace TDS_Client.Manager
             LobbyCam.StopCountdown();
             Countdown.End();
             Round.IsSpectator = (bool)args[0];
-            if (!Round.IsSpectator)
-            {
-                MapLimitManager.Start();
-                Round.InFight = true;
-            }
+            Round.InFight = !Round.IsSpectator;
             RoundInfo.Start(args.Length >= 2 ? (ulong)args[1] : 0);
         }
 
@@ -333,13 +329,28 @@ namespace TDS_Client.Manager
 
         private void OnDeathMethod(object[] args)
         {
+
             Player player = (Player)args[0];
+            bool willSpawn = (bool)args[3];
             if (player == Player.LocalPlayer)
             {
-                Round.InFight = false;
-                Bomb.Reset();
+                if (!willSpawn)
+                {
+                    Round.InFight = false;
+                    Bomb.Reset();
+                }
+                else
+                {
+                    if (!Round.IsSpectator)
+                        MapLimitManager.Start();
+                    Bomb.BombOnHand = false;
+                }
             }
-            RoundInfo.OnePlayerDied((int)args[1], (string)args[2]);
+
+            if (!willSpawn)
+                RoundInfo.OnePlayerDied((int)args[1]);
+            string killinfoStr = (string)args[2];
+            MainBrowser.AddKillMessage(killinfoStr);
         }
 
         private void OnPlayerGotBombMethod(object[] args)

@@ -24,7 +24,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 DeathInfoSync(character, killer, weapon);
 
-                if (--character.Lifes == 0 && spawnPlayer)
+                if (character.Lifes == 1 && spawnPlayer)
                 {
                     DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
@@ -33,6 +33,7 @@ namespace TDS_Server.Instance.Lobby
                     }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
                 }
             }
+            --character.Lifes;
         }
 
         public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)

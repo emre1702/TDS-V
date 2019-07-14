@@ -12,7 +12,9 @@ namespace TDS_Client.Manager.Lobby
             set
             {
                 _inFight = value;
-                if (!value)
+                if (value)
+                    MapLimitManager.Start();
+                else
                     MapLimitManager.Stop();
             }
         }

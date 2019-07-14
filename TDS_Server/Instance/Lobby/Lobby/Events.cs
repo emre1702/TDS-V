@@ -37,13 +37,13 @@ namespace TDS_Server.Instance.Lobby
         /// <returns>Time in ms to disapper & spawn again</returns>
         public virtual void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
         {
-            if (DeathSpawnTimer.ContainsKey(character))
-            {
-                DeathSpawnTimer[character].Kill();
-                DeathSpawnTimer.Remove(character);
-            }
             if (spawnPlayer)
             {
+                if (DeathSpawnTimer.ContainsKey(character))
+                {
+                    DeathSpawnTimer[character].Kill();
+                    DeathSpawnTimer.Remove(character);
+                }
                 NAPI.Player.SpawnPlayer(character.Client, SpawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
             }
         }
