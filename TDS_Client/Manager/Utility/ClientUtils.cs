@@ -17,7 +17,12 @@ namespace TDS_Client.Manager.Utility
         public static List<Player> GetTriggeredPlayersList(string objStr)
         {
             var list = JsonConvert.DeserializeObject<List<ushort>>(objStr);
-            return list.Select(s => Entities.Players.GetAtRemote(s)).ToList();
+            return list.Select(s => GetPlayerByHandleValue(s)).ToList();
+        }
+
+        public static Player GetPlayerByHandleValue(ushort handleValue)
+        {
+            return Entities.Players.GetAtRemote(handleValue);
         }
 
         public static void DisableAttack()

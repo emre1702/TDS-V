@@ -227,6 +227,8 @@ $(document).ready(function () {
                 if (msg[0] === "/") {
                     msg = msg.substr(1);
                     if (msg.length > 0) {
+                        if (msg == "test")
+                            addMessage(JSON.stringify(chatdata.playernames));
                         mp.trigger("CommandUsed_Browser", msg);
                     }
                 } else {
