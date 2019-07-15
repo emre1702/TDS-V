@@ -74,6 +74,7 @@ namespace TDS_Server.Manager.Utility
                         break;
                 }
                 Lobbies.Add(lobby);
+                Lobby.LobbiesByIndex[lobby.Id] = lobby;
                 if (lobby is Arena arena)
                 {
                     AddMapsToArena(arena, lobbysetting);
@@ -138,6 +139,7 @@ namespace TDS_Server.Manager.Utility
                 Lobbies entity = new Lobbies
                 {
                     Name = data.Name,
+                    OwnerId = player.Entity?.Id ?? 0,
                     AmountLifes = data.AmountLifes,
                     DieAfterOutsideMapLimitTime = data.DieAfterOutsideMapLimitTime,
                     IsOfficial = false,
@@ -175,6 +177,8 @@ namespace TDS_Server.Manager.Utility
                 Arena arena = new Arena(entity);
                 arena.DbContext.Entry(entity).State = EntityState.Added;
                 await arena.DbContext.SaveChangesAsync();
+
+                await arena.DbContext.Entry(entity).Reference(e => e.Owner).LoadAsync();
 
                 AddLobby(arena);
                 AddMapsToArena(arena, entity);
@@ -217,6 +221,7 @@ namespace TDS_Server.Manager.Utility
         public static void AddLobby(Lobby lobby)
         {
             Lobbies.Add(lobby);
+            Lobby.LobbiesByIndex[lobby.Id] = lobby;
             if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
                 string json = JsonConvert.SerializeObject(GetCustomLobbyData(lobby));

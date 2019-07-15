@@ -15,6 +15,7 @@
         public const string JoinArena = "JoinArena_Client";
         public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Client";
         public const string JoinLobby = "JoinLobby_Client";
+        public const string JoinLobbyWithPassword = "JoinLobbyWithPassword_Client";
         public const string JoinMapCreator = "JoinMapCreator_Client";
 
         public const string LanguageChange = "LanguageChange_Client";

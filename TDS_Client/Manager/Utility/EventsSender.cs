@@ -16,6 +16,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.GetVehicle] = new CooldownEventDto(DToServerEvent.GetVehicle, 2000),
             [DToServerEvent.JoinArena] = new CooldownEventDto(DToServerEvent.JoinArena, 1000),
             [DToServerEvent.JoinLobby] = new CooldownEventDto(DToServerEvent.JoinLobby, 1000),
+            [DToServerEvent.JoinLobbyWithPassword] = new CooldownEventDto(DToServerEvent.JoinLobbyWithPassword, 1000),
             [DToServerEvent.JoinMapCreator] = new CooldownEventDto(DToServerEvent.JoinMapCreator, 1000),
             [DToServerEvent.LanguageChange] = new CooldownEventDto(DToServerEvent.LanguageChange, 500),
             [DToServerEvent.LobbyChatMessage] = new CooldownEventDto(DToServerEvent.LobbyChatMessage, 250),

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
@@ -92,6 +93,8 @@ namespace TDS_Server.Manager.Player
         [ServerEvent(Event.PlayerConnected)]
         public static async void OnPlayerConnected(Client player)
         {
+            while (!TDSNewContext.IsConfigured)
+                await Task.Delay(1000);
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
             //todo Make the name settable

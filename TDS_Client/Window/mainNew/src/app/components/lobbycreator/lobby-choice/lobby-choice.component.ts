@@ -60,6 +60,7 @@ export class LobbyChoiceComponent {
 
   showUserLobbies() {
     this.settings.InUserLobbiesMenu = true;
+    this.rageConnector.call(DToClientEvent.JoinedCustomLobbiesMenu);
     this.changeDetector.detectChanges();
   }
 }

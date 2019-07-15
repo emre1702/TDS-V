@@ -662,14 +662,14 @@ namespace TDS_Client.Manager
         private void OnJoinCustomLobbyMethod(object[] args)
         {
             int lobbyId = (int)args[0];
-            EventsSender.Send(DToServerEvent.JoinLobby, lobbyId, 0);
+            EventsSender.Send(DToServerEvent.JoinLobby, lobbyId);
         }
 
         private void OnJoinCustomLobbyWithPasswordMethod(object[] args)
         {
             int lobbyId = (int)args[0];
             string password = (string)args[1];
-            EventsSender.Send(DToServerEvent.JoinLobby, lobbyId, 0, password);
+            EventsSender.Send(DToServerEvent.JoinLobbyWithPassword, lobbyId, password);
         }
 
         private void OnJoinedCustomLobbiesMenuMethod(object[] args)

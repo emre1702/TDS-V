@@ -44,7 +44,6 @@ namespace TDS_Server.Instance.Lobby
                 entity.DefaultSpawnZ
             );
 
-            LobbiesByIndex[entity.Id] = this;
             _dimensionsUsed.Add(Dimension);
 
             Teams = new Team[entity.Teams.Count];

@@ -8,7 +8,7 @@ namespace TDS_Client.Manager.Lobby
     internal static class Choice
     {
 
-        public static void JoinLobby(int index, int teamindex)
+        public static void JoinLobby(int index, uint? teamindex)
         {
             EventsSender.Send(DToServerEvent.JoinLobby, index, teamindex);
             //EventsSender.SendCooldown("joinMapCreatorLobby");

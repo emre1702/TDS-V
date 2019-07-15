@@ -57,7 +57,26 @@ namespace TDS_Server.Instance.Lobby
         #region Lobby
 
         [RemoteEvent(DToServerEvent.JoinLobby)]
-        public static async void JoinLobbyEvent(Client client, int index, uint? teamindex, string? password = null)
+        public static async void JoinLobbyEvent(Client client, int index)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+
+            if (Lobby.LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = Lobby.LobbiesByIndex[index];
+                await lobby.AddPlayer(player, null);
+            }
+            else
+            {
+                NAPI.Chat.SendChatMessageToPlayer(client, player.Language.LOBBY_DOESNT_EXIST);
+                //todo Remove lobby at client view and check, why he saw this lobby
+            }
+        }
+
+        [RemoteEvent(DToServerEvent.JoinLobbyWithPassword)]
+        public static async void JoinLobbyEvent(Client client, int index, string? password = null)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -72,7 +91,7 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 }
 
-                await lobby.AddPlayer(player, teamindex);
+                await lobby.AddPlayer(player, null);
             }
             else
             {
