@@ -55,9 +55,9 @@ namespace TDS_Server.Manager.Utility
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
             }
-            catch /*(Exception ex)*/
+            catch (Exception ex)
             {
-               // NAPI.Util.ConsoleOutput(ex.ToString());
+                NAPI.Util.ConsoleOutput(ex.ToString());
             }
         }
     }
