@@ -5,11 +5,9 @@ using System.Linq;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Manager.Commands;
-using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -19,6 +17,7 @@ namespace TDS_Server.Manager.Utility
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
+            NAPI.World.SetWeather(Weather.NEUTRAL);
             LoadAll();
         }
 
