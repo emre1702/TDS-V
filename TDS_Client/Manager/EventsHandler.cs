@@ -184,17 +184,8 @@ namespace TDS_Client.Manager
 
         private void OnJoinSameLobbyMethod(object[] args)
         {
-            Chat.Output($"JoinSameLobby: {args.Length}");
-            if (args.Length > 0)
-            {
-                Chat.Output(args[0] == null ? "is null" : "not null");
-                Chat.Output(args[0].ToString());
-                Chat.Output(args[0] is Player ? "is Player" : "is not Player");
-                Chat.Output(args[0].GetType().Name);
-            }
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
-            Chat.Output(player.Name + " has been added");
             Players.Load(player);
             VoiceManager.AddPlayer(player);
         }
