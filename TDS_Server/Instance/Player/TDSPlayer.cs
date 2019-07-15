@@ -333,9 +333,7 @@ namespace TDS_Server.Instance.Player
                     DbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
                     CurrentLobbyStats = null;
                 }
-                Console.WriteLine(new string('\n', 99));
                 await DbContext.SaveChangesAsync();
-                Console.WriteLine(new string('\n', 99));
             }
             finally
             {
