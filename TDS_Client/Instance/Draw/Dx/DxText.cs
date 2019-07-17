@@ -1,5 +1,6 @@
 ﻿using RAGE.Game;
 using RAGE.NUI;
+using System;
 using System.Drawing;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
@@ -49,6 +50,16 @@ namespace TDS_Client.Instance.Draw.Dx
             _amountLines = amountLines;
 
             ApplyTextAlignmentY();
+        }
+
+        protected override int GetAbsoluteX(float x, bool relative)
+        {
+            return (int)Math.Round(relative ? x * 1920 : x);
+        }
+
+        protected override int GetAbsoluteY(float y, bool relative)
+        {
+            return (int)Math.Round(relative ? y * 1080 : y);
         }
 
         public void SetRelativeY(float y)

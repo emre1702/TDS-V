@@ -81,12 +81,12 @@ namespace TDS_Client.Instance.Draw.Dx
             return relative ? y : y / ResY;
         }
 
-        protected int GetAbsoluteX(float x, bool relative)
+        protected virtual int GetAbsoluteX(float x, bool relative)
         {
             return (int)Math.Round(relative ? x * ResX : x);
         }
 
-        protected int GetAbsoluteY(float y, bool relative)
+        protected virtual int GetAbsoluteY(float y, bool relative)
         {
             return (int)Math.Round(relative ? y * ResY : y);
         }
