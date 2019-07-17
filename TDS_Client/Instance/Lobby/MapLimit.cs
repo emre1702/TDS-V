@@ -35,18 +35,13 @@ namespace TDS_Client.Instance.Lobby
 
         public void Start()
         {
-            Remove();
+            Stop();
             Reset();
             maxOutsideCounter = Settings.DieAfterOutsideMapLimitTime;
             checkTimer = new TDSTimer(Check, 1000, 0);
         }
 
         public void Stop()
-        {
-            checkTimer?.Kill();
-        }
-
-        public void Remove()
         {
             checkTimer?.Kill();
             checkTimer = null;
