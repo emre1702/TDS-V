@@ -705,6 +705,14 @@ namespace TDS_Client.Manager
         {
             ChatManager.CloseChatInput();
             string msg = (string)args[0];
+            if (msg == "checkshoot")
+            {
+                if (Bomb.BombOnHand || !Round.InFight)
+                    Chat.Output("Shooting is blocked. Reason: " + (Round.InFight ? "bomb" : (!Bomb.BombOnHand ? "round" : "both")));
+                else
+                    Chat.Output("Shooting is not blocked.");
+            }
+                
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
         }
 
