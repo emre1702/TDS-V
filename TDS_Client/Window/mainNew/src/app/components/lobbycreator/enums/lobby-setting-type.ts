@@ -1,3 +1,3 @@
 export enum LobbySettingType {
-  string, password, number, numberSlider, boolean, option, button
+  string, password, number, numberSlider, boolean, enum, button
 }

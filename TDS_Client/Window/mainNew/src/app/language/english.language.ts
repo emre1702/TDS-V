@@ -54,7 +54,6 @@ export class English implements Language {
     StartArmor = "Start armor";
     AmountLifes = "Amount lifes";
     SpawnAgainAfterDeathMs = "Spawn after death time (ms)";
-    DieAfterOutsideMapLimitTime = "Die outside map after time (sec)";
     CreateLobby = "Create lobby";
     Send = "Send";
     PasswordIncorrect = "The password is incorrect.";
@@ -69,6 +68,12 @@ export class English implements Language {
     Player = "Player";
     Teams = "Teams";
     Times = "Times";
+    KillAfterTime = "Kill after time";
+    TeleportBackAfterTime = "Teleport after time";
+    Block = "Block";
+    None = "None";
+    MapLimitType = "Map limit type";
+    MapLimitTime = "Map limit time";
 
     Arena = "Arena";
     Gang = "Gang";

@@ -284,8 +284,6 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.IsTemporary);
                 entity.Property(e => e.IsOfficial);
 
-                entity.Property(e => e.DieAfterOutsideMapLimitTime).HasDefaultValueSql("10");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
@@ -383,6 +381,8 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.LobbyId)
                    .HasColumnName("LobbyID")
                    .ValueGeneratedNever();
+
+                entity.Property(e => e.MapLimitTime).HasDefaultValueSql("10");
 
                 entity.HasOne(d => d.Lobby)
                     .WithOne(p => p.LobbyMapSettings)
@@ -822,7 +822,7 @@ namespace TDS_Server_DB.Entity
 
             var seedLobbies = new List<Lobbies> {
                 //new Lobbies { Id = 0, OwnerId = 0, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true, SpawnAgainAfterDeathMs = 0 },
-                new Lobbies { Id = 1, OwnerId = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400, DieAfterOutsideMapLimitTime = 10 },
+                new Lobbies { Id = 1, OwnerId = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
                 new Lobbies { Id = 2, OwnerId = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
@@ -1036,7 +1036,7 @@ namespace TDS_Server_DB.Entity
             );
 
             modelBuilder.Entity<LobbyMapSettings>().HasData(
-                new LobbyMapSettings { LobbyId = 1, MapLimitType = EMapLimitType.KillAfterTime }  
+                new LobbyMapSettings { LobbyId = 1, MapLimitTime = 10, MapLimitType = EMapLimitType.KillAfterTime }  
             );
 
             modelBuilder.Entity<Weapons>().HasData(

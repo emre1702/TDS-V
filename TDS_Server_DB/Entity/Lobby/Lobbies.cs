@@ -34,7 +34,6 @@ namespace TDS_Server_DB.Entity.Lobby
         public bool IsOfficial { get; set; }
         public int SpawnAgainAfterDeathMs { get; set; }
         public DateTime CreateTimestamp { get; set; }
-        public int DieAfterOutsideMapLimitTime { get; set; }
 
         public virtual Players Owner { get; set; }
         public virtual LobbyRewards LobbyRewards { get; set; }

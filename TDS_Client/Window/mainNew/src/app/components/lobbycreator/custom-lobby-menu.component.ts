@@ -11,6 +11,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { CustomLobbyPasswordDialog } from './dialog/custom-lobby-password-dialog';
+import { LobbyMapLimitType } from './enums/lobby-map-limit-type';
 
 @Component({
   selector: 'app-custom-lobby-menu',
@@ -94,6 +95,16 @@ export class CustomLobbyMenuComponent {
     },
 
     {
+      title: "Map", rows: [
+        {
+          type: LobbySettingType.enum, dataSettingIndex: "MapLimitType", defaultValue: "KillAfterTime",
+          enum: LobbyMapLimitType,
+          formControl: new FormControl(LobbyMapLimitType.KillAfterTime, [])
+        }
+      ]
+    },
+
+    {
       title: "Times", rows: [
         {
           type: LobbySettingType.number, dataSettingIndex: "BombDetonateTimeMs", defaultValue: 45000,
@@ -120,7 +131,7 @@ export class CustomLobbyMenuComponent {
           formControl: new FormControl(400, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "DieAfterOutsideMapLimitTime", defaultValue: 10,
+          type: LobbySettingType.number, dataSettingIndex: "MapLimitTime", defaultValue: 10,
           formControl: new FormControl(10, [Validators.required, Validators.max(9999), Validators.min(0)]), onlyInt: true
         },
       ]
@@ -249,5 +260,10 @@ export class CustomLobbyMenuComponent {
       }
     }
     return true;
+  }
+
+  getEnumKeys(e: {}) {
+    const keys = Object.keys(e);
+    return keys.slice(keys.length / 2);
   }
 }

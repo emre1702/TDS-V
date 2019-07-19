@@ -55,7 +55,6 @@ namespace TDS_Client.Instance.Lobby
         {
             Stop();
             Reset();
-            _maxOutsideCounter = Settings.DieAfterOutsideMapLimitTime;
             _checkTimer = new TDSTimer(Check, 1000, 0);
             _checkTimerFaster = new TDSTimer(CheckFaster, Constants.MapLimitFasterCheckTimeMs, 0);
         }
@@ -68,6 +67,7 @@ namespace TDS_Client.Instance.Lobby
             _checkTimerFaster = null;
             _info?.Remove();
             _info = null;
+            _maxOutsideCounter = Settings.MapLimitTime;
             _outsideCounter = _maxOutsideCounter;
         }
 
@@ -78,6 +78,7 @@ namespace TDS_Client.Instance.Lobby
                 _lastPosInMap = Player.LocalPlayer.Position;
                 _lastRotInMap = Player.LocalPlayer.GetHeading();
             }
+            _maxOutsideCounter = Settings.MapLimitTime;
             if (_outsideCounter == _maxOutsideCounter)
                 return;
             _info?.Remove();
@@ -120,7 +121,7 @@ namespace TDS_Client.Instance.Lobby
         {
             if (_outsideCounter > 0)
                 RefreshInfoKillAfterTime();
-            else if (_outsideCounter == 0)
+            else
             {
                 EventsSender.Send(DToServerEvent.OutsideMapLimit);
                 Stop();
@@ -129,10 +130,15 @@ namespace TDS_Client.Instance.Lobby
 
         private void IsOutsideTeleportBackAfterTime()
         {
+            Chat.Output(_outsideCounter.ToString());
             if (_outsideCounter > 0)
                 RefreshInfoTeleportAfterTime();
-            else if (_outsideCounter == 0)
+            else
+            {
                 Player.LocalPlayer.Position = _lastPosInMap;
+                Reset();
+            }
+                
         }
 
         private void IsOutsideBlock()

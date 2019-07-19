@@ -71,7 +71,7 @@ namespace TDS_Client.Manager.Utility
         public static int MapChooseTime => syncedServerSettings.MapChooseTime;
         public static int RoundTime => syncedLobbySettings.RoundTime ?? 0;
         public static int RoundEndTime => syncedServerSettings.RoundEndTime;
-        public static int DieAfterOutsideMapLimitTime => syncedLobbySettings.DieAfterOutsideMapLimitTime ?? 0;
+        public static int MapLimitTime => syncedLobbySettings.MapLimitTime ?? 0;
         public static bool InLobbyWithMaps => syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
 

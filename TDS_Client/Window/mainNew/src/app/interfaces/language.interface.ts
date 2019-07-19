@@ -50,7 +50,6 @@ export interface Language {
     StartArmor: string;
     AmountLifes: string;
     SpawnAgainAfterDeathMs: string;
-    DieAfterOutsideMapLimitTime: string;
     CreateLobby: string;
     Send: string;
     PasswordIncorrect: string;
@@ -65,6 +64,12 @@ export interface Language {
     Player: string;
     Teams: string;
     Times: string;
+    KillAfterTime: string;
+    TeleportBackAfterTime: string;
+    Block: string;
+    None: string;
+    MapLimitType: string;
+    MapLimitTime: string;
 
     Arena: string;
     Gang: string;

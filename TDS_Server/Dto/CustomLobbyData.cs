@@ -1,4 +1,6 @@
-﻿namespace TDS_Server.Dto
+﻿using TDS_Common.Enum;
+
+namespace TDS_Server.Dto
 {
     class CustomLobbyData
     {
@@ -19,6 +21,8 @@
         public int CountdownTime;
 
         public int SpawnAgainAfterDeathMs;
-        public int DieAfterOutsideMapLimitTime;
+        public int MapLimitTime;
+
+        public EMapLimitType MapLimitType;
     }
 }

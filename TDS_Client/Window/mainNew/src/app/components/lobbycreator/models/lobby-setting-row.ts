@@ -5,7 +5,7 @@ export class LobbySettingRow {
   public type: LobbySettingType;
   public formControl: FormControl;
 
-  public options?: any;
+  public enum?: any;
   public defaultValue: any;
 
   public onlyInt?: boolean;

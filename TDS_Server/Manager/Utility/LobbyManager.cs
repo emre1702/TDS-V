@@ -142,7 +142,6 @@ namespace TDS_Server.Manager.Utility
                     Name = data.Name,
                     OwnerId = player.Entity?.Id ?? 0,
                     AmountLifes = data.AmountLifes,
-                    DieAfterOutsideMapLimitTime = data.DieAfterOutsideMapLimitTime,
                     IsOfficial = false,
                     IsTemporary = true,
                     LobbyRoundSettings = new LobbyRoundSettings
@@ -152,7 +151,8 @@ namespace TDS_Server.Manager.Utility
                     },
                     LobbyMapSettings = new LobbyMapSettings
                     {
-                        MapLimitType = EMapLimitType.Block
+                        MapLimitTime = data.MapLimitTime,
+                        MapLimitType = data.MapLimitType
                     },
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyWeapons = new HashSet<LobbyWeapons>
@@ -267,7 +267,7 @@ namespace TDS_Server.Manager.Utility
             return new CustomLobbyData
             {
                 AmountLifes = lobby.LobbyEntity.AmountLifes ?? 1,
-                DieAfterOutsideMapLimitTime = lobby.LobbyEntity.DieAfterOutsideMapLimitTime,
+
                 LobbyId = lobby.LobbyEntity.Id,
                 Name = lobby.LobbyEntity.Name,
                 OwnerName = lobby.OwnerName,
@@ -282,6 +282,9 @@ namespace TDS_Server.Manager.Utility
                 BombPlantTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombPlantTimeMs,
                 BombDetonateTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombDetonateTimeMs,
                 BombDefuseTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
+
+                MapLimitTime = lobby.LobbyEntity.LobbyMapSettings.MapLimitTime,
+                MapLimitType = lobby.LobbyEntity.LobbyMapSettings.MapLimitType
             };
         }
     }

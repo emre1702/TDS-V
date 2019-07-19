@@ -49,7 +49,6 @@ export class German extends English {
   StartArmor = "Start Weste";
   AmountLifes = "Anzahl Leben";
   SpawnAgainAfterDeathMs = "Wiederbelebung nach Tod Zeit (ms)";
-  DieAfterOutsideMapLimitTime = "Tod außerhalb der Map Zeit (sek)";
   CreateLobby = "Erstelle Lobby";
   Send = "Senden";
   PasswordIncorrect = "Das Passwort ist falsch.";
@@ -64,6 +63,12 @@ export class German extends English {
   Player = "Spieler";
   Teams = "Teams";
   Times = "Zeiten";
+  KillAfterTime = "Tod nach Zeit";
+  TeleportBackAfterTime = "Teleport nach Zeit";
+  Block = "Block";
+  None = "Nichts";
+  MapLimitType = "Map-Grenze Typ";
+  MapLimitTime = "Map-Grenze Zeit";
 
   Arena = "Arena";
   Gang = "Gang";

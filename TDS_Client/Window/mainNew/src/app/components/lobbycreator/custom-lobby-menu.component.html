@@ -36,29 +36,25 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="lobbySettingType.numberSlider">
-          <td class="left">
-            {{ setting.dataSettingIndex | language: settings.Lang }}:
-          </td>
-          <td class="right">
+          <div class="setting-row">
             <mat-slider color="primary" thumbLabel tickInterval="1" [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()">
+                {{ setting.dataSettingIndex | language: settings.Lang }}
             </mat-slider>
-          </td>
+          </div>
           <!-- <div *ngSwitchDefault>output2</div> -->
         </ng-container>
 
-        <ng-container *ngSwitchCase="lobbySettingType.option">
-          <td class="left">
-            {{ setting.dataSettingIndex | language: settings.Lang }}:
-          </td>
-          <td class="right">
+        <ng-container *ngSwitchCase="lobbySettingType.enum">
+          <div class="setting-row">
             <mat-form-field color="accent">
+              <mat-label>{{ setting.dataSettingIndex | language: settings.Lang }}</mat-label>
               <mat-select [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()">
-                <mat-option *ngFor="let opt of setting.options" [value]="opt">
-                  {{ opt }}
+                <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)" [value]="setting.enum[enumStr]">
+                  {{ enumStr | language: settings.Lang }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-          </td>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="lobbySettingType.boolean">
