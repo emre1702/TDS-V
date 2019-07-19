@@ -279,7 +279,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.DefaultSpawnX).HasDefaultValueSql("0");
                 entity.Property(e => e.DefaultSpawnY).HasDefaultValueSql("0");
-                entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("900");
+                entity.Property(e => e.DefaultSpawnZ).HasDefaultValueSql("9000");
                 entity.Property(e => e.DefaultSpawnRotation).HasDefaultValueSql("0");
                 entity.Property(e => e.IsTemporary);
                 entity.Property(e => e.IsOfficial);
