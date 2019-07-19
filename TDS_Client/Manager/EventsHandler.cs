@@ -137,6 +137,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
             Add(DToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
             Add(DToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
+            Add(DToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
@@ -284,7 +285,7 @@ namespace TDS_Client.Manager
         private void OnRoundEndMethod(object[] args)
         {
             Cam.DoScreenFadeOut(Settings.RoundEndTime / 2);
-            Bomb.Reset();
+            Bomb.Stop();
             Round.StopFight();
             Countdown.Stop();
             LobbyCam.StopCountdown();
@@ -330,25 +331,15 @@ namespace TDS_Client.Manager
 
         private void OnDeathMethod(object[] args)
         {
-
             Player player = (Player)args[0];
-            bool willSpawn = (bool)args[3];
+            bool willRespawn = (bool)args[3];
             if (player == Player.LocalPlayer)
             {
-                if (!willSpawn)
-                {
-                    Round.InFight = false;
-                    Bomb.Reset();
-                }
-                else
-                {
-                    if (!Round.IsSpectator)
-                        MapLimitManager.Start();
-                    Bomb.BombOnHand = false;
-                }
+                Round.InFight = false;
+                Bomb.RestartRound();
             }
 
-            if (!willSpawn)
+            if (!willRespawn)
                 RoundInfo.OnePlayerDied((int)args[1]);
             string killinfoStr = (string)args[2];
             MainBrowser.AddKillMessage(killinfoStr);
@@ -412,6 +403,12 @@ namespace TDS_Client.Manager
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Team.RemoveSameTeam(player);
+        }
+
+        private void OnPlayerRespawnedMethod(object[] args)
+        {
+            if (!Round.IsSpectator)
+                Round.InFight = true;
         }
 
         private void OnPlayerTeamChangeMethod(object[] args)

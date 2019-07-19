@@ -64,7 +64,7 @@ namespace TDS_Client.Manager.Lobby
         {
             RoundInfo.Stop();
             Round.InFight = false;
-            Bomb.Reset();
+            Bomb.Stop();
             Round.Reset(true);
             LobbyCam.StopCountdown();
             MapManager.CloseMenu();

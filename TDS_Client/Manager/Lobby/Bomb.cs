@@ -183,7 +183,15 @@ namespace TDS_Client.Manager.Lobby
             return Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, _plantedPos.X, _plantedPos.Y, _plantedPos.Z, true) <= Settings.DistanceToSpotToDefuse;
         }
 
-        public static void Reset()
+        public static void RestartRound()
+        {
+            BombOnHand = false;
+            _progressRect?.Remove();
+            _progressRect = null;
+            _playerStatus = EPlantDefuseStatus.None;
+        }
+
+        public static void Stop()
         {
             BombOnHand = false;
             if (!DataChanged)
