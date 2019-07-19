@@ -82,9 +82,11 @@ namespace TDS_Server.Instance.GameModes
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
             Workaround.AttachEntityToEntity(_bomb, character.Client, EBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), Lobby);
             if (_bombAtPlayer != character)
+            {
                 SendBombPlantInfos(character);
+                _bombAtPlayer = character;
+            }
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombOnHand);
-            _bombAtPlayer = character;
         }
 
         private void BombToBack(TDSPlayer character)
@@ -95,9 +97,11 @@ namespace TDS_Server.Instance.GameModes
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
             Workaround.AttachEntityToEntity(_bomb, character.Client, EBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), Lobby);
             if (_bombAtPlayer != character)
+            {
                 SendBombPlantInfos(character);
+                _bombAtPlayer = character;
+            } 
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombNotOnHand);
-            _bombAtPlayer = character;
         }
 
         private void DropBomb()
@@ -109,21 +113,19 @@ namespace TDS_Server.Instance.GameModes
             Workaround.DetachEntity(_bomb);
             //_bomb.FreezePosition = true;
             _bomb.Position = _bombAtPlayer.Client.Position;
-            _bombAtPlayer = null;
             _bombTakeMarker = NAPI.Marker.CreateMarker(0, _bomb.Position, new Vector3(), new Vector3(), 1,
                                                         new Color(180, 0, 0, 180), true, Lobby.Dimension);
             ColShape bombtakecol = NAPI.ColShape.CreateSphereColShape(_bomb.Position, 2);
             _lobbyBombTakeCol[Lobby] = bombtakecol;
+            NAPI.ClientEvent.TriggerClientEvent(_bombAtPlayer.Client, DToClientEvent.BombNotOnHand);
+            _bombAtPlayer = null;
         }
 
         private void TakeBomb(TDSPlayer character)
         {
             if (_bomb == null)
                 return;
-            if (character.Client.CurrentWeapon == WeaponHash.Unarmed)
-                BombToHand(character);
-            else
-                BombToBack(character);
+            ToggleBombAtHand(character, character.Client.CurrentWeapon, character.Client.CurrentWeapon);
             //_bomb.FreezePosition = false;
             _bombTakeMarker?.Delete();
             _bombTakeMarker = null;

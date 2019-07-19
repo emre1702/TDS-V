@@ -65,8 +65,6 @@ namespace TDS_Client.Manager
                 if (Bomb.CheckPlantDefuseOnTick)
                     Bomb.CheckPlantDefuse();
                 Bomb.UpdatePlantDefuseProgress();
-                if (Bomb.BombOnHand)
-                    ClientUtils.DisableAttack();
             }
             if (RoundInfo.RefreshOnTick)
                 RoundInfo.RefreshTime();
@@ -75,7 +73,8 @@ namespace TDS_Client.Manager
                 Damagesys.ShowBloodscreenIfNecessary();
                 FloatingDamageInfo.UpdateAllPositions();
             }
-            else
+
+            if (Bomb.BombOnHand || !Round.InFight)
                 ClientUtils.DisableAttack();
             ChatManager.OnUpdate();
             FreeCam.Render();
