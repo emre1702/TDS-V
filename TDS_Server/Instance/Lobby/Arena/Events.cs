@@ -32,7 +32,7 @@ namespace TDS_Server.Instance.Lobby
                 {
                     DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
-                        SetPlayerReadyForRound(character, false);
+                        RespawnPlayer(character);
                     }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
                 }
             }

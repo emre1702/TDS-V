@@ -17,12 +17,13 @@ namespace TDS_Common.Dto
         public int? BombDetonateTimeMs;
         public int? DieAfterOutsideMapLimitTime;
         public bool InLobbyWithMaps;
+        public EMapLimitType? MapLimitType;
 
         [JsonIgnore]
         public string Json;
 
         public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
-            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? DieAfterOutsideMapLimitTime, bool InLobbyWithMaps)
+            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? DieAfterOutsideMapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType)
         {
             this.Id = Id;
             this.Name = Name;
@@ -36,6 +37,7 @@ namespace TDS_Common.Dto
             this.BombDetonateTimeMs = BombDetonateTimeMs;
             this.DieAfterOutsideMapLimitTime = DieAfterOutsideMapLimitTime;
             this.InLobbyWithMaps = InLobbyWithMaps;
+            this.MapLimitType = MapLimitType;
 
             this.Json = JsonConvert.SerializeObject(this);
         }

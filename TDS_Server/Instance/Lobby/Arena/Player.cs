@@ -58,7 +58,7 @@ namespace TDS_Server.Instance.Lobby
             RoundCheckForEnoughAlive();
         }
 
-        private void SetPlayerReadyForRound(TDSPlayer character, bool freeze = true)
+        private void SetPlayerReadyForRound(TDSPlayer character)
         {
             Client player = character.Client;
             if (character.Team != null && !character.Team.IsSpectator)
@@ -75,7 +75,7 @@ namespace TDS_Server.Instance.Lobby
 
             RemoveAsSpectator(character);
 
-            Workaround.FreezePlayer(player, freeze);
+            Workaround.FreezePlayer(player, true);
             GivePlayerWeapons(player);
 
             if (_removeSpectatorsTimer.ContainsKey(character))
@@ -208,6 +208,13 @@ namespace TDS_Server.Instance.Lobby
                 to.MostAssistsInARound = from.Assists;
 
             from.Clear();
+        }
+
+        private void RespawnPlayer(TDSPlayer player)
+        {
+            SetPlayerReadyForRound(player);
+            Workaround.FreezePlayer(player.Client, false);
+            player.Client.TriggerEvent(DToClientEvent.PlayerRespawned);
         }
     }
 }

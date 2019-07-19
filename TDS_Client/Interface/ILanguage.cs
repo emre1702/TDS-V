@@ -8,7 +8,8 @@ namespace TDS_Client.Interface
         ILobbyChoiceTexts LOBBY_CHOICE_TEXTS { get; }
         IMapCreatorMenuTexts MAPCREATOR_MENU { get; }
 
-        string OUTSIDE_MAP_LIMIT { get; }
+        string OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME { get; }
+        string OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME { get; }
         string PLANTING { get; }
         string DEFUSING { get; }
         string SCOREBOARD_NAME { get; }

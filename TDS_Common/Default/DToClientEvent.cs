@@ -47,6 +47,7 @@
         public const string PlayerSpectateMode = "PlayerSpectateMode_Server";
         public const string PlayerJoinedTeam = "PlayerJoinedTeam_Server";
         public const string PlayerLeftTeam = "PlayerLeftTeam_Server";
+        public const string PlayerRespawned = "PlayerRespawned_Server";
         public const string PlayerTeamChange = "PlayerTeamChange_Server";
         public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
 

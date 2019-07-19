@@ -170,8 +170,8 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
                 return;
-
-            arena.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
+            if (arena.LobbyEntity.LobbyMapSettings.MapLimitType == EMapLimitType.KillAfterTime)
+                arena.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
         }
 
         [RemoteEvent(DToServerEvent.SendTeamOrder)]
@@ -314,17 +314,6 @@ namespace TDS_Server.Instance.Lobby
             if (!player.LoggedIn)
                 return;
             MapCreator.SendPlayerHisSavedMapNames(player);
-        }
-
-        [RemoteEvent(DToServerEvent.TeleportToPositionRotation)]
-        public void OnTeleportToPositionRotation(Client client, float x, float y, float z, float rot)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-            if (player.CurrentLobby == null || !(player.CurrentLobby is MapCreateLobby lobby))
-                return;
-            lobby.SetPosition(player, x, y, z, rot);
         }
 
         [RemoteEvent(DToServerEvent.GetVehicle)]

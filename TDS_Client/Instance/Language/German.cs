@@ -7,7 +7,9 @@ namespace TDS_Client.Instance.Language
     {
         public override string DEFUSING => "Entschärfung ...";
         public override string PLANTING => "Lege Bombe ...";
-        public override string OUTSIDE_MAP_LIMIT => "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {1} Sekunden, um zurück zu gehen.";
+        public override string OUTSIDE_MAP_LIMIT => "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {0} Sekunden, um zurück zu gehen.";
+        public override string OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME => "Du bist außerhalb der Map-Grenze!\nWenn du nicht zurück gehst, wirst du in {0} Sekunden sterben.";
+        public override string OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME => "Du bist außerhalb der Map-Grenze!\nWenn du nicht zurück gehst, wirst du in {0} Sekunden zurück teleportiert.";
 
         public override string SCOREBOARD_NAME => "Name";
         public override string SCOREBOARD_PLAYTIME => "Spielzeit";

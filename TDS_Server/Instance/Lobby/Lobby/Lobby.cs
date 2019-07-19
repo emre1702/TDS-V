@@ -66,7 +66,8 @@ namespace TDS_Server.Instance.Lobby
                 RoundTime: entity.LobbyRoundSettings?.RoundTime,
                 BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
                 DieAfterOutsideMapLimitTime: entity.DieAfterOutsideMapLimitTime,
-                InLobbyWithMaps: this is Arena
+                InLobbyWithMaps: this is Arena,
+                MapLimitType: entity.LobbyMapSettings?.MapLimitType
             );
         }
 

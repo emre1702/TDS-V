@@ -23,8 +23,10 @@ namespace TDS_Server.Manager.Player
         {
             while (!TDSNewContext.IsConfigured)
                 await Task.Delay(1000);
-            using var dbcontext = new TDSNewContext();
-            Players entity = await dbcontext.Players
+            TDSPlayer character = player.GetChar();
+            character.CheckDbContext();
+
+            character.Entity = await character.DbContext.Players
                 .Include(p => p.PlayerStats)
                 .Include(p => p.PlayerTotalStats)
                 .Include(p => p.PlayerSettings)
@@ -34,40 +36,38 @@ namespace TDS_Server.Manager.Player
                 .Include(p => p.PlayerRelationsTarget)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (entity == null)
+            if (character.Entity == null)
             {
                 NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
+                character.DbContext.Dispose();
                 return;
             }
 
-            if (Utils.HashPWServer(password) != entity.Password)
+            if (Utils.HashPWServer(password) != character.Entity.Password)
             {
                 NAPI.Notification.SendNotificationToPlayer(player, player.GetLang().WRONG_PASSWORD);
+                character.DbContext.Dispose();
                 return;
             }
 
             Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
-            entity.PlayerStats.LoggedIn = true;
+            character.Entity.PlayerStats.LoggedIn = true;
+            await character.DbContext.SaveChangesAsync();
 
             SyncedPlayerSettingsDto syncedPlayerSettings = new SyncedPlayerSettingsDto
             {
-                Language = entity.PlayerSettings.Language,
-                Hitsound = entity.PlayerSettings.Hitsound,
-                Bloodscreen = entity.PlayerSettings.Bloodscreen,
-                FloatingDamageInfo = entity.PlayerSettings.FloatingDamageInfo
+                Language = character.Entity.PlayerSettings.Language,
+                Hitsound = character.Entity.PlayerSettings.Hitsound,
+                Bloodscreen = character.Entity.PlayerSettings.Bloodscreen,
+                FloatingDamageInfo = character.Entity.PlayerSettings.FloatingDamageInfo
             };
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, entity.AdminLvl,
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, character.Entity.AdminLvl,
                 JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(syncedPlayerSettings));
 
-            TDSPlayer character = player.GetChar();
-            character.Entity = entity;
-
-            if (entity.AdminLvl > 0)
+            if (character.Entity.AdminLvl > 0)
                 AdminsManager.SetOnline(character);
-            character.Gang = Gang.GetFromId(entity.GangId ?? 0);
-
-            await dbcontext.SaveChangesAsync();
+            character.Gang = Gang.GetFromId(character.Entity.GangId ?? 0);
 
             if (character.ChatLoaded)
                 OfflineMessagesManager.CheckOfflineMessages(character);

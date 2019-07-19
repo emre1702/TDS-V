@@ -39,6 +39,7 @@ namespace TDS_Server_DB.Entity.Lobby
         public virtual Players Owner { get; set; }
         public virtual LobbyRewards LobbyRewards { get; set; }
         public virtual LobbyRoundSettings LobbyRoundSettings { get; set; }
+        public virtual LobbyMapSettings LobbyMapSettings { get; set; }
         public virtual ICollection<LobbyKillingspreeRewards> LobbyKillingspreeRewards { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }

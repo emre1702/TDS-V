@@ -71,6 +71,7 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ELanguage>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<VehicleHash>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EFreeroamVehicleType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EMapLimitType>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -139,6 +140,7 @@ namespace TDS_Server_DB.Entity
             modelBuilder.ForNpgsqlHasEnum<ELanguage>();
             modelBuilder.ForNpgsqlHasEnum<VehicleHash>();
             modelBuilder.ForNpgsqlHasEnum<EFreeroamVehicleType>();
+            modelBuilder.ForNpgsqlHasEnum<EMapLimitType>();
             #endregion
 
             #region Tables
@@ -369,6 +371,23 @@ namespace TDS_Server_DB.Entity
                     .WithOne(p => p.LobbyRoundSettings)
                     .HasForeignKey<LobbyRoundSettings>(d => d.LobbyId)
                     .HasConstraintName("lobby_round_infos_LobbyID_fkey");
+            });
+
+            modelBuilder.Entity<LobbyMapSettings>(entity =>
+            {
+                entity.HasKey(e => e.LobbyId)
+                    .HasName("lobby_map_settings_pkey");
+
+                entity.ToTable("lobby_map_settings");
+
+                entity.Property(e => e.LobbyId)
+                   .HasColumnName("LobbyID")
+                   .ValueGeneratedNever();
+
+                entity.HasOne(d => d.Lobby)
+                    .WithOne(p => p.LobbyMapSettings)
+                    .HasForeignKey<LobbyMapSettings>(d => d.LobbyId)
+                    .HasConstraintName("lobby_map_settings_LobbyID_fkey");
             });
 
             modelBuilder.Entity<LobbyWeapons>(entity =>
@@ -1014,6 +1033,10 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LobbyRoundSettings>().HasData(
                 new LobbyRoundSettings { LobbyId = 1, RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000, BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true }
+            );
+
+            modelBuilder.Entity<LobbyMapSettings>().HasData(
+                new LobbyMapSettings { LobbyId = 1, MapLimitType = EMapLimitType.KillAfterTime }  
             );
 
             modelBuilder.Entity<Weapons>().HasData(

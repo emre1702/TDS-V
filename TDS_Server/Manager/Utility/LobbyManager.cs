@@ -44,6 +44,7 @@ namespace TDS_Server.Manager.Utility
             List<Lobbies> lobbies = await dbcontext.Lobbies
                 .Include(l => l.LobbyRewards)
                 .Include(l => l.LobbyRoundSettings)
+                .Include(l => l.LobbyMapSettings)
                 .Include(l => l.Teams)
                 .Include(l => l.LobbyWeapons)
                 .Include(l => l.LobbyMaps)
@@ -145,9 +146,14 @@ namespace TDS_Server.Manager.Utility
                     IsOfficial = false,
                     IsTemporary = true,
                     LobbyRoundSettings = new LobbyRoundSettings
-                        { RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
-                          BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound
-                        },
+                    { 
+                        RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
+                        BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound
+                    },
+                    LobbyMapSettings = new LobbyMapSettings
+                    {
+                        MapLimitType = EMapLimitType.Block
+                    },
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyWeapons = new HashSet<LobbyWeapons>
                     {

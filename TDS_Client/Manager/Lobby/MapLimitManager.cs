@@ -1,5 +1,7 @@
 ﻿using TDS_Client.Instance.Lobby;
+using TDS_Client.Manager.Utility;
 using TDS_Common.Dto.Map;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -10,7 +12,7 @@ namespace TDS_Client.Manager.Lobby
         public static void Load(Position4DDto[] edges)
         {
             currentMapLimit?.Stop();
-            currentMapLimit = new MapLimit(edges);
+            currentMapLimit = new MapLimit(edges, Settings.MapLimitType);
         }
 
         public static void Start()

@@ -20,21 +20,18 @@ namespace TDS_Server.Instance.Player
 {
     internal class TDSPlayer
     {
-        public TDSNewContext DbContext { get; private set; }
+        public TDSNewContext DbContext { get; set; }
 
         public Players? Entity
         {
             get => _entity;
             set
             {
-                if (_entity != null)
-                    DbContext.Entry(_entity).State = EntityState.Detached;
                 _entity = value;
                 if (_entity == null)
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
-                DbContext.Attach(value);
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
         }
@@ -47,10 +44,10 @@ namespace TDS_Server.Instance.Player
             get => _currentLobbyStats;
             set
             {
-                if (_currentLobbyStats != null)
+                if (_currentLobbyStats != null && !_dbDisposed)
                     DbContext.Entry(_currentLobbyStats).State = EntityState.Detached;
                 _currentLobbyStats = value;
-                if (value != null)
+                if (value != null && !_dbDisposed)
                     DbContext.Attach(_currentLobbyStats);
             }
         }
@@ -213,6 +210,7 @@ namespace TDS_Server.Instance.Player
         private PlayerLobbyStats? _currentLobbyStats;
         private short _killingSpree;
         private short _shortTimeKillingSpree;
+        private bool _dbDisposed;
 
         private SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
 
@@ -323,6 +321,8 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return;
+            if (_dbDisposed)
+                return;
 
             _lastSaveTick = Environment.TickCount;
             await _semaphoreSlime.WaitAsync();
@@ -347,6 +347,23 @@ namespace TDS_Server.Instance.Player
                 return;
 
             await SaveData();
+        }
+
+        public void Logout()
+        {
+            if (_dbDisposed)
+                return;
+            _dbDisposed = true;
+            DbContext.Dispose();
+        }
+
+        public void CheckDbContext()
+        {
+            if (_dbDisposed)
+            {
+                DbContext = new TDSNewContext();
+                _dbDisposed = false;
+            }
         }
     }
 }

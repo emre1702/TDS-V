@@ -48,6 +48,7 @@ namespace TDS_Server.Manager.Player
             CustomEventManager.SetPlayerLoggedOut(player);
 
             await player.SaveData();
+            player.Logout();
 
             LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, client.Name));
         }

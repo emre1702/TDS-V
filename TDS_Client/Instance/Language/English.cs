@@ -7,7 +7,9 @@ namespace TDS_Client.Instance.Language
     {
         public virtual string DEFUSING => "Defusing ...";
         public virtual string PLANTING => "Planting ...";
-        public virtual string OUTSIDE_MAP_LIMIT => "You are outside of the map!\nThere are {1} seconds left to return to the map.";
+        public virtual string OUTSIDE_MAP_LIMIT => "You are outside of the map!\nThere are {0} seconds left to return to the map.";
+        public virtual string OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME => "You're off the map!\nIf you don't go back, you will die in {0} seconds.";
+        public virtual string OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME => "You're off the map!\nIf you do not go back, you will be teleported back in {0} seconds.";
 
         public virtual string SCOREBOARD_NAME => "Name";
         public virtual string SCOREBOARD_PLAYTIME => "Playtime";
