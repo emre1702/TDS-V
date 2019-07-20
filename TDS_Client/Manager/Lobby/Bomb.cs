@@ -136,7 +136,7 @@ namespace TDS_Client.Manager.Lobby
             _plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = EPlantDefuseStatus.Planting;
             _progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
-                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center, frontPriority: 900);
            ulong plantTime = (ulong) Settings.GetPlantOrDefuseTime(_playerStatus);
             _progressRect.SetAutomatic(plantTime);
             EventsSender.Send(DToServerEvent.StartPlanting);
@@ -149,7 +149,7 @@ namespace TDS_Client.Manager.Lobby
             _plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = EPlantDefuseStatus.Defusing;
             _progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
-                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+                alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center, frontPriority: 900);
             ulong defuseTime = (ulong) Settings.GetPlantOrDefuseTime(_playerStatus);
             _progressRect.SetAutomatic(defuseTime);
             EventsSender.Send(DToServerEvent.StartDefusing);
