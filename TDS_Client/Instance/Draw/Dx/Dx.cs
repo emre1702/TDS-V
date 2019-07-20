@@ -13,15 +13,18 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public static int ResX;
         public static int ResY;
+        public int FrontPriority;
 
         private readonly static List<Dx> _dxDraws = new List<Dx>();
 
         protected readonly List<Dx> Children = new List<Dx>();
 
-        public Dx(bool activated = true)
+        public Dx(int frontPriority = 0, bool activated = true)
         {
             Activated = activated;
+            FrontPriority = frontPriority;
             _dxDraws.Add(this);
+            _dxDraws.Sort((a, b) => a.FrontPriority.CompareTo(b.FrontPriority));
         }
 
         ~Dx() => Dispose(false);

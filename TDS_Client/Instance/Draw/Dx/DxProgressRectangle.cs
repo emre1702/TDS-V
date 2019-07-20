@@ -33,7 +33,8 @@ namespace TDS_Client.Instance.Draw.Dx
         public DxProgressRectangle(string text, float x, float y, float width, float height,
             Color textColor, Color backColor, Color progressColor,
             float textScale = 1.0f, Font textFont = Font.ChaletLondon, int frontRectOffsetAbsoluteX = 3, int frontRectOffsetAbsoluteY = 3, bool filling = true,
-            UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true) : base()
+            UIResText.Alignment alignmentX = UIResText.Alignment.Centered, EAlignmentY alignmentY = EAlignmentY.Center, bool relativePos = true, int frontPriority = 0) 
+            : base(frontPriority: frontPriority)
         {
             this._width = width;
             this._filling = filling;
@@ -42,15 +43,15 @@ namespace TDS_Client.Instance.Draw.Dx
             float textX = GetTextX(x, width, alignmentX);
             float textY = GetTextY(y, height, alignmentY);
 
-            this._text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true);
+            this._text = new DxText(text, textX, textY, textScale, textColor, textFont, UIResText.Alignment.Centered, EAlignmentY.Center, relativePos, false, true, frontPriority: frontPriority + 2);
 
             float frontRectX = GetFrontRectX(x, width, alignmentX, relativePos) + frontRectOffsetAbsoluteX;
             float frontRectY = GetAbsoluteY(y, relativePos);
             float frontRectWidth = GetAbsoluteX(width, relativePos) - frontRectOffsetAbsoluteX * 2;
             float frontRectHeight = GetAbsoluteY(height, relativePos) - frontRectOffsetAbsoluteY * 2;
 
-            _backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos);
-            _frontRect = new DxRectangle(frontRectX, frontRectY, frontRectWidth, frontRectHeight, progressColor, UIResText.Alignment.Left, alignmentY, false);
+            _backRect = new DxRectangle(x, y, width, height, backColor, alignmentX, alignmentY, relativePos, frontPriority: frontPriority);
+            _frontRect = new DxRectangle(frontRectX, frontRectY, frontRectWidth, frontRectHeight, progressColor, UIResText.Alignment.Left, alignmentY, false, frontPriority: frontPriority + 1);
 
             Children.Add(_backRect);
             Children.Add(_frontRect);

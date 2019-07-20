@@ -11,7 +11,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         public bool RelativePos;
         public bool RelativeWidth;
 
-        public DxGridColumn(float width, DxGrid grid, bool relativePos = true, bool relativeWidth = true) : base(false)
+        public DxGridColumn(float width, DxGrid grid, bool relativePos = true, bool relativeWidth = true, int frontPriority = 0) : base(frontPriority, false)
         {
             Width = relativeWidth ? width * grid.Width : width;
             RelativePos = relativePos;

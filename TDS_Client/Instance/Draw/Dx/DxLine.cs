@@ -19,7 +19,7 @@ namespace TDS_Client.Instance.Draw.Dx
         private bool relative;
         //private bool is3D;
 
-        public DxLine(float startX, float startY, float? startZ, float endX, float endY, float? endZ, Color color, bool relative = true) : base()
+        public DxLine(float startX, float startY, float? startZ, float endX, float endY, float? endZ, Color color, bool relative = true, int frontPriority = 0) : base(frontPriority: frontPriority)
         {
             if (startZ.HasValue && endZ.HasValue)
             {

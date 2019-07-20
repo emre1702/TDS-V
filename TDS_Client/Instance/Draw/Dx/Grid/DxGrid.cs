@@ -25,7 +25,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         private int maxRows;
 
         public DxGrid(float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
-            UIResText.Alignment alignment = UIResText.Alignment.Centered, int maxRows = 25) : base()
+            UIResText.Alignment alignment = UIResText.Alignment.Centered, int maxRows = 25, int frontPriority = 0) : base(frontPriority)
         {
             X = x;
             Y = y;
@@ -59,24 +59,22 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             }
         }
 
-        public void SetHeader(DxGridRow row)
+        public void SetHeader(DxGridRow row, bool setPriority = true)
         {
             Header = row;
             row.Grid = this;
+            if (setPriority)
+                row.FrontPriority = FrontPriority + 1;
             Children.Add(row);
         }
 
-        public void AddRow(DxGridRow row)
+        public void AddRow(DxGridRow row, bool setPriority = true)
         {
             _rows.Add(row);
             row.Grid = this;
+            if (setPriority)
+                row.FrontPriority = FrontPriority + 1;
             Children.Add(row);
-        }
-
-        public void AddCell(DxGridCell cell)
-        {
-            cell.Row.AddCell(cell);
-            Children.Add(cell);
         }
 
         public void ClearRows()

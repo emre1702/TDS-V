@@ -30,7 +30,8 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             }
         }
 
-        public DxGridCell(string text, DxGridRow row, DxGridColumn column, Color? backColor = null, Color? textColor = null, float? scale = null, Font? font = null, UIResText.Alignment? alignment = null) : base(false)
+        public DxGridCell(string text, DxGridRow row, DxGridColumn column, Color? backColor = null, Color? textColor = null, float? scale = null, Font? font = null, 
+            UIResText.Alignment? alignment = null, int frontPriority = 0) : base(frontPriority, false)
         {
             this.text = text;
             this.Row = row;

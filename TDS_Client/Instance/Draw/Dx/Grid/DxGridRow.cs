@@ -28,7 +28,8 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
 
         public bool UseColorForWholeRow = true;
 
-        public DxGridRow(DxGrid grid, float? height, Color backColor, Color? textColor = null, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool isHeader = false, bool relative = true) : base(false)
+        public DxGridRow(DxGrid grid, float? height, Color backColor, Color? textColor = null, string text = null, float scale = 0.4f, Font font = Font.ChaletLondon, 
+            UIResText.Alignment textAlignment = UIResText.Alignment.Left, bool isHeader = false, bool relative = true, int frontPriority = 0) : base(frontPriority, false)
         {
             this.Grid = grid;
             this.height = height;
@@ -85,9 +86,11 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             return Y + Height / 2;
         }
 
-        public void AddCell(DxGridCell cell)
+        public void AddCell(DxGridCell cell, bool setPriority = true)
         {
             Cells.Add(cell);
+            if (setPriority)
+                cell.FrontPriority = FrontPriority + 1;
             Color color = cell.BackColor;
             if (color != null && color != BackColor)
             {

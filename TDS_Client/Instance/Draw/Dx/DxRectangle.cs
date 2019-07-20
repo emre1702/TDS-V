@@ -15,7 +15,8 @@ namespace TDS_Client.Instance.Draw.Dx
         private readonly Color color;
         private UIResText.Alignment alignmentX;
 
-        public DxRectangle(float x, float y, float width, float height, Color color, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relativePos = true) : base()
+        public DxRectangle(float x, float y, float width, float height, Color color, UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, 
+            bool relativePos = true, int frontPriority = 0) : base(frontPriority: frontPriority)
         {
             xpos = GetRelativeX(x, relativePos);
             ypos = GetRelativeY(y, relativePos);
