@@ -86,17 +86,6 @@ namespace TDS_Client.Manager.Lobby
             BombOnHand = false;
         }
 
-        public static void UpdatePlantDefuseProgress()
-        {
-            if (_playerStatus == EPlantDefuseStatus.None)
-                return;
-            if (_progressRect == null)
-                return;
-            ulong mswasted = TimerManager.ElapsedTicks - _plantDefuseStartTick;
-            float mstoplantordefuse = Settings.GetPlantOrDefuseTime(_playerStatus);
-            _progressRect.Progress = Math.Min(mswasted / mstoplantordefuse, 1);
-        }
-
         private static void CheckPlantDefuseStart()
         {
             if (!Pad.IsDisabledControlPressed(0, (int)Control.Attack))
@@ -148,6 +137,8 @@ namespace TDS_Client.Manager.Lobby
             _playerStatus = EPlantDefuseStatus.Planting;
             _progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+           ulong plantTime = (ulong) Settings.GetPlantOrDefuseTime(_playerStatus);
+            _progressRect.SetAutomatic(plantTime);
             EventsSender.Send(DToServerEvent.StartPlanting);
         }
 
@@ -159,6 +150,8 @@ namespace TDS_Client.Manager.Lobby
             _playerStatus = EPlantDefuseStatus.Defusing;
             _progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+            ulong defuseTime = (ulong) Settings.GetPlantOrDefuseTime(_playerStatus);
+            _progressRect.SetAutomatic(defuseTime);
             EventsSender.Send(DToServerEvent.StartDefusing);
         }
 

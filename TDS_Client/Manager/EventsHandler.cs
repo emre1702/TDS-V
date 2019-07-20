@@ -64,7 +64,6 @@ namespace TDS_Client.Manager
             {
                 if (Bomb.CheckPlantDefuseOnTick)
                     Bomb.CheckPlantDefuse();
-                Bomb.UpdatePlantDefuseProgress();
             }
             if (RoundInfo.RefreshOnTick)
                 RoundInfo.RefreshTime();
