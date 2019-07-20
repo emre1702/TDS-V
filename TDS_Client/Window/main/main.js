@@ -100,7 +100,6 @@ function showBloodscreen() {
         });
     }
     bloodscreentimeout = setTimeout(function () {
-        bloodscreen.css("display", "none");
         bloodscreentimeout = null;
         //bloodscreen.removeClass("bloodscreen_show").removeClass("bloodscreen_hide_transition");
     }, 2500);
