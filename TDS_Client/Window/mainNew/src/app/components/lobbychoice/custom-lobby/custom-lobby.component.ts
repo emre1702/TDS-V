@@ -1,22 +1,21 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
-import { LobbySettingRow } from './models/lobby-setting-row';
-import { LobbySettingType } from './enums/lobby-setting-type';
-import { LobbySettingPanel } from './models/lobby-setting-panel';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { LobbySettingType } from '../enums/lobby-setting-type';
+import { LobbySettingPanel } from '../models/lobby-setting-panel';
 import { FormControl, Validators } from '@angular/forms';
 import { SettingsService } from 'src/app/services/settings.service';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
 import { DFromClientEvent } from 'src/app/enums/dfromclientevent.enum';
-import { CustomLobbyData } from './models/custom-lobby-data';
+import { CustomLobbyData } from '../models/custom-lobby-data';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { CustomLobbyPasswordDialog } from './dialog/custom-lobby-password-dialog';
-import { LobbyMapLimitType } from './enums/lobby-map-limit-type';
+import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialog';
+import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 
 @Component({
-  selector: 'app-custom-lobby-menu',
-  templateUrl: './custom-lobby-menu.component.html',
-  styleUrls: ['./custom-lobby-menu.component.scss'],
+  selector: 'app-custom-lobby',
+  templateUrl: './custom-lobby.component.html',
+  styleUrls: ['./custom-lobby.component.scss'],
   animations: [
     trigger('lobbyShowHideAnimation', [
       transition('* => *', [
@@ -50,6 +49,7 @@ import { LobbyMapLimitType } from './enums/lobby-map-limit-type';
     )
   ],
 })
+
 export class CustomLobbyMenuComponent {
   settingPanel: LobbySettingPanel[] = [
     {

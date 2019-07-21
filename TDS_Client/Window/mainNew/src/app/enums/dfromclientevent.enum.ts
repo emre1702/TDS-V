@@ -19,4 +19,6 @@ export enum DFromClientEvent {
   ToggleLobbyChoice = "ToggleLobbyChoice_Client",
   ToggleMapCreator = "ToggleMapCreator_Client",
   ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
+
+  ShowTeamChoice = "ShowTeamChoice_Client"
 }

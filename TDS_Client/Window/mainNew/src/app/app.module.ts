@@ -36,9 +36,10 @@ import { MapCreatorComponent } from './components/mapcreator/map-creator.compone
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
 import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CustomLobbyMenuComponent } from './components/lobbycreator/custom-lobby-menu.component';
-import { CustomLobbyPasswordDialog } from './components/lobbycreator/dialog/custom-lobby-password-dialog';
-import { LobbyChoiceComponent } from './components/lobbycreator/lobby-choice/lobby-choice.component';
+import { CustomLobbyMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby.component';
+import { CustomLobbyPasswordDialog } from './components/lobbychoice/dialog/custom-lobby-password-dialog';
+import { LobbyChoiceComponent } from './components/lobbychoice/lobby-choice/lobby-choice.component';
+import { TeamChoiceComponent } from './team-choice/team-choice.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { LobbyChoiceComponent } from './components/lobbycreator/lobby-choice/lob
     LanguagePipe,
     LoadMapDialog,
     CustomLobbyPasswordDialog,
-    LobbyChoiceComponent
+    LobbyChoiceComponent,
+    TeamChoiceComponent
   ],
   imports: [
     ReactiveFormsModule,

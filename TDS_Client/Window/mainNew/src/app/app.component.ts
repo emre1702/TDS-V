@@ -10,8 +10,6 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'TDS-V Angular';
-
   showMapCreator = false;
   showFreeroam = false;
   showLobbyChoice = true;
