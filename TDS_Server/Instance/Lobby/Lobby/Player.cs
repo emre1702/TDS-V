@@ -79,7 +79,7 @@ namespace TDS_Server.Instance.Lobby
             if (player.Client.Exists)
             {
                 Workaround.FreezePlayer(player.Client, true);
-                Workaround.UnspectatePlayer(player.Client);
+                Workaround.StopSpectate(player.Client);
                 player.Client.Transparency = 255;
             }
             if (DeathSpawnTimer.ContainsKey(player))

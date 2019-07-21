@@ -81,6 +81,7 @@
         public const string FreezePlayerWorkaround = "FreezePlayerWorkaround_Server";
         public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";
         public const string SetPlayerTeamWorkaround = "SetPlayerTeamWorkaround_Server";
-        public const string UnspectatePlayerWorkaround = "UnspectatePlayerWorkaround_Server";
+        public const string SpectateWorkaround = "SpectateWorkaround_Server";
+        public const string StopSpectateWorkaround = "StopSpectateWorkaround_Server";
     }
 }

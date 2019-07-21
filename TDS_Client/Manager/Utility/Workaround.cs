@@ -18,7 +18,8 @@ namespace TDS_Client.Manager.Utility
             Events.Add(DToClientEvent.SetEntityInvincible, SetEntityInvincibleMethod);
             Events.Add(DToClientEvent.SetPlayerInvincible, SetPlayerInvincibleMethod);
             Events.Add(DToClientEvent.SetPlayerTeamWorkaround, SetPlayerTeamWorkaroundMethod);
-            Events.Add(DToClientEvent.UnspectatePlayerWorkaround, UnspectatePlayerWorkaroundMethod);
+            Events.Add(DToClientEvent.SpectateWorkaround,SpectateWorkaroundMethod);
+            Events.Add(DToClientEvent.StopSpectateWorkaround, StopSpectateWorkaroundMethod);
         }
 
         private static void AttachEntityToEntityWorkaroundMethod(object[] args)
@@ -59,7 +60,13 @@ namespace TDS_Client.Manager.Utility
             RAGE.Game.Player.SetPlayerTeam(team);
         }
 
-        private static void UnspectatePlayerWorkaroundMethod(object[] args)
+        private static void SpectateWorkaroundMethod(object[] args)
+        {
+            Player target = ClientUtils.GetPlayerByHandleValue((ushort)args[0]);
+            //todo Add spectatePlayer workaround (need a spectate system for this)
+        }
+
+        private static void StopSpectateWorkaroundMethod(object[] args)
         {
             //todo Add unspectatePlayer workaround (need a spectate system for this)
         }

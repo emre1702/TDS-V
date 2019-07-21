@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.Lobby
 
         protected void RemoveAsSpectator(TDSPlayer character)
         {
-            Workaround.UnspectatePlayer(character.Client);
+            Workaround.StopSpectate(character.Client);
             if (character.Spectates == null)
                 return;
             TDSPlayer spectating = character.Spectates;
@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer == null)
             {
-                Workaround.UnspectatePlayer(character.Client);
+                Workaround.StopSpectate(character.Client);
             }
             else
             {
@@ -70,7 +70,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer == null)
             {
-                Workaround.UnspectatePlayer(character.Client);
+                Workaround.StopSpectate(character.Client);
             }
             else
             {
