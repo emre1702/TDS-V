@@ -128,7 +128,7 @@ namespace TDS_Server.Instance.Language
             "#n#For announcements, support, bug-reports etc.",
             "#n#please visit our Discord-server:",
             "#n#discord.gg/ntVnGFt",
-            "#n#You can get/hide the cursor with END.",
+            "#n#You can get/hide the cursor with #r#END#w#.",
             "#n#Have fun on TDS#w#!"
         };
 

@@ -129,7 +129,7 @@ namespace TDS_Server.Instance.Language
             "#n#Für Ankündigungen, Support, Bug-Meldung usw.",
             "#n#bitte unseren Discord-Server nutzen:",
             "#n#discord.gg/ntVnGFt",
-            "#n#Du kannst den Cursor mit ENDE umschalten.",
+            "#n#Du kannst den Cursor mit #r#ENDE#w# umschalten.",
             "#n#Viel Spaß wünscht das #b#TDS-Team#w#!"
         };
 
