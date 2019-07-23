@@ -118,10 +118,6 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, DToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
         }
 
-        public static void 
-
-
-
 
         private static void PlayerJoinedLobby(Lobby lobby, TDSPlayer player)
         {
