@@ -120,8 +120,7 @@ namespace TDS_Server_DB.Entity
                 optionsBuilder
                     //.UseLoggerFactory(loggerFactory)
                     //.EnableSensitiveDataLogging()
-                    //.UseNpgsql(_connectionString);
-                    .UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+                    .UseNpgsql(_connectionString);
             }
         }
 
