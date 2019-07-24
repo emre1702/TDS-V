@@ -28,6 +28,7 @@ namespace TDS_Server.Manager.Utility
                 SettingsManager.LoadLocal();
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
+                dbcontext.Database.Migrate();
 
                 var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync();
                 foreach (var stat in playerStats)
