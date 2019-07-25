@@ -16,11 +16,11 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 SEPERATOR='==============================='
 
-cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Release/netcoreapp3.0
+cd C:/RAGEMP/server-files/bridge/resources/tds/netcoreapp3.0
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.dll" --exclude="TDS_Server.dll" --include="*/" --include='TDS_*.dll' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.*" --exclude="TDS_Server.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
@@ -28,7 +28,7 @@ rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing 
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll rage@51.38.99.64:/home/rage/RAGE/bridge/resources/tds/netcoreapp3.0/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll ./TDS_Server.pdb rage@51.38.99.64:/home/rage/RAGE/bridge/resources/tds/netcoreapp3.0/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
