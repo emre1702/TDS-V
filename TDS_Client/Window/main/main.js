@@ -1,4 +1,5 @@
 ﻿let bloodscreen = $("#bloodscreen");
+let bloodscreenDom;
 let killmessagesBox = $("#kill_messages_box");
 let language = 9;
 let ordersDiv = $("#orders");
@@ -89,18 +90,21 @@ function stopBombTickSound() {
 function showBloodscreen() {
     if (bloodscreentimeout) {
         clearTimeout(bloodscreentimeout);
-        let dom = bloodscreen.get()[0];
-        dom.style.animation = "none";
-        dom.offsetHeight;
-        dom.style.animation = "BloodscreenAnim 2.5s";
+
+        bloodscreenDom.style.animation = "none";
+        bloodscreenDom.offsetHeight;
+        bloodscreenDom.style.animation = "BloodscreenAnim 2.5s";
     } else {
         bloodscreen.css({
-            "display": "block",
-            "animation": "BloodscreenAnim 2.5s"
+            "animation": "BloodscreenAnim 2.5s",
+            "animation-fill-mode": "forwards"
         });
     }
     bloodscreentimeout = setTimeout(function () {
         bloodscreentimeout = null;
+        bloodscreen.css({
+            "animation": ""
+        });
         //bloodscreen.removeClass("bloodscreen_show").removeClass("bloodscreen_hide_transition");
     }, 2500);
 }
@@ -145,3 +149,7 @@ function toggleOrders(bool) {
     else
         ordersDiv.hide(1000);
 }
+
+$(document).ready(() => {
+    bloodscreenDom = bloodscreen.get()[0];
+});
