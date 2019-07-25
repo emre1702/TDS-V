@@ -39,7 +39,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomLobbyMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby.component';
 import { CustomLobbyPasswordDialog } from './components/lobbychoice/dialog/custom-lobby-password-dialog';
 import { LobbyChoiceComponent } from './components/lobbychoice/lobby-choice/lobby-choice.component';
-import { TeamChoiceComponent } from './team-choice/team-choice.component';
+// import { TeamChoiceComponent } from './components/team-choice/team-choice.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { TeamChoiceComponent } from './team-choice/team-choice.component';
     LoadMapDialog,
     CustomLobbyPasswordDialog,
     LobbyChoiceComponent,
-    TeamChoiceComponent
+    // TeamChoiceComponent
   ],
   imports: [
     ReactiveFormsModule,
