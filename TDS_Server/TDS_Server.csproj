@@ -17,6 +17,10 @@
     <DefineConstants></DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>C:\RAGEMP\server-files\bridge\resources\tds\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="client\registerlogin\**" />
     <Compile Remove="server\**" />
@@ -27,19 +31,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NetCore.App" Version="3.0.0-preview6-27804-01" />
+    <PackageReference Include="Microsoft.NetCore.App" Version="3.0.0-preview7-27912-14" />
     <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="Humanizer.Core" Version="2.6.2" />
     <PackageReference Include="Humanizer.Core.de" Version="2.6.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview5.19227.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview7.19362.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-preview5.19227.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-preview7.19362.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="morelinq" Version="3.1.1" />
+    <PackageReference Include="morelinq" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
