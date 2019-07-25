@@ -10,9 +10,9 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  showMapCreator = false;
+  showMapCreator = true;
   showFreeroam = false;
-  showLobbyChoice = true;
+  showLobbyChoice = false;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {

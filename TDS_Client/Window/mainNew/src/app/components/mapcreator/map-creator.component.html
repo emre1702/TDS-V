@@ -8,12 +8,12 @@
   <div id="container-content">
     <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
       <mat-form-field color="accent" hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}" class="mat-form-field-with-hint">
-        <input #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}" [formControl]="nameControl" type="text" [(ngModel)]="data.Name"/>
+        <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}" [formControl]="nameControl" type="text" [(ngModel)]="data.Name"/>
         <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}</mat-error>
         <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>
       </mat-form-field>
       <div class="two-per-row-container" color="accent">
-        <mat-select class="two-per-row-div mat-select-without-field mat-raised-button" required [(ngModel)]="data.Type" (selectionChange)="onMapTypeChange($event)">
+        <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required [(ngModel)]="data.Type" (selectionChange)="onMapTypeChange($event)">
           <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
             {{ type | language: settings.Lang }}
           </mat-option>
@@ -64,10 +64,10 @@
 
     <div id="mapsettings-content" class="two-per-row-container" *ngIf="currentNav == mapCreatorNav.MapSettings">
       <mat-form-field class="two-per-row-div" color="accent">
-        <input matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MinPlayers"/>
+        <input name="minPlayer" matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MinPlayers"/>
       </mat-form-field>
       <mat-form-field class="two-per-row-div" color="accent">
-        <input matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MaxPlayers"/>
+        <input name="maxPlayers" matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MaxPlayers"/>
       </mat-form-field>
     </div>
 
@@ -83,7 +83,7 @@
       <div id="team-spawns-top-row">
         <mat-form-field color="accent">
           <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
-          <mat-select [(ngModel)]="editingTeamNumber" (selectionChange)="onEditingTeamNumberChange($event)">
+          <mat-select name="editingTeamNumber" [(ngModel)]="editingTeamNumber" (selectionChange)="onEditingTeamNumberChange($event)">
             <mat-option *ngFor="let spawns of data.TeamSpawns; let i = index" [value]="i">
               {{ 'Team ' + (i+1) }}
             </mat-option>
@@ -189,13 +189,13 @@
       </div>
       <div id="map-center-positions-container">
         <mat-form-field color="accent">
-          <input matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.X"/>
+          <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.X"/>
         </mat-form-field>
         <mat-form-field color="accent">
-          <input matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Y"/>
+          <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Y"/>
         </mat-form-field>
         <mat-form-field color="accent">
-          <input matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Z"/>
+          <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Z"/>
         </mat-form-field>
       </div>
       <div class="positions-bottom-row">

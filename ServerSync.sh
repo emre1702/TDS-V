@@ -20,34 +20,44 @@ cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Release/netcoreap
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --timeout=60 --exclude="TDS_Client.dll" --exclude="TDS_Server.dll" --include="*/" --include='TDS_*.dll' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.dll" --exclude="TDS_Server.dll" --include="*/" --include='TDS_*.dll' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --timeout=60 --ignore-existing --exclude='TDS_*' --include='*.dll' --include='*.so' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing --exclude='TDS_*' --include='*.dll' --include='*.so' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/bridge/runtime/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll rage@51.38.99.64:/home/rage/RAGE/bridge/resources/tds/netcoreapp3.0/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll rage@51.38.99.64:/home/rage/RAGE/bridge/resources/tds/netcoreapp3.0/
+
+echo -e "${SEPERATOR}\n"
+echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/JavaScript
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/packages/tds/
+
+echo -e "${SEPERATOR}\n"
+echo -e "Update ${LIGHTBLUE}clientside JS ${NOCOLOR}..."
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/JavaScript
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --include='*.js' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update ${LIGHTBLUE}clientside C# ${NOCOLOR}..."
 
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Common
-rsync -hmrtvzP --timeout=60 --exclude="bin" --exclude="obj" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="bin" --exclude="obj" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client/
 
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client
-rsync -hmrtvzP --timeout=60 --exclude="bin" --exclude="obj" --exclude="Window" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="bin" --exclude="obj" --exclude="Window" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client/
 
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update clientside ${LIGHTBLUE}plain HTML ${NOCOLOR}CEF ..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window
-rsync -hmrtvzP --timeout=60 --exclude=".vscode" --exclude="mainNew" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude=".vscode" --exclude="mainNew" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update clientside ${LIGHTBLUE}Angular ${NOCOLOR}CEF ..."
-cd mainNew/dist/mainNew
-rsync -hmrtvzP --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window/mainNew
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/mainNew/dist/mainNew
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window/mainNew/
 
 cmd /k
