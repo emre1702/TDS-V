@@ -20,7 +20,16 @@ namespace TDS_Server.Instance.Player
 {
     internal class TDSPlayer
     {
-        public TDSNewContext DbContext { get; set; }
+        public TDSNewContext DbContext 
+        { 
+            get
+            {
+                if (_dbContext == null)
+                    _dbContext = new TDSNewContext();
+                return _dbContext;
+            } 
+            set => _dbContext = value;
+        }
 
         public Players? Entity
         {
@@ -44,10 +53,10 @@ namespace TDS_Server.Instance.Player
             get => _currentLobbyStats;
             set
             {
-                if (_currentLobbyStats != null && !_dbDisposed)
+                if (_currentLobbyStats != null)
                     DbContext.Entry(_currentLobbyStats).State = EntityState.Detached;
                 _currentLobbyStats = value;
-                if (value != null && !_dbDisposed)
+                if (value != null)
                     DbContext.Attach(_currentLobbyStats);
             }
         }
@@ -210,14 +219,13 @@ namespace TDS_Server.Instance.Player
         private PlayerLobbyStats? _currentLobbyStats;
         private short _killingSpree;
         private short _shortTimeKillingSpree;
-        private bool _dbDisposed;
+        private TDSNewContext? _dbContext;
 
         private SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
 
         public TDSPlayer(Client client)
         {
             Client = client;
-            DbContext = new TDSNewContext();
         }
 
         #region Money
@@ -321,8 +329,6 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null || !Entity.PlayerStats.LoggedIn)
                 return;
-            if (_dbDisposed)
-                return;
 
             _lastSaveTick = Environment.TickCount;
             await _semaphoreSlime.WaitAsync();
@@ -351,19 +357,13 @@ namespace TDS_Server.Instance.Player
 
         public void Logout()
         {
-            if (_dbDisposed)
-                return;
-            _dbDisposed = true;
             DbContext.Dispose();
+            _dbContext = null;
         }
 
-        public void CheckDbContext()
+        public void InitDbContext()
         {
-            if (_dbDisposed)
-            {
-                DbContext = new TDSNewContext();
-                _dbDisposed = false;
-            }
+            _dbContext = new TDSNewContext();
         }
     }
 }

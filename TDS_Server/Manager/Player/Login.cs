@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Player
             while (!TDSNewContext.IsConfigured)
                 await Task.Delay(1000);
             TDSPlayer character = player.GetChar();
-            character.CheckDbContext();
+            character.InitDbContext();
 
             character.Entity = await character.DbContext.Players
                 .Include(p => p.PlayerStats)
