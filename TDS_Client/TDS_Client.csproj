@@ -5,10 +5,19 @@
     <Platforms>AnyCPU;x64</Platforms>
 	<LangVersion>7.3</LangVersion>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<Configurations>Debug;Release;Server</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DefineConstants>IS_CLIENTSIDE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Server|x64'">
+    <DefineConstants>IS_CLIENTSIDE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Server|AnyCPU'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>

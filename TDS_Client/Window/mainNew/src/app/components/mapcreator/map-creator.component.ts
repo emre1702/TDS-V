@@ -137,11 +137,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   sendDataToClient() {
     this.fixData();
-    alert(this.data.Name);
-    alert(this.data.MinPlayers);
     this.changeDetector.detectChanges();
-    alert(this.data.Name);
-    alert(this.data.MinPlayers);
     this.rageConnector.callCallback(DToClientEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
       const errName = MapCreateError[err];
       this.snackBar.open(this.settings.Lang[errName], "OK", {
