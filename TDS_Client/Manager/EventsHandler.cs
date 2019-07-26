@@ -153,7 +153,6 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
-            Add(DToClientEvent.SyncCurrentMapName, OnSyncCurrentMapNameMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
         }
@@ -275,7 +274,7 @@ namespace TDS_Client.Manager
         {
             Cam.DoScreenFadeIn(50);
             LobbyCam.StopCountdown();
-            Countdown.End();
+            Countdown.End(args.Length < 2 || (ulong)args[1] != 0);
             Round.IsSpectator = (bool)args[0];
             Round.InFight = !Round.IsSpectator;
             RoundInfo.Start(args.Length >= 2 ? (ulong)args[1] : 0);
@@ -440,11 +439,6 @@ namespace TDS_Client.Manager
             Angular.SyncAllCustomLobbies(json);
         }
 
-        private void OnSyncCurrentMapNameMethod(object[] args)
-        {
-            MapInfo.SetMapInfo((string)args[0]);
-        }
-
         private void OnAddCustomLobbyMethod(object[] args)
         {
             string json = (string)args[0];
@@ -606,8 +600,7 @@ namespace TDS_Client.Manager
 
         private void OnChooseArenaToJoinMethod(object[] args)
         {
-            bool isSpectator = (bool)args[0];
-            Choice.JoinArena(isSpectator);
+            Choice.JoinArena();
         }
 
         private void OnChooseMapCreatorToJoinMethod(object[] args)

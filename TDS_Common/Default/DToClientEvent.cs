@@ -67,7 +67,6 @@
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
-        public const string SyncCurrentMapName = "SyncCurrentMapName_Server";
         public const string AddCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";

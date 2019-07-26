@@ -47,20 +47,24 @@ namespace TDS_Client.Manager.Lobby
             PlaySound();
         }
 
-        public static void End()
+        public static void End(bool showGo = true)
         {
-            if (text == null)
-                text = new DxText("GO", 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
-            else
-            {
-                text.Text = "GO";
-                text.SetScale(2f);
-            }
-
-            countdownTimer?.Kill();
             currentCountdownTime = 0;
-            PlaySound();
-            countdownTimer = new TDSTimer(Stop, 2000, 1);
+            if (showGo)
+            {
+                countdownTimer?.Kill();
+                if (text == null)
+                    text = new DxText("GO", 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+                else
+                {
+                    text.Text = "GO";
+                    text.SetScale(2f);
+                }
+                PlaySound();
+                countdownTimer = new TDSTimer(Stop, 2000, 1);
+            }       
+            else 
+                Stop();
         }
 
         public static void Stop()
