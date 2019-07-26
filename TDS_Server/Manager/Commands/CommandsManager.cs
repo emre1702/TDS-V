@@ -91,6 +91,8 @@ namespace TDS_Server.Manager.Commands
             foreach (MethodInfo method in methods)
             {
                 var attribute = method.GetCustomAttribute<TDSCommand>();
+                if (attribute == null)
+                    continue;
                 string cmd = attribute.Command.ToLower();
                 if (!_commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
                     continue;
@@ -298,7 +300,7 @@ namespace TDS_Server.Manager.Commands
                 if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
                     NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_DOESNT_EXIST);
                 if (SettingsManager.ToChatOnNonExistentCommand)
-                    ChatManager.SendLobbyMessage(player, "/" + cmd + " " + string.Join(' ', args), false);
+                    ChatManager.SendLobbyMessage(player, "/" + cmd + (args != null ?  " " + string.Join(' ', args) : ""), false);
                 return false;
             }
             return true;

@@ -29,7 +29,7 @@ namespace TDS_Server.Manager.Utility
 
             foreach (var entry in await dbcontext.AdminLevelNames.ToListAsync())
             {
-                AdminLevels[entry.Level].Names[(ELanguage)entry.Language] = entry.Name;
+                AdminLevels[entry.Level].Names[entry.Language] = entry.Name;
             }
         }
 

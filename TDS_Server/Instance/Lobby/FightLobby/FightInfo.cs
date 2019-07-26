@@ -15,10 +15,10 @@ namespace TDS_Server.Instance.Lobby
             if (killer != null && player != killer)
             {
                 //Todo weaponname was empty, test it
-                string weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
+                string? weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
                 killstr = LangUtils.GetLangDictionary((lang) =>
                 {
-                    return lang.DEATH_KILLED_INFO.Formatted(killer != null ? killer.Client.Name : "-", player.Client.Name, weaponname);
+                    return lang.DEATH_KILLED_INFO.Formatted(killer != null ? killer.Client.Name : "-", player.Client.Name, weaponname ?? "?");
                 });
             }
             else
