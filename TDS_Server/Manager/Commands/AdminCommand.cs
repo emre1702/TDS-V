@@ -64,7 +64,7 @@ namespace TDS_Server.Manager.Commands
                 target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
             }
             target.CurrentLobby.RemovePlayer(target);
-            await LobbyManager.GetLobby(0).AddPlayer(target, 0);
+            await LobbyManager.MainMenu.AddPlayer(target, 0);
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 1)]
