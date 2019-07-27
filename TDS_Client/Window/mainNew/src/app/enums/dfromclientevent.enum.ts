@@ -20,5 +20,7 @@ export enum DFromClientEvent {
   ToggleMapCreator = "ToggleMapCreator_Client",
   ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
 
-  ShowTeamChoice = "ShowTeamChoice_Client"
+  SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server",
+  SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server",
+  ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server"
 }

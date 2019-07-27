@@ -11,6 +11,7 @@ using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
+using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 
@@ -18,24 +19,29 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class Arena
     {
-        public override async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
+        public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex = null)
         {
-            // Give null for teamindex so Lobby.AddPlayer doesn't put the player into a team
-            if (!await base.AddPlayer(character, teamindex == 0 ? teamindex : null))
+            if (!await base.AddPlayer(player, 0))
                 return false;
+            SpectateOtherAllTeams(player);
+            SendPlayerRoundInfoOnJoin(player);
 
-            character.CurrentRoundStats = new RoundStatsDto(character);
-            SpectateOtherSameTeam(character);
-
-            if (teamindex != 0)
-                AddPlayerAsPlayer(character, teamindex);
-
-            SendPlayerRoundInfoOnJoin(character);
-
-            string mapname = _currentMap == null ? "-" : _currentMap.Info.Name;
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.SyncCurrentMapName, mapname);
+            TeamChoiceMenuSync.AddPlayer(player, this);
 
             return true;
+        }
+
+        public void ChooseTeam(TDSPlayer player, int teamIndex)
+        {
+            player.CurrentRoundStats = new RoundStatsDto(player);
+
+            if (teamIndex != 0)
+            {
+                SpectateOtherSameTeam(player);
+                AddPlayerAsPlayer(player, teamIndex);
+            }
+                
+            TeamChoiceMenuSync.RemovePlayer(player);
         }
 
         public override void RemovePlayer(TDSPlayer player)
@@ -112,12 +118,10 @@ namespace TDS_Server.Instance.Lobby
             player.LastHitter = null;
         }
 
-        private void AddPlayerAsPlayer(TDSPlayer character, uint? teamindex)
+        private void AddPlayerAsPlayer(TDSPlayer character, int teamIndex)
         {
-            Team team = GetTeamWithFewestPlayer();  // Todo: Add "RandomTeams" Lobby setting and use teamindex instead of GetTeamWithFewestPlayer if it's true
-            character.Team = team;
-            team.TempPlayers.Add(character);
-            team.SyncAddedPlayer(character);
+            character.Team = LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
+            character.Team.SyncAddedPlayer(character);
 
             if (CurrentRoundStatus == ERoundStatus.Countdown)
             {

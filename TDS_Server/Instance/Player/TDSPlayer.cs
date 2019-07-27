@@ -9,9 +9,11 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.GangTeam;
+using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
+using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
@@ -71,6 +73,10 @@ namespace TDS_Server.Instance.Player
                     _team?.RemovePlayer(this);
                     value?.AddPlayer(this);
                     NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
+
+                    if (CurrentLobby != null && CurrentLobby is Arena)
+                        TeamChoiceMenuSync.PlayerChangedTeam(this, value, _team);
+
                     _team = value;
                 }
             }

@@ -63,13 +63,17 @@
         public const string SetEntityInvincible = "SetEntityInvincible_Server";
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
+        public const string SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
-        public const string AddCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
+        public const string SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server";
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";
+
+        public const string ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server";
 
         //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
 

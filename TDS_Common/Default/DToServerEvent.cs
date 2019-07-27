@@ -5,6 +5,7 @@
         public const string AddRatingToMap = "AddRatingToMap_Client";
 
         public const string ChatLoaded = "ChatLoaded_Client";
+        public const string ChooseTeam = "ChooseTeam_Browser";
         public const string CommandUsed = "CommandUsed_Client";
         public const string CreateCustomLobby = "CreateCustomLobby_Client";
 

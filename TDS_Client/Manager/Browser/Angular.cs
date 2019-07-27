@@ -8,6 +8,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using System.Globalization;
 using System;
+using TDS_Common.Default;
 
 namespace TDS_Client.Manager.Browser
 {
@@ -37,7 +38,10 @@ namespace TDS_Client.Manager.Browser
             foreach (var arg in args)
             {
                 if (arg is string)
-                    strBuilder.Append($", `{arg}`");
+                    if (arg != null)
+                        strBuilder.Append($", `{arg}`");
+                    else
+                        strBuilder.Append($", undefined");
                 else if (!arg.GetType().IsValueType)
                     strBuilder.Append($", `{JsonConvert.SerializeObject(arg)}`");
                 else if (arg is char)
@@ -198,6 +202,16 @@ namespace TDS_Client.Manager.Browser
         public static void LeaveCustomLobbyMenu()
         {
             Execute(DToBrowserEvent.LeaveCustomLobbyMenu);
+        }
+
+        public static void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
+        {
+            Execute(DToClientEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
+        }
+
+        public static void ToggleTeamChoiceMenu(bool boolean)
+        {
+            Execute(DToClientEvent.ToggleTeamChoiceMenu, boolean);
         }
     }
 

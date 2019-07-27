@@ -74,6 +74,7 @@ namespace TDS_Client.Manager.Utility
         public static int MapLimitTime => syncedLobbySettings.MapLimitTime ?? 0;
         public static bool InLobbyWithMaps => syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
+        public static bool MixTeamsAfterRound => syncedLobbySettings.MixTeamsAfterRound ?? false;
 
         public static void Load()
         {

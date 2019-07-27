@@ -14,9 +14,9 @@ namespace TDS_Client.Manager.Lobby
             //EventsSender.SendCooldown("joinMapCreatorLobby");
         }
 
-        public static void JoinArena(bool spectator)
+        public static void JoinArena()
         {
-            EventsSender.Send(DToServerEvent.JoinArena, spectator);
+            EventsSender.Send(DToServerEvent.JoinArena);
         }
 
         public static void JoinMapCreator()

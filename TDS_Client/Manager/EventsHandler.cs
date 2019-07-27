@@ -104,7 +104,6 @@ namespace TDS_Client.Manager
 
         private void AddToClientEvents()
         {
-            Add(DToClientEvent.AddCustomLobby, OnAddCustomLobbyMethod);
             Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
@@ -153,8 +152,11 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
+            Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
+            Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
+            Add(DToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
         }
 
         private void OnLoadOwnMapRatingsMethod(object[] args)
@@ -439,7 +441,7 @@ namespace TDS_Client.Manager
             Angular.SyncAllCustomLobbies(json);
         }
 
-        private void OnAddCustomLobbyMethod(object[] args)
+        private void OnSyncNewCustomLobbyMethod(object[] args)
         {
             string json = (string)args[0];
             Angular.AddCustomLobby(json);
@@ -536,6 +538,12 @@ namespace TDS_Client.Manager
             }
         }
 
+        private void OnSyncTeamChoiceMenuDataMethod(object[] args)
+        {
+            string teamsJson = (string) args[0];
+            Angular.SyncTeamChoiceMenuData(teamsJson, Settings.MixTeamsAfterRound);
+        }
+
         private void OnSyncTeamPlayersMethod(object[] args)
         {
             Team.ClearSameTeam();
@@ -548,6 +556,13 @@ namespace TDS_Client.Manager
             }
         }
 
+        private void OnToggleTeamChoiceMenuMethod(object[] args)
+        {
+            bool boolean = Convert.ToBoolean(args[0]);
+            CursorManager.Visible = boolean;
+            Angular.ToggleTeamChoiceMenu(boolean);
+        }
+
         #endregion From Server events
 
         #region From Browser events
@@ -558,6 +573,7 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
+            Add(DToServerEvent.ChooseTeam, OnChooseTeamMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
             Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
@@ -606,6 +622,12 @@ namespace TDS_Client.Manager
         private void OnChooseMapCreatorToJoinMethod(object[] args)
         {
             Choice.JoinMapCreator();
+        }
+
+        private void OnChooseTeamMethod(object[] args)
+        {
+            int index = Convert.ToInt32(args[0]);
+            EventsSender.Send(DToServerEvent.ChooseTeam, index);
         }
 
         private void OnBrowserSendMapRatingMethod(object[] args)

@@ -5,6 +5,7 @@ using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
+using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
@@ -101,12 +102,12 @@ namespace TDS_Server.Instance.Lobby
         }
 
         [RemoteEvent(DToServerEvent.JoinArena)]
-        public static async void JoinLobbyEvent(Client client, bool spectator)
+        public static async void JoinArenaEvent(Client client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            await LobbyManager.Arena.AddPlayer(player, spectator ? 0 : (uint?)null);
+            await LobbyManager.Arena.AddPlayer(player, null);
         }
 
         [RemoteEvent(DToServerEvent.JoinMapCreator)]
@@ -133,7 +134,7 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            LobbyManager.SetPlayerInCustomLobbyMenu(player, true);
+            CustomLobbyMenuSync.AddPlayer(player);
         }
 
         [RemoteEvent(DToServerEvent.LeftCustomLobbiesMenu)]
@@ -142,7 +143,18 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            LobbyManager.SetPlayerInCustomLobbyMenu(player, false);
+            CustomLobbyMenuSync.RemovePlayer(player);
+        }
+
+        [RemoteEvent(DToServerEvent.ChooseTeam)]
+        public static void ChooseTeamMethod(Client client, int index)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (player.CurrentLobby == null || !(player.CurrentLobby is Arena arena))
+                return;
+            arena.ChooseTeam(player, index);
         }
         #endregion Lobby
 
