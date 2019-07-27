@@ -5,6 +5,7 @@ using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 
@@ -19,9 +20,9 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (player.CurrentLobby.LobbyEntity.Type == ELobbyType.MainMenu)
             {
-                if (LobbyManager.PlayerInCustomLobbyMenu.Contains(player))
+                if (CustomLobbyMenuSync.IsPlayerInCustomLobbyMenu(player))
                 {
-                    LobbyManager.SetPlayerInCustomLobbyMenu(player, false);
+                    CustomLobbyMenuSync.RemovePlayer(player);
                     NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LeaveCustomLobbyMenu);
                 }
                 return;
