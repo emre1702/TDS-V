@@ -29,7 +29,6 @@ namespace TDS_Server.Instance.Utility
         public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
         public List<TDSPlayer>? SpectateablePlayers { get; set; }
         public List<TDSPlayer>? AlivePlayers { get; set; }
-        public List<TDSPlayer> TempPlayers { get; set; } = new List<TDSPlayer>();
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter;
 

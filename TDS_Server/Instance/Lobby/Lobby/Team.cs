@@ -31,14 +31,14 @@ namespace TDS_Server.Instance.Lobby
 
         protected Team GetTeamWithFewestPlayer()
         {
-            return Teams.Skip(1).MinBy(t => t.TempPlayers.Count).Shuffle().FirstOrDefault();
+            return Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
         }
 
         private void ClearTeamPlayersLists()
         {
             foreach (var entry in Teams)
             {
-                entry.TempPlayers.Clear();
+                entry.Players.Clear();
                 entry.AlivePlayers?.Clear();
                 entry.SpectateablePlayers?.Clear();
             }
@@ -46,15 +46,15 @@ namespace TDS_Server.Instance.Lobby
 
         protected void MixTeams()
         {
+            var oldPlayersList = Players.ToList();
             ClearTeamPlayersLists();
-            foreach (TDSPlayer character in Players)
+            foreach (TDSPlayer character in oldPlayersList)
             {
                 if (character.Team == null) // propably not (yet) in the lobby
                     continue;
                 if (!character.Team.IsSpectator)
                 {
                     character.Team = GetTeamWithFewestPlayer();
-                    character.Team.TempPlayers.Add(character);
                 }
                 else
                     character.Team.Players.Add(character);
