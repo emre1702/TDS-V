@@ -56,6 +56,10 @@
   height: auto;
   width: 20vw;
 
+  .mat-expansion-panel  {
+    background-color: transparent;
+  }
+
   #settings-expansion-panel-container {
     max-height: 90vh;
     overflow-y: auto;

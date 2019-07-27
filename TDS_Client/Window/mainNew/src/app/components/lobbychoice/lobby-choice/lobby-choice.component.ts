@@ -5,6 +5,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { LobbyChoice } from './interfaces/lobby-choice';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DFromClientEvent } from 'src/app/enums/dfromclientevent.enum';
 
 @Component({
   selector: 'app-lobby-choice',
@@ -35,7 +36,13 @@ export class LobbyChoiceComponent {
   ];
 
   constructor(private rageConnector: RageConnectorService, public settings: SettingsService,
-    private sanitizer: DomSanitizer, private changeDetector: ChangeDetectorRef) { }
+    private sanitizer: DomSanitizer, private changeDetector: ChangeDetectorRef) {
+
+    this.rageConnector.listen(DFromClientEvent.LeaveCustomLobbyMenu, () => {
+      this.settings.InUserLobbiesMenu = false;
+      this.changeDetector.detectChanges();
+    });
+  }
 
   setLanguage(languageId: number) {
     this.settings.loadLanguage(languageId);
