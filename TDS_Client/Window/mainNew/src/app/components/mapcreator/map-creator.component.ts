@@ -43,7 +43,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     Validators.maxLength(Constants.MAX_MAP_CREATE_NAME_LENGTH)
   ]);
 
-  @ViewChild("descriptionTextArea") descriptionTextArea: ElementRef;
+  @ViewChild("descriptionTextArea", { static: false }) descriptionTextArea: ElementRef;
 
   constructor(
     public settings: SettingsService,

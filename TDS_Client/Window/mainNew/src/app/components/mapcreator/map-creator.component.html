@@ -1,4 +1,4 @@
-<form id="container" class="mat-elevation-8 mat-app-background" cdkDrag>
+<form class="container mat-elevation-8 mat-app-background" cdkDrag>
   <mat-toolbar color="primary" cdkDragHandle>
     <mat-icon id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back</mat-icon>
     <h1>{{ currentTitle | language: settings.Lang }}</h1>

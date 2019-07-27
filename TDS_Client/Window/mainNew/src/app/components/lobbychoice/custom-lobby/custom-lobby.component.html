@@ -1,4 +1,4 @@
-<div id="settings-table-container" class="mat-elevation-8 mat-app-background" [@settingsShowHideAnimation]>
+<div id="settings-table-container" class="container mat-elevation-8 mat-app-background" [@settingsShowHideAnimation]>
   <div id="settings-expansion-panel-container">
     <mat-expansion-panel *ngFor="let panel of settingPanel">
       <mat-expansion-panel-header>
@@ -81,7 +81,7 @@
   </div>
 </div>
 
-<div id="main-container" [@lobbyShowHideAnimation]>
+<div id="main-container" class="container" [@lobbyShowHideAnimation]>
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">
     <mat-icon>add_to_photos</mat-icon>
   </div>

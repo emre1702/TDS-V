@@ -119,3 +119,7 @@ html, body, app-root {
 button:not([disabled]):hover {
   opacity: 0.6 !important;
 }
+
+.container {
+  border-radius: 30px;
+}
