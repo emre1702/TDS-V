@@ -47,7 +47,7 @@ export class LobbyChoiceComponent {
   }
 
   joinArena() {
-    this.rageConnector.call(DToClientEvent.ChooseArenaToJoin, false);
+    this.rageConnector.call(DToClientEvent.ChooseArenaToJoin);
   }
 
   joinGang() {
