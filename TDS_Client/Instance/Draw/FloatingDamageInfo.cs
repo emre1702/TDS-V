@@ -64,6 +64,15 @@ namespace TDS_Client.Instance.Draw
             }
         }
 
+        public static void RemoveAll()
+        {
+            foreach (var info in damageInfos)
+            {
+                info.Remove();
+            }
+            damageInfos = new List<FloatingDamageInfo>();
+        }
+
         private void Remove()
         {
             text?.Remove();
