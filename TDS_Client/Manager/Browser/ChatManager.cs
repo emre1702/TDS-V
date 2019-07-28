@@ -14,8 +14,14 @@ namespace TDS_Client.Manager.Browser
             get => _isOpen;
             set
             {
+                if (_isOpen == value)
+                    return;
                 _isOpen = value;
                 Angular.ToggleChatOpened(value);
+                if (value)
+                    TickManager.Add(OnUpdate);
+                else
+                    TickManager.Remove(OnUpdate);
             }
         }
 
@@ -30,12 +36,9 @@ namespace TDS_Client.Manager.Browser
 
         public static void OnUpdate()
         {
-            if (IsOpen)
-            {
-                Pad.DisableAllControlActions((int)EInputGroup.LOOK);
-                Pad.DisableAllControlActions((int)EInputGroup.MOVE);
-                Pad.DisableAllControlActions((int)EInputGroup.SUB);
-            }
+            Pad.DisableAllControlActions((int)EInputGroup.LOOK);
+            Pad.DisableAllControlActions((int)EInputGroup.MOVE);
+            Pad.DisableAllControlActions((int)EInputGroup.SUB);
         }
 
         public static void Loaded()

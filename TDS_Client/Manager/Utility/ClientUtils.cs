@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
@@ -7,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Manager.Lobby;
 using TDS_Common.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
@@ -14,6 +14,11 @@ namespace TDS_Client.Manager.Utility
 {
     internal static class ClientUtils
     {
+        static ClientUtils()
+        {
+            TickManager.Add(DisableAttack, () => Bomb.BombOnHand || !Round.InFight);
+        }
+
         public static List<Player> GetTriggeredPlayersList(string objStr)
         {
             var list = JsonConvert.DeserializeObject<List<ushort>>(objStr);

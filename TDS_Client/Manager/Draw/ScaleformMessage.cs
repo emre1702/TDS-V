@@ -6,19 +6,24 @@ namespace TDS_Client.Manager.Draw.Scaleform
 {
     internal static class ScaleformMessage
     {
-        private static ulong initTimeMs;
-        private static ulong msgDurationMs;
-        private static bool animatedOut;
-        private static BasicScaleform fscaleform;
+        private static ulong _initTimeMs;
+        private static ulong _msgDurationMs;
+        private static bool _animatedOut;
+        private static BasicScaleform _fscaleform;
 
         private static BasicScaleform scaleform
         {
             get
             {
-                if (fscaleform == null)
-                    fscaleform = new BasicScaleform(DScaleformName.MP_BIG_MESSAGE_FREEMODE);
-                return fscaleform;
+                if (_fscaleform == null)
+                    _fscaleform = new BasicScaleform(DScaleformName.MP_BIG_MESSAGE_FREEMODE);
+                return _fscaleform;
             }
+        }
+
+        static ScaleformMessage()
+        {
+            TickManager.Add(Render);
         }
 
         public static void ShowWeaponPurchasedMessage(string title, string weaponName, int weaponHash, ulong time = 5000)
@@ -47,32 +52,32 @@ namespace TDS_Client.Manager.Draw.Scaleform
 
         private static void InitCommonSettings(ulong time)
         {
-            initTimeMs = TimerManager.ElapsedTicks;
-            msgDurationMs = time;
-            animatedOut = false;
+            _initTimeMs = TimerManager.ElapsedTicks;
+            _msgDurationMs = time;
+            _animatedOut = false;
         }
 
         public static void Render()
         {
-            if (fscaleform == null)
+            if (_fscaleform == null)
                 return;
-            if (initTimeMs == 0)
+            if (_initTimeMs == 0)
                 return;
 
-            fscaleform.RenderFullscreen();
-            if (TimerManager.ElapsedTicks - initTimeMs > msgDurationMs)
+            _fscaleform.RenderFullscreen();
+            if (TimerManager.ElapsedTicks - _initTimeMs > _msgDurationMs)
             {
-                if (!animatedOut)
+                if (!_animatedOut)
                 {
-                    fscaleform.Call(DScaleformFunction.TRANSITION_OUT);
-                    animatedOut = true;
-                    msgDurationMs += 750;
+                    _fscaleform.Call(DScaleformFunction.TRANSITION_OUT);
+                    _animatedOut = true;
+                    _msgDurationMs += 750;
                 }
                 else
                 {
-                    initTimeMs = 0;
-                    fscaleform.Destroy();
-                    fscaleform = null;
+                    _initTimeMs = 0;
+                    _fscaleform.Destroy();
+                    _fscaleform = null;
                 }
             }
         }

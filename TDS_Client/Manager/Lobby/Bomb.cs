@@ -17,18 +17,32 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Bomb
     {
+        public static bool DataChanged 
+        { 
+            get => _dataChanged;
+            set
+            {
+                if (_dataChanged == value)
+                    return;
+                _dataChanged = value;
+                if (value)
+                    TickManager.Add(CheckPlantDefuse, () => CheckPlantDefuseOnTick);
+                else 
+                    TickManager.Remove(CheckPlantDefuse);
+            }
+        }
+        public static bool CheckPlantDefuseOnTick { get; private set; }
+        public static bool BombOnHand { get; set; }
+
         private static Vector3 _plantedPos;
         private static EPlantDefuseStatus _playerStatus;
         private static bool _gotBomb;
         private static bool _bombPlanted;
         private static Position4DDto[] _plantSpots;
         private static ulong _plantDefuseStartTick;
+        private static bool _dataChanged;
 
         private static DxProgressRectangle _progressRect;
-
-        public static bool DataChanged;
-        public static bool CheckPlantDefuseOnTick { get; private set; }
-        public static bool BombOnHand { get; set; }
 
         public static void Detonate()
         {

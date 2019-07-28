@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Instance.Draw.Dx
 {
@@ -25,6 +26,11 @@ namespace TDS_Client.Instance.Draw.Dx
             FrontPriority = frontPriority;
             _dxDraws.Add(this);
             _dxDraws.Sort((a, b) => a.FrontPriority.CompareTo(b.FrontPriority));
+        }
+
+        static Dx()
+        {
+            TickManager.Add(RenderAll);
         }
 
         ~Dx() => Dispose(false);

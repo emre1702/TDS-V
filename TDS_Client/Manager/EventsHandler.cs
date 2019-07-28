@@ -49,34 +49,10 @@ namespace TDS_Client.Manager
 
         private void AddRAGEEvents()
         {
-            Tick += OnTickMethod;
             OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
             OnPlayerSpawn += OnPlayerSpawnMethod;
             OnPlayerDeath += OnPlayerDeathMethod;
             OnPlayerQuit += OnPlayerQuitMethod;
-        }
-
-        private void OnTickMethod(List<TickNametagData> nametags)
-        {
-            ScaleformMessage.Render();
-            Dx.RenderAll();
-            if (Bomb.DataChanged)
-            {
-                if (Bomb.CheckPlantDefuseOnTick)
-                    Bomb.CheckPlantDefuse();
-            }
-            if (RoundInfo.RefreshOnTick)
-                RoundInfo.RefreshTime();
-            if (Round.InFight)
-            {
-                Damagesys.ShowBloodscreenIfNecessary();
-                FloatingDamageInfo.UpdateAllPositions();
-            }
-
-            if (Bomb.BombOnHand || !Round.InFight)
-                ClientUtils.DisableAttack();
-            ChatManager.OnUpdate();
-            FreeCam.Render();
         }
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
@@ -148,9 +124,11 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
+            Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
+            Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
@@ -499,6 +477,11 @@ namespace TDS_Client.Manager
             RoundInfo.StopDeathmatchInfo();
         }
 
+        private void OnStopSpectatorMethod(object[] args)
+        {
+            SpectateSystem.SpectatingEntity = null;
+        }
+
         private void OnRegisterLoginSuccessfulMethod(object[] args)
         {
             int adminlvl = (int)args[0];
@@ -520,6 +503,13 @@ namespace TDS_Client.Manager
             int mapId = (int)args[0];
             int amountVotes = (int)args[1];
             Angular.SetMapVotes(mapId, amountVotes);
+        }
+
+        private void OnSetPlayerToSpectatePlayerMethod(object[] args)
+        {
+            Player target = ClientUtils.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
+            if (target != null) 
+                SpectateSystem.SpectatingEntity = target;
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)

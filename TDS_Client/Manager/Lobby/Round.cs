@@ -1,4 +1,6 @@
-﻿using TDS_Client.Manager.Damage;
+﻿using TDS_Client.Instance.Draw;
+using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -11,11 +13,24 @@ namespace TDS_Client.Manager.Lobby
             get => _inFight;
             set
             {
-                _inFight = value;
                 if (value)
+                {
                     MapLimitManager.Start();
+                    if (!_inFight)
+                    {
+                        TickManager.Add(Damagesys.ShowBloodscreenIfNecessary);
+                        FloatingDamageInfo.UpdateAllPositions();
+                    }
+                }  
                 else
+                {
                     MapLimitManager.Stop();
+                    if (_inFight)
+                    {
+                        FloatingDamageInfo.RemoveAll();
+                    }
+                }
+                _inFight = value;
             }
         }
 

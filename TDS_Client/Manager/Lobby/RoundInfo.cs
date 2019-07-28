@@ -49,7 +49,22 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
-        public static bool RefreshOnTick { get; set; }
+        public static bool RefreshOnTick 
+        { 
+            get => _refreshOnTick;
+            set
+            {
+                if (_refreshOnTick == value)
+                    return;
+                _refreshOnTick = value;
+                if (value)
+                    TickManager.Add(RefreshTime);
+                else 
+                    TickManager.Remove(RefreshTime);
+            }
+        }
+
+        private static bool _refreshOnTick;
 
         public static void Start(ulong alreadywastedms)
         {

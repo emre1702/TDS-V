@@ -16,15 +16,13 @@ namespace TDS_Client.Manager.Utility
         private static bool _inFreeCam;
         private static FreeCamMoveDto _moveDto;
 
+        static FreeCam()
+        {
+            TickManager.Add(Render, () => _inFreeCam && !ChatManager.IsOpen && !Cursor.Visible);
+        }
+
         public static void Render()
         {
-            if (!_inFreeCam)
-                return;
-            if (ChatManager.IsOpen)
-                return;
-            if (Cursor.Visible)
-                return;
-
             /* 
              * API.disableControlThisFrame( 16 );
 		    API.disableControlThisFrame( 17 );
