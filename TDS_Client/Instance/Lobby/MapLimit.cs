@@ -130,7 +130,6 @@ namespace TDS_Client.Instance.Lobby
 
         private void IsOutsideTeleportBackAfterTime()
         {
-            Chat.Output(_outsideCounter.ToString());
             if (_outsideCounter > 0)
                 RefreshInfoTeleportAfterTime();
             else
