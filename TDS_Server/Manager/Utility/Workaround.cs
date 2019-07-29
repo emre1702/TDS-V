@@ -32,16 +32,6 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SetPlayerTeamWorkaround, team);
         }
 
-        public static void Spectate(Client player, Client targetPlayer)
-        {
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SpectateWorkaround, targetPlayer.Handle.Value);
-        }
-
-        public static void StopSpectate(Client player)
-        {
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StopSpectateWorkaround);
-        }
-
         public static void AttachEntityToEntity(Entity entity, Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
         {
             var infoDto = new EntityAttachInfoDto

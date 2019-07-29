@@ -20,12 +20,10 @@ namespace TDS_Server.Instance.Lobby
 
         protected void RemoveAsSpectator(TDSPlayer character)
         {
-            Workaround.StopSpectate(character.Client);
             if (character.Spectates == null)
                 return;
             TDSPlayer spectating = character.Spectates;
             character.Spectates = null;
-            spectating.Spectators.Remove(character);
         }
 
         /// <summary>
@@ -43,15 +41,9 @@ namespace TDS_Server.Instance.Lobby
                 nextPlayer = GetPreviousSpectatePlayerInSameTeam(currentlySpectating);
             nextPlayer ??= character;
 
-            currentlySpectating.Spectators.Remove(character);
             character.Spectates = nextPlayer;
-            if (nextPlayer == null)
+            if (nextPlayer != null)
             {
-                Workaround.StopSpectate(character.Client);
-            }
-            else
-            {
-                nextPlayer.Spectators.Add(character);
                 character.Client.Spectate(nextPlayer.Client);
             }
         }
@@ -66,15 +58,9 @@ namespace TDS_Server.Instance.Lobby
                 nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
             nextPlayer ??= character;
 
-            currentlySpectating.Spectators.Remove(character);
             character.Spectates = nextPlayer;
-            if (nextPlayer == null)
+            if (nextPlayer != null)
             {
-                Workaround.StopSpectate(character.Client);
-            }
-            else
-            {
-                nextPlayer.Spectators.Add(character);
                 character.Client.Spectate(nextPlayer.Client);
             }
         }

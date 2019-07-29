@@ -19,6 +19,10 @@ namespace TDS_Server.Instance.Lobby
         {
             TDSPlayer character = player.GetChar();
             character.CurrentLobby?.OnPlayerSpawn(character);
+            foreach (var target in character.Spectators)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.SpectatorReattachCam);
+            }
         }
 
         [ServerEvent(Event.PlayerDisconnected)]

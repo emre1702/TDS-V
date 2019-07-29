@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
@@ -6,7 +7,29 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Spectate
     {
-        private static bool binded;
+        public static PedBase SpectatingEntity
+        {
+            get => _spectatingEntity;
+            set
+            {
+                if (value == _spectatingEntity)
+                    return;
+                if (_spectatingEntity == null)
+                    CameraManager.SpectateCam.Activate();
+                else if (value == null)
+                    CameraManager.SpectateCam.Deactivate();
+
+                _spectatingEntity = value;
+
+                if (value != null)
+                    CameraManager.SpectateCam.Spectate(value);
+                    
+                 CameraManager.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);  
+            }
+        }
+
+        private static PedBase _spectatingEntity;
+        private static bool _binded;
 
         private static void Next(ConsoleKey _)
         {
@@ -20,9 +43,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Start()
         {
-            if (binded)
+            if (_binded)
                 return;
-            binded = true;
+            _binded = true;
 
             BindManager.Add(ConsoleKey.RightArrow, Next);
             BindManager.Add(ConsoleKey.D, Next);
@@ -32,9 +55,9 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Stop()
         {
-            if (!binded)
+            if (!_binded)
                 return;
-            binded = false;
+            _binded = false;
 
             BindManager.Remove(ConsoleKey.RightArrow, Next);
             BindManager.Remove(ConsoleKey.D, Next);

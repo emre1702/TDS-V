@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TDS_Client.Default;
 using TDS_Client.Instance.Draw;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
@@ -125,6 +126,7 @@ namespace TDS_Client.Manager
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
+            Add(DToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
@@ -252,11 +254,11 @@ namespace TDS_Client.Manager
 
         private void OnRoundStartMethod(object[] args)
         {
+            Round.IsSpectator = (bool)args[0];
+            Round.InFight = !Round.IsSpectator;
             Cam.DoScreenFadeIn(50);
             LobbyCam.StopCountdown();
             Countdown.End(args.Length < 2 || (ulong)args[1] != 0);
-            Round.IsSpectator = (bool)args[0];
-            Round.InFight = !Round.IsSpectator;
             RoundInfo.Start(args.Length >= 2 ? (ulong)args[1] : 0);
         }
 
@@ -479,7 +481,7 @@ namespace TDS_Client.Manager
 
         private void OnStopSpectatorMethod(object[] args)
         {
-            SpectateSystem.SpectatingEntity = null;
+            Spectate.SpectatingEntity = null;
         }
 
         private void OnRegisterLoginSuccessfulMethod(object[] args)
@@ -509,7 +511,16 @@ namespace TDS_Client.Manager
         {
             Player target = ClientUtils.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             if (target != null) 
-                SpectateSystem.SpectatingEntity = target;
+                Spectate.SpectatingEntity = target;
+        }
+
+        private void OnSpectatorReattachCamMethod(object[] args)
+        {
+            if (Spectate.SpectatingEntity != null)
+            {
+                CameraManager.SpectateCam.Spectate(Spectate.SpectatingEntity);
+            }
+                
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)

@@ -10,5 +10,6 @@
         public static ulong ShowFloatingDamageInfoMs => 1000;
         public static bool Voice3D => false;
         public static uint MapLimitFasterCheckTimeMs => 100;
+        public static int DefaultSpectatePlayerChangeEaseTime => 1500;
     }
 }

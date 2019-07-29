@@ -64,9 +64,11 @@
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
         public const string SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server";
+        public const string SpectatorReattachCam = "SpectatorReattachCam_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
+        public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
@@ -84,7 +86,6 @@
         public const string FreezePlayerWorkaround = "FreezePlayerWorkaround_Server";
         public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";
         public const string SetPlayerTeamWorkaround = "SetPlayerTeamWorkaround_Server";
-        public const string SpectateWorkaround = "SpectateWorkaround_Server";
-        public const string StopSpectateWorkaround = "StopSpectateWorkaround_Server";
+        public const string SetPlayerToSpectatePlayer = "SpectateWorkaround_Server";
     }
 }

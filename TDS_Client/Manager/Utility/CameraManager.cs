@@ -6,5 +6,6 @@ namespace TDS_Client.Manager.Utility
     {
         public static TDSCamera BetweenRoundsCam { get; set; } = new TDSCamera();
         public static TDSCamera FreeCam { get; set; } = new TDSCamera();
+        public static TDSCamera SpectateCam { get; set; } = new TDSCamera();
     }
 }

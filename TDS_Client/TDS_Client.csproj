@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y /Q /S &quot;$(ProjectDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\obj\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\Window\&quot;" />
+    <Exec Command="xcopy /Y /Q /S &quot;$(ProjectDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\obj&quot;&#xD;&#xA;RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\Window&quot;" />
   </Target>
 
 </Project>

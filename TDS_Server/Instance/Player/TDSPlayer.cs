@@ -165,7 +165,36 @@ namespace TDS_Server.Instance.Player
         }
 
         public TDSPlayer? LastHitter { get; set; }
-        public TDSPlayer? Spectates { get; set; }
+        public TDSPlayer? Spectates 
+        { 
+            get => _spectates;
+            set 
+            {
+                if (_spectates == value)
+                    return;
+
+                if (_spectates == null)
+                {
+                    SpectateSystem.SetPlayerToSpectator(this, true);
+                } 
+                else
+                {
+                    _spectates.Spectators.Remove(this);
+                }
+                _spectates = value;
+                if (value == null)
+                {
+                    SpectateSystem.SetPlayerToSpectator(this, false);
+                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.StopSpectator);
+                }
+                else
+                {
+                    SpectateSystem.SetPlayerToSpectatePlayer(this, value);
+                    value.Spectators.Add(this);
+                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.SetPlayerToSpectatePlayer, value.Client.Handle.Value);
+                }              
+            }
+        }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
         public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
 
@@ -226,6 +255,7 @@ namespace TDS_Server.Instance.Player
         private short _killingSpree;
         private short _shortTimeKillingSpree;
         private TDSNewContext? _dbContext;
+        private TDSPlayer? _spectates;
 
         private SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
 

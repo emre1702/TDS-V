@@ -76,10 +76,10 @@ namespace TDS_Server.Instance.Lobby
             player.Lifes = 0;
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
+            player.Spectates = null;
             if (player.Client.Exists)
             {
                 Workaround.FreezePlayer(player.Client, true);
-                Workaround.StopSpectate(player.Client);
                 player.Client.Transparency = 255;
             }
             if (DeathSpawnTimer.ContainsKey(player))
