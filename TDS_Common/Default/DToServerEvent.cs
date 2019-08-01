@@ -46,8 +46,5 @@
         public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
         public const string TryLogin = "TryLogin_Client";
         public const string TryRegister = "TryRegister_Client";
-
-        public const string VoiceToAdd = "VoiceToAdd_Client";
-        public const string VoiceToRemove = "VoiceToRemove_Client";
     }
 }

@@ -24,13 +24,11 @@ namespace TDS_Client.Manager.Utility
             _sendingToPlayers.Add(player);
             player.AutoVolume = true;
             player.Voice3d = ClientConstants.Voice3D;
-            EventsSender.Send(DToServerEvent.VoiceToAdd, player);
         }
 
         public static void RemovePlayer(Player player)
         {
             _sendingToPlayers.Remove(player);
-            EventsSender.Send(DToServerEvent.VoiceToRemove, player);
         }
 
         private static void Start(Control _)

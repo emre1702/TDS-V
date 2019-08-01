@@ -79,6 +79,11 @@ namespace TDS_Server.Instance.Utility
             FuncIterate((player, team) =>
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
+                foreach (var target in Players)
+                {
+                    target.Client.DisableVoiceTo(player.Client);
+                    player.Client.DisableVoiceTo(target.Client);
+                }
             });
             Players.Clear();
         }
@@ -88,6 +93,8 @@ namespace TDS_Server.Instance.Utility
             foreach (var target in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client.Handle.Value);
+                target.Client.EnableVoiceTo(player.Client);
+                player.Client.EnableVoiceTo(target.Client);
             }
         }
 
@@ -96,6 +103,8 @@ namespace TDS_Server.Instance.Utility
             foreach (var target in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client.Handle.Value);
+                target.Client.DisableVoiceTo(player.Client);
+                player.Client.DisableVoiceTo(target.Client);
             }
         }
 
@@ -105,6 +114,11 @@ namespace TDS_Server.Instance.Utility
             foreach (var player in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
+                foreach (var target in Players)
+                {
+                    player.Client.EnableVoiceTo(target.Client);
+                    target.Client.EnableVoiceTo(player.Client);
+                }
             }
         }
 
