@@ -9,18 +9,7 @@ namespace TDS_Client.Manager.Utility
 {
     internal static class Workaround
     {
-        public static void AddEvents()
-        {
-            Events.Add(DToClientEvent.AttachEntityToEntityWorkaround, AttachEntityToEntityWorkaroundMethod);
-            Events.Add(DToClientEvent.DetachEntityWorkaround, DetachEntityWorkaroundMethod);
-            Events.Add(DToClientEvent.FreezePlayerWorkaround, FreezePlayerWorkaroundMethod);
-            Events.Add(DToClientEvent.SetEntityCollisionlessWorkaround, SetEntityCollisionlessWorkaroundMethod);
-            Events.Add(DToClientEvent.SetEntityInvincible, SetEntityInvincibleMethod);
-            Events.Add(DToClientEvent.SetPlayerInvincible, SetPlayerInvincibleMethod);
-            Events.Add(DToClientEvent.SetPlayerTeamWorkaround, SetPlayerTeamWorkaroundMethod);
-        }
-
-        private static void AttachEntityToEntityWorkaroundMethod(object[] args)
+        public static void AttachEntityToEntityWorkaroundMethod(object[] args)
         {
             EntityAttachInfoDto info = JsonConvert.DeserializeObject<EntityAttachInfoDto>(args[0].ToString());
             info.EntityValue = Entities.Objects.GetAtRemote((ushort)info.EntityValue).Handle;
@@ -31,7 +20,7 @@ namespace TDS_Client.Manager.Utility
                 true, true, false, false, 0, true);
         }
 
-        private static void DetachEntityWorkaroundMethod(object[] args)
+        public static void DetachEntityWorkaroundMethod(object[] args)
         {
             int entity = (int)args[0];
             entity = Entities.Objects.GetAtRemote((ushort)entity).Handle;
@@ -39,13 +28,13 @@ namespace TDS_Client.Manager.Utility
             RAGE.Game.Entity.DetachEntity(entity, true, resetCollision);
         }
 
-        private static void FreezePlayerWorkaroundMethod(object[] args)
+        public static void FreezePlayerWorkaroundMethod(object[] args)
         {
             bool freeze = (bool)args[0];
             Player.LocalPlayer.FreezePosition(freeze);
         }
 
-        private static void SetEntityCollisionlessWorkaroundMethod(object[] args)
+        public static void SetEntityCollisionlessWorkaroundMethod(object[] args)
         {
             EntityCollisionlessInfoDto info = JsonConvert.DeserializeObject<EntityCollisionlessInfoDto>(args[0].ToString());
             GameEntity entity = Entities.Objects.GetAtRemote((ushort)info.EntityValue);
@@ -60,13 +49,13 @@ namespace TDS_Client.Manager.Utility
             RAGE.Game.Entity.SetEntityCollision(info.EntityValue, !info.Collisionless, true);
         }
 
-        private static void SetPlayerTeamWorkaroundMethod(object[] args)
+        public static void SetPlayerTeamWorkaroundMethod(object[] args)
         {
             int team = (int)args[0];
             RAGE.Game.Player.SetPlayerTeam(team);
         }
 
-        private static void SetEntityInvincibleMethod(object[] args)
+        public static void SetEntityInvincibleMethod(object[] args)
         {
             ushort handle = Convert.ToUInt16(args[0]);
             bool toggle = (bool)args[1];
@@ -75,7 +64,7 @@ namespace TDS_Client.Manager.Utility
                 RAGE.Game.Entity.SetEntityInvincible(vehHandle, toggle);
         }
 
-        private static void SetPlayerInvincibleMethod(object[] args)
+        public static void SetPlayerInvincibleMethod(object[] args)
         {
             bool toggle = (bool)args[0];
             Player.LocalPlayer.SetInvincible(toggle);

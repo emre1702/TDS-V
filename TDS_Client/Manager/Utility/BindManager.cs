@@ -10,7 +10,7 @@ using Events = RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
 {
-    internal class BindManager : Events.Script
+    internal class BindManager : Script
     {
         private static readonly Dictionary<ConsoleKey, List<KeyBindDto>> _bindedKeys = new Dictionary<ConsoleKey, List<KeyBindDto>>();
         private static readonly Dictionary<Control, List<ControlBindDto>> _bindedControls = new Dictionary<Control, List<ControlBindDto>>();
