@@ -48,6 +48,9 @@ namespace TDS_Server.Manager.Maps
                 if (GetMapByName(mapCreateData.Name) != null || MapsLoader.GetMapByName(mapCreateData.Name) != null)
                     return EMapCreateError.NameAlreadyExists;
 
+                foreach (var bombPlace in mapCreateData.BombPlaces) 
+                    bombPlace.Z -= 1;
+
                 var mapDto = new MapDto(mapCreateData);
                 mapDto.Info.CreatorId = creator.Entity.Id;
 
