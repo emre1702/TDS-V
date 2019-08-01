@@ -29,10 +29,10 @@ import { DFromClientEvent } from 'src/app/enums/dfromclientevent.enum';
 })
 export class LobbyChoiceComponent {
   lobbyChoices: LobbyChoice[] = [
-    { name: "Arena", func: this.joinArena.bind(this), imgUrl: "/mainNew/assets/arenachoice.png" },
-    { name: "Gang", func: this.joinGang.bind(this), imgUrl: "/mainNew/assets/gangchoice.png", disabled: true },
-    { name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "/mainNew/assets/mapcreatorchoice.png" },
-    { name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "/mainNew/assets/customlobbychoice.png" },
+    { name: "Arena", func: this.joinArena.bind(this), imgUrl: "assets/arenachoice.png" },
+    { name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png", disabled: true },
+    { name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
+    { name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "assets/customlobbychoice.png" },
   ];
 
   constructor(private rageConnector: RageConnectorService, public settings: SettingsService,
