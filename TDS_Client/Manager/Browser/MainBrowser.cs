@@ -122,5 +122,15 @@ namespace TDS_Client.Manager.Browser
         {
             Execute("stopBombTickSound()");
         }
+
+        public static void StartPlayerTalking(string name)
+        {
+            Execute($"addPlayerTalking('{name}')");
+        }
+
+        public static void StopPlayerTalking(string name)
+        {
+            Execute($"removePlayerTalking('{name}')");
+        }
     }
 }

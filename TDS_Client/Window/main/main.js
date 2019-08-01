@@ -1,6 +1,7 @@
 ﻿let bloodscreen = $("#bloodscreen");
 let bloodscreenDom;
 let killmessagesBox = $("#kill_messages_box");
+let voiceChatPlayerNamesBox = $("#voice_chat_player_names_box");
 let language = 9;
 let ordersDiv = $("#orders");
 let bloodscreentimeout;
@@ -148,6 +149,21 @@ function toggleOrders(bool) {
         ordersDiv.show(1000);
     else
         ordersDiv.hide(1000);
+}
+
+function addPlayerTalking(name) {
+	let id = "voice-chat-" + name;
+	let img = "<img src='../pic/speaker.png'/>";
+	let child = $("<div id='" + id + "'>" + img + "<span>" + name + "</span></div>");
+    voiceChatPlayerNamesBox.append(child);
+}
+
+function removePlayerTalking(name) {
+	let id = "voice-chat-" + name;
+	let child = voiceChatPlayerNamesBox.find("#" + id);
+	if (child) {
+		child.remove();
+	}
 }
 
 $(document).ready(() => {

@@ -1,4 +1,5 @@
 ﻿using RAGE;
+using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
@@ -13,7 +14,8 @@ namespace TDS_Client.Manager.Event
             OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
             OnPlayerSpawn += OnPlayerSpawnMethod;
             OnPlayerDeath += OnPlayerDeathMethod;
-            OnPlayerQuit += OnPlayerQuitMethod;
+            OnPlayerStartTalking += OnPlayerStartTalkingMethod;
+            OnPlayerStopTalking += OnPlayerStopTalkingMethod;
         }
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
@@ -31,9 +33,14 @@ namespace TDS_Client.Manager.Event
             Death.PlayerDeath(player);
         }
 
-        private void OnPlayerQuitMethod(Player player)
+        private void OnPlayerStartTalkingMethod(Player player)
         {
+            MainBrowser.StartPlayerTalking(player.Name);
         }
 
+        private void OnPlayerStopTalkingMethod(Player player)
+        {
+            MainBrowser.StopPlayerTalking(player.Name);
+        }
     }
 }

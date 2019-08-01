@@ -1,4 +1,9 @@
-﻿#bloodscreen {
+﻿@font-face {
+    font-family: Roboto;
+    src: url(../font/Roboto-Regular.ttf);
+}
+
+#bloodscreen {
     position: absolute;
     margin: 0 0;
     width: 100%;
@@ -37,3 +42,30 @@ text {
     position: relative;
 }
 
+#voice_chat_player_names_box {
+    position: absolute;
+	top: 38vh;
+    width: auto;
+    max-height: 25vh;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-content: flex-start;
+    font-family: Roboto, Arial;
+}
+
+#voice_chat_player_names_box div {
+	margin-left: 10px;
+    color: white;
+}
+
+#voice_chat_player_names_box div span {
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-size: 1.2em;
+}
+
+#voice_chat_player_names_box div img {
+	height: 1em;
+	width: 1em;
+	margin-right: 5px;
+}

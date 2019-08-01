@@ -15,7 +15,7 @@ let files = [
         reserved: ["setMoney", "playSound", "playHitsound", "playKillstreakSound", "showBloodscreen", "addKillMessage", "alert",
             "toggleCanVoteForMapWithNumpad", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", 
             "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound", 
-			"onKillstreakSoundEnded"]
+			"onKillstreakSoundEnded", "addPlayerTalking", "removePlayerTalking"]
     },
     { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
     {
