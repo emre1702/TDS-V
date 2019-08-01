@@ -100,7 +100,7 @@ html, body, app-root {
 }
 
 .border {
-  border: 4px outset mat-color($dark-primary) !important;
+  border: 4px ridge mat-color($dark-primary) !important;
 }
 
 /*@font-face {
