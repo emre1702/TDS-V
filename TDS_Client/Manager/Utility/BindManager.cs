@@ -7,6 +7,7 @@ using TDS_Client.Dto;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Lobby;
 using Events = RAGE.Events;
+using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Utility
 {
