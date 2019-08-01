@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Dto.Map;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 
 namespace TDS_Server.Instance.GameModes
@@ -42,7 +43,7 @@ namespace TDS_Server.Instance.GameModes
                     blip: NAPI.Blip.CreateBlip(pos, Lobby.Dimension),
                     pos: pos
                 );
-                dto.Blip.Sprite = 433;
+                dto.Blip.Sprite = Constants.BombPlantPlaceBlipSprite;
                 _bombPlantPlaces.Add(dto);
             }
             _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo?.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);

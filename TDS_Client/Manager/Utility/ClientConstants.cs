@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Manager.Utility
 {
-    internal class Constants
+    internal class ClientConstants
     {
         public static string LobbyChoiceBrowserPath => "package://Window/choice/index.html";
         public static string MainBrowserPath => "package://Window/main/index.html";

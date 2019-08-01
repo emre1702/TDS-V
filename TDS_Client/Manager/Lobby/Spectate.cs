@@ -24,7 +24,7 @@ namespace TDS_Client.Manager.Lobby
                 if (value != null)
                     CameraManager.SpectateCam.Spectate(value);
                     
-                 CameraManager.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);  
+                 CameraManager.SpectateCam.Render(true, ClientConstants.DefaultSpectatePlayerChangeEaseTime);  
             }
         }
 

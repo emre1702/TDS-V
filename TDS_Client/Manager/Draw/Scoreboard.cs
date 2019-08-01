@@ -102,7 +102,7 @@ namespace TDS_Client.Manager.Draw
                 return;
             grid.ScrollIndex = 0;
             ulong tick = TimerManager.ElapsedTicks;
-            if (tick - lastLoadedTick >= (ulong)Constants.ScoreboardLoadCooldown)
+            if (tick - lastLoadedTick >= (ulong)ClientConstants.ScoreboardLoadCooldown)
             {
                 lastLoadedTick = tick;
                 grid.ClearRows();

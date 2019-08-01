@@ -26,7 +26,7 @@ namespace TDS_Client.Manager.Account
         {
             name = theName;
             isRegistered = isregistered;
-            Browser = new HtmlWindow(Constants.RegisterLoginBrowserPath);
+            Browser = new HtmlWindow(ClientConstants.RegisterLoginBrowserPath);
             CursorManager.Visible = true;
             SendDataToBrowser();
         }

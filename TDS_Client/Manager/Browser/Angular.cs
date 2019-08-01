@@ -19,7 +19,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void Load()
         {
-            Browser = new HtmlWindow(Constants.AngularBrowserPath);
+            Browser = new HtmlWindow(ClientConstants.AngularBrowserPath);
             OnLoaded();
         }
 

@@ -23,7 +23,7 @@ namespace TDS_Client.Manager.Utility
         {
             _sendingToPlayers.Add(player);
             player.AutoVolume = true;
-            player.Voice3d = Constants.Voice3D;
+            player.Voice3d = ClientConstants.Voice3D;
             EventsSender.Send(DToServerEvent.VoiceToAdd, player);
         }
 

@@ -84,7 +84,7 @@ namespace TDS_Server.Instance.Lobby
                     regions.Add(position);
 
                     Blip blip = NAPI.Blip.CreateBlip(pos: position, dimension: Dimension);
-                    blip.Sprite = 491;
+                    blip.Sprite = Constants.TeamSpawnBlipSprite;
                     Team team = Teams[teamsSpawnList.TeamID];
                     blip.Color = team.Entity.BlipColor;
                     blip.Name = "Spawn " + team.Entity.Name;
@@ -98,7 +98,7 @@ namespace TDS_Server.Instance.Lobby
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
                 Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
-                blip.Sprite = 441;
+                blip.Sprite = Constants.MapLimitBlipSprite;
                 blip.Name = "Limit";
                 _mapBlips.Add(blip);
             }

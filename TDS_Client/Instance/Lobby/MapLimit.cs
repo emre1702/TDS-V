@@ -56,7 +56,7 @@ namespace TDS_Client.Instance.Lobby
             Stop();
             Reset();
             _checkTimer = new TDSTimer(Check, 1000, 0);
-            _checkTimerFaster = new TDSTimer(CheckFaster, Constants.MapLimitFasterCheckTimeMs, 0);
+            _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
         }
 
         public void Stop()

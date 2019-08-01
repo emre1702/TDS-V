@@ -17,7 +17,7 @@ namespace TDS_Client.Manager.Browser
 
         public static void Load()
         {
-            Browser = new HtmlWindow(Constants.MainBrowserPath);
+            Browser = new HtmlWindow(ClientConstants.MainBrowserPath);
             Browser.MarkAsChat();
             OnLoaded();
         }
