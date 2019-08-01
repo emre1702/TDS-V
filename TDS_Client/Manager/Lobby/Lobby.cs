@@ -95,6 +95,7 @@ namespace TDS_Client.Manager.Lobby
         {
             Angular.ToggleMapCreator(false);
             Angular.ToggleFreeroam(false);
+            MapCreator.Reset();
         }
     }
 }

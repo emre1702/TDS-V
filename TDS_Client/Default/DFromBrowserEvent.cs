@@ -2,6 +2,7 @@
 {
     public class DFromBrowserEvent
     {
+        public const string AddMapCreatorPosition = "AddMapCreatorPosition_Browser";
         public const string AddMapVote = "AddMapVote_Browser";
         public const string AddRatingToMap = "AddRatingToMap_Browser";
 
@@ -26,6 +27,8 @@
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser";
         public const string LoadMySavedMap = "LoadMySavedMap_Browser";
         public const string LoadMySavedMapNames = "LoadMySavedMapNames_Browser";
+
+        public const string RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser";
 
         public const string SaveMapCreatorData = "SaveMapCreatorData_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Browser";

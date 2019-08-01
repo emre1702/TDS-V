@@ -19,4 +19,7 @@ export enum DToClientEvent {
   SendMapCreatorData = "SendMapCreatorData_Browser",
   LoadMySavedMap = "LoadMySavedMap_Browser",
   LoadMySavedMapNames = "LoadMySavedMapNames_Browser",
+
+  AddMapCreatorPosition = "AddMapCreatorPosition_Browser",
+  RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser"
 }

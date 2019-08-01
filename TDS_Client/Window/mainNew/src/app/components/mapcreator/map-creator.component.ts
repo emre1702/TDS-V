@@ -12,6 +12,7 @@ import { LoadMapDialog } from './loadmapdialog/load-map-dialog';
 import { MapCreateError } from './enums/mapcreateerror.enum';
 import { Position3D } from './models/position3d';
 import { FormControl, Validators } from '@angular/forms';
+import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
 
 enum MapCreatorNav {
   Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, BombPlaces
@@ -97,6 +98,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   addPosToTeamSpawns(pos: Position4D) {
     this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber], pos];
+    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.TeamSpawn,
+      pos.X, pos.Y, pos.Z, this.editingTeamNumber);
   }
 
   addPosToMapLimits(pos: Position4D) {

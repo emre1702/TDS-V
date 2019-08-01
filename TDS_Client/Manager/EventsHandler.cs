@@ -5,14 +5,12 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Default;
-using TDS_Client.Instance.Draw;
+using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
-using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
-using TDS_Client.Manager.Draw.Scaleform;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
@@ -570,6 +568,7 @@ namespace TDS_Client.Manager
 
         private void AddFromBrowserEvents()
         {
+            Add(DFromBrowserEvent.AddMapCreatorPosition, OnAddMapCreatorPositionMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
@@ -589,6 +588,7 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
@@ -600,6 +600,11 @@ namespace TDS_Client.Manager
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+        }
+
+        private void OnAddMapCreatorPositionMethod(object[] args)
+        {
+            MapCreator.AddedPosition(args);
         }
 
         private void OnAddMapVoteMethod(object[] args)
@@ -748,6 +753,14 @@ namespace TDS_Client.Manager
                 return;
 
             Settings.LanguageEnum = (ELanguage)languageID;
+        }
+
+        private void OnRemoveMapCreatorPositionMethod(object[] args)
+        {
+            EMapCreatorPositionType type = (EMapCreatorPositionType)Convert.ToInt32(args[0]);
+            int index = Convert.ToInt32(args[1]);
+            int teamNumber = args.Length > 2 ? Convert.ToInt32(args[2]) : 0;
+            MapCreator.RemovedPosition(type, index, teamNumber);
         }
 
         private void OnSaveMapCreatorDataMethod(object[] args)
