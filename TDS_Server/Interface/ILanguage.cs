@@ -67,6 +67,7 @@
         string PLAYER_LOGGED_IN { get; }
         string PLAYER_LOGGED_OUT { get; }
         string PLAYER_NOT_MUTED { get; }
+        string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }
         string PRIVATE_CHAT_DISCONNECTED { get; }

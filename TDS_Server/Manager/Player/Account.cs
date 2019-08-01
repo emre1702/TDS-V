@@ -54,11 +54,16 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Client player, string password, string email)
+        public static async void OnPlayerTryRegisterEvent(Client player, string username, string password, string email)
         {
             if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
                 return;
-            Register.RegisterPlayer(player, password, email.Length != 0 ? email : null);
+            if (await Player.DoesPlayerWithNameExist(username))
+            {
+                player.SendNotification(player.GetChar().Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
+                return;
+            }
+            Register.RegisterPlayer(player, username, password, email.Length != 0 ? email : null);
         }
 
         [RemoteEvent(DToServerEvent.ChatLoaded)]
@@ -72,9 +77,9 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.TryLogin)]
-        public static async void OnPlayerTryLoginEvent(Client player, string password)
+        public static async void OnPlayerTryLoginEvent(Client player, string username, string password)
         {
-            int id = await Player.GetPlayerIDByScname(player.SocialClubName);
+            int id = await Player.GetPlayerIDByName(username);
             if (id != 0)
             {
                 Login.LoginPlayer(player, id, password);
@@ -98,32 +103,32 @@ namespace TDS_Server.Manager.Player
                 await Task.Delay(1000);
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
-            //todo Make the name settable
-            player.Name = player.SocialClubName;
 
-            bool isPlayerRegistered = false;
-
-            int playerID = await Player.DbContext.Players.Where(p => p.Name == player.Name).Select(p => p.Id).FirstOrDefaultAsync();
-            if (playerID != 0)
+            var playerIDName = await Player.DbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
+            if (playerIDName == null)
             {
-                isPlayerRegistered = true;
-                var ban = await BansManager.DbContext.PlayerBans.FindAsync(playerID, 0);    // MainMenu ban => server ban
-                if (ban != null)
-                {
-                    if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
-                    {
-                        string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
-                        string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
-                        //todo Test line break and display
-                        player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
-                        return;
-                    }
-                    BansManager.DbContext.Remove(ban);
-                    await BansManager.DbContext.SaveChangesAsync();
-                }
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, false);
+                return;
             }
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, isPlayerRegistered);
+            PlayerBans? ban = await BansManager.DbContext.PlayerBans.FindAsync(playerIDName.Id, 0);    // MainMenu ban => server ban
+            if (ban != null && ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.Now)
+            {
+                BansManager.DbContext.Remove(ban);
+                await BansManager.DbContext.SaveChangesAsync();
+                ban = null;
+            }
+
+            if (ban != null)
+            {
+                string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+                string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
+                //todo Test line break and display
+                player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+                return;
+            }
+
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
         }
 
         public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)

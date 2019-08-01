@@ -53,15 +53,30 @@ namespace TDS_Server.Manager.Player
         {
             return GetChar(client).Entity;
         }
+
         public static async Task<bool> DoesPlayerWithScnameExist(string scname)
         {
             return await GetPlayerIDByScname(scname) != 0;
+        }
+
+        public static async Task<bool> DoesPlayerWithNameExist(string name)
+        {
+            return await DbContext.Players
+                            .AnyAsync(p => EF.Functions.ILike(p.Name, name));    
         }
 
         public static async Task<int> GetPlayerIDByScname(string scname)
         {
             return await DbContext.Players
                 .Where(p => p.SCName == scname)
+                .Select(p => p.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<int> GetPlayerIDByName(string name)
+        {
+            return await DbContext.Players
+                .Where(p => p.Name == name)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();
         }

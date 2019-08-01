@@ -702,15 +702,17 @@ namespace TDS_Client.Manager
 
         private void OnTryLoginMethod(object[] args)
         {
-            string password = (string)args[0];
-            RegisterLogin.TryLogin(password);
+            string username = (string)args[0];
+            string password = (string)args[1];
+            RegisterLogin.TryLogin(username, password);
         }
 
         private void OnTryRegisterMethod(object[] args)
         {
-            string password = (string)args[0];
-            string email = (string)args[1];
-            RegisterLogin.TryRegister(password, email);
+            string username = (string)args[0];
+            string password = (string)args[1];
+            string email = (string)args[2];
+            RegisterLogin.TryRegister(username, password, email);
         }
 
         private void OnChatLoadedMethod(object[] args)

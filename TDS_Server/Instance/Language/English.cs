@@ -72,6 +72,7 @@ namespace TDS_Server.Instance.Language
         public virtual string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~logged in.";
         public virtual string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~logged out.";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
+        public virtual string PLAYER_WITH_NAME_ALREADY_EXISTS => "A player with that name already exists.";
         public virtual string PRIVATE_CHAT_CLOSED_PARTNER => "Your private chat partner closed the chat.";
         public virtual string PRIVATE_CHAT_CLOSED_YOU => "You closed the private chat.";
         public virtual string PRIVATE_CHAT_DISCONNECTED => "Your private chat partner disconnected.";

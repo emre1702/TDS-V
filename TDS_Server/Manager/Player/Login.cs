@@ -50,6 +50,7 @@ namespace TDS_Server.Manager.Player
                 return;
             }
 
+            player.Name = character.Entity.Name;
             Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
             character.Entity.PlayerStats.LoggedIn = true;
             await character.DbContext.SaveChangesAsync();

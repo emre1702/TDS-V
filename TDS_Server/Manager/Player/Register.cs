@@ -11,7 +11,7 @@ namespace TDS_Server.Manager.Player
 {
     internal static class Register
     {
-        public static async void RegisterPlayer(Client player, string password, string? email)
+        public static async void RegisterPlayer(Client player, string username, string password, string? email)
         {
             while (!TDSNewContext.IsConfigured)
                 await Task.Delay(1000);
@@ -21,7 +21,7 @@ namespace TDS_Server.Manager.Player
 
             Players dbplayer = new Players
             {
-                Name = player.Name,
+                Name = username,
                 SCName = player.SocialClubName,
                 Password = Utils.HashPWServer(password),
                 Email = email,

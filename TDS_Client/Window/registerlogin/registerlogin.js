@@ -83,16 +83,18 @@ $(document).ready(function () {
         var type = button.attr("data-eventtype");
         switch (type) {
             case "login":
+				var username = $this.find("input[id=login_username]").val();
                 var password = $this.find("input[id=login_password]").val();
-                mp.trigger("TryLogin_Browser", password);
+                mp.trigger("TryLogin_Browser", username, password);
                 break;
 
             case "register":
                 $this.find("input:not(:hidden)[id=register_password_again]").each(function () {
+					let username = $this.find("input[id=register_username]").val();
                     let password = $this.find("input[id=register_password]").val();
                     let email = $this.find("input[id=register_email]").val();
                     if (password === $(this).val()) {
-                        mp.trigger("TryRegister_Browser", password, email);
+                        mp.trigger("TryRegister_Browser", username, password, email);
                     } else {
                         alert(langdata["password_has_to_be_same"]);
                         event.preventDefault();
@@ -108,7 +110,7 @@ function setLoginPanelData(playername, isreg, lang) {
     loadLanguage(lang);
     $("[data-lang=username]").each(function () {
         $(this).addClass('active highlight');
-        $(this).next("input").val(playername);
+        $(this).next("input").val(playername).prop("disabled", isregistered);
     });
 
     isregistered = isreg;

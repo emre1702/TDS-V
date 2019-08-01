@@ -12,14 +12,14 @@ namespace TDS_Client.Manager.Account
         private static string name;
         private static bool isRegistered;
 
-        public static void TryLogin(string password)
+        public static void TryLogin(string username, string password)
         {
-            EventsSender.Send(DToServerEvent.TryLogin, CommonUtils.HashPWClient(password));
+            EventsSender.Send(DToServerEvent.TryLogin, username, CommonUtils.HashPWClient(password));
         }
 
-        public static void TryRegister(string password, string email)
+        public static void TryRegister(string username, string password, string email)
         {
-            EventsSender.Send(DToServerEvent.TryRegister, CommonUtils.HashPWClient(password), email ?? string.Empty);
+            EventsSender.Send(DToServerEvent.TryRegister, username, CommonUtils.HashPWClient(password), email ?? string.Empty);
         }
 
         public static void Start(string theName, bool isregistered)
