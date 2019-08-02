@@ -109,6 +109,7 @@ namespace TDS_Server.Instance.Language
         public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
         public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";
         public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
+        public virtual string TARGET_NOT_BLOCKED => "{0} is not blocked.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
@@ -136,5 +137,6 @@ namespace TDS_Server.Instance.Language
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
+        public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }

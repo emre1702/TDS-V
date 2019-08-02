@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Rest;
@@ -97,8 +98,10 @@ namespace TDS_Server.Instance.Utility
                 if (target == player)
                     continue;
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client.Handle.Value);
-                target.Client.EnableVoiceTo(player.Client);
-                player.Client.EnableVoiceTo(target.Client);
+                if (!player.HasRelationTo(target, EPlayerRelation.Block))
+                    target.Client.EnableVoiceTo(player.Client);
+                if(!target.HasRelationTo(player, EPlayerRelation.Block))
+                    player.Client.EnableVoiceTo(target.Client);
             }
         }
 
@@ -124,8 +127,10 @@ namespace TDS_Server.Instance.Utility
                 {
                     if (target == player)
                         continue;
-                    player.Client.EnableVoiceTo(target.Client);
-                    target.Client.EnableVoiceTo(player.Client);
+                    if (!player.HasRelationTo(target, EPlayerRelation.Block))
+                        target.Client.EnableVoiceTo(player.Client);
+                    if (!target.HasRelationTo(player, EPlayerRelation.Block))
+                        player.Client.EnableVoiceTo(target.Client);
                 }
             }
         }

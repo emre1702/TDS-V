@@ -105,6 +105,7 @@
         string TARGET_ADDED_BLOCK { get; }
         string TARGET_ALREADY_BLOCKED { get; }
         string TARGET_ALREADY_IN_PRIVATE_CHAT { get; }
+        string TARGET_NOT_BLOCKED { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
         string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
@@ -125,5 +126,6 @@
         string WRONG_PASSWORD { get; }
 
         string YOU_GOT_BLOCKED_BY { get; }
+        string YOU_UNBLOCKED { get; }
     }
 }

@@ -110,6 +110,7 @@ namespace TDS_Server.Instance.Language
         public override string TARGET_ADDED_BLOCK => "Der Spieler {0} wurde von dir geblockt.";
         public override string TARGET_ALREADY_BLOCKED => "Der Spieler {0} wurde bereits von dir geblockt.";
         public override string TARGET_ALREADY_IN_PRIVATE_CHAT => "Das Ziel ist bereits in einem Privatchat.";
+        public override string TARGET_NOT_BLOCKED => "{0} ist nicht blockiert.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
@@ -137,5 +138,6 @@ namespace TDS_Server.Instance.Language
         public override string WRONG_PASSWORD => "Falsches Passwort!";
 
         public override string YOU_GOT_BLOCKED_BY => "Du wurde von {0} geblockt.";
+        public override string YOU_UNBLOCKED => "Du hast {0} blockiert.";
     }
 }

@@ -43,6 +43,8 @@ namespace TDS_Server.Instance.Player
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
+                PlayerRelationsPlayer = _entity.PlayerRelationsPlayer.ToList();
+                PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
         }
@@ -243,8 +245,10 @@ namespace TDS_Server.Instance.Player
         public Vehicle? FreeroamVehicle { get; set; }
         public DateTime? LastKillAt { get; set; }
         public PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
+        public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
+        public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
 
-        public HashSet<int> BlockingPlayerIds => Entity?.PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet() ?? new HashSet<int>();
+        public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -359,6 +363,11 @@ namespace TDS_Server.Instance.Player
                 );
                 SentPrivateChatRequestTo = null;
             }
+        }
+
+        public bool HasRelationTo(TDSPlayer target, EPlayerRelation relation)
+        {
+            return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
         }
 
         public async Task SaveData()

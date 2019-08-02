@@ -179,7 +179,8 @@ namespace TDS_Server.Manager.Commands
             var relation = await player.DbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
             if (relation != null && relation.Relation == EPlayerRelation.Block)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.Client.Name));
+                //NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.Client.Name));
+                UnblockUser(player, target);
                 return;
             }
 
@@ -187,20 +188,49 @@ namespace TDS_Server.Manager.Commands
             if (relation != null && relation.Relation == EPlayerRelation.Friend)
             {
                 msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.Client.Name);
+                player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id).Relation = EPlayerRelation.Block;
+                target.PlayerRelationsTarget.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id).Relation = EPlayerRelation.Block;
             }
             else
             {
                 relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
                 player.DbContext.PlayerRelations.Add(relation);
                 msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.Client.Name);
+                player.PlayerRelationsPlayer.Add(relation);
+                target.PlayerRelationsTarget.Add(relation);
             }
 
             if (player.InPrivateChatWith == target)
                 player.ClosePrivateChat(false);
+            target.Client.DisableVoiceTo(player.Client);
 
             relation.Relation = EPlayerRelation.Block;
             await player.DbContext.SaveChangesAsync();
             NAPI.Chat.SendChatMessageToPlayer(player.Client, msg);
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.Client.Name));
+        }
+
+        [TDSCommand(DPlayerCommand.UnblockUser)]
+        public static async void UnblockUser(TDSPlayer player, TDSPlayer target)
+        {
+            if (player.Entity == null || target.Entity == null)
+                return;
+
+            var relation = await player.DbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+            if (relation == null || relation.Relation != EPlayerRelation.Block)
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_NOT_BLOCKED, target.Client.Name));
+                return;
+            }
+
+            if (target.Team == player.Team) 
+                target.Client.EnableVoiceTo(player.Client);
+
+            player.DbContext.PlayerRelations.Remove(relation);
+            await player.DbContext.SaveChangesAsync();
+            player.PlayerRelationsPlayer.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+            target.PlayerRelationsTarget.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_UNBLOCKED, target.Client.Name));
             NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.Client.Name));
         }
 
