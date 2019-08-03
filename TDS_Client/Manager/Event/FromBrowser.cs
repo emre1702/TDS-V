@@ -33,12 +33,13 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
             Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
-            Add(DFromBrowserEvent.LoadMySavedMap, OnLoadMySavedMapFromBrowserMethod);
-            Add(DFromBrowserEvent.LoadMySavedMapNames, OnLoadMySavedMapsFromBrowserMethod);
+            Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
+            Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(DToServerEvent.RemoveMap, OnRemoveMapMethod);
             Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
@@ -140,15 +141,15 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
         }
 
-        private void OnLoadMySavedMapFromBrowserMethod(object[] args)
+        private void OnLoadMapNamesToLoadForMapCreatorMethod(object[] args)
         {
-            string mapName = (string)args[0];
-            EventsSender.Send(DToServerEvent.LoadMySavedMap, mapName);
+            EventsSender.Send(DToServerEvent.LoadMapNamesToLoadForMapCreator);
         }
 
-        private void OnLoadMySavedMapsFromBrowserMethod(object[] args)
+        private void OnLoadMyMapForMapCreatorMethod(object[] args)
         {
-            EventsSender.Send(DToServerEvent.LoadMySavedMapNames);
+            string mapName = (string)args[0];
+            EventsSender.Send(DToServerEvent.LoadMapForMapCreator, mapName);
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -208,6 +209,11 @@ namespace TDS_Client.Manager.Event
             Settings.LanguageEnum = (ELanguage)languageID;
         }
 
+        private void OnRemoveMapMethod(object[] args)
+        {
+            int mapId = Convert.ToInt32(args[0]);
+            EventsSender.Send(DToServerEvent.RemoveMap, mapId);
+        }
         private void OnRemoveMapCreatorPositionMethod(object[] args)
         {
             EMapCreatorPositionType type = (EMapCreatorPositionType)Convert.ToInt32(args[0]);

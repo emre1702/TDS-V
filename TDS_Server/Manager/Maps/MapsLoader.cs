@@ -65,6 +65,7 @@ namespace TDS_Server.Manager.Maps
             }
 
             MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
+            map.Info.FilePath = fileInfo.FullName;
 
             if (isOnlySaved)
                 return map;

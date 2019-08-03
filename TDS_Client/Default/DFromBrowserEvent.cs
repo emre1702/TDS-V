@@ -25,8 +25,6 @@
 
         public const string LanguageChange = "LanguageChange_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser";
-        public const string LoadMySavedMap = "LoadMySavedMap_Browser";
-        public const string LoadMySavedMapNames = "LoadMySavedMapNames_Browser";
 
         public const string RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser";
 

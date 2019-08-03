@@ -21,6 +21,9 @@ namespace TDS_Server.Dto.Map
 
         [XmlElement("creatorid")]
         public int? CreatorId { get; set; }
+
+        [XmlIgnore]
+        public string FilePath { get; set; }
     }
 
 #pragma warning enable CS8618 // Non-nullable field is uninitialized.

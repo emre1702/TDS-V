@@ -30,9 +30,9 @@
         public const string LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Server";
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
         public const string LoadMapFavourites = "LoadMapFavourites_Server";
+        public const string LoadMapForMapCreator = "LoadMapForMapCreator_Server";
+        public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
-        public const string LoadMySavedMap = "LoadMySavedMap_Server";
-        public const string LoadMySavedMapNames = "LoadMySavedMapNames_Server";
 
         public const string MapChange = "MapChange_Server";
         public const string MapClear = "MapClear_Server";

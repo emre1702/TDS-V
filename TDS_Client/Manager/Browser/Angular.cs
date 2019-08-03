@@ -164,14 +164,14 @@ namespace TDS_Client.Manager.Browser
             Execute(DFromBrowserEvent.SaveMapCreatorData, err);
         }
 
-        public static void LoadMySavedMapNames(string json)
+        public static void LoadMapNamesForMapCreator(string json)
         {
-            Execute(DFromBrowserEvent.LoadMySavedMapNames, json);
+            Execute(DToServerEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
-        public static void LoadMySavedMap(string json)
+        public static void LoadMapForMapCreator(string json)
         {
-            Execute(DFromBrowserEvent.LoadMySavedMap, json);
+            Execute(DToServerEvent.LoadMapForMapCreator, json);
         }
 
         public static void SyncInFightLobby(bool b)

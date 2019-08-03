@@ -1,13 +1,16 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Common.Dto;
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
+using Command = TDS_Server_DB.Entity.Command.Commands;
 using TDS_Server_DB.Entity.Server;
+using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -26,14 +29,16 @@ namespace TDS_Server.Manager.Utility
         public static float DistanceToSpotToPlant => _serverSettings.DistanceToSpotToPlant;
         public static float ArenaNewMapProbabilityPercent => _serverSettings.ArenaNewMapProbabilityPercent;
         public static int KillingSpreeMaxSecondsUntilNextKill => _serverSettings.KillingSpreeMaxSecondsUntilNextKill;
+
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
         private static AppConfigDto _localSettings;
         private static ServerSettings _serverSettings;
+        private static Command _loadMapOfOthersRightInfos;
 
         public static void LoadLocal()
         {
-            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "TDS_Server";
             using var fileStream = new FileStream(appName + ".config", FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
@@ -54,7 +59,16 @@ namespace TDS_Server.Manager.Utility
                 TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs
             };
 
+            _loadMapOfOthersRightInfos = dbcontext.Commands.First(c => c.Command == "LoadMapOfOthers");
+
             NAPI.Server.SetGamemodeName(_serverSettings.GamemodeName);
+        }
+
+        public static bool CanLoadMapsFromOthers(TDSPlayer player)
+        {
+            return _loadMapOfOthersRightInfos.NeededAdminLevel.HasValue && _loadMapOfOthersRightInfos.NeededAdminLevel <= player.AdminLevel.Level
+                || _loadMapOfOthersRightInfos.VipCanUse && player.Entity?.IsVip == true;
+
         }
     }
 }

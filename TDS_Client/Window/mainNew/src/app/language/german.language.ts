@@ -51,6 +51,10 @@ export class German extends English {
   SpawnAgainAfterDeathMs = "Wiederbelebung nach Tod Zeit (ms)";
   CreateLobby = "Erstelle Lobby";
   Send = "Senden";
+  Test = "Testen";
+  New = "Neu";
+    Save = "Speichern";
+    Load = "Laden";
   PasswordIncorrect = "Das Passwort ist falsch.";
   JoinLobby = "Lobby beitreten";
   MixTeamsAfterRound = "Teams nach der Runde mischen";
@@ -69,6 +73,16 @@ export class German extends English {
   None = "Nichts";
   MapLimitType = "Map-Grenze Typ";
   MapLimitTime = "Map-Grenze Zeit";
+  AreYouSure = "Bist du dir sicher?";
+  Yes = "Ja";
+  No = "Nein";
+  Confirmation = "Bestätigung";
+  Saved = "Gespeichert";
+  Created = "Erstellt";
+  Added = "Hinzugefügt";
+  OthersSaved = "Andere Gespeichert";
+  OthersCreated = "Andere Erstellt";
+  OthersAdded = "Andere Hinzugefügt";
 
   Arena = "Arena";
   Gang = "Gang";

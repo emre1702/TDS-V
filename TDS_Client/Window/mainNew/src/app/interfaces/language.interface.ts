@@ -52,6 +52,10 @@ export interface Language {
     SpawnAgainAfterDeathMs: string;
     CreateLobby: string;
     Send: string;
+    Test: string;
+    New: string;
+    Save: string;
+    Load: string;
     PasswordIncorrect: string;
     JoinLobby: string;
     MixTeamsAfterRound: string;
@@ -70,6 +74,16 @@ export interface Language {
     None: string;
     MapLimitType: string;
     MapLimitTime: string;
+    AreYouSure: string;
+    Yes: string;
+    No: string;
+    Confirmation: string;
+    Saved: string;
+    Created: string;
+    Added: string;
+    OthersSaved: string;
+    OthersCreated: string;
+    OthersAdded: string;
 
     Arena: string;
     Gang: string;

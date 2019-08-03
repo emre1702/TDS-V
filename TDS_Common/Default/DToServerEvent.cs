@@ -22,14 +22,15 @@
         public const string LanguageChange = "LanguageChange_Client";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
-        public const string LoadMySavedMap = "LoadMySavedMap_Client";
-        public const string LoadMySavedMapNames = "LoadMySavedMapNames_Client";
+        public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";
+        public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser";
 
         public const string MapsListRequest = "MapsListRequest_Client";
         public const string MapVote = "MapVote_Client";
 
         public const string OutsideMapLimit = "OutsideMapLimit_Client";
 
+        public const string RemoveMap = "RemoveMap_Browser";
         public const string RequestPlayersForScoreboard = "RequestPlayersForScoreboard_Client";
 
         public const string SaveMapCreatorData = "SaveMapCreatorData_Client";

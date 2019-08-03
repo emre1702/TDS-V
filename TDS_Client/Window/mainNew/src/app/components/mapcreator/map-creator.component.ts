@@ -8,11 +8,14 @@ import { MapCreateDataDto } from './models/mapCreateDataDto';
 import { Constants } from '../../constants';
 import { Position4D } from './models/position4d';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
-import { LoadMapDialog } from './loadmapdialog/load-map-dialog';
+import { LoadMapDialog } from './dialog/load-map-dialog';
 import { MapCreateError } from './enums/mapcreateerror.enum';
 import { Position3D } from './models/position3d';
 import { FormControl, Validators } from '@angular/forms';
 import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
+import { LoadMapDialogGroupDto } from './models/loadMapDialogGroupDto';
+import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
 
 enum MapCreatorNav {
   Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, BombPlaces
@@ -104,16 +107,22 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   addPosToMapLimits(pos: Position4D) {
     this.data.MapEdges = [...this.data.MapEdges, pos];
+    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.MapLimit,
+      pos.X, pos.Y, pos.Z);
   }
 
   addPosToBombPlaces(pos: Position4D) {
     this.data.BombPlaces = [...this.data.BombPlaces, pos];
+    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.BombPlantPlace,
+      pos.X, pos.Y, pos.Z);
   }
 
   addPosToMapCenter(pos: Position4D) {
     this.data.MapCenter.X = pos.X;
     this.data.MapCenter.Y = pos.Y;
     this.data.MapCenter.Z = pos.Z;
+    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.MapCenter,
+      pos.X, pos.Y, pos.Z);
   }
 
 
@@ -122,6 +131,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.data.TeamSpawns[this.editingTeamNumber].splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber]];
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.TeamSpawn, index);
   }
 
   removePosFromMapLimits() {
@@ -129,6 +139,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.data.MapEdges.splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.MapEdges = [...this.data.MapEdges];
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.MapLimit, index);
   }
 
   removePosFromBombPlaces() {
@@ -136,6 +147,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.data.BombPlaces.splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.BombPlaces = [...this.data.BombPlaces];
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.BombPlantPlace, index);
   }
 
   sendDataToClient() {
@@ -149,9 +161,27 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     });
   }
 
+  removeTheMap() {
+    const dialogRef = this.dialog.open(AreYouSureDialog);
+    dialogRef.afterClosed().subscribe((bool: boolean) => {
+      const map = this.data;
+      this.data = new MapCreateDataDto();
+      this.changeDetector.detectChanges();
+      if (map.Id == 0)
+        return;
+
+      this.rageConnector.call(DToServerEvent.RemoveMap, this.data.Id);
+    });    
+  }
+
   startNew() {
-    this.data = new MapCreateDataDto();
-    this.changeDetector.detectChanges();
+    const dialogRef = this.dialog.open(AreYouSureDialog);
+    dialogRef.afterClosed().subscribe((bool: boolean) => {
+      if (!bool) 
+        return;
+      this.data = new MapCreateDataDto();
+      this.changeDetector.detectChanges();
+    });
   }
 
   saveData() {
@@ -166,15 +196,15 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   loadPossibleMaps() {
-    this.rageConnector.callCallback(DToClientEvent.LoadMySavedMapNames, null, (possibleMapsJson: string) => {
-      const possibleMaps = JSON.parse(possibleMapsJson) as string[];
+    this.rageConnector.callCallback(DToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
+      const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
       const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
 
       dialogRef.beforeClosed().subscribe(loadMapStr => {
         if (!loadMapStr)
           return;
 
-        this.rageConnector.callCallback(DToClientEvent.LoadMySavedMap, loadMapStr, (json: string) => {
+        this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, loadMapStr, (json: string) => {
           this.data = JSON.parse(json);
           this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
             duration: 5000,

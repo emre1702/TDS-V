@@ -1,3 +1,6 @@
 export enum DToServerEvent {
-  ChooseTeam = "ChooseTeam_Browser"
+  ChooseTeam = "ChooseTeam_Browser",
+  LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser",
+  LoadMapForMapCreator = "LoadMapForMapCreator_Browser",
+  RemoveMap = "RemoveMap_Browser",
 }

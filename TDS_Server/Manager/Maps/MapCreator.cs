@@ -11,6 +11,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
@@ -59,6 +60,7 @@ namespace TDS_Server.Manager.Maps
 
                 string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
                 string mapPath = (onlySave ? SettingsManager.SavedMapsPath : SettingsManager.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
+                mapDto.Info.FilePath = mapPath;
 
                 MemoryStream memStrm = new MemoryStream();
                 UTF8Encoding utf8e = new UTF8Encoding();
@@ -127,21 +129,132 @@ namespace TDS_Server.Manager.Maps
             return _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
-        public static void SendPlayerHisSavedMap(TDSPlayer player, string mapName)
+        public static void SendPlayerMapForMapCreator(TDSPlayer player, string mapName)
         {
             if (player.Entity == null)
                 return;
-            var map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
-            string json = JsonConvert.SerializeObject(map);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMySavedMap, json);
+            
+            MapDto? map = MapsLoader.GetMapByName(mapName);
+
+            if (map == null)
+                map = GetMapByName(mapName);
+            if (map == null)
+                map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+
+            var mapCreatorData = new MapCreateDataDto
+            {
+                Id = map.SyncedData.Id,
+                Name = map.SyncedData.Name,
+                Type = map.Info.Type,
+                BombPlaces = map.BombInfo?.PlantPositions,
+                MapCenter = map.LimitInfo.Center,
+                MapEdges = map.LimitInfo.Edges,
+                MinPlayers = map.Info.MinPlayers,
+                MaxPlayers = map.Info.MaxPlayers,
+                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select(t => t.Spawns).ToArray(),
+                Description = new Dictionary<ELanguage, string> 
+                { 
+                    [ELanguage.English] = map.Descriptions?.English ?? string.Empty, 
+                    [ELanguage.German] = map.Descriptions?.German ?? string.Empty 
+                }
+
+            };
+
+            string json = JsonConvert.SerializeObject(mapCreatorData);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapForMapCreator, json);
         }
 
-        public static void SendPlayerHisSavedMapNames(TDSPlayer player)
+        public static void SendPlayerMapNamesForMapCreator(TDSPlayer player)
         {
             if (player.Entity == null)
                 return;
-            string json = JsonConvert.SerializeObject(_savedMaps.Where(m => m.Info.CreatorId == player.Entity.Id).Select(m => m.Info.Name));
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMySavedMapNames, json);
+
+            var data = new List<LoadMapDialogGroupDto>
+            {
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Saved",
+                    Maps = _savedMaps
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                },
+
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Created",
+                    Maps = _newCreatedMaps
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                },
+
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Added",
+                    Maps = MapsLoader.AllMaps
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                },
+            };
+
+            if (SettingsManager.CanLoadMapsFromOthers(player))
+            {
+                data.Add(new LoadMapDialogGroupDto
+                {
+                    GroupName = "OthersSaved",
+                    Maps = _savedMaps
+                        .Where(m => m.Info.CreatorId != player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                });
+
+                data.Add(new LoadMapDialogGroupDto
+                {
+                    GroupName = "OthersCreated",
+                    Maps = _newCreatedMaps
+                        .Where(m => m.Info.CreatorId != player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                });
+
+                data.Add(new LoadMapDialogGroupDto
+                {
+                    GroupName = "OthersAdded",
+                    Maps = MapsLoader.AllMaps
+                        .Where(m => m.Info.CreatorId != player.Entity.Id)
+                        .Select(m => m.Info.Name)
+                        .ToList()
+                });
+            }
+
+            string json = JsonConvert.SerializeObject(data);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
+        }
+
+        public static void RemoveMap(TDSPlayer player, int mapId)
+        {
+            bool isSavedMap = true;
+            MapDto? map = _savedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+            if (map == null)
+            {
+                map = _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                isSavedMap = false;
+            }
+
+            if (map == null)
+                return;
+
+            if (map.Info.CreatorId != player.Entity?.Id && !SettingsManager.CanLoadMapsFromOthers(player))
+                return;
+
+            if (isSavedMap)
+                _savedMaps.Remove(map);
+            else
+                _newCreatedMaps.Remove(map);
+
+            File.Delete(map.Info.FilePath);
         }
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)

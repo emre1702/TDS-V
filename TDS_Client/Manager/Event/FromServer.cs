@@ -43,8 +43,8 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
-            Add(DToClientEvent.LoadMySavedMap, OnLoadMySavedMapFromServerMethod);
-            Add(DToClientEvent.LoadMySavedMapNames, OnLoadMySavedMapNamesFromServerMethod);
+            Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
+            Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
             Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
             Add(DToClientEvent.MapClear, OnMapClearMethod);
@@ -135,16 +135,16 @@ namespace TDS_Client.Manager.Event
             Angular.LoadFavoriteMaps(mapFavoritesJson);
         }
 
-        private void OnLoadMySavedMapFromServerMethod(object[] args)
+        private void OnLoadMapForMapCreatorServerMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.LoadMySavedMap(json);
+            Angular.LoadMapForMapCreator(json);
         }
 
-        private void OnLoadMySavedMapNamesFromServerMethod(object[] args)
+        private void OnLoadMapNamesToLoadForMapCreatorServerMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.LoadMySavedMapNames(json);
+            Angular.LoadMapNamesForMapCreator(json);
         }
 
         private void OnMapChangeMethod(object[] args)

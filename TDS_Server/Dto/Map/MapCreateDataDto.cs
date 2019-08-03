@@ -7,7 +7,7 @@ namespace TDS_Common.Dto.Map
     public class MapCreateDataDto
     {
         #nullable disable
-
+        public int Id { get; set; }
         public string Name { get; set; }
         public EMapType Type { get; set; }
         public uint MinPlayers { get; set; }

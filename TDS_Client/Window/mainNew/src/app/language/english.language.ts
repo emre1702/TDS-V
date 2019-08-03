@@ -56,6 +56,10 @@ export class English implements Language {
     SpawnAgainAfterDeathMs = "Spawn after death time (ms)";
     CreateLobby = "Create lobby";
     Send = "Send";
+    Test = "Test";
+    New = "New";
+    Save = "Save";
+    Load = "Load";
     PasswordIncorrect = "The password is incorrect.";
     JoinLobby = "Join lobby";
     MixTeamsAfterRound = "Mix teams after round";
@@ -74,6 +78,16 @@ export class English implements Language {
     None = "None";
     MapLimitType = "Map limit type";
     MapLimitTime = "Map limit time";
+    AreYouSure = "Are you sure?";
+    Yes = "Yes";
+    No = "No";
+    Confirmation = "Confirmation";
+    Saved = "Saved";
+    Created = "Created";
+    Added = "Added";
+    OthersSaved = "Others saved";
+    OthersCreated = "Others created";
+    OthersAdded = "Others added";
 
     Arena = "Arena";
     Gang = "Gang";

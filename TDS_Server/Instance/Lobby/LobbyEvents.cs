@@ -314,22 +314,31 @@ namespace TDS_Server.Instance.Lobby
             NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SaveMapCreatorReturn, (int)err);
         }
 
-        [RemoteEvent(DToServerEvent.LoadMySavedMap)]
-        public void OnLoadMySavedMap(Client client, string mapName)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-            MapCreator.SendPlayerHisSavedMap(player, mapName);
-        }
-
-        [RemoteEvent(DToServerEvent.LoadMySavedMapNames)]
+        [RemoteEvent(DToServerEvent.LoadMapNamesToLoadForMapCreator)]
         public void OnLoadMySavedMapNames(Client client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            MapCreator.SendPlayerHisSavedMapNames(player);
+            MapCreator.SendPlayerMapNamesForMapCreator(player);
+        }
+
+        [RemoteEvent(DToServerEvent.LoadMapForMapCreator)]
+        public void OnLoadMySavedMap(Client client, string mapName)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            MapCreator.SendPlayerMapForMapCreator(player, mapName);
+        }
+
+        [RemoteEvent(DToServerEvent.RemoveMap)]
+        public void OnRemoveMap(Client client, int mapId)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            MapCreator.RemoveMap(player, mapId);
         }
 
         [RemoteEvent(DToServerEvent.GetVehicle)]
