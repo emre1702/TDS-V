@@ -862,6 +862,7 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 20, Command = "BlockUser" },
                 new Commands { Id = 21, Command = "UnblockUser" },
                 new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
+                new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -955,7 +956,23 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "Ignore", Command = 20 },
                 new CommandAlias { Alias = "IgnoreUser", Command = 20 },
                 new CommandAlias { Alias = "Block", Command = 20 },
-                new CommandAlias { Alias = "Unblock", Command = 21 }
+                new CommandAlias { Alias = "Unblock", Command = 21 },
+                new CommandAlias { Alias = "PermaVoiceMute", Command = 23 },
+                new CommandAlias { Alias = "PVoiceMute", Command = 23 },
+                new CommandAlias { Alias = "RVoiceMute", Command = 23 },
+                new CommandAlias { Alias = "TimeVoiceMute", Command = 23 },
+                new CommandAlias { Alias = "TVoiceMute", Command = 23 },
+                new CommandAlias { Alias = "PermaMuteVoice", Command = 23 },
+                new CommandAlias { Alias = "PMuteVoice", Command = 23 },
+                new CommandAlias { Alias = "RMuteVoice", Command = 23 },
+                new CommandAlias { Alias = "TimeMuteVoice", Command = 23 },
+                new CommandAlias { Alias = "TMuteVoice", Command = 23 },
+                new CommandAlias { Alias = "VoicePermaMute", Command = 23 },
+                new CommandAlias { Alias = "VoicePMute", Command = 23 },
+                new CommandAlias { Alias = "VoiceRMute", Command = 23 },
+                new CommandAlias { Alias = "VoiceTimeMute", Command = 23 },
+                new CommandAlias { Alias = "VoiceTMute", Command = 23 },
+                new CommandAlias { Alias = "MuteVoice", Command = 23 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -1000,7 +1017,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 20, Language = ELanguage.German, Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
                 new CommandInfos { Id = 20, Language = ELanguage.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
                 new CommandInfos { Id = 21, Language = ELanguage.German, Info = "Entfernt das Ziel aus der Blockliste." },
-                new CommandInfos { Id = 21, Language = ELanguage.English, Info = "Removes the target from the blocklist." }
+                new CommandInfos { Id = 21, Language = ELanguage.English, Info = "Removes the target from the blocklist." },
+                new CommandInfos { Id = 23, Language = ELanguage.German, Info = "Mutet einen Spieler im Voice-Chat." },
+                new CommandInfos { Id = 23, Language = ELanguage.English, Info = "Mutes a player in the voice-chat." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(

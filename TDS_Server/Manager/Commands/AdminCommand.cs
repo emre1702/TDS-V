@@ -183,6 +183,34 @@ namespace TDS_Server.Manager.Commands
                 AdminLogsManager.Log(ELogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
+        [TDSCommand(DAdminCommand.VoiceMute, 0)]
+        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText] string reason)
+        {
+            if (!IsReasonValid(reason, player))
+                return;
+            if (!IsMuteTimeValid(minutes, player))
+                return;
+
+            Account.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
+        }
+
+        [TDSCommand(DAdminCommand.VoiceMute, 1)]
+        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText] string reason)
+        {
+            if (!IsReasonValid(reason, player))
+                return;
+            if (!IsMuteTimeValid(minutes, player))
+                return;
+
+            Account.ChangePlayerVoiceMuteTime(player, target, minutes, reason);
+
+            if (!cmdinfos.AsLobbyOwner)
+                AdminLogsManager.Log(ELogType.VoiceMute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
+        }
+
         [TDSCommand(DAdminCommand.Goto)]
         public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
         {

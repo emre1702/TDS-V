@@ -60,6 +60,7 @@
         string PERMABAN_LOBBY_INFO { get; }
         string PERMABAN_LOBBY_YOU_INFO { get; }
         string PERMAMUTE_INFO { get; }
+        string PERMAVOICEMUTE_INFO { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
         //string PLAYER_GOT_KILLINGSPREE_NOTIFICATION { get; }
@@ -114,12 +115,14 @@
         string TIMEBAN_LOBBY_INFO { get; }
         string TIMEBAN_LOBBY_YOU_INFO { get; }
         string TIMEMUTE_INFO { get; }
+        string TIMEVOICEMUTE_INFO { get; }
         string TOO_LONG_OUTSIDE_MAP { get; }
 
         string UNBAN_INFO { get; }
         string UNBAN_LOBBY_INFO { get; }
         string UNBAN_YOU_LOBBY_INFO { get; }
         string UNMUTE_INFO { get; }
+        string UNVOICEMUTE_INFO { get; }
 
         string[] WELCOME_MESSAGE { get; }
 

@@ -98,9 +98,9 @@ namespace TDS_Server.Instance.Utility
                 if (target == player)
                     continue;
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client.Handle.Value);
-                if (!player.HasRelationTo(target, EPlayerRelation.Block))
+                if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
                     target.Client.EnableVoiceTo(player.Client);
-                if(!target.HasRelationTo(player, EPlayerRelation.Block))
+                if(!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
                     player.Client.EnableVoiceTo(target.Client);
             }
         }
@@ -127,9 +127,9 @@ namespace TDS_Server.Instance.Utility
                 {
                     if (target == player)
                         continue;
-                    if (!player.HasRelationTo(target, EPlayerRelation.Block))
+                    if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
                         target.Client.EnableVoiceTo(player.Client);
-                    if (!target.HasRelationTo(player, EPlayerRelation.Block))
+                    if (!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
                         player.Client.EnableVoiceTo(target.Client);
                 }
             }

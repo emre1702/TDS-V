@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
@@ -49,14 +50,46 @@ namespace TDS_Server.Manager.Utility
                 try
                 {
                     ++player.PlayMinutes;
-                    if (player.MuteTime.HasValue && player.MuteTime > 0)
-                        --player.MuteTime;
+                    ReduceMuteTime(player);
+                    ReduceVoiceMuteTime(player);
+
                     player.CheckSaveData();
                 }
                 catch (Exception ex)
                 {
                     ErrorLogsManager.Log(ex.Message, Environment.StackTrace, player);
                 }
+            }
+        }
+
+        private static void ReduceMuteTime(TDSPlayer player)
+        {
+            if (!player.MuteTime.HasValue || player.MuteTime == 0)
+                return;
+
+            if (--player.MuteTime != 0)
+                return;
+
+            player.MuteTime = null;
+        }
+
+        private static void ReduceVoiceMuteTime(TDSPlayer player)
+        {
+            if (!player.VoiceMuteTime.HasValue || player.VoiceMuteTime == 0)
+                return;
+
+            if (--player.VoiceMuteTime != 0)
+                return;
+            
+            player.VoiceMuteTime = null;
+
+            if (player.Team == null)
+                return;
+
+            foreach (var target in player.Team.Players)
+            {
+                if (!target.HasRelationTo(player, EPlayerRelation.Block))
+                    player.Client.EnableVoiceTo(target.Client);
             }
         }
     }

@@ -17,6 +17,7 @@ namespace TDS_Common.Enum
         Lobby_Kick = 9,
         Lobby_Ban = 10,
         Goto = 11,
-        RemoveMap = 12
+        RemoveMap = 12,
+        VoiceMute = 13
     }
 }

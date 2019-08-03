@@ -136,7 +136,7 @@ namespace TDS_Server.Manager.Player
             if (target.Entity == null)
                 return;
             OutputMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
-            target.MuteTime = minutes == -1 ? (int?)null : minutes;
+            target.MuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
         }
 
         public static async void ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
@@ -145,6 +145,34 @@ namespace TDS_Server.Manager.Player
 
             using var dbcontext = new TDSNewContext();
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
+            dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
+
+            await dbcontext.SaveChangesAsync();
+        }
+
+        public static void ChangePlayerVoiceMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
+        {
+            if (target.Entity == null)
+                return;
+            OutputVoiceMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
+            target.VoiceMuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
+
+            if (target.Team != null)
+            {
+                foreach (var player in target.Team.Players)
+                {
+                    target.Client.DisableVoiceTo(player.Client);
+                }
+            }
+            
+        }
+
+        public static async void ChangePlayerVoiceMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
+        {
+            OutputVoiceMuteInfo(admin.Client.Name, target.Name, minutes, reason);
+
+            using var dbcontext = new TDSNewContext();
+            target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
             await dbcontext.SaveChangesAsync();
@@ -164,6 +192,24 @@ namespace TDS_Server.Manager.Player
 
                 default:
                     LangUtils.SendAllChatMessage(lang => lang.TIMEMUTE_INFO.Formatted(targetName, adminName, minutes, reason));
+                    break;
+            }
+        }
+
+        private static void OutputVoiceMuteInfo(string adminName, string targetName, float minutes, string reason)
+        {
+            switch (minutes)
+            {
+                case -1:
+                    LangUtils.SendAllChatMessage(lang => lang.PERMAVOICEMUTE_INFO.Formatted(targetName, adminName, reason));
+                    break;
+
+                case 0:
+                    LangUtils.SendAllChatMessage(lang => lang.UNVOICEMUTE_INFO.Formatted(targetName, adminName, reason));
+                    break;
+
+                default:
+                    LangUtils.SendAllChatMessage(lang => lang.TIMEVOICEMUTE_INFO.Formatted(targetName, adminName, minutes, reason));
                     break;
             }
         }
