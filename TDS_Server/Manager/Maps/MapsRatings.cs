@@ -26,7 +26,13 @@ namespace TDS_Server.Manager.Maps
             if (playerId == null)
                 return;
 
-            MapDto? map = MapsLoader.GetMapById(mapId) ?? MapCreator.GetMapById(mapId);
+            MapDto? map = MapsLoader.GetMapById(mapId);
+            bool isCustom = false; 
+            if (map == null)
+            {
+                map = MapCreator.GetMapById(mapId);
+                isCustom = true;
+            }
             if (map == null)
                 return;
 
@@ -39,6 +45,9 @@ namespace TDS_Server.Manager.Maps
             maprating.Rating = rating;
             map.SyncedData.Rating = rating;
             await DbContext.SaveChangesAsync();
+
+            if (isCustom)
+                MapCreator.AddedMapRating(map);
         }
 
         public static void SendPlayerHisRatings(TDSPlayer character)

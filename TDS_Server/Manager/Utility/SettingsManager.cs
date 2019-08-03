@@ -29,6 +29,7 @@ namespace TDS_Server.Manager.Utility
         public static float DistanceToSpotToPlant => _serverSettings.DistanceToSpotToPlant;
         public static float ArenaNewMapProbabilityPercent => _serverSettings.ArenaNewMapProbabilityPercent;
         public static int KillingSpreeMaxSecondsUntilNextKill => _serverSettings.KillingSpreeMaxSecondsUntilNextKill;
+        public static int MapRatingAmountForCheck => _serverSettings.MapRatingAmountForCheck;
 
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 

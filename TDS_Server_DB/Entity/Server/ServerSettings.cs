@@ -17,5 +17,6 @@
         public int TeamOrderCooldownMs { get; set; }
         public float ArenaNewMapProbabilityPercent { get; set; }
         public int KillingSpreeMaxSecondsUntilNextKill { get; set; }
+        public int MapRatingAmountForCheck { get; set; }
     }
 }

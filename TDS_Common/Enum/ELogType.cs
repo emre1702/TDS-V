@@ -16,6 +16,7 @@ namespace TDS_Common.Enum
         Lobby_Leave = 8,
         Lobby_Kick = 9,
         Lobby_Ban = 10,
-        Goto = 11
+        Goto = 11,
+        RemoveMap = 12
     }
 }
