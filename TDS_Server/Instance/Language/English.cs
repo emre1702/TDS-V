@@ -49,6 +49,7 @@ namespace TDS_Server.Instance.Language
         public virtual string LOBBY_ERROR_REMOVE => "The lobby has got an error and got removed. The developer are informed.";
 
         public virtual string MAP_WON_VOTING => "The map {0} won the voting!";
+        public virtual string MUTE_EXPIRED => "The chat mute has expired. You can write again.";
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";
 
         public virtual string NOT_ALLOWED => "You are not allowed to do that!";
@@ -127,6 +128,8 @@ namespace TDS_Server.Instance.Language
         public virtual string UNBAN_YOU_LOBBY_INFO => "You got unbaned in lobby '{0}' by {1}. Reason: {2}";
         public virtual string UNMUTE_INFO => "{0} was unmuted by {1}. Reason: {2}";
         public virtual string UNVOICEMUTE_INFO => "{0} was unmuted in voice-chat by {1}. Reason: {2}";
+
+        public virtual string VOICE_MUTE_EXPIRED => "Your voice channel mute has expired. You can talk again.";
 
         public virtual string[] WELCOME_MESSAGE => new string[] {
             "#n#Welcome to #b#Team Deathmatch Server#w#.",

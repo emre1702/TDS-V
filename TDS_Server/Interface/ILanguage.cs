@@ -43,6 +43,7 @@
         string LOBBY_ERROR_REMOVE { get; }
 
         string MAP_WON_VOTING { get; }
+        string MUTE_EXPIRED { get; }
         string MUTETIME_INVALID { get; }
 
         string NOT_ALLOWED { get; }
@@ -124,8 +125,9 @@
         string UNMUTE_INFO { get; }
         string UNVOICEMUTE_INFO { get; }
 
-        string[] WELCOME_MESSAGE { get; }
+        string VOICE_MUTE_EXPIRED { get; }
 
+        string[] WELCOME_MESSAGE { get; }
         string WRONG_PASSWORD { get; }
 
         string YOU_GOT_BLOCKED_BY { get; }

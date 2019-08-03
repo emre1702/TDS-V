@@ -50,6 +50,7 @@ namespace TDS_Server.Instance.Language
         public override string LOBBY_ERROR_REMOVE => "Die Lobby hatte einen Fehler und wurde entfernt. Der/die Entwickler wurde(n) benachrichtigt.";
 
         public override string MAP_WON_VOTING => "Die Map {0} hat das Voting gewonnen!";
+        public override string MUTE_EXPIRED => "Dein Chat Mute ist abgelaufen. Du darfst wieder schreiben.";
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";
 
         public override string NOT_ALLOWED => "Du bist dazu nicht befugt!";
@@ -128,6 +129,8 @@ namespace TDS_Server.Instance.Language
         public override string UNBAN_YOU_LOBBY_INFO => "Du wurdest in der Lobby '{0}' von {1} entbannt. Grund: {2}";
         public override string UNMUTE_INFO => "{0} wurde von {1} entmutet. Grund: {2}";
         public override string UNVOICEMUTE_INFO => "{0} wurde von {1} im Voice-Chat entmutet. Grund: {2}";
+
+        public override string VOICE_MUTE_EXPIRED => "Dein Voice-Channel Mute ist abgelaufen. Du darfst wieder reden.";
 
         public override string[] WELCOME_MESSAGE => new string[] {
             "#n#Willkommen auf dem #b#Team Deathmatch Server#w#.",
