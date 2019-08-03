@@ -1,4 +1,5 @@
 ﻿using RAGE;
+using RAGE.Game;
 using RAGE.NUI;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,7 @@ namespace TDS_Client.Instance.Lobby
             Reset();
             _checkTimer = new TDSTimer(Check, 1000, 0);
             _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
+            TickManager.Add(Draw);
         }
 
         public void Stop()
@@ -69,6 +71,7 @@ namespace TDS_Client.Instance.Lobby
             _info = null;
             _maxOutsideCounter = Settings.MapLimitTime;
             _outsideCounter = _maxOutsideCounter;
+            TickManager.Remove(Draw);
         }
 
         private void Reset()
@@ -136,8 +139,7 @@ namespace TDS_Client.Instance.Lobby
             {
                 Player.LocalPlayer.Position = _lastPosInMap;
                 Reset();
-            }
-                
+            }    
         }
 
         private void IsOutsideBlock()
@@ -182,6 +184,23 @@ namespace TDS_Client.Instance.Lobby
                     inside = !inside;
             }
             return inside;
+        }
+
+        private void Draw()
+        {
+            for (int i = 0; i < _edges.Length - 1; ++i)
+            {
+                var edgeStart = _edges[i];
+                var edgeTarget = _edges[i+1];
+                float edgeStartZ = 0;
+                float edgeTargetZ = 0;
+                Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, edgeStart.Z, ref edgeStartZ, false);
+                Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, edgeTarget.Z, ref edgeTargetZ, false);
+
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.3f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.3f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.8f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.8f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 1.3f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 1.3f, 150, 0, 0, 255);
+            }
         }
     }
 }
