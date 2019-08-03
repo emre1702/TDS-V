@@ -34,7 +34,8 @@ import { TeamOrdersComponent } from './components/teamorders/teamorders.componen
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
-import { LoadMapDialog } from './components/mapcreator/loadmapdialog/load-map-dialog';
+import { LoadMapDialog } from './components/mapcreator/dialog/load-map-dialog';
+import { AreYouSureDialog } from './dialog/are-you-sure-dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomLobbyMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby.component';
 import { CustomLobbyPasswordDialog } from './components/lobbychoice/dialog/custom-lobby-password-dialog';
@@ -53,6 +54,7 @@ import { TeamChoiceComponent } from './components/team-choice/team-choice.compon
     MapVotingNavPipe,
     LanguagePipe,
     LoadMapDialog,
+    AreYouSureDialog,
     CustomLobbyPasswordDialog,
     LobbyChoiceComponent,
     TeamChoiceComponent
@@ -83,7 +85,7 @@ import { TeamChoiceComponent } from './components/team-choice/team-choice.compon
     MatGridListModule,
     MatCheckboxModule
   ],
-  entryComponents: [LoadMapDialog, CustomLobbyPasswordDialog],
+  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
   providers: [OrderByPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
