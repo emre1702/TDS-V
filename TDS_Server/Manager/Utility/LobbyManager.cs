@@ -107,9 +107,9 @@ namespace TDS_Server.Manager.Utility
             arena.SetMapList(lobbyMapsList);
         }
 
-        public static Lobby GetLobby(int id)
+        public static Lobby? GetLobby(int id)
         {
-            Lobby.LobbiesByIndex.TryGetValue(id, out Lobby lobby);
+            Lobby.LobbiesByIndex.TryGetValue(id, out Lobby? lobby);
             return lobby;
         }
 

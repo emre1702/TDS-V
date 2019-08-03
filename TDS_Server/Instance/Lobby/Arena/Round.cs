@@ -82,7 +82,7 @@ namespace TDS_Server.Instance.Lobby
                 }
                 catch (Exception ex)
                 {
-                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace);
+                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     NAPI.Task.Run(Remove);
                 }

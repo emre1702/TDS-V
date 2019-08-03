@@ -20,8 +20,10 @@
             return lobby1.Id != lobby2.Id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
+            if (obj == null)
+                return false;
             if (!obj.GetType().IsSubclassOf(typeof(Lobby)) && obj.GetType() != typeof(Lobby))
                 return false;
             return Id == ((Lobby)obj).Id;

@@ -129,7 +129,7 @@ namespace TDS_Server.Instance
         {
             if (source == null)
                 return;
-            if (!allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int> lasthitterdict))
+            if (!allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int>? lasthitterdict))
             {
                 lasthitterdict = new Dictionary<TDSPlayer, int>();
                 allHitters[target] = lasthitterdict;

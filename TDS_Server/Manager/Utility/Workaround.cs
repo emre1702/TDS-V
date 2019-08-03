@@ -67,7 +67,7 @@ namespace TDS_Server.Manager.Utility
             var info = _attachedEntitiesInfos[entity];
             if (info.LobbyId.HasValue)
             {
-                Lobby lobby = LobbyManager.GetLobby(info.LobbyId.Value);
+                Lobby? lobby = LobbyManager.GetLobby(info.LobbyId.Value);
                 if (lobby == null)
                     return;
                 lobby.SendAllPlayerEvent(DToClientEvent.DetachEntityWorkaround, null, entity.Value, resetCollision);

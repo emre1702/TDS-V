@@ -129,8 +129,9 @@ namespace TDS_Server.Instance.GameModes
             //_bomb.FreezePosition = false;
             _bombTakeMarker?.Delete();
             _bombTakeMarker = null;
-            _lobbyBombTakeCol.Remove(Lobby, out ColShape col);
-            NAPI.ColShape.DeleteColShape(col);
+            _lobbyBombTakeCol.Remove(Lobby, out ColShape? col);
+            if (col != null)
+                NAPI.ColShape.DeleteColShape(col);
         }
     }
 }

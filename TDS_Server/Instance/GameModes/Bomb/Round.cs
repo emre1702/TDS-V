@@ -79,8 +79,9 @@ namespace TDS_Server.Instance.GameModes
 
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
-                _lobbyBombTakeCol.Remove(Lobby, out ColShape col);
-                NAPI.ColShape.DeleteColShape(col);
+                _lobbyBombTakeCol.Remove(Lobby, out ColShape? col);
+                if (col != null)
+                    NAPI.ColShape.DeleteColShape(col);
                 _bombTakeMarker?.Delete();
                 _bombTakeMarker = null;
             }

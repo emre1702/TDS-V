@@ -149,9 +149,9 @@ namespace TDS_Server.Instance.Utility
             return !(a == b);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            return obj is Team team && team.Entity.Id == this.Entity.Id;
+            return obj != null && obj is Team team && team.Entity.Id == this.Entity.Id;
         }
 
         public override int GetHashCode()

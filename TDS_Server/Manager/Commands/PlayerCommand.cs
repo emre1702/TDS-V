@@ -188,8 +188,12 @@ namespace TDS_Server.Manager.Commands
             if (relation != null && relation.Relation == EPlayerRelation.Friend)
             {
                 msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.Client.Name);
-                player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id).Relation = EPlayerRelation.Block;
-                target.PlayerRelationsTarget.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id).Relation = EPlayerRelation.Block;
+                var playerRelation = player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+                if (playerRelation != null)
+                    playerRelation.Relation = EPlayerRelation.Block;
+                var targetRelation = target.PlayerRelationsTarget.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+                if (targetRelation != null)
+                    targetRelation.Relation = EPlayerRelation.Block;
             }
             else
             {

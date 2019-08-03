@@ -10,4 +10,3 @@ B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Common\bin\Debug\netcoreapp2.2\
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Common\bin\Debug\netcoreapp2.2\xxHash.dll
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Common\obj\Debug\netcoreapp2.2\TDS_Common.csproj.CopyComplete
 B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Common\bin\Debug\netcoreapp2.2\Newtonsoft.Json.dll
-B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Common\obj\Debug\netcoreapp2.2\TDS_Common.csprojAssemblyReference.cache
