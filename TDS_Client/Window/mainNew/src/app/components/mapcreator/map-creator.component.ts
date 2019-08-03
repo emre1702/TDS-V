@@ -162,8 +162,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   removeTheMap() {
-    const dialogRef = this.dialog.open(AreYouSureDialog);
-    dialogRef.afterClosed().subscribe((bool: boolean) => {
+    this.dialog.open(AreYouSureDialog, {panelClass: "mat-app-background"})
+      .afterClosed()
+      .subscribe((bool: boolean) => {
       const map = this.data;
       this.data = new MapCreateDataDto();
       this.changeDetector.detectChanges();
@@ -175,8 +176,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   startNew() {
-    const dialogRef = this.dialog.open(AreYouSureDialog);
-    dialogRef.afterClosed().subscribe((bool: boolean) => {
+    this.dialog.open(AreYouSureDialog, {panelClass: "mat-app-background"})
+      .afterClosed()
+      .subscribe((bool: boolean) => {
       if (!bool) 
         return;
       this.data = new MapCreateDataDto();
