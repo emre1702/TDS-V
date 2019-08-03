@@ -854,7 +854,9 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 17, Command = "OpenPrivateChat" },
                 new Commands { Id = 18, Command = "PrivateMessage" },
                 new Commands { Id = 19, Command = "UserId" },
-                new Commands { Id = 20, Command = "BlockUser" }
+                new Commands { Id = 20, Command = "BlockUser" },
+                new Commands { Id = 21, Command = "UnblockUser" },
+                new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -947,7 +949,8 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "UID", Command = 19 },
                 new CommandAlias { Alias = "Ignore", Command = 20 },
                 new CommandAlias { Alias = "IgnoreUser", Command = 20 },
-                new CommandAlias { Alias = "Block", Command = 20 }
+                new CommandAlias { Alias = "Block", Command = 20 },
+                new CommandAlias { Alias = "Unblock", Command = 21 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -990,7 +993,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 19, Language = ELanguage.German, Info = "Gibt dir deine User-Id aus." },
                 new CommandInfos { Id = 19, Language = ELanguage.English, Info = "Outputs your user-id to yourself." },
                 new CommandInfos { Id = 20, Language = ELanguage.German, Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
-                new CommandInfos { Id = 20, Language = ELanguage.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." }
+                new CommandInfos { Id = 20, Language = ELanguage.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
+                new CommandInfos { Id = 21, Language = ELanguage.German, Info = "Entfernt das Ziel aus der Blockliste." },
+                new CommandInfos { Id = 21, Language = ELanguage.English, Info = "Removes the target from the blocklist." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(
