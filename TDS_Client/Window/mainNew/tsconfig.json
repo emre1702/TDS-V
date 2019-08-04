@@ -3,7 +3,7 @@
   "exclude": [
     "*node_modules*"
   ],
-  "include": ["./src/*", ],
+  "include": ["./src/*"],
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -22,6 +22,9 @@
       "es2018",
       "dom"
     ],
-    "disableSizeLimit": true
+    "disableSizeLimit": true,
+    "plugins": [ 
+      {"name": "@angular/language-service"} 
+    ]
   }
 }
