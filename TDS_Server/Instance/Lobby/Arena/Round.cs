@@ -55,9 +55,10 @@ namespace TDS_Server.Instance.Lobby
         };
 
         public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
-        private ERoundEndReason _currentRoundEndReason;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
+
         private Team? _currentRoundEndWinnerTeam;
+        private ERoundEndReason _currentRoundEndReason;
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
@@ -105,6 +106,7 @@ namespace TDS_Server.Instance.Lobby
         private void StartNewMapChoose()
         {
             MapDto nextMap = GetNextMap();
+            SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
             CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap);
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);

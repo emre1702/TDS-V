@@ -24,6 +24,9 @@ namespace TDS_Server.Dto.Map
 
         [XmlIgnore]
         public string FilePath { get; set; }
+
+        [XmlIgnore]
+        public bool IsNewMap { get; set; }
     }
 
 #pragma warning enable CS8618 // Non-nullable field is uninitialized.

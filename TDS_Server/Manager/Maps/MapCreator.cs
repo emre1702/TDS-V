@@ -54,6 +54,7 @@ namespace TDS_Server.Manager.Maps
                     bombPlace.Z -= 1;
 
                 var mapDto = new MapDto(mapCreateData);
+                mapDto.Info.IsNewMap = true;
                 mapDto.Info.CreatorId = creator.Entity.Id;
 
                 mapDto.LoadSyncedData();
@@ -105,12 +106,18 @@ namespace TDS_Server.Manager.Maps
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
                 map.SyncedData.CreatorName = string.Empty;
+                map.Info.IsNewMap = true;
             }
         }
 
         public static async Task LoadSavedMaps(TDSNewContext dbContext)
         {
             _savedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.SavedMapsPath, true);
+            foreach (var map in _savedMaps)
+            {
+                // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
+                map.Info.IsNewMap = true;
+            }
         }
 
         public static MapDto? GetRandomNewMap()

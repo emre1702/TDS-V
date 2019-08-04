@@ -1,23 +1,21 @@
 using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Default;
-using TDS_Server.Dto;
-using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
     partial class Lobby
     {
+        public bool SavePlayerLobbyStats { get; set; } = true;
+
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
             if (LobbyEntity.Type != ELobbyType.MainMenu)

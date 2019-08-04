@@ -23,7 +23,7 @@ namespace TDS_Server.Instance
                 return null;
 
             // Death //
-            if (player.CurrentLobbyStats != null)
+            if (player.CurrentLobbyStats != null && player.CurrentLobby?.SavePlayerLobbyStats == true)
             {
                 ++player.CurrentLobbyStats.Deaths;
                 ++player.CurrentLobbyStats.TotalDeaths;

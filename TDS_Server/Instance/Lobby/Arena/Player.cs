@@ -187,8 +187,10 @@ namespace TDS_Server.Instance.Lobby
             ++teamamountdata.AmountAlive;
         }
 
-        private static void SavePlayerRoundStats(TDSPlayer character)
+        private void SavePlayerRoundStats(TDSPlayer character)
         {
+            if (!SavePlayerLobbyStats)
+                return;
             if (character.CurrentLobbyStats == null)
                 return;
 
