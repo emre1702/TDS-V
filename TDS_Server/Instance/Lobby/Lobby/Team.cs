@@ -62,7 +62,8 @@ namespace TDS_Server.Instance.Lobby
 
             foreach (var team in Teams)
             {
-                team.SyncAllPlayers();
+                if (!team.IsSpectator)
+                    team.SyncAllPlayers();
             }
         }
 
