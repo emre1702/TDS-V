@@ -107,6 +107,8 @@ namespace TDS_Server.Instance.Lobby
         {
             MapDto nextMap = GetNextMap();
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
+            if (!nextMap.Info.IsNewMap) 
+                SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
             CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap);
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);

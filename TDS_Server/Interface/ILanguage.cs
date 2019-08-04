@@ -111,6 +111,7 @@
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
         string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
+        string TESTING_MAP_NOTIFICATION { get; }
         string TIMEBAN_INFO { get; }
         string TIMEBAN_YOU_INFO { get; }
         string TIMEBAN_LOBBY_INFO { get; }
