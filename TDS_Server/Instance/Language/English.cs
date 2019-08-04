@@ -52,7 +52,8 @@ namespace TDS_Server.Instance.Language
         public virtual string MUTE_EXPIRED => "The chat mute has expired. You can write again.";
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";
 
-        public virtual string NOT_ALLOWED => "You are not allowed to do that!";
+        public virtual string NOT_ALLOWED => "You are not allowed to do that.";
+        public virtual string NOT_ENOUGH_MONEY => "You don't have enough money.";
         public virtual string NOT_IN_PRIVATE_CHAT => "You are not in a private chat.";
         public virtual string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "There can be only 6 maps in voting!";
         public virtual string NOT_POSSIBLE_IN_THIS_LOBBY => "Not possible in this lobby!";
@@ -143,7 +144,9 @@ namespace TDS_Server.Instance.Language
 
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
+        public virtual string YOU_GAVE_MONEY_TO => "You gave ${0} to {1}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
+        public virtual string YOU_GOT_MONEY_BY => "You got ${0} from {1}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }

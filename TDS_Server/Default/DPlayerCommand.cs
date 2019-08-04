@@ -14,5 +14,6 @@
         public const string TeamChat = "TeamChat";
         public const string UnblockUser = "UnblockUser";
         public const string UserId = "UserId";
+        public const string GiveMoney = "GiveMoney";
     }
 }

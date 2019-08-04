@@ -53,7 +53,8 @@ namespace TDS_Server.Instance.Language
         public override string MUTE_EXPIRED => "Dein Chat Mute ist abgelaufen. Du darfst wieder schreiben.";
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";
 
-        public override string NOT_ALLOWED => "Du bist dazu nicht befugt!";
+        public override string NOT_ALLOWED => "Du bist dazu nicht befugt.";
+        public override string NOT_ENOUGH_MONEY => "Du hast nicht genug Geld.";
         public override string NOT_IN_PRIVATE_CHAT => "Du bist nicht in einem Privatchat.";
         public override string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "Es dürfen nur 6 Maps im Voting sein!";
         public override string NOT_POSSIBLE_IN_THIS_LOBBY => "In dieser Lobby nicht möglich!";
@@ -144,7 +145,9 @@ namespace TDS_Server.Instance.Language
 
         public override string WRONG_PASSWORD => "Falsches Passwort!";
 
+        public override string YOU_GAVE_MONEY_TO => "Du hast {1} ${0} gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurde von {0} geblockt.";
+        public override string YOU_GOT_MONEY_BY => "Du hast von ${0} von {1} bekommen.";
         public override string YOU_UNBLOCKED => "Du hast {0} blockiert.";
     }
 }

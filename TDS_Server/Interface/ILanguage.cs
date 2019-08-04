@@ -47,6 +47,7 @@
         string MUTETIME_INVALID { get; }
 
         string NOT_ALLOWED { get; }
+        string NOT_ENOUGH_MONEY { get; }
         string NOT_IN_PRIVATE_CHAT { get; }
         string NOT_MORE_MAPS_FOR_VOTING_ALLOWED { get; }
         string NOT_POSSIBLE_IN_THIS_LOBBY { get; }
@@ -131,7 +132,9 @@
         string[] WELCOME_MESSAGE { get; }
         string WRONG_PASSWORD { get; }
 
+        string YOU_GAVE_MONEY_TO { get; }
         string YOU_GOT_BLOCKED_BY { get; }
+        string YOU_GOT_MONEY_BY { get; }
         string YOU_UNBLOCKED { get; }
     }
 }

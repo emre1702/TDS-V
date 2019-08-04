@@ -238,6 +238,25 @@ namespace TDS_Server.Manager.Commands
             NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.Client.Name));
         }
 
+        [TDSCommand(DPlayerCommand.GiveMoney)]
+        public static void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
+        {
+            if (player.Entity == null || target.Entity == null)
+                return;
+
+            if (player.Money < money)
+            {
+                player.Client.SendNotification(player.Language.NOT_ENOUGH_MONEY);
+                return;
+            }
+
+            player.GiveMoney((int)money * -1);
+            target.GiveMoney(money);
+
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO, money, target.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY, money, player.Client.Name));
+        }
+
         /*#region Lobby
         [CommandAlias ( "leavelobby" )]
         [CommandAlias ( "lobbyleave" )]
