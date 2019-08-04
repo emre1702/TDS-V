@@ -47,21 +47,21 @@ namespace TDS_Server.Instance.Lobby
                 });
         }
 
-        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team? targetTeam = null)
+        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team? targetTeam = null, bool flashing = false)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
             if (targetTeam is null)
             {
                 FuncIterateAllPlayers((character, teamID) =>
                 {
-                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language]);
+                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language], flashing);
                 });
             }
             else
             {
                 targetTeam.FuncIterate((character, teamID) =>
                 {
-                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language]);
+                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language], flashing);
                 });
             }
         }
