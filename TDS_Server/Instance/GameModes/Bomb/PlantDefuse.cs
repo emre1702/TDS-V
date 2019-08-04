@@ -98,6 +98,7 @@ namespace TDS_Server.Instance.GameModes
             character.Client.StopAnimation();
 
             // COUNTER-TERROR WON //
+            WinnerTeam = _counterTerroristTeam;
             Lobby.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombDefused);
         }
 

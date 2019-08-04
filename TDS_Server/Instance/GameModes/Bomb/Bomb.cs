@@ -58,6 +58,7 @@ namespace TDS_Server.Instance.GameModes
                     _planter.CurrentRoundStats.Damage += damage;
             });
             // TERROR WON //
+            WinnerTeam = _terroristTeam;
             if (Lobby.CurrentRoundStatus == ERoundStatus.Round)
                 Lobby.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombExploded);
         }
