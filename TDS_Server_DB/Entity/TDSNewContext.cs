@@ -862,7 +862,8 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 20, Command = "BlockUser" },
                 new Commands { Id = 21, Command = "UnblockUser" },
                 new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
-                new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true }
+                new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true },
+                new Commands { Id = 24, Command = "GiveMoney" }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -972,7 +973,10 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "VoiceRMute", Command = 23 },
                 new CommandAlias { Alias = "VoiceTimeMute", Command = 23 },
                 new CommandAlias { Alias = "VoiceTMute", Command = 23 },
-                new CommandAlias { Alias = "MuteVoice", Command = 23 }
+                new CommandAlias { Alias = "MuteVoice", Command = 23 },
+                new CommandAlias { Alias = "MoneyGive", Command = 24 },
+                new CommandAlias { Alias = "SendMoney", Command = 24 },
+                new CommandAlias { Alias = "MoneySend", Command = 24 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -1019,7 +1023,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 21, Language = ELanguage.German, Info = "Entfernt das Ziel aus der Blockliste." },
                 new CommandInfos { Id = 21, Language = ELanguage.English, Info = "Removes the target from the blocklist." },
                 new CommandInfos { Id = 23, Language = ELanguage.German, Info = "Mutet einen Spieler im Voice-Chat." },
-                new CommandInfos { Id = 23, Language = ELanguage.English, Info = "Mutes a player in the voice-chat." }
+                new CommandInfos { Id = 23, Language = ELanguage.English, Info = "Mutes a player in the voice-chat." },
+                new CommandInfos { Id = 24, Language = ELanguage.German, Info = "Gibt einem Spieler Geld." },
+                new CommandInfos { Id = 24, Language = ELanguage.English, Info = "Gives money to a player." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(
