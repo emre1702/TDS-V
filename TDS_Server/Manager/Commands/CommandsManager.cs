@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Server.CustomAttribute;
+using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Player;
@@ -18,7 +18,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Command;
 using TDS_Server_DB.Entity.Player;
-using DB = TDS_Server_DB.Entity;
+using DB = TDS_Server_DB.Entity.Command;
 
 namespace TDS_Server.Manager.Commands
 {
@@ -27,10 +27,6 @@ namespace TDS_Server.Manager.Commands
         // private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
         // private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
 
-        private class CommandData
-        {
-            public List<CommandMethodData> MethodDatas = new List<CommandMethodData>();
-        }
 
         private class HandleArgumentsResult
         {
@@ -38,31 +34,9 @@ namespace TDS_Server.Manager.Commands
             public bool IsWrongMethod;
         }
 
-        private class CommandMethodData
-        {
-            public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
-
-            // public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
-            // public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
-            public Type[] ParameterTypes = new Type[0];
-
-            public int Priority;
-            public int? ToOneStringAfterParameterCount = null;
-            public bool HasCommandInfos = false;
-
-            public int AmountDefaultParams => 1 + (HasCommandInfos ? 1 : 0);
-
-            public CommandMethodData(MethodInfo methodDefault, int priority)
-            {
-                MethodDefault = methodDefault;
-                Priority = priority;
-            }
-        }
-
-        private static readonly Dictionary<string, CommandData> _commandDataByCommand = new Dictionary<string, CommandData>();  // this is the primary Dictionary for commands!
-        private static readonly Dictionary<string, DB.Command.Commands> _commandsDict = new Dictionary<string, DB.Command.Commands>();
+        private static readonly Dictionary<string, CommandDataDto> _commandDataByCommand = new Dictionary<string, CommandDataDto>();  // this is the primary Dictionary for commands!
+        private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
         private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
-        private static readonly Dictionary<Type, Func<string, Task<object?>>> _typeConverter = new Dictionary<Type, Func<string, Task<object?>>>();
 
         // private const int AmountDefaultParams = 2;
 
@@ -72,9 +46,7 @@ namespace TDS_Server.Manager.Commands
 
         public static async Task LoadCommands(TDSNewContext dbcontext)
         {
-            LoadConverters();
-
-            foreach (DB.Command.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).ToListAsync())
+            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).ToListAsync())
             {
                 _commandsDict[command.Command.ToLower()] = command;
 
@@ -97,12 +69,12 @@ namespace TDS_Server.Manager.Commands
                 if (!_commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
                     continue;
 
-                CommandData commanddata;
+                CommandDataDto commanddata;
                 if (_commandDataByCommand.ContainsKey(cmd))
                     commanddata = _commandDataByCommand[cmd];
                 else
-                    commanddata = new CommandData();
-                CommandMethodData methoddata = new CommandMethodData
+                    commanddata = new CommandDataDto();
+                CommandMethodDataDto methoddata = new CommandMethodDataDto
                 (
                     priority: attribute.Priority,
                     methodDefault: method
@@ -155,6 +127,8 @@ namespace TDS_Server.Manager.Commands
             {
                 commanddata.MethodDatas.Sort((a, b) => -1 * a.Priority.CompareTo(b.Priority));
             }
+
+            Userpanel.Commands.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
         [RemoteEvent(DToServerEvent.CommandUsed)]
@@ -174,12 +148,12 @@ namespace TDS_Server.Manager.Commands
                 if (!CheckCommandExists(character, cmd, args))
                     return;
 
-                DB.Command.Commands entity = _commandsDict[cmd];
+                DB.Commands entity = _commandsDict[cmd];
 
                 if (!CheckRights(character, entity, cmdinfos))
                     return;
 
-                CommandData commanddata = _commandDataByCommand[cmd];
+                CommandDataDto commanddata = _commandDataByCommand[cmd];
 
                 if (IsInvalidArgsCount(character, commanddata, args))
                     return;
@@ -220,7 +194,7 @@ namespace TDS_Server.Manager.Commands
             }
         }
 
-        private static async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodData methoddata, int methodindex, int amountmethodsavailable, object[]? args)
+        private static async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodDataDto methoddata, int methodindex, int amountmethodsavailable, object[]? args)
         {
             if (args == null)
                 return new HandleArgumentsResult { Worked = true };
@@ -272,7 +246,7 @@ namespace TDS_Server.Manager.Commands
 
         }
 
-        private static object[]? HandleRemaingText(CommandMethodData methodData, object[]? args)
+        private static object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args)
         {
             if (args != null && methodData.ToOneStringAfterParameterCount.HasValue)
             {
@@ -283,7 +257,7 @@ namespace TDS_Server.Manager.Commands
             return args;
         }
 
-        private static bool IsInvalidArgsCount(TDSPlayer player, CommandData commanddata, object[]? args)
+        private static bool IsInvalidArgsCount(TDSPlayer player, CommandDataDto commanddata, object[]? args)
         {
             if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
             {
@@ -306,7 +280,7 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static bool CheckRights(TDSPlayer character, DB.Command.Commands entity, TDSCommandInfos cmdinfos)
+        private static bool CheckRights(TDSPlayer character, DB.Commands entity, TDSCommandInfos cmdinfos)
         {
             bool canuse = false;
             bool needright = false;
@@ -387,7 +361,7 @@ namespace TDS_Server.Manager.Commands
             return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToArray();
         }
 
-        private static object[] GetFinalInvokeArgs(CommandMethodData methodData, TDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
+        private static object[] GetFinalInvokeArgs(CommandMethodDataDto methodData, TDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
         {
             object[] newargs = new object[(args?.Length ?? 0) + methodData.AmountDefaultParams];
             newargs[0] = cmdUser;
@@ -405,11 +379,6 @@ namespace TDS_Server.Manager.Commands
             if (converterReturn != null && converterReturn is Task<Players?> task)
                 return await task;
             return converterReturn;
-        }
-
-        private static void LoadConverters()
-        {
-            _typeConverter[typeof(Players)] = GetDatabasePlayerByName;
         }
 
         private static async Task<object?> GetDatabasePlayerByName(string name)

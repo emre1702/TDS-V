@@ -1,0 +1,58 @@
+<div class="container mat-elevation-z8 mat-app-background" cdkDrag>
+    <mat-toolbar color="primary" cdkDragHandle>
+        <button mat-button [matMenuTriggerFor]="userpanelNav">{{ currentNav | language: settings.Lang }}</button>
+    </mat-toolbar>
+    <div class="container-content">
+        <app-userpanel-commands *ngIf="currentNav.startsWith('Commands')" 
+            [(currentCommand)]="currentCommand"
+            [currentNav]="currentNav" >
+        </app-userpanel-commands>
+    </div>
+</div>
+
+<mat-menu #userpanelNav="matMenu">
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">{{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}</button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Rules)" disabled>
+        <mat-icon>assignment</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Settings)" disabled>
+        <mat-icon>settings</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.Settings] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="commandsNav">
+        <mat-icon>speaker_notes</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.Commands] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.FAQ)" disabled>
+        <mat-icon>help</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.FAQ] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Report)" disabled>
+        <mat-icon>question_answer</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.Report] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #commandsNav="matMenu">
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsUser)">
+        <mat-icon>group</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.CommandsUser] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsTDSTeam)">
+        <mat-icon>pan_tool</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.CommandsTDSTeam] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsVIP)">
+        <mat-icon>group_add</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.CommandsVIP] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsDonator)">
+        <mat-icon>monetization_on</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.CommandsDonator] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsLobbyOwner)">
+        <mat-icon>how_to_reg</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.CommandsLobbyOwner] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>

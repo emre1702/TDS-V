@@ -162,7 +162,8 @@ namespace TDS_Common.Instance.Utility
         }
 
         /// <summary>
-        /// Iterate the timers and call the Action of the ready/finished ones.
+        /// Call this on every update/tick at clientside/serverside.
+        /// Iterates the timers and calls the Action of the ready/finished ones.
         /// If IsRunning is false, the timer gets removed/killed.
         /// Because the timer-List is sorted, the iteration stops when a timer is not ready yet, cause then the others won't be ready, too.
         /// </summary>
@@ -201,25 +202,3 @@ namespace TDS_Common.Instance.Utility
         }
     }
 }
-
-/* Examples:
-
-	// Yes, the method can be private //
-	private void testTimerFunc ( Client player, string text ) {
-		NAPI.Chat.SendChatMessageToPlayer ( player, "[TIMER] "+text );
-	}
-
-	void testTimerFunc ( ) {
-		NAPI.Chat.SendChatMessageToAll ( "[TIMER2] Hello" );
-	}
-
-	[Command("ttimer")]
-	public void timerTesting ( Client player ) {
-		// Lamda for parameter //
-		Timer.SetTimer ( () => testTimerFunc ( player, "hi" ), 1000, 1 );
-		// Normal without parameters //
-		Timer.SetTimer ( testTimerFunc, 1000, 1 );
-		// Without existing method //
-		Timer.SetTimer ( () => { NAPI.Chat.SendChatMessageToPlayer ( player, "[TIMER3] Bonus is da best" ); }, 1000, 0 );
-	}
-*/

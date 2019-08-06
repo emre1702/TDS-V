@@ -88,8 +88,40 @@ export class German extends English {
   Gang = "Gang";
   UserLobbies = "Benutzer-Lobbies";
 
+  Userpanel = "Userpanel";
+  Main = "Hauptmenü";
+  Rules = "Regeln";
+  Settings = "Einstellungen";
+  Commands = "Befehle";
+  CommandsUser = "Befehle - Spieler";
+  CommandsTDSTeam = "Befehle - TDS-Team";
+  CommandsDonator = "Befehle - Spender";
+  CommandsVIP = "Befehle - VIP";
+  CommandsLobbyOwner = "Befehle - Lobby-Besitzer";
+
+  Usage = "Nutzung";
+  Usages = "Nutzungen";
+
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";
   SPREAD_OUT = "Teilt euch auf!";
   TO_BOMB = "Geht zur Bombe!";
+
+  target = "Ziel";
+  reason = "Grund";
+  time = "Zeit";
+  text = "Text";
+  length = "Länge";
+  minutes = "Minuten";
+  message = "Nachricht";
+  money = "Geld";
+
+  TDSPlayer = "Online Spieler";
+  Players = "Spieler";
+  Int32 = "Ganzzahl";
+  UInt32 = "positive Ganzzahl";
+  Single = "Kommazahl";
+  Double = "Kommazahl";
+  String = "Zeichenkette";
+  DateTime = "Zeit";
 }

@@ -26,7 +26,10 @@ import {
   MatSliderModule,
   MatExpansionModule,
   MatGridListModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatMenuModule,
+  MatBadgeModule,
+  MatTooltipModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -41,6 +44,9 @@ import { CustomLobbyMenuComponent } from './components/lobbychoice/custom-lobby/
 import { CustomLobbyPasswordDialog } from './components/lobbychoice/dialog/custom-lobby-password-dialog';
 import { LobbyChoiceComponent } from './components/lobbychoice/lobby-choice/lobby-choice.component';
 import { TeamChoiceComponent } from './components/team-choice/team-choice.component';
+import { UserpanelComponent } from './components/userpanel/userpanel.component';
+import { UserpanelCommandNavPipe } from './components/userpanel/pipes/userpanelCommandNav.pipe';
+import { UserpanelCommandsComponent } from './components/userpanel/userpanel-commands/userpanel-commands.component';
 
 @NgModule({
   declarations: [
@@ -52,12 +58,15 @@ import { TeamChoiceComponent } from './components/team-choice/team-choice.compon
     CustomLobbyMenuComponent,
     OrderByPipe,
     MapVotingNavPipe,
+    UserpanelCommandNavPipe,
     LanguagePipe,
     LoadMapDialog,
     AreYouSureDialog,
     CustomLobbyPasswordDialog,
     LobbyChoiceComponent,
-    TeamChoiceComponent
+    TeamChoiceComponent,
+    UserpanelComponent,
+    UserpanelCommandsComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -83,7 +92,10 @@ import { TeamChoiceComponent } from './components/team-choice/team-choice.compon
     MatSliderModule,
     MatExpansionModule,
     MatGridListModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTooltipModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
   providers: [OrderByPipe],

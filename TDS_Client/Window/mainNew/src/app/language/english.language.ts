@@ -93,8 +93,40 @@ export class English implements Language {
     Gang = "Gang";
     UserLobbies = "User-Lobbies";
 
+    Userpanel = "Userpanel";
+    Main = "Main";
+    Rules = "Rules";
+    Settings = "Settings";
+    Commands = "Commands";
+    CommandsUser = "Commands - User";
+    CommandsTDSTeam = "Commands - TDS-Team";
+    CommandsDonator = "Commands - Donator";
+    CommandsVIP = "Commands - VIP";
+    CommandsLobbyOwner = "Commands - Lobby-owner";
+
+    Usage = "Usage";
+    Usages = "Usages";
+
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";
     SPREAD_OUT = "Spread out!";
     TO_BOMB = "Go to the bomb!";
+
+    target = "target";
+    reason = "reason";
+    time = "time";
+    text = "text";
+    length = "length";
+    minutes = "minutes";
+    message = "message";
+    money = "money";
+
+    TDSPlayer = "online player";
+    Players = "player";
+    Int32 = "integer";
+    UInt32 = "positive integer";
+    Single = "decimal";
+    Double = "decimal";
+    String = "string";
+    DateTime = "time";
 }

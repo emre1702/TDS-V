@@ -1,0 +1,50 @@
+.container {
+    position: absolute;
+    left: 37.5vw;
+    top: 30vh;
+    width: 25vw;
+    height: 40vh;
+    overflow-y: hidden;
+    
+    .mat-toolbar {
+        height: 10%;
+        display: flex;
+    }
+
+
+    .container-content {
+        height: 90%;
+        overflow-y: auto;
+
+        .left-content {
+            float: left;
+            max-width: 50%;
+            height: 100%;
+            overflow: auto;
+            white-space: nowrap;
+            // direction: rtl;
+
+            .mat-list-item {
+                height: 5%;
+            }
+        }
+          
+        .right-content {
+            padding: 20px;
+            display: flex;
+            flex-flow: column;
+            min-height: 100%;
+            height: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .rights-row {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+

@@ -12,15 +12,17 @@ export enum DFromClientEvent {
   RemoveCustomLobby = "RemoveCustomLobby_Client",
   ResetMapVoting = "ResetMapVoting_Client",
   SetMapVotes = "SetMapVotes_Client",
+  SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server",
   SyncAllCustomLobbies = "SyncAllCustomLobbies_Client",
+  SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server",
   ToggleChatOpened = "ToggleChatOpened_Client",
   ToggleFreeroam = "ToggleFreeroam_Client",
   ToggleInFightLobby = "ToggleInFightLobby_Client",
   ToggleLobbyChoice = "ToggleLobbyChoice_Client",
   ToggleMapCreator = "ToggleMapCreator_Client",
+  ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server",
   ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
 
-  SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server",
-  SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server",
-  ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server"
+  ToggleUserpanel = "ToggleUserpanel_Client",
+  LoadAllCommands = "LoadAllCommands_Client"
 }

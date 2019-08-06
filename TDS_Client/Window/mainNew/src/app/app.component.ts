@@ -14,6 +14,7 @@ export class AppComponent {
   showFreeroam = false;
   showLobbyChoice = true;
   showTeamChoice = false;
+  showUserpanel = false;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {
@@ -35,6 +36,11 @@ export class AppComponent {
 
     rageConnector.listen(DFromClientEvent.ToggleTeamChoiceMenu, (bool: boolean) => {
       this.showTeamChoice = bool;
+      changeDetector.detectChanges();
+    });
+
+    rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
+      this.showUserpanel = bool;
       changeDetector.detectChanges();
     });
 

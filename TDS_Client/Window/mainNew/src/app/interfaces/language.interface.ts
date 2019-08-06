@@ -89,8 +89,37 @@ export interface Language {
     Gang: string;
     UserLobbies: string;
 
+    Userpanel: string;
+    Main: string;
+    Rules: string;
+    Settings: string;
+    Commands: string;
+    CommandsUser: string;
+    CommandsTDSTeam: string;
+    CommandsDonator: string;
+    CommandsVIP: string;
+    CommandsLobbyOwner: string;
+
     ATTACK: string;
     BACK: string;
     SPREAD_OUT: string;
     TO_BOMB: string;
+
+    target: string;
+    reason: string;
+    time: string;
+    text: string;
+    length: string;
+    minutes: string;
+    message: string;
+    money: string;
+
+    TDSPlayer: string;
+    Players: string;
+    Int32: string;
+    UInt32: string;
+    Single: string;
+    Double: string;
+    String: string;
+    DateTime: string;
 }
