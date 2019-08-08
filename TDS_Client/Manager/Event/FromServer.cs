@@ -42,6 +42,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+            Add(DToServerEvent.LoadAllCommands, OnLoadAllCommandsServerMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
             Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
@@ -127,6 +128,12 @@ namespace TDS_Client.Manager.Event
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Remove(player);
             VoiceManager.RemovePlayer(player);
+        }
+
+        private void OnLoadAllCommandsServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.LoadAllCommands(json);
         }
 
         private void OnLoadMapFavouritesMethod(object[] args)

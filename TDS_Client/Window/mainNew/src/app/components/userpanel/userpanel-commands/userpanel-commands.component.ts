@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 import { SettingsService } from '../../../services/settings.service';
@@ -9,9 +9,9 @@ import { LanguageEnum } from '../../../enums/language.enum';
   templateUrl: './userpanel-commands.component.html',
   styleUrls: ['./userpanel-commands.component.scss']
 })
-export class UserpanelCommandsComponent {
+export class UserpanelCommandsComponent implements OnChanges {
 
-  allCommands: UserpanelCommandDataDto[] = [
+  /*allCommands: UserpanelCommandDataDto[] = [
     {Command: "Goto", Aliases: ["GotoPlayer", "PlayerGoto"], VIPCanUse: true, Description: {[LanguageEnum.German]: "Go to a player"}, LobbyOwnerCanUse: false,
       Syntaxes: [
         {Parameters: [
@@ -40,18 +40,25 @@ export class UserpanelCommandsComponent {
         ]}
       ]
     },
-  ];
+  ];*/
 
   langPipe = new LanguagePipe();
 
   @Input() currentCommand: UserpanelCommandDataDto;
   @Input() currentNav: string;
+  @Input() allCommands: UserpanelCommandDataDto[];
 
   constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService) { }
 
   gotoCommand(command: UserpanelCommandDataDto) {
     this.currentCommand = command;
     this.changeDetector.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("Change in userpanelCommands: ");
+    console.log(changes);
+    // this.changeDetector.detectChanges();  check if we need that in RAGE
   }
 
 }

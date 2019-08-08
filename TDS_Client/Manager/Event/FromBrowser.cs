@@ -52,6 +52,8 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+
+            Add(DToServerEvent.LoadAllCommands, OnLoadAllCommandsMethod);
         }
 
         private void OnAddMapCreatorPositionMethod(object[] args)
@@ -139,6 +141,11 @@ namespace TDS_Client.Manager.Event
         private void OnLeftCustomLobbiesMenuMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
+        }
+
+        private void OnLoadAllCommandsMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LoadAllCommands);
         }
 
         private void OnLoadMapNamesToLoadForMapCreatorMethod(object[] args)

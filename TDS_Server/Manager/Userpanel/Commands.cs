@@ -1,15 +1,18 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using TDS_Common.Default;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
+using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Userpanel
 {
     class Commands
     {
         private static List<UserpanelCommandDataDto> _commandDatas = new List<UserpanelCommandDataDto>();
+        private static string _commandDatasJson = "[]";
 
         public static void LoadCommandData(
             Dictionary<string, CommandDataDto> commandDataByCommand, 
@@ -53,6 +56,13 @@ namespace TDS_Server.Manager.Userpanel
 
                 _commandDatas.Add(userpanelCommandData);
             }
+
+            _commandDatasJson = JsonConvert.SerializeObject(_commandDatas);
+        }
+
+        public static void SendPlayerCommandData(TDSPlayer player)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToServerEvent.LoadAllCommands, _commandDatasJson);
         }
     }
 }

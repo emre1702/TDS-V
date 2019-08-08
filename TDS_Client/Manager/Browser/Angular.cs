@@ -213,6 +213,11 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToClientEvent.ToggleTeamChoiceMenu, boolean);
         }
+
+        public static void LoadAllCommands(string json)
+        {
+            Execute(DToServerEvent.LoadAllCommands, json);
+        }
     }
 
 }

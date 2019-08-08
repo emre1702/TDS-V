@@ -5,7 +5,8 @@
     <div class="container-content">
         <app-userpanel-commands *ngIf="currentNav.startsWith('Commands')" 
             [(currentCommand)]="currentCommand"
-            [currentNav]="currentNav" >
+            [currentNav]="currentNav"
+            [allCommands]="allCommands" >
         </app-userpanel-commands>
     </div>
 </div>

@@ -4,6 +4,8 @@ import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
 import { LanguageEnum } from '../../enums/language.enum';
 import { LanguagePipe } from '../../pipes/language.pipe';
+import { RageConnectorService } from '../../services/rage-connector.service';
+import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 
 @Component({
   selector: 'app-userpanel',
@@ -12,53 +14,27 @@ import { LanguagePipe } from '../../pipes/language.pipe';
 })
 export class UserpanelComponent {
 
-  allCommands: UserpanelCommandDataDto[] = [
-    {Command: "Goto", Aliases: ["GotoPlayer", "PlayerGoto"], VIPCanUse: false, Description: {[LanguageEnum.German]: "Go to a player"}, LobbyOwnerCanUse: false,
-      Syntaxes: [
-        {Parameters: [
-          {Name: "target", Type: "TDSPlayer"}
-        ]}
-      ]
-    },
-    {Command: "mute", Aliases: ["tmute", "pmute"], VIPCanUse: true, Description: {[9]: "Mute a player"},
-      LobbyOwnerCanUse: true, MinAdminLevel: 4, MinDonation: 20,
-      Syntaxes: [
-        {Parameters: [
-          {Name: "target", Type: "TDSPlayer"},
-          {Name: "time", Type: "Int32", DefaultValue: 0}
-        ]},
-        {Parameters: [
-          {Name: "target", Type: "Players"},
-          {Name: "time", Type: "Int32"}
-        ]},
-        {Parameters: [
-          {Name: "target", Type: "TDSPlayer"},
-          {Name: "time", Type: "DateTime"}
-        ]},
-        {Parameters: [
-          {Name: "target", Type: "Players"},
-          {Name: "time", Type: "DateTime"}
-        ]}
-      ]
-    },
-  ];
-
   userpanelNavPage = UserpanelNavPage;
-  currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
   currentCommand: UserpanelCommandDataDto;
-  langPipe = new LanguagePipe();
+  currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
 
-  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
+  allCommands: UserpanelCommandDataDto[] = [];
+
+  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {
+
+  }
 
   gotoNav(nav: number) {
     this.currentNav = UserpanelNavPage[nav];
     this.currentCommand = undefined;
     this.changeDetector.detectChanges();
-  }
 
-  gotoCommand(command: UserpanelCommandDataDto) {
-    this.currentCommand = command;
-    this.changeDetector.detectChanges();
+    if (this.currentNav.startsWith("Command") && !this.allCommands.length) {
+      this.rageConnector.callCallback(DFromClientEvent.LoadAllCommands, [], (commandsJson) => {
+        this.allCommands = JSON.parse(commandsJson);
+        this.changeDetector.detectChanges();
+      });
+    }
   }
 
   getNavs(): Array<string> {

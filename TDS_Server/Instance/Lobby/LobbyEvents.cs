@@ -354,6 +354,17 @@ namespace TDS_Server.Instance.Lobby
         }
         #endregion MapCreator
 
+        #region Userpanel
+        [RemoteEvent(DToServerEvent.LoadAllCommands)]
+        public void PlayerLoadAllCommands(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            Manager.Userpanel.Commands.LoadCommandData()
+        }
+        #endregion
+
         #endregion Remote
 
         /*[RemoteEvent("joinMapCreatorLobby")]
