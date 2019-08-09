@@ -13,6 +13,7 @@
         public const string ChooseMapCreatorToJoin = "ChooseMapCreatorToJoin_Browser";
         public const string CloseChat = "CloseChat_Browser";
         public const string CloseMapVotingMenu = "CloseMapVotingMenu_Browser";
+        public const string CloseUserpanel = "CloseUserpanel_Browser";
         public const string CommandUsed = "CommandUsed_Browser";
         public const string CreateCustomLobby = "CreateCustomLobby_Browser";
 

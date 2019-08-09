@@ -6,6 +6,7 @@ import { LanguageEnum } from '../../enums/language.enum';
 import { LanguagePipe } from '../../pipes/language.pipe';
 import { RageConnectorService } from '../../services/rage-connector.service';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 
 @Component({
   selector: 'app-userpanel',
@@ -22,6 +23,10 @@ export class UserpanelComponent {
 
   constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {
 
+  }
+
+  closeUserpanel() {
+    this.rageConnector.call(DToClientEvent.CloseUserpanel);
   }
 
   gotoNav(nav: number) {

@@ -218,6 +218,11 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToServerEvent.LoadAllCommands, json);
         }
+
+        public static void ToggleUserpanel(bool boolean)
+        {
+            Execute(DToBrowserEvent.ToggleUserpanel, boolean);
+        }
     }
 
 }

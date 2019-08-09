@@ -3,6 +3,7 @@ export enum DToClientEvent {
   ChooseArenaToJoin = "ChooseArenaToJoin_Browser",
   ChooseMapCreatorToJoin = "ChooseMapCreatorToJoin_Browser",
   CloseMapVotingMenu = "CloseMapVotingMenu_Browser",
+  CloseUserpanel = "CloseUserpanel_Browser",
   CreateCustomLobby = "CreateCustomLobby_Browser",
   GetCurrentPositionRotation = "GetCurrentPositionRotation_Browser",
   GetVehicle = "GetVehicle_Browser",

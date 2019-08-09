@@ -361,7 +361,7 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            Manager.Userpanel.Commands.LoadCommandData()
+            Manager.Userpanel.Commands.SendPlayerCommandData(player);
         }
         #endregion
 

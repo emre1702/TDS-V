@@ -26,6 +26,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DToServerEvent.ChooseTeam, OnChooseTeamMethod);
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
+            Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
             Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
@@ -100,6 +101,11 @@ namespace TDS_Client.Manager.Event
         private void OnCloseMapVotingMenuMethod(object[] args)
         {
             MapManager.CloseMenu(false);
+        }
+
+        private void OnCloseUserpanelMethod(object[] args)
+        {
+            Userpanel.Close();
         }
 
         private void OnCreateCustomLobbyMethod(object[] args)

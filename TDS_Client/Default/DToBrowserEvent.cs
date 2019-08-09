@@ -21,5 +21,6 @@
         public const string ToggleLobbyChoice = "ToggleLobbyChoice_Client"; //todo add
         public const string ToggleMapCreator = "ToggleMapCreator_Client";
         public const string ToggleTeamOrderModus = "ToggleTeamOrderModus_Client";
+        public const string ToggleUserpanel = "ToggleUserpanel_Client";
     }
 }

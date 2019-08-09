@@ -24,6 +24,7 @@ namespace TDS_Client.Manager.Utility
 
             Add(ConsoleKey.End, CursorManager.ManuallyToggleCursor);
             Add(ConsoleKey.F3, MapManager.ToggleMenu);
+            Add(ConsoleKey.U, Userpanel.Open);
         }
 
         public static void Add(ConsoleKey key, Action<ConsoleKey> method, EKeyPressState pressState = EKeyPressState.Down)
