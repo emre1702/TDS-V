@@ -14,7 +14,7 @@ namespace TDS_Server.Dto.Userpanel.Command
 
         public List<UserpanelCommandSyntaxDto> Syntaxes { get; set; } = new List<UserpanelCommandSyntaxDto>();
         public List<string> Aliases { get; set; }
-        public Dictionary<ELanguage, string> Description { get; set; }
+        public Dictionary<int, string> Description { get; set; }
     }
     #nullable restore
 }

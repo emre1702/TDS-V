@@ -6,8 +6,7 @@
     <div class="container-content">
         <app-userpanel-commands *ngIf="currentNav.startsWith('Commands')" 
             [(currentCommand)]="currentCommand"
-            [currentNav]="currentNav"
-            [allCommands]="allCommands" >
+            [currentNav]="currentNav" >
         </app-userpanel-commands>
     </div>
 </div>
@@ -49,10 +48,10 @@
         <mat-icon>group_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsVIP] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsDonator)">
+    <!--<button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsDonator)">
         <mat-icon>monetization_on</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsDonator] | language: settings.Lang }}</span>
-    </button>
+    </button>-->
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsLobbyOwner)">
         <mat-icon>how_to_reg</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsLobbyOwner] | language: settings.Lang }}</span>

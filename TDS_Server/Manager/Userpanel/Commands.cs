@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Userpanel
                 {
                     Command = dbCommand.Command,
                     Aliases = dbCommand.CommandAlias.Select(a => a.Alias).ToList(),
-                    Description = dbCommand.CommandInfos.ToDictionary(i => i.Language, i => i.Info),
+                    Description = dbCommand.CommandInfos.ToDictionary(i => (int)i.Language, i => i.Info),
                     LobbyOwnerCanUse = dbCommand.LobbyOwnerCanUse,
                     MinAdminLevel = dbCommand.NeededAdminLevel,
                     MinDonation = dbCommand.NeededDonation,
@@ -62,7 +62,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static void SendPlayerCommandData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToServerEvent.LoadAllCommands, _commandDatasJson);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadAllCommands, _commandDatasJson);
         }
     }
 }

@@ -13,12 +13,14 @@ namespace TDS_Client.Manager.Utility
                 return;
             Angular.ToggleUserpanel(true);
             _open = true;
+            CursorManager.Visible = true;
         }
 
         public static void Close()
         {
             _open = false;
             Angular.ToggleUserpanel(false);
+            CursorManager.Visible = false;
         }
     }
 }

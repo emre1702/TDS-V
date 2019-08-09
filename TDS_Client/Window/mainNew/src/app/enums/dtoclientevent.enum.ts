@@ -18,7 +18,7 @@ export enum DToClientEvent {
   ToggleMapFavorite = "ToggleMapFavorite_Browser",
   SaveMapCreatorData = "SaveMapCreatorData_Browser",
   SendMapCreatorData = "SendMapCreatorData_Browser",
-  
+
   AddMapCreatorPosition = "AddMapCreatorPosition_Browser",
   RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser"
 }

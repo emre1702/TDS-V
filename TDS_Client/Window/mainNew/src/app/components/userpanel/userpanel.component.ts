@@ -2,11 +2,10 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
-import { LanguageEnum } from '../../enums/language.enum';
-import { LanguagePipe } from '../../pipes/language.pipe';
 import { RageConnectorService } from '../../services/rage-connector.service';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
+import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { UserpanelService } from './services/userpanel.service';
 
 @Component({
   selector: 'app-userpanel',
@@ -19,9 +18,10 @@ export class UserpanelComponent {
   currentCommand: UserpanelCommandDataDto;
   currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
 
-  allCommands: UserpanelCommandDataDto[] = [];
-
-  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {
+  constructor(public settings: SettingsService,
+    private changeDetector: ChangeDetectorRef,
+    private rageConnector: RageConnectorService,
+    private userpanelServer: UserpanelService) {
 
   }
 
@@ -34,11 +34,8 @@ export class UserpanelComponent {
     this.currentCommand = undefined;
     this.changeDetector.detectChanges();
 
-    if (this.currentNav.startsWith("Command") && !this.allCommands.length) {
-      this.rageConnector.callCallback(DFromClientEvent.LoadAllCommands, [], (commandsJson) => {
-        this.allCommands = JSON.parse(commandsJson);
-        this.changeDetector.detectChanges();
-      });
+    if (this.currentNav.startsWith("Commands") && !this.userpanelServer.allCommands.length) {
+      this.userpanelServer.loadCommands();
     }
   }
 

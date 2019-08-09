@@ -42,7 +42,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
-            Add(DToServerEvent.LoadAllCommands, OnLoadAllCommandsServerMethod);
+            Add(DToClientEvent.LoadAllCommands, OnLoadAllCommandsServerMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
             Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
