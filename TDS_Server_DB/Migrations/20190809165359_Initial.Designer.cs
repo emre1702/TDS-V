@@ -13,8 +13,8 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190719213554_MapLimitTime")]
-    partial class MapLimitTime
+    [Migration("20190809165359_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace TDS_Server_DB.Migrations
                 .HasAnnotation("Npgsql:Enum:e_freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .HasAnnotation("Npgsql:Enum:e_language", "german,english")
                 .HasAnnotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
-                .HasAnnotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto")
+                .HasAnnotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute")
                 .HasAnnotation("Npgsql:Enum:e_map_limit_type", "kill_after_time,teleport_back_after_time,block,none")
                 .HasAnnotation("Npgsql:Enum:e_player_relation", "none,block,friend")
                 .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,sweeper_shotgun,micro_smg,wrench,pistol,pump_shotgun,ap_pistol,ball,molotov,smg,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,assault_rifle,special_carbine,revolver,marksman_rifle,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_m_k2,sepcial_carbine_m_k2,bullpup_rifle_m_k2")
@@ -544,6 +544,106 @@ namespace TDS_Server_DB.Migrations
                         {
                             Alias = "Block",
                             Command = (short)20
+                        },
+                        new
+                        {
+                            Alias = "Unblock",
+                            Command = (short)21
+                        },
+                        new
+                        {
+                            Alias = "PermaVoiceMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "PVoiceMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "RVoiceMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "TimeVoiceMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "TVoiceMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "PermaMuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "PMuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "RMuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "TimeMuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "TMuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "VoicePermaMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "VoicePMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "VoiceRMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "VoiceTimeMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "VoiceTMute",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "MuteVoice",
+                            Command = (short)23
+                        },
+                        new
+                        {
+                            Alias = "MoneyGive",
+                            Command = (short)24
+                        },
+                        new
+                        {
+                            Alias = "SendMoney",
+                            Command = (short)24
+                        },
+                        new
+                        {
+                            Alias = "MoneySend",
+                            Command = (short)24
                         });
                 });
 
@@ -803,6 +903,42 @@ namespace TDS_Server_DB.Migrations
                             Id = (short)20,
                             Language = ELanguage.English,
                             Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc."
+                        },
+                        new
+                        {
+                            Id = (short)21,
+                            Language = ELanguage.German,
+                            Info = "Entfernt das Ziel aus der Blockliste."
+                        },
+                        new
+                        {
+                            Id = (short)21,
+                            Language = ELanguage.English,
+                            Info = "Removes the target from the blocklist."
+                        },
+                        new
+                        {
+                            Id = (short)23,
+                            Language = ELanguage.German,
+                            Info = "Mutet einen Spieler im Voice-Chat."
+                        },
+                        new
+                        {
+                            Id = (short)23,
+                            Language = ELanguage.English,
+                            Info = "Mutes a player in the voice-chat."
+                        },
+                        new
+                        {
+                            Id = (short)24,
+                            Language = ELanguage.German,
+                            Info = "Gibt einem Spieler Geld."
+                        },
+                        new
+                        {
+                            Id = (short)24,
+                            Language = ELanguage.English,
+                            Info = "Gives money to a player."
                         });
                 });
 
@@ -977,6 +1113,36 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = (short)20,
                             Command = "BlockUser",
+                            LobbyOwnerCanUse = false,
+                            VipCanUse = false
+                        },
+                        new
+                        {
+                            Id = (short)21,
+                            Command = "UnblockUser",
+                            LobbyOwnerCanUse = false,
+                            VipCanUse = false
+                        },
+                        new
+                        {
+                            Id = (short)22,
+                            Command = "LoadMapOfOthers",
+                            LobbyOwnerCanUse = false,
+                            NeededAdminLevel = (short)1,
+                            VipCanUse = true
+                        },
+                        new
+                        {
+                            Id = (short)23,
+                            Command = "VoiceMute",
+                            LobbyOwnerCanUse = false,
+                            NeededAdminLevel = (short)1,
+                            VipCanUse = true
+                        },
+                        new
+                        {
+                            Id = (short)24,
+                            Command = "GiveMoney",
                             LobbyOwnerCanUse = false,
                             VipCanUse = false
                         });
@@ -1632,6 +1798,8 @@ namespace TDS_Server_DB.Migrations
                     b.Property<int?>("MuteTime");
 
                     b.Property<int>("PlayTime");
+
+                    b.Property<int?>("VoiceMuteTime");
 
                     b.HasKey("PlayerId")
                         .HasName("player_stats_pkey");
@@ -2534,6 +2702,10 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(18);
 
+                    b.Property<int>("MapRatingAmountForCheck")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(10);
+
                     b.Property<string>("MapsPath")
                         .IsRequired()
                         .HasMaxLength(300);
@@ -2570,6 +2742,7 @@ namespace TDS_Server_DB.Migrations
                             ErrorToPlayerOnNonExistentCommand = true,
                             GamemodeName = "tdm",
                             KillingSpreeMaxSecondsUntilNextKill = 18,
+                            MapRatingAmountForCheck = 10,
                             MapsPath = "bridge/resources/tds/maps/",
                             NewMapsPath = "bridge/resources/tds/newmaps/",
                             SaveLogsCooldownMinutes = 1,

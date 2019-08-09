@@ -15,7 +15,8 @@ namespace TDS_Server_DB.Migrations
                 .Annotation("Npgsql:Enum:e_freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .Annotation("Npgsql:Enum:e_language", "german,english")
                 .Annotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
-                .Annotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto")
+                .Annotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute")
+                .Annotation("Npgsql:Enum:e_map_limit_type", "kill_after_time,teleport_back_after_time,block,none")
                 .Annotation("Npgsql:Enum:e_player_relation", "none,block,friend")
                 .Annotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,sweeper_shotgun,micro_smg,wrench,pistol,pump_shotgun,ap_pistol,ball,molotov,smg,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,assault_rifle,special_carbine,revolver,marksman_rifle,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_m_k2,sepcial_carbine_m_k2,bullpup_rifle_m_k2")
                 .Annotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
@@ -160,7 +161,8 @@ namespace TDS_Server_DB.Migrations
                     SaveSeasonsCooldownMinutes = table.Column<int>(nullable: false),
                     TeamOrderCooldownMs = table.Column<int>(nullable: false),
                     ArenaNewMapProbabilityPercent = table.Column<float>(nullable: false),
-                    KillingSpreeMaxSecondsUntilNextKill = table.Column<float>(nullable: false, defaultValue: 18f)
+                    KillingSpreeMaxSecondsUntilNextKill = table.Column<int>(nullable: false, defaultValue: 18),
+                    MapRatingAmountForCheck = table.Column<int>(nullable: false, defaultValue: 10)
                 },
                 constraints: table =>
                 {
@@ -317,14 +319,13 @@ namespace TDS_Server_DB.Migrations
                     AmountLifes = table.Column<short>(nullable: true),
                     DefaultSpawnX = table.Column<float>(nullable: false, defaultValueSql: "0"),
                     DefaultSpawnY = table.Column<float>(nullable: false, defaultValueSql: "0"),
-                    DefaultSpawnZ = table.Column<float>(nullable: false, defaultValueSql: "900"),
+                    DefaultSpawnZ = table.Column<float>(nullable: false, defaultValueSql: "9000"),
                     AroundSpawnPoint = table.Column<float>(nullable: false, defaultValueSql: "3"),
                     DefaultSpawnRotation = table.Column<float>(nullable: false, defaultValueSql: "0"),
                     IsTemporary = table.Column<bool>(nullable: false),
                     IsOfficial = table.Column<bool>(nullable: false),
                     SpawnAgainAfterDeathMs = table.Column<int>(nullable: false, defaultValueSql: "400"),
-                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
-                    DieAfterOutsideMapLimitTime = table.Column<int>(nullable: false, defaultValueSql: "10")
+                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -442,6 +443,7 @@ namespace TDS_Server_DB.Migrations
                     Money = table.Column<int>(nullable: false),
                     PlayTime = table.Column<int>(nullable: false),
                     MuteTime = table.Column<int>(nullable: true),
+                    VoiceMuteTime = table.Column<int>(nullable: true),
                     LoggedIn = table.Column<bool>(nullable: false),
                     LastLoginTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
                 },
@@ -450,6 +452,24 @@ namespace TDS_Server_DB.Migrations
                     table.PrimaryKey("player_stats_pkey", x => x.PlayerID);
                     table.ForeignKey(
                         name: "player_stats_PlayerID_fkey",
+                        column: x => x.PlayerID,
+                        principalTable: "players",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "player_total_stats",
+                columns: table => new
+                {
+                    PlayerID = table.Column<int>(nullable: false),
+                    Money = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("player_total_stats_pkey", x => x.PlayerID);
+                    table.ForeignKey(
+                        name: "player_total_stats_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
@@ -472,6 +492,25 @@ namespace TDS_Server_DB.Migrations
                     table.ForeignKey(
                         name: "lobby_killingspree_rewards_LobbyID_fkey",
                         column: x => x.LobbyId,
+                        principalTable: "lobbies",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "lobby_map_settings",
+                columns: table => new
+                {
+                    LobbyID = table.Column<int>(nullable: false),
+                    MapLimitTime = table.Column<int>(nullable: false, defaultValueSql: "10"),
+                    MapLimitType = table.Column<EMapLimitType>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("lobby_map_settings_pkey", x => x.LobbyID);
+                    table.ForeignKey(
+                        name: "lobby_map_settings_LobbyID_fkey",
+                        column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -532,7 +571,7 @@ namespace TDS_Server_DB.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("lobby_weapons_pkey", x => x.Hash);
+                    table.PrimaryKey("lobby_weapons_pkey", x => new { x.Hash, x.Lobby });
                     table.ForeignKey(
                         name: "lobby_weapons_Hash_fkey",
                         column: x => x.Hash,
@@ -594,7 +633,15 @@ namespace TDS_Server_DB.Migrations
                     TotalKills = table.Column<int>(nullable: false),
                     TotalAssists = table.Column<int>(nullable: false),
                     TotalDeaths = table.Column<int>(nullable: false),
-                    TotalDamage = table.Column<int>(nullable: false)
+                    TotalDamage = table.Column<int>(nullable: false),
+                    TotalRounds = table.Column<int>(nullable: false),
+                    MostKillsInARound = table.Column<int>(nullable: false),
+                    MostDamageInARound = table.Column<int>(nullable: false),
+                    MostAssistsInARound = table.Column<int>(nullable: false),
+                    MostKillsInADay = table.Column<int>(nullable: false),
+                    MostDamageInADay = table.Column<int>(nullable: false),
+                    MostAssistsInADay = table.Column<int>(nullable: false),
+                    TotalMapsBought = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -750,23 +797,24 @@ namespace TDS_Server_DB.Migrations
                 "VALUES (0, 0, 'Spectator', 0, 255, 255, 255, 4, 1004114196)");
             migrationBuilder.Sql("INSERT INTO gangs (\"ID\", \"TeamId\", \"Short\") VALUES (0, 0, '-')");
 
-
             migrationBuilder.InsertData(
                 table: "commands",
                 columns: new[] { "ID", "Command", "LobbyOwnerCanUse", "NeededAdminLevel", "NeededDonation", "VipCanUse" },
                 values: new object[,]
                 {
+                    { (short)24, "GiveMoney", false, null, null, false },
+                    { (short)21, "UnblockUser", false, null, null, false },
                     { (short)20, "BlockUser", false, null, null, false },
-                    { (short)19, "UserId", false, null, null, false },
+                    { (short)18, "PrivateMessage", false, null, null, false },
                     { (short)17, "OpenPrivateChat", false, null, null, false },
                     { (short)16, "ClosePrivateChat", false, null, null, false },
-                    { (short)15, "Position", false, null, null, false },
-                    { (short)18, "PrivateMessage", false, null, null, false },
+                    { (short)19, "UserId", false, null, null, false },
+                    { (short)14, "PrivateChat", false, null, null, false },
                     { (short)13, "TeamChat", false, null, null, false },
                     { (short)12, "GlobalChat", false, null, null, false },
                     { (short)11, "Suicide", false, null, null, false },
                     { (short)10, "LobbyLeave", false, null, null, false },
-                    { (short)14, "PrivateChat", false, null, null, false }
+                    { (short)15, "Position", false, null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -774,22 +822,22 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "VehicleType", "Note", "VehicleHash" },
                 values: new object[,]
                 {
-                    { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 },
-                    { EFreeroamVehicleType.Helicopter, null, VehicleHash.AKULA },
-                    { EFreeroamVehicleType.Plane, null, VehicleHash.Pyro },
+                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 },
                     { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 },
-                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 }
+                    { EFreeroamVehicleType.Plane, null, VehicleHash.Pyro },
+                    { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 },
+                    { EFreeroamVehicleType.Helicopter, null, VehicleHash.AKULA }
                 });
-
-            migrationBuilder.InsertData(
-                table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "DieAfterOutsideMapLimitTime", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { 1, (short)1, 10, true, false, "Arena", 0, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
                 columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
                 values: new object[] { 2, (short)1, true, false, "GangLobby", 0, null, 400, ELobbyType.GangLobby });
+
+            migrationBuilder.InsertData(
+                table: "lobbies",
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { 1, (short)1, true, false, "Arena", 0, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "maps",
@@ -808,8 +856,8 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "server_settings",
-                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "KillingSpreeMaxSecondsUntilNextKill", "MapsPath", "NewMapsPath", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "SavedMapsPath", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
-                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 18f, "bridge/resources/tds/maps/", "bridge/resources/tds/newmaps/", 1, 1, 1, "bridge/resources/tds/savedmaps/", 3000, false });
+                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "KillingSpreeMaxSecondsUntilNextKill", "MapRatingAmountForCheck", "MapsPath", "NewMapsPath", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "SavedMapsPath", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
+                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 18, 10, "bridge/resources/tds/maps/", "bridge/resources/tds/newmaps/", 1, 1, 1, "bridge/resources/tds/savedmaps/", 3000, false });
 
             migrationBuilder.InsertData(
                 table: "server_total_stats",
@@ -893,13 +941,13 @@ namespace TDS_Server_DB.Migrations
                     { EWeaponHash.Railgun, (short)50, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.HomingLauncher, (short)150, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.CompactRifle, (short)34, 1f, EWeaponType.AssaultRifle },
+                    { EWeaponHash.Gusenberg, (short)34, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.SniperRifle, (short)101, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun },
                     { EWeaponHash.Hammer, (short)40, 1f, EWeaponType.Melee },
                     { EWeaponHash.GrenadeLauncherSmoke, (short)0, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.Flare, (short)0, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.Nightstick, (short)35, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Gusenberg, (short)34, 1f, EWeaponType.MachineGun }
+                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun }
                 });
 
             migrationBuilder.InsertData(
@@ -922,24 +970,24 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "Alias", "Command" },
                 values: new object[,]
                 {
-                    { "Pos", (short)15 },
-                    { "GetPosition", (short)15 },
-                    { "GetPos", (short)15 },
-                    { "Coordinates", (short)15 },
+                    { "ClosePM", (short)16 },
                     { "CPC", (short)16 },
+                    { "Pos", (short)15 },
+                    { "GetPos", (short)15 },
+                    { "CurrentPos", (short)15 },
+                    { "ClosePrivateSay", (short)16 },
+                    { "Coordinates", (short)15 },
                     { "Coordinate", (short)15 },
                     { "Coord", (short)15 },
                     { "PrivateSay", (short)14 },
                     { "PChat", (short)14 },
                     { "TSay", (short)13 },
                     { "CurrentPosition", (short)15 },
-                    { "ClosePM", (short)16 },
-                    { "OpenPrivateSay", (short)17 },
                     { "StopPrivateChat", (short)16 },
-                    { "StopPrivateSay", (short)17 },
-                    { "TeamSay", (short)13 },
-                    { "OpenPM", (short)17 },
                     { "OPC", (short)17 },
+                    { "OpenPrivateSay", (short)17 },
+                    { "OpenPM", (short)17 },
+                    { "TeamSay", (short)13 },
                     { "MSG", (short)18 },
                     { "PM", (short)18 },
                     { "PSay", (short)18 },
@@ -947,24 +995,29 @@ namespace TDS_Server_DB.Migrations
                     { "Ignore", (short)20 },
                     { "IgnoreUser", (short)20 },
                     { "Block", (short)20 },
-                    { "ClosePrivateSay", (short)16 },
+                    { "Unblock", (short)21 },
+                    { "MoneyGive", (short)24 },
+                    { "SendMoney", (short)24 },
+                    { "MoneySend", (short)24 },
+                    { "StopPrivateSay", (short)17 },
                     { "TChat", (short)13 },
-                    { "CurrentPos", (short)15 },
-                    { "LeaveLobby", (short)10 },
-                    { "Death", (short)11 },
-                    { "PublicSay", (short)12 },
-                    { "Mainmenu", (short)10 },
-                    { "AllChat", (short)12 },
-                    { "Dead", (short)11 },
-                    { "Back", (short)10 },
-                    { "Kill", (short)11 },
-                    { "AllSay", (short)12 },
+                    { "GetPosition", (short)15 },
                     { "Leave", (short)10 },
+                    { "Dead", (short)11 },
+                    { "Kill", (short)11 },
+                    { "LeaveLobby", (short)10 },
+                    { "AllChat", (short)12 },
+                    { "AllSay", (short)12 },
+                    { "G", (short)12 },
+                    { "Die", (short)11 },
+                    { "Death", (short)11 },
                     { "GChat", (short)12 },
+                    { "Global", (short)12 },
+                    { "Back", (short)10 },
+                    { "Mainmenu", (short)10 },
                     { "GlobalSay", (short)12 },
                     { "PublicChat", (short)12 },
-                    { "G", (short)12 },
-                    { "Die", (short)11 }
+                    { "PublicSay", (short)12 }
                 });
 
             migrationBuilder.InsertData(
@@ -972,28 +1025,32 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "ID", "Language", "Info" },
                 values: new object[,]
                 {
-                    { (short)16, ELanguage.English, "Closes a private chat or withdraws a private chat request." },
-                    { (short)16, ELanguage.German, "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
                     { (short)18, ELanguage.German, "Private Nachricht an einen bestimmten Spieler." },
-                    { (short)18, ELanguage.English, "Private message to a specific player." },
+                    { (short)17, ELanguage.German, "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
+                    { (short)17, ELanguage.English, "Sends a private chat request or accepts the request of another user." },
+                    { (short)20, ELanguage.German, "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
                     { (short)19, ELanguage.German, "Gibt dir deine User-Id aus." },
                     { (short)19, ELanguage.English, "Outputs your user-id to yourself." },
-                    { (short)20, ELanguage.German, "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
                     { (short)20, ELanguage.English, "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
-                    { (short)17, ELanguage.German, "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
+                    { (short)21, ELanguage.German, "Entfernt das Ziel aus der Blockliste." },
+                    { (short)21, ELanguage.English, "Removes the target from the blocklist." },
+                    { (short)24, ELanguage.German, "Gibt einem Spieler Geld." },
+                    { (short)24, ELanguage.English, "Gives money to a player." },
                     { (short)12, ELanguage.German, "Globaler Chat, welcher überall gelesen werden kann." },
-                    { (short)17, ELanguage.English, "Sends a private chat request or accepts the request of another user." },
-                    { (short)10, ELanguage.English, "Leaves the current lobby." },
-                    { (short)10, ELanguage.German, "Verlässt die jetzige Lobby." },
+                    { (short)12, ELanguage.English, "Global chat which can be read everywhere." },
+                    { (short)18, ELanguage.English, "Private message to a specific player." },
+                    { (short)16, ELanguage.German, "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
                     { (short)13, ELanguage.German, "Sendet die Nachricht nur zum eigenen Team." },
-                    { (short)13, ELanguage.English, "Sends the message to the current team only." },
+                    { (short)16, ELanguage.English, "Closes a private chat or withdraws a private chat request." },
                     { (short)14, ELanguage.German, "Gibt die Position des Spielers aus." },
                     { (short)14, ELanguage.English, "Outputs the position of the player." },
                     { (short)11, ELanguage.English, "Kills the user (suicide)." },
-                    { (short)12, ELanguage.English, "Global chat which can be read everywhere." },
                     { (short)11, ELanguage.German, "Tötet den Nutzer (Selbstmord)." },
                     { (short)15, ELanguage.German, "Sendet eine Nachricht im Privatchat." },
-                    { (short)15, ELanguage.English, "Sends a message in private chat." }
+                    { (short)13, ELanguage.English, "Sends the message to the current team only." },
+                    { (short)10, ELanguage.German, "Verlässt die jetzige Lobby." },
+                    { (short)15, ELanguage.English, "Sends a message in private chat." },
+                    { (short)10, ELanguage.English, "Leaves the current lobby." }
                 });
 
             migrationBuilder.InsertData(
@@ -1001,15 +1058,17 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "ID", "Command", "LobbyOwnerCanUse", "NeededAdminLevel", "NeededDonation", "VipCanUse" },
                 values: new object[,]
                 {
+                    { (short)9, "NextMap", true, (short)1, null, true },
                     { (short)8, "Mute", false, (short)1, null, true },
                     { (short)7, "LobbyKick", true, (short)1, null, true },
-                    { (short)9, "NextMap", true, (short)1, null, true },
                     { (short)6, "LobbyBan", true, (short)1, null, true },
+                    { (short)23, "VoiceMute", false, (short)1, null, true },
                     { (short)3, "Ban", false, (short)2, null, false },
-                    { (short)4, "Goto", true, (short)2, null, false },
                     { (short)5, "Kick", false, (short)1, null, true },
                     { (short)2, "AdminChat", false, (short)1, null, true },
-                    { (short)1, "AdminSay", false, (short)1, null, false }
+                    { (short)1, "AdminSay", false, (short)1, null, false },
+                    { (short)4, "Goto", true, (short)2, null, false },
+                    { (short)22, "LoadMapOfOthers", false, (short)1, null, true }
                 });
 
             migrationBuilder.InsertData(
@@ -1022,6 +1081,11 @@ namespace TDS_Server_DB.Migrations
                     { 1, (short)3, (short)30, null, null },
                     { 1, (short)5, (short)50, null, null }
                 });
+
+            migrationBuilder.InsertData(
+                table: "lobby_map_settings",
+                columns: new[] { "LobbyID", "MapLimitTime", "MapLimitType" },
+                values: new object[] { 1, 10, EMapLimitType.KillAfterTime });
 
             migrationBuilder.InsertData(
                 table: "lobby_maps",
@@ -1044,17 +1108,17 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobby_weapons",
-                columns: new[] { "Hash", "Ammo", "Damage", "HeadMultiplicator", "Lobby" },
+                columns: new[] { "Hash", "Lobby", "Ammo", "Damage", "HeadMultiplicator" },
                 values: new object[,]
                 {
-                    { EWeaponHash.UpnAtomizer, 500, null, null, 1 },
-                    { EWeaponHash.AssaultShotgun, 2000, null, null, 1 },
-                    { EWeaponHash.Revolver, 500, null, null, 1 },
-                    { EWeaponHash.AssaultRifle, 2000, null, null, 1 },
-                    { EWeaponHash.SMG, 2000, null, null, 1 },
-                    { EWeaponHash.CarbineRifleMK2, 2000, null, null, 1 },
-                    { EWeaponHash.UnholyHellbringer, 2000, null, null, 1 },
-                    { EWeaponHash.MicroSMG, 2000, null, null, 1 }
+                    { EWeaponHash.UpnAtomizer, 1, 500, null, null },
+                    { EWeaponHash.AssaultShotgun, 1, 2000, null, null },
+                    { EWeaponHash.Revolver, 1, 500, null, null },
+                    { EWeaponHash.AssaultRifle, 1, 2000, null, null },
+                    { EWeaponHash.SMG, 1, 2000, null, null },
+                    { EWeaponHash.UnholyHellbringer, 1, 2000, null, null },
+                    { EWeaponHash.MicroSMG, 1, 2000, null, null },
+                    { EWeaponHash.CarbineRifleMK2, 1, 2000, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1062,10 +1126,10 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "ID", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name", "SkinHash" },
                 values: new object[,]
                 {
+                    { 4, (short)4, (short)255, (short)255, (short)255, (short)0, 2, "None", 1004114196 },
                     { 3, (short)1, (short)0, (short)0, (short)150, (short)2, 1, "Terrorist", 275618457 },
                     { 2, (short)52, (short)0, (short)150, (short)0, (short)1, 1, "SWAT", -1920001264 },
-                    { 1, (short)4, (short)255, (short)255, (short)255, (short)0, 1, "Spectator", 1004114196 },
-                    { 4, (short)4, (short)255, (short)255, (short)255, (short)0, 2, "None", 1004114196 }
+                    { 1, (short)4, (short)255, (short)255, (short)255, (short)0, 1, "Spectator", 1004114196 }
                 });
 
             migrationBuilder.InsertData(
@@ -1074,16 +1138,25 @@ namespace TDS_Server_DB.Migrations
                 values: new object[,]
                 {
                     { "Announce", (short)1 },
-                    { "RMute", (short)8 },
-                    { "TMute", (short)8 },
-                    { "EndRound", (short)9 },
-                    { "Next", (short)9 },
-                    { "Skip", (short)9 },
+                    { "RVoiceMute", (short)23 },
+                    { "TimeVoiceMute", (short)23 },
+                    { "TVoiceMute", (short)23 },
+                    { "PermaMuteVoice", (short)23 },
+                    { "PMuteVoice", (short)23 },
+                    { "RMuteVoice", (short)23 },
+                    { "TimeMuteVoice", (short)23 },
+                    { "TMuteVoice", (short)23 },
+                    { "VoicePermaMute", (short)23 },
+                    { "VoicePMute", (short)23 },
+                    { "VoiceRMute", (short)23 },
+                    { "VoiceTimeMute", (short)23 },
+                    { "VoiceTMute", (short)23 },
+                    { "MuteVoice", (short)23 },
                     { "PBan", (short)3 },
                     { "Permaban", (short)3 },
                     { "RBan", (short)3 },
-                    { "PMute", (short)8 },
                     { "TBan", (short)3 },
+                    { "Timeban", (short)3 },
                     { "UBan", (short)3 },
                     { "UnBan", (short)3 },
                     { "GotoPlayer", (short)4 },
@@ -1092,20 +1165,27 @@ namespace TDS_Server_DB.Migrations
                     { "WarpTo", (short)4 },
                     { "WarpToPlayer", (short)4 },
                     { "XYZ", (short)4 },
-                    { "Timeban", (short)3 },
-                    { "PermaMute", (short)8 },
-                    { "TimeMute", (short)8 },
-                    { "KickLobby", (short)7 },
-                    { "Announcement", (short)1 },
-                    { "ASay", (short)1 },
-                    { "OChat", (short)1 },
-                    { "OSay", (short)1 },
-                    { "BanLobby", (short)6 },
+                    { "PVoiceMute", (short)23 },
+                    { "Skip", (short)9 },
+                    { "PermaVoiceMute", (short)23 },
+                    { "EndRound", (short)9 },
                     { "AChat", (short)2 },
-                    { "RKick", (short)5 },
-                    { "ChatAdmin", (short)2 },
+                    { "Next", (short)9 },
+                    { "KickLobby", (short)7 },
                     { "InternChat", (short)2 },
-                    { "WriteAdmin", (short)2 }
+                    { "RKick", (short)5 },
+                    { "PermaMute", (short)8 },
+                    { "PMute", (short)8 },
+                    { "RMute", (short)8 },
+                    { "TimeMute", (short)8 },
+                    { "TMute", (short)8 },
+                    { "WriteAdmin", (short)2 },
+                    { "OSay", (short)1 },
+                    { "OChat", (short)1 },
+                    { "ASay", (short)1 },
+                    { "Announcement", (short)1 },
+                    { "BanLobby", (short)6 },
+                    { "ChatAdmin", (short)2 }
                 });
 
             migrationBuilder.InsertData(
@@ -1113,25 +1193,35 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "ID", "Language", "Info" },
                 values: new object[,]
                 {
-                    { (short)7, ELanguage.German, "Kickt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
-                    { (short)1, ELanguage.German, "Schreibt öffentlich als ein Admin." },
                     { (short)1, ELanguage.English, "Writes public as an admin." },
                     { (short)3, ELanguage.English, "Bans a player out of the server." },
+                    { (short)1, ELanguage.German, "Schreibt öffentlich als ein Admin." },
                     { (short)3, ELanguage.German, "Bannt einen Spieler vom gesamten Server." },
                     { (short)2, ELanguage.German, "Schreibt intern nur den Admins." },
-                    { (short)2, ELanguage.English, "Writes intern to admins only." },
+                    { (short)5, ELanguage.German, "Kickt einen Spieler vom Server." },
+                    { (short)23, ELanguage.English, "Mutes a player in the voice-chat." },
+                    { (short)23, ELanguage.German, "Mutet einen Spieler im Voice-Chat." },
+                    { (short)5, ELanguage.English, "Kicks a player out of the server." },
+                    { (short)6, ELanguage.German, "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                    { (short)6, ELanguage.English, "Bans a player out of the lobby in which the command was used." },
+                    { (short)7, ELanguage.German, "Kickt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                    { (short)7, ELanguage.English, "Kicks a player out of the lobby in which the command was used." },
+                    { (short)8, ELanguage.German, "Mutet einen Spieler im normalen Chat." },
+                    { (short)8, ELanguage.English, "Mutes a player in the normal chat." },
+                    { (short)4, ELanguage.German, "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
                     { (short)9, ELanguage.English, "Ends the current round in the lobby." },
                     { (short)9, ELanguage.German, "Beendet die jetzige Runde in der jeweiligen Lobby." },
-                    { (short)5, ELanguage.German, "Kickt einen Spieler vom Server." },
-                    { (short)5, ELanguage.English, "Kicks a player out of the server." },
-                    { (short)8, ELanguage.English, "Mutes a player in the normal chat." },
-                    { (short)8, ELanguage.German, "Mutet einen Spieler im normalen Chat." },
-                    { (short)6, ELanguage.German, "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
-                    { (short)4, ELanguage.German, "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
-                    { (short)6, ELanguage.English, "Bans a player out of the lobby in which the command was used." },
-                    { (short)7, ELanguage.English, "Kicks a player out of the lobby in which the command was used." },
+                    { (short)2, ELanguage.English, "Writes intern to admins only." },
                     { (short)4, ELanguage.English, "Warps the user to another player (maybe in his vehicle) or to the defined coordinates." }
                 });
+
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 2");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 23");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 4");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
 
             migrationBuilder.CreateIndex(
                 name: "IX_command_alias_Command",
@@ -1157,6 +1247,12 @@ namespace TDS_Server_DB.Migrations
                 name: "fki_FK_lobby_maps_maps",
                 table: "lobby_maps",
                 column: "MapID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_lobby_weapons_Hash",
+                table: "lobby_weapons",
+                column: "Hash",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_lobby_weapons_Lobby",
@@ -1236,14 +1332,6 @@ namespace TDS_Server_DB.Migrations
                 principalTable: "gangs",
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 3");
-            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 21");
-            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 5");
-            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1270,6 +1358,9 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "killingspree_rewards");
+
+            migrationBuilder.DropTable(
+                name: "lobby_map_settings");
 
             migrationBuilder.DropTable(
                 name: "lobby_maps");
@@ -1318,6 +1409,9 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "player_stats");
+
+            migrationBuilder.DropTable(
+                name: "player_total_stats");
 
             migrationBuilder.DropTable(
                 name: "server_daily_stats");

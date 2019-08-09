@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Npgsql;
 using TDS_Common.Enum;
 using TDS_Server_DB.Entity.Admin;
@@ -121,6 +120,7 @@ namespace TDS_Server_DB.Entity
                     //.UseLoggerFactory(loggerFactory)
                     //.EnableSensitiveDataLogging()
                     .UseNpgsql(_connectionString);
+                    //.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
             }
         }
 
