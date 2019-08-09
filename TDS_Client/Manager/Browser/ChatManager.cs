@@ -78,6 +78,8 @@ namespace TDS_Client.Manager.Browser
 
         public static void CloseChatInput()
         {
+            if (!IsOpen)
+                return;
             IsOpen = false;
             MainBrowser.Browser.ExecuteJs($"enableChatInput(0);");
         }
