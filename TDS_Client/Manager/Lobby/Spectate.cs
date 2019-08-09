@@ -1,5 +1,6 @@
 ﻿using RAGE.Elements;
 using System;
+using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
@@ -46,6 +47,8 @@ namespace TDS_Client.Manager.Lobby
             if (_binded)
                 return;
             _binded = true;
+
+            Death.PlayerSpawn();
 
             BindManager.Add(ConsoleKey.RightArrow, Next);
             BindManager.Add(ConsoleKey.D, Next);
