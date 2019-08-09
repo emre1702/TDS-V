@@ -1,3 +1,4 @@
+using System.Linq;
 using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
@@ -26,17 +27,9 @@ namespace TDS_Server.Instance.Lobby
         private int GetTeamAmount(bool onlyCheckPlayerAmount)
         {
             if (!onlyCheckPlayerAmount)
-                return Teams.Length;
+                return Teams.Length - 1;
             else
-            {
-                int amount = 0;
-                foreach (var team in Teams)
-                {
-                    if (team.Players.Count > 0)
-                        ++amount;
-                }
-                return amount;
-            }
+                return Teams.Skip(1).Count(team => team.Players.Count > 0);
         }
 
         private Team? GetTeamStillInRound(int minalive = 1)
