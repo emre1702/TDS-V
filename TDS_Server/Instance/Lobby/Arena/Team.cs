@@ -13,15 +13,7 @@ namespace TDS_Server.Instance.Lobby
         /// <returns>Amount teams still in round.</returns>
         private int GetTeamAmountStillInRound(int minalive = 1)
         {
-            int amount = 0;
-            foreach (var team in Teams)
-            {
-                if (team.AlivePlayers == null)
-                    continue;
-                if (team.AlivePlayers.Count >= minalive)
-                    ++amount;
-            }
-            return amount;
+            return Teams.Count(team => team.AlivePlayers != null && team.AlivePlayers.Count >= minalive);
         }
 
         private int GetTeamAmount(bool onlyCheckPlayerAmount)
