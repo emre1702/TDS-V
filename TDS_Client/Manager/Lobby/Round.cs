@@ -18,7 +18,8 @@ namespace TDS_Client.Manager.Lobby
                     MapLimitManager.Start();
                     if (!_inFight)
                     {
-                        TickManager.Add(Damagesys.ShowBloodscreenIfNecessary);
+                        Damagesys.ResetLastHP();
+                        TickManager.Add(Damagesys.ShowBloodscreenIfNecessary, () => Settings.Bloodscreen);
                         FloatingDamageInfo.UpdateAllPositions();
                     }
                 }  

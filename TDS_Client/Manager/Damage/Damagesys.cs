@@ -13,7 +13,7 @@ namespace TDS_Client.Manager.Damage
 {
     internal static class Damagesys
     {
-        private static int lastTotalHP = 0;
+        private static int _lastTotalHP = 0;
 
         public static int CurrentWeaponDamage;
 
@@ -21,15 +21,13 @@ namespace TDS_Client.Manager.Damage
 
         public static void ShowBloodscreenIfNecessary()
         {
-            if (!Settings.Bloodscreen)
-                return;
             int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
-            if (currentTotalHP == lastTotalHP)
+            if (currentTotalHP == _lastTotalHP)
                 return;
 
-            if (currentTotalHP < lastTotalHP)
+            if (currentTotalHP < _lastTotalHP)
                 MainBrowser.ShowBloodscreen();
-            lastTotalHP = currentTotalHP;
+            _lastTotalHP = currentTotalHP;
         }
 
         public static void OnWeaponShot(Vector3 targetPos, Player target, CancelEventArgs cancel)
@@ -72,7 +70,7 @@ namespace TDS_Client.Manager.Damage
 
         public static void ResetLastHP()
         {
-            lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
+            _lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
         }
     }
 }
