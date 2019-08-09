@@ -108,6 +108,7 @@ export class German extends English {
   TO_BOMB = "Geht zur Bombe!";
 
   target = "Ziel";
+  dbTarget = "Ziel";
   reason = "Grund";
   time = "Zeit";
   text = "Text";

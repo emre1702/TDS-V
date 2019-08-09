@@ -100,12 +100,16 @@ export interface Language {
     CommandsVIP: string;
     CommandsLobbyOwner: string;
 
+    Usage: string;
+    Usages: string;
+
     ATTACK: string;
     BACK: string;
     SPREAD_OUT: string;
     TO_BOMB: string;
 
     target: string;
+    dbTarget: string;
     reason: string;
     time: string;
     text: string;

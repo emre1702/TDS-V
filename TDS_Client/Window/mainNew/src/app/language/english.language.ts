@@ -113,6 +113,7 @@ export class English implements Language {
     TO_BOMB = "Go to the bomb!";
 
     target = "target";
+    dbTarget = "target";
     reason = "reason";
     time = "time";
     text = "text";
