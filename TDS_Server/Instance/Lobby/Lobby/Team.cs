@@ -54,6 +54,7 @@ namespace TDS_Server.Instance.Lobby
                     continue;
                 if (!character.Team.IsSpectator)
                 {
+                    character.Team = null;
                     character.Team = GetTeamWithFewestPlayer();
                 }
                 else
