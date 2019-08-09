@@ -32,6 +32,7 @@ namespace TDS_Client.Manager.Browser
             Chat.Show(false);
             BindManager.Add(Control.MpTextChatAll, OpenLobbyChatInput);
             BindManager.Add(Control.MpTextChatTeam, OpenTeamChatInput);
+            BindManager.Add(System.ConsoleKey.Escape, (_) => CloseChatInput());
         }
 
         public static void OnUpdate()
