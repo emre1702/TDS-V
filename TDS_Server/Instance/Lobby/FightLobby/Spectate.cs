@@ -44,7 +44,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer != null)
             {
-                character.Client.Spectate(nextPlayer.Client);
+                character.Spectates = nextPlayer;
             }
         }
 
@@ -61,7 +61,7 @@ namespace TDS_Server.Instance.Lobby
             character.Spectates = nextPlayer;
             if (nextPlayer != null)
             {
-                character.Client.Spectate(nextPlayer.Client);
+                character.Spectates = nextPlayer;
             }
         }
 
