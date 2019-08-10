@@ -88,6 +88,12 @@ chatAPI["show"] = (toggle) => {
     chatdata.active = toggle;
 };
 
+chatdata.maininput.blur(() => {
+	enableChatInput(false);
+	mp.trigger("CloseChat_Browser");
+});
+
+
 function replaceRGBColor(input) {
     let index = input.indexOf("!{");
     while (index != -1) {

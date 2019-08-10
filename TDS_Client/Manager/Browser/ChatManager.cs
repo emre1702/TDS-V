@@ -76,9 +76,9 @@ namespace TDS_Client.Manager.Browser
                 MainBrowser.Browser.ExecuteJs($"enableChatInput(1, '{cmd}')");
         }
 
-        public static void CloseChatInput()
+        public static void CloseChatInput(bool force = false)
         {
-            if (!IsOpen)
+            if (!IsOpen && !force)
                 return;
             IsOpen = false;
             MainBrowser.Browser.ExecuteJs($"enableChatInput(0);");
