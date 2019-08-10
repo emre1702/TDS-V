@@ -188,18 +188,19 @@ namespace TDS_Client.Instance.Lobby
 
         private void Draw()
         {
-            for (int i = 0; i < _edges.Length - 1; ++i)
+            for (int i = 0; i <= _edges.Length - 1; ++i)
             {
                 var edgeStart = _edges[i];
-                var edgeTarget = _edges[i+1];
+                var edgeTarget = i == _edges.Length - 1 ? _edges[0] : _edges[i+1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
                 Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, edgeStart.Z, ref edgeStartZ, false);
                 Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, edgeTarget.Z, ref edgeTargetZ, false);
 
-                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.3f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.3f, 150, 0, 0, 255);
-                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.8f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.8f, 150, 0, 0, 255);
-                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 1.3f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 1.3f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.5f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 1.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 1.5f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 2.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 2.5f, 150, 0, 0, 255);
             }
         }
     }
