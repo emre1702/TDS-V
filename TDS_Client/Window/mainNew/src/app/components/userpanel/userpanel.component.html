@@ -8,6 +8,9 @@
             [(currentCommand)]="currentCommand"
             [currentNav]="currentNav" >
         </app-userpanel-commands>
+        <div *ngIf="currentNav == userpanelNavPage[userpanelNavPage.Main]" 
+            [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
+        </div>
     </div>
 </div>
 

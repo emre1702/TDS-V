@@ -90,6 +90,7 @@ export interface Language {
     UserLobbies: string;
 
     Userpanel: string;
+    UserpanelInfo: string;
     Main: string;
     Rules: string;
     Settings: string;

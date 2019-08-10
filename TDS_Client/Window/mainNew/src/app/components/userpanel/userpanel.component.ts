@@ -6,6 +6,7 @@ import { RageConnectorService } from '../../services/rage-connector.service';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { UserpanelService } from './services/userpanel.service';
+import { LanguagePipe } from '../../pipes/language.pipe';
 
 @Component({
   selector: 'app-userpanel',
@@ -14,6 +15,7 @@ import { UserpanelService } from './services/userpanel.service';
 })
 export class UserpanelComponent {
 
+  langPipe = new LanguagePipe();
   userpanelNavPage = UserpanelNavPage;
   currentCommand: UserpanelCommandDataDto;
   currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];

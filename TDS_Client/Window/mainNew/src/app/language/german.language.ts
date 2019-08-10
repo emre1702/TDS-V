@@ -88,7 +88,14 @@ export class German extends English {
   Gang = "Gang";
   UserLobbies = "Benutzer-Lobbies";
 
-  Userpanel = "Userpanel";
+  Userpanel = "Benutzeroberfläche";
+  UserpanelInfo = `Das hier ist deine Benutzeroberfläche.
+    <br><br>
+    Mit dem Navigations-Button in der Ecke links oben kannst du zwischen mehreren Menüs navigieren.
+    <br><br>
+    Ist eines der Menüs deaktiviert (ausgegraut), heißt es, dass es noch in Arbeit ist.
+    <br><br>
+    Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also nicht, wenn du neue Funktionen entdeckst.`;
   Main = "Hauptmenü";
   Rules = "Regeln";
   Settings = "Einstellungen";
