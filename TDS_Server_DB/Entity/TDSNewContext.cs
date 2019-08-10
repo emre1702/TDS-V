@@ -120,11 +120,11 @@ namespace TDS_Server_DB.Entity
                             .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
                 );*/
 
+                string connStr = _connectionString ?? "Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;";
                 optionsBuilder
                     //.UseLoggerFactory(loggerFactory)
                     //.EnableSensitiveDataLogging()
-                    .UseNpgsql(_connectionString);
-                    //.UseNpgsql("Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;");
+                    .UseNpgsql(connStr);
             }
         }
 
