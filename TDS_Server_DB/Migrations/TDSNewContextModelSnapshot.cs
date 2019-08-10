@@ -2804,35 +2804,35 @@ namespace TDS_Server_DB.Migrations
                         {
                             RuleId = 1,
                             Language = ELanguage.English,
-                            RuleStr = @"Teaming with opposing players is strictly forbidden!<br>
-                        This means the deliberate sparing, better treatment, letting or similar of certain opposing players without the permission of the own team members.
-                        If such behaviour is noticed, it can lead to severe penalties and is permanently noted."
+                            RuleStr = @"Teaming with opposing players is strictly forbidden!
+This means the deliberate sparing, better treatment, letting or similar of certain opposing players without the permission of the own team members.
+If such behaviour is noticed, it can lead to severe penalties and is permanently noted."
                         },
                         new
                         {
                             RuleId = 1,
                             Language = ELanguage.German,
-                            RuleStr = @"Teamen mit gegnerischen Spielern ist strengstens verboten!<br>
-                        Damit ist das absichtliche Verschonen, besser Behandeln, Lassen o.ä. von bestimmten gegnerischen Spielern ohne Erlaubnis der eigenen Team-Mitglieder gemeint.<br>
-                        Wird ein solches Verhalten bemerkt, kann es zu starken Strafen führen und es wird permanent notiert."
+                            RuleStr = @"Teamen mit gegnerischen Spielern ist strengstens verboten!
+Damit ist das absichtliche Verschonen, besser Behandeln, Lassen o.ä. von bestimmten gegnerischen Spielern ohne Erlaubnis der eigenen Team-Mitglieder gemeint.
+Wird ein solches Verhalten bemerkt, kann es zu starken Strafen führen und es wird permanent notiert."
                         },
                         new
                         {
                             RuleId = 2,
                             Language = ELanguage.English,
-                            RuleStr = @"The normal chat in an official lobby has rules, the other chats (private lobbies, dirty) none.<br>
-                        By 'normal chat' we mean all chat methods (global, team, etc.) in the 'normal' chat area.<br>
-                        The chat rules listed here are ONLY for the normal chat in an official lobby.<br>
-                        Chats in private lobbies can be freely monitored by the lobby owners."
+                            RuleStr = @"The normal chat in an official lobby has rules, the other chats (private lobbies, dirty) none.
+By 'normal chat' we mean all chat methods (global, team, etc.) in the 'normal' chat area.
+The chat rules listed here are ONLY for the normal chat in an official lobby.
+Chats in private lobbies can be freely monitored by the lobby owners."
                         },
                         new
                         {
                             RuleId = 2,
                             Language = ELanguage.German,
-                            RuleStr = @"Der normale Chat in einer offiziellen Lobby hat Regeln, die restlichen Chats (private Lobbys, dirty) jedoch keine.<br>
-                        Unter 'normaler Chat' versteht man alle Chats-Methode (global, team usw.) im 'normal' Chat-Bereich.<br>
-                        Die hier aufgelisteten Chat-Regeln richten sich NUR an den normalen Chat in einer offiziellen Lobby.<br>
-                        Chats in privaten Lobbys können frei von den Lobby-Besitzern überwacht werden."
+                            RuleStr = @"Der normale Chat in einer offiziellen Lobby hat Regeln, die restlichen Chats (private Lobbys, dirty) jedoch keine.
+Unter 'normaler Chat' versteht man alle Chats-Methode (global, team usw.) im 'normal' Chat-Bereich.
+Die hier aufgelisteten Chat-Regeln richten sich NUR an den normalen Chat in einer offiziellen Lobby.
+Chats in privaten Lobbys können frei von den Lobby-Besitzern überwacht werden."
                         },
                         new
                         {
@@ -2850,31 +2850,55 @@ namespace TDS_Server_DB.Migrations
                         {
                             RuleId = 4,
                             Language = ELanguage.English,
-                            RuleStr = @"Exploitation of the commands is strictly forbidden!<br>
-                        Admin commands for 'punishing' (kick, mute, ban etc.) may only be used for violations of rules."
+                            RuleStr = @"Exploitation of the commands is strictly forbidden!
+Admin commands for 'punishing' (kick, mute, ban etc.) may only be used for violations of rules."
                         },
                         new
                         {
                             RuleId = 4,
                             Language = ELanguage.German,
-                            RuleStr = @"Ausnutzung der Befehle ist strengstens verboten!<br>
-                        Admin-Befehle zum 'Bestrafen' (Kick, Mute, Ban usw.) dürfen auch nur bei Verstößen gegen Regeln genutzt werden."
+                            RuleStr = @"Ausnutzung der Befehle ist strengstens verboten!
+Admin-Befehle zum 'Bestrafen' (Kick, Mute, Ban usw.) dürfen auch nur bei Verstößen gegen Regeln genutzt werden."
                         },
                         new
                         {
                             RuleId = 5,
                             Language = ELanguage.English,
-                            RuleStr = @"If you are not sure if the time for e.g. Mute or Bann could be too high,<br>
-                        ask your team leader - if you can't reach someone quickly, choose a lower time.
-                        Too high times are bad, too low times are no problem."
+                            RuleStr = @"If you are not sure if the time for e.g. Mute or Bann could be too high,
+ask your team leader - if you can't reach someone quickly, choose a lower time.
+Too high times are bad, too low times are no problem."
                         },
                         new
                         {
                             RuleId = 5,
                             Language = ELanguage.German,
-                            RuleStr = @"Wenn du dir nicht sicher bist, ob die Zeit für z.B. Mute oder Bann zu hoch sein könnte,<br>
-                        frage deinen Team-Leiter - kannst du niemanden auf die Schnelle erreichen, so entscheide dich für eine niedrigere Zeit.<br>
-                        Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
+                            RuleStr = @"Wenn du dir nicht sicher bist, ob die Zeit für z.B. Mute oder Bann zu hoch sein könnte,
+frage deinen Team-Leiter - kannst du niemanden auf die Schnelle erreichen, so entscheide dich für eine niedrigere Zeit.
+Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
+                        },
+                        new
+                        {
+                            RuleId = 6,
+                            Language = ELanguage.English,
+                            RuleStr = "All admin rules with the exception of activity duty are also valid for VIPs."
+                        },
+                        new
+                        {
+                            RuleId = 6,
+                            Language = ELanguage.German,
+                            RuleStr = "Alle Admin-Regeln mit Ausnahme von Aktivitäts-Pflicht sind auch gültig für VIPs."
+                        },
+                        new
+                        {
+                            RuleId = 7,
+                            Language = ELanguage.English,
+                            RuleStr = "The VIPs are free to decide whether they want to use their rights or not."
+                        },
+                        new
+                        {
+                            RuleId = 7,
+                            Language = ELanguage.German,
+                            RuleStr = "Den VIPs ist es frei überlassen, ob sie ihre Rechte nutzen wollen oder nicht."
                         });
                 });
 
@@ -2922,6 +2946,18 @@ namespace TDS_Server_DB.Migrations
                             Id = 5,
                             Category = ERuleCategory.General,
                             Target = ERuleTarget.Admin
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Category = ERuleCategory.General,
+                            Target = ERuleTarget.VIP
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Category = ERuleCategory.General,
+                            Target = ERuleTarget.VIP
                         });
                 });
 
