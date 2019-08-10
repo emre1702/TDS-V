@@ -93,6 +93,9 @@ export interface Language {
     UserpanelInfo: string;
     Main: string;
     Rules: string;
+    RulesUser: string;
+    RulesTDSTeam: string;
+    RulesVIP: string;
     Settings: string;
     Commands: string;
     CommandsUser: string;

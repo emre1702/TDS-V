@@ -12,9 +12,9 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
 export class AppComponent {
   showMapCreator = false;
   showFreeroam = false;
-  showLobbyChoice = false;
+  showLobbyChoice = true;
   showTeamChoice = false;
-  showUserpanel = true;
+  showUserpanel = false;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {

@@ -95,14 +95,18 @@ export class English implements Language {
 
     Userpanel = "Userpanel";
     UserpanelInfo = `This is your user interface.
-        <br><br>
-        With the navigation button in the upper left corner you can navigate between several menus.
-        <br><br>
-        If one of the menus is deactivated (grayed out), it means that it is still in progress.
-        <br><br>
-        The user interface is always being worked on, so don't be surprised if you discover new features.`;
+<br><br>
+With the navigation button in the upper left corner you can navigate between several menus.
+<br><br>
+If one of the menus is deactivated (grayed out), it means that it is still in progress.
+<br><br>
+The user interface is always being worked on, so don't be surprised if you discover new features.`;
     Main = "Main";
     Rules = "Rules";
+    RulesUser = "Rules - User";
+    RulesTDSTeam = "Rules - TDS-Team";
+    RulesVIP = "Rules - VIP";
+
     Settings = "Settings";
     Commands = "Commands";
     CommandsUser = "Commands - User";

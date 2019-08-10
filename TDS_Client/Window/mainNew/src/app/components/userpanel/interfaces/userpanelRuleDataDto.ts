@@ -4,6 +4,6 @@ import { UserpanelRulesCategory } from '../enums/userpanel-rules-category.enum';
 export interface UserpanelRuleDataDto {
     Id: number;
     Texts: {[language: number]: string};
-    Target: UserpanelRulesTarget;
-    Category: UserpanelRulesCategory;
+    Target: number;
+    Category: number;
 }
