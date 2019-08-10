@@ -1,6 +1,6 @@
 <div class="container mat-elevation-z8 mat-app-background" cdkDrag>
     <mat-toolbar color="primary" cdkDragHandle>
-        <button mat-button [matMenuTriggerFor]="userpanelNav">{{ currentNav | language: settings.Lang }}</button>
+        <button mat-button [matMenuTriggerFor]="userpanelNav" cdkFocusInitial>{{ currentNav | language: settings.Lang }}</button>
         <button mat-button (click)="closeUserpanel()"><mat-icon>clear</mat-icon></button>
     </mat-toolbar>
     <div class="container-content">
