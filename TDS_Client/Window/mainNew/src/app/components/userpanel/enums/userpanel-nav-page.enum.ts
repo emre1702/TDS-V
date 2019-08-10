@@ -8,6 +8,9 @@ export enum UserpanelNavPage {
     CommandsLobbyOwner,
     Settings,
     Rules,
+    RulesUser,
+    RulesTDSTeam,
+    RulesVIP,
     FAQ,
     Report
 }

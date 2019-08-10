@@ -47,6 +47,8 @@ import { TeamChoiceComponent } from './components/team-choice/team-choice.compon
 import { UserpanelComponent } from './components/userpanel/userpanel.component';
 import { UserpanelCommandNavPipe } from './components/userpanel/pipes/userpanelCommandNav.pipe';
 import { UserpanelCommandsComponent } from './components/userpanel/userpanel-commands/userpanel-commands.component';
+import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/userpanel-rules.component';
+import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,7 @@ import { UserpanelCommandsComponent } from './components/userpanel/userpanel-com
     OrderByPipe,
     MapVotingNavPipe,
     UserpanelCommandNavPipe,
+    UserpanelRulesNavPipe,
     LanguagePipe,
     LoadMapDialog,
     AreYouSureDialog,
@@ -66,7 +69,8 @@ import { UserpanelCommandsComponent } from './components/userpanel/userpanel-com
     LobbyChoiceComponent,
     TeamChoiceComponent,
     UserpanelComponent,
-    UserpanelCommandsComponent
+    UserpanelCommandsComponent,
+    UserpanelRulesComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -23,7 +23,7 @@ export class UserpanelComponent {
   constructor(public settings: SettingsService,
     private changeDetector: ChangeDetectorRef,
     private rageConnector: RageConnectorService,
-    private userpanelServer: UserpanelService) {
+    private userpanelService: UserpanelService) {
 
   }
 
@@ -36,8 +36,10 @@ export class UserpanelComponent {
     this.currentCommand = undefined;
     this.changeDetector.detectChanges();
 
-    if (this.currentNav.startsWith("Commands") && !this.userpanelServer.allCommands.length) {
-      this.userpanelServer.loadCommands();
+    if (this.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
+      this.userpanelService.loadCommands();
+    } else if (this.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
+      this.userpanelService.loadRules();
     }
   }
 

@@ -363,6 +363,15 @@ namespace TDS_Server.Instance.Lobby
                 return;
             Manager.Userpanel.Commands.SendPlayerCommandData(player);
         }
+
+        [RemoteEvent(DToServerEvent.LoadAllRules)]
+        public void PlayerLoadAllRules(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            Manager.Userpanel.Rules.SendPlayerRules(player);
+        }
         #endregion
 
         #endregion Remote

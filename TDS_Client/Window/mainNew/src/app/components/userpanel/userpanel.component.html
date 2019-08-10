@@ -8,6 +8,9 @@
             [(currentCommand)]="currentCommand"
             [currentNav]="currentNav" >
         </app-userpanel-commands>
+        <app-userpanel-rules *ngIf="currentNav.startsWith('Rules')" 
+            [currentNav]="currentNav" >
+        </app-userpanel-rules>
         <div *ngIf="currentNav == userpanelNavPage[userpanelNavPage.Main]" 
             [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
         </div>
@@ -16,7 +19,7 @@
 
 <mat-menu #userpanelNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">{{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}</button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Rules)" disabled>
+    <button mat-menu-item [matMenuTriggerFor]="rulesNav">
         <mat-icon>assignment</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>
     </button>
@@ -58,5 +61,20 @@
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsLobbyOwner)">
         <mat-icon>how_to_reg</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsLobbyOwner] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #rulesNav="matMenu">
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesUser)">
+        <mat-icon>group</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.RulesUser] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesTDSTeam)">
+        <mat-icon>pan_tool</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.RulesTDSTeam] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesVIP)">
+        <mat-icon>group_add</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.RulesVIP] | language: settings.Lang }}</span>
     </button>
 </mat-menu>

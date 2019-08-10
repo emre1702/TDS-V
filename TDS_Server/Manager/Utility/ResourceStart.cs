@@ -55,6 +55,8 @@ namespace TDS_Server.Manager.Utility
                 await MapCreator.LoadSavedMaps(dbcontext);
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
+
+                Userpanel.Rules.LoadRules(dbcontext);
             }
             catch (Exception ex)
             {

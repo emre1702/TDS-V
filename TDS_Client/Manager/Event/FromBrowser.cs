@@ -55,6 +55,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
 
             Add(DToServerEvent.LoadAllCommands, OnLoadAllCommandsMethod);
+            Add(DToServerEvent.LoadAllRules, OnLoadAllRulesMethod);
         }
 
         private void OnAddMapCreatorPositionMethod(object[] args)
@@ -152,6 +153,11 @@ namespace TDS_Client.Manager.Event
         private void OnLoadAllCommandsMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.LoadAllCommands);
+        }
+
+        private void OnLoadAllRulesMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LoadAllRules);
         }
 
         private void OnLoadMapNamesToLoadForMapCreatorMethod(object[] args)

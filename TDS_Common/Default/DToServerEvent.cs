@@ -50,5 +50,6 @@
 
 
         public const string LoadAllCommands = "LoadAllCommands_Browser";
+        public const string LoadAllRules = "LoadAllRules_Browser";
     }
 }

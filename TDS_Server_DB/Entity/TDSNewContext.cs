@@ -11,6 +11,7 @@ using TDS_Server_DB.Entity.Log;
 using TDS_Server_DB.Entity.Player;
 using TDS_Server_DB.Entity.Rest;
 using TDS_Server_DB.Entity.Server;
+using TDS_Server_DB.Entity.Userpanel;
 
 /**
  * Rules on migration:
@@ -71,6 +72,8 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<VehicleHash>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EFreeroamVehicleType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EMapLimitType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleCategory>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -100,6 +103,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
         public virtual DbSet<Players> Players { get; set; }
+        public virtual DbSet<Rules> Rules { get; set; }
         public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
         public virtual DbSet<ServerTotalStats> ServerTotalStats { get; set; }
@@ -140,9 +144,13 @@ namespace TDS_Server_DB.Entity
             modelBuilder.ForNpgsqlHasEnum<VehicleHash>();
             modelBuilder.ForNpgsqlHasEnum<EFreeroamVehicleType>();
             modelBuilder.ForNpgsqlHasEnum<EMapLimitType>();
+            modelBuilder.ForNpgsqlHasEnum<ERuleCategory>();
+            modelBuilder.ForNpgsqlHasEnum<ERuleTarget>();
             #endregion
 
             #region Tables
+            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
+
             modelBuilder.Entity<AdminLevels>(entity =>
             {
                 entity.HasKey(e => e.Level)
@@ -152,8 +160,6 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Level).ValueGeneratedNever();
             });
-
-            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
 
             modelBuilder.Entity<AdminLevelNames>(entity =>
             {
@@ -721,6 +727,28 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("players_GangId_fkey");
             });
 
+            modelBuilder.Entity<Rules>(entity =>
+            {
+                entity.ToTable("rules");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<RuleTexts>(entity =>
+            {
+                entity.ToTable("rule_texts");
+
+                entity.HasKey(e => new { e.RuleId, e.Language });
+                entity.Property(e => e.RuleId)
+                    .HasColumnName("RuleID");
+
+                entity.HasOne(d => d.Rule)
+                    .WithMany(p => p.RuleTexts)
+                    .HasForeignKey(d => d.RuleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<ServerDailyStats>(entity =>
             {
                 entity.ToTable("server_daily_stats");
@@ -1175,6 +1203,99 @@ namespace TDS_Server_DB.Entity
             modelBuilder.Entity<ServerTotalStats>().HasData(
                 new ServerTotalStats { Id = 1 }
             );
+
+            modelBuilder.Entity<Rules>().HasData(
+                new Rules { Id = 1, Target = ERuleTarget.User, Category = ERuleCategory.General },
+                new Rules { Id = 2, Target = ERuleTarget.User, Category = ERuleCategory.Chat },
+                new Rules { Id = 3, Target = ERuleTarget.Admin, Category = ERuleCategory.General },
+                new Rules { Id = 4, Target = ERuleTarget.Admin, Category = ERuleCategory.General },
+                new Rules { Id = 5, Target = ERuleTarget.Admin, Category = ERuleCategory.General }
+            );
+
+            modelBuilder.Entity<RuleTexts>().HasData(
+                new RuleTexts 
+                { 
+                    RuleId = 1, 
+                    Language = ELanguage.English, 
+                    RuleStr = @"Teaming with opposing players is strictly forbidden!<br>
+                        This means the deliberate sparing, better treatment, letting or similar of certain opposing players without the permission of the own team members.
+                        If such behaviour is noticed, it can lead to severe penalties and is permanently noted."
+                },
+                new RuleTexts
+                {
+                    RuleId = 1,
+                    Language = ELanguage.German,
+                    RuleStr = @"Teamen mit gegnerischen Spielern ist strengstens verboten!<br>
+                        Damit ist das absichtliche Verschonen, besser Behandeln, Lassen o.ä. von bestimmten gegnerischen Spielern ohne Erlaubnis der eigenen Team-Mitglieder gemeint.<br>
+                        Wird ein solches Verhalten bemerkt, kann es zu starken Strafen führen und es wird permanent notiert."
+                },
+
+                new RuleTexts
+                {
+                    RuleId = 2,
+                    Language = ELanguage.English,
+                    RuleStr = @"The normal chat in an official lobby has rules, the other chats (private lobbies, dirty) none.<br>
+                        By 'normal chat' we mean all chat methods (global, team, etc.) in the 'normal' chat area.<br>
+                        The chat rules listed here are ONLY for the normal chat in an official lobby.<br>
+                        Chats in private lobbies can be freely monitored by the lobby owners."
+                },
+                new RuleTexts
+                {
+                    RuleId = 2,
+                    Language = ELanguage.German,
+                    RuleStr = @"Der normale Chat in einer offiziellen Lobby hat Regeln, die restlichen Chats (private Lobbys, dirty) jedoch keine.<br>
+                        Unter 'normaler Chat' versteht man alle Chats-Methode (global, team usw.) im 'normal' Chat-Bereich.<br>
+                        Die hier aufgelisteten Chat-Regeln richten sich NUR an den normalen Chat in einer offiziellen Lobby.<br>
+                        Chats in privaten Lobbys können frei von den Lobby-Besitzern überwacht werden."
+                },
+
+                new RuleTexts
+                {
+                    RuleId = 3,
+                    Language = ELanguage.English,
+                    RuleStr = "Admins have to follow the same rules as players do."
+                },
+                new RuleTexts
+                {
+                    RuleId = 3,
+                    Language = ELanguage.German,
+                    RuleStr = "Admins haben genauso die Regeln zu befolgen wie auch die Spieler."
+                },
+
+                new RuleTexts
+                {
+                    RuleId = 4,
+                    Language = ELanguage.English,
+                    RuleStr = @"Exploitation of the commands is strictly forbidden!<br>
+                        Admin commands for 'punishing' (kick, mute, ban etc.) may only be used for violations of rules."
+                },
+                new RuleTexts
+                {
+                    RuleId = 4,
+                    Language = ELanguage.German,
+                    RuleStr = @"Ausnutzung der Befehle ist strengstens verboten!<br>
+                        Admin-Befehle zum 'Bestrafen' (Kick, Mute, Ban usw.) dürfen auch nur bei Verstößen gegen Regeln genutzt werden."
+                },
+
+                new RuleTexts
+                {
+                    RuleId = 5,
+                    Language = ELanguage.English,
+                    RuleStr = @"If you are not sure if the time for e.g. Mute or Bann could be too high,<br>
+                        ask your team leader - if you can't reach someone quickly, choose a lower time.
+                        Too high times are bad, too low times are no problem."
+                },
+                new RuleTexts
+                {
+                    RuleId = 5,
+                    Language = ELanguage.German,
+                    RuleStr = @"Wenn du dir nicht sicher bist, ob die Zeit für z.B. Mute oder Bann zu hoch sein könnte,<br>
+                        frage deinen Team-Leiter - kannst du niemanden auf die Schnelle erreichen, so entscheide dich für eine niedrigere Zeit.<br>
+                        Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
+                }
+            );
+
+            
             #endregion
 
             #region Autoincrement

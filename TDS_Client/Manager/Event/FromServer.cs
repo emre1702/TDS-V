@@ -43,6 +43,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             Add(DToClientEvent.LoadAllCommands, OnLoadAllCommandsServerMethod);
+            Add(DToClientEvent.LoadAllRules, OnLoadAllRulesServerMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
             Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
@@ -134,6 +135,12 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             Angular.LoadAllCommands(json);
+        }
+
+        private void OnLoadAllRulesServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Angular.LoadAllRules(json);
         }
 
         private void OnLoadMapFavouritesMethod(object[] args)

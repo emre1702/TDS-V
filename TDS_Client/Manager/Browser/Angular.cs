@@ -214,14 +214,19 @@ namespace TDS_Client.Manager.Browser
             Execute(DToClientEvent.ToggleTeamChoiceMenu, boolean);
         }
 
+        public static void ToggleUserpanel(bool boolean)
+        {
+            Execute(DToBrowserEvent.ToggleUserpanel, boolean);
+        }
+
         public static void LoadAllCommands(string json)
         {
             Execute(DToServerEvent.LoadAllCommands, json);
         }
 
-        public static void ToggleUserpanel(bool boolean)
+        public static void LoadAllRules(string json)
         {
-            Execute(DToBrowserEvent.ToggleUserpanel, boolean);
+            Execute(DToServerEvent.LoadAllRules, json);
         }
     }
 

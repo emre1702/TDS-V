@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, 
 import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 import { SettingsService } from '../../../services/settings.service';
-import { LanguageEnum } from '../../../enums/language.enum';
 import { UserpanelService } from '../services/userpanel.service';
 
 @Component({
@@ -58,9 +57,6 @@ export class UserpanelCommandsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     this.userpanelService.commandsLoaded.on(null, this.detectChanges.bind(this));
-
-    if (!this.userpanelService.allCommands.length)
-      this.userpanelService.loadCommands();
   }
 
   ngOnDestroy(): void {
