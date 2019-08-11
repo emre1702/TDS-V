@@ -1,4 +1,5 @@
 using GTANetworkAPI;
+using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
@@ -244,17 +245,26 @@ namespace TDS_Server.Manager.Commands
             if (player.Entity == null || target.Entity == null)
                 return;
 
+            if (money < SettingsManager.GiveMoneyMinAmount)
+            {
+                player.Client.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
+                return;
+            }
+
+            uint fee = (uint)Math.Ceiling(money * SettingsManager.GiveMoneyFee);
+            money += fee;
+
             if (player.Money < money)
             {
-                player.Client.SendNotification(player.Language.NOT_ENOUGH_MONEY);
+                player.Client.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
                 return;
             }
 
             player.GiveMoney((int)money * -1);
-            target.GiveMoney(money);
+            target.GiveMoney(money - fee);
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO, money, target.Client.Name));
-            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY, money, player.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.Client.Name));
         }
 
         /*#region Lobby

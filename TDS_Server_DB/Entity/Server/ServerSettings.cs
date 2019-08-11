@@ -18,5 +18,7 @@
         public float ArenaNewMapProbabilityPercent { get; set; }
         public int KillingSpreeMaxSecondsUntilNextKill { get; set; }
         public int MapRatingAmountForCheck { get; set; }
+        public float GiveMoneyFee { get; set; }
+        public int GiveMoneyMinAmount { get; set; }
     }
 }

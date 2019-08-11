@@ -29,6 +29,8 @@ namespace TDS_Server.Instance.Language
 
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
+        public virtual string GIVE_MONEY_NEED_FEE => "You need ${0} with ${1} fee included.";
+        public virtual string GIVE_MONEY_TOO_LESS => "The amount you tried to give is too less.";
         public virtual string GOT_ASSIST => "You got the assist of {0}.";
         public virtual string GOT_LAST_HITTED_KILL => "You hitted {0} last and got the kill.";
         public virtual string GOT_LOBBY_BAN => "You got a ban from the lobby-owner here. Duration: {0} | Reason: {1}";
@@ -144,9 +146,9 @@ namespace TDS_Server.Instance.Language
 
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
-        public virtual string YOU_GAVE_MONEY_TO => "You gave ${0} to {1}.";
+        public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
-        public virtual string YOU_GOT_MONEY_BY => "You got ${0} from {1}.";
+        public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }

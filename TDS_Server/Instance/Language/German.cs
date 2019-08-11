@@ -30,6 +30,8 @@ namespace TDS_Server.Instance.Language
 
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
+        public override string GIVE_MONEY_NEED_FEE => "Du brauchst ${0} mit ${1} Gebühr inklusive.";
+        public override string GIVE_MONEY_TOO_LESS => "Das Geld, was du versuchst zu geben, ist zu wenig.";
         public override string GOT_ASSIST => "Du hast den Assist von {0} bekommen.";
         public override string GOT_LAST_HITTED_KILL => "Du hast {0} zuletzt getroffen und den Kill bekommen.";
         public override string GOT_LOBBY_BAN => "Du hast hier vom Lobby-Besitzer einen Bann. Dauer: {0} | Grund: {1}";

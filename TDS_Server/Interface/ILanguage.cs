@@ -24,6 +24,8 @@
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
+        string GIVE_MONEY_NEED_FEE { get; }
+        string GIVE_MONEY_TOO_LESS { get; }
         string GOT_ASSIST { get; }
         string GOT_LAST_HITTED_KILL { get; }
         string GOT_LOBBY_BAN { get; }
@@ -132,9 +134,9 @@
         string[] WELCOME_MESSAGE { get; }
         string WRONG_PASSWORD { get; }
 
-        string YOU_GAVE_MONEY_TO { get; }
+        string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
-        string YOU_GOT_MONEY_BY { get; }
+        string YOU_GOT_MONEY_BY_WITH_FEE { get; }
         string YOU_UNBLOCKED { get; }
     }
 }
