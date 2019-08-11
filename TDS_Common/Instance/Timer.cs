@@ -23,7 +23,21 @@ namespace TDS_Common.Instance.Utility
         public Action Func;
 
         /// <summary>After how many milliseconds (after the last execution) the timer should get called. Can be changed dynamically</summary>
-        public readonly uint ExecuteAfterMs;
+        public uint ExecuteAfterMs
+        {
+            get => _executeAfterMs;
+            set 
+            {
+                _executeAfterMs = value;
+                _executeAtMs = _tickGetter() + value;
+                lock (_timer)
+                {
+                    _timer.Remove(this);
+                    InsertSorted();
+                }
+            }
+        }
+        private uint _executeAfterMs;
 
         /// <summary>When the Timer is ready to execute (Stopwatch is used).</summary>
         private ulong _executeAtMs;
@@ -63,11 +77,14 @@ namespace TDS_Common.Instance.Utility
         {
             ulong executeatms = executeafterms + _tickGetter();
             Func = thefunc;
-            ExecuteAfterMs = executeafterms;
+            _executeAfterMs = executeafterms;
             _executeAtMs = executeatms;
             ExecutesLeft = executes;
             HandleException = handleexception;
-            _insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
+            lock (_insertAfterList)
+            {
+                _insertAfterList.Add(this);   // Needed to put in the timer later, else it could break the script when the timer gets created from a Action of another timer.
+            }
         }
 
         /// <summary>
@@ -93,8 +110,11 @@ namespace TDS_Common.Instance.Utility
             {
                 if (ExecutesLeft != 0)
                     ExecutesLeft--;
-                _executeAtMs += ExecuteAfterMs;
-                _insertAfterList.Add(this);
+                _executeAtMs += _executeAfterMs;
+                lock (_insertAfterList)
+                {
+                    _insertAfterList.Add(this);
+                }
             }
         }
 
@@ -122,8 +142,11 @@ namespace TDS_Common.Instance.Utility
                 {
                     if (ExecutesLeft != 0)
                         ExecutesLeft--;
-                    _executeAtMs += ExecuteAfterMs;
-                    _insertAfterList.Add(this);
+                    _executeAtMs += _executeAfterMs;
+                    lock (_insertAfterList)
+                    {
+                        _insertAfterList.Add(this);
+                    }
                 }
             }
         }
@@ -150,15 +173,18 @@ namespace TDS_Common.Instance.Utility
         private void InsertSorted()
         {
             bool putin = false;
-            for (int i = _timer.Count - 1; i >= 0 && !putin; i--)
-                if (_executeAtMs <= _timer[i]._executeAtMs)
-                {
-                    _timer.Insert(i + 1, this);
-                    putin = true;
-                }
+            lock (_timer)
+            {
+                for (int i = _timer.Count - 1; i >= 0 && !putin; i--)
+                    if (_executeAtMs <= _timer[i]._executeAtMs)
+                    {
+                        _timer.Insert(i + 1, this);
+                        putin = true;
+                    }
 
-            if (!putin)
-                _timer.Insert(0, this);
+                if (!putin)
+                    _timer.Insert(0, this);
+            }
         }
 
         /// <summary>
@@ -170,34 +196,39 @@ namespace TDS_Common.Instance.Utility
         public static void OnUpdateFunc()
         {
             ulong tick = _tickGetter();
-            for (int i = _timer.Count - 1; i >= 0; i--)
+            lock (_timer)
             {
-                if (!_timer[i]._willRemoved)
+                for (int i = _timer.Count - 1; i >= 0; i--)
                 {
-                    if (_timer[i]._executeAtMs <= tick)
+                    if (_timer[i]._willRemoved)
                     {
-                        TDSTimer thetimer = _timer[i];
-                        _timer.RemoveAt(i);   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
-                        if (thetimer.HandleException)
-                            thetimer.ExecuteMeSafe();
-                        else
-                            thetimer.ExecuteMe();
+                        _timer.RemoveAt(i);
+                        continue;
                     }
-                    else
+
+                    if (_timer[i]._executeAtMs > tick)
                         break;
+
+                    TDSTimer thetimer = _timer[i];
+                    _timer.RemoveAt(i);   // Remove the timer from the list (because of sorting and executeAtMs will get changed)
+                    if (thetimer.HandleException)
+                        thetimer.ExecuteMeSafe();
+                    else
+                        thetimer.ExecuteMe();                        
                 }
-                else
-                    _timer.RemoveAt(i);
             }
 
-            // Put the timers back in the list
-            if (_insertAfterList.Count > 0)
+            lock (_insertAfterList)
             {
-                foreach (TDSTimer timer in _insertAfterList)
+                // Put the timers back in the list
+                if (_insertAfterList.Count > 0)
                 {
-                    timer.InsertSorted();
+                    foreach (TDSTimer timer in _insertAfterList)
+                    {
+                        timer.InsertSorted();
+                    }
+                    _insertAfterList.Clear();
                 }
-                _insertAfterList.Clear();
             }
         }
     }
