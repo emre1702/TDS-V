@@ -17,6 +17,10 @@ export class AppComponent {
   showUserpanel = false;
 
   constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
+    rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number) => {
+      this.settings.loadAdminLevel(adminLevel);
+    });
+
     rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {
       this.showMapCreator = bool;
       changeDetector.detectChanges();

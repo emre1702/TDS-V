@@ -5,6 +5,7 @@
         public const string AddCustomLobby = "AddCustomLobby_Client";
         public const string AddMapToVoting = "AddMapToVoting_Client";
         public const string CloseMapMenu = "CloseMapMenu_Client";
+        public const string InitLoadAngular = "InitLoadAngular_Client";
         public const string LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Client";
         public const string LoadAllCustomLobbies = "LoadAllCustomLobbies_Client";  //todo add
         public const string LoadLanguage = "LoadLanguage_Client";

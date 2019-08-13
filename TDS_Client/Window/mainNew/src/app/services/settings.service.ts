@@ -15,6 +15,16 @@ import { EventEmitter } from 'events';
 })
 export class SettingsService {
 
+  //////////////////// AdminLevel ////////////////////
+  public AdminLevel = 0;
+
+  public AdminLevelChanged = new EventEmitter();
+
+  public loadAdminLevel(adminLevel: number) {
+    this.AdminLevel = adminLevel;
+    this.AdminLevelChanged.emit(null);
+  }
+
   ///////////////////// Language /////////////////////
   public LangValue: LanguageEnum = LanguageEnum.English;
   public Lang: Language = SettingsService.langByLangValue[this.LangValue];

@@ -1,10 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
 import { RageConnectorService } from '../../services/rage-connector.service';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { UserpanelService } from './services/userpanel.service';
 import { LanguagePipe } from '../../pipes/language.pipe';
 
@@ -13,7 +12,7 @@ import { LanguagePipe } from '../../pipes/language.pipe';
   templateUrl: './userpanel.component.html',
   styleUrls: ['./userpanel.component.scss']
 })
-export class UserpanelComponent {
+export class UserpanelComponent implements OnInit, OnDestroy {
 
   langPipe = new LanguagePipe();
   userpanelNavPage = UserpanelNavPage;
@@ -25,6 +24,14 @@ export class UserpanelComponent {
     private rageConnector: RageConnectorService,
     private userpanelService: UserpanelService) {
 
+  }
+
+  ngOnInit() {
+    this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
   }
 
   closeUserpanel() {
@@ -46,5 +53,9 @@ export class UserpanelComponent {
   getNavs(): Array<string> {
     const keys = Object.keys(UserpanelNavPage);
     return keys.slice(keys.length / 2);
+  }
+
+  private detectChanges() {
+    this.changeDetector.detectChanges();
   }
 }

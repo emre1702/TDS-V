@@ -2,6 +2,7 @@ export enum DFromClientEvent {
     AddCustomLobby = "AddCustomLobby_Client",
     AddMapToVoting = "AddMapToVoting_Client",
     CloseMapMenu = "CloseMapMenu_Client",
+    InitLoadAngular = "InitLoadAngular_Client",
     LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Client",
     LoadAllCustomLobbies = "LoadAllCustomLobbies_Client",
     LoadFavoriteMaps = "LoadFavoriteMaps_Client",

@@ -446,7 +446,7 @@ namespace TDS_Client.Manager.Event
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
-            Angular.Load();
+            Angular.Load(adminlvl);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
             Settings.Load();

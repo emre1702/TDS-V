@@ -17,10 +17,10 @@ namespace TDS_Client.Manager.Browser
         public static HtmlWindow Browser { get; set; }
         private readonly static Queue<string> _executeQueue = new Queue<string>();
 
-        public static void Load()
+        public static void Load(int adminLevel)
         {
             Browser = new HtmlWindow(ClientConstants.AngularBrowserPath);
-            OnLoaded();
+            OnLoaded(adminLevel);
         }
 
         private static void Execute(string eventName, params object[] args)
@@ -72,8 +72,9 @@ namespace TDS_Client.Manager.Browser
             return strBuilder.ToString();
         }
 
-        private static void OnLoaded()
+        private static void OnLoaded(int adminLevel)
         {
+            Execute(DToBrowserEvent.InitLoadAngular, adminLevel);
             foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);
