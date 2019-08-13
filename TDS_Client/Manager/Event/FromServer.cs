@@ -42,12 +42,11 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
-            Add(DToClientEvent.LoadAllCommands, OnLoadAllCommandsServerMethod);
-            Add(DToClientEvent.LoadAllRules, OnLoadAllRulesServerMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
             Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
             Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
+            Add(DToClientEvent.LoadUserpanelData, OnLoadUserpanelDataMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
             Add(DToClientEvent.MapClear, OnMapClearMethod);
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
@@ -93,6 +92,13 @@ namespace TDS_Client.Manager.Event
             MainBrowser.OnLoadOwnMapRatings(datajson);
         }
 
+        private void OnLoadUserpanelDataMethod(object[] args)
+        {
+            int type = (int)args[0];
+            string json = (string)args[1];
+            Angular.LoadUserpanelData(type, json);
+        }
+
         /*private void OnHitOpponentMethod(object[] args)
         {
             DeathmatchInfo.HittedOpponent();
@@ -129,18 +135,6 @@ namespace TDS_Client.Manager.Event
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Remove(player);
             VoiceManager.RemovePlayer(player);
-        }
-
-        private void OnLoadAllCommandsServerMethod(object[] args)
-        {
-            string json = (string)args[0];
-            Angular.LoadAllCommands(json);
-        }
-
-        private void OnLoadAllRulesServerMethod(object[] args)
-        {
-            string json = (string)args[0];
-            Angular.LoadAllRules(json);
         }
 
         private void OnLoadMapFavouritesMethod(object[] args)

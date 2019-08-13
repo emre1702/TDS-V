@@ -29,12 +29,11 @@
 
         public const string LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Server";
         public const string LeaveSameLobby = "LeaveSameLobby_Server";
-        public const string LoadAllCommands = "LoadAllCommands_Server";
-        public const string LoadAllRules = "LoadAllRules_Server";
         public const string LoadMapFavourites = "LoadMapFavourites_Server";
         public const string LoadMapForMapCreator = "LoadMapForMapCreator_Server";
         public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Server";
         public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
+        public const string LoadUserpanelData = "LoadUserpanelData_Server";
 
         public const string MapChange = "MapChange_Server";
         public const string MapClear = "MapClear_Server";

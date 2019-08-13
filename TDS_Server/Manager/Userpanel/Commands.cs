@@ -5,6 +5,7 @@ using System.Linq;
 using TDS_Common.Default;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
+using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Userpanel
@@ -62,7 +63,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static void SendPlayerCommandData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadAllCommands, _commandDatasJson);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.Commands, _commandDatasJson);
         }
     }
 }

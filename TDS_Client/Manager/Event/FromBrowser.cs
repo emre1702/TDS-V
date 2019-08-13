@@ -36,6 +36,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
+            Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
@@ -53,9 +54,6 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
-
-            Add(DToServerEvent.LoadAllCommands, OnLoadAllCommandsMethod);
-            Add(DToServerEvent.LoadAllRules, OnLoadAllRulesMethod);
         }
 
         private void OnAddMapCreatorPositionMethod(object[] args)
@@ -150,16 +148,6 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
         }
 
-        private void OnLoadAllCommandsMethod(object[] args)
-        {
-            EventsSender.Send(DToServerEvent.LoadAllCommands);
-        }
-
-        private void OnLoadAllRulesMethod(object[] args)
-        {
-            EventsSender.Send(DToServerEvent.LoadAllRules);
-        }
-
         private void OnLoadMapNamesToLoadForMapCreatorMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.LoadMapNamesToLoadForMapCreator);
@@ -169,6 +157,11 @@ namespace TDS_Client.Manager.Event
         {
             string mapName = (string)args[0];
             EventsSender.Send(DToServerEvent.LoadMapForMapCreator, mapName);
+        }
+
+        private void OnLoadUserpanelDataBrowserMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)args[0]);
         }
 
         private void OnTryLoginMethod(object[] args)

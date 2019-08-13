@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Server.Enum;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
@@ -355,22 +356,14 @@ namespace TDS_Server.Instance.Lobby
         #endregion MapCreator
 
         #region Userpanel
-        [RemoteEvent(DToServerEvent.LoadAllCommands)]
-        public void PlayerLoadAllCommands(Client client)
+        [RemoteEvent(DToServerEvent.LoadUserpanelData)]
+        public void PlayerLoadAllCommands(Client client, int dataType)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            Manager.Userpanel.Commands.SendPlayerCommandData(player);
-        }
-
-        [RemoteEvent(DToServerEvent.LoadAllRules)]
-        public void PlayerLoadAllRules(Client client)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-            Manager.Userpanel.Rules.SendPlayerRules(player);
+            EUserpanelLoadDataType type = (EUserpanelLoadDataType) dataType;
+            Manager.Userpanel.Main.PlayerLoadData(player, type);
         }
         #endregion
 

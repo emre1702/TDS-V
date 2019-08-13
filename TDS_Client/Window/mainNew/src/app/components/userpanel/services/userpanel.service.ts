@@ -4,6 +4,7 @@ import { RageConnectorService } from '../../../services/rage-connector.service';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { EventEmitter } from 'events';
 import { UserpanelRuleDataDto } from '../interfaces/userpanelRuleDataDto';
+import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -15,25 +16,39 @@ export class UserpanelService {
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
 
-    constructor(private rageConnector: RageConnectorService) {}
+    constructor(private rageConnector: RageConnectorService) {
+        this.rageConnector.listen(DToServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
+    }
 
     loadCommands() {
-        this.rageConnector.callCallback(DToServerEvent.LoadAllCommands, undefined, this.loadAllCommands.bind(this));
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Commands);
     }
 
     loadRules() {
-        this.rageConnector.callCallback(DToServerEvent.LoadAllRules, undefined, this.loadAllRules.bind(this));
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Rules);
+    }
+
+    private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
+        json = this.escapeSpecialChars(json);
+        switch (type) {
+            case UserpanelLoadDataType.Commands:
+                this.loadAllCommands(json);
+                break;
+            case UserpanelLoadDataType.Rules:
+                this.loadAllRules(json);
+                break;
+        }
     }
 
     private loadAllCommands(json: string) {
-        this.allCommands = JSON.parse(this.escapeSpecialChars(json));
+        this.allCommands = JSON.parse(json);
         this.allCommands.sort((a, b) => a.Command < b.Command ? -1 : 1);
         this.allCommands.forEach(c => c.Aliases.sort());
         this.commandsLoaded.emit(null);
     }
 
     private loadAllRules(json: string) {
-        this.allRules = JSON.parse(this.escapeSpecialChars(json));
+        this.allRules = JSON.parse(json);
         this.allRules.sort((a, b) => a.Id < b.Id ? -1 : 1);
         this.rulesLoaded.emit(null);
     }

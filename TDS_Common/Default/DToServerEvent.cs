@@ -24,6 +24,7 @@
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
         public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";
         public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser";
+        public const string LoadUserpanelData = "LoadUserpanelData_Browser";
 
         public const string MapsListRequest = "MapsListRequest_Client";
         public const string MapVote = "MapVote_Client";
@@ -47,9 +48,5 @@
         public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
         public const string TryLogin = "TryLogin_Client";
         public const string TryRegister = "TryRegister_Client";
-
-
-        public const string LoadAllCommands = "LoadAllCommands_Browser";
-        public const string LoadAllRules = "LoadAllRules_Browser";
     }
 }

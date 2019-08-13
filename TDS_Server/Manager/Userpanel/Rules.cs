@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
 using TDS_Common.Default;
+using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 
@@ -26,7 +27,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static void SendPlayerRules(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadAllRules, _rulesJson);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.Rules, _rulesJson);
         }
     }
 }
