@@ -1,16 +1,19 @@
 export enum UserpanelNavPage {
     Main,
+    MyStats,
+    Admin,
+    Settings,
     Commands,
     CommandsUser,
     CommandsTDSTeam,
     CommandsDonator,
     CommandsVIP,
     CommandsLobbyOwner,
-    Settings,
     Rules,
     RulesUser,
     RulesTDSTeam,
     RulesVIP,
     FAQ,
-    Report
+    Reports,
+    Applications
 }
