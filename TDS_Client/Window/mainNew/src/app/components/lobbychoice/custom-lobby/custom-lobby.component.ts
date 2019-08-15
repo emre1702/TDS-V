@@ -147,11 +147,6 @@ export class CustomLobbyMenuComponent {
   constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
     public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
 
-    this.rageConnector.listen(DFromClientEvent.LoadAllCustomLobbies, (customLobbyDataJson: string) => {
-      this.lobbyDatas = JSON.parse(customLobbyDataJson);
-      changeDetector.detectChanges();
-    });
-
     this.rageConnector.listen(DFromClientEvent.AddCustomLobby, (customLobbyDataJson: string) => {
       this.lobbyDatas.push(JSON.parse(customLobbyDataJson));
       changeDetector.detectChanges();

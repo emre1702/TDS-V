@@ -4,7 +4,6 @@ export enum DFromClientEvent {
     CloseMapMenu = "CloseMapMenu_Client",
     InitLoadAngular = "InitLoadAngular_Client",
     LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Client",
-    LoadAllCustomLobbies = "LoadAllCustomLobbies_Client",
     LoadFavoriteMaps = "LoadFavoriteMaps_Client",
     LoadLanguage = "LoadLanguage_Client",
     LoadMapVoting = "LoadMapVoting_Client",
