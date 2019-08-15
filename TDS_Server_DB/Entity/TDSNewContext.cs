@@ -132,20 +132,20 @@ namespace TDS_Server_DB.Entity
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ForNpgsqlUseIdentityByDefaultColumns();
+            modelBuilder.UseIdentityByDefaultColumns();
 
             #region Enum
-            modelBuilder.ForNpgsqlHasEnum<EPlayerRelation>();
-            modelBuilder.ForNpgsqlHasEnum<EWeaponHash>();
-            modelBuilder.ForNpgsqlHasEnum<EWeaponType>();
-            modelBuilder.ForNpgsqlHasEnum<ELogType>();
-            modelBuilder.ForNpgsqlHasEnum<ELobbyType>();
-            modelBuilder.ForNpgsqlHasEnum<ELanguage>();
-            modelBuilder.ForNpgsqlHasEnum<VehicleHash>();
-            modelBuilder.ForNpgsqlHasEnum<EFreeroamVehicleType>();
-            modelBuilder.ForNpgsqlHasEnum<EMapLimitType>();
-            modelBuilder.ForNpgsqlHasEnum<ERuleCategory>();
-            modelBuilder.ForNpgsqlHasEnum<ERuleTarget>();
+            modelBuilder.HasPostgresEnum<EPlayerRelation>();
+            modelBuilder.HasPostgresEnum<EWeaponHash>();
+            modelBuilder.HasPostgresEnum<EWeaponType>();
+            modelBuilder.HasPostgresEnum<ELogType>();
+            modelBuilder.HasPostgresEnum<ELobbyType>();
+            modelBuilder.HasPostgresEnum<ELanguage>();
+            modelBuilder.HasPostgresEnum<VehicleHash>();
+            modelBuilder.HasPostgresEnum<EFreeroamVehicleType>();
+            modelBuilder.HasPostgresEnum<EMapLimitType>();
+            modelBuilder.HasPostgresEnum<ERuleCategory>();
+            modelBuilder.HasPostgresEnum<ERuleTarget>();
             #endregion
 
             #region Tables
@@ -419,7 +419,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_admins");
 
-                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
+                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.AsVip).HasColumnName("AsVIP");
 
@@ -432,7 +432,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_chats");
 
-                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
+                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
 
@@ -443,7 +443,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_errors");
 
-                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
+                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.Info).IsRequired();
 
@@ -454,7 +454,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.ToTable("log_rests");
 
-                entity.Property(e => e.Id).HasColumnName("ID").ForNpgsqlUseSequenceHiLo();
+                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.Ip).HasColumnName("IP");
 
@@ -469,7 +469,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Index_maps_name")
-                    .ForNpgsqlHasMethod("hash");
+                    .HasMethod("hash");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -490,7 +490,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ForNpgsqlUseSequenceHiLo();
+                    .UseHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
 
