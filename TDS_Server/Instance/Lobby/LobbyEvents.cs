@@ -1,9 +1,11 @@
 using GTANetworkAPI;
+using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Sync;
@@ -27,7 +29,9 @@ namespace TDS_Server.Instance.Lobby
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer character = player.GetChar();
             character.CurrentLobby?.OnPlayerDisconnected(character);
@@ -165,18 +169,37 @@ namespace TDS_Server.Instance.Lobby
 
         #region Damagesys
 
-        [RemoteEvent(DToServerEvent.HitOtherPlayer)]
-        public void OnPlayerHitOtherPlayer(Client player, string hittedName, bool headshot, int clientHasSentThisDamage)
+        [RemoteEvent(DToServerEvent.GotHit)]
+        public void OnPlayerGotHitByOtherPlayer(Client client, ushort attackerRemoteId, int boneOrZero, int damage)
         {
-            TDSPlayer character = player.GetChar();
-            Client hitted = NAPI.Player.GetPlayerFromName(hittedName);
-            if (hitted == null)
-                return;
-            if (character.CurrentLobby is FightLobby fightlobby)
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
             {
-                WeaponHash currentweapon = player.CurrentWeapon;
-                fightlobby.DamagedPlayer(hitted.GetChar(), character, currentweapon, headshot, clientHasSentThisDamage);
+                var attackerClientError = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
+                ErrorLogsManager.Log(string.Format("Player {0} got hit by {1} with {2} damage - but he is not online.", client.Name, attackerClientError?.Name ?? "id " + attackerRemoteId, damage), 
+                    Environment.StackTrace, client);
+                return;
             }
+
+            var attackerClient = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
+            if (attackerClient == null)
+                return;
+                
+            TDSPlayer attacker = attackerClient.GetChar();
+            if (!attacker.LoggedIn)
+            {
+                ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but he is not online.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
+                return;
+            }
+                
+            if (!(player.CurrentLobby is FightLobby fightLobby))
+            {
+                ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but this player isn't in fightlobby.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
+                return;
+            }
+
+            WeaponHash currentweapon = client.CurrentWeapon;
+            fightLobby.DamagedPlayer(player, attacker, currentweapon, boneOrZero == 0 ? (int?)null : boneOrZero, damage);
         }
 
         #endregion Damagesys

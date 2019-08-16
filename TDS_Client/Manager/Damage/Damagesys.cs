@@ -1,12 +1,7 @@
 ﻿using RAGE;
 using RAGE.Elements;
-using RAGE.Game;
-using System.Linq;
 using TDS_Client.Manager.Browser;
-using TDS_Client.Manager.Lobby;
-using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
-using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Damage
@@ -30,42 +25,31 @@ namespace TDS_Client.Manager.Damage
             _lastTotalHP = currentTotalHP;
         }
 
-        public static void OnWeaponShot(Vector3 targetPos, Player target, CancelEventArgs cancel)
+        public static void CheckOnTick()
         {
-            cancel.Cancel = true;
-
-            Player hitted = GetHittedPlayer(targetPos);
-            if (hitted == null)
-                return;
-
-            if (Team.IsInSameTeam(hitted))
+            int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
+            if (Player.LocalPlayer.HasBeenDamagedByAnyPed())
             {
-                // debug //
-                Chat.Output("Hitted a team member");
-                //////////
-                return;
+                int outbone = 0;
+                Player.LocalPlayer.GetLastDamageBone(ref outbone);
+
+                foreach (var player in Entities.Players.All)
+                {
+                    if (!player.Exists)
+                        continue;
+                    if (player == Player.LocalPlayer)
+                        continue;
+                    if (!RAGE.Game.Entity.HasEntityBeenDamagedByEntity(Player.LocalPlayer.Handle, player.Handle, true))
+                        continue;
+
+                    Events.CallRemote(DToServerEvent.GotHit, player.RemoteId, outbone, _lastTotalHP - currentTotalHP);
+
+                }
+
+                Player.LocalPlayer.ClearLastDamageBone();
+                Player.LocalPlayer.ClearLastDamageEntity();                    
             }
-
-            EventsSender.Send(DToServerEvent.HitOtherPlayer, hitted.Name, IsHeadshot(hitted, targetPos), CurrentWeaponDamage);
-            DeathmatchInfo.HittedOpponent(hitted, CurrentWeaponDamage);
-        }
-
-        private static bool IsHeadshot(Player hitted, Vector3 pos)
-        {
-            return false;
-        }
-
-        private static Player GetHittedPlayer(Vector3 targetPos)
-        {
-            Vector3 startpos = Player.LocalPlayer.GetBoneCoords(6286, 0, 0, 0);
-            Vector3 endpos = Vector3.Lerp(startpos, targetPos, 1.05f);
-            int rayHandle = Shapetest.StartShapeTestRay(startpos.X, startpos.Y, startpos.Z, endpos.X, endpos.Y, endpos.Z, 8, Player.LocalPlayer.Handle, 0);
-            int hit = 0;
-            int hitEntityHandle = 0;
-            Shapetest.GetShapeTestResult(rayHandle, ref hit, endpos, startpos, ref hitEntityHandle);
-            if (hit != 0)
-                return Entities.Players.All.FirstOrDefault(p => p.Handle == hitEntityHandle);
-            return null;
+            _lastTotalHP = currentTotalHP;
         }
 
         public static void ResetLastHP()

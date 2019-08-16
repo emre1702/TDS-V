@@ -19,7 +19,6 @@ namespace TDS_Client.Manager.Lobby
                     if (!_inFight)
                     {
                         Damagesys.ResetLastHP();
-                        TickManager.Add(Damagesys.ShowBloodscreenIfNecessary, () => Settings.Bloodscreen);
                         FloatingDamageInfo.UpdateAllPositions();
                     }
                 }  

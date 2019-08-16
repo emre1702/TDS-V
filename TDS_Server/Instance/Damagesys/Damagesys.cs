@@ -17,16 +17,16 @@ namespace TDS_Server.Instance
             foreach (LobbyWeapons weapon in weapons)
             {
                 if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
-                    damagesDict[weapon.Hash] = _defaultDamages[weapon.Hash];
+                    _damagesDict[weapon.Hash] = _defaultDamages[weapon.Hash];
                 else
-                    damagesDict[weapon.Hash] = new DamageDto(weapon);
+                    _damagesDict[weapon.Hash] = new DamageDto(weapon);
             }
             InitKillingSpreeRewards(killingspreeRewards);
         }
 
         public void Clear()
         {
-            allHitters.Clear();
+            _allHitters.Clear();
         }
 
         public static void LoadDefaults(TDSNewContext dbcontext)

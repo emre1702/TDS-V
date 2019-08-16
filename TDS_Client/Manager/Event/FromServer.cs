@@ -37,7 +37,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
             Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
-            //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
+            Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
@@ -99,10 +99,12 @@ namespace TDS_Client.Manager.Event
             Angular.LoadUserpanelData(type, json);
         }
 
-        /*private void OnHitOpponentMethod(object[] args)
+        private void OnHitOpponentMethod(object[] args)
         {
-            DeathmatchInfo.HittedOpponent();
-        }*/
+            ushort remoteId = (ushort)args[0];
+            int damage = (int)args[1];
+            DeathmatchInfo.HittedOpponent(ClientUtils.GetPlayerByHandleValue(remoteId), damage);
+        }
 
         // Join always means we also left another lobby (except on login)
         private void OnJoinLobbyMethod(object[] args)

@@ -10,8 +10,9 @@
         public const string CreateCustomLobby = "CreateCustomLobby_Client";
 
         public const string GetVehicle = "GetVehicle_Client";
+        public const string GotHit = "GotHit_Client";
 
-        public const string HitOtherPlayer = "HitOtherPlayer_Client";
+        //public const string HitOtherPlayer = "HitOtherPlayer_Client";
 
         public const string JoinArena = "JoinArena_Client";
         public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Client";

@@ -12,7 +12,7 @@ namespace TDS_Client.Manager.Damage
             if (Settings.Hitsound)
                 MainBrowser.PlayHitsound();
 
-            if (Settings.FloatingDamageInfo)
+            if (Settings.FloatingDamageInfo && hitted != null)
                 new FloatingDamageInfo(hitted, damage);
         }
 

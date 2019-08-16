@@ -11,16 +11,10 @@ namespace TDS_Client.Manager.Event
     {
         private void AddRAGEEvents()
         {
-            OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
             OnPlayerSpawn += OnPlayerSpawnMethod;
             OnPlayerDeath += OnPlayerDeathMethod;
             OnPlayerStartTalking += OnPlayerStartTalkingMethod;
             OnPlayerStopTalking += OnPlayerStopTalkingMethod;
-        }
-
-        private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
-        {
-            Damagesys.OnWeaponShot(targetPos, target, cancel);
         }
 
         private void OnPlayerSpawnMethod(CancelEventArgs cancel)

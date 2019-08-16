@@ -62,12 +62,12 @@ namespace TDS_Server.Instance
 
         private void CheckForAssist(TDSPlayer character, Client killer)
         {
-            if (!allHitters.ContainsKey(character))
+            if (!_allHitters.ContainsKey(character))
                 return;
             if (character.CurrentLobby == null)
                 return;
             int halfarmorhp = character.CurrentLobby.StartTotalHP / 2;
-            foreach (KeyValuePair<TDSPlayer, int> entry in allHitters[character])
+            foreach (KeyValuePair<TDSPlayer, int> entry in _allHitters[character])
             {
                 if (entry.Value >= halfarmorhp)
                 {
@@ -81,7 +81,7 @@ namespace TDS_Server.Instance
                     if (killer != target ||
                         halfarmorhp % 2 != 0 ||
                         entry.Value != halfarmorhp / 2 ||
-                        allHitters[character].Count > 2)
+                        _allHitters[character].Count > 2)
                         return;
                 }
             }

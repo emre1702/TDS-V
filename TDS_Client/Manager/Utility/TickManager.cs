@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Lobby;
 using static RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
@@ -11,6 +13,8 @@ namespace TDS_Client.Manager.Utility
         public TickManager()
         {
             Tick += OnTickMethod;
+
+            Add(Damagesys.CheckOnTick, () => Round.InFight);
         }
 
         private static void OnTickMethod(List<TickNametagData> _)

@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.Player;
@@ -91,10 +92,12 @@ namespace TDS_Server.Instance
 			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
         };*/
 
-        private readonly Dictionary<EWeaponHash, DamageDto> damagesDict = new Dictionary<EWeaponHash, DamageDto>();
-        private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
+        private readonly Dictionary<EWeaponHash, DamageDto> _damagesDict = new Dictionary<EWeaponHash, DamageDto>();
+        private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> _allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
-        public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, bool headshot, TDSPlayer? source, int clientHasSentThisDamage)
+#pragma warning disable IDE0060 // Remove unused parameter
+        public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
@@ -106,22 +109,13 @@ namespace TDS_Server.Instance
                     return;
             }
 
-            int damage = GetDamage(weapon, headshot);
-            if (damage != clientHasSentThisDamage)
-            {
-                ErrorLogsManager.Log("Source has sent " + clientHasSentThisDamage + " damage, but the damage had to be " + damage, Environment.StackTrace, source);
-            }
-
-            target.Damage(ref damage);
-
             if (source != null)
             {
                 UpdateLastHitter(target, source, damage);
                 if (source.CurrentRoundStats != null)
                     source.CurrentRoundStats.Damage += damage;
 
-                //if (source.Entity.PlayerSettings.HitsoundOn)
-                //    NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent);
+                NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent, target.Client.Handle.Value, damage);  
             }
         }
 
@@ -129,10 +123,10 @@ namespace TDS_Server.Instance
         {
             if (source == null)
                 return;
-            if (!allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int>? lasthitterdict))
+            if (!_allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int>? lasthitterdict))
             {
                 lasthitterdict = new Dictionary<TDSPlayer, int>();
-                allHitters[target] = lasthitterdict;
+                _allHitters[target] = lasthitterdict;
             }
             lasthitterdict.TryGetValue(source, out int currentDamage);
             lasthitterdict[source] = currentDamage + damage;
@@ -141,11 +135,11 @@ namespace TDS_Server.Instance
 
         public int GetDamage(EWeaponHash hash, bool headshot = false)
         {
-            if (!damagesDict.ContainsKey(hash))
+            if (!_damagesDict.ContainsKey(hash))
                 return 0;
-            int damage = damagesDict[hash].Damage;
+            int damage = _damagesDict[hash].Damage;
             if (headshot)
-                damage = (int)(damage * damagesDict[hash].HeadMultiplier);
+                damage = (int)(damage * _damagesDict[hash].HeadMultiplier);
             return damage;
         }
     }
