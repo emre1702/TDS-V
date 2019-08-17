@@ -48,9 +48,9 @@ namespace TDS_Server.Instance.Utility
 
             SyncedTeamData = new SyncedTeamDataDto
             (
-                index: (int)Entity.Index,
+                index: Entity.Index,
                 name: Entity.Name,
-                color: System.Drawing.Color.FromArgb(Entity.ColorR, Entity.ColorG, Entity.ColorB),
+                color: new ColorDto(Entity.ColorR, Entity.ColorG, Entity.ColorB),
                 amountPlayers: new SyncedTeamPlayerAmountDto()
             );
         }

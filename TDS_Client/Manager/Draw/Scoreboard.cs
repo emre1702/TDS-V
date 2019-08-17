@@ -69,7 +69,7 @@ namespace TDS_Client.Manager.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(grid, null, team.Color, textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
+                DxGridRow row = new DxGridRow(grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 new DxGridCell(playerdata.Name, row, columns[0]);
 
                 new DxGridCell(TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, columns[1]);
