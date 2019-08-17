@@ -43,6 +43,20 @@ namespace TDS_Server_DB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "faqs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Language = table.Column<ELanguage>(nullable: false),
+                    Question = table.Column<string>(nullable: true),
+                    Answer = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_faqs", x => new { x.Id, x.Language });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "freeroam_default_vehicle",
                 columns: table => new
                 {
@@ -459,7 +473,10 @@ namespace TDS_Server_DB.Migrations
                     Hitsound = table.Column<bool>(nullable: false),
                     Bloodscreen = table.Column<bool>(nullable: false),
                     FloatingDamageInfo = table.Column<bool>(nullable: false),
-                    AllowDataTransfer = table.Column<bool>(nullable: false)
+                    AllowDataTransfer = table.Column<bool>(nullable: false),
+                    Voice3D = table.Column<bool>(nullable: false),
+                    VoiceAutoVolume = table.Column<bool>(nullable: false),
+                    VoiceVolume = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -834,18 +851,19 @@ namespace TDS_Server_DB.Migrations
                 "VALUES (0, 0, 'Spectator', 0, 255, 255, 255, 4, 1004114196)");
             migrationBuilder.Sql("INSERT INTO gangs (\"ID\", \"TeamId\", \"Short\") VALUES (0, 0, '-')");
 
+
             migrationBuilder.InsertData(
                 table: "commands",
                 columns: new[] { "ID", "Command", "LobbyOwnerCanUse", "NeededAdminLevel", "NeededDonation", "VipCanUse" },
                 values: new object[,]
                 {
+                    { (short)24, "GiveMoney", false, null, null, false },
                     { (short)21, "UnblockUser", false, null, null, false },
                     { (short)20, "BlockUser", false, null, null, false },
                     { (short)19, "UserId", false, null, null, false },
-                    { (short)18, "PrivateMessage", false, null, null, false },
                     { (short)17, "OpenPrivateChat", false, null, null, false },
                     { (short)16, "ClosePrivateChat", false, null, null, false },
-                    { (short)24, "GiveMoney", false, null, null, false },
+                    { (short)18, "PrivateMessage", false, null, null, false },
                     { (short)14, "PrivateChat", false, null, null, false },
                     { (short)13, "TeamChat", false, null, null, false },
                     { (short)12, "GlobalChat", false, null, null, false },
@@ -855,15 +873,30 @@ namespace TDS_Server_DB.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "faqs",
+                columns: new[] { "Id", "Language", "Answer", "Question" },
+                values: new object[,]
+                {
+                    { 2, ELanguage.English, @"In case of a transfer of TDS-V, the database will also be transferred, but without the player data (for data protection reasons).
+                However, if you want to keep your data, you must allow it in the user panel.
+                The data does not contain any sensitive information - IPs are not stored, passwords are secure (hash + salt).", "What is the 'Allow data transfer' setting in the userpanel?" },
+                    { 1, ELanguage.German, "Mit der ENDE Taste auf deiner Tastatur.", "Wie aktiviere ich meinen Cursor?" },
+                    { 1, ELanguage.English, "With the END key on your keyboard.", "How do I activate my cursor?" },
+                    { 2, ELanguage.German, @"Im Falle einer Übergabe von TDS-V wird die Datenbank auch übergeben, jedoch ohne die Spieler-Daten (aus Datenschutz-Gründen).
+                Falls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben.
+                Die Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt).", "Was ist die 'Erlaube Daten-Transfer' Einstellung im Userpanel?" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "freeroam_default_vehicle",
                 columns: new[] { "VehicleType", "Note", "VehicleHash" },
                 values: new object[,]
                 {
-                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 },
-                    { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 },
+                    { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 },
                     { EFreeroamVehicleType.Helicopter, null, VehicleHash.AKULA },
                     { EFreeroamVehicleType.Plane, null, VehicleHash.Pyro },
-                    { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 }
+                    { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 },
+                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 }
                 });
 
             migrationBuilder.InsertData(
@@ -879,12 +912,12 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "maps",
                 columns: new[] { "ID", "CreatorId", "Name" },
-                values: new object[] { -3, 0, "All Bombs" });
+                values: new object[] { -2, 0, "All Normals" });
 
             migrationBuilder.InsertData(
                 table: "maps",
                 columns: new[] { "ID", "CreatorId", "Name" },
-                values: new object[] { -2, 0, "All Normals" });
+                values: new object[] { -3, 0, "All Bombs" });
 
             migrationBuilder.InsertData(
                 table: "maps",
@@ -896,11 +929,11 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "ID", "Category", "Target" },
                 values: new object[,]
                 {
-                    { 1, ERuleCategory.General, ERuleTarget.User },
                     { 5, ERuleCategory.General, ERuleTarget.Admin },
                     { 4, ERuleCategory.General, ERuleTarget.Admin },
                     { 3, ERuleCategory.General, ERuleTarget.Admin },
                     { 2, ERuleCategory.Chat, ERuleTarget.User },
+                    { 1, ERuleCategory.General, ERuleTarget.User },
                     { 6, ERuleCategory.General, ERuleTarget.VIP },
                     { 7, ERuleCategory.General, ERuleTarget.VIP }
                 });
@@ -920,7 +953,11 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "Hash", "DefaultDamage", "DefaultHeadMultiplicator", "Type" },
                 values: new object[,]
                 {
-                    { EWeaponHash.SweeperShotgun, (short)162, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.PumpShotgun, (short)58, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.Machete, (short)45, 1f, EWeaponType.Melee },
+                    { EWeaponHash.MarksmanPistol, (short)150, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.MachinePistol, (short)20, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.KnuckleDuster, (short)30, 1f, EWeaponType.Melee },
                     { EWeaponHash.HeavyPistol, (short)40, 1f, EWeaponType.Handgun },
                     { EWeaponHash.BattleAxe, (short)50, 1f, EWeaponType.Melee },
                     { EWeaponHash.MarksmanRifle, (short)65, 2f, EWeaponType.SniperRifle },
@@ -928,58 +965,58 @@ namespace TDS_Server_DB.Migrations
                     { EWeaponHash.SpecialCarbine, (short)32, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.AssaultRifle, (short)30, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.SNSPistol, (short)28, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.MiniSMG, (short)22, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.PipeBomb, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.KnuckleDuster, (short)30, 1f, EWeaponType.Melee },
                     { EWeaponHash.RPG, (short)100, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.AdvancedRifle, (short)30, 1f, EWeaponType.AssaultRifle },
+                    { EWeaponHash.SwitchBlade, (short)50, 1f, EWeaponType.Melee },
+                    { EWeaponHash.AssaultShotgun, (short)192, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.AssaultSMG, (short)23, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.ProximityMine, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Musket, (short)165, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.NightVision, (short)0, 1f, EWeaponType.Rest },
-                    { EWeaponHash.GrenadeLauncher, (short)100, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.MiniSMG, (short)22, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.MachinePistol, (short)20, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Machete, (short)45, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Unarmed, (short)15, 1f, EWeaponType.Melee },
                     { EWeaponHash.SniperRifle, (short)101, 2f, EWeaponType.SniperRifle },
                     { EWeaponHash.FireExtinguisher, (short)0, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.CompactGrenadeLauncher, (short)100, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.Snowball, (short)10, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.VintagePistol, (short)34, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.CombatPDW, (short)28, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.HeavySniper, (short)216, 2f, EWeaponType.SniperRifle },
+                    { EWeaponHash.DoubleBarrelShotgun, (short)166, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.SweeperShotgun, (short)162, 1f, EWeaponType.Shotgun },
                     { EWeaponHash.CarbineRifleMK2, (short)32, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.UnholyHellbringer, (short)23, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.MarksmanPistol, (short)150, 1f, EWeaponType.Handgun },
                     { EWeaponHash.UpnAtomizer, (short)80, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.SmokeGrenade, (short)0, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.Parachute, (short)0, 1f, EWeaponType.Rest },
                     { EWeaponHash.Bottle, (short)10, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.Hatchet, (short)50, 1f, EWeaponType.Melee },
-                    { EWeaponHash.AssaultSMG, (short)23, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.DoubleBarrelShotgun, (short)166, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.AssaultShotgun, (short)192, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.SwitchBlade, (short)50, 1f, EWeaponType.Melee },
-                    { EWeaponHash.SmokeGrenade, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.HeavySniper, (short)216, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.BZGas, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.MG, (short)40, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.MicroSMG, (short)21, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.Pistol, (short)26, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.Musket, (short)165, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.GrenadeLauncher, (short)100, 1f, EWeaponType.HeavyWeapon },
+                    { EWeaponHash.Gusenberg, (short)34, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.Hammer, (short)40, 1f, EWeaponType.Melee },
+                    { EWeaponHash.GrenadeLauncherSmoke, (short)0, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.Flare, (short)0, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.FlareGun, (short)50, 1f, EWeaponType.Handgun },
                     { EWeaponHash.GolfClub, (short)40, 1f, EWeaponType.Melee },
+                    { EWeaponHash.CompactRifle, (short)34, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.Minigun, (short)30, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.HeavyShotgun, (short)117, 1f, EWeaponType.Shotgun },
                     { EWeaponHash.StunGun, (short)0, 1f, EWeaponType.Handgun },
                     { EWeaponHash.PetrolCan, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.GrenadeLauncherSmoke, (short)0, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.StickyBomb, (short)100, 1f, EWeaponType.ThrownWeapon },
+                    { EWeaponHash.SMG, (short)22, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.Molotov, (short)10, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.Ball, (short)0, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.APPistol, (short)28, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.PumpShotgun, (short)58, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.Pistol, (short)26, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.Wrench, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.MicroSMG, (short)21, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.SMG, (short)22, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Hammer, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.Gusenberg, (short)34, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.HeavyShotgun, (short)117, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.HomingLauncher, (short)150, 1f, EWeaponType.HeavyWeapon },
+                    { EWeaponHash.Nightstick, (short)35, 1f, EWeaponType.Melee },
+                    { EWeaponHash.Railgun, (short)50, 1f, EWeaponType.HeavyWeapon },
+                    { EWeaponHash.Unarmed, (short)15, 1f, EWeaponType.Melee },
+                    { EWeaponHash.BZGas, (short)0, 1f, EWeaponType.ThrownWeapon },
+                    { EWeaponHash.BullpupShotgun, (short)112, 1f, EWeaponType.Shotgun },
+                    { EWeaponHash.MG, (short)40, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.Knife, (short)45, 1f, EWeaponType.Melee },
                     { EWeaponHash.Pistol50, (short)51, 1f, EWeaponType.Handgun },
                     { EWeaponHash.Bat, (short)40, 1f, EWeaponType.Melee },
@@ -992,13 +1029,9 @@ namespace TDS_Server_DB.Migrations
                     { EWeaponHash.CombatMG, (short)28, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.Firework, (short)100, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.BullpupRifle, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.SawnOffShotgun, (short)160, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.Railgun, (short)50, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.CombatPDW, (short)28, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.HomingLauncher, (short)150, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.CompactRifle, (short)34, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.BullpupShotgun, (short)112, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.Nightstick, (short)35, 1f, EWeaponType.Melee }
+                    { EWeaponHash.Wrench, (short)40, 1f, EWeaponType.Melee },
+                    { EWeaponHash.NightVision, (short)0, 1f, EWeaponType.Rest },
+                    { EWeaponHash.SawnOffShotgun, (short)160, 1f, EWeaponType.Shotgun }
                 });
 
             migrationBuilder.InsertData(
@@ -1440,6 +1473,9 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "command_infos");
+
+            migrationBuilder.DropTable(
+                name: "faqs");
 
             migrationBuilder.DropTable(
                 name: "freeroam_default_vehicle");
