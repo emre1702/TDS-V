@@ -14,6 +14,7 @@
         public const string RemoveCustomLobby = "RemoveCustomLobby_Client";  
         public const string ResetMapVoting = "ResetMapVoting_Client";
         public const string SetMapVotes = "SetMapVotes_Client";
+        public const string ShowCooldown = "ShowCooldown_Client";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Client";
         public const string ToggleChatOpened = "ToggleChatOpened_Client";
         public const string ToggleFreeroam = "ToggleFreeroam_Client";

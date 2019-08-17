@@ -9,8 +9,6 @@ namespace TDS_Client.Manager.Utility
 {
     internal class VoiceManager
     {
-        private static readonly HashSet<Player> _sendingToPlayers = new HashSet<Player>();
-
         public static void Init()
         {
             //if (!Voice.Allowed)
@@ -19,16 +17,12 @@ namespace TDS_Client.Manager.Utility
             BindManager.Add(Control.PushToTalk, Stop, EKeyPressState.Up);
         }
 
-        public static void AddPlayer(Player player)
+        public static void SetForPlayer(Player player)
         {
-            _sendingToPlayers.Add(player);
-            player.AutoVolume = true;
-            player.Voice3d = ClientConstants.Voice3D;
-        }
-
-        public static void RemovePlayer(Player player)
-        {
-            _sendingToPlayers.Remove(player);
+            player.AutoVolume = Settings.PlayerSettings.VoiceAutoVolume;
+            if (!Settings.PlayerSettings.VoiceAutoVolume)
+                player.VoiceVolume = Settings.PlayerSettings.VoiceVolume;
+            player.Voice3d = Settings.PlayerSettings.Voice3D;
         }
 
         private static void Start(Control _)

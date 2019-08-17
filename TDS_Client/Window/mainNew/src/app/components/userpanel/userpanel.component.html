@@ -12,6 +12,7 @@
             [currentNav]="currentNav" >
         </app-userpanel-rules>
         <app-userpanel-faqs *ngIf="currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
+        <app-userpanel-settings *ngIf="currentNav == userpanelNavPage[userpanelNavPage.Settings]"></app-userpanel-settings>
         <div *ngIf="currentNav == userpanelNavPage[userpanelNavPage.Main]" 
             [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
         </div>
@@ -24,7 +25,7 @@
         <mat-icon>assignment</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Settings)" disabled>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Settings)">
         <mat-icon>settings</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Settings] | language: settings.Lang }}</span>
     </button>

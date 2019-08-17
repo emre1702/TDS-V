@@ -1351,6 +1351,25 @@ namespace TDS_Server_DB.Entity
                     Language = ELanguage.German,
                     Question = "Wie aktiviere ich meinen Cursor?",
                     Answer = "Mit der ENDE Taste auf deiner Tastatur."
+                },
+
+                new FAQs
+                {
+                    Id = 2,
+                    Language = ELanguage.English,
+                    Question = "What is the 'Allow data transfer' setting in the userpanel?",
+                    Answer = "In case of a transfer of TDS-V, the database will also be transferred, but without the player data (for data protection reasons)."
+                            + "\nHowever, if you want to keep your data, you must allow it in the user panel."
+                            + "\nThe data does not contain any sensitive information - IPs are not stored, passwords are secure (hash + salt)."
+                },
+                new FAQs
+                {
+                    Id = 2,
+                    Language = ELanguage.German,
+                    Question = "Was ist die 'Erlaube Daten-Transfer' Einstellung im Userpanel?",
+                    Answer = "Im Falle einer Übergabe von TDS-V wird die Datenbank auch übergeben, jedoch ohne die Spieler-Daten (aus Datenschutz-Gründen)."
+                            + "\nFalls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben."
+                            + "\nDie Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt)."
                 }
             );
             #endregion

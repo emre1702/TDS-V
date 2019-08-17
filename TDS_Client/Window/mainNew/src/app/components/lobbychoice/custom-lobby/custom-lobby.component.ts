@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { LobbySettingType } from '../enums/lobby-setting-type';
+import { SettingType } from '../../../enums/setting-type';
 import { LobbySettingPanel } from '../models/lobby-setting-panel';
 import { FormControl, Validators } from '@angular/forms';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -55,13 +55,13 @@ export class CustomLobbyMenuComponent {
     {
       title: "Default", rows: [
         {
-          type: LobbySettingType.string, dataSettingIndex: "Name", defaultValue: "",
+          type: SettingType.string, dataSettingIndex: "Name", defaultValue: "",
           formControl: new FormControl("", [Validators.required, Validators.maxLength(50), Validators.minLength(3)])
         },
         /*{ type: LobbySettingType.option, dataSettingIndex: "Type", required: true, value: "",
           options: Object.keys(LobbyMapType).slice(Object.keys(LobbyMapType).length / 2) }*/
         {
-          type: LobbySettingType.password, dataSettingIndex: "Password", defaultValue: "",
+          type: SettingType.password, dataSettingIndex: "Password", defaultValue: "",
           formControl: new FormControl("", [Validators.maxLength(100)])
         }
       ]
@@ -70,15 +70,15 @@ export class CustomLobbyMenuComponent {
     {
       title: "Player", rows: [
         {
-          type: LobbySettingType.number, dataSettingIndex: "StartHealth", defaultValue: 100,
+          type: SettingType.number, dataSettingIndex: "StartHealth", defaultValue: 100,
           formControl: new FormControl(100, [Validators.required, Validators.max(100), Validators.min(1)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "StartArmor", defaultValue: 100,
+          type: SettingType.number, dataSettingIndex: "StartArmor", defaultValue: 100,
           formControl: new FormControl(100, [Validators.required, Validators.max(200), Validators.min(0)])
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "AmountLifes", defaultValue: 1,
+          type: SettingType.number, dataSettingIndex: "AmountLifes", defaultValue: 1,
           formControl: new FormControl(1, [Validators.required, Validators.max(999), Validators.min(1)]), onlyInt: true
         },
 
@@ -88,7 +88,7 @@ export class CustomLobbyMenuComponent {
     {
       title: "Teams", rows: [
         {
-          type: LobbySettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: true,
+          type: SettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: true,
           formControl: new FormControl(true, [])
         }
       ]
@@ -97,7 +97,7 @@ export class CustomLobbyMenuComponent {
     {
       title: "Map", rows: [
         {
-          type: LobbySettingType.enum, dataSettingIndex: "MapLimitType", defaultValue: "KillAfterTime",
+          type: SettingType.enum, dataSettingIndex: "MapLimitType", defaultValue: "KillAfterTime",
           enum: LobbyMapLimitType,
           formControl: new FormControl(LobbyMapLimitType.KillAfterTime, [])
         }
@@ -107,37 +107,37 @@ export class CustomLobbyMenuComponent {
     {
       title: "Times", rows: [
         {
-          type: LobbySettingType.number, dataSettingIndex: "BombDetonateTimeMs", defaultValue: 45000,
+          type: SettingType.number, dataSettingIndex: "BombDetonateTimeMs", defaultValue: 45000,
           formControl: new FormControl(45000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "BombDefuseTimeMs", defaultValue: 8000,
+          type: SettingType.number, dataSettingIndex: "BombDefuseTimeMs", defaultValue: 8000,
           formControl: new FormControl(8000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "BombPlantTimeMs", defaultValue: 3000,
+          type: SettingType.number, dataSettingIndex: "BombPlantTimeMs", defaultValue: 3000,
           formControl: new FormControl(3000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "RoundTime", defaultValue: 240,
+          type: SettingType.number, dataSettingIndex: "RoundTime", defaultValue: 240,
           formControl: new FormControl(240, [Validators.required, Validators.max(999999), Validators.min(60)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "CountdownTime", defaultValue: 5,
+          type: SettingType.number, dataSettingIndex: "CountdownTime", defaultValue: 5,
           formControl: new FormControl(5, [Validators.required, Validators.max(60), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "SpawnAgainAfterDeathMs", defaultValue: 400,
+          type: SettingType.number, dataSettingIndex: "SpawnAgainAfterDeathMs", defaultValue: 400,
           formControl: new FormControl(400, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
         },
         {
-          type: LobbySettingType.number, dataSettingIndex: "MapLimitTime", defaultValue: 10,
+          type: SettingType.number, dataSettingIndex: "MapLimitTime", defaultValue: 10,
           formControl: new FormControl(10, [Validators.required, Validators.max(9999), Validators.min(0)]), onlyInt: true
         },
       ]
     }
   ];
-  lobbySettingType = LobbySettingType;
+  lobbySettingType = SettingType;
   MathFloor = Math.floor;
 
   creating = true;

@@ -72,6 +72,7 @@
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncSettings = "SyncSettings_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server";
         public const string SyncTeamPlayers = "SyncTeamPlayers_Server";

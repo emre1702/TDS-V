@@ -44,6 +44,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.RemoveMap, OnRemoveMapMethod);
             Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
+            Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
@@ -224,7 +225,8 @@ namespace TDS_Client.Manager.Event
         private void OnRemoveMapMethod(object[] args)
         {
             int mapId = Convert.ToInt32(args[0]);
-            EventsSender.Send(DToServerEvent.RemoveMap, mapId);
+            if (!EventsSender.Send(DToServerEvent.RemoveMap, mapId))
+                Angular.ShowCooldown();
         }
         private void OnRemoveMapCreatorPositionMethod(object[] args)
         {
@@ -239,6 +241,14 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SaveMapCreatorData, json))
                 Angular.SaveMapCreatorReturn((int)EMapCreateError.Cooldown);
+        }
+
+        private void OnSaveSettingsMethod(object[] args)
+        {
+            string json = (string)args[0];
+            if (!EventsSender.Send(DToServerEvent.SaveSettings, json)) 
+                Angular.ShowCooldown();
+                
         }
 
         private void OnSendMapCreatorDataMethod(object[] args)

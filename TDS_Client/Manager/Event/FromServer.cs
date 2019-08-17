@@ -80,6 +80,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
+            Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
@@ -123,7 +124,7 @@ namespace TDS_Client.Manager.Event
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Load(player);
-            VoiceManager.AddPlayer(player);
+            VoiceManager.SetForPlayer(player);
         }
 
         private void OnLeaveCustomLobbyMenuMethod(object[] args)
@@ -136,7 +137,6 @@ namespace TDS_Client.Manager.Event
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Remove(player);
-            VoiceManager.RemovePlayer(player);
         }
 
         private void OnLoadMapFavouritesMethod(object[] args)
@@ -381,6 +381,13 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             Angular.AddCustomLobby(json);
+        }
+
+        private void OnSyncSettingsMethod(object[] args)
+        {
+            string json = (string)args[0];
+            var settings = JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(json);
+            Settings.LoadUserSettings(settings);
         }
 
         private void OnRemoveCustomLobbyMethod(object[] args)

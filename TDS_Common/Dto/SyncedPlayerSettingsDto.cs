@@ -4,9 +4,14 @@ namespace TDS_Common.Dto
 {
     public class SyncedPlayerSettingsDto
     {
-        public ELanguage Language;
-        public bool Hitsound;
-        public bool Bloodscreen;
-        public bool FloatingDamageInfo;
+        public int PlayerId { get; set; }
+        public ELanguage Language { get; set; }
+        public bool Hitsound { get; set; }
+        public bool Bloodscreen { get; set; }
+        public bool FloatingDamageInfo { get; set; }
+        public bool AllowDataTransfer { get; set; }
+        public bool Voice3D { get; set; }
+        public bool VoiceAutoVolume { get; set; }
+        public float VoiceVolume { get; set; }
     }
 }

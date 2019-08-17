@@ -172,14 +172,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         return;
 
       this.rageConnector.call(DToServerEvent.RemoveMap, this.data.Id);
-    });    
+    });
   }
 
   startNew() {
     this.dialog.open(AreYouSureDialog, {panelClass: "mat-app-background"})
       .afterClosed()
       .subscribe((bool: boolean) => {
-      if (!bool) 
+      if (!bool)
         return;
       this.data = new MapCreateDataDto();
       this.changeDetector.detectChanges();

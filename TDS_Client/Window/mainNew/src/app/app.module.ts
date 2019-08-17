@@ -29,7 +29,9 @@ import {
   MatCheckboxModule,
   MatMenuModule,
   MatBadgeModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSlideToggleModule,
+  MatButtonToggleModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -50,6 +52,7 @@ import { UserpanelCommandsComponent } from './components/userpanel/userpanel-com
 import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/userpanel-rules.component';
 import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
+import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +75,8 @@ import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/us
     UserpanelComponent,
     UserpanelCommandsComponent,
     UserpanelRulesComponent,
-    UserpanelFAQsComponent
+    UserpanelFAQsComponent,
+    UserpanelSettingsComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -101,7 +105,9 @@ import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/us
     MatCheckboxModule,
     MatMenuModule,
     MatBadgeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatButtonToggleModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
   providers: [OrderByPipe],

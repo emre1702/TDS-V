@@ -38,43 +38,41 @@ namespace TDS_Client.Manager.Utility
                 Language = _languagesDict[_languageEnum];
                 Scoreboard.LoadLanguage();
                 Angular.LoadLanguage(_languageEnum);
-                if (syncedPlayerSettings != null)
+                if (PlayerSettings != null)
                 {
-                    syncedPlayerSettings.Language = value;
-                    EventsSender.Send(DToServerEvent.LanguageChange, syncedPlayerSettings.Language);
+                    PlayerSettings.Language = value;
+                    EventsSender.Send(DToServerEvent.LanguageChange, PlayerSettings.Language);
                 }
             }
         }
 
         public static ILanguage Language { get; private set; } = _languagesDict[LanguageEnum];
-        public static bool Bloodscreen => syncedPlayerSettings.Bloodscreen;
-        public static bool Hitsound => syncedPlayerSettings.Hitsound;
-        public static bool FloatingDamageInfo => syncedPlayerSettings.FloatingDamageInfo;
 
-        private static SyncedServerSettingsDto syncedServerSettings;
-        private static SyncedLobbySettingsDto syncedLobbySettings;
-        private static SyncedPlayerSettingsDto syncedPlayerSettings;
+        private static SyncedServerSettingsDto _syncedServerSettings;
+        private static SyncedLobbySettingsDto _syncedLobbySettings;
 
-        public static int LobbyId => syncedLobbySettings.Id;
-        public static string LobbyName => syncedLobbySettings != null ? syncedLobbySettings.Name : "Mainmenu";
+        public static SyncedPlayerSettingsDto PlayerSettings;
 
-        public static float DistanceToSpotToPlant => syncedServerSettings.DistanceToSpotToPlant;
-        public static float DistanceToSpotToDefuse => syncedServerSettings.DistanceToSpotToDefuse;
+        public static int LobbyId => _syncedLobbySettings.Id;
+        public static string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
+
+        public static float DistanceToSpotToPlant => _syncedServerSettings.DistanceToSpotToPlant;
+        public static float DistanceToSpotToDefuse => _syncedServerSettings.DistanceToSpotToDefuse;
 
         //public static uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public static uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
-        public static int BombDetonateTimeMs => syncedLobbySettings.BombDetonateTimeMs ?? 0;
+        public static int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
 
         //public static uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
-        public static int CountdownTime => syncedLobbySettings.CountdownTime ?? 0;
+        public static int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
 
-        public static int MapChooseTime => syncedServerSettings.MapChooseTime;
-        public static int RoundTime => syncedLobbySettings.RoundTime ?? 0;
-        public static int RoundEndTime => syncedServerSettings.RoundEndTime;
-        public static int MapLimitTime => syncedLobbySettings.MapLimitTime ?? 0;
-        public static bool InLobbyWithMaps => syncedLobbySettings?.InLobbyWithMaps ?? false;
-        public static EMapLimitType MapLimitType => syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
-        public static bool MixTeamsAfterRound => syncedLobbySettings.MixTeamsAfterRound ?? false;
+        public static int MapChooseTime => _syncedServerSettings.MapChooseTime;
+        public static int RoundTime => _syncedLobbySettings.RoundTime ?? 0;
+        public static int RoundEndTime => _syncedServerSettings.RoundEndTime;
+        public static int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
+        public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
+        public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
+        public static bool MixTeamsAfterRound => _syncedLobbySettings.MixTeamsAfterRound ?? false;
 
         public static void Load()
         {
@@ -91,7 +89,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
         {
-            syncedServerSettings = loadedSyncedSettings;
+            _syncedServerSettings = loadedSyncedSettings;
         }
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
@@ -103,20 +101,26 @@ namespace TDS_Client.Manager.Utility
                 loadedSyncedSettings.Language = LanguageEnum;
                 EventsSender.Send(DToServerEvent.LanguageChange, loadedSyncedSettings.Language);
             }
-            syncedPlayerSettings = loadedSyncedSettings;
+
+            foreach (var player in RAGE.Elements.Entities.Players.All)
+            {
+                VoiceManager.SetForPlayer(player);
+            }
+
+            PlayerSettings = loadedSyncedSettings;
         }
 
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
         {
-            syncedLobbySettings = loadedSyncedLobbySettings;
+            _syncedLobbySettings = loadedSyncedLobbySettings;
         }
 
         public static int GetPlantOrDefuseTime(EPlantDefuseStatus status)
         {
             if (status == EPlantDefuseStatus.Defusing)
-                return syncedLobbySettings.BombDefuseTimeMs ?? 0;
+                return _syncedLobbySettings.BombDefuseTimeMs ?? 0;
             else if (status == EPlantDefuseStatus.Planting)
-                return syncedLobbySettings.BombPlantTimeMs ?? 0;
+                return _syncedLobbySettings.BombPlantTimeMs ?? 0;
             return 0;
         }
 

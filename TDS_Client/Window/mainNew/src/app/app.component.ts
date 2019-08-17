@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from './services/rage-connector.service';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
+import { MatSnackBarRef, MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,12 @@ export class AppComponent {
   showTeamChoice = false;
   showUserpanel = true;
 
-  constructor(public settings: SettingsService, rageConnector: RageConnectorService, changeDetector: ChangeDetectorRef) {
+  constructor(
+    public settings: SettingsService,
+    rageConnector: RageConnectorService,
+    changeDetector: ChangeDetectorRef,
+    snackBar: MatSnackBar) {
+
     rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number) => {
       this.settings.loadAdminLevel(adminLevel);
     });
@@ -46,6 +52,10 @@ export class AppComponent {
     rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
       this.showUserpanel = bool;
       changeDetector.detectChanges();
+    });
+
+    rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
+      snackBar.open("Cooldown", undefined, { duration: 2000 });
     });
 
     this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());

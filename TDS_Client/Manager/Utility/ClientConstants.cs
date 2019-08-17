@@ -8,7 +8,6 @@
         public static string RegisterLoginBrowserPath => "package://Window/registerlogin/index.html";
         public static int ScoreboardLoadCooldown => 5000;
         public static ulong ShowFloatingDamageInfoMs => 1000;
-        public static bool Voice3D => false;
         public static uint MapLimitFasterCheckTimeMs => 100;
         public static int DefaultSpectatePlayerChangeEaseTime => 1500;
     }

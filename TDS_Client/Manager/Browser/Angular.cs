@@ -224,6 +224,11 @@ namespace TDS_Client.Manager.Browser
         {
             Execute(DToServerEvent.LoadUserpanelData, type, json);
         }
+
+        public static void ShowCooldown()
+        {
+            Execute(DToBrowserEvent.ShowCooldown);
+        }
     }
 
 }

@@ -13,6 +13,7 @@ export enum DFromClientEvent {
     ResetMapVoting = "ResetMapVoting_Client",
     SetMapVotes = "SetMapVotes_Client",
     SetPlayerNameToTeamChoiceData = "SetPlayerNameToTeamChoiceData_Server",
+    ShowCooldown = "ShowCooldown_Client",
     SyncAllCustomLobbies = "SyncAllCustomLobbies_Client",
     SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server",
     ToggleChatOpened = "ToggleChatOpened_Client",

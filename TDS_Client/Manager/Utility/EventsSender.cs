@@ -7,7 +7,7 @@ namespace TDS_Client.Manager.Utility
 {
     internal static class EventsSender
     {
-        private static readonly Dictionary<string, CooldownEventDto> cooldownEventsDict = new Dictionary<string, CooldownEventDto>
+        private static readonly Dictionary<string, CooldownEventDto> _cooldownEventsDict = new Dictionary<string, CooldownEventDto>
         {
             [DToServerEvent.AddRatingToMap] = new CooldownEventDto(1000),
             [DToServerEvent.ChatLoaded] = new CooldownEventDto(100000),
@@ -28,6 +28,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.MapVote] = new CooldownEventDto(500),
             [DToServerEvent.RequestPlayersForScoreboard] = new CooldownEventDto(5000),
             [DToServerEvent.SaveMapCreatorData] = new CooldownEventDto(10000),
+            [DToServerEvent.SaveSettings] = new CooldownEventDto(3000),
             [DToServerEvent.SendMapCreatorData] = new CooldownEventDto(10000),
             [DToServerEvent.SendMapRating] = new CooldownEventDto(2000),
             [DToServerEvent.SendTeamOrder] = new CooldownEventDto(2000),
@@ -38,7 +39,7 @@ namespace TDS_Client.Manager.Utility
 
         public static bool Send(string eventName, params object[] args)
         {
-            if (!cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
+            if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
                 Events.CallRemote(eventName, args);
                 return true;

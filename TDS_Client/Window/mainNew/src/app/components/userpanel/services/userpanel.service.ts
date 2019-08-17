@@ -7,6 +7,7 @@ import { UserpanelRuleDataDto } from '../interfaces/userpanelRuleDataDto';
 import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
 import { UserpanelFAQDataDto } from '../interfaces/userpanelFAQDataDto';
 import { SettingsService } from '../../../services/settings.service';
+import { UserpanelSettingDataDto } from '../interfaces/userpanelSettingDataDto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,15 @@ export class UserpanelService {
     allCommands: UserpanelCommandDataDto[] = [];
     allRules: UserpanelRuleDataDto[] = [];
     allFAQs: UserpanelFAQDataDto[] = [];
+    allSettings: UserpanelSettingDataDto;
 
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
     public faqsLoaded = new EventEmitter();
+    public settingsLoaded = new EventEmitter();
 
-    constructor(private rageConnector: RageConnectorService, settings: SettingsService) {
-        this.rageConnector.listen(DToServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
+    constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
+        rageConnector.listen(DToServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
         settings.LanguageChanged.on(null, this.languageChanged.bind(this));
     }
 
@@ -34,7 +37,11 @@ export class UserpanelService {
     }
 
     loadFAQs() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs)
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs);
+    }
+
+    loadSettings() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Settings);
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
@@ -48,6 +55,10 @@ export class UserpanelService {
                 break;
             case UserpanelLoadDataType.FAQs:
                 this.loadAllFAQs(json);
+                break;
+            case UserpanelLoadDataType.Settings:
+                this.loadAllSettings(json);
+                break;
         }
     }
 
@@ -70,8 +81,14 @@ export class UserpanelService {
         this.faqsLoaded.emit(null);
     }
 
+    private loadAllSettings(json: string) {
+        this.allSettings = JSON.parse(json);
+        this.settingsLoaded.emit(null);
+    }
+
     private languageChanged() {
         this.allFAQs = [];
+        this.allSettings.Language = this.settings.LangValue;
     }
 
     private escapeSpecialChars(json: string) {

@@ -1,16 +1,11 @@
-﻿using TDS_Common.Enum;
+﻿using System.Text.Json.Serialization;
+using TDS_Common.Dto;
 
 namespace TDS_Server_DB.Entity.Player
 {
-    public partial class PlayerSettings
+    public class PlayerSettings : SyncedPlayerSettingsDto
     {
-        public int PlayerId { get; set; }
-        public ELanguage Language { get; set; }
-        public bool Hitsound { get; set; }
-        public bool Bloodscreen { get; set; }
-        public bool FloatingDamageInfo { get; set; }
-        public bool AllowDataTransfer { get; set; }
-
+        [JsonIgnore]
         public virtual Players Player { get; set; }
     }
 }

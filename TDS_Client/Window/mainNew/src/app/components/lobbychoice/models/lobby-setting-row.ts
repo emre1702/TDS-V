@@ -1,8 +1,8 @@
-import { LobbySettingType } from '../enums/lobby-setting-type';
+import { SettingType } from '../../../enums/setting-type';
 import { FormControl } from '@angular/forms';
 
 export class LobbySettingRow {
-  public type: LobbySettingType;
+  public type: SettingType;
   public formControl: FormControl;
 
   public enum?: any;

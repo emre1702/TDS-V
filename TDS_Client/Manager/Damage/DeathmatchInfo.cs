@@ -9,10 +9,10 @@ namespace TDS_Client.Manager.Damage
     {
         public static void HittedOpponent(Player hitted, int damage)
         {
-            if (Settings.Hitsound)
+            if (Settings.PlayerSettings.Hitsound)
                 MainBrowser.PlayHitsound();
 
-            if (Settings.FloatingDamageInfo && hitted != null)
+            if (Settings.PlayerSettings.FloatingDamageInfo && hitted != null)
                 new FloatingDamageInfo(hitted, damage);
         }
 
