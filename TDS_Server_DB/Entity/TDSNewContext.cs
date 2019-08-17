@@ -646,6 +646,15 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.AllowDataTransfer).HasDefaultValue(false);
+                entity.Property(e => e.Bloodscreen).HasDefaultValue(true);
+                entity.Property(e => e.FloatingDamageInfo).HasDefaultValue(true);
+                entity.Property(e => e.Hitsound).HasDefaultValue(true);
+                entity.Property(e => e.Language).HasDefaultValue(ELanguage.English);
+                entity.Property(e => e.Voice3D).HasDefaultValue(false);
+                entity.Property(e => e.VoiceAutoVolume).HasDefaultValue(false);
+                entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
+
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
                     .HasForeignKey<PlayerSettings>(d => d.PlayerId)

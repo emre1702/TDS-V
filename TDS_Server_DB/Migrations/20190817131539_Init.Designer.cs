@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190817121056_Init")]
+    [Migration("20190817131539_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1896,28 +1896,44 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool>("AllowDataTransfer")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Bloodscreen")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("FloatingDamageInfo")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("Hitsound")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<ELanguage>("Language")
-                        .HasColumnType("e_language");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("e_language")
+                        .HasDefaultValue(ELanguage.English);
 
                     b.Property<bool>("Voice3D")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("VoiceAutoVolume")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<float>("VoiceVolume")
-                        .HasColumnType("real");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(6f);
 
                     b.HasKey("PlayerId")
                         .HasName("player_settings_pkey");
