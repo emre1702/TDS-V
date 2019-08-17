@@ -1,9 +1,10 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Instance.GameModes;
+using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
@@ -11,59 +12,10 @@ using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Lobby
+namespace TDS_Server.Manager.EventManager
 {
-    internal class LobbyEvents : Script
+    partial class EventsHandler
     {
-        #region Server
-
-        [ServerEvent(Event.PlayerSpawn)]
-        public static void OnPlayerSpawn(Client player)
-        {
-            TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerSpawn(character);
-            foreach (var target in character.Spectators)
-            {
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.SpectatorReattachCam);
-            }
-        }
-
-        [ServerEvent(Event.PlayerDisconnected)]
-#pragma warning disable IDE0060 // Remove unused parameter
-        public static void OnPlayerDisconnected(Client player, DisconnectionType type, string reason)
-#pragma warning restore IDE0060 // Remove unused parameter
-        {
-            TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerDisconnected(character);
-        }
-
-        //[DisableDefaultOnDeathRespawn]
-        [ServerEvent(Event.PlayerDeath)]
-        public static void OnPlayerDeath(Client player, Client killer, uint reason)
-        {
-            TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerDeath(character, killer, reason);
-        }
-
-        [ServerEvent(Event.PlayerEnterColshape)]
-        public static void OnPlayerEnterColShape(ColShape shape, Client player)
-        {
-            TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerEnterColShape(shape, character);
-        }
-
-        [ServerEvent(Event.PlayerWeaponSwitch)]
-        public static void OnPlayerWeaponSwitch(Client player, WeaponHash oldweapon, WeaponHash newweapon)
-        {
-            TDSPlayer character = player.GetChar();
-            if (character.CurrentLobby is FightLobby fightlobby)
-                fightlobby.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
-        }
-
-        #endregion Server
-
-        #region Remote
-
         #region Lobby
 
         [RemoteEvent(DToServerEvent.JoinLobby)]
@@ -125,7 +77,7 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-           MapCreateLobby.Create(player);
+            MapCreateLobby.Create(player);
         }
 
         [RemoteEvent(DToServerEvent.CreateCustomLobby)]
@@ -176,7 +128,7 @@ namespace TDS_Server.Instance.Lobby
             if (!player.LoggedIn)
             {
                 var attackerClientError = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
-                ErrorLogsManager.Log(string.Format("Player {0} got hit by {1} with {2} damage - but he is not online.", client.Name, attackerClientError?.Name ?? "id " + attackerRemoteId, damage), 
+                ErrorLogsManager.Log(string.Format("Player {0} got hit by {1} with {2} damage - but he is not online.", client.Name, attackerClientError?.Name ?? "id " + attackerRemoteId, damage),
                     Environment.StackTrace, client);
                 return;
             }
@@ -184,14 +136,14 @@ namespace TDS_Server.Instance.Lobby
             var attackerClient = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
             if (attackerClient == null)
                 return;
-                
+
             TDSPlayer attacker = attackerClient.GetChar();
             if (!attacker.LoggedIn)
             {
                 ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but he is not online.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
                 return;
             }
-                
+
             if (!(player.CurrentLobby is FightLobby fightLobby))
             {
                 ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but this player isn't in fightlobby.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
@@ -385,72 +337,9 @@ namespace TDS_Server.Instance.Lobby
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            EUserpanelLoadDataType type = (EUserpanelLoadDataType) dataType;
+            EUserpanelLoadDataType type = (EUserpanelLoadDataType)dataType;
             Manager.Userpanel.Main.PlayerLoadData(player, type);
         }
         #endregion
-
-        #endregion Remote
-
-        /*[RemoteEvent("joinMapCreatorLobby")]
-        public void JoinMapCreatorLobbyEvent(Client player)
-        {
-            manager.lobby.MapCreatorLobby.Join(player.GetChar());
-        }
-
-        #region MapCreate
-
-        [RemoteEvent("checkMapName")]
-        public void OnCheckMapNameEvent(Client player, string mapname)
-        {
-            player.TriggerEvent("sendMapNameCheckResult", Map.DoesMapNameExist(mapname));
-        }
-
-        [RemoteEvent("sendMapFromCreator")]
-        public void SendMapFromCreatorEvent(Client player, string map)
-        {
-            Character character = player.GetChar();
-            Map.CreateNewMap(map, character.UID);
-            character.Lobby.RemovePlayerDerived(character);
-        }
-
-        [RemoteEvent("requestNewMapsList")]
-        public void RequestNewMapsListEvent(Client player, bool requestall)
-        {
-            Map.RequestNewMapsList(player, requestall);
-        }
-
-        #endregion MapCreate
-
-        #region MapRanking
-
-        [RemoteEvent("addRatingToMap")]
-        public void AddRatingToMapEvent(Client player, string mapname, uint rating)
-        {
-            Map.AddPlayerMapRating(player, mapname, rating);
-        }
-
-        #endregion MapRanking
-
-        #region Freecam
-
-        //case "setFreecamObjectPositionTo":
-        //player.GetChar ().Lobby.SetPlayerFreecamPos ( player, args[0] );    //TODO
-        //break;
-
-        #endregion Freecam
-
-        #region Order
-
-        [RemoteEvent("onPlayerGiveOrder")]
-        public void OnPlayerGiveOrderEvent(Client player, string ordershort)
-        {
-            Character character = player.GetChar();
-            character.Lobby.SendTeamOrder(character, ordershort);
-        }
-
-        #endregion Order
-
-        */
     }
 }
