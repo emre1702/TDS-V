@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -38,7 +38,7 @@ namespace TDS_Server.Manager.Maps
                 MapCreateDataDto mapCreateData;
                 try
                 {
-                    mapCreateData = JsonSerializer.Deserialize<MapCreateDataDto>(mapJson);
+                    mapCreateData = JsonConvert.DeserializeObject<MapCreateDataDto>(mapJson);
                     if (mapCreateData == null)
                         return EMapCreateError.CouldNotDeserialize;
                 }
@@ -169,7 +169,7 @@ namespace TDS_Server.Manager.Maps
 
             };
 
-            string json = JsonSerializer.Serialize(mapCreatorData);
+            string json = JsonConvert.SerializeObject(mapCreatorData);
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapForMapCreator, json);
         }
 
@@ -250,7 +250,7 @@ namespace TDS_Server.Manager.Maps
                 });
             }
 
-            string json = JsonSerializer.Serialize(data);
+            string json = JsonConvert.SerializeObject(data);
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
@@ -388,7 +388,7 @@ namespace TDS_Server.Manager.Maps
                 filenames = GetAllNewMapFileNames();
             else
                 filenames = GetOwnNewMapFileNames(uid);
-            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RequestNewMapsList, JsonSerializer.Serialize(filenames));
+            NAPI.ClientEvent.TriggerClientEvent(player, DCustomEvents.RequestNewMapsList, JsonConvert.SerializeObject(filenames));
         }*/
     }
 }

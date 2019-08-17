@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
@@ -119,7 +119,7 @@ namespace TDS_Server.Instance.Utility
 
         public void SyncAllPlayers()
         {
-            string json = JsonSerializer.Serialize(Players.Select(p => p.Client.Value));
+            string json = JsonConvert.SerializeObject(Players.Select(p => p.Client.Value));
             foreach (var player in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);

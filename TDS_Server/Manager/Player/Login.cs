@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Player
             await character.DbContext.SaveChangesAsync();
 
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, character.Entity.AdminLvl,
-                JsonSerializer.Serialize(SettingsManager.SyncedSettings), JsonSerializer.Serialize(character.Entity.PlayerSettings));
+                JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
 
             if (character.Entity.AdminLvl > 0)
                 AdminsManager.SetOnline(character);

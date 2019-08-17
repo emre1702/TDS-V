@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Enum;
@@ -32,7 +32,7 @@ namespace TDS_Server.Manager.Userpanel
                         f.Question,
                         f.Answer
                     });
-                _faqsJsonByLanguage[entry.Key] = JsonSerializer.Serialize(faqs);
+                _faqsJsonByLanguage[entry.Key] = JsonConvert.SerializeObject(faqs);
             }
         }
 

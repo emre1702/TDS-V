@@ -12,7 +12,7 @@ using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -150,7 +150,7 @@ namespace TDS_Server.Instance.Lobby
             if (_currentMap != null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, _currentMap.Info.Name,
-                    _currentMap.LimitInfo.EdgesJson, JsonSerializer.Serialize(_currentMap.LimitInfo.Center));
+                    _currentMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(_currentMap.LimitInfo.Center));
             }
 
             SendPlayerAmountInFightInfo(player.Client);
@@ -172,7 +172,7 @@ namespace TDS_Server.Instance.Lobby
         private void SendPlayerAmountInFightInfo(Client player)
         {
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonSerializer.Serialize(amounts));
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonConvert.SerializeObject(amounts));
         }
 
         private void SetPlayerAlive(TDSPlayer player)

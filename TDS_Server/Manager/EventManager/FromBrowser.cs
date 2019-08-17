@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.EventManager
                 if (!player.LoggedIn || player.Entity == null)
                     return;
 
-                var obj = JsonSerializer.Deserialize<PlayerSettings>(json);
+                var obj = JsonConvert.DeserializeObject<PlayerSettings>(json);
                 player.DbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj);
                 await player.SaveData();
 
