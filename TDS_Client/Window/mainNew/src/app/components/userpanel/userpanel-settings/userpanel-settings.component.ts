@@ -78,6 +78,9 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userpanelService.settingsLoaded.on(null, this.loadSettings.bind(this));
+
+    if (this.userpanelService.allSettings)
+      this.loadSettings();
   }
 
   ngOnDestroy() {
@@ -111,6 +114,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     for (const group of this.settingPanel) {
       for (const row of group.rows) {
         this.userpanelService.allSettings[row.dataSettingIndex] = row.initialValue;
+        row.formControl.setValue(row.initialValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
       }
     }
     this.changeDetector.detectChanges();
@@ -120,6 +124,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     for (const group of this.settingPanel) {
       for (const row of group.rows) {
         this.userpanelService.allSettings[row.dataSettingIndex] = row.defaultValue;
+        row.formControl.setValue(row.defaultValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
       }
     }
     this.changeDetector.detectChanges();
@@ -129,7 +134,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     for (const group of this.settingPanel) {
       for (const row of group.rows) {
         const value = this.userpanelService.allSettings[row.dataSettingIndex];
-        row.formControl.setValue(value);
+        row.formControl.setValue(value, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
         row.initialValue = value;
       }
     }

@@ -14,6 +14,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map;
+using TDS_Common.Enum;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;
@@ -388,6 +389,7 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             var settings = JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(json);
             Settings.LoadUserSettings(settings);
+            Angular.LoadUserpanelData((int)EUserpanelLoadDataType.Settings, json);
         }
 
         private void OnRemoveCustomLobbyMethod(object[] args)
@@ -488,6 +490,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnSyncScoreboardDataMethod(object[] args)
         {
+            MainBrowser.SendAlert((string)args[0]);
             bool inmainmenu = args.Length == 1;
             if (inmainmenu)
             {
@@ -496,6 +499,7 @@ namespace TDS_Client.Manager.Event
             }
             else
             {
+                MainBrowser.SendAlert((string)args[1]);
                 var playerlist = JsonConvert.DeserializeObject<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
                 var lobbylist = JsonConvert.DeserializeObject<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 Scoreboard.AddLobbyData(playerlist, lobbylist);

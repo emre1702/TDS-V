@@ -94,7 +94,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
-            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language)
+            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language || PlayerSettings != null)
                 LanguageEnum = loadedSyncedSettings.Language;
             else
             {
@@ -102,14 +102,13 @@ namespace TDS_Client.Manager.Utility
                 EventsSender.Send(DToServerEvent.LanguageChange, loadedSyncedSettings.Language);
             }
 
+            _languageManuallyChanged = false;
+            PlayerSettings = loadedSyncedSettings;
+
             foreach (var player in RAGE.Elements.Entities.Players.All)
             {
-                if (player == null)
-                    continue;
                 VoiceManager.SetForPlayer(player);
             }
-
-            PlayerSettings = loadedSyncedSettings;
         }
 
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)

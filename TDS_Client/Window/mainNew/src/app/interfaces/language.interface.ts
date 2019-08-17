@@ -88,6 +88,21 @@ export interface Language {
     Arena: string;
     Gang: string;
     UserLobbies: string;
+    Usage: string;
+    Usages: string;
+    General: string;
+    Fight: string;
+    Voice: string;
+    Revert: string;
+    Standard: string;
+    Language: string;
+    AllowDataTransfer: string;
+    Bloodscreen: string;
+    Hitsound: string;
+    FloatingDamageInfo: string;
+    Voice3D: string;
+    VoiceAutoVolume: string;
+    VoiceVolume: string;
 
     Userpanel: string;
     UserpanelInfo: string;
@@ -103,9 +118,6 @@ export interface Language {
     CommandsDonator: string;
     CommandsVIP: string;
     CommandsLobbyOwner: string;
-
-    Usage: string;
-    Usages: string;
 
     ATTACK: string;
     BACK: string;

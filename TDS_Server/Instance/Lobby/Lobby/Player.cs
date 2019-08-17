@@ -50,7 +50,7 @@ namespace TDS_Server.Instance.Lobby
                 character.Team = Teams[teamindex.Value];
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client.Handle.Value);
-            System.Console.WriteLine(JsonSerializer.Serialize(Teams.Select(t => t.SyncedTeamData)));
+
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
                                                                                             JsonSerializer.Serialize(Players.Select(p => p.Client.Handle.Value).ToList()),
                                                                                             JsonSerializer.Serialize(Teams.Select(t => t.SyncedTeamData)));

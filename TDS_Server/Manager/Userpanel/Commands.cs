@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
+using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
-using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.Userpanel

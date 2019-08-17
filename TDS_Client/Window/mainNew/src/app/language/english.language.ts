@@ -101,12 +101,27 @@ With the navigation button in the upper left corner you can navigate between sev
 If one of the menus is deactivated (grayed out), it means that it is still in progress.
 <br><br>
 The user interface is always being worked on, so don't be surprised if you discover new features.`;
+    Usage = "Usage";
+    Usages = "Usages";
+    General = "General";
+    Fight = "Fight";
+    Voice = "Voice";
+    Revert = "Revert";
+    Standard = "Standard";
+    Language = "Language";
+    AllowDataTransfer = "Allow data transfer";
+    Bloodscreen = "Bloodscreen";
+    Hitsound = "Hit sound";
+    FloatingDamageInfo = "Floating damage info";
+    Voice3D = "Voice 3D";
+    VoiceAutoVolume = "Voice auto volume";
+    VoiceVolume = "Voice volume";
+
     Main = "Main";
     Rules = "Rules";
     RulesUser = "Rules - User";
     RulesTDSTeam = "Rules - TDS-Team";
     RulesVIP = "Rules - VIP";
-
     Settings = "Settings";
     Commands = "Commands";
     CommandsUser = "Commands - User";
@@ -114,9 +129,6 @@ The user interface is always being worked on, so don't be surprised if you disco
     CommandsDonator = "Commands - Donator";
     CommandsVIP = "Commands - VIP";
     CommandsLobbyOwner = "Commands - Lobby-owner";
-
-    Usage = "Usage";
-    Usages = "Usages";
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

@@ -1,4 +1,5 @@
-﻿using RAGE;
+﻿using Newtonsoft.Json;
+using RAGE;
 using RAGE.Game;
 using System;
 using TDS_Client.Default;
@@ -162,7 +163,17 @@ namespace TDS_Client.Manager.Event
 
         private void OnLoadUserpanelDataBrowserMethod(object[] args)
         {
-            EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)args[0]);
+            EUserpanelLoadDataType type = (EUserpanelLoadDataType)Convert.ToInt32(args[0]);
+            switch (type)
+            {
+                case EUserpanelLoadDataType.Settings:
+                    Angular.LoadUserpanelData((int)type, JsonConvert.SerializeObject(Settings.PlayerSettings));
+                    break;
+                default:
+                    EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)type);
+                    break;
+            }
+            
         }
 
         private void OnTryLoginMethod(object[] args)

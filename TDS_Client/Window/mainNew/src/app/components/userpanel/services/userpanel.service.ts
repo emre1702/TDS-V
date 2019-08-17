@@ -88,7 +88,8 @@ export class UserpanelService {
 
     private languageChanged() {
         this.allFAQs = [];
-        this.allSettings.Language = this.settings.LangValue;
+        if (this.allSettings)
+            this.allSettings.Language = this.settings.LangValue;
     }
 
     private escapeSpecialChars(json: string) {

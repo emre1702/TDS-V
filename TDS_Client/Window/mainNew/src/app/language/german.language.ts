@@ -96,6 +96,23 @@ Mit dem Navigations-Button in der Ecke links oben kannst du zwischen mehreren Me
 Ist eines der Menüs deaktiviert (ausgegraut), heißt es, dass es noch in Arbeit ist.
 <br><br>
 Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also nicht, wenn du neue Funktionen entdeckst.`;
+  Usage = "Nutzung";
+  Usages = "Nutzungen";
+  General = "Allgemein";
+  Fight = "Kampf";
+  Voice = "Voice";
+  Revert = "Zurücksetzen";
+  Standard = "Standard";
+  Language = "Sprache";
+  AllowDataTransfer = "Erlaube Daten-Transfer";
+  Bloodscreen = "Blut-Screen";
+  Hitsound = "Hit Geräusch";
+  FloatingDamageInfo = "Schwebende Schaden-Infos";
+  Voice3D = "Voice 3D";
+  VoiceAutoVolume = "Voice autom. Lautstärke";
+  VoiceVolume = "Voice Lautstärke";
+
+
   Main = "Hauptmenü";
   Rules = "Regeln";
   RulesUser = "Regeln - Spieler";
@@ -108,9 +125,6 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   CommandsDonator = "Befehle - Spender";
   CommandsVIP = "Befehle - VIP";
   CommandsLobbyOwner = "Befehle - Lobby-Besitzer";
-
-  Usage = "Nutzung";
-  Usages = "Nutzungen";
 
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";

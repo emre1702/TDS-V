@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
 using TDS_Common.Default;
-using TDS_Server.Enum;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 
