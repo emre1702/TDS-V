@@ -104,6 +104,8 @@ namespace TDS_Client.Manager.Utility
 
             foreach (var player in RAGE.Elements.Entities.Players.All)
             {
+                if (player == null)
+                    continue;
                 VoiceManager.SetForPlayer(player);
             }
 
