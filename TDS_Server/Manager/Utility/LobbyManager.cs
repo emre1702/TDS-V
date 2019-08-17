@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -47,26 +47,19 @@ namespace TDS_Server.Manager.Utility
             foreach (Lobbies lobbysetting in lobbies)
             {
                 ELobbyType type = lobbysetting.Type;
-                Lobby lobby;
-                switch (type)
+                var lobby = type switch
                 {
-                    case ELobbyType.FightLobby:
-                        lobby = new FightLobby(lobbysetting);
-                        break;
+                    ELobbyType.FightLobby => new FightLobby(lobbysetting),
 
-                    case ELobbyType.Arena:
-                        lobby = new Arena(lobbysetting);
-                        break;
+                    ELobbyType.Arena => new Arena(lobbysetting),
                     //case ELobbyType.GangLobby:
                     //    lobby = new GangLobby(lobbysetting);
                     //    break;
                     //case ELobbyType.MapCreateLobby:
 
                     //    break;
-                    default:
-                        lobby = new Lobby(lobbysetting);
-                        break;
-                }
+                    _ => new Lobby(lobbysetting),
+                };
                 Lobbies.Add(lobby);
                 Lobby.LobbiesByIndex[lobby.Id] = lobby;
                 if (lobby is Arena arena)
@@ -117,7 +110,7 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<CustomLobbyData>(dataJson);
+                var data = JsonSerializer.Deserialize<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
                     player.Client.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR);

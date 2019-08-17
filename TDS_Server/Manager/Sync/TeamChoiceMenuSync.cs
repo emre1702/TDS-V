@@ -1,19 +1,18 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Server.Dto.TeamChoiceMenu;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Sync
 {
     class TeamChoiceMenuSync
     {
-        private static List<TDSPlayer> _playersInTeamChoiceLobby = new List<TDSPlayer>();
+        private static readonly List<TDSPlayer> _playersInTeamChoiceLobby = new List<TDSPlayer>();
 
         public static void AddPlayer(TDSPlayer player, Lobby lobby)
         {
@@ -23,7 +22,7 @@ namespace TDS_Server.Manager.Sync
             var teams = lobby.Teams.Select(t => 
                 new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB, t.Players.Where(p => p != player).Select(p => p.Client.Name)));
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonConvert.SerializeObject(teams));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonSerializer.Serialize(teams));
         }
 
         public static void RemovePlayer(TDSPlayer player)

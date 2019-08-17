@@ -1,12 +1,11 @@
 using GTANetworkAPI;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
-using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Maps;
@@ -135,7 +134,7 @@ namespace TDS_Server.Instance.Lobby
         public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
             _maps = themaps;
-            _mapsJson = syncjson ?? JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());
+            _mapsJson = syncjson ?? JsonSerializer.Serialize(themaps.Select(m => m.SyncedData).ToList());
         }
     }
 }

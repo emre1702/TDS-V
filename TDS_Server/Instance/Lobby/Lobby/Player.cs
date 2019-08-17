@@ -1,6 +1,6 @@
 using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -51,8 +51,8 @@ namespace TDS_Server.Instance.Lobby
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client.Handle.Value);
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
-                                                                                            JsonConvert.SerializeObject(Players.Select(p => p.Client.Handle.Value).ToList()),
-                                                                                            JsonConvert.SerializeObject(Teams.Select(t => t.SyncedTeamData)));
+                                                                                            JsonSerializer.Serialize(Players.Select(p => p.Client.Handle.Value).ToList()),
+                                                                                            JsonSerializer.Serialize(Teams.Select(t => t.SyncedTeamData)));
 
             if (LobbyEntity.Type != ELobbyType.MainMenu)
             {

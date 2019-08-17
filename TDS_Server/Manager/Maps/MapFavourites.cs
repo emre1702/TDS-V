@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Maps
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, JsonConvert.SerializeObject(mapIDs));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, JsonSerializer.Serialize(mapIDs));
         }
 
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]

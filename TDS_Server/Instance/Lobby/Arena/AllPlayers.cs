@@ -1,7 +1,7 @@
 using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 
@@ -76,7 +76,7 @@ namespace TDS_Server.Instance.Lobby
             });
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            string json = JsonConvert.SerializeObject(amounts);
+            string json = JsonSerializer.Serialize(amounts);
             SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json);
         }
 

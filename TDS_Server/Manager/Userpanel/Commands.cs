@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
@@ -58,7 +58,7 @@ namespace TDS_Server.Manager.Userpanel
                 _commandDatas.Add(userpanelCommandData);
             }
 
-            _commandDatasJson = JsonConvert.SerializeObject(_commandDatas);
+            _commandDatasJson = JsonSerializer.Serialize(_commandDatas);
         }
 
         public static void SendPlayerCommandData(TDSPlayer player)

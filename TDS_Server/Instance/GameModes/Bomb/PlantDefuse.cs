@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto;
@@ -64,7 +64,7 @@ namespace TDS_Server.Instance.GameModes
             Lobby.FuncIterateAllPlayers((target, team) =>
             {
                 NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.BOMB_PLANTED);
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.BombPlanted, JsonConvert.SerializeObject(playerpos), team == _counterTerroristTeam);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.BombPlanted, JsonSerializer.Serialize(playerpos), team == _counterTerroristTeam);
             });
 
             SendBombDefuseInfos();

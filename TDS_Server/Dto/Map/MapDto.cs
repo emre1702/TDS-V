@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map;
@@ -8,6 +7,7 @@ using EMapType = TDS_Server.Enum.EMapType;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
+using System.Text.Json;
 
 namespace TDS_Server.Dto.Map
 {
@@ -71,13 +71,13 @@ namespace TDS_Server.Dto.Map
             {
                 Center = data.MapCenter,
                 Edges = data.MapEdges,
-                EdgesJson = JsonConvert.SerializeObject(data.MapEdges)
+                EdgesJson = JsonSerializer.Serialize(data.MapEdges)
             };
 
             BombInfo = new MapBombInfoDto
             {
                 PlantPositions = data.BombPlaces,
-                PlantPositionsJson = JsonConvert.SerializeObject(data.BombPlaces)
+                PlantPositionsJson = JsonSerializer.Serialize(data.BombPlaces)
             };
         }
     }
