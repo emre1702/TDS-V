@@ -5,7 +5,9 @@ using System;
 using System.Linq;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GangTeam;
+using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Commands;
+using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
@@ -26,6 +28,8 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
+
                 SettingsManager.LoadLocal();
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
@@ -65,6 +69,19 @@ namespace TDS_Server.Manager.Utility
             catch (Exception ex)
             {
                 NAPI.Util.ConsoleOutput(ex.ToString());
+            }
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                var exception = (Exception)e.ExceptionObject;
+                ErrorLogsManager.Log("Unhandled exception: " + exception.GetBaseException().Message, exception.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
+            }
+            catch
+            {
+                // ignored
             }
         }
     }
