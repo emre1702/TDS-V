@@ -490,7 +490,6 @@ namespace TDS_Client.Manager.Event
 
         private void OnSyncScoreboardDataMethod(object[] args)
         {
-            MainBrowser.SendAlert((string)args[0]);
             bool inmainmenu = args.Length == 1;
             if (inmainmenu)
             {
@@ -499,7 +498,6 @@ namespace TDS_Client.Manager.Event
             }
             else
             {
-                MainBrowser.SendAlert((string)args[1]);
                 var playerlist = JsonConvert.DeserializeObject<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
                 var lobbylist = JsonConvert.DeserializeObject<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 Scoreboard.AddLobbyData(playerlist, lobbylist);
