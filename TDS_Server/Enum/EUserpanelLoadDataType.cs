@@ -3,6 +3,7 @@
     enum EUserpanelLoadDataType
     {
         Commands,
-        Rules
+        Rules,
+        FAQs
     }
 }

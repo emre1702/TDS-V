@@ -5,6 +5,8 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { EventEmitter } from 'events';
 import { UserpanelRuleDataDto } from '../interfaces/userpanelRuleDataDto';
 import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
+import { UserpanelFAQDataDto } from '../interfaces/userpanelFAQDataDto';
+import { SettingsService } from '../../../services/settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +14,15 @@ import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
 export class UserpanelService {
     allCommands: UserpanelCommandDataDto[] = [];
     allRules: UserpanelRuleDataDto[] = [];
+    allFAQs: UserpanelFAQDataDto[] = [];
 
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
+    public faqsLoaded = new EventEmitter();
 
-    constructor(private rageConnector: RageConnectorService) {
+    constructor(private rageConnector: RageConnectorService, settings: SettingsService) {
         this.rageConnector.listen(DToServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
+        settings.LanguageChanged.on(null, this.languageChanged.bind(this));
     }
 
     loadCommands() {
@@ -26,6 +31,10 @@ export class UserpanelService {
 
     loadRules() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Rules);
+    }
+
+    loadFAQs() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs)
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
@@ -37,6 +46,8 @@ export class UserpanelService {
             case UserpanelLoadDataType.Rules:
                 this.loadAllRules(json);
                 break;
+            case UserpanelLoadDataType.FAQs:
+                this.loadAllFAQs(json);
         }
     }
 
@@ -51,6 +62,16 @@ export class UserpanelService {
         this.allRules = JSON.parse(json);
         this.allRules.sort((a, b) => a.Id < b.Id ? -1 : 1);
         this.rulesLoaded.emit(null);
+    }
+
+    private loadAllFAQs(json: string) {
+        this.allFAQs = JSON.parse(json);
+        this.allFAQs.sort((a, b) => a.Id < b.Id ? -1 : 1);
+        this.faqsLoaded.emit(null);
+    }
+
+    private languageChanged() {
+        this.allFAQs = [];
     }
 
     private escapeSpecialChars(json: string) {

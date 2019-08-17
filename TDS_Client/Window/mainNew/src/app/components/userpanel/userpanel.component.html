@@ -11,6 +11,7 @@
         <app-userpanel-rules *ngIf="currentNav.startsWith('Rules')" 
             [currentNav]="currentNav" >
         </app-userpanel-rules>
+        <app-userpanel-faqs *ngIf="currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
         <div *ngIf="currentNav == userpanelNavPage[userpanelNavPage.Main]" 
             [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
         </div>
@@ -31,7 +32,7 @@
         <mat-icon>speaker_notes</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Commands] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.FAQ)" disabled>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.FAQ)">
         <mat-icon>help</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.FAQ] | language: settings.Lang }}</span>
     </button>

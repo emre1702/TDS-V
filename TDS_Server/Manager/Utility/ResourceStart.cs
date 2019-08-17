@@ -56,7 +56,7 @@ namespace TDS_Server.Manager.Utility
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
 
-                Userpanel.Rules.LoadRules(dbcontext);
+                Userpanel.Main.Init(dbcontext);
             }
             catch (Exception ex)
             {

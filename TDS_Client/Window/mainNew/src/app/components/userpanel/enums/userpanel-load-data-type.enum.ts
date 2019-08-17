@@ -1,4 +1,5 @@
 export enum UserpanelLoadDataType {
     Commands,
-    Rules
+    Rules,
+    FAQs
 }

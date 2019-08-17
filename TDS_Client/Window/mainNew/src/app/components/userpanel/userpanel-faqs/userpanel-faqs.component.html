@@ -1,0 +1,7 @@
+<div id="container">
+    <div *ngFor="let faq of userpanelService.allFAQs" class="faq-entry">
+        <h4>{{ faq.Id }}. {{ faq.Question }}</h4>
+        <span>{{ faq.Answer }}</span>
+        <mat-divider></mat-divider>
+    </div>
+</div>

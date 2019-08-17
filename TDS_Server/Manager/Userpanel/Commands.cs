@@ -12,7 +12,7 @@ namespace TDS_Server.Manager.Userpanel
 {
     class Commands
     {
-        private static List<UserpanelCommandDataDto> _commandDatas = new List<UserpanelCommandDataDto>();
+        private static readonly List<UserpanelCommandDataDto> _commandDatas = new List<UserpanelCommandDataDto>();
         private static string _commandDatasJson = "[]";
 
         public static void LoadCommandData(

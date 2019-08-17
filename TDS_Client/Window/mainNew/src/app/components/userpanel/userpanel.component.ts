@@ -47,6 +47,8 @@ export class UserpanelComponent implements OnInit, OnDestroy {
       this.userpanelService.loadCommands();
     } else if (this.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
       this.userpanelService.loadRules();
+    } else if (this.currentNav.startsWith("FAQ") && !this.userpanelService.allFAQs.length) {
+      this.userpanelService.loadFAQs();
     }
   }
 

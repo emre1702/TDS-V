@@ -81,6 +81,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
+        public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
@@ -149,8 +150,6 @@ namespace TDS_Server_DB.Entity
             #endregion
 
             #region Tables
-            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1");
-
             modelBuilder.Entity<AdminLevels>(entity =>
             {
                 entity.HasKey(e => e.Level)
@@ -225,6 +224,13 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.Commands)
                     .HasForeignKey(d => d.NeededAdminLevel)
                     .HasConstraintName("FK_commands_admin_levels");
+            });
+
+            modelBuilder.Entity<FAQs>(entity =>
+            {
+                entity.ToTable("faqs");
+
+                entity.HasKey(e => new { e.Id, e.Language });
             });
 
             modelBuilder.Entity<FreeroamDefaultVehicle>(entity =>
@@ -1331,7 +1337,22 @@ namespace TDS_Server_DB.Entity
                 }
             );
 
-            
+            modelBuilder.Entity<FAQs>().HasData(
+                new FAQs 
+                { 
+                    Id = 1,
+                    Language = ELanguage.English,
+                    Question = "How do I activate my cursor?",
+                    Answer = "With the END key on your keyboard."
+                },
+                new FAQs
+                {
+                    Id = 1,
+                    Language = ELanguage.German,
+                    Question = "Wie aktiviere ich meinen Cursor?",
+                    Answer = "Mit der ENDE Taste auf deiner Tastatur."
+                }
+            );
             #endregion
 
             #region Autoincrement

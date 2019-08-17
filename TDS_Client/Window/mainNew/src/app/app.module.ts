@@ -49,6 +49,7 @@ import { UserpanelCommandNavPipe } from './components/userpanel/pipes/userpanelC
 import { UserpanelCommandsComponent } from './components/userpanel/userpanel-commands/userpanel-commands.component';
 import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/userpanel-rules.component';
 import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
+import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRul
     TeamChoiceComponent,
     UserpanelComponent,
     UserpanelCommandsComponent,
-    UserpanelRulesComponent
+    UserpanelRulesComponent,
+    UserpanelFAQsComponent
   ],
   imports: [
     ReactiveFormsModule,
