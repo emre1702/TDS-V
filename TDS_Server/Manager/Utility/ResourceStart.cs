@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System;
 using System.Linq;
 using TDS_Server.Instance;
@@ -29,6 +30,9 @@ namespace TDS_Server.Manager.Utility
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
                 dbcontext.Database.Migrate();
+                var connection = (NpgsqlConnection)dbcontext.Database.GetDbConnection();
+                connection.Open();
+                connection.ReloadTypes();
 
                 var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync();
                 foreach (var stat in playerStats)
