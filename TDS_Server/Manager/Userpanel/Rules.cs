@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Linq;
-using System.Text.Json;
 using TDS_Common.Default;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.Userpanel
                r.Target,
                r.Category
             });
-            _rulesJson = JsonSerializer.Serialize(sendRules);
+            _rulesJson = JsonConvert.SerializeObject(sendRules);
         }
 
         public static void SendPlayerRules(TDSPlayer player)
