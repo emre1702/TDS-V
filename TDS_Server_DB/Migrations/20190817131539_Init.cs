@@ -844,6 +844,13 @@ namespace TDS_Server_DB.Migrations
                     { (short)3, (short)50, (short)50, (short)222 }
                 });
 
+            migrationBuilder.Sql("INSERT INTO players (\"ID\", \"SCName\", \"Name\", \"Password\") VALUES (0, 'System', 'System', '-')");
+            migrationBuilder.Sql("INSERT INTO lobbies (\"ID\", \"OwnerId\", \"Type\", \"Name\", \"IsTemporary\", \"IsOfficial\", \"AmountLifes\", \"SpawnAgainAfterDeathMs\") " +
+                "VALUES (0, 0, 'main_menu', 'MainMenu', FALSE, TRUE, 0, 0)");
+            migrationBuilder.Sql("INSERT INTO teams (\"ID\", \"Index\", \"Name\", \"Lobby\", \"ColorR\", \"ColorG\", \"ColorB\", \"BlipColor\", \"SkinHash\") " +
+                "VALUES (0, 0, 'Spectator', 0, 255, 255, 255, 4, 1004114196)");
+            migrationBuilder.Sql("INSERT INTO gangs (\"ID\", \"TeamId\", \"Short\") VALUES (0, 0, '-')");
+
             migrationBuilder.InsertData(
                 table: "commands",
                 columns: new[] { "ID", "Command", "LobbyOwnerCanUse", "NeededAdminLevel", "NeededDonation", "VipCanUse" },
@@ -1437,6 +1444,14 @@ namespace TDS_Server_DB.Migrations
                 principalTable: "gangs",
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 2");
+            migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 23");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 4");
+            migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
