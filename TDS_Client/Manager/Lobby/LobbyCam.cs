@@ -20,6 +20,8 @@ namespace TDS_Client.Manager.Lobby
 
         public static void SetGoTowardsPlayer(int? time = null)
         {
+            var cam = CameraManager.BetweenRoundsCam;
+            cam.Render();
             TDSCamera.RenderBack(true, (int)(time ?? (Settings.CountdownTime * 0.9)));
         }
 

@@ -70,7 +70,8 @@ namespace TDS_Server.Manager.Maps
             if (isOnlySaved)
                 return map;
 
-            if (map.LimitInfo.Center == null)
+            if (map.LimitInfo.Center == null || 
+                (map.LimitInfo.Center.X == 0 && map.LimitInfo.Center.Y == 0 && map.LimitInfo.Center.Z == 0))
                 map.LimitInfo.Center = map.GetCenter();
 
             uint teamId = 0;
