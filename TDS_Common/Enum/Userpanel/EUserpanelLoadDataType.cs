@@ -1,7 +1,8 @@
-﻿namespace TDS_Common.Enum
+﻿namespace TDS_Common.Enum.Userpanel
 {
     public enum EUserpanelLoadDataType
     {
+        MyStats,
         Commands,
         Rules,
         FAQs,

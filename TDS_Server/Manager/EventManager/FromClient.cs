@@ -2,7 +2,7 @@
 using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
-using TDS_Server.Enum;
+using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;

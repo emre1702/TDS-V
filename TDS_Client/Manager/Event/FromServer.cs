@@ -14,7 +14,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map;
-using TDS_Common.Enum;
+using TDS_Common.Enum.Userpanel;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;

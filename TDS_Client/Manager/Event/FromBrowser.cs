@@ -10,6 +10,7 @@ using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Userpanel;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
