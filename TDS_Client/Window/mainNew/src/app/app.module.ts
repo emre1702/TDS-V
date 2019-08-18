@@ -53,6 +53,7 @@ import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/
 import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
+import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { UserpanelSettingsComponent } from './components/userpanel/userpanel-set
     UserpanelCommandsComponent,
     UserpanelRulesComponent,
     UserpanelFAQsComponent,
-    UserpanelSettingsComponent
+    UserpanelSettingsComponent,
+    UserpanelStatsComponent
   ],
   imports: [
     ReactiveFormsModule,

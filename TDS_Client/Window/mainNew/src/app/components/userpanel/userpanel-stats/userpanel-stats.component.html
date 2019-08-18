@@ -1,0 +1,36 @@
+<div class="container" *ngIf="stats">
+    <ng-container *ngFor="let key of columns">
+        <div *ngIf="stats[key] != undefined && stats[key] != '' && (!array.isArray(stats[key]) || stats[key].length) && key != 'Logs'">
+            {{ key | language: settings.Lang }}: {{ stats[key] }}
+        </div>
+
+        <mat-accordion class="logs" *ngIf="key == 'Logs' && stats[key].length">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ key | language: settings.Lang }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-expansion-panel *ngFor="let log of stats[key]">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{ log.Type | language: settings.Lang }}
+                        </mat-panel-title>
+                        <mat-panel-description *ngIf="!log.LengthOrEndTime">
+                            {{ log.Timestamp }}
+                        </mat-panel-description>
+                        <mat-panel-description *ngIf="log.LengthOrEndTime">
+                            {{ log.Timestamp }} - {{ log.LengthOrEndTime }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div>{{ 'Admin' | language: settings.Lang }}: {{ log.Admin }}</div>
+                    <div *ngIf="log.Lobby">{{ 'Lobby' }}: {{ log.Lobby }}</div>
+                    <div>{{ 'AsDonator' | language: settings.Lang }}: {{ log.AsDonator ? 'Yes' : 'No' | language: settings.Lang }}</div>
+                    <div>{{ 'AsVip' | language: settings.Lang }}: {{ log.AsVip ? 'Yes' : 'No' | language: settings.Lang }}</div>
+                    <div>{{ 'Reason' | language: settings.Lang }}: {{ log.Reason }}</div>
+                </mat-expansion-panel>
+            </mat-expansion-panel>
+               
+        </mat-accordion>
+    </ng-container>
+</div>

@@ -112,8 +112,24 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   VoiceAutoVolume = "Voice autom. Lautstärke";
   VoiceVolume = "Voice Lautstärke";
 
+  SCName = "Socialclub Name";
+  AdminLvl = "Admin Level";
+  Donation = "Spende";
+  IsVip = "Ist Vip";
+  Money = "Geld";
+  TotalMoney = "Geld bisher";
+  PlayTime = "Spielzeit";
+  BansInLobbies = "Bans in Lobbys";
+  AmountMapsRated = "Anzahl Maps bewertet";
+  MapsRatedAverage = "Durchschnitt der Map-Bewertungen";
+  AmountMapsCreated = "Anzahl Maps erstellt";
+  CreatedMapsAverageRating = "Durchschnitt der Bewertungen der erstellten Maps";
+  LastLogin = "Letzter Login";
+  RegisterTimestamp = "Register Zeit";
+
 
   Main = "Hauptmenü";
+  MyStats = "Meine Stats (wird verbessert)";
   Rules = "Regeln";
   RulesUser = "Regeln - Spieler";
   RulesTDSTeam = "Regeln - TDS-Team";

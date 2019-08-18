@@ -104,9 +104,27 @@ export interface Language {
     VoiceAutoVolume: string;
     VoiceVolume: string;
 
+    ////////////////// Stats ////////////////
+    SCName: string;
+    AdminLvl: string;
+    Donation: string;
+    IsVip: string;
+    Money: string;
+    TotalMoney: string;
+    PlayTime: string;
+    BansInLobbies: string;
+    AmountMapsCreated: string;
+    MapsRatedAverage: string;
+    CreatedMapsAverageRating: string;
+    AmountMapsRated: string;
+    LastLogin: string;
+    RegisterTimestamp: string;
+    ////////////////////////////////////////
+
     Userpanel: string;
     UserpanelInfo: string;
     Main: string;
+    MyStats: string;
     Rules: string;
     RulesUser: string;
     RulesTDSTeam: string;

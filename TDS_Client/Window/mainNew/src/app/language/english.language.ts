@@ -117,7 +117,23 @@ The user interface is always being worked on, so don't be surprised if you disco
     VoiceAutoVolume = "Voice auto volume";
     VoiceVolume = "Voice volume";
 
+    SCName = "Socialclub Name";
+    AdminLvl = "Admin Level";
+    Donation = "Donation";
+    IsVip = "Is Vip";
+    Money = "Money";
+    TotalMoney = "Total Money";
+    PlayTime = "Play time";
+    BansInLobbies = "Bans in lobbies";
+    AmountMapsRated = "Amount maps rated";
+    MapsRatedAverage = "Maps rated average";
+    AmountMapsCreated = "Amount maps created";
+    CreatedMapsAverageRating = "Created maps average rating";
+    LastLogin = "Last login";
+    RegisterTimestamp = "Register time";
+
     Main = "Main";
+    MyStats = "My stats (will improve)";
     Rules = "Rules";
     RulesUser = "Rules - User";
     RulesTDSTeam = "Rules - TDS-Team";

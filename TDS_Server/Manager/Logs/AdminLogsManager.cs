@@ -8,7 +8,7 @@ namespace TDS_Server.Manager.Logs
 {
     internal static class AdminLogsManager
     {
-        public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false)
+        public static void Log(ELogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {
@@ -19,12 +19,13 @@ namespace TDS_Server.Manager.Logs
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                LengthOrEndTime = lengthOrEndTime
             };
             LogsManager.DbContext.Add(log);
         }
 
-        public static void Log(ELogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false)
+        public static void Log(ELogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {
@@ -35,7 +36,8 @@ namespace TDS_Server.Manager.Logs
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                LengthOrEndTime = lengthOrEndTime
             };
             LogsManager.DbContext.Add(log);
         }

@@ -18,20 +18,45 @@ export class UserpanelComponent implements OnInit, OnDestroy {
   userpanelNavPage = UserpanelNavPage;
   currentCommand: UserpanelCommandDataDto;
   currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
+  myStatsColumns = ["Id",
+    "Name",
+    "SCName",
+    "Gang",
+    "AdminLvl",
+    "Donation",
+    "IsVip",
+    "Money",
+    "TotalMoney",
+    "PlayTime",
+
+    "MuteTime",
+    "VoiceMuteTime",
+
+    "BansInLobbies",
+
+    "AmountMapsCreated",
+    "MapsRatedAverage",
+    "CreatedMapsAverageRating",
+    "AmountMapsRated",
+    "LastLogin",
+    "RegisterTimestamp",
+    "Logs"];
 
   constructor(public settings: SettingsService,
     private changeDetector: ChangeDetectorRef,
     private rageConnector: RageConnectorService,
-    private userpanelService: UserpanelService) {
+    public userpanelService: UserpanelService) {
 
   }
 
   ngOnInit() {
     this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
+    this.userpanelService.myStatsLoaded.on(null, this.detectChanges.bind(this));
   }
 
   ngOnDestroy() {
     this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
+    this.userpanelService.myStatsLoaded.off(null, this.detectChanges.bind(this));
   }
 
   closeUserpanel() {
@@ -47,10 +72,12 @@ export class UserpanelComponent implements OnInit, OnDestroy {
       this.userpanelService.loadCommands();
     } else if (this.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
       this.userpanelService.loadRules();
-    } else if (this.currentNav.startsWith("FAQ") && !this.userpanelService.allFAQs.length) {
+    } else if (nav == UserpanelNavPage.FAQ && !this.userpanelService.allFAQs.length) {
       this.userpanelService.loadFAQs();
-    } else if (this.currentNav.startsWith("Setting") && !this.userpanelService.allSettings) {
+    } else if (nav == UserpanelNavPage.Settings && !this.userpanelService.allSettings) {
       this.userpanelService.loadSettings();
+    } else if (nav == UserpanelNavPage.MyStats) {
+      this.userpanelService.loadMyStats();
     }
   }
 

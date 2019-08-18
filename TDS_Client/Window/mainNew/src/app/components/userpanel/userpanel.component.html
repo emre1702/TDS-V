@@ -4,6 +4,10 @@
         <button mat-button (click)="closeUserpanel()"><mat-icon>clear</mat-icon></button>
     </mat-toolbar>
     <div class="container-content">
+        <app-userpanel-stats *ngIf="currentNav == userpanelNavPage[userpanelNavPage.MyStats]"
+            [stats]="userpanelService.myStats"
+            [columns]="myStatsColumns">
+        </app-userpanel-stats>
         <app-userpanel-commands *ngIf="currentNav.startsWith('Commands')" 
             [(currentCommand)]="currentCommand"
             [currentNav]="currentNav" >
@@ -20,7 +24,14 @@
 </div>
 
 <mat-menu #userpanelNav="matMenu">
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">{{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}</button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">
+        <mat-icon>dashboard</mat-icon>
+        {{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.MyStats)">
+        <mat-icon>info</mat-icon>
+        {{ userpanelNavPage[userpanelNavPage.MyStats] | language: settings.Lang }}
+    </button>
     <button mat-menu-item [matMenuTriggerFor]="rulesNav">
         <mat-icon>assignment</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>

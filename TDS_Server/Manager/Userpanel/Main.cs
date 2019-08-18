@@ -1,4 +1,4 @@
-﻿using TDS_Common.Enum;
+﻿using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 
@@ -20,6 +20,10 @@ namespace TDS_Server.Manager.Userpanel
 
                 case EUserpanelLoadDataType.FAQs:
                     FAQs.SendPlayerFAQs(player);
+                    break;
+
+                case EUserpanelLoadDataType.MyStats:
+                    PlayerStats.SendPlayerPlayerStats(player);
                     break;
             }
         }
