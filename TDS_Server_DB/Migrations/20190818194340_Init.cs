@@ -82,7 +82,8 @@ namespace TDS_Server_DB.Migrations
                     AsDonator = table.Column<bool>(nullable: false),
                     AsVIP = table.Column<bool>(nullable: false),
                     Reason = table.Column<string>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
+                    LengthOrEndTime = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

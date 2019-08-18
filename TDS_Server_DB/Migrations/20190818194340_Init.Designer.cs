@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190817131539_Init")]
+    [Migration("20190818194340_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1602,6 +1602,9 @@ namespace TDS_Server_DB.Migrations
                     b.Property<bool>("AsVip")
                         .HasColumnName("AsVIP")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("LengthOrEndTime")
+                        .HasColumnType("text");
 
                     b.Property<int?>("Lobby")
                         .HasColumnType("integer");

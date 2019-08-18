@@ -432,6 +432,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Reason).IsRequired();
 
                 entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.LengthOrEndTime).IsRequired(false);
             });
 
             modelBuilder.Entity<LogChats>(entity =>

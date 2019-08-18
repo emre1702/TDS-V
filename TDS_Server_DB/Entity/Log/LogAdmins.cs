@@ -14,5 +14,6 @@ namespace TDS_Server_DB.Entity.Log
         public bool AsVip { get; set; }
         public string Reason { get; set; }
         public DateTime Timestamp { get; set; }
+        public string LengthOrEndTime { get; set; }
     }
 }

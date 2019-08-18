@@ -1601,6 +1601,9 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("AsVIP")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("LengthOrEndTime")
+                        .HasColumnType("text");
+
                     b.Property<int?>("Lobby")
                         .HasColumnType("integer");
 
