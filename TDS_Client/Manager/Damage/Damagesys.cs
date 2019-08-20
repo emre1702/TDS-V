@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using RAGE.Elements;
+using System;
 using TDS_Client.Manager.Browser;
 using TDS_Common.Default;
 using Player = RAGE.Elements.Player;
@@ -27,7 +28,7 @@ namespace TDS_Client.Manager.Damage
 
         public static void CheckOnTick()
         {
-            int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
+            int currentTotalHP = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0) + Player.LocalPlayer.GetArmour();
             if (Player.LocalPlayer.HasBeenDamagedByAnyPed())
             {
                 int outbone = 0;
