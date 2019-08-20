@@ -32,7 +32,7 @@
             </mat-expansion-panel>
         </mat-accordion>
 
-        <mat-accordion class="lobby_stats" *ngIf="key == 'LobbyStats' && stats[key].length">
+        <mat-accordion class="lobby_stats" *ngIf="key == 'LobbyStats' && stats[key] && stats[key].length">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -46,7 +46,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <div *ngFor="let statKey of lobbyStatsColumns">
-                        {{ key | language: settings.Lang }}: {{ stats[key][statKey] }}
+                        {{ statKey | language: settings.Lang }}: {{ stat[statKey] }}
                     </div>
                 </mat-expansion-panel>
             </mat-expansion-panel>

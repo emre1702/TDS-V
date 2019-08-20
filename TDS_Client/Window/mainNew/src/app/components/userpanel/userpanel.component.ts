@@ -40,6 +40,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
     "AmountMapsRated",
     "LastLogin",
     "RegisterTimestamp",
+    "LobbyStats",
     "Logs"];
 
   constructor(public settings: SettingsService,

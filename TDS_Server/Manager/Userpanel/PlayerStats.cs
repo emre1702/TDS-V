@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Userpanel
             {
                 if (player.Entity == null)
                     return;
-                var stats = await GetPlayerStats(player.Entity.Id);
+                var stats = await GetPlayerStats(player.Entity.Id, true);
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.MyStats, JsonConvert.SerializeObject(stats));
             }
             catch (Exception ex)
@@ -48,6 +48,8 @@ namespace TDS_Server.Manager.Userpanel
                 .Include(p => p.PlayerMapRatings)
                 .Include(p => p.PlayerStats)
                 .Include(p => p.PlayerTotalStats)
+                .Include(p => p.PlayerLobbyStats)
+                    .ThenInclude(s => s.Lobby)
                 .Where(p => p.Id == playerId)
                 .Select(p => new PlayerUserpanelStatsDataDto
                 {
