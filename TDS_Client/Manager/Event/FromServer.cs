@@ -103,7 +103,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnHitOpponentMethod(object[] args)
         {
-            ushort remoteId = (ushort)args[0];
+            ushort remoteId = Convert.ToUInt16(args[0]);
             int damage = (int)args[1];
             DeathmatchInfo.HittedOpponent(ClientUtils.GetPlayerByHandleValue(remoteId), damage);
         }
