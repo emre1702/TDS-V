@@ -149,7 +149,7 @@ namespace TDS_Server.Instance.Language
 
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurde von {0} geblockt.";
-        public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast von ${0} (${1} Gebühr) von {2} bekommen.";
+        public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast ${0} (${1} Gebühr) von {2} bekommen.";
         public override string YOU_UNBLOCKED => "Du hast {0} blockiert.";
     }
 }
