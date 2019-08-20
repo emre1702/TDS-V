@@ -1,4 +1,5 @@
 import { UserpanelAdminTargetHistoryDataDto } from './userpanelAdminTargetHistoryDataDto';
+import { UserpanelPlayerLobbyStatsDataDto } from './userpanelPlayerLobbyStatsDataDto';
 export interface UserpanelStatsDataDto {
     Id: number;
     Name: string;
@@ -24,5 +25,6 @@ export interface UserpanelStatsDataDto {
     LastLogin: string;
     RegisterTimestamp: string;
 
+    LobbyStats: UserpanelPlayerLobbyStatsDataDto[];
     Logs: UserpanelAdminTargetHistoryDataDto[];
 }

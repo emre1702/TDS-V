@@ -23,6 +23,15 @@ export class UserpanelStatsComponent implements OnInit, OnDestroy {
 
   @Input() columns: string[];
 
+  lobbyStatsColumns: string[] = [
+    "Kills", "Assists", "Deaths", "Damage",
+    "TotalKills", "TotalAssists", "TotalDeaths", "TotalDamage",
+    "TotalRounds",
+    "MostKillsInARound", "MostDamageInARound", "MostAssistsInARound",
+    "MostKillsInADay", "MostDamageInADay", "MostAssistsInADay",
+    "TotalMapsBought"
+  ];
+
   private _stats: UserpanelStatsDataDto;
 
   constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }

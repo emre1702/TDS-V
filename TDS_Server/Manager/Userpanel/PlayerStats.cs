@@ -10,6 +10,7 @@ using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Userpanel
 {
@@ -32,7 +33,7 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
-        private static async Task<PlayerUserpanelStatsDataDto> GetPlayerStats(int playerId)
+        private static async Task<PlayerUserpanelStatsDataDto> GetPlayerStats(int playerId, bool loadLobbyStats = false)
         {
             using var dbContext = new TDSNewContext();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -68,7 +69,9 @@ namespace TDS_Server.Manager.Userpanel
                     MuteTime = p.PlayerStats.MuteTime,
                     PlayTime = p.PlayerStats.PlayTime,
                     VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
-                    TotalMoney = p.PlayerTotalStats.Money 
+                    TotalMoney = p.PlayerTotalStats.Money,
+
+                    LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)) : null
                 })
                 .FirstOrDefaultAsync();
 
@@ -102,6 +105,52 @@ namespace TDS_Server.Manager.Userpanel
     }
 
     #nullable disable
+    class PlayerUserpanelLobbyStats
+    {
+        public string Lobby { get; internal set; }
+
+        public int Kills { get; set; }
+        public int Assists { get; set; }
+        public int Deaths { get; set; }
+        public int Damage { get; set; }
+        public int TotalKills { get; set; }
+        public int TotalAssists { get; set; }
+        public int TotalDeaths { get; set; }
+        public int TotalDamage { get; set; }
+        public int TotalRounds { get; set; }
+        public int MostKillsInARound { get; set; }
+        public int MostDamageInARound { get; set; }
+        public int MostAssistsInARound { get; set; }
+        public int MostKillsInADay { get; set; }
+        public int MostDamageInADay { get; set; }
+        public int MostAssistsInADay { get; set; }
+
+        public int TotalMapsBought { get; set; }
+
+        public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
+        {
+            Lobby = stats.Lobby.Name;
+
+            Kills = stats.Kills;
+            Assists = stats.Assists;
+            Deaths = stats.Deaths;
+            Damage = stats.Damage;
+
+            TotalKills = stats.TotalKills;
+            TotalAssists = stats.TotalAssists;
+            TotalDeaths = stats.TotalDeaths;
+            TotalDamage = stats.TotalDamage;
+
+            TotalRounds = stats.TotalRounds;
+            MostKillsInARound = stats.MostKillsInARound;
+            MostDamageInARound = stats.MostDamageInARound;
+            MostAssistsInARound = stats.MostAssistsInARound;
+            MostKillsInADay = stats.MostKillsInADay;
+            MostDamageInADay = stats.MostDamageInADay;
+            MostAssistsInADay = stats.MostAssistsInADay;
+        }
+    }
+
     class PlayerUserpanelAdminTargetHistoryDataDto
     {
         public string Admin { get; internal set; }
@@ -144,6 +193,7 @@ namespace TDS_Server.Manager.Userpanel
         public int? VoiceMuteTime { get; internal set; }
         public int PlayTime { get; internal set; }
 
+        public IEnumerable<PlayerUserpanelLobbyStats> LobbyStats { get; internal set; }
         public IEnumerable<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }
     }
     #nullable restore
