@@ -136,6 +136,7 @@
 
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
+        string YOU_GOT_UNBLOCKED_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
         string YOU_UNBLOCKED { get; }
     }

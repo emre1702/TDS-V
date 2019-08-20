@@ -149,6 +149,7 @@ namespace TDS_Server.Instance.Language
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
+        public virtual string YOU_GOT_UNBLOCKED_BY => "You got unblocked by {0}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }
