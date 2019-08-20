@@ -2,6 +2,7 @@
 using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Browser;
 using TDS_Common.Default;
 using Player = RAGE.Elements.Player;
 
@@ -28,11 +29,13 @@ namespace TDS_Client.Manager.Utility
         private static void Start(Control _)
         {
             Voice.Muted = false;
+            MainBrowser.StartPlayerTalking(Player.LocalPlayer.Name);
         }
 
         private static void Stop(Control _)
         {
             Voice.Muted = true;
+            MainBrowser.StopPlayerTalking(Player.LocalPlayer.Name);
         }
     }
 }
