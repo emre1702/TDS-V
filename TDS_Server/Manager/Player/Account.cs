@@ -104,18 +104,19 @@ namespace TDS_Server.Manager.Player
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
 
-            var playerIDName = await Player.DbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
+            using var dbContext = new TDSNewContext();
+            var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
             if (playerIDName == null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, false);
                 return;
             }
 
-            PlayerBans? ban = await BansManager.DbContext.PlayerBans.FindAsync(playerIDName.Id, 0);    // MainMenu ban => server ban
+            PlayerBans? ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.PlayerId == playerIDName.Id && b.LobbyId == 0);
             if (ban != null && ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.Now)
             {
-                BansManager.DbContext.Remove(ban);
-                await BansManager.DbContext.SaveChangesAsync();
+                dbContext.Remove(ban);
+                await dbContext.SaveChangesAsync();
                 ban = null;
             }
 

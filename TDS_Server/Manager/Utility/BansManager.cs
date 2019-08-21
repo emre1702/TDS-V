@@ -3,25 +3,20 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Utility
 {
     internal static class BansManager
     {
-        public static TDSNewContext DbContext { get; set; }
-
-        static BansManager()
-        {
-            DbContext = new TDSNewContext();
-        }
-
         public static async Task RemoveExpiredBans()
         {
-            var bans = await DbContext.PlayerBans
+            using var dbContext = new TDSNewContext();
+            var bans = await dbContext.PlayerBans
                 .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
                 .ToListAsync();
-            DbContext.PlayerBans.RemoveRange(bans);
-            await DbContext.SaveChangesAsync();
+            dbContext.PlayerBans.RemoveRange(bans);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

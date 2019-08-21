@@ -380,15 +380,5 @@ namespace TDS_Server.Manager.Commands
                 return await task;
             return converterReturn;
         }
-
-        private static async Task<object?> GetDatabasePlayerByName(string name)
-        {
-            object? result = null;
-            result = await Player.Player.DbContext.Players
-                .Where(p => p.Name == name)
-                .Select(p => (object?)p)
-                .FirstOrDefaultAsync();
-            return result;
-        }
     }
 }

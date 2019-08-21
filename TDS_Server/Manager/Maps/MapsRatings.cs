@@ -12,13 +12,6 @@ namespace TDS_Server.Manager.Maps
 {
     internal static class MapsRatings
     {
-        public static TDSNewContext DbContext { get; set; }
-
-        static MapsRatings()
-        {
-            DbContext = new TDSNewContext();
-        }
-
         public static async void AddPlayerMapRating(Client player, int mapId, byte rating)
         {
             int? playerId = player.GetEntity()?.Id;
@@ -35,15 +28,16 @@ namespace TDS_Server.Manager.Maps
             if (map == null)
                 return;
 
-            PlayerMapRatings? maprating = await DbContext.PlayerMapRatings.FindAsync(playerId, mapId);
+            using var dbContext = new TDSNewContext();
+            PlayerMapRatings? maprating = await dbContext.PlayerMapRatings.FindAsync(playerId, mapId);
             if (maprating == null)
             {
                 maprating = new PlayerMapRatings { PlayerId = playerId.Value, MapId = mapId };
-                DbContext.PlayerMapRatings.Add(maprating);
+                dbContext.PlayerMapRatings.Add(maprating);
             }
             maprating.Rating = rating;
             map.SyncedData.Rating = rating;
-            await DbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             if (isCustom)
                 MapCreator.AddedMapRating(map);

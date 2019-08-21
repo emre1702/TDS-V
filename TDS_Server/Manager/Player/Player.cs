@@ -12,7 +12,6 @@ namespace TDS_Server.Manager.Player
 {
     internal static class Player
     {
-        public static TDSNewContext DbContext { get; set; }
         public static int AmountLoggedInPlayers => LoggedInPlayers.Count;
         public static readonly List<TDSPlayer> LoggedInPlayers = new List<TDSPlayer>();
 
@@ -20,9 +19,6 @@ namespace TDS_Server.Manager.Player
 
         static Player()
         {
-            DbContext = new TDSNewContext();
-            DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-
             CustomEventManager.OnPlayerLoggedInBefore += player =>
             {
                 LoggedInPlayers.Add(player);
@@ -61,13 +57,16 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<bool> DoesPlayerWithNameExist(string name)
         {
-            return await DbContext.Players
+            using var dbContext = new TDSNewContext();
+            return await dbContext.Players.AsNoTracking()
                             .AnyAsync(p => EF.Functions.ILike(p.Name, name));    
         }
 
         public static async Task<int> GetPlayerIDByScname(string scname)
         {
-            return await DbContext.Players
+            using var dbContext = new TDSNewContext();
+            return await dbContext.Players
+                .AsNoTracking()
                 .Where(p => p.SCName == scname)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();
@@ -75,7 +74,9 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<int> GetPlayerIDByName(string name)
         {
-            return await DbContext.Players
+            using var dbContext = new TDSNewContext();
+            return await dbContext.Players
+                .AsNoTracking()
                 .Where(p => p.Name == name)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();

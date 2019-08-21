@@ -13,18 +13,12 @@ namespace TDS_Server.Manager.Maps
 {
     internal class MapFavourites : Script
     {
-        public static TDSNewContext DbContext { get; set; }
-
-        static MapFavourites()
-        {
-            DbContext = new TDSNewContext();
-        }
-
         public static void LoadPlayerFavourites(TDSPlayer player)
         {
             if (player.Entity == null)
                 return;
-            List<int> mapIDs = DbContext.PlayerMapFavourites
+            using var dbContext = new TDSNewContext();
+            List<int> mapIDs = dbContext.PlayerMapFavourites
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
@@ -38,15 +32,16 @@ namespace TDS_Server.Manager.Maps
             if (entity == null)
                 return;
 
-            PlayerMapFavourites? favorite = await DbContext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
+            using var dbContext = new TDSNewContext();
+            PlayerMapFavourites? favorite = await dbContext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
             #region Add Favourite
 
             if (favorite == null && isFavorite)
             {
                 favorite = new PlayerMapFavourites { PlayerId = entity.Id, MapId = mapId };
-                DbContext.PlayerMapFavourites.Add(favorite);
-                await DbContext.SaveChangesAsync();
+                dbContext.PlayerMapFavourites.Add(favorite);
+                await dbContext.SaveChangesAsync();
                 return;
             }
 
@@ -56,8 +51,8 @@ namespace TDS_Server.Manager.Maps
 
             if (favorite != null && !isFavorite)
             {
-                DbContext.PlayerMapFavourites.Remove(favorite);
-                await DbContext.SaveChangesAsync();
+                dbContext.PlayerMapFavourites.Remove(favorite);
+                await dbContext.SaveChangesAsync();
                 return;
             }
             #endregion
