@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Draw
         {
             if (_moneyText != null)
                 return _moneyText;
-            return new DxText("0", 1920 - 5, 1080 - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Top,
+            return new DxText("0", 1920 - 5, 1080 - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom,
                 font: Font.Pricedown, dropShadow: true, outline: true, relative: false);
         }
 
