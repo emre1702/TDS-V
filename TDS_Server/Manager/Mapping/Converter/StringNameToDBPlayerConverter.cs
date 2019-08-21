@@ -9,6 +9,8 @@ namespace TDS_Server.Manager.Mapping.Converter
     {
         public async Task<Players?> Convert(string name, Task<Players?> destination, ResolutionContext _)
         {
+            if (name[0] == '@')
+                name = name.Substring(1);
             Players? ret = await Player.Player.DbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false);
             return ret;
         }

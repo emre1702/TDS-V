@@ -8,6 +8,8 @@ namespace TDS_Server.Manager.Mapping.Converter
     {
         public Client? Convert(string name, Client? destination, ResolutionContext _)
         {
+            if (name[0] == '@')
+                name = name.Substring(1);
             Client? player = NAPI.Player.GetPlayerFromName(name);
             if (player != null && player.Exists)
                 return player;

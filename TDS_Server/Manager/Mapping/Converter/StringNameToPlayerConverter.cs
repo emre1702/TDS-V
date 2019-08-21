@@ -11,6 +11,8 @@ namespace TDS_Server.Manager.Mapping.Converter
     {
         public TDSPlayer? Convert(string name, TDSPlayer? destination, ResolutionContext _)
         {
+            if (name[0] == '@')
+                name = name.Substring(1);
             Client? client = FindClient(name);
             TDSPlayer? player = client?.GetChar();
             return player != null && player.LoggedIn ? player : null;
