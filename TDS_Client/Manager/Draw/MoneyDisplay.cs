@@ -8,21 +8,21 @@ namespace TDS_Client.Manager.Draw
 {
     internal static class MoneyDisplay
     {
-        private static DxText moneyText;
+        private static DxText _moneyText;
 
         private static DxText GetMoneyText()
         {
-            if (moneyText != null)
-                return moneyText;
-            return new DxText("0", 1920 - 5, 1080 - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom,
+            if (_moneyText != null)
+                return _moneyText;
+            return new DxText("0", 1920 - 5, 1080 - 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Top,
                 font: Font.Pricedown, dropShadow: true, outline: true, relative: false);
         }
 
         public static void Refresh()
         {
-            if (moneyText == null)
-                moneyText = GetMoneyText();
-            moneyText.Text = AccountData.Money.ToString();
+            if (_moneyText == null)
+                _moneyText = GetMoneyText();
+            _moneyText.Text = AccountData.Money.ToString();
         }
     }
 }
