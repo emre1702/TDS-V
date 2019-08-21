@@ -8,6 +8,7 @@
         string BOMB_PLANT_INFO { get; }
         string BOMB_PLANTED { get; }
 
+        string CHAR_IN_NAME_IS_NOT_ALLOWED { get; }
         string COMMAND_DOESNT_EXIST { get; }
         string COMMAND_TOO_LESS_ARGUMENTS { get; }
         string COMMAND_USED_WRONG { get; }

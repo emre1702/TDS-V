@@ -28,8 +28,10 @@ namespace TDS_Server.Manager.Utility
 
         public static string HashPWServer(string pw)
         {
-            byte[] hashbytes = SHA512.Create().ComputeHash(Encoding.Default.GetBytes(pw));
-            hashbytes = SHA384.Create().ComputeHash(hashbytes);
+            using var sha512 = SHA512.Create();
+            byte[] hashbytes = sha512.ComputeHash(Encoding.Default.GetBytes(pw));
+            using var sha384 = SHA384.Create();
+            hashbytes = sha384.ComputeHash(hashbytes);
             for (int i = 0; hashbytes != null && i < hashbytes.Length; i++)
             {
                 _strbuilder.AppendFormat("{0:x2}", hashbytes[i]);
@@ -88,6 +90,77 @@ namespace TDS_Server.Manager.Utility
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 
             return Regex.Replace(name, invalidRegStr, "_");
+        }
+
+        /// <summary>
+        /// Check if the name is valid
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The one char being not valid.</returns>
+        public static char? CheckNameValid(string name)
+        {
+            int min = System.Enum.GetValues(typeof(CharASCII)).Cast<int>().Min();
+            int max = System.Enum.GetValues(typeof(CharASCII)).Cast<int>().Max();
+            foreach (byte number in Encoding.ASCII.GetBytes(name))
+            {
+                if (number < min || number > max)
+                    return (char)number;
+                if (number == (byte)CharASCII.AtSign
+                        || number == (byte)CharASCII.GraveAccent
+                        || number == (byte)CharASCII.Apostrophe
+                        || number == (byte)CharASCII.LeftCurlyBracket
+                        || number == (byte)CharASCII.RightCurlyBracket)
+                    return (char)number;
+
+            }
+            return null;
+        }
+
+        private enum CharASCII : byte
+        {
+            Space = 32,
+            ExclamationMark = 33,
+            QuoteDouble = 34,
+            Route = 35,
+            Dollar = 36,
+            Percent = 37,
+            And = 38,
+            Apostrophe = 39,
+            LeftParenthesis = 40,
+            RightParenthesis = 41,
+            Asterisk = 42,
+            Plus = 43,
+            Comma = 44,
+            Minus = 45,
+            Dot = 46,
+            Slash = 47,
+            Digit0 = 48,
+            // ...
+            Digit9 = 57,
+            Colon = 58,
+            Semicolon = 59,
+            LessThan = 60,
+            Equal = 61,
+            GreaterThan = 62,
+            QuestionMark = 63,
+            AtSign = 64,
+            CharA = 65,
+            // ...
+            CharZ = 90,
+            LeftSquareBracket = 91,
+            BackSlash = 92,
+            RightSquareBracket = 93,
+            Circumflex = 94,                    // ^
+            LowLine = 95,                       // _
+            GraveAccent = 96,                   // `
+            SmallCharA = 97,
+            // ...
+            SmallCharZ = 122,
+            LeftCurlyBracket = 123,
+            VerticalBar = 124,
+            RightCurlyBracket = 125,
+            Tilde = 126
+
         }
     }
 }

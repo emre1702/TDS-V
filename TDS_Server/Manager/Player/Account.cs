@@ -54,16 +54,23 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Client player, string username, string password, string email)
+        public static async void OnPlayerTryRegisterEvent(Client client, string username, string password, string email)
         {
-            if (await Player.DoesPlayerWithScnameExist(player.SocialClubName))
+            if (await Player.DoesPlayerWithScnameExist(client.SocialClubName))
                 return;
+            TDSPlayer player = client.GetChar();
             if (await Player.DoesPlayerWithNameExist(username))
             {
-                player.SendNotification(player.GetChar().Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
+                client.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
                 return;
             }
-            Register.RegisterPlayer(player, username, password, email.Length != 0 ? email : null);
+            char? invalidChar = Utils.CheckNameValid(username);
+            if (invalidChar.HasValue)
+            {
+                client.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value));
+                return;
+            }
+            Register.RegisterPlayer(client, username, password, email.Length != 0 ? email : null);
         }
 
         [RemoteEvent(DToServerEvent.ChatLoaded)]

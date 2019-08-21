@@ -10,6 +10,7 @@ namespace TDS_Server.Instance.Language
         public virtual string BOMB_PLANT_INFO => "To plant the bomb you have to take your fists and hold the left mouse button on one of the bomb-spots.";
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 
+        public virtual string CHAR_IN_NAME_IS_NOT_ALLOWED => "The character '{0}' in your name is not allowed.";
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
         public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too less arguments for this command.";
         public virtual string COMMAND_USED_WRONG => "The command usage was wrong.";
