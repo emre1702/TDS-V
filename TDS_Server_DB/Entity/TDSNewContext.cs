@@ -817,6 +817,14 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.GiveMoneyMinAmount)
                     .IsRequired()
                     .HasDefaultValue(100);
+
+                entity.Property(e => e.NametagMaxDistance)
+                    .IsRequired()
+                    .HasDefaultValue(25*25);
+
+                entity.Property(e => e.ShowNametagOnlyOnAiming)
+                    .IsRequired()
+                    .HasDefaultValue(true);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
@@ -868,7 +876,8 @@ namespace TDS_Server_DB.Entity
                     DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
                     SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,
                     ArenaNewMapProbabilityPercent = 2, KillingSpreeMaxSecondsUntilNextKill = 18,
-                    MapRatingAmountForCheck = 10, GiveMoneyFee = 0.05f, GiveMoneyMinAmount = 100
+                    MapRatingAmountForCheck = 10, GiveMoneyFee = 0.05f, GiveMoneyMinAmount = 100,
+                    NametagMaxDistance = 25*25, ShowNametagOnlyOnAiming = true
                 }
             );
 

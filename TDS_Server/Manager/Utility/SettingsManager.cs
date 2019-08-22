@@ -59,7 +59,9 @@ namespace TDS_Server.Manager.Utility
                 DistanceToSpotToDefuse = _serverSettings.DistanceToSpotToDefuse,
                 RoundEndTime = 8 * 1000,
                 MapChooseTime = 4 * 1000,
-                TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs
+                TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs,
+                NametagMaxDistance = _serverSettings.NametagMaxDistance,
+                ShowNametagOnlyOnAiming = _serverSettings.ShowNametagOnlyOnAiming
             };
 
             _loadMapOfOthersRightInfos = dbcontext.Commands.First(c => c.Command == "LoadMapOfOthers");

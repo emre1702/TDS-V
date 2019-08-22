@@ -2941,6 +2941,11 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("character varying(300)")
                         .HasMaxLength(300);
 
+                    b.Property<float>("NametagMaxDistance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(625f);
+
                     b.Property<string>("NewMapsPath")
                         .IsRequired()
                         .HasColumnType("character varying(300)")
@@ -2959,6 +2964,11 @@ namespace TDS_Server_DB.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(300)")
                         .HasMaxLength(300);
+
+                    b.Property<bool>("ShowNametagOnlyOnAiming")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("TeamOrderCooldownMs")
                         .HasColumnType("integer");
@@ -2984,11 +2994,13 @@ namespace TDS_Server_DB.Migrations
                             KillingSpreeMaxSecondsUntilNextKill = 18,
                             MapRatingAmountForCheck = 10,
                             MapsPath = "bridge/resources/tds/maps/",
+                            NametagMaxDistance = 625f,
                             NewMapsPath = "bridge/resources/tds/newmaps/",
                             SaveLogsCooldownMinutes = 1,
                             SavePlayerDataCooldownMinutes = 1,
                             SaveSeasonsCooldownMinutes = 1,
                             SavedMapsPath = "bridge/resources/tds/savedmaps/",
+                            ShowNametagOnlyOnAiming = true,
                             TeamOrderCooldownMs = 3000,
                             ToChatOnNonExistentCommand = false
                         });

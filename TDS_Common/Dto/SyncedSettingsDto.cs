@@ -7,5 +7,7 @@
         public int RoundEndTime;
         public int MapChooseTime;
         public int TeamOrderCooldownMs;
+        public float NametagMaxDistance;
+        public bool ShowNametagOnlyOnAiming;
     }
 }

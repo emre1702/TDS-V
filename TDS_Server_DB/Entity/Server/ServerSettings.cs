@@ -20,5 +20,7 @@
         public int MapRatingAmountForCheck { get; set; }
         public float GiveMoneyFee { get; set; }
         public int GiveMoneyMinAmount { get; set; }
+        public float NametagMaxDistance { get; set; }
+        public bool ShowNametagOnlyOnAiming { get; set; }
     }
 }

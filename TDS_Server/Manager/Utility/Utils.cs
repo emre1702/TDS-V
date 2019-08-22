@@ -99,8 +99,8 @@ namespace TDS_Server.Manager.Utility
         /// <returns>The one char being not valid.</returns>
         public static char? CheckNameValid(string name)
         {
-            int min = System.Enum.GetValues(typeof(CharASCII)).Cast<int>().Min();
-            int max = System.Enum.GetValues(typeof(CharASCII)).Cast<int>().Max();
+            byte min = System.Enum.GetValues(typeof(CharASCII)).Cast<byte>().Min();
+            byte max = System.Enum.GetValues(typeof(CharASCII)).Cast<byte>().Max();
             foreach (byte number in Encoding.ASCII.GetBytes(name))
             {
                 if (number < min || number > max)

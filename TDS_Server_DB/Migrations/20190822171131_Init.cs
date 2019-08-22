@@ -195,7 +195,9 @@ namespace TDS_Server_DB.Migrations
                     KillingSpreeMaxSecondsUntilNextKill = table.Column<int>(nullable: false, defaultValue: 18),
                     MapRatingAmountForCheck = table.Column<int>(nullable: false, defaultValue: 10),
                     GiveMoneyFee = table.Column<float>(nullable: false, defaultValue: 0.05f),
-                    GiveMoneyMinAmount = table.Column<int>(nullable: false, defaultValue: 100)
+                    GiveMoneyMinAmount = table.Column<int>(nullable: false, defaultValue: 100),
+                    NametagMaxDistance = table.Column<float>(nullable: false, defaultValue: 625f),
+                    ShowNametagOnlyOnAiming = table.Column<bool>(nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -940,8 +942,8 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "server_settings",
-                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "GiveMoneyFee", "GiveMoneyMinAmount", "KillingSpreeMaxSecondsUntilNextKill", "MapRatingAmountForCheck", "MapsPath", "NewMapsPath", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "SavedMapsPath", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
-                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 0.05f, 100, 18, 10, "bridge/resources/tds/maps/", "bridge/resources/tds/newmaps/", 1, 1, 1, "bridge/resources/tds/savedmaps/", 3000, false });
+                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "GiveMoneyFee", "GiveMoneyMinAmount", "KillingSpreeMaxSecondsUntilNextKill", "MapRatingAmountForCheck", "MapsPath", "NametagMaxDistance", "NewMapsPath", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "SavedMapsPath", "ShowNametagOnlyOnAiming", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
+                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 0.05f, 100, 18, 10, "bridge/resources/tds/maps/", 625f, "bridge/resources/tds/newmaps/", 1, 1, 1, "bridge/resources/tds/savedmaps/", true, 3000, false });
 
             migrationBuilder.InsertData(
                 table: "server_total_stats",

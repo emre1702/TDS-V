@@ -6,7 +6,6 @@ using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Draw;
-using TDS_Client.Manager.Lobby;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
@@ -73,10 +72,13 @@ namespace TDS_Client.Manager.Utility
         public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
         public static bool MixTeamsAfterRound => _syncedLobbySettings.MixTeamsAfterRound ?? false;
+        public static float NametagMaxDistance;
+        public static bool ShowNametagOnlyOnAiming;
 
         public static void Load()
         {
             Player.LocalPlayer.SetCanAttackFriendly(false, false);
+            RAGE.Nametags.Enabled = false;
 
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Flying), 100, false);
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Lung), 100, false);
@@ -90,6 +92,10 @@ namespace TDS_Client.Manager.Utility
         public static void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
         {
             _syncedServerSettings = loadedSyncedSettings;
+
+            NametagMaxDistance = _syncedServerSettings.NametagMaxDistance;
+            ShowNametagOnlyOnAiming = _syncedServerSettings.ShowNametagOnlyOnAiming;
+
         }
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using static RAGE.Events;
 
@@ -17,8 +18,9 @@ namespace TDS_Client.Manager.Utility
             Add(Damagesys.CheckOnTick, () => Round.InFight);
         }
 
-        private static void OnTickMethod(List<TickNametagData> _)
+        private static void OnTickMethod(List<TickNametagData> data)
         {
+            Nametag.Draw(data);
             foreach (var method in _methods)
             {
                 if (method.Item2 == null || method.Item2())
