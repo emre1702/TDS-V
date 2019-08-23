@@ -19,9 +19,6 @@ namespace TDS_Server_DB.Entity.Player
         public int MostKillsInARound { get; set; }
         public int MostDamageInARound { get; set; }
         public int MostAssistsInARound { get; set; }
-        public int MostKillsInADay{ get; set; }
-        public int MostDamageInADay { get; set; }
-        public int MostAssistsInADay { get; set; }
 
         public int TotalMapsBought { get; set; }
 

@@ -28,7 +28,6 @@ export class UserpanelStatsComponent implements OnInit, OnDestroy {
     "TotalKills", "TotalAssists", "TotalDeaths", "TotalDamage",
     "TotalRounds",
     "MostKillsInARound", "MostDamageInARound", "MostAssistsInARound",
-    "MostKillsInADay", "MostDamageInADay", "MostAssistsInADay",
     "TotalMapsBought"
   ];
 

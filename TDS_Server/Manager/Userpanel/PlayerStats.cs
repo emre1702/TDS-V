@@ -123,9 +123,6 @@ namespace TDS_Server.Manager.Userpanel
         public int MostKillsInARound { get; set; }
         public int MostDamageInARound { get; set; }
         public int MostAssistsInARound { get; set; }
-        public int MostKillsInADay { get; set; }
-        public int MostDamageInADay { get; set; }
-        public int MostAssistsInADay { get; set; }
 
         public int TotalMapsBought { get; set; }
 
@@ -147,9 +144,6 @@ namespace TDS_Server.Manager.Userpanel
             MostKillsInARound = stats.MostKillsInARound;
             MostDamageInARound = stats.MostDamageInARound;
             MostAssistsInARound = stats.MostAssistsInARound;
-            MostKillsInADay = stats.MostKillsInADay;
-            MostDamageInADay = stats.MostDamageInADay;
-            MostAssistsInADay = stats.MostAssistsInADay;
         }
     }
 
