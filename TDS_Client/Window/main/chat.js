@@ -201,7 +201,9 @@ function loadUserName(username) {
 }
 
 function loadNamesForChat(names) {
-    chatdata.playernames = JSON.parse(names);
+	chatdata.playernames.length = 0;
+	let newPlayerNames = JSON.parse(names);
+    chatdata.playernames.push(...newPlayerNames);
 }
 
 function addNameForChat(name) {
