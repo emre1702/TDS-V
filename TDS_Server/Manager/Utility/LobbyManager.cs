@@ -141,10 +141,10 @@ namespace TDS_Server.Manager.Utility
                         MapLimitType = data.MapLimitType
                     },
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
-                    LobbyWeapons = new HashSet<LobbyWeapons>
+                    LobbyWeapons = new HashSet<LobbyWeapons> // todo Take default weapons from arena lobby
                     {
                         new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.Revolver, Ammo = 500 },
+                        new LobbyWeapons { Hash = EWeaponHash.HeavyRevolver, Ammo = 500 },
                         new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Ammo = 500 },
                         new LobbyWeapons { Hash = EWeaponHash.SMG, Ammo = 2000 },
                         new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Ammo = 2000 },

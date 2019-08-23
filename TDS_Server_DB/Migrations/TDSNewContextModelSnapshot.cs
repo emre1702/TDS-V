@@ -26,7 +26,7 @@ namespace TDS_Server_DB.Migrations
                 .HasAnnotation("Npgsql:Enum:e_player_relation", "none,block,friend")
                 .HasAnnotation("Npgsql:Enum:e_rule_category", "general,chat")
                 .HasAnnotation("Npgsql:Enum:e_rule_target", "user,admin,vip")
-                .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,sweeper_shotgun,micro_smg,wrench,pistol,pump_shotgun,ap_pistol,ball,molotov,smg,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,assault_rifle,special_carbine,revolver,marksman_rifle,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2")
+                .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .HasAnnotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .HasAnnotation("Npgsql:Enum:vehicle_hash", "adder,airbus,airtug,akuma,alpha,alpha_z1,ambulance,annihilator,apc,ardent,army_tanker,army_trailer,army_trailer2,asea,asea2,asterope,avarus,bagger,bale_trailer,baller,baller2,baller3,baller4,baller5,baller6,banshee,banshee2,barracks,barracks2,barracks3,bati,bati2,benson,besra,bestia_gts,bf400,bf_injection,biff,bifta,bison,bison2,bison3,bjxl,blade,blazer,blazer2,blazer3,blazer4,blazer5,blimp,blimp2,blista,blista2,blista3,bmx,boat_trailer,bobcat_xl,bodhi2,bombushka,boxville,boxville2,boxville3,boxville4,boxville5,brawler,brickade,brioso,b_type,b_type2,b_type3,buccaneer,buccaneer2,buffalo,buffalo2,buffalo3,bulldozer,bullet,burrito,burrito2,burrito3,burrito4,burrito5,bus,buzzard,buzzard2,cable_car,caddy,caddy2,caddy3,camper,carbonizzare,carbon_rs,cargobob,cargobob2,cargobob3,cargobob4,cargo_plane,casco,cavalcade,cavalcade2,cheetah,cheetah2,chimera,chino,chino2,cliffhanger,coach,cog55,cog552,cog_cabrio,cognoscenti,cognoscenti2,comet2,comet3,contender,coquette,coquette2,coquette3,cruiser,crusader,cuban800,cutter,cyclone,daemon,daemon2,defiler,diablous,diablous2,dilettante,dilettante2,dinghy,dinghy2,dinghy3,dinghy4,d_loader,dock_trailer,docktug,dodo,dominator,dominator2,double,dubsta,dubsta2,dubsta3,dukes,dukes2,dump,dune,dune2,dune3,dune4,dune5,duster,elegy,elegy2,emperor,emperor2,emperor3,enduro,entity_xf,esskey,exemplar,f620,faction,faction2,faction3,faggio,faggio2,faggio3,fbi,fbi2,fcr,fcr2,felon,felon2,feltzer2,feltzer3,fire_truck,fixter,flatbed,forklift,fmj,fq2,freight,freight_car,freight_cont1,freight_cont2,freight_grain,freight_trailer,frogger,frogger2,fugitive,furoregt,fusilade,futo,gargoyle,gauntlet,gauntlet2,g_burrito,g_burrito2,glendale,gp1,grain_trailer,granger,gresley,guardian,habanero,hakuchou,hakuchou2,half_track,handler,hauler,hauler2,havok,hexer,hotknife,howard,hunter,huntley,hydra,infernus,infernus2,ingot,innovation,insurgent,insurgent2,insurgent3,intruder,issi2,itali_gtb,itali_gtb2,jackal,jb700,jester,jester2,jet,jetmax,journey,kalahari,khamelion,kuruma,kuruma2,landstalker,lazer,lectro,lguard,limo2,lurcher,luxor,luxor2,lynx,mamba,mammatus,manana,manchez,marquis,marshall,massacro,massacro2,maverick,mesa,mesa2,mesa3,metro_train,microlight,miljet,minivan,minivan2,mixer,mixer2,mogul,molotok,monroe,monster,moonbeam,moonbeam2,mower,mule,mule2,mule3,nemesis,nero,nero2,nightblade,nightshade,night_shark,nimbus,ninef,ninef2,nokota,omnis,oppressor,oracle,oracle2,osiris,packer,panto,paradise,patriot,p_bus,pcj,penetrator,penumbra,peyote,pfister811,phantom,phantom2,phantom3,phoenix,picador,pigalle,police,police2,police3,police4,policeb,police_old1,police_old2,police_t,polmav,pony,pony2,pounder,prairie,pranger,predator,premier,primo,primo2,prop_trailer,prototipo,pyro,radi,rake_trailer,rancher_xl,rancher_xl2,rally_truck,rapid_gt,rapid_gt2,rapid_gt3,raptor,rat_bike,rat_loader,rat_loader2,re7b,reaper,rebel,rebel2,regina,rental_bus,retinue,rhapsody,rhino,riot,ripley,rocoto,romero,rogue,rubble,ruffian,ruiner,ruiner2,ruiner3,rumpo,rumpo2,rumpo3,ruston,sabre_gt,sabre_gt2,sadler,sadler2,sanchez,sanchez2,sanctus,sandking,sandking2,savage,schafter2,schafter3,schafter4,schafter5,schafter6,schwarzer,scorcher,scrap,seabreeze,seashark,seashark2,seashark3,seminole,sentinel,sentinel2,serrano,seven70,shamal,sheava,sheriff,sheriff2,shotaro,skylift,slam_van,slam_van2,slam_van3,sovereign,specter,specter2,speeder,speeder2,speedo,speedo2,squalo,stalion,stalion2,stanier,starling,stinger,stinger_gt,stockade,stockade3,stratum,stretch,stunt,submersible,submersible2,sultan,sultan_rs,suntrap,superd,supervolito,supervolito2,surano,surfer,surfer2,surge,swift2,swift,t20,taco,tailgater,tampa,tampa2,tampa3,tanker,tanker2,tanker_car,taxi,technical,technical2,technical3,tempesta,thrust,tip_truck,tip_truck2,titan,torero,tornado,tornado2,tornado3,tornado4,tornado5,tornado6,toro,toro2,tourbus,tow_truck,tow_truck2,tr2,tr3,tr4,tractor,tractor2,tractor3,trailer_logs,trailer_large,trailers,trailers2,trailers3,trailers4,trailer_small,trailer_small2,trash,trash2,tr_flat,tri_bike,tri_bike2,tri_bike3,trophy_truck,trophy_truck2,tropic,tropic2,tropos,tug,tula,turismor,turismo2,tv_trailer,tyrus,utilli_truck,utilli_truck2,utilli_truck3,vacca,vader,vagner,valkyrie,valkyrie2,velum,velum2,verlierer2,vestra,vigero,vigilante,vindicator,virgo,virgo2,virgo3,visione,volatus,voltic,voltic2,voodoo,voodoo2,vortex,warrener,washington,wastelander,windsor,windsor2,wolfsbane,xa21,xls,xls2,youga,youga2,zentorno,zion,zion2,zombie_a,zombie_b,z_type,akula,autarch,avenger,avenger2,barrage,chernobog,comet4,comet5,deluxo,gt500,hermes,hustler,kamacho,khanjali,neon,pariah,raiden,revolter,riata,riot2,savestra,sc1,sentinel3,streiter,stromberg,thruster,viseris,volatol,yosemite,z190,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
@@ -1537,51 +1537,537 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            Hash = EWeaponHash.AssaultRifle,
+                            Hash = EWeaponHash.SniperRifle,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Revolver,
+                            Hash = EWeaponHash.FireExtinguisher,
                             Lobby = 1,
-                            Ammo = 500
+                            Ammo = 99999
                         },
                         new
                         {
-                            Hash = EWeaponHash.UpnAtomizer,
+                            Hash = EWeaponHash.CompactGrenadeLauncher,
                             Lobby = 1,
-                            Ammo = 500
+                            Ammo = 99999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SMG,
+                            Hash = EWeaponHash.Snowball,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.VintagePistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CombatPDW,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavySniper,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavySniperMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SweeperShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MicroSMG,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
                         },
                         new
                         {
-                            Hash = EWeaponHash.UnholyHellbringer,
+                            Hash = EWeaponHash.Wrench,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Pistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PistolMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PumpShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PumpShotgunMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.APPistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Baseball,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Molotov,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SMG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SMGMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.StickyBomb,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PetrolCan,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.StunGun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavyShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Minigun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.GolfClub,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.FlareGun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Flare,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.GrenadeLauncherSmoke,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Hammer,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CombatPistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Gusenberg,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CompactRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HomingLauncher,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Nightstick,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Railgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SawnOffShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.BullpupRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Firework,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CombatMG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CombatMGMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CarbineRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Crowbar,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Flashlight,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Dagger,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Grenade,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PoolCue,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Bat,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Pistol50,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Knife,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.BullpupShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.BZGas,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.GrenadeLauncher,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.NightVision,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Musket,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.ProximityMine,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.AdvancedRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.RPG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PipeBomb,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MiniSMG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SNSPistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SNSPistolMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.AssaultRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.AssaultRifleMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SpecialCarbine,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavyRevolver,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavyRevolverMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.DoubleActionRevolver,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MarksmanRifle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MarksmanRifleMk2,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.BattleAxe,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavyPistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.KnuckleDuster,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MachinePistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MarksmanPistol,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Machete,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SwitchBlade,
+                            Lobby = 1,
+                            Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AssaultShotgun,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.DoubleBarrelShotgun,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.AssaultSMG,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Hatchet,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Bottle,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Parachute,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SmokeGrenade,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.UpnAtomizer,
+                            Lobby = 1,
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.UnholyHellbringer,
+                            Lobby = 1,
+                            Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CarbineRifleMK2,
                             Lobby = 1,
-                            Ammo = 2000
+                            Ammo = 99999
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Widowmaker,
+                            Lobby = 1,
+                            Ammo = 99999
                         });
                 });
 
@@ -1788,19 +2274,10 @@ namespace TDS_Server_DB.Migrations
                     b.Property<int>("Kills")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MostAssistsInADay")
-                        .HasColumnType("integer");
-
                     b.Property<int>("MostAssistsInARound")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MostDamageInADay")
-                        .HasColumnType("integer");
-
                     b.Property<int>("MostDamageInARound")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MostKillsInADay")
                         .HasColumnType("integer");
 
                     b.Property<int>("MostKillsInARound")
@@ -2349,6 +2826,13 @@ namespace TDS_Server_DB.Migrations
                         },
                         new
                         {
+                            Hash = EWeaponHash.HeavySniperMk2,
+                            DefaultDamage = (short)216,
+                            DefaultHeadMultiplicator = 2f,
+                            Type = EWeaponType.SniperRifle
+                        },
+                        new
+                        {
                             Hash = EWeaponHash.SweeperShotgun,
                             DefaultDamage = (short)162,
                             DefaultHeadMultiplicator = 1f,
@@ -2377,7 +2861,21 @@ namespace TDS_Server_DB.Migrations
                         },
                         new
                         {
+                            Hash = EWeaponHash.PistolMk2,
+                            DefaultDamage = (short)26,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
                             Hash = EWeaponHash.PumpShotgun,
+                            DefaultDamage = (short)58,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.Shotgun
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.PumpShotgunMk2,
                             DefaultDamage = (short)58,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.Shotgun
@@ -2391,7 +2889,7 @@ namespace TDS_Server_DB.Migrations
                         },
                         new
                         {
-                            Hash = EWeaponHash.Ball,
+                            Hash = EWeaponHash.Baseball,
                             DefaultDamage = (short)0,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.ThrownWeapon
@@ -2406,6 +2904,13 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Hash = EWeaponHash.SMG,
+                            DefaultDamage = (short)22,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.MachineGun
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.SMGMk2,
                             DefaultDamage = (short)22,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.MachineGun
@@ -2546,6 +3051,13 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Hash = EWeaponHash.CombatMG,
+                            DefaultDamage = (short)28,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.MachineGun
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.CombatMGMk2,
                             DefaultDamage = (short)28,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.MachineGun
@@ -2706,7 +3218,21 @@ namespace TDS_Server_DB.Migrations
                         },
                         new
                         {
+                            Hash = EWeaponHash.SNSPistolMk2,
+                            DefaultDamage = (short)28,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
                             Hash = EWeaponHash.AssaultRifle,
+                            DefaultDamage = (short)30,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.AssaultRifleMk2,
                             DefaultDamage = (short)30,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.AssaultRifle
@@ -2720,7 +3246,21 @@ namespace TDS_Server_DB.Migrations
                         },
                         new
                         {
-                            Hash = EWeaponHash.Revolver,
+                            Hash = EWeaponHash.HeavyRevolver,
+                            DefaultDamage = (short)110,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.HeavyRevolverMk2,
+                            DefaultDamage = (short)110,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.DoubleActionRevolver,
                             DefaultDamage = (short)110,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.Handgun
@@ -2728,6 +3268,13 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Hash = EWeaponHash.MarksmanRifle,
+                            DefaultDamage = (short)65,
+                            DefaultHeadMultiplicator = 2f,
+                            Type = EWeaponType.SniperRifle
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.MarksmanRifleMk2,
                             DefaultDamage = (short)65,
                             DefaultHeadMultiplicator = 2f,
                             Type = EWeaponType.SniperRifle
@@ -2847,6 +3394,13 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Hash = EWeaponHash.CarbineRifleMK2,
+                            DefaultDamage = (short)32,
+                            DefaultHeadMultiplicator = 1f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = EWeaponHash.Widowmaker,
                             DefaultDamage = (short)32,
                             DefaultHeadMultiplicator = 1f,
                             Type = EWeaponType.AssaultRifle
