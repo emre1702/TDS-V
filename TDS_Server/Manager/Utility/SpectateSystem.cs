@@ -1,7 +1,4 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TDS_Common.Default;
 using TDS_Server.Instance.Player;
 
@@ -9,8 +6,6 @@ namespace TDS_Server.Manager.Utility
 {
     class SpectateSystem
     {
-        
-
         public static void SetPlayerToSpectator(TDSPlayer player, bool inSpectator)
         {
             if (inSpectator)
@@ -30,10 +25,29 @@ namespace TDS_Server.Manager.Utility
 
         }
 
-        public static void SetPlayerToSpectatePlayer(TDSPlayer player, TDSPlayer targetPlayer)
+        public static void SetPlayerToSpectatePlayer(TDSPlayer player, TDSPlayer? targetPlayer)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.Client.Handle.Value);
-        }
+            if (player.Spectates == targetPlayer)
+                return;
 
+            if (player.Spectates == null)
+            {
+                SetPlayerToSpectator(player, true);
+            } 
+            else
+            {
+                player.Spectates.Spectators.Remove(player);
+            }
+
+            if (targetPlayer == null)
+            {
+                SetPlayerToSpectator(player, false);
+            }
+            else
+            {
+                targetPlayer.Spectators.Add(player);
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.Client.Handle.Value);
+            }
+        }
     }
 }

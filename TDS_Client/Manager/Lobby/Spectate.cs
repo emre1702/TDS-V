@@ -15,18 +15,18 @@ namespace TDS_Client.Manager.Lobby
             {
                 if (value == _spectatingEntity)
                     return;
-                if (_spectatingEntity == null)
-                    CameraManager.SpectateCam.Activate();
+                if (_spectatingEntity == null) 
+                    Start();
                 else if (value == null)
-                    CameraManager.SpectateCam.Deactivate();
+                    Stop();
 
                 _spectatingEntity = value;
 
                 if (value != null)
                     CameraManager.SpectateCam.Spectate(value);
                     
-                 CameraManager.SpectateCam.Render(true, ClientConstants.DefaultSpectatePlayerChangeEaseTime);  
-            }
+                CameraManager.SpectateCam.Render(true, ClientConstants.DefaultSpectatePlayerChangeEaseTime);  
+             }
         }
 
         private static PedBase _spectatingEntity;
@@ -49,6 +49,7 @@ namespace TDS_Client.Manager.Lobby
             _binded = true;
 
             Death.PlayerSpawn();
+            CameraManager.SpectateCam.Activate();
 
             BindManager.Add(ConsoleKey.RightArrow, Next);
             BindManager.Add(ConsoleKey.D, Next);
@@ -61,6 +62,8 @@ namespace TDS_Client.Manager.Lobby
             if (!_binded)
                 return;
             _binded = false;
+
+            CameraManager.SpectateCam.Deactivate();
 
             BindManager.Remove(ConsoleKey.RightArrow, Next);
             BindManager.Remove(ConsoleKey.D, Next);

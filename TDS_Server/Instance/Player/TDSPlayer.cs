@@ -183,29 +183,8 @@ namespace TDS_Server.Instance.Player
             get => _spectates;
             set 
             {
-                if (_spectates == value)
-                    return;
-
-                if (_spectates == null)
-                {
-                    SpectateSystem.SetPlayerToSpectator(this, true);
-                } 
-                else
-                {
-                    _spectates.Spectators.Remove(this);
-                }
+                SpectateSystem.SetPlayerToSpectatePlayer(this, value);
                 _spectates = value;
-                if (value == null)
-                {
-                    SpectateSystem.SetPlayerToSpectator(this, false);
-                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.StopSpectator);
-                }
-                else
-                {
-                    SpectateSystem.SetPlayerToSpectatePlayer(this, value);
-                    value.Spectators.Add(this);
-                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.SetPlayerToSpectatePlayer, value.Client.Handle.Value);
-                }              
             }
         }
         public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
@@ -272,7 +251,7 @@ namespace TDS_Server.Instance.Player
         private TDSNewContext? _dbContext;
         private TDSPlayer? _spectates;
 
-        private SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
 
         public TDSPlayer(Client client)
         {

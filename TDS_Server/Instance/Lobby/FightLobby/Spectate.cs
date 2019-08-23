@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -22,7 +21,6 @@ namespace TDS_Server.Instance.Lobby
         {
             if (character.Spectates == null)
                 return;
-            TDSPlayer spectating = character.Spectates;
             character.Spectates = null;
         }
 
