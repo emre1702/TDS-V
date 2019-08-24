@@ -13,8 +13,8 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20190823191151_init")]
-    partial class init
+    [Migration("20190824171323_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2603,6 +2603,13 @@ namespace TDS_Server_DB.Migrations
                     b.ToTable("maps");
 
                     b.HasData(
+                        new
+                        {
+                            Id = -4,
+                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatorId = 0,
+                            Name = "All Sniper"
+                        },
                         new
                         {
                             Id = -3,

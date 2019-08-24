@@ -7,7 +7,7 @@ using TDS_Common.Enum;
 
 namespace TDS_Server_DB.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -911,7 +911,7 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "maps",
                 columns: new[] { "ID", "CreatorId", "Name" },
-                values: new object[] { -2, 0, "All Normals" });
+                values: new object[] { -1, 0, "All" });
 
             migrationBuilder.InsertData(
                 table: "maps",
@@ -921,7 +921,12 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "maps",
                 columns: new[] { "ID", "CreatorId", "Name" },
-                values: new object[] { -1, 0, "All" });
+                values: new object[] { -4, 0, "All Sniper" });
+
+            migrationBuilder.InsertData(
+                table: "maps",
+                columns: new[] { "ID", "CreatorId", "Name" },
+                values: new object[] { -2, 0, "All Normals" });
 
             migrationBuilder.InsertData(
                 table: "rules",

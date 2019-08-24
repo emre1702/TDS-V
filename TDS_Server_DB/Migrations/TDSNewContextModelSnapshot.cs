@@ -2603,6 +2603,13 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
+                            Id = -4,
+                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatorId = 0,
+                            Name = "All Sniper"
+                        },
+                        new
+                        {
                             Id = -3,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatorId = 0,
