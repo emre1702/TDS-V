@@ -70,10 +70,20 @@ namespace TDS_Client.Instance.Utility
             Cam.PointCamAtCoord(Handle, x, y, z);
         }
 
+        public void PointCamAtCoord(Vector3 pos)
+        {
+            PointCamAtCoord(pos.X, pos.Y, pos.Z);
+        }
+
         public void RenderToPosition(float x, float y, float z, bool ease = false, int easeTime = 0)
         {
             SetPosition(x, y, z);
             Render(ease, easeTime);
+        }
+
+        public void RenderToPosition(Vector3 pos, bool ease = false, int easeTime = 0)
+        {
+            RenderToPosition(pos.X, pos.Y, pos.Z, ease, easeTime);
         }
 
         public static void RenderBack(bool ease = false, int easeTime = 0)
