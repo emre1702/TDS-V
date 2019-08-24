@@ -49,6 +49,8 @@ namespace TDS_Server.Manager.EventManager
             TDSPlayer character = player.GetChar();
             if (character.CurrentLobby is FightLobby fightlobby)
                 fightlobby.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
+            character.LastWeaponOnHand = newweapon;
+
         }
     }
 }

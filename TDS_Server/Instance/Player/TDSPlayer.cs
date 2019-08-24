@@ -237,6 +237,7 @@ namespace TDS_Server.Instance.Player
         public PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
         public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
         public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
+        public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 

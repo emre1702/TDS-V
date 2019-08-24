@@ -81,7 +81,7 @@ namespace TDS_Server.Instance.Lobby
             RemoveAsSpectator(character);
 
             Workaround.FreezePlayer(player, true);
-            GivePlayerWeapons(player);
+            GivePlayerWeapons(character);
 
             if (_removeSpectatorsTimer.ContainsKey(character))
                 _removeSpectatorsTimer.Remove(character);
