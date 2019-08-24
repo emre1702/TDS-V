@@ -26,6 +26,7 @@ namespace TDS_Client.Instance.Utility
             get => Cam.GetCamRot(Handle, 2);
             set => Cam.SetCamRot(Handle, value.X, value.Y, value.Z, 2);
         }
+        public Vector3 Direction => ClientUtils.GetDirectionByRotation(Rotation);
 
         public TDSCamera()
         {

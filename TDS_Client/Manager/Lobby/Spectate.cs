@@ -32,12 +32,12 @@ namespace TDS_Client.Manager.Lobby
         private static PedBase _spectatingEntity;
         private static bool _binded;
 
-        private static void Next(ConsoleKey _)
+        private static void Next(EKey _)
         {
             EventsSender.Send(DToServerEvent.SpectateNext, true);
         }
 
-        private static void Previous(ConsoleKey _)
+        private static void Previous(EKey _)
         {
             EventsSender.Send(DToServerEvent.SpectateNext, false);
         }
@@ -51,10 +51,10 @@ namespace TDS_Client.Manager.Lobby
             Death.PlayerSpawn();
             CameraManager.SpectateCam.Activate();
 
-            BindManager.Add(ConsoleKey.RightArrow, Next);
-            BindManager.Add(ConsoleKey.D, Next);
-            BindManager.Add(ConsoleKey.LeftArrow, Previous);
-            BindManager.Add(ConsoleKey.A, Previous);
+            BindManager.Add(EKey.RightArrow, Next);
+            BindManager.Add(EKey.D, Next);
+            BindManager.Add(EKey.LeftArrow, Previous);
+            BindManager.Add(EKey.A, Previous);
         }
 
         public static void Stop()
@@ -65,10 +65,10 @@ namespace TDS_Client.Manager.Lobby
 
             CameraManager.SpectateCam.Deactivate();
 
-            BindManager.Remove(ConsoleKey.RightArrow, Next);
-            BindManager.Remove(ConsoleKey.D, Next);
-            BindManager.Remove(ConsoleKey.LeftArrow, Previous);
-            BindManager.Remove(ConsoleKey.A, Previous);
+            BindManager.Remove(EKey.RightArrow, Next);
+            BindManager.Remove(EKey.D, Next);
+            BindManager.Remove(EKey.LeftArrow, Previous);
+            BindManager.Remove(EKey.A, Previous);
         }
     }
 }

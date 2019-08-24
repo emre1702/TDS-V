@@ -1,12 +1,13 @@
 ﻿using RAGE;
 using RAGE.Ui;
 using System;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Manager.Utility
 {
     internal class CursorManager
     {
-        private static int cursorOpenedCounter;
+        private static int _cursorOpenedCounter;
 
         public static bool Visible
         {
@@ -15,23 +16,23 @@ namespace TDS_Client.Manager.Utility
             {
                 if (value)
                 {
-                    ++cursorOpenedCounter;
+                    ++_cursorOpenedCounter;
                     Cursor.Visible = true;
                     Chat.Activate(false);
                 }
-                else if (--cursorOpenedCounter <= 0)
+                else if (--_cursorOpenedCounter <= 0)
                 {
                     Cursor.Visible = false;
                     Chat.Activate(true);
-                    cursorOpenedCounter = 0;
+                    _cursorOpenedCounter = 0;
                 }
             }
         }
 
-        public static void ManuallyToggleCursor(ConsoleKey _)
+        public static void ManuallyToggleCursor(EKey _)
         {
             bool isVisible = Cursor.Visible;
-            cursorOpenedCounter = isVisible ? 0 : 1;
+            _cursorOpenedCounter = isVisible ? 0 : 1;
             Chat.Activate(isVisible);
             Cursor.Visible = !isVisible;
         }

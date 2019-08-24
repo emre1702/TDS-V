@@ -126,5 +126,12 @@ namespace TDS_Client.Manager.Utility
             return l < 0.4 ? Color.White : Color.Black;
         }
 
+        public static Vector3 GetDirectionByRotation(Vector3 rotation)
+        {
+            float num = rotation.Z * 0.0174532924f;
+            float num2 = rotation.X * 0.0174532924f;
+            float num3 = MathF.Abs(MathF.Cos(num2));
+            return new Vector3 { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
+        }
     }
 }

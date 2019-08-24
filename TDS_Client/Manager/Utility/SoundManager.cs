@@ -390,7 +390,7 @@ namespace TDS_Client.Manager.Utility
         public SoundManager()
         {
             RAGE.Game.Audio.SetAudioFlag("LoadMPData", true);
-            BindManager.Add(ConsoleKey.J, (key =>
+            BindManager.Add(EKey.J, (key =>
             {
                 --_currentIndex;
                 if (_currentIndex < 0)
@@ -398,7 +398,7 @@ namespace TDS_Client.Manager.Utility
                 PlaySound();
             }));
 
-            BindManager.Add(ConsoleKey.L, (key =>
+            BindManager.Add(EKey.L, (key =>
             {
                 ++_currentIndex;
                 if (_currentIndex >= _sounds.Count)

@@ -125,13 +125,13 @@ namespace DemoClient
             if (_ticks == 20)
             {
                 // Previous screen effect
-                if (Input.IsDown((int)ConsoleKey.LeftArrow))
+                if (Input.IsDown((int)EKey.LeftArrow))
                 {
                     SwitchScreenFx(-1);
                 }
 
                 // Next screen effect
-                if (Input.IsDown((int)ConsoleKey.RightArrow))
+                if (Input.IsDown((int)EKey.RightArrow))
                 {
                     SwitchScreenFx(1);
                 }

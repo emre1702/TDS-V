@@ -20,11 +20,11 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Init()
         {
-            BindManager.Add(ConsoleKey.NumPad0, ToggleOrderMode);
+            BindManager.Add(EKey.NumPad0, ToggleOrderMode);
             int i = 0;
             foreach (var orderobj in System.Enum.GetValues(typeof(ETeamOrder)))
             {
-                BindManager.Add(ConsoleKey.NumPad1 + i, GiveOrder);
+                BindManager.Add(EKey.NumPad1 + i, GiveOrder);
                 ++i;
             }
         }
@@ -49,13 +49,13 @@ namespace TDS_Client.Manager.Lobby
             return _sameTeamPlayers.Contains(player);
         }
 
-        public static void ToggleOrderMode(ConsoleKey _)
+        public static void ToggleOrderMode(EKey _)
         {
             _activated = !_activated;
             Angular.ToggleTeamOrderModus(_activated);
         }
 
-        private static void GiveOrder(ConsoleKey key)
+        private static void GiveOrder(EKey key)
         {
             if (!_activated)
                 return;
@@ -63,12 +63,12 @@ namespace TDS_Client.Manager.Lobby
                 return;
             ETeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
-            ToggleOrderMode(ConsoleKey.NoName);
+            ToggleOrderMode(EKey.NoName);
         }
 
-        private static ETeamOrder GetTeamOrderByKey(ConsoleKey key)
+        private static ETeamOrder GetTeamOrderByKey(EKey key)
         {
-            return (ETeamOrder)(key - ConsoleKey.NumPad1);
+            return (ETeamOrder)(key - EKey.NumPad1);
         }
     }
 }

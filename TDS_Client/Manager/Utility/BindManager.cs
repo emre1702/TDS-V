@@ -13,21 +13,21 @@ namespace TDS_Client.Manager.Utility
 {
     internal class BindManager : Script
     {
-        private static readonly Dictionary<ConsoleKey, List<KeyBindDto>> _bindedKeys = new Dictionary<ConsoleKey, List<KeyBindDto>>();
+        private static readonly Dictionary<EKey, List<KeyBindDto>> _bindedKeys = new Dictionary<EKey, List<KeyBindDto>>();
         private static readonly Dictionary<Control, List<ControlBindDto>> _bindedControls = new Dictionary<Control, List<ControlBindDto>>();
-        private static readonly Dictionary<ConsoleKey, bool> _lastKeyDownState = new Dictionary<ConsoleKey, bool>();
+        private static readonly Dictionary<EKey, bool> _lastKeyDownState = new Dictionary<EKey, bool>();
         private static readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
 
         public BindManager()
         {
             Events.Tick += OnTick;
 
-            Add(ConsoleKey.End, CursorManager.ManuallyToggleCursor);
-            Add(ConsoleKey.F3, MapManager.ToggleMenu);
-            Add(ConsoleKey.U, Userpanel.Open);
+            Add(EKey.End, CursorManager.ManuallyToggleCursor);
+            Add(EKey.F3, MapManager.ToggleMenu);
+            Add(EKey.U, Userpanel.Open);
         }
 
-        public static void Add(ConsoleKey key, Action<ConsoleKey> method, EKeyPressState pressState = EKeyPressState.Down)
+        public static void Add(EKey key, Action<EKey> method, EKeyPressState pressState = EKeyPressState.Down)
         {
             if (!_bindedKeys.ContainsKey(key))
                 _bindedKeys[key] = new List<KeyBindDto>();
@@ -41,7 +41,7 @@ namespace TDS_Client.Manager.Utility
             _bindedControls[control].Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
         }
 
-        public static void Remove(ConsoleKey key, Action<ConsoleKey> method = null, EKeyPressState pressState = EKeyPressState.None)
+        public static void Remove(EKey key, Action<EKey> method = null, EKeyPressState pressState = EKeyPressState.None)
         {
             if (!_bindedKeys.ContainsKey(key))
                 return;

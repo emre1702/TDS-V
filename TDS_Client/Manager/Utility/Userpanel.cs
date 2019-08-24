@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 
 namespace TDS_Client.Manager.Utility
@@ -7,7 +8,7 @@ namespace TDS_Client.Manager.Utility
     {
         private static bool _open;
 
-        public static void Open(ConsoleKey _)
+        public static void Open(EKey _)
         {
             if (_open)
                 return;
