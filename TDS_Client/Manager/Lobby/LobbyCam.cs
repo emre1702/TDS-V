@@ -15,13 +15,11 @@ namespace TDS_Client.Manager.Lobby
             var cam = CameraManager.BetweenRoundsCam;
             cam.PointCamAtCoord(mapcenter.X, mapcenter.Y, mapcenter.Z);
             cam.Activate();
-            cam.RenderToPosition(mapcenter.X, mapcenter.Y, mapcenter.Z + 110, true, Settings.MapChooseTime);
+            cam.RenderToPosition(mapcenter.X, mapcenter.Y, mapcenter.Z + 110);
         }
 
         public static void SetGoTowardsPlayer(int? time = null)
         {
-            var cam = CameraManager.BetweenRoundsCam;
-            cam.Render();
             TDSCamera.RenderBack(true, (int)(time ?? (Settings.CountdownTime * 0.9)));
         }
 

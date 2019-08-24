@@ -4,6 +4,7 @@ using RAGE.Elements;
 using RAGE.Game;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
+using Ped = RAGE.Elements.Ped;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Utility
@@ -68,6 +69,7 @@ namespace TDS_Client.Instance.Utility
         public void PointCamAtCoord(float x, float y, float z)
         {
             Cam.PointCamAtCoord(Handle, x, y, z);
+            Streaming.SetFocusArea(x, y, z, 0, 0, 0);         
         }
 
         public void PointCamAtCoord(Vector3 pos)
