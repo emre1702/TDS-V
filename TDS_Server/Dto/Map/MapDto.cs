@@ -42,6 +42,8 @@ namespace TDS_Server.Dto.Map
 
         [XmlIgnore]
         public bool IsBomb => Info.Type == EMapType.Bomb;
+        [XmlIgnore]
+        public bool IsSniper => Info.Type == EMapType.Sniper;
 
         public MapDto() { }
 

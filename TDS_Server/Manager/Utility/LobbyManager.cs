@@ -15,6 +15,7 @@ using TDS_Server.Manager.Sync;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
+using TDS_Server.Instance.GameModes;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -95,6 +96,13 @@ namespace TDS_Server.Manager.Utility
                     return;
                 }
 
+                // All Sniper
+                if (mapAssignment.MapId == -4)
+                {
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Sniper).ToList());
+                    return;
+                }
+
                 lobbyMapsList.Add(MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name));
             }
             arena.SetMapList(lobbyMapsList);
@@ -141,17 +149,7 @@ namespace TDS_Server.Manager.Utility
                         MapLimitType = data.MapLimitType
                     },
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
-                    LobbyWeapons = new HashSet<LobbyWeapons> // todo Take default weapons from arena lobby
-                    {
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultRifle, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.HeavyRevolver, Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.UpnAtomizer, Ammo = 500 },
-                        new LobbyWeapons { Hash = EWeaponHash.SMG, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.MicroSMG, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.UnholyHellbringer, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.AssaultShotgun, Ammo = 2000 },
-                        new LobbyWeapons { Hash = EWeaponHash.CarbineRifleMK2, Ammo = 2000 }
-                    },
+                    LobbyWeapons = GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
@@ -205,6 +203,16 @@ namespace TDS_Server.Manager.Utility
         {
             Lobbies.Remove(lobby);
             CustomLobbyMenuSync.SyncLobbyRemoved(lobby);
+        }
+
+        private static HashSet<LobbyWeapons> GetAllPossibleLobbyWeapons(EMapType type)
+        {
+            return type switch
+            {
+                EMapType.Bomb => Bomb.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
+                EMapType.Sniper => Sniper.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
+                _ => Normal.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
+            };
         }
     }
 }

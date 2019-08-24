@@ -4,6 +4,7 @@ using Npgsql;
 using System;
 using System.Linq;
 using TDS_Server.Instance;
+using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Commands;
@@ -61,6 +62,11 @@ namespace TDS_Server.Manager.Utility
                 await MapsLoader.LoadDefaultMaps(dbcontext);
                 await MapCreator.LoadNewMaps(dbcontext);
                 await MapCreator.LoadSavedMaps(dbcontext);
+
+                Normal.Init(dbcontext);
+                Bomb.Init(dbcontext);
+                Sniper.Init(dbcontext);
+                
                 await LobbyManager.LoadAllLobbies(dbcontext);
                 await Gang.LoadAll(dbcontext);
 

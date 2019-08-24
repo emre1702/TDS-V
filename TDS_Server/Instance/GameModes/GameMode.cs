@@ -1,4 +1,6 @@
 ﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS_Common.Enum;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
@@ -35,6 +37,9 @@ namespace TDS_Server.Instance.GameModes
 
         public virtual void RemovePlayer(TDSPlayer player) { }
         public virtual void RemovePlayerFromAlive(TDSPlayer player) { }
+
+        public virtual bool IsWeaponAllowed(EWeaponHash weaponHash) => true;
+
         public virtual void OnPlayerEnterColShape(ColShape shape, TDSPlayer player) { }
         public virtual void OnPlayerDeath(TDSPlayer player) { }
         public virtual void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }

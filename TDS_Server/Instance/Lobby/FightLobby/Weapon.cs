@@ -1,4 +1,5 @@
 using GTANetworkAPI;
+using System.Linq;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity.Lobby;
 
@@ -6,7 +7,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class FightLobby
     {
-        public void GivePlayerWeapons(TDSPlayer player)
+        public virtual void GivePlayerWeapons(TDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
             player.Client.RemoveAllWeapons();

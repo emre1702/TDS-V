@@ -50,7 +50,8 @@ namespace TDS_Server.Instance.Lobby
             = new Dictionary<EMapType, Func<Arena, MapDto, GameMode>>
         {
             [EMapType.Normal] = (lobby, map) => new Normal(lobby, map),
-            [EMapType.Bomb] = (lobby, map) => new Bomb(lobby, map)
+            [EMapType.Bomb] = (lobby, map) => new Bomb(lobby, map),
+            [EMapType.Sniper] = (lobby, map) => new Sniper(lobby, map)
         };
 
         public ERoundStatus CurrentRoundStatus = ERoundStatus.None;

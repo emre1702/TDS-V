@@ -1320,6 +1320,7 @@ namespace TDS_Server_DB.Entity
             );
 
             modelBuilder.Entity<Maps>().HasData(
+                new Maps { Id = -4, Name = "All Sniper", CreatorId = 0 },
                 new Maps { Id = -3, Name = "All Bombs", CreatorId = 0 },
                 new Maps { Id = -2, Name = "All Normals", CreatorId = 0 },
                 new Maps { Id = -1, Name = "All", CreatorId = 0 }

@@ -8,6 +8,9 @@ namespace TDS_Server.Enum
         Normal = 0,
 
         [XmlEnum("bomb")]
-        Bomb = 1
+        Bomb = 1,
+
+        [XmlEnum("sniper")]
+        Sniper = 2
     }
 }

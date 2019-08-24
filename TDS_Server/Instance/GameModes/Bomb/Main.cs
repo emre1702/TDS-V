@@ -1,7 +1,9 @@
-﻿using TDS_Server.Dto.Map;
+﻿using System.Linq;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
+using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.GameModes
 {
@@ -15,6 +17,13 @@ namespace TDS_Server.Instance.GameModes
         {
             _terroristTeam = arena.Teams[2];
             _counterTerroristTeam = arena.Teams[1];
+        }
+
+        public static void Init(TDSNewContext dbContext)
+        {
+            _allowedWeaponHashes = dbContext.Weapons
+                .Select(w => w.Hash)
+                .ToHashSet();
         }
     }
 }

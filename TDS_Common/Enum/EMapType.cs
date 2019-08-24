@@ -4,6 +4,7 @@
     {
         Normal,
 
-        Bomb
+        Bomb,
+        Sniper
     }
 }
