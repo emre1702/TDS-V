@@ -50,7 +50,7 @@ namespace TDS_Client.Instance.Utility
             Cam.SetCamCoord(Handle, x, y, z);
             if (instantly)
             {
-                Cam.RenderScriptCams(true, false, 0, true, true, 0);
+                Cam.RenderScriptCams(true, false, 0, true, false, 0);
             }
         }
 
@@ -97,12 +97,12 @@ namespace TDS_Client.Instance.Utility
             {
                 Streaming.SetFocusEntity(spectatingEntity.Handle);
                 CameraManager.SpectateCam.Activate();
-                Cam.RenderScriptCams(true, ease, easeTime, true, true, 0);
+                Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
             }
             else 
             {
                 Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
-                Cam.RenderScriptCams(false, ease, easeTime, true, true, 0);
+                Cam.RenderScriptCams(false, ease, easeTime, true, false, 0);
                 ActiveCamera = null;
             }
         }
@@ -110,7 +110,7 @@ namespace TDS_Client.Instance.Utility
 
         public void Render(bool ease = false, int easeTime = 0)
         {
-            Cam.RenderScriptCams(true, ease, easeTime, true, true, 0);
+            Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
         }
 
         public void Detach()
@@ -125,7 +125,7 @@ namespace TDS_Client.Instance.Utility
             ActiveCamera = this;
             if (instantly)
             {
-                Cam.RenderScriptCams(true, false, 0, true, true, 0);
+                Cam.RenderScriptCams(true, false, 0, true, false, 0);
             }
 
         }
@@ -139,7 +139,7 @@ namespace TDS_Client.Instance.Utility
              if (instantly)
             {
                 Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
-                Cam.RenderScriptCams(false, false, 0, true, true, 0);
+                Cam.RenderScriptCams(false, false, 0, true, false, 0);
             }
                 
         }
