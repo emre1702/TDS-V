@@ -133,5 +133,16 @@ namespace TDS_Client.Manager.Utility
             float num3 = MathF.Abs(MathF.Cos(num2));
             return new Vector3 { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
         }
+
+        public static Vector3 GetCrossProduct(Vector3 left, Vector3 right)
+        {
+            Vector3 vec = new Vector3
+            {
+                X = left.Y * right.Z - left.Z * right.Y,
+                Y = left.Z * right.X - left.X * right.Z,
+                Z = left.X * right.Y - left.Y * right.X
+            };
+            return vec;
+        }
     }
 }
