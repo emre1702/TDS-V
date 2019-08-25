@@ -1,6 +1,7 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.MapCreator;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
 
@@ -84,6 +85,7 @@ namespace TDS_Client.Manager.Lobby
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Angular.ToggleMapCreator(true);
             Angular.ToggleFreeroam(true);
+            FreeCam.Start();
         }
 
         private static void LeftMainMenu()
@@ -93,6 +95,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void LeftMapCreator()
         {
+            FreeCam.Stop();
             Angular.ToggleMapCreator(false);
             Angular.ToggleFreeroam(false);
             MapCreator.Reset();
