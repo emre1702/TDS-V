@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TDS_Client.Enum
 {
-    enum EKey
+    public enum EKey
     {
         //
         // Summary:
