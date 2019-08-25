@@ -20,6 +20,16 @@ namespace TDS_Client.Instance.Language
         public override string SCOREBOARD_LOBBY => "Lobby";
         public override string BOMB_PLANTED => "Die Bombe wurde platziert!";
 
+        public override string DIRECTION => "Richtung";
+        public override string FASTER => "Schneller";
+        public override string SLOWER => "Langsamer";
+        public override string FAST_MODE => "Schneller-Modus (3x)";
+        public override string SLOW_MODE => "Langsamer-Modus (0.5x)";
+        public override string DOWN => "Runter";
+        public override string UP => "Hoch";
+        public override string LEFT_SHIFT => "LShift";
+        public override string LEFT_CTRL => "LSTRG";
+
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 
         public override ILobbyChoiceTexts LOBBY_CHOICE_TEXTS => new LobbyChoiceTextsGerman();

@@ -21,6 +21,16 @@ namespace TDS_Client.Instance.Language
 
         public virtual string BOMB_PLANTED => "The bomb got planted!";
 
+        public virtual string DIRECTION => "Direction";
+        public virtual string FASTER => "Faster";
+        public virtual string SLOWER => "Slower";
+        public virtual string FAST_MODE => "Fast mode (3x)";
+        public virtual string SLOW_MODE => "Slow mode (0.5x)";
+        public virtual string DOWN => "Down";
+        public virtual string UP => "Up";
+        public virtual string LEFT_SHIFT => "LShift";
+        public virtual string LEFT_CTRL => "LCTRL";
+
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 
         public virtual ILobbyChoiceTexts LOBBY_CHOICE_TEXTS => new LobbyChoiceTextsEnglish();

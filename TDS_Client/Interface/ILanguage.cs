@@ -19,6 +19,15 @@ namespace TDS_Client.Interface
         string SCOREBOARD_DEATHS { get; }
         string SCOREBOARD_TEAM { get; }
         string BOMB_PLANTED { get; }
+        string DIRECTION { get; }
+        string FASTER { get; }
+        string SLOWER { get; }
+        string FAST_MODE { get; }
+        string SLOW_MODE { get; }
+        string DOWN { get; }
+        string UP { get; }
+        string LEFT_SHIFT { get; }
+        string LEFT_CTRL { get; }
 
         ELanguage Enum { get; }
     }
