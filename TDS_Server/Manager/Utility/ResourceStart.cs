@@ -17,6 +17,8 @@ namespace TDS_Server.Manager.Utility
 {
     internal class ResourceStart : Script
     {
+        public static bool ResourceStarted { get; private set; }
+
         public ResourceStart()
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
@@ -71,6 +73,8 @@ namespace TDS_Server.Manager.Utility
                 await Gang.LoadAll(dbcontext);
 
                 Userpanel.Main.Init(dbcontext);
+
+                ResourceStarted = true;
             }
             catch (Exception ex)
             {

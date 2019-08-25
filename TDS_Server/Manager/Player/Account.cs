@@ -108,6 +108,8 @@ namespace TDS_Server.Manager.Player
         {
             while (!TDSNewContext.IsConfigured)
                 await Task.Delay(1000);
+            while (!ResourceStart.ResourceStarted) 
+                await Task.Delay(1000);
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
 
