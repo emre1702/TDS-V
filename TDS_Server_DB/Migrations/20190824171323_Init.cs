@@ -1543,11 +1543,11 @@ namespace TDS_Server_DB.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 2");
+            migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 3");
             migrationBuilder.Sql("ALTER TABLE maps ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
             migrationBuilder.Sql("ALTER TABLE players ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
-            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 23");
-            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 4");
+            migrationBuilder.Sql("ALTER TABLE commands ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 24");
+            migrationBuilder.Sql("ALTER TABLE teams ALTER COLUMN \"ID\" SET GENERATED ALWAYS RESTART WITH 5");
             migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" SET GENERATED ALWAYS");
         }
 
