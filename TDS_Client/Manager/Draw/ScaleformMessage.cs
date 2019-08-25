@@ -76,7 +76,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
                 else
                 {
                     _initTimeMs = 0;
-                    _fscaleform.Destroy();
+                    _fscaleform.Dispose();
                     _fscaleform = null;
                 }
             }

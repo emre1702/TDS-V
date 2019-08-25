@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using RAGE;
 using RAGE.Game;
+using TDS_Client.Enum;
 
 namespace DemoClient
 {

@@ -61,7 +61,7 @@ namespace TDS_Client.Manager.Draw
                 else
                 {
                     initTimeMs = 0;
-                    fmidsizedScaleform.Destroy();
+                    fmidsizedScaleform.Dispose();
                     fmidsizedScaleform = null;
                 }
             }
