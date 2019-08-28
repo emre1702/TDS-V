@@ -96,7 +96,9 @@ namespace TDS_Client.Manager.Lobby
 
         private static void LeftMapCreator()
         {
+            Binds.RemoveGeneral();
             Freecam.Stop();
+            Foot.Start();
             Angular.ToggleMapCreator(false);
             Angular.ToggleFreeroam(false);
             Blips.Reset();
