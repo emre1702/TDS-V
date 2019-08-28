@@ -2,7 +2,6 @@
 using RAGE.Ui;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using Player = RAGE.Elements.Player;
