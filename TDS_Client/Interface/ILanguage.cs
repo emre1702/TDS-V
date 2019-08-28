@@ -28,6 +28,7 @@ namespace TDS_Client.Interface
         string UP { get; }
         string LEFT_SHIFT { get; }
         string LEFT_CTRL { get; }
+        string TOGGLE_FREECAM { get; }
 
         ELanguage Enum { get; }
     }

@@ -85,7 +85,8 @@ namespace TDS_Client.Manager.Lobby
             RAGE.Game.Cam.DoScreenFadeIn(100);
             Angular.ToggleMapCreator(true);
             Angular.ToggleFreeroam(true);
-            Freecam.Start();
+            Binds.SetGeneral();
+            Main.ToggleFreecam();
         }
 
         private static void LeftMainMenu()

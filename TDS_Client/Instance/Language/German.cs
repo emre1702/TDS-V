@@ -29,6 +29,7 @@ namespace TDS_Client.Instance.Language
         public override string UP => "Hoch";
         public override string LEFT_SHIFT => "LShift";
         public override string LEFT_CTRL => "LSTRG";
+        public override string TOGGLE_FREECAM => "Freecam umschalten";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

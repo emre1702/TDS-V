@@ -10,61 +10,35 @@ namespace TDS_Client.Manager.MapCreator
 {
     class Freecam
     {
+        public static bool IsActive;
+
         private static float _currentScrollSpeed = 1f;
         private static bool _isUpPressed;
         private static bool _isDownPressed;
 
         public static void Start()
         {
+            IsActive = true;
             TickManager.Add(OnTick);
-            BindManager.Add(EKey.E, KeyDown, EKeyPressState.Down);
-            BindManager.Add(EKey.E, KeyUp, EKeyPressState.Up);
-            BindManager.Add(EKey.Q, KeyDown, EKeyPressState.Down);
-            BindManager.Add(EKey.Q, KeyUp, EKeyPressState.Up);
-
-            var player = RAGE.Elements.Player.LocalPlayer;
-            player.FreezePosition(true);
-            player.SetInvincible(true);
-            player.SetVisible(false, false);
-            player.SetCollision(false, false);
-
+            
             var cam = CameraManager.FreeCam;
-            cam.SetPosition(Cam.GetGameplayCamCoord());
+            cam.Position = Cam.GetGameplayCamCoord();
             cam.Rotation = Cam.GetGameplayCamRot(2);
             Cam.SetCamFov(cam.Handle, Cam.GetGameplayCamFov());
             cam.Activate();
             cam.Render();
 
-            var lang = Settings.Language;          
-            InstructionalButtonManager.Add(lang.SLOWER, Control.VehicleFlySelectPrevWeapon);
-            InstructionalButtonManager.Add(lang.FASTER, Control.VehicleFlySelectNextWeapon);
-            InstructionalButtonManager.Add(lang.SLOW_MODE, lang.LEFT_CTRL);
-            InstructionalButtonManager.Add(lang.FAST_MODE, lang.LEFT_SHIFT);
-            InstructionalButtonManager.Add(lang.DOWN, "E");
-            InstructionalButtonManager.Add(lang.UP, "Q");
-            InstructionalButtonManager.Add(lang.DIRECTION, Control.VehicleRoof);
-            InstructionalButtonManager.IsLayoutPositive = false;
-            InstructionalButtonManager.IsActive = true;
+            Binds.SetForInFreecam();
         }
 
         public static void Stop()
         {
+            IsActive = false;
             TickManager.Remove(OnTick);
-            BindManager.Remove(EKey.E, KeyDown, EKeyPressState.Down);
-            BindManager.Remove(EKey.E, KeyUp, EKeyPressState.Up);
-            BindManager.Remove(EKey.Q, KeyDown, EKeyPressState.Down);
-            BindManager.Remove(EKey.Q, KeyUp, EKeyPressState.Up);
 
             CameraManager.FreeCam.Deactivate();
-            TDSCamera.RenderBack();
-
-            var player = RAGE.Elements.Player.LocalPlayer;
-            player.SetInvincible(false);
-            player.SetVisible(true, false);
-            player.SetCollision(true, true);
-
-            InstructionalButtonManager.Reset();
-            InstructionalButtonManager.IsActive = false;
+            
+            Binds.RemoveForInFreeCam();
         }
 
         private static void OnTick()
@@ -124,7 +98,7 @@ namespace TDS_Client.Manager.MapCreator
 
         }
 
-        private static void KeyDown(EKey key)
+        public static void KeyDown(EKey key)
         {
             switch (key)
             {
@@ -137,7 +111,7 @@ namespace TDS_Client.Manager.MapCreator
             }
         }
 
-        private static void KeyUp(EKey key)
+        public static void KeyUp(EKey key)
         {
             switch (key)
             {
