@@ -51,15 +51,5 @@ namespace TDS_Client.Manager.MapCreator
             InstructionalButtonManager.Reset();
             InstructionalButtonManager.IsActive = false;
         }
-
-        public static void SetForByFoot()
-        {
-            
-        }
-
-        public static void RemoveForByFoot()
-        {
-            
-        }
     }
 }

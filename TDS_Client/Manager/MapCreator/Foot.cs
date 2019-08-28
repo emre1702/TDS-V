@@ -18,8 +18,6 @@ namespace TDS_Client.Manager.MapCreator
             player.SetCollision(true, true);
 
             TDSCamera.RenderBack();
-
-            Binds.SetForByFoot();
         }
 
         public static void Stop()
@@ -29,8 +27,6 @@ namespace TDS_Client.Manager.MapCreator
             player.SetInvincible(true);
             player.SetVisible(false, false);
             player.SetCollision(false, false);
-
-            Binds.RemoveForByFoot();
         }
     }
 }
