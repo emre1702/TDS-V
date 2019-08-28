@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Manager.Utility;
 using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Event
@@ -17,6 +18,7 @@ namespace TDS_Client.Manager.Event
         private void LoadOnStart()
         {
             Dx.RefreshResolution();
+            CameraManager.Init();
         }
     }
 }
