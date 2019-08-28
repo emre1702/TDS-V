@@ -61,7 +61,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnAddMapCreatorPositionMethod(object[] args)
         {
-            Lobby.MapCreator.AddedPosition(args);
+            MapCreator.Blips.AddedPosition(args);
         }
 
         private void OnAddMapVoteMethod(object[] args)
@@ -245,7 +245,7 @@ namespace TDS_Client.Manager.Event
             EMapCreatorPositionType type = (EMapCreatorPositionType)Convert.ToInt32(args[0]);
             int index = Convert.ToInt32(args[1]);
             int teamNumber = args.Length > 2 ? Convert.ToInt32(args[2]) : 0;
-            Lobby.MapCreator.RemovedPosition(type, index, teamNumber);
+            MapCreator.Blips.RemovedPosition(type, index, teamNumber);
         }
 
         private void OnSaveMapCreatorDataMethod(object[] args)

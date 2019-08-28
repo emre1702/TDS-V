@@ -98,7 +98,7 @@ namespace TDS_Client.Manager.Lobby
             Freecam.Stop();
             Angular.ToggleMapCreator(false);
             Angular.ToggleFreeroam(false);
-            MapCreator.Reset();
+            Blips.Reset();
         }
     }
 }

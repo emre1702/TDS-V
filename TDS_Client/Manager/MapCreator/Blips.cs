@@ -2,12 +2,13 @@
 using RAGE.Elements;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TDS_Client.Enum;
 using TDS_Common.Manager.Utility;
 
-namespace TDS_Client.Manager.Lobby
+namespace TDS_Client.Manager.MapCreator
 {
-    class MapCreator
+    class Blips
     {
         private static List<List<Blip>> _teamSpawnBlips = new List<List<Blip>>();
         private static List<Blip> _mapLimitBlips = new List<Blip>();
@@ -16,7 +17,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void AddedPosition(object[] args)
         {
-            EMapCreatorPositionType type = (EMapCreatorPositionType) Convert.ToInt32(args[0]);
+            EMapCreatorPositionType type = (EMapCreatorPositionType)Convert.ToInt32(args[0]);
             float x = Convert.ToSingle(args[1]);
             float y = Convert.ToSingle(args[2]);
             float z = Convert.ToSingle(args[3]);
