@@ -34,6 +34,11 @@ namespace TDS_Client.Instance.Utility
             TickManager.Add(OnUpdate, () => SpectatingPed != null);
         }
 
+        ~TDSCamera()
+        {
+            Cam.DestroyCam(Handle, false);
+        }
+
         public void OnUpdate()
         {
             var rot = SpectatingPed.GetRotation(2);
