@@ -120,6 +120,8 @@ namespace TDS_Client.Manager.Utility
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
         {
             _syncedLobbySettings = loadedSyncedLobbySettings;
+            if (_syncedLobbySettings.InLobbyWithMaps)
+                InstructionalButtonManager.Add("Map-Manager", "F3");
         }
 
         public static int GetPlantOrDefuseTime(EPlantDefuseStatus status)
