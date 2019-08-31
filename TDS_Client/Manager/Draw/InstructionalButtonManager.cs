@@ -104,6 +104,8 @@ namespace TDS_Client.Manager.Draw
         private static void AddDefaultButtons()
         {
             Add("Cursor", Settings.Language.END_KEY);
+            Add("Userpanel", "U");
+            Add("Voice", Control.PushToTalk);
         }
     }
 }
