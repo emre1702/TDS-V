@@ -98,6 +98,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.rageConnector.call(DToClientEvent.TeleportToXY, x, y);
   }
 
+  tpToXYZ(x: number, y: number, z: number) {
+    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, x, y, z, 0);
+  }
 
   addPosToTeamSpawns(pos: Position4D) {
     this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber], pos];
