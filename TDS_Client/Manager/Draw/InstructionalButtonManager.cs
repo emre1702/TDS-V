@@ -97,6 +97,13 @@ namespace TDS_Client.Manager.Draw
             _scaleform.Call("CREATE_CONTAINER");
             _scaleform.Call("SET_CLEAR_SPACE", 100);
             _buttons = new List<InstructionalButton>();
+
+            AddDefaultButtons();
+        }
+
+        private static void AddDefaultButtons()
+        {
+            Add("Cursor", Settings.Language.END_KEY);
         }
     }
 }
