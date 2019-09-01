@@ -5,6 +5,7 @@
         TeamSpawn,
         MapLimit,
         BombPlantPlace,
-        MapCenter
+        MapCenter,
+        Object
     }
 }
