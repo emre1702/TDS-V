@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Manager.MapCreator
 {
-    class Objects
+    static class ObjectHashes
     {
         public static List<string> Hashes = new List<string>()
         {
