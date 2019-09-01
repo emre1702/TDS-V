@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Draw
         {
             if (_moneyText != null)
                 return _moneyText;
-            return new DxText("0", 920, 1080-5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Bottom,
+            return new DxText("$0", 920, 5, 0.5f, Color.FromArgb(115, 186, 131), alignmentX: UIResText.Alignment.Right, alignmentY: Enum.EAlignmentY.Top,
                 font: Font.ChaletLondon, dropShadow: true, outline: true, relative: false);
         }
 
@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Draw
         {
             if (_moneyText == null)
                 _moneyText = GetMoneyText();
-            _moneyText.Text = AccountData.Money.ToString();
+            _moneyText.Text = "$" + AccountData.Money.ToString();
         }
     }
 }
