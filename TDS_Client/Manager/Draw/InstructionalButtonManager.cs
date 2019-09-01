@@ -38,7 +38,7 @@ namespace TDS_Client.Manager.Draw
         private static List<InstructionalButton> _buttons = new List<InstructionalButton>();
         private static bool _isLayoutPositive;
         private static Color _backgroundColor;
-        private static bool _isActive;
+        private static bool _isActive = true;
 
         static InstructionalButtonManager() 
         {
@@ -105,7 +105,6 @@ namespace TDS_Client.Manager.Draw
         {
             Add("Cursor", Settings.Language.END_KEY);
             Add("Userpanel", "U");
-            Add("Voice", Control.PushToTalk);
         }
     }
 }

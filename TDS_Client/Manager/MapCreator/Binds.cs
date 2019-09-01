@@ -19,7 +19,6 @@ namespace TDS_Client.Manager.MapCreator
             BindManager.Remove(EKey.M, Main.ToggleFreecam);
 
             InstructionalButtonManager.Reset();
-            InstructionalButtonManager.IsActive = false;
         }
 
         public static void SetForInFreecam()
@@ -28,8 +27,11 @@ namespace TDS_Client.Manager.MapCreator
             BindManager.Add(EKey.E, Freecam.KeyUp, EKeyPressState.Up);
             BindManager.Add(EKey.Q, Freecam.KeyDown, EKeyPressState.Down);
             BindManager.Add(EKey.Q, Freecam.KeyUp, EKeyPressState.Up);
+            BindManager.Add(EKey.Delete, ObjectPlacing.DeleteHoldingObject, EKeyPressState.Down);
+            BindManager.Add(Control.Attack, ObjectPlacing.LeftMouseClick, EKeyPressState.Down, OnDisabled: true);
 
             var lang = Settings.Language;
+            InstructionalButtonManager.Add(lang.DELETE_DESCRIPTION, lang.DELETE_KEY);
             InstructionalButtonManager.Add(lang.SLOWER, Control.VehicleFlySelectPrevWeapon);
             InstructionalButtonManager.Add(lang.FASTER, Control.VehicleFlySelectNextWeapon);
             InstructionalButtonManager.Add(lang.SLOW_MODE, lang.LEFT_CTRL);
@@ -38,7 +40,6 @@ namespace TDS_Client.Manager.MapCreator
             InstructionalButtonManager.Add(lang.UP, "Q");
             InstructionalButtonManager.Add(lang.DIRECTION, Control.VehicleRoof);
             InstructionalButtonManager.IsLayoutPositive = false;
-            InstructionalButtonManager.IsActive = true;
         }
 
         public static void RemoveForInFreeCam()
@@ -47,9 +48,9 @@ namespace TDS_Client.Manager.MapCreator
             BindManager.Remove(EKey.E, Freecam.KeyUp, EKeyPressState.Up);
             BindManager.Remove(EKey.Q, Freecam.KeyDown, EKeyPressState.Down);
             BindManager.Remove(EKey.Q, Freecam.KeyUp, EKeyPressState.Up);
+            BindManager.Remove(Control.Attack, ObjectPlacing.LeftMouseClick);
 
             InstructionalButtonManager.Reset();
-            InstructionalButtonManager.IsActive = false;
         }
     }
 }
