@@ -47,6 +47,8 @@ namespace TDS_Client.Manager.MapCreator
 
             if (!CursorManager.Visible)
                 MoveCam();
+
+            ObjectPlacing.OnTick();
         }
 
         private static void MoveCam()
@@ -103,10 +105,10 @@ namespace TDS_Client.Manager.MapCreator
             switch (key)
             {
                 case EKey.E:
-                    _isUpPressed = true;
+                    _isDownPressed = true;
                     break;
                 case EKey.Q:
-                    _isDownPressed = true;
+                    _isUpPressed = true;
                     break;
             }
         }
@@ -116,10 +118,10 @@ namespace TDS_Client.Manager.MapCreator
             switch (key)
             {
                 case EKey.E:
-                    _isUpPressed = false;
+                    _isDownPressed = false;
                     break;
                 case EKey.Q:
-                    _isDownPressed = false;
+                    _isUpPressed = false;
                     break;
             }
         }
