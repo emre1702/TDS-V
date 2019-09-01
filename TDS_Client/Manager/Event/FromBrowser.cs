@@ -4,6 +4,7 @@ using RAGE.Game;
 using System;
 using TDS_Client.Default;
 using TDS_Client.Enum;
+using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
@@ -290,8 +291,16 @@ namespace TDS_Client.Manager.Event
             float y = Convert.ToSingle(args[1]);
             float z = Convert.ToSingle(args[2]);
             float rot = Convert.ToSingle(args[3]);
-            Player.LocalPlayer.Position = new Vector3(x, y, z);
-            Player.LocalPlayer.SetHeading(rot);
+            if (TDSCamera.ActiveCamera != null)
+            {
+                TDSCamera.ActiveCamera.Position = new Vector3(x, y, z);
+                TDSCamera.ActiveCamera.Rotation = new Vector3(0, 0, rot);
+            } 
+            else
+            {
+                Player.LocalPlayer.Position = new Vector3(x, y, z);
+                Player.LocalPlayer.SetHeading(rot);
+            }            
         }
 
         private void OnToggleMapFavoriteMethod(object[] args)
