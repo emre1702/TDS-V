@@ -31,6 +31,9 @@ namespace TDS_Client.Instance.Language
         public virtual string LEFT_SHIFT => "LShift";
         public virtual string LEFT_CTRL => "LCTRL";
         public virtual string TOGGLE_FREECAM => "Toggle freecam";
+        public virtual string DELETE_KEY => "Delete";
+        public virtual string DELETE_DESCRIPTION => "Delete";
+        public virtual string END_KEY => "End";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 

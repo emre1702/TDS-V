@@ -139,7 +139,7 @@
       </div>
 
       <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="addNewPos(addPosToTeamSpawns)">
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.TeamSpawn)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)" [disabled]="!selectedPosition">
@@ -178,7 +178,7 @@
       </div>
 
       <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="addNewPos(addPosToMapLimits)">
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapLimit)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)" [disabled]="!selectedPosition">
@@ -205,7 +205,7 @@
         </mat-form-field>
       </div>
       <div class="positions-bottom-row">
-          <button mat-raised-button type="button" (click)="addNewPos(addPosToMapCenter)">
+          <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)">
             {{ 'AddPos' | language: settings.Lang }}
           </button>
           <button mat-raised-button type="button" (click)="tpToXYZ(data.MapCenter.X, data.MapCenter.Y, data.MapCenter.Z)" [disabled]="false">
@@ -251,7 +251,7 @@
       </div>
 
       <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="addNewPos(addPosToBombPlaces)">
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.BombPlantPlace)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)" [disabled]="!selectedPosition">

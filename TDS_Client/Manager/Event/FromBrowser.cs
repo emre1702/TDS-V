@@ -31,7 +31,6 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
-            Add(DFromBrowserEvent.GetCurrentPositionRotation, OnGetCurrentPositionRotationMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
@@ -50,6 +49,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            Add(DFromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
             Add(DFromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
@@ -115,11 +115,6 @@ namespace TDS_Client.Manager.Event
         {
             string dataJson = (string)args[0];
             EventsSender.Send(DToServerEvent.CreateCustomLobby, dataJson);
-        }
-
-        private void OnGetCurrentPositionRotationMethod(object[] args)
-        {
-            Angular.SendCurrentPositionRotation();
         }
 
         private void OnGetVehicleMethod(object[] args)
@@ -269,6 +264,13 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SendMapCreatorData, json))
                 Angular.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
+        }
+
+        private void OnStartMapCreatorPosPlacingMethod(object[] args)
+        {
+            EMapCreatorPositionType type = (EMapCreatorPositionType)(int)args[0];
+            object editingTeamIndexOrObjectName = args[1];
+            MapCreator.ObjectPlacing.StartNewPlacing(type, editingTeamIndexOrObjectName);
         }
 
         private void OnSyncRegisterLoginLanguageTextsMethod(object[] args)

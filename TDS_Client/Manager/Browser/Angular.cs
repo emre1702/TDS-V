@@ -122,13 +122,6 @@ namespace TDS_Client.Manager.Browser
             Execute(DToBrowserEvent.LoadFavoriteMaps, mapFavoritesJson);
         }
 
-        public static void SendCurrentPositionRotation()
-        {
-            var pos = Player.LocalPlayer.Position;
-            var rot = Player.LocalPlayer.GetHeading();
-            Execute(DFromBrowserEvent.GetCurrentPositionRotation, pos.X, pos.Y, pos.Z, rot);
-        }
-
         public static void ToggleTeamOrderModus(bool activated)
         {
             Execute(DToBrowserEvent.ToggleTeamOrderModus, activated);

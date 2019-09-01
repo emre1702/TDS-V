@@ -29,6 +29,9 @@ namespace TDS_Client.Interface
         string LEFT_SHIFT { get; }
         string LEFT_CTRL { get; }
         string TOGGLE_FREECAM { get; }
+        string DELETE_KEY { get; }
+        string DELETE_DESCRIPTION { get; }
+        string END_KEY { get; }
 
         ELanguage Enum { get; }
     }

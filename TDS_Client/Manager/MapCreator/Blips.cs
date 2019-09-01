@@ -2,7 +2,6 @@
 using RAGE.Elements;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using TDS_Client.Enum;
 using TDS_Common.Manager.Utility;
 
@@ -10,9 +9,9 @@ namespace TDS_Client.Manager.MapCreator
 {
     class Blips
     {
-        private static List<List<Blip>> _teamSpawnBlips = new List<List<Blip>>();
-        private static List<Blip> _mapLimitBlips = new List<Blip>();
-        private static List<Blip> _bombPlantPlaceBlips = new List<Blip>();
+        private static readonly List<List<Blip>> _teamSpawnBlips = new List<List<Blip>>();
+        private static readonly List<Blip> _mapLimitBlips = new List<Blip>();
+        private static readonly List<Blip> _bombPlantPlaceBlips = new List<Blip>();
         private static Blip _mapCenterBlip;
 
         public static void AddedPosition(object[] args)
@@ -74,7 +73,7 @@ namespace TDS_Client.Manager.MapCreator
             }
         }
 
-        public static void Reset()
+        public static void Clear()
         {
             foreach (var teamList in _teamSpawnBlips)
                 foreach (var blip in teamList)

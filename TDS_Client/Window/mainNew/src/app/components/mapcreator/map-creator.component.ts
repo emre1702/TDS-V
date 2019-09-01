@@ -16,6 +16,7 @@ import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
 import { LoadMapDialogGroupDto } from './models/loadMapDialogGroupDto';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
+import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 
 enum MapCreatorNav {
   Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, BombPlaces
@@ -30,6 +31,7 @@ enum MapCreatorNav {
 export class MapCreatorComponent implements OnInit, OnDestroy {
   data = new MapCreateDataDto();
   mapCreatorNav = MapCreatorNav;
+  mapCreatorPositionType = MapCreatorPositionType;
   currentNav = MapCreatorNav.Main;
   editingTeamNumber = 0;
   selectedPosition: Position3D | Position4D;
@@ -55,6 +57,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     public dialog: MatDialog,
     private snackBar: MatSnackBar) {
+      this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
   }
 
   ngOnInit() {
@@ -63,6 +66,25 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+  }
+
+  private addPositionToMapCreatorBrowser(type: MapCreatorPositionType, x: number, y: number, z: number, rot: number) {
+    const pos = new Position4D(x, y, z, rot);
+    switch (type) {
+      case MapCreatorPositionType.TeamSpawn:
+        this.addPosToTeamSpawns(pos);
+        break;
+      case MapCreatorPositionType.MapCenter:
+        this.addPosToMapCenter(pos);
+        break;
+      case MapCreatorPositionType.BombPlantPlace:
+        this.addPosToBombPlaces(pos);
+        break;
+      case MapCreatorPositionType.MapLimit:
+        this.addPosToMapLimits(pos);
+        break;
+    }
+    this.changeDetector.detectChanges();
   }
 
   private detectChanges() {
@@ -75,13 +97,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  addNewPos(addFunc: (pos: Position4D) => void) {
-    this.rageConnector.callCallback(DToClientEvent.GetCurrentPositionRotation, null, (x: number, y: number, z: number, rot: number) => {
-      const pos = new Position4D(x, y, z, rot);
-      // need to create a new dataSource object, else table will not refresh
-      addFunc.call(this, pos);
-      this.changeDetector.detectChanges();
-    });
+  startNewPosPlacing(type: MapCreatorPositionType) {
+    this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type);
   }
 
   removeSelectedPos(removeFunc: () => void) {
@@ -104,20 +121,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   addPosToTeamSpawns(pos: Position4D) {
     this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber], pos];
-    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.TeamSpawn,
-      pos.X, pos.Y, pos.Z, this.editingTeamNumber);
   }
 
   addPosToMapLimits(pos: Position4D) {
     this.data.MapEdges = [...this.data.MapEdges, pos];
-    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.MapLimit,
-      pos.X, pos.Y, pos.Z);
   }
 
   addPosToBombPlaces(pos: Position4D) {
     this.data.BombPlaces = [...this.data.BombPlaces, pos];
-    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.BombPlantPlace,
-      pos.X, pos.Y, pos.Z);
   }
 
   addPosToMapCenter(pos: Position4D) {

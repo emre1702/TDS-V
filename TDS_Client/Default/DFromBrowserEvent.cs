@@ -17,7 +17,6 @@
         public const string CommandUsed = "CommandUsed_Browser";
         public const string CreateCustomLobby = "CreateCustomLobby_Browser";
 
-        public const string GetCurrentPositionRotation = "GetCurrentPositionRotation_Browser";
         public const string GetVehicle = "GetVehicle_Browser";
 
         public const string JoinCustomLobby = "JoinCustomLobby_Browser";
@@ -32,6 +31,7 @@
         public const string SaveMapCreatorData = "SaveMapCreatorData_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Browser";
         public const string SendMapRating = "SendMapRating_Browser";
+        public const string StartMapCreatorPosPlacing = "StartMapCreatorPosPlacing_Browser";
         public const string SyncRegisterLoginLanguageTexts = "SyncRegisterLoginLanguageTexts_Browser";
 
         public const string TeleportToXY = "TeleportToXY_Browser";

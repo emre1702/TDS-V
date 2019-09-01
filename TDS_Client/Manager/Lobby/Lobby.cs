@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Enum;
+using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
@@ -104,6 +105,7 @@ namespace TDS_Client.Manager.Lobby
         private static void LeftMapCreator()
         {
             Main.Stop();
+            MapCreatorObject.Reset();
         }
     }
 }

@@ -5,7 +5,6 @@ export enum DToClientEvent {
   CloseMapVotingMenu = "CloseMapVotingMenu_Browser",
   CloseUserpanel = "CloseUserpanel_Browser",
   CreateCustomLobby = "CreateCustomLobby_Browser",
-  GetCurrentPositionRotation = "GetCurrentPositionRotation_Browser",
   GetVehicle = "GetVehicle_Browser",
   JoinCustomLobby = "JoinCustomLobby_Browser",
   JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser",
@@ -18,6 +17,7 @@ export enum DToClientEvent {
   ToggleMapFavorite = "ToggleMapFavorite_Browser",
   SaveMapCreatorData = "SaveMapCreatorData_Browser",
   SendMapCreatorData = "SendMapCreatorData_Browser",
+  StartMapCreatorPosPlacing = "StartMapCreatorPosPlacing_Browser",
 
   AddMapCreatorPosition = "AddMapCreatorPosition_Browser",
   RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser"
