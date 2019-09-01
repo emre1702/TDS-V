@@ -152,10 +152,12 @@ namespace TDS_Client.Manager.Utility
             Vector3 f2 = new Vector3(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
             Vector3 f3 = new Vector3(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
 
-            Vector3 final = new Vector3();
-            final.X = (f1.X * point.X + f1.Y * point.Y + f1.Z * point.Z);
-            final.Y = (f2.X * point.X + f2.Y * point.Y + f2.Z * point.Z);
-            final.Z = (f3.X * point.X + f3.Y * point.Y + f3.Z * point.Z);
+            Vector3 final = new Vector3
+            {
+                X = (f1.X * point.X + f1.Y * point.Y + f1.Z * point.Z),
+                Y = (f2.X * point.X + f2.Y * point.Y + f2.Z * point.Z),
+                Z = (f3.X * point.X + f3.Y * point.Y + f3.Z * point.Z)
+            };
 
             return final;
         }
@@ -166,10 +168,12 @@ namespace TDS_Client.Manager.Utility
             Vector3 f8 = new Vector3(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
             Vector3 f9 = new Vector3(0, 0, 1);
 
-            Vector3 final = new Vector3();
-            final.X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z);
-            final.Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z);
-            final.Z = (f9.X * point.X + f9.Y * point.Y + f9.Z * point.Z);
+            Vector3 final = new Vector3
+            {
+                X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z),
+                Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z),
+                Z = (f9.X * point.X + f9.Y * point.Y + f9.Z * point.Z)
+            };
             return final;
         }
 
@@ -179,10 +183,12 @@ namespace TDS_Client.Manager.Utility
             Vector3 f5 = new Vector3(0, 1, 0);
             Vector3 f6 = new Vector3(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
 
-            Vector3 final = new Vector3();
-            final.X = (f4.X * point.X + f4.Y * point.Y + f4.Z * point.Z);
-            final.Y = (f5.X * point.X + f5.Y * point.Y + f5.Z * point.Z);
-            final.Z = (f6.X * point.X + f6.Y * point.Y + f6.Z * point.Z);
+            Vector3 final = new Vector3
+            {
+                X = (f4.X * point.X + f4.Y * point.Y + f4.Z * point.Z),
+                Y = (f5.X * point.X + f5.Y * point.Y + f5.Z * point.Z),
+                Z = (f6.X * point.X + f6.Y * point.Y + f6.Z * point.Z)
+            };
             return final;
         }
 
