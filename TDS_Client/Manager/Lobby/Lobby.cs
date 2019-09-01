@@ -1,7 +1,9 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.MapCreator;
+using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
 
@@ -24,6 +26,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void Joined(SyncedLobbySettingsDto settings)
         {
+            InstructionalButtonManager.Reset();
             if (_inLobbyType != null)
             {
                 switch (_inLobbyType)
@@ -59,6 +62,13 @@ namespace TDS_Client.Manager.Lobby
             }
 
             _inLobbyType = settings.Type;
+            LoadLobbyGeneralBinds();
+        }
+
+        private static void LoadLobbyGeneralBinds()
+        {
+            if (Settings.InLobbyWithMaps)
+                InstructionalButtonManager.Add("Map-Voting", "F3");
         }
 
         private static void Left()
@@ -83,10 +93,7 @@ namespace TDS_Client.Manager.Lobby
         {
             InFightLobby = false;
             RAGE.Game.Cam.DoScreenFadeIn(100);
-            Angular.ToggleMapCreator(true);
-            Angular.ToggleFreeroam(true);
-            Binds.SetGeneral();
-            Main.ToggleFreecam();
+            Main.Start();
         }
 
         private static void LeftMainMenu()
@@ -96,12 +103,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void LeftMapCreator()
         {
-            Binds.RemoveGeneral();
-            Freecam.Stop();
-            Foot.Start();
-            Angular.ToggleMapCreator(false);
-            Angular.ToggleFreeroam(false);
-            Blips.Reset();
+            Main.Stop();
         }
     }
 }
