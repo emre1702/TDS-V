@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Lobby;
 using TDS_Common.Manager.Utility;
 using Player = RAGE.Elements.Player;
@@ -48,10 +49,10 @@ namespace TDS_Client.Manager.Utility
             Ui.DrawNotification(false, false);
         }
 
-        public static Vector3 GetWorldCoordFromScreenCoord(float x, float y /*, out Vector3 forwardDirection*/)
+        public static Vector3 GetWorldCoordFromScreenCoord(float x, float y, TDSCamera cam = null /*, out Vector3 forwardDirection*/)
         {
-            Vector3 camPos = Cam.GetGameplayCamCoord();
-            Vector3 camRot = Cam.GetGameplayCamRot(0);
+            Vector3 camPos = cam?.Position ?? Cam.GetGameplayCamCoord();
+            Vector3 camRot = cam?.Rotation ?? Cam.GetGameplayCamRot(0);
             var camForward = RotationToDirection(camRot);
             var rotUp = camRot + new Vector3(1, 0, 0);
             var rotDown = camRot + new Vector3(-1, 0, 0);
@@ -143,6 +144,51 @@ namespace TDS_Client.Manager.Utility
                 Z = left.X * right.Y - left.Y * right.X
             };
             return vec;
+        }
+
+        public static Vector3 RotateX(Vector3 point, float angle)
+        {
+            Vector3 f1 = new Vector3(1, 0, 0);
+            Vector3 f2 = new Vector3(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
+            Vector3 f3 = new Vector3(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
+
+            Vector3 final = new Vector3();
+            final.X = (f1.X * point.X + f1.Y * point.Y + f1.Z * point.Z);
+            final.Y = (f2.X * point.X + f2.Y * point.Y + f2.Z * point.Z);
+            final.Z = (f3.X * point.X + f3.Y * point.Y + f3.Z * point.Z);
+
+            return final;
+        }
+
+        public static Vector3 RotateZ(Vector3 point, float angle)
+        {
+            Vector3 f7 = new Vector3(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
+            Vector3 f8 = new Vector3(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
+            Vector3 f9 = new Vector3(0, 0, 1);
+
+            Vector3 final = new Vector3();
+            final.X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z);
+            final.Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z);
+            final.Z = (f9.X * point.X + f9.Y * point.Y + f9.Z * point.Z);
+            return final;
+        }
+
+        public static Vector3 RotateY(Vector3 point, float angle)
+        {
+            Vector3 f4 = new Vector3(MathF.Cos(DegreesToRad(angle)), 0, MathF.Sin(DegreesToRad(angle)));
+            Vector3 f5 = new Vector3(0, 1, 0);
+            Vector3 f6 = new Vector3(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
+
+            Vector3 final = new Vector3();
+            final.X = (f4.X * point.X + f4.Y * point.Y + f4.Z * point.Z);
+            final.Y = (f5.X * point.X + f5.Y * point.Y + f5.Z * point.Z);
+            final.Z = (f6.X * point.X + f6.Y * point.Y + f6.Z * point.Z);
+            return final;
+        }
+
+        public static float DegreesToRad(float deg)
+        {
+            return MathF.PI * deg / 180.0f;
         }
     }
 }
