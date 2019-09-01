@@ -13,6 +13,7 @@ namespace TDS_Client.Instance.Utility
     {
         public int Handle { get; set; }
         public PedBase SpectatingPed { get; set; }
+        public bool IsActive => this == ActiveCamera;
 
         public static TDSCamera ActiveCamera { get; set; }
 
