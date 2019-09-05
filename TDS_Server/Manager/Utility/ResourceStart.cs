@@ -80,8 +80,8 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        [ServerEvent(Event.FirstChanceException)]
-        public void OnFirstChanceException(Exception ex)
+        [ServerEvent(Event.UnhandledException)]
+        public void OnUnhandledException(Exception ex)
         {
             try
             {
