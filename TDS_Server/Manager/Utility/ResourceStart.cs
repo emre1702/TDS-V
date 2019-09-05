@@ -81,7 +81,7 @@ namespace TDS_Server.Manager.Utility
         }
 
         [ServerEvent(Event.FirstChanceException)]
-        private static void OnFirstChanceException(Exception ex)
+        public void OnFirstChanceException(Exception ex)
         {
             try
             {
