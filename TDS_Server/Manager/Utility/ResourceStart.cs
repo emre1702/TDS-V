@@ -31,8 +31,6 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
-                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
-
                 SettingsManager.LoadLocal();
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
@@ -82,12 +80,12 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        [ServerEvent(Event.FirstChanceException)]
+        private static void OnFirstChanceException(Exception ex)
         {
             try
             {
-                var exception = (Exception)e.ExceptionObject;
-                ErrorLogsManager.Log("Unhandled exception: " + exception.GetBaseException().Message, exception.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
+                ErrorLogsManager.Log("Unhandled exception: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
             }
             catch
             {
