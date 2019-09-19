@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System.Xml.Serialization;
+using TDS_Server.Dto.Map.Creator;
 
 namespace TDS_Common.Dto.Map
 {
@@ -13,6 +14,15 @@ namespace TDS_Common.Dto.Map
 
         [XmlAttribute("z")]
         public float Z { get; set; }
+
+        public Position3DDto() { }
+
+        public Position3DDto(MapCreatorPosition pos)
+        {
+            X = pos.PosX;
+            Y = pos.PosY;
+            Z = pos.PosZ;
+        }
 
         public Vector3 ToVector3()
         {

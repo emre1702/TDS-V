@@ -5,8 +5,6 @@ namespace TDS_Client.Interface
     internal interface ILanguage
     {
         ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
-        ILobbyChoiceTexts LOBBY_CHOICE_TEXTS { get; }
-        IMapCreatorMenuTexts MAPCREATOR_MENU { get; }
 
         string OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME { get; }
         string OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME { get; }
@@ -32,7 +30,10 @@ namespace TDS_Client.Interface
         string DELETE_KEY { get; }
         string DELETE_DESCRIPTION { get; }
         string END_KEY { get; }
+        string OBJECT_MODEL_INVALID { get; }
+        string COULD_NOT_LOAD_OBJECT { get; }
 
         ELanguage Enum { get; }
+        
     }
 }

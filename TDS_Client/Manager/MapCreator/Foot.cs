@@ -13,7 +13,6 @@ namespace TDS_Client.Manager.MapCreator
             player.Position = cam.Position;
             player.SetHeading(cam.Rotation.Z);
             player.FreezePosition(false);
-            player.SetInvincible(false);
             player.SetVisible(true, false);
             player.SetCollision(true, true);
 
@@ -24,7 +23,6 @@ namespace TDS_Client.Manager.MapCreator
         {
             var player = RAGE.Elements.Player.LocalPlayer;
             player.FreezePosition(true);
-            player.SetInvincible(true);
             player.SetVisible(false, false);
             player.SetCollision(false, false);
         }

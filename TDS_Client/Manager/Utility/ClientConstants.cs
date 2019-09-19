@@ -6,7 +6,8 @@ namespace TDS_Client.Manager.Utility
     {
         public static string LobbyChoiceBrowserPath => "package://Window/choice/index.html";
         public static string MainBrowserPath => "package://Window/main/index.html";
-        public static string AngularBrowserPath => "package://Window/mainNew/index.html";
+        public static string AngularMainBrowserPath => "package://Window/angular/main/index.html";
+        public static string AngularMapCreatorObjectChoiceBrowserPath => "package://Window/angular/map-creator-object-choice/index.html";
         public static string RegisterLoginBrowserPath => "package://Window/registerlogin/index.html";
         public static int ScoreboardLoadCooldown => 5000;
         public static ulong ShowFloatingDamageInfoMs = 1000;

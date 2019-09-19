@@ -1,0 +1,40 @@
+.container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 1%;
+    left: 1%;
+    width: 20%;
+    height: 98%;
+    opacity: 0.95;
+    overflow-y: auto;
+  
+    .positions-div {
+      height: 100% !important;
+      overflow: hidden;
+  
+      #filter {
+        margin: 10px;
+        width: calc(100% - 20px);
+      }
+        
+      .mat-table-container {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        height: auto !important;
+        max-height: 80%;
+  
+        .mat-table {
+          width: 100%;
+          max-width: 100%;
+          display: table;
+          border-collapse: collapse;
+          margin: 0px;
+          background: transparent;
+          overflow: auto;
+        }
+      }
+    } 
+}
+  

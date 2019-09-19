@@ -13,7 +13,7 @@ import { MatSnackBarRef, MatSnackBar } from '@angular/material';
 export class AppComponent {
   showMapCreator = false;
   showFreeroam = false;
-  showLobbyChoice = true;
+  showLobbyChoice = false;
   showTeamChoice = false;
   showUserpanel = false;
 

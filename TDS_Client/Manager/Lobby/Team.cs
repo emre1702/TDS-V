@@ -53,7 +53,7 @@ namespace TDS_Client.Manager.Lobby
         public static void ToggleOrderMode(EKey _)
         {
             _activated = !_activated;
-            Angular.ToggleTeamOrderModus(_activated);
+            Browser.Angular.Main.ToggleTeamOrderModus(_activated);
         }
 
         private static void GiveOrder(EKey key)

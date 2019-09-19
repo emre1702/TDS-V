@@ -8,6 +8,7 @@ using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Lobby;
+using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -22,7 +23,6 @@ namespace TDS_Client.Manager.Event
     {
         private void AddFromBrowserEvents()
         {
-            Add(DFromBrowserEvent.AddMapCreatorPosition, OnAddMapCreatorPositionMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
@@ -32,6 +32,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
+            Add(DFromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
             Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
@@ -39,12 +40,15 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
+            Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
+            Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(DToServerEvent.RemoveMap, OnRemoveMapMethod);
             Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
+            Add(DFromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
@@ -58,11 +62,6 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
-        }
-
-        private void OnAddMapCreatorPositionMethod(object[] args)
-        {
-            MapCreator.Blips.AddedPosition(args);
         }
 
         private void OnAddMapVoteMethod(object[] args)
@@ -124,6 +123,12 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(DToServerEvent.GetVehicle, (int)vehType);
         }
 
+        private void OnHoldMapCreatorObjectMethod(object[] args)
+        {
+            int objID = (int)args[0];
+            MapCreator.ObjectPlacing.HoldObjectWithID(objID);
+        }
+
         private void OnJoinCustomLobbyMethod(object[] args)
         {
             int lobbyId = (int)args[0];
@@ -164,13 +169,23 @@ namespace TDS_Client.Manager.Event
             switch (type)
             {
                 case EUserpanelLoadDataType.Settings:
-                    Angular.LoadUserpanelData((int)type, JsonConvert.SerializeObject(Settings.PlayerSettings));
+                    Browser.Angular.Main.LoadUserpanelData((int)type, JsonConvert.SerializeObject(Settings.PlayerSettings));
                     break;
                 default:
                     EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)type);
                     break;
             }
-            
+        }
+
+        private void OnMapCreatorShowObjectMethod(object[] args)
+        {
+            string objName = (string)args[0];
+            ObjectPreview.ShowObject(objName);
+        }
+
+        private void OnMapCreatorStopObjectPreviewMethod(object[] args)
+        {
+            ObjectPreview.Stop();
         }
 
         private void OnTryLoginMethod(object[] args)
@@ -234,28 +249,32 @@ namespace TDS_Client.Manager.Event
         {
             int mapId = Convert.ToInt32(args[0]);
             if (!EventsSender.Send(DToServerEvent.RemoveMap, mapId))
-                Angular.ShowCooldown();
+                Browser.Angular.Main.ShowCooldown();
         }
         private void OnRemoveMapCreatorPositionMethod(object[] args)
         {
-            EMapCreatorPositionType type = (EMapCreatorPositionType)Convert.ToInt32(args[0]);
-            int index = Convert.ToInt32(args[1]);
-            int teamNumber = args.Length > 2 ? Convert.ToInt32(args[2]) : 0;
-            MapCreator.Blips.RemovedPosition(type, index, teamNumber);
+            int posId = Convert.ToInt32(args[0]);
+            ObjectsManager.Delete(posId);
+        }
+
+        private void OnRemoveMapCreatorTeamNumberMethod(object[] args)
+        {
+            int teamNumber = Convert.ToInt32(args[0]);
+            ObjectsManager.DeleteTeamObjects(teamNumber);
         }
 
         private void OnSaveMapCreatorDataMethod(object[] args)
         {
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SaveMapCreatorData, json))
-                Angular.SaveMapCreatorReturn((int)EMapCreateError.Cooldown);
+                Browser.Angular.Main.SaveMapCreatorReturn((int)EMapCreateError.Cooldown);
         }
 
         private void OnSaveSettingsMethod(object[] args)
         {
             string json = (string)args[0];
-            if (!EventsSender.Send(DToServerEvent.SaveSettings, json)) 
-                Angular.ShowCooldown();
+            if (!EventsSender.Send(DToServerEvent.SaveSettings, json))
+                Browser.Angular.Main.ShowCooldown();
                 
         }
 
@@ -263,7 +282,7 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SendMapCreatorData, json))
-                Angular.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
+                Browser.Angular.Main.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
         }
 
         private void OnStartMapCreatorPosPlacingMethod(object[] args)
@@ -297,12 +316,9 @@ namespace TDS_Client.Manager.Event
             {
                 TDSCamera.ActiveCamera.Position = new Vector3(x, y, z);
                 TDSCamera.ActiveCamera.Rotation = new Vector3(0, 0, rot);
-            } 
-            else
-            {
-                Player.LocalPlayer.Position = new Vector3(x, y, z);
-                Player.LocalPlayer.SetHeading(rot);
-            }            
+            }
+            Player.LocalPlayer.Position = new Vector3(x, y, z);
+            Player.LocalPlayer.SetHeading(rot);
         }
 
         private void OnToggleMapFavoriteMethod(object[] args)

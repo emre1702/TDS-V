@@ -18,7 +18,7 @@ namespace TDS_Client.Manager.Lobby
             set
             {
                 _inFightLobby = value;
-                Angular.SyncInFightLobby(value);
+                Browser.Angular.Main.SyncInFightLobby(value);
             }
         }
 
@@ -80,14 +80,14 @@ namespace TDS_Client.Manager.Lobby
             Round.Reset(true);
             LobbyCam.StopCountdown();
             MapManager.CloseMenu();
-            Angular.ResetMapVoting();
+            Browser.Angular.Main.ResetMapVoting();
         }
 
         private static void JoinedMainmenu()
         {
             Death.PlayerSpawn();
             RAGE.Game.Cam.DoScreenFadeIn(100);
-            Angular.ToggleLobbyChoiceMenu(true);
+            Browser.Angular.Main.ToggleLobbyChoiceMenu(true);
         }
 
         private static void JoinedMapCreator()
@@ -99,7 +99,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void LeftMainMenu()
         {
-            Angular.ToggleLobbyChoiceMenu(false);
+            Browser.Angular.Main.ToggleLobbyChoiceMenu(false);
         }
 
         private static void LeftMapCreator()

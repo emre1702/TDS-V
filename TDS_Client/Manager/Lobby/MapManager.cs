@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Lobby
 
             if (_lobbyIdAtLastLoad == Settings.LobbyId)
             {
-                Angular.OpenMapMenu(_lastMapsJson);
+                Browser.Angular.Main.OpenMapMenu(_lastMapsJson);
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace TDS_Client.Manager.Lobby
                 return;
             _open = false;
             if (sendToBrowser)
-                Angular.CloseMapMenu();
+                Browser.Angular.Main.CloseMapMenu();
             CursorManager.Visible = false;
         }
 
@@ -57,7 +57,7 @@ namespace TDS_Client.Manager.Lobby
         {
             _lastMapsJson = mapjson;
             _lobbyIdAtLastLoad = Settings.LobbyId;
-            Angular.OpenMapMenu(mapjson);
+            Browser.Angular.Main.OpenMapMenu(mapjson);
         }
     }
 }

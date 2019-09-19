@@ -14,7 +14,7 @@ namespace TDS_Client.Manager.Utility
                 return;
             if (ChatManager.IsOpen)
                 return;
-            Angular.ToggleUserpanel(true);
+            Browser.Angular.Main.ToggleUserpanel(true);
             _open = true;
             CursorManager.Visible = true;
         }
@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Utility
         public static void Close()
         {
             _open = false;
-            Angular.ToggleUserpanel(false);
+            Browser.Angular.Main.ToggleUserpanel(false);
             CursorManager.Visible = false;
         }
     }

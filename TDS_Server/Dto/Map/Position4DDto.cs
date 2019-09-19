@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using TDS_Server.Dto.Map.Creator;
 
 namespace TDS_Common.Dto.Map
 {
@@ -15,6 +16,16 @@ namespace TDS_Common.Dto.Map
 
         [XmlAttribute("rot")]
         public float Rotation { get; set; }
+
+        public Position4DDto() { }
+
+        public Position4DDto(MapCreatorPosition pos) 
+        {
+            X = pos.PosX;
+            Y = pos.PosY;
+            Z = pos.PosZ;
+            Rotation = pos.RotZ;
+        }
 
         public Position3DDto To3D()
         {

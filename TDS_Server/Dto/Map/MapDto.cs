@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using TDS_Common.Dto;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using EMapType = TDS_Server.Enum.EMapType;
-using TDS_Server.Instance.Player;
-using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 using Newtonsoft.Json;
+using TDS_Server.Dto.Map.Creator;
+using TDS_Common.Dto.Map;
+using System.Linq;
 
 namespace TDS_Server.Dto.Map
 {
@@ -27,6 +27,9 @@ namespace TDS_Server.Dto.Map
 
         [XmlElement("limit")]
         public MapLimitInfoDto LimitInfo { get; set; }
+
+        [XmlElement("objects")]
+        public MapObjectsListDto Objects { get; set; }
 
         [XmlElement("bomb")]
         public MapBombInfoDto? BombInfo { get; set; }
@@ -66,19 +69,24 @@ namespace TDS_Server.Dto.Map
             TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Length] };
             for (uint i = 0; i < data.TeamSpawns.Length; ++i)
             {
-                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = i, Spawns = data.TeamSpawns[i] };
+                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = i, Spawns = data.TeamSpawns[i].Select(pos => new Position4DDto(pos)).ToArray() };
             }
 
             LimitInfo = new MapLimitInfoDto
             {
-                Center = data.MapCenter,
-                Edges = data.MapEdges,
+                Center = new Position3DDto(data.MapCenter),
+                Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
                 EdgesJson = JsonConvert.SerializeObject(data.MapEdges)
+            };
+
+            Objects = new MapObjectsListDto
+            {
+                Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToArray()
             };
 
             BombInfo = new MapBombInfoDto
             {
-                PlantPositions = data.BombPlaces,
+                PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
                 PlantPositionsJson = JsonConvert.SerializeObject(data.BombPlaces)
             };
         }

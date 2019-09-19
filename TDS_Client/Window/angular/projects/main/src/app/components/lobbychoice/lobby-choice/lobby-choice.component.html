@@ -1,0 +1,15 @@
+<ng-container *ngIf="!settings.InUserLobbiesMenu">
+  <div id="language-button-container">
+    <button mat-icon-button id="german-button" class="language-button mat-elevation-z8" (click)="setLanguage(7)"></button>
+    <button mat-icon-button id="english-button" class="language-button mat-elevation-z8" (click)="setLanguage(9)"></button>
+  </div>
+
+  <div id="lobby-choices" [@hideShowAnimation]>
+    <button mat-button *ngFor="let lobbyChoice of lobbyChoices" class="border" (click)="lobbyChoice.func()"
+    [style.background]="getImageUrl(lobbyChoice.imgUrl)" [style.display]="lobbyChoice.disabled ? 'none' : ''">
+      <span>{{ lobbyChoice.name | language: settings.Lang }}</span>
+    </button>
+  </div>
+</ng-container>
+
+<app-custom-lobby *ngIf="settings.InUserLobbiesMenu"></app-custom-lobby>

@@ -1,0 +1,94 @@
+<div id="settings-table-container" class="container mat-elevation-z8 mat-app-background" [@settingsShowHideAnimation]>
+  <div id="settings-expansion-panel-container">
+    <mat-expansion-panel *ngFor="let panel of settingPanel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ panel.title | language: settings.Lang }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let setting of panel.rows" [ngSwitch]="setting.type">
+
+        <ng-container *ngSwitchCase="lobbySettingType.string">
+          <div class="setting-row">
+            <mat-form-field color="accent">
+              <input matInput [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
+              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.password">
+          <div class="setting-row">
+            <mat-form-field color="accent">
+              <input matInput [type]="creating ? '' : 'password'" [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
+              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.number">
+          <div class="setting-row">
+            <mat-form-field color="accent">
+              <input matInput type="number" [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
+              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.numberSlider">
+          <div class="setting-row">
+            <mat-slider color="primary" thumbLabel tickInterval="1" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+                {{ setting.dataSettingIndex | language: settings.Lang }}
+            </mat-slider>
+          </div>
+          <!-- <div *ngSwitchDefault>output2</div> -->
+        </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.enum">
+          <div class="setting-row">
+            <mat-form-field color="accent">
+              <mat-label>{{ setting.dataSettingIndex | language: settings.Lang }}</mat-label>
+              <mat-select [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+                <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)" [value]="setting.enum[enumStr]">
+                  {{ enumStr | language: settings.Lang }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.boolean">
+          <div class="setting-row">
+            <mat-checkbox labelPosition="before" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+              {{ setting.dataSettingIndex | language: settings.Lang }}
+            </mat-checkbox>
+          </div>
+        </ng-container>
+      </ng-container>
+    </mat-expansion-panel>
+  </div>
+
+  <div id="last-row-buttons">
+    <button *ngIf="creating" mat-raised-button (click)="createLobby()" [disabled]="!areSettingsValid()">
+      {{ 'CreateLobby' | language: settings.Lang }}
+    </button>
+    <button *ngIf="!creating" mat-raised-button (click)="joinLobby()">
+      {{ 'JoinLobby' | language: settings.Lang }}
+    </button>
+    <button mat-raised-button (click)="goBack()">
+      {{ 'Back' | language: settings.Lang }}
+    </button>
+  </div>
+</div>
+
+<div id="main-container" class="container" [@lobbyShowHideAnimation]>
+  <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">
+    <mat-icon>add_to_photos</mat-icon>
+  </div>
+  <div *ngFor="let lobbyData of lobbyDatas" matRipple class="lobby mat-app-background" (click)="showLobbyData(lobbyData)">
+    <img src="assets/arenachoice.png" alt="Arena" style="width: 100%">
+    <p>{{ lobbyData.Name }}</p>
+    <p>{{ lobbyData.OwnerName }}</p>
+    <p>Arena</p>
+  </div>
+</div>

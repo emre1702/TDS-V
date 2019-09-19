@@ -39,6 +39,9 @@
         <button class="two-per-row-div" mat-raised-button (click)="currentTitle='MapCenter'; switchToMapCenterEdit()">
           {{ 'MapCenter' | language: settings.Lang }}
         </button>
+        <button class="two-per-row-div" mat-raised-button (click)="currentTitle='Objects'; switchToObjects()">
+          {{ 'Objects' | language: settings.Lang }}
+        </button>
         <button class="two-per-row-div" mat-raised-button *ngIf="data.Type == 1"
           [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="currentTitle='BombPlaces'; switchToBombPlacesEdit()">
           {{ 'BombPlaces' | language: settings.Lang }} *
@@ -112,22 +115,22 @@
 
           <ng-container matColumnDef="x">
             <mat-header-cell *matHeaderCellDef>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.X }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="y">
             <mat-header-cell *matHeaderCellDef>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Y }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="z">
             <mat-header-cell *matHeaderCellDef>Z</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Z }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="rot">
             <mat-header-cell *matHeaderCellDef>Rotation</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Rotation }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -145,11 +148,15 @@
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)" [disabled]="!selectedPosition">
           {{ 'Remove' | language: settings.Lang }}
         </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
           {{ 'Teleport' | language: settings.Lang }}
         </button>
       </div>
     </div>
+
     <div class="positions-div" *ngIf="currentNav == mapCreatorNav.MapLimit">
       <div class="mat-table-container mat-elevation-z8">
         <mat-table [dataSource]="data.MapEdges" matSort>
@@ -161,12 +168,12 @@
 
           <ng-container matColumnDef="x">
             <mat-header-cell *matHeaderCellDef>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.X }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="y">
             <mat-header-cell *matHeaderCellDef>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Y }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns2D"></mat-header-row>
@@ -184,35 +191,136 @@
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)" [disabled]="!selectedPosition">
           {{ 'Remove' | language: settings.Lang }}
         </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
           {{ 'Teleport' | language: settings.Lang }}
         </button>
       </div>
     </div>
+
     <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
       <div id="map-center-info">
         {{ 'MapCenterInfo' | language: settings.Lang }}
       </div>
       <div id="map-center-positions-container">
         <mat-form-field color="accent">
-          <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.X"/>
+          <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosX"/>
         </mat-form-field>
         <mat-form-field color="accent">
-          <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Y"/>
+          <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosY"/>
         </mat-form-field>
         <mat-form-field color="accent">
-          <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.Z"/>
+          <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosZ"/>
         </mat-form-field>
       </div>
       <div class="positions-bottom-row">
-          <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)">
-            {{ 'AddPos' | language: settings.Lang }}
-          </button>
-          <button mat-raised-button type="button" (click)="tpToXYZ(data.MapCenter.X, data.MapCenter.Y, data.MapCenter.Z)" [disabled]="false">
-            {{ 'Teleport' | language: settings.Lang }}
-          </button>
-        </div>
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)">
+          {{ 'AddPos' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+          {{ 'Teleport' | language: settings.Lang }}
+        </button>
+      </div>
     </div>
+
+    <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
+      <div id="map-center-info">
+        {{ 'MapCenterInfo' | language: settings.Lang }}
+      </div>
+      <div id="map-center-positions-container">
+        <mat-form-field color="accent">
+          <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosX"/>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosY"/>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data.MapCenter.PosZ"/>
+        </mat-form-field>
+      </div>
+      <div class="positions-bottom-row">
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)">
+          {{ 'AddPos' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+          {{ 'Teleport' | language: settings.Lang }}
+        </button>
+      </div>
+    </div>
+
+    <div class="positions-div" *ngIf="currentNav == mapCreatorNav.Objects">
+      <div class="mat-table-container mat-elevation-z8">
+        <mat-table [dataSource]="data.Objects" matSort >
+
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef>{{ 'NumberShort' | language: settings.Lang }}</mat-header-cell>
+            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>{{ 'Name' | language: settings.Lang }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="x">
+            <mat-header-cell *matHeaderCellDef>X</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="y">
+            <mat-header-cell *matHeaderCellDef>Y</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="z">
+            <mat-header-cell *matHeaderCellDef>Z</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="rotX">
+              <mat-header-cell *matHeaderCellDef>RotX </mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rotY">
+                <mat-header-cell *matHeaderCellDef>RotY</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
+              </ng-container>
+
+          <ng-container matColumnDef="rotZ">
+            <mat-header-cell *matHeaderCellDef>RotZ</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumnsObject"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsObject"
+                  (click)="onSelectedPositionChanged(row)"
+                  [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+        </mat-table>
+      </div>
+
+      <div class="positions-bottom-row">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromObjects)" [disabled]="!selectedPosition">
+          {{ 'Remove' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+          {{ 'Teleport' | language: settings.Lang }}
+        </button>
+      </div>
+    </div>
+
     <div class="positions-div bomb-places-div" *ngIf="currentNav == mapCreatorNav.BombPlaces">
       <div class="mat-table-container mat-elevation-z8">
         <mat-table [dataSource]="data.BombPlaces" matSort>
@@ -224,22 +332,22 @@
 
           <ng-container matColumnDef="x">
             <mat-header-cell *matHeaderCellDef>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.X }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="y">
             <mat-header-cell *matHeaderCellDef>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Y }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="z">
             <mat-header-cell *matHeaderCellDef>Z</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Z }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="rot">
             <mat-header-cell *matHeaderCellDef>Rotation</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Rotation }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
@@ -257,6 +365,9 @@
         <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)" [disabled]="!selectedPosition">
           {{ 'Remove' | language: settings.Lang }}
         </button>
+        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+          {{ 'Hold' | language: settings.Lang }}
+        </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
           {{ 'Teleport' | language: settings.Lang }}
         </button>
@@ -264,3 +375,5 @@
     </div>
   </div>
 </form>
+
+<app-map-creator-object-choice *ngIf="currentNav == mapCreatorNav.Objects"></app-map-creator-object-choice>

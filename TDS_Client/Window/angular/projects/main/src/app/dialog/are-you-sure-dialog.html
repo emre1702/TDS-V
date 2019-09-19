@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ 'Confirm' | language: settings.Lang }}</h1>
+<div mat-dialog-content>
+  {{ 'AreYouSure' | language: settings.Lang }}
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="false" cdkFocusInitial>{{ 'No' | language: settings.Lang }}</button>
+  <button mat-raised-button [mat-dialog-close]="true">{{ 'Yes' | language: settings.Lang }}</button>
+</div>

@@ -1,6 +1,5 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
-using TDS_Common.Instance.Utility;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -8,19 +7,14 @@ namespace TDS_Client.Manager.MapCreator
     {
         public static void Start()
         {
-            Angular.ToggleMapCreator(true);
-            Angular.ToggleFreeroam(true);
+            Browser.Angular.Main.ToggleMapCreator(true);
+            Browser.Angular.Main.ToggleFreeroam(true);
             Binds.SetGeneral();
             ToggleFreecam();
+            ObjectsManager.Start();
+            MarkerManager.Start();
 
-            // TEST //
-            new TDSTimer(() =>
-            {
-                var obj = new RAGE.Elements.MapObject(RAGE.Game.Misc.GetHashKey("prop_mp_placement_med"),
-                   new RAGE.Vector3(0, 0, 80), new RAGE.Vector3(), dimension: RAGE.Elements.Player.LocalPlayer.Dimension);
-                ObjectsManager.Add(obj);
-            }, 5000);
-            /////////
+            RAGE.Elements.Player.LocalPlayer.SetInvincible(true);
         }
 
         public static void Stop()
@@ -28,10 +22,10 @@ namespace TDS_Client.Manager.MapCreator
             Binds.RemoveGeneral();
             Freecam.Stop();
             Foot.Start();
-            Angular.ToggleMapCreator(false);
-            Angular.ToggleFreeroam(false);
-            Blips.Clear();
-            ObjectsManager.Clear();
+            Browser.Angular.Main.ToggleMapCreator(false);
+            Browser.Angular.Main.ToggleFreeroam(false);
+            ObjectsManager.Stop();
+            MarkerManager.Stop();
         }
 
         public static void ToggleFreecam(EKey _ = EKey.A)

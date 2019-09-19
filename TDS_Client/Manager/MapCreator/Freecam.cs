@@ -89,13 +89,15 @@ namespace TDS_Client.Manager.MapCreator
             float goUp = _isUpPressed ? 0.5f : 0f;
             float goDown = _isDownPressed ? 0.5f : 0f;
 
-            cam.SetPosition(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
-            var camPos = cam.Position;
-            Streaming.SetFocusArea(camPos.X, camPos.Y, camPos.Z, 0, 0, 0);
+            Vector3 newPos = new Vector3(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
+            cam.SetPosition(newPos);
+            RAGE.Elements.Player.LocalPlayer.Position = newPos;
             if (Pad.IsControlPressed(0, (int)Control.Aim))
             {
                 float rotX = Math.Max(Math.Min(rot.X + rightAxisY * -5f, 89), -89);
-                cam.Rotation = new Vector3(rotX, 0.0f, rot.Z + rightAxisX * -5f);
+                var newRot = new Vector3(rotX, 0.0f, rot.Z + rightAxisX * -5f);
+                cam.Rotation = newRot;
+                RAGE.Elements.Player.LocalPlayer.SetHeading(newRot.Z);
             }
 
         }

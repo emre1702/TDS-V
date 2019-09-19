@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    div {
+        width: 100%;    
+        margin-bottom: 5px;
+    }
+
+    .logs {
+        margin-top: 10px;
+    }
+
+    .lobby_stats {
+        margin-top: 10px;
+        width: 100%;
+    }
+}

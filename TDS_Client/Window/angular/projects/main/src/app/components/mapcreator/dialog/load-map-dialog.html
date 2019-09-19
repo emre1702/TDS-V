@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{ 'ChooseAMapFromList' | language: settings.Lang }}</h1>
+<div mat-dialog-content>
+  <mat-form-field color="accent">
+    <mat-label>{{ 'Map' | language: settings.Lang }}</mat-label>
+    <mat-select [value]="chosenMap">
+      <mat-optgroup *ngFor="let groupData of data" [label]="groupData.GroupName">
+        <mat-option *ngFor="let mapName of groupData.Maps" [value]="mapName">
+          {{ mapName }}
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">{{ 'Cancel' | language: settings.Lang }}</button>
+  <button mat-raised-button [mat-dialog-close]="chosenMap" cdkFocusInitial>{{ 'Choose' | language: settings.Lang }}</button>
+</div>

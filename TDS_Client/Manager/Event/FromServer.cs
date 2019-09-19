@@ -98,7 +98,7 @@ namespace TDS_Client.Manager.Event
         {
             int type = (int)args[0];
             string json = (string)args[1];
-            Angular.LoadUserpanelData(type, json);
+            Browser.Angular.Main.LoadUserpanelData(type, json);
         }
 
         private void OnHitOpponentMethod(object[] args)
@@ -130,7 +130,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnLeaveCustomLobbyMenuMethod(object[] args)
         {
-            Angular.LeaveCustomLobbyMenu();
+            Browser.Angular.Main.LeaveCustomLobbyMenu();
         }
 
         private void OnLeaveSameLobbyMethod(object[] args)
@@ -143,19 +143,19 @@ namespace TDS_Client.Manager.Event
         private void OnLoadMapFavouritesMethod(object[] args)
         {
             string mapFavoritesJson = (string)args[0];
-            Angular.LoadFavoriteMaps(mapFavoritesJson);
+            Browser.Angular.Main.LoadFavoriteMaps(mapFavoritesJson);
         }
 
         private void OnLoadMapForMapCreatorServerMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.LoadMapForMapCreator(json);
+            Browser.Angular.Main.LoadMapForMapCreator(json);
         }
 
         private void OnLoadMapNamesToLoadForMapCreatorServerMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.LoadMapNamesForMapCreator(json);
+            Browser.Angular.Main.LoadMapNamesForMapCreator(json);
         }
 
         private void OnMapChangeMethod(object[] args)
@@ -206,7 +206,7 @@ namespace TDS_Client.Manager.Event
         private void OnCreateCustomLobbyResponseMethod(object[] args)
         {
             string errorOrEmpty = (string)args[0];
-            Angular.CreateCustomLobbyReturn(errorOrEmpty);
+            Browser.Angular.Main.CreateCustomLobbyReturn(errorOrEmpty);
         }
 
         private void OnRoundStartMethod(object[] args)
@@ -227,7 +227,7 @@ namespace TDS_Client.Manager.Event
             Countdown.Stop();
             LobbyCam.StopCountdown();
             RoundInfo.Stop();
-            Angular.ResetMapVoting();
+            Browser.Angular.Main.ResetMapVoting();
             string reason = (string)args[0];
             int mapId = (int)args[1];
             MainBrowser.ShowRoundEndReason(reason, mapId);
@@ -236,13 +236,13 @@ namespace TDS_Client.Manager.Event
         private void OnSaveMapCreatorReturnMethod(object[] args)
         {
             int err = (int)args[0];
-            Angular.SaveMapCreatorReturn(err);
+            Browser.Angular.Main.SaveMapCreatorReturn(err);
         }
 
         private void OnSendMapCreatorReturnMethod(object[] args)
         {
             int err = (int)args[0];
-            Angular.SendMapCreatorReturn(err);
+            Browser.Angular.Main.SendMapCreatorReturn(err);
         }
 
         private void OnSetAssistsForRoundStatsMethod(object[] args)
@@ -375,13 +375,13 @@ namespace TDS_Client.Manager.Event
         private void OnSyncAllCustomLobbiesMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.SyncAllCustomLobbies(json);
+            Browser.Angular.Main.SyncAllCustomLobbies(json);
         }
 
         private void OnSyncNewCustomLobbyMethod(object[] args)
         {
             string json = (string)args[0];
-            Angular.AddCustomLobby(json);
+            Browser.Angular.Main.AddCustomLobby(json);
         }
 
         private void OnSyncSettingsMethod(object[] args)
@@ -389,13 +389,13 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             var settings = JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(json);
             Settings.LoadUserSettings(settings);
-            Angular.LoadUserpanelData((int)EUserpanelLoadDataType.Settings, json);
+            Browser.Angular.Main.LoadUserpanelData((int)EUserpanelLoadDataType.Settings, json);
         }
 
         private void OnRemoveCustomLobbyMethod(object[] args)
         {
             int lobbyId = (int)args[0];
-            Angular.RemoveCustomLobby(lobbyId);
+            Browser.Angular.Main.RemoveCustomLobby(lobbyId);
         }
 
         private void OnPlayCustomSoundMethod(object[] args)
@@ -407,7 +407,7 @@ namespace TDS_Client.Manager.Event
         private void OnMapVotingSyncOnPlayerJoinMethod(object[] args)
         {
             string mapVotesJson = (string)args[0];
-            Angular.LoadMapVoting(mapVotesJson);
+            Browser.Angular.Main.LoadMapVoting(mapVotesJson);
         }
 
         private void OnPlayerAdminLevelChangeMethod(object[] args)
@@ -424,7 +424,7 @@ namespace TDS_Client.Manager.Event
         private void OnAddMapToVotingMethod(object[] args)
         {
             string mapVoteJson = (string)args[0];
-            Angular.AddMapToVoting(mapVoteJson);
+            Browser.Angular.Main.AddMapToVoting(mapVoteJson);
         }
 
         private void OnStartRegisterLoginMethod(object[] args)
@@ -457,7 +457,7 @@ namespace TDS_Client.Manager.Event
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
-            Angular.Load(adminlvl);
+            Browser.Angular.Main.Start(adminlvl);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
             Settings.Load();
@@ -469,7 +469,7 @@ namespace TDS_Client.Manager.Event
         {
             int mapId = (int)args[0];
             int amountVotes = (int)args[1];
-            Angular.SetMapVotes(mapId, amountVotes);
+            Browser.Angular.Main.SetMapVotes(mapId, amountVotes);
         }
 
         private void OnSetPlayerToSpectatePlayerMethod(object[] args)
@@ -507,7 +507,7 @@ namespace TDS_Client.Manager.Event
         private void OnSyncTeamChoiceMenuDataMethod(object[] args)
         {
             string teamsJson = (string)args[0];
-            Angular.SyncTeamChoiceMenuData(teamsJson, Settings.MixTeamsAfterRound);
+            Browser.Angular.Main.SyncTeamChoiceMenuData(teamsJson, Settings.MixTeamsAfterRound);
         }
 
         private void OnSyncTeamPlayersMethod(object[] args)
@@ -526,7 +526,7 @@ namespace TDS_Client.Manager.Event
         {
             bool boolean = Convert.ToBoolean(args[0]);
             CursorManager.Visible = boolean;
-            Angular.ToggleTeamChoiceMenu(boolean);
+            Browser.Angular.Main.ToggleTeamChoiceMenu(boolean);
         }
 
     }

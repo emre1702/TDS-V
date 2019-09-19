@@ -34,13 +34,11 @@ namespace TDS_Client.Instance.Language
         public virtual string DELETE_KEY => "Delete";
         public virtual string DELETE_DESCRIPTION => "Delete";
         public virtual string END_KEY => "End";
+        public virtual string OBJECT_MODEL_INVALID => "Object model is invalid.";
+        public virtual string COULD_NOT_LOAD_OBJECT => "Could not load object.";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 
-        public virtual ILobbyChoiceTexts LOBBY_CHOICE_TEXTS => new LobbyChoiceTextsEnglish();
-
-        public virtual IMapCreatorMenuTexts MAPCREATOR_MENU => new MapCreatorMenuTextsEnglish();
-
-        public ELanguage Enum => ELanguage.English;
+        public virtual ELanguage Enum => ELanguage.English;
     }
 }

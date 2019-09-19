@@ -11,6 +11,13 @@
   overflow-y: auto;
 }
 
+.objects-container {
+  top: 1%;
+  left: 1%;
+  width: 20%;
+  height: 98%;
+}
+
 #container-content {
   padding: 20px;
   height: auto;
@@ -24,6 +31,13 @@ textarea {
 
 .positions-div {
   height: 70vh;
+
+  .mat-table-objects-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 55% !important;
+  }
 
   .mat-table-container {
     display: flex;
@@ -139,10 +153,16 @@ textarea {
   vertical-align: bottom;
   bottom: 20px;
   width: 90%;
+  overflow-x: hidden;
+  flex-wrap: wrap;
   text-align: center;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  * {
+    flex-grow: 1;
+  }
 }
 
 .main-bottom-buttons-row {

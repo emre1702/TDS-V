@@ -17,7 +17,7 @@ namespace TDS_Client.Manager.Browser
                 if (_isOpen == value)
                     return;
                 _isOpen = value;
-                Angular.ToggleChatOpened(value);
+                Browser.Angular.Main.ToggleChatOpened(value);
                 if (value)
                     TickManager.Add(OnUpdate);
                 else

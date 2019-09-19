@@ -33,13 +33,11 @@ namespace TDS_Client.Instance.Language
         public override string DELETE_KEY => "Entf";
         public override string DELETE_DESCRIPTION => "Entfernen";
         public override string END_KEY => "Ende";
+        public override string OBJECT_MODEL_INVALID => "Objekt Modell ist ungültig.";
+        public override string COULD_NOT_LOAD_OBJECT => "Konnte Objekt nicht laden.";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 
-        public override ILobbyChoiceTexts LOBBY_CHOICE_TEXTS => new LobbyChoiceTextsGerman();
-
-        public override IMapCreatorMenuTexts MAPCREATOR_MENU => new MapCreatorMenuTextsGerman();
-
-        public new ELanguage Enum => ELanguage.German;
+        public override ELanguage Enum => ELanguage.German;
     }
 }

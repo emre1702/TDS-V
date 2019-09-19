@@ -31,7 +31,9 @@ import {
   MatBadgeModule,
   MatTooltipModule,
   MatSlideToggleModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatPaginatorModule,
+  MatPaginatorIntl
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -54,6 +56,8 @@ import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRul
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
 import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
+import { MapCreatorObjectChoiceComponent } from './components/mapcreator/map-creator-object-choice/map-creator-object-choice.component';
+import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 
 @NgModule({
   declarations: [
@@ -78,7 +82,8 @@ import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/
     UserpanelRulesComponent,
     UserpanelFAQsComponent,
     UserpanelSettingsComponent,
-    UserpanelStatsComponent
+    UserpanelStatsComponent,
+    MapCreatorObjectChoiceComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -109,10 +114,14 @@ import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/
     MatBadgeModule,
     MatTooltipModule,
     MatSlideToggleModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatPaginatorModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
-  providers: [OrderByPipe],
+  providers: [
+    OrderByPipe,
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

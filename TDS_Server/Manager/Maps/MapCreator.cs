@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Common.Default;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
@@ -20,6 +19,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
 using DB = TDS_Server_DB.Entity;
+using TDS_Server.Dto.Map.Creator;
 
 namespace TDS_Server.Manager.Maps
 {
@@ -50,8 +50,8 @@ namespace TDS_Server.Manager.Maps
                 if (GetMapByName(mapCreateData.Name) != null || MapsLoader.GetMapByName(mapCreateData.Name) != null)
                     return EMapCreateError.NameAlreadyExists;
 
-                foreach (var bombPlace in mapCreateData.BombPlaces) 
-                    bombPlace.Z -= 1;
+                //foreach (var bombPlace in mapCreateData.BombPlaces) 
+                //    bombPlace.PosZ -= 1;
 
                 var mapDto = new MapDto(mapCreateData);
                 mapDto.Info.IsNewMap = true;
@@ -150,17 +150,19 @@ namespace TDS_Server.Manager.Maps
             if (map == null)
                 map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
 
+            int posId = 0;
+
             var mapCreatorData = new MapCreateDataDto
             {
                 Id = map.SyncedData.Id,
                 Name = map.SyncedData.Name,
                 Type = map.Info.Type,
-                BombPlaces = map.BombInfo?.PlantPositions,
-                MapCenter = map.LimitInfo.Center,
-                MapEdges = map.LimitInfo.Edges,
+                BombPlaces = map.BombInfo?.PlantPositions.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray(),
+                MapCenter = map.LimitInfo.Center != null ? new MapCreatorPosition(posId++, map.LimitInfo.Center) : null,
+                MapEdges = map.LimitInfo.Edges.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray(),
                 MinPlayers = map.Info.MinPlayers,
                 MaxPlayers = map.Info.MaxPlayers,
-                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select(t => t.Spawns).ToArray(),
+                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select(t => t.Spawns.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray()).ToArray(),
                 Description = new Dictionary<ELanguage, string> 
                 { 
                     [ELanguage.English] = map.Descriptions?.English ?? string.Empty, 

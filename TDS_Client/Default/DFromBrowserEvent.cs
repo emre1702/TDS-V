@@ -2,7 +2,6 @@
 {
     public class DFromBrowserEvent
     {
-        public const string AddMapCreatorPosition = "AddMapCreatorPosition_Browser";
         public const string AddMapVote = "AddMapVote_Browser";
         public const string AddRatingToMap = "AddRatingToMap_Browser";
 
@@ -19,6 +18,8 @@
 
         public const string GetVehicle = "GetVehicle_Browser";
 
+        public const string HoldMapCreatorObject = "HoldMapCreatorObject_Browser";
+
         public const string JoinCustomLobby = "JoinCustomLobby_Browser";
         public const string JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser";
         public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Browser";
@@ -26,7 +27,11 @@
         public const string LanguageChange = "LanguageChange_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser";
 
+        public const string MapCreatorShowObject = "MapCreatorShowObject_Browser";
+        public const string MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser";
+
         public const string RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser";
+        public const string RemoveMapCreatorTeamNumber = "RemoveMapCreatorTeamNumber_Browser";
 
         public const string SaveMapCreatorData = "SaveMapCreatorData_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Browser";

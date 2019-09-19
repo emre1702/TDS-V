@@ -1,0 +1,38 @@
+#full-size-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    height: auto;
+    max-height: 40%;
+    width: 30%;
+    margin: auto;
+    padding: 5px;
+    overflow-x: hidden;
+
+    .mat-button {
+        width: 100%;
+        overflow: none;
+
+        .button-span {
+            display: inline-block;
+            overflow: none;
+            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white
+        }
+    }
+
+    .mat-divider {
+        margin-top: 15px;
+        margin-bottom: 7px;
+    }
+
+    .team-same-button {
+        margin-bottom: 15px;
+    }
+}

@@ -1,0 +1,28 @@
+<div class="container mat-elevation-z8 mat-app-background" cdkDrag>
+    <mat-toolbar color="primary" cdkDragHandle>
+        <h1>{{ 'Objects' | language: language }}</h1>
+    </mat-toolbar>
+    <div class="positions-div">
+        <mat-form-field id="filter" color="accent">
+            <input matInput (keyup)="applyFilter($event)" (keyup.enter)="applyFilterAfterDelay($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        <div class="mat-table-container mat-elevation-z8">
+            <mat-table [dataSource]="objectsDataSource" matSort>
+
+                <ng-container matColumnDef="name">
+                    <mat-header-cell mat-sort-header id="name" *matHeaderCellDef>{{ 'Name' | language: language }}</mat-header-cell>
+                    <mat-cell *matCellDef="let name" (keydown)="selectObject(name)">{{ name }}</mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="['name']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['name']"
+                        tabindex="999"
+                        (click)="onSelectedObjectChanged(row)"
+                        (keydown.enter)="selectObject(row)"
+                        [ngClass]="{'background-color-primary': selectedObject == row}"></mat-row>
+
+            </mat-table>
+        </div>
+        <mat-paginator color="accent" pageSize="25" [pageSizeOptions]="[5, 10, 25, 50, 100, 200]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

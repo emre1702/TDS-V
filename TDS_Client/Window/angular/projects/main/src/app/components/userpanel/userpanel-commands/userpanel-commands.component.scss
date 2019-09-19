@@ -1,0 +1,29 @@
+.left-content {
+    float: left;
+    max-width: 50%;
+    height: 100%;
+    overflow: auto;
+    white-space: nowrap;
+    // direction: rtl;
+
+    .mat-list-item {
+        height: 5%;
+    }
+}
+  
+.right-content {
+    padding-left: 20px;
+    display: flex;
+    flex-flow: column;
+    min-height: 100%;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    justify-content: space-between;
+
+    .rights-row {
+        display: flex;
+        justify-content: space-between;
+    }
+}

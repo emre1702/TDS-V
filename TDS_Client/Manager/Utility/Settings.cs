@@ -36,7 +36,7 @@ namespace TDS_Client.Manager.Utility
                 _languageManuallyChanged = true;
                 Language = _languagesDict[_languageEnum];
                 Scoreboard.LoadLanguage();
-                Angular.LoadLanguage(_languageEnum);
+                Browser.Angular.Main.LoadLanguage(_languageEnum);
                 if (PlayerSettings != null)
                 {
                     PlayerSettings.Language = value;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { RageConnectorService } from 'src/app/services/rage-connector.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { LanguageEnum } from 'src/app/enums/language.enum';
@@ -6,20 +6,19 @@ import { MapType } from './enums/maptype.enum';
 import { MatSelectChange, MatDialog, MatSnackBar } from '@angular/material';
 import { MapCreateDataDto } from './models/mapCreateDataDto';
 import { Constants } from '../../constants';
-import { Position4D } from './models/position4d';
 import { DToClientEvent } from 'src/app/enums/dtoclientevent.enum';
 import { LoadMapDialog } from './dialog/load-map-dialog';
 import { MapCreateError } from './enums/mapcreateerror.enum';
-import { Position3D } from './models/position3d';
 import { FormControl, Validators } from '@angular/forms';
 import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
 import { LoadMapDialogGroupDto } from './models/loadMapDialogGroupDto';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { MapCreatorPosition } from './models/mapCreatorPosition';
 
 enum MapCreatorNav {
-  Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, BombPlaces
+  Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, BombPlaces
 }
 
 @Component({
@@ -34,7 +33,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   mapCreatorPositionType = MapCreatorPositionType;
   currentNav = MapCreatorNav.Main;
   editingTeamNumber = 0;
-  selectedPosition: Position3D | Position4D;
+  selectedPosition: MapCreatorPosition;
 
   editingDescriptionLang: string;
   currentTitle = "MapCreator";
@@ -42,6 +41,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ["id", "x", "y", "z", "rot"];
   displayedColumns2D: string[] = ["id", "x", "y"];
+  displayedColumnsObject: string[] = ["id", "name", "x", "y", "z", "rotX", "rotY", "rotZ"];
 
   nameControl = new FormControl("", [
     Validators.required,
@@ -58,6 +58,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private snackBar: MatSnackBar) {
       this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
+      this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.RemovePositionInMapCreatorBrowser.bind(this));
   }
 
   ngOnInit() {
@@ -68,10 +69,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
   }
 
-  private addPositionToMapCreatorBrowser(type: MapCreatorPositionType, x: number, y: number, z: number, rot: number) {
-    const pos = new Position4D(x, y, z, rot);
+  private addPositionToMapCreatorBrowser(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number, rotX: number, rotY: number, rotZ: number, info?: string|number) {
+    const pos = new MapCreatorPosition(id, type, posX, posY, posZ, rotX, rotY, rotZ);
     switch (type) {
       case MapCreatorPositionType.TeamSpawn:
+        pos.Info = info;
         this.addPosToTeamSpawns(pos);
         break;
       case MapCreatorPositionType.MapCenter:
@@ -82,6 +84,52 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         break;
       case MapCreatorPositionType.MapLimit:
         this.addPosToMapLimits(pos);
+        break;
+      case MapCreatorPositionType.Object:
+        pos.Info = info;
+        this.addPosToObjects(pos);
+        break;
+    }
+    this.changeDetector.detectChanges();
+  }
+
+  private RemovePositionInMapCreatorBrowser(id: number, type: MapCreatorPositionType) {
+    switch (type) {
+      case MapCreatorPositionType.TeamSpawn:
+        for (const list of this.data.TeamSpawns) {
+          const teamSpawnPos = list.find(p => p.Id === id);
+          if (teamSpawnPos) {
+            this.selectedPosition = teamSpawnPos;
+            this.removePosFromTeamSpawns();
+            break;
+          }
+        }
+        break;
+      case MapCreatorPositionType.MapCenter:
+          this.data.MapCenter.PosX = 0;
+          this.data.MapCenter.PosY = 0;
+          this.data.MapCenter.PosZ = 0;
+        break;
+      case MapCreatorPositionType.BombPlantPlace:
+        const bombPos = this.data.BombPlaces.find(p => p.Id === id);
+        if (bombPos) {
+          this.selectedPosition = bombPos;
+          this.removePosFromBombPlaces();
+        }
+        break;
+      case MapCreatorPositionType.MapLimit:
+        const mapLimitPos = this.data.MapEdges.find(p => p.Id === id);
+        if (mapLimitPos) {
+          this.selectedPosition = mapLimitPos;
+          this.removePosFromMapLimits();
+        }
+        break;
+      case MapCreatorPositionType.Object:
+        const objectPos = this.data.Objects.find(p => p.Id === id);
+        if (objectPos) {
+          this.selectedPosition = objectPos;
+          this.removePosFromObjects();
+        }
         break;
     }
     this.changeDetector.detectChanges();
@@ -94,74 +142,103 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   removeLastTeam() {
     this.data.TeamSpawns.pop();
     this.editingTeamNumber = this.data.TeamSpawns.length - 1;
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data.TeamSpawns.length);
     this.changeDetector.detectChanges();
   }
 
   startNewPosPlacing(type: MapCreatorPositionType) {
-    this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type);
+    this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type, this.editingTeamNumber);
   }
 
   removeSelectedPos(removeFunc: () => void) {
     removeFunc.call(this);
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, this.selectedPosition.Id);
+    this.selectedPosition = undefined;
     this.changeDetector.detectChanges();
   }
 
-  tpToSelectedPos() {
-    const pos = this.selectedPosition as Position4D;
-    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, pos.X, pos.Y, pos.Z, pos.Rotation);
+  holdSelected() {
+    this.rageConnector.call(DToClientEvent.HoldMapCreatorObject, this.selectedPosition.Id);
   }
 
-  tpToXY(x: number, y: number) {
-    this.rageConnector.call(DToClientEvent.TeleportToXY, x, y);
+  tpToSelectedPos() {
+    const pos = this.selectedPosition;
+    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, pos.PosX, pos.PosY, pos.PosZ, pos.RotZ);
   }
 
   tpToXYZ(x: number, y: number, z: number) {
     this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, x, y, z, 0);
   }
 
-  addPosToTeamSpawns(pos: Position4D) {
-    this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber], pos];
+  addPosToTeamSpawns(pos: MapCreatorPosition) {
+    if (!this.updatePosIfExists(this.data.TeamSpawns[pos.Info], pos)) {
+      this.data.TeamSpawns[pos.Info] = [...this.data.TeamSpawns[pos.Info], pos];
+    }
   }
 
-  addPosToMapLimits(pos: Position4D) {
-    this.data.MapEdges = [...this.data.MapEdges, pos];
+  addPosToMapLimits(pos: MapCreatorPosition) {
+    if (!this.updatePosIfExists(this.data.MapEdges, pos)) {
+      this.data.MapEdges = [...this.data.MapEdges, pos];
+    }
   }
 
-  addPosToBombPlaces(pos: Position4D) {
-    this.data.BombPlaces = [...this.data.BombPlaces, pos];
+  addPosToObjects(pos: MapCreatorPosition) {
+    if (!this.updatePosIfExists(this.data.Objects, pos)) {
+      this.data.Objects = [...this.data.Objects, pos];
+    }
   }
 
-  addPosToMapCenter(pos: Position4D) {
-    this.data.MapCenter.X = pos.X;
-    this.data.MapCenter.Y = pos.Y;
-    this.data.MapCenter.Z = pos.Z;
-    this.rageConnector.call(DToClientEvent.AddMapCreatorPosition, MapCreatorPositionType.MapCenter,
-      pos.X, pos.Y, pos.Z);
+  addPosToBombPlaces(pos: MapCreatorPosition) {
+    if (!this.updatePosIfExists(this.data.BombPlaces, pos)) {
+      this.data.BombPlaces = [...this.data.BombPlaces, pos];
+    }
   }
 
+  private updatePosIfExists(arr: MapCreatorPosition[], pos: MapCreatorPosition): boolean {
+    const entries = arr.filter(position => position.Id === pos.Id);
+    if (entries.length <= 0) {
+      return false;
+    }
+    const origPos = entries[0];
+    origPos.Info = pos.Info;
+    origPos.PosX = pos.PosX;
+    origPos.PosY = pos.PosY;
+    origPos.PosZ = pos.PosZ;
+    origPos.RotX = pos.RotX;
+    origPos.RotY = pos.RotY;
+    origPos.RotZ = pos.RotZ;
+    return true;
+  }
+
+  addPosToMapCenter(pos: MapCreatorPosition) {
+    this.data.MapCenter = pos;
+  }
 
   removePosFromTeamSpawns() {
-    const index = this.data.TeamSpawns[this.editingTeamNumber].indexOf(this.selectedPosition as Position4D);
+    const index = this.data.TeamSpawns[this.editingTeamNumber].indexOf(this.selectedPosition);
     this.data.TeamSpawns[this.editingTeamNumber].splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber]];
-    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.TeamSpawn, index);
   }
 
   removePosFromMapLimits() {
-    const index = this.data.MapEdges.indexOf(this.selectedPosition as Position3D);
+    const index = this.data.MapEdges.indexOf(this.selectedPosition);
     this.data.MapEdges.splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.MapEdges = [...this.data.MapEdges];
-    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.MapLimit, index);
+  }
+
+  removePosFromObjects() {
+    const index = this.data.Objects.indexOf(this.selectedPosition);
+    this.data.Objects.splice(index, 1);
+    this.data.Objects = [...this.data.Objects];
   }
 
   removePosFromBombPlaces() {
-    const index = this.data.BombPlaces.indexOf(this.selectedPosition as Position4D);
+    const index = this.data.BombPlaces.indexOf(this.selectedPosition);
     this.data.BombPlaces.splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.BombPlaces = [...this.data.BombPlaces];
-    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, MapCreatorPositionType.BombPlantPlace, index);
   }
 
   sendDataToClient() {
@@ -275,7 +352,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  onSelectedPositionChanged(row: Position4D) {
+  onSelectedPositionChanged(row: MapCreatorPosition) {
     if (this.selectedPosition == row)
       this.selectedPosition = undefined;
     else
@@ -304,8 +381,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
+  switchToObjects() {
+    this.currentNav = MapCreatorNav.Objects;
+    this.changeDetector.detectChanges();
+  }
+
   switchToMapCenterEdit() {
     this.currentNav = MapCreatorNav.MapCenter;
+    this.selectedPosition = this.data.MapCenter;
     this.changeDetector.detectChanges();
   }
 
@@ -318,6 +401,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     switch (this.currentNav) {
       case MapCreatorNav.Description:
         this.saveDescription();
+        break;
+      case MapCreatorNav.Objects:
+        this.rageConnector.call(DToClientEvent.MapCreatorStopObjectPreview);
         break;
     }
     this.goBackNav();
@@ -360,8 +446,6 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     return this.data.Type != MapType.Bomb || this.data.BombPlaces.length > 0;
   }
 
-
-
   getMinNameLength() {
     return Constants.MIN_MAP_CREATE_NAME_LENGTH;
   }
@@ -369,5 +453,4 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   getMaxNameLength() {
     return Constants.MAX_MAP_CREATE_NAME_LENGTH;
   }
-
 }

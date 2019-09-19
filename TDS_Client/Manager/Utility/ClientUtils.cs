@@ -96,6 +96,16 @@ namespace TDS_Client.Manager.Utility
             return point3Dret;
         }
 
+        public static Vector3 GetScreenCoordFromWorldCoord(Vector3 vec)
+        {
+            float x = 0;
+            float y = 0;
+            if (Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
+                return new Vector3(x, y, 0f);
+            else
+                return null;
+        }
+
         public static float DegToRad(float _deg)
         {
             double Radian = (Math.PI / 180) * _deg;
@@ -195,6 +205,104 @@ namespace TDS_Client.Manager.Utility
         public static float DegreesToRad(float deg)
         {
             return MathF.PI * deg / 180.0f;
+        }
+
+        public static float GetDotProduct(Vector3 v1, Vector3 v2)
+        {
+            return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+        }
+
+        public static bool LineIntersectingSphere(Vector3 StartLine, Vector3 LineEnd, Vector3 SphereCenter, float SphereRadius)
+        {
+            Vector3 d = LineEnd - StartLine;
+            Vector3 f = StartLine - SphereCenter;
+
+            float c = GetDotProduct(f, f) - SphereRadius * SphereRadius;
+            if (c <= 0f)
+                return true;
+
+            float b = GetDotProduct(f, d);
+            if (b >= 0f)
+                return false;
+
+            float a = GetDotProduct(d, d);
+            if (b * b - a * c < 0f)
+                return false;
+
+            return true;
+        }
+
+        public static bool LineIntersectingPlane(Vector3 PlaneNorm, Vector3 PlanePoint, Vector3 LineStart, Vector3 LineEnd, ref Vector3 HitPosition)
+        {
+            Vector3 u = LineEnd - LineStart;
+            float dot = GetDotProduct(PlaneNorm, u);
+            if (MathF.Abs(dot) > float.Epsilon)
+            {
+                Vector3 w = LineStart - PlanePoint;
+                float fac = -GetDotProduct(PlaneNorm, w) / dot;
+                u = u * fac;
+                HitPosition = LineStart + u;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool LineIntersectingCircle(Vector3 CircleCenter, Vector3 CircleRotation, float CircleRadius, Vector3 LineStart, Vector3 LineEnd, ref Vector3 HitPosition, float threshold, ref Vector3 planeNorm)
+        {
+            Vector3 v2 = new Vector3(CircleCenter.X, CircleCenter.Y, CircleCenter.Z + CircleRadius);
+            Vector3 v3 = new Vector3(CircleCenter.X - CircleRadius, CircleCenter.Y, CircleCenter.Z);
+
+            v2 -= CircleCenter;
+            v2 = RotateZ(v2, CircleRotation.Z);
+            v2 += CircleCenter;
+
+            v3 -= CircleCenter;
+            v3 = RotateZ(v3, CircleRotation.Z);
+            v3 += CircleCenter;
+
+            v2 -= CircleCenter;
+            v2 = RotateX(v2, CircleRotation.X);
+            v2 += CircleCenter;
+
+            v3 -= CircleCenter;
+            v3 = RotateX(v3, CircleRotation.X);
+            v3 += CircleCenter;
+
+            v2 -= CircleCenter;
+            v2 = RotateY(v2, CircleRotation.Y);
+            v2 += CircleCenter;
+
+            v3 -= CircleCenter;
+            v3 = RotateY(v3, CircleRotation.Y);
+            v3 += CircleCenter;
+
+            //RAGE.Game.Graphics.DrawPoly(CircleCenter.X, CircleCenter.Y, CircleCenter.Z, v2.X, v2.Y, v2.Z, v3.X, v3.Y, v3.Z, 0, 255, 0, 255);
+
+            Vector3 four = v2 - CircleCenter;
+            Vector3 five = v3 - CircleCenter;
+
+            Vector3 cross = GetCrossProduct(four, five);
+            planeNorm = new Vector3(cross.X, cross.Y, cross.Z);
+            cross.Normalize();
+            bool hit = LineIntersectingPlane(cross, CircleCenter, LineStart, LineEnd, ref HitPosition);
+            if (hit)
+            {
+                if (HitPosition.DistanceTo(CircleCenter) <= CircleRadius + threshold)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static float GetCursorX()
+        {
+            return Pad.GetDisabledControlNormal(0, (int)Control.CursorX);
+        }
+
+        public static float GetCursorY()
+        {
+            return Pad.GetDisabledControlNormal(0, (int)Control.CursorY);
         }
     }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "rage-connector",
+  "version": "1.0",
+  "peerDependencies": {
+    "@angular/common": "^8.2.7",
+    "@angular/core": "^8.2.7"
+  },
+  "main": "bundles/rage-connector.umd.js",
+  "module": "fesm5/rage-connector.js",
+  "es2015": "fesm2015/rage-connector.js",
+  "esm5": "esm5/rage-connector.js",
+  "esm2015": "esm2015/rage-connector.js",
+  "fesm5": "fesm5/rage-connector.js",
+  "fesm2015": "fesm2015/rage-connector.js",
+  "typings": "rage-connector.d.ts",
+  "metadata": "rage-connector.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

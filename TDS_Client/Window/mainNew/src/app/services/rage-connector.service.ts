@@ -1,4 +1,4 @@
-import { Injectable, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 declare const mp: {
   trigger(eventName: string, ...args: any): void;
