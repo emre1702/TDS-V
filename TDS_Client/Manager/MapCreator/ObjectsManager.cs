@@ -5,6 +5,7 @@ using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.MapCreator
 {

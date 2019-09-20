@@ -3,8 +3,8 @@ using RAGE.Elements;
 using RAGE.Game;
 using TDS_Client.Enum;
 using TDS_Client.Instance.MapCreator;
-using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Enum;
 using Entity = RAGE.Game.Entity;
 
 namespace TDS_Client.Manager.MapCreator

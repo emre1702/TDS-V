@@ -2,6 +2,7 @@
 using RAGE;
 using RAGE.Elements;
 using TDS_Client.Enum;
+using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Instance.MapCreator

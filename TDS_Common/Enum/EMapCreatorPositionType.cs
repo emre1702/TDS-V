@@ -1,6 +1,6 @@
-﻿namespace TDS_Client.Enum
+﻿namespace TDS_Common.Enum
 {
-    enum EMapCreatorPositionType
+    public enum EMapCreatorPositionType
     {
         TeamSpawn,
         MapLimit,

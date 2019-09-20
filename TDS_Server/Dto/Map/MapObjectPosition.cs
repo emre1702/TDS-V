@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using TDS_Server.Dto.Map.Creator;
 
 namespace TDS_Server.Dto.Map
@@ -28,15 +29,15 @@ namespace TDS_Server.Dto.Map
 
         public MapObjectPosition() { }
 
-        public MapObjectPosition(MapCreatorObject obj)
+        public MapObjectPosition(MapCreatorPosition obj)
         {
-            Name = obj.ObjectName;
-            X = obj.Position.PosX;
-            Y = obj.Position.PosY;
-            Z = obj.Position.PosZ;
-            RotX = obj.Position.RotX;
-            RotY = obj.Position.RotY;
-            RotZ = obj.Position.RotZ;
+            Name = obj.Info?.ToString() ?? "?";
+            X = obj.PosX;
+            Y = obj.PosY;
+            Z = obj.PosZ;
+            RotX = obj.RotX;
+            RotY = obj.RotY;
+            RotZ = obj.RotZ;
         }
     }
 }
