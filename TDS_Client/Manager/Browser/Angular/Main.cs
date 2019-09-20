@@ -15,6 +15,15 @@ namespace TDS_Client.Manager.Browser.Angular
         public static HtmlWindow Browser { get; set; }
         private readonly static Queue<string> _executeQueue = new Queue<string>();
 
+        private static void Execute(string eventName, params object[] args)
+        {
+            string execStr = Shared.GetExecStr(eventName, args);
+            if (Browser == null)
+                _executeQueue.Enqueue(execStr);
+            else
+                Browser.ExecuteJs(execStr);
+        }
+
         public static void Start(int adminLevel)
         {
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
@@ -25,15 +34,6 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.ExecuteJs(execStr);
             }
             _executeQueue.Clear();
-        }
-
-        public static void Execute(string eventName, params object[] args)
-        {
-            string execStr = Shared.GetExecStr(eventName, args);
-            if (Browser == null)
-                _executeQueue.Enqueue(execStr);
-            else
-                Browser.ExecuteJs(execStr);
         }
 
         public static void LoadLanguage(ELanguage language)

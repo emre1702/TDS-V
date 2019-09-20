@@ -26,6 +26,8 @@ namespace TDS_Client.Manager.MapCreator
             Browser.Angular.Main.ToggleFreeroam(false);
             ObjectsManager.Stop();
             MarkerManager.Stop();
+            ObjectPreview.Stop();
+            Browser.Angular.MapCreatorObjectChoice.Stop();
         }
 
         public static void ToggleFreecam(EKey _ = EKey.A)

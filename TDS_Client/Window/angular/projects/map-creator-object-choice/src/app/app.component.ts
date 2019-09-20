@@ -12,7 +12,7 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
 @Component({
   selector: 'app-root',
   templateUrl: './app.template.html',
-  styles: ['./app.style.scss']
+  styleUrls: ['./app.style.scss']
 })
 export class AppComponent implements AfterViewInit {
   private langByLangValue = {

@@ -21,29 +21,29 @@
 
         <button class="two-per-row-div"
             mat-raised-button
-            (click)="currentTitle='MapSettings'; switchToMapSettings()" >
+            (click)="switchToMapSettings()" >
           {{ 'MapSettings' | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button
-          (click)="currentTitle=lang; switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages()" >
+          (click)="switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages()" >
           {{ lang | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button
-          [color]="isTeamSpawnsValid() ? 'primary' : 'warn'" (click)="currentTitle='TeamSpawns'; switchToTeamSpawnsEdit()">
+          [color]="isTeamSpawnsValid() ? 'primary' : 'warn'" (click)="switchToTeamSpawnsEdit()">
           {{ 'TeamSpawns' | language: settings.Lang }} *
         </button>
         <button class="two-per-row-div" mat-raised-button
-          [color]="isMapLimitValid() ? 'primary' : 'warn'" (click)="currentTitle='MapLimit'; switchToMapLimitEdit()">
+          [color]="isMapLimitValid() ? 'primary' : 'warn'" (click)="switchToMapLimitEdit()">
           {{ 'MapLimit' | language: settings.Lang }} *
         </button>
-        <button class="two-per-row-div" mat-raised-button (click)="currentTitle='MapCenter'; switchToMapCenterEdit()">
+        <button class="two-per-row-div" mat-raised-button (click)="switchToMapCenterEdit()">
           {{ 'MapCenter' | language: settings.Lang }}
         </button>
-        <button class="two-per-row-div" mat-raised-button (click)="currentTitle='Objects'; switchToObjects()">
+        <button class="two-per-row-div" mat-raised-button (click)="switchToObjects()">
           {{ 'Objects' | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button *ngIf="data.Type == 1"
-          [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="currentTitle='BombPlaces'; switchToBombPlacesEdit()">
+          [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="switchToBombPlacesEdit()">
           {{ 'BombPlaces' | language: settings.Lang }} *
         </button>
       </div>
@@ -347,5 +347,3 @@
     </div>
   </div>
 </form>
-
-<app-map-creator-object-choice *ngIf="currentNav == mapCreatorNav.Objects"></app-map-creator-object-choice>

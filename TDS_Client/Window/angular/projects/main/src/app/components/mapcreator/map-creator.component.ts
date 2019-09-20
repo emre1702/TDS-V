@@ -359,38 +359,47 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   switchToMapSettings() {
+    this.currentTitle = 'MapSettings';
     this.currentNav = MapCreatorNav.MapSettings;
     this.changeDetector.detectChanges();
   }
 
   switchToDescriptionEdit(lang: string) {
+    this.currentTitle = lang;
     this.editingDescriptionLang = lang;
     this.currentNav = MapCreatorNav.Description;
     this.changeDetector.detectChanges();
   }
 
   switchToTeamSpawnsEdit() {
+    this.currentTitle = 'TeamSpawns';
     this.currentNav = MapCreatorNav.TeamSpawns;
     this.changeDetector.detectChanges();
   }
 
   switchToMapLimitEdit() {
+    this.currentTitle = 'MapLimit';
     this.currentNav = MapCreatorNav.MapLimit;
     this.changeDetector.detectChanges();
   }
 
   switchToObjects() {
+    this.currentTitle = 'Objects';
     this.currentNav = MapCreatorNav.Objects;
     this.changeDetector.detectChanges();
   }
 
   switchToMapCenterEdit() {
+    this.currentTitle = 'MapCenter';
     this.currentNav = MapCreatorNav.MapCenter;
     this.selectedPosition = this.data.MapCenter;
     this.changeDetector.detectChanges();
   }
 
   switchToBombPlacesEdit() {
+    this.rageConnector.call(DToClientEvent.MapCreatorStartObjectChoice);
+
+    this.currentTitle = 'BombPlaces';
     this.currentNav = MapCreatorNav.BombPlaces;
     this.changeDetector.detectChanges();
   }

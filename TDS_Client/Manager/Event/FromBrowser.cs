@@ -41,6 +41,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
+            Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
@@ -183,9 +184,15 @@ namespace TDS_Client.Manager.Event
             ObjectPreview.ShowObject(objName);
         }
 
+        private void OnMapCreatorStartObjectChoiceMethod(object[] args)
+        {
+            Browser.Angular.MapCreatorObjectChoice.Start();
+        }
+
         private void OnMapCreatorStopObjectPreviewMethod(object[] args)
         {
             ObjectPreview.Stop();
+            Browser.Angular.MapCreatorObjectChoice.Stop();
         }
 
         private void OnTryLoginMethod(object[] args)
