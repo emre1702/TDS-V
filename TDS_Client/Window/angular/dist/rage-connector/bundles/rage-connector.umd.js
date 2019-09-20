@@ -207,9 +207,7 @@
      */
     var RageConnectorService = /** @class */ (function () {
         function RageConnectorService(zone) {
-            this.zone = zone;
-            this.events = {};
-            this.callbackEvents = {};
+            RageConnectorService.zone = zone;
             window.RageAngularEvent = this.rageEventHandler;
         }
         /**
@@ -223,19 +221,18 @@
          * @return {?}
          */
         function (eventName) {
-            var _this = this;
             var args = [];
             for (var _i = 1; _i < arguments.length; _i++) {
                 args[_i - 1] = arguments[_i];
             }
-            this.zone.run((/**
+            RageConnectorService.zone.run((/**
              * @return {?}
              */
             function () {
                 var e_1, _a, e_2, _b;
-                if (_this.events[eventName]) {
+                if (RageConnectorService.events[eventName]) {
                     try {
-                        for (var _c = __values(_this.events[eventName]), _d = _c.next(); !_d.done; _d = _c.next()) {
+                        for (var _c = __values(RageConnectorService.events[eventName]), _d = _c.next(); !_d.done; _d = _c.next()) {
                             var func = _d.value;
                             func.apply(void 0, __spread(args));
                         }
@@ -248,10 +245,10 @@
                         finally { if (e_1) throw e_1.error; }
                     }
                 }
-                if (_this.callbackEvents[eventName]) {
+                if (RageConnectorService.callbackEvents[eventName]) {
                     /** @type {?} */
-                    var callbackFunctions = _this.callbackEvents[eventName];
-                    _this.callbackEvents[eventName] = undefined;
+                    var callbackFunctions = RageConnectorService.callbackEvents[eventName];
+                    RageConnectorService.callbackEvents[eventName] = undefined;
                     try {
                         for (var callbackFunctions_1 = __values(callbackFunctions), callbackFunctions_1_1 = callbackFunctions_1.next(); !callbackFunctions_1_1.done; callbackFunctions_1_1 = callbackFunctions_1.next()) {
                             var func = callbackFunctions_1_1.value;
@@ -292,10 +289,10 @@
          * @return {?}
          */
         function (eventName, callback) {
-            if (!this.events[eventName]) {
-                this.events[eventName] = [];
+            if (!RageConnectorService.events[eventName]) {
+                RageConnectorService.events[eventName] = [];
             }
-            this.events[eventName].push(callback);
+            RageConnectorService.events[eventName].push(callback);
         };
         /**
          * @param {?} eventName
@@ -345,15 +342,18 @@
         function (eventName, args, callback) {
             if (typeof mp == "undefined") // testing without RAGE
                 return;
-            if (!this.callbackEvents[eventName]) {
-                this.callbackEvents[eventName] = [];
+            if (!RageConnectorService.callbackEvents[eventName]) {
+                RageConnectorService.callbackEvents[eventName] = [];
             }
-            this.callbackEvents[eventName].push(callback);
+            RageConnectorService.callbackEvents[eventName].push(callback);
             if (args)
                 mp.trigger.apply(mp, __spread([eventName], args));
             else
                 mp.trigger(eventName);
         };
+        RageConnectorService.zone = null;
+        RageConnectorService.events = {};
+        RageConnectorService.callbackEvents = {};
         RageConnectorService.decorators = [
             { type: core.Injectable, args: [{
                         providedIn: 'root'
@@ -371,17 +371,17 @@
          * @type {?}
          * @private
          */
-        RageConnectorService.prototype.events;
+        RageConnectorService.zone;
         /**
          * @type {?}
          * @private
          */
-        RageConnectorService.prototype.callbackEvents;
+        RageConnectorService.events;
         /**
          * @type {?}
          * @private
          */
-        RageConnectorService.prototype.zone;
+        RageConnectorService.callbackEvents;
     }
 
     /**

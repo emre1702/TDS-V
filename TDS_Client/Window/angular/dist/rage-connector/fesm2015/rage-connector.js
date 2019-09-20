@@ -9,9 +9,7 @@ class RageConnectorService {
      * @param {?} zone
      */
     constructor(zone) {
-        this.zone = zone;
-        this.events = {};
-        this.callbackEvents = {};
+        RageConnectorService.zone = zone;
         window.RageAngularEvent = this.rageEventHandler;
     }
     /**
@@ -20,19 +18,19 @@ class RageConnectorService {
      * @return {?}
      */
     rageEventHandler(eventName, ...args) {
-        this.zone.run((/**
+        RageConnectorService.zone.run((/**
          * @return {?}
          */
         () => {
-            if (this.events[eventName]) {
-                for (const func of this.events[eventName]) {
+            if (RageConnectorService.events[eventName]) {
+                for (const func of RageConnectorService.events[eventName]) {
                     func(...args);
                 }
             }
-            if (this.callbackEvents[eventName]) {
+            if (RageConnectorService.callbackEvents[eventName]) {
                 /** @type {?} */
-                const callbackFunctions = this.callbackEvents[eventName];
-                this.callbackEvents[eventName] = undefined;
+                const callbackFunctions = RageConnectorService.callbackEvents[eventName];
+                RageConnectorService.callbackEvents[eventName] = undefined;
                 for (const func of callbackFunctions) {
                     func(...args);
                 }
@@ -48,10 +46,10 @@ class RageConnectorService {
      * @return {?}
      */
     listen(eventName, callback) {
-        if (!this.events[eventName]) {
-            this.events[eventName] = [];
+        if (!RageConnectorService.events[eventName]) {
+            RageConnectorService.events[eventName] = [];
         }
-        this.events[eventName].push(callback);
+        RageConnectorService.events[eventName].push(callback);
     }
     /**
      * @param {?} eventName
@@ -75,16 +73,19 @@ class RageConnectorService {
     callCallback(eventName, args, callback) {
         if (typeof mp == "undefined") // testing without RAGE
             return;
-        if (!this.callbackEvents[eventName]) {
-            this.callbackEvents[eventName] = [];
+        if (!RageConnectorService.callbackEvents[eventName]) {
+            RageConnectorService.callbackEvents[eventName] = [];
         }
-        this.callbackEvents[eventName].push(callback);
+        RageConnectorService.callbackEvents[eventName].push(callback);
         if (args)
             mp.trigger(eventName, ...args);
         else
             mp.trigger(eventName);
     }
 }
+RageConnectorService.zone = null;
+RageConnectorService.events = {};
+RageConnectorService.callbackEvents = {};
 RageConnectorService.decorators = [
     { type: Injectable, args: [{
                 providedIn: 'root'
@@ -100,17 +101,17 @@ if (false) {
      * @type {?}
      * @private
      */
-    RageConnectorService.prototype.events;
+    RageConnectorService.zone;
     /**
      * @type {?}
      * @private
      */
-    RageConnectorService.prototype.callbackEvents;
+    RageConnectorService.events;
     /**
      * @type {?}
      * @private
      */
-    RageConnectorService.prototype.zone;
+    RageConnectorService.callbackEvents;
 }
 
 /**

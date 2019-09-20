@@ -384,6 +384,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   switchToObjects() {
+    this.rageConnector.call(DToClientEvent.MapCreatorStartObjectChoice);
+
     this.currentTitle = 'Objects';
     this.currentNav = MapCreatorNav.Objects;
     this.changeDetector.detectChanges();
@@ -397,8 +399,6 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   switchToBombPlacesEdit() {
-    this.rageConnector.call(DToClientEvent.MapCreatorStartObjectChoice);
-
     this.currentTitle = 'BombPlaces';
     this.currentNav = MapCreatorNav.BombPlaces;
     this.changeDetector.detectChanges();

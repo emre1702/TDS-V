@@ -1,8 +1,8 @@
 import { NgZone } from '@angular/core';
 export declare class RageConnectorService {
-    private zone;
-    private events;
-    private callbackEvents;
+    private static zone;
+    private static events;
+    private static callbackEvents;
     constructor(zone: NgZone);
     rageEventHandler(eventName: string, ...args: any): void;
     /**

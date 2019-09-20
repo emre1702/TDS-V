@@ -21,6 +21,7 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void Start()
         {
+            RAGE.Chat.Output("MapCreatorObjectChoice Start");
             Browser = new HtmlWindow(ClientConstants.AngularMapCreatorObjectChoiceBrowserPath);
 
             Execute(DToBrowserEvent.InitLoadAngular, (int)Settings.LanguageEnum);

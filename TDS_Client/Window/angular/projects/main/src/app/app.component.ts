@@ -11,9 +11,9 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  showMapCreator = true;
+  showMapCreator = false;
   showFreeroam = false;
-  showLobbyChoice = false;
+  showLobbyChoice = true;
   showTeamChoice = false;
   showUserpanel = false;
 

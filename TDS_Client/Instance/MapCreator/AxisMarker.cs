@@ -16,8 +16,8 @@ namespace TDS_Client.Instance.MapCreator
 
         public Marker Marker;
 
-        private Func<float, Vector3> _rotationGetter;  
-        private AxisMarkerMovePosType _movePosType;
+        private readonly Func<float, Vector3> _rotationGetter;  
+        private readonly AxisMarkerMovePosType _movePosType;
 
 
         public AxisMarker(RGBA color, Func<float, Vector3> rotationGetter = null, AxisMarkerMovePosType movePosType = AxisMarkerMovePosType.None)
@@ -75,7 +75,7 @@ namespace TDS_Client.Instance.MapCreator
 
         public void HandleClick(MapCreatorObject obj)
         {
-            float x = 0f;
+            float x;
             if (_movePosType != AxisMarkerMovePosType.None)
             {
                 x = Math.Max(Math.Max(obj.Size.X, obj.Size.Y), obj.Size.Z) * 1.25f;

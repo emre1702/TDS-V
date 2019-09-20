@@ -10,23 +10,25 @@ declare const window: any;
 })
 export class RageConnectorService {
 
-  private events: {[key: string]: ((...args: any) => void)[]} = {};
-  private callbackEvents: {[key: string]: ((...args: any) => void)[]} = {};
+  private static zone: NgZone = null;
+  private static events: {[key: string]: ((...args: any) => void)[]} = {};
+  private static callbackEvents: {[key: string]: ((...args: any) => void)[]} = {};
 
-  constructor(private zone: NgZone) {
+  constructor(zone: NgZone) {
+    RageConnectorService.zone = zone;
     window.RageAngularEvent = this.rageEventHandler;
   }
 
   public rageEventHandler(eventName: string, ...args: any) {
-    this.zone.run(() => {
-      if (this.events[eventName]) {
-        for (const func of this.events[eventName]) {
+    RageConnectorService.zone.run(() => {
+      if (RageConnectorService.events[eventName]) {
+        for (const func of RageConnectorService.events[eventName]) {
           func(...args);
         }
       }
-      if (this.callbackEvents[eventName]) {
-        const callbackFunctions = this.callbackEvents[eventName];
-        this.callbackEvents[eventName] = undefined;
+      if (RageConnectorService.callbackEvents[eventName]) {
+        const callbackFunctions = RageConnectorService.callbackEvents[eventName];
+        RageConnectorService.callbackEvents[eventName] = undefined;
         for (const func of callbackFunctions) {
           func(...args);
         }
@@ -42,10 +44,10 @@ export class RageConnectorService {
    * @param callback Any function
    */
   public listen(eventName: string, callback: (...args: any) => void) {
-    if (!this.events[eventName]) {
-      this.events[eventName] = [];
+    if (!RageConnectorService.events[eventName]) {
+      RageConnectorService.events[eventName] = [];
     }
-    this.events[eventName].push(callback);
+    RageConnectorService.events[eventName].push(callback);
   }
 
   public call(eventName: string, ...args: any) {
@@ -65,10 +67,10 @@ export class RageConnectorService {
   public callCallback(eventName: string, args: any[] | undefined, callback: (...args: any) => void) {
     if (typeof mp == "undefined") // testing without RAGE
       return;
-    if (!this.callbackEvents[eventName]) {
-      this.callbackEvents[eventName] = [];
+    if (!RageConnectorService.callbackEvents[eventName]) {
+      RageConnectorService.callbackEvents[eventName] = [];
     }
-    this.callbackEvents[eventName].push(callback);
+    RageConnectorService.callbackEvents[eventName].push(callback);
     if (args)
       mp.trigger(eventName, ...args);
     else
