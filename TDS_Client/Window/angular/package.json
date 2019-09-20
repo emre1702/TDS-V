@@ -4,8 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200 --host 127.0.0.1 --project=main",
-    "build": "ng build --baseHref='' --prod --aot=true --buildOptimizer --commonChunk=false --optimization --sourceMap=false",
-    "startobject": "ng serve --port 4200 --host 127.0.0.1 --project=map-creator-object-choice"
+    "build": "ng build --baseHref='' --prod --aot=true --buildOptimizer --commonChunk=false --optimization --sourceMap=false --project=main",
+    "startobject": "ng serve --port 4200 --host 127.0.0.1 --project=map-creator-object-choice",
+    "buildobject": "ng build --baseHref='' --prod --aot=true --buildOptimizer --commonChunk=false --optimization --sourceMap=false --project=map-creator-object-choice"
   },
   "private": true,
   "dependencies": {
