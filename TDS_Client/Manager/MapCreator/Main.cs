@@ -42,6 +42,7 @@ namespace TDS_Client.Manager.MapCreator
                 Foot.Stop();
                 Freecam.Start();
             }
+            Binds.SetGeneral();
         }
     }
 }
