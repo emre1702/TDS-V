@@ -1,6 +1,7 @@
 *.ide
 *.suo
 /.vs/
+/dist/
 packages/*
 */obj/*
 */packages/*
@@ -10,5 +11,3 @@ TDS_Server/server/*
 /TDS_Server_DB/DB.config
 *node_modules*
 *efcore.bat
-*scaffoldCommand.txt
-*/angular/dist/*
