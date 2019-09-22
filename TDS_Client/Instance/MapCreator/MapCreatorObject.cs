@@ -65,16 +65,14 @@ namespace TDS_Client.Instance.MapCreator
             Blip = CreateBlip();
 
             Entity.FreezePosition(true);
-            ActivatePhysics();
         }
 
         public void LoadEntityData()
         {
-            Position = Entity.Position;
+            Position = RAGE.Game.Entity.GetEntityCoords(Entity.Handle, true);
             _movingPosition = new Vector3(Position.X, Position.Y, Position.Z);
             Rotation = RAGE.Game.Entity.GetEntityRotation(Entity.Handle, 2);
             _movingRotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
-            ActivatePhysics();
         }
 
         public void ResetObjectPosition()
