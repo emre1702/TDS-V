@@ -57,6 +57,8 @@ import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/us
 import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
 import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
 import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
+import { InputTypeDirective } from './extensions/inputTypeDirective';
+import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,10 @@ import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
     UserpanelRulesComponent,
     UserpanelFAQsComponent,
     UserpanelSettingsComponent,
-    UserpanelStatsComponent
+    UserpanelStatsComponent,
+
+    InputTypeDirective,
+    TextareaTypeDirective
   ],
   imports: [
     ReactiveFormsModule,

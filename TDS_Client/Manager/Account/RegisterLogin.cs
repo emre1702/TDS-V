@@ -9,8 +9,8 @@ namespace TDS_Client.Manager.Account
     internal static class RegisterLogin
     {
         public static HtmlWindow Browser;
-        private static string name;
-        private static bool isRegistered;
+        private static string _name;
+        private static bool _isRegistered;
 
         public static void TryLogin(string username, string password)
         {
@@ -24,8 +24,8 @@ namespace TDS_Client.Manager.Account
 
         public static void Start(string theName, bool isregistered)
         {
-            name = theName;
-            isRegistered = isregistered;
+            _name = theName;
+            _isRegistered = isregistered;
             Browser = new HtmlWindow(ClientConstants.RegisterLoginBrowserPath);
             CursorManager.Visible = true;
             SendDataToBrowser();
@@ -40,7 +40,7 @@ namespace TDS_Client.Manager.Account
 
         private static void SendDataToBrowser()
         {
-            Browser.ExecuteJs($"setLoginPanelData(`{name}`, {(isRegistered ? 1 : 0)}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
 
         public static void SyncLanguage()

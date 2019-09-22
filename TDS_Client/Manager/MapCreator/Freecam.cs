@@ -105,6 +105,9 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void KeyDown(EKey key)
         {
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             switch (key)
             {
                 case EKey.E:

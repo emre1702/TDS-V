@@ -271,6 +271,9 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void TogglePlaceOnGround(EKey _)
         {
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             _placeOnGround = !_placeOnGround;
         }
 

@@ -7,6 +7,8 @@ export enum DToClientEvent {
   CreateCustomLobby = "CreateCustomLobby_Browser",
   GetVehicle = "GetVehicle_Browser",
   HoldMapCreatorObject = "HoldMapCreatorObject_Browser",
+  InputStarted = "InputStarted_Browser",
+  InputStopped = "InputStopped_Browser",
   JoinCustomLobby = "JoinCustomLobby_Browser",
   JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser",
   JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Browser",

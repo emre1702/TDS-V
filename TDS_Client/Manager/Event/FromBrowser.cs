@@ -33,6 +33,8 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
+            Add(DFromBrowserEvent.InputStarted, OnInputStartedMethod);
+            Add(DFromBrowserEvent.InputStopped, OnInputStoppedMethod);
             Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
@@ -129,6 +131,16 @@ namespace TDS_Client.Manager.Event
         {
             int objID = (int)args[0];
             ObjectPlacing.HoldObjectWithID(objID);
+        }
+
+        private void OnInputStartedMethod(object[] args)
+        {
+            Browser.Angular.Shared.InInput = true;
+        }
+
+        private void OnInputStoppedMethod(object[] args)
+        {
+            Browser.Angular.Shared.InInput = false;
         }
 
         private void OnJoinCustomLobbyMethod(object[] args)

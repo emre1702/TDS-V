@@ -10,6 +10,8 @@ namespace TDS_Client.Manager.Browser.Angular
     static class Shared
     {
 
+        public static bool InInput { get; set; }
+
         public static string GetExecStr(string eventName, params object[] args)
         {
             var strBuilder = new StringBuilder($"RageAngularEvent(`{eventName}`");

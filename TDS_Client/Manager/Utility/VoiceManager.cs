@@ -28,6 +28,9 @@ namespace TDS_Client.Manager.Utility
 
         private static void Start(Control _)
         {
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             Voice.Muted = false;
             MainBrowser.StartPlayerTalking(Player.LocalPlayer.Name);
         }

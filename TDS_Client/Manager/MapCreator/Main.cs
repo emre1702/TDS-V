@@ -33,6 +33,9 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void ToggleFreecam(EKey _ = EKey.A)
         {
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             InstructionalButtonManager.Reset();
             Binds.SetGeneral();
             if (Freecam.IsActive)

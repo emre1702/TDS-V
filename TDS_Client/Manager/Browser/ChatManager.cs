@@ -51,16 +51,25 @@ namespace TDS_Client.Manager.Browser
 
         private static void OpenLobbyChatInput(Control _)
         {
+            if (Angular.Shared.InInput)
+                return;
+
             OpenChatInput(null);
         }
 
         private static void OpenGlobalChatInput(Control _)
         {
+            if (Angular.Shared.InInput)
+                return;
+
             OpenChatInput("/globalsay ");
         }
 
         private static void OpenTeamChatInput(Control _)
         {
+            if (Angular.Shared.InInput)
+                return;
+
             OpenChatInput("/teamsay ");
         }
 

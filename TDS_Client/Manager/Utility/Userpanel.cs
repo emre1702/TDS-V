@@ -14,6 +14,9 @@ namespace TDS_Client.Manager.Utility
                 return;
             if (ChatManager.IsOpen)
                 return;
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             Browser.Angular.Main.ToggleUserpanel(true);
             _open = true;
             CursorManager.Visible = true;

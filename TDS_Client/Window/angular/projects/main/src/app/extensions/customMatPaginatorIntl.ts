@@ -1,14 +1,20 @@
 import { MatPaginatorIntl } from '@angular/material';
 import { SettingsService } from '../services/settings.service';
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 
 @Injectable()
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {
   constructor(
-    private settings: SettingsService) {
+    private settings: SettingsService,
+    private changeDetector: ChangeDetectorRef) {
 
     super();
     this.initLangs();
+
+    settings.LanguageChanged.on(null, () => {
+      this.initLangs();
+      this.changeDetector.detectChanges();
+    })
   }
 
   private initLangs() {

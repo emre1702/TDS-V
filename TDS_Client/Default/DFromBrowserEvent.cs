@@ -20,6 +20,8 @@
 
         public const string HoldMapCreatorObject = "HoldMapCreatorObject_Browser";
 
+        public const string InputStarted = "InputStarted_Browser";
+        public const string InputStopped = "InputStopped_Browser";
         public const string JoinCustomLobby = "JoinCustomLobby_Browser";
         public const string JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser";
         public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Browser";
