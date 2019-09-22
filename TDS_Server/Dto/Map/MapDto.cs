@@ -74,7 +74,7 @@ namespace TDS_Server.Dto.Map
 
             LimitInfo = new MapLimitInfoDto
             {
-                Center = new Position3DDto(data.MapCenter),
+                Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
                 Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
                 EdgesJson = JsonConvert.SerializeObject(data.MapEdges)
             };
@@ -84,11 +84,12 @@ namespace TDS_Server.Dto.Map
                 Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToArray()
             };
 
-            BombInfo = new MapBombInfoDto
-            {
-                PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
-                PlantPositionsJson = JsonConvert.SerializeObject(data.BombPlaces)
-            };
+            if (data.BombPlaces != null)
+                BombInfo = new MapBombInfoDto
+                {
+                    PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
+                    PlantPositionsJson = JsonConvert.SerializeObject(data.BombPlaces)
+                };
         }
     }
 
