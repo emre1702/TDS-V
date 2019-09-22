@@ -79,6 +79,23 @@ namespace TDS_Client.Manager.MapCreator
 
         }
 
+        public static void HighlightObjectWithId(int id)
+        {
+            if (HoldingObject != null)
+                return;
+
+            if (id == -1)
+                HighlightedObject = null;
+            else
+            {
+                var obj = ObjectsManager.GetByID(id);
+                if (obj == null || obj.Entity.IsNull)
+                    return;
+
+                HighlightedObject = obj;
+            }
+        }
+
         public static void HoldObjectWithID(int id)
         {
             var obj = ObjectsManager.GetByID(id);

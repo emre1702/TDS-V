@@ -130,6 +130,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
         break;
     }
+    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, -1);
     this.changeDetector.detectChanges();
   }
 
@@ -210,8 +211,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   addPosToMapCenter(pos: MapCreatorPosition) {
     this.data.MapCenter = pos;
-    if (this.currentNav === MapCreatorNav.MapCenter)
+    if (this.currentNav === MapCreatorNav.MapCenter) {
       this.selectedPosition = pos;
+      this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, pos.Id);
+    }
   }
 
   removePosFromTeamSpawns() {
@@ -364,6 +367,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       this.selectedPosition = undefined;
     else
       this.selectedPosition = row;
+    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, this.selectedPosition ? this.selectedPosition.Id : -1);
     this.changeDetector.detectChanges();
   }
 
@@ -405,6 +409,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.selectedPosition = this.data.MapCenter;
     this.currentNav = MapCreatorNav.MapCenter;
     this.changeDetector.detectChanges();
+
+    if (this.data.MapCenter)
+      this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, this.data.MapCenter.Id);
   }
 
   switchToBombPlacesEdit() {
@@ -428,6 +435,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   goBackNav() {
     this.currentNav = MapCreatorNav.Main;
     this.selectedPosition = undefined;
+    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, -1);
     this.changeDetector.detectChanges();
   }
 

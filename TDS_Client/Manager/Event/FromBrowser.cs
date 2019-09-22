@@ -40,6 +40,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
+            Add(DFromBrowserEvent.MapCreatorHiglightPos, OnMapCreatorHiglightPosMethod);
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
             Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
@@ -127,7 +128,7 @@ namespace TDS_Client.Manager.Event
         private void OnHoldMapCreatorObjectMethod(object[] args)
         {
             int objID = (int)args[0];
-            MapCreator.ObjectPlacing.HoldObjectWithID(objID);
+            ObjectPlacing.HoldObjectWithID(objID);
         }
 
         private void OnJoinCustomLobbyMethod(object[] args)
@@ -176,6 +177,11 @@ namespace TDS_Client.Manager.Event
                     EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)type);
                     break;
             }
+        }
+
+        private void OnMapCreatorHiglightPosMethod(object[] args)
+        {
+            ObjectPlacing.HighlightObjectWithId((int)args[0]);
         }
 
         private void OnMapCreatorShowObjectMethod(object[] args)
