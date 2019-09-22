@@ -307,6 +307,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             duration: 5000,
             panelClass: "mat-app-background"
           });
+          this.changeDetector.detectChanges();
         });
       });
 
