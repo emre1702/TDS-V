@@ -23,8 +23,6 @@ namespace TDS_Client.Manager.Utility
             Events.Tick += OnTick;
 
             Add(EKey.End, CursorManager.ManuallyToggleCursor);
-            Add(EKey.F3, MapManager.ToggleMenu);
-            Add(EKey.U, Userpanel.Open);
         }
 
         public static void Add(EKey key, Action<EKey> method, EKeyPressState pressState = EKeyPressState.Down)

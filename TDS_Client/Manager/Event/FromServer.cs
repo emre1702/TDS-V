@@ -5,6 +5,7 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Default;
+using TDS_Client.Enum;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
@@ -463,6 +464,9 @@ namespace TDS_Client.Manager.Event
             Settings.Load();
             VoiceManager.Init();
             Team.Init();
+
+            BindManager.Add(EKey.F3, MapManager.ToggleMenu);
+            BindManager.Add(EKey.U, Userpanel.Open);
         }
 
         private void OnSetMapVotesMethod(object[] args)
