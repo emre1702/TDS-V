@@ -177,6 +177,7 @@ namespace TDS_Client.Manager.MapCreator
             {
                 var obj = GetMapCenter(map.MapCenter.Id);
                 obj.LoadPos(map.MapCenter);
+                RAGE.Game.Entity.SetEntityCoordsNoOffset(Player.LocalPlayer.Handle, map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ, true, false, false);
             }
 
             if (map.MapEdges != null)
