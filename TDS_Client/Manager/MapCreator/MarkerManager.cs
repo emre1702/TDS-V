@@ -88,7 +88,6 @@ namespace TDS_Client.Manager.MapCreator
                 IEnumerable<AxisMarker> markerList;
                 switch (obj.Type)
                 {
-                    case EMapCreatorPositionType.BombPlantPlace:
                     case EMapCreatorPositionType.MapCenter:
                     case EMapCreatorPositionType.MapLimit:
                         markerList = _rotateMarker.Where(m => m.IsPositionMarker);
