@@ -1,9 +1,9 @@
 ﻿using RAGE;
 using RAGE.Game;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Instance.MapCreator;
-using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.MapCreator
@@ -85,33 +85,28 @@ namespace TDS_Client.Manager.MapCreator
                 float closestDistToMarker = float.MaxValue;
                 AxisMarker closestMarker = null;
                 Vector3 hitPointClosestMarker = null;
+                IEnumerable<AxisMarker> markerList;
                 switch (obj.Type)
                 {
                     case EMapCreatorPositionType.BombPlantPlace:
                     case EMapCreatorPositionType.MapCenter:
                     case EMapCreatorPositionType.MapLimit:
-                        foreach (var marker in _rotateMarker.Where(m => m.IsPositionMarker))
-                        {
-                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
-                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
-                        }
+                        markerList = _rotateMarker.Where(m => m.IsPositionMarker);
                         break;
                     case EMapCreatorPositionType.TeamSpawn:
-                        foreach (var marker in _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z))
-                        {
-                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
-                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
-                        }
+                        markerList = _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z);
                         break;
                     default:
-                        foreach (var marker in _rotateMarker)
-                        {
-                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
-                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
-                        }
+                        markerList = _rotateMarker;
                         break;
                 }
-                
+
+                foreach (var marker in markerList)
+                {
+                    marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
+                    marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                }
+
 
                 if (_highlightedMarker != closestMarker)
                 {
@@ -122,11 +117,11 @@ namespace TDS_Client.Manager.MapCreator
 
                 if (_highlightedMarker != null && _highlightedMarker.IsPositionMarker)
                     // false comes first, so if we want to have RotationMarker first, we have to use ! before it
-                    foreach (var marker in _rotateMarker.OrderBy(m => !m.IsRotationMarker))  
+                    foreach (var marker in markerList.OrderBy(m => !m.IsRotationMarker))  
                         marker.Draw();
                 else
                     // false comes first, so if we want to have PositionMarker first, we have to use ! before it
-                    foreach (var marker in _rotateMarker.OrderBy(m => !m.IsPositionMarker))
+                    foreach (var marker in markerList.OrderBy(m => !m.IsPositionMarker))
                         marker.Draw();
             }
 
