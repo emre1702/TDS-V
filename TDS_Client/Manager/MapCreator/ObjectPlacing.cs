@@ -84,6 +84,10 @@ namespace TDS_Client.Manager.MapCreator
             var obj = ObjectsManager.GetByID(id);
             if (obj == null || obj.Entity.IsNull)
                 return;
+
+            if (HoldingObject != null)
+                ReleaseObject();
+
             HoldingObject = null;
             HighlightedObject = obj;
             HoldHighlightingObject();
