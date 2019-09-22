@@ -85,6 +85,7 @@ export class German extends English {
   OthersCreated = "Andere Erstellt";
   OthersAdded = "Andere Hinzugefügt";
   ChangePos = "Ändere Pos";
+  Confirm = "Bestätige";
 
   Arena = "Arena";
   Gang = "Gang";

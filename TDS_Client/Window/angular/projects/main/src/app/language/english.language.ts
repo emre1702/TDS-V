@@ -90,6 +90,7 @@ export class English implements Language {
     OthersCreated = "Others created";
     OthersAdded = "Others added";
     ChangePos = "Change pos";
+    Confirm = "Confirm";
 
     Arena = "Arena";
     Gang = "Gang";
