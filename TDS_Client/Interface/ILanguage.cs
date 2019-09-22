@@ -26,13 +26,15 @@ namespace TDS_Client.Interface
         string UP { get; }
         string LEFT_SHIFT { get; }
         string LEFT_CTRL { get; }
-        string TOGGLE_FREECAM { get; }
-        string TOGGLE_ON_GROUND { get; }
         string DELETE_KEY { get; }
         string DELETE_DESCRIPTION { get; }
         string END_KEY { get; }
         string OBJECT_MODEL_INVALID { get; }
         string COULD_NOT_LOAD_OBJECT { get; }
+        string FREECAM { get; }
+        string ON_FOOT { get; }
+        string PUT_ON_GROUND { get; }
+        string LET_IT_FLOAT { get; }
 
         ELanguage Enum { get; }
         

@@ -1,5 +1,6 @@
 ﻿using TDS_Client.Enum;
 using TDS_Client.Manager.Draw;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.MapCreator
 {

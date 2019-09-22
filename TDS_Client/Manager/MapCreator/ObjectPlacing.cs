@@ -3,6 +3,7 @@ using RAGE.Elements;
 using RAGE.Game;
 using TDS_Client.Enum;
 using TDS_Client.Instance.MapCreator;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using Entity = RAGE.Game.Entity;
@@ -280,6 +281,8 @@ namespace TDS_Client.Manager.MapCreator
                 return;
 
             _placeOnGround = !_placeOnGround;
+
+            InstructionalButtonManager.Add(_placeOnGround ? Settings.Language.PUT_ON_GROUND : Settings.Language.LET_IT_FLOAT, "F");
         }
 
         private static (Raycasting.RaycastHit, Vector3) GetCursorHit(float toDistance, int ignoreHandle, int flags)

@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Instance.Utility;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.MapCreator
@@ -17,6 +18,8 @@ namespace TDS_Client.Manager.MapCreator
             player.SetCollision(true, true);
 
             TDSCamera.RenderBack();
+
+            InstructionalButtonManager.Add(Settings.Language.ON_FOOT, "M");
         }
 
         public static void Stop()

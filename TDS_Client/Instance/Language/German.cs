@@ -29,13 +29,15 @@ namespace TDS_Client.Instance.Language
         public override string UP => "Hoch";
         public override string LEFT_SHIFT => "LShift";
         public override string LEFT_CTRL => "LSTRG";
-        public override string TOGGLE_FREECAM => "Freecam umschalten";
-        public override string TOGGLE_ON_GROUND => "Boden Pos umschalten";
         public override string DELETE_KEY => "Entf";
         public override string DELETE_DESCRIPTION => "Entfernen";
         public override string END_KEY => "Ende";
         public override string OBJECT_MODEL_INVALID => "Objekt Modell ist ungültig.";
         public override string COULD_NOT_LOAD_OBJECT => "Konnte Objekt nicht laden.";
+        public override string FREECAM => "Freecam";
+        public override string ON_FOOT => "Zu Fuß";
+        public override string PUT_ON_GROUND => "Boden legen";
+        public override string LET_IT_FLOAT => "Schweben lassen";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

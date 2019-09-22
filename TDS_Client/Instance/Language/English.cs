@@ -30,13 +30,15 @@ namespace TDS_Client.Instance.Language
         public virtual string UP => "Up";
         public virtual string LEFT_SHIFT => "LShift";
         public virtual string LEFT_CTRL => "LCTRL";
-        public virtual string TOGGLE_FREECAM => "Toggle freecam";
-        public virtual string TOGGLE_ON_GROUND => "Toggle on ground";
         public virtual string DELETE_KEY => "Delete";
         public virtual string DELETE_DESCRIPTION => "Delete";
         public virtual string END_KEY => "End";
         public virtual string OBJECT_MODEL_INVALID => "Object model is invalid.";
         public virtual string COULD_NOT_LOAD_OBJECT => "Could not load object.";
+        public virtual string FREECAM => "Freecam";
+        public virtual string ON_FOOT => "On Foot";
+        public virtual string PUT_ON_GROUND => "Put on ground";
+        public virtual string LET_IT_FLOAT => "Let it float";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 

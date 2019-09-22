@@ -12,8 +12,8 @@ namespace TDS_Client.Manager.MapCreator
             BindManager.Add(EKey.M, Main.ToggleFreecam);
             BindManager.Add(EKey.F, ObjectPlacing.TogglePlaceOnGround);
 
-            InstructionalButtonManager.Add(Settings.Language.TOGGLE_FREECAM, "M");
-            InstructionalButtonManager.Add(Settings.Language.TOGGLE_ON_GROUND, "F");
+            InstructionalButtonManager.Add(Settings.Language.FREECAM, "M");
+            InstructionalButtonManager.Add(Settings.Language.LET_IT_FLOAT, "F");
         }
 
         public static void RemoveGeneral()
