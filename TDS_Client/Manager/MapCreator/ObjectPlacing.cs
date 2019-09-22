@@ -162,7 +162,7 @@ namespace TDS_Client.Manager.MapCreator
             HoldingObject = null;
             object info = null;
             if (obj.Type == EMapCreatorPositionType.TeamSpawn)
-                info = obj.TeamNumber;
+                info = obj.TeamNumber.Value;
             else if (obj.Type == EMapCreatorPositionType.Object)
                 info = obj.ObjectName;
             Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z, obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info);

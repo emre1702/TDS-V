@@ -36,6 +36,7 @@ namespace TDS_Client.Manager.MapCreator
             }
             _cacheMapEditorObjects.Clear();
             ObjectPlacing.CheckObjectDeleted();
+            MapCreatorObject.Reset();
         }
 
         public static void Add(GameEntityBase obj, EMapCreatorPositionType type)
