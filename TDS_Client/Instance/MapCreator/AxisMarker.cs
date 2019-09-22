@@ -136,7 +136,7 @@ namespace TDS_Client.Instance.MapCreator
             if (_positionGetter != null)
                 Marker.Position = _positionGetter(obj);
             else
-                Marker.Position = obj.Position;
+                Marker.Position = obj.MovingPosition;
 
             if (_rotationGetter != null)
                 Marker.Rotation = _rotationGetter(obj);
