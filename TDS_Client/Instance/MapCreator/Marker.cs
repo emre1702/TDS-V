@@ -23,7 +23,7 @@ namespace TDS_Client.Instance.MapCreator
 
         public void Draw()
         {
-            RAGE.Events.CallLocal("drawMarker", Type, Position.X, Position.Y, Position.Z,
+            Events.CallLocal("drawMarker", Type, Position.X, Position.Y, Position.Z,
                 Direction.X, Direction.Y, Direction.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale.X, Scale.Y, Scale.Z,
                 Color.Red, Color.Green, Color.Blue, Color.Alpha,
                 false, false, 2, false, "", "", false);

@@ -48,6 +48,7 @@ namespace TDS_Client.Manager.MapCreator
             if (!CursorManager.Visible)
                 MoveCam();
 
+            MarkerManager.OnTick();
             ObjectPlacing.OnTick();
         }
 

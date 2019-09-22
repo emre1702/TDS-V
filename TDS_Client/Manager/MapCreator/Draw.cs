@@ -7,8 +7,8 @@ namespace TDS_Client.Manager.MapCreator
 {
     class Draw
     {
-        public static Color HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
-        public static Color HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
+        public static RGBA HighlightColor_Edge = new RGBA(255, 255, 255, 255);
+        public static RGBA HighlightColor_Full = new RGBA(255, 255, 255, 35);
 
         public static void DrawSkeleton(Vector3 pos, Vector3 size, Vector3 rot)
         {
@@ -69,38 +69,38 @@ namespace TDS_Client.Manager.MapCreator
             p8 = ClientUtils.RotateX(p8, rot.X);
             p8 = ClientUtils.RotateZ(p8, rot.Z);
             p8 += pos;
-            Graphics.DrawLine(p1.X, p1.Y, p1.Z, p2.X, p2.Y, p2.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p2.X, p2.Y, p2.Z, p3.X, p3.Y, p3.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p3.X, p3.Y, p3.Z, p4.X, p4.Y, p4.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p4.X, p4.Y, p4.Z, p1.X, p1.Y, p1.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
+            Graphics.DrawLine(p1.X, p1.Y, p1.Z, p2.X, p2.Y, p2.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p2.X, p2.Y, p2.Z, p3.X, p3.Y, p3.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p3.X, p3.Y, p3.Z, p4.X, p4.Y, p4.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p4.X, p4.Y, p4.Z, p1.X, p1.Y, p1.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
 
-            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p4.X, p4.Y, p4.Z, p1.X, p1.Y, p1.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p3.X, p3.Y, p3.Z, p1.X, p1.Y, p1.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p4.X, p4.Y, p4.Z, p1.X, p1.Y, p1.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p3.X, p3.Y, p3.Z, p1.X, p1.Y, p1.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
 
-            Graphics.DrawLine(p5.X, p5.Y, p5.Z, p6.X, p6.Y, p6.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p6.X, p6.Y, p6.Z, p7.X, p7.Y, p7.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p7.X, p7.Y, p7.Z, p8.X, p8.Y, p8.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p8.X, p8.Y, p8.Z, p5.X, p5.Y, p5.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
+            Graphics.DrawLine(p5.X, p5.Y, p5.Z, p6.X, p6.Y, p6.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p6.X, p6.Y, p6.Z, p7.X, p7.Y, p7.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p7.X, p7.Y, p7.Z, p8.X, p8.Y, p8.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p8.X, p8.Y, p8.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
 
-            Graphics.DrawPoly(p8.X, p8.Y, p8.Z, p7.X, p7.Y, p7.Z, p5.X, p5.Y, p5.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p7.X, p7.Y, p7.Z, p6.X, p6.Y, p6.Z, p5.X, p5.Y, p5.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p8.X, p8.Y, p8.Z, p7.X, p7.Y, p7.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p7.X, p7.Y, p7.Z, p6.X, p6.Y, p6.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
 
-            Graphics.DrawLine(p1.X, p1.Y, p1.Z, p5.X, p5.Y, p5.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p2.X, p2.Y, p2.Z, p6.X, p6.Y, p6.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p3.X, p3.Y, p3.Z, p7.X, p7.Y, p7.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
-            Graphics.DrawLine(p4.X, p4.Y, p4.Z, p8.X, p8.Y, p8.Z, HighlightColor_Edge.R, HighlightColor_Edge.G, HighlightColor_Edge.B, 255);
+            Graphics.DrawLine(p1.X, p1.Y, p1.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p2.X, p2.Y, p2.Z, p6.X, p6.Y, p6.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p3.X, p3.Y, p3.Z, p7.X, p7.Y, p7.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
+            Graphics.DrawLine(p4.X, p4.Y, p4.Z, p8.X, p8.Y, p8.Z, (int)HighlightColor_Edge.Red, (int)HighlightColor_Edge.Green, (int)HighlightColor_Edge.Blue, 255);
 
-            Graphics.DrawPoly(p1.X, p1.Y, p1.Z, p4.X, p4.Y, p4.Z, p5.X, p5.Y, p5.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p5.X, p5.Y, p5.Z, p4.X, p4.Y, p4.Z, p8.X, p8.Y, p8.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p1.X, p1.Y, p1.Z, p4.X, p4.Y, p4.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p5.X, p5.Y, p5.Z, p4.X, p4.Y, p4.Z, p8.X, p8.Y, p8.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
 
-            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p5.X, p5.Y, p5.Z, p6.X, p6.Y, p6.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p1.X, p1.Y, p1.Z, p5.X, p5.Y, p5.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p5.X, p5.Y, p5.Z, p6.X, p6.Y, p6.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p2.X, p2.Y, p2.Z, p1.X, p1.Y, p1.Z, p5.X, p5.Y, p5.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
 
-            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p2.X, p2.Y, p2.Z, p6.X, p6.Y, p6.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p6.X, p6.Y, p6.Z, p7.X, p7.Y, p7.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p2.X, p2.Y, p2.Z, p6.X, p6.Y, p6.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p6.X, p6.Y, p6.Z, p7.X, p7.Y, p7.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
 
-            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p7.X, p7.Y, p7.Z, p8.X, p8.Y, p8.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
-            Graphics.DrawPoly(p8.X, p8.Y, p8.Z, p4.X, p4.Y, p4.Z, p3.X, p3.Y, p3.Z, HighlightColor_Full.R, HighlightColor_Full.G, HighlightColor_Full.B, HighlightColor_Full.A);
+            Graphics.DrawPoly(p3.X, p3.Y, p3.Z, p7.X, p7.Y, p7.Z, p8.X, p8.Y, p8.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
+            Graphics.DrawPoly(p8.X, p8.Y, p8.Z, p4.X, p4.Y, p4.Z, p3.X, p3.Y, p3.Z, (int)HighlightColor_Full.Red, (int)HighlightColor_Full.Green, (int)HighlightColor_Full.Blue, (int)HighlightColor_Full.Alpha);
         }
     }
 }

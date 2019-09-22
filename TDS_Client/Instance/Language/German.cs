@@ -30,6 +30,7 @@ namespace TDS_Client.Instance.Language
         public override string LEFT_SHIFT => "LShift";
         public override string LEFT_CTRL => "LSTRG";
         public override string TOGGLE_FREECAM => "Freecam umschalten";
+        public override string TOGGLE_ON_GROUND => "Boden Pos umschalten";
         public override string DELETE_KEY => "Entf";
         public override string DELETE_DESCRIPTION => "Entfernen";
         public override string END_KEY => "Ende";

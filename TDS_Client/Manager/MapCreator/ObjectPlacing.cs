@@ -15,18 +15,31 @@ namespace TDS_Client.Manager.MapCreator
         private const bool ONLY_HOLD_OWN_OBJECTS = true;
 #pragma warning restore IDE1006 // Naming Styles
 
-        public static MapCreatorObject HighlightedObject;
+        public static MapCreatorObject LastHighlightedObject;
+        public static MapCreatorObject HighlightedObject
+        {
+            get => _highlightedObject;
+            set
+            {
+                _highlightedObject = value;
+                if (value != null)
+                    LastHighlightedObject = value;
+            }
+        }
+        public static MapCreatorObject HoldingObject;
 
-        private static MapCreatorObject _holdingObject;
+        private static MapCreatorObject _highlightedObject;
         private static float _clampDistance = 50f;
-        private static bool _placeOnGround = true;  // TRUE IS DEBUG
+        private static bool _placeOnGround = true;
 
         public static void OnTick()
         {
-            
-            if (_holdingObject == null && CursorManager.Visible)
+            if (MarkerManager.ClickedMarker != null)
+                return;
+
+            if (HoldingObject == null && CursorManager.Visible)
                 HighlightObject();
-            else if (_holdingObject != null)
+            else if (HoldingObject != null)
                 MoveHoldingObject();
 
             if (HighlightedObject != null) 
@@ -60,7 +73,7 @@ namespace TDS_Client.Manager.MapCreator
 
             if (obj == null)
                 return;
-            _holdingObject = null;
+            HoldingObject = null;
             HighlightedObject = obj;
             HoldHighlightingObject();
 
@@ -71,59 +84,68 @@ namespace TDS_Client.Manager.MapCreator
             var obj = ObjectsManager.GetByID(id);
             if (obj == null || obj.Entity.IsNull)
                 return;
-            _holdingObject = null;
+            HoldingObject = null;
             HighlightedObject = obj;
             HoldHighlightingObject();
         }
 
         public static void LeftMouseClick(Control _)
         {
-            if (_holdingObject == null && HighlightedObject != null && CursorManager.Visible)
+            if (MarkerManager.ClickedMarker != null)
+                return;
+
+            if (HoldingObject == null && HighlightedObject != null && CursorManager.Visible)
                 HoldHighlightingObject();
-            else if (_holdingObject != null && CursorManager.Visible)
+            else if (HoldingObject != null && CursorManager.Visible)
                 ReleaseObject();
         }
 
         public static void DeleteHoldingObject(EKey _)
         {
-            if (_holdingObject == null)
+            if (HoldingObject == null)
                 return;
-            Browser.Angular.Main.RemovePositionInMapCreatorBrowser(_holdingObject.ID, _holdingObject.Type);
-            _holdingObject.Delete();
-            if (HighlightedObject == _holdingObject)
+            Browser.Angular.Main.RemovePositionInMapCreatorBrowser(HoldingObject.ID, HoldingObject.Type);
+            HoldingObject.Delete();
+            if (HighlightedObject == HoldingObject)
                 HighlightedObject = null;
-            _holdingObject = null;
+            HoldingObject = null;
         }
 
         public static void CheckObjectDeleted()
         {
-            if (_holdingObject?.Deleted == true)
-                _holdingObject = null;
+            if (HoldingObject?.Deleted == true)
+                HoldingObject = null;
             if (HighlightedObject?.Deleted == true)
                 HighlightedObject = null;
+            if (LastHighlightedObject?.Deleted == true)
+                LastHighlightedObject = null;
         }
 
         private static void HoldHighlightingObject()
         {
-            Chat.Output("Hold hightlighting object");
-            _holdingObject = HighlightedObject;
+            HoldingObject = HighlightedObject;
             HighlightedObject = null;
-            _holdingObject.LoadEntityData();
+            HoldingObject.LoadEntityData();
+
+            Draw.HighlightColor_Edge = new RGBA(255, 255, 0, 35);
+            Draw.HighlightColor_Full = new RGBA(255, 255, 0, 35);
         }
 
         private static void ReleaseObject()
         {
-            _holdingObject.Position = _holdingObject.MovingPosition;
-            _holdingObject.Rotation = _holdingObject.MovingRotation;
-            Chat.Output($"Release {_holdingObject.Entity.Position.X}|{_holdingObject.Entity.Position.Y}|{_holdingObject.Entity.Position.Z}");
-            var obj = _holdingObject;
-            _holdingObject = null;
+            HoldingObject.Position = HoldingObject.MovingPosition;
+            HoldingObject.Rotation = HoldingObject.MovingRotation;
+            var obj = HoldingObject;
+            HoldingObject = null;
             object info = null;
             if (obj.Type == EMapCreatorPositionType.TeamSpawn)
                 info = obj.TeamNumber;
             else if (obj.Type == EMapCreatorPositionType.Object)
                 info = obj.ObjectName;
             Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z, obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info);
+
+            Draw.HighlightColor_Edge = new RGBA(255, 255, 255, 35);
+            Draw.HighlightColor_Full = new RGBA(255, 255, 255, 35);
         }
 
         private static void MoveHoldingObject()
@@ -134,51 +156,49 @@ namespace TDS_Client.Manager.MapCreator
                 MoveHoldingObjectWithCamera();
 
             if (_placeOnGround)
-                PlaceOnGround(_holdingObject);
-            _holdingObject.ActivatePhysics();
+                PlaceOnGround(HoldingObject);
+            HoldingObject.ActivatePhysics();
         }
 
         private static void MoveHoldingObjectWithCursor()
         {
             if (Pad.IsDisabledControlJustPressed(0, (int)Control.CursorScrollUp))
             {
-                Chat.Output("scroll up");
                 _clampDistance += 5f;
                 if (_clampDistance > 500f)
                     _clampDistance = 500f;
             }
             else if (Pad.IsDisabledControlJustReleased(0, (int)Control.CursorScrollDown))
             {
-                Chat.Output("scroll down");
                 _clampDistance -= 5f;
-                if (_clampDistance < 10f)
-                    _clampDistance = 10f;
+                if (_clampDistance < 5f)
+                    _clampDistance = 5;
             }
 
             Vector3 camPos = CameraManager.FreeCam.Position;
-            var hit = GetCursorHit(1000, _holdingObject.Entity.Handle, -1);
+            var hit = GetCursorHit(1000, HoldingObject.Entity.Handle, -1);
 
             if (hit.Item1.Hit && hit.Item1.EndCoords.DistanceTo(camPos) <= _clampDistance)
             {
-                _holdingObject.MovingPosition = hit.Item1.EndCoords;   
+                HoldingObject.MovingPosition = hit.Item1.EndCoords;   
             } 
             else
             {
-                _holdingObject.MovingPosition = hit.Item2;
+                HoldingObject.MovingPosition = hit.Item2;
             }
         }
 
         private static void MoveHoldingObjectWithCamera()
         {
-            var hit = GetCameraHit(1000, _holdingObject.Entity.Handle, -1);
+            var hit = GetCameraHit(1000, HoldingObject.Entity.Handle, -1);
             Vector3 camPos = CameraManager.FreeCam.Position;
             if (hit.Item1.Hit && hit.Item1.EndCoords.DistanceTo(camPos) <= _clampDistance)
             {
-                _holdingObject.MovingPosition = hit.Item1.EndCoords;
+                HoldingObject.MovingPosition = hit.Item1.EndCoords;
             }
             else
             {
-                _holdingObject.MovingPosition = hit.Item2;
+                HoldingObject.MovingPosition = hit.Item2;
             }
         }
 
@@ -228,9 +248,9 @@ namespace TDS_Client.Manager.MapCreator
             return obj;
         }
 
-        public static void TogglePlaceOnGround(bool toggle)
+        public static void TogglePlaceOnGround(EKey _)
         {
-            _placeOnGround = toggle;
+            _placeOnGround = !_placeOnGround;
         }
 
         private static (Raycasting.RaycastHit, Vector3) GetCursorHit(float toDistance, int ignoreHandle, int flags)

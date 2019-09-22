@@ -62,7 +62,7 @@ namespace TDS_Client.Manager.Utility
             var camRight = RotationToDirection(rotRight) - RotationToDirection(rotLeft);
             var camUp = RotationToDirection(rotUp) - RotationToDirection(rotDown);
 
-            var rollRad = -DegToRad(camRot.Y);
+            var rollRad = -DegreesToRad(camRot.Y);
 
             var camRightRoll = camRight * (float)Math.Cos(rollRad) - camUp * (float)Math.Sin(rollRad);
             var camUpRoll = camRight * (float)Math.Sin(rollRad) + camUp * (float)Math.Cos(rollRad);
@@ -106,16 +106,10 @@ namespace TDS_Client.Manager.Utility
                 return null;
         }
 
-        public static float DegToRad(float _deg)
-        {
-            double Radian = (Math.PI / 180) * _deg;
-            return (float)Radian;
-        }
-
         public static Vector3 RotationToDirection(Vector3 rotation)
         {
-            var z = DegToRad(rotation.Z);
-            var x = DegToRad(rotation.X);
+            var z = DegreesToRad(rotation.Z);
+            var x = DegreesToRad(rotation.X);
             var num = Math.Abs(Math.Cos(x));
             return new Vector3
             {
@@ -207,6 +201,11 @@ namespace TDS_Client.Manager.Utility
             return MathF.PI * deg / 180.0f;
         }
 
+        public static float RadToDegrees(float rad)
+        {
+            return rad * (180f / MathF.PI);
+        }
+
         public static float GetDotProduct(Vector3 v1, Vector3 v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
@@ -240,7 +239,7 @@ namespace TDS_Client.Manager.Utility
             {
                 Vector3 w = LineStart - PlanePoint;
                 float fac = -GetDotProduct(PlaneNorm, w) / dot;
-                u = u * fac;
+                u *= fac;
                 HitPosition = LineStart + u;
                 return true;
             }
@@ -293,6 +292,116 @@ namespace TDS_Client.Manager.Utility
                 }
             }
             return false;
+        }
+
+        public static Vector3 GetNormalizedVector(Vector3 vec)
+        {
+            float mag = MathF.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
+            return new Vector3(vec.X / mag, vec.Y / mag, vec.Z / mag);
+        }
+
+        public static float GetAngleBetweenVectors(Vector3 v1, Vector3 v2)
+        {
+            return MathF.Acos(GetDotProduct(GetNormalizedVector(v1), GetNormalizedVector(v2)));
+        }
+
+        public static Tuple<Vector3, Vector3> ClosestDistanceBetweenLines(Vector3 a0, Vector3 a1, Vector3 b0, Vector3 b1)
+        {
+            var A = a1 - a0;
+            var B = b1 - b0;
+            float magA = A.Length();
+            float magB = B.Length();
+
+            var _A = A / magA;
+            var _B = B / magB;
+
+            var cross = GetCrossProduct(_A, _B);
+            var denom = cross.Length() * cross.Length();
+
+            Vector3 closest1, closest2;
+            if (denom == 0)
+            {
+                var d0 = GetDotProduct(_A, (b0 - a0));
+                var d1 = GetDotProduct(_A, (b1 - a0));
+                if (d0 <= 0 && 0 >= d1)
+                {
+                    if (MathF.Abs(d0) < MathF.Abs(d1))
+                    {
+                        closest1 = a0;
+                        closest2 = b0;
+                        return new Tuple<Vector3, Vector3>(closest1, closest2);
+                    }
+                    closest1 = a0;
+                    closest2 = b1;
+                    return new Tuple<Vector3, Vector3>(closest1, closest2);
+                }
+                else if (d0 >= magA && magA <= d1)
+                {
+                    if (MathF.Abs(d0) < MathF.Abs(d1))
+
+                    {
+                        closest1 = a1;
+                        closest2 = b0;
+                        return new Tuple<Vector3, Vector3>(closest1, closest2);
+                    }
+                    closest1 = a1;
+                    closest2 = b1;
+                    return new Tuple<Vector3, Vector3>(closest1, closest2);
+                }
+                closest1 = Vector3.Zero;
+                closest2 = Vector3.Zero;
+                return new Tuple<Vector3, Vector3>(closest1, closest2);
+            }
+
+            var t = (b0 - a0);
+            var detA = Determinent(t, _B, cross);
+            var detB = Determinent(t, _A, cross);
+
+            var t0 = detA / denom;
+            var t1 = detB / denom;
+
+            var pA = a0 + (_A * t0);
+            var pB = b0 + (_B * t1);
+
+            if (t0 < 0)
+                pA = a0;
+            else if (t0 > magA)
+                pA = a1;
+
+            if (t1 < 0)
+                pB = b0;
+            else if (t1 > magB)
+                pB = b1;
+
+            float dot;
+            if (t0 < 0 || t0 > magA)
+            {
+                dot = GetDotProduct(_B, (pA - b0));
+                if (dot < 0)
+                    dot = 0;
+                else if (dot > magB)
+                    dot = magB;
+                pB = b0 + (_B * dot);
+            }
+
+            if (t1 < 0 || t1 > magB)
+            {
+                dot = GetDotProduct(_A, (pB - a0));
+                if (dot < 0)
+                    dot = 0;
+                else if (dot > magA)
+                    dot = magA;
+                pA = a0 + (_A * dot);
+            }
+
+            closest1 = pA;
+            closest2 = pB;
+            return new Tuple<Vector3, Vector3>(closest1, closest2);
+        }
+
+        public static float Determinent(Vector3 a, Vector3 b, Vector3 c)
+        {
+            return a.X * b.Y * c.Z + a.Y * b.Z * c.X + a.Z * b.X * c.Y - c.X * b.Y * a.Z - c.Y * b.Z * a.X - c.Z * b.X * a.Y;
         }
 
         public static float GetCursorX()
