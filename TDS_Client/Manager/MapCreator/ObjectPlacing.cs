@@ -87,14 +87,14 @@ namespace TDS_Client.Manager.MapCreator
                 return;
 
             if (id == -1)
-                HighlightedObject = null;
+                HighlightObject(null);
             else
             {
                 var obj = ObjectsManager.GetByID(id);
                 if (obj == null || obj.Entity.IsNull)
                     return;
 
-                HighlightedObject = obj;
+                HighlightObject(obj);
             }
         }
 
@@ -228,17 +228,20 @@ namespace TDS_Client.Manager.MapCreator
         private static void HighlightObject()
         {
             var newHighlightedObject = GetHighlightingObject();
+            HighlightObject(newHighlightedObject);
+        }
 
-            if (newHighlightedObject != HighlightedObject)
+        private static void HighlightObject(MapCreatorObject obj)
+        {
+            if (obj != HighlightedObject)
             {
-                Chat.Output("HighlightObject");
                 RemoveHightlightObject(HighlightedObject);
 
-                if (newHighlightedObject != null)
-                    AddHightlightObject(newHighlightedObject);
+                if (obj != null)
+                    AddHightlightObject(obj);
             }
 
-            HighlightedObject = newHighlightedObject;
+            HighlightedObject = obj;
         }
 
         private static void AddHightlightObject(MapCreatorObject obj)

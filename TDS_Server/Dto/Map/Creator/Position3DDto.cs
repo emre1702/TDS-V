@@ -1,8 +1,7 @@
-﻿using GTANetworkAPI;
-using System.Xml.Serialization;
-using TDS_Server.Dto.Map.Creator;
+﻿using System.Xml.Serialization;
+using TDS_Common.Dto.Map.Creator;
 
-namespace TDS_Common.Dto.Map
+namespace TDS_Server.Dto.Map
 {
     public class Position3DDto
     {
@@ -24,9 +23,15 @@ namespace TDS_Common.Dto.Map
             Z = pos.PosZ;
         }
 
-        public Vector3 ToVector3()
+        public MapCreatorPosition ToMapCreatorPosition(int id)
         {
-            return new Vector3(X, Y, Z);
+            return new MapCreatorPosition
+            {
+                Id = id,
+                PosX = X,
+                PosY = Y,
+                PosZ = Z
+            };
         }
     }
 }

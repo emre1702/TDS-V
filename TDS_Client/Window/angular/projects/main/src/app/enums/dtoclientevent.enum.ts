@@ -15,7 +15,7 @@ export enum DToClientEvent {
   LanguageChange = "LanguageChange_Browser",
   LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser",
   // RemoveMapVote = "RemoveMapVote_Browser",
-  MapCreatorHiglightPos = "MapCreatorHiglightPos_Browser",
+  MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser",
   MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser",
   MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser",
   RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser",

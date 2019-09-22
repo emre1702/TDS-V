@@ -42,7 +42,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
-            Add(DFromBrowserEvent.MapCreatorHiglightPos, OnMapCreatorHiglightPosMethod);
+            Add(DFromBrowserEvent.MapCreatorHighlightPos, OnMapCreatorHighlightPosMethod);
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
             Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
@@ -191,7 +191,7 @@ namespace TDS_Client.Manager.Event
             }
         }
 
-        private void OnMapCreatorHiglightPosMethod(object[] args)
+        private void OnMapCreatorHighlightPosMethod(object[] args)
         {
             ObjectPlacing.HighlightObjectWithId((int)args[0]);
         }

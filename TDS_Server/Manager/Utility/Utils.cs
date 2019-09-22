@@ -7,6 +7,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using TDS_Common.Dto.Map;
+using TDS_Server.Dto.Map;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -90,6 +92,11 @@ namespace TDS_Server.Manager.Utility
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 
             return Regex.Replace(name, invalidRegStr, "_");
+        }
+
+        public static Vector3 ToVector3(this Position3DDto pos)
+        {
+            return new Vector3(pos.X, pos.Y, pos.Z);
         }
 
         /// <summary>

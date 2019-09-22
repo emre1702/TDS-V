@@ -2,6 +2,7 @@
 using RAGE;
 using RAGE.Elements;
 using TDS_Client.Enum;
+using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 
@@ -46,7 +47,7 @@ namespace TDS_Client.Instance.MapCreator
 
         private static int _idCounter = 0;
 
-        public MapCreatorObject(GameEntityBase entity, EMapCreatorPositionType type, int? teamNumber = null, string objectName = null)
+        public MapCreatorObject(GameEntityBase entity, EMapCreatorPositionType type, int? teamNumber = null, string objectName = null, int id = -1)
         {
             Entity = entity;
             Type = type;
@@ -60,11 +61,26 @@ namespace TDS_Client.Instance.MapCreator
 
             Position = entity.Position;
 
-            ID = ++_idCounter;
+            if (id == -1)
+                ID = ++_idCounter;
+            else
+            {
+                _idCounter = Math.Max(ID, id);
+                ID = id;
+            }
 
             Blip = CreateBlip();
 
             Entity.FreezePosition(true);
+        }
+
+        public void LoadPos(MapCreatorPosition pos)
+        {
+            MovingPosition = new Vector3(pos.PosX, pos.PosY, pos.PosZ);
+            Position = MovingPosition;
+
+            MovingRotation = new Vector3(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = MovingRotation;
         }
 
         public void LoadEntityData()

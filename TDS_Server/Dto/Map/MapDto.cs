@@ -5,9 +5,9 @@ using TDS_Common.Enum;
 using EMapType = TDS_Server.Enum.EMapType;
 using TDS_Server_DB.Entity.Player;
 using Newtonsoft.Json;
-using TDS_Server.Dto.Map.Creator;
 using TDS_Common.Dto.Map;
 using System.Linq;
+using TDS_Common.Dto.Map.Creator;
 
 namespace TDS_Server.Dto.Map
 {
@@ -57,13 +57,13 @@ namespace TDS_Server.Dto.Map
                 Name = data.Name,
                 MinPlayers = data.MinPlayers,
                 MaxPlayers = data.MaxPlayers,
-                Type = data.Type
+                Type = (EMapType)(int)data.Type
             };
 
             Descriptions = new MapDescriptionsDto
             {
-                English = data.Description[ELanguage.English],
-                German = data.Description[ELanguage.German]
+                English = data.Description[(int)ELanguage.English],
+                German = data.Description[(int)ELanguage.German]
             };
 
             TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Length] };

@@ -13,6 +13,7 @@ using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 using Newtonsoft.Json;
+using TDS_Server.Dto.Map;
 
 namespace TDS_Server.Instance.Lobby
 {

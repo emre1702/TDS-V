@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <mat-form-field color="accent">
     <mat-label>{{ 'Map' | language: settings.Lang }}</mat-label>
-    <mat-select [value]="chosenMap">
+    <mat-select [(value)]="chosenMap">
       <mat-optgroup *ngFor="let groupData of data" label="{{ groupData.GroupName | language: settings.Lang }}">
         <mat-option *ngFor="let mapName of groupData.Maps" [value]="mapName">
           {{ mapName }}

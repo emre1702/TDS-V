@@ -1,20 +1,16 @@
-﻿using System.Xml.Serialization;
-using TDS_Server.Dto.Map.Creator;
+﻿using TDS_Client.Dto.Map;
+using TDS_Common.Dto.Map.Creator;
 
-namespace TDS_Common.Dto.Map
+namespace TDS_Server.Dto.Map
 {
     public class Position4DDto
     {
-        [XmlAttribute("x")]
         public float X { get; set; }
 
-        [XmlAttribute("y")]
         public float Y { get; set; }
 
-        [XmlAttribute("z")]
         public float Z { get; set; }
 
-        [XmlAttribute("rot")]
         public float Rotation { get; set; }
 
         public Position4DDto() { }
@@ -30,6 +26,18 @@ namespace TDS_Common.Dto.Map
         public Position3DDto To3D()
         {
             return new Position3DDto { X = X, Y = Y, Z = Z };
+        }
+
+        public MapCreatorPosition ToMapCreatorPosition(int id)
+        {
+            return new MapCreatorPosition
+            {
+                Id = id,
+                PosX = X,
+                PosY = Y,
+                PosZ = Z,
+                RotZ = Rotation
+            };
         }
     }
 }

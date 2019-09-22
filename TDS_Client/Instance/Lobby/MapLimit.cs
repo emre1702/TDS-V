@@ -9,9 +9,9 @@ using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Dto.Map;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Lobby

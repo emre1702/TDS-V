@@ -19,7 +19,8 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
 using DB = TDS_Server_DB.Entity;
-using TDS_Server.Dto.Map.Creator;
+using System.Text.RegularExpressions;
+using TDS_Common.Dto.Map.Creator;
 
 namespace TDS_Server.Manager.Maps
 {
@@ -156,17 +157,18 @@ namespace TDS_Server.Manager.Maps
             {
                 Id = map.SyncedData.Id,
                 Name = map.SyncedData.Name,
-                Type = map.Info.Type,
-                BombPlaces = map.BombInfo?.PlantPositions.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray(),
-                MapCenter = map.LimitInfo.Center != null ? new MapCreatorPosition(posId++, map.LimitInfo.Center) : null,
-                MapEdges = map.LimitInfo.Edges.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray(),
+                Type = (EMapType)(int)map.Info.Type,
+                BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
+                MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++),
+                MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
                 MinPlayers = map.Info.MinPlayers,
                 MaxPlayers = map.Info.MaxPlayers,
-                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select(t => t.Spawns.Select(pos => new MapCreatorPosition(posId++, pos)).ToArray()).ToArray(),
-                Description = new Dictionary<ELanguage, string> 
+                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToArray()).ToArray(),
+                Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToArray(),
+                Description = new Dictionary<int, string> 
                 { 
-                    [ELanguage.English] = map.Descriptions?.English ?? string.Empty, 
-                    [ELanguage.German] = map.Descriptions?.German ?? string.Empty 
+                    [(int)ELanguage.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty, 
+                    [(int)ELanguage.German] = map.Descriptions != null ? Regex.Replace(map.Descriptions.German ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty
                 }
 
             };

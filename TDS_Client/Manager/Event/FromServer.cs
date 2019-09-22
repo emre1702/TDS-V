@@ -11,11 +11,13 @@ using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
+using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Common.Dto.Map;
+using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum.Userpanel;
+using TDS_Server.Dto.Map;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;
@@ -151,6 +153,9 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             Browser.Angular.Main.LoadMapForMapCreator(json);
+
+            var mapCreatorData = JsonConvert.DeserializeObject<MapCreateDataDto>(json);
+            ObjectsManager.LoadMap(mapCreatorData);
         }
 
         private void OnLoadMapNamesToLoadForMapCreatorServerMethod(object[] args)

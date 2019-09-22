@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
-using TDS_Server.Dto.Map.Creator;
+using TDS_Common.Dto.Map.Creator;
 
 namespace TDS_Server.Dto.Map
 {
@@ -38,6 +38,21 @@ namespace TDS_Server.Dto.Map
             RotX = obj.RotX;
             RotY = obj.RotY;
             RotZ = obj.RotZ;
+        }
+
+        public MapCreatorPosition ToMapCreatorPosition(int id)
+        {
+            return new MapCreatorPosition
+            {
+                Id = id,
+                Info = Name,
+                PosX = X,
+                PosY = Y,
+                PosZ = Z,
+                RotX = RotX,
+                RotY = RotY,
+                RotZ = RotZ
+            };
         }
     }
 }

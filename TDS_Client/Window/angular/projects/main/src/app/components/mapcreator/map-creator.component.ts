@@ -130,7 +130,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
         break;
     }
-    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, -1);
+    this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
     this.changeDetector.detectChanges();
   }
 
@@ -213,7 +213,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.data.MapCenter = pos;
     if (this.currentNav === MapCreatorNav.MapCenter) {
       this.selectedPosition = pos;
-      this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, pos.Id);
+      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos.Id);
     }
   }
 
@@ -300,11 +300,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
       const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
 
-      dialogRef.beforeClosed().subscribe(loadMapStr => {
+      dialogRef.beforeClosed().subscribe((loadMapStr: string) => {
         if (!loadMapStr)
           return;
 
-        this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, loadMapStr, (json: string) => {
+        this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, [loadMapStr], (json: string) => {
           this.data = JSON.parse(json);
           this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
             duration: 5000,
@@ -367,7 +367,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       this.selectedPosition = undefined;
     else
       this.selectedPosition = row;
-    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, this.selectedPosition ? this.selectedPosition.Id : -1);
+    this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition.Id : -1);
     this.changeDetector.detectChanges();
   }
 
@@ -411,7 +411,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
 
     if (this.data.MapCenter)
-      this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, this.data.MapCenter.Id);
+      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data.MapCenter.Id);
   }
 
   switchToBombPlacesEdit() {
@@ -435,7 +435,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   goBackNav() {
     this.currentNav = MapCreatorNav.Main;
     this.selectedPosition = undefined;
-    this.rageConnector.call(DToClientEvent.MapCreatorHiglightPos, -1);
+    this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
     this.changeDetector.detectChanges();
   }
 

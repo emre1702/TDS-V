@@ -29,7 +29,7 @@
         public const string LanguageChange = "LanguageChange_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser";
 
-        public const string MapCreatorHiglightPos = "MapCreatorHiglightPos_Browser";
+        public const string MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser";
         public const string MapCreatorShowObject = "MapCreatorShowObject_Browser";
         public const string MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser";
         public const string MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser";

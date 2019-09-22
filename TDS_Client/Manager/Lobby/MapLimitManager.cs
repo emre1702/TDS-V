@@ -1,28 +1,27 @@
 ﻿using TDS_Client.Instance.Lobby;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto.Map;
-using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 
 namespace TDS_Client.Manager.Lobby
 {
     internal static class MapLimitManager
     {
-        private static MapLimit currentMapLimit;
+        private static MapLimit _currentMapLimit;
 
         public static void Load(Position4DDto[] edges)
         {
-            currentMapLimit?.Stop();
-            currentMapLimit = new MapLimit(edges, Settings.MapLimitType);
+            _currentMapLimit?.Stop();
+            _currentMapLimit = new MapLimit(edges, Settings.MapLimitType);
         }
 
         public static void Start()
         {
-            currentMapLimit?.Start();
+            _currentMapLimit?.Start();
         }
 
         public static void Stop()
         {
-            currentMapLimit?.Stop();
+            _currentMapLimit?.Stop();
         }
     }
 }

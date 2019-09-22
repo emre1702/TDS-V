@@ -2,6 +2,8 @@
 using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
+using TDS_Server.Dto.Map;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.GameModes
 {

@@ -12,6 +12,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
+using TDS_Server.Dto.Map;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -39,7 +40,7 @@ namespace TDS_Client.Manager.Lobby
         private static bool _gotBomb;
         private static bool _bombPlanted;
         private static Position4DDto[] _plantSpots;
-        private static ulong _plantDefuseStartTick;
+        //private static ulong _plantDefuseStartTick;
         private static bool _dataChanged;
 
         private static DxProgressRectangle _progressRect;
@@ -147,7 +148,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnPlantSpot())
                 return;
-            _plantDefuseStartTick = TimerManager.ElapsedTicks;
+            //_plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = EPlantDefuseStatus.Planting;
             _progressRect = new DxProgressRectangle(Settings.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center, frontPriority: 900);
@@ -160,7 +161,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (!IsOnDefuseSpot())
                 return;
-            _plantDefuseStartTick = TimerManager.ElapsedTicks;
+            //_plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = EPlantDefuseStatus.Defusing;
             _progressRect = new DxProgressRectangle(Settings.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen, textScale: 0.7f,
                 alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center, frontPriority: 900);
@@ -210,7 +211,7 @@ namespace TDS_Client.Manager.Lobby
             _gotBomb = false;
             _plantSpots = null;
             _playerStatus = EPlantDefuseStatus.None;
-            _plantDefuseStartTick = 0;
+            //_plantDefuseStartTick = 0;
             if (_bombPlanted)
                 MainBrowser.StopBombTick();
             _bombPlanted = false;
