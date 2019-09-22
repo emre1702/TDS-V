@@ -98,9 +98,9 @@ namespace TDS_Client.Manager.MapCreator
             if (MarkerManager.ClickedMarker != null)
                 return;
 
-            if (HoldingObject == null && HighlightedObject != null && CursorManager.Visible)
+            if (HoldingObject == null && HighlightedObject != null)
                 HoldHighlightingObject();
-            else if (HoldingObject != null && CursorManager.Visible)
+            else if (HoldingObject != null)
                 ReleaseObject();
         }
 
