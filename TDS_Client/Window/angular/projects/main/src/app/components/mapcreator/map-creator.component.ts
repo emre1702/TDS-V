@@ -210,6 +210,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   addPosToMapCenter(pos: MapCreatorPosition) {
     this.data.MapCenter = pos;
+    if (this.currentNav === MapCreatorNav.MapCenter)
+      this.selectedPosition = pos;
   }
 
   removePosFromTeamSpawns() {
@@ -237,6 +239,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.data.BombPlaces.splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
     this.data.BombPlaces = [...this.data.BombPlaces];
+  }
+
+  removeMapCenter() {
+    this.data.MapCenter = undefined;
   }
 
   sendDataToClient() {
@@ -395,8 +401,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   switchToMapCenterEdit() {
     this.currentTitle = 'MapCenter';
-    this.currentNav = MapCreatorNav.MapCenter;
     this.selectedPosition = this.data.MapCenter;
+    this.currentNav = MapCreatorNav.MapCenter;
     this.changeDetector.detectChanges();
   }
 
