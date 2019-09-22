@@ -73,6 +73,8 @@ namespace TDS_Client.Manager.MapCreator
 
             if (obj == null)
                 return;
+            if (HoldingObject != null)
+                ReleaseObject();
             HoldingObject = null;
             HighlightedObject = obj;
             HoldHighlightingObject();
