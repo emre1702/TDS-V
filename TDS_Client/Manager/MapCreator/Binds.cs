@@ -20,8 +20,6 @@ namespace TDS_Client.Manager.MapCreator
         {
             BindManager.Remove(EKey.M, Main.ToggleFreecam);
             BindManager.Remove(EKey.F, ObjectPlacing.TogglePlaceOnGround);
-
-            InstructionalButtonManager.Reset();
         }
 
         public static void SetForInFreecam()
@@ -52,8 +50,6 @@ namespace TDS_Client.Manager.MapCreator
             BindManager.Remove(EKey.Q, Freecam.KeyDown, EKeyPressState.Down);
             BindManager.Remove(EKey.Q, Freecam.KeyUp, EKeyPressState.Up);
             BindManager.Remove(Control.Attack, ObjectPlacing.LeftMouseClick);
-
-            InstructionalButtonManager.Reset();
         }
     }
 }

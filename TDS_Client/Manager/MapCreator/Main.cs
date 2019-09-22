@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Enum;
-using TDS_Client.Manager.Browser;
+using TDS_Client.Manager.Draw;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -19,6 +19,7 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void Stop()
         {
+            InstructionalButtonManager.Reset();
             Binds.RemoveGeneral();
             Freecam.Stop();
             Foot.Start();
@@ -32,6 +33,8 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void ToggleFreecam(EKey _ = EKey.A)
         {
+            InstructionalButtonManager.Reset();
+            Binds.SetGeneral();
             if (Freecam.IsActive)
             {
                 Freecam.Stop();
@@ -42,7 +45,6 @@ namespace TDS_Client.Manager.MapCreator
                 Foot.Stop();
                 Freecam.Start();
             }
-            Binds.SetGeneral();
         }
     }
 }
