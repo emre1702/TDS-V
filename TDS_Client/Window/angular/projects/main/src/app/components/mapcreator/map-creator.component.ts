@@ -349,8 +349,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   onEditingTeamNumberChange(event: MatSelectChange) {
-    if (event.value == "+" && this.data.TeamSpawns[this.data.TeamSpawns.length - 1].length) {
-      this.editingTeamNumber = event.value - 1;
+    if (event.value == "+" && !this.data.TeamSpawns[this.data.TeamSpawns.length - 1].length) {
+      this.editingTeamNumber = this.data.TeamSpawns.length - 1;
     } else if (event.value == "+") {
       this.data.TeamSpawns = [...this.data.TeamSpawns, []];
       this.editingTeamNumber = this.data.TeamSpawns.length - 1;
