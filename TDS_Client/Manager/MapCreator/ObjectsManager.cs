@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.MapCreator;
+using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto.Map;
 using TDS_Common.Dto.Map.Creator;
@@ -164,6 +165,16 @@ namespace TDS_Client.Manager.MapCreator
         {
             Stop();
 
+            if (map.MapCenter != null)
+            {
+                var obj = GetMapCenter(map.MapCenter.Id);
+                obj.LoadPos(map.MapCenter);
+                if (TDSCamera.ActiveCamera != null)
+                    TDSCamera.ActiveCamera.Position = new Vector3(map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ);
+                else
+                    Player.LocalPlayer.Position = new Vector3(map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ);
+            }
+
             if (map.BombPlaces != null)
             {
                 foreach (var bombPlace in map.BombPlaces)
@@ -171,13 +182,6 @@ namespace TDS_Client.Manager.MapCreator
                     var obj = GetBombPlantPlace(bombPlace.Id);
                     obj.LoadPos(bombPlace);
                 }
-            }
-
-            if (map.MapCenter != null)
-            {
-                var obj = GetMapCenter(map.MapCenter.Id);
-                obj.LoadPos(map.MapCenter);
-                RAGE.Game.Entity.SetEntityCoordsNoOffset(Player.LocalPlayer.Handle, map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ, true, false, false);
             }
 
             if (map.MapEdges != null)
