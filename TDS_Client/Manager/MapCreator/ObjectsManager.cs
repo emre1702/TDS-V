@@ -95,6 +95,7 @@ namespace TDS_Client.Manager.MapCreator
             while (pedHashIndex >= ClientConstants.TeamSpawnPedHash.Length) 
                 pedHashIndex -= ClientConstants.TeamSpawnPedHash.Length;
             var obj = new Ped(ClientConstants.TeamSpawnPedHash[pedHashIndex], Player.LocalPlayer.Position, Player.LocalPlayer.GetHeading(), dimension: Player.LocalPlayer.Dimension);
+            obj.SetInvincible(true);
             var mapCreatorObj = new MapCreatorObject(obj, EMapCreatorPositionType.TeamSpawn, editingTeamIndex);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
