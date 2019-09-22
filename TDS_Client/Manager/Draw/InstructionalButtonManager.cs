@@ -1,6 +1,7 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TDS_Client.Instance.Draw.Scaleform;
 using TDS_Client.Manager.Utility;
 
@@ -52,12 +53,26 @@ namespace TDS_Client.Manager.Draw
 
         public static void Add(string title, string control)
         {
-            _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
+            var button = _buttons.FirstOrDefault(b => b.ControlString == control);
+            if (button != null)
+            {
+                button.Title = title;
+                Redraw();
+            }
+            else 
+                _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
         }
 
         public static void Add(string title, Control control)
         {
-            _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
+            var button = _buttons.FirstOrDefault(b => b.ControlEnum == control);
+            if (button != null)
+            {
+                button.Title = title;
+                Redraw();
+            }
+            else
+                _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
         }
 
         public static void SetDataSlot(int slot, string control, string title)
