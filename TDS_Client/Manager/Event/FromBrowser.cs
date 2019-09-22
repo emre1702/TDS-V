@@ -273,8 +273,14 @@ namespace TDS_Client.Manager.Event
         private void OnRemoveMapMethod(object[] args)
         {
             int mapId = Convert.ToInt32(args[0]);
-            if (!EventsSender.Send(DToServerEvent.RemoveMap, mapId))
+            if (mapId == 0 || EventsSender.Send(DToServerEvent.RemoveMap, mapId))  
+            {
+                ObjectsManager.Stop();
+                ObjectsManager.Start();
+            }
+            else
                 Browser.Angular.Main.ShowCooldown();
+
         }
         private void OnRemoveMapCreatorPositionMethod(object[] args)
         {

@@ -170,24 +170,32 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   addPosToTeamSpawns(pos: MapCreatorPosition) {
+    if (!this.data.TeamSpawns[pos.Info])
+      this.data.TeamSpawns[pos.Info] = [];
     if (!this.updatePosIfExists(this.data.TeamSpawns[pos.Info], pos)) {
       this.data.TeamSpawns[pos.Info] = [...this.data.TeamSpawns[pos.Info], pos];
     }
   }
 
   addPosToMapLimits(pos: MapCreatorPosition) {
+    if (!this.data.MapEdges)
+      this.data.MapEdges = [];
     if (!this.updatePosIfExists(this.data.MapEdges, pos)) {
       this.data.MapEdges = [...this.data.MapEdges, pos];
     }
   }
 
   addPosToObjects(pos: MapCreatorPosition) {
+    if (!this.data.Objects)
+      this.data.Objects = [];
     if (!this.updatePosIfExists(this.data.Objects, pos)) {
       this.data.Objects = [...this.data.Objects, pos];
     }
   }
 
   addPosToBombPlaces(pos: MapCreatorPosition) {
+    if (!this.data.BombPlaces)
+      this.data.BombPlaces = [];
     if (!this.updatePosIfExists(this.data.BombPlaces, pos)) {
       this.data.BombPlaces = [...this.data.BombPlaces, pos];
     }
@@ -266,10 +274,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       const map = this.data;
       this.data = new MapCreateDataDto();
       this.changeDetector.detectChanges();
-      if (map.Id == 0)
-        return;
 
-      this.rageConnector.call(DToServerEvent.RemoveMap, this.data.Id);
+      this.rageConnector.call(DToServerEvent.RemoveMap, map.Id);
     });
   }
 
@@ -347,6 +353,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   onMapTypeChange(event: MatSelectChange) {
+    if (this.data.Type == MapType.Bomb && event.value != MapType.Bomb) {
+      this.data.BombPlaces = [];
+    }
     this.data.Type = event.value;
     this.changeDetector.detectChanges();
   }

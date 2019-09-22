@@ -14,7 +14,7 @@ export class CustomMatPaginatorIntl extends MatPaginatorIntl {
     settings.LanguageChanged.on(null, () => {
       this.initLangs();
       this.changeDetector.detectChanges();
-    })
+    });
   }
 
   private initLangs() {
