@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -17,29 +18,29 @@ namespace TDS_Client.Manager.MapCreator
         {
             _rotateMarker = new AxisMarker[]
             {
-                new AxisMarker(27, new RGBA(255, 0, 0), 
+                new AxisMarker(27, new RGBA(255, 0, 0), AxisMarker.AxisEnum.X,
                     rotationGetter: obj => new Vector3(-obj.MovingRotation.Z + 90f, 90, 0),
                     objectRotationGetter: (obj, angle) => new Vector3(obj.Rotation.X, obj.Rotation.Y + angle, obj.Rotation.Z)),     // Marker_X_Rotate
 
-                new AxisMarker(27, new RGBA(0, 255, 0), 
+                new AxisMarker(27, new RGBA(0, 255, 0), AxisMarker.AxisEnum.Y,
                     rotationGetter: obj => new Vector3(-obj.MovingRotation.Z, 90, 0),
                     objectRotationGetter: (obj, angle) => new Vector3(obj.Rotation.X - angle, obj.Rotation.Y, obj.Rotation.Z)),     // Marker_Y_Rotate
 
-                new AxisMarker(27, new RGBA(0, 0, 255), 
+                new AxisMarker(27, new RGBA(0, 0, 255), AxisMarker.AxisEnum.Z,
                     rotationGetter: obj => new Vector3(0, 0, 0),
                     objectRotationGetter: (obj, angle) => new Vector3(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z - angle)),     // Marker_Z_Rotate
 
-                new AxisMarker(28, new RGBA(255, 0, 0), 
+                new AxisMarker(28, new RGBA(255, 0, 0), AxisMarker.AxisEnum.X,
                     positionGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, obj.Size.X / 2f + (obj.Size.X / 4f), 0f, 0f),
                     objectPositionFromGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, -1000f, 0f, 0f),
                     objectPositionToGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 1000f, 0f, 0f)),    // Marker_X_Move
 
-                new AxisMarker(28, new RGBA(0, 255, 0),
+                new AxisMarker(28, new RGBA(0, 255, 0),AxisMarker.AxisEnum.Y,
                     positionGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0f, obj.Size.Y / 2f + (obj.Size.Y / 4f), 0f),
                     objectPositionFromGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0, -1000f, 0f),
                     objectPositionToGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0f, 1000f, 0f)),    // Marker_Y_Move
 
-                new AxisMarker(28, new RGBA(0, 0, 255),
+                new AxisMarker(28, new RGBA(0, 0, 255),AxisMarker.AxisEnum.Z,
                     positionGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0f, 0f, obj.Size.Z + (obj.Size.Z / 4f)),
                     objectPositionFromGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0f, 0f, -1000f),
                     objectPositionToGetter: obj => Entity.GetOffsetFromEntityInWorldCoords(obj.Entity.Handle, 0f, 0f, 1000f)),    // Marker_Z_Move
@@ -84,11 +85,33 @@ namespace TDS_Client.Manager.MapCreator
                 float closestDistToMarker = float.MaxValue;
                 AxisMarker closestMarker = null;
                 Vector3 hitPointClosestMarker = null;
-                foreach (var marker in _rotateMarker)
+                switch (obj.Type)
                 {
-                    marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
-                    marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                    case EMapCreatorPositionType.BombPlantPlace:
+                    case EMapCreatorPositionType.MapCenter:
+                    case EMapCreatorPositionType.MapLimit:
+                        foreach (var marker in _rotateMarker.Where(m => m.IsPositionMarker))
+                        {
+                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
+                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                        }
+                        break;
+                    case EMapCreatorPositionType.TeamSpawn:
+                        foreach (var marker in _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z))
+                        {
+                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
+                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                        }
+                        break;
+                    default:
+                        foreach (var marker in _rotateMarker)
+                        {
+                            marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
+                            marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                        }
+                        break;
                 }
+                
 
                 if (_highlightedMarker != closestMarker)
                 {

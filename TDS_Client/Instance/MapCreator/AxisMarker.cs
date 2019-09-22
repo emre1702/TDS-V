@@ -9,12 +9,18 @@ namespace TDS_Client.Instance.MapCreator
 {
     class AxisMarker
     {
+        public enum AxisEnum
+        {
+            X, Y, Z
+        }
+
         public readonly Marker Marker;
 
         public Vector3 HighlightStartHitPoint;
 
         public bool IsRotationMarker => _rotationGetter != null;
         public bool IsPositionMarker => _positionGetter != null;
+        public AxisEnum Axis;
 
         private readonly Func<MapCreatorObject, Vector3> _positionGetter;
         private readonly Func<MapCreatorObject, Vector3> _objectPositionFromGetter;
@@ -28,6 +34,7 @@ namespace TDS_Client.Instance.MapCreator
         public AxisMarker(
             int type,
             RGBA color, 
+            AxisEnum axis,
             Func<MapCreatorObject, Vector3> positionGetter = null,
             Func<MapCreatorObject, Vector3> objectPositionFromGetter = null,
             Func<MapCreatorObject, Vector3> objectPositionToGetter = null,
@@ -36,6 +43,7 @@ namespace TDS_Client.Instance.MapCreator
         {
             _originalColor = color;
             Marker = new Marker(type, new Vector3(), new Vector3(), new Vector3(), new Vector3(), color);
+            Axis = axis;
             _positionGetter = positionGetter;
             _objectPositionFromGetter = objectPositionFromGetter;
             _objectPositionToGetter = objectPositionToGetter;
