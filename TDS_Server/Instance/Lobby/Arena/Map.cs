@@ -94,6 +94,8 @@ namespace TDS_Server.Instance.Lobby
 
         private void CreateMapLimitBlips(MapDto map)
         {
+            if (map.LimitInfo.Edges == null)
+                return;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
                 Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
