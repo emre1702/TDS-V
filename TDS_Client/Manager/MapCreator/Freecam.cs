@@ -30,7 +30,7 @@ namespace TDS_Client.Manager.MapCreator
 
             Binds.SetForInFreecam();
 
-            InstructionalButtonManager.Add(Settings.Language.FREECAM, "M");
+            InstructionalButtonManager.Add(Settings.Language.ON_FOOT, "M");
         }
 
         public static void Stop()

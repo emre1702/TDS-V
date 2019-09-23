@@ -19,7 +19,7 @@ namespace TDS_Client.Manager.MapCreator
 
             TDSCamera.RenderBack();
 
-            InstructionalButtonManager.Add(Settings.Language.ON_FOOT, "M");
+            InstructionalButtonManager.Add(Settings.Language.FREECAM, "M");
         }
 
         public static void Stop()
