@@ -44,12 +44,12 @@ echo -e "${SEPERATOR}\n"
 echo -e "Update ${LIGHTBLUE}clientside C# ${NOCOLOR}..."
 
 cd C:/RAGEMP/server-files/client_packages/cs_packages/TDS_Client
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --delete --timeout=60 --exclude="bin" --exclude="obj" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --delete --timeout=60 --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/cs_packages/TDS_Client/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update clientside ${LIGHTBLUE}plain HTML ${NOCOLOR}CEF ..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --delete --timeout=60 --exclude=".vscode" --exclude="angular" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --delete --timeout=60 --exclude=".vscode" --exclude="angular" --exclude="node_modules" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@51.38.99.64:/home/rage/RAGE/client_packages/Window/
 
 echo -e "${SEPERATOR}\n"
 echo -e "Update clientside ${LIGHTBLUE}Angular ${NOCOLOR}CEF ..."
