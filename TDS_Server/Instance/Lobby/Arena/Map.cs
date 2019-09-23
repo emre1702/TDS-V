@@ -133,8 +133,10 @@ namespace TDS_Server.Instance.Lobby
 
         public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
-            _maps = themaps;
-            _mapsJson = syncjson ?? JsonConvert.SerializeObject(themaps.Select(m => m.SyncedData).ToList());
+            // Only choose maps with team-amount same as this lobby got teams (without spectator)
+            _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Length - 1).ToList();
+
+            _mapsJson = syncjson ?? JsonConvert.SerializeObject(_maps.Select(m => m.SyncedData).ToList());
         }
     }
 }
