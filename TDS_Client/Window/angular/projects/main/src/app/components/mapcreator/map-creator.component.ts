@@ -63,6 +63,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+
+    this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
+      duration: 5000,
+      panelClass: "mat-app-background"
+    });
   }
 
   ngOnDestroy() {
@@ -262,7 +267,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     this.rageConnector.callCallback(DToClientEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
       const errName = MapCreateError[err];
       this.snackBar.open(this.settings.Lang[errName], "OK", {
-        duration: undefined, panelClass: "mat-app-background"
+        duration: undefined,
+        panelClass: "mat-app-background"
       });
     });
   }

@@ -97,6 +97,8 @@ html, body, app-root {
 
 .mat-app-background {
   border: 4px outset mat-color($dark-primary) !important;
+  background-color: #303030;
+  color: white;
 }
 
 .border {
