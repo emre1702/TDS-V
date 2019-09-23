@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Helper
 
         public static Position3DDto? GetCenter(this MapDto map)
         {
-            if (map.LimitInfo.Edges.Length == 0)
+            if (map.LimitInfo.Edges is null || map.LimitInfo.Edges.Length == 0)
                 return map.GetCenterBySpawns();
 
             float zpos = map.GetCenterZPos();
@@ -57,9 +57,9 @@ namespace TDS_Server.Manager.Helper
             return GetCenterOfMapPositions(map.LimitInfo.Edges, zpos) ?? GetCenterBySpawns(map);
         }
 
-        private static Position3DDto? GetCenterOfMapPositions(Position3DDto[] positions, float zpos = 0)
+        private static Position3DDto? GetCenterOfMapPositions(Position3DDto[]? positions, float zpos = 0)
         {
-            if (positions.Length <= 2)
+            if (positions == null || positions.Length <= 2)
                 return null;
 
             float centerX = 0.0f;

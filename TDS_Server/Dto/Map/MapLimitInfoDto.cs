@@ -8,7 +8,7 @@ namespace TDS_Server.Dto.Map
     public class MapLimitInfoDto
     {
         [XmlElement("pos")]
-        public Position3DDto[] Edges { get; set; }
+        public Position3DDto[]? Edges { get; set; }
 
         [XmlElement("center")]
         public Position3DDto? Center { get; set; }
