@@ -53,11 +53,10 @@ namespace TDS_Client.Manager.Draw
 
         public static void Add(string title, string control)
         {
-            var button = _buttons.FirstOrDefault(b => b.ControlString == control);
+            var button = _buttons.FirstOrDefault(b => b.OriginalControlString == control);
             if (button != null)
             {
                 button.Title = title;
-                Redraw();
             }
             else 
                 _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
@@ -69,7 +68,6 @@ namespace TDS_Client.Manager.Draw
             if (button != null)
             {
                 button.Title = title;
-                Redraw();
             }
             else
                 _buttons.Add(new InstructionalButton(title, control, _buttons.Count));

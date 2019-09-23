@@ -26,7 +26,10 @@ namespace TDS_Client.Instance.Draw.Scaleform
             get => _controlEnum;
             set => SetControl(value);
         }
-        
+
+        public string OriginalControlString { get; set; }
+
+
         private string _title;
         private int _slot;
         private string _controlString;
@@ -48,6 +51,7 @@ namespace TDS_Client.Instance.Draw.Scaleform
 
         public InstructionalButton(string title, string control, int slot) : this(title, slot)
         {
+            OriginalControlString = control;
             if (!control.StartsWith("t_") && !control.StartsWith("w_"))
             {
                 if (control.Length <= 2)
