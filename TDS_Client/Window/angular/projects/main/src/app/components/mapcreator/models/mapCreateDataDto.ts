@@ -9,7 +9,7 @@ export class MapCreateDataDto {
     public MaxPlayers = 999;
     public Description: {
         [key in LanguageEnum]: string
-    } = { [7]: "", [9]: "" };
+    } = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
     public Objects: MapCreatorPosition[] = [];
     public TeamSpawns: MapCreatorPosition[][] = [[]];
     public MapEdges: MapCreatorPosition[] = [];

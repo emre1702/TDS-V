@@ -312,6 +312,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
         this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, [loadMapStr], (json: string) => {
           this.data = JSON.parse(json);
+          this.fixData();
           this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
             duration: 5000,
             panelClass: "mat-app-background"
@@ -325,6 +326,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   private fixData() {
+    if (!this.data.Name)
+      this.data.Name = "";
+
+    if (!this.data.Type)
+      this.data.Type = 0;
+
     if (typeof (this.data.MinPlayers) == "undefined")
       this.data.MinPlayers = 0;
     this.data.MinPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MinPlayers)));
@@ -332,6 +339,25 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     if (typeof (this.data.MaxPlayers) == "undefined")
       this.data.MaxPlayers = 999;
     this.data.MaxPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MaxPlayers)));
+
+    if (!this.data.Description)
+      this.data.Description = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
+    if (!this.data.Description[LanguageEnum.German])
+      this.data.Description[LanguageEnum.German] = "";
+    if (!this.data.Description[LanguageEnum.English])
+      this.data.Description[LanguageEnum.English] = "";
+
+    if (!this.data.Objects)
+      this.data.Objects = [];
+
+    if (!this.data.TeamSpawns)
+      this.data.TeamSpawns = [[]];
+
+    if (!this.data.MapEdges)
+      this.data.MapEdges = [];
+
+    if (!this.data.BombPlaces)
+      this.data.BombPlaces = [];
   }
 
   getLanguages(): string[] {
