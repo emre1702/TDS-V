@@ -10,7 +10,6 @@ namespace TDS_Client.Manager.MapCreator
         {
             Browser.Angular.Main.ToggleMapCreator(true);
             Browser.Angular.Main.ToggleFreeroam(true);
-            Binds.SetGeneral();
             ToggleFreecam();
             ObjectsManager.Start();
             MarkerManager.Start();
@@ -23,7 +22,7 @@ namespace TDS_Client.Manager.MapCreator
             InstructionalButtonManager.Reset();
             Binds.RemoveGeneral();
             Freecam.Stop();
-            Foot.Start();
+            Foot.Start(false);
             Browser.Angular.Main.ToggleMapCreator(false);
             Browser.Angular.Main.ToggleFreeroam(false);
             ObjectsManager.Stop();

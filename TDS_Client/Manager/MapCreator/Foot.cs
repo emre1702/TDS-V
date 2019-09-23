@@ -6,7 +6,7 @@ namespace TDS_Client.Manager.MapCreator
 {
     class Foot
     {
-        public static void Start()
+        public static void Start(bool addInstructionalButtom = true)
         {
             var cam = CameraManager.FreeCam;
             var player = RAGE.Elements.Player.LocalPlayer;
@@ -19,7 +19,8 @@ namespace TDS_Client.Manager.MapCreator
 
             TDSCamera.RenderBack();
 
-            InstructionalButtonManager.Add(Settings.Language.FREECAM, "M");
+            if (addInstructionalButtom)
+                InstructionalButtonManager.Add(Settings.Language.FREECAM, "M");
         }
 
         public static void Stop()
