@@ -171,8 +171,8 @@ namespace TDS_Client.Manager.Event
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = JsonConvert.DeserializeObject<Position4DDto[]>((string)args[1]);
-            if (maplimit.Length > 0)
+            var maplimit = JsonConvert.DeserializeObject<List<Position4DDto>>((string)args[1]);
+            if (maplimit.Count > 0)
                 MapLimitManager.Load(maplimit);
             LobbyCam.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
             Round.InFight = false;
