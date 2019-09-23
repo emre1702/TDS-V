@@ -1,12 +1,12 @@
 import { LanguageEnum } from '../../../enums/language.enum';
 import { MapCreatorPosition } from './mapCreatorPosition';
+import { MapCreateSettings } from './mapCreateSettings';
 
 export class MapCreateDataDto {
     public Id = 0;
     public Name = "";
     public Type = 0;
-    public MinPlayers = 0;
-    public MaxPlayers = 999;
+    public Settings: MapCreateSettings = new MapCreateSettings();
     public Description: {
         [key in LanguageEnum]: string
     } = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };

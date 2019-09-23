@@ -55,8 +55,8 @@ namespace TDS_Server.Dto.Map
             Info = new MapInfoDto
             {
                 Name = data.Name,
-                MinPlayers = data.MinPlayers,
-                MaxPlayers = data.MaxPlayers,
+                MinPlayers = data.Settings.MinPlayers,
+                MaxPlayers = data.Settings.MaxPlayers,
                 Type = (EMapType)(int)data.Type
             };
 

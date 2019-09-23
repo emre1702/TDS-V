@@ -161,8 +161,11 @@ namespace TDS_Server.Manager.Maps
                 BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
                 MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++),
                 MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
-                MinPlayers = map.Info.MinPlayers,
-                MaxPlayers = map.Info.MaxPlayers,
+                Settings = new MapCreateSettings
+                {
+                    MinPlayers = map.Info.MinPlayers,
+                    MaxPlayers = map.Info.MaxPlayers,
+                },
                 TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToArray()).ToArray(),
                 Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToArray(),
                 Description = new Dictionary<int, string> 

@@ -16,6 +16,7 @@ import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { MapCreatorPosition } from './models/mapCreatorPosition';
+import { MapCreateSettings } from './models/mapCreateSettings';
 
 enum MapCreatorNav {
   Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, BombPlaces
@@ -338,13 +339,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     if (!this.data.Type)
       this.data.Type = 0;
 
-    if (typeof (this.data.MinPlayers) == "undefined")
-      this.data.MinPlayers = 0;
-    this.data.MinPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MinPlayers)));
-
-    if (typeof (this.data.MaxPlayers) == "undefined")
-      this.data.MaxPlayers = 999;
-    this.data.MaxPlayers = Math.max(0, Math.min(999, Math.floor(this.data.MaxPlayers)));
+    if (!this.data.Settings)
+      this.data.Settings = new MapCreateSettings();
+    if (this.data.Settings.MinPlayers == undefined)
+      this.data.Settings.MinPlayers = 0;
+    this.data.Settings.MinPlayers = Math.max(0, Math.min(999, Math.floor(this.data.Settings.MinPlayers)));
+    if (this.data.Settings.MaxPlayers == undefined)
+      this.data.Settings.MaxPlayers = 999;
+    this.data.Settings.MaxPlayers = Math.max(0, Math.min(999, Math.floor(this.data.Settings.MaxPlayers)));
 
     if (!this.data.Description)
       this.data.Description = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };

@@ -8,8 +8,7 @@ namespace TDS_Common.Dto.Map.Creator
         public int Id { get; set; }
         public string Name { get; set; }
         public EMapType Type { get; set; }
-        public uint MinPlayers { get; set; }
-        public uint MaxPlayers { get; set; }
+        public MapCreateSettings Settings { get; set; }
         public Dictionary<int, string> Description { get; set; }
         public MapCreatorPosition[] Objects { get; set; }
         public MapCreatorPosition[][] TeamSpawns { get; set; }
