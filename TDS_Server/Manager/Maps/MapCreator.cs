@@ -31,7 +31,7 @@ namespace TDS_Server.Manager.Maps
 
         public async static Task<EMapCreateError> Create(TDSPlayer creator, string mapJson, bool onlySave)
         {
-            if (creator.Entity == null)
+            if (creator.Entity is null)
                 return EMapCreateError.Unknown;
             var serializer = new XmlSerializer(typeof(MapDto));
             try
@@ -40,7 +40,7 @@ namespace TDS_Server.Manager.Maps
                 try
                 {
                     mapCreateData = JsonConvert.DeserializeObject<MapCreateDataDto>(mapJson);
-                    if (mapCreateData == null)
+                    if (mapCreateData is null)
                         return EMapCreateError.CouldNotDeserialize;
                 }
                 catch
@@ -141,14 +141,14 @@ namespace TDS_Server.Manager.Maps
 
         public static void SendPlayerMapForMapCreator(TDSPlayer player, string mapName)
         {
-            if (player.Entity == null)
+            if (player.Entity is null)
                 return;
             
             MapDto? map = MapsLoader.GetMapByName(mapName);
 
-            if (map == null)
+            if (map is null)
                 map = GetMapByName(mapName);
-            if (map == null)
+            if (map is null)
                 map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
 
             int posId = 0;
@@ -182,7 +182,7 @@ namespace TDS_Server.Manager.Maps
 
         public static void SendPlayerMapNamesForMapCreator(TDSPlayer player)
         {
-            if (player.Entity == null)
+            if (player.Entity is null)
                 return;
 
             bool canLoadMapsFromOthers = SettingsManager.CanLoadMapsFromOthers(player);
@@ -265,13 +265,13 @@ namespace TDS_Server.Manager.Maps
         {
             bool isSavedMap = true;
             MapDto? map = _savedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
-            if (map == null)
+            if (map is null)
             {
                 map = _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
                 isSavedMap = false;
             }
 
-            if (map == null)
+            if (map is null)
                 return;
 
             bool canLoadMapsFromOthers = SettingsManager.CanLoadMapsFromOthers(player);

@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Sync
 
         public static void PlayerChangedTeam(TDSPlayer player, Team? newTeam, Team? oldTeam)
         {
-            if (player.CurrentLobby == null)
+            if (player.CurrentLobby is null)
                 return;
 
             _playersInTeamChoiceLobby.RemoveAll(p => !p.LoggedIn || !p.Client.Exists);

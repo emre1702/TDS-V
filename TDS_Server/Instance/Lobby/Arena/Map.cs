@@ -105,9 +105,9 @@ namespace TDS_Server.Instance.Lobby
 
         private Position4DDto? GetMapRandomSpawnData(Team? team)
         {
-            if (_currentMap == null)
+            if (_currentMap is null)
                 return null;
-            if (team == null)
+            if (team is null)
                 return null;
             int index = team.SpawnCounter++;
             var teamSpawns = _currentMap.TeamSpawnsList.TeamSpawns[team.Entity.Index - 1].Spawns;

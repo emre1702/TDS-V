@@ -25,7 +25,7 @@ namespace TDS_Server.Manager.Stats
         {
             DbContext = new TDSNewContext();
             Stats = DbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
-            if (Stats == null)
+            if (Stats is null)
             {
                 Stats = new ServerDailyStats { Date = DateTime.Today };
                 DbContext.ServerDailyStats.Add(Stats);

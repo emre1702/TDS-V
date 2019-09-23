@@ -14,7 +14,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (Players.Contains(target))
                 RemovePlayer(target);
-            if (target.Entity == null)
+            if (target.Entity is null)
                 return;
             BanPlayer(admin, target.Entity, endTime, reason);
             if (endTime.HasValue)
@@ -79,7 +79,7 @@ namespace TDS_Server.Instance.Lobby
 
         public void UnbanPlayer(TDSPlayer admin, TDSPlayer target, string reason)
         {
-            if (target.Entity == null)
+            if (target.Entity is null)
                 return;
             UnbanPlayer(admin, target.Entity, reason);
             if (LobbyEntity.Id != 0)
@@ -89,7 +89,7 @@ namespace TDS_Server.Instance.Lobby
         public async void UnbanPlayer(TDSPlayer admin, Players target, string reason)
         {
             PlayerBans? ban = await DbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
-            if (ban == null)
+            if (ban is null)
             {
                 NAPI.Chat.SendChatMessageToPlayer(admin.Client, admin.Language.PLAYER_ISNT_BANED);
                 return;
@@ -107,10 +107,10 @@ namespace TDS_Server.Instance.Lobby
 
         private async Task<bool> IsPlayerBaned(TDSPlayer character)
         {
-            if (character.Entity == null)
+            if (character.Entity is null)
                 return false;
             PlayerBans? ban = await DbContext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id);
-            if (ban == null)
+            if (ban is null)
                 return false;
 
             // !ban.EndTimestamp.HasValue => permaban

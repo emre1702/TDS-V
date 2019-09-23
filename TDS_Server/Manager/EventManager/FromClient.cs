@@ -113,7 +113,7 @@ namespace TDS_Server.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby == null || !(player.CurrentLobby is Arena arena))
+            if (player.CurrentLobby is null || !(player.CurrentLobby is Arena arena))
                 return;
             arena.ChooseTeam(player, index);
         }
@@ -134,7 +134,7 @@ namespace TDS_Server.Manager.EventManager
             }
 
             var attackerClient = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
-            if (attackerClient == null)
+            if (attackerClient is null)
                 return;
 
             TDSPlayer attacker = attackerClient.GetChar();
@@ -323,7 +323,7 @@ namespace TDS_Server.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby == null || !(player.CurrentLobby is MapCreateLobby lobby))
+            if (player.CurrentLobby is null || !(player.CurrentLobby is MapCreateLobby lobby))
                 return;
             EFreeroamVehicleType vehType = (EFreeroamVehicleType)vehTypeNumber;
             lobby.GiveVehicle(player, vehType);

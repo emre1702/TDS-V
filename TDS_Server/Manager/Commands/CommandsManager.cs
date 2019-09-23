@@ -63,7 +63,7 @@ namespace TDS_Server.Manager.Commands
             foreach (MethodInfo method in methods)
             {
                 var attribute = method.GetCustomAttribute<TDSCommand>();
-                if (attribute == null)
+                if (attribute is null)
                     continue;
                 string cmd = attribute.Command.ToLower();
                 if (!_commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
@@ -137,7 +137,7 @@ namespace TDS_Server.Manager.Commands
             TDSPlayer character = player.GetChar();
             try
             {
-                if (character.Entity == null || !character.Entity.PlayerStats.LoggedIn)
+                if (character.Entity is null || !character.Entity.PlayerStats.LoggedIn)
                     return;
 
                 object[]? args = GetArgs(msg, out string cmd);
@@ -196,14 +196,14 @@ namespace TDS_Server.Manager.Commands
 
         private static async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodDataDto methoddata, int methodindex, int amountmethodsavailable, object[]? args)
         {
-            if (args == null)
+            if (args is null)
                 return new HandleArgumentsResult { Worked = true };
 
             try
             {
                 for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
                 {
-                    if (args == null || args[i] == null)
+                    if (args is null || args[i] is null)
                         continue;
 
                     var parameterType = methoddata.ParameterTypes[i];
@@ -211,7 +211,7 @@ namespace TDS_Server.Manager.Commands
 
                     #region Check for null
 
-                    if (arg == null)
+                    if (arg is null)
                     {
                         #region Check if player exists
 

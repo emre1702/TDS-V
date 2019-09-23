@@ -15,7 +15,7 @@ namespace TDS_Server.Manager.Maps
     {
         public static void LoadPlayerFavourites(TDSPlayer player)
         {
-            if (player.Entity == null)
+            if (player.Entity is null)
                 return;
             using var dbContext = new TDSNewContext();
             List<int> mapIDs = dbContext.PlayerMapFavourites
@@ -29,7 +29,7 @@ namespace TDS_Server.Manager.Maps
         public static async void ToggleMapFavouriteState(Client player, int mapId, bool isFavorite)
         {
             Players? entity = player.GetEntity();
-            if (entity == null)
+            if (entity is null)
                 return;
 
             using var dbContext = new TDSNewContext();
@@ -37,7 +37,7 @@ namespace TDS_Server.Manager.Maps
 
             #region Add Favourite
 
-            if (favorite == null && isFavorite)
+            if (favorite is null && isFavorite)
             {
                 favorite = new PlayerMapFavourites { PlayerId = entity.Id, MapId = mapId };
                 dbContext.PlayerMapFavourites.Add(favorite);

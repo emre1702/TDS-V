@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.EventManager
             try
             {
                 TDSPlayer player = client.GetChar();
-                if (!player.LoggedIn || player.Entity == null)
+                if (!player.LoggedIn || player.Entity is null)
                     return;
 
                 var obj = JsonConvert.DeserializeObject<PlayerSettings>(json);

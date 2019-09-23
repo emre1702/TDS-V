@@ -72,7 +72,7 @@ namespace TDS_Server.Manager.Commands
         {
             if (!IsReasonValid(reason, player))
                 return;
-            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby is null || player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
@@ -92,7 +92,7 @@ namespace TDS_Server.Manager.Commands
             if (!IsReasonValid(reason, player))
                 return;
 
-            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby is null || player.CurrentLobby.Id == 0)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;

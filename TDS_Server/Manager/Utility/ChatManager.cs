@@ -70,7 +70,7 @@ namespace TDS_Server.Manager.Utility
 
         public static void SendTeamChat(TDSPlayer character, string message)
         {
-            if (character.Team == null)
+            if (character.Team is null)
                 return;
             string changedmessage = "[TEAM] " + character.Team.ChatColor + character.Client.Name + ": !{220|220|220}" + message;
             character.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, character.BlockingPlayerIds, character.Team);

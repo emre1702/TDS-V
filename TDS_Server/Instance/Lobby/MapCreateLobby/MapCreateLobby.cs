@@ -15,7 +15,7 @@ namespace TDS_Server.Instance.Lobby
 
         public static async void Create(TDSPlayer player)
         {
-            if (player.Entity == null)
+            if (player.Entity is null)
                 return;
 
             Lobbies entity = new Lobbies

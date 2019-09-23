@@ -45,9 +45,9 @@ namespace TDS_Server.Instance.Lobby
             }
 
             MapDto? map = MapsLoader.GetMapById(mapId);
-            if (map == null)
+            if (map is null)
                 map = MapCreator.GetMapById(mapId);
-            if (map == null)
+            if (map is null)
                 return;
 
             RemovePlayerVote(player.Client);
@@ -74,7 +74,7 @@ namespace TDS_Server.Instance.Lobby
             _playerVotes.Remove(player);
 
             MapVoteDto? oldVotedMap = _mapVotes.FirstOrDefault(m => m.Id == oldVote);
-            if (oldVotedMap == null)
+            if (oldVotedMap is null)
             {
                 SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, oldVote, 0);
                 return;

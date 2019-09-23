@@ -49,7 +49,7 @@ namespace TDS_Server.Instance.Lobby
             if (startindextoiterate == 0)
                 startindextoiterate = 1;
             Team team = Teams[startindextoiterate];
-            if (team.SpectateablePlayers == null)
+            if (team.SpectateablePlayers is null)
                 return null;
 
             return team.SpectateablePlayers.Count == 0 ? null : team;
@@ -71,7 +71,7 @@ namespace TDS_Server.Instance.Lobby
             if (startindextoiterate == 0)
                 startindextoiterate = Teams.Length - 1;
             Team team = Teams[startindextoiterate];
-            if (team.SpectateablePlayers == null)
+            if (team.SpectateablePlayers is null)
                 return null;
 
             return team.SpectateablePlayers.Count == 0 ? null : team;

@@ -51,7 +51,7 @@ namespace TDS_Server.Instance.Lobby
                 }
 
                 Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Client.Heading, 0, 0, player.Client.Name, dimension: Dimension);
-                if (vehicle == null)
+                if (vehicle is null)
                     return;
                 player.FreeroamVehicle = vehicle;
 

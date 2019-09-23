@@ -18,7 +18,7 @@
             }
 
             Client target = Utility.FindPlayer ( targetname );
-            if ( target == null || !target.Exists ) {
+            if ( target is null || !target.Exists ) {
                 player.SendLangNotification ( "player_doesnt_exist" );
                 return;
             }
@@ -34,7 +34,7 @@
             Client player = character.Player;
 
             GangInvitation invitation = gangInvitations.Find ( c => c.Player == player && c.Gang == character.Gang );
-            if ( invitation == null ) {
+            if ( invitation is null ) {
                 character.Player.SendLangNotification ( "invitation_was_removed" );
                 return;
             }

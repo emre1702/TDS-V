@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Player
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer player = client.GetChar();
-            if (player.Entity == null)
+            if (player.Entity is null)
                 return;
 
             if (!player.LoggedIn)
@@ -115,7 +115,7 @@ namespace TDS_Server.Manager.Player
 
             using var dbContext = new TDSNewContext();
             var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
-            if (playerIDName == null)
+            if (playerIDName is null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, false);
                 return;
@@ -143,7 +143,7 @@ namespace TDS_Server.Manager.Player
 
         public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
-            if (target.Entity == null)
+            if (target.Entity is null)
                 return;
             OutputMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
             target.MuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
@@ -162,7 +162,7 @@ namespace TDS_Server.Manager.Player
 
         public static void ChangePlayerVoiceMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
-            if (target.Entity == null)
+            if (target.Entity is null)
                 return;
             OutputVoiceMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
             target.VoiceMuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);

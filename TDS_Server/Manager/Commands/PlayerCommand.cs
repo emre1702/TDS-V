@@ -17,7 +17,7 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.LobbyLeave)]
         public static async void LobbyLeave(TDSPlayer player)
         {
-            if (player.CurrentLobby == null)
+            if (player.CurrentLobby is null)
                 return;
             if (player.CurrentLobby.LobbyEntity.Type == ELobbyType.MainMenu)
             {
@@ -112,7 +112,7 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.ClosePrivateChat)]
         public static void ClosePrivateChat(TDSPlayer player)
         {
-            if (player.InPrivateChatWith == null && player.SentPrivateChatRequestTo == null)
+            if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
             {
                 player.Client.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
@@ -123,7 +123,7 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.PrivateChat)]
         public static void PrivateChat(TDSPlayer player, [TDSRemainingText] string message)
         {
-            if (player.InPrivateChatWith == null)
+            if (player.InPrivateChatWith is null)
             {
                 player.Client.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
@@ -174,7 +174,7 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.BlockUser)]
         public static async void BlockUser(TDSPlayer player, TDSPlayer target)
         {
-            if (player.Entity == null || target.Entity == null)
+            if (player.Entity is null || target.Entity is null)
                 return;
 
             var relation = await player.DbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
@@ -218,11 +218,11 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.UnblockUser)]
         public static async void UnblockUser(TDSPlayer player, TDSPlayer target)
         {
-            if (player.Entity == null || target.Entity == null)
+            if (player.Entity is null || target.Entity is null)
                 return;
 
             var relation = await player.DbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
-            if (relation == null || relation.Relation != EPlayerRelation.Block)
+            if (relation is null || relation.Relation != EPlayerRelation.Block)
             {
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_NOT_BLOCKED, target.Client.Name));
                 return;
@@ -242,7 +242,7 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DPlayerCommand.GiveMoney)]
         public static void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
         {
-            if (player.Entity == null || target.Entity == null)
+            if (player.Entity is null || target.Entity is null)
                 return;
 
             if (money < SettingsManager.GiveMoneyMinAmount)

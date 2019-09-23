@@ -15,7 +15,7 @@ namespace TDS_Server.Instance.Lobby
                 return;
             if (IsEmpty())
                 return;
-            if (LobbyEntity.LobbyRewards == null)
+            if (LobbyEntity.LobbyRewards is null)
                 return;
             if (LobbyEntity.LobbyRewards.MoneyPerKill == 0 && LobbyEntity.LobbyRewards.MoneyPerAssist == 0 && LobbyEntity.LobbyRewards.MoneyPerDamage == 0)
                 return;
@@ -23,9 +23,9 @@ namespace TDS_Server.Instance.Lobby
             StringBuilder strbuilder = new StringBuilder();
             FuncIterateAllPlayers((character, team) =>
             {
-                if (character.CurrentRoundStats == null)
+                if (character.CurrentRoundStats is null)
                     return;
-                if (team == null || team.IsSpectator)
+                if (team is null || team.IsSpectator)
                     return;
 
                 uint killreward = 0;
@@ -84,7 +84,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((player, team) =>
             {
-                if (team == null || team.Entity.Index == 0)
+                if (team is null || team.Entity.Index == 0)
                     return;
                 SavePlayerRoundStats(player);
             });

@@ -50,7 +50,7 @@ namespace TDS_Server.Instance.Lobby
             ClearTeamPlayersLists();
             foreach (TDSPlayer character in oldPlayersList)
             {
-                if (character.Team == null) // propably not (yet) in the lobby
+                if (character.Team is null) // propably not (yet) in the lobby
                     continue;
                 if (!character.Team.IsSpectator)
                 {
@@ -81,7 +81,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!teamOrderDict.ContainsKey(teamOrder))
                 return;
-            if (character.Team == null)
+            if (character.Team is null)
                 return;
 
             Team team = character.Team;

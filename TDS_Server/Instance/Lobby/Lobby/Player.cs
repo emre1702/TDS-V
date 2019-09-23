@@ -102,11 +102,11 @@ namespace TDS_Server.Instance.Lobby
 
         private async Task AddPlayerLobbyStats(TDSPlayer character)
         {
-            if (character.Entity == null)
+            if (character.Entity is null)
                 return;
 
             PlayerLobbyStats? stats = await character.DbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
-            if (stats == null)
+            if (stats is null)
             {
                 stats = new PlayerLobbyStats { LobbyId = LobbyEntity.Id };
                 character.Entity.PlayerLobbyStats.Add(stats);
@@ -117,7 +117,7 @@ namespace TDS_Server.Instance.Lobby
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)
         {
-            if (character.Entity == null)
+            if (character.Entity is null)
                 return false;
             return character.CurrentLobby == this && LobbyEntity.OwnerId == character.Entity.Id;
         }

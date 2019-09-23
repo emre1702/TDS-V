@@ -26,7 +26,7 @@ namespace TDS_Server.Instance.Player
         { 
             get
             {
-                if (_dbContext == null)
+                if (_dbContext is null)
                     _dbContext = new TDSNewContext();
                 return _dbContext;
             } 
@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Player
             set
             {
                 _entity = value;
-                if (_entity == null)
+                if (_entity is null)
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
@@ -88,7 +88,7 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (_gang == null)
+                if (_gang is null)
                 {
                     _gang = Gang.None;
                 }
@@ -127,7 +127,7 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (Entity == null)
+                if (Entity is null)
                     return false;
                 return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
             }
@@ -139,13 +139,13 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (Entity == null || Entity.PlayerSettings == null)
+                if (Entity is null || Entity.PlayerSettings is null)
                     return _langEnumBeforeLogin;
                 return Entity.PlayerSettings.Language;
             }
             set
             {
-                if (Entity == null || Entity.PlayerSettings == null)
+                if (Entity is null || Entity.PlayerSettings is null)
                     _langEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = value;
@@ -156,7 +156,7 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (Entity == null)
+                if (Entity is null)
                     return AdminsManager.AdminLevels[0];
                 return AdminsManager.AdminLevels[Entity.AdminLvl];
             }
@@ -170,7 +170,7 @@ namespace TDS_Server.Instance.Player
             get => Entity?.PlayerStats.Money ?? 0;
             set
             {
-                if (Entity == null)
+                if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
@@ -195,7 +195,7 @@ namespace TDS_Server.Instance.Player
             get => Entity?.PlayerStats.PlayTime ?? 0;
             set
             {
-                if (Entity == null)
+                if (Entity is null)
                     return;
                 Entity.PlayerStats.PlayTime = value;
             }
@@ -218,7 +218,7 @@ namespace TDS_Server.Instance.Player
         {
             get
             {
-                if (LastKillAt == null)
+                if (LastKillAt is null)
                     return _shortTimeKillingSpree;
 
                 var timeSpanSinceLastKill = DateTime.UtcNow - LastKillAt.Value;
@@ -326,10 +326,10 @@ namespace TDS_Server.Instance.Player
 
         public void ClosePrivateChat(bool disconnected)
         {
-            if (InPrivateChatWith == null && SentPrivateChatRequestTo == null)
+            if (InPrivateChatWith is null && SentPrivateChatRequestTo == null)
                 return;
 
-            if (InPrivateChatWith != null)
+            if (InPrivateChatWith is { })
             {
                 if (disconnected)
                 {
@@ -343,7 +343,7 @@ namespace TDS_Server.Instance.Player
                 InPrivateChatWith.InPrivateChatWith = null;
                 InPrivateChatWith = null;
             }
-            else if (SentPrivateChatRequestTo != null)
+            else if (SentPrivateChatRequestTo is { })
             {
                 if (!disconnected)
                 {
@@ -363,14 +363,14 @@ namespace TDS_Server.Instance.Player
 
         public async Task SaveData()
         {
-            if (Entity == null || !Entity.PlayerStats.LoggedIn)
+            if (Entity is null || !Entity.PlayerStats.LoggedIn)
                 return;
 
             _lastSaveTick = Environment.TickCount;
             await _semaphoreSlime.WaitAsync();
             try
             {
-                if (CurrentLobbyStats != null && LobbyManager.GetLobby(CurrentLobbyStats.LobbyId) == null)
+                if (CurrentLobbyStats is { } && LobbyManager.GetLobby(CurrentLobbyStats.LobbyId) is null)
                 {
                     DbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
                     CurrentLobbyStats = null;

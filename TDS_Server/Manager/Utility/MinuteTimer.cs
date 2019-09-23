@@ -85,7 +85,7 @@ namespace TDS_Server.Manager.Utility
             player.VoiceMuteTime = null;
             NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.VOICE_MUTE_EXPIRED);
 
-            if (player.Team == null || player.Team.IsSpectator)
+            if (player.Team is null || player.Team.IsSpectator)
                 return;
 
             foreach (var target in player.Team.Players)

@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Utility
             );
             _attachedEntitiesInfos[entity] = infoDto;
 
-            if (lobby == null)
+            if (lobby is null)
                 NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
             else
             {
@@ -68,7 +68,7 @@ namespace TDS_Server.Manager.Utility
             if (info.LobbyId.HasValue)
             {
                 Lobby? lobby = LobbyManager.GetLobby(info.LobbyId.Value);
-                if (lobby == null)
+                if (lobby is null)
                     return;
                 lobby.SendAllPlayerEvent(DToClientEvent.DetachEntityWorkaround, null, entity.Value, resetCollision);
             }

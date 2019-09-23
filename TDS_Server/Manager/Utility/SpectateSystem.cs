@@ -30,7 +30,7 @@ namespace TDS_Server.Manager.Utility
             if (player.Spectates == targetPlayer)
                 return;
 
-            if (player.Spectates == null)
+            if (player.Spectates is null)
             {
                 SetPlayerToSpectator(player, true);
             } 
@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Utility
                 player.Spectates.Spectators.Remove(player);
             }
 
-            if (targetPlayer == null)
+            if (targetPlayer is null)
             {
                 SetPlayerToSpectator(player, false);
             }

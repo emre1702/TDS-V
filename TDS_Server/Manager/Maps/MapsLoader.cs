@@ -48,7 +48,7 @@ namespace TDS_Server.Manager.Maps
             foreach (var fileInfo in directoryInfo.EnumerateFiles("*.map", SearchOption.AllDirectories))
             {
                 MapDto? map = LoadMap(fileInfo, isOnlySaved);
-                if (map == null)
+                if (map is null)
                     continue;
                 list.Add(map);
             }
@@ -70,7 +70,7 @@ namespace TDS_Server.Manager.Maps
             if (isOnlySaved)
                 return map;
 
-            if (map.LimitInfo.Center == null || 
+            if (map.LimitInfo.Center is null || 
                 (map.LimitInfo.Center.X == 0 && map.LimitInfo.Center.Y == 0 && map.LimitInfo.Center.Z == 0))
                 map.LimitInfo.Center = map.GetCenter();
 
@@ -104,7 +104,7 @@ namespace TDS_Server.Manager.Maps
             foreach (var map in mapsToAdd)
             {
 
-                if (map.Info.CreatorId == null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
+                if (map.Info.CreatorId is null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
                     await dbContext.Maps.AddAsync(new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = null });
                 else
                     await dbContext.Maps.AddAsync(new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });

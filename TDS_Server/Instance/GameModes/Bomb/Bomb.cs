@@ -77,7 +77,7 @@ namespace TDS_Server.Instance.GameModes
 
         private void BombToHand(TDSPlayer character)
         {
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
@@ -92,7 +92,7 @@ namespace TDS_Server.Instance.GameModes
 
         private void BombToBack(TDSPlayer character)
         {
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
@@ -107,9 +107,9 @@ namespace TDS_Server.Instance.GameModes
 
         private void DropBomb()
         {
-            if (_bombAtPlayer == null)
+            if (_bombAtPlayer is null)
                 return;
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
             Workaround.DetachEntity(_bomb);
             //_bomb.FreezePosition = true;
@@ -124,7 +124,7 @@ namespace TDS_Server.Instance.GameModes
 
         private void TakeBomb(TDSPlayer character)
         {
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
             ToggleBombAtHand(character, character.Client.CurrentWeapon, character.Client.CurrentWeapon);
             //_bomb.FreezePosition = false;

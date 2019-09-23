@@ -121,7 +121,7 @@ namespace TDS_Server.Instance
 
         public void UpdateLastHitter(TDSPlayer target, TDSPlayer? source, int damage)
         {
-            if (source == null)
+            if (source is null)
                 return;
             if (!_allHitters.TryGetValue(target, out Dictionary<TDSPlayer, int>? lasthitterdict))
             {

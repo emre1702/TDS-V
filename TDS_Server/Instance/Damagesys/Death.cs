@@ -64,9 +64,8 @@ namespace TDS_Server.Instance
         {
             if (!_allHitters.ContainsKey(character))
                 return;
-            if (character.CurrentLobby == null)
-                return;
-            int halfarmorhp = character.CurrentLobby.StartTotalHP / 2;
+
+            int halfarmorhp = character.CurrentLobby!.StartTotalHP / 2;
             foreach (KeyValuePair<TDSPlayer, int> entry in _allHitters[character])
             {
                 if (entry.Value >= halfarmorhp)
@@ -90,7 +89,7 @@ namespace TDS_Server.Instance
         public void CheckLastHitter(TDSPlayer character, out TDSPlayer? killer)
         {
             killer = null;
-            if (character.LastHitter == null)
+            if (character.LastHitter is null)
                 return;
 
             TDSPlayer lastHitterCharacter = character.LastHitter;

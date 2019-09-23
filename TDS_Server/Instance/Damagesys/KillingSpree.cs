@@ -34,7 +34,7 @@ namespace TDS_Server.Instance
 
         private void InitKillingSpreeRewards(ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {
-            if (killingspreeRewards == null || killingspreeRewards.Count == 0)
+            if (killingspreeRewards is null || killingspreeRewards.Count == 0)
                 return;
             _killingSpreeRewards = killingspreeRewards.ToDictionary(v => v.KillsAmount, v => v);
         }
@@ -49,7 +49,7 @@ namespace TDS_Server.Instance
             ++player.KillingSpree;
 
             var timeNow = DateTime.UtcNow;
-            if (player.LastKillAt == null)
+            if (player.LastKillAt is null)
             {
                 player.LastKillAt = timeNow;
                 return;
@@ -89,7 +89,7 @@ namespace TDS_Server.Instance
         {
             if (!sSpreeReward.ContainsKey(character.KillingSpree))
                 return;
-            if (character.CurrentLobby == null)
+            if (character.CurrentLobby is null)
                 return;
 
             Tuple<string, int, int> reward = sSpreeReward[character.KillingSpree];

@@ -20,21 +20,21 @@ namespace TDS_Server.Instance.GameModes
             base.StartRound();
             Lobby.FuncIterateAllPlayers((character, team) =>
             {
-                if (team == null || team.IsSpectator)
+                if (team is null || team.IsSpectator)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == _terroristTeam)
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
                 else
                     NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_GOOD);
             });
-            if (_bombAtPlayer == null)
+            if (_bombAtPlayer is null)
                 GiveBombToRandomTerrorist();
         }
 
         public override void StartMapChoose()
         {
             base.StartMapChoose();
-            if (Map.BombInfo == null)
+            if (Map.BombInfo is null)
                 return;
 
             foreach (Position3DDto bombplace in Map.BombInfo.PlantPositions)

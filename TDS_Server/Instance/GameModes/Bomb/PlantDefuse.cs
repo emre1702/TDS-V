@@ -39,13 +39,13 @@ namespace TDS_Server.Instance.GameModes
             _bombPlantDefuseTimer = null;
             if (player.Client.Dead)
                 return;
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
             player.Client.StopAnimation();
 
             Vector3 playerpos = player.Client.Position;
             var plantPlace = GetPlantPos(playerpos);
-            if (plantPlace == null)
+            if (plantPlace is null)
                 return;
 
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
@@ -83,7 +83,7 @@ namespace TDS_Server.Instance.GameModes
             _bombPlantDefuseTimer = null;
             if (character.Client.Dead)
                 return;
-            if (_bomb == null)
+            if (_bomb is null)
                 return;
 
             Vector3 playerpos = character.Client.Position;
@@ -104,13 +104,13 @@ namespace TDS_Server.Instance.GameModes
 
         public bool StartBombPlanting(TDSPlayer character)
         {
-            if (_bomb == null)
+            if (_bomb is null)
                 return false;
             if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
                 return false;
-            if (_bombDetonateTimer != null)
+            if (_bombDetonateTimer is { })
                 return false;
-            if (_bombPlantDefuseTimer != null)
+            if (_bombPlantDefuseTimer is { })
                 return false;
             if (character.Client.Dead)
                 return false;
@@ -133,13 +133,13 @@ namespace TDS_Server.Instance.GameModes
         public bool StartBombDefusing(TDSPlayer character)
         {
             //Todo StartBombDefusing was empty, test it
-            if (_bomb == null)
+            if (_bomb is null)
                 return false;
             if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
                 return false;
-            if (_bombDetonateTimer == null)
+            if (_bombDetonateTimer is null)
                 return false;
-            if (_bombPlantDefuseTimer != null)
+            if (_bombPlantDefuseTimer is { })
                 return false;
             if (character.Client.Dead)
                 return false;

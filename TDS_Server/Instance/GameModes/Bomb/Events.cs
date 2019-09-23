@@ -32,7 +32,7 @@ namespace TDS_Server.Instance.GameModes
             if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
                 return;
 
-            if (_bombDetonateTimer == null || _bomb == null)
+            if (_bombDetonateTimer is null || _bomb is null)
                 return;
 
             if (_bombDetonateTimer != null && _bomb != null)

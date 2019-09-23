@@ -45,7 +45,7 @@ namespace TDS_Server.Manager.Helper
         {
             var teamSpawns1 = map.TeamSpawnsList.TeamSpawns.FirstOrDefault();
             var teamSpawns2 = map.TeamSpawnsList.TeamSpawns.LastOrDefault();
-            if (teamSpawns1 == null)
+            if (teamSpawns1 is null)
                 return 0;
             var spawn1 = teamSpawns1.Spawns.FirstOrDefault();
             var spawn2 = teamSpawns2.Spawns.FirstOrDefault();

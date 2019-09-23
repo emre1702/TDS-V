@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Utility
                 _strbuilder.Append(str);
                 for (int i = 0; i < args.Length; ++i)
                 {
-                    _strbuilder.Replace("{" + i + "}", args[i] == null ? "?" : args[i].ToString());
+                    _strbuilder.Replace("{" + i + "}", args[i] is null ? "?" : args[i].ToString());
                 }
                 string result = _strbuilder.ToString();
                 _strbuilder.Clear();

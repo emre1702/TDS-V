@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.Userpanel
         {
             try
             {
-                if (player.Entity == null)
+                if (player.Entity is null)
                     return;
                 var stats = await GetPlayerStats(player.Entity.Id, true);
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.MyStats, JsonConvert.SerializeObject(stats));

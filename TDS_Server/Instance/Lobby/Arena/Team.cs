@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.Lobby
         {
             foreach (var team in Teams)
             {
-                if (team.AlivePlayers == null)
+                if (team.AlivePlayers is null)
                     continue;
                 if (team.AlivePlayers.Count > 0)
                     return team;
@@ -43,7 +43,7 @@ namespace TDS_Server.Instance.Lobby
 
             foreach (Team team in Teams)
             {
-                if (team.AlivePlayers == null)
+                if (team.AlivePlayers is null)
                     continue;
                 int teamhealth = 0;
                 foreach (var player in team.AlivePlayers)

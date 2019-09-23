@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Utility
             }
             catch (Exception ex)
             {
-                if (exceptionsource == null)
+                if (exceptionsource is null)
                     ErrorLogsManager.Log(ex.Message, Environment.StackTrace);
                 else
                     ErrorLogsManager.Log(ex.Message, Environment.StackTrace, exceptionsource);

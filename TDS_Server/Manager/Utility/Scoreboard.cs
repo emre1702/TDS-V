@@ -16,7 +16,7 @@ namespace TDS_Server.Manager.Utility
         public static void SendDataToPlayer(Client client)
         {
             TDSPlayer player = client.GetChar();
-            if (player.CurrentLobby == null || player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby is null || player.CurrentLobby.Id == 0)
             {
                 var entries = GetDataForMainmenu();
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries));
@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Utility
             else
             {
                 var entries = GetDataForLobby(player.CurrentLobby.Id);
-                if (entries == null)
+                if (entries is null)
                     return;
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.CurrentLobby?.Id);
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries), JsonConvert.SerializeObject(lobbydata));
@@ -58,7 +58,7 @@ namespace TDS_Server.Manager.Utility
         private static List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(int lobbyId)
         {
             Lobby? lobby = LobbyManager.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
-            if (lobby == null)
+            if (lobby is null)
                 return null;
 
             var list = new List<SyncedScoreboardLobbyDataDto>();

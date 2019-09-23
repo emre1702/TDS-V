@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Player
                 .Include(p => p.PlayerRelationsTarget)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (character.Entity == null)
+            if (character.Entity is null)
             {
                 NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
                 character.DbContext.Dispose();

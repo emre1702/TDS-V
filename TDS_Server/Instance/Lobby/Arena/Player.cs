@@ -70,7 +70,7 @@ namespace TDS_Server.Instance.Lobby
             if (character.Team != null && !character.Team.IsSpectator)
             {
                 Position4DDto? spawndata = GetMapRandomSpawnData(character.Team);
-                if (spawndata == null)
+                if (spawndata is null)
                     return;
                 NAPI.Player.SpawnPlayer(player, spawndata.ToVector3(), spawndata.Rotation);
                 if (character.Team.SpectateablePlayers != null && !character.Team.SpectateablePlayers.Contains(character))
@@ -109,7 +109,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void StartRoundForPlayer(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team == null || player.Team.IsSpectator);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team != null && !player.Team.IsSpectator)
             {
                 SetPlayerAlive(player);
@@ -178,7 +178,7 @@ namespace TDS_Server.Instance.Lobby
 
         private void SetPlayerAlive(TDSPlayer player)
         {
-            if (player.Team == null || player.Team.AlivePlayers == null)
+            if (player.Team is null || player.Team.AlivePlayers is null)
                 return;
             player.Lifes = (sbyte)(LobbyEntity.AmountLifes ?? 0);
             player.Team.AlivePlayers.Add(player);
@@ -191,12 +191,12 @@ namespace TDS_Server.Instance.Lobby
         {
             if (!SavePlayerLobbyStats)
                 return;
-            if (character.CurrentLobbyStats == null)
+            if (character.CurrentLobbyStats is null)
                 return;
 
             PlayerLobbyStats? to = character.CurrentLobbyStats;
             RoundStatsDto? from = character.CurrentRoundStats;
-            if (to == null || from == null)
+            if (to is null || from is null)
                 return;
             to.Kills += from.Kills;
             to.Assists += from.Assists;

@@ -14,7 +14,7 @@
         public static bool operator !=(Lobby? lobby1, Lobby? lobby2)
         {
             if (lobby1 is null)
-                return !(lobby2 is null);
+                return lobby2 is { };
             if (lobby2 is null)
                 return true;
             return lobby1.Id != lobby2.Id;
@@ -22,7 +22,7 @@
 
         public override bool Equals(object? obj)
         {
-            if (obj == null)
+            if (obj is null)
                 return false;
             if (!obj.GetType().IsSubclassOf(typeof(Lobby)) && obj.GetType() != typeof(Lobby))
                 return false;
