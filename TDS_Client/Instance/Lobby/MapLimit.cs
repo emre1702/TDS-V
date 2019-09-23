@@ -18,8 +18,8 @@ namespace TDS_Client.Instance.Lobby
 {
     internal class MapLimit
     {
-        private readonly float _minX, _minY, _maxX, _maxY;
-        private readonly Position4DDto[] _edges;
+        private float _minX, _minY, _maxX, _maxY;
+        private List<Position4DDto> _edges;
         private int _maxOutsideCounter;
 
         private int _outsideCounter;
@@ -35,15 +35,14 @@ namespace TDS_Client.Instance.Lobby
 
         private bool _savePosition => _edges != null && (_type == EMapLimitType.Block || _type == EMapLimitType.TeleportBackAfterTime);
 
-        public MapLimit(Position4DDto[] edges, EMapLimitType type)
+        public MapLimit(List<Position4DDto> edges, EMapLimitType type)
         {
             _edges = edges;
-            if (edges.Length == 0)
-                return;
-            _minX = edges.Min(v => v.X);
-            _minY = edges.Min(v => v.Y);
-            _maxX = edges.Max(v => v.X);
-            _maxY = edges.Max(v => v.Y);
+
+            _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
+            _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;
+            _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
+            _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
 
             _type = type;
 
@@ -56,8 +55,11 @@ namespace TDS_Client.Instance.Lobby
         {
             Stop();
             Reset();
-            _checkTimer = new TDSTimer(Check, 1000, 0);
-            _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
+            if (_type != EMapLimitType.Display)
+            {
+                _checkTimer = new TDSTimer(Check, 1000, 0);
+                _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
+            }
             TickManager.Add(Draw);
         }
 
@@ -87,6 +89,18 @@ namespace TDS_Client.Instance.Lobby
             _info?.Remove();
             _info = null;
             _outsideCounter = _maxOutsideCounter;
+        }
+
+        public void SetEdges(List<Position4DDto> edges)
+        {
+            if (_type != EMapLimitType.Display)
+            {
+                _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
+                _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;
+                _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
+                _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
+            }
+            _edges = edges;
         }
 
         public void CheckFaster()
@@ -174,7 +188,7 @@ namespace TDS_Client.Instance.Lobby
                 return false;
 
             bool inside = false;
-            for (int i = 0, j = _edges.Length - 1; i < _edges.Length; j = i++)
+            for (int i = 0, j = _edges.Count - 1; i < _edges.Count; j = i++)
             {
                 Position4DDto iPoint = _edges[i];
                 Position4DDto jPoint = _edges[j];
@@ -188,14 +202,14 @@ namespace TDS_Client.Instance.Lobby
 
         private void Draw()
         {
-            for (int i = 0; i <= _edges.Length - 1; ++i)
+            for (int i = 0; i <= _edges.Count - 1; ++i)
             {
                 var edgeStart = _edges[i];
-                var edgeTarget = i == _edges.Length - 1 ? _edges[0] : _edges[i+1];
+                var edgeTarget = i == _edges.Count - 1 ? _edges[0] : _edges[i+1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
-                Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, edgeStart.Z, ref edgeStartZ, false);
-                Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, edgeTarget.Z, ref edgeTargetZ, false);
+                Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, Player.LocalPlayer.Position.Z, ref edgeStartZ, false);
+                Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, Player.LocalPlayer.Position.Z + 10, ref edgeTargetZ, false);
 
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.5f, 150, 0, 0, 255);

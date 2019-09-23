@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Enum;
+using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto.Map;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 using Entity = RAGE.Elements.Entity;
 using Ped = RAGE.Elements.Ped;
 using Player = RAGE.Elements.Player;
@@ -20,10 +21,15 @@ namespace TDS_Client.Manager.MapCreator
     static class ObjectsManager
     {
         private static readonly Dictionary<GameEntity, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<GameEntity, MapCreatorObject>();
+        private static MapLimit _mapLimitDisplay;
 
         public static void Start()
         {
             Events.OnEntityStreamIn += OnEntityStreamIn;
+
+            TickManager.Add(RefreshMapLimitDisplay);
+            _mapLimitDisplay = new MapLimit(new List<Position4DDto>(), EMapLimitType.Display);
+            _mapLimitDisplay.Start();
         }
 
         public static void Stop()
@@ -37,6 +43,11 @@ namespace TDS_Client.Manager.MapCreator
             _cacheMapEditorObjects.Clear();
             ObjectPlacing.CheckObjectDeleted();
             MapCreatorObject.Reset();
+
+            _mapLimitDisplay.Stop();
+            _mapLimitDisplay = null;
+
+            TickManager.Remove(RefreshMapLimitDisplay);
         }
 
         public static void Add(GameEntityBase obj, EMapCreatorPositionType type)
@@ -219,6 +230,14 @@ namespace TDS_Client.Manager.MapCreator
             }
 
             Start();
+        }
+
+        private static void RefreshMapLimitDisplay()
+        {
+            _mapLimitDisplay.SetEdges(_cacheMapEditorObjects
+                .Where(o => o.Value.Type == EMapCreatorPositionType.MapLimit)
+                .Select(o => new Position4DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y })
+                .ToList());
         }
 
 
