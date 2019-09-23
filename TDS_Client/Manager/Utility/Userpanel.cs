@@ -8,25 +8,26 @@ namespace TDS_Client.Manager.Utility
     {
         private static bool _open;
 
-        public static void Open(EKey _)
+        public static void Toggle(EKey key)
         {
-            if (_open)
-                return;
-            if (ChatManager.IsOpen)
-                return;
-            if (Browser.Angular.Shared.InInput)
-                return;
+            if (key != EKey.NoName)
+            {
+                if (ChatManager.IsOpen)
+                    return;
+                if (Browser.Angular.Shared.InInput)
+                    return;
+            }
+            else 
+                _open = true;
 
-            Browser.Angular.Main.ToggleUserpanel(true);
-            _open = true;
-            CursorManager.Visible = true;
+            _open = !_open;
+            CursorManager.Visible = _open;
+            Browser.Angular.Main.ToggleUserpanel(_open);
         }
 
         public static void Close()
         {
-            _open = false;
-            Browser.Angular.Main.ToggleUserpanel(false);
-            CursorManager.Visible = false;
+            Toggle(EKey.NoName);
         }
     }
 }

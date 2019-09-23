@@ -471,7 +471,7 @@ namespace TDS_Client.Manager.Event
             Team.Init();
 
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
-            BindManager.Add(EKey.U, Userpanel.Open);
+            BindManager.Add(EKey.U, Userpanel.Toggle);
         }
 
         private void OnSetMapVotesMethod(object[] args)
