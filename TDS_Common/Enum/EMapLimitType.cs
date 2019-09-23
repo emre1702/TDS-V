@@ -5,6 +5,6 @@
         KillAfterTime,
         TeleportBackAfterTime,
         Block,
-        None
+        Display
     }
 }
