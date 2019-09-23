@@ -64,11 +64,6 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-
-    this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
-      duration: 5000,
-      panelClass: "mat-app-background"
-    });
   }
 
   ngOnDestroy() {
