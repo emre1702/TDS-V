@@ -73,10 +73,10 @@
 
     <div id="mapsettings-content" class="two-per-row-container" *ngIf="currentNav == mapCreatorNav.MapSettings">
       <mat-form-field class="two-per-row-div" color="accent">
-        <input name="minPlayer" matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MinPlayers"/>
+        <input name="minPlayer" matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.Settings.MinPlayers"/>
       </mat-form-field>
       <mat-form-field class="two-per-row-div" color="accent">
-        <input name="maxPlayers" matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.MaxPlayers"/>
+        <input name="maxPlayers" matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data.Settings.MaxPlayers"/>
       </mat-form-field>
     </div>
 
