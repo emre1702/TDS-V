@@ -11,11 +11,11 @@ namespace TDS_Server.Manager.Utility
         public delegate void PlayerDelegate(TDSPlayer player);
         public delegate void ClientDelegate(Client client);
 
-        public static event PlayerDelegate OnPlayerLoggedInBefore;
-        public static event PlayerDelegate OnPlayerLoggedOutBefore;
-        public static event PlayerDelegate OnPlayerLoggedIn;
-        public static event PlayerDelegate OnPlayerLoggedOut;
-        public static event ClientDelegate OnPlayerRegistered;
+        public static event PlayerDelegate? OnPlayerLoggedInBefore;
+        public static event PlayerDelegate? OnPlayerLoggedOutBefore;
+        public static event PlayerDelegate? OnPlayerLoggedIn;
+        public static event PlayerDelegate? OnPlayerLoggedOut;
+        public static event ClientDelegate? OnPlayerRegistered;
 
         public static void SetPlayerLoggedIn(TDSPlayer player)
         {

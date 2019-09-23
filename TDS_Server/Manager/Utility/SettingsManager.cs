@@ -33,11 +33,13 @@ namespace TDS_Server.Manager.Utility
         public static float GiveMoneyFee => _serverSettings.GiveMoneyFee;
         public static int GiveMoneyMinAmount => _serverSettings.GiveMoneyMinAmount;
 
+        #nullable disable warnings
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
         private static AppConfigDto _localSettings;
         private static ServerSettings _serverSettings;
         private static Command _loadMapOfOthersRightInfos;
+        #nullable restore warnings
 
         public static void LoadLocal()
         {

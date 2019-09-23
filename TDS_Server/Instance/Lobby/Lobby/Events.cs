@@ -8,12 +8,10 @@ namespace TDS_Server.Instance.Lobby
     partial class Lobby
     {
         public delegate void PlayerJoinedLobbyDelegate(Lobby lobby, TDSPlayer player);
-
-        public static event PlayerJoinedLobbyDelegate PlayerJoinedLobby;
-
         public delegate void PlayerLeftLobbyDelegate(Lobby lobby, TDSPlayer player);
 
-        public static event PlayerLeftLobbyDelegate PlayerLeftLobby;
+        public static event PlayerJoinedLobbyDelegate? PlayerJoinedLobby;
+        public static event PlayerLeftLobbyDelegate? PlayerLeftLobby;
 
         protected readonly Dictionary<TDSPlayer, TDSTimer> DeathSpawnTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
@@ -25,7 +23,7 @@ namespace TDS_Server.Instance.Lobby
 
         public void OnPlayerDisconnected(TDSPlayer character)
         {
-            this.RemovePlayer(character);
+            RemovePlayer(character);
         }
 
         /// <summary>

@@ -10,7 +10,9 @@ namespace TDS_Server.Instance
 {
     partial class Damagesys
     {
+        #nullable disable warnings
         private static Dictionary<EWeaponHash, DamageDto> _defaultDamages;
+        #nullable restore warnings
 
         public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {

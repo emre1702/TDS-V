@@ -16,8 +16,10 @@ namespace TDS_Server.Manager.Stats
 {
     class ServerDailyStatsManager
     {
+        #nullable disable warnings
         public static TDSNewContext DbContext { get; private set; }
         public static ServerDailyStats Stats { get; private set; }
+        #nullable restore warnings
 
         public static void Init()
         {

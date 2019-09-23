@@ -3,8 +3,7 @@ using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Dto.Map
 {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
-
+    #nullable disable warnings
     public class MapTeamSpawnsDto
     {
         [XmlIgnore]
@@ -13,6 +12,5 @@ namespace TDS_Server.Dto.Map
         [XmlElement("spawn")]
         public Position4DDto[] Spawns { get; set; }
     }
-
-#pragma warning enable CS8618 // Non-nullable field is uninitialized.
+    #nullable restore warnings
 }

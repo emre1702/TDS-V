@@ -3,8 +3,8 @@ using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Dto.Map
 {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
 
+#nullable disable warnings
     public class MapLimitInfoDto
     {
         [XmlElement("pos")]
@@ -16,6 +16,5 @@ namespace TDS_Server.Dto.Map
         [XmlIgnore]
         public string EdgesJson { get; set; }
     }
-
-#pragma warning enable CS8618 // Non-nullable field is uninitialized.
+#nullable restore warnings
 }

@@ -2,13 +2,11 @@
 
 namespace TDS_Server.Dto.Map
 {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
-
+    #nullable disable warnings
     public class MapTeamSpawnsListDto
     {
         [XmlElement("team")]
         public MapTeamSpawnsDto[] TeamSpawns { get; set; }
     }
-
-#pragma warning enable CS8618 // Non-nullable field is uninitialized.
+    #nullable restore warnings
 }
