@@ -193,6 +193,8 @@ export class CustomLobbyMenuComponent {
   createLobby() {
     if (!this.creating)
       return;
+    if (!this.areSettingsValid())
+      return;
 
     const data = new CustomLobbyData();
     for (const panel of this.settingPanel) {
@@ -249,6 +251,11 @@ export class CustomLobbyMenuComponent {
         }
       }
     }
+    const lobbyName: string = (this.settingPanel
+                                .find(p => p.title === "Default").rows
+                                .find(p => p.dataSettingIndex === "Name").formControl.value as string).toLowerCase();
+    if (lobbyName.startsWith("mapcreator"))
+      return false;
     return true;
   }
 
