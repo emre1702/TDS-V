@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 if (team.AlivePlayers is null)
                     continue;
-                if (team.AlivePlayers.Count > 0)
+                if (team.AlivePlayers.Count >= minalive)
                     return team;
             }
             return null;
