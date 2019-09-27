@@ -16,6 +16,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map.Creator;
+using TDS_Common.Dto.Sync;
 using TDS_Common.Enum.Userpanel;
 using TDS_Server.Dto.Map;
 using static RAGE.Events;
@@ -84,6 +85,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
+            Add(DToClientEvent.SyncPlayerWeaponUpgrades, OnSyncPlayerWeaponUpgradesMethod);
             Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
@@ -388,6 +390,16 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             Browser.Angular.Main.AddCustomLobby(json);
+        }
+
+        private void OnSyncPlayerWeaponUpgradesMethod(object[] args)
+        {
+            var handleValue = (ushort)args[0];
+            var player = ClientUtils.GetPlayerByHandleValue(handleValue);
+            if (player == null)
+                return;
+            var data = JsonConvert.DeserializeObject<WeaponSyncData>((string)args[1]);
+            Sync.Weapon.Set(player, data);
         }
 
         private void OnSyncSettingsMethod(object[] args)

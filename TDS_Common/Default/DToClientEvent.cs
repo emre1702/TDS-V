@@ -1,6 +1,6 @@
 ﻿namespace TDS_Common.Default
 {
-    public class DToClientEvent
+    public static class DToClientEvent
     {
         public const string SetAssistsForRoundStats = "SetAssistsForRoundStats_Server";
         public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
@@ -72,6 +72,7 @@
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncPlayerWeaponUpgrades = "SyncPlayerWeaponUpgrades_Server";   //todo: Add serversided
         public const string SyncSettings = "SyncSettings_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server";

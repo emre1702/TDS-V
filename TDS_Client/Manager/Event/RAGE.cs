@@ -1,4 +1,5 @@
 ﻿using RAGE;
+using RAGE.Elements;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using static RAGE.Events;
@@ -15,6 +16,7 @@ namespace TDS_Client.Manager.Event
             OnPlayerDeath += OnPlayerDeathMethod;
             OnPlayerStartTalking += OnPlayerStartTalkingMethod;
             OnPlayerStopTalking += OnPlayerStopTalkingMethod;
+            OnEntityStreamIn += OnEntityStreamInMethod;
         }
 
         private void OnPlayerSpawnMethod(CancelEventArgs cancel)
@@ -35,6 +37,17 @@ namespace TDS_Client.Manager.Event
         private void OnPlayerStopTalkingMethod(Player player)
         {
             MainBrowser.StopPlayerTalking(player.Name);
+        }
+
+        private void OnEntityStreamInMethod(Entity entity)
+        {
+            switch (entity.Type)
+            {
+                case Type.Player:
+                case Type.Ped:
+                    Sync.Weapon.PedStreamedIn((PedBase)entity);
+                    break;
+            } 
         }
     }
 }
