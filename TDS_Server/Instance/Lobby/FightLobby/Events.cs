@@ -39,6 +39,9 @@ namespace TDS_Server.Instance.Lobby
         public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerWeaponChange, newWeapon, DmgSys.GetDamage((EWeaponHash)newWeapon));
+
+            if (player.WeaponUpgradesDatasJson.TryGetValue((uint)newWeapon, out string? dataJson))
+                SendAllPlayerEvent(DToClientEvent.SyncPlayerWeaponUpgrades, null, dataJson);
         }
     }
 }

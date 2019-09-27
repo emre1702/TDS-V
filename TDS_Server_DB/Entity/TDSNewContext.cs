@@ -74,6 +74,8 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EMapLimitType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleCategory>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<WeaponComponent>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponComponentCategory>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -109,7 +111,9 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
         public virtual DbSet<ServerTotalStats> ServerTotalStats { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
+        public virtual DbSet<WeaponComponents> WeaponComponents { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
+        public virtual DbSet<WeaponsTints> WeaponsTints { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -147,6 +151,8 @@ namespace TDS_Server_DB.Entity
             modelBuilder.HasPostgresEnum<EMapLimitType>();
             modelBuilder.HasPostgresEnum<ERuleCategory>();
             modelBuilder.HasPostgresEnum<ERuleTarget>();
+            modelBuilder.HasPostgresEnum<WeaponComponent>();
+            modelBuilder.HasPostgresEnum<EWeaponComponentCategory>();
             #endregion
 
             #region Tables
@@ -743,6 +749,71 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("players_GangId_fkey");
             });
 
+            modelBuilder.Entity<PlayerWeaponComponents>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.WeaponHash });
+
+                entity.ToTable("player_weapon_components");
+
+                entity.Property(e => e.PlayerId)
+                    .HasColumnName("PlayerID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.WeaponHash)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ComponentHash)
+                    .ValueGeneratedNever();
+
+                entity.HasOne(d => d.Player)
+                   .WithMany(p => p.PlayerWeaponComponents)
+                   .HasForeignKey(d => d.PlayerId)
+                   .HasConstraintName("player_player_weapon_components_PlayerId_fkey");
+
+                entity.HasOne(d => d.Component)
+                    .WithMany(t => t.PlayerWeaponComponents)
+                    .HasForeignKey(d => d.ComponentHash)
+                    .HasConstraintName("component_player_weapon_components_ComponentHash_fkey");
+
+                entity.HasOne(d => d.Weapon)
+                    .WithMany(w => w.PlayerWeaponComponents)
+                    .HasForeignKey(d => d.WeaponHash)
+                    .HasConstraintName("weapon_player_weapon_components_WeaponHash_fkey");
+            });
+
+            modelBuilder.Entity<PlayerWeaponTints>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.WeaponHash });
+
+                entity.ToTable("player_weapon_tints");
+
+                entity.Property(e => e.PlayerId)
+                    .HasColumnName("PlayerID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.WeaponHash)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.TintId)
+                    .HasColumnName("TintID")
+                    .ValueGeneratedNever();
+
+                entity.HasOne(d => d.Player)
+                   .WithMany(p => p.PlayerWeaponTints)
+                   .HasForeignKey(d => d.PlayerId)
+                   .HasConstraintName("player_player_weapon_tints_PlayerId_fkey");
+
+                entity.HasOne(d => d.Tint)
+                    .WithMany(t => t.PlayerWeaponTints)
+                    .HasForeignKey(d => new { d.TintId, d.IsMK2 })
+                    .HasConstraintName("tint_player_weapon_tints_TintId_fkey");
+
+                entity.HasOne(d => d.Weapon)
+                    .WithMany(w => w.PlayerWeaponTints)
+                    .HasForeignKey(d => d.WeaponHash)
+                    .HasConstraintName("weapon_player_weapon_tints_WeaponHash_fkey");
+            });
+
             modelBuilder.Entity<Rules>(entity =>
             {
                 entity.ToTable("rules");
@@ -854,6 +925,17 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("teams_Lobby_fkey");
             });
 
+            modelBuilder.Entity<WeaponComponents>(entity =>
+            {
+                entity.HasKey(e => e.Hash);
+
+                entity.ToTable("weapon_components");
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany(e => e.Components)
+                    .HasForeignKey(e => e.WeaponHash)
+                    .HasConstraintName("weapon_weapon_components_WeaponHash_fkey");
+            });
 
             modelBuilder.Entity<Weapons>(entity =>
             {
@@ -865,6 +947,16 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Hash).IsRequired();
 
                 entity.Property(e => e.DefaultHeadMultiplicator).HasDefaultValueSql("1");
+            });
+
+            modelBuilder.Entity<WeaponsTints>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.IsMK2 });
+
+                entity.ToTable("weaponsTints");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+                        
             });
             #endregion
 

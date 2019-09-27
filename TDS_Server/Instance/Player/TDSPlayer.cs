@@ -1,11 +1,13 @@
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Common.Default;
+using TDS_Common.Dto.Sync;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.GangTeam;
@@ -45,6 +47,7 @@ namespace TDS_Server.Instance.Player
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 PlayerRelationsPlayer = _entity.PlayerRelationsPlayer.ToList();
                 PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
+                LoadWeaponUpgrades(_entity);
                 NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
             }
         }
@@ -238,6 +241,8 @@ namespace TDS_Server.Instance.Player
         public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
         public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
+        public readonly Dictionary<uint, WeaponSyncData> WeaponUpgradesDatas = new Dictionary<uint, WeaponSyncData>();
+        public readonly Dictionary<uint, string> WeaponUpgradesDatasJson = new Dictionary<uint, string>();
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 
@@ -400,6 +405,22 @@ namespace TDS_Server.Instance.Player
         public void InitDbContext()
         {
             _dbContext = new TDSNewContext();
+        }
+
+        private void LoadWeaponUpgrades(Players entity)
+        {
+            var weaponHashesWithUpgrades = entity.PlayerWeaponComponents.Select(c => c.WeaponHash).Union(entity.PlayerWeaponTints.Select(t => t.WeaponHash));
+            foreach (var weaponHash in weaponHashesWithUpgrades)
+            {
+                var data = new WeaponSyncData
+                {
+                    WeaponHash = (uint)weaponHash,
+                    TintIndex = entity.PlayerWeaponTints.FirstOrDefault(t => t.WeaponHash == weaponHash)?.TintId ?? 0,
+                    ComponentHashes = entity.PlayerWeaponComponents.Where(t => t.WeaponHash == weaponHash).Select(t => (uint)t.ComponentHash).ToList()
+                };
+                WeaponUpgradesDatas[(uint)weaponHash] = data;
+                WeaponUpgradesDatasJson[(uint)weaponHash] = JsonConvert.SerializeObject(data);
+            }
         }
     }
 }

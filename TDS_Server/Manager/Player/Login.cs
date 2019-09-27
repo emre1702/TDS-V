@@ -32,6 +32,8 @@ namespace TDS_Server.Manager.Player
                 .Include(p => p.PlayerMapRatings)
                 .Include(p => p.PlayerMapFavourites)
                 .Include(p => p.PlayerRelationsTarget)
+                .Include(p => p.PlayerWeaponComponents)
+                .Include(p => p.PlayerWeaponTints)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (character.Entity is null)

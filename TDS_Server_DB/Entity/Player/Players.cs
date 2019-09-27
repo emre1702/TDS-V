@@ -51,5 +51,7 @@ namespace TDS_Server_DB.Entity.Player
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
         public virtual ICollection<PlayerRelations> PlayerRelationsPlayer { get; set; }
         public virtual ICollection<PlayerRelations> PlayerRelationsTarget { get; set; }
+        public virtual ICollection<PlayerWeaponComponents> PlayerWeaponComponents { get; set; }
+        public virtual ICollection<PlayerWeaponTints> PlayerWeaponTints { get; set; }
     }
 }
