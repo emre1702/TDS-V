@@ -34,8 +34,4 @@
       <HintPath>C:\RAGEMP\server-files\bridge\runtime\Bootstrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y /Q /S &quot;$(TargetPath)&quot; &quot;C:\RAGEMP\server-files\bridge\runtime\&quot;" />
-  </Target>
 </Project>

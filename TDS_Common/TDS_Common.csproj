@@ -19,8 +19,4 @@
     </Reference>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="RD /S /Q &quot;C:\RAGEMP\server-files\client_packages\cs_packages\&quot;&#xD;&#xA;xcopy /Y /Q /S &quot;$(ProjectDir)*.cs&quot; &quot;C:\RAGEMP\server-files\client_packages\cs_packages\TDS_Client\&quot;" />
-  </Target>
-
 </Project>
