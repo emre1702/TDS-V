@@ -10,6 +10,8 @@
 	  <NullableContextOptions>enable</NullableContextOptions>
 	  <Nullable>enable</Nullable>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	  <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
