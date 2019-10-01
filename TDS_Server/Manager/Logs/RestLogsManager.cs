@@ -20,7 +20,7 @@ namespace TDS_Server.Manager.Logs
             {
                 Type = type,
                 Source = source?.GetEntity()?.Id ?? 0,
-                Ip = ipAddressParseWorked ? address : null,
+                Ip = saveipserial && ipAddressParseWorked ? address : null,
                 Serial = saveipserial ? source?.Serial : null,
                 Lobby = savelobby ? source?.GetChar().CurrentLobby?.Id : null,
                 Timestamp = DateTime.Now
