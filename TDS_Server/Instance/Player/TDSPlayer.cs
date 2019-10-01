@@ -243,6 +243,7 @@ namespace TDS_Server.Instance.Player
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
         public readonly Dictionary<uint, WeaponSyncData> WeaponUpgradesDatas = new Dictionary<uint, WeaponSyncData>();
         public readonly Dictionary<uint, string> WeaponUpgradesDatasJson = new Dictionary<uint, string>();
+        public string? WeaponUpgradesDatasJsonComplete;
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 
@@ -361,6 +362,13 @@ namespace TDS_Server.Instance.Player
             }
         }
 
+        public void GiveWeapon(EWeaponHash weaponHash, int ammo) 
+        {
+            WeaponHash hash = (WeaponHash)((uint)weaponHash);
+            NAPI.Player.GivePlayerWeapon(Client, hash, 0);
+            NAPI.Player.SetPlayerWeaponAmmo(Client, hash, ammo);
+        }
+
         public bool HasRelationTo(TDSPlayer target, EPlayerRelation relation)
         {
             return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
@@ -421,6 +429,7 @@ namespace TDS_Server.Instance.Player
                 WeaponUpgradesDatas[(uint)weaponHash] = data;
                 WeaponUpgradesDatasJson[(uint)weaponHash] = JsonConvert.SerializeObject(data);
             }
+            WeaponUpgradesDatasJsonComplete = JsonConvert.SerializeObject(WeaponUpgradesDatas);
         }
     }
 }

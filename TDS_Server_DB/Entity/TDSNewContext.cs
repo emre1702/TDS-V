@@ -74,7 +74,7 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EMapLimitType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleCategory>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<WeaponComponent>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponComponent>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponComponentCategory>();
         }
 
@@ -106,6 +106,8 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
         public virtual DbSet<Players> Players { get; set; }
+        public virtual DbSet<PlayerWeaponComponents> PlayerWeaponComponents { get; set; }
+        public virtual DbSet<PlayerWeaponTints> PlayerWeaponTints { get; set; }
         public virtual DbSet<Rules> Rules { get; set; }
         public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
@@ -151,7 +153,7 @@ namespace TDS_Server_DB.Entity
             modelBuilder.HasPostgresEnum<EMapLimitType>();
             modelBuilder.HasPostgresEnum<ERuleCategory>();
             modelBuilder.HasPostgresEnum<ERuleTarget>();
-            modelBuilder.HasPostgresEnum<WeaponComponent>();
+            modelBuilder.HasPostgresEnum<EWeaponComponent>();
             modelBuilder.HasPostgresEnum<EWeaponComponentCategory>();
             #endregion
 
@@ -751,7 +753,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<PlayerWeaponComponents>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.WeaponHash });
+                entity.HasKey(e => new { e.PlayerId, e.WeaponHash, e.ComponentHash });
 
                 entity.ToTable("player_weapon_components");
 
@@ -772,7 +774,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.HasOne(d => d.Component)
                     .WithMany(t => t.PlayerWeaponComponents)
-                    .HasForeignKey(d => d.ComponentHash)
+                    .HasForeignKey(d => new { d.ComponentHash, d.WeaponHash })
                     .HasConstraintName("component_player_weapon_components_ComponentHash_fkey");
 
                 entity.HasOne(d => d.Weapon)
@@ -927,7 +929,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<WeaponComponents>(entity =>
             {
-                entity.HasKey(e => e.Hash);
+                entity.HasKey(e => new { e.Hash, e.WeaponHash });
 
                 entity.ToTable("weapon_components");
 
@@ -1575,6 +1577,1579 @@ namespace TDS_Server_DB.Entity
                             + "\nFalls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben."
                             + "\nDie Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt)."
                 }
+            );
+
+            modelBuilder.Entity<WeaponComponents>().HasData(
+            #region Melees
+            #region Knuckle Duster
+                new WeaponComponents 
+                { 
+                    Hash = EWeaponComponent.KnuckleVarmodBase, 
+                    Name = "Base Model",
+                    Category = EWeaponComponentCategory.Varmod, 
+                    WeaponHash = EWeaponHash.KnuckleDuster 
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodPimp,
+                    Name = "The Pimp",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodBallas,
+                    Name = "The Ballas",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodDollar,
+                    Name = "The Hustler",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodDiamond,
+                    Name = "The Rock",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodHate,
+                    Name = "The Hater",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodLove,
+                    Name = "The Lover",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodPlayer,
+                    Name = "The Player",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodKing,
+                    Name = "The King",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.KnuckleVarmodVagos,
+                    Name = "The Vagos",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.KnuckleDuster
+                },
+            #endregion Knuckle Duster
+
+            #region Switchblade
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SwitchbladeVarmodBase,
+                    Name = "Default Handle",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.SwitchBlade
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SwitchbladeVarmodVar1,
+                    Name = "VIP Variant",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.SwitchBlade
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SwitchbladeVarmodVar2,
+                    Name = "Bodyguard Variant",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.SwitchBlade
+                },
+            #endregion Switchblade
+            #endregion Melees
+
+            #region Pistols
+            #region Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.Pistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.Pistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.Pistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.Pistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolVarmodLuxe,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.Pistol
+                },
+            #endregion SwitchBlade
+
+            #region Combat Pistol
+                 new WeaponComponents
+                 {
+                     Hash = EWeaponComponent.CombatPistolClip01,
+                     Name = "Default Clip",
+                     Category = EWeaponComponentCategory.Clip,
+                     WeaponHash = EWeaponHash.CombatPistol
+                 },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.CombatPistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.CombatPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.CombatPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.CombatPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.CombatPistolVarmodLowrider,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.CombatPistol
+                },
+            #endregion Combat Pistol
+
+            #region AP Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.APPistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.APPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.APPistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.APPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.APPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.APPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.APPistolVarmodLuxe,
+                    Name = "Gilded Gun Metal Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.APPistol
+                },
+            #endregion AP Pistol
+
+            #region Pistol .50
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.Pistol50Clip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.Pistol50
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.Pistol50Clip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.Pistol50
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.Pistol50
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.Pistol50
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.Pistol50VarmodLuxe,
+                    Name = "Platinum Pearl Deluxe Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.Pistol50
+                },
+            #endregion Pistol .50
+
+            #region Heavy Revolver
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverVarmodBoss,
+                    Name = "VIP Variant",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.HeavyRevolver
+                },
+
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverVarmodGoon,
+                    Name = "Bodyguard Variant",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.HeavyRevolver
+                },
+
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolver
+                },
+            #endregion Heavy Revolver
+
+            #region SNS Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistol
+                },
+
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistol
+                },
+
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolVarmodLowrider,
+                    Name = "Etched Wood Grip Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.SNSPistol
+                },
+            #endregion SNS Pistol
+
+            #region Heavy Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.HeavyPistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.HeavyPistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.HeavyPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.HeavyPistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.HeavyPistolVarmodLuxe,
+                    Name = "Etched Wood Grip Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.HeavyPistol
+                },
+            #endregion Heavy Pistol
+
+            #region Heavy Revolver Mk II
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Clip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2ClipTracer,
+                    Name = "Tracer Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2ClipIncendiary,
+                    Name = "Incendiary Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2ClipHollowpoint,
+                    Name = "Hollow Point Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2ClipFMJ,
+                    Name = "Full Metal Jacket Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtSights,
+                    Name = "Holographic Sight",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeMacroMk2,
+                    Name = "Small Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiComp03,
+                    Name = "Compensator",
+                    Category = EWeaponComponentCategory.Compensator,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo02,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo03,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo04,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo05,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo06,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo07,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo08,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo09,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2Camo10,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RevolverMk2CamoInd01,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.HeavyRevolverMk2
+                },
+            #endregion Heavy Revolver Mk II
+
+            #region SNS Pistol Mk II
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Clip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Clip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2ClipTracer,
+                    Name = "Tracer Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2ClipIncendiary,
+                    Name = "Incendiary Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2ClipHollowpoint,
+                    Name = "Hollow Point Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2ClipFMJ,
+                    Name = "Full Metal Jacket Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiRail02,
+                    Name = "Mounted Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh03,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiComp02,
+                    Name = "Compensator",
+                    Category = EWeaponComponentCategory.Compensator,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo02,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo03,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo04,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo05,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo06,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo07,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo08,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo09,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo10,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2CamoInd01,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2CamoSlide,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo02Slide,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo03Slide,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo04Slide,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo05Slide,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo06Slide,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo07Slide,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo08Slide,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo09Slide,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2Camo10Slide,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SNSPistolMk2CamoInd01Slide,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SNSPistolMk2
+                },
+            #endregion SNS Pistol Mk II
+
+            #region Pistol Mk II
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Clip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Clip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2ClipTracer,
+                    Name = "Tracer Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2ClipIncendiary,
+                    Name = "Incendiary Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2ClipHollowpoint,
+                    Name = "Hollow Point Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2ClipFMJ,
+                    Name = "Full Metal Jacket Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiRail,
+                    Name = "Mounted Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh02,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiComp,
+                    Name = "Compensator",
+                    Category = EWeaponComponentCategory.Compensator,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo02,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo03,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo04,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo05,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo06,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo07,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo08,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo09,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo10,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2CamoInd01,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2CamoSlide,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo02Slide,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo03Slide,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo04Slide,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo05Slide,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo06Slide,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo07Slide,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo08Slide,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo09Slide,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2Camo10Slide,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PistolMk2CamoInd01Slide,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.PistolMk2
+                },
+            #endregion Pistol Mk II
+
+            #region Vintage Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.VintagePistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.VintagePistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.VintagePistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.VintagePistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.VintagePistol
+                },
+            #endregion Vintage Pistol
+
+            #region Up-n-Atomizer
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.RaypistolVarmosXMAS18,
+                    Name = "Festive tint",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.UpnAtomizer
+                },
+            #endregion Up-n-Atomizer
+            #endregion Pistols
+
+            #region Submachine Guns
+            #region Micro SMG
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MicroSMGClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MicroSMGClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeMacro,
+                    Name = "Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MicroSMGVarmodLuxe,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+            #endregion Micro SMG
+
+            #region SMG
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGClip03,
+                    Name = "Drum Magazine",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeMacro02,
+                    Name = "Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.SMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGVarmodLuxe,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.MicroSMG
+                },
+            #endregion SMG
+
+            #region Assault SMG
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AssaultSMGClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AssaultSMGClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeMacro,
+                    Name = "Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArSupp02,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AssaultSMGVarmodLowrider,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.AssaultSMG
+                },
+            #endregion Assault SMG
+
+            #region Mini SMG
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MiniSMGClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MiniSMG
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MiniSMGClip02,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MiniSMG
+                },
+            #endregion Mini SMG
+
+            #region SMG Mk II
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Clip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Clip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2ClipTracer,
+                    Name = "Tracer Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2ClipIncendiary,
+                    Name = "Incendiary Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2ClipHollowpoint,
+                    Name = "Hollow Point Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2ClipFMJ,
+                    Name = "Full Metal Jacket Rounds",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtSightsSMG,
+                    Name = "Holographic Sight",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeMacro02SMGMk2,
+                    Name = "Small Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeSmallSMGMk2,
+                    Name = "Medium Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle01,
+                    Name = "Flat Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle02,
+                    Name = "Tactical Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle03,
+                    Name = "Fat-End Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle04,
+                    Name = "Precision Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle05,
+                    Name = "Heavy Duty Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle06,
+                    Name = "Splanted Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtMuzzle07,
+                    Name = "Split-End Muzzle Brake",
+                    Category = EWeaponComponentCategory.Muzzle,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtSbBarrel01,
+                    Name = "Default Barrel",
+                    Category = EWeaponComponentCategory.Barrel,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtSbBarrel02,
+                    Name = "Heavy Barrel",
+                    Category = EWeaponComponentCategory.Barrel,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo,
+                    Name = "Digital Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo02,
+                    Name = "Brushstroke Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo03,
+                    Name = "Woodland Camo",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo04,
+                    Name = "Skull",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo05,
+                    Name = "Sessanta Nove",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo06,
+                    Name = "Perseus",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo07,
+                    Name = "Leopard",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo08,
+                    Name = "Zebra",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo09,
+                    Name = "Geometric",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2Camo10,
+                    Name = "Boom!",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SMGMk2CamoInd01,
+                    Name = "Patriotic",
+                    Category = EWeaponComponentCategory.Camouflag,
+                    WeaponHash = EWeaponHash.SMGMk2
+                },
+            #endregion SMG Mk II
+
+            #region Machine Pistol
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MachinePistolClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MachinePistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MachinePistolClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MachinePistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.MachinePistolClip03,
+                    Name = "Drum Magazine",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.MachinePistol
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtPiSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.MachinePistol
+                },
+            #endregion Machine Pistol
+
+            #region Combat PDW
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.CombatPDWClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.CombatPDWClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.CombatPDWClip03,
+                    Name = "Drum Magazine",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArAfGrip,
+                    Name = "Grip",
+                    Category = EWeaponComponentCategory.Grip,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtScopeSmall,
+                    Name = "Scope",
+                    Category = EWeaponComponentCategory.Scope,
+                    WeaponHash = EWeaponHash.CombatPDW
+                },
+            #endregion Combat PDW
+            #endregion Submachine Guns
+
+            #region Shotguns
+            #region Pump Shotgun
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.PumpShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtSrSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.PumpShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.PumpShotgunVarmodLowrider,
+                    Name = "Yusuf Amir Luxury Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.PumpShotgun
+                },
+            #endregion Pump Shotgun
+
+            #region Sawed-Off Shotgun
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.SawnoffShotgunVarmodLuxe,
+                    Name = "Gilded Gun Metal Finish",
+                    Category = EWeaponComponentCategory.Varmod,
+                    WeaponHash = EWeaponHash.SawnOffShotgun
+                },
+            #endregion Sawed-Off Shotgun
+
+            #region Assault Shotgun
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AssaultShotgunClip01,
+                    Name = "Default Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.AssaultShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AssaultShotgunClip02,
+                    Name = "Extended Clip",
+                    Category = EWeaponComponentCategory.Clip,
+                    WeaponHash = EWeaponHash.AssaultShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArFlsh,
+                    Name = "Flashlight",
+                    Category = EWeaponComponentCategory.Flashlight,
+                    WeaponHash = EWeaponHash.AssaultShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArSupp,
+                    Name = "Suppressor",
+                    Category = EWeaponComponentCategory.Suppressor,
+                    WeaponHash = EWeaponHash.AssaultShotgun
+                },
+                new WeaponComponents
+                {
+                    Hash = EWeaponComponent.AtArAfGrip,
+                    Name = "Grip",
+                    Category = EWeaponComponentCategory.Grip,
+                    WeaponHash = EWeaponHash.AssaultShotgun
+                }
+            #endregion Assault Shotgun
+
+            #region Bullpup Shotgun
+            #endregion Bullpup Shotgun
+
+            #region Pump Shotgun Mk II
+            #endregion Pump Shotgun Mk II
+
+            #region Heavy Shotgun
+            #endregion Heavy Shotgun
+            #endregion Shotguns
+
+            #region Rifles
+            #endregion Rifles
+
+            #region Machine Guns
+            #endregion Machine Guns
+
+            #region Sniper Rifles
+
+            #endregion Sniper Rifles
+
+            #region Heavy Weapons
+
+            #endregion
+            );
+
+
+            modelBuilder.Entity<WeaponsTints>().HasData(
+                new WeaponsTints { Id = 1, IsMK2 = false, Name = "Green" },
+                new WeaponsTints { Id = 2, IsMK2 = false, Name = "Gold" },
+                new WeaponsTints { Id = 3, IsMK2 = false, Name = "Pink" },
+                new WeaponsTints { Id = 4, IsMK2 = false, Name = "Army" },
+                new WeaponsTints { Id = 5, IsMK2 = false, Name = "LSPD" },
+                new WeaponsTints { Id = 6, IsMK2 = false, Name = "Orange" },
+                new WeaponsTints { Id = 7, IsMK2 = false, Name = "Platinum" },
+
+                new WeaponsTints { Id = 1, IsMK2 = true, Name = "Classic Gray" },
+                new WeaponsTints { Id = 2, IsMK2 = true, Name = "Classic Two-Tone" },
+                new WeaponsTints { Id = 3, IsMK2 = true, Name = "Classic White" },
+                new WeaponsTints { Id = 4, IsMK2 = true, Name = "Classic Beige" },
+                new WeaponsTints { Id = 5, IsMK2 = true, Name = "Classic Green" },
+                new WeaponsTints { Id = 6, IsMK2 = true, Name = "Classic Blue" },
+                new WeaponsTints { Id = 7, IsMK2 = true, Name = "Classic Earth" },
+                new WeaponsTints { Id = 8, IsMK2 = true, Name = "Classic Brown & Black" },
+                new WeaponsTints { Id = 9, IsMK2 = true, Name = "Red Contrast" },
+                new WeaponsTints { Id = 10, IsMK2 = true, Name = "Blue Contrast" },
+                new WeaponsTints { Id = 11, IsMK2 = true, Name = "Yellow Contrast" },
+                new WeaponsTints { Id = 12, IsMK2 = true, Name = "Orange Contrast" },
+                new WeaponsTints { Id = 13, IsMK2 = true, Name = "Bold Pink" },
+                new WeaponsTints { Id = 14, IsMK2 = true, Name = "Bold Purple & Yellow" },
+                new WeaponsTints { Id = 15, IsMK2 = true, Name = "Bold Orange" },
+                new WeaponsTints { Id = 16, IsMK2 = true, Name = "Bold Green & Purple" },
+                new WeaponsTints { Id = 17, IsMK2 = true, Name = "Bold Red Features" },
+                new WeaponsTints { Id = 18, IsMK2 = true, Name = "Bold Green Features" },
+                new WeaponsTints { Id = 19, IsMK2 = true, Name = "Bold Cyan Features" },
+                new WeaponsTints { Id = 20, IsMK2 = true, Name = "Bold Yellow Features" },
+                new WeaponsTints { Id = 21, IsMK2 = true, Name = "Bold Red & White" },
+                new WeaponsTints { Id = 22, IsMK2 = true, Name = "Bold Blue & White" },
+                new WeaponsTints { Id = 23, IsMK2 = true, Name = "Metallic Gold" },
+                new WeaponsTints { Id = 24, IsMK2 = true, Name = "Metallic Platinum" },
+                new WeaponsTints { Id = 25, IsMK2 = true, Name = "Metallic Gray & Lilac" },
+                new WeaponsTints { Id = 26, IsMK2 = true, Name = "Metallic Purple & Lime" },
+                new WeaponsTints { Id = 27, IsMK2 = true, Name = "Metallic Red" },
+                new WeaponsTints { Id = 28, IsMK2 = true, Name = "Metallic Green" },
+                new WeaponsTints { Id = 29, IsMK2 = true, Name = "Metallic Blue" },
+                new WeaponsTints { Id = 30, IsMK2 = true, Name = "Metallic White & Aqua" },
+                new WeaponsTints { Id = 31, IsMK2 = true, Name = "Metallic Red & Yellow" }
             );
             #endregion
 

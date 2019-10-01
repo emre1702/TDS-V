@@ -28,6 +28,8 @@ namespace TDS_Server.Instance.Language
             "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and hold the left mouse button."
         };
 
+        public virtual string ERROR_OCURRED_DEVS_NOTIFIED => "An error occured! The developer(s) is/are informed.";
+
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GIVE_MONEY_NEED_FEE => "You need ${0} with ${1} fee included.";

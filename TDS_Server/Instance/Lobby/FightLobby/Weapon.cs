@@ -1,5 +1,7 @@
 using GTANetworkAPI;
+using Newtonsoft.Json;
 using System.Linq;
+using TDS_Common.Default;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity.Lobby;
 
@@ -16,14 +18,15 @@ namespace TDS_Server.Instance.Lobby
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;
-                WeaponHash hash = (WeaponHash) ((uint)weapon.Hash);
-                NAPI.Player.GivePlayerWeapon(player.Client, hash, 0);
-                NAPI.Player.SetPlayerWeaponAmmo(player.Client, hash, weapon.Ammo);
-                if (hash == lastWeapon)
+                player.GiveWeapon(weapon.Hash, weapon.Ammo);
+                if ((uint)weapon.Hash == (uint)lastWeapon)
                     giveLastWeapon = true;
             }
             if (giveLastWeapon)
                 NAPI.Player.SetPlayerCurrentWeapon(player.Client, lastWeapon);
+
+            if (player.WeaponUpgradesDatasJsonComplete is { })
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncMyWeaponUpgrades, player.WeaponUpgradesDatasJsonComplete);
         }
     }
 }

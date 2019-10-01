@@ -71,6 +71,7 @@
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
+        public const string SyncMyWeaponUpgrades = "SyncMyWeaponUpgrades_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
         public const string SyncPlayerWeaponUpgrades = "SyncPlayerWeaponUpgrades_Server";   //todo: Add serversided
         public const string SyncSettings = "SyncSettings_Server";

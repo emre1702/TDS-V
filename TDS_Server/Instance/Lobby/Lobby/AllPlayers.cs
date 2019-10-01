@@ -24,6 +24,14 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
         }
 
+        public void SendAllOtherPlayerEvent(string eventname, TDSPlayer exceptThis, Team? team, params object[] args)
+        {
+            if (team is null)
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != exceptThis).Select(p => p.Client).ToArray(), eventname, args);
+            else
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != exceptThis && p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
+        }
+
         public void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
         {
             foreach (var player in Players)

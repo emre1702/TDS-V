@@ -29,6 +29,8 @@ namespace TDS_Server.Instance.Language
             "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und halte die linke Maustaste gedrückt."
         };
 
+        public override string ERROR_OCURRED_DEVS_NOTIFIED => "Ein Fehler ist aufgetreten! Der/die Entwickler ist/sind informiert.";
+
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GIVE_MONEY_NEED_FEE => "Du brauchst ${0} mit ${1} Gebühr inklusive.";

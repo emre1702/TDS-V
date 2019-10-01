@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -12,9 +13,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    partial class TDSNewContextModelSnapshot : ModelSnapshot
+    [Migration("20190929090042_WeaponUpgrades2")]
+    partial class WeaponUpgrades2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2480,7 +2482,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<EWeaponComponent>("ComponentHash")
                         .HasColumnType("e_weapon_component");
 
-                    b.HasKey("PlayerId", "WeaponHash", "ComponentHash");
+                    b.HasKey("PlayerId", "WeaponHash");
 
                     b.HasIndex("WeaponHash");
 

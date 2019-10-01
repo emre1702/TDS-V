@@ -22,6 +22,8 @@
         string DEATH_DIED_INFO { get; }
         string[] DEFUSE_INFO { get; }
 
+        string ERROR_OCURRED_DEVS_NOTIFIED { get; }
+
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }

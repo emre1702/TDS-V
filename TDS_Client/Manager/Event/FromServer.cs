@@ -84,6 +84,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
+            Add(DToClientEvent.SyncMyWeaponUpgrades, OnSyncMyWeaponUpgradesMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncPlayerWeaponUpgrades, OnSyncPlayerWeaponUpgradesMethod);
             Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
@@ -386,6 +387,12 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.SyncAllCustomLobbies(json);
         }
 
+        private void OnSyncMyWeaponUpgradesMethod(object[] args)
+        {
+            var weaponUpgrades = JsonConvert.DeserializeObject<Dictionary<uint, WeaponSyncData>>((string)args[0]);
+            Sync.Weapon.Set(weaponUpgrades);
+        }
+
         private void OnSyncNewCustomLobbyMethod(object[] args)
         {
             string json = (string)args[0];
@@ -394,7 +401,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnSyncPlayerWeaponUpgradesMethod(object[] args)
         {
-            var handleValue = (ushort)args[0];
+            var handleValue = Convert.ToUInt16(args[0]);
             var player = ClientUtils.GetPlayerByHandleValue(handleValue);
             if (player == null)
                 return;

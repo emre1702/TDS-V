@@ -7,8 +7,9 @@ namespace TDS_Server_DB.Entity.Rest
 {
     public class WeaponComponents
     {
-        public WeaponComponent Hash { get; set; }
+        public EWeaponComponent Hash { get; set; }
         public EWeaponHash WeaponHash { get; set; }
+        public string Name { get; set; }
         public EWeaponComponentCategory Category { get; set; }
 
         public virtual Weapons Weapon { get; set; }

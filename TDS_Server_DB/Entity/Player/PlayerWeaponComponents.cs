@@ -8,7 +8,7 @@ namespace TDS_Server_DB.Entity.Player
     {
         public int PlayerId { get; set; }
         public EWeaponHash WeaponHash { get; set; }
-        public WeaponComponent ComponentHash { get; set; }
+        public EWeaponComponent ComponentHash { get; set; }
 
         public virtual Players Player { get; set; }
         public virtual Weapons Weapon { get; set; }

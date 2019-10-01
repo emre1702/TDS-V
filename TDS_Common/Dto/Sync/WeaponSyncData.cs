@@ -6,6 +6,6 @@ namespace TDS_Common.Dto.Sync
     {
         public uint WeaponHash { get; set; }
         public int TintIndex { get; set; }
-        public List<uint> ComponentHashes { get; set; }
+        public List<uint> ComponentHashes { get; set; } = new List<uint>();
     }
 }

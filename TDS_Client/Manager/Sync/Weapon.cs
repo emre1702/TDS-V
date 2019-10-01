@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using TDS_Client.Enum;
 using TDS_Common.Dto.Sync;
 using PedBase = RAGE.Elements.PedBase;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Sync
 {
@@ -20,7 +22,6 @@ namespace TDS_Client.Manager.Sync
             foreach (var component in syncData.ComponentHashes)
                 ped.GiveWeaponComponentTo(syncData.WeaponHash, component);
             ped.SetWeaponTintIndex(syncData.WeaponHash, syncData.TintIndex);
-            //ped.SetCurrentWeapon(syncData.WeaponHash, true);
         }
 
         public static void Set(PedBase ped, WeaponSyncData data)
@@ -28,6 +29,21 @@ namespace TDS_Client.Manager.Sync
             _pedWeaponData[ped] = data;
             if (ped.Exists) 
                 PedStreamedIn(ped);
+        }
+
+        public static void Set(Dictionary<uint, WeaponSyncData> data)
+        {
+            foreach (var entry in data)
+            {
+                if (entry.Value.ComponentHashes.Count > 0)
+                {
+                    foreach (var component in entry.Value.ComponentHashes)
+                        Player.LocalPlayer.GiveWeaponComponentTo(entry.Key, component);
+                }
+                
+                Player.LocalPlayer.SetWeaponTintIndex(entry.Key, entry.Value.TintIndex);
+            }
+                
         }
 
         public static void Clear()

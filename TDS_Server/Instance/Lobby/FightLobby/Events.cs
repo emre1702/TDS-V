@@ -40,8 +40,7 @@ namespace TDS_Server.Instance.Lobby
         {
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerWeaponChange, newWeapon, DmgSys.GetDamage((EWeaponHash)newWeapon));
 
-            if (player.WeaponUpgradesDatasJson.TryGetValue((uint)newWeapon, out string? dataJson))
-                SendAllPlayerEvent(DToClientEvent.SyncPlayerWeaponUpgrades, null, dataJson);
+            SyncPlayerWeaponUpgradesToAll(player, (uint)newWeapon);
         }
     }
 }

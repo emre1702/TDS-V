@@ -163,6 +163,14 @@ namespace TDS_Server.Manager.Commands
                 Vector3 rot = player.Client.Rotation;
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
             }
+
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.SMGMk2Clip02);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.AtArFlsh);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.AtSightsSMG);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.AtPiSupp);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.AtMuzzle04);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.AtSbBarrel02);
+            WeaponUpgrades.BuyComponent(player, EWeaponHash.SMGMk2, EWeaponComponent.SMGMk2Camo10);
         }
 
         [TDSCommand(DPlayerCommand.UserId)]
