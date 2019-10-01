@@ -1,5 +1,7 @@
 using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
@@ -16,7 +18,7 @@ namespace TDS_Server.Instance.Lobby
                 RemovePlayer(target);
             if (target.Entity is null)
                 return;
-            BanPlayer(admin, target.Entity, endTime, reason);
+            BanPlayer(admin, target.Entity, endTime, reason, target.Client.Serial);
             if (endTime.HasValue)
             {
                 if (LobbyEntity.Id != 0)
@@ -33,12 +35,16 @@ namespace TDS_Server.Instance.Lobby
             }
         }
 
-        public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason)
+        public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
         {
+            if (serial is null)
+                serial = await DbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync();
+
             PlayerBans? ban = await DbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
             if (ban != null)
             {
                 ban.AdminId = admin.Entity?.Id ?? 0;
+                ban.Serial = serial;
                 ban.StartTimestamp = DateTime.Now;
                 ban.EndTimestamp = endTime;
                 ban.Reason = reason;
@@ -49,6 +55,7 @@ namespace TDS_Server.Instance.Lobby
                 {
                     PlayerId = target.Id,
                     LobbyId = LobbyEntity.Id,
+                    Serial = serial,
                     AdminId = admin.Entity?.Id ?? 0,
                     EndTimestamp = endTime,
                     Reason = reason

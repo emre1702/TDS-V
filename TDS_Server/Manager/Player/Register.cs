@@ -27,6 +27,7 @@ namespace TDS_Server.Manager.Player
                 Email = email,
                 IsVip = false
             };
+            
             dbplayer.PlayerSettings = new PlayerSettings
             {
                 AllowDataTransfer = false,

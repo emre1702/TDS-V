@@ -527,6 +527,8 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.EndTimestamp).HasColumnType("timestamp with time zone");
 
+                entity.Property(e => e.Serial).IsRequired(false);
+
                 entity.Property(e => e.Reason).IsRequired();
 
                 entity.Property(e => e.StartTimestamp)

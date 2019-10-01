@@ -114,6 +114,13 @@ namespace TDS_Server.Manager.Player
             Workaround.FreezePlayer(player, true);
 
             using var dbContext = new TDSNewContext();
+
+            #region Serial ban
+            PlayerBans? ban = await dbContext.PlayerBans.Include(b => b.Player).FirstOrDefaultAsync(b => b.LobbyId == 0 && b.Serial == player.Serial);
+            if (!await HandlePlayerBan(player, ban, dbContext))
+                return;
+            #endregion
+
             var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
             if (playerIDName is null)
             {
@@ -121,24 +128,34 @@ namespace TDS_Server.Manager.Player
                 return;
             }
 
-            PlayerBans? ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.PlayerId == playerIDName.Id && b.LobbyId == 0);
-            if (ban != null && ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.Now)
+            #region Player ban
+            ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.LobbyId == 0 && b.PlayerId == playerIDName.Id);
+            if (!await HandlePlayerBan(player, ban, dbContext))
+                return;
+            #endregion
+
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
+        }
+
+        private static async Task<bool> HandlePlayerBan(Client player, PlayerBans? ban, TDSNewContext dbContext)
+        {
+            if (ban is null)
+                return true;
+
+            if (ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.Now)
             {
                 dbContext.Remove(ban);
                 await dbContext.SaveChangesAsync();
                 ban = null;
+                return true;
             }
 
-            if (ban != null)
-            {
-                string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
-                string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
-                //todo Test line break and display
-                player.Kick($"Banned!\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
-                return;
-            }
+            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+            string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
+            //todo Test line break and display
+            player.Kick($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
+            return false;
         }
 
         public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
