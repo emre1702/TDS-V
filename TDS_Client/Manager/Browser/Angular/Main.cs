@@ -154,6 +154,7 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
         {
+            Execute(DToClientEvent.ToggleTeamChoiceMenu, true);
             Execute(DToClientEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
         }
 

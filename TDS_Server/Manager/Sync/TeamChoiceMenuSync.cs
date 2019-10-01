@@ -17,7 +17,6 @@ namespace TDS_Server.Manager.Sync
         public static void AddPlayer(TDSPlayer player, Lobby lobby)
         {
             _playersInTeamChoiceLobby.Add(player);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ToggleTeamChoiceMenu, true);
 
             var teams = lobby.Teams.Select(t => 
                 new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB, t.Players.Where(p => p != player).Select(p => p.Client.Name)));
