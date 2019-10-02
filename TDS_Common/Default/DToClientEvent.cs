@@ -1,6 +1,6 @@
 ﻿namespace TDS_Common.Default
 {
-    public class DToClientEvent
+    public static class DToClientEvent
     {
         public const string SetAssistsForRoundStats = "SetAssistsForRoundStats_Server";
         public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
