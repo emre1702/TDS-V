@@ -57,7 +57,9 @@ namespace TDS_Client.Manager.Browser
             OpenChatInput(null);
         }
 
+#pragma warning disable IDE0051 // Remove unused private members
         private static void OpenGlobalChatInput(Control _)
+#pragma warning restore IDE0051 // Remove unused private members
         {
             if (Angular.Shared.InInput)
                 return;
