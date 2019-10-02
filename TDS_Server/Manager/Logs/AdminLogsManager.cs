@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.Logs
                 Timestamp = DateTime.Now,
                 LengthOrEndTime = lengthOrEndTime
             };
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
 
         public static void Log(ELogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Logs
                 Timestamp = DateTime.Now,
                 LengthOrEndTime = lengthOrEndTime
             };
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
     }
 }

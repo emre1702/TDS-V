@@ -18,7 +18,7 @@ namespace TDS_Server.Manager.Logs
                 Timestamp = DateTime.Now
             };
             Console.WriteLine(info + "\n" + stacktrace);
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
 
         public static void Log(string info, string stacktrace, TDSPlayer? source = null)
@@ -31,7 +31,7 @@ namespace TDS_Server.Manager.Logs
                 Timestamp = DateTime.Now
             };
             Console.WriteLine(info + "\n" + stacktrace);
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
     }
 }

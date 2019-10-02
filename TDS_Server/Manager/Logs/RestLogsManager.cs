@@ -25,7 +25,7 @@ namespace TDS_Server.Manager.Logs
                 Lobby = savelobby ? source?.GetChar().CurrentLobby?.Id : null,
                 Timestamp = DateTime.Now
             };
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
     }
 }

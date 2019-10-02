@@ -21,7 +21,7 @@ namespace TDS_Server.Manager.Logs
                 IsTeamChat = isteamchat,
                 Timestamp = DateTime.Now
             };
-            LogsManager.DbContext.Add(log);
+            LogsManager.AddLog(log);
         }
     }
 }
