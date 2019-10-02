@@ -1,5 +1,8 @@
 using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using TDS_Common.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
@@ -15,7 +18,7 @@ namespace TDS_Server.Instance.Lobby
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
-        public TDSNewContext DbContext { get; set; }
+        private readonly TDSNewContext _dbContext;
         public readonly Lobbies LobbyEntity;
 
         public int Id => LobbyEntity.Id;
@@ -29,13 +32,15 @@ namespace TDS_Server.Instance.Lobby
         protected readonly Vector3 SpawnPoint;
 
         private readonly SyncedLobbySettingsDto _syncedLobbySettings;
+        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
+        private bool _usingDBContext;
 
         public Lobby(Lobbies entity)
         {
-            DbContext = new TDSNewContext();
+            _dbContext = new TDSNewContext();
             LobbyEntity = entity;
 
-            DbContext.Attach(entity);
+            _dbContext.Attach(entity);
 
             Dimension = GetFreeDimension();
             SpawnPoint = new Vector3(
@@ -89,9 +94,14 @@ namespace TDS_Server.Instance.Lobby
                 RemovePlayer(character);
             }
 
-            DbContext.Remove(LobbyEntity);
-            await DbContext.SaveChangesAsync();
-            DbContext.Dispose();
+            await ExecuteForDBAsync(async (dbContext) =>
+            {
+                dbContext.Remove(LobbyEntity);
+                await dbContext.SaveChangesAsync();
+                dbContext.Dispose();
+            });
+
+           
         }
 
         private static uint GetFreeDimension()
@@ -105,6 +115,75 @@ namespace TDS_Server.Instance.Lobby
         protected bool IsEmpty()
         {
             return Players.Count == 0;
+        }
+
+        public async Task ExecuteForDBAsync(Func<TDSNewContext, Task> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await _dbContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                await action(_dbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    _dbContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
+        }
+
+        public async Task<T> ExecuteForDBAsync<T>(Func<TDSNewContext, Task<T>> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await _dbContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                return await action(_dbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    _dbContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
+        }
+
+        public async Task ExecuteForDB(Action<TDSNewContext> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await _dbContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                action(_dbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    _dbContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
         }
     }
 }

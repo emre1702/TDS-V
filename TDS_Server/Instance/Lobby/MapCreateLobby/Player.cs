@@ -32,10 +32,13 @@ namespace TDS_Server.Instance.Lobby
 
         public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
         {
-            VehicleHash vehHash = await DbContext.FreeroamDefaultVehicle
-                .Where(v => v.VehicleType == vehType)
-                .Select(v => v.VehicleHash)
-                .FirstOrDefaultAsync();
+            VehicleHash vehHash = await ExecuteForDBAsync((dbContext) => 
+            {
+                return dbContext.FreeroamDefaultVehicle
+                    .Where(v => v.VehicleType == vehType)
+                    .Select(v => v.VehicleHash)
+                    .FirstOrDefaultAsync();
+            });
             if (vehHash == default)
                 return;
 

@@ -27,8 +27,12 @@ namespace TDS_Server.Instance.Lobby
                 IsTemporary = true
             };
             MapCreateLobby lobby = new MapCreateLobby(entity);
-            lobby.DbContext.Add(entity);
-            await lobby.DbContext.SaveChangesAsync();
+            await lobby.ExecuteForDBAsync(async (dbContext) => 
+            {
+                dbContext.Add(entity);
+                await dbContext.SaveChangesAsync();
+            });
+           
             await lobby.AddPlayer(player, 0);
 
             LobbyManager.AddLobby(lobby);

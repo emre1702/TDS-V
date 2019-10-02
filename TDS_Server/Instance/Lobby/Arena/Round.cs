@@ -131,7 +131,7 @@ namespace TDS_Server.Instance.Lobby
             CurrentGameMode?.StartRound();
         }
 
-        private void EndRound()
+        private async void EndRound()
         {
             if (LobbyEntity.IsTemporary && IsEmpty())
             {
@@ -162,8 +162,11 @@ namespace TDS_Server.Instance.Lobby
 
             RewardAllPlayer();
             SaveAllPlayerRoundStats();
-            DbContext.SaveChangesAsync();
-
+            await ExecuteForDBAsync(async (dbContext) => 
+            {
+                await dbContext.SaveChangesAsync();
+            });
+            
             ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
             ServerDailyStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
 
