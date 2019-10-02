@@ -71,15 +71,10 @@ namespace TDS_Server.Instance.Lobby
 
             player.CurrentLobby = null;
             player.PreviousLobby = this;
-            await player.DBContextSemaphore.WaitAsync();
-            try
+            await player.ExecuteForDB((dbContext) => 
             {
                 player.CurrentLobbyStats = null;
-            }
-            finally
-            {
-                player.DBContextSemaphore.Release();
-            }
+            });
             player.Lifes = 0;
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;

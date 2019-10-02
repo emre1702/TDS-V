@@ -23,11 +23,11 @@ namespace TDS_Server.Manager.EventManager
                     return;
 
                 var obj = JsonConvert.DeserializeObject<PlayerSettings>(json);
-                await player.ExecuteForDBAsync(async (dbContext) =>
+                await player.ExecuteForDB((dbContext) =>
                 {
                     dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj);
-                    await player.SaveData();
                 });
+                await player.SaveData();
 
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncSettings, json);
             }
