@@ -238,7 +238,6 @@ namespace TDS_Server.Instance.Player
         public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
         public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
-        public SemaphoreSlim DBContextSemaphore { get; } = new SemaphoreSlim(1);
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 
@@ -252,6 +251,7 @@ namespace TDS_Server.Instance.Player
         private short _shortTimeKillingSpree;
         private TDSNewContext? _dbContext;
         private TDSPlayer? _spectates;
+        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
         private bool _usingDBContext;
         
 
@@ -406,7 +406,7 @@ namespace TDS_Server.Instance.Player
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)
             {
-                await DBContextSemaphore.WaitAsync();
+                await _dbContextSemaphore.WaitAsync();
                 _usingDBContext = true;
             }
             
@@ -418,7 +418,7 @@ namespace TDS_Server.Instance.Player
             {
                 if (!wasInDBContextBefore)
                 { 
-                    DBContextSemaphore.Release();
+                    _dbContextSemaphore.Release();
                     _usingDBContext = false;
                 }
             }
@@ -429,7 +429,7 @@ namespace TDS_Server.Instance.Player
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)
             {
-                await DBContextSemaphore.WaitAsync();
+                await _dbContextSemaphore.WaitAsync();
                 _usingDBContext = true;
             }
 
@@ -441,7 +441,7 @@ namespace TDS_Server.Instance.Player
             {
                 if (!wasInDBContextBefore)
                 {
-                    DBContextSemaphore.Release();
+                    _dbContextSemaphore.Release();
                     _usingDBContext = false;
                 }
             }
@@ -452,7 +452,7 @@ namespace TDS_Server.Instance.Player
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)
             {
-                await DBContextSemaphore.WaitAsync();
+                await _dbContextSemaphore.WaitAsync();
                 _usingDBContext = true;
             }
 
@@ -464,7 +464,7 @@ namespace TDS_Server.Instance.Player
             {
                 if (!wasInDBContextBefore)
                 {
-                    DBContextSemaphore.Release();
+                    _dbContextSemaphore.Release();
                     _usingDBContext = false;
                 }
             }
