@@ -65,13 +65,21 @@ namespace TDS_Server.Instance.Lobby
             return true;
         }
 
-        public virtual void RemovePlayer(TDSPlayer player)
+        public virtual async void RemovePlayer(TDSPlayer player)
         {
             Players.Remove(player);
 
             player.CurrentLobby = null;
             player.PreviousLobby = this;
-            player.CurrentLobbyStats = null;
+            await player.DBContextSemaphore.WaitAsync();
+            try
+            {
+                player.CurrentLobbyStats = null;
+            }
+            finally
+            {
+                player.DBContextSemaphore.Release();
+            }
             player.Lifes = 0;
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
@@ -100,19 +108,22 @@ namespace TDS_Server.Instance.Lobby
             PlayerLeftLobby?.Invoke(this, player);
         }
 
-        private async Task AddPlayerLobbyStats(TDSPlayer character)
+        private async Task AddPlayerLobbyStats(TDSPlayer player)
         {
-            if (character.Entity is null)
+            if (player.Entity is null)
                 return;
 
-            PlayerLobbyStats? stats = await character.DbContext.PlayerLobbyStats.FindAsync(character.Entity.Id, LobbyEntity.Id);
-            if (stats is null)
+            await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                stats = new PlayerLobbyStats { LobbyId = LobbyEntity.Id };
-                character.Entity.PlayerLobbyStats.Add(stats);
-                await character.DbContext.SaveChangesAsync();
-            }
-            character.CurrentLobbyStats = stats;
+                PlayerLobbyStats? stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity.Id, LobbyEntity.Id);
+                if (stats is null)
+                {
+                    stats = new PlayerLobbyStats { LobbyId = LobbyEntity.Id };
+                    player.Entity.PlayerLobbyStats.Add(stats);
+                    await dbContext.SaveChangesAsync();
+                }
+                player.CurrentLobbyStats = stats;
+            });     
         }
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)

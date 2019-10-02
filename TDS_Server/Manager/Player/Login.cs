@@ -22,37 +22,44 @@ namespace TDS_Server.Manager.Player
             while (!TDSNewContext.IsConfigured)
                 await Task.Delay(1000);
             TDSPlayer character = player.GetChar();
+
             character.InitDbContext();
-
-            character.Entity = await character.DbContext.Players
-                .Include(p => p.PlayerStats)
-                .Include(p => p.PlayerTotalStats)
-                .Include(p => p.PlayerSettings)
-                .Include(p => p.OfflinemessagesTarget)
-                .Include(p => p.PlayerMapRatings)
-                .Include(p => p.PlayerMapFavourites)
-                .Include(p => p.PlayerRelationsTarget)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (character.Entity is null)
+            bool worked = await character.ExecuteForDBAsync(async (dbContext) =>
             {
-                NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
-                character.DbContext.Dispose();
+                character.Entity = await dbContext.Players
+                   .Include(p => p.PlayerStats)
+                   .Include(p => p.PlayerTotalStats)
+                   .Include(p => p.PlayerSettings)
+                   .Include(p => p.OfflinemessagesTarget)
+                   .Include(p => p.PlayerMapRatings)
+                   .Include(p => p.PlayerMapFavourites)
+                   .Include(p => p.PlayerRelationsTarget)
+                   .FirstOrDefaultAsync(p => p.Id == id);
+
+                if (character.Entity is null)
+                {
+                    NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
+                    dbContext.Dispose();
+                    return false;
+                }
+
+                if (Utils.HashPWServer(password) != character.Entity.Password)
+                {
+                    NAPI.Notification.SendNotificationToPlayer(player, player.GetLang().WRONG_PASSWORD);
+                    dbContext.Dispose();
+                    return false;
+                }
+
+                player.Name = character.Entity.Name;
+                //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
+                character.Entity.PlayerStats.LoggedIn = true;
+                await dbContext.SaveChangesAsync();
+                return true;
+            });
+            
+            if (!worked || character.Entity == null)
                 return;
-            }
-
-            if (Utils.HashPWServer(password) != character.Entity.Password)
-            {
-                NAPI.Notification.SendNotificationToPlayer(player, player.GetLang().WRONG_PASSWORD);
-                character.DbContext.Dispose();
-                return;
-            }
-
-            player.Name = character.Entity.Name;
-            //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
-            character.Entity.PlayerStats.LoggedIn = true;
-            await character.DbContext.SaveChangesAsync();
-
+           
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, character.Entity.AdminLvl,
                 JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
 

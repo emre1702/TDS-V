@@ -22,7 +22,7 @@ namespace TDS_Server.Instance.Player
 {
     internal class TDSPlayer
     {
-        public TDSNewContext DbContext 
+        private TDSNewContext DbContext 
         { 
             get
             {
@@ -238,6 +238,7 @@ namespace TDS_Server.Instance.Player
         public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
         public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
+        public SemaphoreSlim DBContextSemaphore { get; } = new SemaphoreSlim(1);
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
 
@@ -251,8 +252,8 @@ namespace TDS_Server.Instance.Player
         private short _shortTimeKillingSpree;
         private TDSNewContext? _dbContext;
         private TDSPlayer? _spectates;
-
-        private readonly SemaphoreSlim _semaphoreSlime = new SemaphoreSlim(1);
+        private bool _usingDBContext;
+        
 
         public TDSPlayer(Client client)
         {
@@ -367,20 +368,15 @@ namespace TDS_Server.Instance.Player
                 return;
 
             _lastSaveTick = Environment.TickCount;
-            await _semaphoreSlime.WaitAsync();
-            try
+            await ExecuteForDBAsync(async (dbContext) =>
             {
                 if (CurrentLobbyStats is { } && LobbyManager.GetLobby(CurrentLobbyStats.LobbyId) is null)
                 {
-                    DbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
+                    dbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
                     CurrentLobbyStats = null;
                 }
-                await DbContext.SaveChangesAsync();
-            }
-            finally
-            {
-                _semaphoreSlime.Release();
-            }
+                await dbContext.SaveChangesAsync();
+            });
         }
 
         public async void CheckSaveData()
@@ -391,15 +387,87 @@ namespace TDS_Server.Instance.Player
             await SaveData();
         }
 
-        public void Logout()
+        public async void Logout()
         {
-            DbContext.Dispose();
-            _dbContext = null;
+            await ExecuteForDB((dbContext) =>
+            {
+                dbContext.Dispose();
+                _dbContext = null;
+            });
         }
 
         public void InitDbContext()
         {
             _dbContext = new TDSNewContext();
+        }
+
+        public async Task ExecuteForDBAsync(Func<TDSNewContext, Task> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await DBContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+            
+            try
+            {
+                await action(DbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                { 
+                    DBContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
+        }
+
+        public async Task<T> ExecuteForDBAsync<T>(Func<TDSNewContext, Task<T>> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await DBContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                return await action(DbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    DBContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
+        }
+
+        public async Task ExecuteForDB(Action<TDSNewContext> action)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await DBContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                action(DbContext);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    DBContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
         }
     }
 }
