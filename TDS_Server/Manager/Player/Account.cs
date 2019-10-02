@@ -146,7 +146,6 @@ namespace TDS_Server.Manager.Player
             {
                 dbContext.Remove(ban);
                 await dbContext.SaveChangesAsync();
-                ban = null;
                 return true;
             }
 
