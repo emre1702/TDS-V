@@ -15,8 +15,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutputPath>C:\RAGEMP\server-files\bridge\resources\tds\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants></DefineConstants>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -61,7 +62,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh" />
+    <Exec Command="B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
   </Target>
 
 </Project>
