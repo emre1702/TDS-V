@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using TDS_Common.Enum;
 using TDS_Server_DB.Entity.Admin;
@@ -115,16 +116,15 @@ namespace TDS_Server_DB.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                /*optionsBuilder.EnableSensitiveDataLogging();
-                var loggerFactory = LoggerFactory.Create(builder =>
-                    builder.AddConsole()
-                            .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
+                /*var loggerFactory = LoggerFactory.Create(builder =>
+                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
+                        .AddProvider(new CustomDBLogger())
                 );*/
 
                 string connStr = _connectionString ?? "Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;";
                 optionsBuilder
-                    //.UseLoggerFactory(loggerFactory)
-                    //.EnableSensitiveDataLogging()
+                   // .UseLoggerFactory(loggerFactory)
+                   // .EnableSensitiveDataLogging()
                     .UseNpgsql(connStr);
             }
         }
@@ -650,9 +650,9 @@ namespace TDS_Server_DB.Entity
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.AllowDataTransfer).HasDefaultValue(false);
-                entity.Property(e => e.Bloodscreen).HasDefaultValue(true);
-                entity.Property(e => e.FloatingDamageInfo).HasDefaultValue(true);
-                entity.Property(e => e.Hitsound).HasDefaultValue(true);
+                entity.Property(e => e.Bloodscreen);
+                entity.Property(e => e.FloatingDamageInfo);
+                entity.Property(e => e.Hitsound);
                 entity.Property(e => e.Language).HasDefaultValue(ELanguage.English);
                 entity.Property(e => e.Voice3D).HasDefaultValue(false);
                 entity.Property(e => e.VoiceAutoVolume).HasDefaultValue(false);
@@ -825,8 +825,7 @@ namespace TDS_Server_DB.Entity
                     .HasDefaultValue(25*25);
 
                 entity.Property(e => e.ShowNametagOnlyOnAiming)
-                    .IsRequired()
-                    .HasDefaultValue(true);
+                    .IsRequired();
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
