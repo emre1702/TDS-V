@@ -25,37 +25,37 @@ mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
-cd /cygdrive/c/RAGEMP/server-files/bridge/resources/tds/netcoreapp3.0
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.0
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
 rsync -hmrtvzP --exclude='TDS_Server.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/bridge/runtime
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
 rsync -hmrtvzP ./TDS_Server.dll ./TDS_Server.pdb /cygdrive/c/RAGEMP/server-files/bridge/resources/tds/netcoreapp3.0
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/JavaScript
 rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/packages/tds
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside C# ${NOCOLOR}files ..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V
 rsync -hmrtvzP --delete --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' TDS_Client/. TDS_Common/. /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client/
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside JS ${NOCOLOR}..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/JavaScript
 rsync -hmrtvzP --delete --include='*.js' --exclude='*' . /cygdrive/c/RAGEMP/server-files/client_packages
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update clientside ${LIGHTBLUE}plain HTML ${NOCOLOR}CEF ..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window
 rsync -hmrtvzP --delete --exclude=".vscode" --exclude="angular" --exclude="node_modules" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' . /cygdrive/c/RAGEMP/server-files/client_packages/Window
 
-echo -e "${SEPERATOR}/n"
+echo -e "${SEPERATOR}"
 echo -e "Update clientside ${LIGHTBLUE}Angular ${NOCOLOR}CEF ..."
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/angular/dist/main
 rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
