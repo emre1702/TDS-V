@@ -8,7 +8,6 @@ let toes5 = require("@babel/core").transform;
 let uglify = require("uglify-js");
 let cleancssrequire = require("clean-css");
 let files = [
-    { path: "choice/", html: "choice.html", js: ["choice.js"], css: ["choice/choice.css"], reserved: ["setLobbyChoiceLanguage"] },
     {
         path: "main/", html: "main.html", js: ["main.js", "chat.js", "roundend.js"],
         css: ["main/chat.css", "main/main.css", "main/roundend.css"],
@@ -18,11 +17,6 @@ let files = [
 			"onKillstreakSoundEnded", "addPlayerTalking", "removePlayerTalking", "chatFocus"]
     },
     { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
-    {
-        path: "mapcreator/", html: "mapcreator.html", js: ["mapcreator.js"], css: ["mapcreator/mapcreator.css"],
-        reserved: ["openMapCreatorMenu", "gotoPosition", "addCurrentPosition", "removePosition", "loadPositionFromClient", "loadLanguage", "sendMap", "checkMapName", "loadResultOfMapNameCheck",
-            "toggleBombContents"]
-    }
 ];
 let standalonejsfiles = [
     {
