@@ -41,23 +41,16 @@ function updateScroll(chatbody = null) {
 function enableChatInput(enable, cmd = "") {
     if (!chatdata.active && enable)
         return;
-
     if (enable !== chatdata.inputshowing) {
-        mp.invoke("focus", enable);
-
         if (enable) {
-            chatdata.maininput.fadeIn();
+            chatdata.maininput.show(0, () => { chatdata.maininput.focus(); });
             chatdata.maininput.val(cmd);
-            setTimeout(() => {
-                chatdata.maininput.focus();
-            }, 100);
         } else {
             chatdata.maininput.hide();
             chatdata.maininput.val("");
         }
 
         chatdata.inputshowing = enable;
-        mp.trigger("ChatInputToggled_Browser", enable);
     }
 }
 let chatAPI = {};

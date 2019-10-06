@@ -17,14 +17,12 @@ namespace TDS_Client.Manager.Utility
                     if (++_cursorOpenedCounter == 1)
                     {
                         Cursor.Visible = true;
-                        Chat.Activate(false);
                         CursorVisibilityChanged?.Invoke(true);
                     }
                 }
                 else if (--_cursorOpenedCounter <= 0)
                 {
                     Cursor.Visible = false;
-                    Chat.Activate(true);
                     _cursorOpenedCounter = 0;
                     CursorVisibilityChanged?.Invoke(false);
                 }
@@ -41,6 +39,7 @@ namespace TDS_Client.Manager.Utility
             bool isVisible = Cursor.Visible;
             _cursorOpenedCounter = isVisible ? 0 : 1;
             Cursor.Visible = !isVisible;
+            CursorVisibilityChanged?.Invoke(!isVisible);
         }
     }
 }
