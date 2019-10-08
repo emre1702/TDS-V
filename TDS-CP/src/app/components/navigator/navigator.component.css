@@ -1,9 +1,0 @@
-mat-toolbar {
-    height: auto !important;
-    background: var(--primary-color-gradient);
-    z-index: 1;
-}
-
-#space {
-    flex: 1 1 auto;
-}
