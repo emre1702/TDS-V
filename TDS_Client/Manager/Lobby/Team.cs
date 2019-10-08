@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using RAGE.Elements;
+using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using TDS_Client.Enum;
@@ -33,15 +35,34 @@ namespace TDS_Client.Manager.Lobby
         public static void AddSameTeam(Player player)
         {
             _sameTeamPlayers.Add(player);
+            var prevBlipHandle = player.GetBlipFrom();
+            RAGE.Chat.Output("Prev blip handle: " + prevBlipHandle);
+            if (prevBlipHandle <= 0)
+            {
+                var blip = player.AddBlipFor();
+                RAGE.Chat.Output("New blip handle: " + blip);
+                Ui.SetBlipAsFriendly(blip, true);
+            }
         }
 
         public static void RemoveSameTeam(Player player)
         {
             _sameTeamPlayers.Remove(player);
+            var prevBlipHandle = player.GetBlipFrom();
+            RAGE.Chat.Output("Prev blip handle @RemoveSameTeam: " + prevBlipHandle);
+            if (prevBlipHandle > 0 && Ui.DoesBlipExist(prevBlipHandle))
+               Ui.RemoveBlip(ref prevBlipHandle);
         }
 
         public static void ClearSameTeam()
         {
+            foreach (var player in _sameTeamPlayers)
+            {
+                var blip = player.GetBlipFrom();
+                RAGE.Chat.Output("Prev blip handle @ClearSameTeam: " + blip);
+                if (blip > 0 && Ui.DoesBlipExist(blip))
+                    Ui.RemoveBlip(ref blip);
+            }
             _sameTeamPlayers.Clear();
         }
 
