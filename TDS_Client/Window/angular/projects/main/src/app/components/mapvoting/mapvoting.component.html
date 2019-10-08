@@ -18,8 +18,11 @@
 
 		<mat-sidenav-content role="main">
 			<div id="left-content">
+        <mat-form-field class="filter" color="accent">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
 				<mat-action-list>
-					<mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav">
+					<mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter">
 						{{ map.Name }}
 					</mat-list-item>
 				</mat-action-list>

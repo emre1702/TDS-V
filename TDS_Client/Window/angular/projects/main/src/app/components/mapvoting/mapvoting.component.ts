@@ -41,6 +41,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
   data: MapDataDto[] = [];
   selectedNav: string;
   selectedMap: MapDataDto;
+  mapSearchFilter = "";
 
   @ViewChild('snav', { static: false }) snav: MatSidenav;
 
@@ -56,6 +57,8 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     this.settings.InTeamOrderModusChanged.on(null, this.detectChanges.bind(this));
     this.settings.FavoriteMapsChanged.on(null, this.detectChanges.bind(this));
     this.settings.InFightLobbyChanged.on(null, this.detectChanges.bind(this));
+
+    this.mapSearchFilter = "";
   }
 
   ngOnDestroy(): void {
@@ -117,6 +120,11 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
   voteForMapId(mapId: number) {
     this.voting.voteForMapId(mapId);
+    this.changeDetector.detectChanges();
+  }
+
+  applyFilter(filter: string) {
+    this.mapSearchFilter = filter;
     this.changeDetector.detectChanges();
   }
 

@@ -32,11 +32,16 @@ mat-toolbar > h1 {
 
 #left-content {
   float: left;
-  max-width: 70%;
+  max-width: 60%;
   height: 100%;
   overflow-x: auto;
   white-space: nowrap;
   // direction: rtl;
+
+  .filter {
+    margin-top: 5px;
+    width: 100%;
+  }
 }
 
 #right-content {
