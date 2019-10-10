@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __decorate } from "tslib";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,9 +28,11 @@ import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/us
 import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
 import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
 import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
+import { InputTypeDirective } from './extensions/inputTypeDirective';
+import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 let AppModule = class AppModule {
 };
-AppModule = tslib_1.__decorate([
+AppModule = __decorate([
     NgModule({
         declarations: [
             AppComponent,
@@ -54,7 +56,9 @@ AppModule = tslib_1.__decorate([
             UserpanelRulesComponent,
             UserpanelFAQsComponent,
             UserpanelSettingsComponent,
-            UserpanelStatsComponent
+            UserpanelStatsComponent,
+            InputTypeDirective,
+            TextareaTypeDirective
         ],
         imports: [
             ReactiveFormsModule,
