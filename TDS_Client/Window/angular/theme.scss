@@ -96,13 +96,13 @@ html, body, app-root {
 }
 
 .mat-app-background {
-  border: 4px outset mat-color($dark-primary) !important;
+  border: 4px outset mat-color($dark-primary);
   background-color: #303030F2;
   color: white;
 }
 
 .border {
-  border: 4px ridge mat-color($dark-primary) !important;
+  border: 4px ridge mat-color($dark-primary);
 }
 
 /*@font-face {
