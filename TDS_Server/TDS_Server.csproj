@@ -62,7 +62,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
+    <Exec Command="B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
   </Target>
 
 </Project>
