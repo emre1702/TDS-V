@@ -91,6 +91,9 @@ export class English implements Language {
     OthersAdded = "Others added";
     ChangePos = "Change pos";
     Confirm = "Confirm";
+    LeaveLobby = "Leave lobby";
+    Spectate = "Spectate";
+    RandomTeam = "Random team";
 
     Arena = "Arena";
     Gang = "Gang";

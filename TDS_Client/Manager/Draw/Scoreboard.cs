@@ -19,6 +19,7 @@ namespace TDS_Client.Manager.Draw
         private static DxGrid _grid;
         private static bool _isActivated;
         private static ulong _lastLoadedTick;
+        private static bool _isManualToggleDisabled;
 
         private readonly static DxGridColumn[] _columns = new DxGridColumn[6];
 
@@ -97,26 +98,40 @@ namespace TDS_Client.Manager.Draw
             _grid.Header.Cells[5].SetText(Settings.Language.SCOREBOARD_TEAM);
         }
 
-        public static void PressedScoreboardKey(Control _)
+        public static void PressedScoreboardKey(Control control = Control.Aim)
         {
             if (IsActivated)
                 return;
+            if (_isManualToggleDisabled && control != Control.Aim)
+                return;
+
+            if (control == Control.Aim)
+                _isManualToggleDisabled = true;
+
             _grid.ScrollIndex = 0;
             ulong tick = TimerManager.ElapsedTicks;
-            if (tick - _lastLoadedTick >= (ulong)ClientConstants.ScoreboardLoadCooldown)
+            if (tick - _lastLoadedTick >= (ulong)ClientConstants.ScoreboardLoadCooldown || control == Control.Aim)
             {
                 _lastLoadedTick = tick;
                 _grid.ClearRows();
-                EventsSender.Send(DToServerEvent.RequestPlayersForScoreboard);
+                if (control == Control.Aim)
+                    EventsSender.SendIgnoreCooldown(DToServerEvent.RequestPlayersForScoreboard);
+                else 
+                    EventsSender.Send(DToServerEvent.RequestPlayersForScoreboard);
             }
 
             IsActivated = true;
         }
 
-        public static void ReleasedScoreboardKey(Control _)
+        public static void ReleasedScoreboardKey(Control control = Control.Aim)
         {
             if (!IsActivated)
                 return;
+            if (_isManualToggleDisabled && control != Control.Aim)
+                return;
+
+            if (control == Control.Aim)
+                _isManualToggleDisabled = false;
             IsActivated = false;
         }
 

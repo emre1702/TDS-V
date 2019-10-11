@@ -21,6 +21,7 @@
         public const string JoinMapCreator = "JoinMapCreator_Client";
 
         public const string LanguageChange = "LanguageChange_Client";
+        public const string LeaveLobby = "LeaveLobby_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
         public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";

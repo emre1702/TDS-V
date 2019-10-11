@@ -4,7 +4,6 @@ using System.Drawing;
 
 namespace TDS_Common.Dto
 {
-    [Serializable]
     public class SyncedTeamDataDto
     {
         public int Index { get; set; }

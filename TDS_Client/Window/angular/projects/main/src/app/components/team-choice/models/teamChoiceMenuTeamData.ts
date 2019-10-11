@@ -3,5 +3,4 @@ export interface TeamChoiceMenuTeamData {
   Red: number;
   Green: number;
   Blue: number;
-  PlayerNames: string[];
 }

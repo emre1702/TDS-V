@@ -86,6 +86,9 @@ export class German extends English {
   OthersAdded = "Andere Hinzugefügt";
   ChangePos = "Ändere Pos";
   Confirm = "Bestätige";
+  LeaveLobby = "Lobby verlassen";
+  Spectate = "Zuschauen";
+  RandomTeam = "Zufälliges Team";
 
   Arena = "Arena";
   Gang = "Gang";

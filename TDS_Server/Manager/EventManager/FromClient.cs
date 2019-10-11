@@ -117,6 +117,19 @@ namespace TDS_Server.Manager.EventManager
                 return;
             arena.ChooseTeam(player, index);
         }
+
+        [RemoteEvent(DToServerEvent.LeaveLobby)]
+        public static async void LeaveLobbyMethod(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (player.CurrentLobby is null)
+                return;
+
+            player.CurrentLobby.RemovePlayer(player);
+            await LobbyManager.MainMenu.AddPlayer(player, 0);
+        }
         #endregion Lobby
 
         #region Damagesys

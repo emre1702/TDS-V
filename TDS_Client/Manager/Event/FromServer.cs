@@ -517,6 +517,7 @@ namespace TDS_Client.Manager.Event
         {
             string teamsJson = (string)args[0];
             Browser.Angular.Main.SyncTeamChoiceMenuData(teamsJson, Settings.MixTeamsAfterRound);
+            Scoreboard.PressedScoreboardKey();
             CursorManager.Visible = true;
         }
 
@@ -536,6 +537,10 @@ namespace TDS_Client.Manager.Event
         {
             bool boolean = Convert.ToBoolean(args[0]);
             CursorManager.Visible = boolean;
+            if (boolean)
+                Scoreboard.PressedScoreboardKey();
+            else 
+                Scoreboard.ReleasedScoreboardKey();
             Browser.Angular.Main.ToggleTeamChoiceMenu(boolean);
         }
 

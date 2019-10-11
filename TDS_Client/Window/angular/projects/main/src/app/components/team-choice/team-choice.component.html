@@ -1,30 +1,17 @@
-<div id="full-size-container" *ngIf="data">
-  <div class="container mat-app-background">
-
-    <ng-container *ngIf="isRandomTeams">
-      <button mat-button (click)="chooseTeamIndex(1)">
-        <div *ngFor="let team of data.slice(1)" class="team-same-button">
-          <div style="overflow: hidden; word-break: break-all; word-wrap: break-word; white-space: normal; line-height: 1.2em">
-              <div class="button-span" [style.color]="getColor(team)">{{ team.Name }}</div> ({{ team.PlayerNames.length }}):
-              <div>{{ team.PlayerNames.join(", ") }}</div>
-
-          </div>
-        </div>
+<div *ngIf="data" id="buttons">
+  <ng-container *ngIf="!isRandomTeams">
+      <button class="container mat-app-background" [style.border-color]="getColor(team)" *ngFor="let team of data.slice(1); let i = index" (click)="chooseTeamIndex(i + 1)">
+          {{ team.Name }}
       </button>
-    </ng-container>
+  </ng-container>
+  <button class="container mat-app-background" *ngIf="isRandomTeams" (click)="chooseTeamIndex(1)">
+      {{ 'RandomTeam' | language: settings.Lang }}
+  </button>
 
-    <ng-container *ngIf="!isRandomTeams">
-      <ng-container *ngFor="let team of data.slice(1); let i = index">
-        <button mat-button (click)="chooseTeamIndex(i)">
-          <div style="overflow: hidden; word-break: break-all; word-wrap: break-word; white-space: normal; line-height: 1.2em">
-              <div class="button-span" [style.color]="getColor(team)">{{ team.Name }}</div> ({{ team.PlayerNames.length }}):
-              <div>{{ team.PlayerNames.join(", ") }}</div>
-          </div>
-        </button>
-        <mat-divider></mat-divider>
-      </ng-container>
-    </ng-container>
-
-    <button mat-button (click)="chooseTeamIndex(0)">{{ data[0].Name }}</button>
-  </div>
+  <button class="container mat-app-background" (click)="chooseTeamIndex(0)">
+      {{ 'Spectate' | language: settings.Lang }}
+  </button>
+  <button class="container mat-app-background" (click)="leaveLobby()">
+      {{ 'LeaveLobby' | language: settings.Lang }}
+  </button>
 </div>

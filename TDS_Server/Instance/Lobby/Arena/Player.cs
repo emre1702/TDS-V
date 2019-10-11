@@ -14,6 +14,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 using Newtonsoft.Json;
 using TDS_Server.Dto.Map;
+using TDS_Server.Dto.TeamChoiceMenu;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -26,7 +27,10 @@ namespace TDS_Server.Instance.Lobby
             SpectateOtherAllTeams(player);
             SendPlayerRoundInfoOnJoin(player);
 
-            TeamChoiceMenuSync.AddPlayer(player, this);
+            var teams = Teams.Select(t =>
+                new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB));
+
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonConvert.SerializeObject(teams));
 
             return true;
         }
@@ -40,8 +44,6 @@ namespace TDS_Server.Instance.Lobby
                 SpectateOtherSameTeam(player);
                 AddPlayerAsPlayer(player, teamIndex);
             }
-                
-            TeamChoiceMenuSync.RemovePlayer(player);
         }
 
         public override void RemovePlayer(TDSPlayer player)

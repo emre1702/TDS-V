@@ -87,6 +87,9 @@ export interface Language {
     OthersAdded: string;
     ChangePos: string;
     Confirm: string;
+    LeaveLobby: string;
+    Spectate: string;
+    RandomTeam: string;
 
     Arena: string;
     Gang: string;

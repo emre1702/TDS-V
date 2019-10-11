@@ -76,9 +76,6 @@ namespace TDS_Server.Instance.Player
                     value?.AddPlayer(this);
                     NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
 
-                    if (CurrentLobby != null && CurrentLobby is Arena)
-                        TeamChoiceMenuSync.PlayerChangedTeam(this, value, _team);
-
                     _team = value;
                 }
             }

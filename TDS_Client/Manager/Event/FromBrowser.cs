@@ -7,6 +7,7 @@ using TDS_Client.Enum;
 using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
@@ -38,6 +39,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
             Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
+            Add(DToServerEvent.LeaveLobby, OnLeaveLobbyMethod);
             Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
@@ -93,6 +95,8 @@ namespace TDS_Client.Manager.Event
 
         private void OnChooseTeamMethod(object[] args)
         {
+            Browser.Angular.Main.ToggleTeamChoiceMenu(false);
+            Scoreboard.ReleasedScoreboardKey();
             int index = Convert.ToInt32(args[0]);
             EventsSender.Send(DToServerEvent.ChooseTeam, index);
         }
@@ -159,6 +163,13 @@ namespace TDS_Client.Manager.Event
         private void OnJoinedCustomLobbiesMenuMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.JoinedCustomLobbiesMenu);
+        }
+
+        private void OnLeaveLobbyMethod(object[] args)
+        {
+            Browser.Angular.Main.ToggleTeamChoiceMenu(false);
+            Scoreboard.ReleasedScoreboardKey();
+            EventsSender.Send(DToServerEvent.LeaveLobby);
         }
 
         private void OnLeftCustomLobbiesMenuMethod(object[] args)

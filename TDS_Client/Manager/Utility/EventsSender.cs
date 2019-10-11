@@ -20,6 +20,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.JoinLobbyWithPassword] = new CooldownEventDto(1000),
             [DToServerEvent.JoinMapCreator] = new CooldownEventDto(1000),
             [DToServerEvent.LanguageChange] = new CooldownEventDto(500),
+            [DToServerEvent.LeaveLobby] = new CooldownEventDto(500),
             [DToServerEvent.LobbyChatMessage] = new CooldownEventDto(250),
             [DToServerEvent.LoadMapForMapCreator] = new CooldownEventDto(10000),
             [DToServerEvent.LoadMapNamesToLoadForMapCreator] = new CooldownEventDto(10000),
@@ -51,6 +52,26 @@ namespace TDS_Client.Manager.Utility
                 return false;
             }
 
+            entry.LastExecMs = currentTicks;
+            Events.CallRemote(eventName, args);
+            return true;
+        }
+
+        /// <summary>
+        /// Still saves the last execute time for .Send cooldown.
+        /// </summary>
+        /// <param name="eventName"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static bool SendIgnoreCooldown(string eventName, params object[] args)
+        {
+            if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
+            {
+                Events.CallRemote(eventName, args);
+                return true;
+            }
+
+            ulong currentTicks = TimerManager.ElapsedTicks;
             entry.LastExecMs = currentTicks;
             Events.CallRemote(eventName, args);
             return true;

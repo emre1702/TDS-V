@@ -12,6 +12,7 @@
             "webRoot": "${workspaceFolder}\\projects\\main\\",
             "breakOnLoad": true,
             "sourceMaps": true,
+            "port": 9220,
             "sourceMapPathOverrides": {
               "webpack:/*": "${webRoot}/*",
               "/./*": "${webRoot}/*",
