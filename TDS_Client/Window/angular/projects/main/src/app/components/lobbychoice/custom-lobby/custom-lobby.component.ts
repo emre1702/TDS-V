@@ -22,11 +22,11 @@ import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
         query(':enter', [
           style({ transform: 'translateY(100vh)', opacity: 0 }),
           stagger(80, [
-            animate('800ms ease-in-out', style({ transform: 'translateY(0)', opacity: 0.95 })),
+            animate('800ms ease-in-out', style({ transform: 'translateY(0)', opacity: 1 })),
           ])
         ], { optional: true }),
         query(':leave', [
-          style({ transform: 'translateY(0)', opacity: 0.95 }),
+          style({ transform: 'translateY(0)', opacity: 1 }),
           stagger(80, [
             animate('800ms ease-out', style({ transform: 'translateY(100vh)', opacity: 0 }))
           ])
@@ -38,7 +38,7 @@ import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
       transition(
         ':enter', [
           style({ transform: 'translateX(100%)', opacity: 0 }),
-          animate('500ms', style({ transform: 'translateX(0)', opacity: 0.9 }))
+          animate('500ms', style({ transform: 'translateX(0)', opacity: 1 }))
         ]
       ),
       transition(

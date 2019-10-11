@@ -97,7 +97,7 @@ html, body, app-root {
 
 .mat-app-background {
   border: 4px outset mat-color($dark-primary) !important;
-  background-color: #303030;
+  background-color: #303030F2;
   color: white;
 }
 
@@ -124,5 +124,4 @@ button:not([disabled]):hover {
 
 .container {
   border-radius: 30px;
-  opacity: 0.95;
 }
