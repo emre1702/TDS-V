@@ -30,7 +30,7 @@ namespace TDS_Server.Manager.Utility
                 if (component == null)
                 {
                     ErrorLogsManager.Log($"{player.Client.Name} with ID {player.Entity?.Id ?? '?'} tried to buy weapon-component {weaponComponentHash.ToString()}" 
-                                            +" for weapon {weaponHash.ToString()}, but the component doesn't exist in DB.", Environment.StackTrace, player);
+                                            + $" for weapon {weaponHash.ToString()}, but the component doesn't exist in DB.", Environment.StackTrace, player);
                     NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.ERROR_OCURRED_DEVS_NOTIFIED);
                     return;
                 }
@@ -76,9 +76,61 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        public static void BuyTint(TDSPlayer player, EWeaponHash weaponHash, uint tint)
+        public static async void BuyTint(TDSPlayer player, EWeaponHash weaponHash, int tintIndex, bool isMk2)
         {
+            if (player.Entity is null)
+                return;
 
+            try
+            {
+                //todo: Remove money from player (?)
+                using var dbContext = new TDSNewContext();
+                var tint = await dbContext.WeaponsTints.FindAsync(tintIndex, isMk2);
+                if (tint == null)
+                {
+                    ErrorLogsManager.Log($"{player.Client.Name} with ID {player.Entity?.Id ?? '?'} tried to buy weapon-tint {tintIndex} (isMk2: {isMk2})"
+                                            + "  but the tint doesn't exist in DB.", Environment.StackTrace, player);
+                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.ERROR_OCURRED_DEVS_NOTIFIED);
+                    return;
+                }
+
+                var weaponTintForSameWeapon = await dbContext.PlayerWeaponTints
+                    .Include(c => c.Tint)
+                    .FirstOrDefaultAsync(c => c.PlayerId == player.Entity.Id && c.WeaponHash == weaponHash);
+                if (weaponTintForSameWeapon.TintId == tintIndex)
+                {
+                    return;
+                }
+
+                int oldTint = -1;
+                if (weaponTintForSameWeapon != null)
+                {
+                    oldTint = weaponTintForSameWeapon.TintId;
+                    dbContext.PlayerWeaponTints.Remove(weaponTintForSameWeapon);
+                }
+                var playerWeaponTint = new PlayerWeaponTints { PlayerId = player.Entity.Id, TintId = tintIndex, IsMK2 = isMk2, WeaponHash = weaponHash };
+                dbContext.PlayerWeaponTints.Add(playerWeaponTint);
+                await dbContext.SaveChangesAsync();
+
+                WeaponSyncData weaponUpgradesData;
+                if (player.WeaponUpgradesDatas.ContainsKey((uint)weaponHash))
+                    weaponUpgradesData = player.WeaponUpgradesDatas[(uint)weaponHash];
+                else
+                    weaponUpgradesData = new WeaponSyncData { WeaponHash = (uint)weaponHash };
+
+                weaponUpgradesData.TintIndex = tintIndex; 
+
+                player.WeaponUpgradesDatasJson[(uint)weaponHash] = JsonConvert.SerializeObject(weaponUpgradesData);
+                player.WeaponUpgradesDatasJsonComplete = JsonConvert.SerializeObject(player.WeaponUpgradesDatas);
+
+                if (player.CurrentLobby is FightLobby lobby && (uint)player.Client.CurrentWeapon == (uint)weaponHash)
+                    lobby.SyncPlayerWeaponUpgradesToAll(player, (uint)weaponHash);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log($"Buying weapon tint {tintIndex} (isMk2: {isMk2.ToString()}) failed. Exception: " + ex.GetBaseException().ToString(),
+                    ex.StackTrace ?? Environment.StackTrace, player);
+            }
         }
     }
 }
