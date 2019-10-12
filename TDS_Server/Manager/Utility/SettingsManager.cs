@@ -30,6 +30,7 @@ namespace TDS_Server.Manager.Utility
         public static float ArenaNewMapProbabilityPercent => _serverSettings.ArenaNewMapProbabilityPercent;
         public static int KillingSpreeMaxSecondsUntilNextKill => _serverSettings.KillingSpreeMaxSecondsUntilNextKill;
         public static int MapRatingAmountForCheck => _serverSettings.MapRatingAmountForCheck;
+        public static float MinMapRatingForNewMaps => _serverSettings.MinMapRatingForNewMaps;
         public static float GiveMoneyFee => _serverSettings.GiveMoneyFee;
         public static int GiveMoneyMinAmount => _serverSettings.GiveMoneyMinAmount;
 
