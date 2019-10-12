@@ -261,6 +261,8 @@ namespace TDS_Server.Manager.Maps
             if (map is null)
             {
                 map = _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                if (map is null)
+                    map = _needCheckMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
                 isSavedMap = false;
             }
 
@@ -275,8 +277,10 @@ namespace TDS_Server.Manager.Maps
 
             if (isSavedMap)
                 _savedMaps.Remove(map);
-            else
+            else if (_newCreatedMaps.Contains(map))
                 _newCreatedMaps.Remove(map);
+            else 
+                _needCheckMaps.Remove(map);
 
             File.Delete(map.Info.FilePath);
         }
