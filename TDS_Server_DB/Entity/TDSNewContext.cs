@@ -901,6 +901,8 @@ namespace TDS_Server_DB.Entity
                 new Lobbies { Id = 1, OwnerId = 0, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
                 new Lobbies { Id = 2, OwnerId = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
    
+                // only for map-creator ban
+                new Lobbies { Id = 3, OwnerId = 0, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 
