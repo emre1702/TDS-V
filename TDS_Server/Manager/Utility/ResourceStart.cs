@@ -62,6 +62,7 @@ namespace TDS_Server.Manager.Utility
                 await MapsLoader.LoadDefaultMaps(dbcontext);
                 await MapCreator.LoadNewMaps(dbcontext);
                 await MapCreator.LoadSavedMaps(dbcontext);
+                await MapCreator.LoadNeedCheckMaps(dbcontext);
 
                 Normal.Init(dbcontext);
                 Bomb.Init(dbcontext);

@@ -84,6 +84,7 @@ export class German extends English {
   OthersSaved = "Andere Gespeichert";
   OthersCreated = "Andere Erstellt";
   OthersAdded = "Andere Hinzugefügt";
+  Deactivated = "Deaktivierte";
   ChangePos = "Ändere Pos";
   Confirm = "Bestätige";
   LeaveLobby = "Lobby verlassen";

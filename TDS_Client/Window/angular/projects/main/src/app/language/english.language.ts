@@ -89,6 +89,7 @@ export class English implements Language {
     OthersSaved = "Others saved";
     OthersCreated = "Others created";
     OthersAdded = "Others added";
+    Deactivated = "Deactivated";
     ChangePos = "Change pos";
     Confirm = "Confirm";
     LeaveLobby = "Leave lobby";

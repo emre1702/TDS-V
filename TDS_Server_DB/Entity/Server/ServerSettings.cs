@@ -7,6 +7,7 @@
         public string MapsPath { get; set; }
         public string NewMapsPath { get; set; }
         public string SavedMapsPath { get; set; }
+        public string NeedCheckMapsPath { get; set; }
         public bool ErrorToPlayerOnNonExistentCommand { get; set; }
         public bool ToChatOnNonExistentCommand { get; set; }
         public float DistanceToSpotToPlant { get; set; }

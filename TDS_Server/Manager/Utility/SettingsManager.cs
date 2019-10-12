@@ -20,6 +20,7 @@ namespace TDS_Server.Manager.Utility
         public static string MapsPath => _serverSettings.MapsPath;
         public static string NewMapsPath => _serverSettings.NewMapsPath;
         public static string SavedMapsPath => _serverSettings.SavedMapsPath;
+        public static string NeedCheckMapsPath => _serverSettings.NeedCheckMapsPath;
         public static bool ErrorToPlayerOnNonExistentCommand => _serverSettings.ErrorToPlayerOnNonExistentCommand;
         public static bool ToChatOnNonExistentCommand => _serverSettings.ToChatOnNonExistentCommand;
         public static int SaveLogsCooldownMinutes => _serverSettings.SaveLogsCooldownMinutes;

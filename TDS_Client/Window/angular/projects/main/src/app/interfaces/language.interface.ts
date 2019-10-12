@@ -85,6 +85,7 @@ export interface Language {
     OthersSaved: string;
     OthersCreated: string;
     OthersAdded: string;
+    Deactivated: string;
     ChangePos: string;
     Confirm: string;
     LeaveLobby: string;

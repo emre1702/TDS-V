@@ -804,6 +804,10 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasMaxLength(300);
 
+                entity.Property(e => e.NeedCheckMapsPath)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
                 entity.Property(e => e.KillingSpreeMaxSecondsUntilNextKill)
                     .IsRequired()
                     .HasDefaultValue(18);
@@ -877,6 +881,7 @@ namespace TDS_Server_DB.Entity
             modelBuilder.Entity<ServerSettings>().HasData(
                 new ServerSettings {  Id = 1, GamemodeName = "tdm", MapsPath = "bridge/resources/tds/maps/",
                     NewMapsPath = "bridge/resources/tds/newmaps/", SavedMapsPath = "bridge/resources/tds/savedmaps/",
+                    NeedCheckMapsPath = "bridge/resources/tds/needcheckmaps/",
                     ErrorToPlayerOnNonExistentCommand = true, ToChatOnNonExistentCommand = false,
                     DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
                     SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,

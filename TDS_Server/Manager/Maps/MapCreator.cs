@@ -28,6 +28,7 @@ namespace TDS_Server.Manager.Maps
     {
         private static List<MapDto> _newCreatedMaps = new List<MapDto>();
         private static List<MapDto> _savedMaps = new List<MapDto>();
+        private static List<MapDto> _needCheckMaps = new List<MapDto>();
 
         public async static Task<EMapCreateError> Create(TDSPlayer creator, string mapJson, bool onlySave)
         {
@@ -121,6 +122,15 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
+        public static async Task LoadNeedCheckMaps(TDSNewContext dbContext)
+        {
+            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NeedCheckMapsPath, false);
+            foreach (var map in _newCreatedMaps)
+            {
+                map.Info.IsNewMap = true;
+            }
+        }
+
         public static MapDto? GetRandomNewMap()
         {
             var list = _newCreatedMaps.Where(m => m.Ratings.Count < SettingsManager.MapRatingAmountForCheck).ToList();
@@ -147,9 +157,14 @@ namespace TDS_Server.Manager.Maps
             MapDto? map = MapsLoader.GetMapByName(mapName);
 
             if (map is null)
-                map = GetMapByName(mapName);
+                map = _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
             if (map is null)
                 map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            if (map is null)
+                map = _needCheckMaps.FirstOrDefault(m => m.Info.Name == mapName);
+
+            if (map is null)
+                return;
 
             int posId = 0;
 
@@ -188,18 +203,6 @@ namespace TDS_Server.Manager.Maps
             bool canLoadMapsFromOthers = SettingsManager.CanLoadMapsFromOthers(player);
             var data = new List<LoadMapDialogGroupDto>();
 
-            if (canLoadMapsFromOthers)
-            { 
-                data.Add(new LoadMapDialogGroupDto
-                {
-                    GroupName = "MapsToTest",
-                    Maps = _newCreatedMaps
-                        .Where(m => m.Ratings.Count >= SettingsManager.MapRatingAmountForCheck)
-                        .Select(m => m.Info.Name)
-                        .ToList()
-                });
-            }
-
             data.Add(new LoadMapDialogGroupDto
             {
                 GroupName = "Saved",
@@ -213,7 +216,7 @@ namespace TDS_Server.Manager.Maps
             {
                 GroupName = "Created",
                 Maps = _newCreatedMaps
-                    .Where(m => m.Info.CreatorId == player.Entity.Id && m.Ratings.Count < SettingsManager.MapRatingAmountForCheck)
+                    .Where(m => m.Info.CreatorId == player.Entity.Id)
                     .Select(m => m.Info.Name)
                     .ToList()
             });
@@ -228,30 +231,20 @@ namespace TDS_Server.Manager.Maps
             });
 
             if (canLoadMapsFromOthers)
-            {
-                data.Add(new LoadMapDialogGroupDto
-                {
-                    GroupName = "OthersSaved",
-                    Maps = _savedMaps
-                        .Where(m => m.Info.CreatorId != player.Entity.Id)
-                        .Select(m => m.Info.Name)
-                        .ToList()
-                });
-
+            { 
                 data.Add(new LoadMapDialogGroupDto
                 {
                     GroupName = "OthersCreated",
                     Maps = _newCreatedMaps
-                        .Where(m => m.Info.CreatorId != player.Entity.Id && m.Ratings.Count < SettingsManager.MapRatingAmountForCheck)
+                        .Where(m => m.Info.CreatorId != player.Entity.Id)
                         .Select(m => m.Info.Name)
                         .ToList()
                 });
 
                 data.Add(new LoadMapDialogGroupDto
                 {
-                    GroupName = "OthersAdded",
-                    Maps = MapsLoader.AllMaps
-                        .Where(m => m.Info.CreatorId != player.Entity.Id)
+                    GroupName = "Deactivated",
+                    Maps = _needCheckMaps
                         .Select(m => m.Info.Name)
                         .ToList()
                 });
@@ -292,6 +285,21 @@ namespace TDS_Server.Manager.Maps
         {
             if (map.Ratings.Count < SettingsManager.MapRatingAmountForCheck)
                 return;
+
+            if (map.RatingAverage >= SettingsManager.MinMapRatingForNewMaps)
+                return;
+
+            DisableNewMap(map);
+        }
+
+        private static void DisableNewMap(MapDto map)
+        {
+            _newCreatedMaps.Remove(map);
+
+            string fileName = Path.GetFileName(map.Info.FilePath);
+            string fileContent = File.ReadAllText(map.Info.FilePath);
+            File.WriteAllText(SettingsManager.NeedCheckMapsPath + Utils.MakeValidFileName(fileName), fileContent);
+
         }
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
