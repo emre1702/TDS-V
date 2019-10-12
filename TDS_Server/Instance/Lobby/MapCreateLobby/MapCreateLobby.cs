@@ -11,7 +11,7 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class MapCreateLobby : Lobby
     {
-        private MapCreateLobby(Lobbies entity) : base(entity) {}
+        public MapCreateLobby(Lobbies entity) : base(entity) {}
 
         public static async void Create(TDSPlayer player)
         {

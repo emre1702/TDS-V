@@ -118,7 +118,7 @@ namespace TDS_Server.Instance.Lobby
                 SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
         }
 
-        private async Task<bool> IsPlayerBaned(TDSPlayer character)
+        public async Task<bool> IsPlayerBaned(TDSPlayer character)
         {
             if (character.Entity is null)
                 return false;

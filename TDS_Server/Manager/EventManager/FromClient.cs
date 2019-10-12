@@ -72,11 +72,15 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.JoinMapCreator)]
-        public static void JoinMapCreatorEvent(Client client)
+        public static async void JoinMapCreatorEvent(Client client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
+
+            if (await LobbyManager.MapCreateLobbyDummy.IsPlayerBaned(player))
+                return;
+
             MapCreateLobby.Create(player);
         }
 
