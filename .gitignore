@@ -1,7 +1,7 @@
 *.ide
 *.suo
 /.vs/
-*/dist/*
+dist/
 packages/*
 */obj/*
 */packages/*
