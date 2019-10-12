@@ -37,7 +37,11 @@ namespace TDS_Server.Manager.Maps
             }
             maprating.Rating = rating;
             map.SyncedData.Rating = rating;
+
             await dbContext.SaveChangesAsync();
+
+            map.Ratings.Add(maprating);
+            map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
             if (isCustom)
                 MapCreator.AddedMapRating(map);
