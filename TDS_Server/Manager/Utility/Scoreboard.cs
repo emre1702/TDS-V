@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Utility
         private static List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
         {
             List<SyncedScoreboardMainmenuLobbyDataDto> list = new List<SyncedScoreboardMainmenuLobbyDataDto>();
-            foreach (Lobby lobby in LobbyManager.Lobbies)
+            foreach (Lobby lobby in LobbyManager.Lobbies.Where(l => l.Id >= 0))
             {
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;
