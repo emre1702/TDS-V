@@ -96,6 +96,7 @@ namespace TDS_Client.Manager.Event
         private void OnChooseTeamMethod(object[] args)
         {
             Browser.Angular.Main.ToggleTeamChoiceMenu(false);
+            CursorManager.Visible = false;
             Scoreboard.ReleasedScoreboardKey();
             int index = Convert.ToInt32(args[0]);
             EventsSender.Send(DToServerEvent.ChooseTeam, index);
