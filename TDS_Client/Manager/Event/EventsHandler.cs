@@ -1,4 +1,5 @@
-﻿using TDS_Client.Instance.Draw.Dx;
+﻿using RAGE.Game;
+using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
 using Script = RAGE.Events.Script;
 
@@ -19,6 +20,7 @@ namespace TDS_Client.Manager.Event
         {
             Dx.RefreshResolution();
             CameraManager.Init();
+            Streaming.RequestNamedPtfxAsset("scr_xs_celebration");
         }
     }
 }

@@ -13,6 +13,7 @@ namespace TDS_Server.Instance.Lobby
             _roundStatusMethod[ERoundStatus.Countdown] = StartRoundCountdown;
             _roundStatusMethod[ERoundStatus.Round] = StartRound;
             _roundStatusMethod[ERoundStatus.RoundEnd] = EndRound;
+            _roundStatusMethod[ERoundStatus.RoundEndRanking] = ShowRoundRanking;
 
             DurationsDict[ERoundStatus.Round] = (uint)entity.LobbyRoundSettings.RoundTime * 1000;
             DurationsDict[ERoundStatus.Countdown] = (uint)entity.LobbyRoundSettings.CountdownTime * 1000;

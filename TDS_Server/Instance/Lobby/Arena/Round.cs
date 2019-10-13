@@ -14,6 +14,8 @@ using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Stats;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Lobby;
+using TDS_Server.Dto;
+using System.Linq;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -31,7 +33,8 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.NewMapChoose] = 4 * 1000,
             [ERoundStatus.Countdown] = 5 * 1000,
             [ERoundStatus.Round] = 4 * 60 * 1000,
-            [ERoundStatus.RoundEnd] = 8 * 1000,
+            [ERoundStatus.RoundEnd] = 1 * 1000,
+            [ERoundStatus.RoundEndRanking] = 10 * 1000,
             [ERoundStatus.None] = 0
         };
 
@@ -43,7 +46,8 @@ namespace TDS_Server.Instance.Lobby
             [ERoundStatus.NewMapChoose] = ERoundStatus.Countdown,
             [ERoundStatus.Countdown] = ERoundStatus.Round,
             [ERoundStatus.Round] = ERoundStatus.RoundEnd,
-            [ERoundStatus.RoundEnd] = ERoundStatus.MapClear,
+            [ERoundStatus.RoundEnd] = ERoundStatus.RoundEndRanking,
+            [ERoundStatus.RoundEndRanking] = ERoundStatus.MapClear,
             [ERoundStatus.None] = ERoundStatus.NewMapChoose
         };
         private readonly Dictionary<EMapType, Func<Arena, MapDto, GameMode>> _gameModeByMapType
@@ -59,6 +63,7 @@ namespace TDS_Server.Instance.Lobby
 
         private Team? _currentRoundEndWinnerTeam;
         private ERoundEndReason _currentRoundEndReason;
+        private List<RoundPlayerRankingStat>? _ranking; 
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
@@ -161,6 +166,7 @@ namespace TDS_Server.Instance.Lobby
             CurrentGameMode?.StopRound();
 
             RewardAllPlayer();
+            _ranking = GetOrderedRoundRanking();
             SaveAllPlayerRoundStats();
             await ExecuteForDBAsync(async (dbContext) => 
             {
@@ -169,6 +175,59 @@ namespace TDS_Server.Instance.Lobby
             
             ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
             ServerDailyStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
+
+        }
+
+        private void ShowRoundRanking()
+        {
+            if (_ranking is null)
+                return;
+
+            try
+            {
+                Client winner = _ranking.First().Player.Client;
+                Client? second = _ranking.ElementAtOrDefault(1)?.Player.Client;
+                Client? third = _ranking.ElementAtOrDefault(2)?.Player.Client;
+
+                //Vector3 rot = new Vector3(0, 0, 345);
+
+                NAPI.Player.SpawnPlayer(winner, new Vector3(-425.48, 1123.55, 325.85), 345);
+                winner.Dimension = Dimension;
+
+                if (second is { })
+                {
+                    NAPI.Player.SpawnPlayer(second, new Vector3(-427.03, 1123.21, 325.85), 345);
+                    second.Dimension = Dimension;
+                }
+
+                if (third is { })
+                {
+                    NAPI.Player.SpawnPlayer(third, new Vector3(-424.33, 1122.5, 325.85), 345);
+                    third.Dimension = Dimension;
+                }
+
+                string json = JsonConvert.SerializeObject(_ranking);
+                SendAllPlayerEvent(DToClientEvent.StartRankingShowAfterRound, null, json, winner.Handle.Value, second?.Handle.Value ?? 0, third?.Handle.Value ?? 0);
+            } 
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
+            }
+
+
+            // Pos 1.:
+            // X: -425.48
+            // Y: 1123.5
+            // Z: 325.85474
+            // Rot: 345
+
+            // Pos 2.:
+            // X: -427.035
+            // Y: 1123.21
+            // Z: 325.85437
+
+
+
 
         }
 

@@ -28,6 +28,8 @@ namespace TDS_Client.Manager.Lobby
         public static void Joined(SyncedLobbySettingsDto settings)
         {
             InstructionalButtonManager.Reset();
+            RAGE.Elements.Player.LocalPlayer.SetInvincible(false);
+
             if (_inLobbyType != null)
             {
                 switch (_inLobbyType)
@@ -80,6 +82,7 @@ namespace TDS_Client.Manager.Lobby
             Round.Reset(true);
             LobbyCam.StopCountdown();
             MapManager.CloseMenu();
+            Ranking.Stop();
             Browser.Angular.Main.ResetMapVoting();
         }
 

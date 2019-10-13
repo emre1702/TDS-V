@@ -65,6 +65,7 @@
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
         public const string SpectatorReattachCam = "SpectatorReattachCam_Server";
+        public const string StartRankingShowAfterRound = "StartRankingShowAfterRound_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
         public const string StopRoundStats = "StopRoundStats_Server";

@@ -4,6 +4,10 @@ using System.Text;
 using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using System.Collections.Generic;
+using TDS_Server.Instance.Player;
+using TDS_Server.Dto;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -52,6 +56,29 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.Chat.SendChatMessageToPlayer(character.Client, strbuilder.ToString());
                 strbuilder.Clear();
             });
+        }
+
+        private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
+        {
+            if (IsEmpty())
+                return null;
+
+            var list = Players
+                .Where(p => p.CurrentRoundStats != null && p.Team is { } && !p.Team.IsSpectator)
+                .Select(p => new RoundPlayerRankingStat(p))
+                .ToList();
+
+            float killsMult = SettingsManager.MultiplierRankingKills;
+            float assistsMult = SettingsManager.MultiplierRankingAssists;
+            float damageMult = SettingsManager.MultiplierRankingDamage;
+
+            list.Sort((a, b) => 
+                (a.Kills * killsMult + a.Assists * assistsMult + a.Damage * damageMult).CompareTo(
+                    (b.Kills * killsMult + b.Assists * assistsMult + b.Damage * damageMult)
+                ) * -1
+            );
+
+            return list;
         }
 
         private void SetAllPlayersInCountdown()

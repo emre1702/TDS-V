@@ -78,6 +78,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
             Add(DToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
+            Add(DToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
@@ -185,6 +186,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnCountdownStartMethod(object[] args)
         {
+            Ranking.Stop();
             LobbyCam.Stop();
             int mstimetoplayer = (int)Math.Ceiling(Settings.CountdownTime * 1000 * 0.9);
             if (args == null)
@@ -494,7 +496,11 @@ namespace TDS_Client.Manager.Event
             {
                 CameraManager.SpectateCam.Spectate(Spectate.SpectatingEntity);
             }
+        }
 
+        private void OnStartRankingShowAfterRoundMethod(object[] args)
+        {
+            Ranking.Start((string)args[0], Convert.ToUInt16(args[1]), Convert.ToUInt16(args[2]), Convert.ToUInt16(args[3]));
         }
 
         private void OnSyncScoreboardDataMethod(object[] args)
