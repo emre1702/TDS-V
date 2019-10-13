@@ -155,6 +155,7 @@ namespace TDS_Server.Manager.Commands
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
                 Vector3 rot = player.Client.Vehicle.Rotation;
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, $"Vehicle dimension: {player.Client.Vehicle.Dimension} | Your dimension: {player.Client.Dimension}");
             }
             else
             {
@@ -162,6 +163,7 @@ namespace TDS_Server.Manager.Commands
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
                 Vector3 rot = player.Client.Rotation;
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, "Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, $"Dimension: {player.Client.Dimension}");
             }
         }
 
