@@ -8,11 +8,14 @@ namespace TDS_Client.Manager.MapCreator
     {
         public static void Start(bool addInstructionalButtom = true)
         {
-            var cam = CameraManager.FreeCam;
             var player = RAGE.Elements.Player.LocalPlayer;
 
-            player.Position = cam.Position;
-            player.SetHeading(cam.Rotation.Z);
+            if (!(CameraManager.FreeCam is null))
+            {
+                var cam = CameraManager.FreeCam;
+                player.Position = cam.Position;
+                player.SetHeading(cam.Rotation.Z);
+            }
             player.FreezePosition(false);
             player.SetVisible(true, false);
             player.SetCollision(true, true);

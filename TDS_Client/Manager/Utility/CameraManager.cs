@@ -15,7 +15,6 @@ namespace TDS_Client.Manager.Utility
             Cam.DestroyAllCams(false);
 
             BetweenRoundsCam = new TDSCamera();
-            FreeCam = new TDSCamera();
             SpectateCam = new TDSCamera();
         }
     }

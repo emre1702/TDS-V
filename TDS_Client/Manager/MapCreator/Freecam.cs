@@ -20,7 +20,11 @@ namespace TDS_Client.Manager.MapCreator
         {
             IsActive = true;
             TickManager.Add(OnTick);
-            
+
+            if (CameraManager.FreeCam is null)
+                CameraManager.FreeCam = new TDSCamera();
+
+
             var cam = CameraManager.FreeCam;
             cam.Position = Cam.GetGameplayCamCoord();
             cam.Rotation = Cam.GetGameplayCamRot(2);
@@ -39,7 +43,9 @@ namespace TDS_Client.Manager.MapCreator
             TickManager.Remove(OnTick);
 
             CameraManager.FreeCam.Deactivate();
-            
+            CameraManager.FreeCam = null;
+
+
             Binds.RemoveForInFreeCam();
         }
 
