@@ -1,13 +1,14 @@
 ﻿using Player = RAGE.Elements.Player;
+using PedBase = RAGE.Elements.PedBase;
 using System.Collections.Generic;
 using TDS_Client.Manager.Utility;
 using static RAGE.Events;
 using System.Drawing;
 using System;
 using Font = RAGE.Game.Font;
-using RAGE.Elements;
 using TDS_Client.Enum;
 using RAGE.Game;
+using TDS_Client.Instance.Utility;
 
 namespace TDS_Client.Manager.Draw
 {
@@ -28,19 +29,24 @@ namespace TDS_Client.Manager.Draw
             if (!RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
-            PedBase target = Entities.Players.GetAtHandle(targetEntity);
-            if (target == null)
-            {
-                target = Entities.Peds.GetAtHandle(targetEntity);
-                if (target == null)
-                    return;
-            }
-
-            var distance = target.Position.DistanceTo(Player.LocalPlayer.Position);
-            if (target.Position.DistanceTo(Player.LocalPlayer.Position) > Settings.NametagMaxDistance)
+            if (Entity.GetEntityType(targetEntity) != 1)
                 return;
 
-            DrawNametag(target, distance);
+            var myPos = TDSCamera.ActiveCamera?.Position ?? Player.LocalPlayer.Position;
+            var hisPos = Entity.GetEntityCoords(targetEntity, true);
+            var distance = myPos.DistanceTo(hisPos);
+
+            if (distance > Settings.NametagMaxDistance)
+                return;
+
+            string name = "Ped";
+            RAGE.Elements.Entities.Players.All.ForEach(player => 
+            {
+                if (player.Handle == targetEntity)
+                    name = player.Name;
+            });
+
+            DrawNametag(targetEntity, name, distance);
         }
 
         private static void DrawAtSight(List<TickNametagData> nametags)
@@ -52,14 +58,15 @@ namespace TDS_Client.Manager.Draw
                 if (nametag.Distance > Settings.NametagMaxDistance)
                     continue;
 
-                DrawNametag(nametag.Player, nametag.Distance);
+                DrawNametag(nametag.Player.Handle, nametag.Player.Name, nametag.Distance);
             }
         }
 
-        private static void DrawNametag(PedBase target, float distance)
+        private static void DrawNametag(int handle, string name, float distance)
         {
             float scale = Math.Max(distance / Settings.NametagMaxDistance, 0.6f);
-            var position = RAGE.Game.Ped.GetPedBoneCoords(target.Handle, (int)EPedBone.IK_Head, 0, 0, 0.9f);
+            var position = Entity.GetEntityCoords(handle, true);
+            position.Z += 0.9f + distance / Settings.NametagMaxDistance;
 
             float screenX = 0;
             float screenY = 0;
@@ -68,17 +75,15 @@ namespace TDS_Client.Manager.Draw
             float textheight = Ui.GetTextScaleHeight(scale, (int)Font.ChaletLondon);
             screenY -= textheight;
 
-            RAGE.Chat.Output(screenX + " - " + screenY + " | " + scale);
-
-            RAGE.NUI.UIResText.Draw(target is Player ? ((Player)target).Name : "Ped", (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(target),
+            RAGE.NUI.UIResText.Draw(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
                 RAGE.NUI.UIResText.Alignment.Centered, true, true, 0);
         }
 
 
-        private static Color GetHealthColor(PedBase pedBase)
+        private static Color GetHealthColor(int handle)
         {
-            var hp = Math.Max(pedBase.GetHealth() - 100, 0);
-            var armor = pedBase.GetArmour();
+            var hp = Math.Max(Entity.GetEntityHealth(handle) - 100, 0);
+            var armor = Ped.GetPedArmour(handle);
             return GetHealthColor(hp, armor);
         }
 
