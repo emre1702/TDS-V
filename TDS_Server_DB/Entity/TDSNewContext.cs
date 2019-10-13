@@ -900,7 +900,7 @@ namespace TDS_Server_DB.Entity
                     ArenaNewMapProbabilityPercent = 2, KillingSpreeMaxSecondsUntilNextKill = 18,
                     MapRatingAmountForCheck = 10, MinMapRatingForNewMaps = 3f, 
                     GiveMoneyFee = 0.05f, GiveMoneyMinAmount = 100,
-                    NametagMaxDistance = 25*25, ShowNametagOnlyOnAiming = true,
+                    NametagMaxDistance = 80, ShowNametagOnlyOnAiming = true,
                     MultiplierRankingKills = 75f, MultiplierRankingAssists = 25f, MultiplierRankingDamage = 1f
                 }
             );
@@ -915,7 +915,7 @@ namespace TDS_Server_DB.Entity
                 new Lobbies { Id = 2, OwnerId = 0, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
    
                 // only for map-creator ban
-                new Lobbies { Id = 3, OwnerId = 0, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
+                new Lobbies { Id = -1, OwnerId = 0, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 
