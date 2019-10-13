@@ -10,7 +10,7 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "lobbies",
                 columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { 3, (short)1, true, false, "MapCreateLobby", 0, null, 400, ELobbyType.MapCreateLobby });
+                values: new object[] { -1, (short)1, true, false, "MapCreateLobby", 0, null, 400, ELobbyType.MapCreateLobby });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.DeleteData(
                 table: "lobbies",
                 keyColumn: "ID",
-                keyValue: 3);
+                keyValue: -1);
         }
     }
 }
