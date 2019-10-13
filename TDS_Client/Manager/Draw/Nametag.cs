@@ -62,7 +62,7 @@ namespace TDS_Client.Manager.Draw
             }
         }
 
-        private static void DrawNametag(int handle, string name, float distance)
+        public static void DrawNametag(int handle, string name, float distance)
         {
             float scale = Math.Max(distance / Settings.NametagMaxDistance, 0.6f);
             var position = Entity.GetEntityCoords(handle, true);
