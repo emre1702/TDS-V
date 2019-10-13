@@ -832,6 +832,18 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(25*25);
 
+                entity.Property(e => e.MultiplierRankingKills)
+                    .IsRequired()
+                    .HasDefaultValue(75f);
+
+                entity.Property(e => e.MultiplierRankingAssists)
+                    .IsRequired()
+                    .HasDefaultValue(25f);
+
+                entity.Property(e => e.MultiplierRankingDamage)
+                    .IsRequired()
+                    .HasDefaultValue(1f);
+
                 entity.Property(e => e.ShowNametagOnlyOnAiming)
                     .IsRequired();
             });
@@ -888,7 +900,8 @@ namespace TDS_Server_DB.Entity
                     ArenaNewMapProbabilityPercent = 2, KillingSpreeMaxSecondsUntilNextKill = 18,
                     MapRatingAmountForCheck = 10, MinMapRatingForNewMaps = 3f, 
                     GiveMoneyFee = 0.05f, GiveMoneyMinAmount = 100,
-                    NametagMaxDistance = 25*25, ShowNametagOnlyOnAiming = true
+                    NametagMaxDistance = 25*25, ShowNametagOnlyOnAiming = true,
+                    MultiplierRankingKills = 75f, MultiplierRankingAssists = 25f, MultiplierRankingDamage = 1f
                 }
             );
 

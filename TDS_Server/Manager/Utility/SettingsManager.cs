@@ -34,8 +34,11 @@ namespace TDS_Server.Manager.Utility
         public static float MinMapRatingForNewMaps => _serverSettings.MinMapRatingForNewMaps;
         public static float GiveMoneyFee => _serverSettings.GiveMoneyFee;
         public static int GiveMoneyMinAmount => _serverSettings.GiveMoneyMinAmount;
+        public static float MultiplierRankingKills => _serverSettings.MultiplierRankingKills;
+        public static float MultiplierRankingAssists => _serverSettings.MultiplierRankingAssists;
+        public static float MultiplierRankingDamage => _serverSettings.MultiplierRankingDamage;
 
-        #nullable disable warnings
+#nullable disable warnings
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
         private static AppConfigDto _localSettings;

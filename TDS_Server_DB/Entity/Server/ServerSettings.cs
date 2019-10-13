@@ -24,5 +24,9 @@
         public int GiveMoneyMinAmount { get; set; }
         public float NametagMaxDistance { get; set; }
         public bool ShowNametagOnlyOnAiming { get; set; }
+
+        public float MultiplierRankingKills { get; set; }
+        public float MultiplierRankingAssists { get; set; }
+        public float MultiplierRankingDamage { get; set; }
     }
 }
