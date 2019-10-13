@@ -20,11 +20,15 @@ namespace TDS_Server.Instance.Lobby
 
             Lobbies entity = new Lobbies
             {
-                Name = "MapCreator-" + player.Client.Name,  // Todo after custom lobbies: They can't be named "MapCreator-*"
+                Name = "MapCreator-" + player.Client.Name,
                 Teams = new List<Teams> { new Teams { Index = 0, Name = player.Client.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = ELobbyType.MapCreateLobby,
                 OwnerId = player.Entity.Id,
-                IsTemporary = true
+                IsTemporary = true,
+                DefaultSpawnX = -365.425f,
+                DefaultSpawnY = -131.809f,
+                DefaultSpawnZ = 37.873f,
+                DefaultSpawnRotation = 0f
             };
             MapCreateLobby lobby = new MapCreateLobby(entity);
             await lobby.ExecuteForDBAsync(async (dbContext) => 
