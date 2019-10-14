@@ -95,6 +95,8 @@ export class English implements Language {
     LeaveLobby = "Leave lobby";
     Spectate = "Spectate";
     RandomTeam = "Random team";
+    Place = "Place";
+    Points = "Points";
 
     Arena = "Arena";
     Gang = "Gang";

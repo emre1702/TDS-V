@@ -183,9 +183,19 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, info);
         }
 
-        internal static void RemovePositionInMapCreatorBrowser(int id, EMapCreatorPositionType type)
+        public static void RemovePositionInMapCreatorBrowser(int id, EMapCreatorPositionType type)
         {
             Execute(DToBrowserEvent.RemovePositionInMapCreatorBrowser, id, (int)type);
+        }
+
+        public static void ShowRankings(string rankingsJson)
+        {
+            Execute(DToBrowserEvent.ShowRankings, rankingsJson);
+        }
+
+        public static void HideRankings()
+        {
+            Execute(DToBrowserEvent.HideRankings);
         }
     }
 

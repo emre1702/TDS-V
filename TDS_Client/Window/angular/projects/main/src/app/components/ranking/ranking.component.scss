@@ -1,0 +1,17 @@
+.container {
+  position: absolute;
+  width: auto;
+  max-width: 25%;
+  right: 10px;
+  top: 10%;
+  max-height: 80%;
+  overflow: auto;
+
+  .mat-table {
+    width: 100%;
+    display: table;
+    border-collapse: collapse;
+    margin: 0px;
+    background: transparent;
+  }
+}

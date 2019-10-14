@@ -91,6 +91,8 @@ export interface Language {
     LeaveLobby: string;
     Spectate: string;
     RandomTeam: string;
+    Place: string;
+    Points: string;
 
     Arena: string;
     Gang: string;

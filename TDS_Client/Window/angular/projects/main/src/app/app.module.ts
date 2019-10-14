@@ -59,6 +59,7 @@ import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/
 import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 import { InputTypeDirective } from './extensions/inputTypeDirective';
 import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
+import { RankingComponent } from './components/ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
     UserpanelStatsComponent,
 
     InputTypeDirective,
-    TextareaTypeDirective
+    TextareaTypeDirective,
+    RankingComponent
   ],
   imports: [
     ReactiveFormsModule,

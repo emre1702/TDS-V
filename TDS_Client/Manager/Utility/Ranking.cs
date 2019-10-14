@@ -15,7 +15,7 @@ namespace TDS_Client.Manager.Utility
         private static Player _second = null;
         private static Player _third = null;
 
-        public static void Start(string rankingJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
+        public static void Start(string rankingsJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
         {
             Death.PlayerSpawn();
 
@@ -38,22 +38,29 @@ namespace TDS_Client.Manager.Utility
             _second = secondHandle != 0 ? ClientUtils.GetPlayerByHandleValue(secondHandle) : null;
             _third = thirdHandle != 0 ? ClientUtils.GetPlayerByHandleValue(thirdHandle) : null;
 
-            //Browser.Angular.Main.ShowRankings(rankingsJson);
+            Browser.Angular.Main.ShowRankings(rankingsJson);
         }
 
         public static void Stop()
         {
             TickManager.Remove(OnRender);
             Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+            Browser.Angular.Main.HideRankings();
         }
 
         private static void OnRender()
         {
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_money_rain_celeb", 427.03f, 1123.21f, 325.85f, 1f);
+
             StartParticleFx("scr_xs_confetti_burst", -428.01f, 1123.47f, 325f, 1.5f);
             StartParticleFx("scr_xs_confetti_burst", -423.48f, 1122.09f, 325f, 1.5f);
             StartParticleFx("scr_xs_confetti_burst", -426.17f, 1121.18f, 325f, 2f);
+
+            // didnt work
+            //StartParticleFx("scr_xs_champagne_spray", -428.01f, 1123.47f, 325f, 1.5f);
+            //StartParticleFx("scr_xs_champagne_spray", -423.48f, 1122.09f, 325f, 1.5f);
+            //StartParticleFx("scr_xs_beer_chug", -426.17f, 1121.18f, 325f, 2f);
 
             if (!(_winner is null) && _winner.Exists) 
                 Nametag.DrawNametag(_winner.Handle, "1. " + _winner.Name, 5f);

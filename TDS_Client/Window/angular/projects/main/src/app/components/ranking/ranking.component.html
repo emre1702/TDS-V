@@ -1,0 +1,37 @@
+<div class="container mat-app-background mat-elevation-z8">
+  <mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="Place">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Place' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Place }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Name }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Points">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Points' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Points }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Kills">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Kills' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Kills }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Assists">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Assists' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Assists }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Damage">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Damage' | language: settings.Lang }}</mat-header-cell>
+      <mat-cell *matCellDef="let ranking">{{ ranking.Damage }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>

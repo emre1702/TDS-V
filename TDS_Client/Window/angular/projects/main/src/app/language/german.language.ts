@@ -90,6 +90,8 @@ export class German extends English {
   LeaveLobby = "Lobby verlassen";
   Spectate = "Zuschauen";
   RandomTeam = "Zufälliges Team";
+  Place = "Platz";
+  Points = "Punkte";
 
   Arena = "Arena";
   Gang = "Gang";

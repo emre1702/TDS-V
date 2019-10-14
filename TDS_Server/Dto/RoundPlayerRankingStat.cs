@@ -5,7 +5,9 @@ namespace TDS_Server.Dto
 {
     class RoundPlayerRankingStat
     {
+        public int Place { get; set; }
         public string Name { get; set; }
+        public int Points { get; set; }
         public int Kills { get; set; }
         public int Assists { get; set; }
         public int Damage { get; set; }
