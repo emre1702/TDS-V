@@ -39,6 +39,7 @@ namespace TDS_Client.Manager.Utility
             _third = thirdHandle != 0 ? ClientUtils.GetPlayerByHandleValue(thirdHandle) : null;
 
             Browser.Angular.Main.ShowRankings(rankingsJson);
+            CursorManager.Visible = true;
         }
 
         public static void Stop()
@@ -46,6 +47,7 @@ namespace TDS_Client.Manager.Utility
             TickManager.Remove(OnRender);
             Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
             Browser.Angular.Main.HideRankings();
+            CursorManager.Visible = false;
         }
 
         private static void OnRender()
