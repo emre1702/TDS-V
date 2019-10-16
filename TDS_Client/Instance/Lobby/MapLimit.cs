@@ -211,10 +211,21 @@ namespace TDS_Client.Instance.Lobby
                 Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, Player.LocalPlayer.Position.Z, ref edgeStartZ, false);
                 Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, Player.LocalPlayer.Position.Z + 10, ref edgeTargetZ, false);
 
-                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);
+                //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
+                //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
+
+                float maxTop = Math.Max(edgeStartZ + 50, edgeTargetZ + 50);
+                Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, 150, 0, 0, 100);
+                Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, 150, 0, 0, 100);
+
+                Graphics.DrawPoly(edgeStart.X, edgeStart.Y, maxTop, edgeStart.X, edgeStart.Y, edgeStartZ, edgeTarget.X, edgeTarget.Y, edgeTargetZ, 150, 0, 0, 100);
+                Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeTarget.X, edgeTarget.Y, maxTop, edgeStart.X, edgeStart.Y, maxTop, 150, 0, 0, 100);
+
+
+                /*Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.5f, 150, 0, 0, 255);
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 1.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 1.5f, 150, 0, 0, 255);
-                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 2.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 2.5f, 150, 0, 0, 255);
+                Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 2.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 2.5f, 150, 0, 0, 255);*/
             }
         }
     }
