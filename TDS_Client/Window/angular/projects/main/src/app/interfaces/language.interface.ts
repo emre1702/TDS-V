@@ -107,6 +107,7 @@ export interface Language {
     Standard: string;
     Language: string;
     AllowDataTransfer: string;
+    ShowConfettiAtRanking: string;
     Bloodscreen: string;
     Hitsound: string;
     FloatingDamageInfo: string;

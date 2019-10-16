@@ -32,7 +32,8 @@ namespace TDS_Client.Manager.Utility
 
             Cam.DoScreenFadeIn(200);
 
-            TickManager.Add(OnRender);
+            if (Settings.PlayerSettings.ShowConfettiAtRanking) 
+                TickManager.Add(OnRender);
 
             _winner = ClientUtils.GetPlayerByHandleValue(winnerHandle);
             _second = secondHandle != 0 ? ClientUtils.GetPlayerByHandleValue(secondHandle) : null;

@@ -120,6 +120,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Standard = "Standard";
     Language = "Language";
     AllowDataTransfer = "Allow data transfer";
+    ShowConfettiAtRanking = "Confetti at ranking";
     Bloodscreen = "Bloodscreen";
     Hitsound = "Hit sound";
     FloatingDamageInfo = "Floating damage info";

@@ -115,6 +115,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   Standard = "Standard";
   Language = "Sprache";
   AllowDataTransfer = "Erlaube Daten-Transfer";
+  ShowConfettiAtRanking = "Konfetti beim Ranking";
   Bloodscreen = "Blut-Screen";
   Hitsound = "Hit Geräusch";
   FloatingDamageInfo = "Schwebende Schaden-Infos";

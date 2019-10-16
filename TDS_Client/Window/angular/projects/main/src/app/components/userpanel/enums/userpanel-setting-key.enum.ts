@@ -1,6 +1,7 @@
 export enum UserpanelSettingKey {
     AllowDataTransfer,
     Language,
+    ShowConfettiAtRanking,
 
     Bloodscreen,
     Hitsound,

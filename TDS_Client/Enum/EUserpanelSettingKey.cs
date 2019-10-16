@@ -4,6 +4,7 @@
     {
         AllowDataTransfer,
         Language,
+        ShowConfettiAtRanking,
 
         Bloodscreen,
         Hitsound,

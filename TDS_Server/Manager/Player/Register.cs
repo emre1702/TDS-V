@@ -35,7 +35,8 @@ namespace TDS_Server.Manager.Player
                 Language = ELanguage.English,
                 Hitsound = true,
                 Bloodscreen = true,
-                FloatingDamageInfo = true
+                FloatingDamageInfo = true,
+                ShowConfettiAtRanking = true
             };
             dbplayer.PlayerStats = new PlayerStats
             {

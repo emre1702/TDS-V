@@ -32,6 +32,10 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
           type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.AllowDataTransfer], defaultValue: false,
           formControl: new FormControl(false)
         },
+        {
+          type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.ShowConfettiAtRanking], defaultValue: true,
+          formControl: new FormControl(true)
+        }
       ]
     },
 
