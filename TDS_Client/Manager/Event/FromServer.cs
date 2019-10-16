@@ -298,7 +298,7 @@ namespace TDS_Client.Manager.Event
         private void OnPlayerMoneyChangeMethod(object[] args)
         {
             AccountData.Money = (int)args[0];
-            MoneyDisplay.Refresh();
+            Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), AccountData.Money, false);
         }
 
         private void OnPlayerPlantedBombMethod(object[] args)
@@ -460,6 +460,7 @@ namespace TDS_Client.Manager.Event
         private void OnRegisterLoginSuccessfulMethod(object[] args)
         {
             int adminlvl = (int)args[0];
+            AccountData.LoggedIn = true;
             AccountData.AdminLevel = adminlvl;
             Settings.LoadSyncedSettings(JsonConvert.DeserializeObject<SyncedServerSettingsDto>(args[1].ToString()));
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));

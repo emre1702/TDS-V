@@ -16,6 +16,7 @@ namespace TDS_Client.Manager.Utility
             Tick += OnTickMethod;
 
             Add(Damagesys.CheckOnTick, () => Round.InFight);
+            Add(() => RAGE.Game.Ui.ShowHudComponentThisFrame((int)RAGE.Game.HudComponent.Cash), () => Account.AccountData.LoggedIn);    
         }
 
         private static void OnTickMethod(List<TickNametagData> data)
