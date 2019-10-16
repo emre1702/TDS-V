@@ -38,13 +38,9 @@ namespace TDS_Client.Instance.Lobby
         public MapLimit(List<Position4DDto> edges, EMapLimitType type)
         {
             _edges = edges;
-
-            _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
-            _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;
-            _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
-            _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
-
             _type = type;
+
+            SetEdges(edges);            
 
             _mapLimitTypeMethod[EMapLimitType.KillAfterTime] = IsOutsideKillAfterTime;
             _mapLimitTypeMethod[EMapLimitType.TeleportBackAfterTime] = IsOutsideTeleportBackAfterTime;
