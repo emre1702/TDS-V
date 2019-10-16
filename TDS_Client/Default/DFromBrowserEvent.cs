@@ -34,6 +34,8 @@
         public const string MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser";
         public const string MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser";
 
+        public const string OnColorSettingChange = "OnColorSettingChange_Browser";
+
         public const string RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser";
         public const string RemoveMapCreatorTeamNumber = "RemoveMapCreatorTeamNumber_Browser";
 

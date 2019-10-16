@@ -102,6 +102,7 @@ export interface Language {
     General: string;
     Fight: string;
     Voice: string;
+    Graphical: string;
     Revert: string;
     Standard: string;
     Language: string;
@@ -112,6 +113,7 @@ export interface Language {
     Voice3D: string;
     VoiceAutoVolume: string;
     VoiceVolume: string;
+    MapBorder: string;
     of: string;
     FirstPageLabel: string;
     ItemsPerPage: string;

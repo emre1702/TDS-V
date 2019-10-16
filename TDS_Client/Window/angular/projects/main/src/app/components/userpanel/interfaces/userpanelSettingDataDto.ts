@@ -7,7 +7,10 @@ export interface UserpanelSettingDataDto {
     Bloodscreen: boolean;
     FloatingDamageInfo: boolean;
     AllowDataTransfer: boolean;
+
     Voice3D: boolean;
     VoiceAutoVolume: boolean;
     VoiceVolume: number;
+
+    MapBorderColor: number;
 }

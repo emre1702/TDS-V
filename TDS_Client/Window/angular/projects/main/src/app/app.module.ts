@@ -60,6 +60,7 @@ import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 import { InputTypeDirective } from './extensions/inputTypeDirective';
 import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 import { RankingComponent } from './components/ranking/ranking.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { RankingComponent } from './components/ranking/ranking.component';
     BrowserModule,
     BrowserAnimationsModule,
     DragDropModule,
+    ColorPickerModule,
     MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,

@@ -8,7 +8,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <ng-container *ngFor="let setting of panel.rows" [ngSwitch]="setting.type">
-        
+
                     <ng-container *ngSwitchCase="userpanelSettingType.string">
                         <div class="setting-row">
                             <mat-form-field color="accent">
@@ -17,7 +17,7 @@
                             </mat-form-field>
                         </div>
                     </ng-container>
-            
+
                     <ng-container *ngSwitchCase="userpanelSettingType.number">
                         <div class="setting-row">
                             <mat-form-field color="accent">
@@ -26,7 +26,7 @@
                             </mat-form-field>
                         </div>
                     </ng-container>
-            
+
                     <ng-container *ngSwitchCase="userpanelSettingType.numberSlider">
                         <div class="setting-row">
                             <span>{{ setting.dataSettingIndex | language: settings.Lang }}</span>
@@ -35,7 +35,7 @@
                         </div>
                         <!-- <div *ngSwitchDefault>output2</div> -->
                     </ng-container>
-            
+
                     <ng-container *ngSwitchCase="userpanelSettingType.enum">
                         <div class="setting-row">
                             <mat-form-field color="accent">
@@ -48,7 +48,7 @@
                             </mat-form-field>
                         </div>
                     </ng-container>
-            
+
                     <ng-container *ngSwitchCase="userpanelSettingType.boolean">
                         <div class="setting-row">
                             <mat-checkbox labelPosition="before" [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()">
@@ -59,17 +59,32 @@
 
                     <ng-container *ngSwitchCase="userpanelSettingType.booleanSlider">
                         <div class="setting-row">
-                            <mat-slide-toggle labelPosition="before" [formControl]="setting.formControl" 
+                            <mat-slide-toggle labelPosition="before" [formControl]="setting.formControl"
                             (blur)="changeDetector.detectChanges()" (change)="setting.onValueChanged && setting.onValueChanged()">
                                 {{ setting.dataSettingIndex | language: settings.Lang }}
                             </mat-slide-toggle>
                         </div>
                     </ng-container>
+
+                    <ng-container *ngSwitchCase="userpanelSettingType.color">
+                      <div class="setting-row">
+                            <input matInput
+                            [(colorPicker)]="setting.formControl.value"
+                            [value]="'MapBorder' | language: settings.Lang"
+                            [style.background]="setting.formControl.value"
+                            [cpFallbackColor]="setting.defaultValue"
+                            (colorPickerChange)="onColorChange(setting)"
+                            cpOutputFormat="rgba"
+                            cpAlphaChannel="always"
+                            readonly="true"
+                            cpUseRootViewContainer="true"/>
+                      </div>
+                  </ng-container>
                 </ng-container>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-  
+
     <div id="last-row-buttons">
       <button mat-raised-button (click)="save()">
         {{ 'Save' | language: settings.Lang }}

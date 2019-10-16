@@ -13,5 +13,6 @@ namespace TDS_Common.Dto
         public bool Voice3D { get; set; }
         public bool VoiceAutoVolume { get; set; }
         public float VoiceVolume { get; set; }
+        public string MapBorderColor { get; set; }
     }
 }

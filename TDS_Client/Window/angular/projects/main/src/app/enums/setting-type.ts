@@ -6,5 +6,6 @@ export enum SettingType {
   boolean,
   booleanSlider,
   enum,
-  button
+  button,
+  color
 }

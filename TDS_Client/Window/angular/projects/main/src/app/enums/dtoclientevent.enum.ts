@@ -18,6 +18,7 @@ export enum DToClientEvent {
   MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser",
   MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser",
   MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser",
+  OnColorSettingChange = "OnColorSettingChange_Browser",
   RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser",
   RemoveMapCreatorTeamNumber = "RemoveMapCreatorTeamNumber_Browser",
   TeleportToPositionRotation = "TeleportToPositionRotation_Browser",

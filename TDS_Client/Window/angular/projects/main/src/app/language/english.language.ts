@@ -115,6 +115,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     General = "General";
     Fight = "Fight";
     Voice = "Voice";
+    Graphical = "Graphical";
     Revert = "Revert";
     Standard = "Standard";
     Language = "Language";
@@ -125,6 +126,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Voice3D = "Voice 3D";
     VoiceAutoVolume = "Voice auto volume";
     VoiceVolume = "Voice volume";
+    MapBorder = "Map-border";
     of = "of";
     FirstPageLabel = "First page";
     ItemsPerPage = "Items per page";

@@ -8,5 +8,7 @@ export enum UserpanelSettingKey {
 
     Voice3D,
     VoiceAutoVolume,
-    VoiceVolume
+    VoiceVolume,
+
+    MapBorderColor
 }

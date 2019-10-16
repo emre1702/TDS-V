@@ -1,5 +1,7 @@
 ﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
@@ -74,6 +76,10 @@ namespace TDS_Client.Manager.Utility
         public static bool MixTeamsAfterRound => _syncedLobbySettings.MixTeamsAfterRound ?? false;
         public static float NametagMaxDistance;
         public static bool ShowNametagOnlyOnAiming;
+        public static Color MapBorderColor;
+
+        // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
+        public static Color? NotTempMapBorderColor;
 
         public static void Load()
         {
@@ -95,7 +101,6 @@ namespace TDS_Client.Manager.Utility
 
             NametagMaxDistance = _syncedServerSettings.NametagMaxDistance;
             ShowNametagOnlyOnAiming = _syncedServerSettings.ShowNametagOnlyOnAiming;
-
         }
 
         public static void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
@@ -115,6 +120,9 @@ namespace TDS_Client.Manager.Utility
             {
                 VoiceManager.SetForPlayer(player);
             }
+
+            MapBorderColor = ClientUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor);
+            NotTempMapBorderColor = null;
         }
 
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
@@ -129,6 +137,15 @@ namespace TDS_Client.Manager.Utility
             else if (status == EPlantDefuseStatus.Planting)
                 return _syncedLobbySettings.BombPlantTimeMs ?? 0;
             return 0;
+        }
+
+        public static void RevertTempSettings()
+        {
+            if (NotTempMapBorderColor.HasValue)
+            {
+                MapBorderColor = NotTempMapBorderColor.Value;
+                NotTempMapBorderColor = null;
+            }
         }
 
         /*function loadSettings() {

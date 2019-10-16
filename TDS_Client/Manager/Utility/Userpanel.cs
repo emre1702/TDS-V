@@ -23,6 +23,9 @@ namespace TDS_Client.Manager.Utility
             _open = !_open;
             CursorManager.Visible = _open;
             Browser.Angular.Main.ToggleUserpanel(_open);
+
+            if (!_open)
+                Settings.RevertTempSettings();
         }
 
         public static void Close()

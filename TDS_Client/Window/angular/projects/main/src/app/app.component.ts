@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -25,7 +25,8 @@ export class AppComponent {
         public settings: SettingsService,
         rageConnector: RageConnectorService,
         changeDetector: ChangeDetectorRef,
-        snackBar: MatSnackBar) {
+        snackBar: MatSnackBar,
+        public vcRef: ViewContainerRef) {
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number) => {
             this.settings.loadAdminLevel(adminLevel);

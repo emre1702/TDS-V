@@ -110,6 +110,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   General = "Allgemein";
   Fight = "Kampf";
   Voice = "Voice";
+  Graphical = "Grafisch";
   Revert = "Zurücksetzen";
   Standard = "Standard";
   Language = "Sprache";
@@ -120,6 +121,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   Voice3D = "Voice 3D";
   VoiceAutoVolume = "Voice autom. Lautstärke";
   VoiceVolume = "Voice Lautstärke";
+  MapBorder = "Karten-Limit";
 
   SCName = "Socialclub Name";
   AdminLvl = "Admin Level";

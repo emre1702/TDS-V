@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { Validators, FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewContainerRef } from '@angular/core';
+import {  FormControl } from '@angular/forms';
 import { SettingType } from '../../../enums/setting-type';
 import { UserpanelSettingsPanel } from '../interfaces/userpanelSettingsPanel';
 import { SettingsService } from '../../../services/settings.service';
@@ -8,6 +8,8 @@ import { UserpanelSettingKey } from '../enums/userpanel-setting-key.enum';
 import { LanguageEnum } from '../../../enums/language.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { UserpanelSettingRow } from '../interfaces/userpanelSettingRow';
+import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 
 @Component({
   selector: 'app-userpanel-settings',
@@ -65,6 +67,15 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
           type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.VoiceVolume], defaultValue: 1,
           min: 0, max: 10,
           formControl: new FormControl(1)
+        },
+      ]
+    },
+
+    {
+      title: "Graphical", rows: [
+        {
+          type: SettingType.color, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.MapBorderColor], defaultValue: "rgba(150,0,0,0.35)",
+          formControl: new FormControl("rgba(150,0,0,0.35)")
         },
       ]
     }
@@ -151,5 +162,11 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
   getEnumKeys(e: {}) {
     const keys = Object.keys(e);
     return keys.slice(keys.length / 2);
+  }
+
+  onColorChange(setting: UserpanelSettingRow) {
+    this.changeDetector.detectChanges();
+
+    this.rageConnector.call(DToClientEvent.OnColorSettingChange, setting.formControl.value, setting.dataSettingIndex);
   }
 }

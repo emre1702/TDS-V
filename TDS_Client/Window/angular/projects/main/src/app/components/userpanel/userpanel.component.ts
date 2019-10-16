@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';

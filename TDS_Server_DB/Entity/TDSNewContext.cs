@@ -649,7 +649,7 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.AllowDataTransfer).HasDefaultValue(false);
+                entity.Property(e => e.AllowDataTransfer);
                 entity.Property(e => e.Bloodscreen);
                 entity.Property(e => e.FloatingDamageInfo);
                 entity.Property(e => e.Hitsound);
@@ -657,6 +657,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Voice3D).HasDefaultValue(false);
                 entity.Property(e => e.VoiceAutoVolume).HasDefaultValue(false);
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
+                entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)

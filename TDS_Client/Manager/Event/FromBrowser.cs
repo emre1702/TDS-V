@@ -48,6 +48,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
             Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
+            Add(DFromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
@@ -201,6 +202,8 @@ namespace TDS_Client.Manager.Event
                     EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)type);
                     break;
             }
+
+            Settings.RevertTempSettings();
         }
 
         private void OnMapCreatorHighlightPosMethod(object[] args)
@@ -223,6 +226,20 @@ namespace TDS_Client.Manager.Event
         {
             ObjectPreview.Stop();
             Browser.Angular.MapCreatorObjectChoice.Stop();
+        }
+
+        private void OnColorSettingChangeMethod(object[] args)
+        {
+            string color = (string)args[0];
+            string dataSetting = (string)args[1];
+
+            switch (dataSetting)
+            {
+                case nameof(EUserpanelSettingKey.MapBorderColor):
+                    Settings.MapBorderColor = ClientUtils.GetColorFromHtmlRgba(color);
+                    break;
+            }
+            
         }
 
         private void OnTryLoginMethod(object[] args)
