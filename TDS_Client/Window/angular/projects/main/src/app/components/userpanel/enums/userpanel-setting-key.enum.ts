@@ -2,6 +2,7 @@ export enum UserpanelSettingKey {
     AllowDataTransfer,
     Language,
     ShowConfettiAtRanking,
+    DiscordIdentity,
 
     Bloodscreen,
     Hitsound,

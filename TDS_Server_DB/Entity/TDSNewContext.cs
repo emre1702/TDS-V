@@ -659,6 +659,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
+                entity.Property(e => e.DiscordIdentity);
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)

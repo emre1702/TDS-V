@@ -5,6 +5,7 @@
         AllowDataTransfer,
         Language,
         ShowConfettiAtRanking,
+        DiscordIdentity,
 
         Bloodscreen,
         Hitsound,

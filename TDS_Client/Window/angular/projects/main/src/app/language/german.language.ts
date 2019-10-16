@@ -116,6 +116,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   Language = "Sprache";
   AllowDataTransfer = "Erlaube Daten-Transfer";
   ShowConfettiAtRanking = "Konfetti beim Ranking";
+  DiscordIdentity = "Discord-Identität";
   Bloodscreen = "Blut-Screen";
   Hitsound = "Hit Geräusch";
   FloatingDamageInfo = "Schwebende Schaden-Infos";

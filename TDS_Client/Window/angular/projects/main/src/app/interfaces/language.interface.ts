@@ -108,6 +108,7 @@ export interface Language {
     Language: string;
     AllowDataTransfer: string;
     ShowConfettiAtRanking: string;
+    DiscordIdentity: string;
     Bloodscreen: string;
     Hitsound: string;
     FloatingDamageInfo: string;

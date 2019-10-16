@@ -35,6 +35,10 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         {
           type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.ShowConfettiAtRanking], defaultValue: true,
           formControl: new FormControl(true)
+        },
+        {
+          type: SettingType.string, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.DiscordIdentity], defaultValue: "",
+          formControl: new FormControl(""), placeholder: "Name#ID"
         }
       ]
     },
