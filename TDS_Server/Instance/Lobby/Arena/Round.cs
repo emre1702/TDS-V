@@ -213,22 +213,6 @@ namespace TDS_Server.Instance.Lobby
             {
                 ErrorLogsManager.Log("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
             }
-
-
-            // Pos 1.:
-            // X: -425.48
-            // Y: 1123.5
-            // Z: 325.85474
-            // Rot: 345
-
-            // Pos 2.:
-            // X: -427.035
-            // Y: 1123.21
-            // Z: 325.85437
-
-
-
-
         }
 
         private void RoundCheckForEnoughAlive()
