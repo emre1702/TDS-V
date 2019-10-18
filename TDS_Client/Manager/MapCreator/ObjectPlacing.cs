@@ -1,11 +1,14 @@
 ﻿using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
+using System.Collections.Generic;
 using TDS_Client.Enum;
+using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 using Entity = RAGE.Game.Entity;
 
 namespace TDS_Client.Manager.MapCreator
@@ -129,10 +132,16 @@ namespace TDS_Client.Manager.MapCreator
             if (HoldingObject == null)
                 return;
             Browser.Angular.Main.RemovePositionInMapCreatorBrowser(HoldingObject.ID, HoldingObject.Type);
+            var objType = HoldingObject.Type;
             HoldingObject.Delete();
             if (HighlightedObject == HoldingObject)
                 HighlightedObject = null;
             HoldingObject = null;
+
+            if (objType == EMapCreatorPositionType.MapLimit)
+            {
+                ObjectsManager.RefreshMapLimitDisplay();
+            }
         }
 
         public static void CheckObjectDeleted()
@@ -170,6 +179,17 @@ namespace TDS_Client.Manager.MapCreator
 
             Draw.HighlightColor_Edge = new RGBA(255, 255, 255, 35);
             Draw.HighlightColor_Full = new RGBA(255, 255, 255, 35);
+
+            if (obj.Type == EMapCreatorPositionType.MapLimit)
+            {
+                if (ObjectsManager.MapLimitDisplay == null)
+                {
+                    ObjectsManager.MapLimitDisplay = new MapLimit(new List<Position4DDto>(), EMapLimitType.Display);
+                    ObjectsManager.MapLimitDisplay.Start();
+                }
+                ObjectsManager.RefreshMapLimitDisplay();
+            }
+            
         }
 
         private static void MoveHoldingObject()

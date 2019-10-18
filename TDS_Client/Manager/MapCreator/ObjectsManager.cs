@@ -21,15 +21,11 @@ namespace TDS_Client.Manager.MapCreator
     static class ObjectsManager
     {
         private static readonly Dictionary<GameEntity, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<GameEntity, MapCreatorObject>();
-        private static MapLimit _mapLimitDisplay;
+        public static MapLimit MapLimitDisplay;
 
         public static void Start()
         {
             Events.OnEntityStreamIn += OnEntityStreamIn;
-
-            TickManager.Add(RefreshMapLimitDisplay);
-            _mapLimitDisplay = new MapLimit(new List<Position4DDto>(), EMapLimitType.Display);
-            _mapLimitDisplay.Start();
         }
 
         public static void Stop()
@@ -44,10 +40,8 @@ namespace TDS_Client.Manager.MapCreator
             ObjectPlacing.CheckObjectDeleted();
             MapCreatorObject.Reset();
 
-            _mapLimitDisplay.Stop();
-            _mapLimitDisplay = null;
-
-            TickManager.Remove(RefreshMapLimitDisplay);
+            MapLimitDisplay?.Stop();
+            MapLimitDisplay = null;
         }
 
         public static void Add(GameEntityBase obj, EMapCreatorPositionType type)
@@ -171,6 +165,10 @@ namespace TDS_Client.Manager.MapCreator
             _cacheMapEditorObjects.Remove(obj.Entity);
             obj.Delete();
             ObjectPlacing.CheckObjectDeleted();
+            if (obj.Type == EMapCreatorPositionType.MapLimit)
+            {
+                RefreshMapLimitDisplay();
+            }
         }
 
         public static void LoadMap(MapCreateDataDto map)
@@ -232,11 +230,11 @@ namespace TDS_Client.Manager.MapCreator
             Start();
         }
 
-        private static void RefreshMapLimitDisplay()
+        public static void RefreshMapLimitDisplay()
         {
-            _mapLimitDisplay.SetEdges(_cacheMapEditorObjects
+            MapLimitDisplay?.SetEdges(_cacheMapEditorObjects
                 .Where(o => o.Value.Type == EMapCreatorPositionType.MapLimit)
-                .Select(o => new Position4DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y })
+                .Select(o => new Position4DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y, Z = o.Value.MovingPosition.Z })
                 .ToList());
         }
 
