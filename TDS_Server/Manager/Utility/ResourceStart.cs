@@ -23,7 +23,6 @@ namespace TDS_Server.Manager.Utility
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
-            NAPI.World.SetWeather(Weather.CLEAR);
             LoadAll();
         }
 

@@ -21,6 +21,8 @@ namespace TDS_Client.Manager.Event
             Dx.RefreshResolution();
             CameraManager.Init();
             Streaming.RequestNamedPtfxAsset("scr_xs_celebration");
+            Misc.SetWeatherTypeNowPersist("CLEAR");
+            Misc.SetWind(0);
         }
     }
 }
