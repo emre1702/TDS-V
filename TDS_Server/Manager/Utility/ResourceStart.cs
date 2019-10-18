@@ -23,6 +23,8 @@ namespace TDS_Server.Manager.Utility
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
+            var date = DateTime.Now;
+            NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
             LoadAll();
         }
 
