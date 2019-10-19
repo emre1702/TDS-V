@@ -237,6 +237,7 @@ namespace TDS_Server.Instance.Player
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
+        public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
 
         private Players? _entity;
         private int _lastSaveTick;

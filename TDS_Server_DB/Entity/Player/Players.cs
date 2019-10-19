@@ -37,6 +37,7 @@ namespace TDS_Server_DB.Entity.Player
 
         public virtual AdminLevels AdminLvlNavigation { get; set; }
         public virtual Gangs Gang { get; set; }
+        public virtual PlayerClothes PlayerClothes { get; set; }
         public virtual PlayerSettings PlayerSettings { get; set; }
         public virtual PlayerStats PlayerStats { get; set; }
         public virtual PlayerTotalStats PlayerTotalStats { get; set; }

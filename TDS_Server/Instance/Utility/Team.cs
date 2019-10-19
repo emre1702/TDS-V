@@ -66,7 +66,7 @@ namespace TDS_Server.Instance.Utility
         public void AddPlayer(TDSPlayer player)
         {
             Players.Add(player);
-            player.Client.SetSkin((PedHash)Entity.SkinHash);
+            player.Client.SetSkin(Entity.SkinHash.HasValue ? (PedHash)Entity.SkinHash.Value : player.FreemodeSkin);
         }
 
         public void RemovePlayer(TDSPlayer player)

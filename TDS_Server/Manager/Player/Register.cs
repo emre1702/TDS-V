@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -43,6 +44,10 @@ namespace TDS_Server.Manager.Player
                 LoggedIn = false
             };
             dbplayer.PlayerTotalStats = new PlayerTotalStats();
+            dbplayer.PlayerClothes = new PlayerClothes
+            {
+                IsMale = CommonUtils.GetRandom(true, false)
+            };
             dbContext.Players.Add(dbplayer);
             await dbContext.SaveChangesAsync();
 

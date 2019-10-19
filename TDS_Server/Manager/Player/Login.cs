@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
 using TDS_Server.Instance.Player;
@@ -34,6 +35,7 @@ namespace TDS_Server.Manager.Player
                    .Include(p => p.PlayerMapRatings)
                    .Include(p => p.PlayerMapFavourites)
                    .Include(p => p.PlayerRelationsTarget)
+                   .Include(p => p.PlayerClothes)
                    .FirstOrDefaultAsync(p => p.Id == id);
 
                 if (character.Entity is null)
@@ -59,7 +61,11 @@ namespace TDS_Server.Manager.Player
             
             if (!worked || character.Entity == null)
                 return;
-           
+
+            if (character.Entity.PlayerClothes is null)
+                character.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
+
+
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, character.Entity.AdminLvl,
                 JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
 

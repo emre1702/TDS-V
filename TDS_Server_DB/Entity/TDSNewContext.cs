@@ -98,6 +98,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<Maps> Maps { get; set; }
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
+        public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
@@ -552,6 +553,17 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("player_bans_PlayerID_fkey");
             });
 
+            modelBuilder.Entity<PlayerClothes>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+
+                entity.ToTable("player_clothes");
+
+                entity.HasOne(c => c.Player)
+                    .WithOne(p => p.PlayerClothes)
+                    .HasForeignKey<PlayerClothes>(c => c.PlayerId);
+            });
+
             modelBuilder.Entity<PlayerLobbyStats>(entity =>
             {
                 entity.HasKey(e => new { e.PlayerId, e.LobbyId })
@@ -872,6 +884,9 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasMaxLength(100);
 
+                entity.Property(e => e.SkinHash)
+                    .IsRequired(false);
+
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
                     .HasForeignKey(d => d.Lobby)
@@ -1136,10 +1151,10 @@ namespace TDS_Server_DB.Entity
 
             var seedTeams = new List<Teams> {
                 //new Teams { Id = 0, Index = 0, Name = "Spectator", Lobby = 0, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
-                new Teams { Id = 1, Index = 0, Name = "Spectator", Lobby = 1, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
+                new Teams { Id = 1, Index = 0, Name = "Spectator", Lobby = 1, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4 },
                 new Teams { Id = 2, Index = 1, Name = "SWAT", Lobby = 1, ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
                 new Teams { Id = 3, Index = 2, Name = "Terrorist", Lobby = 1, ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
-                new Teams { Id = 4, Index = 0, Name = "None", Lobby = 2, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 }
+                new Teams { Id = 4, Index = 0, Name = "None", Lobby = 2, ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4 }
             };
             modelBuilder.Entity<Teams>().HasData(seedTeams);
 
