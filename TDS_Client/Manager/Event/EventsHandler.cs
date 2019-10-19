@@ -23,6 +23,9 @@ namespace TDS_Client.Manager.Event
             Streaming.RequestNamedPtfxAsset("scr_xs_celebration");
             Misc.SetWeatherTypeNowPersist("CLEAR");
             Misc.SetWind(0);
+
+            // CLEAR_GPS_CUSTOM_ROUTE
+            RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
         }
     }
 }
