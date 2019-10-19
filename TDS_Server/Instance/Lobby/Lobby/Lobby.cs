@@ -72,8 +72,7 @@ namespace TDS_Server.Instance.Lobby
                 BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
                 InLobbyWithMaps: this is Arena,
                 MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
-                MapLimitType: entity.LobbyMapSettings?.MapLimitType,
-                MixTeamsAfterRound: entity.LobbyRoundSettings?.MixTeamsAfterRound
+                MapLimitType: entity.LobbyMapSettings?.MapLimitType
             );
         }
 

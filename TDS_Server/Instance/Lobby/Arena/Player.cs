@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Lobby
             var teams = Teams.Select(t =>
                 new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB));
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonConvert.SerializeObject(teams));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonConvert.SerializeObject(teams), RoundSettings.MixTeamsAfterRound);
 
             return true;
         }

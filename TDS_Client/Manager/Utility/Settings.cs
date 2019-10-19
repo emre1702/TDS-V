@@ -73,7 +73,6 @@ namespace TDS_Client.Manager.Utility
         public static int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
         public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
-        public static bool MixTeamsAfterRound => _syncedLobbySettings.MixTeamsAfterRound ?? false;
         public static float NametagMaxDistance;
         public static bool ShowNametagOnlyOnAiming;
         public static Color MapBorderColor;

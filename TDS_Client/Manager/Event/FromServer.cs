@@ -523,7 +523,8 @@ namespace TDS_Client.Manager.Event
         private void OnSyncTeamChoiceMenuDataMethod(object[] args)
         {
             string teamsJson = (string)args[0];
-            Browser.Angular.Main.SyncTeamChoiceMenuData(teamsJson, Settings.MixTeamsAfterRound);
+            bool mixTeamsAfterRound = Convert.ToBoolean(args[1]);
+            Browser.Angular.Main.SyncTeamChoiceMenuData(teamsJson, mixTeamsAfterRound);
             Scoreboard.PressedScoreboardKey();
             CursorManager.Visible = true;
         }

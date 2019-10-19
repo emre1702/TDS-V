@@ -18,13 +18,12 @@ namespace TDS_Common.Dto
         public int? MapLimitTime;
         public bool InLobbyWithMaps;
         public EMapLimitType? MapLimitType;
-        public bool? MixTeamsAfterRound;
 
         [JsonIgnore]
         public string Json;
 
         public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
-            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType, bool? MixTeamsAfterRound)
+            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType)
         {
             this.Id = Id;
             this.Name = Name;
@@ -39,7 +38,6 @@ namespace TDS_Common.Dto
             this.MapLimitTime = MapLimitTime;
             this.InLobbyWithMaps = InLobbyWithMaps;
             this.MapLimitType = MapLimitType;
-            this.MixTeamsAfterRound = MixTeamsAfterRound;
 
             this.Json = JsonConvert.SerializeObject(this);
         }
