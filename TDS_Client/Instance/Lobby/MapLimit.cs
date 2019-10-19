@@ -21,6 +21,7 @@ namespace TDS_Client.Instance.Lobby
         private float _minX, _minY, _maxX, _maxY;
         private List<Position4DDto> _edges;
         private int _maxOutsideCounter;
+        private float _edgesMaxTop = -1;
 
         private int _outsideCounter;
         private DxText _info;
@@ -28,6 +29,8 @@ namespace TDS_Client.Instance.Lobby
         private TDSTimer _checkTimerFaster;
         private Vector3 _lastPosInMap;
         private float _lastRotInMap;
+        private bool _createdGpsRoutes;
+        private bool _started;
 
         private readonly EMapLimitType _type;
         private readonly Dictionary<EMapLimitType, Action> _mapLimitTypeMethod = new Dictionary<EMapLimitType, Action>{};
@@ -37,7 +40,6 @@ namespace TDS_Client.Instance.Lobby
 
         public MapLimit(List<Position4DDto> edges, EMapLimitType type)
         {
-            _edges = edges;
             _type = type;
 
             SetEdges(edges);            
@@ -49,7 +51,8 @@ namespace TDS_Client.Instance.Lobby
 
         public void Start()
         {
-            Stop();
+            if (_started)
+                Stop();
             Reset();
             if (_type != EMapLimitType.Display)
             {
@@ -57,10 +60,14 @@ namespace TDS_Client.Instance.Lobby
                 _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
             }
             TickManager.Add(Draw);
+            DrawGpsRoutes();
+            _started = true;
         }
 
         public void Stop()
         {
+            if (!_started)
+                return;
             _checkTimer?.Kill();
             _checkTimer = null;
             _checkTimerFaster?.Kill();
@@ -70,6 +77,8 @@ namespace TDS_Client.Instance.Lobby
             _maxOutsideCounter = Settings.MapLimitTime;
             _outsideCounter = _maxOutsideCounter;
             TickManager.Remove(Draw);
+            ClearGpsRoutes();
+            _started = false;
         }
 
         private void Reset()
@@ -96,7 +105,21 @@ namespace TDS_Client.Instance.Lobby
                 _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
                 _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
             }
+
+            foreach (var edge in edges)
+            {
+                float edgeZ = 0;
+                if (Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ, false))
+                    edge.Z = edgeZ;
+            }
+
             _edges = edges;
+
+            if (_started)
+            {
+                ClearGpsRoutes();
+                DrawGpsRoutes();
+            }
         }
 
         public void CheckFaster()
@@ -196,22 +219,59 @@ namespace TDS_Client.Instance.Lobby
             return inside;
         }
 
+        private void DrawGpsRoutes()
+        {
+            if (_createdGpsRoutes)
+                return;
+            if (_edges.Count == 0)
+                return;
+
+            /*// START_GPS_CUSTOM_ROUTE
+            Invoker.Invoke(0xDB34E8D56FC13B08, 6, false, true);
+
+            foreach (var edge in _edges)
+            {
+                // ADD_POINT_TO_GPS_CUSTOM_ROUTE
+                Invoker.Invoke(0x311438A071DD9B1A, edge.X, edge.Y, edge.Z);
+            }
+
+            // SET_GPS_CUSTOM_ROUTE_RENDER
+            RAGE.Game.Invoker.Invoke(0x900086F371220B6F, true, 16, 16);*/
+
+            _createdGpsRoutes = true;
+        }
+
+        private void ClearGpsRoutes()
+        {
+            if (!_createdGpsRoutes)
+                return;
+
+            // CLEAR_GPS_CUSTOM_ROUTE
+            //RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
+
+            _createdGpsRoutes = false;
+        }
+
         private void Draw()
         {
-            for (int i = 0; i <= _edges.Count - 1; ++i)
+            float totalMaxTop = -1;
+            for (int i = 0; i < _edges.Count; ++i)
             {
                 var edgeStart = _edges[i];
                 var edgeTarget = i == _edges.Count - 1 ? _edges[0] : _edges[i+1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
                 Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, Player.LocalPlayer.Position.Z, ref edgeStartZ, false);
-                Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, Player.LocalPlayer.Position.Z + 10, ref edgeTargetZ, false);
+                Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, Player.LocalPlayer.Position.Z, ref edgeTargetZ, false);
 
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
 
                 Color color = Settings.MapBorderColor;
                 float maxTop = Math.Max(edgeStartZ + 50, edgeTargetZ + 50);
+                totalMaxTop = Math.Max(totalMaxTop, maxTop);
+                if (_edgesMaxTop != -1)
+                    maxTop = _edgesMaxTop;
                 Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, color.R, color.G, color.B, color.A);
                 Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, color.R, color.G, color.B, color.A);
 
@@ -224,6 +284,8 @@ namespace TDS_Client.Instance.Lobby
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 1.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 1.5f, 150, 0, 0, 255);
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 2.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 2.5f, 150, 0, 0, 255);*/
             }
+
+            _edgesMaxTop = totalMaxTop;
         }
     }
 }
