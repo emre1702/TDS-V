@@ -33,6 +33,7 @@ namespace TDS_Server.Manager.Utility
             try
             {
                 SettingsManager.LoadLocal();
+                ClothesManager.Init();
 
                 using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
                 dbcontext.Database.Migrate();
