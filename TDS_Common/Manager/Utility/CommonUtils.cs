@@ -13,5 +13,11 @@ namespace TDS_Common.Manager.Utility
         {
             return XXHash64.Hash(Encoding.Default.GetBytes(pw)).ToString();
         }
+
+        public static T GetRandom<T>(params T[] elements)
+        {
+            var rndIndex = Rnd.Next(0, elements.Length);
+            return elements[rndIndex];
+        }
     }
 }
