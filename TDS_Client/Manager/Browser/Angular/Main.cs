@@ -26,6 +26,9 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void Start(int adminLevel)
         {
+            if (Browser != null)
+                return;
+
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
 
             Execute(DToBrowserEvent.InitLoadAngular, adminLevel);
