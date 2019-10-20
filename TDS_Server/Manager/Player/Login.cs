@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Enum;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
 using TDS_Server.Instance.Player;
@@ -66,8 +67,10 @@ namespace TDS_Server.Manager.Player
                 character.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, character.Entity.AdminLvl,
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
                 JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
+
+            PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
 
             if (character.Entity.AdminLvl > 0)
                 AdminsManager.SetOnline(character);

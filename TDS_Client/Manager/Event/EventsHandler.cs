@@ -1,6 +1,8 @@
 ﻿using RAGE.Game;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Enum;
 using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Event
@@ -26,6 +28,22 @@ namespace TDS_Client.Manager.Event
 
             // CLEAR_GPS_CUSTOM_ROUTE
             RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
+        }
+
+        public static void OnLocalPlayerDataChange(EPlayerDataKey key, object obj)
+        {
+            switch (key)
+            {
+                case EPlayerDataKey.Money:
+                    Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
+                    break;
+                case EPlayerDataKey.AdminLevel:
+                    Browser.Angular.Main.Start((int)obj);
+                    break;
+                case EPlayerDataKey.LoggedIn:
+                    TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
+                    break;
+            }  
         }
     }
 }

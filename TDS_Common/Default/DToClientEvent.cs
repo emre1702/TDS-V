@@ -41,9 +41,7 @@
         public const string MapVotingSyncOnPlayerJoin = "MapVotingSyncOnPlayerJoin_Server";
 
         public const string PlayCustomSound = "PlayCustomSound_Server";
-        public const string PlayerAdminLevelChange = "PlayerAdminLevelChange_Server";
         public const string PlayerGotBomb = "PlayerGotBomb_Server";
-        public const string PlayerMoneyChange = "PlayerMoneyChange_Server";
         public const string PlayerPlantedBomb = "PlayerPlantedBomb_Server";
         public const string PlayerSpectateMode = "PlayerSpectateMode_Server";
         public const string PlayerJoinedTeam = "PlayerJoinedTeam_Server";

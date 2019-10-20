@@ -56,9 +56,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
             Add(DToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
             Add(DToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
-            Add(DToClientEvent.PlayerAdminLevelChange, OnPlayerAdminLevelChangeMethod);
             Add(DToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
-            Add(DToClientEvent.PlayerMoneyChange, OnPlayerMoneyChangeMethod);
             Add(DToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
             Add(DToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
             Add(DToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
@@ -298,12 +296,6 @@ namespace TDS_Client.Manager.Event
             Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<Position4DDto[]>((string)args[0]));
         }
 
-        private void OnPlayerMoneyChangeMethod(object[] args)
-        {
-            AccountData.Money = (int)args[0];
-            Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), AccountData.Money, false);
-        }
-
         private void OnPlayerPlantedBombMethod(object[] args)
         {
             Bomb.LocalPlayerPlantedBomb();
@@ -432,11 +424,6 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.LoadMapVoting(mapVotesJson);
         }
 
-        private void OnPlayerAdminLevelChangeMethod(object[] args)
-        {
-            AccountData.AdminLevel = (int)args[0];
-        }
-
         private void OnMapListRequestMethod(object[] args)
         {
             //List<SyncedMapDataDto> maps = JsonConvert.DeserializeObject<List<SyncedMapDataDto>>((string)args[0]);
@@ -473,16 +460,12 @@ namespace TDS_Client.Manager.Event
 
         private void OnRegisterLoginSuccessfulMethod(object[] args)
         {
-            int adminlvl = (int)args[0];
-            AccountData.LoggedIn = true;
-            AccountData.AdminLevel = adminlvl;
             Settings.LoadSyncedSettings(JsonConvert.DeserializeObject<SyncedServerSettingsDto>(args[1].ToString()));
             Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[2].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
-            Browser.Angular.Main.Start(adminlvl);
-            BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, Enum.EKeyPressState.Down);
-            BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, Enum.EKeyPressState.Up);
+            BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, EKeyPressState.Down);
+            BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, EKeyPressState.Up);
             Settings.Load();
             VoiceManager.Init();
             Team.Init();

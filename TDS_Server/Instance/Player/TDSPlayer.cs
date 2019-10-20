@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
+using TDS_Server.Enum;
 using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Sync;
+using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
@@ -45,7 +45,8 @@ namespace TDS_Server.Instance.Player
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 PlayerRelationsPlayer = _entity.PlayerRelationsPlayer.ToList();
                 PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
-                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, _entity.PlayerStats.Money);
+                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, _entity.PlayerStats.Money);
+                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.AdminLevel, EPlayerDataSyncMode.All, _entity.AdminLvl);
             }
         }
 
@@ -170,7 +171,7 @@ namespace TDS_Server.Instance.Player
                 if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
-                NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerMoneyChange, value);
+                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, value);
             }
         }
 
