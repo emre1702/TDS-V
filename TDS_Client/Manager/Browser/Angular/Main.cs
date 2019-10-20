@@ -200,6 +200,12 @@ namespace TDS_Client.Manager.Browser.Angular
         {
             Execute(DToBrowserEvent.HideRankings);
         }
+
+        //Todo: Sync admin level with Angular
+        public static void RefreshAdminLevel(int adminLevel)
+        {
+
+        }
     }
 
 }

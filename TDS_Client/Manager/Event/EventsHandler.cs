@@ -38,7 +38,10 @@ namespace TDS_Client.Manager.Event
                     Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
                     break;
                 case EPlayerDataKey.AdminLevel:
-                    Browser.Angular.Main.Start((int)obj);
+                    if (Browser.Angular.Main.Browser == null)
+                        Browser.Angular.Main.Start((int)obj);
+                    else
+                        Browser.Angular.Main.RefreshAdminLevel((int)obj);
                     break;
                 case EPlayerDataKey.LoggedIn:
                     TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
