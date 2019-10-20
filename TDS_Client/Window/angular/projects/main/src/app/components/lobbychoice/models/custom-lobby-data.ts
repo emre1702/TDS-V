@@ -10,6 +10,7 @@ export class CustomLobbyData {
   public AmountLifes: number;
 
   public MixTeamsAfterRound: boolean;
+  public ShowRanking: boolean;
 
   public BombDetonateTimeMs: number;
   public BombDefuseTimeMs: number;

@@ -13,7 +13,7 @@
                         <div class="setting-row">
                             <mat-form-field color="accent">
                                 <input matInput [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                                [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+                                [placeholder]="setting.placeholder || setting.dataSettingIndex | language: settings.Lang"/>
                             </mat-form-field>
                         </div>
                     </ng-container>

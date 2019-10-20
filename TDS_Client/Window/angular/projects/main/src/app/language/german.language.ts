@@ -46,6 +46,7 @@ export class German extends English {
   Boat = "Boot";
 
   Password = "Passwort";
+  ShowRanking = "Zeige Ranking";
   StartHealth = "Start HP";
   StartArmor = "Start Weste";
   AmountLifes = "Anzahl Leben";

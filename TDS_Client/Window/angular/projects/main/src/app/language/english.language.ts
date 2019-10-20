@@ -51,6 +51,7 @@ export class English implements Language {
     Boat = "Boat";
 
     Password = "Password";
+    ShowRanking = "Show ranking";
     StartHealth = "Start health";
     StartArmor = "Start armor";
     AmountLifes = "Amount lifes";

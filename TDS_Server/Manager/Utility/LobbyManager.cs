@@ -151,6 +151,7 @@ namespace TDS_Server.Manager.Utility
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyWeapons = GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
+                    ShowRanking = data.ShowRanking,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
                     StartHealth = data.StartHealth,

@@ -8,6 +8,7 @@ namespace TDS_Server.Dto
         public string Name = "";
         public string? OwnerName;
         public string Password = "";
+        public bool ShowRanking;
         public short StartHealth;
         public short StartArmor;
         public short AmountLifes;

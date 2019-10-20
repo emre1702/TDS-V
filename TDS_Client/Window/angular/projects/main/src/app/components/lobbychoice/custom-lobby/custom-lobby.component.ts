@@ -63,6 +63,10 @@ export class CustomLobbyMenuComponent {
         {
           type: SettingType.password, dataSettingIndex: "Password", defaultValue: "",
           formControl: new FormControl("", [Validators.maxLength(100)])
+        },
+        {
+          type: SettingType.boolean, dataSettingIndex: "ShowRanking", defaultValue: true,
+          formControl: new FormControl(true)
         }
       ]
     },
@@ -81,7 +85,6 @@ export class CustomLobbyMenuComponent {
           type: SettingType.number, dataSettingIndex: "AmountLifes", defaultValue: 1,
           formControl: new FormControl(1, [Validators.required, Validators.max(999), Validators.min(1)]), onlyInt: true
         },
-
       ]
     },
 

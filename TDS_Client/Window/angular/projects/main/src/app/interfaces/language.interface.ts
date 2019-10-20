@@ -47,6 +47,7 @@ export interface Language {
     Boat: string;
 
     Password: string;
+    ShowRanking: string;
     StartHealth: string;
     StartArmor: string;
     AmountLifes: string;

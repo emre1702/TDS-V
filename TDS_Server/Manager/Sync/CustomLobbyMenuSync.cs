@@ -87,6 +87,7 @@ namespace TDS_Server.Manager.Sync
                 Name = lobby.LobbyEntity.Name,
                 OwnerName = lobby.OwnerName,
                 Password = lobby.LobbyEntity.Password,
+                ShowRanking = lobby.LobbyEntity.ShowRanking,
                 SpawnAgainAfterDeathMs = lobby.LobbyEntity.SpawnAgainAfterDeathMs,
                 StartArmor = lobby.LobbyEntity.StartArmor,
                 StartHealth = lobby.LobbyEntity.StartHealth,
