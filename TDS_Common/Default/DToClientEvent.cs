@@ -56,6 +56,7 @@
         public const string RemoveCustomLobby = "RemoveCustomLobby_Server";
         public const string RequestNewMapsList = "RequestNewMapsList_Server";
 
+        public const string RemoveSyncedPlayerDatas = "RemoveSyncedPlayerDatas_Server";
         public const string RoundStart = "RoundStart_Server";
         public const string RoundEnd = "RoundEnd_Server";
 
@@ -63,6 +64,7 @@
         public const string SendMapCreatorReturn = "SendMapCreatorReturn_Server";
         public const string SetEntityInvincible = "SetEntityInvincible_Server";
         public const string SetMapVotes = "SetMapVotes_Server";
+        public const string SetPlayerData = "SetPlayerData_Server";
         public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
         public const string SpectatorReattachCam = "SpectatorReattachCam_Server";
         public const string StartRankingShowAfterRound = "StartRankingShowAfterRound_Server";
@@ -72,6 +74,7 @@
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncPlayerData = "SyncPlayerData_Server";
         public const string SyncSettings = "SyncSettings_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";
         public const string SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server";

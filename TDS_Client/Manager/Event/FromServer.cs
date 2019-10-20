@@ -68,6 +68,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
+            Add(DToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
             Add(DToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
@@ -76,6 +77,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
             Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
+            Add(DToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
             Add(DToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
             Add(DToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
@@ -85,6 +87,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
+            Add(DToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
             Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
             Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
             Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
@@ -392,6 +395,11 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.AddCustomLobby(json);
         }
 
+        private void OnSyncPlayerDataMethod(object[] args)
+        {
+            PlayerDataSync.AppendDictionaryFromServer((string)args[0]);
+        }
+
         private void OnSyncSettingsMethod(object[] args)
         {
             string json = (string)args[0];
@@ -404,6 +412,12 @@ namespace TDS_Client.Manager.Event
         {
             int lobbyId = (int)args[0];
             Browser.Angular.Main.RemoveCustomLobby(lobbyId);
+        }
+
+        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
+        {
+            ushort playerHandle = Convert.ToUInt16(args[0]);
+            PlayerDataSync.RemovePlayerData(playerHandle);
         }
 
         private void OnPlayCustomSoundMethod(object[] args)
@@ -482,6 +496,11 @@ namespace TDS_Client.Manager.Event
             int mapId = (int)args[0];
             int amountVotes = (int)args[1];
             Browser.Angular.Main.SetMapVotes(mapId, amountVotes);
+        }
+
+        private void OnSetPlayerDataMethod(object[] args)
+        {
+            PlayerDataSync.HandleDataFromServer(args);
         }
 
         private void OnSetPlayerToSpectatePlayerMethod(object[] args)
