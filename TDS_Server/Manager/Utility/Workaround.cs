@@ -18,8 +18,8 @@ namespace TDS_Server.Manager.Utility
 
         public static void Init()
         {
-            Lobby.PlayerJoinedLobby += PlayerJoinedLobby;
-            Lobby.PlayerLeftLobby += PlayerLeftLobby;
+            CustomEventManager.OnPlayerJoinedLobby += PlayerJoinedLobby;
+            CustomEventManager.OnPlayerLeftLobby += PlayerLeftLobby;
         }
 
         public static void FreezePlayer(Client player, bool freeze)
@@ -109,7 +109,7 @@ namespace TDS_Server.Manager.Utility
         }
 
 
-        private static void PlayerJoinedLobby(Lobby lobby, TDSPlayer player)
+        private static void PlayerJoinedLobby(TDSPlayer player, Lobby lobby)
         {
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
@@ -139,7 +139,7 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        private static void PlayerLeftLobby(Lobby lobby, TDSPlayer player)
+        private static void PlayerLeftLobby(TDSPlayer player, Lobby lobby)
         {
         }
     }

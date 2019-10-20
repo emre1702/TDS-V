@@ -61,7 +61,7 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.Notification.SendNotificationToPlayer(character.Client, string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
             }
 
-            PlayerJoinedLobby?.Invoke(this, character);
+            CustomEventManager.SetPlayerJoinedLobby(character, this);
             return true;
         }
 
@@ -100,7 +100,7 @@ namespace TDS_Server.Instance.Lobby
             if (LobbyEntity.Type != ELobbyType.MainMenu)
                 RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
 
-            PlayerLeftLobby?.Invoke(this, player);
+            CustomEventManager.SetPlayerLeftLobby(player, this);
         }
 
         private async Task AddPlayerLobbyStats(TDSPlayer player)
