@@ -6,6 +6,8 @@ namespace TDS_Server_DB.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("UPDATE teams SET \"SkinHash\" = 0 WHERE \"SkinHash\" is null");
+
             migrationBuilder.AlterColumn<int>(
                 name: "SkinHash",
                 table: "teams",
@@ -14,20 +16,6 @@ namespace TDS_Server_DB.Migrations
                 oldClrType: typeof(int),
                 oldType: "integer",
                 oldNullable: true);
-
-            migrationBuilder.UpdateData(
-                table: "teams",
-                keyColumn: "ID",
-                keyValue: 1,
-                column: "SkinHash",
-                value: 0);
-
-            migrationBuilder.UpdateData(
-                table: "teams",
-                keyColumn: "ID",
-                keyValue: 4,
-                column: "SkinHash",
-                value: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
