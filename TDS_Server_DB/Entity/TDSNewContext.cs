@@ -412,8 +412,8 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Hash).ValueGeneratedNever();
 
                 entity.HasOne(d => d.HashNavigation)
-                    .WithOne(p => p.LobbyWeapons)
-                    .HasForeignKey<LobbyWeapons>(d => d.Hash)
+                    .WithMany(p => p.LobbyWeapons)
+                    .HasForeignKey(d => d.Hash)
                     .HasConstraintName("lobby_weapons_Hash_fkey");
 
                 entity.HasOne(d => d.LobbyNavigation)

@@ -1,4 +1,5 @@
-﻿using TDS_Common.Enum;
+﻿using System.Collections.Generic;
+using TDS_Common.Enum;
 using TDS_Server_DB.Entity.Lobby;
 
 namespace TDS_Server_DB.Entity.Rest
@@ -10,6 +11,6 @@ namespace TDS_Server_DB.Entity.Rest
         public short DefaultDamage { get; set; }
         public float DefaultHeadMultiplicator { get; set; }
 
-        public virtual LobbyWeapons LobbyWeapons { get; set; }
+        public virtual ICollection<LobbyWeapons> LobbyWeapons { get; set; }
     }
 }
