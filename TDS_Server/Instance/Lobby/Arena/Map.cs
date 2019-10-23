@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.Lobby
         private List<Blip> _mapBlips = new List<Blip>();
         private string _mapsJson = string.Empty;
 
-        private MapDto GetNextMap()
+        private MapDto? GetNextMap()
         {
             MapDto? map = GetVotedMap();
             if (map != null)
@@ -28,8 +28,10 @@ namespace TDS_Server.Instance.Lobby
             return GetRandomMap();
         }
 
-        public MapDto GetRandomMap()
+        public MapDto? GetRandomMap()
         {
+            if (_maps.Count == 0)
+                return null;
             if (IsOfficial && CommonUtils.Rnd.NextDouble() * 100 <= SettingsManager.ArenaNewMapProbabilityPercent)
             {
                 var map = MapCreator.GetRandomNewMap();
