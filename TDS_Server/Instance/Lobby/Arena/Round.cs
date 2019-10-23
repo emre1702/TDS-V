@@ -110,7 +110,9 @@ namespace TDS_Server.Instance.Lobby
 
         private void StartNewMapChoose()
         {
-            MapDto nextMap = GetNextMap();
+            MapDto? nextMap = GetNextMap();
+            if (nextMap == null)
+                return;
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
             if (nextMap.Info.IsNewMap) 
                 SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
