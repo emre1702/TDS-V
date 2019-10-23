@@ -1,16 +1,15 @@
 ﻿using RAGE.Game;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
-using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Draw;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
@@ -120,7 +119,7 @@ namespace TDS_Client.Manager.Utility
                 VoiceManager.SetForPlayer(player);
             }
 
-            MapBorderColor = ClientUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor);
+            MapBorderColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor);
             NotTempMapBorderColor = null;
         }
 
