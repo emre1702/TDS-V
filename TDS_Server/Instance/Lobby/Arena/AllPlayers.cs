@@ -73,14 +73,18 @@ namespace TDS_Server.Instance.Lobby
             float assistsMult = SettingsManager.MultiplierRankingAssists;
             float damageMult = SettingsManager.MultiplierRankingDamage;
 
-            int place = 0;
             foreach (var ranking in list)
             {
-                ranking.Place = ++place;
                 ranking.Points = (int)(ranking.Kills * killsMult + ranking.Assists * assistsMult + ranking.Damage * damageMult);
             }
 
             list.Sort((a, b) => a.Points.CompareTo(b.Points) * -1);
+
+            int place = 0;
+            foreach (var ranking in list)
+            {
+                ranking.Place = ++place;
+            }
 
             return list;
         }
