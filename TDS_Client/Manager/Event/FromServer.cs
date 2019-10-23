@@ -277,7 +277,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnDeathMethod(object[] args)
         {
-            Player player = (Player)args[0];
+            Player player = ClientUtils.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             bool willRespawn = (bool)args[3];
             if (player == Player.LocalPlayer)
             {
