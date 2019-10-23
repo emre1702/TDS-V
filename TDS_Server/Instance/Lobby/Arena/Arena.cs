@@ -34,6 +34,7 @@ namespace TDS_Server.Instance.Lobby
             if (IsOfficial)
                 return;
              base.Remove();
+            DeleteMapBlips();
             _nextRoundStatusTimer?.Kill();
             _nextRoundStatusTimer = null;
             CurrentGameMode?.StopRound();
