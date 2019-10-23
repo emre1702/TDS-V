@@ -124,6 +124,16 @@ export interface Language {
     NextPageLabel: string;
     PreviousPageLabel: string;
     Hold: string;
+    PresetLabels: string;
+    PlayerSkin: string;
+    SkinHash: string;
+    BlipColor: string;
+    Color: string;
+    Transparent: string;
+    HeightArrowDoesntBlink: string;
+    AddTeam: string;
+    RemoveTeam: string;
+    Back: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

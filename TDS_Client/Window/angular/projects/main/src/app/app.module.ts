@@ -61,6 +61,7 @@ import { InputTypeDirective } from './extensions/inputTypeDirective';
 import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 import { RankingComponent } from './components/ranking/ranking.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-teams-menu/custom-lobby-teams-menu.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
 
     InputTypeDirective,
     TextareaTypeDirective,
-    RankingComponent
+    RankingComponent,
+    CustomLobbyTeamsMenuComponent
   ],
   imports: [
     ReactiveFormsModule,

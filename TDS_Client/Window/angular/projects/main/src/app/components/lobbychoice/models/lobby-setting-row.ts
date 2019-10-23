@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 export class LobbySettingRow {
   public type: SettingType;
-  public formControl: FormControl;
+  public formControl?: FormControl;
 
   public enum?: any;
   public defaultValue: any;
@@ -11,4 +11,5 @@ export class LobbySettingRow {
   public onlyInt?: boolean;
 
   public dataSettingIndex: string;
+  public action?: () => void;
 }

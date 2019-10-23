@@ -1,0 +1,62 @@
+#main.container {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: auto;
+  width: auto;
+  min-width: 20vw;
+  padding: 5px;
+  z-index: 5;
+
+  .mat-table-container {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto !important;
+    max-height: calc(100%-20px);
+    margin-bottom: 10px;
+
+    .mat-table {
+      display: table;
+      width: auto;
+      border-collapse: collapse;
+      background: transparent;
+      table-layout: auto;
+
+      .colorInput {
+        width: 30px;
+      }
+
+      .mat-select {
+        width: 10vw;
+      }
+    }
+  }
+
+  .last-row-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
+
+#blip-color-window {
+  position: fixed;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 10px;
+
+  * {
+    width: 30px;
+    height: 30px;
+  }
+}

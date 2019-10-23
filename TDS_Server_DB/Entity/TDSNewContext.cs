@@ -885,7 +885,8 @@ namespace TDS_Server_DB.Entity
                     .HasMaxLength(100);
 
                 entity.Property(e => e.SkinHash)
-                    .IsRequired(false);
+                    .IsRequired()
+                    .HasDefaultValue(0);
 
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)

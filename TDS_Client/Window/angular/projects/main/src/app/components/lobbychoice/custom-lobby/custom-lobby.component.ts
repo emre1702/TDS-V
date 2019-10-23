@@ -11,6 +11,7 @@ import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialog';
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
+import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
 
 @Component({
   selector: 'app-custom-lobby',
@@ -51,6 +52,10 @@ import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 })
 
 export class CustomLobbyMenuComponent {
+  private spectatorTeam: CustomLobbyTeamData = { Name: "Spectator", Color: "rgb(255, 255, 255)", BlipColor: 4, IsReadOnly: true, SkinHash: 0 };
+  private team1: CustomLobbyTeamData = { Name: "SWAT", Color: "rgb(0, 150, 0)", BlipColor: 52, IsReadOnly: false, SkinHash: -1920001264 };
+  private team2: CustomLobbyTeamData = { Name: "Terroristen", Color: "rgb(150, 0, 0)", BlipColor: 1, IsReadOnly: false, SkinHash: 275618457 };
+
   settingPanel: LobbySettingPanel[] = [
     {
       title: "Default", rows: [
@@ -93,9 +98,23 @@ export class CustomLobbyMenuComponent {
         {
           type: SettingType.boolean, dataSettingIndex: "MixTeamsAfterRound", defaultValue: true,
           formControl: new FormControl(true, [])
+        },
+        {
+          type: SettingType.button, dataSettingIndex: "Teams", defaultValue: [this.spectatorTeam, this.team1, this.team2],
+          formControl: new FormControl([this.spectatorTeam, this.team1, this.team2]),
+          action: () => { this.inTeamsMenu = true; this.changeDetector.detectChanges(); }
         }
       ]
     },
+
+    /*{
+      title: "Weapons", rows: [
+        {
+          type: SettingType.button, dataSettingIndex: "Weapons", defaultValue: [],
+          action: () => { this.inWeaponsMenu = true; this.changeDetector.detectChanges(); }
+        }
+      ]
+    },*/
 
     {
       title: "Map", rows: [
@@ -103,7 +122,11 @@ export class CustomLobbyMenuComponent {
           type: SettingType.enum, dataSettingIndex: "MapLimitType", defaultValue: "KillAfterTime",
           enum: LobbyMapLimitType,
           formControl: new FormControl(LobbyMapLimitType.KillAfterTime, [])
-        }
+        },
+        /*{
+          type: SettingType.button, dataSettingIndex: "Maps", defaultValue: [],
+          action: () => { this.inMapsMenu = true; this.changeDetector.detectChanges(); }
+        }*/
       ]
     },
 
@@ -144,8 +167,11 @@ export class CustomLobbyMenuComponent {
   MathFloor = Math.floor;
 
   creating = true;
+  inTeamsMenu = false;
+  inWeaponsMenu = false;
+  inMapsMenu = false;
 
-  lobbyDatas: CustomLobbyData[] = [];
+  lobbyDatas: CustomLobbyData[];
 
   constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
     public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
@@ -246,6 +272,14 @@ export class CustomLobbyMenuComponent {
     this.changeDetector.detectChanges();
   }
 
+  goBackToMainSettings(event: CustomLobbyTeamData[]) {
+    this.inMapsMenu = false;
+    this.inTeamsMenu = false;
+    this.inWeaponsMenu = false;
+    this.setSelectedLobbyTeams(event);
+    this.changeDetector.detectChanges();
+  }
+
   areSettingsValid(): boolean {
     for (const panel of this.settingPanel) {
       for (const setting of panel.rows) {
@@ -265,5 +299,18 @@ export class CustomLobbyMenuComponent {
   getEnumKeys(e: {}) {
     const keys = Object.keys(e);
     return keys.slice(keys.length / 2);
+  }
+
+  getSelectedLobbyTeams() {
+    return this.settingPanel
+              .find(p => p.title === "Teams").rows
+              .find(p => p.dataSettingIndex === "Teams").formControl.value;
+  }
+
+  setSelectedLobbyTeams(teams: CustomLobbyTeamData[]) {
+    this.settingPanel
+              .find(p => p.title === "Teams").rows
+              .find(p => p.dataSettingIndex === "Teams").formControl.setValue(teams);
+    this.changeDetector.detectChanges();
   }
 }

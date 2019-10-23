@@ -147,7 +147,16 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   NextPageLabel = "Nächste Seite";
   PreviousPageLabel = "Vorherige Seite";
   Hold = "Halten";
-
+  PresetLabels = "Vordefinierte Farben";
+  PlayerSkin = "Spieler Skin";
+  SkinHash = "Skin";
+  BlipColor = "Blip Farbe";
+  Color = "Farbe";
+  Transparent = "Durchsichtig";
+  HeightArrowDoesntBlink = "Höhen-Pfeil blinkt nicht";
+  AddTeam = "Team hinzufügen";
+  RemoveTeam = "Team entfernen";
+  Back = "Zurück";
 
   Main = "Hauptmenü";
   MyStats = "Meine Stats (wird verbessert)";

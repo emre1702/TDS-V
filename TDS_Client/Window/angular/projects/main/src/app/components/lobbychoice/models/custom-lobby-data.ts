@@ -1,4 +1,5 @@
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
+import { CustomLobbyTeamData } from './custom-lobby-team-data';
 
 export class CustomLobbyData {
   public LobbyId?: number;
@@ -22,4 +23,6 @@ export class CustomLobbyData {
   public MapLimitTime: number;
 
   public MapLimitType: LobbyMapLimitType;
+
+  public Teams: CustomLobbyTeamData[];
 }

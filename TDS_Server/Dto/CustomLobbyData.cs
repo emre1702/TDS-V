@@ -1,12 +1,14 @@
-﻿using TDS_Common.Enum;
+﻿using System.Collections.Generic;
+using TDS_Common.Enum;
 
 namespace TDS_Server.Dto
 {
+    #nullable disable
     class CustomLobbyData
     {
         public int? LobbyId;
         public string Name = "";
-        public string? OwnerName;
+        public string OwnerName;
         public string Password = "";
         public bool ShowRanking;
         public short StartHealth;
@@ -25,5 +27,8 @@ namespace TDS_Server.Dto
         public int MapLimitTime;
 
         public EMapLimitType MapLimitType;
+
+        public List<CustomLobbyTeamData> Teams;
     }
+    #nullable restore
 }

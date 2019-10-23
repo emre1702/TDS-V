@@ -48,7 +48,7 @@
 }
 
 
-#settings-table-container {
+.settings-table-container {
   position: absolute;
   right: 10px;
   top: 10px;
@@ -59,7 +59,7 @@
     background-color: transparent;
   }
 
-  #settings-expansion-panel-container {
+  .settings-expansion-panel-container {
     max-height: 90vh;
     overflow-y: auto;
   }
@@ -74,7 +74,7 @@
     margin-bottom: 15px;
   }
 
-  #last-row-buttons {
+  .last-row-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

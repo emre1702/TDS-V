@@ -1,5 +1,6 @@
-<div id="settings-table-container" class="container mat-elevation-z8 mat-app-background" [@settingsShowHideAnimation]>
-  <div id="settings-expansion-panel-container">
+<div class="container mat-elevation-z8 mat-app-background settings-table-container" [@settingsShowHideAnimation]
+*ngIf="!inTeamsMenu && !inWeaponsMenu && !inMapsMenu">
+  <div class="settings-expansion-panel-container">
     <mat-expansion-panel *ngFor="let panel of settingPanel">
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -64,11 +65,17 @@
             </mat-checkbox>
           </div>
         </ng-container>
+
+        <ng-container *ngSwitchCase="lobbySettingType.button">
+          <button class="setting-row" mat-raised-button (click)="setting.action()">
+            {{ setting.dataSettingIndex | language: settings.Lang }}
+          </button>
+        </ng-container>
       </ng-container>
     </mat-expansion-panel>
   </div>
 
-  <div id="last-row-buttons">
+  <div class="last-row-buttons">
     <button *ngIf="creating" mat-raised-button (click)="createLobby()" [disabled]="!areSettingsValid()">
       {{ 'CreateLobby' | language: settings.Lang }}
     </button>
@@ -80,6 +87,13 @@
     </button>
   </div>
 </div>
+
+<app-custom-lobby-teams-menu
+*ngIf="inTeamsMenu"
+[@settingsShowHideAnimation]
+[teams]="getSelectedLobbyTeams()"
+(backClicked)="goBackToMainSettings($event)">
+</app-custom-lobby-teams-menu>
 
 <div id="main-container" class="container" [@lobbyShowHideAnimation]>
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">

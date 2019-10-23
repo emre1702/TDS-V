@@ -100,7 +100,15 @@ namespace TDS_Server.Manager.Sync
                 BombDefuseTimeMs = lobby.LobbyEntity.LobbyRoundSettings.BombDefuseTimeMs,
 
                 MapLimitTime = lobby.LobbyEntity.LobbyMapSettings.MapLimitTime,
-                MapLimitType = lobby.LobbyEntity.LobbyMapSettings.MapLimitType
+                MapLimitType = lobby.LobbyEntity.LobbyMapSettings.MapLimitType,
+
+                Teams = lobby.LobbyEntity.Teams.Select(t => new CustomLobbyTeamData
+                {
+                    Name = t.Name,
+                    Color = $"rgb({t.ColorR},{t.ColorG},{t.ColorB})",
+                    BlipColor = t.BlipColor, 
+                    SkinHash = t.SkinHash
+                }).ToList()
             };
         }
 

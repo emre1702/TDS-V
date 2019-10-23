@@ -16,6 +16,7 @@ using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
 using TDS_Server.Instance.GameModes;
+using System.Drawing;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -155,12 +156,19 @@ namespace TDS_Server.Manager.Utility
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
                     StartHealth = data.StartHealth,
-                    Teams = new HashSet<Teams>
+                    Teams = data.Teams.Select(t => 
                     {
-                        new Teams { Index = 0, Name = "Spectator", ColorR = 255, ColorG = 255, ColorB = 255, BlipColor = 4, SkinHash = 1004114196 },
-                        new Teams { Index = 1, Name = "SWAT", ColorR = 0, ColorG = 150, ColorB = 0, BlipColor = 52, SkinHash = -1920001264 },
-                        new Teams { Index = 2, Name = "Terrorist", ColorR = 150, ColorG = 0, ColorB = 0, BlipColor = 1, SkinHash = 275618457 },
-                    },
+                        var color = ColorTranslator.FromHtml(t.Color);
+                        return new Teams 
+                        { 
+                            Name = t.Name,
+                            BlipColor = (short)t.BlipColor,
+                            ColorR = color.R,
+                            ColorG = color.G,
+                            ColorB = color.B,
+                            SkinHash = t.SkinHash
+                        };
+                    }).ToHashSet(),
                     Type = ELobbyType.Arena
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });

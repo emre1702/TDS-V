@@ -137,6 +137,16 @@ The user interface is always being worked on, so don't be surprised if you disco
     NextPageLabel = "Next page";
     PreviousPageLabel = "Previous page";
     Hold = "Hold";
+    PresetLabels = "Preset colors";
+    PlayerSkin = "Player skin";
+    SkinHash = "Skin";
+    BlipColor = "Blip color";
+    Color = "Color";
+    Transparent = "Transparent";
+    HeightArrowDoesntBlink = "Height arrow doesn't blink";
+    AddTeam = "Add team";
+    RemoveTeam = "Remove team";
+    Back = "Back";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
