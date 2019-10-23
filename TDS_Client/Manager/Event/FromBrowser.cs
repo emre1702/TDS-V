@@ -14,6 +14,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
+using TDS_Common.Manager.Utility;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
@@ -236,7 +237,7 @@ namespace TDS_Client.Manager.Event
             switch (dataSetting)
             {
                 case nameof(EUserpanelSettingKey.MapBorderColor):
-                    Settings.MapBorderColor = ClientUtils.GetColorFromHtmlRgba(color);
+                    Settings.MapBorderColor = CommonUtils.GetColorFromHtmlRgba(color);
                     break;
             }
             
