@@ -1,12 +1,9 @@
-﻿using GTANetworkAPI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
-using TDS_Common.Enum.Userpanel;
 
 namespace TDS_Server.Manager.Userpanel
 {
@@ -36,9 +33,9 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
-        public static void SendPlayerFAQs(TDSPlayer player)
+        public static string GetData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.FAQs, _faqsJsonByLanguage[player.LanguageEnum]);
+            return _faqsJsonByLanguage[player.LanguageEnum];
         }
     }
 }

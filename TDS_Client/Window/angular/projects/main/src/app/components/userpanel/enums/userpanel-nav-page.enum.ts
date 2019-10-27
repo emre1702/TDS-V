@@ -15,5 +15,6 @@ export enum UserpanelNavPage {
     RulesVIP,
     FAQ,
     Reports,
+    Application,
     Applications
 }

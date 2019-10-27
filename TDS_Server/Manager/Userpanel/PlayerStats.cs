@@ -1,12 +1,9 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Default;
-using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -18,18 +15,19 @@ namespace TDS_Server.Manager.Userpanel
     {
         private const string _dATETIMEOFFSET_FORMAT = "dddd, MMM dd yyyy HH:mm:ss zzz";
 
-        public static async void SendPlayerPlayerStats(TDSPlayer player)
+        public static async Task<string?> GetData(TDSPlayer player)
         {
             try
             {
                 if (player.Entity is null)
-                    return;
+                    return null;
                 var stats = await GetPlayerStats(player.Entity.Id, true);
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.MyStats, JsonConvert.SerializeObject(stats));
+                return JsonConvert.SerializeObject(stats);
             }
             catch (Exception ex)
             {
                 Logs.ErrorLogsManager.Log("SendPlayerPlayerStats failed: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                return null;
             }
         }
 

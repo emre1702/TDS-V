@@ -41,6 +41,8 @@ namespace TDS_Server.Instance.Language
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
         public virtual string HITSOUND_DEACTIVATED => "Hitsound deactivated!";
 
+        public virtual string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "The invitation has already been withdrawn or removed.";
+
         public virtual string JOINED_LOBBY_MESSAGE => "You joined lobby \"{0}\".\nUse '/{1}' to leave.";
 
         public virtual string KICK_INFO => "{0} was kicked by {1}. Reason: {2}";
@@ -72,12 +74,14 @@ namespace TDS_Server.Instance.Language
         public virtual string PERMABAN_LOBBY_YOU_INFO => "You was baned for {0} hours from lobby '{1}' by {2}. Reason {3}";
         public virtual string PERMAMUTE_INFO => "{0} was muted permanently by {1}. Reason: {2}";
         public virtual string PERMAVOICEMUTE_INFO => "{0} was muted permanently in voice-chat by {1}. Reason: {2}";
+        public virtual string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} accepted your team-invitation. He is your member now.";
         public virtual string PLAYER_ALREADY_MUTED => "The player is already muted!";
         public virtual string PLAYER_DOESNT_EXIST => "The player doesn't exist!";
         public virtual string PLAYER_ISNT_BANED => "The player isn't banned.";
         public virtual string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~logged in.";
         public virtual string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~logged out.";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
+        public virtual string PLAYER_REJECTED_YOUR_INVITATION => "{0} rejected your team-invitation.";
         public virtual string PLAYER_WITH_NAME_ALREADY_EXISTS => "A player with that name already exists.";
         public virtual string PRIVATE_CHAT_CLOSED_PARTNER => "Your private chat partner closed the chat.";
         public virtual string PRIVATE_CHAT_CLOSED_YOU => "You closed the private chat.";
@@ -147,10 +151,12 @@ namespace TDS_Server.Instance.Language
 
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
+        public virtual string YOU_ACCEPTED_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
         public virtual string YOU_GOT_UNBLOCKED_BY => "You got unblocked by {0}.";
+        public virtual string YOU_REJECTED_INVITATION => "You rejected the team-invitation of {0}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }

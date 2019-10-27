@@ -163,6 +163,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     LastLogin = "Last login";
     RegisterTimestamp = "Register time";
 
+    ////////////////// Stats ////////////////
     Main = "Main";
     MyStats = "My stats (will improve)";
     Rules = "Rules";
@@ -176,6 +177,33 @@ The user interface is always being worked on, so don't be surprised if you disco
     CommandsDonator = "Commands - Donator";
     CommandsVIP = "Commands - VIP";
     CommandsLobbyOwner = "Commands - Lobby-owner";
+    ////////////////////////////////////////
+
+    ///////////// Applications /////////////
+    InfosForAdminApplyProcess = "Information about the procedure";
+    AdminApplyProcessInfo = `Here you can apply for a supporter position.
+The application will be open for one week and all team-member can view it.
+Here they see your important statistics and, if available, your answers to all administrator questions.
+
+If an administrator wants you in his team, he sends you an invitation.
+You can accept this invitation within the time you can't write a new application.
+However, if no administrator wants you, you will not receive an invitation.
+
+After sending the application you can't write a new application for 2 weeks.
+At the end of the 2 weeks all application data (including invitations) will be deleted.`;
+    Confirmations = "Confirmations";
+    ConfirmRuleAdminApply = "I confirm that I have read and accepted the rules.";
+    ConfirmTeamAdminApply = "I confirm that I agree with the team hierarchy and will listen to the members above in the hierarchy.";
+    ConfirmNoAbuseAdminApply = "I confirm that as a supporter I would never exploit my rights and could even be excluded from the server if exploited.";
+    ConfirmStatsVisibleAdminApply = "I confirm that my application will make all my data of interest for the application visible to all team members (even if they might not have permission to do so).";
+    Application = "Application";
+    Applications = "Applications";
+    AdminQuestions = "Administrator questions";
+    SendApplication = "Send application";
+    AlreadyCreatedApplicationInfo = `The last application was sent on '{0}'.
+
+Here you can see all the invitations sent to you:`;
+    ////////////////////////////////////////
 
     ATTACK = "Attack! Go go go!";
     BACK = "Stay back!";

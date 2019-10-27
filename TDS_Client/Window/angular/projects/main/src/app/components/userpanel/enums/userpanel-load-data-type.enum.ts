@@ -3,5 +3,7 @@ export enum UserpanelLoadDataType {
     Commands,
     Rules,
     FAQs,
-    Settings
+    Settings,
+    ApplicationUser,
+    ApplicationsAdmin
 }

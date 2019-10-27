@@ -1,10 +1,6 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
-using TDS_Common.Default;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
 
@@ -28,9 +24,9 @@ namespace TDS_Server.Manager.Userpanel
             _rulesJson = JsonConvert.SerializeObject(sendRules);
         }
 
-        public static void SendPlayerRules(TDSPlayer player)
+        public static string GetData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.Rules, _rulesJson);
+            return _rulesJson;
         }
     }
 }

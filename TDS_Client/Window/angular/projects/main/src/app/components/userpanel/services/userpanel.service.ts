@@ -9,6 +9,8 @@ import { UserpanelFAQDataDto } from '../interfaces/userpanelFAQDataDto';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelSettingDataDto } from '../interfaces/userpanelSettingDataDto';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
+import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
+import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 
 @Injectable({
   providedIn: 'root'
@@ -44,12 +46,16 @@ export class UserpanelService {
             Reason: "Hat dieas doias doijasoi djoas jdoiasoi djaosid jio", Timestamp: "a901290391 12 30912", Type: "Ban"}
         ]
       }*/;
+    adminQuestions: UserpanelAdminQuestionsGroup[] = [];
+    myApplicationCreateTime: string;
+    adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[] = [];
 
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
     public faqsLoaded = new EventEmitter();
     public settingsLoaded = new EventEmitter();
     public myStatsLoaded = new EventEmitter();
+    public applicationDataLoaded = new EventEmitter();
 
     private myStatsLoadCooldown: NodeJS.Timeout;
 
@@ -81,6 +87,14 @@ export class UserpanelService {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStats);
     }
 
+    loadApplicationPage() {
+      this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationUser);
+    }
+
+    loadApplicationsPage() {
+      this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationsAdmin);
+    }
+
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
         json = this.escapeSpecialChars(json);
         switch (type) {
@@ -98,6 +112,12 @@ export class UserpanelService {
                 break;
             case UserpanelLoadDataType.MyStats:
                 this.loadedMyStats(json);
+                break;
+            case UserpanelLoadDataType.ApplicationUser:
+                this.loadedApplicationDataForUser(json);
+                break;
+            case UserpanelLoadDataType.ApplicationsAdmin:
+                this.loadedApplicationsDataForAdmin(json);
                 break;
         }
     }
@@ -130,6 +150,23 @@ export class UserpanelService {
         this.myStats = JSON.parse(json);
         this.myStats.Logs.sort((a, b) => a.Type < b.Type ? -1 : 1);
         this.myStatsLoaded.emit(null);
+    }
+
+    private loadedApplicationDataForUser(json: string) {
+        const data = JSON.parse(json);
+        if (data.CreateTime) {
+            this.myApplicationCreateTime = data.CreateTime;
+            this.adminApplyInvitations = data.Invitations;
+        } else {
+            this.adminQuestions = data.AdminQuestions;
+            this.adminApplyInvitations = [];
+            this.myApplicationCreateTime = undefined;
+        }
+        this.applicationDataLoaded.emit(null);
+    }
+
+    private loadedApplicationsDataForAdmin(json: string) {
+
     }
 
     private languageChanged() {

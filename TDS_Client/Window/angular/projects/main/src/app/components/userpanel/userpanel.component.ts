@@ -79,6 +79,10 @@ export class UserpanelComponent implements OnInit, OnDestroy {
       this.userpanelService.loadSettings();
     } else if (nav == UserpanelNavPage.MyStats) {
       this.userpanelService.loadMyStats();
+    } else if (nav == UserpanelNavPage.Application) {
+      this.userpanelService.loadApplicationPage();
+    } else if (nav == UserpanelNavPage.Applications) {
+      this.userpanelService.loadApplicationsPage();
     }
   }
 

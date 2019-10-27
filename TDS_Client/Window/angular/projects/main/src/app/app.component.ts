@@ -14,7 +14,7 @@ import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerR
 export class AppComponent {
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
     showUserpanel = false;
     showRankings = false;

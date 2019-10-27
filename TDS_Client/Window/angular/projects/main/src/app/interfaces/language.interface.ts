@@ -152,6 +152,21 @@ export interface Language {
     RegisterTimestamp: string;
     ////////////////////////////////////////
 
+    ///////////// Applications /////////////
+    InfosForAdminApplyProcess: string;
+    AdminApplyProcessInfo: string;
+    Confirmations: string;
+    ConfirmRuleAdminApply: string;
+    ConfirmTeamAdminApply: string;
+    ConfirmNoAbuseAdminApply: string;
+    ConfirmStatsVisibleAdminApply: string;
+    Application: string;
+    Applications: string;
+    AdminQuestions: string;
+    SendApplication: string;
+    AlreadyCreatedApplicationInfo: string;
+    ////////////////////////////////////////
+
     Userpanel: string;
     UserpanelInfo: string;
     Main: string;

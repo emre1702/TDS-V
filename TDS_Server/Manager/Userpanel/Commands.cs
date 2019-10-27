@@ -1,9 +1,6 @@
-﻿using GTANetworkAPI;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Default;
-using TDS_Common.Enum.Userpanel;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
 using TDS_Server.Instance.Player;
@@ -61,9 +58,9 @@ namespace TDS_Server.Manager.Userpanel
             _commandDatasJson = JsonConvert.SerializeObject(_commandDatas);
         }
 
-        public static void SendPlayerCommandData(TDSPlayer player)
+        public static string GetData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)EUserpanelLoadDataType.Commands, _commandDatasJson);
+            return _commandDatasJson;
         }
     }
 }

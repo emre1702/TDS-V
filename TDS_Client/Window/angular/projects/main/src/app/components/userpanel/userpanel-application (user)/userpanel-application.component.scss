@@ -1,0 +1,58 @@
+mat-vertical-stepper {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+
+  ::ng-deep .mat-checkbox-layout {
+    margin-top: 7px;
+    margin-bottom: 7px;
+
+    .mat-checkbox-inner-container {
+      margin-top: 3px;
+    }
+  }
+
+  .adminquestions-expansion-panel-container {
+    max-height: 90vh;
+    overflow-y: auto;
+
+    .mat-expansion-panel {
+        margin-bottom: 10px;
+    }
+  }
+
+  .question-row {
+    width: 100%;
+
+    * {
+      font-size: 1.1em;
+      width: 100%;
+    }
+
+    ::ng-deep .mat-checkbox-layout {
+      width: 100%;
+    }
+
+    ::ng-deep .mat-checkbox-label {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    ::ng-deep .mat-checkbox-inner-container {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}
+
+.content-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-card {
+    margin-top: 10px;
+}

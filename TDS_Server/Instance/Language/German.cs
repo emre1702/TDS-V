@@ -42,6 +42,8 @@ namespace TDS_Server.Instance.Language
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
         public override string HITSOUND_DEACTIVATED => "Hitsound deaktiviert!";
 
+        public override string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "Die Einladung wurde schon zurückgezogen oder entfernt.";
+
         public override string JOINED_LOBBY_MESSAGE => "Du bist in die Lobby \"{0}\" eingetreten.\nNutze '/{1}' zum Verlassen.";
 
         public override string KICK_INFO => "{0} wurde von {1} gekickt. Grund: {2}";
@@ -73,12 +75,14 @@ namespace TDS_Server.Instance.Language
         public override string PERMABAN_LOBBY_YOU_INFO => "Du wurdest permanent aus der Lobby '{0}' von {1} gebannt. Grund {2}";
         public override string PERMAMUTE_INFO => "{0} wurde von {1} permanent gemutet. Grund: {2}";
         public override string PERMAVOICEMUTE_INFO => "{0} wurde von {1} im Voice-Chat permanent gemutet. Grund: {2}";
+        public override string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} hat deine Team-Einladung angenommen. Er ist nun dein Mitglied.";
         public override string PLAYER_ALREADY_MUTED => "Der Spieler ist bereits gemutet!";
         public override string PLAYER_DOESNT_EXIST => "Der Spieler existiert nicht!";
         public override string PLAYER_ISNT_BANED => "Der Spieler ist nicht gebannt.";
         public override string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~hat sich eingeloggt.";
         public override string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~hat sich ausgeloggt.";
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
+        public override string PLAYER_REJECTED_YOUR_INVITATION => "{0} hat deine Team-Einladung abgelehnt.";
         public override string PLAYER_WITH_NAME_ALREADY_EXISTS => "Es existiert bereits ein Spieler mit diesem Namen.";
         public override string PRIVATE_CHAT_CLOSED_PARTNER => "Dein Privatchat-Partner hat den Chat geschlossen.";
         public override string PRIVATE_CHAT_CLOSED_YOU => "Du hast den Privatchat geschlossen.";
@@ -148,10 +152,12 @@ namespace TDS_Server.Instance.Language
 
         public override string WRONG_PASSWORD => "Falsches Passwort!";
 
+        public override string YOU_ACCEPTED_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurdest von {0} geblockt.";
         public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast ${0} (${1} Gebühr) von {2} bekommen.";
         public override string YOU_GOT_UNBLOCKED_BY => "Du wurdest von {0} entblockt.";
+        public override string YOU_REJECTED_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
     }
 }

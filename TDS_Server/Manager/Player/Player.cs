@@ -81,5 +81,10 @@ namespace TDS_Server.Manager.Player
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync();
         }
+
+        public static TDSPlayer? GetPlayerByID(int id)
+        {
+            return LoggedInPlayers.FirstOrDefault(p => p.Entity?.Id == id);
+        }
     }
 }

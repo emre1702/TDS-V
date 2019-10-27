@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -13,9 +14,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    partial class TDSNewContextModelSnapshot : ModelSnapshot
+    [Migration("20191027183414_Application_Init_1")]
+    partial class Application_Init_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4050,8 +4052,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server_DB.Entity.Admin.AdminLevels", "NeededAdminLevelNavigation")
                         .WithMany("Commands")
                         .HasForeignKey("NeededAdminLevel")
-                        .HasConstraintName("FK_commands_admin_levels")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("FK_commands_admin_levels");
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
@@ -4167,7 +4168,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .WithMany("PlayerBansPlayer")
                         .HasForeignKey("PlayerId")
                         .HasConstraintName("player_bans_PlayerID_fkey")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -4282,8 +4283,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                 {
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "AdminLeader")
                         .WithMany("AdminMembers")
-                        .HasForeignKey("AdminLeaderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AdminLeaderId");
 
                     b.HasOne("TDS_Server_DB.Entity.Admin.AdminLevels", "AdminLvlNavigation")
                         .WithMany("Players")

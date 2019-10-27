@@ -35,6 +35,8 @@
         string HITSOUND_ACTIVATED { get; }
         string HITSOUND_DEACTIVATED { get; }
 
+        string INVITATION_WAS_WITHDRAWN_OR_REMOVED { get; }
+
         string JOINED_LOBBY_MESSAGE { get; }
 
         string KICK_INFO { get; }
@@ -66,6 +68,7 @@
         string PERMABAN_LOBBY_YOU_INFO { get; }
         string PERMAMUTE_INFO { get; }
         string PERMAVOICEMUTE_INFO { get; }
+        string PLAYER_ACCEPTED_YOUR_INVITATION { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
         //string PLAYER_GOT_KILLINGSPREE_NOTIFICATION { get; }
@@ -74,6 +77,7 @@
         string PLAYER_LOGGED_OUT { get; }
         string PLAYER_NOT_MUTED { get; }
         string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
+        string PLAYER_REJECTED_YOUR_INVITATION { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }
         string PRIVATE_CHAT_DISCONNECTED { get; }
@@ -135,10 +139,12 @@
         string[] WELCOME_MESSAGE { get; }
         string WRONG_PASSWORD { get; }
 
+        string YOU_ACCEPTED_INVITATION { get; }
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
         string YOU_GOT_UNBLOCKED_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
+        string YOU_REJECTED_INVITATION { get; }
         string YOU_UNBLOCKED { get; }
     }
 }

@@ -4,6 +4,7 @@ using TDS_Server_DB.Entity.Admin;
 using TDS_Server_DB.Entity.Gang;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
+using TDS_Server_DB.Entity.Userpanel;
 
 namespace TDS_Server_DB.Entity.Player
 {
@@ -30,12 +31,18 @@ namespace TDS_Server_DB.Entity.Player
         public string Password { get; set; }
         public string Email { get; set; }
         public short AdminLvl { get; set; }
+        public int? AdminLeaderId { get; set; }
         public bool IsVip { get; set; }
         public short Donation { get; set; }
         public int? GangId { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
         public virtual AdminLevels AdminLvlNavigation { get; set; }
+        public virtual Players AdminLeader { get; set; }
+        public virtual ICollection<Players> AdminMembers { get; set; }
+        public virtual Applications Application { get; set; }
+        public virtual ICollection<ApplicationInvitations> ApplicationInvitations { get; set; }
+        public virtual ICollection<ApplicationQuestions> ApplicationQuestions { get; set; }
         public virtual Gangs Gang { get; set; }
         public virtual PlayerClothes PlayerClothes { get; set; }
         public virtual PlayerSettings PlayerSettings { get; set; }

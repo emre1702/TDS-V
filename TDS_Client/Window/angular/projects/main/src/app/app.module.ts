@@ -33,7 +33,10 @@ import {
   MatSlideToggleModule,
   MatButtonToggleModule,
   MatPaginatorModule,
-  MatPaginatorIntl
+  MatPaginatorIntl,
+  MatStepperModule,
+  MatProgressSpinnerModule,
+  MatCardModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -62,6 +65,7 @@ import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 import { RankingComponent } from './components/ranking/ranking.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-teams-menu/custom-lobby-teams-menu.component';
+import { UserpanelApplicationComponent } from './components/userpanel/userpanel-application (user)/userpanel-application.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +91,7 @@ import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-l
     UserpanelFAQsComponent,
     UserpanelSettingsComponent,
     UserpanelStatsComponent,
+    UserpanelApplicationComponent,
 
     InputTypeDirective,
     TextareaTypeDirective,
@@ -124,7 +129,10 @@ import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-l
     MatTooltipModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatStepperModule,
+    MatProgressSpinnerModule,
+    MatCardModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
   providers: [

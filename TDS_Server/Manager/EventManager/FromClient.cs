@@ -355,8 +355,36 @@ namespace TDS_Server.Manager.EventManager
             if (!player.LoggedIn)
                 return;
             EUserpanelLoadDataType type = (EUserpanelLoadDataType)dataType;
-            Manager.Userpanel.Main.PlayerLoadData(player, type);
+            Userpanel.Main.PlayerLoadData(player, type);
         }
+
+        [RemoteEvent(DToServerEvent.SendApplication)]
+        public void SendApplicationMethod(Client client, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            Userpanel.ApplicationUser.CreateApplication(player, json);
+        }
+
+        [RemoteEvent(DToServerEvent.AcceptInvitation)]
+        public void AcceptInvitationMethod(Client client, int id)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            Userpanel.ApplicationUser.AcceptInvitation(player, id);
+        }
+
+        [RemoteEvent(DToServerEvent.RejectInvitation)]
+        public void RejectInvitationMethod(Client client, int id)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            Userpanel.ApplicationUser.RejectInvitation(player, id);
+        }
+
         #endregion
     }
 }

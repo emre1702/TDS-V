@@ -125,3 +125,11 @@ button:not([disabled]):hover {
 .container {
   border-radius: 30px;
 }
+
+.multi-line-text {
+  white-space: pre-line;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}

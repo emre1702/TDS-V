@@ -6,6 +6,8 @@
         Commands,
         Rules,
         FAQs,
-        Settings
+        Settings,
+        ApplicationUser,
+        ApplicationsAdmin
     }
 }

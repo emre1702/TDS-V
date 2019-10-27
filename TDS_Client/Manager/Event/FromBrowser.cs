@@ -25,6 +25,7 @@ namespace TDS_Client.Manager.Event
     {
         private void AddFromBrowserEvents()
         {
+            Add(DToServerEvent.AcceptInvitation, OnAcceptInvitationMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
             Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
@@ -54,11 +55,13 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
             Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(DToServerEvent.RejectInvitation, OnRejectInvitationMethod);
             Add(DToServerEvent.RemoveMap, OnRemoveMapMethod);
             Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
             Add(DFromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
+            Add(DToServerEvent.SendApplication, OnSendApplicationMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DFromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
@@ -70,6 +73,12 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+        }
+
+        private void OnAcceptInvitationMethod(object[] args)
+        {
+            int invitationId = (int)args[0];
+            EventsSender.Send(DToServerEvent.AcceptInvitation, invitationId);
         }
 
         private void OnAddMapVoteMethod(object[] args)
@@ -273,7 +282,7 @@ namespace TDS_Client.Manager.Event
                     Chat.Output("Shooting is blocked. Reason: " + (Round.InFight ? "bomb" : (!Bomb.BombOnHand ? "round" : "both")));
                 else
                     Chat.Output("Shooting is not blocked.");
-            }
+            } 
 
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
         }
@@ -298,6 +307,12 @@ namespace TDS_Client.Manager.Event
                 return;
 
             Settings.LanguageEnum = (ELanguage)languageID;
+        }
+
+        private void OnRejectInvitationMethod(object[] args)
+        {
+            int invitationId = (int)args[0];
+            EventsSender.Send(DToServerEvent.RejectInvitation, invitationId);
         }
 
         private void OnRemoveMapMethod(object[] args)
@@ -337,6 +352,12 @@ namespace TDS_Client.Manager.Event
             if (!EventsSender.Send(DToServerEvent.SaveSettings, json))
                 Browser.Angular.Main.ShowCooldown();
                 
+        }
+
+        private void OnSendApplicationMethod(object[] args)
+        {
+            string json = (string)args[0];
+            EventsSender.Send(DToServerEvent.SendApplication, json);
         }
 
         private void OnSendMapCreatorDataMethod(object[] args)

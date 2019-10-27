@@ -1,0 +1,98 @@
+<mat-vertical-stepper linear #stepper (animationDone)="stepperAnimationDone()" *ngIf="this.dataLoaded && !this.applicationAlreadyCreated">
+
+    <mat-step>
+        <ng-template matStepLabel>{{ 'InfosForAdminApplyProcess' | language: settings.Lang }}</ng-template>
+        <div class="multi-line-text">{{ 'AdminApplyProcessInfo' | language: settings.Lang }}</div>
+    </mat-step>
+
+    <mat-step #confirmStep>
+        <ng-template matStepLabel>{{ 'Confirmations' | language: settings.Lang }}</ng-template>
+        <mat-checkbox (change)="checkboxChecked($event)" required>{{ 'ConfirmRuleAdminApply' | language: settings.Lang }}
+        </mat-checkbox>
+        <mat-divider></mat-divider>
+        <mat-checkbox (change)="checkboxChecked($event)" required>{{ 'ConfirmTeamAdminApply' | language: settings.Lang }}
+        </mat-checkbox>
+        <mat-divider></mat-divider>
+        <mat-checkbox (change)="checkboxChecked($event)" required>{{ 'ConfirmNoAbuseAdminApply' | language: settings.Lang }}
+        </mat-checkbox>
+        <mat-divider></mat-divider>
+        <mat-checkbox (change)="checkboxChecked($event)" required>{{ 'ConfirmStatsVisibleAdminApply' | language: settings.Lang }}
+        </mat-checkbox>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>{{ 'AdminQuestions' | language: settings.Lang }}</ng-template>
+        <div class="adminquestions-expansion-panel-container">
+            <mat-expansion-panel *ngFor="let questionGroup of userpanelService.adminQuestions">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ questionGroup.AdminName }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let question of questionGroup.Questions" [ngSwitch]="question.AnswerType">
+
+                    <ng-container *ngSwitchCase="answerType.Text">
+                        <div class="question-row">
+                            <mat-form-field color="accent">
+                                <textarea matInput
+                                    [(ngModel)]="answersToAdminQuestions[question.ID]"
+                                    (blur)="changeDetector.detectChanges()"
+                                    [placeholder]="question.Question"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="answerType.Number">
+                        <div class="question-row">
+                            <mat-form-field color="accent">
+                                <input matInput type="number"
+                                    [(ngModel)]="answersToAdminQuestions[question.ID]"
+                                    (blur)="changeDetector.detectChanges()"
+                                    [placeholder]="question.Question" />
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="answerType.Check">
+                        <div class="question-row">
+                            <mat-checkbox labelPosition="before"
+                                [(ngModel)]="answersToAdminQuestions[question.ID]"
+                                [indeterminate]="answersToAdminQuestions[question.ID] == undefined"
+                                (blur)="changeDetector.detectChanges()">
+                                {{ question.Question | language: settings.Lang }}
+                            </mat-checkbox>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </mat-expansion-panel>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>{{ 'SendApplication' | language: settings.Lang }}</ng-template>
+    </mat-step>
+
+</mat-vertical-stepper>
+
+<div *ngIf="this.dataLoaded && this.applicationAlreadyCreated">
+    <label class="multi-line-text">
+        {{ "AlreadyCreatedApplicationInfo" | language: settings.Lang:userpanelService.myApplicationCreateTime }}
+    </label>
+    <mat-card *ngFor="let invitation of userpanelService.adminApplyInvitations">
+        <mat-card-header>
+            <mat-card-title>{{ invitation.AdminName }}</mat-card-title>
+            <mat-card-subtitle>{{ invitation.AdminSCName }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ invitation.Message }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button (click)="acceptInvitation(invitation.ID)">{{ 'Accept' | language: settings.Lang }}</button>
+            <button mat-raised-button (click)="rejectInvitation(invitation.ID)">{{ 'Reject' | language: settings.Lang }}</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+
+<div class="content-container" *ngIf="!this.dataLoaded">
+    <mat-spinner color="accent"></mat-spinner>
+</div>

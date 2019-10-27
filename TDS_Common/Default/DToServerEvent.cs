@@ -1,7 +1,8 @@
 ﻿namespace TDS_Common.Default
 {
-    public class DToServerEvent
+    public static class DToServerEvent
     {
+        public const string AcceptInvitation = "AcceptInvitation_Browser";
         public const string AddRatingToMap = "AddRatingToMap_Client";
 
         public const string ChatLoaded = "ChatLoaded_Client";
@@ -33,18 +34,19 @@
 
         public const string OutsideMapLimit = "OutsideMapLimit_Client";
 
+        public const string RejectInvitation = "RejectInvitation_Browser";
         public const string RemoveMap = "RemoveMap_Browser";
         public const string RequestPlayersForScoreboard = "RequestPlayersForScoreboard_Client";
 
         public const string SaveMapCreatorData = "SaveMapCreatorData_Client";
         public const string SaveSettings = "SaveSettings_Browser";
+        public const string SendApplication = "SendApplication_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Client";
         public const string SendMapRating = "SendMapRating_Client";
         public const string SendTeamOrder = "SendTeamOrder_Client";
+        public const string SpectateNext = "SpectateNext_Client";
         public const string StartDefusing = "StartDefusing_Client";
         public const string StartPlanting = "StartPlanting_Client";
-
-        public const string SpectateNext = "SpectateNext_Client";
         public const string StopDefusing = "StopDefusing_Client";
         public const string StopPlanting = "StopPlanting_Client";
 

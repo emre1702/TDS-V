@@ -158,6 +158,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   RemoveTeam = "Team entfernen";
   Back = "Zurück";
 
+  ////////////////// Stats ////////////////
   Main = "Hauptmenü";
   MyStats = "Meine Stats (wird verbessert)";
   Rules = "Regeln";
@@ -171,6 +172,33 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
   CommandsDonator = "Befehle - Spender";
   CommandsVIP = "Befehle - VIP";
   CommandsLobbyOwner = "Befehle - Lobby-Besitzer";
+  ////////////////////////////////////////
+
+  ///////////// Applications /////////////
+  InfosForAdminApplyProcess = "Informationen zum Ablauf";
+  AdminApplyProcessInfo = `Hier kannst du dich für einen Supporter-Posten bewerben.
+Die Bewerbung bleibt dann eine Woche lang offen und alle Team-Mitglieder können Sie betrachten.
+Hierbei sehen sie deine wichtigen Statistiken und, falls vorhanden, deine Antworten auf alle Administrator-Fragen.
+
+Wenn ein Administrator dich in seinem Team haben will, sendet er dir eine Einladung.
+Diese kannst du innerhalb der Zeit, in der du keine neue Bewerbung schreiben kannst, annehmen.
+Will dich jedoch kein Administrator, wirst du keine Einladung bekommen.
+
+Nach Absenden der Bewerbung kannst du für 2 Wochen keine Bewerbung mehr schreiben.
+Mit Ablauf der 2 Wochen werden alle Daten zur Bewerbung (also auch Einladungen) gelöscht.`;
+  Confirmations = "Bestätigungen";
+  ConfirmRuleAdminApply = "Ich bestätige, dass ich die Regeln gelesen und akzeptiert habe.";
+  ConfirmTeamAdminApply = "Ich bestätige, dass ich mit der Team-Hierarchie einverstanden bin und auf die Mitglieder weiter oben in der Hierarchie hören werde.";
+  ConfirmNoAbuseAdminApply = "Ich bestätige, dass ich als Supporter meine Rechte niemals ausnutzen würde und bei Ausnutzung sogar vom Server ausgeschlossen werden könnte.";
+  ConfirmStatsVisibleAdminApply = "Ich bestätige, dass durch meine Bewerbung alle meine für die Bewerbung interessanten Daten für alle Team-Mitglieder (auch obwohl sie evtl. dafür keine Berechtigung haben könnten) sichtbar gemacht werden können.";
+  Application = "Bewerbung";
+  Applications = "Bewerbungen";
+  AdminQuestions = "Administrator-Fragen";
+  SendApplication = "Sende die Bewerbung";
+  AlreadyCreatedApplicationInfo = `Die letzte Bewerbung wurde am '{0}' versendet.
+
+Hier siehst du alle bisherigen Einladungen an dich:`;
+  ////////////////////////////////////////
 
   ATTACK = "Angriff! Los los los!";
   BACK = "Bleibt zurück!";
