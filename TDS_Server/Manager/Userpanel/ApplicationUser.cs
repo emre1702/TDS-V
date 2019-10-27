@@ -20,16 +20,23 @@ namespace TDS_Server.Manager.Userpanel
 
         public static void LoadAdminQuestions(TDSNewContext dbContext)
         {
-            var list = dbContext.ApplicationQuestions.Include(q => q.Admin).GroupBy(q => q.Admin.Name).Select(q => new 
+            var list = dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new 
             {
-                AdminName = q.Key,
-                Questions = q.Select(e => new
+                AdminName = e.Admin.Name,
+                ID = e.Id,
+                e.Question,
+                e.AnswerType
+            }).ToList()
+            .GroupBy(g => g.AdminName)
+            .Select(g => new {
+                AdminName = g.Key,
+                Questions = g.Select(q => new
                 {
-                    ID = e.Id,
-                    e.Question,
-                    AnswerType = (int)e.AnswerType
-                }).ToList()
-            }).ToList();
+                    q.ID,
+                    q.Question,
+                    q.AnswerType
+                })
+            });
 
             _adminQuestions = JsonConvert.SerializeObject(list);
         }
