@@ -277,7 +277,7 @@ namespace TDS_Server.Instance.Lobby
                 case ERoundEndReason.Command:
                     return LangUtils.GetLangDictionary(lang =>
                     {
-                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.Client.Name ?? "-");
+                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.DisplayName ?? "-");
                     });
                 case ERoundEndReason.NewPlayer:
                     return LangUtils.GetLangDictionary(lang =>

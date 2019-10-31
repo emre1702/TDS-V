@@ -50,7 +50,7 @@ namespace TDS_Server.Manager.Player
             await player.SaveData();
             player.Logout();
 
-            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, client.Name));
+            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName));
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
@@ -161,13 +161,13 @@ namespace TDS_Server.Manager.Player
         {
             if (target.Entity is null)
                 return;
-            OutputMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
+            OutputMuteInfo(admin.DisplayName, target.Entity.Name, minutes, reason);
             target.MuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
         }
 
         public static async void ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
         {
-            OutputMuteInfo(admin.Client.Name, target.Name, minutes, reason);
+            OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
             using var dbcontext = new TDSNewContext();
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
@@ -180,7 +180,7 @@ namespace TDS_Server.Manager.Player
         {
             if (target.Entity is null)
                 return;
-            OutputVoiceMuteInfo(admin.Client.Name, target.Entity.Name, minutes, reason);
+            OutputVoiceMuteInfo(admin.DisplayName, target.Entity.Name, minutes, reason);
             target.VoiceMuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
 
             if (target.Team != null)
@@ -195,7 +195,7 @@ namespace TDS_Server.Manager.Player
 
         public static async void ChangePlayerVoiceMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
         {
-            OutputVoiceMuteInfo(admin.Client.Name, target.Name, minutes, reason);
+            OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
             using var dbcontext = new TDSNewContext();
             target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;

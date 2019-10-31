@@ -11,12 +11,12 @@ namespace TDS_Client.Manager.Utility
         private static readonly Dictionary<ushort, Dictionary<EPlayerDataKey, object>> _playerRemoteIdDatas 
             = new Dictionary<ushort, Dictionary<EPlayerDataKey, object>>();
 
-        public static T GetData<T>(Player player, EPlayerDataKey key)
+        public static T GetData<T>(Player player, EPlayerDataKey key, T returnOnEmpty = default)
         {
             if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
-                return default;
+                return returnOnEmpty;
             if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
-                return default;
+                return returnOnEmpty;
 
             return (T)_playerRemoteIdDatas[player.RemoteId][key];
         }

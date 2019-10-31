@@ -8,5 +8,7 @@
         public const int MapCenterBlipSprite = 629;
         public const int ObjectBlipSprite = 1;
         public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
+        public const int ServerTeamSuffixMinAdminLevel = 1;
+        public const string ServerTeamSuffix = "[TDS] ";
     }
 }

@@ -52,7 +52,7 @@ namespace TDS_Server.Manager.Commands
             if (!cmdinfos.AsLobbyOwner)
             {
                 AdminLogsManager.Log(ELogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
-                LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
+                LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
             else
             {
@@ -61,7 +61,7 @@ namespace TDS_Server.Manager.Commands
                     NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.TARGET_NOT_IN_SAME_LOBBY);
                     return;
                 }
-                target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.Client.Name, player.Client.Name, reason));
+                target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
             target.CurrentLobby.RemovePlayer(target);
             await LobbyManager.MainMenu.AddPlayer(target, 0);
@@ -148,8 +148,8 @@ namespace TDS_Server.Manager.Commands
             if (!IsReasonValid(reason, player))
                 return;
 
-            LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.Client.Name, player.Client.Name, reason));
-            target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.Client.Name, reason));
+            LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.DisplayName, player.DisplayName, reason));
+            target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);

@@ -75,7 +75,7 @@ namespace TDS_Server.Instance
                     if (target.Exists && targetcharacter.CurrentLobby == character.CurrentLobby && killer != target && targetcharacter.CurrentRoundStats != null)
                     {
                         ++targetcharacter.CurrentRoundStats.Assists;
-                        NAPI.Notification.SendNotificationToPlayer(target, Utils.GetReplaced(character.Language.GOT_ASSIST, character.Client.Name));
+                        NAPI.Notification.SendNotificationToPlayer(target, Utils.GetReplaced(character.Language.GOT_ASSIST, character.DisplayName));
                     }
                     if (killer != target ||
                         halfarmorhp % 2 != 0 ||
@@ -107,7 +107,7 @@ namespace TDS_Server.Instance
             if (lastHitterCharacter.CurrentRoundStats != null)
                 ++lastHitterCharacter.CurrentRoundStats.Kills;
             KillingSpreeKill(lastHitterCharacter);
-            NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.Client.Name));
+            NAPI.Notification.SendNotificationToPlayer(lastHitterCharacter.Client, Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
             killer = lastHitterCharacter;
         }
     }

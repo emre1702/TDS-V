@@ -149,7 +149,7 @@ namespace TDS_Server.Manager.Userpanel
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.Client.Name));
+                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
             } 
             else
             {
@@ -190,7 +190,7 @@ namespace TDS_Server.Manager.Userpanel
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.Client.Name));
+                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));
             }
             else
             {

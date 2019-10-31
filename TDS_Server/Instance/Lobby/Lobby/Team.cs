@@ -87,7 +87,7 @@ namespace TDS_Server.Instance.Lobby
             Team team = character.Team;
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);
 
-            string str = $"[TEAM] {team.ChatColor}{character.Client.Name}: !{{150|0|0}}";
+            string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !{{150|0|0}}";
             team.FuncIterate((target, _) =>
             {
                 NAPI.Chat.SendChatMessageToPlayer(target.Client, str + texts[target.Language]);

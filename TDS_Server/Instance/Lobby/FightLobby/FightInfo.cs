@@ -19,14 +19,14 @@ namespace TDS_Server.Instance.Lobby
                 string? weaponname = System.Enum.GetName(typeof(EWeaponHash), weapon);
                 killstr = LangUtils.GetLangDictionary((lang) =>
                 {
-                    return lang.DEATH_KILLED_INFO.Formatted(killer != null ? killer.Client.Name : "-", player.Client.Name, weaponname ?? "?");
+                    return lang.DEATH_KILLED_INFO.Formatted(killer?.DisplayName ?? "-", player.DisplayName, weaponname ?? "?");
                 });
             }
             else
             {
                 killstr = LangUtils.GetLangDictionary((lang) =>
                 {
-                    return Utils.GetReplaced(lang.DEATH_DIED_INFO, player.Client.Name);
+                    return Utils.GetReplaced(lang.DEATH_DIED_INFO, player.DisplayName);
                 });
             }
 

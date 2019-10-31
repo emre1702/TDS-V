@@ -414,5 +414,14 @@ namespace TDS_Client.Manager.Utility
         {
             return Pad.GetDisabledControlNormal(0, (int)Control.CursorY);
         }
+
+        public static string GetDisplayName(this Player player)
+        {
+            string name = player.Name;
+            int adminLevel = PlayerDataSync.GetData<int>(player, TDS_Common.Enum.EPlayerDataKey.AdminLevel);
+            if (adminLevel > Constants.ServerTeamSuffixMinAdminLevel)
+                name = Constants.ServerTeamSuffix + name;
+            return name;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.GangTeam;
@@ -239,6 +240,7 @@ namespace TDS_Server.Instance.Player
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+        public string DisplayName => AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + Client.Name : Client.Name;
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -350,7 +352,7 @@ namespace TDS_Server.Instance.Player
                     Client.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
                 }
                 SentPrivateChatRequestTo.Client.SendNotification(
-                    SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(Client.Name)
+                    SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(DisplayName)
                 );
                 SentPrivateChatRequestTo = null;
             }

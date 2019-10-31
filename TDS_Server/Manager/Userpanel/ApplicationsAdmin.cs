@@ -102,8 +102,8 @@ namespace TDS_Server.Manager.Userpanel
             var target = Player.Player.GetPlayerByID(playerId);
             if (target != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_INVITATION_BY, player.Client.Name));
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.SENT_APPLICATION_TO, target.Client.Name));
+                NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
             }
             else
             {

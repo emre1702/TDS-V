@@ -66,11 +66,11 @@ namespace TDS_Client.Manager.Utility
             //StartParticleFx("scr_xs_beer_chug", -426.17f, 1121.18f, 325f, 2f);
 
             if (!(_winner is null) && _winner.Exists) 
-                Nametag.DrawNametag(_winner.Handle, "1. " + _winner.Name, 5f);
+                Nametag.DrawNametag(_winner.Handle, "1. " + _winner.GetDisplayName(), 5f);
             if (!(_second is null) && _second.Exists)
-                Nametag.DrawNametag(_second.Handle, "2. " + _second.Name, 5f);
+                Nametag.DrawNametag(_second.Handle, "2. " + _second.GetDisplayName(), 5f);
             if (!(_third is null) && _third.Exists)
-                Nametag.DrawNametag(_third.Handle, "3. " + _third.Name, 5f);
+                Nametag.DrawNametag(_third.Handle, "3. " + _third.GetDisplayName(), 5f);
 
             //StartParticleFx("scr_xs_champagne_spray", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_beer_chug", 427.03f, 1123.21f, 325.85f, 1f);

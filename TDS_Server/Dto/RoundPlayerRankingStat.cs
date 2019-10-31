@@ -18,7 +18,7 @@ namespace TDS_Server.Dto
         public RoundPlayerRankingStat(TDSPlayer player)
         {
             Player = player;
-            Name = player.Client.Name;
+            Name = player.DisplayName;
             Kills = player.CurrentRoundStats!.Kills;
             Assists = player.CurrentRoundStats!.Assists;
             Damage = player.CurrentRoundStats!.Damage;

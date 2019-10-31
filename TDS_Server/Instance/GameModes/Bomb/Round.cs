@@ -46,6 +46,7 @@ namespace TDS_Server.Instance.GameModes
                     pos: pos
                 );
                 dto.Blip.Sprite = Constants.BombPlantPlaceBlipSprite;
+                dto.Blip.Name = "Bomb-Plant";
                 _bombPlantPlaces.Add(dto);
             }
             _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo?.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);
@@ -62,11 +63,6 @@ namespace TDS_Server.Instance.GameModes
             {
                 _bomb.Delete();
                 _bomb = null;
-            }
-            if (_plantBlip != null)
-            {
-                _plantBlip.Delete();
-                _plantBlip = null;
             }
             _bombPlantPlaces.Clear();
         }

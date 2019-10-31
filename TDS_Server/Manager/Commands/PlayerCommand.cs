@@ -61,14 +61,14 @@ namespace TDS_Server.Manager.Commands
             // Am I blocked?
             if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.Client.Name));
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
             }
 
             // Am I already in chat?
             if (player.InPrivateChatWith != null)
             {
-                player.Client.SendNotification(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH.Formatted(player.InPrivateChatWith.Client.Name));
+                player.Client.SendNotification(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH.Formatted(player.InPrivateChatWith.DisplayName));
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace TDS_Server.Manager.Commands
             if (player.SentPrivateChatRequestTo != null)
             {
                 TDSPlayer oldTargett = player.SentPrivateChatRequestTo;
-                oldTargett.Client.SendNotification(oldTargett.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(player.Client.Name));
+                oldTargett.Client.SendNotification(oldTargett.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(player.DisplayName));
                 player.SentPrivateChatRequestTo = null;
             }
 
@@ -94,15 +94,15 @@ namespace TDS_Server.Manager.Commands
             // Send request
             if (target.SentPrivateChatRequestTo != player)
             {
-                player.Client.SendNotification(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO.Formatted(target.Client.Name));
-                target.Client.SendNotification(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM.Formatted(player.Client.Name));
+                player.Client.SendNotification(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO.Formatted(target.DisplayName));
+                target.Client.SendNotification(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM.Formatted(player.DisplayName));
                 player.SentPrivateChatRequestTo = target;
             }
             // Accept request
             else
             {
-                player.Client.SendNotification(player.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(target.Client.Name));
-                target.Client.SendNotification(target.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(player.Client.Name));
+                player.Client.SendNotification(player.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(target.DisplayName));
+                target.Client.SendNotification(target.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(player.DisplayName));
                 target.SentPrivateChatRequestTo = null;
                 player.InPrivateChatWith = target;
                 target.InPrivateChatWith = player;
@@ -129,7 +129,7 @@ namespace TDS_Server.Manager.Commands
                 return;
             }
             string colorStr = "!{155|35|133}";
-            player.InPrivateChatWith.Client.SendChatMessage($"{colorStr}[{player.Client.Name}: {message}]");
+            player.InPrivateChatWith.Client.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]");
         }
 
         [TDSCommand(DPlayerCommand.PrivateMessage)]
@@ -139,7 +139,7 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.Client.Name));
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
             }
             ChatManager.SendPrivateMessage(player, target, message);
@@ -185,7 +185,7 @@ namespace TDS_Server.Manager.Commands
 
                 if (relation != null && relation.Relation == EPlayerRelation.Block)
                 {
-                    //NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.Client.Name));
+                    //NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
                     UnblockUser(player, target);
                     return false;
                 }
@@ -193,7 +193,7 @@ namespace TDS_Server.Manager.Commands
                 string msg;
                 if (relation != null && relation.Relation == EPlayerRelation.Friend)
                 {
-                    msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.Client.Name);
+                    msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.DisplayName);
                     var playerRelation = player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
                     if (playerRelation != null)
                         playerRelation.Relation = EPlayerRelation.Block;
@@ -205,7 +205,7 @@ namespace TDS_Server.Manager.Commands
                 {
                     relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
                     dbContext.PlayerRelations.Add(relation);
-                    msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.Client.Name);
+                    msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
                     player.PlayerRelationsPlayer.Add(relation);
                     target.PlayerRelationsTarget.Add(relation);
                 }
@@ -223,7 +223,7 @@ namespace TDS_Server.Manager.Commands
                 player.ClosePrivateChat(false);
             target.Client.DisableVoiceTo(player.Client);
  
-            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
         }
 
         [TDSCommand(DPlayerCommand.UnblockUser)]
@@ -237,7 +237,7 @@ namespace TDS_Server.Manager.Commands
                 var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
                 if (relation is null || relation.Relation != EPlayerRelation.Block)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_NOT_BLOCKED, target.Client.Name));
+                    NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName));
                     return;
                 }
 
@@ -250,8 +250,8 @@ namespace TDS_Server.Manager.Commands
 
             player.PlayerRelationsPlayer.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
             target.PlayerRelationsTarget.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_UNBLOCKED, target.Client.Name));
-            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
         }
 
         [TDSCommand(DPlayerCommand.GiveMoney)]
@@ -278,8 +278,8 @@ namespace TDS_Server.Manager.Commands
             player.GiveMoney((int)money * -1);
             target.GiveMoney(money - fee);
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.Client.Name));
-            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.Client.Name));
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
+            NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
         }
 
         /*#region Lobby

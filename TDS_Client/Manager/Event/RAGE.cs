@@ -1,6 +1,7 @@
 ﻿using RAGE;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Utility;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
@@ -29,12 +30,12 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerStartTalkingMethod(Player player)
         {
-            MainBrowser.StartPlayerTalking(player.Name);
+            MainBrowser.StartPlayerTalking(player.GetDisplayName());
         }
 
         private void OnPlayerStopTalkingMethod(Player player)
         {
-            MainBrowser.StopPlayerTalking(player.Name);
+            MainBrowser.StopPlayerTalking(player.GetDisplayName());
         }
     }
 }

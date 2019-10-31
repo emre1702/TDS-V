@@ -32,13 +32,13 @@ namespace TDS_Client.Manager.Utility
                 return;
 
             Voice.Muted = false;
-            MainBrowser.StartPlayerTalking(Player.LocalPlayer.Name);
+            MainBrowser.StartPlayerTalking(Player.LocalPlayer.GetDisplayName());
         }
 
         private static void Stop(Control _)
         {
             Voice.Muted = true;
-            MainBrowser.StopPlayerTalking(Player.LocalPlayer.Name);
+            MainBrowser.StopPlayerTalking(Player.LocalPlayer.GetDisplayName());
         }
     }
 }

@@ -88,7 +88,7 @@ namespace TDS_Server.Manager.Player
 
             CustomEventManager.SetPlayerLoggedIn(character);
 
-            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.Name));
+            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, character.DisplayName));
         }
     }
 }

@@ -16,7 +16,6 @@ namespace TDS_Server.Instance.GameModes
         private readonly List<BombPlantPlaceDto> _bombPlantPlaces = new List<BombPlantPlaceDto>();
         private TDSTimer? _bombDetonateTimer,
                       _bombPlantDefuseTimer;
-        private Blip? _plantBlip;
 
         private void SendBombPlantInfos(TDSPlayer character)
         {
@@ -55,6 +54,7 @@ namespace TDS_Server.Instance.GameModes
             plantPlace.Object.Delete();
             plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, Lobby.Dimension);
             plantPlace.Blip.Color = 49;
+            plantPlace.Blip.Name = "Bomb-Plant";
             //bombPlantBlips[i].Flashing = true;
             //Todo Implement after new Bridge version
             _bombAtPlayer = null;

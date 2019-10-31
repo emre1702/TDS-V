@@ -9,6 +9,7 @@ using Font = RAGE.Game.Font;
 using TDS_Client.Enum;
 using RAGE.Game;
 using TDS_Client.Instance.Utility;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw
 {
@@ -40,11 +41,14 @@ namespace TDS_Client.Manager.Draw
                 return;
 
             string name = "Ped";
-            RAGE.Elements.Entities.Players.All.ForEach(player => 
+            foreach (var player in RAGE.Elements.Entities.Players.All) 
             {
                 if (player.Handle == targetEntity)
-                    name = player.Name;
-            });
+                {
+                    name = player.GetDisplayName();
+                    break;
+                }
+            }
 
             DrawNametag(targetEntity, name, distance);
         }
@@ -58,7 +62,7 @@ namespace TDS_Client.Manager.Draw
                 if (nametag.Distance > Settings.NametagMaxDistance)
                     continue;
 
-                DrawNametag(nametag.Player.Handle, nametag.Player.Name, nametag.Distance);
+                DrawNametag(nametag.Player.Handle, nametag.Player.GetDisplayName(), nametag.Distance);
             }
         }
 
