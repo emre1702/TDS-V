@@ -12,13 +12,13 @@ namespace TDS_Server.Instance.Lobby
             CurrentGameMode?.OnPlayerEnterColShape(shape, character);
         }
 
-        public override void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
+        public override void OnPlayerDeath(TDSPlayer character, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
             if (character.Lifes > 0)
             {
                 if (CurrentRoundStatus == Enum.ERoundStatus.RoundEnd && character.Team != _currentRoundEndWinnerTeam)
                 {
-                    DmgSys.OnPlayerDeath(character, CurrentRoundEndBecauseOfPlayer?.Client, weapon);
+                    DmgSys.OnPlayerDeath(character, killer, weapon);
                     return;
                 }
 

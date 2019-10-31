@@ -30,9 +30,18 @@ namespace TDS_Server.Manager.EventManager
 
         //[DisableDefaultOnDeathRespawn]
         [ServerEvent(Event.PlayerDeath)]
-        public static void OnPlayerDeath(Client player, Client killer, uint reason)
+        public static void OnPlayerDeath(Client player, Client killerClient, uint reason)
         {
             TDSPlayer character = player.GetChar();
+            if (!character.LoggedIn)
+                return;
+            if (character.CurrentLobby is null)
+                return;
+            TDSPlayer killer;
+            if (character.CurrentLobby is FightLobby fightLobby)
+                killer = fightLobby.DmgSys.GetKiller(character, killerClient);
+            else 
+                killer = killerClient?.GetChar() ?? character;
             character.CurrentLobby?.OnPlayerDeath(character, killer, reason);
         }
 

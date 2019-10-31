@@ -11,16 +11,16 @@ namespace TDS_Server.Instance
     {
         private static readonly Dictionary<TDSPlayer, TDSTimer> sDeadTimer = new Dictionary<TDSPlayer, TDSTimer>();
 
-        public TDSPlayer? OnPlayerDeath(TDSPlayer player, Client? killer, uint weapon)
+        public void OnPlayerDeath(TDSPlayer player, TDSPlayer killer, uint weapon)
         {
             if (sDeadTimer.ContainsKey(player))
-                return null;
+                return;
             Workaround.FreezePlayer(player.Client, true);
 
             KillingSpreeDeath(player);
 
             if (player.Lifes <= 0)
-                return null;
+                return;
 
             // Death //
             if (player.CurrentLobbyStats != null && player.CurrentLobby?.SavePlayerLobbyStats == true)
@@ -29,24 +29,19 @@ namespace TDS_Server.Instance
                 ++player.CurrentLobbyStats.TotalDeaths;
             }
 
-            TDSPlayer killercharacter = GetKiller(player, killer);
-            killer = killercharacter.Client;
-
             // Kill //
-            if (killercharacter != player)
+            if (killer != player)
             {
-                if (killercharacter.CurrentRoundStats != null)
-                    ++killercharacter.CurrentRoundStats.Kills;
-                KillingSpreeKill(killercharacter);
+                if (killer.CurrentRoundStats != null)
+                    ++killer.CurrentRoundStats.Kills;
+                KillingSpreeKill(killer);
             }
 
             // Assist //
-            CheckForAssist(player, killer);
-
-            return killercharacter;
+            CheckForAssist(player, killer.Client);
         }
 
-        private TDSPlayer GetKiller(TDSPlayer player, Client? possiblekiller)
+        public TDSPlayer GetKiller(TDSPlayer player, Client? possiblekiller)
         {
             // It's the killer from the Death event //
             if (player.Client != possiblekiller && possiblekiller != null && possiblekiller.Exists)

@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.Lobby
         /// <param name="killer"></param>
         /// <param name="weapon"></param>
         /// <returns>Time in ms to disapper & spawn again</returns>
-        public virtual void OnPlayerDeath(TDSPlayer character, Client killer, uint weapon, bool spawnPlayer = true)
+        public virtual void OnPlayerDeath(TDSPlayer character, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
             if (spawnPlayer)
             {
