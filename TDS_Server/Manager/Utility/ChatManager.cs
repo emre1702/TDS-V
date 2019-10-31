@@ -79,7 +79,7 @@ namespace TDS_Server.Manager.Utility
 
         public static void SendPrivateMessage(TDSPlayer character, TDSPlayer targetcharacter, string message)
         {
-            string changedmessage = "[PM] !{253|132|85}" + character.Client.SocialClubName + ": !{220|220|220}" + message;
+            string changedmessage = "[PM] !{253|132|85}" + character.DisplayName + ": !{220|220|220}" + message;
             NAPI.Chat.SendChatMessageToPlayer(targetcharacter.Client, changedmessage);
             ChatLogsManager.Log(message, character, target: targetcharacter);
         }
