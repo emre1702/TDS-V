@@ -18,6 +18,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants></DefineConstants>
     <WarningsAsErrors />
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -46,6 +46,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
             Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+            Add(DToClientEvent.LoadApplicationDataForAdmin, OnLoadApplicationDataForAdminMethod);
             Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
             Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
             Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
@@ -143,6 +144,12 @@ namespace TDS_Client.Manager.Event
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
             Players.Remove(player);
+        }
+
+        private void OnLoadApplicationDataForAdminMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Browser.Angular.Main.LoadApplicationDataForAdmin(json);
         }
 
         private void OnLoadMapFavouritesMethod(object[] args)
@@ -369,7 +376,7 @@ namespace TDS_Client.Manager.Event
             SyncedTeamPlayerAmountDto[] list = JsonConvert.DeserializeObject<SyncedTeamPlayerAmountDto[]>((string)args[0]);
             foreach (var team in Team.CurrentLobbyTeams)
             {
-                if (team.Index != 0)
+                if (!team.IsSpectator)
                     team.AmountPlayers = list[team.Index - 1];
             }
             RoundInfo.RefreshAllTeamTexts();

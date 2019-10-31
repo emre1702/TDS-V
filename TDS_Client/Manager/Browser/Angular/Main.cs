@@ -7,6 +7,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
 using TDS_Client.Enum;
+using System;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -205,6 +206,11 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void RefreshAdminLevel(int adminLevel)
         {
 
+        }
+
+        public static void LoadApplicationDataForAdmin(string json)
+        {
+            Execute(DToServerEvent.LoadApplicationDataForAdmin, json);
         }
     }
 

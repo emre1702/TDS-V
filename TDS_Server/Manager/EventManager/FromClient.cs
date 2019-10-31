@@ -385,6 +385,14 @@ namespace TDS_Server.Manager.EventManager
             Userpanel.ApplicationUser.RejectInvitation(player, id);
         }
 
+        [RemoteEvent(DToServerEvent.LoadApplicationDataForAdmin)]
+        public async void LoadApplicationDataForAdminMethod(Client client, int applicationId)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            await Userpanel.ApplicationsAdmin.SendApplicationData(player, applicationId);
+        }
         #endregion
     }
 }

@@ -21,6 +21,7 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.JoinMapCreator] = new CooldownEventDto(1000),
             [DToServerEvent.LanguageChange] = new CooldownEventDto(500),
             [DToServerEvent.LeaveLobby] = new CooldownEventDto(500),
+            [DToServerEvent.LoadApplicationDataForAdmin] = new CooldownEventDto(3000),
             [DToServerEvent.LobbyChatMessage] = new CooldownEventDto(250),
             [DToServerEvent.LoadMapForMapCreator] = new CooldownEventDto(10000),
             [DToServerEvent.LoadMapNamesToLoadForMapCreator] = new CooldownEventDto(10000),

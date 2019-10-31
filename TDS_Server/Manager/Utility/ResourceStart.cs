@@ -32,6 +32,8 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
                 SettingsManager.LoadLocal();
                 ClothesManager.Init();
 
@@ -89,6 +91,34 @@ namespace TDS_Server.Manager.Utility
             try
             {
                 ErrorLogsManager.Log("Unhandled exception: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        [ServerEvent(Event.FirstChanceException)]
+        public void OnFirstChanceException(Exception ex)
+        {
+            try
+            {
+                ErrorLogsManager.Log("First chance exception: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                ErrorLogsManager.Log("CurrentDomain_UnhandledException: " 
+                    +  ((Exception)e.ExceptionObject).GetBaseException().Message, 
+                    ((Exception)e.ExceptionObject).StackTrace ?? Environment.StackTrace, 
+                    (TDSPlayer?)null);
             }
             catch
             {

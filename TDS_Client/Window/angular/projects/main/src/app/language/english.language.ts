@@ -200,9 +200,11 @@ At the end of the 2 weeks all application data (including invitations) will be d
     Applications = "Applications";
     AdminQuestions = "Administrator questions";
     SendApplication = "Send application";
+    ApplicationStatsInfo = "Player stats & infos";
     AlreadyCreatedApplicationInfo = `The last application was sent on '{0}'.
 
 Here you can see all the invitations sent to you:`;
+    ApplicationAnswersInfo = "Answers to the administrator questions";
     ////////////////////////////////////////
 
     ATTACK = "Attack! Go go go!";

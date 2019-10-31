@@ -66,6 +66,8 @@ import { RankingComponent } from './components/ranking/ranking.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-teams-menu/custom-lobby-teams-menu.component';
 import { UserpanelApplicationComponent } from './components/userpanel/userpanel-application (user)/userpanel-application.component';
+import { UserpanelApplicationsComponent } from './components/userpanel/userpanel-applications (admin)/userpanel-applications.component';
+import { UserpanelAdminQuestionsComponent } from './components/userpanel/userpanel-admin-questions/userpanel-admin-questions.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +98,9 @@ import { UserpanelApplicationComponent } from './components/userpanel/userpanel-
     InputTypeDirective,
     TextareaTypeDirective,
     RankingComponent,
-    CustomLobbyTeamsMenuComponent
+    CustomLobbyTeamsMenuComponent,
+    UserpanelApplicationsComponent,
+    UserpanelAdminQuestionsComponent
   ],
   imports: [
     ReactiveFormsModule,

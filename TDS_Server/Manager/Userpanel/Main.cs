@@ -34,9 +34,12 @@ namespace TDS_Server.Manager.Userpanel
                     break;
 
                 case EUserpanelLoadDataType.ApplicationsAdmin:
-
+                    json = await ApplicationsAdmin.GetData(player);
                     break;
             }
+
+            if (json == null)
+                return;
 
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)dataType, json);
         }

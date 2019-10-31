@@ -112,6 +112,8 @@ namespace TDS_Server.Instance.Language
         public override string ROUND_MISSION_NORMAL => "Ziel: Alle Gegner müssen getötet werden.";
         public override string ROUND_REWARD_INFO => "#w#Runden-Belohnung:#n#Kills: #g#${0}#n##w#Assists: #g#${1}#n##w#Damage: #g#${2}#n##o#Insgesamt: #g#${3}";
 
+        public override string SENT_APPLICATION => "Du hast eine Einladung gesendet.";
+        public override string SENT_APPLICATION_TO => "Du hast {0} eine Einladung gesendet.";
         public override string STILL_BANED_IN_LOBBY => "Du hast noch einen Ban bis {0} von {1}. Grund: {2}";
         public override string STILL_MUTED => "Du bist noch für {0} Minuten gemutet.";
         public override string STILL_PERMABANED_IN_LOBBY => "Du wurdest von {0} aus dieser Lobby permanent gebannt. Grund: {1}";
@@ -155,6 +157,7 @@ namespace TDS_Server.Instance.Language
         public override string YOU_ACCEPTED_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurdest von {0} geblockt.";
+        public override string YOU_GOT_INVITATION_BY => "Du hast von {0} eine Einladung ins Team bekommen.";
         public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast ${0} (${1} Gebühr) von {2} bekommen.";
         public override string YOU_GOT_UNBLOCKED_BY => "Du wurdest von {0} entblockt.";
         public override string YOU_REJECTED_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";

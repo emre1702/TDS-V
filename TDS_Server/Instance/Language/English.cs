@@ -111,6 +111,8 @@ namespace TDS_Server.Instance.Language
         public virtual string ROUND_MISSION_NORMAL => "Mission: All opponents have to die.";
         public virtual string ROUND_REWARD_INFO => "#w#Round-reward:#n#Kills: #g#${0}#n##w#Assists: #g#${1}#n##w#Damage: #g#${2}#n##o#Total: #g#${3}";
 
+        public virtual string SENT_APPLICATION => "You sent an invitation.";
+        public virtual string SENT_APPLICATION_TO => "You sent {0} an invitation.";
         public virtual string STILL_BANED_IN_LOBBY => "You are still baned until {0} by {1}. Reason: {2}";
         public virtual string STILL_MUTED => "You are still muted for {0} minutes.";
         public virtual string STILL_PERMABANED_IN_LOBBY => "You are still permanently baned by {0} in this lobby. Reason: {1}";
@@ -154,6 +156,7 @@ namespace TDS_Server.Instance.Language
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
+        public virtual string YOU_GOT_INVITATION_BY => "You got an invitation to join the team from {0}.";
         public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
         public virtual string YOU_GOT_UNBLOCKED_BY => "You got unblocked by {0}.";
         public virtual string YOU_REJECTED_INVITATION => "You rejected the team-invitation of {0}.";

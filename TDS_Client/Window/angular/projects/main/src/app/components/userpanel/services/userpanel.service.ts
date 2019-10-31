@@ -11,11 +11,24 @@ import { UserpanelSettingDataDto } from '../interfaces/userpanelSettingDataDto';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
+import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserpanelService {
+    loadingData = false;
+
+    private _currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
+
+    get currentNav(): string {
+        return this._currentNav;
+    }
+    set currentNav(value: string) {
+        this._currentNav = value;
+        this.currentNavChanged.emit(null);
+    }
+
     allCommands: UserpanelCommandDataDto[] = [];
     allRules: UserpanelRuleDataDto[] = [];
     allFAQs: UserpanelFAQDataDto[] = [];
@@ -47,15 +60,19 @@ export class UserpanelService {
         ]
       }*/;
     adminQuestions: UserpanelAdminQuestionsGroup[] = [];
-    myApplicationCreateTime: string;
-    adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[] = [];
+    myApplicationCreateTime: string = undefined;
+    adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[];
+    applications: { ID: number, CreateTime: string, PlayerName: string }[];
 
+    public currentNavChanged = new EventEmitter();
+    public loadingDataChanged = new EventEmitter();
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
     public faqsLoaded = new EventEmitter();
     public settingsLoaded = new EventEmitter();
     public myStatsLoaded = new EventEmitter();
     public applicationDataLoaded = new EventEmitter();
+    public applicationsLoaded = new EventEmitter();
 
     private myStatsLoadCooldown: NodeJS.Timeout;
 
@@ -97,6 +114,10 @@ export class UserpanelService {
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
         json = this.escapeSpecialChars(json);
+
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);
+
         switch (type) {
             case UserpanelLoadDataType.Commands:
                 this.loadedAllCommands(json);
@@ -117,7 +138,7 @@ export class UserpanelService {
                 this.loadedApplicationDataForUser(json);
                 break;
             case UserpanelLoadDataType.ApplicationsAdmin:
-                this.loadedApplicationsDataForAdmin(json);
+                this.loadedApplicationsForAdmin(json);
                 break;
         }
     }
@@ -154,9 +175,11 @@ export class UserpanelService {
 
     private loadedApplicationDataForUser(json: string) {
         const data = JSON.parse(json);
+        // data.CreateTime -> Application already exists
         if (data.CreateTime) {
             this.myApplicationCreateTime = data.CreateTime;
             this.adminApplyInvitations = data.Invitations;
+        // !data.CreateTime -> No application, user can create a new one
         } else {
             this.adminQuestions = data.AdminQuestions;
             this.adminApplyInvitations = [];
@@ -165,8 +188,9 @@ export class UserpanelService {
         this.applicationDataLoaded.emit(null);
     }
 
-    private loadedApplicationsDataForAdmin(json: string) {
-
+    private loadedApplicationsForAdmin(json: string) {
+        this.applications = JSON.parse(json);
+        this.applicationsLoaded.emit(null);
     }
 
     private languageChanged() {

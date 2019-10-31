@@ -5,7 +5,7 @@
     width: 25vw;
     height: 40vh;
     overflow-y: hidden;
-    
+
     .mat-toolbar {
         height: 10%;
         display: flex;
@@ -18,6 +18,16 @@
         height: calc(100% - 3.5vh - 40px);
         overflow-y: auto;
         padding: 20px;
+
+        .loading-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 }
+
 

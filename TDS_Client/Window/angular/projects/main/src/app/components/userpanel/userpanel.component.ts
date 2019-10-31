@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
@@ -17,7 +17,6 @@ export class UserpanelComponent implements OnInit, OnDestroy {
   langPipe = new LanguagePipe();
   userpanelNavPage = UserpanelNavPage;
   currentCommand: UserpanelCommandDataDto;
-  currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
   myStatsColumns = ["Id",
     "Name",
     "SCName",
@@ -51,27 +50,33 @@ export class UserpanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.userpanelService.loadingData = false;
     this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
     this.userpanelService.myStatsLoaded.on(null, this.detectChanges.bind(this));
+    this.userpanelService.loadingDataChanged.on(null, this.detectChanges.bind(this));
+    this.userpanelService.currentNavChanged.on(null, this.detectChanges.bind(this));
   }
 
   ngOnDestroy() {
     this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
     this.userpanelService.myStatsLoaded.off(null, this.detectChanges.bind(this));
+    this.userpanelService.loadingDataChanged.off(null, this.detectChanges.bind(this));
+    this.userpanelService.currentNavChanged.off(null, this.detectChanges.bind(this));
   }
 
   closeUserpanel() {
+    this.userpanelService.loadingData = false;
     this.rageConnector.call(DToClientEvent.CloseUserpanel);
   }
 
   gotoNav(nav: number) {
-    this.currentNav = UserpanelNavPage[nav];
     this.currentCommand = undefined;
-    this.changeDetector.detectChanges();
+    this.userpanelService.loadingData = true;
+    this.userpanelService.currentNav = UserpanelNavPage[nav];
 
-    if (this.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
+    if (this.userpanelService.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
       this.userpanelService.loadCommands();
-    } else if (this.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
+    } else if (this.userpanelService.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
       this.userpanelService.loadRules();
     } else if (nav == UserpanelNavPage.FAQ && !this.userpanelService.allFAQs.length) {
       this.userpanelService.loadFAQs();
@@ -83,6 +88,9 @@ export class UserpanelComponent implements OnInit, OnDestroy {
       this.userpanelService.loadApplicationPage();
     } else if (nav == UserpanelNavPage.Applications) {
       this.userpanelService.loadApplicationsPage();
+    } else {
+        this.userpanelService.loadingData = false;
+        this.changeDetector.detectChanges();
     }
   }
 

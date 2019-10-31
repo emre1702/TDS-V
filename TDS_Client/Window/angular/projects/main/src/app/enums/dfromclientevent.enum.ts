@@ -6,6 +6,7 @@ export enum DFromClientEvent {
     HideRankings = "HideRankings_Client",
     InitLoadAngular = "InitLoadAngular_Client",
     LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Client",
+    LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Client",
     LoadFavoriteMaps = "LoadFavoriteMaps_Client",
     LoadLanguage = "LoadLanguage_Client",
     LoadMapVoting = "LoadMapVoting_Client",

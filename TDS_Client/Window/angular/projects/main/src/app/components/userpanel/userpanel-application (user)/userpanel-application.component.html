@@ -1,4 +1,4 @@
-<mat-vertical-stepper linear #stepper (animationDone)="stepperAnimationDone()" *ngIf="this.dataLoaded && !this.applicationAlreadyCreated">
+<mat-vertical-stepper linear #stepper (animationDone)="stepperAnimationDone()" *ngIf="!this.applicationAlreadyCreated">
 
     <mat-step>
         <ng-template matStepLabel>{{ 'InfosForAdminApplyProcess' | language: settings.Lang }}</ng-template>
@@ -23,48 +23,10 @@
     <mat-step>
         <ng-template matStepLabel>{{ 'AdminQuestions' | language: settings.Lang }}</ng-template>
         <div class="adminquestions-expansion-panel-container">
-            <mat-expansion-panel *ngFor="let questionGroup of userpanelService.adminQuestions">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{ questionGroup.AdminName }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <ng-container *ngFor="let question of questionGroup.Questions" [ngSwitch]="question.AnswerType">
-
-                    <ng-container *ngSwitchCase="answerType.Text">
-                        <div class="question-row">
-                            <mat-form-field color="accent">
-                                <textarea matInput
-                                    [(ngModel)]="answersToAdminQuestions[question.ID]"
-                                    (blur)="changeDetector.detectChanges()"
-                                    [placeholder]="question.Question"></textarea>
-                            </mat-form-field>
-                        </div>
-                    </ng-container>
-
-                    <ng-container *ngSwitchCase="answerType.Number">
-                        <div class="question-row">
-                            <mat-form-field color="accent">
-                                <input matInput type="number"
-                                    [(ngModel)]="answersToAdminQuestions[question.ID]"
-                                    (blur)="changeDetector.detectChanges()"
-                                    [placeholder]="question.Question" />
-                            </mat-form-field>
-                        </div>
-                    </ng-container>
-
-                    <ng-container *ngSwitchCase="answerType.Check">
-                        <div class="question-row">
-                            <mat-checkbox labelPosition="before"
-                                [(ngModel)]="answersToAdminQuestions[question.ID]"
-                                [indeterminate]="answersToAdminQuestions[question.ID] == undefined"
-                                (blur)="changeDetector.detectChanges()">
-                                {{ question.Question | language: settings.Lang }}
-                            </mat-checkbox>
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </mat-expansion-panel>
+            <app-userpanel-admin-questions
+                [questions]="userpanelService.adminQuestions"
+                [(answers)]="answersToAdminQuestions">
+            </app-userpanel-admin-questions>
         </div>
     </mat-step>
 
@@ -74,7 +36,7 @@
 
 </mat-vertical-stepper>
 
-<div *ngIf="this.dataLoaded && this.applicationAlreadyCreated">
+<div *ngIf="this.applicationAlreadyCreated">
     <label class="multi-line-text">
         {{ "AlreadyCreatedApplicationInfo" | language: settings.Lang:userpanelService.myApplicationCreateTime }}
     </label>
@@ -91,8 +53,4 @@
             <button mat-raised-button (click)="rejectInvitation(invitation.ID)">{{ 'Reject' | language: settings.Lang }}</button>
         </mat-card-actions>
     </mat-card>
-</div>
-
-<div class="content-container" *ngIf="!this.dataLoaded">
-    <mat-spinner color="accent"></mat-spinner>
 </div>

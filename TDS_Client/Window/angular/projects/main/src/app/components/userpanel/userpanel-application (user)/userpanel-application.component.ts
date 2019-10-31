@@ -2,11 +2,10 @@ import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef } fro
 import { SettingsService } from '../../../services/settings.service';
 import { MatVerticalStepper, MatCheckboxChange, MatDialog } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
-import { UserpanelAdminQuestion } from '../interfaces/userpanelAdminQuestion';
 import { UserpanelService } from '../services/userpanel.service';
-import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 
 @Component({
     selector: 'app-userpanel-application',
@@ -17,9 +16,7 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
     @ViewChild("stepper", { static: false }) stepper: MatVerticalStepper;
 
     private amountUnchecked = 0;
-    answerType = UserpanelAdminQuestionAnswerType;
     applicationAlreadyCreated = false;
-    dataLoaded = false;
 
     answersToAdminQuestions: { [index: number]: any } = {};
 
@@ -30,18 +27,18 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
         private dialog: MatDialog) { }
 
     ngOnInit() {
-        this.dataLoaded = false;
-        this.settings.LanguageChanged.on(null, this.detectChanges);
-        this.userpanelService.applicationDataLoaded.on(null, this.dataLoadedFunc);
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.userpanelService.applicationDataLoaded.on(null, this.dataLoadedFunc.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.detectChanges);
-        this.userpanelService.applicationDataLoaded.off(null, this.dataLoadedFunc);
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.userpanelService.applicationDataLoaded.off(null, this.dataLoadedFunc.bind(this));
     }
 
     acceptInvitation(id: number) {
         this.rageConnector.call(DToServerEvent.AcceptInvitation, id);
+        this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
     }
 
     rejectInvitation(id: number) {
@@ -77,6 +74,7 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
                     const answersJson = JSON.stringify(this.answersToAdminQuestions);
 
                     this.rageConnector.call(DToServerEvent.SendApplication, answersJson);
+                    this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
                 });
         }
     }
@@ -109,7 +107,6 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
         } else {
             this.applicationAlreadyCreated = false;
         }
-        this.dataLoaded = true;
         this.changeDetector.detectChanges();
     }
 

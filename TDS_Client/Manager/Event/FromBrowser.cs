@@ -43,6 +43,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
             Add(DToServerEvent.LeaveLobby, OnLeaveLobbyMethod);
             Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
+            Add(DToServerEvent.LoadApplicationDataForAdmin, LoadApplicationDataForAdminBrowserMethod);
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
@@ -187,6 +188,12 @@ namespace TDS_Client.Manager.Event
         private void OnLeftCustomLobbiesMenuMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
+        }
+
+        private void LoadApplicationDataForAdminBrowserMethod(object[] args)
+        {
+            int applicationId = Convert.ToInt32(args[0]);
+            EventsSender.Send(DToServerEvent.LoadApplicationDataForAdmin, applicationId);
         }
 
         private void OnLoadMapNamesToLoadForMapCreatorMethod(object[] args)

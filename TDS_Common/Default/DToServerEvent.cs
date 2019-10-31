@@ -25,6 +25,7 @@
         public const string LeaveLobby = "LeaveLobby_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
+        public const string LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Browser";
         public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";
         public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser";
         public const string LoadUserpanelData = "LoadUserpanelData_Browser";

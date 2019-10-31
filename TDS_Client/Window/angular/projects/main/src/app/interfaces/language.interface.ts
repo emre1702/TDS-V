@@ -165,6 +165,8 @@ export interface Language {
     AdminQuestions: string;
     SendApplication: string;
     AlreadyCreatedApplicationInfo: string;
+    ApplicationStatsInfo: string;
+    ApplicationAnswersInfo: string;
     ////////////////////////////////////////
 
     Userpanel: string;

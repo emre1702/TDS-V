@@ -107,6 +107,8 @@
         string ROUND_MISSION_NORMAL { get; }
         string ROUND_REWARD_INFO { get; }
 
+        string SENT_APPLICATION { get; }
+        string SENT_APPLICATION_TO { get; }
         string STILL_BANED_IN_LOBBY { get; }
         string STILL_MUTED { get; }
         string STILL_PERMABANED_IN_LOBBY { get; }
@@ -143,6 +145,7 @@
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
         string YOU_GOT_UNBLOCKED_BY { get; }
+        string YOU_GOT_INVITATION_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
         string YOU_REJECTED_INVITATION { get; }
         string YOU_UNBLOCKED { get; }

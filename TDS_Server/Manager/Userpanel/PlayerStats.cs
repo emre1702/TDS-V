@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -13,8 +14,6 @@ namespace TDS_Server.Manager.Userpanel
 {
     class PlayerStats
     {
-        private const string _dATETIMEOFFSET_FORMAT = "dddd, MMM dd yyyy HH:mm:ss zzz";
-
         public static async Task<string?> GetData(TDSPlayer player)
         {
             try
@@ -31,7 +30,7 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
-        private static async Task<PlayerUserpanelStatsDataDto> GetPlayerStats(int playerId, bool loadLobbyStats = false)
+        public static async Task<PlayerUserpanelStatsDataDto> GetPlayerStats(int playerId, bool loadLobbyStats = false)
         {
             using var dbContext = new TDSNewContext();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -56,7 +55,7 @@ namespace TDS_Server.Manager.Userpanel
                     Donation = p.Donation,
                     IsVip = p.IsVip,
                     Name = p.Name,
-                    RegisterTimestamp = new DateTimeOffset(p.RegisterTimestamp).ToString(_dATETIMEOFFSET_FORMAT),
+                    RegisterTimestamp = new DateTimeOffset(p.RegisterTimestamp).ToString(Constants.DateTimeOffsetFormat),
                     SCName = p.SCName,
                     Gang = p.Gang.Team.Name,
                     AmountMapsCreated = p.Maps.Count,
@@ -64,7 +63,7 @@ namespace TDS_Server.Manager.Userpanel
                     BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name),
                     AmountMapsRated = p.PlayerMapRatings.Count,
                     MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
-                    LastLogin = new DateTimeOffset(p.PlayerStats.LastLoginTimestamp).ToString(_dATETIMEOFFSET_FORMAT),
+                    LastLogin = new DateTimeOffset(p.PlayerStats.LastLoginTimestamp).ToString(Constants.DateTimeOffsetFormat),
                     Money = p.PlayerStats.Money,
                     MuteTime = p.PlayerStats.MuteTime,
                     PlayTime = p.PlayerStats.PlayTime,
@@ -84,7 +83,7 @@ namespace TDS_Server.Manager.Userpanel
                     AsVip = l.AsVip,
                     LobbyId = l.Lobby,
                     Reason = l.Reason,
-                    Timestamp = new DateTimeOffset(l.Timestamp).ToString(_dATETIMEOFFSET_FORMAT),
+                    Timestamp = new DateTimeOffset(l.Timestamp).ToString(Constants.DateTimeOffsetFormat),
                     Type = l.Type.ToString(),
                     LengthOrEndTime = l.LengthOrEndTime
                 })

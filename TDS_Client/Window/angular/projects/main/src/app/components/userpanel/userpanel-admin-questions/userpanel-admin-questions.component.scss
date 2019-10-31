@@ -1,0 +1,27 @@
+.mat-expansion-panel {
+    margin-bottom: 10px;
+
+    .question-row {
+        width: 100%;
+        margin-bottom: 5px;
+
+        * {
+          font-size: 1.1em;
+          width: 100%;
+        }
+
+        ::ng-deep .mat-checkbox-layout {
+          width: 100%;
+        }
+
+        ::ng-deep .mat-checkbox-label {
+          white-space: normal;
+          word-wrap: break-word;
+        }
+
+        ::ng-deep .mat-checkbox-inner-container {
+          margin-left: auto;
+          margin-right: 0;
+        }
+    }
+}

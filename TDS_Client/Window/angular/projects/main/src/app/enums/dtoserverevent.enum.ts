@@ -2,6 +2,7 @@ export enum DToServerEvent {
     AcceptInvitation = "AcceptInvitation_Browser",
     ChooseTeam = "ChooseTeam_Browser",
     LeaveLobby = "LeaveLobby_Browser",
+    LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Browser",
     LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser",
     LoadMapForMapCreator = "LoadMapForMapCreator_Browser",
     LoadUserpanelData = "LoadUserpanelData_Browser",

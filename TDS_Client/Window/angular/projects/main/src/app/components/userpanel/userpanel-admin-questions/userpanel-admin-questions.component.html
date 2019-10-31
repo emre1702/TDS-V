@@ -1,0 +1,45 @@
+<mat-expansion-panel *ngFor="let questionGroup of questions">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{ questionGroup.AdminName }}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-container *ngFor="let question of questionGroup.Questions" [ngSwitch]="question.AnswerType">
+
+        <ng-container *ngSwitchCase="answerType.Text">
+            <div class="question-row">
+                <mat-form-field color="accent">
+                    <textarea matInput
+                        [(ngModel)]="answers[question.ID]"
+                        (blur)="save()"
+                        [readonly]="disabled"
+                        [placeholder]="question.Question"></textarea>
+                </mat-form-field>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="answerType.Number">
+            <div class="question-row">
+                <mat-form-field color="accent">
+                    <input matInput type="number"
+                        [(ngModel)]="answers[question.ID]"
+                        (blur)="save()"
+                        [readonly]="disabled"
+                        [placeholder]="question.Question" />
+                </mat-form-field>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="answerType.Check">
+            <div class="question-row">
+                <mat-checkbox labelPosition="before"
+                    [(ngModel)]="answers[question.ID]"
+                    [indeterminate]="answers[question.ID] == undefined"
+                    [disabled]="disabled"
+                    (blur)="save()">
+                    {{ question.Question | language: settings.Lang }}
+                </mat-checkbox>
+            </div>
+        </ng-container>
+    </ng-container>
+</mat-expansion-panel>
