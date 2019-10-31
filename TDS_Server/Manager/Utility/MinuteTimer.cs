@@ -16,6 +16,11 @@ namespace TDS_Server.Manager.Utility
 
         public static async void Execute()
         {
+            if (!TDSNewContext.IsConfigured)
+                return;
+            if (!ResourceStart.ResourceStarted)
+                return;
+
             // int currenttick = Environment.TickCount;
             ++_counter;
 
