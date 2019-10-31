@@ -20,9 +20,9 @@ namespace TDS_Server.Instance.GameModes
             }
         }
 
-        public override void OnPlayerDeath(TDSPlayer player)
+        public override void OnPlayerDeath(TDSPlayer player, TDSPlayer killer)
         {
-            base.OnPlayerDeath(player);
+            base.OnPlayerDeath(player, killer);
             if (_bombAtPlayer == player)
                 DropBomb();
         }

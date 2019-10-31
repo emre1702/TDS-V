@@ -22,7 +22,7 @@ namespace TDS_Server.Instance.Lobby
                     return;
                 }
 
-                CurrentGameMode?.OnPlayerDeath(character);
+                CurrentGameMode?.OnPlayerDeath(character, killer);
 
                 if (character.Lifes == 1)   // Will be dead
                 {
