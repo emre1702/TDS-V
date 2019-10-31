@@ -119,7 +119,7 @@ namespace TDS_Server.Instance.Lobby
         {
             FuncIterateAllPlayers((player, team) =>
             {
-                if (team is null || team.Entity.Index == 0)
+                if (team is null || team.IsSpectator)
                     return;
                 SavePlayerRoundStats(player);
             });

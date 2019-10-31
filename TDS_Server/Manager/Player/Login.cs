@@ -80,7 +80,7 @@ namespace TDS_Server.Manager.Player
                 OfflineMessagesManager.CheckOfflineMessages(character);
 
             MapsRatings.SendPlayerHisRatings(character);
-            EventsHandler.JoinLobbyEvent(player, 0);
+            EventsHandler.JoinLobbyEvent(player, LobbyManager.MainMenu.Id);
 
             MapFavourites.LoadPlayerFavourites(character);
 

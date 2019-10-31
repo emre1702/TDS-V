@@ -1175,7 +1175,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<string>("Short")
                         .IsRequired()
@@ -1191,6 +1191,14 @@ namespace TDS_Server_DB.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("gangs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Short = "-",
+                            TeamId = -5
+                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.Lobbies", b =>
@@ -1199,7 +1207,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<short?>("AmountLifes")
                         .HasColumnType("smallint");
@@ -1282,8 +1290,7 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            AmountLifes = (short)1,
+                            Id = -4,
                             AroundSpawnPoint = 0f,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DefaultSpawnRotation = 0f,
@@ -1292,33 +1299,13 @@ namespace TDS_Server_DB.Migrations
                             DefaultSpawnZ = 0f,
                             IsOfficial = true,
                             IsTemporary = false,
-                            Name = "Arena",
-                            OwnerId = 0,
+                            Name = "MainMenu",
+                            OwnerId = -1,
                             ShowRanking = false,
-                            SpawnAgainAfterDeathMs = 400,
+                            SpawnAgainAfterDeathMs = 0,
                             StartArmor = (short)0,
                             StartHealth = (short)0,
-                            Type = ELobbyType.Arena
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AmountLifes = (short)1,
-                            AroundSpawnPoint = 0f,
-                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultSpawnRotation = 0f,
-                            DefaultSpawnX = 0f,
-                            DefaultSpawnY = 0f,
-                            DefaultSpawnZ = 0f,
-                            IsOfficial = true,
-                            IsTemporary = false,
-                            Name = "GangLobby",
-                            OwnerId = 0,
-                            ShowRanking = false,
-                            SpawnAgainAfterDeathMs = 400,
-                            StartArmor = (short)0,
-                            StartHealth = (short)0,
-                            Type = ELobbyType.GangLobby
+                            Type = ELobbyType.MainMenu
                         },
                         new
                         {
@@ -1332,8 +1319,48 @@ namespace TDS_Server_DB.Migrations
                             DefaultSpawnZ = 0f,
                             IsOfficial = true,
                             IsTemporary = false,
+                            Name = "Arena",
+                            OwnerId = -1,
+                            ShowRanking = false,
+                            SpawnAgainAfterDeathMs = 400,
+                            StartArmor = (short)0,
+                            StartHealth = (short)0,
+                            Type = ELobbyType.Arena
+                        },
+                        new
+                        {
+                            Id = -2,
+                            AmountLifes = (short)1,
+                            AroundSpawnPoint = 0f,
+                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultSpawnRotation = 0f,
+                            DefaultSpawnX = 0f,
+                            DefaultSpawnY = 0f,
+                            DefaultSpawnZ = 0f,
+                            IsOfficial = true,
+                            IsTemporary = false,
+                            Name = "GangLobby",
+                            OwnerId = -1,
+                            ShowRanking = false,
+                            SpawnAgainAfterDeathMs = 400,
+                            StartArmor = (short)0,
+                            StartHealth = (short)0,
+                            Type = ELobbyType.GangLobby
+                        },
+                        new
+                        {
+                            Id = -3,
+                            AmountLifes = (short)1,
+                            AroundSpawnPoint = 0f,
+                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultSpawnRotation = 0f,
+                            DefaultSpawnX = 0f,
+                            DefaultSpawnY = 0f,
+                            DefaultSpawnZ = 0f,
+                            IsOfficial = true,
+                            IsTemporary = false,
                             Name = "MapCreateLobby",
-                            OwnerId = 0,
+                            OwnerId = -1,
                             ShowRanking = false,
                             SpawnAgainAfterDeathMs = 400,
                             StartArmor = (short)0,
@@ -1367,25 +1394,25 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             KillsAmount = (short)3,
                             HealthOrArmor = (short)30
                         },
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             KillsAmount = (short)5,
                             HealthOrArmor = (short)50
                         },
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             KillsAmount = (short)10,
                             HealthOrArmor = (short)100
                         },
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             KillsAmount = (short)15,
                             HealthOrArmor = (short)100
                         });
@@ -1413,7 +1440,7 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             MapLimitTime = 10,
                             MapLimitType = EMapLimitType.KillAfterTime
                         });
@@ -1440,7 +1467,7 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             MapId = -1
                         });
                 });
@@ -1468,14 +1495,14 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             MoneyPerAssist = 10.0,
                             MoneyPerDamage = 0.10000000000000001,
                             MoneyPerKill = 20.0
                         },
                         new
                         {
-                            LobbyId = 2,
+                            LobbyId = -2,
                             MoneyPerAssist = 10.0,
                             MoneyPerDamage = 0.10000000000000001,
                             MoneyPerKill = 20.0
@@ -1524,7 +1551,7 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            LobbyId = 1,
+                            LobbyId = -1,
                             BombDefuseTimeMs = 8000,
                             BombDetonateTimeMs = 45000,
                             BombPlantTimeMs = 3000,
@@ -1562,535 +1589,535 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Hash = EWeaponHash.SniperRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.FireExtinguisher,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CompactGrenadeLauncher,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Snowball,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.VintagePistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CombatPDW,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavySniper,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavySniperMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SweeperShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MicroSMG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Wrench,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Pistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PistolMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PumpShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PumpShotgunMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.APPistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Baseball,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Molotov,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SMG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SMGMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.StickyBomb,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PetrolCan,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.StunGun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavyShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Minigun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.GolfClub,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.FlareGun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Flare,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.GrenadeLauncherSmoke,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Hammer,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CombatPistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Gusenberg,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CompactRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HomingLauncher,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Nightstick,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Railgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SawnOffShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.BullpupRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Firework,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CombatMG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CombatMGMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CarbineRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Crowbar,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Flashlight,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Dagger,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Grenade,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PoolCue,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Bat,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Pistol50,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Knife,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.BullpupShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.BZGas,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.GrenadeLauncher,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.NightVision,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Musket,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.ProximityMine,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AdvancedRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.RPG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.PipeBomb,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MiniSMG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SNSPistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SNSPistolMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AssaultRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AssaultRifleMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SpecialCarbine,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavyRevolver,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavyRevolverMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.DoubleActionRevolver,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MarksmanRifle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MarksmanRifleMk2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.BattleAxe,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.HeavyPistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.KnuckleDuster,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MachinePistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.MarksmanPistol,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Machete,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SwitchBlade,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AssaultShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.DoubleBarrelShotgun,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.AssaultSMG,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Hatchet,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Bottle,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Parachute,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.SmokeGrenade,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.UpnAtomizer,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.UnholyHellbringer,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.CarbineRifleMK2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         },
                         new
                         {
                             Hash = EWeaponHash.Widowmaker,
-                            Lobby = 1,
+                            Lobby = -1,
                             Ammo = 99999
                         });
                 });
@@ -2535,7 +2562,9 @@ namespace TDS_Server_DB.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int?>("GangId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(-1);
 
                     b.Property<bool>("IsVip")
                         .ValueGeneratedOnAdd()
@@ -2574,6 +2603,19 @@ namespace TDS_Server_DB.Migrations
                     b.HasIndex("GangId");
 
                     b.ToTable("players");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            AdminLvl = (short)0,
+                            Donation = (short)0,
+                            IsVip = false,
+                            Name = "System",
+                            Password = "",
+                            RegisterTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SCName = "System"
+                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.FreeroamDefaultVehicle", b =>
@@ -2625,7 +2667,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
@@ -2654,28 +2696,28 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = -4,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatorId = 0,
+                            CreatorId = -1,
                             Name = "All Sniper"
                         },
                         new
                         {
                             Id = -3,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatorId = 0,
+                            CreatorId = -1,
                             Name = "All Bombs"
                         },
                         new
                         {
                             Id = -2,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatorId = 0,
+                            CreatorId = -1,
                             Name = "All Normals"
                         },
                         new
                         {
                             Id = -1,
                             CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatorId = 0,
+                            CreatorId = -1,
                             Name = "All"
                         });
                 });
@@ -2686,8 +2728,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -2724,7 +2765,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<short>("BlipColor")
                         .HasColumnType("smallint");
@@ -2763,49 +2804,61 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = -1,
                             BlipColor = (short)4,
                             ColorB = (short)255,
                             ColorG = (short)255,
                             ColorR = (short)255,
                             Index = (short)0,
-                            Lobby = 1,
+                            Lobby = -4,
+                            Name = "Spectator",
+                            SkinHash = 1004114196
+                        },
+                        new
+                        {
+                            Id = -2,
+                            BlipColor = (short)4,
+                            ColorB = (short)255,
+                            ColorG = (short)255,
+                            ColorR = (short)255,
+                            Index = (short)0,
+                            Lobby = -1,
                             Name = "Spectator",
                             SkinHash = 0
                         },
                         new
                         {
-                            Id = 2,
+                            Id = -3,
                             BlipColor = (short)52,
                             ColorB = (short)0,
                             ColorG = (short)150,
                             ColorR = (short)0,
                             Index = (short)1,
-                            Lobby = 1,
+                            Lobby = -1,
                             Name = "SWAT",
                             SkinHash = -1920001264
                         },
                         new
                         {
-                            Id = 3,
+                            Id = -4,
                             BlipColor = (short)1,
                             ColorB = (short)0,
                             ColorG = (short)0,
                             ColorR = (short)150,
                             Index = (short)2,
-                            Lobby = 1,
+                            Lobby = -1,
                             Name = "Terrorist",
                             SkinHash = 275618457
                         },
                         new
                         {
-                            Id = 4,
+                            Id = -5,
                             BlipColor = (short)4,
                             ColorB = (short)255,
                             ColorG = (short)255,
                             ColorR = (short)255,
                             Index = (short)0,
-                            Lobby = 2,
+                            Lobby = -2,
                             Name = "None",
                             SkinHash = 0
                         });
@@ -3709,7 +3762,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<int>("AdminId")
                         .HasColumnName("AdminID")
@@ -3735,7 +3788,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<int>("AdminId")
                         .HasColumnType("integer");
@@ -3759,7 +3812,7 @@ namespace TDS_Server_DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID")
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<bool>("Closed")
                         .HasColumnType("boolean");

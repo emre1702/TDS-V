@@ -21,14 +21,14 @@ namespace TDS_Server.Instance.Lobby
             BanPlayer(admin, target.Entity, endTime, reason, target.Client.Serial);
             if (endTime.HasValue)
             {
-                if (LobbyEntity.Id != 0)
+                if (LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                     NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.TIMEBAN_LOBBY_YOU_INFO.Formatted(endTime.Value.Minute / 60, LobbyEntity.Name, admin.AdminLevelName, reason));
                 else
                     NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.TIMEBAN_YOU_INFO.Formatted(endTime.Value.Minute / 60, admin.AdminLevelName, reason));
             }
             else
             {
-                if (LobbyEntity.Id != 0)
+                if (LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                     NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.PERMABAN_LOBBY_YOU_INFO.Formatted(LobbyEntity.Name, admin.AdminLevelName, reason));
                 else
                     NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.PERMABAN_YOU_INFO.Formatted(admin.AdminLevelName, reason));
@@ -69,18 +69,18 @@ namespace TDS_Server.Instance.Lobby
 
             if (endTime.HasValue)
             {
-                if (LobbyEntity.IsOfficial && LobbyEntity.Id != 0)
+                if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                     LangUtils.SendAllChatMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, LobbyEntity.Name, admin.AdminLevelName, reason));
-                else if (LobbyEntity.Id == 0)
+                else if (LobbyEntity.Type == TDS_Common.Enum.ELobbyType.MainMenu)
                     SendAllPlayerLangMessage(lang => lang.TIMEBAN_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, admin.AdminLevelName, reason));
                 else
                     SendAllPlayerLangMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, LobbyEntity.Name, admin.AdminLevelName, reason));
             }
             else
             {
-                if (LobbyEntity.IsOfficial && LobbyEntity.Id != 0)
+                if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                     LangUtils.SendAllChatMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
-                else if (LobbyEntity.Id == 0)
+                else if (LobbyEntity.Type == TDS_Common.Enum.ELobbyType.MainMenu)
                     SendAllPlayerLangMessage(lang => lang.PERMABAN_INFO.Formatted(target.Name, admin.AdminLevelName, reason));
                 else
                     SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
@@ -92,7 +92,7 @@ namespace TDS_Server.Instance.Lobby
             if (target.Entity is null)
                 return;
             UnbanPlayer(admin, target.Entity, reason);
-            if (LobbyEntity.Id != 0)
+            if (LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                 NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.UNBAN_YOU_LOBBY_INFO.Formatted(LobbyEntity.Name, admin.AdminLevelName, reason));
         }
 
@@ -110,9 +110,9 @@ namespace TDS_Server.Instance.Lobby
                 await dbContext.SaveChangesAsync();
             });
 
-            if (LobbyEntity.IsOfficial && LobbyEntity.Id != 0)
+            if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
                 LangUtils.SendAllChatMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
-            else if (LobbyEntity.Id == 0)
+            else if (LobbyEntity.Type == TDS_Common.Enum.ELobbyType.MainMenu)
                 LangUtils.SendAllChatMessage(lang => lang.UNBAN_INFO.Formatted(target.Name, admin.AdminLevelName, reason));
             else
                 SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));

@@ -116,7 +116,7 @@ namespace TDS_Server.Manager.Player
             using var dbContext = new TDSNewContext();
 
             #region Serial ban
-            PlayerBans? ban = await dbContext.PlayerBans.Include(b => b.Player).FirstOrDefaultAsync(b => b.LobbyId == 0 && b.Serial == player.Serial);
+            PlayerBans? ban = await dbContext.PlayerBans.Include(b => b.Player).FirstOrDefaultAsync(b => b.LobbyId == LobbyManager.MainMenu.Id && b.Serial == player.Serial);
             if (!await HandlePlayerBan(player, ban, dbContext))
                 return;
             #endregion
@@ -129,7 +129,7 @@ namespace TDS_Server.Manager.Player
             }
 
             #region Player ban
-            ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.LobbyId == 0 && b.PlayerId == playerIDName.Id);
+            ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.LobbyId == LobbyManager.MainMenu.Id && b.PlayerId == playerIDName.Id);
             if (!await HandlePlayerBan(player, ban, dbContext))
                 return;
             #endregion

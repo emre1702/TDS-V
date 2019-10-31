@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
@@ -22,6 +23,7 @@ namespace TDS_Server.Instance.Lobby
         public readonly Lobbies LobbyEntity;
 
         public int Id => LobbyEntity.Id;
+        public ELobbyType Type => LobbyEntity.Type;
         public string Name => LobbyEntity.Name;
         public bool IsOfficial => LobbyEntity.IsOfficial;
         public string CreatorName => LobbyEntity.Owner?.Name ?? "?";

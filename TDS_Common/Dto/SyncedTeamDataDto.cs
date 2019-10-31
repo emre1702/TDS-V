@@ -10,7 +10,7 @@ namespace TDS_Common.Dto
         public string Name { get; set; }
         public ColorDto Color { get; set; }
         public SyncedTeamPlayerAmountDto AmountPlayers { get; set; }
-
+        public bool IsSpectator => Index == 0;
 
         public SyncedTeamDataDto(int index, string name, ColorDto color, SyncedTeamPlayerAmountDto amountPlayers)
         {

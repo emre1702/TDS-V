@@ -7,6 +7,7 @@ using TDS_Common.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
+using TDS_Common.Enum;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -16,7 +17,7 @@ namespace TDS_Server.Manager.Utility
         public static void SendDataToPlayer(Client client)
         {
             TDSPlayer player = client.GetChar();
-            if (player.CurrentLobby is null || player.CurrentLobby.Id == 0)
+            if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
             {
                 var entries = GetDataForMainmenu();
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries));
@@ -34,7 +35,7 @@ namespace TDS_Server.Manager.Utility
         private static List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
         {
             List<SyncedScoreboardMainmenuLobbyDataDto> list = new List<SyncedScoreboardMainmenuLobbyDataDto>();
-            foreach (Lobby lobby in LobbyManager.Lobbies.Where(l => l.Id >= 0))
+            foreach (Lobby lobby in LobbyManager.Lobbies.Where(l => l.Type != ELobbyType.MapCreateLobby))
             {
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;

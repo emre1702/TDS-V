@@ -142,7 +142,7 @@ namespace TDS_Client.Manager.Lobby
         {
             foreach (var team in Team.CurrentLobbyTeams)
             {
-                if (team.Index == 0)
+                if (team.IsSpectator)
                     continue;
                 RefreshTeamText(team.Index);
             }
