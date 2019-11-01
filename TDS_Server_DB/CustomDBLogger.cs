@@ -28,6 +28,9 @@ namespace TDS_Server_DB
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
+                if (!System.Diagnostics.Debugger.IsAttached)
+                    return;
+
                 string msg = Environment.NewLine + "[" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "] " + formatter(state, exception) + Environment.NewLine;
                 try
                 {
