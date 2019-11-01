@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadDefaultMaps(TDSNewContext dbcontext)
         {
-            AllMaps = await LoadMaps(dbcontext, SettingsManager.MapsPath, false);
+            AllMaps = await LoadMaps(dbcontext, ServerConstants.MapsPath, false);
         }
 
         public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, string path, bool isOnlySaved)

@@ -63,7 +63,7 @@ namespace TDS_Server.Manager.Maps
                 //mapDto.SyncedData.CreatorName = creator.Client.Name;
 
                 string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
-                string mapPath = (onlySave ? SettingsManager.SavedMapsPath : SettingsManager.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
+                string mapPath = (onlySave ? ServerConstants.SavedMapsPath : ServerConstants.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
                 mapDto.Info.FilePath = mapPath;
 
                 MemoryStream memStrm = new MemoryStream();
@@ -103,7 +103,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNewMaps(TDSNewContext dbContext)
         {
-            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NewMapsPath, false);
+            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false);
             foreach (var map in _newCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -114,7 +114,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadSavedMaps(TDSNewContext dbContext)
         {
-            _savedMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.SavedMapsPath, true);
+            _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true);
             foreach (var map in _savedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -124,7 +124,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNeedCheckMaps(TDSNewContext dbContext)
         {
-            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, SettingsManager.NeedCheckMapsPath, false);
+            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false);
             foreach (var map in _newCreatedMaps)
             {
                 map.Info.IsNewMap = true;
@@ -302,7 +302,7 @@ namespace TDS_Server.Manager.Maps
 
             string fileName = Path.GetFileName(map.Info.FilePath);
             string fileContent = File.ReadAllText(map.Info.FilePath);
-            File.WriteAllText(SettingsManager.NeedCheckMapsPath + Utils.MakeValidFileName(fileName), fileContent);
+            File.WriteAllText(ServerConstants.NeedCheckMapsPath + Utils.MakeValidFileName(fileName), fileContent);
 
         }
 

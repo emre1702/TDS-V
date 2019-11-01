@@ -66,6 +66,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
+        public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LobbyKillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<LobbyMaps> LobbyMaps { get; set; }
@@ -323,6 +324,32 @@ namespace TDS_Server_DB.Entity
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("gangs_TeamId_fkey");
+            });
+
+            modelBuilder.Entity<GangwarAreas>(entity =>
+            {
+                entity.ToTable("gangwar_areas");
+
+                entity.HasKey(e => e.MapId);
+
+                entity.Property(e => e.MapId)
+                    .HasColumnName("MapID");
+
+                entity.Property(e => e.OwnerGangId)
+                    .HasColumnName("OwnerGangID");
+
+                entity.Property(e => e.LastAttacked)
+                    .HasDefaultValueSql("'1970-1-1'::timestamp");
+
+                entity.HasOne(g => g.Map)
+                    .WithOne(m => m.GangwarArea)
+                    .HasForeignKey<GangwarAreas>(g => g.MapId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(g => g.OwnerGang)
+                    .WithMany(m => m.GangwarAreas)
+                    .HasForeignKey(g => g.OwnerGangId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<LobbyKillingspreeRewards>(entity =>
@@ -927,22 +954,6 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.MapsPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.NewMapsPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.SavedMapsPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.NeedCheckMapsPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
                 entity.Property(e => e.KillingSpreeMaxSecondsUntilNextKill)
                     .IsRequired()
                     .HasDefaultValue(18);
@@ -1032,9 +1043,7 @@ namespace TDS_Server_DB.Entity
 
             #region Seed data
             modelBuilder.Entity<ServerSettings>().HasData(
-                new ServerSettings {  Id = 1, GamemodeName = "tdm", MapsPath = "bridge/resources/tds/maps/",
-                    NewMapsPath = "bridge/resources/tds/newmaps/", SavedMapsPath = "bridge/resources/tds/savedmaps/",
-                    NeedCheckMapsPath = "bridge/resources/tds/needcheckmaps/",
+                new ServerSettings {  Id = 1, GamemodeName = "tdm",
                     ErrorToPlayerOnNonExistentCommand = true, ToChatOnNonExistentCommand = false,
                     DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
                     SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,
