@@ -39,13 +39,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_gangwar_areas_gangs_OwnerGangID",
                         column: x => x.OwnerGangID,
                         principalTable: "gangs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
