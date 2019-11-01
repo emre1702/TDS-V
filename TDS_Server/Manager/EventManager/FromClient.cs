@@ -192,6 +192,35 @@ namespace TDS_Server.Manager.EventManager
             player.CurrentLobby?.SendTeamOrder(player, teamOrder);
         }
 
+        [RemoteEvent(DToServerEvent.SuicideKill)]
+        public void SuicideKillMethod(Client player)
+        {
+            TDSPlayer character = player.GetChar();
+            if (!character.LoggedIn)
+                return;
+            if (character.Lifes == 0)
+                return;
+            if (!(character.CurrentLobby is FightLobby fightLobby))
+                return;
+            fightLobby.KillPlayer(player, character.Language.COMMITED_SUICIDE);
+        }
+
+        [RemoteEvent(DToServerEvent.SuicideShoot)]
+        public void SuicideShootMethod(Client player)
+        {
+            TDSPlayer character = player.GetChar();
+            if (!character.LoggedIn)
+                return;
+            if (character.Lifes == 0)
+                return;
+            if (!(character.CurrentLobby is FightLobby fightLobby))
+                return;
+            fightLobby.FuncIterateAllPlayers((target, team) =>
+            {
+                NAPI.Native.SendNativeToPlayer(target.Client, Hash.SET_PED_SHOOTS_AT_COORD, player, 0f, 0f, 0f, false);
+            });
+        }
+
         #region Bomb
 
         [RemoteEvent(DToServerEvent.StartPlanting)]

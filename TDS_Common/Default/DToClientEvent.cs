@@ -8,6 +8,7 @@
 
         public const string AddMapToVoting = "AddMapToVoting_Server";
         public const string AmountInFightSync = "AmountInFightSync_Server";
+        public const string ApplySuicideAnimation = "ApplySuicideAnimation_Server";
 
         public const string BombDetonated = "BombDetonated_Server";
         public const string BombNotOnHand = "BombNotOnHand_Server";

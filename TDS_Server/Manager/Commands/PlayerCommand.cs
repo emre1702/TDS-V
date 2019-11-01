@@ -40,7 +40,31 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (player.Lifes == 0)
                 return;
-            fightLobby.KillPlayer(player.Client, player.Language.COMMITED_SUICIDE);
+
+            string animName = "PILL";
+            float animTime = 0.536f;
+            switch ((EWeaponHash)player.Client.CurrentWeapon)
+            {
+                // Pistols //
+                case EWeaponHash.Pistol:
+                case EWeaponHash.CombatPistol:
+                case EWeaponHash.APPistol:
+                case EWeaponHash.Pistol50:
+                case EWeaponHash.HeavyRevolver:
+                case EWeaponHash.SNSPistol:
+                case EWeaponHash.HeavyPistol:
+                case EWeaponHash.DoubleActionRevolver:
+                case EWeaponHash.HeavyRevolverMk2:
+                case EWeaponHash.SNSPistolMk2:
+                case EWeaponHash.PistolMk2:
+                case EWeaponHash.VintagePistol:
+                case EWeaponHash.MarksmanPistol:
+                    animName = "PISTOL";
+                    animTime = 0.365f;
+                    break;
+            }
+            
+            fightLobby.SendAllPlayerEvent(DToClientEvent.ApplySuicideAnimation, null, player.Client.Handle.Value, animName, animTime);
         }
 
         [TDSCommand(DPlayerCommand.GlobalChat)]

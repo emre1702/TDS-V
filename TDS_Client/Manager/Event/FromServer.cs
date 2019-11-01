@@ -33,6 +33,7 @@ namespace TDS_Client.Manager.Event
         {
             Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
             Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
+            Add(DToClientEvent.ApplySuicideAnimation, OnApplySuicideAnimationMethod);
             Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
             Add(DToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
             Add(DToClientEvent.BombOnHand, OnBombOnHandMethod);
@@ -380,6 +381,19 @@ namespace TDS_Client.Manager.Event
                     team.AmountPlayers = list[team.Index - 1];
             }
             RoundInfo.RefreshAllTeamTexts();
+        }
+
+        private void OnApplySuicideAnimationMethod(object[] args)
+        {
+            ushort playerHandle = Convert.ToUInt16(args[0]);
+            string animName = (string)args[1];
+            float animTime = Convert.ToSingle(args[2]);
+
+            Player player = ClientUtils.GetPlayerByHandleValue(playerHandle);
+            if (player == null)
+                return;
+
+            SuicideAnim.ApplyAnimation(player, animName, animTime);
         }
 
         private void OnSyncAllCustomLobbiesMethod(object[] args)
