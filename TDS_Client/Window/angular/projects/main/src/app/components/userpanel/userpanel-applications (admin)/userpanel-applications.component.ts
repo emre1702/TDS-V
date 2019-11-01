@@ -76,6 +76,15 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     private applicationDataLoadedFunc(json) {
         this.userpanelService.loadingData = false;
         this.applicationData = JSON.parse(json);
+        if (typeof(this.applicationData.Answers) === "string") {
+            this.applicationData.Answers = JSON.parse(this.applicationData.Answers);
+        }
+        if (typeof(this.applicationData.Questions) === "string") {
+            this.applicationData.Questions = JSON.parse(this.applicationData.Questions);
+        }
+        if (typeof(this.applicationData.Stats) === "string") {
+            this.applicationData.Stats = JSON.parse(this.applicationData.Stats);
+        }
         /*for (const [questionId, answer] of Object.entries(this.applicationData.Answers)) {
             this.applicationData.Answers[questionId] = "asd";
         }*/

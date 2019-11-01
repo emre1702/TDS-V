@@ -182,9 +182,15 @@ export class UserpanelService {
         // data.CreateTime -> Application already exists
         if (data.CreateTime) {
             this.myApplicationCreateTime = data.CreateTime;
+            if (typeof(data.Invitations) === "string") {
+                data.Invitations = JSON.parse(data.Invitations);
+            }
             this.adminApplyInvitations = data.Invitations;
         // !data.CreateTime -> No application, user can create a new one
         } else {
+            if (typeof(data.AdminQuestions) === "string") {
+                data.AdminQuestions = JSON.parse(data.AdminQuestions);
+            }
             this.adminQuestions = data.AdminQuestions;
             this.adminApplyInvitations = [];
             this.myApplicationCreateTime = undefined;
