@@ -18,6 +18,7 @@ using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
+using TimeZoneConverter;
 
 namespace TDS_Server.Instance.Player
 {
@@ -369,7 +370,7 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null)
                 return;
-            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(Entity.PlayerSettings.TimeZone);
+            TimeZone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.TimeZone);
         }
 
         public DateTime GetLocalDateTime(DateTime dateTime)
