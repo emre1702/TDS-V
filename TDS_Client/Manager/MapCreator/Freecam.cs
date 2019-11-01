@@ -42,7 +42,7 @@ namespace TDS_Client.Manager.MapCreator
             IsActive = false;
             TickManager.Remove(OnTick);
 
-            CameraManager.FreeCam.Deactivate();
+            CameraManager.FreeCam?.Deactivate();
             CameraManager.FreeCam = null;
 
 
