@@ -26,7 +26,8 @@ namespace TDS_Server.Manager.Player
                 SCName = player.SocialClubName,
                 Password = Utils.HashPWServer(password),
                 Email = email,
-                IsVip = false
+                IsVip = false,
+                AdminLvl = CommonUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
             };
             
             dbplayer.PlayerSettings = new PlayerSettings
