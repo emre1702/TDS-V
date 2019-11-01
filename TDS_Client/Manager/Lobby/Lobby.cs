@@ -1,12 +1,11 @@
-﻿using TDS_Client.Enum;
-using TDS_Client.Instance.MapCreator;
-using TDS_Client.Manager.Browser;
+﻿using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
+using PlayerElement = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -28,7 +27,8 @@ namespace TDS_Client.Manager.Lobby
         public static void Joined(SyncedLobbySettingsDto settings)
         {
             InstructionalButtonManager.Reset();
-            RAGE.Elements.Player.LocalPlayer.SetInvincible(false);
+            PlayerElement.LocalPlayer.SetInvincible(false);
+            PlayerElement.LocalPlayer.ResetAlpha();
 
             if (_inLobbyType != null)
             {
