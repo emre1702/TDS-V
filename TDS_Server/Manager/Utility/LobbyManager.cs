@@ -188,6 +188,7 @@ namespace TDS_Server.Manager.Utility
                 AddMapsToArena(arena, entity);
 
                 CustomLobbyMenuSync.RemovePlayer(player);
+                CustomLobbyMenuSync.SyncLobbyAdded(arena);
                 await arena.AddPlayer(player, null);
             }
             catch
