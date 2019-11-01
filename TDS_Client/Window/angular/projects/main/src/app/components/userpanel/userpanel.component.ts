@@ -51,6 +51,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userpanelService.loadingData = false;
+    this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
     this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
     this.userpanelService.myStatsLoaded.on(null, this.detectChanges.bind(this));
     this.userpanelService.loadingDataChanged.on(null, this.detectChanges.bind(this));

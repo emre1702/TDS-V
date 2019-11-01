@@ -197,7 +197,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.HasOne(invitation => invitation.Admin)
                    .WithMany(app => app.ApplicationInvitations)
-                   .HasForeignKey(answer => answer.ApplicationId)
+                   .HasForeignKey(answer => answer.AdminId)
                    .OnDelete(DeleteBehavior.Cascade);
             });
 

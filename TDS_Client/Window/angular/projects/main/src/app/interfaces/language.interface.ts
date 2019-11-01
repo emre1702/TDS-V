@@ -135,6 +135,10 @@ export interface Language {
     RemoveTeam: string;
     Back: string;
     TimeZone: string;
+    Message: string;
+    Invite: string;
+    Accept: string;
+    Reject: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

@@ -8,7 +8,7 @@
 </mat-action-list>
 
 
-<div *ngIf="applicationData">
+<div *ngIf="applicationData" class="application-container">
     <mat-accordion multi="false">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -41,4 +41,5 @@
             </app-userpanel-admin-questions>
         </mat-expansion-panel>
     </mat-accordion>
+    <button mat-raised-button *ngIf="canInvite()" (click)="invite()">{{ 'Invite' | language: settings.Lang }}</button>
 </div>

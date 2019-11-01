@@ -7,6 +7,9 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
+import { MatDialog } from '@angular/material';
+import { ApplicationInviteDialog } from '../../../dialog/application-invite-dialog';
+import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 
 @Component({
     selector: 'app-userpanel-applications',
@@ -15,9 +18,11 @@ import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-quest
 })
 export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     applicationData: {
+        ApplicationID: number,
         Answers: { [index: number]: any },
         Questions: UserpanelAdminQuestionsGroup[],
-        Stats: UserpanelStatsDataDto
+        Stats: UserpanelStatsDataDto,
+        AlreadyInvited: boolean
     };
 
     applicationStatsColumns = ["Id",
@@ -48,7 +53,8 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,
         public userpanelService: UserpanelService,
-        private rageConnector: RageConnectorService) {
+        private rageConnector: RageConnectorService,
+        private dialog: MatDialog) {
         }
 
     ngOnInit() {
@@ -67,9 +73,29 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     }
 
     requestApplicationData(applicationID: number) {
-        this.userpanelService.loadingData = true;
         this.rageConnector.callCallback(DToServerEvent.LoadApplicationDataForAdmin, [applicationID], this.applicationDataLoadedFunc.bind(this));
         this.changeDetector.detectChanges();
+    }
+
+    invite() {
+        if (!this.canInvite()) {
+            return;
+        }
+        this.dialog.open(ApplicationInviteDialog, {panelClass: "mat-app-background"})
+            .afterClosed()
+            .subscribe((message: string | undefined) => {
+                if (message == undefined) {
+                    return;
+                }
+
+                this.rageConnector.call(DToServerEvent.SendApplicationInvite, this.applicationData.ApplicationID, message);
+                this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
+            }
+        );
+    }
+
+    canInvite(): boolean {
+        return !this.applicationData.AlreadyInvited && this.settings.AdminLevel == this.settings.AdminLevelForApplicationInvites;
     }
 
     private applicationsLoadedFunc() {
@@ -77,7 +103,6 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     }
 
     private applicationDataLoadedFunc(json: string) {
-        this.userpanelService.loadingData = false;
         this.applicationData = JSON.parse(json);
         if (typeof(this.applicationData.Answers) === "string") {
             this.applicationData.Answers = JSON.parse(this.applicationData.Answers);

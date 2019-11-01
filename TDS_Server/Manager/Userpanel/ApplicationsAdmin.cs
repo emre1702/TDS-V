@@ -48,7 +48,7 @@ namespace TDS_Server.Manager.Userpanel
                     a.PlayerName
                 });
 
-                return JsonConvert.SerializeObject(apps);
+                return JsonConvert.SerializeObject(appsToSend);
             }
             catch (Exception ex)
             {
@@ -80,7 +80,16 @@ namespace TDS_Server.Manager.Userpanel
 
             var stats = await PlayerStats.GetPlayerStats(creatorId, false, player);
 
-            string json = JsonConvert.SerializeObject(new { Answers = answers, Questions = questionsJson, Stats = stats });
+            bool alreadyInvited = await dbContext.ApplicationInvitations.AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id);
+
+            string json = JsonConvert.SerializeObject(new 
+            { 
+                ApplicationID = applicationId,
+                Answers = answers, 
+                Questions = questionsJson, 
+                Stats = stats,
+                AlreadyInvited = alreadyInvited
+            });
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadApplicationDataForAdmin, json);
             
         }

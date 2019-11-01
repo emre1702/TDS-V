@@ -40,5 +40,15 @@ namespace TDS_Server.Manager.EventManager
 
             
         }
+
+        [RemoteEvent(DToServerEvent.SendApplicationInvite)]
+        public async void SendApplicationInviteMethod(Client client, int applicationId, string message) 
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+
+            await Userpanel.ApplicationsAdmin.SendInvitation(player, applicationId, message);
+        }
     }
 }

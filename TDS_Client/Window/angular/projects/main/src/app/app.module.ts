@@ -68,6 +68,7 @@ import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-l
 import { UserpanelApplicationComponent } from './components/userpanel/userpanel-application (user)/userpanel-application.component';
 import { UserpanelApplicationsComponent } from './components/userpanel/userpanel-applications (admin)/userpanel-applications.component';
 import { UserpanelAdminQuestionsComponent } from './components/userpanel/userpanel-admin-questions/userpanel-admin-questions.component';
+import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { UserpanelAdminQuestionsComponent } from './components/userpanel/userpan
     LoadMapDialog,
     AreYouSureDialog,
     CustomLobbyPasswordDialog,
+    ApplicationInviteDialog,
     LobbyChoiceComponent,
     TeamChoiceComponent,
     UserpanelComponent,
@@ -138,7 +140,7 @@ import { UserpanelAdminQuestionsComponent } from './components/userpanel/userpan
     MatProgressSpinnerModule,
     MatCardModule
   ],
-  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog],
+  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog],
   providers: [
     OrderByPipe,
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }

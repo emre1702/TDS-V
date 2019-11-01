@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{ 'Message' | language: settings.Lang }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="message" cdkFocusInitial [maxLength]="200" rows="4"></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="undefined">{{ 'Cancel' | language: settings.Lang }}</button>
+  <button mat-raised-button [mat-dialog-close]="message" >{{ 'Send' | language: settings.Lang }}</button>
+</div>

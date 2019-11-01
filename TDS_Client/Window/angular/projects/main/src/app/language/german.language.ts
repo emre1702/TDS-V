@@ -158,6 +158,10 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     RemoveTeam = "Team entfernen";
     Back = "Zurück";
     TimeZone = "Zeitzone";
+    Message = "Nachricht";
+    Invite = "Einladen";
+    Accept = "Akzeptieren";
+    Reject = "Ablehnen";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

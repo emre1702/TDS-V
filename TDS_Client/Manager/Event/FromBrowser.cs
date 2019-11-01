@@ -63,6 +63,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(DToServerEvent.SendApplication, OnSendApplicationMethod);
+            Add(DToServerEvent.SendApplicationInvite, OnSendApplicationInviteMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DFromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
@@ -365,6 +366,13 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             EventsSender.Send(DToServerEvent.SendApplication, json);
+        }
+
+        private void OnSendApplicationInviteMethod(object[] args)
+        {
+            int applicationId = Convert.ToInt32(args[0]);
+            string message = (string)args[1];
+            EventsSender.Send(DToServerEvent.SendApplicationInvite, applicationId, message);
         }
 
         private void OnSendMapCreatorDataMethod(object[] args)

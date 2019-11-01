@@ -148,6 +148,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     RemoveTeam = "Remove team";
     Back = "Back";
     TimeZone = "Time zone";
+    Message = "Message";
+    Invite = "Invite";
+    Accept = "Accept";
+    Reject = "Reject";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

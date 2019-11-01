@@ -1,3 +1,14 @@
-.mat-expansion-panel {
-    margin-bottom: 10px;
+
+.application-container {
+    .mat-expansion-panel {
+        margin-bottom: 10px;
+    }
+
+    .mat-accordion {
+        margin-bottom: 20px;
+    }
+
+    button {
+       float: right;
+    }
 }

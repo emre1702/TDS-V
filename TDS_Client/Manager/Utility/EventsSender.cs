@@ -31,6 +31,8 @@ namespace TDS_Client.Manager.Utility
             [DToServerEvent.RequestPlayersForScoreboard] = new CooldownEventDto(5000),
             [DToServerEvent.SaveMapCreatorData] = new CooldownEventDto(10000),
             [DToServerEvent.SaveSettings] = new CooldownEventDto(3000),
+            [DToServerEvent.SendApplication] = new CooldownEventDto(3000),
+            [DToServerEvent.SendApplicationInvite] = new CooldownEventDto(5000),
             [DToServerEvent.SendMapCreatorData] = new CooldownEventDto(10000),
             [DToServerEvent.SendMapRating] = new CooldownEventDto(2000),
             [DToServerEvent.SendTeamOrder] = new CooldownEventDto(2000),

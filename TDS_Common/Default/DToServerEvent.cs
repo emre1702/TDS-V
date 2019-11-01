@@ -42,6 +42,7 @@
         public const string SaveMapCreatorData = "SaveMapCreatorData_Client";
         public const string SaveSettings = "SaveSettings_Browser";
         public const string SendApplication = "SendApplication_Browser";
+        public const string SendApplicationInvite = "SendApplicationInvite_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Client";
         public const string SendMapRating = "SendMapRating_Client";
         public const string SendTeamOrder = "SendTeamOrder_Client";
