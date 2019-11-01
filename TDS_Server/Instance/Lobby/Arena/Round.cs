@@ -194,17 +194,20 @@ namespace TDS_Server.Instance.Lobby
                 //Vector3 rot = new Vector3(0, 0, 345);
 
                 NAPI.Player.SpawnPlayer(winner, new Vector3(-425.48, 1123.55, 325.85), 345);
+                Workaround.FreezePlayer(winner, true);
                 winner.Dimension = Dimension;
 
                 if (second is { })
                 {
                     NAPI.Player.SpawnPlayer(second, new Vector3(-427.03, 1123.21, 325.85), 345);
+                    Workaround.FreezePlayer(second, true);
                     second.Dimension = Dimension;
                 }
 
                 if (third is { })
                 {
                     NAPI.Player.SpawnPlayer(third, new Vector3(-424.33, 1122.5, 325.85), 345);
+                    Workaround.FreezePlayer(third, true);
                     third.Dimension = Dimension;
                 }
 
