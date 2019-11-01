@@ -24,7 +24,7 @@ namespace TDS_Server.Manager.Userpanel
         {
             try
             {
-                if (player.AdminLevel.Level != (short)EAdminLevel.Administrator)
+                if (player.AdminLevel.Level == (short)EAdminLevel.User)
                     return null;
 
                 using var dbContext = new TDSNewContext();
@@ -60,7 +60,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task SendApplicationData(TDSPlayer player, int applicationId)
         {
-            if (player.AdminLevel.Level != (short)EAdminLevel.Administrator)
+            if (player.AdminLevel.Level == (short)EAdminLevel.User)
                 return;
 
             using var dbContext = new TDSNewContext();
