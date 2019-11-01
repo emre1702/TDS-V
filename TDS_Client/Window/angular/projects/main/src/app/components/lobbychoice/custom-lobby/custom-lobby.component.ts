@@ -255,7 +255,9 @@ export class CustomLobbyMenuComponent {
       const dialogRef = this.dialog.open(CustomLobbyPasswordDialog, { data: clickedLobbyData.Password, panelClass: "mat-app-background" });
 
       dialogRef.beforeClosed().subscribe((inputedPassword) => {
-        if (!inputedPassword) {
+        if (inputedPassword == undefined)
+            return;
+        if (inputedPassword == false) {
           this.snackBar.open(this.settings.Lang.PasswordIncorrect, "OK", { duration: 7000, panelClass: "mat-app-background" });
           return;
         }

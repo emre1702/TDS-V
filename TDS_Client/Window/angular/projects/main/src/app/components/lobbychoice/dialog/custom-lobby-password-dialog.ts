@@ -20,7 +20,10 @@ export class CustomLobbyPasswordDialog {
     this.changeDetector.detectChanges();
   }
 
-  isPasswordCorrect() {
-    return this.password === this.input;
+  isPasswordCorrectGetPasswort() {
+    if (this.password !== this.input) {
+        return false;
+    }
+    return this.password;
   }
 }
