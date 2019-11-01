@@ -30,16 +30,23 @@ namespace TDS_Server.Manager.Userpanel
                 using var dbContext = new TDSNewContext();
 
                 var apps = await dbContext.Applications
-                    .Where(a => !a.Closed && DateTime.Now < a.CreateTime.AddDays(ServerConstants.CloseApplicationAfterDays))
+                    .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(ServerConstants.CloseApplicationAfterDays))
                     .Include(a => a.Player)
                     .Select(a => new
                     {
                         ID = a.Id,
-                        CreateTime = new DateTimeOffset(a.CreateTime).ToString(Constants.DateTimeOffsetFormat),
+                        a.CreateTime,
                         PlayerName = a.Player.Name
                     })
                     .OrderBy(a => a.ID)
                     .ToListAsync();
+
+                var appsToSend = apps.Select(a => new
+                {
+                    a.ID,
+                    CreateTime = player.GetLocalDateTime(a.CreateTime).ToString(Constants.DateTimeOffsetFormat),
+                    a.PlayerName
+                });
 
                 return JsonConvert.SerializeObject(apps);
             }
@@ -71,7 +78,7 @@ namespace TDS_Server.Manager.Userpanel
                 .ToDictionaryAsync(a => a.QuestionId, a => a.Answer);
             var questionsJson = ApplicationUser.AdminQuestions;
 
-            var stats = await PlayerStats.GetPlayerStats(creatorId, false);
+            var stats = await PlayerStats.GetPlayerStats(creatorId, false, player);
 
             string json = JsonConvert.SerializeObject(new { Answers = answers, Questions = questionsJson, Stats = stats });
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadApplicationDataForAdmin, json);

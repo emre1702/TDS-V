@@ -84,7 +84,7 @@ namespace TDS_Server_DB.Migrations
                     AsDonator = table.Column<bool>(nullable: false),
                     AsVIP = table.Column<bool>(nullable: false),
                     Reason = table.Column<string>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
                     LengthOrEndTime = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -104,7 +104,7 @@ namespace TDS_Server_DB.Migrations
                     Lobby = table.Column<int>(nullable: true),
                     IsAdminChat = table.Column<bool>(nullable: false),
                     IsTeamChat = table.Column<bool>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -120,7 +120,7 @@ namespace TDS_Server_DB.Migrations
                     Source = table.Column<int>(nullable: true),
                     Info = table.Column<string>(nullable: false),
                     StackTrace = table.Column<string>(nullable: true),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -138,7 +138,7 @@ namespace TDS_Server_DB.Migrations
                     Serial = table.Column<string>(maxLength: 200, nullable: true),
                     IP = table.Column<IPAddress>(nullable: true),
                     Lobby = table.Column<int>(nullable: true),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -163,7 +163,7 @@ namespace TDS_Server_DB.Migrations
                 name: "server_daily_stats",
                 columns: table => new
                 {
-                    Date = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "CURRENT_DATE"),
+                    Date = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "timezone('utc', CURRENT_DATE)"),
                     PlayerPeak = table.Column<short>(nullable: false, defaultValue: (short)0),
                     ArenaRoundsPlayed = table.Column<int>(nullable: false, defaultValue: 0),
                     CustomArenaRoundsPlayed = table.Column<int>(nullable: false, defaultValue: 0),
@@ -353,7 +353,7 @@ namespace TDS_Server_DB.Migrations
                     IsVIP = table.Column<bool>(nullable: false, defaultValue: false),
                     Donation = table.Column<short>(nullable: false, defaultValue: (short)0),
                     GangId = table.Column<int>(nullable: true, defaultValue: -1),
-                    RegisterTimestamp = table.Column<DateTime>(type: "timestamp(4) without time zone", nullable: false, defaultValueSql: "now()")
+                    RegisterTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -400,7 +400,7 @@ namespace TDS_Server_DB.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     PlayerId = table.Column<int>(nullable: false),
-                    CreateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
+                    CreateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
                     Closed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -435,7 +435,7 @@ namespace TDS_Server_DB.Migrations
                     IsTemporary = table.Column<bool>(nullable: false),
                     IsOfficial = table.Column<bool>(nullable: false),
                     SpawnAgainAfterDeathMs = table.Column<int>(nullable: false, defaultValueSql: "400"),
-                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()"),
+                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
                     ShowRanking = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -457,7 +457,7 @@ namespace TDS_Server_DB.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     Name = table.Column<string>(nullable: false),
                     CreatorId = table.Column<int>(nullable: true),
-                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -480,7 +480,7 @@ namespace TDS_Server_DB.Migrations
                     SourceID = table.Column<int>(nullable: false),
                     Message = table.Column<string>(nullable: false),
                     Seen = table.Column<bool>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    Timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -550,6 +550,7 @@ namespace TDS_Server_DB.Migrations
                     Language = table.Column<ELanguage>(nullable: false, defaultValue: ELanguage.English),
                     AllowDataTransfer = table.Column<bool>(nullable: false),
                     ShowConfettiAtRanking = table.Column<bool>(nullable: false),
+                    TimeZone = table.Column<string>(nullable: true, defaultValue: "UTC"),
                     DiscordIdentity = table.Column<string>(nullable: true),
                     Hitsound = table.Column<bool>(nullable: false),
                     Bloodscreen = table.Column<bool>(nullable: false),
@@ -580,7 +581,7 @@ namespace TDS_Server_DB.Migrations
                     MuteTime = table.Column<int>(nullable: true),
                     VoiceMuteTime = table.Column<int>(nullable: true),
                     LoggedIn = table.Column<bool>(nullable: false),
-                    LastLoginTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "now()")
+                    LastLoginTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -782,8 +783,8 @@ namespace TDS_Server_DB.Migrations
                     AdminId = table.Column<int>(nullable: true),
                     Serial = table.Column<string>(nullable: true),
                     Reason = table.Column<string>(nullable: false),
-                    StartTimestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    EndTimestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    StartTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    EndTimestamp = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {

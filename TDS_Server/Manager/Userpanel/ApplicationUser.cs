@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Userpanel
                 return JsonConvert.SerializeObject(new { AdminQuestions });
             }
 
-            if (application.CreateTime.AddDays(ServerConstants.DeleteApplicationAfterDays) > DateTime.Now)
+            if (application.CreateTime.AddDays(ServerConstants.DeleteApplicationAfterDays) > DateTime.UtcNow)
             {
                 await player.ExecuteForDBAsync((dbContext) =>
                 {
@@ -84,7 +84,7 @@ namespace TDS_Server.Manager.Userpanel
                 return JsonConvert.SerializeObject(new { AdminQuestions });
             }
 
-            return JsonConvert.SerializeObject(new { CreateTime = new DateTimeOffset(applicationData.CreateTime).ToString(Constants.DateTimeOffsetFormat), applicationData.Invitations });
+            return JsonConvert.SerializeObject(new { CreateTime = player.GetLocalDateTime(applicationData.CreateTime).ToString(Constants.DateTimeOffsetFormat), applicationData.Invitations });
         }
 
         public static async void CreateApplication(TDSPlayer player, string answersJson)

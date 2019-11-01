@@ -351,7 +351,7 @@ namespace TDS_Server.Manager.Maps
                 CreatedMap map = JsonConvert.DeserializeObject<CreatedMap>(content);
                 string path = Setting.NewMapsPath + playeruid + "/";
                 Directory.CreateDirectory(path);
-                using (StreamWriter writer = File.CreateText(path + DateTime.Now + ".xml"))
+                using (StreamWriter writer = File.CreateText(path + DateTime.UtcNow + ".xml"))
                 {
                     await writer.WriteAsync(GetXmlStringByMap(map, playeruid));
                 }

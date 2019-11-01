@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Logs
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.UtcNow,
                 LengthOrEndTime = lengthOrEndTime
             };
             LogsManager.AddLog(log);
@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Logs
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.UtcNow,
                 LengthOrEndTime = lengthOrEndTime
             };
             LogsManager.AddLog(log);

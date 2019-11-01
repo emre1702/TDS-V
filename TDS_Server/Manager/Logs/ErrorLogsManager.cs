@@ -15,7 +15,7 @@ namespace TDS_Server.Manager.Logs
                 Info = info,
                 StackTrace = stacktrace,
                 Source = source?.GetEntity()?.Id,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             Console.WriteLine(info + "\n" + stacktrace);
             LogsManager.AddLog(log);
@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Logs
                 Info = info,
                 StackTrace = stacktrace,
                 Source = source?.Entity?.Id,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             Console.WriteLine(info + "\n" + stacktrace);
             LogsManager.AddLog(log);

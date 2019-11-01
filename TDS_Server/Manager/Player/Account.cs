@@ -142,14 +142,14 @@ namespace TDS_Server.Manager.Player
             if (ban is null)
                 return true;
 
-            if (ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.Now)
+            if (ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.UtcNow)
             {
                 dbContext.Remove(ban);
                 await dbContext.SaveChangesAsync();
                 return true;
             }
 
-            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+            string startstr =  ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
             //todo Test line break and display
             player.Kick($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");

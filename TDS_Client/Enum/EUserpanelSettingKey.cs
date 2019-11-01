@@ -5,6 +5,7 @@
         AllowDataTransfer,
         Language,
         ShowConfettiAtRanking,
+        TimeZone,
         DiscordIdentity,
 
         Bloodscreen,

@@ -134,6 +134,7 @@ export interface Language {
     AddTeam: string;
     RemoveTeam: string;
     Back: string;
+    TimeZone: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

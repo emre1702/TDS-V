@@ -29,6 +29,8 @@ namespace TDS_Server.Manager.EventManager
                 });
                 await player.SaveData();
 
+                player.LoadTimeZone();
+
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncSettings, json);
             }
             catch (Exception ex)

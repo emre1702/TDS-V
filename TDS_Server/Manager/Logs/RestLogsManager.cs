@@ -23,7 +23,7 @@ namespace TDS_Server.Manager.Logs
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
                 Serial = saveipserial ? source?.Serial : null,
                 Lobby = savelobby ? source?.GetChar().CurrentLobby?.Id : null,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             LogsManager.AddLog(log);
         }

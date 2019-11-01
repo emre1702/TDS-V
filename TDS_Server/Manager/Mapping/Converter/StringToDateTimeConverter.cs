@@ -22,12 +22,12 @@ namespace TDS_Server.Manager.Mapping.Converter
                 case string _ when time.EndsWith("s", true, CultureInfo.CurrentCulture):    // seconds
                     if (!double.TryParse(time[0..^1], out double seconds))
                         return null;
-                    return DateTime.Now.AddSeconds(seconds);
+                    return DateTime.UtcNow.AddSeconds(seconds);
 
                 case string _ when time.EndsWith("sec", true, CultureInfo.CurrentCulture):    // seconds
                     if (!double.TryParse(time[0..^3], out double secs))
                         return null;
-                    return DateTime.Now.AddSeconds(secs);
+                    return DateTime.UtcNow.AddSeconds(secs);
 
                 #endregion Seconds
 
@@ -36,12 +36,12 @@ namespace TDS_Server.Manager.Mapping.Converter
                 case string _ when time.EndsWith("m", true, CultureInfo.CurrentCulture):    // minutes
                     if (!double.TryParse(time[0..^1], out double minutes))
                         return null;
-                    return DateTime.Now.AddMinutes(minutes);
+                    return DateTime.UtcNow.AddMinutes(minutes);
 
                 case string _ when time.EndsWith("min", true, CultureInfo.CurrentCulture):    // minutes
                     if (!double.TryParse(time[0..^3], out double mins))
                         return null;
-                    return DateTime.Now.AddMinutes(mins);
+                    return DateTime.UtcNow.AddMinutes(mins);
 
                 #endregion Minutes
 
@@ -50,12 +50,12 @@ namespace TDS_Server.Manager.Mapping.Converter
                 case string _ when time.EndsWith("h", true, CultureInfo.CurrentCulture):    // hours
                     if (!double.TryParse(time[0..^1], out double hours))
                         return null;
-                    return DateTime.Now.AddHours(hours);
+                    return DateTime.UtcNow.AddHours(hours);
 
                 case string _ when time.EndsWith("st", true, CultureInfo.CurrentCulture):    // hours
                     if (!double.TryParse(time[0..^2], out double hours2))
                         return null;
-                    return DateTime.Now.AddHours(hours2);
+                    return DateTime.UtcNow.AddHours(hours2);
 
                 #endregion Hours
 
@@ -65,7 +65,7 @@ namespace TDS_Server.Manager.Mapping.Converter
                 case string _ when time.EndsWith("t", true, CultureInfo.CurrentCulture):    // days
                     if (!double.TryParse(time[0..^1], out double days))
                         return null;
-                    return DateTime.Now.AddDays(days);
+                    return DateTime.UtcNow.AddDays(days);
 
                 #endregion Days
 

@@ -1220,7 +1220,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<float>("DefaultSpawnRotation")
                         .ValueGeneratedOnAdd()
@@ -2157,7 +2157,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<ELogType>("Type")
                         .HasColumnType("e_log_type");
@@ -2198,7 +2198,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id");
 
@@ -2227,7 +2227,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id");
 
@@ -2260,7 +2260,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<ELogType>("Type")
                         .HasColumnType("e_log_type");
@@ -2282,7 +2282,7 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("EndTimestamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Reason")
                         .IsRequired()
@@ -2293,8 +2293,8 @@ namespace TDS_Server_DB.Migrations
 
                     b.Property<DateTime>("StartTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("PlayerId", "LobbyId")
                         .HasName("player_bans_pkey");
@@ -2468,6 +2468,11 @@ namespace TDS_Server_DB.Migrations
                     b.Property<bool>("ShowConfettiAtRanking")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("TimeZone")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("UTC");
+
                     b.Property<bool>("Voice3D")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -2498,7 +2503,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("LastLoginTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<bool>("LoggedIn")
                         .HasColumnType("boolean");
@@ -2584,8 +2589,8 @@ namespace TDS_Server_DB.Migrations
 
                     b.Property<DateTime>("RegisterTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp(4) without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<string>("SCName")
                         .IsRequired()
@@ -2672,7 +2677,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int?>("CreatorId")
                         .HasColumnType("integer");
@@ -2748,7 +2753,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id");
 
@@ -3523,7 +3528,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
-                        .HasDefaultValueSql("CURRENT_DATE");
+                        .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
 
                     b.Property<int>("AmountLogins")
                         .ValueGeneratedOnAdd()
@@ -3820,7 +3825,7 @@ namespace TDS_Server_DB.Migrations
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");

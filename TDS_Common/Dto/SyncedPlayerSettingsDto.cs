@@ -10,6 +10,7 @@ namespace TDS_Common.Dto
         public ELanguage Language { get; set; }
         public bool AllowDataTransfer { get; set; }
         public bool ShowConfettiAtRanking { get; set; }
+        public string TimeZone { get; set; } 
         public string DiscordIdentity { get; set; }
         #endregion
 

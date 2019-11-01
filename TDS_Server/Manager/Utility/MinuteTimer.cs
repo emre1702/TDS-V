@@ -42,7 +42,7 @@ namespace TDS_Server.Manager.Utility
                     //Season.SaveSeason();
                 }
 
-                var date = DateTime.Now;
+                var date = DateTime.UtcNow;
                 NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
             }
             catch (Exception ex)

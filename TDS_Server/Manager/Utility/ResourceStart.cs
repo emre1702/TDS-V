@@ -23,7 +23,7 @@ namespace TDS_Server.Manager.Utility
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
-            var date = DateTime.Now;
+            var date = DateTime.UtcNow;
             NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
             LoadAll();
         }
@@ -91,19 +91,6 @@ namespace TDS_Server.Manager.Utility
             try
             {
                 ErrorLogsManager.Log("Unhandled exception: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        [ServerEvent(Event.FirstChanceException)]
-        public void OnFirstChanceException(Exception ex)
-        {
-            try
-            {
-                ErrorLogsManager.Log("First chance exception: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, (TDSPlayer?)null);
             }
             catch
             {

@@ -7,6 +7,10 @@
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="NeoSmart.Hashing">
       <HintPath>C:\RAGEMP\dotnet\NeoSmart.Hashing.dll</HintPath>

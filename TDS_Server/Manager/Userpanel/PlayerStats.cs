@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Manager.Utility;
@@ -20,7 +21,7 @@ namespace TDS_Server.Manager.Userpanel
             {
                 if (player.Entity is null)
                     return null;
-                var stats = await GetPlayerStats(player.Entity.Id, true);
+                var stats = await GetPlayerStats(player.Entity.Id, true, player);
                 return JsonConvert.SerializeObject(stats);
             }
             catch (Exception ex)
@@ -30,7 +31,7 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
-        public static async Task<PlayerUserpanelStatsDataDto> GetPlayerStats(int playerId, bool loadLobbyStats = false)
+        public static async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, TDSPlayer? forPlayer = null)
         {
             using var dbContext = new TDSNewContext();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -55,7 +56,7 @@ namespace TDS_Server.Manager.Userpanel
                     Donation = p.Donation,
                     IsVip = p.IsVip,
                     Name = p.Name,
-                    RegisterTimestamp = new DateTimeOffset(p.RegisterTimestamp).ToString(Constants.DateTimeOffsetFormat),
+                    RegisterDateTime = p.RegisterTimestamp,
                     SCName = p.SCName,
                     Gang = p.Gang.Team.Name,
                     AmountMapsCreated = p.Maps.Count,
@@ -63,7 +64,7 @@ namespace TDS_Server.Manager.Userpanel
                     BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name),
                     AmountMapsRated = p.PlayerMapRatings.Count,
                     MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
-                    LastLogin = new DateTimeOffset(p.PlayerStats.LastLoginTimestamp).ToString(Constants.DateTimeOffsetFormat),
+                    LastLoginDateTime = p.PlayerStats.LastLoginTimestamp,
                     Money = p.PlayerStats.Money,
                     MuteTime = p.PlayerStats.MuteTime,
                     PlayTime = p.PlayerStats.PlayTime,
@@ -74,6 +75,9 @@ namespace TDS_Server.Manager.Userpanel
                 })
                 .FirstOrDefaultAsync();
 
+            if (data == null)
+                return null;
+
             data.Logs = await dbContext.LogAdmins
                 .Select(l => new PlayerUserpanelAdminTargetHistoryDataDto
                 {
@@ -83,7 +87,7 @@ namespace TDS_Server.Manager.Userpanel
                     AsVip = l.AsVip,
                     LobbyId = l.Lobby,
                     Reason = l.Reason,
-                    Timestamp = new DateTimeOffset(l.Timestamp).ToString(Constants.DateTimeOffsetFormat),
+                    TimestampDateTime = l.Timestamp,
                     Type = l.Type.ToString(),
                     LengthOrEndTime = l.LengthOrEndTime
                 })
@@ -97,6 +101,34 @@ namespace TDS_Server.Manager.Userpanel
                     .Select(p => p.Name)
                     .FirstOrDefaultAsync();
                 adminTarget.Lobby = adminTarget.LobbyId.HasValue ? LobbyManager.GetLobby(adminTarget.LobbyId.Value)?.Name : null;
+            }
+
+            if (forPlayer != null)
+            {
+                data.RegisterTimestamp = forPlayer
+                    .GetLocalDateTime(data.RegisterDateTime)
+                    .ToString(Constants.DateTimeOffsetFormat);
+
+                data.LastLogin = forPlayer
+                    .GetLocalDateTime(data.LastLoginDateTime)
+                    .ToString(Constants.DateTimeOffsetFormat);
+
+                foreach (var log in data.Logs)
+                {
+                    log.Timestamp = forPlayer
+                        .GetLocalDateTime(log.TimestampDateTime)
+                        .ToString(Constants.DateTimeOffsetFormat);
+                }
+            }
+            else
+            {
+                data.RegisterTimestamp = new DateTimeOffset(data.RegisterDateTime).ToString(Constants.DateTimeOffsetFormat);
+                data.LastLogin = new DateTimeOffset(data.LastLoginDateTime).ToString(Constants.DateTimeOffsetFormat);
+
+                foreach (var log in data.Logs)
+                {
+                    log.Timestamp = new DateTimeOffset(log.TimestampDateTime).ToString(Constants.DateTimeOffsetFormat);
+                }
             }
 
             return data;
@@ -162,6 +194,8 @@ namespace TDS_Server.Manager.Userpanel
         public int? TargetId { get; internal set; }
         [JsonIgnore]
         public int? LobbyId { get; internal set; }
+        [JsonIgnore]
+        public DateTime TimestampDateTime { get; internal set; }
     }
 
     class PlayerUserpanelStatsDataDto
@@ -185,6 +219,11 @@ namespace TDS_Server.Manager.Userpanel
         public int Money { get; internal set; }
         public int? VoiceMuteTime { get; internal set; }
         public int PlayTime { get; internal set; }
+
+        [JsonIgnore]
+        public DateTime LastLoginDateTime { get; set; }
+        [JsonIgnore]
+        public DateTime RegisterDateTime { get; set; }
 
         public IEnumerable<PlayerUserpanelLobbyStats> LobbyStats { get; internal set; }
         public IEnumerable<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }

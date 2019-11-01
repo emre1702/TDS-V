@@ -147,6 +147,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     AddTeam = "Add team";
     RemoveTeam = "Remove team";
     Back = "Back";
+    TimeZone = "Time zone";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

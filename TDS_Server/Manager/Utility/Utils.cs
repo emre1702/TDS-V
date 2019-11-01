@@ -7,7 +7,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using TDS_Common.Dto.Map;
 using TDS_Server.Dto.Map;
 
 namespace TDS_Server.Manager.Utility
@@ -15,13 +14,6 @@ namespace TDS_Server.Manager.Utility
     internal static class Utils
     {
         private static readonly StringBuilder _strbuilder = new StringBuilder();
-        private static readonly DateTime _startDateTime = new DateTime(2017, 7, 24);
-
-        public static uint GetTimespanSinceStart(int seconds = 0)
-        {
-            TimeSpan t = DateTime.Now.AddSeconds(seconds) - _startDateTime;
-            return (uint)t.TotalSeconds;
-        }
 
         public static string GetTimestamp()
         {

@@ -157,6 +157,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     AddTeam = "Team hinzufügen";
     RemoveTeam = "Team entfernen";
     Back = "Zurück";
+    TimeZone = "Zeitzone";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

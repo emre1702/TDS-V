@@ -69,7 +69,7 @@ namespace TDS.server.manager.utility {
         }
 
         public async static void LoadSeason ( ) {
-            int currentmonth = DateTime.Now.Month;
+            int currentmonth = DateTime.UtcNow.Month;
             DataTable result = await Database.ExecResult ( "SELECT month FROM season ORDER BY id DESC LIMIT 1" ).ConfigureAwait ( false );
             if ( result.Rows.Count > 0 ) {
                 DataRow row = result.Rows[0];

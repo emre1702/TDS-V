@@ -13,7 +13,7 @@ namespace TDS_Server.Manager.Utility
         {
             using var dbContext = new TDSNewContext();
             var bans = await dbContext.PlayerBans
-                .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.Now)
+                .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.UtcNow)
                 .ToListAsync();
             dbContext.PlayerBans.RemoveRange(bans);
             await dbContext.SaveChangesAsync();

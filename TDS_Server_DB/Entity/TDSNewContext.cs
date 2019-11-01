@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -223,7 +224,8 @@ namespace TDS_Server_DB.Entity
                 entity.ToTable("applications");
 
                 entity.Property(e => e.CreateTime)
-                    .HasDefaultValueSql("now()");
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.HasOne(app => app.Player)
                     .WithOne(player => player.Application)
@@ -347,7 +349,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("3");
 
-                entity.Property(e => e.CreateTimestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.CreateTimestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.Property(e => e.DefaultSpawnX).HasDefaultValueSql("0");
                 entity.Property(e => e.DefaultSpawnY).HasDefaultValueSql("0");
@@ -500,7 +504,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Reason).IsRequired();
 
-                entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
                 entity.Property(e => e.LengthOrEndTime).IsRequired(false);
             });
 
@@ -512,7 +518,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Message).IsRequired();
 
-                entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
             });
 
             modelBuilder.Entity<LogErrors>(entity =>
@@ -523,7 +531,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Info).IsRequired();
 
-                entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
             });
 
             modelBuilder.Entity<LogRests>(entity =>
@@ -536,7 +546,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Serial).HasMaxLength(200);
 
-                entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
             });
 
             modelBuilder.Entity<Maps>(entity =>
@@ -549,7 +561,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
 
-                entity.Property(e => e.CreateTimestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.CreateTimestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.Property(e => e.Name).IsRequired();
 
@@ -573,7 +587,9 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.TargetId).HasColumnName("TargetID");
 
-                entity.Property(e => e.Timestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.HasOne(d => d.Source)
                     .WithMany(p => p.OfflinemessagesSource)
@@ -595,15 +611,16 @@ namespace TDS_Server_DB.Entity
 
                 entity.ToTable("player_bans");
 
-                entity.Property(e => e.EndTimestamp).HasColumnType("timestamp with time zone");
+                entity.Property(e => e.EndTimestamp)
+                    .HasConversion(v => v, v => v == null ? (DateTime?)null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
 
                 entity.Property(e => e.Serial).IsRequired(false);
 
                 entity.Property(e => e.Reason).IsRequired();
 
                 entity.Property(e => e.StartTimestamp)
-                    .HasColumnType("timestamp with time zone")
-                    .HasDefaultValueSql("now()");
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.HasOne(d => d.Admin)
                     .WithMany(p => p.PlayerBansAdmin)
@@ -752,6 +769,8 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
                 entity.Property(e => e.DiscordIdentity);
+                entity.Property(e => e.TimeZone)
+                    .HasDefaultValue("UTC");
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
@@ -771,7 +790,9 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.LastLoginTimestamp).HasDefaultValueSql("now()");
+                entity.Property(e => e.LastLoginTimestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerStats)
@@ -829,8 +850,8 @@ namespace TDS_Server_DB.Entity
                     .IsRequired(false);
 
                 entity.Property(e => e.RegisterTimestamp)
-                    .HasColumnType("timestamp(4) without time zone")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("timezone('utc', now())")
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
                 entity.Property(e => e.SCName)
                     .IsRequired()
@@ -883,7 +904,11 @@ namespace TDS_Server_DB.Entity
 
                 entity.HasKey(e => e.Date).HasName("server_daily_stats_date_pkey");
 
-                entity.Property(e => e.Date).IsRequired().HasColumnType("date").HasDefaultValueSql("CURRENT_DATE");
+                entity.Property(e => e.Date)
+                    .IsRequired()
+                    .HasColumnType("date")
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);

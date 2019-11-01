@@ -48,6 +48,7 @@ namespace TDS_Server.Instance.Player
                 PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
                 PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, _entity.PlayerStats.Money);
                 PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.AdminLevel, EPlayerDataSyncMode.All, _entity.AdminLvl);
+                LoadTimeZone();
             }
         }
 
@@ -241,6 +242,7 @@ namespace TDS_Server.Instance.Player
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
         public string DisplayName => AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + Client.Name : Client.Name;
+        public TimeZoneInfo TimeZone = TimeZoneInfo.Utc;
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -361,6 +363,18 @@ namespace TDS_Server.Instance.Player
         public bool HasRelationTo(TDSPlayer target, EPlayerRelation relation)
         {
             return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
+        }
+
+        public void LoadTimeZone()
+        {
+            if (Entity == null)
+                return;
+            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(Entity.PlayerSettings.TimeZone);
+        }
+
+        public DateTime GetLocalDateTime(DateTime dateTime)
+        {
+            return TimeZoneInfo.ConvertTime(dateTime, TimeZone);
         }
 
         public async Task SaveData()

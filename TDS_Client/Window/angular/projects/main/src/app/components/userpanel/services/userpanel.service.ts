@@ -98,8 +98,12 @@ export class UserpanelService {
     }
 
     loadMyStats() {
-        if (this.myStatsLoadCooldown)
+        if (this.myStatsLoadCooldown) {
+            this.loadingData = false;
+            this.loadingDataChanged.emit(null);
             return;
+        }
+
         this.myStatsLoadCooldown = setTimeout(this.myStatsLoadingCooldownEnded.bind(this), 3 * 60 * 1000);
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStats);
     }
@@ -200,7 +204,7 @@ export class UserpanelService {
     }
 
 
-    private myStatsLoadingCooldownEnded() {
+    myStatsLoadingCooldownEnded() {
         this.myStatsLoadCooldown = undefined;
     }
 

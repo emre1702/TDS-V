@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Logs
                 Lobby = isglobal ? null : source?.CurrentLobby?.Id,
                 IsAdminChat = isadminchat,
                 IsTeamChat = isteamchat,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             LogsManager.AddLog(log);
         }

@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.Lobby
                 {
                     ban.AdminId = admin.Entity?.Id ?? 0;
                     ban.Serial = serial;
-                    ban.StartTimestamp = DateTime.Now;
+                    ban.StartTimestamp = DateTime.UtcNow;
                     ban.EndTimestamp = endTime;
                     ban.Reason = reason;
                 }
@@ -127,12 +127,12 @@ namespace TDS_Server.Instance.Lobby
                 return false;
 
             // !ban.EndTimestamp.HasValue => permaban
-            if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.Now)
+            if (!ban.EndTimestamp.HasValue || ban.EndTimestamp.Value > DateTime.UtcNow)
             {
                 string duration = "-";
                 if (ban.EndTimestamp.HasValue)
                 {
-                    duration = DateTime.Now.DurationTo(ban.EndTimestamp.Value);
+                    duration = DateTime.UtcNow.DurationTo(ban.EndTimestamp.Value);
                 }
                 NAPI.Chat.SendChatMessageToPlayer(character.Client, Utils.GetReplaced(character.Language.GOT_LOBBY_BAN, duration, ban.Reason));
                 return true;
