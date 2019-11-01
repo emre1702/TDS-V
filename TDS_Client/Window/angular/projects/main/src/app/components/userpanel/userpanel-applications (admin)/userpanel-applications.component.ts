@@ -49,18 +49,21 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         public userpanelService: UserpanelService,
         private rageConnector: RageConnectorService) {
-            this.rageConnector.listen(DFromClientEvent.LoadApplicationDataForAdmin, this.applicationDataLoadedFunc.bind(this));
         }
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
         this.userpanelService.applicationsLoaded.on(null, this.applicationsLoadedFunc.bind(this));
+        this.rageConnector.listen(DFromClientEvent.LoadApplicationDataForAdmin, this.applicationDataLoadedFunc.bind(this));
     }
 
     ngOnDestroy() {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.applicationsLoaded.off(null, this.applicationsLoadedFunc.bind(this));
         this.userpanelService.applications = undefined;
+        this.rageConnector.remove(DFromClientEvent.LoadApplicationDataForAdmin, this.applicationDataLoadedFunc.bind(this));
     }
 
     requestApplicationData(applicationID: number) {
@@ -73,7 +76,7 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    private applicationDataLoadedFunc(json) {
+    private applicationDataLoadedFunc(json: string) {
         this.userpanelService.loadingData = false;
         this.applicationData = JSON.parse(json);
         if (typeof(this.applicationData.Answers) === "string") {
@@ -85,9 +88,6 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         if (typeof(this.applicationData.Stats) === "string") {
             this.applicationData.Stats = JSON.parse(this.applicationData.Stats);
         }
-        /*for (const [questionId, answer] of Object.entries(this.applicationData.Answers)) {
-            this.applicationData.Answers[questionId] = "asd";
-        }*/
         this.changeDetector.detectChanges();
     }
 
