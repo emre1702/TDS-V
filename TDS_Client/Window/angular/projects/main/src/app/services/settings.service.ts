@@ -17,6 +17,7 @@ export class SettingsService {
 
   //////////////////// AdminLevel ////////////////////
   public AdminLevel = 0;
+  public AdminLevelForApplicationInvites = 2;
 
   public AdminLevelChanged = new EventEmitter();
 
@@ -102,5 +103,7 @@ export class SettingsService {
     rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
     rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
     rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
+
+    this.LanguageChanged.setMaxListeners(9999);
   }
 }
