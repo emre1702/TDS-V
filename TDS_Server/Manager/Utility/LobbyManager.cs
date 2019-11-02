@@ -25,9 +25,19 @@ namespace TDS_Server.Manager.Utility
     {
         public static List<Lobby> Lobbies { get; } = new List<Lobby>();
 
-        public static Lobby MainMenu => Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MainMenu).First();
-        public static Arena Arena => Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.Arena).Cast<Arena>().First();
-        public static MapCreateLobby MapCreateLobbyDummy => Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MapCreateLobby).Cast<MapCreateLobby>().First();
+        public static Lobby MainMenu => _mainMenu ?? (_mainMenu = 
+            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MainMenu).First());
+        public static Arena Arena => _arena ?? (_arena = 
+            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.Arena).Cast<Arena>().First());
+        public static MapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??(_mapCreateLobby = 
+            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MapCreateLobby).Cast<MapCreateLobby>().First());
+        public static GangLobby GangLobby => _gangLobby ?? (_gangLobby = 
+            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.GangLobby).Cast<GangLobby>().First());
+
+        private static Lobby? _mainMenu;
+        private static Arena? _arena;
+        private static MapCreateLobby? _mapCreateLobby;
+        private static GangLobby? _gangLobby;
 
 
         public static async Task LoadAllLobbies(TDSNewContext dbcontext)
@@ -60,6 +70,8 @@ namespace TDS_Server.Manager.Utility
                     //    lobby = new GangLobby(lobbysetting);
                     //    break;
                     ELobbyType.MapCreateLobby => new MapCreateLobby(lobbysetting),
+
+                    ELobbyType.GangLobby => await (new GangLobby(lobbysetting).Init(dbcontext)),
 
                     _ => new Lobby(lobbysetting),
                 };
