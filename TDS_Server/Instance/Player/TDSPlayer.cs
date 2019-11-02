@@ -378,9 +378,9 @@ namespace TDS_Server.Instance.Player
             return TimeZoneInfo.ConvertTime(dateTime, TimeZone);
         }
 
-        public async Task SaveData()
+        public async Task SaveData(bool force = false)
         {
-            if (Entity is null || !Entity.PlayerStats.LoggedIn)
+            if (!force && (Entity is null || !Entity.PlayerStats.LoggedIn))
                 return;
 
             _lastSaveTick = Environment.TickCount;
