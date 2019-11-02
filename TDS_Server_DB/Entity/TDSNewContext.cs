@@ -1014,11 +1014,24 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .HasDefaultValue("Spectator");
 
                 entity.Property(e => e.SkinHash)
                     .IsRequired()
                     .HasDefaultValue(0);
+
+                entity.Property(e => e.BlipColor)
+                    .HasDefaultValue(4);
+                    
+                entity.Property(e => e.ColorR)
+                    .HasDefaultValue(255);
+
+                entity.Property(e => e.ColorG)
+                    .HasDefaultValue(255);
+
+                entity.Property(e => e.ColorB)
+                    .HasDefaultValue(255);
 
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
