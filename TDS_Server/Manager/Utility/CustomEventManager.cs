@@ -22,6 +22,9 @@ namespace TDS_Server.Manager.Utility
         public delegate void PlayerLobbyDelegate(TDSPlayer player, Lobby lobby);
 
         public static event PlayerLobbyDelegate? OnPlayerJoinedLobby;
+        /// <summary>
+        /// If the player has left the lobby no matter which reason (could also be a disconnect)
+        /// </summary>
         public static event PlayerLobbyDelegate? OnPlayerLeftLobby;
 
 
