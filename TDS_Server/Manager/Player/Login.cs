@@ -72,8 +72,6 @@ namespace TDS_Server.Manager.Player
 
             PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
 
-            if (character.Entity.AdminLvl > 0)
-                AdminsManager.SetOnline(character);
             character.Gang = Gang.GetFromId(character.Entity.GangId ?? 0);
 
             if (character.ChatLoaded)

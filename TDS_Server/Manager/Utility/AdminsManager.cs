@@ -31,9 +31,12 @@ namespace TDS_Server.Manager.Utility
             {
                 AdminLevels[entry.Level].Names[entry.Language] = entry.Name;
             }
+
+            CustomEventManager.OnPlayerLoggedIn += SetOnline;
+            CustomEventManager.OnPlayerLoggedOut += SetOffline;
         }
 
-        public static void SetOnline(TDSPlayer player)
+        private static void SetOnline(TDSPlayer player)
         {
             if (AdminLevels.ContainsKey(player.AdminLevel.Level))
             {
@@ -41,7 +44,7 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        public static void SetOffline(TDSPlayer player)
+        private static void SetOffline(TDSPlayer player)
         {
             if (AdminLevels.ContainsKey(player.AdminLevel.Level))
             {
@@ -70,7 +73,7 @@ namespace TDS_Server.Manager.Utility
             CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, propertygetter(player.GetLang())), minadminlvl);
         }
 
-        public static void SendLangNotificationToAdmins<T>(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
+        public static void SendLangNotificationToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
             CallMethodForAdmins(player => NAPI.Notification.SendNotificationToPlayer(player.Client, propertygetter(player.Language)), minadminlvl);
         }
