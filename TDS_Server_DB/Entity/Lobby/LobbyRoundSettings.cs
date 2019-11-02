@@ -9,6 +9,7 @@
         public int BombDefuseTimeMs { get; set; }
         public int BombPlantTimeMs { get; set; }
         public bool MixTeamsAfterRound { get; set; }
+        public bool ShowRanking { get; set; }
 
         public virtual Lobbies Lobby { get; set; }
     }
