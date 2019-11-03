@@ -88,26 +88,31 @@ namespace TDS_Server.Manager.Commands
                         methoddata.HasCommandInfos = true;
                 }
 
-                var parameters = method.GetParameters().Skip(methoddata.AmountDefaultParams);
+                var parameters = method.GetParameters().Skip(methoddata.AmountDefaultParams).ToList();
                 Type[] parametertypes = parameters.Select(p => p.ParameterType).ToArray();
 
-                foreach (var parameter in parameters)
+                for (int i = 0; i < parameters.Count; ++i)
                 {
-                    #region TDSRemainingText attribute
-
-                    if (!methoddata.ToOneStringAfterParameterCount.HasValue)
-                        if (parameter.CustomAttributes.Any(d => d.AttributeType == typeof(TDSRemainingText)))
-                            methoddata.ToOneStringAfterParameterCount = parameter.Position;
-
-                    #endregion TDSRemainingText attribute
+                    var parameter = parameters[i];
 
                     #region Save parameter types
-
-                    // Don't need Type for parameters beginning at ToOneStringAfterParameterCount (because they are always strings)
-                    if (!methoddata.ToOneStringAfterParameterCount.HasValue || parameter.Position <= methoddata.ToOneStringAfterParameterCount.Value)
-                        parametertypes[parameter.Position - methoddata.AmountDefaultParams] = parameter.ParameterType;
-
+                    parametertypes[parameter.Position - methoddata.AmountDefaultParams] = parameter.ParameterType;
                     #endregion Save parameter types
+
+                    #region TDSRemainingText attribute
+                    if (!methoddata.ToOneStringAfterParameterCount.HasValue)
+                    {
+                        var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingText), false);
+                        if (remainingTextAttribute != null)
+                        {
+                            methoddata.ToOneStringAfterParameterCount = parameter.Position;
+                            methoddata.RemainingTextAttribute = (TDSRemainingText)remainingTextAttribute;
+                            break;
+                        }
+                    }
+                        
+
+                    #endregion TDSRemainingText attribute
                 }
                 methoddata.ParameterTypes = parametertypes;
 
@@ -163,7 +168,24 @@ namespace TDS_Server.Manager.Commands
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
 
-                    args = HandleRemaingText(methoddata, args);
+                    args = HandleRemaingText(methoddata, args, out string remainingText);
+
+                    #region Check if remaining text is correct (length)
+                    if (methoddata.RemainingTextAttribute != null)
+                    {
+                        if (remainingText.Length < methoddata.RemainingTextAttribute.MinLength)
+                        {
+                            NAPI.Chat.SendChatMessageToPlayer(player, character.Language.TEXT_TOO_SHORT);
+                            return;
+                        }
+                        if (remainingText.Length > methoddata.RemainingTextAttribute.MaxLength)
+                        {
+                            NAPI.Chat.SendChatMessageToPlayer(player, character.Language.TEXT_TOO_LONG);
+                            return;
+                        }
+                    }
+                    #endregion
+
                     var handleArgumentsResult = await HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args);
                     if (handleArgumentsResult.IsWrongMethod)
                         continue;
@@ -246,14 +268,16 @@ namespace TDS_Server.Manager.Commands
 
         }
 
-        private static object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args)
+        private static object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args, out string remainingText)
         {
             if (args != null && methodData.ToOneStringAfterParameterCount.HasValue)
             {
                 int index = methodData.ToOneStringAfterParameterCount.Value - methodData.AmountDefaultParams;
-                args[index] = string.Join(' ', args.Skip(index));
+                remainingText = string.Join(' ', args.Skip(index));
+                args[index] = remainingText;
                 return args.Take(index + 1).ToArray();
             }
+            remainingText = string.Empty;
             return args;
         }
 
