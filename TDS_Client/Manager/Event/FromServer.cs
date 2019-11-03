@@ -144,7 +144,8 @@ namespace TDS_Client.Manager.Event
         {
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
-            Players.Remove(player);
+            string name = (string)args[1];
+            Players.Remove(player, name);
         }
 
         private void OnLoadApplicationDataForAdminMethod(object[] args)

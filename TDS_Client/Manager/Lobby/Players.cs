@@ -20,10 +20,10 @@ namespace TDS_Client.Manager.Lobby
             MainBrowser.AddPlayerForChat(player);
         }
 
-        public static void Remove(Player player)
+        public static void Remove(Player player, string name)
         {
             PlayersSameLobby.Remove(player);
-            MainBrowser.RemovePlayerForChat(player);
+            MainBrowser.RemovePlayerForChat(name);
         }
     }
 }

@@ -102,9 +102,9 @@ namespace TDS_Client.Manager.Browser
             Execute($"addNameForChat(`{player.Name}`)");
         }
 
-        public static void RemovePlayerForChat(Player player)
+        public static void RemovePlayerForChat(string name)
         {
-            Execute($"removeNameForChat(`{player.Name}`)");
+            Execute($"removeNameForChat(`{name}`)");
         }
 
         public static void LoadUserName()

@@ -96,7 +96,7 @@ namespace TDS_Server.Instance.Lobby
                     Remove();
             }
 
-            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Client.Handle.Value);
+            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Client.Handle.Value, player.Client.Name);
             if (LobbyEntity.Type != ELobbyType.MainMenu)
                 RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
 
