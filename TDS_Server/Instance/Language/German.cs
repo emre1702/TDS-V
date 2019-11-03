@@ -127,6 +127,8 @@ namespace TDS_Server.Instance.Language
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";
+        public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
+        public override string TEXT_TOO_SHORT => "Der Text ist zu kurz.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";
         public override string TIMEBAN_YOU_INFO => "Du wurdest für {0} Stunden von {1} gebannt. Grund: {2}";
         public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby '{2}' von {3} gebannt. Grund: {4}";

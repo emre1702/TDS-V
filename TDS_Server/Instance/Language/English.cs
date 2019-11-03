@@ -126,6 +126,8 @@ namespace TDS_Server.Instance.Language
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TESTING_MAP_NOTIFICATION => "This is a newly created map, the round-stats will not be saved.";
+        public virtual string TEXT_TOO_LONG => "The text is too long.";
+        public virtual string TEXT_TOO_SHORT => "The text is too short.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
         public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
         public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
