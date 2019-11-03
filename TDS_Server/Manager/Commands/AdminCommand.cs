@@ -30,7 +30,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.NextMap)]
-        public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText] string reason)
+        public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!(player.CurrentLobby is Arena arena))
                 return;
@@ -41,10 +41,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.LobbyKick)]
-        public static async void LobbyKick(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
+        public static async void LobbyKick(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (player == target)
                 return;
             if (target.CurrentLobby is null)
@@ -68,10 +66,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 1)]
-        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText] string reason)
+        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
@@ -87,11 +83,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 0)]
-        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText] string reason)
+        public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
-
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
                 return;
             if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
@@ -109,11 +102,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Ban, 1)]
-        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText] string reason)
+        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
-
             if (length == DateTime.MinValue)
                 LobbyManager.MainMenu.UnbanPlayer(player, target, reason);
             else if (length == DateTime.MaxValue)
@@ -126,11 +116,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Ban, 0)]
-        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText] string reason)
+        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
-
             if (length == DateTime.MinValue)
                 LobbyManager.MainMenu.UnbanPlayer(player, dbTarget, reason);
             else if (length == DateTime.MaxValue)
@@ -143,11 +130,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Kick)]
-        public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
+        public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
-
             LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.DisplayName, player.DisplayName, reason));
             target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
 
@@ -156,10 +140,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Mute, 1)]
-        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText] string reason)
+        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
@@ -170,10 +152,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Mute, 0)]
-        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText] string reason)
+        public static void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
@@ -184,10 +164,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.VoiceMute, 0)]
-        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText] string reason)
+        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
@@ -198,10 +176,8 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.VoiceMute, 1)]
-        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText] string reason)
+        public static void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!IsReasonValid(reason, player))
-                return;
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
@@ -212,7 +188,7 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Goto)]
-        public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText] string reason)
+        public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
 
@@ -245,24 +221,13 @@ namespace TDS_Server.Manager.Commands
         }
 
         [TDSCommand(DAdminCommand.Goto)]
-        public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText] string reason)
+        public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
         {
             Vector3 pos = new Vector3(x, y, z);
             NAPI.Entity.SetEntityPosition(player.Client, pos);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
-        }
-
-        private static bool IsReasonValid(string reason, TDSPlayer outputTo)
-        {
-            if (reason.Length < 3)
-            {
-                if (outputTo != null)
-                    NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.REASON_MISSING);
-                return false;
-            }
-            return true;
         }
 
         private static bool IsMuteTimeValid(int muteTime, TDSPlayer outputTo)
