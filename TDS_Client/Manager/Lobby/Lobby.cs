@@ -27,7 +27,6 @@ namespace TDS_Client.Manager.Lobby
         public static void Joined(SyncedLobbySettingsDto settings)
         {
             InstructionalButtonManager.Reset();
-            PlayerElement.LocalPlayer.SetInvincible(false);
             PlayerElement.LocalPlayer.ResetAlpha();
 
             if (_inLobbyType != null)

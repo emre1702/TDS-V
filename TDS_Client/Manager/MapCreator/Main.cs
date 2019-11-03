@@ -13,8 +13,6 @@ namespace TDS_Client.Manager.MapCreator
             ToggleFreecam();
             ObjectsManager.Start();
             MarkerManager.Start();
-
-            RAGE.Elements.Player.LocalPlayer.SetInvincible(true);
         }
 
         public static void Stop()
