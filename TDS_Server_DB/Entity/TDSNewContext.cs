@@ -66,6 +66,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
         public virtual DbSet<GangRankPermissions> GangRankPermissions { get; set; }
+        public virtual DbSet<GangRanks> GangRanks { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
@@ -313,6 +314,25 @@ namespace TDS_Server_DB.Entity
                 entity.ToTable("gang_rank_permissions");
 
                 entity.Property(e => e.GangId).HasColumnName("GangID");
+
+                entity.HasOne(e => e.Gang)
+                    .WithOne(g => g.GangRankPermissions)
+                    .HasForeignKey<GangRankPermissions>(e => e.GangId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<GangRanks>(entity =>
+            {
+                entity.HasKey(e => new { e.GangId, e.Rank });
+
+                entity.ToTable("gang_ranks");
+
+                entity.Property(e => e.GangId).HasColumnName("GangID");
+
+                entity.HasOne(e => e.Gang)
+                    .WithMany(g => g.GangRanks)
+                    .HasForeignKey(e => e.GangId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Gangs>(entity =>

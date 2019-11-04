@@ -16,5 +16,7 @@ namespace TDS_Server_DB.Entity.Gang
 
         // Action //
         public short StartGangwar { get; set; }
+
+        public virtual Gangs Gang { get; set; }
     }
 }
