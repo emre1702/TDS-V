@@ -65,6 +65,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
+        public virtual DbSet<GangRankPermissions> GangRankPermissions { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
@@ -303,6 +304,15 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.VehicleType);
 
                 entity.Property(e => e.Note).HasColumnType("character varying");
+            });
+
+            modelBuilder.Entity<GangRankPermissions>(entity =>
+            {
+                entity.HasKey(e => e.GangId);
+
+                entity.ToTable("gang_rank_permissions");
+
+                entity.Property(e => e.GangId).HasColumnName("GangID");
             });
 
             modelBuilder.Entity<Gangs>(entity =>
