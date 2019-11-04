@@ -11,6 +11,9 @@ namespace TDS_Server.Enum
         Bomb = 1,
 
         [XmlEnum("sniper")]
-        Sniper = 2
+        Sniper = 2,
+
+        [XmlEnum("gangwar")]
+        Gangwar = 3
     }
 }

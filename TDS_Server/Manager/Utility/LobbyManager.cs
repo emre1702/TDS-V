@@ -155,7 +155,8 @@ namespace TDS_Server.Manager.Utility
                     LobbyRoundSettings = new LobbyRoundSettings
                     { 
                         RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
-                        BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound
+                        BombDefuseTimeMs = data.BombDefuseTimeMs, BombPlantTimeMs = data.BombPlantTimeMs, MixTeamsAfterRound = data.MixTeamsAfterRound,
+                        ShowRanking = data.ShowRanking
                     },
                     LobbyMapSettings = new LobbyMapSettings
                     {
@@ -165,7 +166,6 @@ namespace TDS_Server.Manager.Utility
                     LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
                     LobbyWeapons = GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
-                    ShowRanking = data.ShowRanking,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
                     StartHealth = data.StartHealth,
@@ -188,13 +188,7 @@ namespace TDS_Server.Manager.Utility
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
                 Arena arena = new Arena(entity);
-                await arena.ExecuteForDBAsync(async (dbContext) => 
-                {
-                    dbContext.Entry(entity).State = EntityState.Added;
-                    await dbContext.SaveChangesAsync();
-                     
-                    await dbContext.Entry(entity).Reference(e => e.Owner).LoadAsync();
-                });
+                await arena.AddToDB();
 
                 AddLobby(arena);
                 AddMapsToArena(arena, entity);

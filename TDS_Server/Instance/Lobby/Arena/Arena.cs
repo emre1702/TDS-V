@@ -18,7 +18,7 @@ namespace TDS_Server.Instance.Lobby
             DurationsDict[ERoundStatus.Round] = (uint)entity.LobbyRoundSettings.RoundTime * 1000;
             DurationsDict[ERoundStatus.Countdown] = (uint)entity.LobbyRoundSettings.CountdownTime * 1000;
 
-            if (!entity.ShowRanking)
+            if (!entity.LobbyRoundSettings.ShowRanking)
             {
                 _nextRoundStatsDict[ERoundStatus.RoundEnd] = ERoundStatus.MapClear;
             }

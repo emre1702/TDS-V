@@ -6,6 +6,7 @@
         FightLobby = 1,
         Arena = 2,
         GangLobby = 3,
-        MapCreateLobby = 4
+        MapCreateLobby = 4,
+        GangwarLobby = 5
     }
 }

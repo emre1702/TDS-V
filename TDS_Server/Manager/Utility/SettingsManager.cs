@@ -17,28 +17,28 @@ namespace TDS_Server.Manager.Utility
     internal class SettingsManager
     {
         public static string ConnectionString => _localSettings.ConnectionString.Value;
-        public static bool ErrorToPlayerOnNonExistentCommand => _serverSettings.ErrorToPlayerOnNonExistentCommand;
-        public static bool ToChatOnNonExistentCommand => _serverSettings.ToChatOnNonExistentCommand;
-        public static int SaveLogsCooldownMinutes => _serverSettings.SaveLogsCooldownMinutes;
-        public static int SavePlayerDataCooldownMinutes => _serverSettings.SavePlayerDataCooldownMinutes;
-        public static int SaveSeasonsCooldownMinutes => _serverSettings.SaveSeasonsCooldownMinutes;
-        public static float DistanceToSpotToDefuse => _serverSettings.DistanceToSpotToDefuse;
-        public static float DistanceToSpotToPlant => _serverSettings.DistanceToSpotToPlant;
-        public static float ArenaNewMapProbabilityPercent => _serverSettings.ArenaNewMapProbabilityPercent;
-        public static int KillingSpreeMaxSecondsUntilNextKill => _serverSettings.KillingSpreeMaxSecondsUntilNextKill;
-        public static int MapRatingAmountForCheck => _serverSettings.MapRatingAmountForCheck;
-        public static float MinMapRatingForNewMaps => _serverSettings.MinMapRatingForNewMaps;
-        public static float GiveMoneyFee => _serverSettings.GiveMoneyFee;
-        public static int GiveMoneyMinAmount => _serverSettings.GiveMoneyMinAmount;
-        public static float MultiplierRankingKills => _serverSettings.MultiplierRankingKills;
-        public static float MultiplierRankingAssists => _serverSettings.MultiplierRankingAssists;
-        public static float MultiplierRankingDamage => _serverSettings.MultiplierRankingDamage;
+        public static bool ErrorToPlayerOnNonExistentCommand => ServerSettings.ErrorToPlayerOnNonExistentCommand;
+        public static bool ToChatOnNonExistentCommand => ServerSettings.ToChatOnNonExistentCommand;
+        public static int SaveLogsCooldownMinutes => ServerSettings.SaveLogsCooldownMinutes;
+        public static int SavePlayerDataCooldownMinutes => ServerSettings.SavePlayerDataCooldownMinutes;
+        public static int SaveSeasonsCooldownMinutes => ServerSettings.SaveSeasonsCooldownMinutes;
+        public static float DistanceToSpotToDefuse => ServerSettings.DistanceToSpotToDefuse;
+        public static float DistanceToSpotToPlant => ServerSettings.DistanceToSpotToPlant;
+        public static float ArenaNewMapProbabilityPercent => ServerSettings.ArenaNewMapProbabilityPercent;
+        public static int KillingSpreeMaxSecondsUntilNextKill => ServerSettings.KillingSpreeMaxSecondsUntilNextKill;
+        public static int MapRatingAmountForCheck => ServerSettings.MapRatingAmountForCheck;
+        public static float MinMapRatingForNewMaps => ServerSettings.MinMapRatingForNewMaps;
+        public static float GiveMoneyFee => ServerSettings.GiveMoneyFee;
+        public static int GiveMoneyMinAmount => ServerSettings.GiveMoneyMinAmount;
+        public static float MultiplierRankingKills => ServerSettings.MultiplierRankingKills;
+        public static float MultiplierRankingAssists => ServerSettings.MultiplierRankingAssists;
+        public static float MultiplierRankingDamage => ServerSettings.MultiplierRankingDamage;
 
 #nullable disable warnings
         public static SyncedServerSettingsDto SyncedSettings { get; private set; }
 
         private static AppConfigDto _localSettings;
-        private static ServerSettings _serverSettings;
+        public static ServerSettings ServerSettings;
         private static Command _loadMapOfOthersRightInfos;
         #nullable restore warnings
 
@@ -54,22 +54,22 @@ namespace TDS_Server.Manager.Utility
 
         public static async Task Load(TDSNewContext dbcontext)
         {
-            _serverSettings = await dbcontext.ServerSettings.SingleAsync();
+            ServerSettings = await dbcontext.ServerSettings.SingleAsync();
 
             SyncedSettings = new SyncedServerSettingsDto()
             {
-                DistanceToSpotToPlant = _serverSettings.DistanceToSpotToPlant,
-                DistanceToSpotToDefuse = _serverSettings.DistanceToSpotToDefuse,
+                DistanceToSpotToPlant = ServerSettings.DistanceToSpotToPlant,
+                DistanceToSpotToDefuse = ServerSettings.DistanceToSpotToDefuse,
                 RoundEndTime = 8 * 1000,
                 MapChooseTime = 4 * 1000,
-                TeamOrderCooldownMs = _serverSettings.TeamOrderCooldownMs,
-                NametagMaxDistance = _serverSettings.NametagMaxDistance,
-                ShowNametagOnlyOnAiming = _serverSettings.ShowNametagOnlyOnAiming
+                TeamOrderCooldownMs = ServerSettings.TeamOrderCooldownMs,
+                NametagMaxDistance = ServerSettings.NametagMaxDistance,
+                ShowNametagOnlyOnAiming = ServerSettings.ShowNametagOnlyOnAiming
             };
 
             _loadMapOfOthersRightInfos = dbcontext.Commands.First(c => c.Command == "LoadMapOfOthers");
 
-            NAPI.Server.SetGamemodeName(_serverSettings.GamemodeName);
+            NAPI.Server.SetGamemodeName(ServerSettings.GamemodeName);
         }
 
         public static bool CanLoadMapsFromOthers(TDSPlayer player)

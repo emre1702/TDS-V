@@ -24,5 +24,10 @@
         public float MultiplierRankingKills { get; set; }
         public float MultiplierRankingAssists { get; set; }
         public float MultiplierRankingDamage { get; set; }
+
+        public int CloseApplicationAfterDays { get; set; }
+        public int DeleteApplicationAfterDays { get; set; }
+        public uint GangwarPreparationTimeMs { get; set; } 
+        public uint GangwarActionTimeMs { get; set; } 
     }
 }

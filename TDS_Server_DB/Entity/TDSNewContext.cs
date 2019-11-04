@@ -992,6 +992,22 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.ShowNametagOnlyOnAiming)
                     .IsRequired();
+
+                entity.Property(e => e.CloseApplicationAfterDays)
+                    .IsRequired()
+                    .HasDefaultValue(7);
+
+                entity.Property(e => e.DeleteApplicationAfterDays)
+                    .IsRequired()
+                    .HasDefaultValue(14);
+
+                entity.Property(e => e.GangwarPreparationTimeMs)
+                    .IsRequired()
+                    .HasDefaultValue(3 * 60 * 1000);
+
+                entity.Property(e => e.GangwarActionTimeMs)
+                    .IsRequired()
+                    .HasDefaultValue(15 * 60 * 1000);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>

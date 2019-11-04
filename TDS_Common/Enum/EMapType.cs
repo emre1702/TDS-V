@@ -5,6 +5,7 @@
         Normal,
 
         Bomb,
-        Sniper
+        Sniper,
+        Gangwar
     }
 }

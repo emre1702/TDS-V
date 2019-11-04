@@ -8,7 +8,6 @@ namespace TDS_Server.Instance.Lobby
     {
         public async override Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
-            //teamindex = character.Gang.Index;
             if (!await base.AddPlayer(character, teamindex))
                 return false;
 
@@ -16,18 +15,5 @@ namespace TDS_Server.Instance.Lobby
 
             return true;
         }
-
-        /*public override bool AddPlayer ( Character character, bool spectator = false ) {
-			if ( !base.AddPlayer ( character, spectator ) )
-				return false;
-
-            Workaround.FreezePlayer(player.Client, false);
-
-            if ( character.Gang != null ) {
-                SetPlayerTeam ( character, character.Gang );
-            }
-
-			return true;
-        }*/
     }
 }

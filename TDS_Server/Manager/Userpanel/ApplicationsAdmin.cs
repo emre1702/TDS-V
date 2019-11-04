@@ -30,7 +30,7 @@ namespace TDS_Server.Manager.Userpanel
                 using var dbContext = new TDSNewContext();
 
                 var apps = await dbContext.Applications
-                    .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(ServerConstants.CloseApplicationAfterDays))
+                    .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(SettingsManager.ServerSettings.CloseApplicationAfterDays))
                     .Include(a => a.Player)
                     .Select(a => new
                     {

@@ -15,7 +15,8 @@ namespace TDS_Server_DB.Entity.Gang
         public int TeamId { get; set; }
         public string Short { get; set; }
 
-        public virtual Teams Team { get; set; }
+        public virtual ICollection<GangwarAreas> GangwarAreas { get; set; }
         public virtual ICollection<Players> Players { get; set; }
+        public virtual Teams Team { get; set; }
     }
 }

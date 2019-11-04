@@ -18,7 +18,8 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
-            if (LobbyEntity.Type != ELobbyType.MainMenu)
+            if (LobbyEntity.Type != ELobbyType.MainMenu && 
+                (LobbyEntity.Type != ELobbyType.GangwarLobby || !LobbyEntity.IsOfficial))
             {
                 if (await IsPlayerBaned(character))
                     return false;
@@ -39,7 +40,8 @@ namespace TDS_Server.Instance.Lobby
             character.CurrentLobby = this;
             Players.Add(character);
 
-            if (LobbyEntity.Type == ELobbyType.MainMenu)
+            if (LobbyEntity.Type == ELobbyType.MainMenu
+                || LobbyEntity.Type == ELobbyType.MapCreateLobby)
                 Workaround.SetPlayerInvincible(character.Client, true);
 
             character.Client.Dimension = Dimension;

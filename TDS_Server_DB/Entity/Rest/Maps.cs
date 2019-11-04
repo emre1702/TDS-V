@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Server_DB.Entity.Gang;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Player;
 
@@ -21,6 +22,7 @@ namespace TDS_Server_DB.Entity.Rest
 
         public virtual Players Creator { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
+        public virtual GangwarAreas GangwarArea { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
     }

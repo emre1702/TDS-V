@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Userpanel
                 return JsonConvert.SerializeObject(new { AdminQuestions });
             }
 
-            if (application.CreateTime.AddDays(ServerConstants.DeleteApplicationAfterDays) < DateTime.UtcNow)
+            if (application.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
             {
                 await player.ExecuteForDBAsync((dbContext) =>
                 {

@@ -23,5 +23,12 @@ namespace TDS_Server_DB.Entity.Rest
 
         public virtual Lobbies LobbyNavigation { get; set; }
         public virtual ICollection<Gangs> Gangs { get; set; }
+
+
+        public Teams DeepCopy()
+        {
+            return (Teams)MemberwiseClone();
+        }
+
     }
 }

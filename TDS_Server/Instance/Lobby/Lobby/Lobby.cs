@@ -1,4 +1,5 @@
 using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -185,6 +186,21 @@ namespace TDS_Server.Instance.Lobby
                     _usingDBContext = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Call this on lobby create.
+        /// </summary>
+        public Task AddToDB()
+        {
+            return ExecuteForDBAsync(async (dbContext) =>
+            {
+                dbContext.Entry(LobbyEntity).State = EntityState.Added;
+                await dbContext.SaveChangesAsync();
+
+                await dbContext.Entry(LobbyEntity).Reference(e => e.Owner).LoadAsync();
+            });
+
         }
     }
 }
