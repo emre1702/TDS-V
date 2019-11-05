@@ -37,8 +37,9 @@ namespace TDS_Server.Manager.Userpanel
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             var data = await dbContext.Players
-                .Include(p => p.Gang)
-                    .ThenInclude(g => g.Team)
+                .Include(p => p.GangMemberNavigation)
+                    .ThenInclude(g => g.Gang)
+                        .ThenInclude(g => g.Team)
                 .Include(p => p.Maps)
                     .ThenInclude(m => m.PlayerMapRatings)
                 .Include(p => p.PlayerBansPlayer)
@@ -58,7 +59,7 @@ namespace TDS_Server.Manager.Userpanel
                     Name = p.Name,
                     RegisterDateTime = p.RegisterTimestamp,
                     SCName = p.SCName,
-                    Gang = p.Gang.Team.Name,
+                    Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Team.Name : "-",
                     AmountMapsCreated = p.Maps.Count,
                     CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
                     BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name),

@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -13,9 +14,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    partial class TDSNewContextModelSnapshot : ModelSnapshot
+    [Migration("20191105202638_GangMember_Refactoring")]
+    partial class GangMember_Refactoring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1185,9 +1187,7 @@ namespace TDS_Server_DB.Migrations
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<short>("Rank")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)0);
+                        .HasColumnType("smallint");
 
                     b.Property<int?>("RankNavigationGangId")
                         .HasColumnType("integer");
@@ -1260,7 +1260,7 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Short")
@@ -1286,6 +1286,7 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = -1,
                             CreateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OwnerId = 0,
                             Short = "-",
                             TeamId = -5
                         });
@@ -4273,7 +4274,8 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "Owner")
                         .WithOne("OwnedGang")
                         .HasForeignKey("TDS_Server_DB.Entity.Gang.Gangs", "OwnerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("TDS_Server_DB.Entity.Rest.Teams", "Team")
                         .WithMany("Gangs")

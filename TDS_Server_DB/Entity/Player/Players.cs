@@ -34,7 +34,6 @@ namespace TDS_Server_DB.Entity.Player
         public int? AdminLeaderId { get; set; }
         public bool IsVip { get; set; }
         public short Donation { get; set; }
-        public int? GangId { get; set; }
         public DateTime RegisterTimestamp { get; set; }
 
         public virtual AdminLevels AdminLvlNavigation { get; set; }
@@ -43,7 +42,8 @@ namespace TDS_Server_DB.Entity.Player
         public virtual Applications Application { get; set; }
         public virtual ICollection<ApplicationInvitations> ApplicationInvitations { get; set; }
         public virtual ICollection<ApplicationQuestions> ApplicationQuestions { get; set; }
-        public virtual Gangs Gang { get; set; }
+        public virtual GangMembers GangMemberNavigation { get; set; }
+        public virtual Gangs OwnedGang { get; set; }
         public virtual PlayerClothes PlayerClothes { get; set; }
         public virtual PlayerSettings PlayerSettings { get; set; }
         public virtual PlayerStats PlayerStats { get; set; }

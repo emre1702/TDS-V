@@ -65,6 +65,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
+        public virtual DbSet<GangMembers> GangMembers { get; set; }
         public virtual DbSet<GangRankPermissions> GangRankPermissions { get; set; }
         public virtual DbSet<GangRanks> GangRanks { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
@@ -307,6 +308,32 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Note).HasColumnType("character varying");
             });
 
+            modelBuilder.Entity<GangMembers>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+
+                entity.ToTable("gang_members");
+
+                entity.Property(e => e.GangId).HasColumnName("GangID");
+                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
+
+                entity.Property(e => e.Rank).HasDefaultValue(0);
+
+                entity.Property(e => e.JoinTime)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+
+                entity.HasOne(e => e.Gang)
+                    .WithMany(g => g.Members)
+                    .HasForeignKey(e => e.GangId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Player)
+                    .WithOne(g => g.GangMemberNavigation)
+                    .HasForeignKey<GangMembers>(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<GangRankPermissions>(entity =>
             {
                 entity.HasKey(e => e.GangId);
@@ -316,7 +343,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.GangId).HasColumnName("GangID");
 
                 entity.HasOne(e => e.Gang)
-                    .WithOne(g => g.GangRankPermissions)
+                    .WithOne(g => g.RankPermissions)
                     .HasForeignKey<GangRankPermissions>(e => e.GangId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
@@ -330,7 +357,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.GangId).HasColumnName("GangID");
 
                 entity.HasOne(e => e.Gang)
-                    .WithMany(g => g.GangRanks)
+                    .WithMany(g => g.Ranks)
                     .HasForeignKey(e => e.GangId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
@@ -347,6 +374,13 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasMaxLength(5);
 
+                entity.Property(e => e.OwnerId)
+                    .IsRequired(false);
+
+                entity.Property(e => e.CreateTime)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+
                 entity.Property(e => e.TeamId).HasColumnName("TeamId");
 
                 entity.HasOne(d => d.Team)
@@ -356,7 +390,7 @@ namespace TDS_Server_DB.Entity
                     .HasConstraintName("gangs_TeamId_fkey");
 
                 entity.HasOne(d => d.Owner)
-                    .WithOne(o => o.Gang)
+                    .WithOne(o => o.OwnedGang)
                     .HasForeignKey<Gangs>(o => o.OwnerId)
                     .OnDelete(DeleteBehavior.SetNull);
             });
@@ -897,8 +931,6 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.AdminLvl).HasDefaultValue(0);
 
-                entity.Property(e => e.GangId).HasDefaultValue(-1);
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -930,12 +962,6 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.AdminMembers)
                     .HasForeignKey(p => p.AdminLeaderId)
                     .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(d => d.Gang)
-                    .WithMany(p => p.Players)
-                    .HasForeignKey(d => d.GangId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("players_GangId_fkey");
             });
 
             modelBuilder.Entity<Rules>(entity =>

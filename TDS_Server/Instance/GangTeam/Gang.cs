@@ -26,6 +26,12 @@ namespace TDS_Server.Instance.GangTeam
             return _gangById[id];
         }
 
+        public static Gang GetPlayerGang(TDSPlayer player)
+        {
+        
+            return None;
+        }
+
         public static Task LoadAll(TDSNewContext dbContext)
         {
             return dbContext.Gangs.ForEachAsync(g =>
