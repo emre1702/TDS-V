@@ -354,6 +354,11 @@ namespace TDS_Server_DB.Entity
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("gangs_TeamId_fkey");
+
+                entity.HasOne(d => d.Owner)
+                    .WithOne(o => o.Gang)
+                    .HasForeignKey<Gangs>(o => o.OwnerId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<GangwarAreas>(entity =>
