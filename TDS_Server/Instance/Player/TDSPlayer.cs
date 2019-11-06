@@ -16,25 +16,13 @@ using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 using TimeZoneConverter;
 
 namespace TDS_Server.Instance.Player
 {
-    internal class TDSPlayer
+    internal class TDSPlayer : EntityWrapperClass
     {
-        private TDSNewContext DbContext 
-        { 
-            get
-            {
-                if (_dbContext is null)
-                    _dbContext = new TDSNewContext();
-                return _dbContext;
-            } 
-            set => _dbContext = value;
-        }
-
         public Players? Entity
         {
             get => _entity;
@@ -253,11 +241,7 @@ namespace TDS_Server.Instance.Player
         private PlayerLobbyStats? _currentLobbyStats;
         private short _killingSpree;
         private short _shortTimeKillingSpree;
-        private TDSNewContext? _dbContext;
-        private TDSPlayer? _spectates;
-        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
-        private bool _usingDBContext;
-        
+        private TDSPlayer? _spectates;        
 
         public TDSPlayer(Client client)
         {
@@ -405,85 +389,7 @@ namespace TDS_Server.Instance.Player
 
         public async void Logout()
         {
-            await ExecuteForDB((dbContext) =>
-            {
-                dbContext.Dispose();
-                _dbContext = null;
-            });
-        }
-
-        public void InitDbContext()
-        {
-            _dbContext = new TDSNewContext();
-        }
-
-        public async Task ExecuteForDBAsync(Func<TDSNewContext, Task> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-            
-            try
-            {
-                await action(DbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                { 
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
-        }
-
-        public async Task<T> ExecuteForDBAsync<T>(Func<TDSNewContext, Task<T>> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-
-            try
-            {
-                return await action(DbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
-        }
-
-        public async Task ExecuteForDB(Action<TDSNewContext> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-
-            try
-            {
-                action(DbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+            await RemoveDBContext();
         }
     }
 }

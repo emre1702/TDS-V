@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Gang;
 
 namespace TDS_Server.Instance.GangTeam
 {
-    internal class Gang
+    internal class Gang : EntityWrapperClass
     {
         private static readonly Dictionary<int, Gang> _gangById = new Dictionary<int, Gang>();
         public static Gang None => _gangById[0];
@@ -19,6 +20,7 @@ namespace TDS_Server.Instance.GangTeam
         {
             Entity = entity;
             _gangById[entity.Id] = this;
+            DbContext.Attach(entity);
         }
 
         public static Gang GetFromId(int id)
@@ -34,7 +36,11 @@ namespace TDS_Server.Instance.GangTeam
 
         public static Task LoadAll(TDSNewContext dbContext)
         {
-            return dbContext.Gangs.ForEachAsync(g =>
+            return dbContext.Gangs
+                .Include(g => g.Members)
+                .Include(g => g.RankPermissions)
+                .AsNoTracking()
+                .ForEachAsync(g =>
             {
                 new Gang(g);
             });

@@ -15,7 +15,7 @@ using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Instance.Lobby
 {
-    partial class Lobby
+    partial class Lobby : EntityWrapperClass
     {
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
@@ -35,8 +35,6 @@ namespace TDS_Server.Instance.Lobby
         protected readonly Vector3 SpawnPoint;
 
         private readonly SyncedLobbySettingsDto _syncedLobbySettings;
-        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
-        private bool _usingDBContext;
 
         public Lobby(Lobbies entity)
         {
@@ -119,75 +117,7 @@ namespace TDS_Server.Instance.Lobby
             return Players.Count == 0;
         }
 
-        public async Task ExecuteForDBAsync(Func<TDSNewContext, Task> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-
-            try
-            {
-                await action(_dbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
-        }
-
-        public async Task<T> ExecuteForDBAsync<T>(Func<TDSNewContext, Task<T>> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-
-            try
-            {
-                return await action(_dbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
-        }
-
-        public async Task ExecuteForDB(Action<TDSNewContext> action)
-        {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
-
-            try
-            {
-                action(_dbContext);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
-        }
-
+      
         /// <summary>
         /// Call this on lobby create.
         /// </summary>
