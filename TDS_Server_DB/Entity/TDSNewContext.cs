@@ -956,12 +956,12 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.Players)
                     .HasForeignKey(d => d.AdminLvl)
                     .HasConstraintName("players_AdminLvl_fkey")
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(p => p.AdminLeader)
                     .WithMany(p => p.AdminMembers)
                     .HasForeignKey(p => p.AdminLeaderId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Rules>(entity =>
@@ -1382,6 +1382,14 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Gangs>().HasData(
                 new Gangs { Id = -1, TeamId = -5, Short = "-" }
+            );
+
+            modelBuilder.Entity<GangRanks>().HasData(
+                new GangRanks { GangId = -1, Rank = 0, Name = "-" }
+            );
+
+            modelBuilder.Entity<GangRankPermissions>().HasData(
+                new GangRankPermissions { GangId = -1, InviteMembers = 5, KickMembers = 5, ManagePermissions = 5, ManageRanks = 5, StartGangwar = 5 }
             );
 
             modelBuilder.Entity<LobbyMaps>().HasData(

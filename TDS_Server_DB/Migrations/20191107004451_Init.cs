@@ -15,7 +15,7 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:e_freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .Annotation("Npgsql:Enum:e_language", "german,english")
-                .Annotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
+                .Annotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,gangwar_lobby")
                 .Annotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby__join,lobby__leave,lobby__kick,lobby__ban,goto,remove_map,voice_mute")
                 .Annotation("Npgsql:Enum:e_map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .Annotation("Npgsql:Enum:e_player_relation", "none,block,friend")
@@ -182,10 +182,6 @@ namespace TDS_Server_DB.Migrations
                     ID = table.Column<short>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GamemodeName = table.Column<string>(maxLength: 50, nullable: false),
-                    MapsPath = table.Column<string>(maxLength: 300, nullable: false),
-                    NewMapsPath = table.Column<string>(maxLength: 300, nullable: false),
-                    SavedMapsPath = table.Column<string>(maxLength: 300, nullable: false),
-                    NeedCheckMapsPath = table.Column<string>(maxLength: 300, nullable: false),
                     ErrorToPlayerOnNonExistentCommand = table.Column<bool>(nullable: false),
                     ToChatOnNonExistentCommand = table.Column<bool>(nullable: false),
                     DistanceToSpotToPlant = table.Column<float>(nullable: false),
@@ -204,7 +200,11 @@ namespace TDS_Server_DB.Migrations
                     ShowNametagOnlyOnAiming = table.Column<bool>(nullable: false),
                     MultiplierRankingKills = table.Column<float>(nullable: false, defaultValue: 75f),
                     MultiplierRankingAssists = table.Column<float>(nullable: false, defaultValue: 25f),
-                    MultiplierRankingDamage = table.Column<float>(nullable: false, defaultValue: 1f)
+                    MultiplierRankingDamage = table.Column<float>(nullable: false, defaultValue: 1f),
+                    CloseApplicationAfterDays = table.Column<int>(nullable: false, defaultValue: 7),
+                    DeleteApplicationAfterDays = table.Column<int>(nullable: false, defaultValue: 14),
+                    GangwarPreparationTimeMs = table.Column<long>(nullable: false, defaultValue: 180000L),
+                    GangwarActionTimeMs = table.Column<long>(nullable: false, defaultValue: 900000L)
                 },
                 constraints: table =>
                 {
@@ -256,7 +256,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Level,
                         principalTable: "admin_levels",
                         principalColumn: "Level",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,7 +280,43 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.NeededAdminLevel,
                         principalTable: "admin_levels",
                         principalColumn: "Level",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "players",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SCName = table.Column<string>(maxLength: 255, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Password = table.Column<string>(maxLength: 100, nullable: false),
+                    Email = table.Column<string>(maxLength: 100, nullable: true),
+                    AdminLvl = table.Column<short>(nullable: false, defaultValue: (short)0),
+                    AdminLeaderID = table.Column<int>(nullable: true),
+                    IsVIP = table.Column<bool>(nullable: false, defaultValue: false),
+                    Donation = table.Column<short>(nullable: false, defaultValue: (short)0),
+                    RegisterTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_players", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_players_players_AdminLeaderID",
+                        column: x => x.AdminLeaderID,
+                        principalTable: "players",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.SetDefault,
+                        onUpdate: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "players_AdminLvl_fkey",
+                        column: x => x.AdminLvl,
+                        principalTable: "admin_levels",
+                        principalColumn: "Level",
+                        onDelete: ReferentialAction.SetDefault,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -298,7 +335,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.RuleID,
                         principalTable: "rules",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,7 +354,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Command,
                         principalTable: "commands",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -335,41 +374,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.ID,
                         principalTable: "commands",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "players",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SCName = table.Column<string>(maxLength: 255, nullable: false),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Password = table.Column<string>(maxLength: 100, nullable: false),
-                    Email = table.Column<string>(maxLength: 100, nullable: true),
-                    AdminLvl = table.Column<short>(nullable: false, defaultValue: (short)0),
-                    AdminLeaderID = table.Column<int>(nullable: true),
-                    IsVIP = table.Column<bool>(nullable: false, defaultValue: false),
-                    Donation = table.Column<short>(nullable: false, defaultValue: (short)0),
-                    GangId = table.Column<int>(nullable: true, defaultValue: -1),
-                    RegisterTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_players", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_players_players_AdminLeaderID",
-                        column: x => x.AdminLeaderID,
-                        principalTable: "players",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "players_AdminLvl_fkey",
-                        column: x => x.AdminLvl,
-                        principalTable: "admin_levels",
-                        principalColumn: "Level",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,7 +396,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -411,7 +418,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -435,8 +443,7 @@ namespace TDS_Server_DB.Migrations
                     IsTemporary = table.Column<bool>(nullable: false),
                     IsOfficial = table.Column<bool>(nullable: false),
                     SpawnAgainAfterDeathMs = table.Column<int>(nullable: false, defaultValueSql: "400"),
-                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
-                    ShowRanking = table.Column<bool>(nullable: false)
+                    CreateTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -446,7 +453,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.OwnerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -467,7 +475,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.CreatorId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -490,13 +499,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.SourceID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "offlinemessages_TargetID_fkey",
                         column: x => x.TargetID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -514,7 +525,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -533,13 +545,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_relations_TargetId_fkey",
                         column: x => x.TargetId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -568,7 +582,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -591,7 +606,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -609,7 +625,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -628,13 +645,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.ApplicationID,
                         principalTable: "applications",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_application_answers_application_questions_QuestionID",
                         column: x => x.QuestionID,
                         principalTable: "application_questions",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -651,17 +670,19 @@ namespace TDS_Server_DB.Migrations
                 {
                     table.PrimaryKey("PK_application_invitations", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_application_invitations_players_ApplicationID",
-                        column: x => x.ApplicationID,
+                        name: "FK_application_invitations_players_AdminID",
+                        column: x => x.AdminID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_application_invitations_applications_ApplicationID",
                         column: x => x.ApplicationID,
                         principalTable: "applications",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -682,7 +703,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyId,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -701,7 +723,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -721,7 +744,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -734,7 +758,8 @@ namespace TDS_Server_DB.Migrations
                     BombDetonateTimeMs = table.Column<int>(nullable: false, defaultValueSql: "45000"),
                     BombDefuseTimeMs = table.Column<int>(nullable: false, defaultValueSql: "8000"),
                     BombPlantTimeMs = table.Column<int>(nullable: false, defaultValueSql: "3000"),
-                    MixTeamsAfterRound = table.Column<bool>(nullable: false)
+                    MixTeamsAfterRound = table.Column<bool>(nullable: false),
+                    ShowRanking = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -744,7 +769,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -765,13 +791,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Hash,
                         principalTable: "weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "lobby_weapons_Lobby_fkey",
                         column: x => x.Lobby,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -794,19 +822,22 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_bans_LobbyID_fkey",
                         column: x => x.LobbyId,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_bans_PlayerID_fkey",
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -837,13 +868,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_lobby_stats_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -853,12 +886,12 @@ namespace TDS_Server_DB.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     Index = table.Column<short>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false, defaultValue: "Spectator"),
                     Lobby = table.Column<int>(nullable: false),
-                    ColorR = table.Column<short>(nullable: false),
-                    ColorG = table.Column<short>(nullable: false),
-                    ColorB = table.Column<short>(nullable: false),
-                    BlipColor = table.Column<short>(nullable: false),
+                    ColorR = table.Column<short>(nullable: false, defaultValue: (short)255),
+                    ColorG = table.Column<short>(nullable: false, defaultValue: (short)255),
+                    ColorB = table.Column<short>(nullable: false, defaultValue: (short)255),
+                    BlipColor = table.Column<short>(nullable: false, defaultValue: (short)4),
                     SkinHash = table.Column<int>(nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
@@ -869,7 +902,8 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Lobby,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -887,13 +921,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_lobby_maps_maps",
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -911,13 +947,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_map_favourites_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -936,13 +974,15 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_map_ratings_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -952,17 +992,134 @@ namespace TDS_Server_DB.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     TeamId = table.Column<int>(nullable: false),
-                    Short = table.Column<string>(maxLength: 5, nullable: false)
+                    Short = table.Column<string>(maxLength: 5, nullable: false),
+                    OwnerId = table.Column<int>(nullable: true),
+                    CreateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_gangs", x => x.ID);
                     table.ForeignKey(
+                        name: "FK_gangs_players_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "players",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "gangs_TeamId_fkey",
                         column: x => x.TeamId,
                         principalTable: "teams",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "gang_rank_permissions",
+                columns: table => new
+                {
+                    GangID = table.Column<int>(nullable: false),
+                    ManagePermissions = table.Column<short>(nullable: false),
+                    InviteMembers = table.Column<short>(nullable: false),
+                    KickMembers = table.Column<short>(nullable: false),
+                    ManageRanks = table.Column<short>(nullable: false),
+                    StartGangwar = table.Column<short>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_gang_rank_permissions", x => x.GangID);
+                    table.ForeignKey(
+                        name: "FK_gang_rank_permissions_gangs_GangID",
+                        column: x => x.GangID,
+                        principalTable: "gangs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "gang_ranks",
+                columns: table => new
+                {
+                    GangID = table.Column<int>(nullable: false),
+                    Rank = table.Column<short>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_gang_ranks", x => new { x.GangID, x.Rank });
+                    table.ForeignKey(
+                        name: "FK_gang_ranks_gangs_GangID",
+                        column: x => x.GangID,
+                        principalTable: "gangs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "gangwar_areas",
+                columns: table => new
+                {
+                    MapID = table.Column<int>(nullable: false),
+                    OwnerGangID = table.Column<int>(nullable: false),
+                    LastAttacked = table.Column<DateTime>(nullable: false, defaultValueSql: "'1970-1-1'::timestamp")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_gangwar_areas", x => x.MapID);
+                    table.ForeignKey(
+                        name: "FK_gangwar_areas_maps_MapID",
+                        column: x => x.MapID,
+                        principalTable: "maps",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_gangwar_areas_gangs_OwnerGangID",
+                        column: x => x.OwnerGangID,
+                        principalTable: "gangs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "gang_members",
+                columns: table => new
+                {
+                    PlayerID = table.Column<int>(nullable: false),
+                    GangID = table.Column<int>(nullable: false),
+                    Rank = table.Column<short>(nullable: false, defaultValue: (short)0),
+                    JoinTime = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    RankNavigationGangId = table.Column<int>(nullable: true),
+                    RankNavigationRank = table.Column<short>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_gang_members", x => x.PlayerID);
+                    table.ForeignKey(
+                        name: "FK_gang_members_gangs_GangID",
+                        column: x => x.GangID,
+                        principalTable: "gangs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_gang_members_players_PlayerID",
+                        column: x => x.PlayerID,
+                        principalTable: "players",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_gang_members_gang_ranks_RankNavigationGangId_RankNavigation~",
+                        columns: x => new { x.RankNavigationGangId, x.RankNavigationRank },
+                        principalTable: "gang_ranks",
+                        principalColumns: new[] { "GangID", "Rank" },
+                        onDelete: ReferentialAction.SetDefault,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -1039,8 +1196,8 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "server_settings",
-                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "GiveMoneyFee", "GiveMoneyMinAmount", "KillingSpreeMaxSecondsUntilNextKill", "MapRatingAmountForCheck", "MapsPath", "MinMapRatingForNewMaps", "MultiplierRankingAssists", "MultiplierRankingDamage", "MultiplierRankingKills", "NametagMaxDistance", "NeedCheckMapsPath", "NewMapsPath", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "SavedMapsPath", "ShowNametagOnlyOnAiming", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
-                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 0.05f, 100, 18, 10, "bridge/resources/tds/maps/", 3f, 25f, 1f, 75f, 80f, "bridge/resources/tds/needcheckmaps/", "bridge/resources/tds/newmaps/", 1, 1, 1, "bridge/resources/tds/savedmaps/", true, 3000, false });
+                columns: new[] { "ID", "ArenaNewMapProbabilityPercent", "DistanceToSpotToDefuse", "DistanceToSpotToPlant", "ErrorToPlayerOnNonExistentCommand", "GamemodeName", "GiveMoneyFee", "GiveMoneyMinAmount", "KillingSpreeMaxSecondsUntilNextKill", "MapRatingAmountForCheck", "MinMapRatingForNewMaps", "MultiplierRankingAssists", "MultiplierRankingDamage", "MultiplierRankingKills", "NametagMaxDistance", "SaveLogsCooldownMinutes", "SavePlayerDataCooldownMinutes", "SaveSeasonsCooldownMinutes", "ShowNametagOnlyOnAiming", "TeamOrderCooldownMs", "ToChatOnNonExistentCommand" },
+                values: new object[] { (short)1, 2f, 3f, 3f, true, "tdm", 0.05f, 100, 18, 10, 3f, 25f, 1f, 75f, 80f, 1, 1, 1, true, 3000, false });
 
             migrationBuilder.InsertData(
                 table: "server_total_stats",
@@ -1392,23 +1549,23 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "ShowRanking", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { -3, (short)1, true, false, "MapCreateLobby", -1, null, false, 400, ELobbyType.MapCreateLobby });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { -3, (short)1, true, false, "MapCreateLobby", -1, null, 400, ELobbyType.MapCreateLobby });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "ShowRanking", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { -2, (short)1, true, false, "GangLobby", -1, null, false, 400, ELobbyType.GangLobby });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { -2, (short)1, true, false, "GangLobby", -1, null, 400, ELobbyType.GangLobby });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "ShowRanking", "SpawnAgainAfterDeathMs", "Type" },
-                values: new object[] { -1, (short)1, true, false, "Arena", -1, null, false, 400, ELobbyType.Arena });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "SpawnAgainAfterDeathMs", "Type" },
+                values: new object[] { -1, (short)1, true, false, "Arena", -1, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
-                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "ShowRanking", "Type" },
-                values: new object[] { -4, null, true, false, "MainMenu", -1, null, false, ELobbyType.MainMenu });
+                columns: new[] { "ID", "AmountLifes", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "Type" },
+                values: new object[] { -4, null, true, false, "MainMenu", -1, null, ELobbyType.MainMenu });
 
             migrationBuilder.InsertData(
                 table: "maps",
@@ -1462,8 +1619,8 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobby_round_settings",
-                columns: new[] { "LobbyID", "BombDefuseTimeMs", "BombDetonateTimeMs", "BombPlantTimeMs", "CountdownTime", "MixTeamsAfterRound", "RoundTime" },
-                values: new object[] { -1, 8000, 45000, 3000, 5, true, 240 });
+                columns: new[] { "LobbyID", "BombDefuseTimeMs", "BombDetonateTimeMs", "BombPlantTimeMs", "CountdownTime", "MixTeamsAfterRound", "RoundTime", "ShowRanking" },
+                values: new object[] { -1, 8000, 45000, 3000, 5, true, 240, false });
 
             migrationBuilder.InsertData(
                 table: "lobby_weapons",
@@ -1563,25 +1720,53 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "teams",
+                columns: new[] { "ID", "BlipColor", "ColorR", "Index", "Lobby", "Name", "SkinHash" },
+                values: new object[] { -4, (short)1, (short)150, (short)2, -1, "Terrorist", 275618457 });
+
+            migrationBuilder.InsertData(
+                table: "teams",
+                columns: new[] { "ID", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name" },
+                values: new object[] { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None" });
+
+            migrationBuilder.InsertData(
+                table: "teams",
+                columns: new[] { "ID", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name" },
+                values: new object[] { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" });
+
+            migrationBuilder.InsertData(
+                table: "teams",
+                columns: new[] { "ID", "BlipColor", "ColorG", "Index", "Lobby", "Name", "SkinHash" },
+                values: new object[] { -3, (short)52, (short)150, (short)1, -1, "SWAT", -1920001264 });
+
+            migrationBuilder.InsertData(
+                table: "teams",
                 columns: new[] { "ID", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name", "SkinHash" },
-                values: new object[,]
-                {
-                    { -4, (short)1, (short)0, (short)0, (short)150, (short)2, -1, "Terrorist", 275618457 },
-                    { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None", 0 },
-                    { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator", 0 },
-                    { -3, (short)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT", -1920001264 },
-                    { -1, (short)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 }
-                });
+                values: new object[] { -1, (short)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 });
 
             migrationBuilder.InsertData(
                 table: "gangs",
-                columns: new[] { "ID", "Short", "TeamId" },
-                values: new object[] { -1, "-", -5 });
+                columns: new[] { "ID", "OwnerId", "Short", "TeamId" },
+                values: new object[] { -1, null, "-", -5 });
+
+            migrationBuilder.InsertData(
+                table: "gang_rank_permissions",
+                columns: new[] { "GangID", "InviteMembers", "KickMembers", "ManagePermissions", "ManageRanks", "StartGangwar" },
+                values: new object[] { -1, (short)5, (short)5, (short)5, (short)5, (short)5 });
+
+            migrationBuilder.InsertData(
+                table: "gang_ranks",
+                columns: new[] { "GangID", "Rank", "Name" },
+                values: new object[] { -1, (short)0, "-" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_application_answers_QuestionID",
                 table: "application_answers",
                 column: "QuestionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_application_invitations_AdminID",
+                table: "application_invitations",
+                column: "AdminID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_application_invitations_ApplicationID",
@@ -1610,9 +1795,30 @@ namespace TDS_Server_DB.Migrations
                 column: "NeededAdminLevel");
 
             migrationBuilder.CreateIndex(
+                name: "IX_gang_members_GangID",
+                table: "gang_members",
+                column: "GangID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_gang_members_RankNavigationGangId_RankNavigationRank",
+                table: "gang_members",
+                columns: new[] { "RankNavigationGangId", "RankNavigationRank" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_gangs_OwnerId",
+                table: "gangs",
+                column: "OwnerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_gangs_TeamId",
                 table: "gangs",
                 column: "TeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_gangwar_areas_OwnerGangID",
+                table: "gangwar_areas",
+                column: "OwnerGangID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_lobbies_OwnerId",
@@ -1691,34 +1897,13 @@ namespace TDS_Server_DB.Migrations
                 column: "AdminLvl");
 
             migrationBuilder.CreateIndex(
-                name: "IX_players_GangId",
-                table: "players",
-                column: "GangId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_teams_Lobby",
                 table: "teams",
                 column: "Lobby");
-
-            migrationBuilder.AddForeignKey(
-                name: "players_GangId_fkey",
-                table: "players",
-                column: "GangId",
-                principalTable: "gangs",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "players_AdminLvl_fkey",
-                table: "players");
-
-            migrationBuilder.DropForeignKey(
-                name: "lobbies_Owner_fkey",
-                table: "lobbies");
-
             migrationBuilder.DropTable(
                 name: "admin_level_names");
 
@@ -1739,6 +1924,15 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "freeroam_default_vehicle");
+
+            migrationBuilder.DropTable(
+                name: "gang_members");
+
+            migrationBuilder.DropTable(
+                name: "gang_rank_permissions");
+
+            migrationBuilder.DropTable(
+                name: "gangwar_areas");
 
             migrationBuilder.DropTable(
                 name: "killingspree_rewards");
@@ -1822,6 +2016,9 @@ namespace TDS_Server_DB.Migrations
                 name: "commands");
 
             migrationBuilder.DropTable(
+                name: "gang_ranks");
+
+            migrationBuilder.DropTable(
                 name: "weapons");
 
             migrationBuilder.DropTable(
@@ -1831,12 +2028,6 @@ namespace TDS_Server_DB.Migrations
                 name: "rules");
 
             migrationBuilder.DropTable(
-                name: "admin_levels");
-
-            migrationBuilder.DropTable(
-                name: "players");
-
-            migrationBuilder.DropTable(
                 name: "gangs");
 
             migrationBuilder.DropTable(
@@ -1844,6 +2035,12 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "lobbies");
+
+            migrationBuilder.DropTable(
+                name: "players");
+
+            migrationBuilder.DropTable(
+                name: "admin_levels");
 
             migrationBuilder.DropSequence(
                 name: "EntityFrameworkHiLoSequence");

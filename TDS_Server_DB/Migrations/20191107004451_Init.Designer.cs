@@ -14,8 +14,8 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    [Migration("20191102223625_ShowRanking_To_LobbyRoundSettings")]
-    partial class ShowRanking_To_LobbyRoundSettings
+    [Migration("20191107004451_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1171,6 +1171,103 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangMembers", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnName("PlayerID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GangId")
+                        .HasColumnName("GangID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("JoinTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<short>("Rank")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)0);
+
+                    b.Property<int?>("RankNavigationGangId")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("RankNavigationRank")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("PlayerId");
+
+                    b.HasIndex("GangId");
+
+                    b.HasIndex("RankNavigationGangId", "RankNavigationRank");
+
+                    b.ToTable("gang_members");
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRankPermissions", b =>
+                {
+                    b.Property<int>("GangId")
+                        .HasColumnName("GangID")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("InviteMembers")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("KickMembers")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("ManagePermissions")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("ManageRanks")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("StartGangwar")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("GangId");
+
+                    b.ToTable("gang_rank_permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            GangId = -1,
+                            InviteMembers = (short)5,
+                            KickMembers = (short)5,
+                            ManagePermissions = (short)5,
+                            ManageRanks = (short)5,
+                            StartGangwar = (short)5
+                        });
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRanks", b =>
+                {
+                    b.Property<int>("GangId")
+                        .HasColumnName("GangID")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("Rank")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("GangId", "Rank");
+
+                    b.ToTable("gang_ranks");
+
+                    b.HasData(
+                        new
+                        {
+                            GangId = -1,
+                            Rank = (short)0,
+                            Name = "-"
+                        });
+                });
+
             modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
                 {
                     b.Property<int>("Id")
@@ -1178,6 +1275,14 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("ID")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Short")
                         .IsRequired()
@@ -1190,6 +1295,9 @@ namespace TDS_Server_DB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
+
                     b.HasIndex("TeamId");
 
                     b.ToTable("gangs");
@@ -1198,6 +1306,7 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Id = -1,
+                            CreateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Short = "-",
                             TeamId = -5
                         });
@@ -2587,11 +2696,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int?>("GangId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(-1);
-
                     b.Property<bool>("IsVip")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("IsVIP")
@@ -2625,8 +2729,6 @@ namespace TDS_Server_DB.Migrations
                     b.HasIndex("AdminLeaderId");
 
                     b.HasIndex("AdminLvl");
-
-                    b.HasIndex("GangId");
 
                     b.ToTable("players");
 
@@ -3603,6 +3705,16 @@ namespace TDS_Server_DB.Migrations
                     b.Property<float>("ArenaNewMapProbabilityPercent")
                         .HasColumnType("real");
 
+                    b.Property<int>("CloseApplicationAfterDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(7);
+
+                    b.Property<int>("DeleteApplicationAfterDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
                     b.Property<float>("DistanceToSpotToDefuse")
                         .HasColumnType("real");
 
@@ -3616,6 +3728,16 @@ namespace TDS_Server_DB.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
+
+                    b.Property<long>("GangwarActionTimeMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(900000L);
+
+                    b.Property<long>("GangwarPreparationTimeMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(180000L);
 
                     b.Property<float>("GiveMoneyFee")
                         .ValueGeneratedOnAdd()
@@ -3689,10 +3811,14 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = (short)1,
                             ArenaNewMapProbabilityPercent = 2f,
+                            CloseApplicationAfterDays = 0,
+                            DeleteApplicationAfterDays = 0,
                             DistanceToSpotToDefuse = 3f,
                             DistanceToSpotToPlant = 3f,
                             ErrorToPlayerOnNonExistentCommand = true,
                             GamemodeName = "tdm",
+                            GangwarActionTimeMs = 0L,
+                            GangwarPreparationTimeMs = 0L,
                             GiveMoneyFee = 0.05f,
                             GiveMoneyMinAmount = 100,
                             KillingSpreeMaxSecondsUntilNextKill = 18,
@@ -4121,8 +4247,50 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangMembers", b =>
+                {
+                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                        .WithMany("Members")
+                        .HasForeignKey("GangId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server_DB.Entity.Player.Players", "Player")
+                        .WithOne("GangMemberNavigation")
+                        .HasForeignKey("TDS_Server_DB.Entity.Gang.GangMembers", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server_DB.Entity.Gang.GangRanks", "RankNavigation")
+                        .WithMany()
+                        .HasForeignKey("RankNavigationGangId", "RankNavigationRank");
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRankPermissions", b =>
+                {
+                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                        .WithOne("RankPermissions")
+                        .HasForeignKey("TDS_Server_DB.Entity.Gang.GangRankPermissions", "GangId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRanks", b =>
+                {
+                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                        .WithMany("Ranks")
+                        .HasForeignKey("GangId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
                 {
+                    b.HasOne("TDS_Server_DB.Entity.Player.Players", "Owner")
+                        .WithOne("OwnedGang")
+                        .HasForeignKey("TDS_Server_DB.Entity.Gang.Gangs", "OwnerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("TDS_Server_DB.Entity.Rest.Teams", "Team")
                         .WithMany("Gangs")
                         .HasForeignKey("TeamId")
@@ -4373,12 +4541,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .HasConstraintName("players_AdminLvl_fkey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
-                        .WithMany("Players")
-                        .HasForeignKey("GangId")
-                        .HasConstraintName("players_GangId_fkey")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.Maps", b =>

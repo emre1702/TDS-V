@@ -1228,6 +1228,17 @@ namespace TDS_Server_DB.Migrations
                     b.HasKey("GangId");
 
                     b.ToTable("gang_rank_permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            GangId = -1,
+                            InviteMembers = (short)5,
+                            KickMembers = (short)5,
+                            ManagePermissions = (short)5,
+                            ManageRanks = (short)5,
+                            StartGangwar = (short)5
+                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRanks", b =>
@@ -1245,6 +1256,14 @@ namespace TDS_Server_DB.Migrations
                     b.HasKey("GangId", "Rank");
 
                     b.ToTable("gang_ranks");
+
+                    b.HasData(
+                        new
+                        {
+                            GangId = -1,
+                            Rank = (short)0,
+                            Name = "-"
+                        });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
@@ -2675,9 +2694,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int?>("GangsId")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("IsVip")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("IsVIP")
@@ -2711,8 +2727,6 @@ namespace TDS_Server_DB.Migrations
                     b.HasIndex("AdminLeaderId");
 
                     b.HasIndex("AdminLvl");
-
-                    b.HasIndex("GangsId");
 
                     b.ToTable("players");
 
@@ -4517,18 +4531,14 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "AdminLeader")
                         .WithMany("AdminMembers")
                         .HasForeignKey("AdminLeaderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server_DB.Entity.Admin.AdminLevels", "AdminLvlNavigation")
                         .WithMany("Players")
                         .HasForeignKey("AdminLvl")
                         .HasConstraintName("players_AdminLvl_fkey")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
-
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", null)
-                        .WithMany("Players")
-                        .HasForeignKey("GangsId");
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.Maps", b =>
