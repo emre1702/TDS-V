@@ -73,6 +73,7 @@ namespace TDS_Server.Manager.Player
             PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
 
             character.Gang = Gang.GetPlayerGang(character);
+            character.GangRank = Gang.GetPlayerGangRank(character);
 
             if (character.ChatLoaded)
                 OfflineMessagesManager.CheckOfflineMessages(character);

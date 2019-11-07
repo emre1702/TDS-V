@@ -16,6 +16,7 @@ using TDS_Server.Interface;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity.Gang;
 using TDS_Server_DB.Entity.Player;
 using TimeZoneConverter;
 
@@ -85,6 +86,8 @@ namespace TDS_Server.Instance.Player
             }
             set => _gang = value;
         }
+
+        public GangRanks? GangRank { get; set; }
 
         public sbyte Lifes { get; set; } = 0;
         public bool IsLobbyOwner => CurrentLobby?.IsPlayerLobbyOwner(this) ?? false;
