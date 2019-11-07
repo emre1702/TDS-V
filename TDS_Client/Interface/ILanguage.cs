@@ -35,6 +35,7 @@ namespace TDS_Client.Interface
         string ON_FOOT { get; }
         string PUT_ON_GROUND { get; }
         string LET_IT_FLOAT { get; }
+        string ERROR { get; }
 
         ELanguage Enum { get; }
         

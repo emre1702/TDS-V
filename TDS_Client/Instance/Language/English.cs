@@ -39,6 +39,7 @@ namespace TDS_Client.Instance.Language
         public virtual string ON_FOOT => "On Foot";
         public virtual string PUT_ON_GROUND => "Put on ground";
         public virtual string LET_IT_FLOAT => "Let it float";
+        public virtual string ERROR => "Error occured, please report this: '{0}'";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 

@@ -38,6 +38,7 @@ namespace TDS_Client.Instance.Language
         public override string ON_FOOT => "Zu Fuß";
         public override string PUT_ON_GROUND => "Boden legen";
         public override string LET_IT_FLOAT => "Schweben lassen";
+        public override string ERROR => "Error aufgetaucht, bitte melde es: '{0}'";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 
