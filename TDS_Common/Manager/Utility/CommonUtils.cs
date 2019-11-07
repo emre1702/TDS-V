@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TDS_Common.Manager.Utility
 {
-    public class CommonUtils
+    public static class CommonUtils
     {
         public static readonly Random Rnd = new Random();
         public static bool IsServersided { get; set; }
