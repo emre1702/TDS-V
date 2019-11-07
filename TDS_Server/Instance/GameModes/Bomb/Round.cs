@@ -49,7 +49,8 @@ namespace TDS_Server.Instance.GameModes
                 dto.Blip.Name = "Bomb-Plant";
                 _bombPlantPlaces.Add(dto);
             }
-            _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo?.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);
+
+            _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);
         }
 
         public override void StartMapClear()
