@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Reference Include="Bootstrapper">
-      <HintPath>C:\RAGEMP\server-files\bridge\runtime\Bootstrapper.dll</HintPath>
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

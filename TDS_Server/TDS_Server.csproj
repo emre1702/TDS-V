@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>C:\RAGEMP\server-files\bridge\resources\tds\</OutputPath>
+    <OutputPath>C:\RAGEMP\server-files\dotnet\resources\tds\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -59,7 +59,7 @@
 
   <ItemGroup>
     <Reference Include="Bootstrapper">
-      <HintPath>C:\RAGEMP\server-files\bridge\runtime\Bootstrapper.dll</HintPath>
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
 
