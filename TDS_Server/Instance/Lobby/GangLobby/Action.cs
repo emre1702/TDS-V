@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.Lobby
 
             await lobby.AddPlayer(attacker, 1);
 
-            lobby.StartPreparations();
+            lobby.StartPreparations(attacker);
 
         }
 
