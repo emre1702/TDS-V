@@ -19,7 +19,7 @@ namespace TDS_Server_DB
 
         private class CustomLogger : ILogger
         {
-            private Queue<string> _logQuery = new Queue<string>();
+            private readonly Queue<string> _logQuery = new Queue<string>();
 
             public bool IsEnabled(LogLevel logLevel)
             {
@@ -45,7 +45,7 @@ namespace TDS_Server_DB
                     
                     File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", msg);
                 }
-                catch (IOException)
+                catch
                 {
                     _logQuery.Enqueue(msg);
                 }

@@ -6,10 +6,10 @@ namespace TDS_Server.Manager.Utility
 {
     class ServerConstants
     {
-        private const string ResourcePathPath = "dotnet/resources/tds/";
-        public const string MapsPath = ResourcePathPath + "maps/";
-        public const string NewMapsPath = ResourcePathPath + "newmaps/";
-        public const string SavedMapsPath = ResourcePathPath + "savedmaps/";
-        public const string NeedCheckMapsPath = ResourcePathPath + "needcheckmaps/";
+        private const string _resourcePathPath = "dotnet/resources/tds/";
+        public const string MapsPath = _resourcePathPath + "maps/";
+        public const string NewMapsPath = _resourcePathPath + "newmaps/";
+        public const string SavedMapsPath = _resourcePathPath + "savedmaps/";
+        public const string NeedCheckMapsPath = _resourcePathPath + "needcheckmaps/";
     }
 }
