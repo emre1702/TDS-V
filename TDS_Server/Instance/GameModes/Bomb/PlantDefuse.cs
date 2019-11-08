@@ -55,7 +55,7 @@ namespace TDS_Server.Instance.GameModes
             plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, Lobby.Dimension);
             plantPlace.Blip.Color = 49;
             plantPlace.Blip.Name = "Bomb-Plant";
-            //bombPlantBlips[i].Flashing = true;
+            //plantPlace.Blip.Flashing = true;
             //Todo Implement after new Bridge version
             _bombAtPlayer = null;
             _planter = player;
