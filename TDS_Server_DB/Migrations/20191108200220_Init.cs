@@ -24,7 +24,7 @@ namespace TDS_Server_DB.Migrations
                 .Annotation("Npgsql:Enum:e_userpanel_admin_question_answer_type", "text,check,number")
                 .Annotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .Annotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
-                .Annotation("Npgsql:Enum:vehicle_hash", "adder,airbus,airtug,akuma,alpha,alpha_z1,ambulance,annihilator,apc,ardent,army_tanker,army_trailer,army_trailer2,asea,asea2,asterope,avarus,bagger,bale_trailer,baller,baller2,baller3,baller4,baller5,baller6,banshee,banshee2,barracks,barracks2,barracks3,bati,bati2,benson,besra,bestia_gts,bf400,bf_injection,biff,bifta,bison,bison2,bison3,bjxl,blade,blazer,blazer2,blazer3,blazer4,blazer5,blimp,blimp2,blista,blista2,blista3,bmx,boat_trailer,bobcat_xl,bodhi2,bombushka,boxville,boxville2,boxville3,boxville4,boxville5,brawler,brickade,brioso,b_type,b_type2,b_type3,buccaneer,buccaneer2,buffalo,buffalo2,buffalo3,bulldozer,bullet,burrito,burrito2,burrito3,burrito4,burrito5,bus,buzzard,buzzard2,cable_car,caddy,caddy2,caddy3,camper,carbonizzare,carbon_rs,cargobob,cargobob2,cargobob3,cargobob4,cargo_plane,casco,cavalcade,cavalcade2,cheetah,cheetah2,chimera,chino,chino2,cliffhanger,coach,cog55,cog552,cog_cabrio,cognoscenti,cognoscenti2,comet2,comet3,contender,coquette,coquette2,coquette3,cruiser,crusader,cuban800,cutter,cyclone,daemon,daemon2,defiler,diablous,diablous2,dilettante,dilettante2,dinghy,dinghy2,dinghy3,dinghy4,d_loader,dock_trailer,docktug,dodo,dominator,dominator2,double,dubsta,dubsta2,dubsta3,dukes,dukes2,dump,dune,dune2,dune3,dune4,dune5,duster,elegy,elegy2,emperor,emperor2,emperor3,enduro,entity_xf,esskey,exemplar,f620,faction,faction2,faction3,faggio,faggio2,faggio3,fbi,fbi2,fcr,fcr2,felon,felon2,feltzer2,feltzer3,fire_truck,fixter,flatbed,forklift,fmj,fq2,freight,freight_car,freight_cont1,freight_cont2,freight_grain,freight_trailer,frogger,frogger2,fugitive,furoregt,fusilade,futo,gargoyle,gauntlet,gauntlet2,g_burrito,g_burrito2,glendale,gp1,grain_trailer,granger,gresley,guardian,habanero,hakuchou,hakuchou2,half_track,handler,hauler,hauler2,havok,hexer,hotknife,howard,hunter,huntley,hydra,infernus,infernus2,ingot,innovation,insurgent,insurgent2,insurgent3,intruder,issi2,itali_gtb,itali_gtb2,jackal,jb700,jester,jester2,jet,jetmax,journey,kalahari,khamelion,kuruma,kuruma2,landstalker,lazer,lectro,lguard,limo2,lurcher,luxor,luxor2,lynx,mamba,mammatus,manana,manchez,marquis,marshall,massacro,massacro2,maverick,mesa,mesa2,mesa3,metro_train,microlight,miljet,minivan,minivan2,mixer,mixer2,mogul,molotok,monroe,monster,moonbeam,moonbeam2,mower,mule,mule2,mule3,nemesis,nero,nero2,nightblade,nightshade,night_shark,nimbus,ninef,ninef2,nokota,omnis,oppressor,oracle,oracle2,osiris,packer,panto,paradise,patriot,p_bus,pcj,penetrator,penumbra,peyote,pfister811,phantom,phantom2,phantom3,phoenix,picador,pigalle,police,police2,police3,police4,policeb,police_old1,police_old2,police_t,polmav,pony,pony2,pounder,prairie,pranger,predator,premier,primo,primo2,prop_trailer,prototipo,pyro,radi,rake_trailer,rancher_xl,rancher_xl2,rally_truck,rapid_gt,rapid_gt2,rapid_gt3,raptor,rat_bike,rat_loader,rat_loader2,re7b,reaper,rebel,rebel2,regina,rental_bus,retinue,rhapsody,rhino,riot,ripley,rocoto,romero,rogue,rubble,ruffian,ruiner,ruiner2,ruiner3,rumpo,rumpo2,rumpo3,ruston,sabre_gt,sabre_gt2,sadler,sadler2,sanchez,sanchez2,sanctus,sandking,sandking2,savage,schafter2,schafter3,schafter4,schafter5,schafter6,schwarzer,scorcher,scrap,seabreeze,seashark,seashark2,seashark3,seminole,sentinel,sentinel2,serrano,seven70,shamal,sheava,sheriff,sheriff2,shotaro,skylift,slam_van,slam_van2,slam_van3,sovereign,specter,specter2,speeder,speeder2,speedo,speedo2,squalo,stalion,stalion2,stanier,starling,stinger,stinger_gt,stockade,stockade3,stratum,stretch,stunt,submersible,submersible2,sultan,sultan_rs,suntrap,superd,supervolito,supervolito2,surano,surfer,surfer2,surge,swift2,swift,t20,taco,tailgater,tampa,tampa2,tampa3,tanker,tanker2,tanker_car,taxi,technical,technical2,technical3,tempesta,thrust,tip_truck,tip_truck2,titan,torero,tornado,tornado2,tornado3,tornado4,tornado5,tornado6,toro,toro2,tourbus,tow_truck,tow_truck2,tr2,tr3,tr4,tractor,tractor2,tractor3,trailer_logs,trailer_large,trailers,trailers2,trailers3,trailers4,trailer_small,trailer_small2,trash,trash2,tr_flat,tri_bike,tri_bike2,tri_bike3,trophy_truck,trophy_truck2,tropic,tropic2,tropos,tug,tula,turismor,turismo2,tv_trailer,tyrus,utilli_truck,utilli_truck2,utilli_truck3,vacca,vader,vagner,valkyrie,valkyrie2,velum,velum2,verlierer2,vestra,vigero,vigilante,vindicator,virgo,virgo2,virgo3,visione,volatus,voltic,voltic2,voodoo,voodoo2,vortex,warrener,washington,wastelander,windsor,windsor2,wolfsbane,xa21,xls,xls2,youga,youga2,zentorno,zion,zion2,zombie_a,zombie_b,z_type,akula,autarch,avenger,avenger2,barrage,chernobog,comet4,comet5,deluxo,gt500,hermes,hustler,kamacho,khanjali,neon,pariah,raiden,revolter,riata,riot2,savestra,sc1,sentinel3,streiter,stromberg,thruster,viseris,volatol,yosemite,z190,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2");
+                .Annotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust");
 
             migrationBuilder.CreateSequence(
                 name: "EntityFrameworkHiLoSequence",
@@ -256,8 +256,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Level,
                         principalTable: "admin_levels",
                         principalColumn: "Level",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -280,8 +279,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.NeededAdminLevel,
                         principalTable: "admin_levels",
                         principalColumn: "Level",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -308,15 +306,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminLeaderID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetDefault,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "players_AdminLvl_fkey",
                         column: x => x.AdminLvl,
                         principalTable: "admin_levels",
                         principalColumn: "Level",
-                        onDelete: ReferentialAction.SetDefault,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -335,8 +331,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.RuleID,
                         principalTable: "rules",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -354,8 +349,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Command,
                         principalTable: "commands",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,8 +368,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.ID,
                         principalTable: "commands",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -396,8 +389,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -418,8 +410,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -453,8 +444,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.OwnerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -475,8 +465,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.CreatorId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -499,15 +488,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.SourceID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "offlinemessages_TargetID_fkey",
                         column: x => x.TargetID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -525,8 +512,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -545,15 +531,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_relations_TargetId_fkey",
                         column: x => x.TargetId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -582,8 +566,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -606,8 +589,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -625,8 +607,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -645,15 +626,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.ApplicationID,
                         principalTable: "applications",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_application_answers_application_questions_QuestionID",
                         column: x => x.QuestionID,
                         principalTable: "application_questions",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -674,15 +653,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_application_invitations_applications_ApplicationID",
                         column: x => x.ApplicationID,
                         principalTable: "applications",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -703,8 +680,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyId,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -723,8 +699,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -744,8 +719,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -769,8 +743,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -791,15 +764,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Hash,
                         principalTable: "weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "lobby_weapons_Lobby_fkey",
                         column: x => x.Lobby,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -822,22 +793,19 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.AdminId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "player_bans_LobbyID_fkey",
                         column: x => x.LobbyId,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_bans_PlayerID_fkey",
                         column: x => x.PlayerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -868,15 +836,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_lobby_stats_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -902,8 +868,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.Lobby,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -921,15 +886,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.LobbyID,
                         principalTable: "lobbies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_lobby_maps_maps",
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -947,15 +910,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_map_favourites_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -974,15 +935,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "player_map_ratings_PlayerID_fkey",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1004,15 +963,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.OwnerId,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "gangs_TeamId_fkey",
                         column: x => x.TeamId,
                         principalTable: "teams",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1034,8 +991,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.GangID,
                         principalTable: "gangs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1054,8 +1010,7 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.GangID,
                         principalTable: "gangs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1074,15 +1029,13 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.MapID,
                         principalTable: "maps",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_gangwar_areas_gangs_OwnerGangID",
                         column: x => x.OwnerGangID,
                         principalTable: "gangs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -1104,22 +1057,19 @@ namespace TDS_Server_DB.Migrations
                         column: x => x.GangID,
                         principalTable: "gangs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_gang_members_players_PlayerID",
                         column: x => x.PlayerID,
                         principalTable: "players",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_gang_members_gang_ranks_RankNavigationGangId_RankNavigation~",
                         columns: x => new { x.RankNavigationGangId, x.RankNavigationRank },
                         principalTable: "gang_ranks",
                         principalColumns: new[] { "GangID", "Rank" },
-                        onDelete: ReferentialAction.SetDefault,
-                        onUpdate: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -1175,7 +1125,7 @@ namespace TDS_Server_DB.Migrations
                 {
                     { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 },
                     { EFreeroamVehicleType.Plane, null, VehicleHash.Pyro },
-                    { EFreeroamVehicleType.Helicopter, null, VehicleHash.AKULA },
+                    { EFreeroamVehicleType.Helicopter, null, VehicleHash.Akula },
                     { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 },
                     { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 }
                 });
