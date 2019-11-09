@@ -27,6 +27,7 @@ namespace TDS_Server_DB.Entity.Player
 
         public int Id { get; set; }
         public string SCName { get; set; }
+        public ulong SCId { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }

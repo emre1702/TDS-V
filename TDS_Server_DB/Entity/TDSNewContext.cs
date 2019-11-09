@@ -952,6 +952,10 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("SCName")
                     .HasMaxLength(255);
 
+                entity.Property(e => e.SCId)
+                    .IsRequired()
+                    .HasColumnName("SCID");
+
                 entity.HasOne(d => d.AdminLvlNavigation)
                     .WithMany(p => p.Players)
                     .HasForeignKey(d => d.AdminLvl)
@@ -1146,7 +1150,7 @@ namespace TDS_Server_DB.Entity
             );
 
             modelBuilder.Entity<Players>().HasData(
-                new Players { Id = -1, SCName = "System", Name = "System", Password = "" }
+                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", Password = "" }
             );
 
             var seedLobbies = new List<Lobbies> {
