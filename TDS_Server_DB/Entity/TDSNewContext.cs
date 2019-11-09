@@ -705,12 +705,23 @@ namespace TDS_Server_DB.Entity
                 entity.HasKey(e => new { e.PlayerId, e.LobbyId })
                     .HasName("player_bans_pkey");
 
+                entity.HasIndex(e => e.IP);
+                entity.HasIndex(e => e.SCName);
+                entity.HasIndex(e => e.SCId);
+                entity.HasIndex(e => e.Serial);
+
                 entity.ToTable("player_bans");
 
                 entity.Property(e => e.EndTimestamp)
                     .HasConversion(v => v, v => v == null ? (DateTime?)null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
 
+                entity.Property(e => e.IP).IsRequired(false);
+
                 entity.Property(e => e.Serial).IsRequired(false);
+
+                entity.Property(e => e.SCName).IsRequired(false);
+
+                entity.Property(e => e.SCId).IsRequired(false);
 
                 entity.Property(e => e.Reason).IsRequired();
 
