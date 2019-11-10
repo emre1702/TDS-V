@@ -10,6 +10,7 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Commands;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
+using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
 
@@ -61,7 +62,7 @@ namespace TDS_Server.Manager.Utility
                 await CommandsManager.LoadCommands(dbcontext);
                 Damagesys.LoadDefaults(dbcontext);
 
-                await BansManager.RemoveExpiredBans();
+                await BansManager.Get().RemoveExpiredBans();
 
                 await MapsLoader.LoadDefaultMaps(dbcontext);
                 await MapCreator.LoadNewMaps(dbcontext);
@@ -78,6 +79,8 @@ namespace TDS_Server.Manager.Utility
                 Userpanel.Main.Init(dbcontext);
 
                 ResourceStarted = true;
+
+                Account.Init();
             }
             catch (Exception ex)
             {

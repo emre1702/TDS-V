@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using GTANetworkMethods;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
@@ -11,13 +12,17 @@ using TDS_Server.Interface;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
+using Task = System.Threading.Tasks.Task;
 
 namespace TDS_Server.Manager.Player
 {
     internal class Account : Script
     {
-        public Account()
+        private static BansManager? _bansManager;
+
+        public static void Init()
         {
+            _bansManager = BansManager.Get();
         }
 
         private static void SendWelcomeMessage(Client player)
@@ -100,25 +105,32 @@ namespace TDS_Server.Manager.Player
                 player.GetChar().LanguageEnum = (ELanguage)language;
         }
 
+        [ServerEvent(Event.IncomingConnection)]
+        public static async void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
+        {
+            while (_bansManager is null)
+                await Task.Delay(1000);
+
+            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, ip, serial, socialClubName, socialClubId, true);
+            if (ban is { })
+                cancel.Cancel = true;
+        }
+
         //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
         [ServerEvent(Event.PlayerConnected)]
         public static async void OnPlayerConnected(Client player)
         {
-            while (!TDSNewContext.IsConfigured)
+            while (_bansManager is null)
                 await Task.Delay(1000);
-            while (!ResourceStart.ResourceStarted) 
-                await Task.Delay(1000);
+
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
 
-            using var dbContext = new TDSNewContext();
-
-            #region Serial ban
-            PlayerBans? ban = await dbContext.PlayerBans.Include(b => b.Player).FirstOrDefaultAsync(b => b.LobbyId == LobbyManager.MainMenu.Id && b.Serial == player.Serial);
-            if (!await HandlePlayerBan(player, ban, dbContext))
+            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, false);
+            if (!HandlePlayerBan(player, ban))
                 return;
-            #endregion
 
+            using var dbContext = new TDSNewContext();
             var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
             if (playerIDName is null)
             {
@@ -126,26 +138,17 @@ namespace TDS_Server.Manager.Player
                 return;
             }
 
-            #region Player ban
-            ban = await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.LobbyId == LobbyManager.MainMenu.Id && b.PlayerId == playerIDName.Id);
-            if (!await HandlePlayerBan(player, ban, dbContext))
+            ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, playerIDName.Id);
+            if (!HandlePlayerBan(player, ban))
                 return;
-            #endregion
 
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
         }
 
-        private static async Task<bool> HandlePlayerBan(Client player, PlayerBans? ban, TDSNewContext dbContext)
+        private static bool HandlePlayerBan(Client player, PlayerBans? ban)
         {
             if (ban is null)
                 return true;
-
-            if (ban.EndTimestamp.HasValue && ban.EndTimestamp.Value <= DateTime.UtcNow)
-            {
-                dbContext.Remove(ban);
-                await dbContext.SaveChangesAsync();
-                return true;
-            }
 
             string startstr =  ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
