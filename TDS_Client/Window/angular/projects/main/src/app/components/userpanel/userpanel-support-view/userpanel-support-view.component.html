@@ -1,0 +1,48 @@
+<form [formGroup]="requestGroup" (ngSubmit)="sendMessage()">
+    <div class="left-side">
+        <div class="messages" #messagesPanel>
+            <div class="title">{{ currentRequest.Title }}</div>
+            <div class="message" [class.admin]="message.Author != currentRequest.Messages[0].Author"
+            [matTooltip]="message.CreateTime"
+            *ngFor="let message of currentRequest.Messages">
+                <div class="message-title">{{ message.Author }}</div>
+                <div class="message-content admin">{{ message.Message }}</div>
+            </div>
+        </div>
+        <mat-form-field color="accent" hideRequiredMarker>
+            <textarea matInput required
+            [placeholder]="'Message' | language: settings.Lang"
+            rows="2"
+            formControlName="message"></textarea>
+            <mat-error>{{ 'TextLengthBetween'
+                | language:settings.Lang:messageMinLength:messageMaxLength }}</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="right-side">
+        <div class="right-side-content">
+            <mat-form-field color="accent" class="readonly-wrapper">
+                <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
+                <mat-select class="readonly-block" disabled [value]="currentRequest.Type">
+                    <mat-option [value]="userpanelSupportType.Question">{{ 'Question' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Help">{{ 'Help' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Compliment">{{ 'Compliment' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Complaint">{{ 'Complaint' | language: settings.Lang }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="admin-buttons">
+                <button *ngFor="let adminLevel of getAdminLevels()"
+                type="button"
+                [style.background-color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? '' : adminLevel.Color"
+                [style.color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? adminLevel.Color : ''"
+                [class.mat-button]="currentRequest.AtleastAdminLevel > adminLevel.Level"
+                [class.mat-raised-button]="currentRequest.AtleastAdminLevel <= adminLevel.Level">
+                    {{ adminLevel.Name | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <button mat-raised-button [disabled]="requestGroup.invalid" type="submit">{{ 'Send' | language: settings.Lang }}</button>
+        <button mat-raised-button (click)="goBack()">{{ 'Back' | language: settings.Lang }}</button>
+    </div>
+</form>

@@ -69,6 +69,9 @@ import { UserpanelApplicationComponent } from './components/userpanel/userpanel-
 import { UserpanelApplicationsComponent } from './components/userpanel/userpanel-applications (admin)/userpanel-applications.component';
 import { UserpanelAdminQuestionsComponent } from './components/userpanel/userpanel-admin-questions/userpanel-admin-questions.component';
 import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
+import { UserpanelSupportUserComponent } from './components/userpanel/userpanel-support-user/userpanel-support-user.component';
+import { UserpanelSupportAdminComponent } from './components/userpanel/userpanel-support-admin/userpanel-support-admin.component';
+import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-support-view/userpanel-support-view.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +105,10 @@ import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
     RankingComponent,
     CustomLobbyTeamsMenuComponent,
     UserpanelApplicationsComponent,
-    UserpanelAdminQuestionsComponent
+    UserpanelAdminQuestionsComponent,
+    UserpanelSupportUserComponent,
+    UserpanelSupportAdminComponent,
+    UserpanelSupportViewComponent
   ],
   imports: [
     ReactiveFormsModule,

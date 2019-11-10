@@ -1,0 +1,60 @@
+.mat-card {
+    margin-bottom: 10px;
+
+    .mat-card-content {
+        word-wrap: break-word;
+    }
+}
+
+.add-card {
+    ::ng-deep .mat-icon {
+        height: auto !important;
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+
+    .left-side {
+        float: left;
+        height: 100%;
+        width: calc(65% - 10px);
+
+        display: flex;
+        flex-direction: column;
+
+        * {
+            width: 100%;
+        }
+    }
+
+    .right-side {
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
+        float: right;
+        width: calc(35% - 10px);
+        height: 100%;
+
+        .right-side-content {
+            flex: 1 1 auto;
+
+            .admin-buttons {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+        }
+
+        * {
+            width: 100%;
+        }
+
+        button {
+            margin-top: 5px;
+        }
+    }
+
+}

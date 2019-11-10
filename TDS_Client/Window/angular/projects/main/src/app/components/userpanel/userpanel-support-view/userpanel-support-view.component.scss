@@ -1,0 +1,80 @@
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+
+    .left-side {
+        float: left;
+        height: 100%;
+        width: calc(65% - 10px);
+
+        display: flex;
+        flex-direction: column;
+
+        * {
+            width: 100%;
+        }
+
+        .messages {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+
+            .title {
+                margin-bottom: 15px;
+            }
+
+            .message {
+                width: 90%;
+                float: left;
+                margin-bottom: 15px;
+
+                .message-title {
+                    font-size: 0.6em;
+                    margin-bottom: 3px;
+                    color: rgba(255, 255, 255, 0.7);
+                    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+                }
+
+                .message-content {
+                    font-size: 0.8em;
+
+                }
+
+                &.admin {
+                    margin-left: auto;
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .right-side {
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
+        float: right;
+        width: calc(35% - 10px);
+        height: 100%;
+
+        .right-side-content {
+            flex: 1 1 auto;
+
+            .admin-buttons {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+        }
+
+        * {
+            width: 100%;
+        }
+
+        button {
+            margin-top: 5px;
+        }
+    }
+
+}

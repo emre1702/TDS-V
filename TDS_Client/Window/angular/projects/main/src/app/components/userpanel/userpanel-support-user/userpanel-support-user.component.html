@@ -1,0 +1,71 @@
+<ng-container *ngIf="inRequest == undefined && !creatingRequest">
+    <mat-card class="add-card" matRipple (click)="openCreateRequest()">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>add</mat-icon>
+            {{ 'CreateNewRequest' | language: settings.Lang }}
+        </mat-card-header>
+    </mat-card>
+
+    <mat-card matRipple *ngFor="let request of userpanelService.supportRequests" (click)="openRequest(request.Id)">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>{{ supportTypeIcons[request.Type] }}</mat-icon>
+            <mat-card-subtitle>{{ request.CreateTime }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ request.Title }}</p>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+
+<form *ngIf="inRequest == undefined && creatingRequest" (ngSubmit)="submitRequest()" [formGroup]="requestGroup">
+    <div class="left-side">
+        <mat-form-field color="accent">
+            <textarea #titleInput matInput required
+            [placeholder]="'Title' | language: settings.Lang"
+            formControlName="title"></textarea>
+            <mat-error>{{ 'TextLengthBetween'
+                | language: settings.Lang:titleMinLength:titleMaxLength }}</mat-error>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <textarea matInput required
+            [placeholder]="'Message' | language: settings.Lang"
+            formControlName="message"></textarea>
+            <mat-error>{{ 'TextLengthBetween'
+                | language: settings.Lang:messageMinLength:messageMaxLength }}</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="right-side">
+        <div class="right-side-content">
+            <mat-form-field color="accent">
+                <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
+                <mat-select required formControlName="type">
+                    <mat-option [value]="userpanelSupportType.Question">{{ 'Question' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Help">{{ 'Help' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Compliment">{{ 'Compliment' | language: settings.Lang }}</mat-option>
+                    <mat-option [value]="userpanelSupportType.Complaint">{{ 'Complaint' | language: settings.Lang }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="admin-buttons">
+                <button *ngFor="let adminLevel of getAdminLevels()"
+                type="button"
+                [style.background-color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? '' : adminLevel.Color"
+                [style.color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? adminLevel.Color : ''"
+                (click)="setAtleastAdminLevel(adminLevel.Level)"
+                [class.mat-button]="currentRequest.AtleastAdminLevel > adminLevel.Level"
+                [class.mat-raised-button]="currentRequest.AtleastAdminLevel <= adminLevel.Level">
+                    {{ adminLevel.Name | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+        <button mat-raised-button [disabled]="requestGroup.invalid" type="submit">{{ 'Create' | language: settings.Lang }}</button>
+        <button mat-raised-button (click)="goBack()">{{ 'Back' | language: settings.Lang }}</button>
+    </div>
+</form>
+
+<app-userpanel-support-view
+*ngIf="inRequest != undefined"
+[currentRequest]="currentRequest"
+(back)="closeSupportView()">
+
+</app-userpanel-support-view>

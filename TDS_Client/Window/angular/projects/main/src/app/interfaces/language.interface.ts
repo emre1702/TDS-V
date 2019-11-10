@@ -139,6 +139,13 @@ export interface Language {
     Invite: string;
     Accept: string;
     Reject: string;
+    CreateNewRequest: string;
+    TextLengthBetween: string;
+    Question: string;
+    Help: string;
+    Compliment: string;
+    Complaint: string;
+    Title: string;
 
     ////////////////// Stats ////////////////
     SCName: string;
@@ -189,6 +196,8 @@ export interface Language {
     CommandsDonator: string;
     CommandsVIP: string;
     CommandsLobbyOwner: string;
+    SupportUser: string;
+    SupportAdmin: string;
 
     ATTACK: string;
     BACK: string;

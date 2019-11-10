@@ -152,6 +152,13 @@ The user interface is always being worked on, so don't be surprised if you disco
     Invite = "Invite";
     Accept = "Accept";
     Reject = "Reject";
+    CreateNewRequest = "Create new request";
+    TextLengthBetween = "The text length must be between {0} and {1}.";
+    Question = "Question";
+    Help = "Help";
+    Compliment = "Compliment";
+    Complaint = "Complaint";
+    Title = "Title";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
@@ -182,6 +189,8 @@ The user interface is always being worked on, so don't be surprised if you disco
     CommandsDonator = "Commands - Donator";
     CommandsVIP = "Commands - VIP";
     CommandsLobbyOwner = "Commands - Lobby-owner";
+    SupportUser = "Support";
+    SupportAdmin = "Support";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

@@ -12,9 +12,10 @@ import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
+import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserpanelService {
     loadingData = false;
@@ -63,6 +64,7 @@ export class UserpanelService {
     myApplicationCreateTime: string = undefined;
     adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[];
     applications: { ID: number, CreateTime: string, PlayerName: string }[];
+    supportRequests: { Id: number, PlayerName?: string, CreateTime: string, Title: string, Type: UserpanelSupportType }[];
 
     public currentNavChanged = new EventEmitter();
     public loadingDataChanged = new EventEmitter();
@@ -73,6 +75,7 @@ export class UserpanelService {
     public myStatsLoaded = new EventEmitter();
     public applicationDataLoaded = new EventEmitter();
     public applicationsLoaded = new EventEmitter();
+    public supportRequestsLoaded = new EventEmitter();
 
     private myStatsLoadCooldown: NodeJS.Timeout;
 
@@ -109,11 +112,29 @@ export class UserpanelService {
     }
 
     loadApplicationPage() {
-      this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationUser);
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationUser);
     }
 
     loadApplicationsPage() {
-      this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationsAdmin);
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationsAdmin);
+    }
+
+    loadUserSupportRequests() {
+        // this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportUser);
+
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);
+        this.supportRequests = [
+            { Id: 1, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Complaint, Title: "Test 123 Wie geht das?" },
+            { Id: 2, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Compliment, Title: "Test 123 Wie gsdafsadfsadfsadfasdfsadfeht das?" },
+            { Id: 3, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Help, Title: "Test 123 Wie gesdafasdfsdadsfsdaasfdsajhdasfuiusfdahoisduafuo8idsfahuoisdahouidsfahouidsfahoiudsafhoiafdshoiudasiouhdfasoihauiht das?" },
+            { Id: 4, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Question, Title: "Test 123dfsgdfsgdfsgdsfihdfgspdfhgspdfsgpofdsghofdsghoiu Wie geht das?" },
+        ];
+        this.supportRequestsLoaded.emit(null);
+    }
+
+    loadSupportRequestsForAdmin() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportAdmin);
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
@@ -143,6 +164,12 @@ export class UserpanelService {
                 break;
             case UserpanelLoadDataType.ApplicationsAdmin:
                 this.loadedApplicationsForAdmin(json);
+                break;
+            case UserpanelLoadDataType.SupportUser:
+                this.loadedUserSupportRequests(json);
+                break;
+            case UserpanelLoadDataType.SupportAdmin:
+                this.loadedSupportRequestsForAdmin(json);
                 break;
         }
     }
@@ -182,13 +209,13 @@ export class UserpanelService {
         // data.CreateTime -> Application already exists
         if (data.CreateTime) {
             this.myApplicationCreateTime = data.CreateTime;
-            if (typeof(data.Invitations) === "string") {
+            if (typeof (data.Invitations) === "string") {
                 data.Invitations = JSON.parse(data.Invitations);
             }
             this.adminApplyInvitations = data.Invitations;
-        // !data.CreateTime -> No application, user can create a new one
+            // !data.CreateTime -> No application, user can create a new one
         } else {
-            if (typeof(data.AdminQuestions) === "string") {
+            if (typeof (data.AdminQuestions) === "string") {
                 data.AdminQuestions = JSON.parse(data.AdminQuestions);
             }
             this.adminQuestions = data.AdminQuestions;
@@ -201,6 +228,16 @@ export class UserpanelService {
     private loadedApplicationsForAdmin(json: string) {
         this.applications = JSON.parse(json);
         this.applicationsLoaded.emit(null);
+    }
+
+    private loadedUserSupportRequests(json: string) {
+        this.supportRequests = JSON.parse(json);
+        this.supportRequestsLoaded.emit(null);
+    }
+
+    private loadedSupportRequestsForAdmin(json: string) {
+        this.supportRequests = JSON.parse(json);
+        this.supportRequestsLoaded.emit(null);
     }
 
     private languageChanged() {

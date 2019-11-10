@@ -16,7 +16,7 @@ export class AppComponent {
     showFreeroam = false;
     showLobbyChoice = false;
     showTeamChoice = false;
-    showUserpanel = false;
+    showUserpanel = true;
     showRankings = false;
 
     rankings: RoundPlayerRankingStat[];

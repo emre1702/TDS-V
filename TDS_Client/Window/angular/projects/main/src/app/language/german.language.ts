@@ -162,6 +162,13 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Invite = "Einladen";
     Accept = "Akzeptieren";
     Reject = "Ablehnen";
+    CreateNewRequest = "Neue Anfrage erstellen";
+    TextLengthBetween = "Die Text-Länge muss zwischen {0} und {1} sein.";
+    Question = "Frage";
+    Help = "Hilfe";
+    Compliment = "Lob";
+    Complaint = "Beschwerde";
+    Title = "Titel";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";
@@ -177,6 +184,8 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     CommandsDonator = "Befehle - Spender";
     CommandsVIP = "Befehle - VIP";
     CommandsLobbyOwner = "Befehle - Lobby-Besitzer";
+    SupportUser = "Support";
+    SupportAdmin = "Support";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

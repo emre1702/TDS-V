@@ -14,7 +14,9 @@ export enum UserpanelNavPage {
     RulesTDSTeam,
     RulesVIP,
     FAQ,
-    Reports,
+    Support,
     Application,
-    Applications
+    Applications,
+    SupportUser,
+    SupportAdmin
 }

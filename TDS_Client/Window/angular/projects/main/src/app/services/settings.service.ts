@@ -27,7 +27,7 @@ export class SettingsService {
   }
 
   ///////////////////// Language /////////////////////
-  public LangValue: LanguageEnum = LanguageEnum.English;
+  public LangValue: LanguageEnum = LanguageEnum.German;
   public Lang: Language = SettingsService.langByLangValue[this.LangValue];
   public LanguageChanged = new EventEmitter();
 
@@ -79,6 +79,13 @@ export class SettingsService {
   public InFightLobbyChanged = new EventEmitter();
 
   public InUserLobbiesMenu = false;
+
+  public AdminLevels = [
+    { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
+    { Level: 1, Name: "Supporter", Color: "rgb(113,202,113)" },
+    { Level: 2, Name: "Administrator", Color: "rgb(253,132,85)" },
+    { Level: 3, Name: "Projectleader", Color: "rgb(222,50,50)" }
+  ];
 
   public toggleInTeamOrderModus(bool: boolean) {
     this.InTeamOrderModus = bool;

@@ -18,8 +18,12 @@
             </app-userpanel-rules>
             <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
             <app-userpanel-settings *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Settings]"></app-userpanel-settings>
-            <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application]"></app-userpanel-application>
-            <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications]"></app-userpanel-applications>
+            <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
+            </app-userpanel-application>
+            <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
+            </app-userpanel-applications>
+            <app-userpanel-support-user *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportUser] && settings.AdminLevel == 0">
+            </app-userpanel-support-user>
             <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
                 [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
             </div>
@@ -55,9 +59,13 @@
         <mat-icon>help</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.FAQ] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Reports)" disabled>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SupportUser)" *ngIf="settings.AdminLevel == 0">
         <mat-icon>question_answer</mat-icon>
-        <span>{{ userpanelNavPage[userpanelNavPage.Reports] | language: settings.Lang }}</span>
+        <span>{{ userpanelNavPage[userpanelNavPage.SupportUser] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SupportAdmin)" *ngIf="settings.AdminLevel > 0">
+        <mat-icon>question_answer</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.SupportAdmin] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Application)" *ngIf="settings.AdminLevel == 0">
       <mat-icon>post_add</mat-icon>
