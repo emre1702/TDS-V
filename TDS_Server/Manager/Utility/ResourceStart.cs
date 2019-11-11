@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GameModes;
