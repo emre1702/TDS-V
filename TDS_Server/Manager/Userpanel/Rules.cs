@@ -8,9 +8,7 @@ namespace TDS_Server.Manager.Userpanel
 {
     class Rules
     {
-        #nullable disable warnings
-        private static string _rulesJson;
-        #nullable restore warnings
+        private static string _rulesJson = string.Empty;
 
         public static void LoadRules(TDSNewContext context)
         {
