@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GameModes;
@@ -52,12 +53,12 @@ namespace TDS_Server.Manager.Utility
                 await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-                HourTimer.Execute();
-
                 ServerDailyStatsManager.Init();
                 ServerTotalStatsManager.Init();
 
                 await SettingsManager.Load(dbcontext);
+
+                HourTimer.Execute();
 
                 await AdminsManager.Init(dbcontext);
                 Workaround.Init();
