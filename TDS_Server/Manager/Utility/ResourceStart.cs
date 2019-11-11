@@ -52,6 +52,8 @@ namespace TDS_Server.Manager.Utility
                 await dbcontext.SaveChangesAsync();
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
+                HourTimer.Execute();
+
                 ServerDailyStatsManager.Init();
                 ServerTotalStatsManager.Init();
 
