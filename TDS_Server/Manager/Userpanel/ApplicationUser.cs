@@ -203,7 +203,7 @@ namespace TDS_Server.Manager.Userpanel
             using var dbContext = new TDSNewContext();
 
             var apps = await dbContext.Applications
-                .Where(a => a.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) >= DateTime.UtcNow)
+                .Where(a => a.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
                 .ToListAsync();
 
             if (apps.Any())
