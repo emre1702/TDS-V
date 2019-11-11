@@ -107,18 +107,15 @@ namespace TDS_Server.Manager.Userpanel
             if (forPlayer != null)
             {
                 data.RegisterTimestamp = forPlayer
-                    .GetLocalDateTime(data.RegisterDateTime)
-                    .ToString(Constants.DateTimeOffsetFormat);
+                    .GetLocalDateTimeString(data.RegisterDateTime);
 
                 data.LastLogin = forPlayer
-                    .GetLocalDateTime(data.LastLoginDateTime)
-                    .ToString(Constants.DateTimeOffsetFormat);
+                    .GetLocalDateTimeString(data.LastLoginDateTime);
 
                 foreach (var log in data.Logs)
                 {
                     log.Timestamp = forPlayer
-                        .GetLocalDateTime(log.TimestampDateTime)
-                        .ToString(Constants.DateTimeOffsetFormat);
+                        .GetLocalDateTimeString(log.TimestampDateTime);
                 }
             }
             else

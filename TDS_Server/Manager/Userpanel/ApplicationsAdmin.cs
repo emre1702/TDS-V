@@ -44,7 +44,7 @@ namespace TDS_Server.Manager.Userpanel
                 var appsToSend = apps.Select(a => new
                 {
                     a.ID,
-                    CreateTime = player.GetLocalDateTime(a.CreateTime).ToString(Constants.DateTimeOffsetFormat),
+                    CreateTime = player.GetLocalDateTimeString(a.CreateTime),
                     a.PlayerName
                 });
 

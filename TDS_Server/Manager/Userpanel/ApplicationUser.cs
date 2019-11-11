@@ -84,7 +84,7 @@ namespace TDS_Server.Manager.Userpanel
                 return JsonConvert.SerializeObject(new { AdminQuestions });
             }
 
-            return JsonConvert.SerializeObject(new { CreateTime = player.GetLocalDateTime(applicationData.CreateTime).ToString(Constants.DateTimeOffsetFormat), applicationData.Invitations });
+            return JsonConvert.SerializeObject(new { CreateTime = player.GetLocalDateTimeString(applicationData.CreateTime), applicationData.Invitations });
         }
 
         public static async void CreateApplication(TDSPlayer player, string answersJson)
@@ -195,6 +195,21 @@ namespace TDS_Server.Manager.Userpanel
             else
             {
                 OfflineMessagesManager.AddOfflineMessage(invitation.AdminId, player.Entity.Id, "I rejected your team application.");
+            }
+        }
+
+        public static async Task DeleteTooLongClosedApplications()
+        {
+            using var dbContext = new TDSNewContext();
+
+            var apps = await dbContext.Applications
+                .Where(a => a.CreateTime >= DateTime.UtcNow.AddDays(-SettingsManager.ServerSettings.DeleteApplicationAfterDays))
+                .ToListAsync();
+
+            if (apps.Any())
+            {
+                dbContext.Applications.RemoveRange(apps);
+                await dbContext.SaveChangesAsync();
             }
         }
     }
