@@ -365,6 +365,11 @@ namespace TDS_Server.Instance.Player
             return TimeZoneInfo.ConvertTime(dateTime, TimeZone);
         }
 
+        public string GetLocalDateTimeString(DateTime dateTime)
+        {
+            return GetLocalDateTime(dateTime).ToString(Constants.DateTimeOffsetFormat);
+        }
+
         public async Task SaveData(bool force = false)
         {
             if (!force && (Entity is null || !Entity.PlayerStats.LoggedIn))
