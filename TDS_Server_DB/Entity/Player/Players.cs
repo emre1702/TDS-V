@@ -23,6 +23,7 @@ namespace TDS_Server_DB.Entity.Player
             PlayerMapRatings = new HashSet<PlayerMapRatings>();
             PlayerRelationsPlayer = new HashSet<PlayerRelations>();
             PlayerRelationsTarget = new HashSet<PlayerRelations>();
+            SupportRequestMessages = new HashSet<SupportRequestMessages>();
         }
 
         public int Id { get; set; }
@@ -60,5 +61,7 @@ namespace TDS_Server_DB.Entity.Player
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
         public virtual ICollection<PlayerRelations> PlayerRelationsPlayer { get; set; }
         public virtual ICollection<PlayerRelations> PlayerRelationsTarget { get; set; }
+        public virtual SupportRequests SupportRequests { get; set; }
+        public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
     }
 }

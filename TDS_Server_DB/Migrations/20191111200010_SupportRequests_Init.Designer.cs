@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -13,9 +14,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSNewContext))]
-    partial class TDSNewContextModelSnapshot : ModelSnapshot
+    [Migration("20191111200010_SupportRequests_Init")]
+    partial class SupportRequests_Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3739,11 +3741,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(14);
 
-                    b.Property<long>("DeleteRequestsDaysAfterClose")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasDefaultValue(30L);
-
                     b.Property<float>("DistanceToSpotToDefuse")
                         .HasColumnType("real");
 
@@ -3842,7 +3839,6 @@ namespace TDS_Server_DB.Migrations
                             ArenaNewMapProbabilityPercent = 2f,
                             CloseApplicationAfterDays = 0,
                             DeleteApplicationAfterDays = 0,
-                            DeleteRequestsDaysAfterClose = 0L,
                             DistanceToSpotToDefuse = 3f,
                             DistanceToSpotToPlant = 3f,
                             ErrorToPlayerOnNonExistentCommand = true,

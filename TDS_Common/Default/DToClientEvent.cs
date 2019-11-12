@@ -21,6 +21,7 @@
 
         public const string Death = "Death_Server";
 
+        public const string GetSupportRequestData = "GetSupportRequestData_Server";
         public const string GotoPositionByMapCreator = "GotoPositionByMapCreator_Server";
 
         public const string HitOpponent = "HitOpponent_Server";
@@ -66,6 +67,7 @@
         public const string SetMapVotes = "SetMapVotes_Server";
         public const string SetPlayerData = "SetPlayerData_Server";
         public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
+        public const string SetSupportRequestClosed = "SetSupportRequestClosed_Server";
         public const string SpectatorReattachCam = "SpectatorReattachCam_Server";
         public const string StartRankingShowAfterRound = "StartRankingShowAfterRound_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
@@ -74,6 +76,7 @@
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
         public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
+        public const string SyncNewSupportRequestMessage = "SyncNewSupportRequestMessage_Server";
         public const string SyncPlayerData = "SyncPlayerData_Server";
         public const string SyncSettings = "SyncSettings_Server";
         public const string SyncScoreboardData = "SyncScoreboardData_Server";

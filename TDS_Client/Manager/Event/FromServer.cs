@@ -42,6 +42,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
             Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
+            Add(DToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
             Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
@@ -79,6 +80,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
+            Add(DToClientEvent.SetSupportRequestClosed, OnSetSupportRequestClosedMethod);
             Add(DToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
             Add(DToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
@@ -86,6 +88,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
+            Add(DToClientEvent.SyncNewSupportRequestMessage, OnSyncNewSupportRequestMessageMethod);
             Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
             Add(DToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
             Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
@@ -300,6 +303,12 @@ namespace TDS_Client.Manager.Event
             MainBrowser.AddKillMessage(killinfoStr);
         }
 
+        private void OnGetSupportRequestDataMethod(object[] args)
+        {
+            string json = (string)args[0];
+            Browser.Angular.Main.GetSupportRequestData(json);
+        }
+
         private void OnPlayerGotBombMethod(object[] args)
         {
             Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<Position4DDto[]>((string)args[0]));
@@ -409,6 +418,14 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.AddCustomLobby(json);
         }
 
+        private void OnSyncNewSupportRequestMessageMethod(object[] args)
+        {
+            int requestId = Convert.ToInt32(args[0]);
+            string messageJson = (string)args[1];
+
+            Browser.Angular.Main.SyncNewSupportRequestMessage(requestId, messageJson);
+        }
+
         private void OnSyncPlayerDataMethod(object[] args)
         {
             PlayerDataSync.AppendDictionaryFromServer((string)args[0]);
@@ -513,6 +530,13 @@ namespace TDS_Client.Manager.Event
             Player target = ClientUtils.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             if (target != null)
                 Spectate.SpectatingEntity = target;
+        }
+
+        private void OnSetSupportRequestClosedMethod(object[] args)
+        {
+            int requestId = Convert.ToInt32(args[0]);
+            bool closed = Convert.ToBoolean(args[1]);
+            Browser.Angular.Main.SetSupportRequestClosed(requestId, closed);
         }
 
         private void OnSpectatorReattachCamMethod(object[] args)

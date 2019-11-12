@@ -1,7 +1,10 @@
 export enum DToServerEvent {
     AcceptInvitation = "AcceptInvitation_Browser",
     ChooseTeam = "ChooseTeam_Browser",
+    GetSupportRequestData = "GetSupportRequestData_Browser",
     LeaveLobby = "LeaveLobby_Browser",
+    LeftSupportRequest = "LeftSupportRequest_Browser",
+    LeftSupportRequestsList = "LeftSupportRequestsList_Browser",
     LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Browser",
     LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser",
     LoadMapForMapCreator = "LoadMapForMapCreator_Browser",
@@ -10,5 +13,8 @@ export enum DToServerEvent {
     RemoveMap = "RemoveMap_Browser",
     SaveSettings = "SaveSettings_Browser",
     SendApplication = "SendApplication_Browser",
-    SendApplicationInvite = "SendApplicationInvite_Browser"
+    SendApplicationInvite = "SendApplicationInvite_Browser",
+    SendSupportRequest = "SendSupportRequest_Browser",
+    SendSupportRequestMessage = "SendSupportRequestMessage_Browser",
+    SetSupportRequestClosed = "SetSupportRequestClosed_Browser"
 }

@@ -20,6 +20,19 @@ import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 export class UserpanelService {
     loadingData = false;
 
+    supportTypeIcons: { [type: number]: string} = {
+        [UserpanelSupportType.Question]: "help",
+        [UserpanelSupportType.Help]: "info",
+        [UserpanelSupportType.Compliment]: "thumb_up",
+        [UserpanelSupportType.Complaint]: "thumb_down"
+    };
+    supportTypeBorderColors: { [type: number]: string} = {
+        [UserpanelSupportType.Question]: "rgb(0,0,150)",
+        [UserpanelSupportType.Help]: "rgb(150,150,150)",
+        [UserpanelSupportType.Compliment]: "rgb(0,150,0)",
+        [UserpanelSupportType.Complaint]: "rgb(150,0,0)"
+    };
+
     private _currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
 
     get currentNav(): string {
@@ -64,7 +77,7 @@ export class UserpanelService {
     myApplicationCreateTime: string = undefined;
     adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[];
     applications: { ID: number, CreateTime: string, PlayerName: string }[];
-    supportRequests: { Id: number, PlayerName?: string, CreateTime: string, Title: string, Type: UserpanelSupportType }[];
+    supportRequests: { ID: number, PlayerName: string, CreateTime: string, Title: string, Type: UserpanelSupportType, Closed: boolean }[];
 
     public currentNavChanged = new EventEmitter();
     public loadingDataChanged = new EventEmitter();
@@ -120,21 +133,21 @@ export class UserpanelService {
     }
 
     loadUserSupportRequests() {
-        // this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportUser);
-
-        this.loadingData = false;
-        this.loadingDataChanged.emit(null);
-        this.supportRequests = [
-            { Id: 1, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Complaint, Title: "Test 123 Wie geht das?" },
-            { Id: 2, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Compliment, Title: "Test 123 Wie gsdafsadfsadfsadfasdfsadfeht das?" },
-            { Id: 3, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Help, Title: "Test 123 Wie gesdafasdfsdadsfsdaasfdsajhdasfuiusfdahoisduafuo8idsfahuoisdahouidsfahouidsfahoiudsafhoiafdshoiudasiouhdfasoihauiht das?" },
-            { Id: 4, CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Question, Title: "Test 123dfsgdfsgdfsgdsfihdfgspdfhgspdfsgpofdsghofdsghoiu Wie geht das?" },
-        ];
-        this.supportRequestsLoaded.emit(null);
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportUser);
     }
 
     loadSupportRequestsForAdmin() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportAdmin);
+
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);
+        this.supportRequests = [
+            { ID: 1, PlayerName: "Bonus", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Complaint, Closed: true, Title: "Test 123 Wie geht das?" },
+            { ID: 2, PlayerName: "Pluz.", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Compliment, Closed: false, Title: "Test 123 Wie gsdafsadfsadfsadfasdfsadfeht das?" },
+            { ID: 3, PlayerName: "sdfsadf sadfsafsadfdssfdafdsfadsfa", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Help, Closed: false, Title: "Test 123 Wie gesdafasdfsdadsfsdaasfdsajhdasfuiusfdahoisduafuo8idsfahuoisdahouidsfahouidsfahoiudsafhoiafdshoiudasiouhdfasoihauiht das?" },
+            { ID: 4, PlayerName: "Bonasdfsadfsadfsadfadsfsdafasdfasdfdasus", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Question, Closed: true, Title: "Test 123dfsgdfsgdfsgdsfihdfgspdfhgspdfsgpofdsghofdsghoiu Wie geht das?" },
+        ];
+        this.supportRequestsLoaded.emit(null);
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {

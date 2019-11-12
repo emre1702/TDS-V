@@ -36,6 +36,14 @@ namespace TDS_Server.Manager.Userpanel
                 case EUserpanelLoadDataType.ApplicationsAdmin:
                     json = await ApplicationsAdmin.GetData(player);
                     break;
+
+                case EUserpanelLoadDataType.SupportUser:
+                    json = await SupportUser.GetData(player);
+                    break;
+
+                case EUserpanelLoadDataType.SupportAdmin:
+                    json = await SupportAdmin.GetData(player);
+                    break;
             }
 
             if (json == null)

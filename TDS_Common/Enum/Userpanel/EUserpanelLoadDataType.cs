@@ -8,6 +8,8 @@
         FAQs,
         Settings,
         ApplicationUser,
-        ApplicationsAdmin
+        ApplicationsAdmin,
+        SupportUser,
+        SupportAdmin
     }
 }

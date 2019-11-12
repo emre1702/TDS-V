@@ -1,6 +1,12 @@
 .mat-card {
     margin-bottom: 10px;
 
+    .lock_icon {
+        position: absolute;
+        top: calc(0% + 5px);
+        right: calc(0% + 5px);
+    }
+
     .mat-card-content {
         word-wrap: break-word;
     }

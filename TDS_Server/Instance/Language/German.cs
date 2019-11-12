@@ -118,6 +118,7 @@ namespace TDS_Server.Instance.Language
         public override string STILL_MUTED => "Du bist noch für {0} Minuten gemutet.";
         public override string STILL_PERMABANED_IN_LOBBY => "Du wurdest von {0} aus dieser Lobby permanent gebannt. Grund: {1}";
         public override string STILL_PERMAMUTED => "Du bist noch permanent gemutet.";
+        public override string SUPPORT_REQUEST_CREATED => "Die Support-Anfrage wurde erstellt.";
 
         public override string TARGET_ADDED_BLOCK => "Der Spieler {0} wurde von dir geblockt.";
         public override string TARGET_ALREADY_BLOCKED => "Der Spieler {0} wurde bereits von dir geblockt.";

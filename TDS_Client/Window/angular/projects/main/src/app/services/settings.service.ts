@@ -16,7 +16,7 @@ import { EventEmitter } from 'events';
 export class SettingsService {
 
   //////////////////// AdminLevel ////////////////////
-  public AdminLevel = 0;
+  public AdminLevel = 3;
   public AdminLevelForApplicationInvites = 2;
 
   public AdminLevelChanged = new EventEmitter();

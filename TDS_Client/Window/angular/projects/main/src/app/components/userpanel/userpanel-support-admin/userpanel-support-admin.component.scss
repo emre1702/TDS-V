@@ -1,0 +1,21 @@
+.mat-card {
+    margin-bottom: 10px;
+    border-width: 2px;
+    border-style: inset;
+
+    .lock_icon {
+        position: absolute;
+        top: calc(0% + 5px);
+        right: calc(0% + 5px);
+    }
+
+    .mat-card-content {
+        word-wrap: break-word;
+    }
+}
+
+.add-card {
+    ::ng-deep .mat-icon {
+        height: auto !important;
+    }
+}

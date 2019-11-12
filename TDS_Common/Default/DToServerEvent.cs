@@ -10,6 +10,7 @@
         public const string CommandUsed = "CommandUsed_Client";
         public const string CreateCustomLobby = "CreateCustomLobby_Client";
 
+        public const string GetSupportRequestData = "GetSupportRequestData_Browser";
         public const string GetVehicle = "GetVehicle_Client";
         public const string GotHit = "GotHit_Client";
 
@@ -24,6 +25,8 @@
         public const string LanguageChange = "LanguageChange_Client";
         public const string LeaveLobby = "LeaveLobby_Browser";
         public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
+        public const string LeftSupportRequest = "LeftSupportRequest_Browser";
+        public const string LeftSupportRequestsList = "LeftSupportRequestsList_Browser";
         public const string LobbyChatMessage = "LobbyChatMessage_Client";
         public const string LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Browser";
         public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";
@@ -45,7 +48,10 @@
         public const string SendApplicationInvite = "SendApplicationInvite_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Client";
         public const string SendMapRating = "SendMapRating_Client";
+        public const string SendSupportRequest = "SendSupportRequest_Browser";
+        public const string SendSupportRequestMessage = "SendSupportRequestMessage_Browser";
         public const string SendTeamOrder = "SendTeamOrder_Client";
+        public const string SetSupportRequestClosed = "SetSupportRequestClosed_Browser";
         public const string SpectateNext = "SpectateNext_Client";
         public const string StartDefusing = "StartDefusing_Client";
         public const string StartPlanting = "StartPlanting_Client";

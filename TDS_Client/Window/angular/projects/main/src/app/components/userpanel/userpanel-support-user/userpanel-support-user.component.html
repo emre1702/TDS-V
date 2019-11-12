@@ -1,15 +1,16 @@
 <ng-container *ngIf="inRequest == undefined && !creatingRequest">
-    <mat-card class="add-card" matRipple (click)="openCreateRequest()">
+    <mat-card class="add-card mat-elevation-z8" matRipple (click)="openCreateRequest()">
         <mat-card-header>
             <mat-icon mat-card-avatar>add</mat-icon>
             {{ 'CreateNewRequest' | language: settings.Lang }}
         </mat-card-header>
     </mat-card>
 
-    <mat-card matRipple *ngFor="let request of userpanelService.supportRequests" (click)="openRequest(request.Id)">
+    <mat-card class="mat-elevation-z8" matRipple *ngFor="let request of userpanelService.supportRequests" (click)="openRequest(request.ID)">
         <mat-card-header>
-            <mat-icon mat-card-avatar>{{ supportTypeIcons[request.Type] }}</mat-icon>
+            <mat-icon mat-card-avatar>{{ userpanelService.supportTypeIcons[request.Type] }}</mat-icon>
             <mat-card-subtitle>{{ request.CreateTime }}</mat-card-subtitle>
+            <mat-icon class="lock_icon">{{ request.Closed ? 'lock' : 'lock_open' }}</mat-icon>
         </mat-card-header>
         <mat-card-content>
             <p>{{ request.Title }}</p>
@@ -64,7 +65,7 @@
 </form>
 
 <app-userpanel-support-view
-*ngIf="inRequest != undefined"
+*ngIf="inRequest != undefined && currentRequest != undefined"
 [currentRequest]="currentRequest"
 (back)="closeSupportView()">
 

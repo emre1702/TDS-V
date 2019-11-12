@@ -4,6 +4,9 @@ import { SettingsService } from '../../../services/settings.service';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
+import { RageConnectorService } from 'rage-connector';
+import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 
 @Component({
     selector: 'app-userpanel-support-user',
@@ -11,21 +14,17 @@ import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
     styleUrls: ['./userpanel-support-user.component.scss']
 })
 export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
-    supportTypeIcons: { [type: number]: string} = {
-        [UserpanelSupportType.Question]: "help",
-        [UserpanelSupportType.Help]: "info",
-        [UserpanelSupportType.Compliment]: "thumb_up",
-        [UserpanelSupportType.Complaint]: "thumb_down"
-    };
     userpanelSupportType = UserpanelSupportType;
     creatingRequest = false;
     inRequest: number = undefined;
 
     currentRequest: {
+        ID: number,
         Title: string,
         Messages: { Author: string, Message: string, CreateTime: string }[],
         Type: UserpanelSupportType,
-        AtleastAdminLevel: number };
+        AtleastAdminLevel: number,
+        Closed: boolean };
 
     requestGroup: FormGroup;
 
@@ -37,11 +36,12 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     constructor(
         public userpanelService: UserpanelService,
         public settings: SettingsService,
-        private changeDetector: ChangeDetectorRef) { }
+        private changeDetector: ChangeDetectorRef,
+        private rageConnector: RageConnectorService) { }
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-
+        this.rageConnector.listen(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
 
         this.requestGroup = new FormGroup({
             title: new FormControl('', [Validators.required, Validators.minLength(this.titleMinLength), Validators.maxLength(this.titleMaxLength)]),
@@ -53,13 +53,15 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.userpanelService.supportRequests = undefined;
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.rageConnector.remove(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.call(DToServerEvent.LeftSupportRequestsList);
     }
 
     openCreateRequest() {
         for (const control of Object.values(this.requestGroup.controls)) {
             control.reset();
         }
-        this.currentRequest = { Title: "", Messages: [], Type: UserpanelSupportType.Question, AtleastAdminLevel: 1 };
+        this.currentRequest = { ID: 0, Title: "", Messages: [], Type: UserpanelSupportType.Question, AtleastAdminLevel: 1, Closed: false };
         this.requestGroup.get("type").enable();
 
         this.creatingRequest = true;
@@ -70,16 +72,10 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.inRequest = id;
         this.requestGroup.get("type").disable();
 
-        // DEBUG //
-        this.currentRequest = { Title: "Bonus, wieso bist du so toll?", Messages: [
-            { Author: "Pluz.", Message: "Hallo Bonus. Ich wollte wissen: Wie kann man so toll sein wie du?", CreateTime: "12.21.3213 13:12:23" },
-            { Author: "Bonus", Message: "Naja, leider ist das etwas, womit man geboren wird. Tut mir Leid Pluz., du bist nicht damit geboren du Opfer.", CreateTime: "12.21.3213 13:12:23" },
-            { Author: "Pluz.", Message: "Ach Mist, das ist so Schade!", CreateTime: "12.21.3213 13:12:23" },
-            { Author: "Pluz.", Message: "Naja, aber es ist toll, dass ich Administrator unter so einem tollen Projektleiter sein kann.", CreateTime: "12.21.3213 13:12:23" },
-            { Author: "Bonus", Message: "Jetzt übertreibst du aber! Es gibt viiiel besser Projektleiter wie z.B. diese eine Schlange! So toll der Typ!", CreateTime: "12.21.3213 13:12:23" },
-            { Author: "Pluz.", Message: "JA MAN STIMMT! Peanut hat so Glück, dass er da Ticketsupporter sein durfte!!! ICH WILL AUCH!", CreateTime: "12.21.3213 13:12:23" },
-        ], Type: UserpanelSupportType.Compliment, AtleastAdminLevel: 3 };
-        this.changeDetector.detectChanges();
+        this.rageConnector.callCallback(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
+            this.currentRequest = JSON.parse(json);
+            this.changeDetector.detectChanges();
+        });
     }
 
     detectChanges() {
@@ -87,11 +83,14 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     }
 
     submitRequest() {
-        this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
-
         this.currentRequest.Title = this.requestGroup.get("title").value;
-        this.currentRequest.Messages = [this.requestGroup.get("message").value];
+        this.currentRequest.Messages = [{ Author: "", CreateTime: "", Message: this.requestGroup.get("message").value}];
         this.currentRequest.Type = this.requestGroup.get("type").value;
+
+        this.rageConnector.call(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
+
+        this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
+        this.changeDetector.detectChanges();
     }
 
     setAtleastAdminLevel(adminLevel: number) {
@@ -101,6 +100,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
 
     closeSupportView() {
         this.inRequest = undefined;
+        this.currentRequest = undefined;
         this.changeDetector.detectChanges();
     }
 
@@ -111,5 +111,15 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     goBack() {
         this.creatingRequest = false;
         this.changeDetector.detectChanges();
+    }
+
+    private setRequestClosed(requestId: number, closed: boolean) {
+        if (this.currentRequest.ID == requestId) {
+            this.currentRequest.Closed = closed;
+        }
+        const request = this.userpanelService.supportRequests.find(r => r.ID == requestId);
+        if (request) {
+            request.Closed = closed;
+        }
     }
 }

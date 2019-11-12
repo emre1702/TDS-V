@@ -20,15 +20,20 @@
     </div>
     <div class="right-side">
         <div class="right-side-content">
-            <mat-form-field color="accent" class="readonly-wrapper">
-                <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
-                <mat-select class="readonly-block" disabled [value]="currentRequest.Type">
-                    <mat-option [value]="userpanelSupportType.Question">{{ 'Question' | language: settings.Lang }}</mat-option>
-                    <mat-option [value]="userpanelSupportType.Help">{{ 'Help' | language: settings.Lang }}</mat-option>
-                    <mat-option [value]="userpanelSupportType.Compliment">{{ 'Compliment' | language: settings.Lang }}</mat-option>
-                    <mat-option [value]="userpanelSupportType.Complaint">{{ 'Complaint' | language: settings.Lang }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="top">
+                <mat-form-field color="accent" class="readonly-wrapper">
+                    <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
+                    <mat-select class="readonly-block" disabled [value]="currentRequest.Type">
+                        <mat-option [value]="userpanelSupportType.Question">{{ 'Question' | language: settings.Lang }}</mat-option>
+                        <mat-option [value]="userpanelSupportType.Help">{{ 'Help' | language: settings.Lang }}</mat-option>
+                        <mat-option [value]="userpanelSupportType.Compliment">{{ 'Compliment' | language: settings.Lang }}</mat-option>
+                        <mat-option [value]="userpanelSupportType.Complaint">{{ 'Complaint' | language: settings.Lang }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-icon-button type="button" (click)="toggleRequestClosed()">
+                    <mat-icon>{{ currentRequest.Closed ? 'lock' : 'lock_open' }}</mat-icon>
+                </button>
+            </div>
 
             <div class="admin-buttons">
                 <button *ngFor="let adminLevel of getAdminLevels()"
@@ -42,7 +47,9 @@
             </div>
         </div>
 
-        <button mat-raised-button [disabled]="requestGroup.invalid" type="submit">{{ 'Send' | language: settings.Lang }}</button>
+        <button mat-raised-button [disabled]="requestGroup.invalid || currentRequest.Closed" type="submit">
+            {{ 'Send' | language: settings.Lang }}
+        </button>
         <button mat-raised-button (click)="goBack()">{{ 'Back' | language: settings.Lang }}</button>
     </div>
 </form>

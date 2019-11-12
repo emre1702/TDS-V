@@ -113,6 +113,7 @@
         string STILL_MUTED { get; }
         string STILL_PERMABANED_IN_LOBBY { get; }
         string STILL_PERMAMUTED { get; }
+        string SUPPORT_REQUEST_CREATED { get; }
 
         string TARGET_ADDED_BLOCK { get; }
         string TARGET_ALREADY_BLOCKED { get; }

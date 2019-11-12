@@ -212,6 +212,21 @@ namespace TDS_Client.Manager.Browser.Angular
         {
             Execute(DToServerEvent.LoadApplicationDataForAdmin, json);
         }
+
+        public static void GetSupportRequestData(string json)
+        {
+            Execute(DToServerEvent.GetSupportRequestData, json);
+        }
+
+        public static void SetSupportRequestClosed(int requestId, bool closed)
+        {
+            Execute(DToClientEvent.SetSupportRequestClosed, requestId, closed);
+        }
+
+        public static void SyncNewSupportRequestMessage(int requestId, string messageJson)
+        {
+            Execute(DToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+        }
     }
 
 }

@@ -34,6 +34,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
+            Add(DToServerEvent.GetSupportRequestData, OnGetSupportRequestDataBrowserMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
             Add(DFromBrowserEvent.InputStarted, OnInputStartedMethod);
@@ -43,6 +44,8 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
             Add(DToServerEvent.LeaveLobby, OnLeaveLobbyMethod);
             Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
+            Add(DToServerEvent.LeftSupportRequest, OnLeftSupportRequestMethod);
+            Add(DToServerEvent.LeftSupportRequestsList, OnLeftSupportRequestsListMethod);
             Add(DToServerEvent.LoadApplicationDataForAdmin, LoadApplicationDataForAdminBrowserMethod);
             Add(DToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(DToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
@@ -66,6 +69,9 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.SendApplicationInvite, OnSendApplicationInviteMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            Add(DToServerEvent.SetSupportRequestClosed, OnSetSupportRequestClosedBrowserMethod);
+            Add(DToServerEvent.SendSupportRequest, OnSendSupportRequestMethod);
+            Add(DToServerEvent.SendSupportRequestMessage, OnSendSupportRequestMessageMethod);
             Add(DFromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
             Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
             Add(DFromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
@@ -138,6 +144,12 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(DToServerEvent.CreateCustomLobby, dataJson);
         }
 
+        private void OnGetSupportRequestDataBrowserMethod(object[] args)
+        {
+            int requestId = Convert.ToInt32(args[0]);
+            EventsSender.Send(DToServerEvent.GetSupportRequestData, requestId);
+        }
+
         private void OnGetVehicleMethod(object[] args)
         {
             // convert because if it fails, there will be an error @clientside, not @serverside
@@ -189,6 +201,16 @@ namespace TDS_Client.Manager.Event
         private void OnLeftCustomLobbiesMenuMethod(object[] args)
         {
             EventsSender.Send(DToServerEvent.LeftCustomLobbiesMenu);
+        }
+
+        private void OnLeftSupportRequestMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LeftSupportRequest);
+        }
+
+        private void OnLeftSupportRequestsListMethod(object[] args)
+        {
+            EventsSender.Send(DToServerEvent.LeftSupportRequestsList);
         }
 
         private void LoadApplicationDataForAdminBrowserMethod(object[] args)
@@ -382,11 +404,31 @@ namespace TDS_Client.Manager.Event
                 Browser.Angular.Main.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
         }
 
+        private void OnSetSupportRequestClosedBrowserMethod(object[] args)
+        {
+            int requestId = Convert.ToInt32(args[0]);
+            bool closed = Convert.ToBoolean(args[1]);
+            EventsSender.Send(DToServerEvent.SetSupportRequestClosed, requestId, closed);
+        }
+
+        private void OnSendSupportRequestMethod(object[] args)
+        {
+            string json = (string)args[0];
+            EventsSender.Send(DToServerEvent.SendSupportRequest, json);
+        }
+
+        private void OnSendSupportRequestMessageMethod(object[] args)
+        {
+            int requestId = Convert.ToInt32(args[0]);
+            string message = (string)args[1];
+            EventsSender.Send(DToServerEvent.SendSupportRequestMessage, requestId, message);
+        }
+
         private void OnStartMapCreatorPosPlacingMethod(object[] args)
         {
             EMapCreatorPositionType type = (EMapCreatorPositionType)(int)args[0];
             object editingTeamIndexOrObjectName = args[1];
-            MapCreator.ObjectPlacing.StartNewPlacing(type, editingTeamIndexOrObjectName);
+            ObjectPlacing.StartNewPlacing(type, editingTeamIndexOrObjectName);
         }
 
         private void OnSyncRegisterLoginLanguageTextsMethod(object[] args)

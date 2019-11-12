@@ -1,1 +1,23 @@
-<p>userpanel-support-admin works!</p>
+<ng-container *ngIf="inRequest == undefined">
+    <mat-card class="mat-elevation-z8" matRipple
+    *ngFor="let request of userpanelService.supportRequests"
+    (click)="openRequest(request.ID)"
+    [style.border-color]="userpanelService.supportTypeBorderColors[request.Type]">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>{{ userpanelService.supportTypeIcons[request.Type] }}</mat-icon>
+            <mat-card-title>{{ request.PlayerName }}</mat-card-title>
+            <mat-card-subtitle>{{ request.CreateTime }}</mat-card-subtitle>
+            <mat-icon class="lock_icon">{{ request.Closed ? 'lock' : 'lock_open' }}</mat-icon>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ request.Title }}</p>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+
+<app-userpanel-support-view
+*ngIf="inRequest != undefined && currentRequest != undefined"
+[currentRequest]="currentRequest"
+(back)="closeSupportView()">
+
+</app-userpanel-support-view>

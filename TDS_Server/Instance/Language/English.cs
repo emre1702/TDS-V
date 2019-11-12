@@ -117,6 +117,7 @@ namespace TDS_Server.Instance.Language
         public virtual string STILL_MUTED => "You are still muted for {0} minutes.";
         public virtual string STILL_PERMABANED_IN_LOBBY => "You are still permanently baned by {0} in this lobby. Reason: {1}";
         public virtual string STILL_PERMAMUTED => "You are still permamuted.";
+        public virtual string SUPPORT_REQUEST_CREATED => "The support request has been created.";
 
         public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
         public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";

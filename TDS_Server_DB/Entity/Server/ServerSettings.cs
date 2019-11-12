@@ -29,5 +29,6 @@
         public int DeleteApplicationAfterDays { get; set; }
         public uint GangwarPreparationTimeMs { get; set; } 
         public uint GangwarActionTimeMs { get; set; } 
+        public uint DeleteRequestsDaysAfterClose { get; set; }
     }
 }

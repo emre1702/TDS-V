@@ -52,6 +52,7 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleCategory>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EUserpanelAdminQuestionAnswerType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ESupportType>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -95,6 +96,8 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
         public virtual DbSet<ServerTotalStats> ServerTotalStats { get; set; }
+        public virtual DbSet<SupportRequests> SupportRequests { get; set; }
+        public virtual DbSet<SupportRequestMessages> SupportRequestMessages { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
@@ -134,6 +137,7 @@ namespace TDS_Server_DB.Entity
             modelBuilder.HasPostgresEnum<ERuleCategory>();
             modelBuilder.HasPostgresEnum<ERuleTarget>();
             modelBuilder.HasPostgresEnum<EUserpanelAdminQuestionAnswerType>();
+            modelBuilder.HasPostgresEnum<ESupportType>();
             #endregion
 
             #region Tables
@@ -1084,6 +1088,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.GangwarActionTimeMs)
                     .IsRequired()
                     .HasDefaultValue(15 * 60 * 1000);
+
+                entity.Property(e => e.DeleteRequestsDaysAfterClose)
+                    .IsRequired()
+                    .HasDefaultValue(30);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
@@ -1095,6 +1103,55 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
             });
+
+            modelBuilder.Entity<SupportRequests>(entity =>
+            {
+                entity.ToTable("support_requests");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.CreateTime)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
+
+                entity.Property(e => e.CloseTime)
+                   .HasConversion(v => v, v => v == null ? (DateTime?)null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
+
+                entity.HasOne(e => e.Author)
+                    .WithOne(a => a.SupportRequests)
+                    .HasForeignKey<SupportRequests>(e => e.AuthorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<SupportRequestMessages>(entity =>
+            {
+                entity.ToTable("support_request_messages");
+
+                entity.HasKey(e => new { e.RequestId, e.MessageIndex });
+
+                entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.Property(e => e.Text).HasMaxLength(300);
+
+                entity.Property(e => e.CreateTime)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
+
+                entity.HasOne(e => e.Author)
+                    .WithMany(a => a.SupportRequestMessages)
+                    .HasForeignKey(e => e.AuthorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Request)
+                    .WithMany(r => r.Messages)
+                    .HasForeignKey(e => e.RequestId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             modelBuilder.Entity<Teams>(entity =>
             {
