@@ -205,7 +205,7 @@ namespace TDS_Client.Manager.Browser.Angular
         //Todo: Sync admin level with Angular
         public static void RefreshAdminLevel(int adminLevel)
         {
-
+            Execute(DToBrowserEvent.RefreshAdminLevel, adminLevel);
         }
 
         public static void LoadApplicationDataForAdmin(string json)

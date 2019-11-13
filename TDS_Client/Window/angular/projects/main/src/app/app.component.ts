@@ -32,6 +32,10 @@ export class AppComponent {
             this.settings.loadAdminLevel(adminLevel);
         });
 
+        rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {
+            this.settings.loadAdminLevel(adminLevel);
+        });
+
         rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {
             this.showMapCreator = bool;
             changeDetector.detectChanges();

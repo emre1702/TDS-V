@@ -15,6 +15,7 @@
         public const string OpenMapMenu = "OpenMapMenu_Client";
         public const string RemoveCustomLobby = "RemoveCustomLobby_Client";  
         public const string RemovePositionInMapCreatorBrowser = "RemovePositionInMapCreatorBrowser_Client";
+        public const string RefreshAdminLevel = "RefreshAdminLevel_Client";
         public const string ResetMapVoting = "ResetMapVoting_Client";
         public const string SetMapVotes = "SetMapVotes_Client";
         public const string ShowCooldown = "ShowCooldown_Client";

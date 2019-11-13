@@ -12,6 +12,7 @@ export enum DFromClientEvent {
     LoadMapVoting = "LoadMapVoting_Client",
     LoadOrders = "LoadOrders_Client",
     OpenMapMenu = "OpenMapMenu_Client",
+    RefreshAdminLevel = "RefreshAdminLevel_Client",
     RemoveCustomLobby = "RemoveCustomLobby_Client",
     RemovePositionInMapCreatorBrowser = "RemovePositionInMapCreatorBrowser_Client",
     ResetMapVoting = "ResetMapVoting_Client",
