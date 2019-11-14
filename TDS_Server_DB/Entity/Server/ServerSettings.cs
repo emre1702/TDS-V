@@ -30,5 +30,7 @@
         public uint GangwarPreparationTimeMs { get; set; } 
         public uint GangwarActionTimeMs { get; set; } 
         public uint DeleteRequestsDaysAfterClose { get; set; }
+
+        public int MinPlayersOnlineForGangwar { get; set; }
     }
 }

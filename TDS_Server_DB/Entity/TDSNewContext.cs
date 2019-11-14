@@ -1092,6 +1092,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.DeleteRequestsDaysAfterClose)
                     .IsRequired()
                     .HasDefaultValue(30);
+
+                entity.Property(e => e.MinPlayersOnlineForGangwar)
+                    .IsRequired()
+                    .HasDefaultValue(3);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
