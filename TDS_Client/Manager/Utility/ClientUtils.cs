@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using TDS_Client.Enum;
 using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Lobby;
 using TDS_Common.Manager.Utility;
@@ -19,6 +20,7 @@ namespace TDS_Client.Manager.Utility
         static ClientUtils()
         {
             TickManager.Add(DisableAttack, () => Bomb.BombOnHand || !Round.InFight);
+            TickManager.Add(DisableControlActions);
         }
 
         public static List<Player> GetTriggeredPlayersList(string objStr)
@@ -32,15 +34,20 @@ namespace TDS_Client.Manager.Utility
             return Entities.Players.GetAtRemote(handleValue);
         }
 
-        public static void DisableAttack()
+        private static void DisableAttack()
         {
-            Pad.DisableControlAction(1, 24, true);
-            Pad.DisableControlAction(1, 140, true);
-            Pad.DisableControlAction(1, 141, true);
-            Pad.DisableControlAction(1, 142, true);
-            Pad.DisableControlAction(1, 257, true);
-            Pad.DisableControlAction(1, 263, true);
-            Pad.DisableControlAction(1, 264, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.Attack, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.Attack2, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.MeleeAttackLight, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.MeleeAttackHeavy, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.MeleeAttackAlternate, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.MeleeAttack1, true);
+            Pad.DisableControlAction((int)EInputGroup.LOOK, (int)Control.MeleeAttack2, true);
+        }
+
+        private static void DisableControlActions()
+        {
+            Pad.DisableControlAction((int)EInputGroup.WHEEL, (int)Control.EnterCheatCode, true);
         }
 
         public static void Notify(string msg)
