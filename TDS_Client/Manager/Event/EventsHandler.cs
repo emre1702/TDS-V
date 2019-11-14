@@ -20,6 +20,7 @@ namespace TDS_Client.Manager.Event
 
         private void LoadOnStart()
         {
+            ClientUtils.Init();
             Dx.RefreshResolution();
             CameraManager.Init();
             Streaming.RequestNamedPtfxAsset("scr_xs_celebration");

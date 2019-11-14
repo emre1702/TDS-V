@@ -5,7 +5,6 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Utility;
@@ -15,9 +14,9 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
 {
-    internal static class ClientUtils
+    static class ClientUtils
     {
-        static ClientUtils()
+        public static void Init()
         {
             TickManager.Add(DisableAttack, () => Bomb.BombOnHand || !Round.InFight);
             TickManager.Add(DisableControlActions);
