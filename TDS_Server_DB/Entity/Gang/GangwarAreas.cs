@@ -10,7 +10,10 @@ namespace TDS_Server_DB.Entity.Gang
         public int MapId { get; set; }
         public int OwnerGangId { get; set; }
         public DateTime LastAttacked { get; set; }
-        
+
+        public int AttackCount { get; set; }
+
+
         public virtual Maps Map { get; set; }
         public virtual Gangs OwnerGang { get; set; }
     }

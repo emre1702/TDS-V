@@ -412,7 +412,11 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("OwnerGangID");
 
                 entity.Property(e => e.LastAttacked)
-                    .HasDefaultValueSql("'1970-1-1'::timestamp");
+                    .HasDefaultValueSql("'2019-1-1'::timestamp");
+
+                entity.Property(e => e.AttackCount)
+                    .IsRequired()
+                    .HasDefaultValue(0);
 
                 entity.HasOne(g => g.Map)
                     .WithOne(m => m.GangwarArea)
@@ -1096,6 +1100,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.MinPlayersOnlineForGangwar)
                     .IsRequired()
                     .HasDefaultValue(3);
+
+                entity.Property(e => e.GangwarAreaAttackCooldownMinutes)
+                    .IsRequired()
+                    .HasDefaultValue(60);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
