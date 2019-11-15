@@ -73,6 +73,48 @@ namespace TDS_Server.Manager.Player
             }
         }
 
+        /// <summary>
+        /// Only works for default types like int, string etc.!
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="key"></param>
+        /// <param name="syncMode"></param>
+        /// <param name="value"></param>
+        public static void SetPlayerSyncData(Client client, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
+        {
+
+            switch (syncMode)
+            {
+                case EPlayerDataSyncMode.All:
+                    if (!_playerHandleDatasAll.ContainsKey(client.Handle.Value))
+                        _playerHandleDatasAll[client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasAll[client.Handle.Value][key] = value;
+
+                    NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetPlayerData, client.Handle.Value, (int)key, value);
+                    break;
+                case EPlayerDataSyncMode.Lobby:
+                    var player = client.GetChar();
+                    if (player.CurrentLobby == null)
+                        return;
+
+                    if (!_playerHandleDatasLobby.ContainsKey(player.CurrentLobby.Id))
+                        _playerHandleDatasLobby[player.CurrentLobby.Id] = new Dictionary<ushort, Dictionary<EPlayerDataKey, object>>();
+                    if (!_playerHandleDatasLobby[player.CurrentLobby.Id].ContainsKey(client.Handle.Value))
+                        _playerHandleDatasLobby[player.CurrentLobby.Id][client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasLobby[player.CurrentLobby.Id][client.Handle.Value][key] = value;
+
+                    player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.SetPlayerData, null, client.Handle.Value, (int)key, value);
+                    break;
+                case EPlayerDataSyncMode.Player:
+                    if (!_playerHandleDatasPlayer.ContainsKey(client.Handle.Value))
+                        _playerHandleDatasPlayer[client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasPlayer[client.Handle.Value][key] = value;
+
+                    NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SetPlayerData, client.Handle.Value, (int)key, value);
+                    break;
+            }
+        }
+
         private static void SyncPlayerAllData(TDSPlayer player)
         {
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, JsonConvert.SerializeObject(_playerHandleDatasAll));
