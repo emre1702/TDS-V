@@ -21,6 +21,8 @@ namespace TDS_Server.Instance.GangTeam
         public Gangs Entity;
         public List<TDSPlayer> PlayersOnline = new List<TDSPlayer>();
 
+        public bool InAction { get; set; }
+
         public Gang(Gangs entity)
         {
             Entity = entity;
@@ -35,7 +37,7 @@ namespace TDS_Server.Instance.GangTeam
             DbContext.Attach(entity);
         }
 
-        public static Gang GetFromId(int id)
+        public static Gang GetById(int id)
         {
             return _gangById[id];
         }

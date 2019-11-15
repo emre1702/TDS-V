@@ -16,19 +16,22 @@ namespace TDS_Server.Instance.Lobby
         private Gang _attackerGang;
         private Gang _ownerGang;
 
-        public GangActionLobby(EGangActionType type, TDSPlayer attacker, Gang attackerGang, Gang ownerGang) : base(CreateEntity(type, attacker, attackerGang, ownerGang))
+        public GangActionLobby(EGangActionType type, TDSPlayer attacker, Gang ownerGang) : base(CreateEntity(type, attacker, ownerGang))
         {
             _attackLeader = attacker;
 
-            _attackerGang = attackerGang;
+            _attackerGang = attacker.Gang;
             _ownerGang = ownerGang;
+
+            _attackerGang.InAction = true;
+            _ownerGang.InAction = true;
         }
 
-        private static Lobbies CreateEntity(EGangActionType type, TDSPlayer attacker, Gang attackerGang, Gang ownerGang)
+        private static Lobbies CreateEntity(EGangActionType type, TDSPlayer attacker, Gang ownerGang)
         {
             var dummyDBTeam = LobbyManager.MainMenu.Teams[0].Entity.DeepCopy();
 
-            var attackerDBTeam = attackerGang.Entity.Team.DeepCopy();
+            var attackerDBTeam = attacker.Gang.Entity.Team.DeepCopy();
             attackerDBTeam.Index = 1;
 
             var ownerDBTeam = ownerGang.Entity.Team.DeepCopy();
@@ -46,7 +49,7 @@ namespace TDS_Server.Instance.Lobby
                 IsOfficial = true,
                 IsTemporary = true,
                 OwnerId = attacker.Entity!.Id,
-                Name = $"[GW] {attackerGang.Entity.Short} vs. {ownerGang.Entity.Short}",
+                Name = $"[GW] {attacker.Gang.Entity.Short} vs. {ownerGang.Entity.Short}",
                 Type = lobbyType,
                 Teams = new List<Teams>
                 {

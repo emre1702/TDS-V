@@ -418,6 +418,10 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(0);
 
+                entity.Property(e => e.DefendCount)
+                    .IsRequired()
+                    .HasDefaultValue(0);
+
                 entity.HasOne(g => g.Map)
                     .WithOne(m => m.GangwarArea)
                     .HasForeignKey<GangwarAreas>(g => g.MapId)

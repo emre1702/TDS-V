@@ -9,10 +9,8 @@ namespace TDS_Server.Instance.Lobby
         protected EGangActionState _actionState;
         protected TDSTimer? _actionChangeTimer;
 
-        public virtual bool StartPreparations(TDSPlayer attacker)
+        public virtual bool StartPreparations()
         {
-            if (!CanStartPreparations(attacker))
-                return false;
             _actionState = EGangActionState.InPreparation;
             return true;
         }
@@ -41,7 +39,11 @@ namespace TDS_Server.Instance.Lobby
 
         public virtual bool StopEnd()
         {
-            _actionState = EGangActionState.Completed; 
+            _actionState = EGangActionState.Completed;
+
+            _attackerGang.InAction = false;
+            _ownerGang.InAction = false;
+
             return true;
         }
     }

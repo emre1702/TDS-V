@@ -10,11 +10,5 @@ namespace TDS_Server.Instance.Lobby
         {
 
         }
-
-        public async Task<GangLobby> Init(TDSNewContext dbContext)
-        {
-            await LoadGangwarAreas(dbContext);
-            return this;
-        }
     }
 }

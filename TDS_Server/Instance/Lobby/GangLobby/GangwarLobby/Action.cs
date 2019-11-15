@@ -7,9 +7,9 @@ namespace TDS_Server.Instance.Lobby
 { 
     partial class GangwarLobby
     {
-        public override bool StartPreparations(TDSPlayer player)
+        public override bool StartPreparations()
         {
-            if (!base.StartPreparations(player))
+            if (!base.StartPreparations())
                 return false;
 
             _actionChangeTimer = new TDSTimer(StopPreparations, SettingsManager.ServerSettings.GangwarPreparationTimeMs, 1);

@@ -71,7 +71,7 @@ namespace TDS_Server.Manager.Utility
                     //    break;
                     ELobbyType.MapCreateLobby => new MapCreateLobby(lobbysetting),
 
-                    ELobbyType.GangLobby => await (new GangLobby(lobbysetting).Init(dbcontext)),
+                    ELobbyType.GangLobby => new GangLobby(lobbysetting),
 
                     _ => new Lobby(lobbysetting),
                 };
