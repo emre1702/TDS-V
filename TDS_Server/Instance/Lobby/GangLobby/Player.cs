@@ -6,12 +6,12 @@ namespace TDS_Server.Instance.Lobby
 {
     partial class GangLobby
     {
-        public async override Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
+        public async override Task<bool> AddPlayer(TDSPlayer player, uint? teamindex)
         {
-            if (!await base.AddPlayer(character, teamindex))
+            if (!await base.AddPlayer(player, teamindex))
                 return false;
 
-            Workaround.FreezePlayer(character.Client, false);
+            Workaround.FreezePlayer(player.Client, false);
 
             return true;
         }
