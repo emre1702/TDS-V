@@ -41,7 +41,8 @@ namespace TDS_Server.Instance.Lobby
             Players.Add(character);
 
             if (LobbyEntity.Type == ELobbyType.MainMenu
-                || LobbyEntity.Type == ELobbyType.MapCreateLobby)
+                || LobbyEntity.Type == ELobbyType.MapCreateLobby
+                || LobbyEntity.Type == ELobbyType.GangLobby)
                 Workaround.SetPlayerInvincible(character.Client, true);
 
             character.Client.Dimension = Dimension;
