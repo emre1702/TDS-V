@@ -508,6 +508,7 @@ namespace TDS_Client.Manager.Event
             Settings.Load();
             VoiceManager.Init();
             Team.Init();
+            Crouching.Init();
 
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
             BindManager.Add(EKey.U, Userpanel.Toggle);

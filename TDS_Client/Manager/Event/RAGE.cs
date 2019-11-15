@@ -1,4 +1,6 @@
-﻿using RAGE;
+﻿using System;
+using RAGE;
+using RAGE.Elements;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Utility;
@@ -17,6 +19,7 @@ namespace TDS_Client.Manager.Event
             OnPlayerStartTalking += OnPlayerStartTalkingMethod;
             OnPlayerStopTalking += OnPlayerStopTalkingMethod;
             OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
+            OnEntityStreamIn += OnEntityStreamInMethod;
         }
 
         private void OnPlayerSpawnMethod(CancelEventArgs cancel)
@@ -43,6 +46,11 @@ namespace TDS_Client.Manager.Event
         {
             RAGE.Game.Player.SetPlayerTargetingMode(0);
             RAGE.Game.Player.SetPlayerLockon(false);
+        }
+
+        private void OnEntityStreamInMethod(Entity entity)
+        {
+            Crouching.OnEntityStreamIn(entity);
         }
     }
 }

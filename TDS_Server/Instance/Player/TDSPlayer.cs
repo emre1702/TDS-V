@@ -234,6 +234,9 @@ namespace TDS_Server.Instance.Player
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
         public string DisplayName => AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + Client.Name : Client.Name;
+
+        public bool IsCrouched { get; set; }
+
         public TimeZoneInfo TimeZone = TimeZoneInfo.Utc;
 
         private Players? _entity;

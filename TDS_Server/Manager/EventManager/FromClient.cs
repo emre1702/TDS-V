@@ -221,6 +221,17 @@ namespace TDS_Server.Manager.EventManager
             });
         }
 
+        [RemoteEvent(DToServerEvent.ToggleCrouch)]
+        public void ToggleCrouchMethod(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+
+            player.IsCrouched = !player.IsCrouched;
+            PlayerDataSync.SetPlayerSyncData(player, EPlayerDataKey.Crouched, Enum.EPlayerDataSyncMode.Lobby, player.IsCrouched);
+        }
+
         #region Bomb
 
         [RemoteEvent(DToServerEvent.StartPlanting)]
