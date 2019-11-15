@@ -29,26 +29,7 @@ namespace TDS_Client.Manager.Event
             Streaming.RequestAnimDict("MP_SUICIDE");
 
             // CLEAR_GPS_CUSTOM_ROUTE
-            RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
-        }
-
-        public static void OnLocalPlayerDataChange(EPlayerDataKey key, object obj)
-        {
-            switch (key)
-            {
-                case EPlayerDataKey.Money:
-                    Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
-                    break;
-                case EPlayerDataKey.AdminLevel:
-                    if (Browser.Angular.Main.Browser == null)
-                        Browser.Angular.Main.Start((int)obj);
-                    else
-                        Browser.Angular.Main.RefreshAdminLevel((int)obj);
-                    break;
-                case EPlayerDataKey.LoggedIn:
-                    TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
-                    break;
-            }  
+            Invoker.Invoke(0xE6DE0561D9232A64);
         }
     }
 }
