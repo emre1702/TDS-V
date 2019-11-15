@@ -60,6 +60,7 @@
         public const string SuicideKill = "SuicideKill_Client";
         public const string SuicideShoot = "SuicideShoot_Client";
 
+        public const string ToggleCrouch = "ToggleCrouch_Client";
         public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
         public const string TryLogin = "TryLogin_Client";
         public const string TryRegister = "TryRegister_Client";
