@@ -16,6 +16,7 @@ namespace TDS_Client.Manager.Event
             OnPlayerDeath += OnPlayerDeathMethod;
             OnPlayerStartTalking += OnPlayerStartTalkingMethod;
             OnPlayerStopTalking += OnPlayerStopTalkingMethod;
+            OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
         }
 
         private void OnPlayerSpawnMethod(CancelEventArgs cancel)
@@ -36,6 +37,12 @@ namespace TDS_Client.Manager.Event
         private void OnPlayerStopTalkingMethod(Player player)
         {
             MainBrowser.StopPlayerTalking(player.GetDisplayName());
+        }
+
+        private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
+        {
+            RAGE.Game.Player.SetPlayerTargetingMode(0);
+            RAGE.Game.Player.SetPlayerLockon(false);
         }
     }
 }
