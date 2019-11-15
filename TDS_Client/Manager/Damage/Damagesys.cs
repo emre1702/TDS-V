@@ -7,7 +7,7 @@ using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Damage
 {
-    internal static class Damagesys
+    static class Damagesys
     {
         private static int _lastTotalHP = 0;
 
@@ -34,6 +34,7 @@ namespace TDS_Client.Manager.Damage
                 int outbone = 0;
                 Player.LocalPlayer.GetLastDamageBone(ref outbone);
 
+                //Todo: Use Players.Streamed after update
                 foreach (var player in Entities.Players.All)
                 {
                     if (!player.Exists)
