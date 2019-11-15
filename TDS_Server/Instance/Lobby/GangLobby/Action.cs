@@ -23,7 +23,6 @@ namespace TDS_Server.Instance.Lobby
             if (gangwarArea.Owner is null)
             {
                 await gangwarArea.SetCaptured(attacker.Gang);
-                //Todo give the gang to the attacker gang
                 return;
             }
 

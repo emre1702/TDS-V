@@ -33,7 +33,6 @@ namespace TDS_Server.Manager.Player
             dbplayer.PlayerSettings = new PlayerSettings
             {
                 AllowDataTransfer = false,
-                //Todo Add AllowDataTransfer to playersettings to set at register-window (and later in settings)
                 Language = ELanguage.English,
                 Hitsound = true,
                 Bloodscreen = true,
