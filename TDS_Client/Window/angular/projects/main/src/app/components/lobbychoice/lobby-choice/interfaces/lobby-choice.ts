@@ -1,6 +1,6 @@
 export interface LobbyChoice {
-  name: string;
-  func: () => void;
-  imgUrl: string;
-  disabled?: boolean;
+    index: number;
+    name: string;
+    func: () => void;
+    imgUrl: string;
 }

@@ -1,0 +1,66 @@
+#wrapper {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    bottom: 15%;
+    height: 70%;
+    perspective: 1000px;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    #content {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transform-style: preserve-3d;
+        transition: transform 1s;
+
+
+        > button {
+            display: 'none';
+            position: absolute;
+            left: 2.5%;
+            width: 95%;
+            height: 100%;
+            opacity: 0.8;
+            background-size: 100% 100% !important;
+            font-size: 7em;
+            transition: transform 1s, opacity 1s;
+            border: 2px solid black;
+
+            span {
+                text-shadow: 2px 2px 2px black !important;
+            }
+
+        }
+    }
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 5px 5px 0;
+    display: inline-block;
+    padding: 5px;
+    top: calc(50% - 2.5vh);
+    height: 5vh;
+    width: 5vh;
+    background: transparent;
+}
+
+.arrow:hover {
+    background: black;
+}
+
+.right {
+    position: absolute;
+    right: 2%;
+    transform: rotate(-45deg);
+}
+
+.left {
+    position: absolute;
+    left: 2%;
+    transform: rotate(135deg);
+}

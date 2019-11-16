@@ -72,6 +72,9 @@ import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
 import { UserpanelSupportUserComponent } from './components/userpanel/userpanel-support-user/userpanel-support-user.component';
 import { UserpanelSupportAdminComponent } from './components/userpanel/userpanel-support-admin/userpanel-support-admin.component';
 import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-support-view/userpanel-support-view.component';
+import { CarouselComponent } from './components/carousel/carousel.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { ReversePipe } from './pipes/reverse.pipe';
 
 @NgModule({
   declarations: [
@@ -86,6 +89,8 @@ import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-
     UserpanelCommandNavPipe,
     UserpanelRulesNavPipe,
     LanguagePipe,
+    FilterPipe,
+    ReversePipe,
     LoadMapDialog,
     AreYouSureDialog,
     CustomLobbyPasswordDialog,
@@ -108,7 +113,8 @@ import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-
     UserpanelAdminQuestionsComponent,
     UserpanelSupportUserComponent,
     UserpanelSupportAdminComponent,
-    UserpanelSupportViewComponent
+    UserpanelSupportViewComponent,
+    CarouselComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -3,14 +3,6 @@
   right: 5px;
   top: 5px;
 
-  #german-button {
-    background: url("/angular/main/assets/german.png") no-repeat;
-  }
-
-  #english-button {
-    background: url("/angular/main/assets/english.png") no-repeat;
-  }
-
   .language-button {
     position: relative;
     float: right;
@@ -22,28 +14,3 @@
     opacity: 0.95;
   }
 }
-
-#lobby-choices {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-
-  width: 100%;
-  left: 0;
-  bottom: 10%;
-  height: 10%;
-
-  > button {
-    height: 100%;
-    flex-grow: 1;
-    flex-basis: 0;
-    background-size: 100% 100% !important;
-    opacity: 0.95;
-    font-size: 2.5em;
-
-    span {
-      text-shadow: 2px 2px 2px black !important;
-    }
-  }
-}
-
