@@ -9,16 +9,26 @@ using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
 {
-    internal class ResourceStop : Script
+    class ResourceStop : Script
     {
+        private static bool _resourceStopped = false;
+
         [ServerEvent(Event.ResourceStop)]
-        public void OnResourceStop()
+        public static void OnResourceStop()
         {
+            if (_resourceStopped)
+                return;
+            _resourceStopped = true;
             SaveAllInDatabase();
             RemoveAllCreated();
         }
 
-        private async void SaveAllInDatabase()
+        public static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+        {
+            OnResourceStop();
+        }
+
+        private static async void SaveAllInDatabase()
         {
             TDSPlayer? exceptionsource = null;
             try
@@ -43,7 +53,7 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        private void RemoveAllCreated()
+        private static void RemoveAllCreated()
         {
             List<Blip> blips = NAPI.Pools.GetAllBlips();
             foreach (Blip blip in blips)

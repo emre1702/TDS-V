@@ -35,6 +35,7 @@ namespace TDS_Server.Manager.Utility
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                AppDomain.CurrentDomain.ProcessExit += ResourceStop.CurrentDomain_ProcessExit;
 
                 SettingsManager.LoadLocal();
                 ClothesManager.Init();
