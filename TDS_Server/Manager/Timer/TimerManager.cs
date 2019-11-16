@@ -2,7 +2,7 @@
 using System;
 using TDS_Common.Instance.Utility;
 
-namespace TDS_Server.Manager.Utility
+namespace TDS_Server.Manager.Timer
 {
     internal class TimerManager : Script
     {

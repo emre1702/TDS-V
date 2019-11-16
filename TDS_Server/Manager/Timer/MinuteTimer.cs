@@ -1,14 +1,12 @@
 ﻿using GTANetworkAPI;
 using System;
-using System.Collections.Generic;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Stats;
-using TDS_Server_DB.Entity;
+using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Manager.Utility
+namespace TDS_Server.Manager.Timer
 {
     internal class MinuteTimer
     {
@@ -16,8 +14,6 @@ namespace TDS_Server.Manager.Utility
 
         public static async void Execute()
         {
-            if (!TDSNewContext.IsConfigured)
-                return;
             if (!ResourceStart.ResourceStarted)
                 return;
 

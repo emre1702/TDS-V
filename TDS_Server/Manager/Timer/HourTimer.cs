@@ -6,7 +6,7 @@ using TDS_Server.Manager.Userpanel;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Userpanel;
 
-namespace TDS_Server.Manager.Utility
+namespace TDS_Server.Manager.Timer
 {
     static class HourTimer
     {
