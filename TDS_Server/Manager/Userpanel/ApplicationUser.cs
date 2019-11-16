@@ -153,7 +153,7 @@ namespace TDS_Server.Manager.Userpanel
             } 
             else
             {
-                OfflineMessagesManager.AddOfflineMessage(invitation.AdminId, player.Entity.Id, "I accepted your team application.");
+                OfflineMessagesManager.AddOfflineMessage(invitation.AdminId, player.Entity.Id, "I've accepted your team application.");
             }
         }
 
