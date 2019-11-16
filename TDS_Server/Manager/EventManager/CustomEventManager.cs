@@ -1,11 +1,8 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 
-namespace TDS_Server.Manager.Utility
+namespace TDS_Server.Manager.EventManager
 {
     static class CustomEventManager
     {

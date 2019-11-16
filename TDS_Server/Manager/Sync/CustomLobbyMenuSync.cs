@@ -6,6 +6,7 @@ using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Sync

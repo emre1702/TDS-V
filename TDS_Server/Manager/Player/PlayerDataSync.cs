@@ -1,13 +1,12 @@
 ﻿using GTANetworkAPI;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Manager.EventManager;
 
 namespace TDS_Server.Manager.Player
 {

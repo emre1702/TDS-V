@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Interface;
+using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Utility
