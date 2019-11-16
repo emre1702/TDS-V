@@ -1,10 +1,12 @@
 <div id="wrapper" *ngIf="buttonStyles[1]">
     <div id="content" #carousel
     [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[0].transform)">
-        <button mat-button *ngFor="let button of buttons | reverse"
-            (click)="button.func()"
-            [style.background]="getImageUrl(button.imgUrl)"
-            [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[button.index + 1].transform)"
+        <button mat-raised-button
+        class="active"
+        *ngFor="let button of buttons | orderBy:'-index'"
+        (click)="button.func()"
+        [style.background]="getImageUrl(button.imgUrl)"
+        [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[button.index + 1].transform)"
             >
             <span>{{ button.name | language: settings.Lang }}</span>
         </button>

@@ -1,9 +1,9 @@
 #wrapper {
     position: absolute;
-    width: 80%;
-    left: 10%;
-    bottom: 15%;
-    height: 70%;
+    width: 60%;
+    left: 20%;
+    bottom: 10%;
+    height: 20%;
     perspective: 1000px;
 
     * {
@@ -17,23 +17,28 @@
         transform-style: preserve-3d;
         transition: transform 1s;
 
-
         > button {
             display: 'none';
             position: absolute;
-            left: 2.5%;
-            width: 95%;
+            width: 100%;
             height: 100%;
-            opacity: 0.8;
+            opacity: 0.9;
             background-size: 100% 100% !important;
             font-size: 7em;
-            transition: transform 1s, opacity 1s;
-            border: 2px solid black;
+            transition: transform 1s;
+            border: 3px solid black;
 
             span {
                 text-shadow: 2px 2px 2px black !important;
             }
 
+            &:not(.active) {
+                filter: grayscale(1);
+            }
+
+            &:hover {
+                opacity: 1 !important;
+            }
         }
     }
 }
@@ -43,7 +48,7 @@
     border-width: 0 5px 5px 0;
     display: inline-block;
     padding: 5px;
-    top: calc(50% - 2.5vh);
+    bottom: calc(10% + 10vh - 2.5vh);
     height: 5vh;
     width: 5vh;
     background: transparent;
@@ -55,12 +60,12 @@
 
 .right {
     position: absolute;
-    right: 2%;
+    right: 5%;
     transform: rotate(-45deg);
 }
 
 .left {
     position: absolute;
-    left: 2%;
+    left: 5%;
     transform: rotate(135deg);
 }

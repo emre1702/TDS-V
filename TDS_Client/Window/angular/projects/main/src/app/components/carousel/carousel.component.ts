@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SettingsService } from '../../services/settings.service';
 import { trigger, transition, query, style, stagger, animate, AnimationBuilder, AnimationPlayer } from '@angular/animations';
 import { LobbyChoice } from '../lobbychoice/lobby-choice/interfaces/lobby-choice';
+import { isNumber } from 'util';
 
 export enum KEY_CODE {
     RIGHT_ARROW = 39,
@@ -35,6 +36,8 @@ export enum KEY_CODE {
 })
 export class CarouselComponent implements AfterViewInit {
 
+    private buttonsWidth = 0.6;
+
     private theta: number;
     private angle = 0;
     private radius: number;
@@ -61,7 +64,7 @@ export class CarouselComponent implements AfterViewInit {
     private changeCarousel() {
         const cellCount = this.buttons.length;
         this.theta = 360 / cellCount;
-        const cellSize = window.innerWidth * 0.8;
+        const cellSize = window.innerWidth * this.buttonsWidth;
         this.radius = Math.round((cellSize / 2) / Math.tan(Math.PI / cellCount));
         for (let i = 0; i < cellCount; i++) {
             let btnStyle = this.buttonStyles[i + 1];
@@ -71,7 +74,6 @@ export class CarouselComponent implements AfterViewInit {
             }
             const cellAngle = this.theta * i;
             btnStyle.transform = 'rotateY(' + cellAngle + 'deg) translateZ(' + this.radius + 'px)';
-            console.log(btnStyle);
         }
 
         this.rotateCarousel();
@@ -79,25 +81,19 @@ export class CarouselComponent implements AfterViewInit {
 
     private rotateCarousel() {
         const btnStyle = this.buttonStyles[0];
-        console.log(this.angle);
         btnStyle.transform = 'translateZ(' + -this.radius + 'px) rotateY(' + this.angle + 'deg)';
     }
 
     private createTurnAroundAnimation() {
         const anim = this.animationBuilder.build([
-            style({ transform: 'translateZ(' + -this.radius + 'px) rotateY(' + this.angle + 'deg)' }),
-            animate(1300 * this.buttons.length - 200 * this.buttons.length, style({ transform: 'translateZ(' + -this.radius + 'px) rotateY(360deg)' }))
+            style({ transform: 'translateZ(' + -this.radius + 'px) rotateY(-60deg)' }),
+            animate(500 * this.buttons.length, style({ transform: 'translateZ(' + -this.radius + 'px) rotateY(-360deg)' }))
         ]);
 
         this.turnAroundPlayer = anim.create(this.carousel.nativeElement);
         this.turnAroundPlayer.play();
 
-        this.turnAroundPlayer.onDone(() => {
-            if (this.turnAroundPlayer) {
-                this.turnAroundPlayer.destroy();
-                this.turnAroundPlayer = undefined;
-            }
-        });
+        this.turnAroundPlayer.onDone(this.stopTurnAroundAnimation.bind(this));
     }
 
     getImageUrl(url: string) {
@@ -106,40 +102,65 @@ export class CarouselComponent implements AfterViewInit {
 
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        console.log(event.key);
         if (event.key === "ArrowRight") {
             this.toRight();
         } else if (event.key === "ArrowLeft") {
             this.toLeft();
         } else if (event.key === "Enter") {
-            this.buttons[this.selectedIndex].func();
-        } else if (event.key === " ") {
-            if (this.turnAroundPlayer) {
-                this.turnAroundPlayer.destroy();
-                this.turnAroundPlayer = undefined;
+            this.buttons[this.buttons.length - this.selectedIndex - 1].func();
+        } else if (!isNaN(parseInt(event.key, 10))) {
+            const index = parseInt(event.key, 10);
+            if (this.buttons.length >= index) {
+                this.buttons.find(i => i.index == index - 1).func();
             }
+        } else {
+            this.stopTurnAroundAnimation();
         }
     }
 
     toRight() {
-        if (this.turnAroundPlayer) {
-            this.turnAroundPlayer.destroy();
-            this.turnAroundPlayer = undefined;
-        }
-        this.angle -= this.theta;
+        this.stopTurnAroundAnimation();
+        this.removeButtonsActiveClass();
         this.selectedIndex = this.selectedIndex + 1 >= this.buttons.length ? 0 : this.selectedIndex + 1;
+        this.angle -= this.theta;
+        this.setButtonsActiveClass();
         this.rotateCarousel();
         this.changeDetector.detectChanges();
     }
 
     toLeft() {
+        this.stopTurnAroundAnimation();
+        this.removeButtonsActiveClass();
+        this.selectedIndex = this.selectedIndex - 1 < 0 ? this.buttons.length - 1 : this.selectedIndex - 1;
+        this.angle += this.theta;
+        this.setButtonsActiveClass();
+        this.rotateCarousel();
+        this.changeDetector.detectChanges();
+    }
+
+    private stopTurnAroundAnimation() {
         if (this.turnAroundPlayer) {
             this.turnAroundPlayer.destroy();
             this.turnAroundPlayer = undefined;
+            this.removeAllButtonsActiveClass();
+            this.setButtonsActiveClass();
         }
-        this.selectedIndex = this.selectedIndex - 1 < 0 ? this.buttons.length - 1 : this.selectedIndex - 1;
-        this.angle += this.theta;
-        this.rotateCarousel();
-        this.changeDetector.detectChanges();
+    }
+
+    private removeAllButtonsActiveClass() {
+        const children = this.carousel.nativeElement.children as HTMLCollection;
+        for (let i = 0; i < children.length; ++i) {
+            children.item(i).classList.remove("active");
+        }
+    }
+
+    private removeButtonsActiveClass() {
+        const children = this.carousel.nativeElement.children as HTMLCollection;
+        children.item(this.buttons.length - this.selectedIndex - 1).classList.remove("active");
+    }
+
+    private setButtonsActiveClass() {
+        const children = this.carousel.nativeElement.children as HTMLCollection;
+        children.item(this.buttons.length - this.selectedIndex - 1).classList.add("active");
     }
 }
