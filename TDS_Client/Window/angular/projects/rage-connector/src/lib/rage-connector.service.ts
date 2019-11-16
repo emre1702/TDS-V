@@ -1,5 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 
+export enum DToServerEvent {
+    FromBrowserEvent = "FromBrowserEvent_Browser"
+};
+
 declare const mp: {
     trigger(eventName: string, ...args: any): void;
 };
@@ -21,6 +25,10 @@ export class RageConnectorService {
 
     public rageEventHandler(eventName: string, ...args: any) {
         RageConnectorService.zone.run(() => {
+            if (eventName == DToServerEvent.FromBrowserEvent) {
+                eventName = args[0];
+                args.shift();
+            }
             if (RageConnectorService.events[eventName]) {
                 for (const func of RageConnectorService.events[eventName]) {
                     func(...args);
@@ -72,6 +80,12 @@ export class RageConnectorService {
         mp.trigger(eventName, ...args);
     }
 
+    public callServer(eventName: string, ...args: any) {
+        if (typeof mp == "undefined") // testing without RAGE
+            return;
+        mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
+    }
+
     /**
      * Calls an event and adds an "event listener" for a response from RAGE clientside.
      * Don't forget to use lambda for callback or add bind(this),
@@ -91,5 +105,26 @@ export class RageConnectorService {
             mp.trigger(eventName, ...args);
         else
             mp.trigger(eventName);
+    }
+
+    /**
+     * Calls an event and adds an "event listener" for a response from RAGE clientside.
+     * Don't forget to use lambda for callback or add bind(this),
+     * else "this" in the function will refer to rage-connector.service.ts instead.
+     * @param eventName Name of the event used in RAGE
+     * @param args Any arguments
+     * @param callback Any function
+     */
+    public callCallbackServer(eventName: string, args: any[] | undefined, callback: (...args: any) => void) {
+        if (typeof mp == "undefined") // testing without RAGE
+            return;
+        if (!RageConnectorService.callbackEvents[eventName]) {
+            RageConnectorService.callbackEvents[eventName] = [];
+        }
+        RageConnectorService.callbackEvents[eventName].push(callback);
+        if (args)
+            mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
+        else
+            mp.trigger(DToServerEvent.FromBrowserEvent, eventName);
     }
 }
