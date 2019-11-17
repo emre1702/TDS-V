@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Userpanel;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Userpanel;
 
 namespace TDS_Server.Manager.Timer
 {
@@ -13,7 +11,8 @@ namespace TDS_Server.Manager.Timer
         private static readonly List<Func<Task>> _actions = new List<Func<Task>>
         {
             SupportRequest.DeleteTooLongClosedRequests,
-            ApplicationUser.DeleteTooLongClosedApplications
+            ApplicationUser.DeleteTooLongClosedApplications,
+            OfflineMessages.DeleteOldMessages
         };
 
         public static async void Execute()

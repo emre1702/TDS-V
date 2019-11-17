@@ -132,6 +132,19 @@ namespace TDS_Server.Manager.Userpanel
             return null;
         }
 
+        public static async Task DeleteOldMessages()
+        {
+            using var dbContext = new TDSNewContext();
+
+            var deleteAfterDays = SettingsManager.ServerSettings.DeleteOfflineMessagesAfterDays;
+            var list = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
+            if (list.Any())
+            {
+                dbContext.Offlinemessages.RemoveRange(list);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
         private class OfflineMessage {
             public int ID { get; set; }
             public string PlayerName { get; set; } = string.Empty;

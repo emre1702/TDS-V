@@ -240,7 +240,7 @@ namespace TDS_Server.Manager.Userpanel
             var requests = await dbContext.SupportRequests.Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
             if (requests.Any())
             {
-                dbContext.SupportRequests.RemoveRange();
+                dbContext.SupportRequests.RemoveRange(requests);
                 await dbContext.SaveChangesAsync();
             }
         }

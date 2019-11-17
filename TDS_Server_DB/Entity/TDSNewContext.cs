@@ -1101,6 +1101,10 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(30);
 
+                entity.Property(e => e.DeleteOfflineMessagesAfterDays)
+                    .IsRequired()
+                    .HasDefaultValue(60);
+
                 entity.Property(e => e.MinPlayersOnlineForGangwar)
                     .IsRequired()
                     .HasDefaultValue(3);
