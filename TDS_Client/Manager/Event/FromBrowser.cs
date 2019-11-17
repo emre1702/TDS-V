@@ -66,7 +66,6 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(DToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(DToServerEvent.SendApplication, OnSendApplicationMethod);
-            Add(DToServerEvent.SendApplicationInvite, OnSendApplicationInviteMethod);
             Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
             Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(DToServerEvent.SetSupportRequestClosed, OnSetSupportRequestClosedBrowserMethod);
@@ -81,6 +80,8 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
             Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
             Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+
+            Add(DToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
         }
 
         private void OnAcceptInvitationMethod(object[] args)
@@ -390,13 +391,6 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(DToServerEvent.SendApplication, json);
         }
 
-        private void OnSendApplicationInviteMethod(object[] args)
-        {
-            int applicationId = Convert.ToInt32(args[0]);
-            string message = (string)args[1];
-            EventsSender.Send(DToServerEvent.SendApplicationInvite, applicationId, message);
-        }
-
         private void OnSendMapCreatorDataMethod(object[] args)
         {
             string json = (string)args[0];
@@ -465,6 +459,15 @@ namespace TDS_Client.Manager.Event
             int mapId = (int)args[0];
             bool isFavorite = (bool)args[1];
             EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapId, isFavorite);
+        }
+
+        private void OnFromBrowserEventMethod(object[] args)
+        {
+            string eventName = (string) args[0];
+            object[] restArgs = new object[args.Length - 1];
+            args.CopyTo(restArgs, 1);
+
+            EventsSender.SendFromBrowser(eventName, restArgs);
         }
     }
 }

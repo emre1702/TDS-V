@@ -82,5 +82,24 @@ namespace TDS_Client.Manager.Utility
             Events.CallRemote(eventName, args);
             return true;
         }
+
+        public static bool SendFromBrowser(string eventName, params object[] args)
+        {
+            if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
+            {
+                Events.CallRemote(DToServerEvent.FromBrowserEvent, eventName, args);
+                return true;
+            }
+
+            ulong currentTicks = TimerManager.ElapsedTicks;
+            if (entry.LastExecMs != 0 && currentTicks - entry.LastExecMs < entry.CooldownMs)
+            {
+                return false;
+            }
+
+            entry.LastExecMs = currentTicks;
+            Events.CallRemote(DToServerEvent.FromBrowserEvent, eventName, args);
+            return true;
+        }
     }
 }

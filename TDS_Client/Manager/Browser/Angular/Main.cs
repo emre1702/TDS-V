@@ -226,6 +226,11 @@ namespace TDS_Client.Manager.Browser.Angular
         {
             Execute(DToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
         }
+
+        public static void FromBrowserEventReturn(string eventName, object ret)
+        {
+            Execute(DToServerEvent.FromBrowserEvent, eventName, ret);
+        }
     }
 
 }

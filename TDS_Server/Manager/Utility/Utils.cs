@@ -91,6 +91,13 @@ namespace TDS_Server.Manager.Utility
             return new Vector3(pos.X, pos.Y, pos.Z);
         }
 
+        public static int? GetInt(object obj)
+        {
+            if (int.TryParse(Convert.ToString(obj), out int result)) 
+                return result;
+            return null;
+        }
+
         /// <summary>
         /// Check if the name is valid
         /// </summary>

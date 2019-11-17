@@ -96,6 +96,8 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
             Add(DToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
+
+            Add(DToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
         }
 
         private void OnLoadOwnMapRatingsMethod(object[] args)
@@ -601,5 +603,11 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.ToggleTeamChoiceMenu(boolean);
         }
 
+        private void OnFromBrowserEventReturnMethod(object[] args)
+        {
+            string eventName = (string)args[0];
+            object ret = args[1];
+            Browser.Angular.Main.FromBrowserEventReturn(eventName, ret);
+        }
     }
 }

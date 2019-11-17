@@ -16,5 +16,7 @@ export enum DToServerEvent {
     SendApplicationInvite = "SendApplicationInvite_Browser",
     SendSupportRequest = "SendSupportRequest_Browser",
     SendSupportRequestMessage = "SendSupportRequestMessage_Browser",
-    SetSupportRequestClosed = "SetSupportRequestClosed_Browser"
+    SetSupportRequestClosed = "SetSupportRequestClosed_Browser",
+
+    FromBrowserEvent = "FromBrowserEvent_Browser"
 }

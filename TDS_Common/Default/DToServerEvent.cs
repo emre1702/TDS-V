@@ -64,5 +64,9 @@
         public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
         public const string TryLogin = "TryLogin_Client";
         public const string TryRegister = "TryRegister_Client";
+
+
+        // Special:
+        public const string FromBrowserEvent = "FromBrowserEvent_Browser";
     }
 }

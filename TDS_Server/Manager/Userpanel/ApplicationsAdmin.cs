@@ -94,17 +94,25 @@ namespace TDS_Server.Manager.Userpanel
             
         }
 
-        public static async Task SendInvitation(TDSPlayer player, int applicationId, string message)
+        public static async Task<object?> SendInvitation(TDSPlayer player, params object[] args)
         {
             if (player.AdminLevel.Level != (short)EAdminLevel.Administrator)
-                return;
+                return null;
+
+            if (args.Length < 2)
+                return null;
+            int? applicationId;
+            if ((applicationId = Utils.GetInt(args[0])) == null)
+                return null;
+            if (!(args[1] is string message))
+                return null;
 
             using var dbContext = new TDSNewContext();
 
             var invitation = new ApplicationInvitations
             {
                 AdminId = player.Entity!.Id,
-                ApplicationId = applicationId,
+                ApplicationId = applicationId.Value,
                 Message = message
             };
             dbContext.ApplicationInvitations.Add(invitation);
@@ -113,7 +121,7 @@ namespace TDS_Server.Manager.Userpanel
 
             int playerId = await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync();
             if (playerId == default)
-                return;
+                return null;
 
             var target = Player.Player.GetPlayerByID(playerId);
             if (target != null)
@@ -125,6 +133,8 @@ namespace TDS_Server.Manager.Userpanel
             {
                 NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.SENT_APPLICATION);
             }
+
+            return null;
         }
     }
 }

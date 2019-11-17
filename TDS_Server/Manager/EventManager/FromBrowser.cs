@@ -7,11 +7,38 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server_DB.Entity.Player;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Manager.EventManager
 {
     partial class EventsHandler
     {
+        public delegate Task<object?> FromBrowserMethodDelegate(TDSPlayer player, params object[] args); 
+
+        private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
+        {
+            [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation
+        };
+
+        [RemoteEvent(DToServerEvent.FromBrowserEvent)]
+        public static void OnFromBrowserEvent(Client client, string eventName, params object[] args)
+        {
+            object? ret = null;
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+
+            if (_methods.ContainsKey(eventName))
+            {
+                ret = _methods[eventName](player, args);
+            }
+
+            if (ret != null)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.FromBrowserEventReturn, eventName, ret);
+            }
+        }
 
         [RemoteEvent(DToServerEvent.SaveSettings)]
         public async void PlayerSaveSettings(Client client, string json)
@@ -36,19 +63,7 @@ namespace TDS_Server.Manager.EventManager
             catch (Exception ex)
             {
                 ErrorLogsManager.Log("Error in PlayerSaveSettings: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, client);
-            }
-
-            
-        }
-
-        [RemoteEvent(DToServerEvent.SendApplicationInvite)]
-        public async void SendApplicationInviteMethod(Client client, int applicationId, string message) 
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-
-            await Userpanel.ApplicationsAdmin.SendInvitation(player, applicationId, message);
+            }            
         }
 
         [RemoteEvent(DToServerEvent.GetSupportRequestData)]

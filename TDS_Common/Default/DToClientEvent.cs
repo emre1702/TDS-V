@@ -95,5 +95,9 @@
         public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";
         public const string SetPlayerTeamWorkaround = "SetPlayerTeamWorkaround_Server";
         public const string SetPlayerToSpectatePlayer = "SpectateWorkaround_Server";
+
+
+        // Special //
+        public const string FromBrowserEventReturn = "FromBrowserEventReturn_Server";
     }
 }
