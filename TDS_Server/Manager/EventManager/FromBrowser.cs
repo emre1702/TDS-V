@@ -22,6 +22,7 @@ namespace TDS_Server.Manager.EventManager
             [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation,
             [DToServerEvent.AnswerToOfflineMessage] = Userpanel.OfflineMessages.Answer,
             [DToServerEvent.SendOfflineMessage] = Userpanel.OfflineMessages.Send,
+            [DToServerEvent.DeleteOfflineMessage] = Userpanel.OfflineMessages.Delete
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]

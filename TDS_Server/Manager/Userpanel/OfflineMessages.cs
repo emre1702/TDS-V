@@ -114,6 +114,24 @@ namespace TDS_Server.Manager.Userpanel
             return true;
         }
 
+        public static async Task<object?> Delete(TDSPlayer player, params object[] args)
+        {
+            int? offlineMessageId;
+            if ((offlineMessageId = Utils.GetInt(args[0])) is null)
+                return null;
+
+            using var dbContext = new TDSNewContext();
+
+            var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId);
+            if (offlineMessage is null)
+                return null;
+
+            dbContext.Offlinemessages.Remove(offlineMessage);
+
+            await dbContext.SaveChangesAsync();
+            return null;
+        }
+
         private class OfflineMessage {
             public int ID { get; set; }
             public string PlayerName { get; set; } = string.Empty;

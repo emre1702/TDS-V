@@ -170,6 +170,10 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Complaint = "Beschwerde";
     Title = "Titel";
     OfflineMessages = "Offline-Nachrichten";
+    Open = "Öffnen";
+    Create = "Erstellen";
+    Answer = "Antwort";
+    ToAnswer = "Antworten";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

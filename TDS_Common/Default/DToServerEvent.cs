@@ -11,6 +11,8 @@
         public const string CommandUsed = "CommandUsed_Client";
         public const string CreateCustomLobby = "CreateCustomLobby_Client";
 
+        public const string DeleteOfflineMessage = "DeleteOfflineMessage_Browser";
+
         public const string GetSupportRequestData = "GetSupportRequestData_Browser";
         public const string GetVehicle = "GetVehicle_Client";
         public const string GotHit = "GotHit_Client";

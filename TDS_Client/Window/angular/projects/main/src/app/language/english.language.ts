@@ -160,6 +160,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     Complaint = "Complaint";
     Title = "Title";
     OfflineMessages = "Offline messages";
+    Open = "Open";
+    Create = "Create";
+    Answer = "Answer";
+    ToAnswer = "Answer";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

@@ -15,7 +15,7 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
     clickedOfflineMessage: number = undefined;
     creatingOfflineMessage = false;
 
-    displayedColumns = ["PlayerName", "Text", "CreateTime"];
+    displayedColumns = ["PlayerName", "Text", "CreateTime", "Delete"];
     offlineMessageFormGroup: FormGroup;
 
     constructor(
@@ -90,5 +90,11 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
                     this.offlineMessageFormGroup.get("message").setValue("");
                 }
             });
+    }
+
+    delete(id: number) {
+        this.userpanelService.offlineMessages = [...this.userpanelService.offlineMessages.filter(o => o.ID !== id)];
+
+        this.rageConnector.callServer(DToServerEvent.DeleteOfflineMessage, id);
     }
 }

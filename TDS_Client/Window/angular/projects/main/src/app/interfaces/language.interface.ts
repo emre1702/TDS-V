@@ -147,6 +147,10 @@ export interface Language {
     Complaint: string;
     Title: string;
     OfflineMessages: string;
+    Open: string;
+    Create: string;
+    Answer: string;
+    ToAnswer: string;
 
     ////////////////// Stats ////////////////
     SCName: string;
