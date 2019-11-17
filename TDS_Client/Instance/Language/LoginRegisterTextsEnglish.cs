@@ -32,6 +32,8 @@ namespace TDS_Client.Instance.Language
 
         public virtual string forgotpw_reset => "Reset";
 
-        public virtual string password_has_to_be_same => "Both passwords have to be the same";
+        public virtual string password_has_to_be_same => "Both passwords have to be the same.";
+
+        public virtual string name_may_not_only_numbers => "The name must not consist only of numbers.";
     }
 }

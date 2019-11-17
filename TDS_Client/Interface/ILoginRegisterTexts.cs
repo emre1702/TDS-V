@@ -17,5 +17,6 @@
         string forgotpw_email { get; }
         string forgotpw_reset { get; }
         string password_has_to_be_same { get; }
+        string name_may_not_only_numbers { get; }
     }
 }

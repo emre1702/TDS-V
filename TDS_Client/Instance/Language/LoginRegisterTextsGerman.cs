@@ -31,5 +31,7 @@
         public override string forgotpw_reset => "Zuruecksetzen";
 
         public override string password_has_to_be_same => "Beide Passwoerter muessen gleich sein.";
+
+        public override string name_may_not_only_numbers => "Der Name darf nicht nur aus Zahlen bestehen.";
     }
 }

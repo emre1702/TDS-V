@@ -20,6 +20,8 @@ namespace TDS_Server.Manager.Player
             using TDSNewContext dbContext = new TDSNewContext();
             if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                 email = null;
+            if (!int.TryParse(username, out int result)) 
+                return;
 
             Players dbplayer = new Players
             {

@@ -94,7 +94,12 @@ $(document).ready(function () {
                     let password = $this.find("input[id=register_password]").val();
                     let email = $this.find("input[id=register_email]").val();
                     if (password === $(this).val()) {
-                        mp.trigger("TryRegister_Browser", username, password, email);
+						if (!(/^\d+$/.test(username))) {
+							mp.trigger("TryRegister_Browser", username, password, email);
+						} else {
+							alert(langdata["name_may_not_only_numbers"]);
+							event.preventDefault();
+						}
                     } else {
                         alert(langdata["password_has_to_be_same"]);
                         event.preventDefault();
