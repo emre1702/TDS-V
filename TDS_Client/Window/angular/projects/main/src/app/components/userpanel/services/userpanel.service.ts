@@ -78,6 +78,7 @@ export class UserpanelService {
     adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[];
     applications: { ID: number, CreateTime: string, PlayerName: string }[];
     supportRequests: { ID: number, PlayerName: string, CreateTime: string, Title: string, Type: UserpanelSupportType, Closed: boolean }[];
+    offlineMessages: { ID: number, PlayerName: string, CreateTime: string, Text: string, Seen: boolean }[];
 
     public currentNavChanged = new EventEmitter();
     public loadingDataChanged = new EventEmitter();
@@ -89,6 +90,7 @@ export class UserpanelService {
     public applicationDataLoaded = new EventEmitter();
     public applicationsLoaded = new EventEmitter();
     public supportRequestsLoaded = new EventEmitter();
+    public offlineMessagesLoaded = new EventEmitter();
 
     private myStatsLoadCooldown: NodeJS.Timeout;
 
@@ -138,16 +140,24 @@ export class UserpanelService {
 
     loadSupportRequestsForAdmin() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportAdmin);
+    }
+
+    loadOfflineMessages() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.OfflineMessages);
 
         this.loadingData = false;
         this.loadingDataChanged.emit(null);
-        this.supportRequests = [
-            { ID: 1, PlayerName: "Bonus", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Complaint, Closed: true, Title: "Test 123 Wie geht das?" },
-            { ID: 2, PlayerName: "Pluz.", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Compliment, Closed: false, Title: "Test 123 Wie gsdafsadfsadfsadfasdfsadfeht das?" },
-            { ID: 3, PlayerName: "sdfsadf sadfsafsadfdssfdafdsfadsfa", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Help, Closed: false, Title: "Test 123 Wie gesdafasdfsdadsfsdaasfdsajhdasfuiusfdahoisduafuo8idsfahuoisdahouidsfahouidsfahoiudsafhoiafdshoiudasiouhdfasoihauiht das?" },
-            { ID: 4, PlayerName: "Bonasdfsadfsadfsadfadsfsdafasdfasdfdasus", CreateTime: "12.02.30 - 12:33:33", Type: UserpanelSupportType.Question, Closed: true, Title: "Test 123dfsgdfsgdfsgdsfihdfgspdfhgspdfsgpofdsghofdsghoiu Wie geht das?" },
+        this.offlineMessages = [ { ID: 1, PlayerName: "Bonus", Text: "Hallo iajsdoi jiojdisoafj oiasdjoif jsaoidfsgdfsüogjdfsjiogjdfsiolgdfioushgioudfshguiodfshiguofdhioufdsghiuodfgshiougdfshiougdsfhiuogsfdhoiufsdghiougfsdhiougfsdhiougfdshiuofgsdhioufgsdhioudj öofsdjö fjsöaod jföasdjöfi asjdöof jasöd jfiaösdjof sadöof jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: false},
+            { ID: 2, PlayerName: "Bonussdafsdafsadfsdas sdafsadfsadf", Text: "Hallo öadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true},
+            { ID: 3, PlayerName: "Bonusdfadsafsads", Text: "Hallo of jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true},
+            { ID: 1, PlayerName: "Bonus", Text: "Hallo iajsdoi jiojdisoafj oiasdjoif jsaoidfsgdfsüogjdfsjiogjdfsiolgdfioushgioudfshguiodfshiguofdhioufdsghiuodfgshiougdfshiougdsfhiuogsfdhoiufsdghiougfsdhiougfsdhiougfdshiuofgsdhioufgsdhioudj öofsdjö fjsöaod jföasdjöfi asjdöof jasöd jfiaösdjof sadöof jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: false},
+            { ID: 2, PlayerName: "Bonussdafsdafsadfsdas sdafsadfsadf", Text: "Hallo öadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true},
+            { ID: 3, PlayerName: "Bonusdfadsafsads", Text: "Hallo of jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true},
+            { ID: 1, PlayerName: "Bonus", Text: "Hallo iajsdoi jiojdisoafj oiasdjoif jsaoidfsgdfsüogjdfsjiogjdfsiolgdfioushgioudfshguiodfshiguofdhioufdsghiuodfgshiougdfshiougdsfhiuogsfdhoiufsdghiougfsdhiougfsdhiougfdshiuofgsdhioufgsdhioudj öofsdjö fjsöaod jföasdjöfi asjdöof jasöd jfiaösdjof sadöof jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: false},
+            { ID: 2, PlayerName: "Bonussdafsdafsadfsdas sdafsadfsadf", Text: "Hallo öadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true},
+            { ID: 3, PlayerName: "Bonusdfadsafsads", Text: "Hallo of jsödaof jsöadj föoasdjöio", CreateTime: "17.11.2019 03:06", Seen: true}
         ];
-        this.supportRequestsLoaded.emit(null);
+        this.offlineMessagesLoaded.emit(null);
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {
@@ -183,6 +193,9 @@ export class UserpanelService {
                 break;
             case UserpanelLoadDataType.SupportAdmin:
                 this.loadedSupportRequestsForAdmin(json);
+                break;
+            case UserpanelLoadDataType.OfflineMessages:
+                this.loadedOfflineMessages(json);
                 break;
         }
     }
@@ -251,6 +264,11 @@ export class UserpanelService {
     private loadedSupportRequestsForAdmin(json: string) {
         this.supportRequests = JSON.parse(json);
         this.supportRequestsLoaded.emit(null);
+    }
+
+    private loadedOfflineMessages(json: string) {
+        this.offlineMessages = JSON.parse(json);
+        this.offlineMessagesLoaded.emit(null);
     }
 
     private languageChanged() {

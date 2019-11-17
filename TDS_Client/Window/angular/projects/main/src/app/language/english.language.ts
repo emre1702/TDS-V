@@ -159,6 +159,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Compliment = "Compliment";
     Complaint = "Complaint";
     Title = "Title";
+    OfflineMessages = "Offline messages";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

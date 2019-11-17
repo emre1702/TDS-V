@@ -169,6 +169,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Compliment = "Lob";
     Complaint = "Beschwerde";
     Title = "Titel";
+    OfflineMessages = "Offline-Nachrichten";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

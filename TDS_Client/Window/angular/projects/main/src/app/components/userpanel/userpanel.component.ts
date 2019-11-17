@@ -93,6 +93,8 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadUserSupportRequests();
         } else if (nav == UserpanelNavPage.SupportAdmin) {
             this.userpanelService.loadSupportRequestsForAdmin();
+        } else if (nav == UserpanelNavPage.OfflineMessages) {
+            this.userpanelService.loadOfflineMessages();
         } else {
             this.userpanelService.loadingData = false;
             this.changeDetector.detectChanges();

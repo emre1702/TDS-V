@@ -26,6 +26,8 @@
             </app-userpanel-support-user>
             <app-userpanel-support-admin *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportAdmin] && settings.AdminLevel > 0">
             </app-userpanel-support-admin>
+            <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]">
+            </app-userpanel-offline-messages>
             <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
                 [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
             </div>
@@ -76,6 +78,10 @@
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Applications)" *ngIf="settings.AdminLevel > 0">
         <mat-icon>post_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Applications] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.OfflineMessages)">
+        <mat-icon>mail_outline</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.OfflineMessages] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 

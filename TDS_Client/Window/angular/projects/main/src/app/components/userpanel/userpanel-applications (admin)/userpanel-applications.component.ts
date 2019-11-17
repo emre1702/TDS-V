@@ -88,7 +88,7 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.rageConnector.call(DToServerEvent.SendApplicationInvite, this.applicationData.ApplicationID, message);
+                this.rageConnector.callServer(DToServerEvent.SendApplicationInvite, this.applicationData.ApplicationID, message);
                 this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
             }
         );

@@ -44,6 +44,9 @@ namespace TDS_Server.Manager.Userpanel
                 case EUserpanelLoadDataType.SupportAdmin:
                     json = await SupportAdmin.GetData(player);
                     break;
+                case EUserpanelLoadDataType.OfflineMessages:
+                    json = await OfflineMessages.GetData(player);
+                    break;
             }
 
             if (json == null)

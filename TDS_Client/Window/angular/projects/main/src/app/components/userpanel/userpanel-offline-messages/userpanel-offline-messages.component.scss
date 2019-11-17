@@ -1,0 +1,90 @@
+#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .mat-table-container {
+        overflow-x: hidden;
+        margin-bottom: auto;
+        flex: 1 1 auto;
+
+        table {
+            width: 100%;
+            background: transparent;
+            border-collapse: collapse;
+
+            tr {
+                width: 100%;
+
+                td:not(.mat-column-ID) {
+                    padding: 5px;
+                    word-break: break-word;
+                    word-wrap: break-word;
+                }
+
+            }
+        }
+
+    }
+
+    .last-row-buttons {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+
+    form {
+        width: 100%;
+        height: 100%;
+
+        .left-side {
+            display: flex;
+            flex-direction: column;
+            float: left;
+            width: calc(65% - 10px);
+            height: 100%;
+            overflow-y: auto;
+
+            .message-content-field {
+                height: 50%;
+            }
+
+            .answer-field {
+                height: 50%;
+            }
+        }
+
+        .right-side {
+            display: flex;
+            flex-direction: column;
+            float: right;
+            width: calc(35% - 10px);
+            height: 100%;
+            box-sizing: border-box;
+
+            .right-side-content {
+                flex: 1 1 auto;
+
+                * {
+                    width: 100%;
+                }
+            }
+
+            .last-row-buttons {
+                margin-top: 5px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                * {
+                    margin-top: 10px;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+}

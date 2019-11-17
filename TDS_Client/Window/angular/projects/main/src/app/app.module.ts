@@ -75,6 +75,7 @@ import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
+import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { ReversePipe } from './pipes/reverse.pipe';
     UserpanelSupportUserComponent,
     UserpanelSupportAdminComponent,
     UserpanelSupportViewComponent,
-    CarouselComponent
+    CarouselComponent,
+    UserpanelOfflineMessagesComponent
   ],
   imports: [
     ReactiveFormsModule,

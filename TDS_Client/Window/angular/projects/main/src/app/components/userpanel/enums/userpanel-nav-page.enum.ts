@@ -18,5 +18,6 @@ export enum UserpanelNavPage {
     Application,
     Applications,
     SupportUser,
-    SupportAdmin
+    SupportAdmin,
+    OfflineMessages
 }

@@ -7,5 +7,6 @@ export enum UserpanelLoadDataType {
     ApplicationUser,
     ApplicationsAdmin,
     SupportUser,
-    SupportAdmin
+    SupportAdmin,
+    OfflineMessages
 }

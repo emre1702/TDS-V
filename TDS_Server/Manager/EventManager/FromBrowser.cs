@@ -9,6 +9,7 @@ using TDS_Server.Manager.Player;
 using TDS_Server_DB.Entity.Player;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace TDS_Server.Manager.EventManager
 {
@@ -18,25 +19,36 @@ namespace TDS_Server.Manager.EventManager
 
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {
-            [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation
+            [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation,
+            [DToServerEvent.AnswerToOfflineMessage] = Userpanel.OfflineMessages.Answer,
+            [DToServerEvent.SendOfflineMessage] = Userpanel.OfflineMessages.Send,
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
-        public static void OnFromBrowserEvent(Client client, string eventName, params object[] args)
+        public static async void OnFromBrowserEvent(Client client, string eventName, params object[] args)
         {
-            object? ret = null;
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-
-            if (_methods.ContainsKey(eventName))
+            try
             {
-                ret = _methods[eventName](player, args);
+                object? ret = null;
+                TDSPlayer player = client.GetChar();
+                if (!player.LoggedIn)
+                    return;
+
+                if (_methods.ContainsKey(eventName))
+                {
+                    ret = await _methods[eventName](player, args);
+                }
+
+                if (ret != null)
+                {
+                    NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.FromBrowserEventReturn, eventName, ret);
+                }
             }
-
-            if (ret != null)
+            catch (Exception ex)
             {
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.FromBrowserEventReturn, eventName, ret);
+                ErrorLogsManager.Log(ex.GetBaseException().Message + "\n" 
+                    + String.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
+                    ex.StackTrace ?? Environment.StackTrace, client);
             }
         }
 

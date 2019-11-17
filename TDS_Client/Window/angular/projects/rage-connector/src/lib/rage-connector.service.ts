@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 
-export enum DToServerEvent {
+enum DToServerEvent {
     FromBrowserEvent = "FromBrowserEvent_Browser"
 };
 

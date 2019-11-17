@@ -4,6 +4,7 @@
     {
         public const string AcceptInvitation = "AcceptInvitation_Browser";
         public const string AddRatingToMap = "AddRatingToMap_Client";
+        public const string AnswerToOfflineMessage = "AnswerToOfflineMessage_Browser";
 
         public const string ChatLoaded = "ChatLoaded_Client";
         public const string ChooseTeam = "ChooseTeam_Browser";
@@ -48,6 +49,7 @@
         public const string SendApplicationInvite = "SendApplicationInvite_Browser";
         public const string SendMapCreatorData = "SendMapCreatorData_Client";
         public const string SendMapRating = "SendMapRating_Client";
+        public const string SendOfflineMessage = "SendOfflineMessage_Browser";
         public const string SendSupportRequest = "SendSupportRequest_Browser";
         public const string SendSupportRequestMessage = "SendSupportRequestMessage_Browser";
         public const string SendTeamOrder = "SendTeamOrder_Client";

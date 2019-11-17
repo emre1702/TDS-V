@@ -146,6 +146,7 @@ export interface Language {
     Compliment: string;
     Complaint: string;
     Title: string;
+    OfflineMessages: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

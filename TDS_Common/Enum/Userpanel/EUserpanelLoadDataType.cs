@@ -10,6 +10,7 @@
         ApplicationUser,
         ApplicationsAdmin,
         SupportUser,
-        SupportAdmin
+        SupportAdmin,
+        OfflineMessages
     }
 }
