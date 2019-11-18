@@ -123,11 +123,12 @@ namespace TDS_Client.Manager.Event
         // Join always means we also left another lobby (except on login)
         private void OnJoinLobbyMethod(object[] args)
         {
+            var oldSettings = Settings.GetSyncedLobbySettings();
             SyncedLobbySettingsDto settings = JsonConvert.DeserializeObject<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
             Players.Load(ClientUtils.GetTriggeredPlayersList((string)args[1]));
             Team.CurrentLobbyTeams = JsonConvert.DeserializeObject<SyncedTeamDataDto[]>((string)args[2]);
-            Lobby.Lobby.Joined(settings);
+            Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
             MainBrowser.HideRoundEndReason();
         }
@@ -511,6 +512,7 @@ namespace TDS_Client.Manager.Event
             VoiceManager.Init();
             Team.Init();
             Crouching.Init();
+            AFKCheckManager.Init();
 
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
             BindManager.Add(EKey.U, Userpanel.Toggle);

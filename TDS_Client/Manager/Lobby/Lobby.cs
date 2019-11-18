@@ -1,6 +1,7 @@
 ﻿using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
+using TDS_Client.Manager.Event;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
@@ -24,7 +25,7 @@ namespace TDS_Client.Manager.Lobby
         private static ELobbyType? _inLobbyType;
         private static bool _inFightLobby;
 
-        public static void Joined(SyncedLobbySettingsDto settings)
+        public static void Joined(SyncedLobbySettingsDto oldSettings, SyncedLobbySettingsDto settings)
         {
             InstructionalButtonManager.Reset();
             PlayerElement.LocalPlayer.ResetAlpha();
@@ -44,6 +45,7 @@ namespace TDS_Client.Manager.Lobby
                         break;
                 }
             }
+            CustomEventManager.SetLobbyLeave(oldSettings);
 
             switch (settings.Type)
             {
@@ -62,6 +64,7 @@ namespace TDS_Client.Manager.Lobby
                     InFightLobby = true;
                     break;
             }
+            CustomEventManager.SetLobbyJoin(settings);
 
             _inLobbyType = settings.Type;
             LoadLobbyGeneralBinds();

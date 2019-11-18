@@ -123,6 +123,11 @@ namespace TDS_Client.Manager.Utility
             NotTempMapBorderColor = null;
         }
 
+        public static SyncedLobbySettingsDto GetSyncedLobbySettings()
+        {
+            return _syncedLobbySettings;
+        }
+
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
         {
             _syncedLobbySettings = loadedSyncedLobbySettings;
