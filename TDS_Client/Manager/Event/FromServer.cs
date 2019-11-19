@@ -241,6 +241,7 @@ namespace TDS_Client.Manager.Event
             LobbyCam.StopCountdown();
             Countdown.End(args.Length < 2 || Convert.ToUInt64(args[1]) != 0);
             RoundInfo.Start(args.Length >= 2 ? Convert.ToUInt64(args[1]) : 0);
+            CustomEventManager.SetRoundStart(Round.IsSpectator);
         }
 
         private void OnRoundEndMethod(object[] args)
@@ -255,6 +256,7 @@ namespace TDS_Client.Manager.Event
             string reason = (string)args[0];
             int mapId = (int)args[1];
             MainBrowser.ShowRoundEndReason(reason, mapId);
+            CustomEventManager.SetRoundEnd();
         }
 
         private void OnSaveMapCreatorReturnMethod(object[] args)

@@ -36,6 +36,8 @@ namespace TDS_Client.Interface
         string PUT_ON_GROUND { get; }
         string LET_IT_FLOAT { get; }
         string ERROR { get; }
+        string AFK_KICK_INFO { get; }
+        string AFK_KICK_WARNING { get; }
 
         ELanguage Enum { get; }
         

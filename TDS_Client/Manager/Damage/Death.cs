@@ -1,6 +1,7 @@
 ﻿using RAGE.Game;
 using TDS_Client.Default;
 using TDS_Client.Manager.Draw.Scaleform;
+using TDS_Client.Manager.Event;
 using TDS_Client.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
@@ -27,6 +28,8 @@ namespace TDS_Client.Manager.Damage
             Graphics.StartScreenEffect(DEffectName.DEATHFAILMPIN, 0, true);
 
             ScaleformMessage.ShowWastedMessage();
+
+            CustomEventManager.SetDead();
         }
     }
 }

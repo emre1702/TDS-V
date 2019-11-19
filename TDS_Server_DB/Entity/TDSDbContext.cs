@@ -1081,6 +1081,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.ShowNametagOnlyOnAiming)
                     .IsRequired();
 
+                entity.Property(e => e.AFKKickAfterSec)
+                    .IsRequired()
+                    .HasDefaultValue(25);
+
                 entity.Property(e => e.CloseApplicationAfterDays)
                     .IsRequired()
                     .HasDefaultValue(7);

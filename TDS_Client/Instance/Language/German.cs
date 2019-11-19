@@ -38,7 +38,9 @@ namespace TDS_Client.Instance.Language
         public override string ON_FOOT => "Zu Fuß";
         public override string PUT_ON_GROUND => "Boden legen";
         public override string LET_IT_FLOAT => "Schweben lassen";
-        public override string ERROR => "Error aufgetaucht, bitte melde es: '{0}'";
+        public override string ERROR => "Fehler aufgetaucht, bitte melde es! Info: '{0}'";
+        public override string AFK_KICK_INFO => "Du warst AFK und wurdest aus der Lobby geworfen.";
+        public override string AFK_KICK_WARNING => "Du bist AFK und wirst in {0} Sekunden gekickt! Ändere deine Position oder schieße!";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

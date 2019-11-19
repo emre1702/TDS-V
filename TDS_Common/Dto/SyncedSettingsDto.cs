@@ -9,5 +9,6 @@
         public int TeamOrderCooldownMs;
         public float NametagMaxDistance;
         public bool ShowNametagOnlyOnAiming;
+        public int AFKKickAfterSec;
     }
 }

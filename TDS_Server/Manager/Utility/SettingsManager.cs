@@ -64,7 +64,8 @@ namespace TDS_Server.Manager.Utility
                 MapChooseTime = 4 * 1000,
                 TeamOrderCooldownMs = ServerSettings.TeamOrderCooldownMs,
                 NametagMaxDistance = ServerSettings.NametagMaxDistance,
-                ShowNametagOnlyOnAiming = ServerSettings.ShowNametagOnlyOnAiming
+                ShowNametagOnlyOnAiming = ServerSettings.ShowNametagOnlyOnAiming,
+                AFKKickAfterSec = ServerSettings.AFKKickAfterSec
             };
 
             _loadMapOfOthersRightInfos = dbcontext.Commands.First(c => c.Command == "LoadMapOfOthers");
