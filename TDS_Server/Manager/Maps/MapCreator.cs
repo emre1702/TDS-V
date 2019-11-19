@@ -78,7 +78,7 @@ namespace TDS_Server.Manager.Maps
 
                 if (!onlySave)
                 {
-                    using var dbContext = new TDSNewContext();
+                    using var dbContext = new TDSDbContext();
                     var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
                     await dbContext.Maps.AddAsync(dbMap);
                     await dbContext.SaveChangesAsync();
@@ -101,7 +101,7 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadNewMaps(TDSNewContext dbContext)
+        public static async Task LoadNewMaps(TDSDbContext dbContext)
         {
             _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false);
             foreach (var map in _newCreatedMaps)
@@ -112,7 +112,7 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadSavedMaps(TDSNewContext dbContext)
+        public static async Task LoadSavedMaps(TDSDbContext dbContext)
         {
             _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true);
             foreach (var map in _savedMaps)
@@ -122,7 +122,7 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadNeedCheckMaps(TDSNewContext dbContext)
+        public static async Task LoadNeedCheckMaps(TDSDbContext dbContext)
         {
             _needCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false);
             foreach (var map in _newCreatedMaps)

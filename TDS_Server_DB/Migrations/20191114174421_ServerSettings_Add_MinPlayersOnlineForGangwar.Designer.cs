@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 
 namespace TDS_Server_DB.Migrations
 {
-    [DbContext(typeof(TDSNewContext))]
+    [DbContext(typeof(TDSDbContext))]
     [Migration("20191114174421_ServerSettings_Add_MinPlayersOnlineForGangwar")]
     partial class ServerSettings_Add_MinPlayersOnlineForGangwar
     {

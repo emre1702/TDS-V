@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Maps
             if (map is null)
                 return;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             PlayerMapRatings? maprating = await dbContext.PlayerMapRatings.FindAsync(playerId, mapId);
             if (maprating is null)
             {

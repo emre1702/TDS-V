@@ -31,7 +31,7 @@ namespace TDS_Server.Instance
             _allHitters.Clear();
         }
 
-        public static void LoadDefaults(TDSNewContext dbcontext)
+        public static void LoadDefaults(TDSDbContext dbcontext)
         {
             _defaultDamages = dbcontext.Weapons
                 .ToDictionary(

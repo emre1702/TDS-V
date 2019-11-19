@@ -22,12 +22,12 @@ namespace TDS_Server.Manager.Maps
         private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
 
-        public static async Task LoadDefaultMaps(TDSNewContext dbcontext)
+        public static async Task LoadDefaultMaps(TDSDbContext dbcontext)
         {
             AllMaps = await LoadMaps(dbcontext, ServerConstants.MapsPath, false);
         }
 
-        public static async Task<List<MapDto>> LoadMaps(TDSNewContext dbcontext, string path, bool isOnlySaved)
+        public static async Task<List<MapDto>> LoadMaps(TDSDbContext dbcontext, string path, bool isOnlySaved)
         {
             List<MapDto> list = LoadMapsInDirectory(path, isOnlySaved);
 
@@ -95,7 +95,7 @@ namespace TDS_Server.Manager.Maps
             return AllMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
-        private static async Task SaveMapsInDB(TDSNewContext dbContext, List<MapDto> maps)
+        private static async Task SaveMapsInDB(TDSDbContext dbContext, List<MapDto> maps)
         {
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
@@ -113,7 +113,7 @@ namespace TDS_Server.Manager.Maps
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        private static void LoadMapDBInfos(TDSNewContext dbContext, List<MapDto> maps)
+        private static void LoadMapDBInfos(TDSDbContext dbContext, List<MapDto> maps)
         {
             foreach (var map in maps)
             {

@@ -18,27 +18,27 @@ using TDS_Server_DB.Entity.Userpanel;
 
 namespace TDS_Server_DB.Entity
 {
-    public partial class TDSNewContext : DbContext
+    public partial class TDSDbContext : DbContext
     {
         public static bool IsConfigured { get; private set; }
 
         private static string _connectionString;
 
-        public TDSNewContext(string connectionString)
+        public TDSDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public TDSNewContext()
+        public TDSDbContext()
         {
         }
 
-        public TDSNewContext(DbContextOptions<TDSNewContext> options)
+        public TDSDbContext(DbContextOptions<TDSDbContext> options)
             : base(options)
         {
         }
 
-        static TDSNewContext()
+        static TDSDbContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EPlayerRelation>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponHash>();

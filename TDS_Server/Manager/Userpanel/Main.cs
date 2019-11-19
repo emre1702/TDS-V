@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Userpanel
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)dataType, json);
         }
 
-        public static void Init(TDSNewContext dbContext)
+        public static void Init(TDSDbContext dbContext)
         {
             Rules.LoadRules(dbContext);
             FAQs.LoadFAQs(dbContext);

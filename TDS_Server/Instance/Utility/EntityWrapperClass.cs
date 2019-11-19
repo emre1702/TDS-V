@@ -7,27 +7,27 @@ namespace TDS_Server.Instance.Utility
 {
     abstract class EntityWrapperClass
     {
-        protected TDSNewContext DbContext
+        protected TDSDbContext DbContext
         {
             get
             {
                 if (_dbContext is null)
-                    _dbContext = new TDSNewContext();
+                    _dbContext = new TDSDbContext();
                 return _dbContext;
             }
             set => _dbContext = value;
         }
 
-        private TDSNewContext? _dbContext;
+        private TDSDbContext? _dbContext;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
         private bool _usingDBContext;
 
         public void InitDbContext()
         {
-            _dbContext = new TDSNewContext();
+            _dbContext = new TDSDbContext();
         }
 
-        public async Task ExecuteForDBAsync(Func<TDSNewContext, Task> action)
+        public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action)
         {
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)
@@ -50,7 +50,7 @@ namespace TDS_Server.Instance.Utility
             }
         }
 
-        public async Task<T> ExecuteForDBAsync<T>(Func<TDSNewContext, Task<T>> action)
+        public async Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action)
         {
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)
@@ -73,7 +73,7 @@ namespace TDS_Server.Instance.Utility
             }
         }
 
-        public async Task ExecuteForDB(Action<TDSNewContext> action)
+        public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
             bool wasInDBContextBefore = _usingDBContext;
             if (!wasInDBContextBefore)

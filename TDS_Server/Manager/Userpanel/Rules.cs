@@ -10,7 +10,7 @@ namespace TDS_Server.Manager.Userpanel
     {
         private static string _rulesJson = string.Empty;
 
-        public static void LoadRules(TDSNewContext context)
+        public static void LoadRules(TDSDbContext context)
         {
             var rules = context.Rules.Include(r => r.RuleTexts).ToList();
             var sendRules = rules.Select(r => new {

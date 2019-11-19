@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Userpanel
     {
         public static string AdminQuestions { get; set; } = string.Empty;
 
-        public static void LoadAdminQuestions(TDSNewContext dbContext)
+        public static void LoadAdminQuestions(TDSDbContext dbContext)
         {
             var list = dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new 
             {
@@ -91,7 +91,7 @@ namespace TDS_Server.Manager.Userpanel
         {
             var answers = JsonConvert.DeserializeObject<Dictionary<int, string>>(answersJson);
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var application = new Applications
             {
@@ -117,7 +117,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async void AcceptInvitation(TDSPlayer player, int invitationId)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var invitation = await dbContext.ApplicationInvitations
                 .Include(i => i.Admin)
@@ -159,7 +159,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async void RejectInvitation(TDSPlayer player, int invitationId)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var invitation = await dbContext.ApplicationInvitations
                 .Include(i => i.Admin)
@@ -200,7 +200,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task DeleteTooLongClosedApplications()
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var apps = await dbContext.Applications
                 .Where(a => a.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)

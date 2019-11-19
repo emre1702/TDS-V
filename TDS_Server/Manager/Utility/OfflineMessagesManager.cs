@@ -19,14 +19,14 @@ namespace TDS_Server.Manager.Utility
                 SourceId = sourceid,
                 Message = message
             };
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             dbContext.Add(msg);
             await dbContext.SaveChangesAsync();
         }
 
         public static async void CheckOfflineMessages(TDSPlayer player)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             int amountnewentries = await dbContext.Offlinemessages
                 .Where(msg => player.Entity != null && msg.SourceId == player.Entity.Id && !msg.Seen)
                 .AsNoTracking()

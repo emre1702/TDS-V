@@ -12,7 +12,7 @@ using TDS_Server_DB.Entity;
 
 namespace TDS_Server_DB.Migrations
 {
-    [DbContext(typeof(TDSNewContext))]
+    [DbContext(typeof(TDSDbContext))]
     partial class TDSNewContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

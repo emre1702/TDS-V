@@ -14,13 +14,13 @@ namespace TDS_Server.Manager.Stats
     class ServerDailyStatsManager
     {
         #nullable disable warnings
-        public static TDSNewContext DbContext { get; private set; }
+        public static TDSDbContext DbContext { get; private set; }
         public static ServerDailyStats Stats { get; private set; }
         #nullable restore warnings
 
         public static void Init()
         {
-            DbContext = new TDSNewContext();
+            DbContext = new TDSDbContext();
             Stats = DbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
             if (Stats is null)
             {

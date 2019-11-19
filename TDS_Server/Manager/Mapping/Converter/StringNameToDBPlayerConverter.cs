@@ -12,7 +12,7 @@ namespace TDS_Server.Manager.Mapping.Converter
         {
             if (name[0] == '@')
                 name = name.Substring(1);
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             Players? ret = await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false);
             return ret;
         }

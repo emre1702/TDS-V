@@ -33,7 +33,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, TDSPlayer? forPlayer = null)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             var data = await dbContext.Players

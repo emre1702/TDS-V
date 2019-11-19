@@ -40,7 +40,7 @@ namespace TDS_Server.Manager.Utility
                 SettingsManager.LoadLocal();
                 ClothesManager.Init();
 
-                using var dbcontext = new TDSNewContext(SettingsManager.ConnectionString);
+                using var dbcontext = new TDSDbContext(SettingsManager.ConnectionString);
                 dbcontext.Database.Migrate();
                 var connection = (NpgsqlConnection)dbcontext.Database.GetDbConnection();
                 connection.Open();

@@ -9,7 +9,7 @@ namespace TDS_Server.Instance.GameModes
     {
         public Normal(Arena lobby, MapDto map) : base(lobby, map) { }
 
-        public static void Init(TDSNewContext dbContext)
+        public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Select(w => w.Hash)

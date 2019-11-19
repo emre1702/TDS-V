@@ -21,7 +21,7 @@ namespace TDS_Server.Manager.Player
     {
         public static async void LoginPlayer(Client player, int id, string password)
         {
-            while (!TDSNewContext.IsConfigured)
+            while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);
             TDSPlayer character = player.GetChar();
 

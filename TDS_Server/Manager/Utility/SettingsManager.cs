@@ -52,7 +52,7 @@ namespace TDS_Server.Manager.Utility
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
         }
 
-        public static async Task Load(TDSNewContext dbcontext)
+        public static async Task Load(TDSDbContext dbcontext)
         {
             ServerSettings = await dbcontext.ServerSettings.SingleAsync();
 

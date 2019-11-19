@@ -44,7 +44,7 @@ namespace TDS_Server.Manager.Commands
         // Without implicit types it's much faster but you can only use Methods with signature Method([defaultParams]) or Method([defaultParams], object[] args)
         // private const bool UseImplicitTypes = true;
 
-        public static async Task LoadCommands(TDSNewContext dbcontext)
+        public static async Task LoadCommands(TDSDbContext dbcontext)
         {
             foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).ToListAsync())
             {

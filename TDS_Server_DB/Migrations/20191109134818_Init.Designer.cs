@@ -13,7 +13,7 @@ using TDS_Server_DB.Entity;
 
 namespace TDS_Server_DB.Migrations
 {
-    [DbContext(typeof(TDSNewContext))]
+    [DbContext(typeof(TDSDbContext))]
     [Migration("20191109134818_Init")]
     partial class Init
     {

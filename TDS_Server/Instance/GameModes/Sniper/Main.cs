@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.GameModes
     {
         public Sniper(Arena lobby, MapDto map) : base(lobby, map) { }
 
-        public static void Init(TDSNewContext dbContext)
+        public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Where(w => w.Type == TDS_Common.Enum.EWeaponType.SniperRifle)

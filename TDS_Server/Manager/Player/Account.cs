@@ -128,7 +128,7 @@ namespace TDS_Server.Manager.Player
             if (!HandlePlayerBan(player, ban))
                 return;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
             if (playerIDName is null)
             {
@@ -168,7 +168,7 @@ namespace TDS_Server.Manager.Player
         {
             OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
-            using var dbcontext = new TDSNewContext();
+            using var dbcontext = new TDSDbContext();
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
@@ -196,7 +196,7 @@ namespace TDS_Server.Manager.Player
         {
             OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
-            using var dbcontext = new TDSNewContext();
+            using var dbcontext = new TDSDbContext();
             target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 

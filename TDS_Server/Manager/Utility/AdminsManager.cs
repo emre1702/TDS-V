@@ -16,7 +16,7 @@ namespace TDS_Server.Manager.Utility
     {
         public static Dictionary<short, AdminLevelDto> AdminLevels = new Dictionary<short, AdminLevelDto>();
 
-        public static async Task Init(TDSNewContext dbcontext)
+        public static async Task Init(TDSDbContext dbcontext)
         {
             AdminLevels = await dbcontext.AdminLevels
                 .OrderBy(lvl => lvl.Level)

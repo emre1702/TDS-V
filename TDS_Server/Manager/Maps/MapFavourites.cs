@@ -17,7 +17,7 @@ namespace TDS_Server.Manager.Maps
         {
             if (player.Entity is null)
                 return;
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             List<int> mapIDs = dbContext.PlayerMapFavourites
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
@@ -32,7 +32,7 @@ namespace TDS_Server.Manager.Maps
             if (entity is null)
                 return;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             PlayerMapFavourites? favorite = await dbContext.PlayerMapFavourites.FindAsync(entity.Id, mapId);
 
             #region Add Favourite

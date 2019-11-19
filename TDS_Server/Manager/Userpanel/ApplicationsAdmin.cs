@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Userpanel
                 if (player.AdminLevel.Level == (short)EAdminLevel.User)
                     return null;
 
-                using var dbContext = new TDSNewContext();
+                using var dbContext = new TDSDbContext();
 
                 var apps = await dbContext.Applications
                     .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(SettingsManager.ServerSettings.CloseApplicationAfterDays))
@@ -63,7 +63,7 @@ namespace TDS_Server.Manager.Userpanel
             if (player.AdminLevel.Level == (short)EAdminLevel.User)
                 return;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             int creatorId = await dbContext.Applications              
                 .Where(a => a.Id == applicationId)
@@ -107,7 +107,7 @@ namespace TDS_Server.Manager.Userpanel
             if (!(args[1] is string message))
                 return null;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var invitation = new ApplicationInvitations
             {

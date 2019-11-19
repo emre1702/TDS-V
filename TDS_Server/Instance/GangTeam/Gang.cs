@@ -60,7 +60,7 @@ namespace TDS_Server.Instance.GangTeam
             return NoneRank;
         }
 
-        public static Task LoadAll(TDSNewContext dbContext)
+        public static Task LoadAll(TDSDbContext dbContext)
         {
             return dbContext.Gangs
                 .Include(g => g.Members)

@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.Utility
 
         public Task SetDefended()
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             dbContext.Attach(Entity);
 
             ++Entity.DefendCount;
@@ -65,7 +65,7 @@ namespace TDS_Server.Instance.Utility
             }
             Owner = newOwner;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
             dbContext.Attach(Entity);
 
             Entity.OwnerGangId = newOwner.Entity.Id;

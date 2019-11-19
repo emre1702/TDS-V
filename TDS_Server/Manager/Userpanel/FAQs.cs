@@ -16,7 +16,7 @@ namespace TDS_Server.Manager.Userpanel
         };
 
 
-        public static void LoadFAQs(TDSNewContext dbContext)
+        public static void LoadFAQs(TDSDbContext dbContext)
         {
             var allFAQs = dbContext.FAQs.ToList();
 

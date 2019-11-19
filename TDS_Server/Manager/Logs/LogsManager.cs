@@ -8,7 +8,7 @@ namespace TDS_Server.Manager.Logs
 {
     static class LogsManager
     {
-        private static readonly TDSNewContext _dbContext;
+        private static readonly TDSDbContext _dbContext;
 
         private static readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
         private static bool _usingDBContext;
@@ -17,7 +17,7 @@ namespace TDS_Server.Manager.Logs
         static LogsManager()
 #pragma warning restore CA1810 // Initialize reference type static fields inline
         {
-            _dbContext = new TDSNewContext();
+            _dbContext = new TDSDbContext();
         }
 
         public static async Task Save()

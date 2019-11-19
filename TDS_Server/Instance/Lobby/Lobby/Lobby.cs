@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.Lobby
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
-        private readonly TDSNewContext _dbContext;
+        private readonly TDSDbContext _dbContext;
         public readonly Lobbies LobbyEntity;
 
         public int Id => LobbyEntity.Id;
@@ -38,7 +38,7 @@ namespace TDS_Server.Instance.Lobby
 
         public Lobby(Lobbies entity)
         {
-            _dbContext = new TDSNewContext();
+            _dbContext = new TDSDbContext();
             LobbyEntity = entity;
 
             _dbContext.Attach(entity);

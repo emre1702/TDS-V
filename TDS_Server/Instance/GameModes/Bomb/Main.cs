@@ -19,7 +19,7 @@ namespace TDS_Server.Instance.GameModes
             _counterTerroristTeam = arena.Teams[1];
         }
 
-        public static void Init(TDSNewContext dbContext)
+        public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Select(w => w.Hash)

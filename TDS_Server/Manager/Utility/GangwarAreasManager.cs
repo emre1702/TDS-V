@@ -15,7 +15,7 @@ namespace TDS_Server.Manager.Utility
             return GangwarAreas.FirstOrDefault(a => a.Entity.MapId == id);
         }
 
-        public static void LoadGangwarAreas(TDSNewContext dbContext)
+        public static void LoadGangwarAreas(TDSDbContext dbContext)
         {
             var entities = dbContext.GangwarAreas.Include(a => a.OwnerGang).ToList();
             foreach (var entity in entities)

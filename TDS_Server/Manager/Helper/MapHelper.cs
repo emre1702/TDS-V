@@ -19,7 +19,7 @@ namespace TDS_Server.Manager.Helper
             map.SyncedData.Type = (EMapType) (int)map.Info.Type;
         }
 
-        public static void LoadMapRatings(this MapDto map, TDSNewContext dbContext)
+        public static void LoadMapRatings(this MapDto map, TDSDbContext dbContext)
         {
             map.Ratings = dbContext.PlayerMapRatings.Where(m => m.MapId == map.SyncedData.Id).ToList();
             map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;

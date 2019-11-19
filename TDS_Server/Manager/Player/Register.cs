@@ -15,9 +15,9 @@ namespace TDS_Server.Manager.Player
     {
         public static async void RegisterPlayer(Client player, string username, string password, string? email)
         {
-            while (!TDSNewContext.IsConfigured)
+            while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);
-            using TDSNewContext dbContext = new TDSNewContext();
+            using TDSDbContext dbContext = new TDSDbContext();
             if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                 email = null;
             if (int.TryParse(username, out int result)) 

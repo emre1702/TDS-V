@@ -44,7 +44,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task<string?> GetSupportRequests(TDSPlayer player)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var data = await dbContext.SupportRequests
                 .Include(r => r.Author)
@@ -73,7 +73,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task GetSupportRequestData(TDSPlayer player, int requestId)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var data = await dbContext.SupportRequests
                 .Include(r => r.Messages)
@@ -140,7 +140,7 @@ namespace TDS_Server.Manager.Userpanel
                     Type = request.Type
                 };
 
-                using var dbContext = new TDSNewContext();
+                using var dbContext = new TDSDbContext();
                 dbContext.SupportRequests.Add(requestEntity);
 
                 await dbContext.SaveChangesAsync();   
@@ -155,7 +155,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task SendMessage(TDSPlayer player, int requestId, string message)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var request = await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId);
             if (request is null) 
@@ -193,7 +193,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task SetSupportRequestClosed(TDSPlayer player, int requestId, bool closed)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var request = await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId);
             if (request is null)
@@ -234,7 +234,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task DeleteTooLongClosedRequests()
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var deleteAfterDays = SettingsManager.ServerSettings.DeleteRequestsDaysAfterClose;
             var requests = await dbContext.SupportRequests.Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();

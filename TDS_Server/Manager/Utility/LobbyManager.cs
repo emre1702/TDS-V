@@ -40,7 +40,7 @@ namespace TDS_Server.Manager.Utility
         private static GangLobby? _gangLobby;
 
 
-        public static async Task LoadAllLobbies(TDSNewContext dbcontext)
+        public static async Task LoadAllLobbies(TDSDbContext dbcontext)
         {
             dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             var temporaryLobbies = await dbcontext.Lobbies.Where(l => l.IsTemporary).ToListAsync();

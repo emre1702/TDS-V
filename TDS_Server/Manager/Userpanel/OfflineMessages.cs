@@ -17,7 +17,7 @@ namespace TDS_Server.Manager.Userpanel
     {
         public static async Task<string?> GetData(TDSPlayer player)
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var offlineMessages = await dbContext.Offlinemessages
                 .Where(o => o.TargetId == player.Entity!.Id)
@@ -60,7 +60,7 @@ namespace TDS_Server.Manager.Userpanel
             if (message is null)
                 return null;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var offlineMessage = await dbContext.Offlinemessages.AsNoTracking().FirstOrDefaultAsync(o => o.Id == offlineMessageID);
             if (offlineMessage is null)
@@ -99,7 +99,7 @@ namespace TDS_Server.Manager.Userpanel
             if (message is null)
                 return false;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var newOfflineMessage = new Offlinemessages
             {
@@ -120,7 +120,7 @@ namespace TDS_Server.Manager.Userpanel
             if ((offlineMessageId = Utils.GetInt(args[0])) is null)
                 return null;
 
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId);
             if (offlineMessage is null)
@@ -134,7 +134,7 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task DeleteOldMessages()
         {
-            using var dbContext = new TDSNewContext();
+            using var dbContext = new TDSDbContext();
 
             var deleteAfterDays = SettingsManager.ServerSettings.DeleteOfflineMessagesAfterDays;
             var list = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
