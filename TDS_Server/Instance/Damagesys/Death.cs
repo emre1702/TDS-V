@@ -41,7 +41,7 @@ namespace TDS_Server.Instance
             // Assist //
             CheckForAssist(player, killer.Client);
 
-            if (player.CurrentLobby?.SavePlayerLobbyStats == true)
+            if (player.CurrentLobby?.SavePlayerLobbyStats == true && player.CurrentLobby?.IsOfficial == true)
             {
                 KillLogsManager.Log(player, killer, weapon);
             }
