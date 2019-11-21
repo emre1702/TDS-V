@@ -134,5 +134,28 @@ namespace TDS_Server.Manager.Logs
                 }
             }
         }
+
+        public static async void AddLog(LogKills log)
+        {
+            bool wasInDBContextBefore = _usingDBContext;
+            if (!wasInDBContextBefore)
+            {
+                await _dbContextSemaphore.WaitAsync();
+                _usingDBContext = true;
+            }
+
+            try
+            {
+                _dbContext.LogKills.Add(log);
+            }
+            finally
+            {
+                if (!wasInDBContextBefore)
+                {
+                    _dbContextSemaphore.Release();
+                    _usingDBContext = false;
+                }
+            }
+        }
     }
 }

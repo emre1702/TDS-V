@@ -2,6 +2,7 @@ using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 
@@ -39,6 +40,12 @@ namespace TDS_Server.Instance
 
             // Assist //
             CheckForAssist(player, killer.Client);
+
+            if (player.CurrentLobby?.SavePlayerLobbyStats == true)
+            {
+                KillLogsManager.Log(player, killer, weapon);
+            }
+            
         }
 
         public TDSPlayer GetKiller(TDSPlayer player, Client? possiblekiller)

@@ -80,6 +80,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<LogAdmins> LogAdmins { get; set; }
         public virtual DbSet<LogChats> LogChats { get; set; }
         public virtual DbSet<LogErrors> LogErrors { get; set; }
+        public virtual DbSet<LogKills> LogKills { get; set; }
         public virtual DbSet<LogRests> LogRests { get; set; }
         public virtual DbSet<Maps> Maps { get; set; }
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
@@ -638,6 +639,17 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.Info).IsRequired();
+
+                entity.Property(e => e.Timestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+            });
+
+            modelBuilder.Entity<LogKills>(entity =>
+            {
+                entity.ToTable("log_kills");
+
+                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
