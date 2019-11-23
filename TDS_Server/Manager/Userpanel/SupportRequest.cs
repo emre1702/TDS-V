@@ -1,12 +1,13 @@
 ﻿using GTANetworkAPI;
+using MessagePack;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum.Userpanel;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Logs;
@@ -68,7 +69,7 @@ namespace TDS_Server.Manager.Userpanel
 
             _inSupportRequestsList.Add(player);
 
-            return JsonConvert.SerializeObject(data);
+            return Serializer.ToBrowser(data);
         }
 
         public static async Task GetSupportRequestData(TDSPlayer player, int requestId)
@@ -112,14 +113,14 @@ namespace TDS_Server.Manager.Userpanel
                 _inSupportRequest[data.ID] = new HashSet<TDSPlayer>();
             _inSupportRequest[data.ID].Add(player);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.GetSupportRequestData, JsonConvert.SerializeObject(data)); 
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.GetSupportRequestData, Serializer.ToBrowser(data)); 
         }
 
         public static async Task SendRequest(TDSPlayer player, string json)
         {
             try
             {
-                var request = JsonConvert.DeserializeObject<SupportRequestData>(json);
+                var request = Serializer.FromBrowser<SupportRequestData>(json);
                 if (request is null)
                     return;
 
@@ -178,7 +179,7 @@ namespace TDS_Server.Manager.Userpanel
             if (!_inSupportRequest.ContainsKey(requestId))
                 return;
 
-            string messageJson = JsonConvert.SerializeObject(new 
+            string messageJson = Serializer.ToBrowser(new SupportRequestMessage
             {
                 Author = player.Client.Name,
                 Message = messageEntity.Text,
@@ -245,42 +246,71 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
+        [MessagePackObject]
         private class SupportRequestsListData
         {
+            [Key(0)]
             public int ID { get; set; }
+            [Key(1)]
             public string PlayerName { get; set; } = string.Empty;
+            [Key(2)]
             public string CreateTime { get; set; } = string.Empty;
+            [Key(3)]
             public ESupportType Type { get; set; }
+            [Key(4)]
             public string Title { get; set; } = string.Empty;
+            [Key(5)]
             public bool Closed { get; set; }
 
-            [JsonIgnore]
+            [IgnoreMember]
             public DateTime CreateTimeDate { get; set; }
         }
 
+        [MessagePackObject]
         private class SupportRequestData
         {
+            [Key(0)]
             public int ID { get; set; }
+            [Key(1)]
             public ESupportType Type { get; set; }
+            [Key(2)]
             public string Title { get; set; } = string.Empty;
+            [Key(3)]
             public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
+            [Key(4)]
             public int AtleastAdminLevel { get; set; }
+            [Key(5)]
             public bool Closed { get; set; }
 
-            [JsonIgnore]
+            [IgnoreMember]
             public DateTime CreateTimeDate { get; set; }
-            [JsonIgnore]
+            [IgnoreMember]
             public int AuthorId { get; set; }
         }
 
+        [MessagePackObject]
         private class SupportRequestMessageData
         {
+            [Key(0)]
             public string Author { get; set; } = string.Empty;
+            [Key(1)]
             public string Message { get; set; } = string.Empty;
+            [Key(2)]
             public string CreateTime { get; set; } = string.Empty;
 
-            [JsonIgnore]
+            [IgnoreMember]
             public DateTime CreateTimeDate { get; set; }
+        }
+
+        [MessagePackObject]
+        private class SupportRequestMessage
+        {
+            [Key(0)]
+            public string? Author { get; set; }
+            [Key(1)]
+            public string? Message { get; set; }
+            [Key(2)]
+            public string? CreateTime { get; set; }
         }
     }
 }

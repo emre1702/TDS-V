@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using RAGE.Ui;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.Text;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -25,7 +23,7 @@ namespace TDS_Client.Manager.Browser.Angular
                     else
                         strBuilder.Append(", undefined");
                 else if (!arg.GetType().IsValueType)
-                    strBuilder.Append($", `{JsonConvert.SerializeObject(arg)}`");
+                    strBuilder.Append($", `{Serializer.ToBrowser(arg)}`");
                 else if (arg is char)
                     strBuilder.Append($", '{arg}'");
                 else if (arg is bool b)

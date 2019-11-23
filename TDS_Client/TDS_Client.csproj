@@ -32,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\RAGEMP\dotnet\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="MessagePack">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="rage-sharp">
       <HintPath>C:\RAGEMP\dotnet\rage-sharp.dll</HintPath>

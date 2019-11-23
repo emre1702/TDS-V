@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Sync
         {
             if (!lobby.IsOfficial && lobby.LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
-                string json = JsonConvert.SerializeObject(GetCustomLobbyData(lobby));
+                string json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
                 for (int i = _playerInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
                     TDSPlayer player = _playerInCustomLobbyMenu[i];
@@ -65,7 +65,7 @@ namespace TDS_Server.Manager.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
-            player.Client.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, JsonConvert.SerializeObject(lobbyDatas));
+            player.Client.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, Serializer.ToBrowser(lobbyDatas));
         }
 
         public static void RemovePlayer(TDSPlayer player)

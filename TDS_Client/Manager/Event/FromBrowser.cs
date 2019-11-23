@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE;
+﻿using RAGE;
 using RAGE.Game;
 using System;
 using TDS_Client.Default;
@@ -237,7 +236,7 @@ namespace TDS_Client.Manager.Event
             switch (type)
             {
                 case EUserpanelLoadDataType.Settings:
-                    Browser.Angular.Main.LoadUserpanelData((int)type, JsonConvert.SerializeObject(Settings.PlayerSettings));
+                    Browser.Angular.Main.LoadUserpanelData((int)type, Serializer.ToBrowser(Settings.PlayerSettings));
                     break;
                 default:
                     EventsSender.Send(DToServerEvent.LoadUserpanelData, (int)type);

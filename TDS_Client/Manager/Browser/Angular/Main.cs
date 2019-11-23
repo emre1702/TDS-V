@@ -1,13 +1,9 @@
-﻿using Newtonsoft.Json;
-using Player = RAGE.Elements.Player;
-using RAGE.Ui;
+﻿using RAGE.Ui;
 using System.Collections.Generic;
 using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
-using TDS_Client.Enum;
-using System;
 
 namespace TDS_Client.Manager.Browser.Angular
 {

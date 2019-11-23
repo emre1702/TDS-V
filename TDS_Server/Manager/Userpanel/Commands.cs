@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Userpanel.Command;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Userpanel
 {
@@ -55,7 +56,7 @@ namespace TDS_Server.Manager.Userpanel
                 _commandDatas.Add(userpanelCommandData);
             }
 
-            _commandDatasJson = JsonConvert.SerializeObject(_commandDatas);
+            _commandDatasJson = Serializer.ToBrowser(_commandDatas);
         }
 
         public static string GetData(TDSPlayer player)

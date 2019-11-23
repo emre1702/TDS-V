@@ -4,10 +4,11 @@ using TDS_Common.Dto;
 using TDS_Common.Enum;
 using EMapType = TDS_Server.Enum.EMapType;
 using TDS_Server_DB.Entity.Player;
-using Newtonsoft.Json;
 using TDS_Common.Dto.Map;
 using System.Linq;
 using TDS_Common.Dto.Map.Creator;
+using TDS_Server.Manager.Utility;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Dto.Map
 {
@@ -66,17 +67,17 @@ namespace TDS_Server.Dto.Map
                 German = data.Description[(int)ELanguage.German]
             };
 
-            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Length] };
-            for (uint i = 0; i < data.TeamSpawns.Length; ++i)
+            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Count] };
+            for (uint i = 0; i < data.TeamSpawns.Count; ++i)
             {
-                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = i, Spawns = data.TeamSpawns[i].Select(pos => new Position4DDto(pos)).ToArray() };
+                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = i, Spawns = data.TeamSpawns[(int)i].Select(pos => new Position4DDto(pos)).ToArray() };
             }
 
             LimitInfo = new MapLimitInfoDto
             {
                 Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
                 Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
-                EdgesJson = JsonConvert.SerializeObject(data.MapEdges)
+                EdgesJson = Serializer.ToClient(data.MapEdges)
             };
 
             Objects = new MapObjectsListDto
@@ -88,7 +89,7 @@ namespace TDS_Server.Dto.Map
                 BombInfo = new MapBombInfoDto
                 {
                     PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
-                    PlantPositionsJson = JsonConvert.SerializeObject(data.BombPlaces)
+                    PlantPositionsJson = Serializer.ToClient(data.BombPlaces)
                 };
         }
     }

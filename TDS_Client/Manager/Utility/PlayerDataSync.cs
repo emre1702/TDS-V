@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE.Elements;
+﻿using RAGE.Elements;
 using RAGE.Game;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Linq;
 using TDS_Common.Enum;
 using Player = RAGE.Elements.Player;
 using Entities = RAGE.Elements.Entities;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -62,7 +62,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void AppendDictionaryFromServer(string dictJson)
         {
-            var dict = JsonConvert.DeserializeObject<Dictionary<ushort, Dictionary<EPlayerDataKey, object>>>(dictJson);
+            var dict = Serializer.FromServer<Dictionary<ushort, Dictionary<EPlayerDataKey, object>>>(dictJson);
             foreach (var entry in dict)
             {
                 var player = Entities.Players.All.FirstOrDefault(p => p.RemoteId == entry.Key);

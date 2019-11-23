@@ -1,13 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using MessagePack;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Common.Dto
 {
+
+    [MessagePackObject]
     public class EntityCollisionlessInfoDto
     {
+        [Key(0)]
         public int EntityValue;
+        [Key(1)]
         public bool Collisionless;
 
-        [JsonIgnore]
+        [IgnoreMember]
         public string Json;
 
         public EntityCollisionlessInfoDto(int EntityValue, bool Collisionless)
@@ -15,7 +20,7 @@ namespace TDS_Common.Dto
             this.EntityValue = EntityValue;
             this.Collisionless = Collisionless;
 
-            this.Json = JsonConvert.SerializeObject(this);
+            this.Json = Serializer.ToClient(this);
         }
     }
 }

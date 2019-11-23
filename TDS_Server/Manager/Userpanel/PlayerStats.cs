@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using MessagePack;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Manager.Utility;
@@ -22,7 +21,7 @@ namespace TDS_Server.Manager.Userpanel
                 if (player.Entity is null)
                     return null;
                 var stats = await GetPlayerStats(player.Entity.Id, true, player);
-                return JsonConvert.SerializeObject(stats);
+                return Serializer.ToBrowser(stats);
             }
             catch (Exception ex)
             {
@@ -133,24 +132,39 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    #nullable disable
+#nullable disable
+    [MessagePackObject]
     class PlayerUserpanelLobbyStats
     {
+        [Key(0)]
         public string Lobby { get; internal set; }
 
+        [Key(1)]
         public int Kills { get; set; }
+        [Key(2)]
         public int Assists { get; set; }
+        [Key(3)]
         public int Deaths { get; set; }
+        [Key(4)]
         public int Damage { get; set; }
+        [Key(5)]
         public int TotalKills { get; set; }
+        [Key(6)]
         public int TotalAssists { get; set; }
+        [Key(7)]
         public int TotalDeaths { get; set; }
+        [Key(8)]
         public int TotalDamage { get; set; }
+        [Key(9)]
         public int TotalRounds { get; set; }
+        [Key(10)]
         public int MostKillsInARound { get; set; }
+        [Key(11)]
         public int MostDamageInARound { get; set; }
+        [Key(12)]
         public int MostAssistsInARound { get; set; }
 
+        [Key(13)]
         public int TotalMapsBought { get; set; }
 
         public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
@@ -174,56 +188,87 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
+    [MessagePackObject]
     class PlayerUserpanelAdminTargetHistoryDataDto
     {
+        [Key(0)]
         public string Admin { get; internal set; }
+        [Key(1)]
         public string Lobby { get; internal set; }
 
+        [Key(2)]
         public string Type { get; internal set; }
+        [Key(3)]
         public bool AsDonator { get; internal set; }
+        [Key(4)]
         public bool AsVip { get; internal set; }
+        [Key(5)]
         public string Reason { get; internal set; }
+        [Key(6)]
         public string Timestamp { get; internal set; }
+        [Key(7)]
         public string LengthOrEndTime { get; internal set; }
 
-        [JsonIgnore]
+        [IgnoreMember]
         public int SourceId { get; internal set; }
-        [JsonIgnore]
+        [IgnoreMember]
         public int? TargetId { get; internal set; }
-        [JsonIgnore]
+        [IgnoreMember]
         public int? LobbyId { get; internal set; }
-        [JsonIgnore]
+        [IgnoreMember]
         public DateTime TimestampDateTime { get; internal set; }
     }
 
+    [MessagePackObject]
     class PlayerUserpanelStatsDataDto
     {
+        [Key(0)]
         public int Id { get; internal set; }
+        [Key(1)]
         public long TotalMoney { get; internal set; }
+        [Key(2)]
         public double MapsRatedAverage { get; internal set; }
+        [Key(3)]
         public string RegisterTimestamp { get; internal set; }
+        [Key(4)]
         public bool IsVip { get; internal set; }
+        [Key(5)]
         public short AdminLvl { get; internal set; }
+        [Key(6)]
         public short Donation { get; internal set; }
+        [Key(7)]
         public string Name { get; internal set; }
+        [Key(8)]
         public string SCName { get; internal set; }
+        [Key(9)]
         public string Gang { get; internal set; }
+        [Key(10)]
         public int AmountMapsCreated { get; internal set; }
+        [Key(11)]
         public string LastLogin { get; internal set; }
+        [Key(12)]
         public IEnumerable<string> BansInLobbies { get; internal set; }
+        [Key(13)]
         public double CreatedMapsAverageRating { get; internal set; }
+        [Key(14)]
         public int AmountMapsRated { get; internal set; }
+        [Key(15)]
         public int? MuteTime { get; internal set; }
+        [Key(16)]
         public int Money { get; internal set; }
+        [Key(17)]
         public int? VoiceMuteTime { get; internal set; }
+        [Key(18)]
         public int PlayTime { get; internal set; }
 
-        [JsonIgnore]
+        [IgnoreMember]
         public DateTime LastLoginDateTime { get; set; }
-        [JsonIgnore]
+        [IgnoreMember]
         public DateTime RegisterDateTime { get; set; }
 
+        [Key(19)]
         public IEnumerable<PlayerUserpanelLobbyStats> LobbyStats { get; internal set; }
+        [Key(20)]
         public IEnumerable<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }
     }
     #nullable restore

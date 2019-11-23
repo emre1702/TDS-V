@@ -22,7 +22,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="3.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Npgsql" Version="4.1.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
   </ItemGroup>
@@ -34,6 +33,9 @@
   <ItemGroup>
     <Reference Include="Bootstrapper">
       <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="MessagePack">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\MessagePack.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

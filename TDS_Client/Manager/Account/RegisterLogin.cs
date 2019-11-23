@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE.Ui;
+﻿using RAGE.Ui;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
@@ -40,12 +39,12 @@ namespace TDS_Client.Manager.Account
 
         private static void SendDataToBrowser()
         {
-            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{Serializer.ToBrowser(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
 
         public static void SyncLanguage()
         {
-            Browser?.ExecuteJs($"loadLanguage(`{JsonConvert.SerializeObject(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser?.ExecuteJs($"loadLanguage(`{Serializer.ToBrowser(Settings.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
     }
 }

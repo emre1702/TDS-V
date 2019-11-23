@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using TDS_Common.Default;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Server_DB.Entity;
@@ -22,7 +22,7 @@ namespace TDS_Server.Manager.Maps
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, JsonConvert.SerializeObject(mapIDs));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs));
         }
 
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]

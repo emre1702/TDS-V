@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Utility;
-using Newtonsoft.Json;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -54,7 +54,7 @@ namespace TDS_Server.Instance.Lobby
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
             _playerVotes[player.Client] = mapId;
-            SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, JsonConvert.SerializeObject(mapVote));
+            SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, Serializer.ToBrowser(mapVote));
         }
 
         private void AddVoteToMap(Client player, int mapId)
@@ -108,7 +108,7 @@ namespace TDS_Server.Instance.Lobby
         {
             if (_mapVotes.Count > 0)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.MapVotingSyncOnPlayerJoin, JsonConvert.SerializeObject(_mapVotes));
+                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.MapVotingSyncOnPlayerJoin, Serializer.ToBrowser(_mapVotes));
             }
         }
 

@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
+using MessagePack;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
@@ -29,17 +29,18 @@ namespace TDS_Server.Manager.Userpanel
                 e.AnswerType
             }).ToList()
             .GroupBy(g => g.AdminName)
-            .Select(g => new {
+            .Select(g => new AdminQuestionsData 
+            {
                 AdminName = g.Key,
-                Questions = g.Select(q => new
+                Questions = g.Select(q => new AdminQuestionData
                 {
-                    q.ID,
-                    q.Question,
-                    q.AnswerType
+                    ID = q.ID,
+                    Question = q.Question,
+                    AnswerType = q.AnswerType
                 })
             });
 
-            AdminQuestions = JsonConvert.SerializeObject(list);
+            AdminQuestions = Serializer.ToBrowser(list);
         }
 
         public static async Task<string> GetData(TDSPlayer player)
@@ -51,7 +52,7 @@ namespace TDS_Server.Manager.Userpanel
 
             if (application == null)
             {
-                return JsonConvert.SerializeObject(new { AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
             if (application.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
@@ -62,34 +63,38 @@ namespace TDS_Server.Manager.Userpanel
                     return dbContext.SaveChangesAsync();
                 });
 
-                return JsonConvert.SerializeObject(new { AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
             var applicationData = await player.ExecuteForDBAsync((dbContext) => 
                 dbContext.Applications.Where(a => a.PlayerId == player.Entity!.Id)
                     .Include(a => a.Invitations)
                     .ThenInclude(i => i.Admin)
-                    .Select(a => new { a.CreateTime, Invitations = a.Invitations.Select(i => 
-                        new { 
-                            ID = i.Id, 
-                            AdminName = i.Admin.Name, 
-                            AdminSCName = i.Admin.SCName,
-                            i.Message 
-                        }
-                    )})
+                    .Select(a => new ApplicationUserData 
+                    {
+                        CreateDateTime = a.CreateTime, 
+                        Invitations = a.Invitations.Select(i => 
+                            new ApplicationUserInvitationData 
+                            { 
+                                ID = i.Id, 
+                                AdminName = i.Admin.Name, 
+                                AdminSCName = i.Admin.SCName,
+                                Message = i.Message 
+                            })
+                    })
                     .FirstOrDefaultAsync());
 
             if (applicationData == default)
             {
-                return JsonConvert.SerializeObject(new { AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
-            return JsonConvert.SerializeObject(new { CreateTime = player.GetLocalDateTimeString(applicationData.CreateTime), applicationData.Invitations });
+            return Serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
         public static async void CreateApplication(TDSPlayer player, string answersJson)
         {
-            var answers = JsonConvert.DeserializeObject<Dictionary<int, string>>(answersJson);
+            var answers = Serializer.FromBrowser<Dictionary<int, string>>(answersJson);
 
             using var dbContext = new TDSDbContext();
 
@@ -211,6 +216,53 @@ namespace TDS_Server.Manager.Userpanel
                 dbContext.Applications.RemoveRange(apps);
                 await dbContext.SaveChangesAsync();
             }
+        }
+
+        [MessagePackObject]
+        private class ApplicationUserData
+        {
+            [Key(0)]
+            public string? CreateTime { get; set; }
+            [Key(1)]
+            public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
+            [Key(2)]
+            public string AdminQuestions { get; set; } = string.Empty;
+
+            [IgnoreMember]
+            public DateTime CreateDateTime { get; set; }
+        }
+
+        [MessagePackObject]
+        private class ApplicationUserInvitationData
+        {
+            [Key(0)]
+            public int ID { get; set; }
+            [Key(1)]
+            public string? AdminName { get; set; }
+            [Key(2)]
+            public string? AdminSCName { get; set; }
+            [Key(3)]
+            public string? Message { get; set; }
+        }
+
+        [MessagePackObject]
+        private class AdminQuestionsData
+        {
+            [Key(0)]
+            public string AdminName { get; set; } = string.Empty;
+            [Key(1)]
+            public IEnumerable<AdminQuestionData>? Questions { get; set; }
+        }
+
+        [MessagePackObject]
+        private class AdminQuestionData
+        {
+            [Key(0)]
+            public int ID { get; set; }
+            [Key(1)]
+            public string Question { get; set; } = string.Empty;
+            [Key(2)]
+            public EUserpanelAdminQuestionAnswerType AnswerType { get; set; }
         }
     }
 }

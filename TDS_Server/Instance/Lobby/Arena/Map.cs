@@ -1,9 +1,8 @@
 using GTANetworkAPI;
+using MessagePack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using TDS_Common.Dto.Map;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Utility;
@@ -140,7 +139,7 @@ namespace TDS_Server.Instance.Lobby
             // Only choose maps with team-amount same as this lobby got teams (without spectator)
             _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Length - 1).ToList();
 
-            _mapsJson = syncjson ?? JsonConvert.SerializeObject(_maps.Select(m => m.SyncedData).ToList());
+            _mapsJson = syncjson ?? Serializer.ToBrowser(_maps.Select(m => m.SyncedData).ToList());
         }
     }
 }

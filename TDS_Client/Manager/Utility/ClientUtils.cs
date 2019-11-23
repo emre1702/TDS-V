@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE;
+﻿using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
 using System;
@@ -24,7 +23,7 @@ namespace TDS_Client.Manager.Utility
 
         public static List<Player> GetTriggeredPlayersList(string objStr)
         {
-            var list = JsonConvert.DeserializeObject<List<ushort>>(objStr);
+            var list = Serializer.FromServer<List<ushort>>(objStr);
             return list.Select(s => GetPlayerByHandleValue(s)).ToList();
         }
 

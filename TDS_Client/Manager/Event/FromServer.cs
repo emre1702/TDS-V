@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE;
+﻿using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
 using System;
@@ -17,6 +16,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum.Userpanel;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
@@ -124,10 +124,10 @@ namespace TDS_Client.Manager.Event
         private void OnJoinLobbyMethod(object[] args)
         {
             var oldSettings = Settings.GetSyncedLobbySettings();
-            SyncedLobbySettingsDto settings = JsonConvert.DeserializeObject<SyncedLobbySettingsDto>((string)args[0]);
+            SyncedLobbySettingsDto settings = Serializer.FromServer<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
             Players.Load(ClientUtils.GetTriggeredPlayersList((string)args[1]));
-            Team.CurrentLobbyTeams = JsonConvert.DeserializeObject<SyncedTeamDataDto[]>((string)args[2]);
+            Team.CurrentLobbyTeams = Serializer.FromServer<SyncedTeamDataDto[]>((string)args[2]);
             Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
             MainBrowser.HideRoundEndReason();
@@ -171,7 +171,7 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             Browser.Angular.Main.LoadMapForMapCreator(json);
 
-            var mapCreatorData = JsonConvert.DeserializeObject<MapCreateDataDto>(json);
+            var mapCreatorData = Serializer.FromServer<MapCreateDataDto>(json);
             ObjectsManager.LoadMap(mapCreatorData);
         }
 
@@ -188,8 +188,8 @@ namespace TDS_Client.Manager.Event
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = JsonConvert.DeserializeObject<List<Position4DDto>>((string)args[1]);
-            LobbyCam.SetToMapCenter(JsonConvert.DeserializeObject<Vector3>((string)args[2]));
+            var maplimit = Serializer.FromServer<List<Position4DDto>>((string)args[1]);
+            LobbyCam.SetToMapCenter(Serializer.FromServer<Vector3>((string)args[2]));
             Round.InFight = false;
             if (maplimit.Count > 0)
                 MapLimitManager.Load(maplimit);
@@ -316,7 +316,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerGotBombMethod(object[] args)
         {
-            Bomb.LocalPlayerGotBomb(JsonConvert.DeserializeObject<Position4DDto[]>((string)args[0]));
+            Bomb.LocalPlayerGotBomb(Serializer.FromServer<Position4DDto[]>((string)args[0]));
         }
 
         private void OnPlayerPlantedBombMethod(object[] args)
@@ -326,7 +326,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnBombPlantedMethod(object[] args)
         {
-            Bomb.BombPlanted(JsonConvert.DeserializeObject<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (int?)args[2] : null);
+            Bomb.BombPlanted(Serializer.FromServer<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (int?)args[2] : null);
         }
 
         private void OnBombNotOnHandMethod(object[] args)
@@ -389,7 +389,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnAmountInFightSyncMethod(object[] args)
         {
-            SyncedTeamPlayerAmountDto[] list = JsonConvert.DeserializeObject<SyncedTeamPlayerAmountDto[]>((string)args[0]);
+            SyncedTeamPlayerAmountDto[] list = Serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
             foreach (var team in Team.CurrentLobbyTeams)
             {
                 if (!team.IsSpectator)
@@ -439,7 +439,7 @@ namespace TDS_Client.Manager.Event
         private void OnSyncSettingsMethod(object[] args)
         {
             string json = (string)args[0];
-            var settings = JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(json);
+            var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             Settings.LoadUserSettings(settings);
             Browser.Angular.Main.LoadUserpanelData((int)EUserpanelLoadDataType.Settings, json);
         }
@@ -470,7 +470,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnMapListRequestMethod(object[] args)
         {
-            //List<SyncedMapDataDto> maps = JsonConvert.DeserializeObject<List<SyncedMapDataDto>>((string)args[0]);
+            //List<SyncedMapDataDto> maps = Serializer.FromServer<List<SyncedMapDataDto>>((string)args[0]);
             MapManager.LoadMapList((string)args[0]);
         }
 
@@ -504,8 +504,8 @@ namespace TDS_Client.Manager.Event
 
         private void OnRegisterLoginSuccessfulMethod(object[] args)
         {
-            Settings.LoadSyncedSettings(JsonConvert.DeserializeObject<SyncedServerSettingsDto>(args[0].ToString()));
-            Settings.LoadUserSettings(JsonConvert.DeserializeObject<SyncedPlayerSettingsDto>(args[1].ToString()));
+            Settings.LoadSyncedSettings(Serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
+            Settings.LoadUserSettings(Serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
             RegisterLogin.Stop();
             MainBrowser.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, EKeyPressState.Down);
@@ -564,13 +564,13 @@ namespace TDS_Client.Manager.Event
             bool inmainmenu = args.Length == 1;
             if (inmainmenu)
             {
-                var list = JsonConvert.DeserializeObject<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
+                var list = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
                 Scoreboard.AddMainmenuData(list);
             }
             else
             {
-                var playerlist = JsonConvert.DeserializeObject<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
-                var lobbylist = JsonConvert.DeserializeObject<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
+                var playerlist = Serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
+                var lobbylist = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 Scoreboard.AddLobbyData(playerlist, lobbylist);
             }
         }
@@ -587,7 +587,7 @@ namespace TDS_Client.Manager.Event
         private void OnSyncTeamPlayersMethod(object[] args)
         {
             Team.ClearSameTeam();
-            IEnumerable<int> listOfPlayerHandles = JsonConvert.DeserializeObject<IEnumerable<int>>(args[0].ToString());
+            IEnumerable<int> listOfPlayerHandles = Serializer.FromServer<IEnumerable<int>>(args[0].ToString());
             foreach (var handle in listOfPlayerHandles)
             {
                 Player player = Entities.Players.GetAtHandle(handle);

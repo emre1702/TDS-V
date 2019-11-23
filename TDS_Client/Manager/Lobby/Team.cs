@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using RAGE.Elements;
-using RAGE.Game;
-using System;
+﻿using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Enum;
-using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;

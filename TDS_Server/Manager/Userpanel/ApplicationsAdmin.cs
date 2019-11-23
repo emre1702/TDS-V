@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
+using MessagePack;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
@@ -12,7 +12,6 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Rest;
 using TDS_Server_DB.Entity.Userpanel;
 
 namespace TDS_Server.Manager.Userpanel
@@ -41,14 +40,14 @@ namespace TDS_Server.Manager.Userpanel
                     .OrderBy(a => a.ID)
                     .ToListAsync();
 
-                var appsToSend = apps.Select(a => new
+                var appsToSend = apps.Select(a => new AppToSendData
                 {
-                    a.ID,
+                    ID = a.ID,
                     CreateTime = player.GetLocalDateTimeString(a.CreateTime),
-                    a.PlayerName
+                    PlayerName = a.PlayerName
                 });
 
-                return JsonConvert.SerializeObject(appsToSend);
+                return Serializer.ToBrowser(appsToSend);
             }
             catch (Exception ex)
             {
@@ -82,7 +81,7 @@ namespace TDS_Server.Manager.Userpanel
 
             bool alreadyInvited = await dbContext.ApplicationInvitations.AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id);
 
-            string json = JsonConvert.SerializeObject(new 
+            string json = Serializer.ToBrowser(new ApplicationData
             { 
                 ApplicationID = applicationId,
                 Answers = answers, 
@@ -135,6 +134,32 @@ namespace TDS_Server.Manager.Userpanel
             }
 
             return null;
+        }
+
+        [MessagePackObject]
+        private class AppToSendData
+        {
+            [Key(0)]
+            public int ID { get; set; }
+            [Key(1)]
+            public string CreateTime { get; set; } = string.Empty;
+            [Key(2)]
+            public string PlayerName { get; set; } = string.Empty;
+        }
+
+        [MessagePackObject]
+        private class ApplicationData
+        {
+            [Key(0)]
+            public int ApplicationID { get; set; }
+            [Key(1)]
+            public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
+            [Key(2)]
+            public string Questions { get; set; } = string.Empty;
+            [Key(3)]
+            public PlayerUserpanelStatsDataDto? Stats { get; set; }
+            [Key(4)]
+            public bool AlreadyInvited { get; set; }
         }
     }
 }

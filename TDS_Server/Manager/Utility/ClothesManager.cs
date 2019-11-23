@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.ClothesMeta;
 using TDS_Server.Manager.Logs;
 
@@ -91,8 +90,8 @@ namespace TDS_Server.Manager.Utility
             ProcessItems(clothesData.Outfits.OutfitsDataFemale.OutfitsData.Items, _femaleOutfits);
 
             Directory.CreateDirectory("cache");
-            File.WriteAllText("cache/maleClothes.json", JsonConvert.SerializeObject(_maleOutfits));
-            File.WriteAllText("cache/femaleClothes.json", JsonConvert.SerializeObject(_femaleOutfits));
+            File.WriteAllText("cache/maleClothes.json", Serializer.ToClient(_maleOutfits));
+            File.WriteAllText("cache/femaleClothes.json", Serializer.ToClient(_femaleOutfits));
 
             var fileSize = metaFileInfo.Length;
             File.WriteAllText("cache/clothesSizeCache.json", fileSize.ToString());

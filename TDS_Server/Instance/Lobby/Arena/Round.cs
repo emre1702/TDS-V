@@ -1,7 +1,6 @@
 using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto.Map;
@@ -16,6 +15,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server.Dto;
 using System.Linq;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -122,7 +122,7 @@ namespace TDS_Server.Instance.Lobby
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(nextMap.LimitInfo.Center));
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.LimitInfo.Center));
             _currentMap = nextMap;
         }
 
@@ -211,7 +211,7 @@ namespace TDS_Server.Instance.Lobby
                     third.Dimension = Dimension;
                 }
 
-                string json = JsonConvert.SerializeObject(_ranking);
+                string json = Serializer.ToBrowser(_ranking);
                 SendAllPlayerEvent(DToClientEvent.StartRankingShowAfterRound, null, json, winner.Handle.Value, second?.Handle.Value ?? 0, third?.Handle.Value ?? 0);
             } 
             catch (Exception ex)

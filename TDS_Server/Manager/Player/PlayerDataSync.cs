@@ -1,12 +1,13 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.EventManager;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Player
 {
@@ -116,14 +117,14 @@ namespace TDS_Server.Manager.Player
 
         private static void SyncPlayerAllData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, JsonConvert.SerializeObject(_playerHandleDatasAll));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasAll));
         }
 
         private static void SyncPlayerLobbyData(TDSPlayer player, Lobby lobby)
         {
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, JsonConvert.SerializeObject(_playerHandleDatasLobby[lobby.Id]));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
         }
 
         private static void PlayerLeftLobby(TDSPlayer player, Lobby lobby)

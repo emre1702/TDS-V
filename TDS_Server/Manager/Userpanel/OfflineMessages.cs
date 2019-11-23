@@ -1,11 +1,10 @@
 ﻿using GTANetworkAPI;
+using MessagePack;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -37,7 +36,7 @@ namespace TDS_Server.Manager.Userpanel
                 message.CreateTime = player.GetLocalDateTimeString(message.CreateTimeDate);
             }
 
-            string json = JsonConvert.SerializeObject(offlineMessages);
+            string json = Serializer.ToBrowser(offlineMessages);
 
             if (offlineMessages.Any(m => !m.Seen))
             {
@@ -145,14 +144,20 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
+        [MessagePackObject]
         private class OfflineMessage {
+            [Key(0)]
             public int ID { get; set; }
+            [Key(1)]
             public string PlayerName { get; set; } = string.Empty;
+            [Key(2)]
             public string CreateTime { get; set; } = string.Empty;
+            [Key(3)]
             public string Text { get; set; } = string.Empty;
+            [Key(4)]
             public bool Seen { get; set; }
 
-            [JsonIgnore]
+            [IgnoreMember]
             public DateTime CreateTimeDate { get; set; }
         }
     }

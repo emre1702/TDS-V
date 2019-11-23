@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using RAGE;
-using RAGE.Elements;
+﻿using RAGE.Elements;
 using System;
-using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -11,7 +9,7 @@ namespace TDS_Client.Manager.Utility
     {
         public static void AttachEntityToEntityWorkaroundMethod(object[] args)
         {
-            EntityAttachInfoDto info = JsonConvert.DeserializeObject<EntityAttachInfoDto>(args[0].ToString());
+            EntityAttachInfoDto info = Serializer.FromServer<EntityAttachInfoDto>(args[0].ToString());
             info.EntityValue = Entities.Objects.GetAtRemote((ushort)info.EntityValue).Handle;
             info.TargetValue = Entities.Players.GetAtRemote((ushort)info.TargetValue).Handle;
             RAGE.Game.Entity.AttachEntityToEntity(info.EntityValue, info.TargetValue, RAGE.Game.Ped.GetPedBoneIndex(info.TargetValue, info.Bone),
@@ -36,7 +34,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void SetEntityCollisionlessWorkaroundMethod(object[] args)
         {
-            EntityCollisionlessInfoDto info = JsonConvert.DeserializeObject<EntityCollisionlessInfoDto>(args[0].ToString());
+            EntityCollisionlessInfoDto info = Serializer.FromServer<EntityCollisionlessInfoDto>(args[0].ToString());
             GameEntity entity = Entities.Objects.GetAtRemote((ushort)info.EntityValue);
             if (entity == null)
             {

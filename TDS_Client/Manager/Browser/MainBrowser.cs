@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using RAGE.Ui;
+﻿using RAGE.Ui;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
+using TDS_Common.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Browser
@@ -94,7 +94,7 @@ namespace TDS_Client.Manager.Browser
         public static void LoadPlayersForChat(List<Player> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
-            Execute($"loadNamesForChat(`{JsonConvert.SerializeObject(names)}`)");
+            Execute($"loadNamesForChat(`{Serializer.ToBrowser(names)}`)");
         }
 
         public static void AddPlayerForChat(Player player)

@@ -1,8 +1,9 @@
 ﻿using GTANetworkAPI;
-using Newtonsoft.Json;
 using TDS_Common.Default;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.GameModes
 {
@@ -37,7 +38,7 @@ namespace TDS_Server.Instance.GameModes
 
             if (_bombDetonateTimer != null && _bomb != null)
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.BombPlanted,
-                    JsonConvert.SerializeObject(_bomb.Position),
+                    Serializer.ToClient(_bomb.Position),
                     false,
                     _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
         }

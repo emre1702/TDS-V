@@ -1,6 +1,5 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -68,7 +67,7 @@ namespace TDS_Server.Manager.Player
 
 
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
-                JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
+                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings));
 
             PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
             PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);

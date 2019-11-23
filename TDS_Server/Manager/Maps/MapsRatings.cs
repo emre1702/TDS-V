@@ -1,7 +1,7 @@
 using GTANetworkAPI;
 using System.Linq;
-using Newtonsoft.Json;
 using TDS_Common.Default;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Maps
                 return;
 
             var ratingsDict = character.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, JsonConvert.SerializeObject(ratingsDict));
+            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict));
         }
     }
 }

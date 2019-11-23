@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Linq;
-using Newtonsoft.Json;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Helper
@@ -28,8 +28,8 @@ namespace TDS_Server.Manager.Helper
         public static void CreateJsons(this MapDto map)
         {
             if (map.BombInfo != null)
-                map.BombInfo.PlantPositionsJson = JsonConvert.SerializeObject(map.BombInfo.PlantPositions);
-            map.LimitInfo.EdgesJson = JsonConvert.SerializeObject(map.LimitInfo.Edges);
+                map.BombInfo.PlantPositionsJson = Serializer.ToBrowser(map.BombInfo.PlantPositions);
+            map.LimitInfo.EdgesJson = Serializer.ToBrowser(map.LimitInfo.Edges);
         }
 
         public static Position3DDto? GetCenter(this MapDto map)

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -16,7 +15,6 @@ using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
 using TDS_Server.Instance.GameModes;
-using System.Drawing;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Manager.Utility
@@ -132,7 +130,7 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<CustomLobbyData>(dataJson);
+                var data = Serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
                     player.Client.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR);

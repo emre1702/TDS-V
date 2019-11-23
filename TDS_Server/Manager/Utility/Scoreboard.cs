@@ -1,13 +1,13 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -20,7 +20,7 @@ namespace TDS_Server.Manager.Utility
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
             {
                 var entries = GetDataForMainmenu();
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries));
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, Serializer.ToClient(entries));
             }
             else
             {
@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Utility
                 if (entries is null)
                     return;
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.CurrentLobby?.Id);
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, JsonConvert.SerializeObject(entries), JsonConvert.SerializeObject(lobbydata));
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, Serializer.ToClient(entries), Serializer.ToClient(lobbydata));
             }
         }
 

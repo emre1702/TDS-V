@@ -3,18 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Common.Dto.Map;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
-using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
-using Newtonsoft.Json;
 using TDS_Server.Dto.Map;
 using TDS_Server.Dto.TeamChoiceMenu;
+using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -30,7 +28,7 @@ namespace TDS_Server.Instance.Lobby
             var teams = Teams.Select(t =>
                 new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB));
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, JsonConvert.SerializeObject(teams), RoundSettings.MixTeamsAfterRound);
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
             return true;
         }
@@ -153,7 +151,7 @@ namespace TDS_Server.Instance.Lobby
             if (_currentMap != null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, _currentMap.Info.Name,
-                    _currentMap.LimitInfo.EdgesJson, JsonConvert.SerializeObject(_currentMap.LimitInfo.Center));
+                    _currentMap.LimitInfo.EdgesJson, Serializer.ToClient(_currentMap.LimitInfo.Center));
             }
 
             SendPlayerAmountInFightInfo(player.Client);
@@ -175,7 +173,7 @@ namespace TDS_Server.Instance.Lobby
         private void SendPlayerAmountInFightInfo(Client player)
         {
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, JsonConvert.SerializeObject(amounts));
+            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
         }
 
         private void SetPlayerAlive(TDSPlayer player)

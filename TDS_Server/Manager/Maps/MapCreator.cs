@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -40,7 +39,7 @@ namespace TDS_Server.Manager.Maps
                 MapCreateDataDto mapCreateData;
                 try
                 {
-                    mapCreateData = JsonConvert.DeserializeObject<MapCreateDataDto>(mapJson);
+                    mapCreateData = Serializer.FromBrowser<MapCreateDataDto>(mapJson);
                     if (mapCreateData is null)
                         return EMapCreateError.CouldNotDeserialize;
                 }
@@ -173,16 +172,16 @@ namespace TDS_Server.Manager.Maps
                 Id = map.SyncedData.Id,
                 Name = map.SyncedData.Name,
                 Type = (EMapType)(int)map.Info.Type,
-                BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
+                BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToList(),
                 MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++),
-                MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToArray(),
+                MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToList(),
                 Settings = new MapCreateSettings
                 {
                     MinPlayers = map.Info.MinPlayers,
                     MaxPlayers = map.Info.MaxPlayers,
                 },
-                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToArray()).ToArray(),
-                Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToArray(),
+                TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToList()).ToList(),
+                Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToList(),
                 Description = new Dictionary<int, string> 
                 { 
                     [(int)ELanguage.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty, 
@@ -191,7 +190,7 @@ namespace TDS_Server.Manager.Maps
 
             };
 
-            string json = JsonConvert.SerializeObject(mapCreatorData);
+            string json = Serializer.ToBrowser(mapCreatorData);
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapForMapCreator, json);
         }
 
@@ -250,7 +249,7 @@ namespace TDS_Server.Manager.Maps
                 });
             }
 
-            string json = JsonConvert.SerializeObject(data);
+            string json = Serializer.ToBrowser(data);
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 

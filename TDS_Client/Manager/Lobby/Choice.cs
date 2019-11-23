@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using RAGE.Ui;
-using TDS_Client.Manager.Utility;
+﻿using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 
 namespace TDS_Client.Manager.Lobby

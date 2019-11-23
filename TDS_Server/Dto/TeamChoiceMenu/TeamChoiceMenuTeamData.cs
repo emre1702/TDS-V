@@ -1,15 +1,17 @@
-﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MessagePack;
 
 namespace TDS_Server.Dto.TeamChoiceMenu
 {
+    [MessagePackObject]
     class TeamChoiceMenuTeamData
     {
+        [Key(0)]
         public string Name { get; set; }
+        [Key(1)]
         public short Red { get; set; }
+        [Key(2)]
         public short Green { get; set; }
+        [Key(3)]
         public short Blue { get; set; }
 
 
