@@ -10,6 +10,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 using TDS_Server.Manager.EventManager;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Manager.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -52,6 +53,8 @@ namespace TDS_Server.Instance.Lobby
 
             if (teamindex != null)
                 character.Team = Teams[teamindex.Value];
+
+            PlayerDataSync.SetData(character, EPlayerDataKey.IsLobbyOwner, Enum.EPlayerDataSyncMode.Player, IsPlayerLobbyOwner(character));
 
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client.Handle.Value);
 

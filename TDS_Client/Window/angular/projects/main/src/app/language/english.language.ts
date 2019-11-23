@@ -164,6 +164,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Create = "Create";
     Answer = "Answer";
     ToAnswer = "Answer";
+    Buy = "Buy";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

@@ -1,6 +1,7 @@
 export enum DToServerEvent {
     AcceptInvitation = "AcceptInvitation_Browser",
     AnswerToOfflineMessage = "AnswerToOfflineMessage_Browser",
+    BuyMap = "BuyMap_Browser",
     ChooseTeam = "ChooseTeam_Browser",
     DeleteOfflineMessage = "DeleteOfflineMessage_Browser",
     GetSupportRequestData = "GetSupportRequestData_Browser",

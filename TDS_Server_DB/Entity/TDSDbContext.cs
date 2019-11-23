@@ -1140,6 +1140,14 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
                     .IsRequired()
                     .HasDefaultValue(60);
+
+                entity.Property(e => e.MapBuyBasePrice)
+                    .IsRequired()
+                    .HasDefaultValue(1000);
+
+                entity.Property(e => e.MapBuyCounterMultiplicator)
+                    .IsRequired()
+                    .HasDefaultValue(1f);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>

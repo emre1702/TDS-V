@@ -43,6 +43,16 @@ namespace TDS_Client.Manager.Utility
             return _playerRemoteIdDatas[player.RemoteId][key];
         }
 
+        public static T GetData<T>(EPlayerDataKey key, T returnOnEmpty = default)
+        {
+            return GetData<T>(Player.LocalPlayer, key, returnOnEmpty);
+        }
+
+        public static object GetData(EPlayerDataKey key)
+        {
+            return GetData(Player.LocalPlayer, key);
+        }
+
         public static void HandleDataFromServer(object[] args)
         {
             ushort playerRemoteId = Convert.ToUInt16(args[0]);
@@ -93,6 +103,7 @@ namespace TDS_Client.Manager.Utility
             {
                 case EPlayerDataKey.Money:
                     Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
+                    Browser.Angular.Main.SyncMoney((int)obj);
                     break;
                 case EPlayerDataKey.AdminLevel:
                     if (Browser.Angular.Main.Browser == null)
@@ -102,6 +113,9 @@ namespace TDS_Client.Manager.Utility
                     break;
                 case EPlayerDataKey.LoggedIn:
                     TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
+                    break;
+                case EPlayerDataKey.IsLobbyOwner:
+                    Browser.Angular.Main.SyncIsLobbyOwner((bool)obj);
                     break;
             }
         }

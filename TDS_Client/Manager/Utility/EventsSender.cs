@@ -10,6 +10,7 @@ namespace TDS_Client.Manager.Utility
         private static readonly Dictionary<string, CooldownEventDto> _cooldownEventsDict = new Dictionary<string, CooldownEventDto>
         {
             [DToServerEvent.AddRatingToMap] = new CooldownEventDto(1000),
+            [DToServerEvent.BuyMap] = new CooldownEventDto(2000),
             [DToServerEvent.ChatLoaded] = new CooldownEventDto(100000),
             [DToServerEvent.ChooseTeam] = new CooldownEventDto(1000),
             [DToServerEvent.CommandUsed] = new CooldownEventDto(500),

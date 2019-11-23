@@ -151,6 +151,7 @@ export interface Language {
     Create: string;
     Answer: string;
     ToAnswer: string;
+    Buy: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

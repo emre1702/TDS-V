@@ -65,7 +65,9 @@ namespace TDS_Server.Manager.Utility
                 TeamOrderCooldownMs = ServerSettings.TeamOrderCooldownMs,
                 NametagMaxDistance = ServerSettings.NametagMaxDistance,
                 ShowNametagOnlyOnAiming = ServerSettings.ShowNametagOnlyOnAiming,
-                AFKKickAfterSec = ServerSettings.AFKKickAfterSec
+                AFKKickAfterSec = ServerSettings.AFKKickAfterSec,
+                MapBuyBasePrice = ServerSettings.MapBuyBasePrice,
+                MapBuyCounterMultiplicator = ServerSettings.MapBuyCounterMultiplicator
             };
 
             _loadMapOfOthersRightInfos = dbcontext.Commands.First(c => c.Command == "LoadMapOfOthers");

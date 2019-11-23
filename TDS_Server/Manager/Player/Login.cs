@@ -69,8 +69,8 @@ namespace TDS_Server.Manager.Player
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
                 Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings));
 
-            PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
-            PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
+            PlayerDataSync.SetData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
+            PlayerDataSync.SetData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
 
             character.Gang = Gang.GetPlayerGang(character);
             character.GangRank = Gang.GetPlayerGangRank(character);

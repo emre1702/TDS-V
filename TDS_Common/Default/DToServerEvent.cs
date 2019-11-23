@@ -6,6 +6,8 @@
         public const string AddRatingToMap = "AddRatingToMap_Client";
         public const string AnswerToOfflineMessage = "AnswerToOfflineMessage_Browser";
 
+        public const string BuyMap = "BuyMap_Browser";
+
         public const string ChatLoaded = "ChatLoaded_Client";
         public const string ChooseTeam = "ChooseTeam_Browser";
         public const string CommandUsed = "CommandUsed_Client";

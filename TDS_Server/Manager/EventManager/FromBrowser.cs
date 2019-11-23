@@ -1,5 +1,4 @@
 ﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
 using System;
 using TDS_Common.Default;
 using TDS_Server.Instance.Player;
@@ -10,19 +9,26 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Instance.Lobby;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.EventManager
 {
     partial class EventsHandler
     {
-        public delegate Task<object?> FromBrowserMethodDelegate(TDSPlayer player, params object[] args); 
+        public delegate Task<object?> FromBrowserAsyncMethodDelegate(TDSPlayer player, params object[] args);
+        public delegate object? FromBrowserMethodDelegate(TDSPlayer player, params object[] args);
 
-        private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
+        private static readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _AsyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
         {
             [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation,
             [DToServerEvent.AnswerToOfflineMessage] = Userpanel.OfflineMessages.Answer,
             [DToServerEvent.SendOfflineMessage] = Userpanel.OfflineMessages.Send,
             [DToServerEvent.DeleteOfflineMessage] = Userpanel.OfflineMessages.Delete
+        };
+        private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
+        {
+            [DToServerEvent.BuyMap] = BuyMap
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
@@ -35,9 +41,13 @@ namespace TDS_Server.Manager.EventManager
                 if (!player.LoggedIn)
                     return;
 
-                if (_methods.ContainsKey(eventName))
+                if (_AsyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _methods[eventName](player, args);
+                    ret = await _AsyncMethods[eventName](player, args);
+                } 
+                else if (_methods.ContainsKey(eventName))
+                {
+                    ret = _methods[eventName](player, args);
                 }
 
                 if (ret != null)
@@ -137,6 +147,20 @@ namespace TDS_Server.Manager.EventManager
                 return;
 
             await Userpanel.SupportRequest.SendMessage(player, requestId, message);
+        }
+
+        private static object? BuyMap(TDSPlayer player, params object[] args)
+        {
+            if (player.CurrentLobby is null)
+                return null;
+            if (!(player.CurrentLobby is Arena arena))
+                return null;
+            int? mapId;
+            if ((mapId = Utils.GetInt(args[0])) == null)
+                return null;
+
+            arena.BuyMap(player, mapId.Value);
+            return null;
         }
     }
 }

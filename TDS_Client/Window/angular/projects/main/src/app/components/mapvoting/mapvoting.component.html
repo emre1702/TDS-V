@@ -41,7 +41,10 @@
 							favorite
 						</mat-icon>
 					</button>
-					<div id="map-creator-hint" *ngIf="selectedMap.CreatorName">{{ "Creator" | language: settings.Lang }}: {{ selectedMap.CreatorName }}</div>
+                    <div id="map-creator-hint" *ngIf="selectedMap.CreatorName">{{ "Creator" | language: settings.Lang }}: {{ selectedMap.CreatorName }}</div>
+                    <button class="background-color-accent" mat-button (click)="buyMap(selectedMap.Id)" [disabled]="!canBuyMap()">
+                        {{ settings.IsLobbyOwner ? 'Choose' : 'Buy' | language: settings.Lang }}
+                    </button>
 					<button id="vote-button" class="background-color-primary" mat-button (click)="voteForMapId(selectedMap.Id)"
 							[disabled]="voting.votedForMapId == selectedMap.Id">
 						{{ 'Vote' | language: settings.Lang }}

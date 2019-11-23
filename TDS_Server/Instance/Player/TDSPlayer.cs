@@ -36,8 +36,8 @@ namespace TDS_Server.Instance.Player
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 PlayerRelationsPlayer = _entity.PlayerRelationsPlayer.ToList();
                 PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
-                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, _entity.PlayerStats.Money);
-                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.AdminLevel, EPlayerDataSyncMode.All, _entity.AdminLvl);
+                PlayerDataSync.SetData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, _entity.PlayerStats.Money);
+                PlayerDataSync.SetData(this, EPlayerDataKey.AdminLevel, EPlayerDataSyncMode.All, _entity.AdminLvl);
                 LoadTimeZone();
             }
         }
@@ -166,7 +166,7 @@ namespace TDS_Server.Instance.Player
                 if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
-                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, value);
+                PlayerDataSync.SetData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, value);
             }
         }
 
@@ -367,7 +367,7 @@ namespace TDS_Server.Instance.Player
             {
                 Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
                 --Entity.PlayerStats.MapsBoughtCounter;
-                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+                PlayerDataSync.SetData(this, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
             }
         }
 

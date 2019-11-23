@@ -1,13 +1,17 @@
 using GTANetworkAPI;
 using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
+using TDS_Server.Enum;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
+using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby
@@ -17,6 +21,7 @@ namespace TDS_Server.Instance.Lobby
         //private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
         private readonly List<MapVoteDto> _mapVotes = new List<MapVoteDto>();
         private readonly Dictionary<Client, int> _playerVotes = new Dictionary<Client, int>();
+        private MapDto? _boughtMap = null;
 
         public void SendMapsForVoting(Client player)
         {
@@ -28,6 +33,8 @@ namespace TDS_Server.Instance.Lobby
 
         public void MapVote(TDSPlayer player, int mapId)
         {
+            if (_boughtMap is { })
+                return;
             if (_playerVotes.ContainsKey(player.Client) && _playerVotes[player.Client] == mapId)
                 return;
 
@@ -90,6 +97,12 @@ namespace TDS_Server.Instance.Lobby
 
         private MapDto? GetVotedMap()
         {
+            if (_boughtMap is { })
+            {
+                var map = _boughtMap;
+                _boughtMap = null;
+                return map;
+            }
             if (_mapVotes.Count > 0)
             {
                 MapVoteDto wonMap = _mapVotes.MaxBy(vote => vote.AmountVotes).First();
@@ -114,11 +127,37 @@ namespace TDS_Server.Instance.Lobby
 
         public void BuyMap(TDSPlayer player, int mapId)
         {
+            if (player.Entity is null)
+                return;
+            if (player.CurrentLobby is null)
+                return;
+            if (!player.IsLobbyOwner && !player.CurrentLobby.IsOfficial)
+                return;
+
             MapDto? map = MapsLoader.GetMapById(mapId);
             if (map is null)
                 map = MapCreator.GetMapById(mapId);
             if (map is null)
                 return;
+
+            if (!player.IsLobbyOwner)
+            {
+                int price = (int)Math.Ceiling(SettingsManager.ServerSettings.MapBuyBasePrice +
+                            (SettingsManager.ServerSettings.MapBuyCounterMultiplicator * player.Entity.PlayerStats.MapsBoughtCounter));
+                if (price > player.Money)
+                {
+                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_ENOUGH_MONEY);
+                    return;
+                }
+
+                player.GiveMoney(-price);
+                ++player.Entity.PlayerStats.MapsBoughtCounter;
+                PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
+            }
+
+            _boughtMap = map;
+            _mapVotes.Clear();
+            _playerVotes.Clear();
 
             SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Client.Name, map.SyncedData.Name));
             SendAllPlayerEvent(DToClientEvent.StopMapVoting, null);

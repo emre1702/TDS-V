@@ -229,7 +229,7 @@ namespace TDS_Server.Manager.EventManager
                 return;
 
             player.IsCrouched = !player.IsCrouched;
-            PlayerDataSync.SetPlayerSyncData(player, EPlayerDataKey.Crouched, Enum.EPlayerDataSyncMode.Lobby, player.IsCrouched);
+            PlayerDataSync.SetData(player, EPlayerDataKey.Crouched, Enum.EPlayerDataSyncMode.Lobby, player.IsCrouched);
         }
 
         #region Bomb

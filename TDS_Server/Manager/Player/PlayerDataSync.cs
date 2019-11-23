@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Player
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public static void SetPlayerSyncData(TDSPlayer player, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
+        public static void SetData(TDSPlayer player, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
         {
 
             switch (syncMode)
@@ -80,7 +80,7 @@ namespace TDS_Server.Manager.Player
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public static void SetPlayerSyncData(Client client, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
+        public static void SetData(Client client, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
         {
 
             switch (syncMode)

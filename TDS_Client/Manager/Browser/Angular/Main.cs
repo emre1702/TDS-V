@@ -4,6 +4,7 @@ using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
+using System;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -222,6 +223,22 @@ namespace TDS_Client.Manager.Browser.Angular
         {
             Execute(DToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
         }
+
+        public static void SyncMoney(int money)
+        {
+            Execute(DToBrowserEvent.SyncMoney, money);
+        }
+
+        public static void SyncMapPriceData(int mapBuyBasePrice, float mapBuyCounterMultiplicator, int mapBuyCounter)
+        {
+            Execute(DToBrowserEvent.SyncMapPriceData, mapBuyBasePrice, mapBuyCounterMultiplicator, mapBuyCounter);
+        }
+
+        public static void SyncIsLobbyOwner(bool obj)
+        {
+            Execute(DToBrowserEvent.SyncIsLobbyOwner, obj);
+        }
+
 
         public static void FromBrowserEventReturn(string eventName, object ret)
         {

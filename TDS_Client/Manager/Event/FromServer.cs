@@ -85,6 +85,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
             Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
+            Add(DToClientEvent.StopMapVoting, OnStopMapVotingMethod);
             Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
             Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
             Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
@@ -490,6 +491,11 @@ namespace TDS_Client.Manager.Event
         private void OnStopBombPlantDefuseMethod(object[] args)
         {
             Bomb.StopRequestByServer();
+        }
+
+        private void OnStopMapVotingMethod(object[] args)
+        {
+            Browser.Angular.Main.ResetMapVoting();
         }
 
         private void OnStopRoundStatsMethod(object[] args)

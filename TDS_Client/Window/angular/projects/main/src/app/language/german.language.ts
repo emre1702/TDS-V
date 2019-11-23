@@ -174,6 +174,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Create = "Erstellen";
     Answer = "Antwort";
     ToAnswer = "Antworten";
+    Buy = "Kaufen";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

@@ -73,6 +73,8 @@ namespace TDS_Client.Manager.Utility
         public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
         public static int AFKKickAfterSec => _syncedServerSettings.AFKKickAfterSec;
+        public static int MapBuyBasePrice => _syncedServerSettings.MapBuyBasePrice;
+        public static float MapBuyCounterMultiplicator => _syncedServerSettings.MapBuyCounterMultiplicator;
 
         public static float NametagMaxDistance;
         public static bool ShowNametagOnlyOnAiming;

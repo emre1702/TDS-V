@@ -21,5 +21,9 @@ namespace TDS_Common.Dto
         public bool ShowNametagOnlyOnAiming;
         [Key(7)]
         public int AFKKickAfterSec;
+        [Key(8)]
+        public int MapBuyBasePrice;
+        [Key(9)]
+        public float MapBuyCounterMultiplicator;
     }
 }
