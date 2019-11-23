@@ -45,6 +45,7 @@ namespace TDS_Server.Instance.Player
         public Client Client { get; }
         public Lobby.Lobby? CurrentLobby { get; set; }
         public Lobby.Lobby? PreviousLobby { get; set; }
+
         public PlayerLobbyStats? CurrentLobbyStats
         {
             get => _currentLobbyStats;
@@ -354,6 +355,20 @@ namespace TDS_Server.Instance.Player
         public bool HasRelationTo(TDSPlayer target, EPlayerRelation relation)
         {
             return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
+        }
+
+        public void CheckReduceMapBoughtCounter()
+        {
+            if (Entity is null)
+                return;
+            if (Entity.PlayerStats.MapsBoughtCounter <= 1)
+                return;
+            if (DateTime.UtcNow >= Entity.PlayerStats.LastMapsBoughtCounterReduce.AddMinutes(SettingsManager.ServerSettings.ReduceMapsBoughtCounterAfterMinute))
+            {
+                Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
+                --Entity.PlayerStats.MapsBoughtCounter;
+                PlayerDataSync.SetPlayerSyncData(this, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+            }
         }
 
         public void LoadTimeZone()

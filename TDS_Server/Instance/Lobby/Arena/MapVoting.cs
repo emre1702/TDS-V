@@ -111,5 +111,17 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.MapVotingSyncOnPlayerJoin, JsonConvert.SerializeObject(_mapVotes));
             }
         }
+
+        public void BuyMap(TDSPlayer player, int mapId)
+        {
+            MapDto? map = MapsLoader.GetMapById(mapId);
+            if (map is null)
+                map = MapCreator.GetMapById(mapId);
+            if (map is null)
+                return;
+
+            SendAllPlayerLangNotification(lang => lang.MAP_BUY_INFO, player.Client.Name, map.SyncedData.Name);
+            SendAllPlayerEvent(DToClientEvent.StopMapVoting);
+        }
     }
 }

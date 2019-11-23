@@ -921,7 +921,15 @@ namespace TDS_Server_DB.Entity
                     .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.MapsBoughtCounter)
+                    .IsRequired()
+                    .HasDefaultValue(1);
+
                 entity.Property(e => e.LastLoginTimestamp)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+
+                entity.Property(e => e.LastMapsBoughtCounterReduce)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
@@ -1126,6 +1134,10 @@ namespace TDS_Server_DB.Entity
                     .HasDefaultValue(3);
 
                 entity.Property(e => e.GangwarAreaAttackCooldownMinutes)
+                    .IsRequired()
+                    .HasDefaultValue(60);
+
+                entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
                     .IsRequired()
                     .HasDefaultValue(60);
             });

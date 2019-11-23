@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -13,9 +14,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSNewContextModelSnapshot : ModelSnapshot
+    [Migration("20191122172549_PlayerStats_MapsBoughtCounter_Add")]
+    partial class PlayerStats_MapsBoughtCounter_Add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2692,11 +2694,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.Property<DateTime>("LastMapsBoughtCounterReduce")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("timezone('utc', now())");
-
                     b.Property<bool>("LoggedIn")
                         .HasColumnType("boolean");
 
@@ -3881,11 +3878,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("real")
                         .HasDefaultValue(625f);
 
-                    b.Property<int>("ReduceMapsBoughtCounterAfterMinute")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(60);
-
                     b.Property<int>("SaveLogsCooldownMinutes")
                         .HasColumnType("integer");
 
@@ -3935,7 +3927,6 @@ namespace TDS_Server_DB.Migrations
                             MultiplierRankingDamage = 1f,
                             MultiplierRankingKills = 75f,
                             NametagMaxDistance = 80f,
-                            ReduceMapsBoughtCounterAfterMinute = 0,
                             SaveLogsCooldownMinutes = 1,
                             SavePlayerDataCooldownMinutes = 1,
                             SaveSeasonsCooldownMinutes = 1,

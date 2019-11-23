@@ -56,6 +56,7 @@ namespace TDS_Server.Manager.Timer
                     ++player.PlayMinutes;
                     ReduceMuteTime(player);
                     ReduceVoiceMuteTime(player);
+                    player.CheckReduceMapBoughtCounter();
 
                     player.CheckSaveData();
                 }

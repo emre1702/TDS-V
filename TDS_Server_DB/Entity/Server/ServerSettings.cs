@@ -35,5 +35,6 @@
 
         public int MinPlayersOnlineForGangwar { get; set; }
         public int GangwarAreaAttackCooldownMinutes { get; set; }
+        public int ReduceMapsBoughtCounterAfterMinute { get; set; }
     }
 }

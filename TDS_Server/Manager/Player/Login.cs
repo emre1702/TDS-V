@@ -71,6 +71,7 @@ namespace TDS_Server.Manager.Player
                 JsonConvert.SerializeObject(SettingsManager.SyncedSettings), JsonConvert.SerializeObject(character.Entity.PlayerSettings));
 
             PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
+            PlayerDataSync.SetPlayerSyncData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
 
             character.Gang = Gang.GetPlayerGang(character);
             character.GangRank = Gang.GetPlayerGangRank(character);

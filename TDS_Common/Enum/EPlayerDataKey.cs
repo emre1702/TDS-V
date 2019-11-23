@@ -2,6 +2,6 @@
 {
     public enum EPlayerDataKey
     {
-        AdminLevel, Money, LoggedIn, Crouched
+        AdminLevel, Money, LoggedIn, Crouched, MapsBoughtCounter
     }
 }
