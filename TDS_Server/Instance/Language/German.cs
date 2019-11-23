@@ -54,6 +54,7 @@ namespace TDS_Server.Instance.Language
         public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";
         public override string LOBBY_ERROR_REMOVE => "Die Lobby hatte einen Fehler und wurde entfernt. Der/die Entwickler wurde(n) benachrichtigt.";
 
+        public override string MAP_BUY_INFO => "{0} hat die Karte {1} gekauft.";
         public override string MAP_WON_VOTING => "Die Map {0} hat das Voting gewonnen!";
         public override string MUTE_EXPIRED => "Dein Chat Mute ist abgelaufen. Du darfst wieder schreiben.";
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";

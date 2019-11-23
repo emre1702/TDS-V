@@ -53,6 +53,7 @@ namespace TDS_Server.Instance.Language
         public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
         public virtual string LOBBY_ERROR_REMOVE => "The lobby has got an error and got removed. The developer are informed.";
 
+        public virtual string MAP_BUY_INFO => "{0} has bought the map {1}.";
         public virtual string MAP_WON_VOTING => "The map {0} won the voting!";
         public virtual string MUTE_EXPIRED => "The chat mute has expired. You can write again.";
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";

@@ -47,6 +47,7 @@
         string LOBBY_DOESNT_EXIST { get; }
         string LOBBY_ERROR_REMOVE { get; }
 
+        string MAP_BUY_INFO { get; }
         string MAP_WON_VOTING { get; }
         string MUTE_EXPIRED { get; }
         string MUTETIME_INVALID { get; }

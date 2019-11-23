@@ -72,6 +72,7 @@
         public const string StartRankingShowAfterRound = "StartRankingShowAfterRound_Server";
         public const string StartRegisterLogin = "StartRegisterLogin_Server";
         public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
+        public const string StopMapVoting = "StopMapVoting_Server";
         public const string StopRoundStats = "StopRoundStats_Server";
         public const string StopSpectator = "StopSpectator_Server";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";

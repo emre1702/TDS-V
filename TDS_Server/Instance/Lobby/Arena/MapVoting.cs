@@ -120,8 +120,8 @@ namespace TDS_Server.Instance.Lobby
             if (map is null)
                 return;
 
-            SendAllPlayerLangNotification(lang => lang.MAP_BUY_INFO, player.Client.Name, map.SyncedData.Name);
-            SendAllPlayerEvent(DToClientEvent.StopMapVoting);
+            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Client.Name, map.SyncedData.Name));
+            SendAllPlayerEvent(DToClientEvent.StopMapVoting, null);
         }
     }
 }
