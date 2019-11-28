@@ -11,11 +11,31 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Team
     {
-        public static SyncedTeamDataDto[] CurrentLobbyTeams;
+        public static List<SyncedTeamDataDto> CurrentLobbyTeams 
+        { 
+            get => _currentLobbyTeams;
+            set
+            {
+                _currentLobbyTeams = value;
+                if (_currentLobbyTeams != null)
+                {
+                    if (_currentLobbyTeams.Count == 1)
+                    {
+                        Player.LocalPlayer.SetCanAttackFriendly(true, true);
+                    }
+                    else
+                    {
+                        Player.LocalPlayer.SetCanAttackFriendly(false, false);
+                    }
+                    
+                }
+            }
+        }
         private static HashSet<Player> _sameTeamPlayers { get; set; } = new HashSet<Player>();
         public static string CurrentTeamName { get; set; } = "Login/Register";
 
         private static bool _activated;
+        private static List<SyncedTeamDataDto> _currentLobbyTeams;
 
         public static void Init()
         {

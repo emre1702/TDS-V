@@ -85,7 +85,6 @@ namespace TDS_Client.Manager.Utility
 
         public static void Load()
         {
-            Player.LocalPlayer.SetCanAttackFriendly(false, false);
             RAGE.Nametags.Enabled = false;
 
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Flying), 100, false);

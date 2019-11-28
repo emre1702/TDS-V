@@ -128,7 +128,7 @@ namespace TDS_Client.Manager.Event
             SyncedLobbySettingsDto settings = Serializer.FromServer<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
             Players.Load(ClientUtils.GetTriggeredPlayersList((string)args[1]));
-            Team.CurrentLobbyTeams = Serializer.FromServer<SyncedTeamDataDto[]>((string)args[2]);
+            Team.CurrentLobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
             Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
             MainBrowser.HideRoundEndReason();

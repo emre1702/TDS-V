@@ -89,9 +89,9 @@ namespace TDS_Client.Manager.Lobby
         private static void CreateTeamsDisplays()
         {
             var teams = Team.CurrentLobbyTeams;
-            int showamountleft = (int)Math.Ceiling((teams.Length - 1) / 2d);
-            int showamountright = teams.Length - showamountleft - 1;
-            _teamDisplays = new DxTextRectangle[teams.Length - 1];
+            int showamountleft = (int)Math.Ceiling((teams.Count - 1) / 2d);
+            int showamountright = teams.Count - showamountleft - 1;
+            _teamDisplays = new DxTextRectangle[teams.Count - 1];
             for (int i = 0; i < showamountleft; ++i)
             {
                 float x = 0.5f - 0.06f * 0.5f - 0.13f * i - 0.13f * 0.5f;
