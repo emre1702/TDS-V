@@ -69,14 +69,17 @@ namespace TDS_Server.Manager.Commands
         {
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
                 return;
-            if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
+            var lobby = player.CurrentLobby;
+            if (lobby.Type == ELobbyType.MapCreateLobby) 
+                lobby = LobbyManager.MapCreateLobbyDummy;
+            if (!lobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
             if (length == DateTime.MinValue)
-                player.CurrentLobby.UnbanPlayer(player, target, reason);
+                lobby.UnbanPlayer(player, target, reason);
             else if (length == DateTime.MaxValue)
-                player.CurrentLobby.BanPlayer(player, target, null, reason);
+                lobby.BanPlayer(player, target, null, reason);
             else
-                player.CurrentLobby.BanPlayer(player, target, length, reason);
+                lobby.BanPlayer(player, target, length, reason);
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
@@ -86,15 +89,18 @@ namespace TDS_Server.Manager.Commands
         {
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
                 return;
-            if (!player.CurrentLobby.IsOfficial && !cmdinfos.AsLobbyOwner)
+             var lobby = player.CurrentLobby;
+            if (lobby.Type == ELobbyType.MapCreateLobby)
+                lobby = LobbyManager.MapCreateLobbyDummy;
+            if (!lobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
 
             if (length == DateTime.MinValue)
-                player.CurrentLobby.UnbanPlayer(player, dbTarget, reason);
+                lobby.UnbanPlayer(player, dbTarget, reason);
             else if (length == DateTime.MaxValue)
-                player.CurrentLobby.BanPlayer(player, dbTarget, null, reason);
+                lobby.BanPlayer(player, dbTarget, null, reason);
             else
-                player.CurrentLobby.BanPlayer(player, dbTarget, length, reason);
+                lobby.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Lobby_Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
