@@ -1,9 +1,13 @@
 export interface CustomLobbyTeamData {
-  Name: string;
-  Color: string;
-  BlipColor: number;
-  SkinHash: number;
+    /** Name */
+    [0]: string;
+    /** Color */
+    [1]: string;
+    /** BlipColor */
+    [2]: number;
+    /** SkinHash */
+    [3]: number;
 
-  // only in Angular
-  IsReadOnly?: boolean;
+    /** IsReadOnly - only in Angular */
+    [4]: boolean;
 }

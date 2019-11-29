@@ -39,16 +39,16 @@ namespace TDS_Server.Manager.Userpanel
         {
             return _faqsJsonByLanguage[player.LanguageEnum];
         }
+    }
 
-        [MessagePackObject]
-        private class FAQData
-        {
-            [Key(0)]
-            public int Id { get; set; }
-            [Key(1)]
-            public string Question { get; set; } = string.Empty;
-            [Key(2)]
-            public string Answer { get; set; } = string.Empty;
-        }
+    [MessagePackObject]
+    public class FAQData
+    {
+        [Key(0)]
+        public int Id { get; set; }
+        [Key(1)]
+        public string Question { get; set; } = string.Empty;
+        [Key(2)]
+        public string Answer { get; set; } = string.Empty;
     }
 }

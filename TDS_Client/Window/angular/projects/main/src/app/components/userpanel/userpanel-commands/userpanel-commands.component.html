@@ -1,38 +1,42 @@
 <div class="left-content">
     <mat-action-list>
-        <mat-list-item (click)="gotoCommand(command)" class="map-item mat-body" *ngFor="let command of userpanelService.allCommands | userpanelCommandNav: currentNav">
-            {{ command.Command }}
+        <mat-list-item (click)="gotoCommand(command)" class="map-item mat-body"
+        *ngFor="let command of userpanelService.allCommands | userpanelCommandNav: currentNav">
+            {{ command[0] }}
         </mat-list-item>
     </mat-action-list>
 </div>
 <mat-divider vertical></mat-divider>
 <div class="right-content" *ngIf="currentCommand">
     <div>
-        {{ currentCommand.Description[settings.LangValue] }}
+        {{ currentCommand[7][settings.LangValue] }}
     </div>
     <div>
-        <div *ngIf="currentCommand.Syntaxes.length <= 1">{{ 'Usage' | language: settings.Lang }}:</div>
-        <div *ngIf="currentCommand.Syntaxes.length > 1">{{ 'Usages' | language: settings.Lang }}:</div>
-        <div *ngFor="let syntax of currentCommand.Syntaxes">
-            /{{ currentCommand.Command }} 
-            <span *ngFor="let parameter of syntax.Parameters" 
-                [matTooltip]="langPipe.transform(parameter.Type, settings.Lang)"
-            > [{{ parameter.Name | language: settings.Lang }}{{ parameter.DefaultValue != undefined ? ' = ' + parameter.DefaultValue : '' }}]</span>
+        <div *ngIf="currentCommand[5].length <= 1">{{ 'Usage' | language: settings.Lang }}:</div>
+        <div *ngIf="currentCommand[5].length > 1">{{ 'Usages' | language: settings.Lang }}:</div>
+        <div *ngFor="let syntax of currentCommand[5]">
+            /{{ currentCommand[0] }}
+            <span *ngFor="let parameter of syntax[0]"
+                [matTooltip]="langPipe.transform(parameter[1], settings.Lang)">
+                [{{ parameter[0] | language: settings.Lang }}{{ parameter[2] != undefined ? ' = ' + parameter[2] : '' }}]
+            </span>
         </div>
     </div>
     <div>
         <mat-divider></mat-divider>
-        Aliases:<br>{{ currentCommand.Aliases.join(', ') }}
+        Aliases:<br>{{ currentCommand[6].join(', ') }}
         <mat-divider></mat-divider>
     </div>
     <div class="rights-row">
-        <mat-icon [style.visibility]="(currentCommand.MinAdminLevel || currentCommand.MinDonation 
-        || currentCommand.VIPCanUse || currentCommand.LobbyOwnerCanUse) ? 'hidden' : 'visible'">
+        <mat-icon [style.visibility]="(currentCommand[1] || currentCommand[2]
+        || currentCommand[3] || currentCommand[4]) ? 'hidden' : 'visible'">
             group
         </mat-icon>
-        <mat-icon [style.visibility]="currentCommand.MinAdminLevel ? 'visible' : 'hidden'" [matBadge]="currentCommand.MinAdminLevel + ''" matBadgeColor="warn">pan_tool</mat-icon>
+        <mat-icon [style.visibility]="currentCommand[1] ? 'visible' : 'hidden'" [matBadge]="currentCommand[1] + ''" matBadgeColor="warn">
+            pan_tool
+        </mat-icon>
         <!--<mat-icon *ngIf="currentCommand.MinDonation" [matBadge]="currentCommand.MinDonation">monetization_on</mat-icon>-->
-        <mat-icon [style.visibility]="currentCommand.VIPCanUse ? 'visible' : 'hidden'">group_add</mat-icon>
-        <mat-icon [style.visibility]="currentCommand.LobbyOwnerCanUse ? 'visible' : 'hidden'">how_to_reg</mat-icon>
+        <mat-icon [style.visibility]="currentCommand[3] ? 'visible' : 'hidden'">group_add</mat-icon>
+        <mat-icon [style.visibility]="currentCommand[4] ? 'visible' : 'hidden'">how_to_reg</mat-icon>
     </div>
 </div>

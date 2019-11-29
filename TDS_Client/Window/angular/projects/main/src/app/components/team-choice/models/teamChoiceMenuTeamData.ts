@@ -1,6 +1,10 @@
 export interface TeamChoiceMenuTeamData {
-  Name: string;
-  Red: number;
-  Green: number;
-  Blue: number;
+    /** Name */
+    [0]: string;
+    /** Red */
+    [1]: number;
+    /** Green */
+    [2]: number;
+    /** Blue */
+    [3]: number;
 }

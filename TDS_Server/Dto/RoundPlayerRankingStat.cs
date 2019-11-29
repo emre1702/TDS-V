@@ -4,7 +4,7 @@ using TDS_Server.Instance.Player;
 namespace TDS_Server.Dto
 {
     [MessagePackObject]
-    class RoundPlayerRankingStat
+    public class RoundPlayerRankingStat
     {
         [Key(0)]
         public int Place { get; set; }

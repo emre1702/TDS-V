@@ -14,7 +14,7 @@ export interface UserpanelSettingRow {
     min?: number;
     max?: number;
 
-    dataSettingIndex: string;
+    dataSettingIndex: number;
 
     onValueChanged?: () => void;
 }

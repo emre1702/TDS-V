@@ -11,7 +11,18 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
     styleUrls: ['./userpanel-offline-messages.component.scss']
 })
 export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
-    inOfflineMessage: { ID: number, PlayerName: string, CreateTime: string, Text: string, Seen: boolean } = undefined;
+    inOfflineMessage: [
+        /** ID */
+        number,
+        /** PlayerName */
+        string,
+        /** CreateTime */
+        string,
+        /** Text */
+        string,
+        /** Seen */
+        boolean
+    ] = undefined;
     clickedOfflineMessage: number = undefined;
     creatingOfflineMessage = false;
 
@@ -59,7 +70,7 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
         this.offlineMessageFormGroup.get("playerName").setValue('');
         this.offlineMessageFormGroup.get("playerName").clearValidators();
         this.offlineMessageFormGroup.get("playerName").updateValueAndValidity({ onlySelf: true });
-        this.inOfflineMessage = this.userpanelService.offlineMessages.find(o => o.ID == this.clickedOfflineMessage);
+        this.inOfflineMessage = this.userpanelService.offlineMessages.find(o => o[0] == this.clickedOfflineMessage);
         this.changeDetector.detectChanges();
     }
 
@@ -74,7 +85,7 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
             return;
         }
         this.rageConnector.callServer(DToServerEvent.AnswerToOfflineMessage,
-            this.inOfflineMessage.ID,
+            this.inOfflineMessage[0],
             this.offlineMessageFormGroup.get("message").value);
         this.offlineMessageFormGroup.get("message").setValue("");
     }
@@ -93,7 +104,7 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
     }
 
     delete(id: number) {
-        this.userpanelService.offlineMessages = [...this.userpanelService.offlineMessages.filter(o => o.ID !== id)];
+        this.userpanelService.offlineMessages = [...this.userpanelService.offlineMessages.filter(o => o[0] !== id)];
 
         this.rageConnector.callServer(DToServerEvent.DeleteOfflineMessage, id);
     }

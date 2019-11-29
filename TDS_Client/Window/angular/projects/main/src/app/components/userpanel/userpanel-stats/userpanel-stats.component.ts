@@ -3,47 +3,43 @@ import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
-  selector: 'app-userpanel-stats',
-  templateUrl: './userpanel-stats.component.html',
-  styleUrls: ['./userpanel-stats.component.scss']
+    selector: 'app-userpanel-stats',
+    templateUrl: './userpanel-stats.component.html',
+    styleUrls: ['./userpanel-stats.component.scss']
 })
 export class UserpanelStatsComponent implements OnInit, OnDestroy {
 
-  objectKeys = Object.keys;
-  array = Array;
+    objectKeys = Object.keys;
+    array = Array;
 
-  @Input()
-  set stats(value: UserpanelStatsDataDto) {
-    this._stats = value;
-    this.changeDetector.detectChanges();
-  }
-  get stats(): UserpanelStatsDataDto {
-    return this._stats;
-  }
+    @Input()
+    set stats(value: UserpanelStatsDataDto) {
+        this._stats = value;
+        this.changeDetector.detectChanges();
+    }
+    get stats(): UserpanelStatsDataDto {
+        return this._stats;
+    }
 
-  @Input() columns: string[];
+    @Input() columns: string[];
 
-  lobbyStatsColumns: string[] = [
-    "Kills", "Assists", "Deaths", "Damage",
-    "TotalKills", "TotalAssists", "TotalDeaths", "TotalDamage",
-    "TotalRounds",
-    "MostKillsInARound", "MostDamageInARound", "MostAssistsInARound",
-    "TotalMapsBought"
-  ];
+    lobbyStatsColumns: number[] = [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+    ];
 
-  private _stats: UserpanelStatsDataDto;
+    private _stats: UserpanelStatsDataDto;
 
-  constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
+    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
 
-  ngOnInit() {
-    this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-  }
+    ngOnInit() {
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+    }
 
-  ngOnDestroy() {
-    this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
-  }
+    ngOnDestroy() {
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+    }
 
-  private detectChanges() {
-    this.changeDetector.detectChanges();
-  }
+    private detectChanges() {
+        this.changeDetector.detectChanges();
+    }
 }

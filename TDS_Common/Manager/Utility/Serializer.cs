@@ -4,6 +4,7 @@ namespace TDS_Common.Manager.Utility
 {
     public static class Serializer
     {
+        // Seems like LZ4MessagePackSerializer and MessagePackSerializer do the same, dunno what the difference is
 
         public static string ToClient<T>(T obj)
         {

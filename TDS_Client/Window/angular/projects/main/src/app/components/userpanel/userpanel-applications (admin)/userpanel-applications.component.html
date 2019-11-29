@@ -1,9 +1,9 @@
 <mat-action-list *ngIf="!applicationData">
     <button mat-list-item style="text-align: left;"
     *ngFor="let application of userpanelService.applications"
-    (click)="requestApplicationData(application.ID)">
-        <span>{{ application.PlayerName }}</span>
-        <span style="position: absolute; right: 0px;">{{ application.CreateTime }}</span>
+    (click)="requestApplicationData(application[0])">
+        <span>{{ application[2] }}</span>
+        <span style="position: absolute; right: 0px;">{{ application[1] }}</span>
     </button>
 </mat-action-list>
 
@@ -20,7 +20,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <app-userpanel-stats
-                [stats]="applicationData.Stats"
+                [stats]="applicationData[3]"
                 [columns]="applicationStatsColumns">
             </app-userpanel-stats>
         </mat-expansion-panel>
@@ -35,8 +35,8 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <app-userpanel-admin-questions
-                [questions]="applicationData.Questions"
-                [answers]="applicationData.Answers"
+                [questions]="applicationData[2]"
+                [answers]="applicationData[1]"
                 [disabled]="true">
             </app-userpanel-admin-questions>
         </mat-expansion-panel>

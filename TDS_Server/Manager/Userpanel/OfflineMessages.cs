@@ -143,22 +143,23 @@ namespace TDS_Server.Manager.Userpanel
                 await dbContext.SaveChangesAsync();
             }
         }
+    }
 
-        [MessagePackObject]
-        private class OfflineMessage {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public string PlayerName { get; set; } = string.Empty;
-            [Key(2)]
-            public string CreateTime { get; set; } = string.Empty;
-            [Key(3)]
-            public string Text { get; set; } = string.Empty;
-            [Key(4)]
-            public bool Seen { get; set; }
+    [MessagePackObject]
+    public class OfflineMessage
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public string PlayerName { get; set; } = string.Empty;
+        [Key(2)]
+        public string CreateTime { get; set; } = string.Empty;
+        [Key(3)]
+        public string Text { get; set; } = string.Empty;
+        [Key(4)]
+        public bool Seen { get; set; }
 
-            [IgnoreMember]
-            public DateTime CreateTimeDate { get; set; }
-        }
+        [IgnoreMember]
+        public DateTime CreateTimeDate { get; set; }
     }
 }

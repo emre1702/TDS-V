@@ -1,4 +1,6 @@
 export class MapCreateSettings {
-    public MinPlayers = 0;
-    public MaxPlayers = 999;
+    /** MinPlayers */
+    [0] = 0;
+    /** MaxPlayers */
+    [1] = 999;
 }

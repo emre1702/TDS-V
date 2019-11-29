@@ -16,7 +16,7 @@ using TDS_Server_DB.Entity.Userpanel;
 
 namespace TDS_Server.Manager.Userpanel
 {
-    class ApplicationsAdmin
+    static class ApplicationsAdmin
     {
 
         public static async Task<string?> GetData(TDSPlayer player)
@@ -135,31 +135,31 @@ namespace TDS_Server.Manager.Userpanel
 
             return null;
         }
+    }
 
-        [MessagePackObject]
-        private class AppToSendData
-        {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public string CreateTime { get; set; } = string.Empty;
-            [Key(2)]
-            public string PlayerName { get; set; } = string.Empty;
-        }
+    [MessagePackObject]
+    public class AppToSendData
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public string CreateTime { get; set; } = string.Empty;
+        [Key(2)]
+        public string PlayerName { get; set; } = string.Empty;
+    }
 
-        [MessagePackObject]
-        private class ApplicationData
-        {
-            [Key(0)]
-            public int ApplicationID { get; set; }
-            [Key(1)]
-            public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
-            [Key(2)]
-            public string Questions { get; set; } = string.Empty;
-            [Key(3)]
-            public PlayerUserpanelStatsDataDto? Stats { get; set; }
-            [Key(4)]
-            public bool AlreadyInvited { get; set; }
-        }
+    [MessagePackObject]
+    public class ApplicationData
+    {
+        [Key(0)]
+        public int ApplicationID { get; set; }
+        [Key(1)]
+        public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
+        [Key(2)]
+        public string Questions { get; set; } = string.Empty;
+        [Key(3)]
+        public PlayerUserpanelStatsDataDto? Stats { get; set; }
+        [Key(4)]
+        public bool AlreadyInvited { get; set; }
     }
 }

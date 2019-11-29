@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Interface
 {
-    internal interface ILanguage
+    public interface ILanguage
     {
         string ACCOUNT_DOESNT_EXIST { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }

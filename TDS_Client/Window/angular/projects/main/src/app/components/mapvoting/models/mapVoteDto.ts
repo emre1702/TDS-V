@@ -1,5 +1,8 @@
 export class MapVoteDto {
-    public Id: number;
-    public Name: string;
-    public AmountVotes: number;
+    /** Id */
+    [0]: number;
+    /** Name */
+    [1]: string;
+    /** AmountVotes */
+    [2]: number;
 }

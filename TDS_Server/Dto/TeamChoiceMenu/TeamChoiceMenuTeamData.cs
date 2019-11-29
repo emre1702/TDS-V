@@ -3,7 +3,7 @@
 namespace TDS_Server.Dto.TeamChoiceMenu
 {
     [MessagePackObject]
-    class TeamChoiceMenuTeamData
+    public class TeamChoiceMenuTeamData
     {
         [Key(0)]
         public string Name { get; set; }

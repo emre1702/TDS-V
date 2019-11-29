@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace TDS_Server.Dto
 {
     [MessagePackObject]
-    class LoadMapDialogGroupDto
+    public class LoadMapDialogGroupDto
     {
         [Key(0)]
         public string GroupName { get; set; } = string.Empty;

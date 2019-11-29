@@ -4,7 +4,7 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Dto
 {
-    internal class RoundStatsDto
+    public class RoundStatsDto
     {
         private TDSPlayer _player;
         private int _kills;

@@ -1,30 +1,51 @@
 import { UserpanelAdminTargetHistoryDataDto } from './userpanelAdminTargetHistoryDataDto';
 import { UserpanelPlayerLobbyStatsDataDto } from './userpanelPlayerLobbyStatsDataDto';
 export interface UserpanelStatsDataDto {
-    Id: number;
-    Name: string;
-    SCName: string;
-    Gang?: string;
-    AdminLvl: number;
-    Donation: number;
-    IsVip: boolean;
-    Money: number;
-    TotalMoney: number;
-    PlayTime: number;
+    /** Id */
+    [0]: number;
+    /** Name */
+    [1]: string;
+    /** SCName */
+    [2]: string;
+    /** Gang */
+    [3]?: string;
+    /** AdminLvl */
+    [4]: number;
+    /** Donation */
+    [5]: number;
+    /** IsVip */
+    [6]: boolean;
+    /** Money */
+    [7]: number;
+    /** TotalMoney */
+    [8]: number;
+    /** PlayTime */
+    [9]: number;
 
-    MuteTime?: number;
-    VoiceMuteTime?: number;
+    /** MuteTime */
+    [10]?: number;
+    /** VoiceMuteTime */
+    [11]?: number;
 
-    BansInLobbies: string[];
+    /** BansInLobbies */
+    [12]: string[];
 
-    AmountMapsCreated: number;
-    MapsRatedAverage: number;
-    CreatedMapsAverageRating: number;
-    AmountMapsRated: number;
+    /** AmountMapsCreated */
+    [13]: number;
+    /** MapsRatedAverage */
+    [14]: number;
+    /** CreatedMapsAverageRating */
+    [15]: number;
+    /** AmountMapsRated */
+    [16]: number;
 
-    LastLogin: string;
-    RegisterTimestamp: string;
+    /** LastLogin */
+    [17]: string;
+    /** RegisterTimestamp */
+    [18]: string;
 
-    LobbyStats: UserpanelPlayerLobbyStatsDataDto[];
-    Logs: UserpanelAdminTargetHistoryDataDto[];
+    /** LobbyStats */
+    [19]: UserpanelPlayerLobbyStatsDataDto[];
+    /** Logs */
+    [20]: UserpanelAdminTargetHistoryDataDto[];
 }

@@ -1,5 +1,8 @@
 export interface UserpanelCommandParameterDto {
-    Name: string;
-    Type: string;
-    DefaultValue?: any;
+    /** Name */
+    [0]: string;
+    /** Type */
+    [1]: string;
+    /** DefaultValue */
+    [2]?: any;
 }

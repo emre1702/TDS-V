@@ -18,13 +18,27 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     creatingRequest = false;
     inRequest: number = undefined;
 
-    currentRequest: {
-        ID: number,
-        Title: string,
-        Messages: { Author: string, Message: string, CreateTime: string }[],
-        Type: UserpanelSupportType,
-        AtleastAdminLevel: number,
-        Closed: boolean };
+    currentRequest: [
+        /** ID */
+        number,
+        /** Title */
+        string,
+        /** Messages */
+        [
+            /** Author */
+            string,
+            /** Message */
+            string,
+            /** CreateTime */
+            string
+        ][],
+        /** Type */
+        UserpanelSupportType,
+        /** AtleastAdminLevel */
+        number,
+        /** Closed */
+        boolean
+    ];
 
     requestGroup: FormGroup;
 
@@ -61,7 +75,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         for (const control of Object.values(this.requestGroup.controls)) {
             control.reset();
         }
-        this.currentRequest = { ID: 0, Title: "", Messages: [], Type: UserpanelSupportType.Question, AtleastAdminLevel: 1, Closed: false };
+        this.currentRequest = [0, "", [], UserpanelSupportType.Question, 1, false];
         this.requestGroup.get("type").enable();
 
         this.creatingRequest = true;
@@ -83,9 +97,9 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     }
 
     submitRequest() {
-        this.currentRequest.Title = this.requestGroup.get("title").value;
-        this.currentRequest.Messages = [{ Author: "", CreateTime: "", Message: this.requestGroup.get("message").value}];
-        this.currentRequest.Type = this.requestGroup.get("type").value;
+        this.currentRequest[1] = this.requestGroup.get("title").value;
+        this.currentRequest[2] = [[ "", this.requestGroup.get("message").value, ""]];
+        this.currentRequest[3] = this.requestGroup.get("type").value;
 
         this.rageConnector.call(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
 
@@ -94,7 +108,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     }
 
     setAtleastAdminLevel(adminLevel: number) {
-        this.currentRequest.AtleastAdminLevel = adminLevel;
+        this.currentRequest[4] = adminLevel;
         this.changeDetector.detectChanges();
     }
 
@@ -114,12 +128,12 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     }
 
     private setRequestClosed(requestId: number, closed: boolean) {
-        if (this.currentRequest.ID == requestId) {
-            this.currentRequest.Closed = closed;
+        if (this.currentRequest[0] == requestId) {
+            this.currentRequest[5] = closed;
         }
-        const request = this.userpanelService.supportRequests.find(r => r.ID == requestId);
+        const request = this.userpanelService.supportRequests.find(r => r[0] == requestId);
         if (request) {
-            request.Closed = closed;
+            request[5] = closed;
         }
     }
 }

@@ -13,11 +13,11 @@ export class UserpanelRulesNavPipe implements PipeTransform {
         const currentNavEnum = UserpanelNavPage[currentNav] as UserpanelNavPage;
         switch (currentNavEnum) {
             case UserpanelNavPage.RulesUser:
-                return list.filter(c => c.Target === UserpanelRulesTarget.User);
+                return list.filter(c => c[2] === UserpanelRulesTarget.User);
             case UserpanelNavPage.RulesTDSTeam:
-                return list.filter(c => c.Target === UserpanelRulesTarget.Admin);
+                return list.filter(c => c[2] === UserpanelRulesTarget.Admin);
             case UserpanelNavPage.RulesVIP:
-                return list.filter(c => c.Target === UserpanelRulesTarget.VIP);
+                return list.filter(c => c[2] === UserpanelRulesTarget.VIP);
         }
         return list;
     }

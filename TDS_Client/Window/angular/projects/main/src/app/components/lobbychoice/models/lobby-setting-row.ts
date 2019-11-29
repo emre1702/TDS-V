@@ -10,6 +10,6 @@ export class LobbySettingRow {
 
   public onlyInt?: boolean;
 
-  public dataSettingIndex: string;
+  public dataSettingIndex: number;
   public action?: () => void;
 }

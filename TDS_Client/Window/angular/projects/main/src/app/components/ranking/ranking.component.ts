@@ -13,35 +13,35 @@ export class RankingComponent implements OnInit {
     _rankings: RoundPlayerRankingStat[];
 
     get rankings(): RoundPlayerRankingStat[] {
-      return this._rankings;
+        return this._rankings;
     }
 
     @Input("rankings")
     set rankings(rankings: RoundPlayerRankingStat[]) {
-      this._rankings = rankings;
-      this.dataSource = new MatTableDataSource(rankings);
-      this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
-      if (this.sort)
-        this.dataSource.sort = this.sort;
-      if (this.changeDetector)
-        this.changeDetector.detectChanges();
+        this._rankings = rankings;
+        this.dataSource = new MatTableDataSource(rankings);
+        this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
+        if (this.sort)
+            this.dataSource.sort = this.sort;
+        if (this.changeDetector)
+            this.changeDetector.detectChanges();
     }
 
     displayedColumns = ["Place", "Name", "Points", "Kills", "Assists", "Damage"];
 
     dataSource: MatTableDataSource<RoundPlayerRankingStat>;
-    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
+    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
 
     ngOnInit() {
-      this.dataSource.sort = this.sort;
-      this.changeDetector.detectChanges();
+        this.dataSource.sort = this.sort;
+        this.changeDetector.detectChanges();
     }
 
     sortingDataAccessor(obj, property) {
-      console.log(obj);
-      console.log(property);
-      return obj[property];
+        console.log(obj);
+        console.log(property);
+        return obj[property];
     }
 }

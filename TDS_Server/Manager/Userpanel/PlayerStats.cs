@@ -61,7 +61,7 @@ namespace TDS_Server.Manager.Userpanel
                     Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Team.Name : "-",
                     AmountMapsCreated = p.Maps.Count,
                     CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
-                    BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name),
+                    BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name).ToList(),
                     AmountMapsRated = p.PlayerMapRatings.Count,
                     MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
                     LastLoginDateTime = p.PlayerStats.LastLoginTimestamp,
@@ -71,7 +71,7 @@ namespace TDS_Server.Manager.Userpanel
                     VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
                     TotalMoney = p.PlayerTotalStats.Money,
 
-                    LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)) : null
+                    LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)).ToList() : null
                 })
                 .FirstOrDefaultAsync();
 
@@ -134,7 +134,7 @@ namespace TDS_Server.Manager.Userpanel
 
 #nullable disable
     [MessagePackObject]
-    class PlayerUserpanelLobbyStats
+    public class PlayerUserpanelLobbyStats
     {
         [Key(0)]
         public string Lobby { get; internal set; }
@@ -189,7 +189,7 @@ namespace TDS_Server.Manager.Userpanel
     }
 
     [MessagePackObject]
-    class PlayerUserpanelAdminTargetHistoryDataDto
+    public class PlayerUserpanelAdminTargetHistoryDataDto
     {
         [Key(0)]
         public string Admin { get; internal set; }
@@ -220,7 +220,7 @@ namespace TDS_Server.Manager.Userpanel
     }
 
     [MessagePackObject]
-    class PlayerUserpanelStatsDataDto
+    public class PlayerUserpanelStatsDataDto
     {
         [Key(0)]
         public int Id { get; internal set; }
@@ -247,7 +247,7 @@ namespace TDS_Server.Manager.Userpanel
         [Key(11)]
         public string LastLogin { get; internal set; }
         [Key(12)]
-        public IEnumerable<string> BansInLobbies { get; internal set; }
+        public List<string> BansInLobbies { get; internal set; }
         [Key(13)]
         public double CreatedMapsAverageRating { get; internal set; }
         [Key(14)]
@@ -267,9 +267,9 @@ namespace TDS_Server.Manager.Userpanel
         public DateTime RegisterDateTime { get; set; }
 
         [Key(19)]
-        public IEnumerable<PlayerUserpanelLobbyStats> LobbyStats { get; internal set; }
+        public List<PlayerUserpanelLobbyStats> LobbyStats { get; internal set; }
         [Key(20)]
-        public IEnumerable<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }
+        public List<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }
     }
     #nullable restore
 }

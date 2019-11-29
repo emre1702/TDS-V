@@ -112,7 +112,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     }
 
     isSelectedMapInVoting() {
-        return this.voting.mapsInVoting.some(m => m.Id == this.selectedMap.Id);
+        return this.voting.mapsInVoting.some(m => m[0] == this.selectedMap[0]);
     }
 
     toggleSnav() {
@@ -164,6 +164,6 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         const voteIndex = event.keyCode - MapVotingComponent.Numpad1KeyCode;
         if (this.voting.mapsInVoting.length <= voteIndex)
             return;
-        this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex].Id);
+        this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex][0]);
     }
 }

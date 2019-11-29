@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
 using System.Linq;
+using TDS_Common.Dto;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.GangTeam;
@@ -86,6 +87,18 @@ namespace TDS_Server.Manager.Utility
                 ResourceStarted = true;
 
                 Account.Init();
+
+                var obj = new SyncedTeamDataDto(0, "Test123", new ColorDto(255, 155, 100, 50), new SyncedTeamPlayerAmountDto { Amount = 3, AmountAlive = 5 });
+
+                var browserJson = TDS_Common.Manager.Utility.Serializer.ToBrowser(obj);
+                var clientJson = TDS_Common.Manager.Utility.Serializer.ToClient(obj);
+
+                var browserObj = TDS_Common.Manager.Utility.Serializer.FromBrowser<SyncedTeamDataDto>(browserJson);
+                var clientObj = TDS_Common.Manager.Utility.Serializer.FromClient<SyncedTeamDataDto>(clientJson);
+
+                var clientWrongObj = TDS_Common.Manager.Utility.Serializer.FromClient<SyncedTeamDataDto>(browserJson);
+                var browserWrongObj = TDS_Common.Manager.Utility.Serializer.FromBrowser<SyncedTeamDataDto>(clientJson);
+
             }
             catch (Exception ex)
             {

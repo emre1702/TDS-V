@@ -101,8 +101,8 @@
   </div>
   <div *ngFor="let lobbyData of lobbyDatas" matRipple class="lobby mat-app-background" (click)="showLobbyData(lobbyData)">
     <img src="assets/arenachoice.png" alt="Arena" style="width: 100%">
-    <p>{{ lobbyData.Name }}</p>
-    <p>{{ lobbyData.OwnerName }}</p>
+    <p>{{ lobbyData[1] }}</p>
+    <p>{{ lobbyData[2] == undefined ? "" : lobbyData[2] }}</p>
     <p>Arena</p>
   </div>
 </div>

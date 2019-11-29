@@ -271,11 +271,11 @@ namespace TDS_Client.Manager.Event
         private void OnColorSettingChangeMethod(object[] args)
         {
             string color = (string)args[0];
-            string dataSetting = (string)args[1];
+            EUserpanelSettingKey dataSetting = (EUserpanelSettingKey)(Convert.ToInt32(args[1]));
 
             switch (dataSetting)
             {
-                case nameof(EUserpanelSettingKey.MapBorderColor):
+                case EUserpanelSettingKey.MapBorderColor:
                     Settings.MapBorderColor = CommonUtils.GetColorFromHtmlRgba(color);
                     break;
             }

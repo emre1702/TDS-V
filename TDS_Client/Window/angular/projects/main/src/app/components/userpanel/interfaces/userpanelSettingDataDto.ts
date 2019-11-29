@@ -1,16 +1,34 @@
 import { LanguageEnum } from '../../../enums/language.enum';
 
 export interface UserpanelSettingDataDto {
-    PlayerId: number;
-    Language: LanguageEnum;
-    Hitsound: boolean;
-    Bloodscreen: boolean;
-    FloatingDamageInfo: boolean;
-    AllowDataTransfer: boolean;
+    /** PlayerId */
+    [0]: number;
 
-    Voice3D: boolean;
-    VoiceAutoVolume: boolean;
-    VoiceVolume: number;
+    /** Language */
+    [1]: LanguageEnum;
+    /** AllowDataTransfer */
+    [2]: boolean;
+    /** ShowConfettiAtRanking */
+    [3]: boolean;
+    /** TimeZone */
+    [4]: string;
+    /** DiscordIdentity */
+    [5]: string;
 
-    MapBorderColor: number;
+    /** Hitsound */
+    [6]: boolean;
+    /** Bloodscreen */
+    [7]: boolean;
+    /** FloatingDamageInfo */
+    [8]: boolean;
+
+    /** Voice3D */
+    [9]: boolean;
+    /** VoiceAutoVolume */
+    [10]: boolean;
+    /** VoiceVolume */
+    [11]: number;
+
+    /** MapBorderColor */
+    [12]: number;
 }

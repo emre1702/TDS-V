@@ -4,7 +4,7 @@ namespace TDS_Server.Dto
 {
     [MessagePackObject]
     #nullable disable
-    class CustomLobbyTeamData
+    public class CustomLobbyTeamData
     {
         [Key(0)]
         public string Name { get; set; }

@@ -22,12 +22,12 @@ export class MapVotingService {
 
   private addMapToVoting(mapVoteJson: string) {
     this.mapsInVoting.push(JSON.parse(mapVoteJson));
-    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-AmountVotes", "Name"]);
+    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
     this.mapsInVotingChanged.emit(null);
   }
 
   private loadMapVoting(mapVoteJson: string) {
-    this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ["-AmountVotes", "Name"]);
+    this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ["-2", "1"]);
     this.mapsInVotingChanged.emit(null);
   }
 
@@ -38,15 +38,15 @@ export class MapVotingService {
   }
 
   private setMapVotes(mapId: number, amountVotes: number) {
-    const index = this.mapsInVoting.findIndex(m => m.Id == mapId);
+    const index = this.mapsInVoting.findIndex(m => m[0] == mapId);
     if (index < 0)
       return;
     if (amountVotes <= 0) {
       this.mapsInVoting.splice(index, 1);
     } else {
-      this.mapsInVoting[index].AmountVotes = amountVotes;
+      this.mapsInVoting[index][2] = amountVotes;
     }
-    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-AmountVotes", "Name"]);
+    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
     this.mapsInVotingChanged.emit(null);
   }
 

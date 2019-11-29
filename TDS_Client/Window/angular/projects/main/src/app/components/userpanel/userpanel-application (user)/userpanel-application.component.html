@@ -42,15 +42,15 @@
     </label>
     <mat-card *ngFor="let invitation of userpanelService.adminApplyInvitations">
         <mat-card-header>
-            <mat-card-title>{{ invitation.AdminName }}</mat-card-title>
-            <mat-card-subtitle>{{ invitation.AdminSCName }}</mat-card-subtitle>
+            <mat-card-title>{{ invitation[1] }}</mat-card-title>
+            <mat-card-subtitle>{{ invitation[2] }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p>{{ invitation.Message }}</p>
+            <p>{{ invitation[3] }}</p>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button (click)="acceptInvitation(invitation.ID)">{{ 'Accept' | language: settings.Lang }}</button>
-            <button mat-raised-button (click)="rejectInvitation(invitation.ID)">{{ 'Reject' | language: settings.Lang }}</button>
+            <button mat-raised-button (click)="acceptInvitation(invitation[0])">{{ 'Accept' | language: settings.Lang }}</button>
+            <button mat-raised-button (click)="rejectInvitation(invitation[0])">{{ 'Reject' | language: settings.Lang }}</button>
         </mat-card-actions>
     </mat-card>
 </div>

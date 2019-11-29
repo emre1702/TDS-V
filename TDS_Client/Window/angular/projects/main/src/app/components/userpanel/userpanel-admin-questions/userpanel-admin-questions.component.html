@@ -1,19 +1,19 @@
 <mat-expansion-panel *ngFor="let questionGroup of questions">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            {{ questionGroup.AdminName }}
+            {{ questionGroup[0] }}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <ng-container *ngFor="let question of questionGroup.Questions" [ngSwitch]="question.AnswerType">
+    <ng-container *ngFor="let question of questionGroup[1]" [ngSwitch]="question[2]">
 
         <ng-container *ngSwitchCase="answerType.Text">
             <div class="question-row">
                 <mat-form-field color="accent">
                     <textarea matInput
-                        [(ngModel)]="answers[question.ID]"
+                        [(ngModel)]="answers[question[0]]"
                         (blur)="save()"
                         [readonly]="disabled"
-                        [placeholder]="question.Question"></textarea>
+                        [placeholder]="question[1]"></textarea>
                 </mat-form-field>
             </div>
         </ng-container>
@@ -22,10 +22,10 @@
             <div class="question-row">
                 <mat-form-field color="accent">
                     <input matInput type="number"
-                        [(ngModel)]="answers[question.ID]"
+                        [(ngModel)]="answers[question[0]]"
                         (blur)="save()"
                         [readonly]="disabled"
-                        [placeholder]="question.Question" />
+                        [placeholder]="question[1]" />
                 </mat-form-field>
             </div>
         </ng-container>
@@ -33,11 +33,11 @@
         <ng-container *ngSwitchCase="answerType.Check">
             <div class="question-row">
                 <mat-checkbox labelPosition="before"
-                    [(ngModel)]="answers[question.ID]"
-                    [indeterminate]="answers[question.ID] == undefined"
+                    [(ngModel)]="answers[question[0]]"
+                    [indeterminate]="answers[question[0]] == undefined"
                     [disabled]="disabled"
                     (blur)="save()">
-                    {{ question.Question | language: settings.Lang }}
+                    {{ question[1] | language: settings.Lang }}
                 </mat-checkbox>
             </div>
         </ng-container>

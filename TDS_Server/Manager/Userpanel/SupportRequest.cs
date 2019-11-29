@@ -245,72 +245,72 @@ namespace TDS_Server.Manager.Userpanel
                 await dbContext.SaveChangesAsync();
             }
         }
+    }
 
-        [MessagePackObject]
-        private class SupportRequestsListData
-        {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public string PlayerName { get; set; } = string.Empty;
-            [Key(2)]
-            public string CreateTime { get; set; } = string.Empty;
-            [Key(3)]
-            public ESupportType Type { get; set; }
-            [Key(4)]
-            public string Title { get; set; } = string.Empty;
-            [Key(5)]
-            public bool Closed { get; set; }
+    [MessagePackObject]
+    public class SupportRequestsListData
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public string PlayerName { get; set; } = string.Empty;
+        [Key(2)]
+        public string CreateTime { get; set; } = string.Empty;
+        [Key(3)]
+        public ESupportType Type { get; set; }
+        [Key(4)]
+        public string Title { get; set; } = string.Empty;
+        [Key(5)]
+        public bool Closed { get; set; }
 
-            [IgnoreMember]
-            public DateTime CreateTimeDate { get; set; }
-        }
+        [IgnoreMember]
+        public DateTime CreateTimeDate { get; set; }
+    }
 
-        [MessagePackObject]
-        private class SupportRequestData
-        {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public ESupportType Type { get; set; }
-            [Key(2)]
-            public string Title { get; set; } = string.Empty;
-            [Key(3)]
-            public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
-            [Key(4)]
-            public int AtleastAdminLevel { get; set; }
-            [Key(5)]
-            public bool Closed { get; set; }
+    [MessagePackObject]
+    public class SupportRequestData
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public ESupportType Type { get; set; }
+        [Key(2)]
+        public string Title { get; set; } = string.Empty;
+        [Key(3)]
+        public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
+        [Key(4)]
+        public int AtleastAdminLevel { get; set; }
+        [Key(5)]
+        public bool Closed { get; set; }
 
-            [IgnoreMember]
-            public DateTime CreateTimeDate { get; set; }
-            [IgnoreMember]
-            public int AuthorId { get; set; }
-        }
+        [IgnoreMember]
+        public DateTime CreateTimeDate { get; set; }
+        [IgnoreMember]
+        public int AuthorId { get; set; }
+    }
 
-        [MessagePackObject]
-        private class SupportRequestMessageData
-        {
-            [Key(0)]
-            public string Author { get; set; } = string.Empty;
-            [Key(1)]
-            public string Message { get; set; } = string.Empty;
-            [Key(2)]
-            public string CreateTime { get; set; } = string.Empty;
+    [MessagePackObject]
+    public class SupportRequestMessageData
+    {
+        [Key(0)]
+        public string Author { get; set; } = string.Empty;
+        [Key(1)]
+        public string Message { get; set; } = string.Empty;
+        [Key(2)]
+        public string CreateTime { get; set; } = string.Empty;
 
-            [IgnoreMember]
-            public DateTime CreateTimeDate { get; set; }
-        }
+        [IgnoreMember]
+        public DateTime CreateTimeDate { get; set; }
+    }
 
-        [MessagePackObject]
-        private class SupportRequestMessage
-        {
-            [Key(0)]
-            public string? Author { get; set; }
-            [Key(1)]
-            public string? Message { get; set; }
-            [Key(2)]
-            public string? CreateTime { get; set; }
-        }
+    [MessagePackObject]
+    public class SupportRequestMessage
+    {
+        [Key(0)]
+        public string? Author { get; set; }
+        [Key(1)]
+        public string? Message { get; set; }
+        [Key(2)]
+        public string? CreateTime { get; set; }
     }
 }

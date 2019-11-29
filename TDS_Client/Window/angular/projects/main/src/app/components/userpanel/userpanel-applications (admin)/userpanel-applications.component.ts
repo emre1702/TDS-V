@@ -18,11 +18,16 @@ import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 })
 export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     applicationData: {
-        ApplicationID: number,
-        Answers: { [index: number]: any },
-        Questions: UserpanelAdminQuestionsGroup[],
-        Stats: UserpanelStatsDataDto,
-        AlreadyInvited: boolean
+        /** ApplicationID */
+        0: number,
+        /** Answers */
+        1: { [index: number]: any },
+        /** Questions */
+        2: UserpanelAdminQuestionsGroup[],
+        /** Stats */
+        3: UserpanelStatsDataDto,
+        /** AlreadyInvited */
+        4: boolean
     };
 
     applicationStatsColumns = ["Id",
@@ -88,14 +93,14 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.rageConnector.callServer(DToServerEvent.SendApplicationInvite, this.applicationData.ApplicationID, message);
+                this.rageConnector.callServer(DToServerEvent.SendApplicationInvite, this.applicationData[0], message);
                 this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
             }
         );
     }
 
     canInvite(): boolean {
-        return !this.applicationData.AlreadyInvited && this.settings.AdminLevel == this.settings.AdminLevelForApplicationInvites;
+        return !this.applicationData[4] && this.settings.AdminLevel == this.settings.AdminLevelForApplicationInvites;
     }
 
     private applicationsLoadedFunc() {
@@ -104,14 +109,14 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
 
     private applicationDataLoadedFunc(json: string) {
         this.applicationData = JSON.parse(json);
-        if (typeof(this.applicationData.Answers) === "string") {
-            this.applicationData.Answers = JSON.parse(this.applicationData.Answers);
+        if (typeof(this.applicationData[1]) === "string") {
+            this.applicationData[1] = JSON.parse(this.applicationData[1]);
         }
-        if (typeof(this.applicationData.Questions) === "string") {
-            this.applicationData.Questions = JSON.parse(this.applicationData.Questions);
+        if (typeof(this.applicationData[2]) === "string") {
+            this.applicationData[2] = JSON.parse(this.applicationData[2]);
         }
-        if (typeof(this.applicationData.Stats) === "string") {
-            this.applicationData.Stats = JSON.parse(this.applicationData.Stats);
+        if (typeof(this.applicationData[3]) === "string") {
+            this.applicationData[3] = JSON.parse(this.applicationData[3]);
         }
         this.changeDetector.detectChanges();
     }

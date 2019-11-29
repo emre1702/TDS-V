@@ -22,7 +22,7 @@ using TimeZoneConverter;
 
 namespace TDS_Server.Instance.Player
 {
-    internal class TDSPlayer : EntityWrapperClass
+    public class TDSPlayer : EntityWrapperClass
     {
         public Players? Entity
         {

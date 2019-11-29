@@ -3,7 +3,7 @@
 		<button mat-icon-button (click)="toggleSnav()">
 			<mat-icon>menu</mat-icon>
 		</button>
-		<h1>{{ 'MapVoting' | language: settings.Lang }} {{ selectedMap ? " - " + selectedMap.Name : "" }}</h1>
+		<h1>{{ 'MapVoting' | language: settings.Lang }} {{ selectedMap ? " - " + selectedMap[1] : "" }}</h1>
 		<button mat-icon-button (click)="deactivate(true)">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -23,30 +23,30 @@
         </mat-form-field>
 				<mat-action-list>
 					<mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter">
-						{{ map.Name }}
+						{{ map[1] }}
 					</mat-list-item>
 				</mat-action-list>
 			</div>
 			<mat-divider vertical class="vertical-divider-color"></mat-divider>
 			<div id="right-content" *ngIf="selectedMap">
 				<!-- <div id="map-title-row">
-						<div id="map-title" class="mat-title">{{ selectedMap.Name }}</div>
+						<div id="map-title" class="mat-title">{{ selectedMap[1] }}</div>
 				</div>-->
 				<div id="map-description" class="mat-body-1">
-					{{ selectedMap.Description[settings.LangValue] }}
+					{{ selectedMap[3][settings.LangValue] }}
 				</div>
 				<div id="map-action-row">
-					<button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap.Id)">
-						<mat-icon id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap.Id)">
+					<button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap[0])">
+						<mat-icon id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])">
 							favorite
 						</mat-icon>
 					</button>
-                    <div id="map-creator-hint" *ngIf="selectedMap.CreatorName">{{ "Creator" | language: settings.Lang }}: {{ selectedMap.CreatorName }}</div>
-                    <button class="background-color-accent" mat-button (click)="buyMap(selectedMap.Id)" [disabled]="!canBuyMap()">
+                    <div id="map-creator-hint" *ngIf="selectedMap[4]">{{ "Creator" | language: settings.Lang }}: {{ selectedMap[4] }}</div>
+                    <button class="background-color-accent" mat-button (click)="buyMap(selectedMap[0])" [disabled]="!canBuyMap()">
                         {{ settings.IsLobbyOwner ? 'Choose' : 'Buy' | language: settings.Lang }}
                     </button>
-					<button id="vote-button" class="background-color-primary" mat-button (click)="voteForMapId(selectedMap.Id)"
-							[disabled]="voting.votedForMapId == selectedMap.Id">
+					<button id="vote-button" class="background-color-primary" mat-button (click)="voteForMapId(selectedMap[0])"
+							[disabled]="voting.votedForMapId == selectedMap[0]">
 						{{ 'Vote' | language: settings.Lang }}
 					</button>
 				</div>
@@ -58,6 +58,6 @@
 <div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus && settings.InFightLobby">
 	<div [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote.Id"
 			*ngFor="let mapvote of voting.mapsInVoting; let i = index">
-		{{ i + 1 }}. {{ mapvote.Name }} ({{ mapvote.AmountVotes }})
+		{{ i + 1 }}. {{ mapvote[1] }} ({{ mapvote[2] }})
 	</div>
 </div>

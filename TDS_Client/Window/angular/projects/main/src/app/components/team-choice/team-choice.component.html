@@ -1,7 +1,8 @@
 <div *ngIf="data" id="buttons">
   <ng-container *ngIf="!isRandomTeams">
-      <button class="container mat-app-background" [style.border-color]="getColor(team)" *ngFor="let team of data.slice(1); let i = index" (click)="chooseTeamIndex(i + 1)">
-          {{ team.Name }}
+      <button class="container mat-app-background" [style.border-color]="getColor(team)" *ngFor="let team of data.slice(1); let i = index"
+      (click)="chooseTeamIndex(i + 1)">
+          {{ team[1] }}
       </button>
   </ng-container>
   <button class="container mat-app-background" *ngIf="isRandomTeams" (click)="chooseTeamIndex(1)">

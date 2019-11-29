@@ -15,7 +15,7 @@ using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Instance.Lobby
 {
-    partial class Lobby : EntityWrapperClass
+    public partial class Lobby : EntityWrapperClass
     {
         public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };

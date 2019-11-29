@@ -1,4 +1,6 @@
 export class LoadMapDialogGroupDto {
-  public GroupName: string;
-  public Maps: string[];
+    /** GroupName */
+    [0]: string;
+    /** Maps */
+    [1]: string[];
 }

@@ -6,7 +6,7 @@ namespace TDS_Server.Dto
 {
     [MessagePackObject]
     #nullable disable
-    class CustomLobbyData
+    public class CustomLobbyData
     {
         [Key(0)]
         public int? LobbyId;

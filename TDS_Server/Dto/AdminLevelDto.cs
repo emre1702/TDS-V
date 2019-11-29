@@ -4,7 +4,7 @@ using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Dto
 {
-    internal class AdminLevelDto
+    public class AdminLevelDto
     {
         public short Level;
         public string FontColor;

@@ -75,10 +75,50 @@ export class UserpanelService {
       }*/;
     adminQuestions: UserpanelAdminQuestionsGroup[] = [];
     myApplicationCreateTime: string = undefined;
-    adminApplyInvitations: { ID: number, AdminName: string, AdminSCName: string, Message: string }[];
-    applications: { ID: number, CreateTime: string, PlayerName: string }[];
-    supportRequests: { ID: number, PlayerName: string, CreateTime: string, Title: string, Type: UserpanelSupportType, Closed: boolean }[];
-    offlineMessages: { ID: number, PlayerName: string, CreateTime: string, Text: string, Seen: boolean }[];
+    adminApplyInvitations: [
+        /** ID */
+        number,
+        /** AdminName */
+        string,
+        /** AdminSCName */
+        string,
+        /** Message */
+        string
+    ][];
+    applications: [
+        /** ID */
+        number,
+        /** CreateTime */
+        string,
+        /** PlayerName */
+        string
+    ][];
+    supportRequests: [
+        /** ID */
+        number,
+        /** PlayerName */
+        string,
+        /** CreateTime */
+        string,
+        /** Title */
+        string,
+        /** Type */
+        UserpanelSupportType,
+        /** Closed */
+        boolean
+    ][];
+    offlineMessages: [
+        /** ID */
+        number,
+        /** PlayerName */
+        string,
+        /** CreateTime */
+        string,
+        /** Text */
+        string,
+        /** Seen */
+        boolean
+    ][];
 
     public currentNavChanged = new EventEmitter();
     public loadingDataChanged = new EventEmitter();
@@ -188,20 +228,20 @@ export class UserpanelService {
 
     private loadedAllCommands(json: string) {
         this.allCommands = JSON.parse(json);
-        this.allCommands.sort((a, b) => a.Command < b.Command ? -1 : 1);
-        this.allCommands.forEach(c => c.Aliases.sort());
+        this.allCommands.sort((a, b) => a[0] < b[0] ? -1 : 1);
+        this.allCommands.forEach(c => c[6].sort());
         this.commandsLoaded.emit(null);
     }
 
     private loadedAllRules(json: string) {
         this.allRules = JSON.parse(json);
-        this.allRules.sort((a, b) => a.Id < b.Id ? -1 : 1);
+        this.allRules.sort((a, b) => a[0] < b[0] ? -1 : 1);
         this.rulesLoaded.emit(null);
     }
 
     private loadedAllFAQs(json: string) {
         this.allFAQs = JSON.parse(json);
-        this.allFAQs.sort((a, b) => a.Id < b.Id ? -1 : 1);
+        this.allFAQs.sort((a, b) => a[0] < b[0] ? -1 : 1);
         this.faqsLoaded.emit(null);
     }
 
@@ -212,25 +252,32 @@ export class UserpanelService {
 
     private loadedMyStats(json: string) {
         this.myStats = JSON.parse(json);
-        this.myStats.Logs.sort((a, b) => a.Type < b.Type ? -1 : 1);
+        this.myStats[20].sort((a, b) => a[1] < b[1] ? -1 : 1);
         this.myStatsLoaded.emit(null);
     }
 
     private loadedApplicationDataForUser(json: string) {
-        const data = JSON.parse(json);
+        const data = JSON.parse(json) as [
+            /** CreateTime */
+            string,
+            /** Invitations */
+            any[],
+            /** AdminQuestions */
+            any[]
+        ];
         // data.CreateTime -> Application already exists
-        if (data.CreateTime) {
-            this.myApplicationCreateTime = data.CreateTime;
-            if (typeof (data.Invitations) === "string") {
-                data.Invitations = JSON.parse(data.Invitations);
+        if (data[0]) {
+            this.myApplicationCreateTime = data[0];
+            if (typeof (data[1]) === "string") {
+                data[1] = JSON.parse(data[1]);
             }
-            this.adminApplyInvitations = data.Invitations;
+            this.adminApplyInvitations = data[1];
             // !data.CreateTime -> No application, user can create a new one
         } else {
-            if (typeof (data.AdminQuestions) === "string") {
-                data.AdminQuestions = JSON.parse(data.AdminQuestions);
+            if (typeof (data[2]) === "string") {
+                data[2] = JSON.parse(data[2]);
             }
-            this.adminQuestions = data.AdminQuestions;
+            this.adminQuestions = data[2];
             this.adminApplyInvitations = [];
             this.myApplicationCreateTime = undefined;
         }
@@ -260,7 +307,7 @@ export class UserpanelService {
     private languageChanged() {
         this.allFAQs = [];
         if (this.allSettings)
-            this.allSettings.Language = this.settings.LangValue;
+            this.allSettings[1] = this.settings.LangValue;
     }
 
 

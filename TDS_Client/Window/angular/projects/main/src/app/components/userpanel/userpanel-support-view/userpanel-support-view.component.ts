@@ -17,13 +17,27 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     requestGroup: FormGroup;
     userpanelSupportType = UserpanelSupportType;
 
-    @Input() currentRequest: {
-        ID: number,
-        Title: string,
-        Messages: { Author: string, Message: string, CreateTime: string }[],
-        Type: UserpanelSupportType,
-        AtleastAdminLevel: number,
-        Closed: boolean };
+    @Input() currentRequest: [
+        /** ID */
+        number,
+        /** Title */
+        string,
+        /** Messages */
+        [
+            /** Author */
+            string,
+            /** Message */
+            string,
+            /** CreateTime */
+            string
+        ][],
+        /** Type */
+        UserpanelSupportType,
+        /** AtleastAdminLevel */
+        number,
+        /** Closed */
+        boolean
+    ];
 
     readonly titleMinLength = 10;
     readonly titleMaxLength = 80;
@@ -46,7 +60,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
             type: new FormControl(UserpanelSupportType.Question, [Validators.required]),
         });
 
-        if (this.currentRequest.Closed) {
+        if (this.currentRequest[5]) {
             this.requestGroup.get("message").disable();
             this.changeDetector.detectChanges();
         }
@@ -55,7 +69,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     }
 
     ngOnDestroy() {
-        this.rageConnector.call(DToServerEvent.LeftSupportRequest, this.currentRequest.ID);
+        this.rageConnector.call(DToServerEvent.LeftSupportRequest, this.currentRequest[0]);
 
         this.rageConnector.remove(DFromClientEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
     }
@@ -67,16 +81,16 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
     sendMessage() {
         const message = this.requestGroup.get("message").value;
-        this.rageConnector.call(DToServerEvent.SendSupportRequestMessage, this.currentRequest.ID, message);
+        this.rageConnector.call(DToServerEvent.SendSupportRequestMessage, this.currentRequest[0], message);
         this.requestGroup.get("message").setValue("");
 
         this.changeDetector.detectChanges();
     }
 
     toggleRequestClosed() {
-        this.currentRequest.Closed = !this.currentRequest.Closed;
+        this.currentRequest[5] = !this.currentRequest[5];
 
-        if (this.currentRequest.Closed) {
+        if (this.currentRequest[5]) {
             this.requestGroup.get("message").disable();
             this.requestGroup.get("message").setValue("");
         } else {
@@ -85,7 +99,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
         this.changeDetector.detectChanges();
 
-        this.rageConnector.call(DToServerEvent.SetSupportRequestClosed, this.currentRequest.ID, this.currentRequest.Closed);
+        this.rageConnector.call(DToServerEvent.SetSupportRequestClosed, this.currentRequest[0], this.currentRequest[5]);
     }
 
     goBack() {
@@ -97,11 +111,11 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     }
 
     private syncNewSupportRequestMessage(requestId: number, messageJson: string) {
-        if (this.currentRequest.ID != requestId) {
+        if (this.currentRequest[0] != requestId) {
             return;
         }
         const isScrolledToBottom = this.messagesPanel.nativeElement.scrollTop == this.messagesPanel.nativeElement.scrollHeight;
-        this.currentRequest.Messages.push(JSON.parse(messageJson));
+        this.currentRequest[2].push(JSON.parse(messageJson));
 
         this.changeDetector.detectChanges();
 

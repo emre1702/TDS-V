@@ -5,7 +5,7 @@ namespace TDS_Server.Dto.Userpanel.Command
 {
     [MessagePackObject]
     #nullable disable
-    class UserpanelCommandDataDto
+    public class UserpanelCommandDataDto
     {
         [Key(0)]
         public string Command { get; set; }

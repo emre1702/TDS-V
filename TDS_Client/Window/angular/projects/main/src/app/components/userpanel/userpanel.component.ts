@@ -17,30 +17,32 @@ export class UserpanelComponent implements OnInit, OnDestroy {
     langPipe = new LanguagePipe();
     userpanelNavPage = UserpanelNavPage;
     currentCommand: UserpanelCommandDataDto;
-    myStatsColumns = ["Id",
-        "Name",
-        "SCName",
-        "Gang",
-        "AdminLvl",
-        "Donation",
-        "IsVip",
-        "Money",
-        "TotalMoney",
-        "PlayTime",
+    myStatsColumns = [
+        0,   // "Id",
+        1,   // "Name",
+        2,   // "SCName",
+        3,   // "Gang",
+        4,   // "AdminLvl",
+        5,   // "Donation",
+        6,   // "IsVip",
+        7,   // "Money",
+        8,   // "TotalMoney",
+        9,   // "PlayTime",
 
-        "MuteTime",
-        "VoiceMuteTime",
+        10,   // "MuteTime",
+        11,   // "VoiceMuteTime",
 
-        "BansInLobbies",
+        12,   // "BansInLobbies",
 
-        "AmountMapsCreated",
-        "MapsRatedAverage",
-        "CreatedMapsAverageRating",
-        "AmountMapsRated",
-        "LastLogin",
-        "RegisterTimestamp",
-        "LobbyStats",
-        "Logs"];
+        13,   // "AmountMapsCreated",
+        14,   // "MapsRatedAverage",
+        15,   // "CreatedMapsAverageRating",
+        16,   // "AmountMapsRated",
+        17,   // "LastLogin",
+        18,   // "RegisterTimestamp",
+        19,   // "LobbyStats",
+        20,   // "Logs"
+    ];
 
     constructor(public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,

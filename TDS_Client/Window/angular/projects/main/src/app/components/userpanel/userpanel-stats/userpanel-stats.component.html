@@ -14,20 +14,20 @@
                 <mat-expansion-panel *ngFor="let log of stats[key]">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            {{ log.Type | language: settings.Lang }}
+                            {{ log[1] | language: settings.Lang }}
                         </mat-panel-title>
-                        <mat-panel-description *ngIf="!log.LengthOrEndTime">
-                            {{ log.Timestamp }}
+                        <mat-panel-description *ngIf="!log[7]">
+                            {{ log[6] }}
                         </mat-panel-description>
-                        <mat-panel-description *ngIf="log.LengthOrEndTime">
-                            {{ log.Timestamp }} - {{ log.LengthOrEndTime }}
+                        <mat-panel-description *ngIf="log[7]">
+                            {{ log[6] }} - {{ log[7] }}
                         </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <div>{{ 'Admin' | language: settings.Lang }}: {{ log.Admin }}</div>
-                    <div *ngIf="log.Lobby">{{ 'Lobby' }}: {{ log.Lobby }}</div>
-                    <div>{{ 'AsDonator' | language: settings.Lang }}: {{ log.AsDonator ? 'Yes' : 'No' | language: settings.Lang }}</div>
-                    <div>{{ 'AsVip' | language: settings.Lang }}: {{ log.AsVip ? 'Yes' : 'No' | language: settings.Lang }}</div>
-                    <div>{{ 'Reason' | language: settings.Lang }}: {{ log.Reason }}</div>
+                    <div>{{ 'Admin' | language: settings.Lang }}: {{ log[0] }}</div>
+                    <div *ngIf="log[2]">{{ 'Lobby' }}: {{ log[2] }}</div>
+                    <div>{{ 'AsDonator' | language: settings.Lang }}: {{ log[3] ? 'Yes' : 'No' | language: settings.Lang }}</div>
+                    <div>{{ 'AsVip' | language: settings.Lang }}: {{ log[4] ? 'Yes' : 'No' | language: settings.Lang }}</div>
+                    <div>{{ 'Reason' | language: settings.Lang }}: {{ log[5] }}</div>
                 </mat-expansion-panel>
             </mat-expansion-panel>
         </mat-accordion>
@@ -42,7 +42,7 @@
                 <mat-expansion-panel *ngFor="let stat of stats[key]">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            {{ stat.Lobby }}
+                            {{ stat[0] }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <div *ngFor="let statKey of lobbyStatsColumns">
@@ -50,7 +50,7 @@
                     </div>
                 </mat-expansion-panel>
             </mat-expansion-panel>
-               
+
         </mat-accordion>
     </ng-container>
 </div>

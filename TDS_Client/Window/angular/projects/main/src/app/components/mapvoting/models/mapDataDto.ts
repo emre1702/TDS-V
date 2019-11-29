@@ -1,12 +1,18 @@
 import { LanguageEnum } from '../../../enums/language.enum';
 
 export class MapDataDto {
-    public Id: number;
-    public Name: string;
-    public Type = 0;
-    public Description: {
+    /** Id */
+    [0]: number;
+    /** Name */
+    [1]: string;
+    /** Type */
+    [2] = 0;
+    /** Description */
+    [3]: {
         [key in LanguageEnum]: string
     } = { [7]: "", [9]: "" };
-    public CreatorName: string;
-    public Rating: number;
+    /** CreatorName */
+    [4]: string;
+    /** Rating */
+    [5]: number;
 }

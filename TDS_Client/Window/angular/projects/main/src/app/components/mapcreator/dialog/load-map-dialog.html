@@ -3,8 +3,8 @@
   <mat-form-field color="accent">
     <mat-label>{{ 'Map' | language: settings.Lang }}</mat-label>
     <mat-select [(value)]="chosenMap">
-      <mat-optgroup *ngFor="let groupData of data" label="{{ groupData.GroupName | language: settings.Lang }}">
-        <mat-option *ngFor="let mapName of groupData.Maps" [value]="mapName">
+      <mat-optgroup *ngFor="let groupData of data" label="{{ groupData[0] | language: settings.Lang }}">
+        <mat-option *ngFor="let mapName of groupData[1]" [value]="mapName">
           {{ mapName }}
         </mat-option>
       </mat-optgroup>

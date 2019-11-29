@@ -3,16 +3,26 @@ import { MapCreatorPosition } from './mapCreatorPosition';
 import { MapCreateSettings } from './mapCreateSettings';
 
 export class MapCreateDataDto {
-    public Id = 0;
-    public Name = "";
-    public Type = 0;
-    public Settings: MapCreateSettings = new MapCreateSettings();
-    public Description: {
+    /** Id */
+    [0] = 0;
+    /** Name */
+    [1] = "";
+    /** Type */
+    [2] = 0;
+    /** Settings */
+    [3]: MapCreateSettings = new MapCreateSettings();
+    /** Description */
+    [4]: {
         [key in LanguageEnum]: string
     } = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
-    public Objects: MapCreatorPosition[] = [];
-    public TeamSpawns: MapCreatorPosition[][] = [[]];
-    public MapEdges: MapCreatorPosition[] = [];
-    public BombPlaces: MapCreatorPosition[] = [];
-    public MapCenter: MapCreatorPosition;
+    /** Objects */
+    [5]: MapCreatorPosition[] = [];
+    /** TeamSpawns */
+    [6]: MapCreatorPosition[][] = [[]];
+    /** MapEdges */
+    [7]: MapCreatorPosition[] = [];
+    /** BombPlaces */
+    [8]: MapCreatorPosition[] = [];
+    /** MapCenter */
+    [9]: MapCreatorPosition;
 }

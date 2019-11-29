@@ -1,7 +1,9 @@
 import { UserpanelAdminQuestion } from './userpanelAdminQuestion';
 
 export interface UserpanelAdminQuestionsGroup {
-    AdminName: string;
+    /** AdminName */
+    [0]: string;
 
-    Questions: UserpanelAdminQuestion[];
+    /** Questions */
+    [1]: UserpanelAdminQuestion[];
 }

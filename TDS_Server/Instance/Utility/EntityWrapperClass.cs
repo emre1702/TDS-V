@@ -5,7 +5,7 @@ using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Utility
 {
-    abstract class EntityWrapperClass
+    public abstract class EntityWrapperClass
     {
         protected TDSDbContext DbContext
         {

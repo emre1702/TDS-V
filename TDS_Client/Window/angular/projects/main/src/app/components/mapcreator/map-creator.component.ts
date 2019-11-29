@@ -74,7 +74,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     const pos = new MapCreatorPosition(id, type, posX, posY, posZ, rotX, rotY, rotZ);
     switch (type) {
       case MapCreatorPositionType.TeamSpawn:
-        pos.Info = info;
+        pos[2] = info;
         this.addPosToTeamSpawns(pos);
         break;
       case MapCreatorPositionType.MapCenter:
@@ -87,7 +87,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.addPosToMapLimits(pos);
         break;
       case MapCreatorPositionType.Object:
-        pos.Info = info;
+        pos[2] = info;
         this.addPosToObjects(pos);
         break;
     }
@@ -97,8 +97,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   private RemovePositionInMapCreatorBrowser(id: number, type: MapCreatorPositionType) {
     switch (type) {
       case MapCreatorPositionType.TeamSpawn:
-        for (const list of this.data.TeamSpawns) {
-          const teamSpawnPos = list.find(p => p.Id === id);
+        for (const list of this.data[6]) {
+          const teamSpawnPos = list.find(p => p[0] === id);
           if (teamSpawnPos) {
             this.selectedPosition = teamSpawnPos;
             this.removePosFromTeamSpawns();
@@ -107,24 +107,24 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
         break;
       case MapCreatorPositionType.MapCenter:
-          this.data.MapCenter = undefined;
+          this.data[9] = undefined;
         break;
       case MapCreatorPositionType.BombPlantPlace:
-        const bombPos = this.data.BombPlaces.find(p => p.Id === id);
+        const bombPos = this.data[8].find(p => p[0] === id);
         if (bombPos) {
           this.selectedPosition = bombPos;
           this.removePosFromBombPlaces();
         }
         break;
       case MapCreatorPositionType.MapLimit:
-        const mapLimitPos = this.data.MapEdges.find(p => p.Id === id);
+        const mapLimitPos = this.data[7].find(p => p[0] === id);
         if (mapLimitPos) {
           this.selectedPosition = mapLimitPos;
           this.removePosFromMapLimits();
         }
         break;
       case MapCreatorPositionType.Object:
-        const objectPos = this.data.Objects.find(p => p.Id === id);
+        const objectPos = this.data[5].find(p => p[0] === id);
         if (objectPos) {
           this.selectedPosition = objectPos;
           this.removePosFromObjects();
@@ -140,9 +140,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   removeLastTeam() {
-    this.data.TeamSpawns.pop();
-    this.editingTeamNumber = this.data.TeamSpawns.length - 1;
-    this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data.TeamSpawns.length);
+    this.data[6].pop();
+    this.editingTeamNumber = this.data[6].length - 1;
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data[6].length);
     this.changeDetector.detectChanges();
   }
 
@@ -152,18 +152,18 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   removeSelectedPos(removeFunc: () => void) {
     removeFunc.call(this);
-    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, this.selectedPosition.Id);
+    this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, this.selectedPosition[0]);
     this.selectedPosition = undefined;
     this.changeDetector.detectChanges();
   }
 
   holdSelected() {
-    this.rageConnector.call(DToClientEvent.HoldMapCreatorObject, this.selectedPosition.Id);
+    this.rageConnector.call(DToClientEvent.HoldMapCreatorObject, this.selectedPosition[0]);
   }
 
   tpToSelectedPos() {
     const pos = this.selectedPosition;
-    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, pos.PosX, pos.PosY, pos.PosZ, pos.RotZ);
+    this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, pos[3], pos[4], pos[5], pos[8]);
   }
 
   tpToXYZ(x: number, y: number, z: number) {
@@ -171,90 +171,90 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   addPosToTeamSpawns(pos: MapCreatorPosition) {
-    if (!this.data.TeamSpawns[pos.Info])
-      this.data.TeamSpawns[pos.Info] = [];
-    if (!this.updatePosIfExists(this.data.TeamSpawns[pos.Info], pos)) {
-      this.data.TeamSpawns[pos.Info] = [...this.data.TeamSpawns[pos.Info], pos];
+    if (!this.data[6][pos[2]])
+      this.data[6][pos[2]] = [];
+    if (!this.updatePosIfExists(this.data[6][pos[2]], pos)) {
+      this.data[6][pos[2]] = [...this.data[6][pos[2]], pos];
     }
   }
 
   addPosToMapLimits(pos: MapCreatorPosition) {
-    if (!this.data.MapEdges)
-      this.data.MapEdges = [];
-    if (!this.updatePosIfExists(this.data.MapEdges, pos)) {
-      this.data.MapEdges = [...this.data.MapEdges, pos];
+    if (!this.data[7])
+      this.data[7] = [];
+    if (!this.updatePosIfExists(this.data[7], pos)) {
+      this.data[7] = [...this.data[7], pos];
     }
   }
 
   addPosToObjects(pos: MapCreatorPosition) {
-    if (!this.data.Objects)
-      this.data.Objects = [];
-    if (!this.updatePosIfExists(this.data.Objects, pos)) {
-      this.data.Objects = [...this.data.Objects, pos];
+    if (!this.data[5])
+      this.data[5] = [];
+    if (!this.updatePosIfExists(this.data[5], pos)) {
+      this.data[5] = [...this.data[5], pos];
     }
   }
 
   addPosToBombPlaces(pos: MapCreatorPosition) {
-    if (!this.data.BombPlaces)
-      this.data.BombPlaces = [];
-    if (!this.updatePosIfExists(this.data.BombPlaces, pos)) {
-      this.data.BombPlaces = [...this.data.BombPlaces, pos];
+    if (!this.data[8])
+      this.data[8] = [];
+    if (!this.updatePosIfExists(this.data[8], pos)) {
+      this.data[8] = [...this.data[8], pos];
     }
   }
 
   private updatePosIfExists(arr: MapCreatorPosition[], pos: MapCreatorPosition): boolean {
-    const entries = arr.filter(position => position.Id === pos.Id);
+    const entries = arr.filter(position => position[0] === pos[0]);
     if (entries.length <= 0) {
       return false;
     }
     const origPos = entries[0];
-    origPos.Info = pos.Info;
-    origPos.PosX = pos.PosX;
-    origPos.PosY = pos.PosY;
-    origPos.PosZ = pos.PosZ;
-    origPos.RotX = pos.RotX;
-    origPos.RotY = pos.RotY;
-    origPos.RotZ = pos.RotZ;
+    origPos[2] = pos[2];
+    origPos[3] = pos[3];
+    origPos[4] = pos[4];
+    origPos[5] = pos[5];
+    origPos[6] = pos[6];
+    origPos[7] = pos[7];
+    origPos[8] = pos[8];
     return true;
   }
 
   addPosToMapCenter(pos: MapCreatorPosition) {
-    this.data.MapCenter = pos;
+    this.data[9] = pos;
     if (this.currentNav === MapCreatorNav.MapCenter) {
       this.selectedPosition = pos;
-      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos.Id);
+      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos[0]);
     }
   }
 
   removePosFromTeamSpawns() {
-    const index = this.data.TeamSpawns[this.editingTeamNumber].indexOf(this.selectedPosition);
-    this.data.TeamSpawns[this.editingTeamNumber].splice(index, 1);
+    const index = this.data[6][this.editingTeamNumber].indexOf(this.selectedPosition);
+    this.data[6][this.editingTeamNumber].splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
-    this.data.TeamSpawns[this.editingTeamNumber] = [...this.data.TeamSpawns[this.editingTeamNumber]];
+    this.data[6][this.editingTeamNumber] = [...this.data[6][this.editingTeamNumber]];
   }
 
   removePosFromMapLimits() {
-    const index = this.data.MapEdges.indexOf(this.selectedPosition);
-    this.data.MapEdges.splice(index, 1);
+    const index = this.data[7].indexOf(this.selectedPosition);
+    this.data[7].splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
-    this.data.MapEdges = [...this.data.MapEdges];
+    this.data[7] = [...this.data[7]];
   }
 
   removePosFromObjects() {
-    const index = this.data.Objects.indexOf(this.selectedPosition);
-    this.data.Objects.splice(index, 1);
-    this.data.Objects = [...this.data.Objects];
+    const index = this.data[5].indexOf(this.selectedPosition);
+    this.data[5].splice(index, 1);
+    this.data[5] = [...this.data[5]];
   }
 
   removePosFromBombPlaces() {
-    const index = this.data.BombPlaces.indexOf(this.selectedPosition);
-    this.data.BombPlaces.splice(index, 1);
+    const index = this.data[8].indexOf(this.selectedPosition);
+    this.data[8].splice(index, 1);
     // need to create a new dataSource object, else table will not refresh
-    this.data.BombPlaces = [...this.data.BombPlaces];
+    this.data[8] = [...this.data[8]];
   }
 
   removeMapCenter() {
-    this.data.MapCenter = undefined;
+    this.data[9] = undefined;
   }
 
   sendDataToClient() {
@@ -277,7 +277,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       this.data = new MapCreateDataDto();
       this.changeDetector.detectChanges();
 
-      this.rageConnector.call(DToServerEvent.RemoveMap, map.Id);
+      this.rageConnector.call(DToServerEvent.RemoveMap, map[0]);
     });
   }
 
@@ -328,39 +328,39 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   private fixData() {
-    if (!this.data.Name)
-      this.data.Name = "";
+    if (!this.data[1])
+      this.data[1] = "";
 
-    if (!this.data.Type)
-      this.data.Type = 0;
+    if (!this.data[2])
+      this.data[2] = 0;
 
-    if (!this.data.Settings)
-      this.data.Settings = new MapCreateSettings();
-    if (this.data.Settings.MinPlayers == undefined)
-      this.data.Settings.MinPlayers = 0;
-    this.data.Settings.MinPlayers = Math.max(0, Math.min(999, Math.floor(this.data.Settings.MinPlayers)));
-    if (this.data.Settings.MaxPlayers == undefined)
-      this.data.Settings.MaxPlayers = 999;
-    this.data.Settings.MaxPlayers = Math.max(0, Math.min(999, Math.floor(this.data.Settings.MaxPlayers)));
+    if (!this.data[3])
+      this.data[3] = new MapCreateSettings();
+    if (this.data[3][0] == undefined)
+      this.data[3][0] = 0;
+    this.data[3][0] = Math.max(0, Math.min(999, Math.floor(this.data[3][0])));
+    if (this.data[3][1] == undefined)
+      this.data[3][1] = 999;
+    this.data[3][1] = Math.max(0, Math.min(999, Math.floor(this.data[3][1])));
 
-    if (!this.data.Description)
-      this.data.Description = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
-    if (!this.data.Description[LanguageEnum.German])
-      this.data.Description[LanguageEnum.German] = "";
-    if (!this.data.Description[LanguageEnum.English])
-      this.data.Description[LanguageEnum.English] = "";
+    if (!this.data[4])
+      this.data[4] = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
+    if (!this.data[4][LanguageEnum.German])
+      this.data[4][LanguageEnum.German] = "";
+    if (!this.data[4][LanguageEnum.English])
+      this.data[4][LanguageEnum.English] = "";
 
-    if (!this.data.Objects)
-      this.data.Objects = [];
+    if (!this.data[5])
+      this.data[5] = [];
 
-    if (!this.data.TeamSpawns)
-      this.data.TeamSpawns = [[]];
+    if (!this.data[6])
+      this.data[6] = [[]];
 
-    if (!this.data.MapEdges)
-      this.data.MapEdges = [];
+    if (!this.data[7])
+      this.data[7] = [];
 
-    if (!this.data.BombPlaces)
-      this.data.BombPlaces = [];
+    if (!this.data[8])
+      this.data[8] = [];
   }
 
   getLanguages(): string[] {
@@ -382,19 +382,19 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   onMapTypeChange(event: MatSelectChange) {
-    if (this.data.Type == MapType.Bomb && event.value != MapType.Bomb) {
-      this.data.BombPlaces = [];
+    if (this.data[2] == MapType.Bomb && event.value != MapType.Bomb) {
+      this.data[8] = [];
     }
-    this.data.Type = event.value;
+    this.data[2] = event.value;
     this.changeDetector.detectChanges();
   }
 
   onEditingTeamNumberChange(event: MatSelectChange) {
-    if (event.value == "+" && !this.data.TeamSpawns[this.data.TeamSpawns.length - 1].length) {
-      this.editingTeamNumber = this.data.TeamSpawns.length - 1;
+    if (event.value == "+" && !this.data[6][this.data[6].length - 1].length) {
+      this.editingTeamNumber = this.data[6].length - 1;
     } else if (event.value == "+") {
-      this.data.TeamSpawns = [...this.data.TeamSpawns, []];
-      this.editingTeamNumber = this.data.TeamSpawns.length - 1;
+      this.data[6] = [...this.data[6], []];
+      this.editingTeamNumber = this.data[6].length - 1;
     } else
       this.editingTeamNumber = event.value;
     this.changeDetector.detectChanges();
@@ -405,7 +405,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
       this.selectedPosition = undefined;
     else
       this.selectedPosition = row;
-    this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition.Id : -1);
+    this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition[0] : -1);
     this.changeDetector.detectChanges();
   }
 
@@ -444,12 +444,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   switchToMapCenterEdit() {
     this.currentTitle = 'MapCenter';
-    this.selectedPosition = this.data.MapCenter;
+    this.selectedPosition = this.data[9];
     this.currentNav = MapCreatorNav.MapCenter;
     this.changeDetector.detectChanges();
 
-    if (this.data.MapCenter)
-      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data.MapCenter.Id);
+    if (this.data[9])
+      this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[9][0]);
   }
 
   switchToBombPlacesEdit() {
@@ -479,7 +479,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
   private saveDescription() {
     const langId = this.getLanguageValue(this.editingDescriptionLang);
-    this.data.Description[langId] = this.descriptionTextArea.nativeElement.value;
+    this.data[4][langId] = this.descriptionTextArea.nativeElement.value;
   }
 
   isSaveableNav() {
@@ -491,9 +491,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   isTeamSpawnsValid(): boolean {
-    if (this.data.TeamSpawns.length == 0)
+    if (this.data[6].length == 0)
       return false;
-    for (const spawnArr of this.data.TeamSpawns) {
+    for (const spawnArr of this.data[6]) {
       if (spawnArr.length < Constants.MIN_TEAM_SPAWNS)
         return false;
     }
@@ -501,11 +501,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
   }
 
   isMapLimitValid(): boolean {
-    return !this.data.MapEdges.length || this.data.MapEdges.length >= 3;
+    return !this.data[7].length || this.data[7].length >= 3;
   }
 
   isBombPlacesValid(): boolean {
-    return this.data.Type != MapType.Bomb || this.data.BombPlaces.length > 0;
+    return this.data[2] != MapType.Bomb || this.data[8].length > 0;
   }
 
   getMinNameLength() {

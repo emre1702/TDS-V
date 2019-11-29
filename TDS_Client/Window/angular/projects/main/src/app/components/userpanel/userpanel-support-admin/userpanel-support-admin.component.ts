@@ -17,13 +17,27 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
     inRequest: number = undefined;
     requestGroup: FormGroup;
 
-    currentRequest: {
-        ID: number,
-        Title: string,
-        Messages: { Author: string, Message: string, CreateTime: string }[],
-        Type: UserpanelSupportType,
-        AtleastAdminLevel: number,
-        Closed: boolean } = undefined;
+    currentRequest: [
+        /** ID */
+        number,
+        /** Title */
+        string,
+        /** Messages */
+        [
+            /** Author */
+            string,
+            /** Message */
+            string,
+            /** CreateTime */
+            string
+        ][],
+        /** Type */
+        UserpanelSupportType,
+        /** AtleastAdminLevel */
+        number,
+        /** Closed */
+        boolean
+    ] = undefined;
 
     readonly messageMinLength = 10;
     readonly messageMaxLength = 255;
@@ -55,12 +69,6 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
             this.currentRequest = JSON.parse(json);
             this.changeDetector.detectChanges();
         });
-
-
-        setTimeout(() => {
-            this.currentRequest = { AtleastAdminLevel: 2, Closed: false, ID: 1, Messages: [{Author: "Bonus", CreateTime: "12.23.3232", Message: "asd"}], Title: "HALLO", Type: UserpanelSupportType.Question};
-            this.changeDetector.detectChanges();
-        }, 3000);
     }
 
     closeSupportView() {
@@ -70,12 +78,12 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
     }
 
     private setRequestClosed(requestId: number, closed: boolean) {
-        if (this.currentRequest.ID == requestId) {
-            this.currentRequest.Closed = closed;
+        if (this.currentRequest[0] == requestId) {
+            this.currentRequest[5] = closed;
         }
-        const request = this.userpanelService.supportRequests.find(r => r.ID == requestId);
+        const request = this.userpanelService.supportRequests.find(r => r[0] == requestId);
         if (request) {
-            request.Closed = closed;
+            request[5] = closed;
         }
     }
 }

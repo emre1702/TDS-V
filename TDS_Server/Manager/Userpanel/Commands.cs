@@ -45,7 +45,7 @@ namespace TDS_Server.Manager.Userpanel
                         {
                             Name = parameter.Name ?? "?",
                             Type = parameter.ParameterType.Name,
-                            DefaultValue = parameter.DefaultValue
+                            DefaultValue = parameter.DefaultValue?.ToString()
                         };
                         syntax.Parameters.Add(parameterData);
                     }

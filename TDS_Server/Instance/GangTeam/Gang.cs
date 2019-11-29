@@ -9,7 +9,7 @@ using TDS_Server_DB.Entity.Gang;
 
 namespace TDS_Server.Instance.GangTeam
 {
-    internal class Gang : EntityWrapperClass
+    public class Gang : EntityWrapperClass
     {
         private static readonly Dictionary<int, Gang> _gangById = new Dictionary<int, Gang>();
         private static readonly Dictionary<int, Gang> _gangByPlayerId = new Dictionary<int, Gang>();

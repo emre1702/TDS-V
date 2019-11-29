@@ -4,7 +4,7 @@ using TDS_Client.Interface;
 namespace TDS_Client.Instance.Language
 {
     [MessagePackObject]
-    class LoginRegisterTextsEnglish : ILoginRegisterTexts
+    public class LoginRegisterTextsEnglish : ILoginRegisterTexts
     {
         [Key(0)]
         public virtual string tab_login => "Login";

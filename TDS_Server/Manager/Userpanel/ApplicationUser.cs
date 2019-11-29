@@ -217,52 +217,52 @@ namespace TDS_Server.Manager.Userpanel
                 await dbContext.SaveChangesAsync();
             }
         }
+    }
 
-        [MessagePackObject]
-        private class ApplicationUserData
-        {
-            [Key(0)]
-            public string? CreateTime { get; set; }
-            [Key(1)]
-            public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
-            [Key(2)]
-            public string AdminQuestions { get; set; } = string.Empty;
+    [MessagePackObject]
+    public class ApplicationUserData
+    {
+        [Key(0)]
+        public string? CreateTime { get; set; }
+        [Key(1)]
+        public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
+        [Key(2)]
+        public string AdminQuestions { get; set; } = string.Empty;
 
-            [IgnoreMember]
-            public DateTime CreateDateTime { get; set; }
-        }
+        [IgnoreMember]
+        public DateTime CreateDateTime { get; set; }
+    }
 
-        [MessagePackObject]
-        private class ApplicationUserInvitationData
-        {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public string? AdminName { get; set; }
-            [Key(2)]
-            public string? AdminSCName { get; set; }
-            [Key(3)]
-            public string? Message { get; set; }
-        }
+    [MessagePackObject]
+    public class ApplicationUserInvitationData
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public string? AdminName { get; set; }
+        [Key(2)]
+        public string? AdminSCName { get; set; }
+        [Key(3)]
+        public string? Message { get; set; }
+    }
 
-        [MessagePackObject]
-        private class AdminQuestionsData
-        {
-            [Key(0)]
-            public string AdminName { get; set; } = string.Empty;
-            [Key(1)]
-            public IEnumerable<AdminQuestionData>? Questions { get; set; }
-        }
+    [MessagePackObject]
+    public class AdminQuestionsData
+    {
+        [Key(0)]
+        public string AdminName { get; set; } = string.Empty;
+        [Key(1)]
+        public IEnumerable<AdminQuestionData>? Questions { get; set; }
+    }
 
-        [MessagePackObject]
-        private class AdminQuestionData
-        {
-            [Key(0)]
-            public int ID { get; set; }
-            [Key(1)]
-            public string Question { get; set; } = string.Empty;
-            [Key(2)]
-            public EUserpanelAdminQuestionAnswerType AnswerType { get; set; }
-        }
+    [MessagePackObject]
+    public class AdminQuestionData
+    {
+        [Key(0)]
+        public int ID { get; set; }
+        [Key(1)]
+        public string Question { get; set; } = string.Empty;
+        [Key(2)]
+        public EUserpanelAdminQuestionAnswerType AnswerType { get; set; }
     }
 }

@@ -12,15 +12,15 @@ export class UserpanelCommandNavPipe implements PipeTransform {
         const currentNavEnum = UserpanelNavPage[currentNav] as UserpanelNavPage;
         switch (currentNavEnum) {
             case UserpanelNavPage.CommandsUser:
-                return list.filter(c => !c.MinAdminLevel && !c.MinDonation && !c.VIPCanUse && !c.LobbyOwnerCanUse);
+                return list.filter(c => !c[1] && !c[2] && !c[3] && !c[4]);
             case UserpanelNavPage.CommandsTDSTeam:
-                return list.filter(c => c.MinAdminLevel);
+                return list.filter(c => c[1]);
             case UserpanelNavPage.CommandsVIP:
-                return list.filter(c => c.VIPCanUse);
+                return list.filter(c => c[3]);
             case UserpanelNavPage.CommandsDonator:
-                return list.filter(c => c.MinDonation);
+                return list.filter(c => c[2]);
             case UserpanelNavPage.CommandsLobbyOwner:
-                return list.filter(c => c.LobbyOwnerCanUse);
+                return list.filter(c => c[4]);
         }
         return list;
     }

@@ -4,23 +4,23 @@
             <table mat-table [dataSource]="userpanelService.offlineMessages" matSort>
                 <ng-container matColumnDef="PlayerName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.PlayerName | slice:0:20 }}{{ element.PlayerName.length > 20 ? '...' : '' }}</td>
+                    <td mat-cell *matCellDef="let element">{{ element[1] | slice:0:20 }}{{ element[1].length > 20 ? '...' : '' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="Text">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Text' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.Text | slice:0:30 }}{{ element.Text.length > 30 ? '...' : '' }}</td>
+                    <td mat-cell *matCellDef="let element">{{ element[3] | slice:0:30 }}{{ element[3].length > 30 ? '...' : '' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="CreateTime">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Created' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.CreateTime }}</td>
+                    <td mat-cell *matCellDef="let element">{{ element[2] }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="Delete">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-icon-button (click)="delete(element.ID)">
+                        <button mat-icon-button (click)="delete(element[0])">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                     </td>
@@ -50,7 +50,7 @@
             <mat-form-field color="accent" >
                 <mat-label>{{ 'Message' | language: settings.Lang }}</mat-label>
                 <textarea matInput
-                [value]="inOfflineMessage.Text"
+                [value]="inOfflineMessage[3]"
                 rows="8">
                 </textarea>
             </mat-form-field>
@@ -65,14 +65,14 @@
         <div class="right-side">
             <div class="right-side-content">
                 <mat-form-field color="accent" >
-                    <input matInput disabled [placeholder]="'ID' | language: settings.Lang"  [value]="inOfflineMessage.ID"/>
+                    <input matInput disabled [placeholder]="'ID' | language: settings.Lang"  [value]="inOfflineMessage[0]"/>
                 </mat-form-field>
                 <mat-form-field color="accent" >
                     <textarea matInput disabled
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
                     [placeholder]="'Player' | language: settings.Lang"
-                    [value]="inOfflineMessage.PlayerName">
+                    [value]="inOfflineMessage[1]">
                     </textarea>
                 </mat-form-field>
                 <mat-form-field color="accent" >
@@ -80,7 +80,7 @@
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
                     [placeholder]="'Created' | language: settings.Lang"
-                    [value]="inOfflineMessage.CreateTime">
+                    [value]="inOfflineMessage[2]">
                     </textarea>
                 </mat-form-field>
             </div>

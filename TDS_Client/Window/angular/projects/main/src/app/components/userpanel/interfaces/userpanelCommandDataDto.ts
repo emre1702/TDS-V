@@ -1,13 +1,21 @@
 import { UserpanelCommandSyntaxDto } from './userpanelCommandSyntaxDto';
 
 export interface UserpanelCommandDataDto {
-    Command: string;
-    MinAdminLevel?: number;
-    MinDonation?: number;
-    VIPCanUse: boolean;
-    LobbyOwnerCanUse: boolean;
+    /** Command */
+    [0]: string;
+    /** MinAdminLevel */
+    [1]?: number;
+    /** MinDonation */
+    [2]?: number;
+    /** VIPCanUse */
+    [3]: boolean;
+    /** LobbyOwnerCanUse */
+    [4]: boolean;
 
-    Syntaxes: UserpanelCommandSyntaxDto[];
-    Aliases: string[];
-    Description: { [language: number]: string };
+    /** Syntaxes */
+    [5]: UserpanelCommandSyntaxDto[];
+    /** Aliases */
+    [6]: string[];
+    /** Description */
+    [7]: { [language: number]: string };
 }

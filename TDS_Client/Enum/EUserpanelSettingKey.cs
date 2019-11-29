@@ -2,8 +2,8 @@
 {
     enum EUserpanelSettingKey
     {
-        AllowDataTransfer,
-        Language,
+        AllowDataTransfer = 5,
+        Language = 1,
         ShowConfettiAtRanking,
         TimeZone,
         DiscordIdentity,

@@ -2,27 +2,45 @@ import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from './custom-lobby-team-data';
 
 export class CustomLobbyData {
-  public LobbyId?: number;
-  public Name: string;
-  public OwnerName?: string;
-  public Password: string;
-  public StartHealth: number;
-  public StartArmor: number;
-  public AmountLifes: number;
+    /**  LobbyId? */
+    [0]?: number;
+    /** Name */
+    [1]: string;
+    /** OwnerName? */
+    [2]?: string;
+    /** Password */
+    [3]: string;
+    /** StartHealth */
+    [4]: number;
+    /** StartArmor */
+    [5]: number;
+    /** AmountLifes */
+    [6]: number;
 
-  public MixTeamsAfterRound: boolean;
-  public ShowRanking: boolean;
+    /** MixTeamsAfterRound */
+    [7]: boolean;
+    /** ShowRanking */
+    [8]: boolean;
 
-  public BombDetonateTimeMs: number;
-  public BombDefuseTimeMs: number;
-  public BombPlantTimeMs: number;
-  public RoundTime: number;
-  public CountdownTime: number;
+    /** BombDetonateTimeMs */
+    [9]: number;
+    /** BombDefuseTimeMs */
+    [10]: number;
+    /** BombPlantTimeMs */
+    [11]: number;
+    /** RoundTime */
+    [12]: number;
+    /** CountdownTime */
+    [13]: number;
 
-  public SpawnAgainAfterDeathMs: number;
-  public MapLimitTime: number;
+    /** SpawnAgainAfterDeathMs */
+    [14]: number;
+    /** MapLimitTime */
+    [15]: number;
 
-  public MapLimitType: LobbyMapLimitType;
+    /** MapLimitType */
+    [16]: LobbyMapLimitType;
 
-  public Teams: CustomLobbyTeamData[];
+    /** Teams */
+    [17]: CustomLobbyTeamData[];
 }

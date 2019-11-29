@@ -25,25 +25,25 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         {
             title: "General", rows: [
                 {
-                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.Language], defaultValue: LanguageEnum.English,
+                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Language, defaultValue: LanguageEnum.English,
                     enum: LanguageEnum,
                     formControl: new FormControl(LanguageEnum.English)
                 },
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.AllowDataTransfer], defaultValue: false,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.AllowDataTransfer, defaultValue: false,
                     formControl: new FormControl(false)
                 },
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.ShowConfettiAtRanking], defaultValue: true,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowConfettiAtRanking, defaultValue: true,
                     formControl: new FormControl(true)
                 },
                 {
-                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.TimeZone],
+                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.TimeZone,
                     defaultValue: TimezoneEnum["(UTC) Coordinated Universal Time"], enum: TimezoneEnum,
                     formControl: new FormControl(TimezoneEnum["(UTC) Coordinated Universal Time"])
                 },
                 {
-                    type: SettingType.string, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.DiscordIdentity], defaultValue: "",
+                    type: SettingType.string, dataSettingIndex: UserpanelSettingKey.DiscordIdentity, defaultValue: "",
                     formControl: new FormControl(""), placeholder: "Name#ID"
                 }
             ]
@@ -52,15 +52,15 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         {
             title: "Fight", rows: [
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.Bloodscreen], defaultValue: true,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Bloodscreen, defaultValue: true,
                     formControl: new FormControl(true)
                 },
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.Hitsound], defaultValue: true,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Hitsound, defaultValue: true,
                     formControl: new FormControl(true)
                 },
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.FloatingDamageInfo], defaultValue: true,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.FloatingDamageInfo, defaultValue: true,
                     formControl: new FormControl(true)
                 }
             ],
@@ -69,16 +69,16 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         {
             title: "Voice", rows: [
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.Voice3D], defaultValue: false,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Voice3D, defaultValue: false,
                     formControl: new FormControl(false)
                 },
                 {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.VoiceAutoVolume], defaultValue: false,
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.VoiceAutoVolume, defaultValue: false,
                     formControl: new FormControl(false),
                     onValueChanged: this.voiceVolumeSettingChanged.bind(this)
                 },
                 {
-                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.VoiceVolume], defaultValue: 1,
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.VoiceVolume, defaultValue: 1,
                     min: 0, max: 10,
                     formControl: new FormControl(1)
                 },
@@ -88,7 +88,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         {
             title: "Graphical", rows: [
                 {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey[UserpanelSettingKey.MapBorderColor], defaultValue: "rgba(150,0,0,0.35)",
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.MapBorderColor, defaultValue: "rgba(150,0,0,0.35)",
                     formControl: new FormControl("rgba(150,0,0,0.35)")
                 },
             ]
@@ -171,7 +171,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     private getFormControl(title: string, setting: UserpanelSettingKey) {
         return this.settingPanel
             .filter(p => p.title === title)
-            .map(p => p.rows.filter(row => row.dataSettingIndex === UserpanelSettingKey[setting])[0])
+            .map(p => p.rows.filter(row => row.dataSettingIndex == setting)[0])
             .map(r => r.formControl)[0];
     }
 

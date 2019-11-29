@@ -1,5 +1,6 @@
 import { UserpanelCommandParameterDto } from './userpanelCommandParameterDto';
 
 export interface UserpanelCommandSyntaxDto {
-    Parameters: UserpanelCommandParameterDto[];
+    /** Parameters */
+    [0]: UserpanelCommandParameterDto[];
 }

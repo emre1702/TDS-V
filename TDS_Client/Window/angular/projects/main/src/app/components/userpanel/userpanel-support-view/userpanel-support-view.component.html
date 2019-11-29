@@ -1,12 +1,12 @@
 <form [formGroup]="requestGroup" (ngSubmit)="sendMessage()">
     <div class="left-side">
         <div class="messages" #messagesPanel>
-            <div class="title">{{ currentRequest.Title }}</div>
-            <div class="message" [class.admin]="message.Author != currentRequest.Messages[0].Author"
-            [matTooltip]="message.CreateTime"
-            *ngFor="let message of currentRequest.Messages">
-                <div class="message-title">{{ message.Author }}</div>
-                <div class="message-content admin">{{ message.Message }}</div>
+            <div class="title">{{ currentRequest[1] }}</div>
+            <div class="message" [class.admin]="message[0] != currentRequest[2][0][0]"
+            [matTooltip]="message[2]"
+            *ngFor="let message of currentRequest[2]">
+                <div class="message-title">{{ message[0] }}</div>
+                <div class="message-content admin">{{ message[1] }}</div>
             </div>
         </div>
         <mat-form-field color="accent" hideRequiredMarker>
@@ -23,7 +23,7 @@
             <div class="top">
                 <mat-form-field color="accent" class="readonly-wrapper">
                     <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
-                    <mat-select class="readonly-block" disabled [value]="currentRequest.Type">
+                    <mat-select class="readonly-block" disabled [value]="currentRequest[3]">
                         <mat-option [value]="userpanelSupportType.Question">{{ 'Question' | language: settings.Lang }}</mat-option>
                         <mat-option [value]="userpanelSupportType.Help">{{ 'Help' | language: settings.Lang }}</mat-option>
                         <mat-option [value]="userpanelSupportType.Compliment">{{ 'Compliment' | language: settings.Lang }}</mat-option>
@@ -31,23 +31,23 @@
                     </mat-select>
                 </mat-form-field>
                 <button mat-icon-button type="button" (click)="toggleRequestClosed()">
-                    <mat-icon>{{ currentRequest.Closed ? 'lock' : 'lock_open' }}</mat-icon>
+                    <mat-icon>{{ currentRequest[5] ? 'lock' : 'lock_open' }}</mat-icon>
                 </button>
             </div>
 
             <div class="admin-buttons">
                 <button *ngFor="let adminLevel of getAdminLevels()"
                 type="button"
-                [style.background-color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? '' : adminLevel.Color"
-                [style.color]="currentRequest.AtleastAdminLevel > adminLevel.Level ? adminLevel.Color : ''"
-                [class.mat-button]="currentRequest.AtleastAdminLevel > adminLevel.Level"
-                [class.mat-raised-button]="currentRequest.AtleastAdminLevel <= adminLevel.Level">
+                [style.background-color]="currentRequest[4] > adminLevel.Level ? '' : adminLevel.Color"
+                [style.color]="currentRequest[4] > adminLevel.Level ? adminLevel.Color : ''"
+                [class.mat-button]="currentRequest[4] > adminLevel.Level"
+                [class.mat-raised-button]="currentRequest[4] <= adminLevel.Level">
                     {{ adminLevel.Name | language: settings.Lang }}
                 </button>
             </div>
         </div>
 
-        <button mat-raised-button [disabled]="requestGroup.invalid || currentRequest.Closed" type="submit">
+        <button mat-raised-button [disabled]="requestGroup.invalid || currentRequest[5]" type="submit">
             {{ 'Send' | language: settings.Lang }}
         </button>
         <button mat-raised-button (click)="goBack()">{{ 'Back' | language: settings.Lang }}</button>

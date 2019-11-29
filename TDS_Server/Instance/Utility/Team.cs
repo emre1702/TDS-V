@@ -12,7 +12,7 @@ using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Instance.Utility
 {
-    internal class Team
+    public class Team
     {
         private Teams _entity;
 

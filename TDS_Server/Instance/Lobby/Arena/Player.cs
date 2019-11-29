@@ -26,7 +26,9 @@ namespace TDS_Server.Instance.Lobby
             SendPlayerRoundInfoOnJoin(player);
 
             var teams = Teams.Select(t =>
-                new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB));
+                    new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
+                )
+                .ToList();
 
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
