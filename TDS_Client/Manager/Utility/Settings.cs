@@ -154,6 +154,18 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
+        public static void LoadLanguageFromRAGE()
+        {
+            int lang = Locale.GetCurrentLanguageId();
+            switch (lang)
+            {
+                case 2: // German
+                    LanguageEnum = ELanguage.German;
+                    _languageManuallyChanged = false;
+                    break;
+            }
+        }
+
         /*function loadSettings() {
             let savedlang = mp.storage.data.language;
             let savedhitsound = mp.storage.data.hitsound;

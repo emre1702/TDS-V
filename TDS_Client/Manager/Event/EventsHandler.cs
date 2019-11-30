@@ -20,6 +20,7 @@ namespace TDS_Client.Manager.Event
 
         private void LoadOnStart()
         {
+            Settings.LoadLanguageFromRAGE();
             ClientUtils.Init();
             Dx.RefreshResolution();
             CameraManager.Init();
