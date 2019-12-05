@@ -10,6 +10,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Server.Dto.Map;
 using Entity = RAGE.Game.Entity;
+using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -52,31 +53,12 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void StartNewPlacing(EMapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
-            MapCreatorObject obj = null;
-            switch (type)
-            {
-                case EMapCreatorPositionType.TeamSpawn:
-                    obj = ObjectsManager.GetTeamSpawn((int)editingTeamIndexOrObjectName);
-                    break;
-                case EMapCreatorPositionType.MapCenter:
-                    obj = ObjectsManager.GetMapCenter();
-                    break;
-                case EMapCreatorPositionType.BombPlantPlace:
-                    obj = ObjectsManager.GetBombPlantPlace();
-                    break;
-                case EMapCreatorPositionType.MapLimit:
-                    obj = ObjectsManager.GetMapLimit();
-                    break;
-                case EMapCreatorPositionType.Object:
-                    string objName = (string)editingTeamIndexOrObjectName;
-                    uint objectHash = Misc.GetHashKey(objName);
-                    obj = ObjectsManager.GetObject(objectHash, EMapCreatorPositionType.Object, objName);
-                    ObjectPreview.Stop();
-                    break;
-            }
-
+            MapCreatorObject obj = ObjectsManager.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, Player.LocalPlayer.RemoteId);
             if (obj == null)
                 return;
+            if (type == EMapCreatorPositionType.Object)
+                ObjectPreview.Stop();
+
             if (HoldingObject != null)
                 ReleaseObject();
             HoldingObject = null;
@@ -107,6 +89,8 @@ namespace TDS_Client.Manager.MapCreator
             var obj = ObjectsManager.GetByID(id);
             if (obj == null || obj.Entity.IsNull)
                 return;
+            if (obj.OwnerRemoteId != Player.LocalPlayer.RemoteId && !Lobby.Lobby.IsLobbyOwner)
+                return;
 
             if (HoldingObject != null)
                 ReleaseObject();
@@ -133,7 +117,7 @@ namespace TDS_Client.Manager.MapCreator
                 return;
             Browser.Angular.Main.RemovePositionInMapCreatorBrowser(HoldingObject.ID, HoldingObject.Type);
             var objType = HoldingObject.Type;
-            HoldingObject.Delete();
+            HoldingObject.Delete(true);
             if (HighlightedObject == HoldingObject)
                 HighlightedObject = null;
             HoldingObject = null;
@@ -175,7 +159,8 @@ namespace TDS_Client.Manager.MapCreator
                 info = obj.TeamNumber.Value;
             else if (obj.Type == EMapCreatorPositionType.Object)
                 info = obj.ObjectName;
-            Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z, obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info);
+            Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z, 
+                obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info, obj.OwnerRemoteId);
 
             Draw.HighlightColor_Edge = new RGBA(255, 255, 255, 35);
             Draw.HighlightColor_Full = new RGBA(255, 255, 255, 35);
@@ -190,6 +175,10 @@ namespace TDS_Client.Manager.MapCreator
                 ObjectsManager.RefreshMapLimitDisplay();
             }
             
+            if (!obj.IsSynced)
+                Sync.SyncNewObjectToLobby(obj);
+            else 
+                Sync.SyncObjectPositionToLobby(obj);
         }
 
         private static void MoveHoldingObject()

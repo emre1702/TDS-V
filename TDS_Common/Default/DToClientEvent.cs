@@ -40,6 +40,14 @@
 
         public const string MapChange = "MapChange_Server";
         public const string MapClear = "MapClear_Server";
+        public const string MapCreatorRequestAllObjectsForPlayer = "MapCreatorRequestAllObjectsForPlayer_Server";
+        public const string MapCreatorStartNewMap = "MapCreatorStartNewMap_Server";
+        public const string MapCreatorSyncAllObjects = "MapCreatorSyncAllObjects_Server";
+        public const string MapCreatorSyncData = "MapCreatorSyncData_Server";
+        public const string MapCreatorSyncFixLastId = "MapCreatorSyncFixLastId_Server";
+        public const string MapCreatorSyncNewObject = "MapCreatorSyncNewObject_Server";
+        public const string MapCreatorSyncObjectPosition = "MapCreatorSyncObjectPosition_Server";
+        public const string MapCreatorSyncObjectRemove = "MapCreatorSyncObjectRemove_Server";
         public const string MapsListRequest = "MapsListRequest_Server";
         public const string MapVotingSyncOnPlayerJoin = "MapVotingSyncOnPlayerJoin_Server";
 

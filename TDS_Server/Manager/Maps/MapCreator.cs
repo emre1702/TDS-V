@@ -20,6 +20,7 @@ using TDS_Server_DB.Entity;
 using DB = TDS_Server_DB.Entity;
 using System.Text.RegularExpressions;
 using TDS_Common.Dto.Map.Creator;
+using TDS_Server.Instance.Lobby;
 
 namespace TDS_Server.Manager.Maps
 {
@@ -190,8 +191,7 @@ namespace TDS_Server.Manager.Maps
 
             };
 
-            string json = Serializer.ToBrowser(mapCreatorData);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapForMapCreator, json);
+            ((MapCreateLobby)player.CurrentLobby!).SetMap(mapCreatorData);
         }
 
         public static void SendPlayerMapNamesForMapCreator(TDSPlayer player)

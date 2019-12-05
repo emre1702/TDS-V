@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
@@ -20,7 +22,28 @@ namespace TDS_Server.Instance.Lobby
             Workaround.SetPlayerInvincible(player.Client, true);
             Workaround.FreezePlayer(player.Client, false);
 
+            if (Players.Count > 1)
+            {
+                var owner = GetOwner();
+                if (owner is null)
+                {
+                    return false;
+                }
+                NAPI.ClientEvent.TriggerClientEvent(owner.Client, DToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Entity!.Id);
+            }
+
             return true;
+        }
+
+        public override void RemovePlayer(TDSPlayer player)
+        {
+            base.RemovePlayer(player);
+
+            if (player.Entity?.Id == LobbyEntity.OwnerId && Players.Count >= 1) {
+                var newOwner = Players[CommonUtils.Rnd.Next(0, Players.Count)];
+                LobbyEntity.OwnerId = newOwner.Entity!.Id;
+                PlayerDataSync.SetData(newOwner, EPlayerDataKey.IsLobbyOwner, Enum.EPlayerDataSyncMode.Player, true);
+            }
         }
 
         public void SetPosition(TDSPlayer player, float x, float y, float z, float rot)

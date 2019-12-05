@@ -34,7 +34,7 @@ namespace TDS_Client.Manager.MapCreator
 
             foreach (var entry in _cacheMapEditorObjects)
             {
-                entry.Value.Delete();
+                entry.Value.Delete(false);
             }
             _cacheMapEditorObjects.Clear();
             ObjectPlacing.CheckObjectDeleted();
@@ -42,12 +42,6 @@ namespace TDS_Client.Manager.MapCreator
 
             MapLimitDisplay?.Stop();
             MapLimitDisplay = null;
-        }
-
-        public static void Add(GameEntityBase obj, EMapCreatorPositionType type)
-        {
-            var mapCreatorObject = new MapCreatorObject(obj, type);
-            _cacheMapEditorObjects[obj] = mapCreatorObject;
         }
 
         public static MapCreatorObject GetByHandle(int handle)
@@ -58,6 +52,26 @@ namespace TDS_Client.Manager.MapCreator
         public static MapCreatorObject GetByID(int id)
         {
             return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
+        }
+
+        public static MapCreatorObject CreateMapCreatorObject(EMapCreatorPositionType type, object editingTeamIndexOrObjectName, ushort playerRemoteId)
+        {
+            switch (type)
+            {
+                case EMapCreatorPositionType.TeamSpawn:
+                    return GetTeamSpawn((int)editingTeamIndexOrObjectName, playerRemoteId);
+                case EMapCreatorPositionType.MapCenter:
+                    return GetMapCenter(playerRemoteId);
+                case EMapCreatorPositionType.BombPlantPlace:
+                    return GetBombPlantPlace(playerRemoteId);
+                case EMapCreatorPositionType.MapLimit:
+                    return GetMapLimit(playerRemoteId);
+                case EMapCreatorPositionType.Object:
+                    string objName = (string)editingTeamIndexOrObjectName;
+                    uint objectHash = Misc.GetHashKey(objName);
+                    return GetObject(objectHash, EMapCreatorPositionType.Object, playerRemoteId, objName);
+            }
+            return null;
         }
 
         public static MapCreatorObject GetOrCreateByHandle(int handle, EMapCreatorPositionType? type = null)
@@ -98,53 +112,53 @@ namespace TDS_Client.Manager.MapCreator
                 }
             }
 
-            var obj = new MapCreatorObject(entity, type.Value);
+            var obj = new MapCreatorObject(entity, type.Value, Player.LocalPlayer.RemoteId);
             _cacheMapEditorObjects[entity] = obj;
             return obj;
         }
 
-        public static MapCreatorObject GetTeamSpawn(int editingTeamIndex, int id = -1)
+        public static MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, int id = -1)
         {
             int pedHashIndex = editingTeamIndex;
             while (pedHashIndex >= ClientConstants.TeamSpawnPedHash.Length) 
                 pedHashIndex -= ClientConstants.TeamSpawnPedHash.Length;
             var obj = new Ped(ClientConstants.TeamSpawnPedHash[pedHashIndex], Player.LocalPlayer.Position, Player.LocalPlayer.GetHeading(), dimension: Player.LocalPlayer.Dimension);
             obj.SetInvincible(true);
-            var mapCreatorObj = new MapCreatorObject(obj, EMapCreatorPositionType.TeamSpawn, editingTeamIndex, id: id);
+            var mapCreatorObj = new MapCreatorObject(obj, EMapCreatorPositionType.TeamSpawn, playerRemoteId, editingTeamIndex, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
 
-        public static MapCreatorObject GetMapCenter(int id = -1)
+        public static MapCreatorObject GetMapCenter(ushort playerRemoteId, int id = -1)
         {
             var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == EMapCreatorPositionType.MapCenter);
             if (entry.Value != null)
                 return entry.Value;
-            return GetObject(ClientConstants.MapCenterHash, EMapCreatorPositionType.MapCenter, id: id);
+            return GetObject(ClientConstants.MapCenterHash, EMapCreatorPositionType.MapCenter, playerRemoteId, id: id);
         }
 
-        public static MapCreatorObject GetMapLimit(int id = -1)
+        public static MapCreatorObject GetMapLimit(ushort playerRemoteId, int id = -1)
         {
-            return GetObject(ClientConstants.MapLimitHash, EMapCreatorPositionType.MapLimit, id: id);
+            return GetObject(ClientConstants.MapLimitHash, EMapCreatorPositionType.MapLimit, playerRemoteId, id: id);
         }
 
-        public static MapCreatorObject GetBombPlantPlace(int id = -1)
+        public static MapCreatorObject GetBombPlantPlace(ushort playerRemoteId, int id = -1)
         {
-            return GetObject(ClientConstants.BombPlantPlaceHash, EMapCreatorPositionType.BombPlantPlace, id: id);
+            return GetObject(ClientConstants.BombPlantPlaceHash, EMapCreatorPositionType.BombPlantPlace, playerRemoteId, id: id);
         }
 
-        public static MapCreatorObject GetObject(uint hash, EMapCreatorPositionType type, string objName = null, int id = -1)
+        public static MapCreatorObject GetObject(uint hash, EMapCreatorPositionType type, ushort playerRemoteId, string objName = null, int id = -1)
         {
            
             MapObject obj = new MapObject(hash, Player.LocalPlayer.Position, Player.LocalPlayer.GetRotation(2), dimension: Player.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(obj, type, objectName: objName, id: id);
+            var mapCreatorObj = new MapCreatorObject(obj, type, playerRemoteId, objectName: objName, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
 
         public static void DeleteTeamObjects(int teamNumber)
         {
-            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber).ToList();
+            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber && CanEditObject(entry.Value)).ToList();
             foreach (var entry in teamObjects)
             {
                 Delete(entry.Value);
@@ -162,8 +176,10 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void Delete(MapCreatorObject obj)
         {
+            if (!CanEditObject(obj))
+                return;
             _cacheMapEditorObjects.Remove(obj.Entity);
-            obj.Delete();
+            obj.Delete(true);
             ObjectPlacing.CheckObjectDeleted();
             if (obj.Type == EMapCreatorPositionType.MapLimit)
             {
@@ -177,7 +193,7 @@ namespace TDS_Client.Manager.MapCreator
 
             if (map.MapCenter != null)
             {
-                var obj = GetMapCenter(map.MapCenter.Id);
+                var obj = GetMapCenter(map.MapCenter.OwnerRemoteId, map.MapCenter.Id);
                 obj.LoadPos(map.MapCenter);
                 if (TDSCamera.ActiveCamera != null)
                     TDSCamera.ActiveCamera.Position = new Vector3(map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ);
@@ -189,7 +205,7 @@ namespace TDS_Client.Manager.MapCreator
             {
                 foreach (var bombPlace in map.BombPlaces)
                 {
-                    var obj = GetBombPlantPlace(bombPlace.Id);
+                    var obj = GetBombPlantPlace(bombPlace.OwnerRemoteId, bombPlace.Id);
                     obj.LoadPos(bombPlace);
                 }
             }
@@ -198,7 +214,7 @@ namespace TDS_Client.Manager.MapCreator
             {
                 foreach (var mapEdge in map.MapEdges)
                 {
-                    var obj = GetMapLimit(mapEdge.Id);
+                    var obj = GetMapLimit(mapEdge.OwnerRemoteId, mapEdge.Id);
                     obj.LoadPos(mapEdge);
                 }
             }
@@ -209,7 +225,7 @@ namespace TDS_Client.Manager.MapCreator
                 {
                     string objName = Convert.ToString(objPos.Info);
                     uint objectHash = Misc.GetHashKey(objName);
-                    var obj = GetObject(objectHash, EMapCreatorPositionType.Object, objName, objPos.Id);
+                    var obj = GetObject(objectHash, EMapCreatorPositionType.Object, objPos.OwnerRemoteId, objName, objPos.Id);
                     obj.LoadPos(objPos);
                 }
             }
@@ -221,7 +237,7 @@ namespace TDS_Client.Manager.MapCreator
                 {
                     foreach (var spawnPos in teamSpawns)
                     {
-                        var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.Id);
+                        var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId, spawnPos.Id);
                         obj.LoadPos(spawnPos);
                     }
                 }
@@ -236,6 +252,16 @@ namespace TDS_Client.Manager.MapCreator
                 .Where(o => o.Value.Type == EMapCreatorPositionType.MapLimit)
                 .Select(o => new Position4DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y, Z = o.Value.MovingPosition.Z })
                 .ToList());
+        }
+
+        public static bool CanEditObject(MapCreatorObject obj)
+        {
+            return obj.OwnerRemoteId == Player.LocalPlayer.RemoteId || Lobby.Lobby.IsLobbyOwner;
+        }
+
+        public static IEnumerable<MapCreatorObject> GetAll()
+        {
+            return _cacheMapEditorObjects.Values;
         }
 
 

@@ -56,6 +56,14 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.LoadUserpanelData, OnLoadUserpanelDataMethod);
             Add(DToClientEvent.MapChange, OnMapChangeMethod);
             Add(DToClientEvent.MapClear, OnMapClearMethod);
+            Add(DToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
+            Add(DToClientEvent.MapCreatorStartNewMap, OnMapCreatorStartNewMapMethod);
+            Add(DToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
+            Add(DToClientEvent.MapCreatorSyncData, OnMapCreatorSyncDataMethod);
+            Add(DToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
+            Add(DToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
+            Add(DToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
+            Add(DToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
             Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
             Add(DToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
             Add(DToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
@@ -196,9 +204,59 @@ namespace TDS_Client.Manager.Event
                 MapLimitManager.Load(maplimit);
         }
 
+        private void OnMapCreatorRequestAllObjectsForPlayerMethod(object[] args)
+        {
+            int tdsPlayerId = Convert.ToInt32(args[0]);
+            Sync.SyncAllObjectsToPlayer(tdsPlayerId);
+        }
+
+        private void OnMapCreatorStartNewMapMethod(object[] args)
+        {
+            MapCreator.Main.StartNewMap();
+        }
+
+        private void OnMapCreatorSyncAllObjectsMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var data = Serializer.FromClient<List<MapCreatorPosition>>(json);
+            Sync.SyncAllObjectsFromLobbyOwner(data);
+        }
+
+        private void OnMapCreatorSyncDataMethod(object[] args)
+        {
+            Browser.Angular.Main.MapCreatorSyncData(Convert.ToInt32(args[0]), args[1]);
+        }
+
+        private void OnMapCreatorSyncFixLastIdMethod(object[] args)
+        {
+            int oldId = Convert.ToInt32(args[0]);
+            int newId = Convert.ToInt32(args[1]);
+            Sync.SyncLatestIdFromServer(oldId, newId);
+        }
+
         private void OnMapClearMethod(object[] args)
         {
             Round.Reset(false);
+        }
+
+        private void OnMapCreatorSyncNewObjectMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var dto = Serializer.FromServer<MapCreatorPosition>(json);
+            Sync.SyncNewObjectFromLobby(dto);
+        }
+
+        private void OnMapCreatorSyncObjectPositionMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var dto = Serializer.FromServer<MapCreatorPosData>(json);
+            Sync.SyncObjectPositionFromLobby(dto);
+        }
+
+        private void MapCreatorSyncObjectRemoveMethod(object[] args)
+        {
+            int objId = Convert.ToInt32(args[0]);
+            Sync.SyncObjectRemoveFromLobby(objId);
         }
 
         private void OnCountdownStartMethod(object[] args)
@@ -612,6 +670,10 @@ namespace TDS_Client.Manager.Event
                 Scoreboard.ReleasedScoreboardKey();
             Browser.Angular.Main.ToggleTeamChoiceMenu(boolean);
         }
+
+
+
+
 
         private void OnFromBrowserEventReturnMethod(object[] args)
         {

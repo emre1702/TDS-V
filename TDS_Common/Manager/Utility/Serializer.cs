@@ -11,6 +11,11 @@ namespace TDS_Common.Manager.Utility
             return LZ4MessagePackSerializer.ToJson(obj);
         }
 
+        public static string ToServer<T>(T obj)
+        {
+            return ToClient(obj);
+        }
+
         public static string ToBrowser<T>(T obj)
         {
             return MessagePackSerializer.ToJson(obj);

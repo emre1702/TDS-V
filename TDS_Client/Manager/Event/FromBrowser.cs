@@ -51,6 +51,7 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
             Add(DFromBrowserEvent.MapCreatorHighlightPos, OnMapCreatorHighlightPosMethod);
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
+            Add(DFromBrowserEvent.MapCreatorStartNew, OnMapCreatorStartNewBrowserMethod);
             Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
             Add(DFromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
@@ -255,6 +256,11 @@ namespace TDS_Client.Manager.Event
         {
             string objName = (string)args[0];
             ObjectPreview.ShowObject(objName);
+        }
+
+        private void OnMapCreatorStartNewBrowserMethod(object[] args)
+        {
+            Sync.SyncStartNewMap();
         }
 
         private void OnMapCreatorStartObjectChoiceMethod(object[] args)

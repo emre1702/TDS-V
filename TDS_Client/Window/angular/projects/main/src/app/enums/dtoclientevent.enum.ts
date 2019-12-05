@@ -16,6 +16,7 @@ export enum DToClientEvent {
   LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser",
   // RemoveMapVote = "RemoveMapVote_Browser",
   MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser",
+  MapCreatorStartNew = "MapCreatorStartNew_Browser",
   MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser",
   MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser",
   OnColorSettingChange = "OnColorSettingChange_Browser",

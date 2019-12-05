@@ -12,6 +12,19 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Lobby
     {
+        public static bool IsLobbyOwner
+        {
+            get => _isLobbyOwner;
+            set
+            {
+                if (_isLobbyOwner != value)
+                {
+                    Browser.Angular.Main.SyncIsLobbyOwner(value);
+                }
+                _isLobbyOwner = value;
+            }
+        }
+
         public static bool InFightLobby
         {
             get => _inFightLobby;
@@ -23,6 +36,7 @@ namespace TDS_Client.Manager.Lobby
         }
 
         private static ELobbyType? _inLobbyType;
+        private static bool _isLobbyOwner;
         private static bool _inFightLobby;
 
         public static void Joined(SyncedLobbySettingsDto oldSettings, SyncedLobbySettingsDto settings)

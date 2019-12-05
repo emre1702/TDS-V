@@ -19,8 +19,11 @@ export class MapCreatorPosition {
     [7]: number;
     /** RotZ */
     [8]: number;
+    /** OwnerRemoteId */
+    [9]: number;
 
-    constructor(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number, rotX: number, rotY: number, rotZ: number) {
+    constructor(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number,
+        rotX: number, rotY: number, rotZ: number, ownerRemoteId: number) {
         this[0] = id;
         this[1] = type;
         this[3] = posX;
@@ -29,5 +32,6 @@ export class MapCreatorPosition {
         this[6] = rotX;
         this[7] = rotY;
         this[8] = rotZ;
+        this[9] = ownerRemoteId;
     }
 }

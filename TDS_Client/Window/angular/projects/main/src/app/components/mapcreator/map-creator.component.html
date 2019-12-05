@@ -8,12 +8,18 @@
   <div id="container-content">
     <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
       <mat-form-field color="accent" hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}" class="mat-form-field-with-hint">
-        <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}" [formControl]="nameControl" type="text" [(ngModel)]="data[1]"/>
+        <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}"
+        [formControl]="nameControl" type="text"
+        [(ngModel)]="data[1]"
+        [disabled]="!settings.IsLobbyOwner"/>
         <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}</mat-error>
         <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>
       </mat-form-field>
       <div class="two-per-row-container" color="accent">
-        <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required [(ngModel)]="data[2]" (selectionChange)="onMapTypeChange($event)">
+        <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required
+        [(ngModel)]="data[2]"
+        (selectionChange)="onMapTypeChange($event)"
+        [disabled]="!settings.IsLobbyOwner">
           <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
             {{ type | language: settings.Lang }}
           </mat-option>
@@ -21,11 +27,13 @@
 
         <button class="two-per-row-div"
             mat-raised-button
-            (click)="switchToMapSettings()" >
+            (click)="switchToMapSettings()"
+            [disabled]="!settings.IsLobbyOwner" >
           {{ 'MapSettings' | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button
-          (click)="switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages()" >
+          (click)="switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages()"
+          [disabled]="!settings.IsLobbyOwner" >
           {{ lang | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button
@@ -50,22 +58,22 @@
 
       <div class="main-bottom-buttons-row">
         <button mat-raised-button type="button" (click)="sendDataToClient()"
-          [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || nameControl.invalid">
+          [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || nameControl.invalid || !settings.IsLobbyOwner">
           {{ 'Send' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="removeTheMap()">
+        <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
           {{ 'Remove' | language: settings.Lang }}
         </button>
       </div>
 
       <div class="main-bottom-buttons-row">
-        <button mat-raised-button type="button" (click)="startNew()">
+        <button mat-raised-button type="button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
           {{ 'New' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="saveData()" [disabled]="nameControl.invalid">
+        <button mat-raised-button type="button" (click)="saveData()" [disabled]="nameControl.invalid || !settings.IsLobbyOwner">
           {{ 'Save' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="loadPossibleMaps()">
+        <button mat-raised-button type="button" (click)="loadPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
           {{ 'Load' | language: settings.Lang }}
         </button>
       </div>
@@ -101,7 +109,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-raised-button type="button" (click)="removeLastTeam()">
+        <button mat-raised-button type="button" [disabled]="!settings.IsLobbyOwner" (click)="removeLastTeam()">
           {{ 'Remove' | language: settings.Lang }}
         </button>
       </div>
@@ -145,10 +153,12 @@
         <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.TeamSpawn)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Remove' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="holdSelected()"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Hold' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
@@ -188,10 +198,12 @@
         <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapLimit)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Remove' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="holdSelected()"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Hold' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
@@ -216,10 +228,12 @@
         </mat-form-field>
       </div>
       <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)">
+        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
+        [disabled]="!settings.IsLobbyOwner">
           {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
+        [disabled]="!settings.IsLobbyOwner">
           {{ 'Remove' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()">
@@ -281,10 +295,12 @@
       </div>
 
       <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromObjects)" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromObjects)"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Remove' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="holdSelected()"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Hold' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
@@ -334,10 +350,12 @@
         <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.BombPlantPlace)">
           {{ 'AddPos' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Remove' | language: settings.Lang }}
         </button>
-        <button mat-raised-button type="button" (click)="holdSelected()" [disabled]="!selectedPosition">
+        <button mat-raised-button type="button" (click)="holdSelected()"
+        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
           {{ 'Hold' | language: settings.Lang }}
         </button>
         <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">

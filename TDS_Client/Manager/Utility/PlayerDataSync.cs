@@ -115,7 +115,7 @@ namespace TDS_Client.Manager.Utility
                     TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
                     break;
                 case EPlayerDataKey.IsLobbyOwner:
-                    Browser.Angular.Main.SyncIsLobbyOwner((bool)obj);
+                    Lobby.Lobby.IsLobbyOwner = (bool)obj;
                     break;
             }
         }

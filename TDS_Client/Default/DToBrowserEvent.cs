@@ -12,6 +12,7 @@
         public const string LoadLanguage = "LoadLanguage_Client";
         public const string LoadFavoriteMaps = "LoadFavoriteMaps_Client";
         public const string LoadMapVoting = "LoadMapVoting_Client";
+        public const string MapCreatorSyncData = "MapCreatorSyncData_Client";
         public const string OpenMapMenu = "OpenMapMenu_Client";
         public const string RemoveCustomLobby = "RemoveCustomLobby_Client";  
         public const string RemovePositionInMapCreatorBrowser = "RemovePositionInMapCreatorBrowser_Client";

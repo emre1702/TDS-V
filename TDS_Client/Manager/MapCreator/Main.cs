@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Enum;
+using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
 
@@ -46,6 +47,13 @@ namespace TDS_Client.Manager.MapCreator
                 Foot.Stop();
                 Freecam.Start();
             }
+        }
+
+        public static void StartNewMap()
+        {
+            ObjectsManager.Stop();
+            ObjectsManager.Start();
+            MapCreatorObject.Reset();
         }
     }
 }

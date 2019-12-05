@@ -11,6 +11,7 @@ export enum DFromClientEvent {
     LoadLanguage = "LoadLanguage_Client",
     LoadMapVoting = "LoadMapVoting_Client",
     LoadOrders = "LoadOrders_Client",
+    MapCreatorSyncData = "MapCreatorSyncData_Client",
     OpenMapMenu = "OpenMapMenu_Client",
     RefreshAdminLevel = "RefreshAdminLevel_Client",
     RemoveCustomLobby = "RemoveCustomLobby_Client",
@@ -34,5 +35,5 @@ export enum DFromClientEvent {
     ToggleMapCreator = "ToggleMapCreator_Client",
     ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server",
     ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
-    ToggleUserpanel = "ToggleUserpanel_Client"
+    ToggleUserpanel = "ToggleUserpanel_Client",
 }

@@ -28,8 +28,9 @@ export class AppComponent {
         snackBar: MatSnackBar,
         public vcRef: ViewContainerRef) {
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number) => {
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number, remoteId: number) => {
             this.settings.loadAdminLevel(adminLevel);
+            this.settings.loadRemoteId(remoteId);
         });
 
         rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {

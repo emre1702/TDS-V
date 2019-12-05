@@ -134,5 +134,15 @@ namespace TDS_Server.Instance.Lobby
                 return false;
             return character.CurrentLobby == this && LobbyEntity.OwnerId == character.Entity.Id;
         }
+
+        public TDSPlayer? GetOwner()
+        {
+            return GetPlayerById(LobbyEntity.OwnerId);
+        }
+
+        public TDSPlayer? GetPlayerById(int id)
+        {
+            return Players.FirstOrDefault(p => p.Entity!.Id == id);
+        }
     }
 }

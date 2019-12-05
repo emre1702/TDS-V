@@ -2,6 +2,7 @@
 using RAGE;
 using RAGE.Elements;
 using TDS_Client.Enum;
+using TDS_Client.Manager.MapCreator;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
@@ -10,7 +11,7 @@ namespace TDS_Client.Instance.MapCreator
 {
     class MapCreatorObject
     {
-        public int ID { get; }
+        public int ID { get; set; }
         public EMapCreatorPositionType Type { get; } 
         public string ObjectName { get; }
         public int? TeamNumber { get; }
@@ -41,16 +42,19 @@ namespace TDS_Client.Instance.MapCreator
         }
         public Vector3 Position;
         public Vector3 Rotation;
+        public ushort OwnerRemoteId { get; }
+        public bool IsSynced { get; set; }
 
         private Vector3 _movingPosition;
         private Vector3 _movingRotation;
 
-        private static int _idCounter = 0;
+        public static int IdCounter = 0;
 
-        public MapCreatorObject(GameEntityBase entity, EMapCreatorPositionType type, int? teamNumber = null, string objectName = null, int id = -1)
+        public MapCreatorObject(GameEntityBase entity, EMapCreatorPositionType type, ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
             Entity = entity;
             Type = type;
+            OwnerRemoteId = ownerRemoteId;
             TeamNumber = teamNumber;
             ObjectName = objectName;
 
@@ -62,12 +66,16 @@ namespace TDS_Client.Instance.MapCreator
             Position = entity.Position;
 
             if (id == -1)
-                ID = ++_idCounter;
+            {
+                ID = ++IdCounter;
+                Sync.SyncLatestIdToServer();
+            } 
             else
             {
-                _idCounter = Math.Max(ID, id);
+                IdCounter = Math.Max(IdCounter, id);
                 ID = id;
             }
+            Sync.SyncLatestIdToServer();
 
             Blip = CreateBlip();
 
@@ -75,6 +83,15 @@ namespace TDS_Client.Instance.MapCreator
         }
 
         public void LoadPos(MapCreatorPosition pos)
+        {
+            MovingPosition = new Vector3(pos.PosX, pos.PosY, pos.PosZ);
+            Position = MovingPosition;
+
+            MovingRotation = new Vector3(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = MovingRotation;
+        }
+
+        public void LoadPos(MapCreatorPosData pos)
         {
             MovingPosition = new Vector3(pos.PosX, pos.PosY, pos.PosZ);
             Position = MovingPosition;
@@ -106,16 +123,62 @@ namespace TDS_Client.Instance.MapCreator
             RAGE.Game.Physics.ActivatePhysics(Entity.Handle);
         }
 
-        public void Delete()
+        public void Delete(bool syncToServer)
         {
             Entity.Destroy();
             Blip.Destroy();
             Deleted = true;
+            if (syncToServer)
+            {
+                Sync.SyncObjectRemoveToLobby(this);
+            }
         }
 
         public static void Reset()
         {
-            _idCounter = 0;
+            IdCounter = 0;
+        }
+
+        public MapCreatorPosition GetDto()
+        {
+            return new MapCreatorPosition 
+            {
+                Id = ID,
+                Info = (object)TeamNumber ?? ObjectName,
+                OwnerRemoteId = OwnerRemoteId,
+                PosX = Position.X,
+                PosY = Position.Y,
+                PosZ = Position.Z,
+                RotX = Rotation.X,
+                RotY = Rotation.Y,
+                RotZ = Rotation.Z,
+                Type = Type
+            };
+        }
+
+        public MapCreatorPosData GetPosDto()
+        {
+            return new MapCreatorPosData
+            {
+                Id = ID,
+
+                PosX = Position.X,
+                PosY = Position.Y,
+                PosZ = Position.Z,
+
+                RotX = Rotation.X,
+                RotY = Rotation.Y,
+                RotZ = Rotation.Z
+            };
+        }
+
+        public static MapCreatorObject FromDto(MapCreatorPosition dto)
+        {
+            var obj = ObjectsManager.CreateMapCreatorObject(dto.Type, dto.Info, dto.OwnerRemoteId);
+
+            obj.LoadPos(dto);
+
+            return obj;
         }
 
         private Blip CreateBlip()

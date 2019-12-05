@@ -12,6 +12,7 @@ export enum DToServerEvent {
     LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser",
     LoadMapForMapCreator = "LoadMapForMapCreator_Browser",
     LoadUserpanelData = "LoadUserpanelData_Browser",
+    MapCreatorSyncData = "MapCreatorSyncData_Browser",
     RejectInvitation = "RejectInvitation_Browser",
     RemoveMap = "RemoveMap_Browser",
     SaveSettings = "SaveSettings_Browser",

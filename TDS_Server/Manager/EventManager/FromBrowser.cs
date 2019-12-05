@@ -11,6 +11,7 @@ using System.Linq;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Manager.Utility;
+using TDS_Common.Enum;
 
 namespace TDS_Server.Manager.EventManager
 {
@@ -28,7 +29,8 @@ namespace TDS_Server.Manager.EventManager
         };
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {
-            [DToServerEvent.BuyMap] = BuyMap
+            [DToServerEvent.BuyMap] = BuyMap,
+            [DToServerEvent.MapCreatorSyncData] = MapCreatorSyncData
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
@@ -160,6 +162,19 @@ namespace TDS_Server.Manager.EventManager
                 return null;
 
             arena.BuyMap(player, mapId.Value);
+            return null;
+        }
+
+        private static object? MapCreatorSyncData(TDSPlayer player, params object[] args)
+        {
+            if (player.CurrentLobby is null)
+                return null;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return null;
+            var infoType = (EMapCreatorInfoType)Convert.ToInt32(args[0]);
+            var data = args[1];
+
+            lobby.SyncMapInfoChange(infoType, data);
             return null;
         }
     }

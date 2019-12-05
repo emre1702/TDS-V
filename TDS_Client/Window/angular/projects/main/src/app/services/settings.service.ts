@@ -91,6 +91,8 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
+    public RemoteId = 0;
+
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
         { Level: 1, Name: "Supporter", Color: "rgb(113,202,113)" },
@@ -111,6 +113,10 @@ export class SettingsService {
     public toggleInFightLobby(bool: boolean) {
         this.InFightLobby = bool;
         this.InFightLobbyChanged.emit(null);
+    }
+
+    public loadRemoteId(remoteId: number) {
+        this.RemoteId = remoteId;
     }
 
     private syncMapPriceData(mapBuyBasePrice: number, mapBuyCounterMultiplicator: number, mapsBoughtCounter: number) {

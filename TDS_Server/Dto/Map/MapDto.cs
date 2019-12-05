@@ -67,6 +67,7 @@ namespace TDS_Server.Dto.Map
                 German = data.Description[(int)ELanguage.German]
             };
 
+            data.TeamSpawns.RemoveAll(l => l.Count == 0);
             TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Count] };
             for (uint i = 0; i < data.TeamSpawns.Count; ++i)
             {

@@ -4,7 +4,6 @@ using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
-using System;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -29,7 +28,7 @@ namespace TDS_Client.Manager.Browser.Angular
 
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
 
-            Execute(DToBrowserEvent.InitLoadAngular, adminLevel);
+            Execute(DToBrowserEvent.InitLoadAngular, adminLevel, RAGE.Elements.Player.LocalPlayer.RemoteId);
             foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);
@@ -179,9 +178,10 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DToBrowserEvent.ShowCooldown);
         }
 
-        public static void AddPositionToMapCreatorBrowser(int id, EMapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, object info)
+        public static void AddPositionToMapCreatorBrowser(int id, EMapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, 
+            object info, ushort ownerRemoteId)
         {
-            Execute(DToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, info);
+            Execute(DToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);
         }
 
         public static void RemovePositionInMapCreatorBrowser(int id, EMapCreatorPositionType type)
@@ -237,6 +237,11 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void SyncIsLobbyOwner(bool obj)
         {
             Execute(DToBrowserEvent.SyncIsLobbyOwner, obj);
+        }
+
+        public static void MapCreatorSyncData(int mapInfoType, object data)
+        {
+            Execute(DToBrowserEvent.MapCreatorSyncData, mapInfoType, data);
         }
 
 

@@ -33,6 +33,7 @@ namespace TDS_Client.Manager.Lobby
         }
         private static HashSet<Player> _sameTeamPlayers { get; set; } = new HashSet<Player>();
         public static string CurrentTeamName { get; set; } = "Login/Register";
+        public static int AmountPlayersSameTeam => _sameTeamPlayers.Count;
 
         private static bool _activated;
         private static List<SyncedTeamDataDto> _currentLobbyTeams;

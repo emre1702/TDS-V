@@ -362,6 +362,8 @@ namespace TDS_Server.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
+            if (!(player.CurrentLobby is MapCreateLobby))
+                return;
             MapCreator.SendPlayerMapForMapCreator(player, mapName);
         }
 
@@ -384,6 +386,72 @@ namespace TDS_Server.Manager.EventManager
                 return;
             EFreeroamVehicleType vehType = (EFreeroamVehicleType)vehTypeNumber;
             lobby.GiveVehicle(player, vehType);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorSyncLastId)]
+        public void OnMapCreatorSyncLastId(Client client, int id)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncLastId(player, id);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorSyncNewObject)]
+        public void OnMapCreatorSyncNewObject(Client client, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncNewObject(player, json);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorSyncObjectPosition)]
+        public void OnMapCreatorSyncObjectPosition(Client client, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncObjectPosition(player, json);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorSyncRemoveObject)]
+        public void OnMapCreatorSyncRemoveObject(Client client, int id)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncRemoveObject(player, id);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorSyncAllObjects)]
+        public void OnMapCreatorSyncAllObjects(Client client, int tdsPlayerId, string json)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncAllObjectsToPlayer(tdsPlayerId, json);
+        }
+
+        [RemoteEvent(DToServerEvent.MapCreatorStartNewMap)]
+        public void OnMapCreatorStartNewMap(Client client)
+        {
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            if (!(player.CurrentLobby is MapCreateLobby lobby))
+                return;
+            lobby.StartNewMap();
         }
         #endregion MapCreator
 

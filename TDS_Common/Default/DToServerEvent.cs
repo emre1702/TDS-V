@@ -38,6 +38,13 @@
         public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser";
         public const string LoadUserpanelData = "LoadUserpanelData_Browser";
 
+        public const string MapCreatorStartNewMap = "MapCreatorStartNewMap_Client";
+        public const string MapCreatorSyncAllObjects = "MapCreatorSyncAllObjects_Client";
+        public const string MapCreatorSyncData = "MapCreatorSyncData_Browser";
+        public const string MapCreatorSyncLastId = "MapCreatorSyncLastId_Client";
+        public const string MapCreatorSyncNewObject = "MapCreatorSyncNewObject_Client";
+        public const string MapCreatorSyncObjectPosition = "MapCreatorSyncObjectPosition_Client";
+        public const string MapCreatorSyncRemoveObject = "MapCreatorSyncRemoveObject_Client";
         public const string MapsListRequest = "MapsListRequest_Client";
         public const string MapVote = "MapVote_Client";
 
