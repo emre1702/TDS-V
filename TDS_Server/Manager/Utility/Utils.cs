@@ -98,6 +98,11 @@ namespace TDS_Server.Manager.Utility
             return null;
         }
 
+        public static bool GetInt(object obj, out int id)
+        {
+            return int.TryParse(Convert.ToString(obj), out id);
+        }
+
         /// <summary>
         /// Check if the name is valid
         /// </summary>

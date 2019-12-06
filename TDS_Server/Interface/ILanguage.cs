@@ -35,6 +35,7 @@
         string HITSOUND_ACTIVATED { get; }
         string HITSOUND_DEACTIVATED { get; }
 
+        string INVITATION_MAPCREATELOBBY { get; }
         string INVITATION_WAS_WITHDRAWN_OR_REMOVED { get; }
 
         string JOINED_LOBBY_MESSAGE { get; }
@@ -116,12 +117,14 @@
         string STILL_PERMAMUTED { get; }
         string SUPPORT_REQUEST_CREATED { get; }
 
+        string TARGET_ACCEPTED_INVITATION { get; }
         string TARGET_ADDED_BLOCK { get; }
         string TARGET_ALREADY_BLOCKED { get; }
         string TARGET_ALREADY_IN_PRIVATE_CHAT { get; }
         string TARGET_NOT_BLOCKED { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
+        string TARGET_REJECTED_INVITATION { get; }
         string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
         string TESTING_MAP_NOTIFICATION { get; }
         string TEXT_TOO_LONG { get; }
@@ -146,12 +149,14 @@
         string WRONG_PASSWORD { get; }
 
         string YOU_ACCEPTED_INVITATION { get; }
+        string YOU_ACCEPTED_TEAM_INVITATION { get; }
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
         string YOU_GOT_UNBLOCKED_BY { get; }
         string YOU_GOT_INVITATION_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
         string YOU_REJECTED_INVITATION { get; }
+        string YOU_REJECTED_TEAM_INVITATION { get; }
         string YOU_UNBLOCKED { get; }
     }
 }

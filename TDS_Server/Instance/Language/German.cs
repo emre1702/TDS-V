@@ -42,6 +42,7 @@ namespace TDS_Server.Instance.Language
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
         public override string HITSOUND_DEACTIVATED => "Hitsound deaktiviert!";
 
+        public override string INVITATION_MAPCREATELOBBY => "Du wurdest von {0} in die MapCreator-Lobby eingeladen.";
         public override string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "Die Einladung wurde schon zurückgezogen oder entfernt.";
 
         public override string JOINED_LOBBY_MESSAGE => "Du bist in die Lobby \"{0}\" eingetreten.\nNutze '/{1}' zum Verlassen.";
@@ -121,12 +122,14 @@ namespace TDS_Server.Instance.Language
         public override string STILL_PERMAMUTED => "Du bist noch permanent gemutet.";
         public override string SUPPORT_REQUEST_CREATED => "Die Support-Anfrage wurde erstellt.";
 
+        public override string TARGET_ACCEPTED_INVITATION => "{0} hat deine Einladung angenommen.";
         public override string TARGET_ADDED_BLOCK => "Der Spieler {0} wurde von dir geblockt.";
         public override string TARGET_ALREADY_BLOCKED => "Der Spieler {0} wurde bereits von dir geblockt.";
         public override string TARGET_ALREADY_IN_PRIVATE_CHAT => "Das Ziel ist bereits in einem Privatchat.";
         public override string TARGET_NOT_BLOCKED => "{0} ist nicht blockiert.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
+        public override string TARGET_REJECTED_INVITATION => "{0} hat deine Einladung abgelehnt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";
         public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
@@ -158,13 +161,15 @@ namespace TDS_Server.Instance.Language
 
         public override string WRONG_PASSWORD => "Falsches Passwort!";
 
-        public override string YOU_ACCEPTED_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
+        public override string YOU_ACCEPTED_INVITATION => "Du hast die Einladung von {0} angenommen.";
+        public override string YOU_ACCEPTED_TEAM_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurdest von {0} geblockt.";
         public override string YOU_GOT_INVITATION_BY => "Du hast von {0} eine Einladung ins Team bekommen.";
         public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast ${0} (${1} Gebühr) von {2} bekommen.";
         public override string YOU_GOT_UNBLOCKED_BY => "Du wurdest von {0} entblockt.";
-        public override string YOU_REJECTED_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";
+        public override string YOU_REJECTED_INVITATION => "Du hast die Einladung von {0} abgelehnt.";
+        public override string YOU_REJECTED_TEAM_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
     }
 }

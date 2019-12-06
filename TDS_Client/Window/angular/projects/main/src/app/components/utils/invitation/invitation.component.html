@@ -1,0 +1,10 @@
+<div id="container" [@invitationAnimation]>
+    <div id="messages-container" class="mat-app-background" *ngFor="let invitation of invitations">
+        <div>{{ invitation[1] }}: {{ invitation[2] }}</div>
+        <div class="buttons-row">
+            <button mat-raised-button (click)="accept(invitation[0])">{{ 'Accept' | language: settings.Lang }}</button>
+            <button mat-raised-button (click)="reject(invitation[0])">{{ 'Reject' | language: settings.Lang }}</button>
+        </div>
+    </div>
+
+</div>

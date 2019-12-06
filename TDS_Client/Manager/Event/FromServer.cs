@@ -3,6 +3,7 @@ using RAGE.Elements;
 using RAGE.Game;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Account;
@@ -106,6 +107,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
             Add(DToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
 
+            Add(DToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
             Add(DToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
         }
 
@@ -218,8 +220,9 @@ namespace TDS_Client.Manager.Event
         private void OnMapCreatorSyncAllObjectsMethod(object[] args)
         {
             string json = Convert.ToString(args[0]);
-            var data = Serializer.FromClient<List<MapCreatorPosition>>(json);
+            var data = Serializer.FromServer<MapCreateDataDto>(json);
             Sync.SyncAllObjectsFromLobbyOwner(data);
+            Browser.Angular.Main.LoadMapForMapCreator(json);
         }
 
         private void OnMapCreatorSyncDataMethod(object[] args)
@@ -673,7 +676,11 @@ namespace TDS_Client.Manager.Event
 
 
 
-
+        private void OnToBrowserEventMethod(object[] args)
+        {
+            string eventName = (string)args[0];
+            Browser.Angular.Main.FromServerToBrowser(eventName, args.Skip(1).ToArray());
+        }
 
         private void OnFromBrowserEventReturnMethod(object[] args)
         {

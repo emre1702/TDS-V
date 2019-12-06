@@ -1,0 +1,32 @@
+#container {
+    width: 100%;
+    height: auto;
+
+    #messages-container {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        div:first-child {
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        .buttons-row {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            :first-child {
+                border: 1px solid green;
+            }
+
+            :last-child {
+                border: 1px solid red;
+            }
+        }
+    }
+}

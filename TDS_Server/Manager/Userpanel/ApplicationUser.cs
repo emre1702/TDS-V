@@ -149,7 +149,7 @@ namespace TDS_Server.Manager.Userpanel
             player.Entity.AdminLvl = 1;
             await player.SaveData();
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_ACCEPTED_INVITATION, invitation.Admin.Name));
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)
@@ -190,7 +190,7 @@ namespace TDS_Server.Manager.Userpanel
             dbContext.Remove(invitation);
             await dbContext.SaveChangesAsync();
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_REJECTED_INVITATION, invitation.Admin.Name));
+            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)

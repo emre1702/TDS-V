@@ -30,7 +30,9 @@ namespace TDS_Server.Manager.EventManager
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {
             [DToServerEvent.BuyMap] = BuyMap,
-            [DToServerEvent.MapCreatorSyncData] = MapCreatorSyncData
+            [DToServerEvent.MapCreatorSyncData] = MapCreatorSyncData,
+            [DToServerEvent.AcceptInvitation] = InvitationManager.AcceptInvitation,
+            [DToServerEvent.RejectInvitation] = InvitationManager.RejectInvitation
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]

@@ -76,6 +76,7 @@ import { CarouselComponent } from './components/carousel/carousel.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
+import { InvitationComponent } from './components/utils/invitation/invitation.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpa
     UserpanelSupportAdminComponent,
     UserpanelSupportViewComponent,
     CarouselComponent,
-    UserpanelOfflineMessagesComponent
+    UserpanelOfflineMessagesComponent,
+    InvitationComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -245,6 +245,11 @@ namespace TDS_Client.Manager.Browser.Angular
         }
 
 
+        public static void FromServerToBrowser(string eventName, params object[] args)
+        {
+            Execute(eventName, args);
+        }
+
         public static void FromBrowserEventReturn(string eventName, object ret)
         {
             Execute(DToServerEvent.FromBrowserEvent, eventName, ret);

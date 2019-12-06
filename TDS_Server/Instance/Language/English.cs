@@ -41,6 +41,7 @@ namespace TDS_Server.Instance.Language
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
         public virtual string HITSOUND_DEACTIVATED => "Hitsound deactivated!";
 
+        public virtual string INVITATION_MAPCREATELOBBY => "You've been invited to the MapCreator lobby by {0}.";
         public virtual string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "The invitation has already been withdrawn or removed.";
 
         public virtual string JOINED_LOBBY_MESSAGE => "You joined lobby \"{0}\".\nUse '/{1}' to leave.";
@@ -120,12 +121,14 @@ namespace TDS_Server.Instance.Language
         public virtual string STILL_PERMAMUTED => "You are still permamuted.";
         public virtual string SUPPORT_REQUEST_CREATED => "The support request has been created.";
 
+        public virtual string TARGET_ACCEPTED_INVITATION => "{0} accepted your invitation.";
         public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
         public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";
         public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
         public virtual string TARGET_NOT_BLOCKED => "{0} is not blocked.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
+        public virtual string TARGET_REJECTED_INVITATION => "{0} turned down your invitation.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TESTING_MAP_NOTIFICATION => "This is a newly created map, the round-stats will not be saved.";
         public virtual string TEXT_TOO_LONG => "The text is too long.";
@@ -157,13 +160,15 @@ namespace TDS_Server.Instance.Language
 
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
-        public virtual string YOU_ACCEPTED_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
+        public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";
+        public virtual string YOU_ACCEPTED_TEAM_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_INVITATION_BY => "You got an invitation to join the team from {0}.";
         public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
         public virtual string YOU_GOT_UNBLOCKED_BY => "You got unblocked by {0}.";
-        public virtual string YOU_REJECTED_INVITATION => "You rejected the team-invitation of {0}.";
+        public virtual string YOU_REJECTED_INVITATION => "You rejected the invitation of {0}.";
+        public virtual string YOU_REJECTED_TEAM_INVITATION => "You rejected the team-invitation of {0}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
     }
 }

@@ -107,6 +107,7 @@
 
 
         // Special //
+        public const string ToBrowserEvent = "ToBrowserEvent_Server";
         public const string FromBrowserEventReturn = "FromBrowserEventReturn_Server";
     }
 }
