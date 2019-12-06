@@ -103,9 +103,9 @@ namespace TDS_Client.Manager.MapCreator
             // Todo: Add P2P here as alternative (if activated, else with server)
         }
 
-        public static void SyncAllObjectsFromLobbyOwner(List<MapCreatorPosition> data)
+        public static void SyncAllObjectsFromLobbyOwner(MapCreateDataDto data)
         {
-            foreach (var dto in data)
+            foreach (var dto in data.GetAllPositions)
             {
                 var newObj = MapCreatorObject.FromDto(dto);
                 MapCreatorObject.IdCounter = Math.Max(MapCreatorObject.IdCounter, newObj.ID);

@@ -1319,7 +1319,8 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 21, Command = "UnblockUser" },
                 new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
                 new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true },
-                new Commands { Id = 24, Command = "GiveMoney" }
+                new Commands { Id = 24, Command = "GiveMoney" },
+                new Commands { Id = 25, Command = "LobbyInvitePlayer" }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -1432,7 +1433,10 @@ namespace TDS_Server_DB.Entity
                 new CommandAlias { Alias = "MuteVoice", Command = 23 },
                 new CommandAlias { Alias = "MoneyGive", Command = 24 },
                 new CommandAlias { Alias = "SendMoney", Command = 24 },
-                new CommandAlias { Alias = "MoneySend", Command = 24 }
+                new CommandAlias { Alias = "MoneySend", Command = 24 },
+                new CommandAlias { Alias = "LobbyInvite", Command = 25 },
+                new CommandAlias { Alias = "InviteLobby", Command = 25 },
+                new CommandAlias { Alias = "InvitePlayerLobby", Command = 25 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -1481,7 +1485,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 23, Language = ELanguage.German, Info = "Mutet einen Spieler im Voice-Chat." },
                 new CommandInfos { Id = 23, Language = ELanguage.English, Info = "Mutes a player in the voice-chat." },
                 new CommandInfos { Id = 24, Language = ELanguage.German, Info = "Gibt einem Spieler Geld." },
-                new CommandInfos { Id = 24, Language = ELanguage.English, Info = "Gives money to a player." }
+                new CommandInfos { Id = 24, Language = ELanguage.English, Info = "Gives money to a player." },
+                new CommandInfos { Id = 25, Language = ELanguage.German, Info = "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
+                new CommandInfos { Id = 25, Language = ELanguage.English, Info = "Invite a player to your lobby (if possible)." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(

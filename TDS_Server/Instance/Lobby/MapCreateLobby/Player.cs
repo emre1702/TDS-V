@@ -24,12 +24,7 @@ namespace TDS_Server.Instance.Lobby
 
             if (Players.Count > 1)
             {
-                var owner = GetOwner();
-                if (owner is null)
-                {
-                    return false;
-                }
-                NAPI.ClientEvent.TriggerClientEvent(owner.Client, DToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Entity!.Id);
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
             }
 
             return true;

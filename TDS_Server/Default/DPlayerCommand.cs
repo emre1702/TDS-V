@@ -5,6 +5,7 @@
         public const string BlockUser = "BlockUser";
         public const string ClosePrivateChat = "ClosePrivateChat";
         public const string GlobalChat = "GlobalChat";
+        public const string LobbyInvitePlayer = "LobbyInvitePlayer";
         public const string LobbyLeave = "LobbyLeave";
         public const string OpenPrivateChat = "OpenPrivateChat";
         public const string Position = "Position";

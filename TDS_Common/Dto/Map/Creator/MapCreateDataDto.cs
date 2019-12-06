@@ -1,5 +1,6 @@
 ﻿using MessagePack;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Common.Enum;
 
 namespace TDS_Common.Dto.Map.Creator
@@ -27,6 +28,22 @@ namespace TDS_Common.Dto.Map.Creator
         public List<MapCreatorPosition> BombPlaces { get; set; }
         [Key(9)]
         public MapCreatorPosition MapCenter { get; set; }
+
+        [IgnoreMember]
+        public List<MapCreatorPosition> GetAllPositions 
+        {    
+            get 
+            {
+                var list = Objects
+                    .Concat(TeamSpawns.SelectMany(s => s).ToList())
+                    .Concat(MapEdges)
+                    .Concat(BombPlaces)
+                    .ToList();
+                list.Add(MapCenter);
+
+                return list;
+            }
+        }
 
     }
 }

@@ -4,8 +4,10 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
+using TDS_Server.Enum;
 using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
@@ -304,6 +306,37 @@ namespace TDS_Server.Manager.Commands
 
             NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
             NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
+        }
+
+        [TDSCommand(DPlayerCommand.LobbyInvitePlayer)]
+        public static void LobbyInvitePlayer(TDSPlayer player, TDSPlayer target)
+        {
+            if (player.CurrentLobby is null)
+                return;
+            if (!player.IsLobbyOwner)
+                return;
+
+            switch (player.CurrentLobby.Type)
+            {
+                case ELobbyType.MapCreateLobby:
+                    new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), player, target, 
+                        onAccept: async (sender, target) => 
+                        {
+                            await sender.CurrentLobby!.AddPlayer(target, null);
+                            NAPI.Notification.SendNotificationToPlayer(target.Client, string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
+                            NAPI.Notification.SendNotificationToPlayer(sender.Client, string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
+                        },
+
+                        onReject: (sender, target) => 
+                        {
+                            NAPI.Notification.SendNotificationToPlayer(target.Client, string.Format(target.Language.YOU_REJECTED_INVITATION, sender.DisplayName), false);
+                            NAPI.Notification.SendNotificationToPlayer(sender.Client, string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
+                        },
+
+                        type: EInvitationType.Lobby
+                    );
+                    break;
+            }
         }
     }
 }
