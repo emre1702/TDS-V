@@ -1,4 +1,4 @@
-<div id="container" [@hideShowAnimation]="getOrders().length">
+<div id="container">
   <div *ngFor="let order of getOrders(); let i=index">
     {{ i + 1 }}. {{ order | language: settings.Lang }}
   </div>

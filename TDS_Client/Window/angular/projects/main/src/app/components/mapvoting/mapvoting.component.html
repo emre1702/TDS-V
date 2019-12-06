@@ -56,7 +56,7 @@
 </div>
 
 <div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus && settings.InFightLobby">
-	<div [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote.Id"
+	<div [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote[0]"
 			*ngFor="let mapvote of voting.mapsInVoting; let i = index">
 		{{ i + 1 }}. {{ mapvote[1] }} ({{ mapvote[2] }})
 	</div>
