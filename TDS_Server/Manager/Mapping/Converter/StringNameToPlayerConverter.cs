@@ -14,26 +14,25 @@ namespace TDS_Server.Manager.Mapping.Converter
         {
             if (name[0] == '@')
                 name = name.Substring(1);
-            Client? client = FindClient(name);
-            TDSPlayer? player = client?.GetChar();
-            return player != null && player.LoggedIn ? player : null;
+            return FindPlayer(name);
         }
 
-        private static Client? FindClient(string name)
+        private static TDSPlayer? FindPlayer(string name)
         {
             if (name[0] == '@')
                 name = name.Substring(1);
 
-            Client? player = NAPI.Player.GetPlayerFromName(name);
-            if (player != null)
-                return player;
-
-            player = NAPI.Player.GetPlayerFromName(Constants.ServerTeamSuffix + name);
-            if (player != null)
-                return player;
-
             name = name.ToLower();
-            return NAPI.Pools.GetAllPlayers().FirstOrDefault(c => c.Name.ToLower().StartsWith(name) || c.Name.ToLower().StartsWith(Constants.ServerTeamSuffix + name));
+
+            var player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower() == name || p.Client.Name.ToLower() == name);
+            if (player is { })
+                return player;
+
+            player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower().StartsWith(name) || p.Client.Name.ToLower().StartsWith(name));
+            if (player is { })
+                return player;
+
+            return null;
         }
     }
 }
