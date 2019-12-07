@@ -1,6 +1,4 @@
 ﻿using TDS_Common.Instance.Utility;
-using TDS_Server.Enum;
-using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Lobby

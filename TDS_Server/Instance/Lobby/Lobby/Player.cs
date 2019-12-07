@@ -17,6 +17,7 @@ namespace TDS_Server.Instance.Lobby
     partial class Lobby
     {
         public bool SavePlayerLobbyStats { get; set; } = true;
+        public bool SetPositionOnPlayerAdd { get; set; } = true;
 
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
@@ -34,7 +35,8 @@ namespace TDS_Server.Instance.Lobby
 
             #endregion Remove from old lobby
 
-            if (LobbyEntity.Type != ELobbyType.MainMenu)
+            if (LobbyEntity.Type != ELobbyType.MainMenu
+                && LobbyEntity.Type != ELobbyType.MapCreateLobby)
             {
                 await AddPlayerLobbyStats(character);
             }
@@ -48,7 +50,8 @@ namespace TDS_Server.Instance.Lobby
                 Workaround.SetPlayerInvincible(character.Client, true);
 
             character.Client.Dimension = Dimension;
-            character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
+            if (SetPositionOnPlayerAdd)
+                character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
             Workaround.FreezePlayer(character.Client, true);
 
             if (teamindex != null)

@@ -18,13 +18,16 @@ namespace TDS_Server.Instance.Lobby
 
         public GangActionLobby(EGangActionType type, TDSPlayer attacker, Gang ownerGang) : base(CreateEntity(type, attacker, ownerGang))
         {
-            _attackLeader = attacker;
+            SetPositionOnPlayerAdd = false;
 
             _attackerGang = attacker.Gang;
             _ownerGang = ownerGang;
 
             _attackerGang.InAction = true;
             _ownerGang.InAction = true;
+
+            _attackLeader = attacker;
+            SetAttackLeader(attacker);
         }
 
         private static Lobbies CreateEntity(EGangActionType type, TDSPlayer attacker, Gang ownerGang)
