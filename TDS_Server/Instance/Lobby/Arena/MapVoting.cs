@@ -152,6 +152,8 @@ namespace TDS_Server.Instance.Lobby
 
                 player.GiveMoney(-price);
                 ++player.Entity.PlayerStats.MapsBoughtCounter;
+                if (player.CurrentLobbyStats is { })
+                    ++player.CurrentLobbyStats.TotalMapsBought;
                 PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
             }
 
