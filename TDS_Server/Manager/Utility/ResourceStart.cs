@@ -79,8 +79,8 @@ namespace TDS_Server.Manager.Utility
                 Sniper.Init(dbcontext);
 
                 await Gang.LoadAll(dbcontext);
-                GangwarAreasManager.LoadGangwarAreas(dbcontext);
                 await LobbyManager.LoadAllLobbies(dbcontext);
+                GangwarAreasManager.LoadGangwarAreas(dbcontext);
 
                 Userpanel.Main.Init(dbcontext);
                 InvitationManager.Init();

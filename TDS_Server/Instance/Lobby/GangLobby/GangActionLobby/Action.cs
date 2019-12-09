@@ -1,6 +1,5 @@
 ﻿using TDS_Common.Instance.Utility;
 using TDS_Server.Enum;
-using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -8,6 +7,9 @@ namespace TDS_Server.Instance.Lobby
     {
         protected EGangActionState _actionState;
         protected TDSTimer? _actionChangeTimer;
+
+        protected bool InPreparation => _actionState == EGangActionState.InPreparation;
+        protected bool InAction => _actionState == EGangActionState.BeforeAction || _actionState == EGangActionState.InAction;
 
         public virtual bool StartPreparations()
         {
@@ -23,6 +25,9 @@ namespace TDS_Server.Instance.Lobby
         public virtual bool StartAction()
         {
             _actionState = EGangActionState.InAction;
+
+            LobbyEntity.Name = $"[{ActionTypeShort}] {AttackerGang.Entity.Short} - {OwnerGang.Entity.Short}";
+
             return true;
         }
 
@@ -41,8 +46,10 @@ namespace TDS_Server.Instance.Lobby
         {
             _actionState = EGangActionState.Completed;
 
-            _attackerGang.InAction = false;
-            _ownerGang.InAction = false;
+            AttackerGang.InAction = false;
+            OwnerGang.InAction = false;
+
+            Remove();
 
             return true;
         }

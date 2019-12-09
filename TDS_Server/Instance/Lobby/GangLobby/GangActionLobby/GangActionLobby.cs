@@ -12,25 +12,25 @@ namespace TDS_Server.Instance.Lobby
 {
     abstract partial class GangActionLobby : FightLobby
     {
-        private TDSPlayer _attackLeader;
-        private Gang _attackerGang;
-        private Gang _ownerGang;
+        protected TDSPlayer AttackLeader;
+        protected Gang AttackerGang;
+        protected Gang OwnerGang;
 
-        public GangActionLobby(EGangActionType type, TDSPlayer attacker, Gang ownerGang) : base(CreateEntity(type, attacker, ownerGang))
+        public GangActionLobby(EGangActionType type, TDSPlayer attacker, Gang ownerGang, string actionShort) : base(CreateEntity(type, attacker, ownerGang, actionShort))
         {
             SetPositionOnPlayerAdd = false;
 
-            _attackerGang = attacker.Gang;
-            _ownerGang = ownerGang;
+            AttackerGang = attacker.Gang;
+            OwnerGang = ownerGang;
 
-            _attackerGang.InAction = true;
-            _ownerGang.InAction = true;
+            AttackerGang.InAction = true;
+            OwnerGang.InAction = true;
 
-            _attackLeader = attacker;
+            AttackLeader = attacker;
             SetAttackLeader(attacker);
         }
 
-        private static Lobbies CreateEntity(EGangActionType type, TDSPlayer attacker, Gang ownerGang)
+        private static Lobbies CreateEntity(EGangActionType type, TDSPlayer attacker, Gang ownerGang, string actionShort)
         {
             var dummyDBTeam = LobbyManager.MainMenu.Teams[0].Entity.DeepCopy();
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Instance.Lobby
                 IsOfficial = true,
                 IsTemporary = true,
                 OwnerId = attacker.Entity!.Id,
-                Name = $"[GW] {attacker.Gang.Entity.Short} vs. {ownerGang.Entity.Short}",
+                Name = $"[{actionShort}-Preparation] {attacker.Gang.Entity.Short}",
                 Type = lobbyType,
                 Teams = new List<Teams>
                 {
@@ -65,5 +65,8 @@ namespace TDS_Server.Instance.Lobby
 
             return lobby;  
         }
+
+        protected virtual string ActionTypeName => "Action";
+        protected virtual string ActionTypeShort => "-";
     }
 }

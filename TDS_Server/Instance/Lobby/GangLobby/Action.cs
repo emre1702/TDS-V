@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Common.Enum;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
@@ -66,7 +67,7 @@ namespace TDS_Server.Instance.Lobby
                 //todo The owners are already in an action
                 return false;
             }
-            if (attacker.CurrentLobby != LobbyManager.GangLobby)
+            if (attacker.CurrentLobby?.Type != ELobbyType.GangLobby)
             {
                 ErrorLogsManager.Log("Tried to start an action, but is not in GangLobby", Environment.StackTrace, attacker);
                 return false;

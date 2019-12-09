@@ -10,10 +10,13 @@ namespace TDS_Server.Instance.Lobby
         private GangwarArea _gangwarArea;
 
         public GangwarLobby(TDSPlayer attacker, GangwarArea gangwarArea)
-            : base(Enum.EGangActionType.Gangwar, attacker, gangwarArea.Owner!)
+            : base(Enum.EGangActionType.Gangwar, attacker, gangwarArea.Owner!, "GW")
         {
             _attackLeader = attacker;
             _gangwarArea = gangwarArea;
         }
+
+        protected override string ActionTypeName => "Gangwar";
+        protected override string ActionTypeShort => "GW";
     }
 }

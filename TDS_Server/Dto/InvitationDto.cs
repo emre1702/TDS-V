@@ -9,7 +9,7 @@ namespace TDS_Server.Dto
         public ulong Id { get; set; }
 
         [Key(1)]
-        public string Sender { get; set; } = string.Empty;
+        public string? Sender { get; set; }
 
         [Key(2)]
         public string Message { get; set; } = string.Empty;

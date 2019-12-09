@@ -31,6 +31,16 @@ namespace TDS_Server.Instance.Language
 
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
+        public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
+        public override string GANGWAR_ATTACKER_STARTED_INFO => "Ihr greift das Gebiet '{0}' von '{1}' an.";
+        public override string GANGWAR_DEFEND_INVITATION => "Verteidige euer Gang-Gebiet!\n(Nimm an oder nutze /verteidigen)";
+        public override string GANGWAR_OWNER_PREPARATION_INFO => "Gegen eines eurer Gebiete wird ein Gangwar vorbereitet.";
+        public override string GANGWAR_OWNER_STARTED_INFO => "Euer Gebiet '{0}' wird von der Gang '{1}' angegriffen.";
+        public override string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
+        public override string GANGWAR_STARTED_INFO => "Die Gang '{0}' greift das Gebiet '{1}' von '{2}' an.";
+        public override string GANGWAR_TEAM_ALREADY_FULL_INFO => "Dein Team ist bereits voll. Warte darauf, dass ein Gegner beitritt, und versuche es dann erneut.";
+        public override string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} has joined the enemy gang in the gangwar.";
+        public override string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} has joined your team in the gangwar.";
         public override string GIVE_MONEY_NEED_FEE => "Du brauchst ${0} mit ${1} Gebühr inklusive.";
         public override string GIVE_MONEY_TOO_LESS => "Das Geld, was du versuchst zu geben, ist zu wenig.";
         public override string GOT_ASSIST => "Du hast den Assist von {0} bekommen.";

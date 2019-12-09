@@ -14,26 +14,27 @@ namespace TDS_Server.Instance.Utility
     class Invitation
     {
         public InvitationDto Dto;
+        public bool RemoveOnLobbyLeave { get; set; }
 
-        private TDSPlayer _sender;
         private TDSPlayer _target;
-        private Action<TDSPlayer, TDSPlayer>? _onAccept;
-        private Action<TDSPlayer, TDSPlayer>? _onReject;
+        private TDSPlayer? _sender;
+        private Action<TDSPlayer, TDSPlayer?, Invitation>? _onAccept;
+        private Action<TDSPlayer, TDSPlayer?, Invitation>? _onReject;
         private EInvitationType _type;
 
         private static ulong _idCounter = 0;
         private static Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
 
 
-        public Invitation(string message, TDSPlayer sender, TDSPlayer target, 
-            Action<TDSPlayer, TDSPlayer>? onAccept = null, 
-            Action<TDSPlayer, TDSPlayer>? onReject = null, 
+        public Invitation(string message, TDSPlayer target, TDSPlayer? sender, 
+            Action<TDSPlayer, TDSPlayer?, Invitation>? onAccept = null, 
+            Action<TDSPlayer, TDSPlayer?, Invitation>? onReject = null, 
             EInvitationType type = EInvitationType.None)
         {
             Dto = new InvitationDto 
             {
                 Id = _idCounter++,
-                Sender = sender.DisplayName,
+                Sender = sender?.DisplayName,
                 Message = message
             };
 
@@ -53,14 +54,14 @@ namespace TDS_Server.Instance.Utility
         {
             if (!_target.LoggedIn)
                 return;
-            _onAccept?.Invoke(_sender, _target);
+            _onAccept?.Invoke(_target, _sender, this);
         }
 
         public void Reject()
         {
             if (!_target.LoggedIn)
                 return;
-            _onReject?.Invoke(_sender, _target);
+            _onReject?.Invoke(_target, _sender, this);
         }
 
         public void Withdraw()
@@ -71,6 +72,10 @@ namespace TDS_Server.Instance.Utility
             NAPI.ClientEvent.TriggerClientEvent(_target.Client, DToClientEvent.ToBrowserEvent, DToBrowserEvent.RemoveInvitation, Dto.Id);
         }
 
+        public void Resend()
+        {
+            NAPI.ClientEvent.TriggerClientEvent(_target.Client, DToClientEvent.ToBrowserEvent, DToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+        }
 
         public static Invitation? GetById(ulong id)
         {
@@ -87,6 +92,11 @@ namespace TDS_Server.Instance.Utility
         public static IEnumerable<Invitation> GetBySender(TDSPlayer sender, EInvitationType type)
         {
             return _invitationById.Values.Where(i => i._sender == sender && i._type == type);
+        }
+
+        public static IEnumerable<Invitation> GetByTarget(TDSPlayer target)
+        {
+            return _invitationById.Values.Where(i => i._target == target);
         }
     }
 }

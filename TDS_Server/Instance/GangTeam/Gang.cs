@@ -20,6 +20,12 @@ namespace TDS_Server.Instance.GangTeam
 
         public Gangs Entity;
         public List<TDSPlayer> PlayersOnline = new List<TDSPlayer>();
+        #nullable disable
+        // This can't be null! 
+        // If it's null, we got serious problems in the code!
+        // Every gang needs a team in GangLobby! Even "None" gang (spectator team)!
+        public Team GangLobbyTeam { get; set; }
+        #nullable restore
 
         public bool InAction { get; set; }
 
@@ -37,9 +43,15 @@ namespace TDS_Server.Instance.GangTeam
             DbContext.Attach(entity);
         }
 
+
         public static Gang GetById(int id)
         {
             return _gangById[id];
+        }
+
+        public static Gang? GetByTeamId(int teamId)
+        {
+            return _gangById.Values.FirstOrDefault(g => g.Entity.TeamId == teamId);
         }
 
         public static Gang GetPlayerGang(TDSPlayer player)

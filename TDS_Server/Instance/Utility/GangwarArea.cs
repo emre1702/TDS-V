@@ -1,6 +1,9 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Threading.Tasks;
+using TDS_Common.Enum;
 using TDS_Server.Instance.GangTeam;
+using TDS_Server.Instance.Lobby;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -12,6 +15,7 @@ namespace TDS_Server.Instance.Utility
     {
         public GangwarAreas Entity { get; private set; }
         public Gang? Owner { get; private set; }
+        public FightLobby InLobby { get; set; }
 
         public bool HasCooldown
         {
@@ -29,24 +33,46 @@ namespace TDS_Server.Instance.Utility
         {
             Entity = entity;
 
-            if (entity.OwnerGangId != 0)
+            if (entity.OwnerGangId != Gang.None.Entity.Id)
             {
                 Owner = Gang.GetById(entity.OwnerGangId);
             }
+
+            InLobby = LobbyManager.GangLobby;
         }
 
-        public void SetInPreparation()
+        public void SetInPreparation(GangwarLobby lobby)
         {
-            //Todo inform the owner gang
+            if (Owner is null)
+                return;
+
+            foreach (var player in Owner.PlayersOnline)
+            {
+                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.GANGWAR_OWNER_PREPARATION_INFO, Entity.Map.Name, lobby.AttackerTeam.Entity.Name));
+            }
+            
+
         }
 
-        public void SetInAttack()
+        public void SetInAttack(GangwarLobby lobby)
         {
-            //Todo inform the owner gang
+            if (Owner is null)
+                return;
+
+            lobby.SendLangMessageToOwner(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, Entity.Map.Name, lobby.AttackerTeam.Entity.Name));
+            foreach (var player in Owner.GangLobbyTeam.Players)
+            {
+                new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)
+                {
+                    RemoveOnLobbyLeave = true
+                };
+            }
         }
 
         public Task SetDefended()
         {
+            InLobby = LobbyManager.GangLobby;
+
             using var dbContext = new TDSDbContext();
             dbContext.Attach(Entity);
 
@@ -59,6 +85,7 @@ namespace TDS_Server.Instance.Utility
 
         public Task SetCaptured(Gang newOwner)
         {
+            InLobby = LobbyManager.GangLobby;
             if (Owner is { })
             {
                 //Todo inform the owner
@@ -81,7 +108,7 @@ namespace TDS_Server.Instance.Utility
         {
             if (!player.LoggedIn)
                 return false;
-            if (player.CurrentLobby != LobbyManager.GangLobby)
+            if (player.CurrentLobby?.Type != ELobbyType.GangLobby)
                 return false;
             if (player.Client.Dead)
                 return false;
@@ -89,5 +116,22 @@ namespace TDS_Server.Instance.Utility
             //Todo Is in the skull or whatever
             return true;
         }
+
+
+        private async void AcceptDefendInvitation(TDSPlayer player, TDSPlayer? sender, Invitation invitation)
+        {
+            if (!(InLobby is GangwarLobby lobby))
+                return;
+
+            if (!await lobby.AddPlayer(player, (uint)lobby.OwnerTeam.Entity.Index))
+            {
+                invitation.Resend();
+                return;
+            }
+                
+            lobby.SendLangNotificationToAttacker(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
+            lobby.SendLangNotificationToOwner(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
+        }
     }
 }
+

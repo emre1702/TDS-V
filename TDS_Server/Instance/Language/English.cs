@@ -30,6 +30,16 @@ namespace TDS_Server.Instance.Language
 
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
+        public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";
+        public virtual string GANGWAR_ATTACKER_STARTED_INFO => "You attack the area '{0}' of '{1}'.";
+        public virtual string GANGWAR_DEFEND_INVITATION => "Defend your gang area!\n(Accept or use /defend)";
+        public virtual string GANGWAR_OWNER_PREPARATION_INFO => "A gangwar is being prepared against one of your areas.";
+        public virtual string GANGWAR_OWNER_STARTED_INFO => "Your area '{0}' is being attacked by the gang '{1}'.";
+        public virtual string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
+        public virtual string GANGWAR_STARTED_INFO => "The gang '{0}' is preparing a gangwar.";
+        public virtual string GANGWAR_TEAM_ALREADY_FULL_INFO => "Your team is already full. Wait for a opponent to join and try again.";
+        public virtual string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} ist bei den Gegnern in den Gangwar beigetreten.";
+        public virtual string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} ist bei euch in den Gangwar beigetreten.";
         public virtual string GIVE_MONEY_NEED_FEE => "You need ${0} with ${1} fee included.";
         public virtual string GIVE_MONEY_TOO_LESS => "The amount you tried to give is too less.";
         public virtual string GOT_ASSIST => "You got the assist of {0}.";

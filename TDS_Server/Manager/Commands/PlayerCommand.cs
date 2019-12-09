@@ -319,18 +319,20 @@ namespace TDS_Server.Manager.Commands
             switch (player.CurrentLobby.Type)
             {
                 case ELobbyType.MapCreateLobby:
-                    new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), player, target, 
-                        onAccept: async (sender, target) => 
+                    new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), 
+                        target: target, 
+                        sender: player, 
+                        onAccept: async (sender, target, invitation) => 
                         {
-                            await sender.CurrentLobby!.AddPlayer(target, null);
-                            NAPI.Notification.SendNotificationToPlayer(target.Client, string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
+                            await sender.CurrentLobby!.AddPlayer(target!, null);
+                            NAPI.Notification.SendNotificationToPlayer(target!.Client, string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
                             NAPI.Notification.SendNotificationToPlayer(sender.Client, string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
                         },
 
-                        onReject: (sender, target) => 
+                        onReject: (sender, target, invitation) => 
                         {
-                            NAPI.Notification.SendNotificationToPlayer(target.Client, string.Format(target.Language.YOU_REJECTED_INVITATION, sender.DisplayName), false);
-                            NAPI.Notification.SendNotificationToPlayer(sender.Client, string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
+                            NAPI.Notification.SendNotificationToPlayer(target!.Client, string.Format(target.Language.YOU_REJECTED_INVITATION, sender.DisplayName), false);
+                            NAPI.Notification.SendNotificationToPlayer(sender.Client, string.Format(sender.Language.TARGET_REJECTED_INVITATION, target!.DisplayName), false);
                         },
 
                         type: EInvitationType.Lobby

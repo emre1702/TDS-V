@@ -25,6 +25,16 @@
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
+        string GANGWAR_ATTACKER_PREPARATION_INFO { get; }
+        string GANGWAR_ATTACKER_STARTED_INFO { get; }
+        string GANGWAR_DEFEND_INVITATION { get; }
+        string GANGWAR_OWNER_PREPARATION_INFO { get; }
+        string GANGWAR_OWNER_STARTED_INFO { get; }
+        string GANGWAR_PREPARATION_INFO { get; }
+        string GANGWAR_STARTED_INFO { get; }
+        string GANGWAR_TEAM_ALREADY_FULL_INFO { get; }
+        string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO { get; }
+        string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO { get; }
         string GIVE_MONEY_NEED_FEE { get; }
         string GIVE_MONEY_TOO_LESS { get; }
         string GOT_ASSIST { get; }

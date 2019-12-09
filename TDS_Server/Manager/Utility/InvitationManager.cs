@@ -19,7 +19,12 @@ namespace TDS_Server.Manager.Utility
         private static void RemoveSendersLobbyInvitations(TDSPlayer player, Lobby lobby)
         {
             var invitations = Invitation.GetBySender(player, EInvitationType.Lobby);
+            foreach (var invitation in invitations)
+            {
+                invitation.Withdraw();
+            }
 
+            invitations = Invitation.GetByTarget(player).Where(i => i.RemoveOnLobbyLeave);
             foreach (var invitation in invitations)
             {
                 invitation.Withdraw();
