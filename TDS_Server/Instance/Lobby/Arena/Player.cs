@@ -69,7 +69,8 @@ namespace TDS_Server.Instance.Lobby
             {
                 case ERoundStatus.NewMapChoose:
                 case ERoundStatus.Countdown:
-                    BalanceCurrentTeams();
+                    if (LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound)
+                        BalanceCurrentTeams();
                     break;
                 case ERoundStatus.Round:
                     RoundCheckForEnoughAlive();
