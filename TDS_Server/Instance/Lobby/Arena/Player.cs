@@ -63,7 +63,10 @@ namespace TDS_Server.Instance.Lobby
             }
             CurrentGameMode?.RemovePlayer(player);
             base.RemovePlayer(player);
-            RoundCheckForEnoughAlive();
+            if (CurrentRoundStatus == ERoundStatus.Round)
+            {
+                RoundCheckForEnoughAlive();
+            }
         }
 
         private void SetPlayerReadyForRound(TDSPlayer character)
