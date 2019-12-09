@@ -13,6 +13,7 @@ using TDS_Server_DB.Entity.Player;
 using TDS_Server.Dto.Map;
 using TDS_Server.Dto.TeamChoiceMenu;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -63,9 +64,43 @@ namespace TDS_Server.Instance.Lobby
             }
             CurrentGameMode?.RemovePlayer(player);
             base.RemovePlayer(player);
-            if (CurrentRoundStatus == ERoundStatus.Round)
+
+            switch (CurrentRoundStatus)
             {
-                RoundCheckForEnoughAlive();
+                case ERoundStatus.NewMapChoose:
+                case ERoundStatus.Countdown:
+                    BalanceCurrentTeams();
+                    break;
+                case ERoundStatus.Round:
+                    RoundCheckForEnoughAlive();
+                    break;
+            }
+        }
+
+        public override void SetPlayerTeam(TDSPlayer player, Team team)
+        {
+            base.SetPlayerTeam(player, team);
+
+            if (CurrentRoundStatus == ERoundStatus.Countdown)
+            {
+                SetPlayerReadyForRound(player);
+            }
+            else
+            {
+                SpectateOtherSameTeam(player);
+                int teamsinround = GetTeamAmountStillInRound();
+                if (teamsinround < 2)
+                {
+                    CurrentRoundEndBecauseOfPlayer = player;
+                    if (CurrentRoundStatus != ERoundStatus.None)
+                        SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
+                    else
+                        SetRoundStatus(ERoundStatus.NewMapChoose);
+                }
+                else
+                {
+                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerSpectateMode);
+                }
             }
         }
 
@@ -123,32 +158,10 @@ namespace TDS_Server.Instance.Lobby
             player.LastHitter = null;
         }
 
-        private void AddPlayerAsPlayer(TDSPlayer character, int teamIndex)
+        private void AddPlayerAsPlayer(TDSPlayer player, int teamIndex)
         {
-            character.Team = LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
-            character.Team.SyncAddedPlayer(character);
-
-            if (CurrentRoundStatus == ERoundStatus.Countdown)
-            {
-                SetPlayerReadyForRound(character);
-            }
-            else
-            {
-                SpectateOtherSameTeam(character);
-                int teamsinround = GetTeamAmountStillInRound();
-                if (teamsinround < 2)
-                {
-                    CurrentRoundEndBecauseOfPlayer = character;
-                    if (CurrentRoundStatus != ERoundStatus.None)
-                        SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
-                    else
-                        SetRoundStatus(ERoundStatus.NewMapChoose);
-                }
-                else
-                {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerSpectateMode);
-                }
-            }
+            var team = LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
+            SetPlayerTeam(player, team);
         }
 
         private void SendPlayerRoundInfoOnJoin(TDSPlayer player)

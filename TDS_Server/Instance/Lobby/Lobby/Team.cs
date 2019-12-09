@@ -92,5 +92,23 @@ namespace TDS_Server.Instance.Lobby
                 NAPI.Chat.SendChatMessageToPlayer(target.Client, str + texts[target.Language]);
             });
         }
+
+        public void BalanceCurrentTeams()
+        {
+            var teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+            var teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+
+            while (teamWithFewestPlayers is { } && teamWithMostPlayers is { }
+                && teamWithMostPlayers.Players.Count - teamWithFewestPlayers.Players.Count > 1)
+            {
+                var playerToPutIntoOtherTeam = teamWithMostPlayers.Players.Last();
+                SetPlayerTeam(playerToPutIntoOtherTeam, teamWithFewestPlayers);
+
+                teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+                teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+            }
+
+           
+        }
     }
 }

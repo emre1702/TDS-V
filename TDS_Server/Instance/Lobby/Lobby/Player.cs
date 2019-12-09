@@ -11,6 +11,7 @@ using TDS_Server_DB.Entity.Player;
 using TDS_Server.Manager.EventManager;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Manager.Player;
+using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.Lobby
 {
@@ -129,6 +130,21 @@ namespace TDS_Server.Instance.Lobby
                 }
                 player.CurrentLobbyStats = stats;
             });     
+        }
+
+        public virtual void SetPlayerTeam(TDSPlayer player, Team team)
+        {
+            if (player.Team is { })
+            {
+                if (player.Team == team)
+                    return;
+                var oldTeam = player.Team;
+                player.Team = null;
+                oldTeam.SyncRemovedPlayer(player);
+            }
+
+            player.Team = team;
+            team.SyncAddedPlayer(player);
         }
 
         public bool IsPlayerLobbyOwner(TDSPlayer character)
