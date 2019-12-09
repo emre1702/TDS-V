@@ -1137,6 +1137,18 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(60);
 
+                entity.Property(e => e.AmountPlayersAllowedInGangwarTeamBeforeCountCheck)
+                    .IsRequired()
+                    .HasDefaultValue(3);
+
+                entity.Property(e => e.GangwarAttackerCanBeMore)
+                    .IsRequired()
+                    .HasDefaultValue(true);
+
+                entity.Property(e => e.GangwarOwnerCanBeMore)
+                    .IsRequired()
+                    .HasDefaultValue(false);
+
                 entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
                     .IsRequired()
                     .HasDefaultValue(60);

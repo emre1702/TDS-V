@@ -35,6 +35,11 @@
 
         public int MinPlayersOnlineForGangwar { get; set; }
         public int GangwarAreaAttackCooldownMinutes { get; set; }
+        public int AmountPlayersAllowedInGangwarTeamBeforeCountCheck { get; set; }
+        public bool GangwarAttackerCanBeMore { get; set; }
+        public bool GangwarOwnerCanBeMore { get; set; }
+
+
         public int ReduceMapsBoughtCounterAfterMinute { get; set; }
         public int MapBuyBasePrice { get; set; }
         public float MapBuyCounterMultiplicator { get; set; }
