@@ -7,6 +7,7 @@ namespace TDS_Server.Instance.Language
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
+        public override string BALANCE_TEAM_INFO => "{0} wurde in ein anderes Team gesteckt, um die Teams auszugleichen.";
         public override string BOMB_PLANT_INFO => "Um die Bombe zu platzieren, musst du zur Faust wechseln und die linke Maustaste auf einem der Bomben-Spots gedrückt halten.";
         public override string BOMB_PLANTED => "Bombe wurde platziert.";
 

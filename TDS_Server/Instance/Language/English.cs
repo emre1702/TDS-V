@@ -7,6 +7,7 @@ namespace TDS_Server.Instance.Language
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
+        public virtual string BALANCE_TEAM_INFO => "{0} was put into another team to balance the teams.";
         public virtual string BOMB_PLANT_INFO => "To plant the bomb you have to take your fists and hold the left mouse button on one of the bomb-spots.";
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 

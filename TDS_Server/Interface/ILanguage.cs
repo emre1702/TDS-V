@@ -5,6 +5,7 @@
         string ACCOUNT_DOESNT_EXIST { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
+        string BALANCE_TEAM_INFO { get; }
         string BOMB_PLANT_INFO { get; }
         string BOMB_PLANTED { get; }
 

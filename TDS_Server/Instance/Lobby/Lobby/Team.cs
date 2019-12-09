@@ -103,6 +103,7 @@ namespace TDS_Server.Instance.Lobby
             {
                 var playerToPutIntoOtherTeam = teamWithMostPlayers.Players.Last();
                 SetPlayerTeam(playerToPutIntoOtherTeam, teamWithFewestPlayers);
+                SendAllPlayerLangNotification(lang => string.Format(lang.BALANCE_TEAM_INFO, playerToPutIntoOtherTeam.DisplayName));
 
                 teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
                 teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
