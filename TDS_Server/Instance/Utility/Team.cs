@@ -93,6 +93,8 @@ namespace TDS_Server.Instance.Utility
 
         public void SyncAddedPlayer(TDSPlayer player)
         {
+            string json = Serializer.ToClient(Players.Select(p => p.Client.Handle.Value));
+            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
                 if (target == player)
@@ -119,7 +121,7 @@ namespace TDS_Server.Instance.Utility
 
         public void SyncAllPlayers()
         {
-            string json = Serializer.ToClient(Players.Select(p => p.Client.Value));
+            string json = Serializer.ToClient(Players.Select(p => p.Client.Handle.Value));
             foreach (var player in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
