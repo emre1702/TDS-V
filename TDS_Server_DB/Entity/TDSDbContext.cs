@@ -115,7 +115,8 @@ namespace TDS_Server_DB.Entity
                 optionsBuilder
                     .UseLoggerFactory(loggerFactory)
                     .EnableSensitiveDataLogging()
-                    .UseNpgsql(connStr);
+                    .UseNpgsql(connStr)
+                    .UseSnakeCaseNamingConvention();
             }
         }
 
