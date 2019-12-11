@@ -11,7 +11,7 @@ namespace TDS_Client.Manager.Utility
         public static string AngularMainBrowserPath => "package://Window/angular/main/index.html";
         public static string AngularMapCreatorObjectChoiceBrowserPath => "package://Window/angular/map-creator-object-choice/index.html";
         public static string RegisterLoginBrowserPath => "package://Window/registerlogin/index.html";
-        public static int ScoreboardLoadCooldown => 5000;
+        public static int ScoreboardLoadCooldown => 2000;
         public static ulong ShowFloatingDamageInfoMs = 1000;
         public static uint MapLimitFasterCheckTimeMs => 100;
         public static int DefaultSpectatePlayerChangeEaseTime => 1500;
