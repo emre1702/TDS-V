@@ -37,7 +37,7 @@
                         <label for="login_password" data-lang="password">
                             password<span class="req">*</span>
                         </label>
-                        <input type="password" id="login_password" name="password" required minlength="3" autocomplete="off" />
+                        <input type="password" id="login_password" name="password" required minlength="3" maxlength="50" autocomplete="off" />
                     </div>
 
                     <!--<p class="forgotpw" style="text-align: right; margin-top: -20px; float: right; width: 40%;"><a href="#" data-lang="login_forgot_pw">Forgot password?</a></p>-->
@@ -52,7 +52,7 @@
                         <label for="register_username" data-lang="username">
                             username<span class="req">*</span>
                         </label>
-                        <input type="text" id="register_username" name="username" />
+                        <input type="text" id="register_username" name="username" required minlength="3" maxlength="20" />
                     </div>
                     <div class="field-wrap">
                         <label for="register_email" data-lang="register_email">
@@ -65,13 +65,13 @@
                         <label for="register_password" data-lang="password">
                             password<span class="req">*</span>
                         </label>
-                        <input type="password" name="password" id="register_password" required minlength="3" autocomplete="off" />
+                        <input type="password" name="password" id="register_password" required minlength="3" maxlength="50" autocomplete="off" />
                     </div>
                     <div class="field-wrap">
                         <label for="register_password_again" data-lang="register_confirm_pw">
                             confirm password<span class="req">*</span>
                         </label>
-                        <input type="password" name="password" id="register_password_again" required minlength="3" autocomplete="off" />
+                        <input type="password" name="password" id="register_password_again" required minlength="3" maxlength="50" autocomplete="off" />
                     </div>
                     <button type="submit" class="button button-block button-standard" data-eventtype="register" data-lang="register_button">Register</button>
                 </form>

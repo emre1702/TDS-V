@@ -57,6 +57,8 @@ namespace TDS_Server.Manager.Player
         [RemoteEvent(DToServerEvent.TryRegister)]
         public static async void OnPlayerTryRegisterEvent(Client client, string username, string password, string email)
         {
+            if (username.Length < 3 || username.Length > 20)
+                return;
             if (await Player.DoesPlayerWithScnameExist(client.SocialClubName))
                 return;
             TDSPlayer player = client.GetChar();
