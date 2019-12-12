@@ -49,8 +49,8 @@ export class AppComponent {
         changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar) {
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (adminLevel: number, remoteId: number) => {
-            this.settings.loadAdminLevel(adminLevel);
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (tdsId: number, remoteId: number) => {
+            this.settings.loadTDSId(tdsId);
             this.settings.loadRemoteId(remoteId);
         });
 

@@ -574,6 +574,8 @@ namespace TDS_Client.Manager.Event
             Settings.LoadSyncedSettings(Serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
             Settings.LoadUserSettings(Serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
             RegisterLogin.Stop();
+            Settings.LoggedIn = true;
+            Settings.TDSId = Convert.ToInt32(args[2]);
             MainBrowser.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, EKeyPressState.Up);
@@ -585,6 +587,10 @@ namespace TDS_Client.Manager.Event
 
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
             BindManager.Add(EKey.U, Userpanel.Toggle);
+
+            TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
+
+            Browser.Angular.Main.Start(Settings.TDSId);
         }
 
         private void OnSetMapVotesMethod(object[] args)

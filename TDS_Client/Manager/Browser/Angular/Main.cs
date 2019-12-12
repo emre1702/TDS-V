@@ -21,14 +21,14 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.ExecuteJs(execStr);
         }
 
-        public static void Start(int adminLevel)
+        public static void Start(int tdsId)
         {
             if (Browser != null)
                 return;
 
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
 
-            Execute(DToBrowserEvent.InitLoadAngular, adminLevel, RAGE.Elements.Player.LocalPlayer.RemoteId);
+            Execute(DToBrowserEvent.InitLoadAngular, tdsId, RAGE.Elements.Player.LocalPlayer.RemoteId);
             foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);

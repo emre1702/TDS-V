@@ -106,13 +106,7 @@ namespace TDS_Client.Manager.Utility
                     Browser.Angular.Main.SyncMoney((int)obj);
                     break;
                 case EPlayerDataKey.AdminLevel:
-                    if (Browser.Angular.Main.Browser == null)
-                        Browser.Angular.Main.Start((int)obj);
-                    else
-                        Browser.Angular.Main.RefreshAdminLevel((int)obj);
-                    break;
-                case EPlayerDataKey.LoggedIn:
-                    TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
+                    Browser.Angular.Main.RefreshAdminLevel((int)obj);
                     break;
                 case EPlayerDataKey.IsLobbyOwner:
                     Lobby.Lobby.IsLobbyOwner = (bool)obj;

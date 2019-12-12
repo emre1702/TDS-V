@@ -67,9 +67,8 @@ namespace TDS_Server.Manager.Player
 
 
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
-                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings));
+                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings), character.Entity.Id);
 
-            PlayerDataSync.SetData(character, EPlayerDataKey.LoggedIn, EPlayerDataSyncMode.Player, true);
             PlayerDataSync.SetData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
 
             character.Gang = Gang.GetPlayerGang(character);
