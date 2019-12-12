@@ -91,6 +91,7 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
+    public TDSId: number;
     public RemoteId = 0;
 
     public AdminLevels = [
@@ -113,6 +114,10 @@ export class SettingsService {
     public toggleInFightLobby(bool: boolean) {
         this.InFightLobby = bool;
         this.InFightLobbyChanged.emit(null);
+    }
+
+    public loadTDSId(tdsId: number) {
+        this.TDSId = tdsId;
     }
 
     public loadRemoteId(remoteId: number) {
