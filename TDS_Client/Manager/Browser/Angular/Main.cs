@@ -229,9 +229,9 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DToBrowserEvent.SyncMoney, money);
         }
 
-        public static void SyncMapPriceData(int mapBuyBasePrice, float mapBuyCounterMultiplicator, int mapBuyCounter)
+        public static void SyncMapPriceData(int mapBuyCounter)
         {
-            Execute(DToBrowserEvent.SyncMapPriceData, mapBuyBasePrice, mapBuyCounterMultiplicator, mapBuyCounter);
+            Execute(DToBrowserEvent.SyncMapPriceData, mapBuyCounter);
         }
 
         public static void SyncIsLobbyOwner(bool obj)

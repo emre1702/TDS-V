@@ -79,7 +79,7 @@ namespace TDS_Client.Manager.Lobby
             if (key != EPlayerDataKey.MapsBoughtCounter)
                 return;
             _mapBuyDataSynced = true;
-            Browser.Angular.Main.SyncMapPriceData(Settings.MapBuyBasePrice, Settings.MapBuyCounterMultiplicator, (int)data);
+            Browser.Angular.Main.SyncMapPriceData((int)data);
         }
 
     }
