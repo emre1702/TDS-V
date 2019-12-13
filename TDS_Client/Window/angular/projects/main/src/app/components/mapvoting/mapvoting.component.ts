@@ -150,7 +150,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     }
 
     private getMapBuyPrice() {
-        return Math.ceil(this.settings.MapBuyBasePrice + this.settings.MapBuyCounterMultiplicator * this.settings.MapsBoughtCounter);
+        return Math.ceil(this.settings.Constants[4] + this.settings.Constants[5] * this.settings.MapsBoughtCounter);
     }
 
     @HostListener("document:keyup", ["$event"])

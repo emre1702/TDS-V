@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Dto;
 using TDS_Server.Enum;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
@@ -65,9 +66,10 @@ namespace TDS_Server.Manager.Player
             if (character.Entity.PlayerClothes is null)
                 character.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
+            var angularConstantsData = AngularConstantsDataDto.Get(character);
 
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
-                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings), character.Entity.Id);
+                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings), Serializer.ToBrowser(angularConstantsData));
 
             PlayerDataSync.SetData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
 

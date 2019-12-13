@@ -561,6 +561,6 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     isOwner(pos: MapCreatorPosition) {
-        return pos[9] == this.settings.RemoteId;
+        return pos[9] == this.settings.Constants[1];
     }
 }

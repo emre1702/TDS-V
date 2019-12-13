@@ -16,6 +16,7 @@
         public const string CommandUsed = "CommandUsed_Browser";
         public const string CreateCustomLobby = "CreateCustomLobby_Browser";
 
+        public const string GetHashedPassword = "GetHashedPassword_Browser";
         public const string GetVehicle = "GetVehicle_Browser";
 
         public const string HoldMapCreatorObject = "HoldMapCreatorObject_Browser";

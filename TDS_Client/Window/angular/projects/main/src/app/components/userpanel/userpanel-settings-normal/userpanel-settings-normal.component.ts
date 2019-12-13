@@ -13,11 +13,11 @@ import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { TimeZoneEnum as TimezoneEnum } from '../enums/timezone.enum';
 
 @Component({
-    selector: 'app-userpanel-settings',
-    templateUrl: './userpanel-settings.component.html',
-    styleUrls: ['./userpanel-settings.component.scss']
+    selector: 'app-userpanel-settings-normal',
+    templateUrl: './userpanel-settings-normal.component.html',
+    styleUrls: ['./userpanel-settings-normal.component.scss']
 })
-export class UserpanelSettingsComponent implements OnInit, OnDestroy {
+export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
     userpanelSettingType = SettingType;
 
@@ -102,14 +102,14 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
         private rageConnector: RageConnectorService) { }
 
     ngOnInit() {
-        this.userpanelService.settingsLoaded.on(null, this.loadSettings.bind(this));
+        this.userpanelService.settingsNormalLoaded.on(null, this.loadSettings.bind(this));
 
-        if (this.userpanelService.allSettings)
+        if (this.userpanelService.allSettingsNormal)
             this.loadSettings();
     }
 
     ngOnDestroy() {
-        this.userpanelService.settingsLoaded.off(null, this.loadSettings.bind(this));
+        this.userpanelService.settingsNormalLoaded.off(null, this.loadSettings.bind(this));
     }
 
     private voiceVolumeSettingChanged() {
@@ -127,11 +127,11 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     save() {
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettings[row.dataSettingIndex] = row.formControl.value;
+                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.formControl.value;
             }
         }
 
-        const json = JSON.stringify(this.userpanelService.allSettings);
+        const json = JSON.stringify(this.userpanelService.allSettingsNormal);
         this.rageConnector.call(DToServerEvent.SaveSettings, json);
 
         this.userpanelService.myStatsLoadingCooldownEnded();
@@ -140,7 +140,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     revertAll() {
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettings[row.dataSettingIndex] = row.initialValue;
+                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.initialValue;
                 row.formControl.setValue(row.initialValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
             }
         }
@@ -150,7 +150,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     setDefault() {
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettings[row.dataSettingIndex] = row.defaultValue;
+                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.defaultValue;
                 row.formControl.setValue(row.defaultValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
             }
         }
@@ -160,7 +160,7 @@ export class UserpanelSettingsComponent implements OnInit, OnDestroy {
     private loadSettings() {
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                const value = this.userpanelService.allSettings[row.dataSettingIndex];
+                const value = this.userpanelService.allSettingsNormal[row.dataSettingIndex];
                 row.formControl.setValue(value, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
                 row.initialValue = value;
             }

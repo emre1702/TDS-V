@@ -25,7 +25,8 @@ namespace TDS_Server.Manager.EventManager
             [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation,
             [DToServerEvent.AnswerToOfflineMessage] = Userpanel.OfflineMessages.Answer,
             [DToServerEvent.SendOfflineMessage] = Userpanel.OfflineMessages.Send,
-            [DToServerEvent.DeleteOfflineMessage] = Userpanel.OfflineMessages.Delete
+            [DToServerEvent.DeleteOfflineMessage] = Userpanel.OfflineMessages.Delete,
+            [DToServerEvent.SaveSpecialSettingsChange] = Userpanel.SettingsSpecial.SetData
         };
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {

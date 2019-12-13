@@ -175,6 +175,16 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Answer = "Antwort";
     ToAnswer = "Antworten";
     Buy = "Kaufen";
+    SettingsSpecial = "Einstellungen Spezial";
+    SettingsNormal = "Einstellungen Normal";
+    Username = "Benutzername";
+    UsernameChangeInfo = "Das Ändern des Benutzernamens hat eine Abklingzeit von {0} Tagen.\nDas Ändern während des Cooldowns kostet ${1}.";
+    BuyUsername = "Kaufe Benutzername";
+    EmailAddress = "Email-Adresse";
+    ConfirmPassword = "Bestätige Passwort";
+    UsernameSettingSaved = "Der Benutzername wurde erfolgreich gespeichert.";
+    PasswordSettingSaved = "Das Passwort wurde erfolgreich gespeichert.";
+    EmailSettingSaved = "Die Email-Adresse wurde erfolgreich gespeichert.";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

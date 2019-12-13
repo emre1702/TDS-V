@@ -17,7 +17,8 @@
                 [currentNav]="userpanelService.currentNav" >
             </app-userpanel-rules>
             <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
-            <app-userpanel-settings *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Settings]"></app-userpanel-settings>
+            <app-userpanel-settings-special *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsSpecial]"></app-userpanel-settings-special>
+            <app-userpanel-settings-normal *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsNormal]"></app-userpanel-settings-normal>
             <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
             </app-userpanel-application>
             <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
@@ -51,7 +52,7 @@
         <mat-icon>assignment</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.Settings)">
+    <button mat-menu-item [matMenuTriggerFor]="settingsNav">
         <mat-icon>settings</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Settings] | language: settings.Lang }}</span>
     </button>
@@ -82,6 +83,17 @@
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.OfflineMessages)">
         <mat-icon>mail_outline</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.OfflineMessages] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #settingsNav="matMenu">
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsSpecial)">
+        <mat-icon>account_box</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.SettingsSpecial] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsNormal)">
+        <mat-icon>list</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.SettingsNormal] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 

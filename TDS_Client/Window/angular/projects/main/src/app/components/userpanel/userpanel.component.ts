@@ -83,8 +83,10 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadRules();
         } else if (nav == UserpanelNavPage.FAQ && !this.userpanelService.allFAQs.length) {
             this.userpanelService.loadFAQs();
-        } else if (nav == UserpanelNavPage.Settings && !this.userpanelService.allSettings) {
-            this.userpanelService.loadSettings();
+        } else if (nav == UserpanelNavPage.SettingsSpecial && !this.userpanelService.allSettingsSpecial) {
+            this.userpanelService.loadSettingsSpecial();
+        } else if (nav == UserpanelNavPage.SettingsNormal && !this.userpanelService.allSettingsNormal) {
+            this.userpanelService.loadSettingsNormal();
         } else if (nav == UserpanelNavPage.MyStats) {
             this.userpanelService.loadMyStats();
         } else if (nav == UserpanelNavPage.Application) {

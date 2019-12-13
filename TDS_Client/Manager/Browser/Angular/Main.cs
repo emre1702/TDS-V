@@ -21,14 +21,14 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.ExecuteJs(execStr);
         }
 
-        public static void Start(int tdsId)
+        public static void Start(string angularConstantsDataJson)
         {
             if (Browser != null)
                 return;
 
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
 
-            Execute(DToBrowserEvent.InitLoadAngular, tdsId, RAGE.Elements.Player.LocalPlayer.RemoteId);
+            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson);
             foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);
@@ -242,6 +242,11 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void MapCreatorSyncData(int mapInfoType, object data)
         {
             Execute(DToBrowserEvent.MapCreatorSyncData, mapInfoType, data);
+        }
+
+        public static void GetHashedPasswordReturn(string hashedPassword)
+        {
+            Execute(DFromBrowserEvent.GetHashedPassword, hashedPassword);
         }
 
 

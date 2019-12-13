@@ -7,12 +7,13 @@ import { UserpanelRuleDataDto } from '../interfaces/userpanelRuleDataDto';
 import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
 import { UserpanelFAQDataDto } from '../interfaces/userpanelFAQDataDto';
 import { SettingsService } from '../../../services/settings.service';
-import { UserpanelSettingDataDto } from '../interfaces/userpanelSettingDataDto';
+import { UserpanelSettingNormalDataDto } from '../interfaces/userpanelSettingNormalDataDto';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
+import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
 
 @Injectable({
     providedIn: 'root'
@@ -46,7 +47,8 @@ export class UserpanelService {
     allCommands: UserpanelCommandDataDto[] = [];
     allRules: UserpanelRuleDataDto[] = [];
     allFAQs: UserpanelFAQDataDto[] = [];
-    allSettings: UserpanelSettingDataDto;
+    allSettingsSpecial: UserpanelSettingSpecialDataDto;
+    allSettingsNormal: UserpanelSettingNormalDataDto;
     myStats: UserpanelStatsDataDto /*= {
         Id: 1,
         AdminLvl: 3,
@@ -125,7 +127,8 @@ export class UserpanelService {
     public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
     public faqsLoaded = new EventEmitter();
-    public settingsLoaded = new EventEmitter();
+    public settingsSpecialLoaded = new EventEmitter();
+    public settingsNormalLoaded = new EventEmitter();
     public myStatsLoaded = new EventEmitter();
     public applicationDataLoaded = new EventEmitter();
     public applicationsLoaded = new EventEmitter();
@@ -151,8 +154,20 @@ export class UserpanelService {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs);
     }
 
-    loadSettings() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Settings);
+    loadSettingsSpecial() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsSpecial);
+
+        this.settings.Constants = [
+            1, 1, 10000, 60, 12, 23
+        ];
+        this.allSettingsSpecial = ["Bonus", "emre1702@live.de", true];
+        this.settingsSpecialLoaded.emit(null);
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);
+    }
+
+    loadSettingsNormal() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsNormal);
     }
 
     loadMyStats() {
@@ -202,8 +217,11 @@ export class UserpanelService {
             case UserpanelLoadDataType.FAQs:
                 this.loadedAllFAQs(json);
                 break;
-            case UserpanelLoadDataType.Settings:
-                this.loadedAllSettings(json);
+            case UserpanelLoadDataType.SettingsSpecial:
+                this.loadedAllSettingsSpecial(json);
+                break;
+            case UserpanelLoadDataType.SettingsNormal:
+                this.loadedAllSettingsNormal(json);
                 break;
             case UserpanelLoadDataType.MyStats:
                 this.loadedMyStats(json);
@@ -245,9 +263,14 @@ export class UserpanelService {
         this.faqsLoaded.emit(null);
     }
 
-    private loadedAllSettings(json: string) {
-        this.allSettings = JSON.parse(json);
-        this.settingsLoaded.emit(null);
+    private loadedAllSettingsSpecial(json: string) {
+        this.allSettingsSpecial = JSON.parse(json);
+        this.settingsSpecialLoaded.emit(null);
+    }
+
+    private loadedAllSettingsNormal(json: string) {
+        this.allSettingsNormal = JSON.parse(json);
+        this.settingsNormalLoaded.emit(null);
     }
 
     private loadedMyStats(json: string) {
@@ -306,8 +329,8 @@ export class UserpanelService {
 
     private languageChanged() {
         this.allFAQs = [];
-        if (this.allSettings)
-            this.allSettings[1] = this.settings.LangValue;
+        if (this.allSettingsNormal)
+            this.allSettingsNormal[1] = this.settings.LangValue;
     }
 
 

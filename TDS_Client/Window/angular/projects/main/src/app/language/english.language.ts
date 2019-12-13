@@ -165,6 +165,16 @@ The user interface is always being worked on, so don't be surprised if you disco
     Answer = "Answer";
     ToAnswer = "Answer";
     Buy = "Buy";
+    SettingsSpecial = "Settings Special";
+    SettingsNormal = "Settings Normal";
+    Username = "Username";
+    UsernameChangeInfo = "Changing the username has a cooldown of {0} days.\nChanging it during the cooldown costs ${1}.";
+    BuyUsername = "Buy username";
+    EmailAddress = "Email address";
+    ConfirmPassword = "Confirm password";
+    UsernameSettingSaved = "The username was successfully saved.";
+    PasswordSettingSaved = "The password was successfully saved.";
+    EmailSettingSaved = "The email address was successfully saved.";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

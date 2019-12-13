@@ -503,7 +503,7 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             Settings.LoadUserSettings(settings);
-            Browser.Angular.Main.LoadUserpanelData((int)EUserpanelLoadDataType.Settings, json);
+            Browser.Angular.Main.LoadUserpanelData((int)EUserpanelLoadDataType.SettingsRest, json);
         }
 
         private void OnRemoveCustomLobbyMethod(object[] args)
@@ -575,7 +575,6 @@ namespace TDS_Client.Manager.Event
             Settings.LoadUserSettings(Serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
             RegisterLogin.Stop();
             Settings.LoggedIn = true;
-            Settings.TDSId = Convert.ToInt32(args[2]);
             MainBrowser.Load();
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.PressedScoreboardKey, EKeyPressState.Down);
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, EKeyPressState.Up);
@@ -590,7 +589,7 @@ namespace TDS_Client.Manager.Event
 
             TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
 
-            Browser.Angular.Main.Start(Settings.TDSId);
+            Browser.Angular.Main.Start(Convert.ToString(args[2]));
         }
 
         private void OnSetMapVotesMethod(object[] args)

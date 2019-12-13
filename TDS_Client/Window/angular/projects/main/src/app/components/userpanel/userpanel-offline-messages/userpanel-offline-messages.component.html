@@ -95,7 +95,7 @@
         </div>
     </form>
 
-    <form *ngIf="creatingOfflineMessage" (submit)="sendMessage()" [formGroup]="offlineMessageFormGroup">
+    <form *ngIf="creatingOfflineMessage" (ngSubmit)="sendMessage()" [formGroup]="offlineMessageFormGroup">
         <div class="left-side">
             <mat-form-field color="accent" >
                 <mat-label>{{ 'Message' | language: settings.Lang }}</mat-label>

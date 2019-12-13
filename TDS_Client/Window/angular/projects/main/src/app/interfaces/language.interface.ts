@@ -152,6 +152,16 @@ export interface Language {
     Answer: string;
     ToAnswer: string;
     Buy: string;
+    SettingsSpecial: string;
+    SettingsNormal: string;
+    Username: string;
+    UsernameChangeInfo: string;
+    BuyUsername: string;
+    EmailAddress: string;
+    ConfirmPassword: string;
+    UsernameSettingSaved: string;
+    PasswordSettingSaved: string;
+    EmailSettingSaved: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

@@ -5,6 +5,7 @@ export enum DToClientEvent {
   CloseMapVotingMenu = "CloseMapVotingMenu_Browser",
   CloseUserpanel = "CloseUserpanel_Browser",
   CreateCustomLobby = "CreateCustomLobby_Browser",
+  GetHashedPassword = "GetHashedPassword_Browser",
   GetVehicle = "GetVehicle_Browser",
   HoldMapCreatorObject = "HoldMapCreatorObject_Browser",
   InputStarted = "InputStarted_Browser",

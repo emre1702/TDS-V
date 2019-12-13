@@ -16,6 +16,7 @@ export enum DToServerEvent {
     RejectInvitation = "RejectInvitation_Browser",
     RemoveMap = "RemoveMap_Browser",
     SaveSettings = "SaveSettings_Browser",
+    SaveSpecialSettingsChange = "SaveSpecialSettingsChange_Browser",
     SendApplication = "SendApplication_Browser",
     SendApplicationInvite = "SendApplicationInvite_Browser",
     SendOfflineMessage = "SendOfflineMessage_Browser",

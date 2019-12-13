@@ -1,6 +1,6 @@
 import { LanguageEnum } from '../../../enums/language.enum';
 
-export interface UserpanelSettingDataDto {
+export interface UserpanelSettingNormalDataDto {
     /** PlayerId */
     [0]: number;
 
@@ -30,5 +30,5 @@ export interface UserpanelSettingDataDto {
     [11]: number;
 
     /** MapBorderColor */
-    [12]: number;
+    [12]: string;
 }

@@ -33,6 +33,7 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
             Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
             Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
+            Add(DFromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             Add(DToServerEvent.GetSupportRequestData, OnGetSupportRequestDataBrowserMethod);
             Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
             Add(DFromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
@@ -236,7 +237,7 @@ namespace TDS_Client.Manager.Event
             EUserpanelLoadDataType type = (EUserpanelLoadDataType)Convert.ToInt32(args[0]);
             switch (type)
             {
-                case EUserpanelLoadDataType.Settings:
+                case EUserpanelLoadDataType.SettingsRest:
                     Browser.Angular.Main.LoadUserpanelData((int)type, Serializer.ToBrowser(Settings.PlayerSettings));
                     break;
                 default:
@@ -464,6 +465,12 @@ namespace TDS_Client.Manager.Event
             int mapId = (int)args[0];
             bool isFavorite = (bool)args[1];
             EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapId, isFavorite);
+        }
+
+        private void OnGetHashedPassword(object[] args)
+        {
+            string pw = Convert.ToString(args[0]);
+            Browser.Angular.Main.GetHashedPasswordReturn(CommonUtils.HashPWClient(pw));
         }
 
         private void OnFromBrowserEventMethod(object[] args)

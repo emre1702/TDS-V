@@ -1,0 +1,54 @@
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    #settings-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: auto;
+        overflow-y: auto;
+
+        .info {
+            white-space: pre-wrap;
+            margin-bottom: 5px;
+        }
+
+        .settings-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            >:first-child {
+                flex-grow: 1;
+                margin-right: 20px;
+                width: 100%;
+            }
+
+            .mat-slide-toggle {
+                float: right;
+                height: 60%;
+                transform: translateY(20%);
+            }
+        }
+    }
+
+    #send-row {
+        margin-top: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .mat-form-field {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        button {
+            height: 60%;
+            transform: translateY(20%);
+        }
+    }
+}

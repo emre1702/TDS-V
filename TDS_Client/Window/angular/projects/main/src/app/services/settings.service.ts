@@ -7,6 +7,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../enums/dfromclientevent.enum';
 import { DToClientEvent } from '../enums/dtoclientevent.enum';
 import { EventEmitter } from 'events';
+import { ConstantsData } from '../interfaces/constants-data';
 
 // tslint:disable: member-ordering
 
@@ -80,8 +81,6 @@ export class SettingsService {
 
     public InUserLobbiesMenu = false;
 
-    public MapBuyBasePrice = 0;
-    public MapBuyCounterMultiplicator = 0;
     public MapsBoughtCounter = 0;
     public MapBuyStatsChanged = new EventEmitter();
 
@@ -91,8 +90,7 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
-    public TDSId: number;
-    public RemoteId = 0;
+    public Constants: ConstantsData;
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
@@ -116,17 +114,7 @@ export class SettingsService {
         this.InFightLobbyChanged.emit(null);
     }
 
-    public loadTDSId(tdsId: number) {
-        this.TDSId = tdsId;
-    }
-
-    public loadRemoteId(remoteId: number) {
-        this.RemoteId = remoteId;
-    }
-
-    private syncMapPriceData(mapBuyBasePrice: number, mapBuyCounterMultiplicator: number, mapsBoughtCounter: number) {
-        this.MapBuyBasePrice = mapBuyBasePrice;
-        this.MapBuyCounterMultiplicator = mapBuyCounterMultiplicator;
+    private syncMapPriceData(mapsBoughtCounter: number) {
         this.MapsBoughtCounter = mapsBoughtCounter;
         this.MapBuyStatsChanged.emit(null);
     }

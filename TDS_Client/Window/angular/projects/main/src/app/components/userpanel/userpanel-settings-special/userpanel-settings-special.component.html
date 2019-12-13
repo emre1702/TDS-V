@@ -1,0 +1,27 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveChanges()">
+    <div id="settings-container">
+        <div class="info">{{'UsernameChangeInfo' | language: settings.Lang:settings.Constants[3]:settings.Constants[2] }}</div>
+        <div class="settings-row">
+            <mat-form-field color="accent">
+                <input matInput formControlName="usernameControl"
+                [placeholder]="'Username' | language: settings.Lang"/>
+            </mat-form-field>
+            <mat-slide-toggle *ngIf="hasToBuyUsername" (change)="wantsToBuyUsernameChanged($event)">{{ 'BuyUsername' | language: settings.Lang }}</mat-slide-toggle>
+        </div>
+
+        <mat-form-field color="accent">
+            <input matInput formControlName="passwordControl" [placeholder]="'Password' | language: settings.Lang"/>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <input matInput formControlName="emailControl" [placeholder]="'EmailAddress' | language: settings.Lang"/>
+        </mat-form-field>
+    </div>
+    <mat-divider></mat-divider>
+    <div id="send-row">
+        <mat-form-field color="accent">
+            <input matInput formControlName="confirmPasswordControl" [placeholder]="'ConfirmPassword' | language: settings.Lang"/>
+        </mat-form-field>
+
+        <button type="submit" mat-raised-button>{{ 'Save' | language: settings.Lang }}</button>
+    </div>
+</form>

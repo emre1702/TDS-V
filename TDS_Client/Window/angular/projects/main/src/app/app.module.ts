@@ -57,7 +57,7 @@ import { UserpanelCommandsComponent } from './components/userpanel/userpanel-com
 import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/userpanel-rules.component';
 import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
-import { UserpanelSettingsComponent } from './components/userpanel/userpanel-settings/userpanel-settings.component';
+import { UserpanelSettingsNormalComponent } from './components/userpanel/userpanel-settings-normal/userpanel-settings-normal.component';
 import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
 import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 import { InputTypeDirective } from './extensions/inputTypeDirective';
@@ -77,6 +77,7 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
 import { InvitationComponent } from './components/utils/invitation/invitation.component';
+import { UserpanelSettingsSpecialComponent } from './components/userpanel/userpanel-settings-special/userpanel-settings-special.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,7 @@ import { InvitationComponent } from './components/utils/invitation/invitation.co
     UserpanelCommandsComponent,
     UserpanelRulesComponent,
     UserpanelFAQsComponent,
-    UserpanelSettingsComponent,
+    UserpanelSettingsNormalComponent,
     UserpanelStatsComponent,
     UserpanelApplicationComponent,
 
@@ -118,7 +119,8 @@ import { InvitationComponent } from './components/utils/invitation/invitation.co
     UserpanelSupportViewComponent,
     CarouselComponent,
     UserpanelOfflineMessagesComponent,
-    InvitationComponent
+    InvitationComponent,
+    UserpanelSettingsSpecialComponent
   ],
   imports: [
     ReactiveFormsModule,

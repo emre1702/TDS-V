@@ -3,6 +3,8 @@ export enum UserpanelNavPage {
     MyStats,
     Admin,
     Settings,
+    SettingsSpecial,
+    SettingsNormal,
     Commands,
     CommandsUser,
     CommandsTDSTeam,

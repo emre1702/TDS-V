@@ -36,9 +36,9 @@ import { Invitation } from './components/utils/invitation/models/invitation';
 export class AppComponent {
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
-    showUserpanel = false;
+    showUserpanel = true;
     showRankings = false;
 
     rankings: RoundPlayerRankingStat[];
@@ -49,9 +49,8 @@ export class AppComponent {
         changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar) {
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (tdsId: number, remoteId: number) => {
-            this.settings.loadTDSId(tdsId);
-            this.settings.loadRemoteId(remoteId);
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
+            this.settings.Constants = JSON.parse(constantsDataJson);
         });
 
         rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {
