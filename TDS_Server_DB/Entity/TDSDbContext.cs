@@ -765,6 +765,10 @@ namespace TDS_Server_DB.Entity
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
+                entity.Property(e => e.LastFreeUsernameChange)
+                    .HasConversion(v => v, v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null)
+                    .IsRequired(false);
+
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerStats)
                     .HasForeignKey<PlayerStats>(d => d.PlayerId)

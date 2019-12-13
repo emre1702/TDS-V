@@ -13,6 +13,7 @@ namespace TDS_Server_DB.Entity.Player
         public DateTime LastLoginTimestamp { get; set; }
         public int MapsBoughtCounter { get; set; }
         public DateTime LastMapsBoughtCounterReduce { get; set; }
+        public DateTime? LastFreeUsernameChange { get; set; } 
 
         public virtual Players Player { get; set; }
     }
