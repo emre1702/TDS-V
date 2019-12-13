@@ -146,10 +146,7 @@ namespace TDS_Server_DB.Entity
             #region Tables
             modelBuilder.Entity<AdminLevels>(entity =>
             {
-                entity.HasKey(e => e.Level)
-                    .HasName("admin_levels_pkey");
-
-                entity.ToTable("admin_levels");
+                entity.HasKey(e => e.Level);
 
                 entity.Property(e => e.Level).ValueGeneratedNever();
             });
@@ -158,8 +155,6 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => new { e.Level, e.Language });
 
-                entity.ToTable("admin_level_names");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -167,18 +162,15 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.LevelNavigation)
                     .WithMany(p => p.AdminLevelNames)
                     .HasForeignKey(d => d.Level)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_admin_level_names_admin_level");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ApplicationAnswers>(entity =>
             {
                 entity.HasKey(e => new { e.ApplicationId, e.QuestionId });
 
-                entity.Property(e => e.ApplicationId).HasColumnName("ApplicationID");
-                entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
-
-                entity.ToTable("application_answers");
+                entity.Property(e => e.ApplicationId);
+                entity.Property(e => e.QuestionId);
 
                 entity.HasOne(answer => answer.Application)
                     .WithMany(app => app.Answers)
@@ -195,11 +187,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
-                entity.Property(e => e.ApplicationId).HasColumnName("ApplicationID");
-                entity.Property(e => e.AdminId).HasColumnName("AdminID");
-
-                entity.ToTable("application_invitations");
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.HasOne(invitation => invitation.Application)
                     .WithMany(app => app.Invitations)
@@ -216,9 +204,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
-
-                entity.ToTable("application_questions");
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.HasOne(question => question.Admin)
                     .WithMany(admin => admin.ApplicationQuestions)
@@ -230,9 +216,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
-
-                entity.ToTable("applications");
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.CreateTime)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -246,28 +230,19 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<CommandAlias>(entity =>
             {
-                entity.HasKey(e => new { e.Alias, e.Command })
-                    .HasName("command_alias_pkey");
-
-                entity.ToTable("command_alias");
+                entity.HasKey(e => new { e.Alias, e.Command });
 
                 entity.Property(e => e.Alias).HasMaxLength(100);
 
                 entity.HasOne(d => d.CommandNavigation)
                     .WithMany(p => p.CommandAlias)
                     .HasForeignKey(d => d.Command)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("command_alias_Command_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<CommandInfos>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.Language })
-                    .HasName("command_infos_pkey");
-
-                entity.ToTable("command_infos");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasKey(e => new { e.Id, e.Language });
 
                 entity.Property(e => e.Info)
                     .IsRequired()
@@ -276,16 +251,11 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.IdNavigation)
                     .WithMany(p => p.CommandInfos)
                     .HasForeignKey(d => d.Id)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("command_infos_ID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Commands>(entity =>
             {
-                entity.ToTable("commands");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
                 entity.Property(e => e.Command)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -293,22 +263,17 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.NeededAdminLevelNavigation)
                     .WithMany(p => p.Commands)
                     .HasForeignKey(d => d.NeededAdminLevel)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_commands_admin_levels");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<FAQs>(entity =>
             {
-                entity.ToTable("faqs");
-
                 entity.HasKey(e => new { e.Id, e.Language });
             });
 
             modelBuilder.Entity<FreeroamDefaultVehicle>(entity =>
             {
                 entity.HasKey(e => e.VehicleType);
-
-                entity.ToTable("freeroam_default_vehicle");
 
                 entity.Property(e => e.VehicleType);
 
@@ -318,11 +283,6 @@ namespace TDS_Server_DB.Entity
             modelBuilder.Entity<GangMembers>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
-
-                entity.ToTable("gang_members");
-
-                entity.Property(e => e.GangId).HasColumnName("GangID");
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
 
                 entity.Property(e => e.Rank).HasDefaultValue(0);
 
@@ -345,9 +305,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => e.GangId);
 
-                entity.ToTable("gang_rank_permissions");
-
-                entity.Property(e => e.GangId).HasColumnName("GangID");
+                entity.Property(e => e.GangId);
 
                 entity.HasOne(e => e.Gang)
                     .WithOne(g => g.RankPermissions)
@@ -359,9 +317,7 @@ namespace TDS_Server_DB.Entity
             {
                 entity.HasKey(e => new { e.GangId, e.Rank });
 
-                entity.ToTable("gang_ranks");
-
-                entity.Property(e => e.GangId).HasColumnName("GangID");
+                entity.Property(e => e.GangId);
 
                 entity.HasOne(e => e.Gang)
                     .WithMany(g => g.Ranks)
@@ -371,10 +327,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Gangs>(entity =>
             {
-                entity.ToTable("gangs");
-
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
                     .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Short)
@@ -388,13 +341,10 @@ namespace TDS_Server_DB.Entity
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
-                entity.Property(e => e.TeamId).HasColumnName("TeamId");
-
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.Gangs)
                     .HasForeignKey(d => d.TeamId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("gangs_TeamId_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Owner)
                     .WithOne(o => o.OwnedGang)
@@ -404,15 +354,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<GangwarAreas>(entity =>
             {
-                entity.ToTable("gangwar_areas");
-
                 entity.HasKey(e => e.MapId);
-
-                entity.Property(e => e.MapId)
-                    .HasColumnName("MapID");
-
-                entity.Property(e => e.OwnerGangId)
-                    .HasColumnName("OwnerGangID");
 
                 entity.Property(e => e.LastAttacked)
                     .HasDefaultValueSql("'2019-1-1'::timestamp");
@@ -438,25 +380,19 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LobbyKillingspreeRewards>(entity =>
             {
-                entity.HasKey(e => new { e.LobbyId, e.KillsAmount })
-                    .HasName("killingspree_rewards_pkey");
-
-                entity.ToTable("killingspree_rewards");
+                entity.HasKey(e => new { e.LobbyId, e.KillsAmount });
 
                 entity.Property(e => e.KillsAmount).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Lobby)
                     .WithMany(p => p.LobbyKillingspreeRewards)
                     .HasForeignKey(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_killingspree_rewards_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Lobbies>(entity =>
             {
-                entity.ToTable("lobbies");
-
-                entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.AroundSpawnPoint).HasDefaultValueSql("3");
 
@@ -486,64 +422,44 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Lobbies)
                     .HasForeignKey(d => d.OwnerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobbies_Owner_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyMaps>(entity =>
             {
-                entity.HasKey(e => new { e.LobbyId, e.MapId })
-                    .HasName("lobby_maps_pkey");
+                entity.HasKey(e => new { e.LobbyId, e.MapId });
 
-                entity.ToTable("lobby_maps");
-
-                entity.HasIndex(e => e.MapId)
-                    .HasName("fki_FK_lobby_maps_maps");
-
-                entity.Property(e => e.LobbyId).HasColumnName("LobbyID");
-
-                entity.Property(e => e.MapId).HasColumnName("MapID");
+                entity.HasIndex(e => e.MapId);
 
                 entity.HasOne(d => d.Lobby)
                     .WithMany(p => p.LobbyMaps)
                     .HasForeignKey(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_maps_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Map)
                     .WithMany(p => p.LobbyMaps)
                     .HasForeignKey(d => d.MapId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_lobby_maps_maps");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyRewards>(entity =>
             {
-                entity.HasKey(e => e.LobbyId)
-                    .HasName("lobby_rewards_pkey");
-
-                entity.ToTable("lobby_rewards");
+                entity.HasKey(e => e.LobbyId);
 
                 entity.Property(e => e.LobbyId)
-                    .HasColumnName("LobbyID")
                     .ValueGeneratedNever();
 
                 entity.HasOne(d => d.Lobby)
                     .WithOne(p => p.LobbyRewards)
                     .HasForeignKey<LobbyRewards>(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_rewards_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyRoundSettings>(entity =>
             {
-                entity.HasKey(e => e.LobbyId)
-                    .HasName("lobby_round_infos_pkey");
-
-                entity.ToTable("lobby_round_settings");
+                entity.HasKey(e => e.LobbyId);
 
                 entity.Property(e => e.LobbyId)
-                    .HasColumnName("LobbyID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.BombDefuseTimeMs).HasDefaultValueSql("8000");
@@ -559,19 +475,14 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Lobby)
                     .WithOne(p => p.LobbyRoundSettings)
                     .HasForeignKey<LobbyRoundSettings>(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_round_infos_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyMapSettings>(entity =>
             {
-                entity.HasKey(e => e.LobbyId)
-                    .HasName("lobby_map_settings_pkey");
-
-                entity.ToTable("lobby_map_settings");
+                entity.HasKey(e => e.LobbyId);
 
                 entity.Property(e => e.LobbyId)
-                   .HasColumnName("LobbyID")
                    .ValueGeneratedNever();
 
                 entity.Property(e => e.MapLimitTime).HasDefaultValueSql("10");
@@ -579,39 +490,30 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Lobby)
                     .WithOne(p => p.LobbyMapSettings)
                     .HasForeignKey<LobbyMapSettings>(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_map_settings_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyWeapons>(entity =>
             {
-                entity.HasKey(e => new { e.Hash, e.Lobby })
-                    .HasName("lobby_weapons_pkey");
-
-                entity.ToTable("lobby_weapons");
+                entity.HasKey(e => new { e.Hash, e.Lobby });
 
                 entity.Property(e => e.Hash).ValueGeneratedNever();
 
                 entity.HasOne(d => d.HashNavigation)
                     .WithMany(p => p.LobbyWeapons)
                     .HasForeignKey(d => d.Hash)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_weapons_Hash_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.LobbyWeapons)
                     .HasForeignKey(d => d.Lobby)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("lobby_weapons_Lobby_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LogAdmins>(entity =>
             {
-                entity.ToTable("log_admins");
+                entity.Property(e => e.Id).UseHiLo();
 
-                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
-
-                entity.Property(e => e.AsVip).HasColumnName("AsVIP");
 
                 entity.Property(e => e.Reason).IsRequired();
 
@@ -623,9 +525,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogChats>(entity =>
             {
-                entity.ToTable("log_chats");
-
-                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
+                entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
 
@@ -636,9 +536,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogErrors>(entity =>
             {
-                entity.ToTable("log_errors");
-
-                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
+                entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Info).IsRequired();
 
@@ -649,9 +547,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogKills>(entity =>
             {
-                entity.ToTable("log_kills");
-
-                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
+                entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -660,11 +556,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogRests>(entity =>
             {
-                entity.ToTable("log_rests");
-
-                entity.Property(e => e.Id).HasColumnName("ID").UseHiLo();
-
-                entity.Property(e => e.Ip).HasColumnName("IP");
+                entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Serial).HasMaxLength(200);
 
@@ -675,13 +567,10 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Maps>(entity =>
             {
-                entity.ToTable("maps");
-
                 entity.HasIndex(e => e.Name)
-                    .HasName("Index_maps_name")
                     .HasMethod("hash");
 
-                entity.Property(e => e.Id).HasColumnName("ID").UseIdentityAlwaysColumn();
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.CreateTimestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -692,22 +581,14 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Maps)
                     .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("maps_CreatorID_fkey");
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Offlinemessages>(entity =>
             {
-                entity.ToTable("offlinemessages");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID").UseIdentityAlwaysColumn();
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Message).IsRequired();
-
-                entity.Property(e => e.SourceId).HasColumnName("SourceID");
-
-                entity.Property(e => e.TargetId).HasColumnName("TargetID");
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -716,27 +597,22 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Source)
                     .WithMany(p => p.OfflinemessagesSource)
                     .HasForeignKey(d => d.SourceId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("offlinemessages_SourceID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Target)
                     .WithMany(p => p.OfflinemessagesTarget)
                     .HasForeignKey(d => d.TargetId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("offlinemessages_TargetID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerBans>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.LobbyId })
-                    .HasName("player_bans_pkey");
+                entity.HasKey(e => new { e.PlayerId, e.LobbyId });
 
                 entity.HasIndex(e => e.IP);
                 entity.HasIndex(e => e.SCName);
                 entity.HasIndex(e => e.SCId);
                 entity.HasIndex(e => e.Serial);
-
-                entity.ToTable("player_bans");
 
                 entity.Property(e => e.EndTimestamp)
                     .HasConversion(v => v, v => v == null ? (DateTime?)null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
@@ -758,27 +634,22 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Admin)
                     .WithMany(p => p.PlayerBansAdmin)
                     .HasForeignKey(d => d.AdminId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("player_bans_AdminID_fkey");
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.Lobby)
                     .WithMany(p => p.PlayerBans)
                     .HasForeignKey(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_bans_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerBansPlayer)
                     .HasForeignKey(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("player_bans_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<PlayerClothes>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
-
-                entity.ToTable("player_clothes");
 
                 entity.HasOne(c => c.Player)
                     .WithOne(p => p.PlayerClothes)
@@ -788,107 +659,71 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<PlayerLobbyStats>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.LobbyId })
-                    .HasName("player_lobby_stats_pkey");
-
-                entity.ToTable("player_lobby_stats");
-
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
-
-                entity.Property(e => e.LobbyId).HasColumnName("LobbyID");
+                entity.HasKey(e => new { e.PlayerId, e.LobbyId });
 
                 entity.HasOne(d => d.Lobby)
                     .WithMany(p => p.PlayerLobbyStats)
                     .HasForeignKey(d => d.LobbyId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_lobby_stats_LobbyID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerLobbyStats)
                     .HasForeignKey(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_lobby_stats_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerMapFavourites>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.MapId })
-                    .HasName("player_map_favourites_pkey");
-
-                entity.ToTable("player_map_favourites");
-
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
-
-                entity.Property(e => e.MapId).HasColumnName("MapID");
+                entity.HasKey(e => new { e.PlayerId, e.MapId });
 
                 entity.HasOne(d => d.Map)
                     .WithMany(p => p.PlayerMapFavourites)
                     .HasForeignKey(d => d.MapId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_map_favourites_MapID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerMapFavourites)
                     .HasForeignKey(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_map_favourites_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerMapRatings>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.MapId })
-                    .HasName("player_map_ratings_pkey");
-
-                entity.ToTable("player_map_ratings");
-
-                entity.Property(e => e.PlayerId).HasColumnName("PlayerID");
-
-                entity.Property(e => e.MapId).HasColumnName("MapID");
+                entity.HasKey(e => new { e.PlayerId, e.MapId });
 
                 entity.HasOne(d => d.Map)
                     .WithMany(p => p.PlayerMapRatings)
                     .HasForeignKey(d => d.MapId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_map_ratings_MapID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerMapRatings)
                     .HasForeignKey(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_map_ratings_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerRelations>(entity =>
             {
-                entity.HasKey(e => new { e.PlayerId, e.TargetId })
-                    .HasName("player_relations_pkey");
+                entity.HasKey(e => new { e.PlayerId, e.TargetId });
 
                 entity.Property(e => e.Relation).IsRequired();
-
-                entity.ToTable("player_relations");
 
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerRelationsPlayer)
                     .HasForeignKey(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_relations_PlayerId_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Target)
                     .WithMany(p => p.PlayerRelationsTarget)
                     .HasForeignKey(d => d.TargetId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_relations_TargetId_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerSettings>(entity =>
             {
-                entity.HasKey(e => e.PlayerId)
-                    .HasName("player_settings_pkey");
-
-                entity.ToTable("player_settings");
+                entity.HasKey(e => e.PlayerId);
 
                 entity.Property(e => e.PlayerId)
-                    .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.AllowDataTransfer);
@@ -908,19 +743,14 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
                     .HasForeignKey<PlayerSettings>(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_settings_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerStats>(entity =>
             {
-                entity.HasKey(e => e.PlayerId)
-                    .HasName("player_stats_pkey");
-
-                entity.ToTable("player_stats");
+                entity.HasKey(e => e.PlayerId);
 
                 entity.Property(e => e.PlayerId)
-                    .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.MapsBoughtCounter)
@@ -938,39 +768,27 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerStats)
                     .HasForeignKey<PlayerStats>(d => d.PlayerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("player_stats_PlayerID_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerTotalStats>(entity =>
             {
-                entity.HasKey(e => e.PlayerId)
-                    .HasName("player_total_stats_pkey");
-
-                entity.ToTable("player_total_stats");
+                entity.HasKey(e => e.PlayerId);
 
                 entity.Property(e => e.PlayerId)
-                    .HasColumnName("PlayerID")
                     .ValueGeneratedNever();
 
                 entity.HasOne(d => d.Player)
                    .WithOne(p => p.PlayerTotalStats)
                    .HasForeignKey<PlayerTotalStats>(d => d.PlayerId)
-                   .OnDelete(DeleteBehavior.Cascade)
-                   .HasConstraintName("player_total_stats_PlayerID_fkey");
+                   .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Players>(entity =>
             {
-                entity.ToTable("players");
-
-                entity.HasKey(e => e.Id).HasName("PK_players");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Email).HasMaxLength(100);
-
-                entity.Property(e => e.IsVip).HasColumnName("IsVIP").HasDefaultValue(false);
 
                 entity.Property(e => e.Donation).HasDefaultValue(0);
 
@@ -985,7 +803,6 @@ namespace TDS_Server_DB.Entity
                     .HasMaxLength(100);
 
                 entity.Property(e => e.AdminLeaderId)
-                    .HasColumnName("AdminLeaderID")
                     .IsRequired(false);
 
                 entity.Property(e => e.RegisterTimestamp)
@@ -994,17 +811,14 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.SCName)
                     .IsRequired()
-                    .HasColumnName("SCName")
                     .HasMaxLength(255);
 
                 entity.Property(e => e.SCId)
-                    .IsRequired()
-                    .HasColumnName("SCID");
+                    .IsRequired();
 
                 entity.HasOne(d => d.AdminLvlNavigation)
                     .WithMany(p => p.Players)
                     .HasForeignKey(d => d.AdminLvl)
-                    .HasConstraintName("players_AdminLvl_fkey")
                     .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(p => p.AdminLeader)
@@ -1015,19 +829,12 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Rules>(entity =>
             {
-                entity.ToTable("rules");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID");
             });
 
             modelBuilder.Entity<RuleTexts>(entity =>
             {
-                entity.ToTable("rule_texts");
-
                 entity.HasKey(e => new { e.RuleId, e.Language });
-                entity.Property(e => e.RuleId)
-                    .HasColumnName("RuleID");
 
                 entity.HasOne(d => d.Rule)
                     .WithMany(p => p.RuleTexts)
@@ -1037,9 +844,9 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<ServerDailyStats>(entity =>
             {
-                entity.ToTable("server_daily_stats");
+                
 
-                entity.HasKey(e => e.Date).HasName("server_daily_stats_date_pkey");
+                entity.HasKey(e => e.Date);
 
                 entity.Property(e => e.Date)
                     .IsRequired()
@@ -1055,11 +862,6 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<ServerSettings>(entity =>
             {
-                entity.ToTable("server_settings");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID");
-
                 entity.Property(e => e.GamemodeName)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -1162,13 +964,18 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.MapBuyCounterMultiplicator)
                     .IsRequired()
                     .HasDefaultValue(1f);
+
+                entity.Property(e => e.UsernameChangeCost)
+                    .IsRequired()
+                    .HasDefaultValue(20000);
+
+                entity.Property(e => e.UsernameChangeCooldownDays)
+                    .IsRequired()
+                    .HasDefaultValue(60);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
             {
-                entity.ToTable("server_total_stats");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
                 entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
@@ -1176,12 +983,6 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<SupportRequests>(entity =>
             {
-                entity.ToTable("support_requests");
-
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
                 entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity.Property(e => e.CreateTime)
@@ -1199,11 +1000,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<SupportRequestMessages>(entity =>
             {
-                entity.ToTable("support_request_messages");
-
                 entity.HasKey(e => new { e.RequestId, e.MessageIndex });
-
-                entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
                 entity.Property(e => e.Text).HasMaxLength(300);
 
@@ -1225,10 +1022,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Teams>(entity =>
             {
-                entity.ToTable("teams");
-
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
                     .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Name)
@@ -1255,17 +1049,13 @@ namespace TDS_Server_DB.Entity
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
                     .HasForeignKey(d => d.Lobby)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("teams_Lobby_fkey");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
 
             modelBuilder.Entity<Weapons>(entity =>
             {
-                entity.HasKey(e => e.Hash)
-                    .HasName("weapons_pkey");
-
-                entity.ToTable("weapons");
+                entity.HasKey(e => e.Hash);
 
                 entity.Property(e => e.Hash).IsRequired();
 

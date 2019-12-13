@@ -43,5 +43,8 @@
         public int ReduceMapsBoughtCounterAfterMinute { get; set; }
         public int MapBuyBasePrice { get; set; }
         public float MapBuyCounterMultiplicator { get; set; }
+
+        public int UsernameChangeCost { get; set; }
+        public int UsernameChangeCooldownDays { get; set; }
     }
 }
