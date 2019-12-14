@@ -33,6 +33,7 @@ namespace TDS_Server.Instance.Language
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";
         public virtual string GANGWAR_ATTACKER_STARTED_INFO => "You attack the area '{0}' of '{1}'.";
+        public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
         public virtual string GANGWAR_DEFEND_INVITATION => "Defend your gang area!\n(Accept or use /defend)";
         public virtual string GANGWAR_OWNER_PREPARATION_INFO => "A gangwar is being prepared against one of your areas.";

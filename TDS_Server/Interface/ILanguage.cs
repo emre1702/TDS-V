@@ -28,6 +28,7 @@
         string GANG_REMOVED { get; }
         string GANGWAR_ATTACKER_PREPARATION_INFO { get; }
         string GANGWAR_ATTACKER_STARTED_INFO { get; }
+        string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
         string GANGWAR_ATTACK_INVITATION { get; }
         string GANGWAR_DEFEND_INVITATION { get; }
         string GANGWAR_OWNER_PREPARATION_INFO { get; }

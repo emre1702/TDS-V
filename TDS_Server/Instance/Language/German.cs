@@ -34,6 +34,7 @@ namespace TDS_Server.Instance.Language
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
         public override string GANGWAR_ATTACKER_STARTED_INFO => "Ihr greift das Gebiet '{0}' von '{1}' an.";
+        public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_DEFEND_INVITATION => "Verteidige euer Gang-Gebiet!\n(Nimm an oder nutze /verteidigen)";
         public override string GANGWAR_OWNER_PREPARATION_INFO => "Gegen eines eurer Gebiete wird ein Gangwar vorbereitet.";
