@@ -7,5 +7,6 @@ export enum SettingType {
   booleanSlider,
   enum,
   button,
-  color
+  color,
+  dateTimeFormatEnum
 }

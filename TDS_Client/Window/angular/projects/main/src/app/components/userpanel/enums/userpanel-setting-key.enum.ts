@@ -2,7 +2,8 @@ export enum UserpanelSettingKey {
     AllowDataTransfer = 2,
     Language = 1,
     ShowConfettiAtRanking = 3,
-    TimeZone = 4,
+    Timezone = 4,
+    DateTimeFormat = 13,
     DiscordIdentity = 5,
 
     Bloodscreen = 7,

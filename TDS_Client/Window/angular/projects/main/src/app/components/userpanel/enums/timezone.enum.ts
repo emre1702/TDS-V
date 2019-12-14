@@ -1,4 +1,4 @@
-export enum TimeZoneEnum {
+export enum TimezoneEnum {
     "(UTC-12:00) International Date Line West" = "Dateline Standard Time",
     "(UTC-11:00) Coordinated Universal Time-11" = "UTC-11",
     "(UTC-10:00) Aleutian Islands" = "Aleutian Standard Time",

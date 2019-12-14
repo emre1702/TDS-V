@@ -17,8 +17,10 @@ namespace TDS_Common.Dto
         [Key(3)]
         public bool ShowConfettiAtRanking { get; set; }
         [Key(4)]
-        public string TimeZone { get; set; }
-        [Key(5)]
+        public string Timezone { get; set; }
+        [Key(13)]
+        public string DateTimeFormat { get; set; }
+       [Key(5)]
         public string DiscordIdentity { get; set; }
         #endregion
 

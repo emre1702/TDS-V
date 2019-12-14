@@ -737,8 +737,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
                 entity.Property(e => e.DiscordIdentity);
-                entity.Property(e => e.TimeZone)
+                entity.Property(e => e.Timezone)
                     .HasDefaultValue("UTC");
+                entity.Property(e => e.DateTimeFormat)
+                    .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)

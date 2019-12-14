@@ -10,7 +10,8 @@ import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelSettingRow } from '../interfaces/userpanelSettingRow';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
-import { TimeZoneEnum as TimezoneEnum } from '../enums/timezone.enum';
+import { TimezoneEnum } from '../enums/timezone.enum';
+import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -20,6 +21,8 @@ import { TimeZoneEnum as TimezoneEnum } from '../enums/timezone.enum';
 export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
     userpanelSettingType = SettingType;
+    currentDate: Date;
+    userpanelSettingKey = UserpanelSettingKey;
 
     settingPanel: UserpanelSettingsPanel[] = [
         {
@@ -38,13 +41,18 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     formControl: new FormControl(true)
                 },
                 {
-                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.TimeZone,
+                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Timezone,
                     defaultValue: TimezoneEnum["(UTC) Coordinated Universal Time"], enum: TimezoneEnum,
                     formControl: new FormControl(TimezoneEnum["(UTC) Coordinated Universal Time"])
                 },
                 {
+                    type: SettingType.dateTimeFormatEnum, dataSettingIndex: UserpanelSettingKey.DateTimeFormat,
+                    defaultValue: DateTimeFormatEnum[""], enum: DateTimeFormatEnum,
+                    formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss'Z'"])
+                },
+                {
                     type: SettingType.string, dataSettingIndex: UserpanelSettingKey.DiscordIdentity, defaultValue: "",
-                    formControl: new FormControl(""), placeholder: "Name#ID"
+                    formControl: new FormControl("")
                 }
             ]
         },
@@ -106,6 +114,9 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
         if (this.userpanelService.allSettingsNormal)
             this.loadSettings();
+
+        // this.currentDate = new Date();
+        this.currentDate = new Date(2019, 5, 25, 15, 20, 40);
     }
 
     ngOnDestroy() {

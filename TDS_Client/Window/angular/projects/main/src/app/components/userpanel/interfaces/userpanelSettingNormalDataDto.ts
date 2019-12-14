@@ -10,7 +10,7 @@ export interface UserpanelSettingNormalDataDto {
     [2]: boolean;
     /** ShowConfettiAtRanking */
     [3]: boolean;
-    /** TimeZone */
+    /** Timezone */
     [4]: string;
     /** DiscordIdentity */
     [5]: string;
@@ -31,4 +31,7 @@ export interface UserpanelSettingNormalDataDto {
 
     /** MapBorderColor */
     [12]: string;
+
+    /** DateTimeFormat */
+    [13]: string;
 }

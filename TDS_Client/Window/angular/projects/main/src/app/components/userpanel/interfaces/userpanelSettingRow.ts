@@ -8,7 +8,6 @@ export interface UserpanelSettingRow {
     enum?: any;
     defaultValue: any;
     initialValue?: any;
-    placeholder?: string;
 
     onlyInt?: boolean;
     min?: number;

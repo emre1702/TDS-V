@@ -122,7 +122,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Language = "Language";
     AllowDataTransfer = "Allow data transfer";
     ShowConfettiAtRanking = "Confetti at ranking";
-    DiscordIdentity = "Discord identity";
+    DiscordIdentity = "Discord identity (Name#ID)";
     Bloodscreen = "Bloodscreen";
     Hitsound = "Hit sound";
     FloatingDamageInfo = "Floating damage info";

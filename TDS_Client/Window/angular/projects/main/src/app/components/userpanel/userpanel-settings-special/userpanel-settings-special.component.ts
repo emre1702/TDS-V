@@ -6,6 +6,7 @@ import { MatSlideToggleChange, MatSnackBar } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelSettingsSpecialType } from '../enums/userpanel-settings-special-type.enum';
+import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 
 @Component({
     selector: 'app-userpanel-settings-special',
@@ -54,45 +55,46 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
 
     saveChanges() {
         const confirmedPassword = this.formGroup.get("confirmPasswordControl").value;
+        this.rageConnector.callCallback(DToClientEvent.GetHashedPassword, [confirmedPassword], (hashedPassword) => {
+            const username = this.formGroup.get("usernameControl").value;
+            if ((!this.hasToBuyUsername || this.formGroup.get("usernameBuyControl").value) && this.userpanelService.allSettingsSpecial[0] != username) {
+                this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
+                    [UserpanelSettingsSpecialType.Username, username, hashedPassword],
+                    (err: string) => {
+                        if (err.length) {
+                            this.showSaveError(err);
+                        } else {
+                            this.showSaveSuccess(UserpanelSettingsSpecialType.Username);
+                        }
+                    });
+            }
 
-        const username = this.formGroup.get("usernameControl").value;
-        if ((!this.hasToBuyUsername || this.formGroup.get("usernameBuyControl").value) && this.userpanelService.allSettingsSpecial[0] != username) {
-            this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
-                [UserpanelSettingsSpecialType.Username, username, confirmedPassword],
-                (err: string) => {
-                    if (err.length) {
-                        this.showSaveError(err);
-                    } else {
-                        this.showSaveSuccess(UserpanelSettingsSpecialType.Username);
-                    }
-                });
-        }
+            const password = this.formGroup.get("passwordControl").value as string;
+            if (password && password.length) {
+                this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
+                    [UserpanelSettingsSpecialType.Password, password, hashedPassword],
+                    (err: string) => {
+                        if (err.length) {
+                            this.showSaveError(err);
+                        } else {
+                            this.showSaveSuccess(UserpanelSettingsSpecialType.Password);
+                        }
+                    });
+            }
 
-        const password = this.formGroup.get("passwordControl").value as string;
-        if (password && password.length) {
-            this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
-                [UserpanelSettingsSpecialType.Password, password, confirmedPassword],
-                (err: string) => {
-                    if (err.length) {
-                        this.showSaveError(err);
-                    } else {
-                        this.showSaveSuccess(UserpanelSettingsSpecialType.Password);
-                    }
-                });
-        }
-
-        const email = this.formGroup.get("emailControl").value;
-        if (this.userpanelService.allSettingsSpecial[1] != email) {
-            this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
-                [UserpanelSettingsSpecialType.Email, email, confirmedPassword],
-                (err: string) => {
-                    if (err.length) {
-                        this.showSaveError(err);
-                    } else {
-                        this.showSaveSuccess(UserpanelSettingsSpecialType.Email);
-                    }
-                });
-        }
+            const email = this.formGroup.get("emailControl").value;
+            if (this.userpanelService.allSettingsSpecial[1] != email) {
+                this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
+                    [UserpanelSettingsSpecialType.Email, email, hashedPassword],
+                    (err: string) => {
+                        if (err.length) {
+                            this.showSaveError(err);
+                        } else {
+                            this.showSaveSuccess(UserpanelSettingsSpecialType.Email);
+                        }
+                    });
+            }
+        });
     }
 
     private showSaveError(err: string) {

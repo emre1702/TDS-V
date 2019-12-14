@@ -237,7 +237,7 @@ namespace TDS_Server.Instance.Player
 
         public bool IsCrouched { get; set; }
 
-        public TimeZoneInfo TimeZone = TimeZoneInfo.Utc;
+        public TimeZoneInfo Timezone = TimeZoneInfo.Utc;
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -374,17 +374,17 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null)
                 return;
-            TimeZone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.TimeZone);
+            Timezone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.Timezone);
         }
 
         public DateTime GetLocalDateTime(DateTime dateTime)
         {
-            return TimeZoneInfo.ConvertTime(dateTime, TimeZone);
+            return TimeZoneInfo.ConvertTime(dateTime, Timezone);
         }
 
         public string GetLocalDateTimeString(DateTime dateTime)
         {
-            return GetLocalDateTime(dateTime).ToString(Constants.DateTimeOffsetFormat);
+            return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? Constants.DateTimeOffsetFormat);
         }
 
         public async Task SaveData(bool force = false)
