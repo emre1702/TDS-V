@@ -1,4 +1,4 @@
-﻿using TDS_Server.Enum;
+﻿using TDS_Server.Enums;
 
 namespace TDS_Server.Instance.Dto
 {

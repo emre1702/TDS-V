@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Player;
 using TDS_Common.Enum;

@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Linq;
-using TDS_Server.Enum;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Enums;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.EventManager;

@@ -7,6 +7,13 @@ namespace TDS_Server.Instance.Utility
 {
     public abstract class EntityWrapperClass
     {
+
+        ~EntityWrapperClass()
+        {
+            _dbContextSemaphore?.Dispose();
+            _dbContext?.Dispose();
+        }
+
         protected TDSDbContext DbContext
         {
             get
@@ -103,6 +110,7 @@ namespace TDS_Server.Instance.Utility
                 dbContext.Dispose();
                 _dbContext = null;
             });
+            _dbContextSemaphore?.Dispose();
         }
     }
 }

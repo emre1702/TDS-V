@@ -10,7 +10,7 @@ namespace TDS_Server.Dto
 
         // public CommandDefaultMethod? Method;    // only used when UseImplicitTypes == false
         // public CommandEmptyDefaultMethod? MethodEmpty;   // only used when UseImplicitTypes == false
-        public Type[] ParameterTypes = new Type[0];
+        public Type[] ParameterTypes = Array.Empty<Type>();
 
         public int Priority;
         public int? ToOneStringAfterParameterCount = null;

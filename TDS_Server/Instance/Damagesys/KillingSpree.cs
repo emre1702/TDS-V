@@ -7,7 +7,7 @@ namespace TDS_Server.Instance
     using TDS_Common.Default;
     using TDS_Server.Instance.Player;
     using TDS_Server.Manager.Utility;
-    using TDS_Server_DB.Entity.Lobby;
+    using TDS_Server_DB.Entity.LobbyEntities;
 
     partial class Damagesys
     {
@@ -39,12 +39,12 @@ namespace TDS_Server.Instance
             _killingSpreeRewards = killingspreeRewards.ToDictionary(v => v.KillsAmount, v => v);
         }
 
-        private void KillingSpreeDeath(TDSPlayer player)
+        private static void KillingSpreeDeath(TDSPlayer player)
         {
             player.KillingSpree = 0;
         }
 
-        private void KillingSpreeKill(TDSPlayer player)
+        private static void KillingSpreeKill(TDSPlayer player)
         {
             ++player.KillingSpree;
 

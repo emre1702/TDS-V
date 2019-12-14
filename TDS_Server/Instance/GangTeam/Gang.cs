@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Gang;
+using TDS_Server_DB.Entity.GangEntities;
 
 namespace TDS_Server.Instance.GangTeam
 {
@@ -18,8 +18,8 @@ namespace TDS_Server.Instance.GangTeam
         public static Gang None => _gangById[-1];
         public static GangRanks NoneRank => None.Entity.Ranks.First();
 
-        public Gangs Entity;
-        public List<TDSPlayer> PlayersOnline = new List<TDSPlayer>();
+        public Gangs Entity { get; set; }
+        public List<TDSPlayer> PlayersOnline { get; set; } = new List<TDSPlayer>();
         #nullable disable
         // This can't be null! 
         // If it's null, we got serious problems in the code!
@@ -81,7 +81,7 @@ namespace TDS_Server.Instance.GangTeam
                 .AsNoTracking()
                 .ForEachAsync(g =>
             {
-                new Gang(g);
+                _ = new Gang(g);
             });
         }
     }

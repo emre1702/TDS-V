@@ -5,7 +5,7 @@ using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Player;
-using TDS_Server.Interface;
+using TDS_Server.Interfaces;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -14,7 +14,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TDS_Server.Manager.Player
 {
-    internal class Account : Script
+    class Account : Script
     {
         private static BansManager? _bansManager;
 
@@ -48,7 +48,7 @@ namespace TDS_Server.Manager.Player
 
             CustomEventManager.SetPlayerLoggedOut(player);
 
-            await player.SaveData(true);
+            await player.SaveData(true).ConfigureAwait(true);
             player.Logout();
 
             LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName));
@@ -59,10 +59,10 @@ namespace TDS_Server.Manager.Player
         {
             if (username.Length < 3 || username.Length > 20)
                 return;
-            if (await Player.DoesPlayerWithScnameExist(client.SocialClubName))
+            if (await Player.DoesPlayerWithScnameExist(client.SocialClubName).ConfigureAwait(true))
                 return;
             TDSPlayer player = client.GetChar();
-            if (await Player.DoesPlayerWithNameExist(username))
+            if (await Player.DoesPlayerWithNameExist(username).ConfigureAwait(true))
             {
                 client.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
                 return;
@@ -89,7 +89,7 @@ namespace TDS_Server.Manager.Player
         [RemoteEvent(DToServerEvent.TryLogin)]
         public static async void OnPlayerTryLoginEvent(Client player, string username, string password)
         {
-            int id = await Player.GetPlayerIDByName(username);
+            int id = await Player.GetPlayerIDByName(username).ConfigureAwait(false);
             if (id != 0)
             {
                 Login.LoginPlayer(player, id, password);
@@ -109,9 +109,9 @@ namespace TDS_Server.Manager.Player
         public static async void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
             while (_bansManager is null)
-                await Task.Delay(1000);
+                await Task.Delay(1000).ConfigureAwait(false);
 
-            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, ip, serial, socialClubName, socialClubId, true);
+            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, ip, serial, socialClubName, socialClubId, true).ConfigureAwait(false);
             if (ban is { })
                 cancel.Cancel = true;
         }
@@ -121,24 +121,26 @@ namespace TDS_Server.Manager.Player
         public static async void OnPlayerConnected(Client player)
         {
             while (_bansManager is null)
-                await Task.Delay(1000);
+                await Task.Delay(1000).ConfigureAwait(true);
 
             player.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(player, true);
 
-            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, false);
+            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, false).ConfigureAwait(true);
             if (!HandlePlayerBan(player, ban))
                 return;
 
             using var dbContext = new TDSDbContext();
-            var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name }).FirstOrDefaultAsync();
+            var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name })
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(true);
             if (playerIDName is null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, false);
                 return;
             }
 
-            ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, playerIDName.Id);
+            ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, playerIDName.Id).ConfigureAwait(true);
             if (!HandlePlayerBan(player, ban))
                 return;
 
@@ -174,7 +176,7 @@ namespace TDS_Server.Manager.Player
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
-            await dbcontext.SaveChangesAsync();
+            await dbcontext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public static void ChangePlayerVoiceMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
@@ -202,7 +204,7 @@ namespace TDS_Server.Manager.Player
             target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
             dbcontext.Entry(target.PlayerStats).State = EntityState.Modified;
 
-            await dbcontext.SaveChangesAsync();
+            await dbcontext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private static void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)

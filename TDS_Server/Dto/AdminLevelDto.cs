@@ -6,10 +6,10 @@ namespace TDS_Server.Dto
 {
     public class AdminLevelDto
     {
-        public short Level;
-        public string FontColor;
-        public Dictionary<ELanguage, string> Names = new Dictionary<ELanguage, string>();
-        public List<TDSPlayer> PlayersOnline = new List<TDSPlayer>();
+        public short Level { get; set; }
+        public string FontColor { get; set; }
+        public Dictionary<ELanguage, string> Names { get; set; } = new Dictionary<ELanguage, string>();
+        public List<TDSPlayer> PlayersOnline { get; set; } = new List<TDSPlayer>();
 
         public AdminLevelDto(short level, string fontColor)
         {

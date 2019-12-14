@@ -1,10 +1,9 @@
-using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Lobby;
+using TDS_Server_DB.Entity.LobbyEntities;
 
 namespace TDS_Server.Instance
 {

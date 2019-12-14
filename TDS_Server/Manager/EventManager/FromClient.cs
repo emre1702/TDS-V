@@ -3,8 +3,9 @@ using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
+using TDS_Server.Enums;
 using TDS_Server.Instance.GameModes;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
@@ -180,7 +181,7 @@ namespace TDS_Server.Manager.EventManager
             if (!(character.CurrentLobby is Arena arena))
                 return;
             if (arena.LobbyEntity.LobbyMapSettings.MapLimitType == EMapLimitType.KillAfterTime)
-                arena.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
+                FightLobby.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
         }
 
         [RemoteEvent(DToServerEvent.SendTeamOrder)]
@@ -189,7 +190,7 @@ namespace TDS_Server.Manager.EventManager
             if (!System.Enum.TryParse(teamOrderInt.ToString(), out ETeamOrder teamOrder))
                 return;
             TDSPlayer player = client.GetChar();
-            player.CurrentLobby?.SendTeamOrder(player, teamOrder);
+            Lobby.SendTeamOrder(player, teamOrder);
         }
 
         [RemoteEvent(DToServerEvent.SuicideKill)]
@@ -200,9 +201,9 @@ namespace TDS_Server.Manager.EventManager
                 return;
             if (character.Lifes == 0)
                 return;
-            if (!(character.CurrentLobby is FightLobby fightLobby))
+            if (!(character.CurrentLobby is FightLobby))
                 return;
-            fightLobby.KillPlayer(player, character.Language.COMMITED_SUICIDE);
+            FightLobby.KillPlayer(player, character.Language.COMMITED_SUICIDE);
         }
 
         [RemoteEvent(DToServerEvent.SuicideShoot)]
@@ -229,7 +230,7 @@ namespace TDS_Server.Manager.EventManager
                 return;
 
             player.IsCrouched = !player.IsCrouched;
-            PlayerDataSync.SetData(player, EPlayerDataKey.Crouched, Enum.EPlayerDataSyncMode.Lobby, player.IsCrouched);
+            PlayerDataSync.SetData(player, EPlayerDataKey.Crouched, EPlayerDataSyncMode.Lobby, player.IsCrouched);
         }
 
         #region Bomb

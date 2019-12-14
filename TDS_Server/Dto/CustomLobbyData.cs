@@ -9,41 +9,41 @@ namespace TDS_Server.Dto
     public class CustomLobbyData
     {
         [Key(0)]
-        public int? LobbyId;
+        public int? LobbyId { get; set; }
         [Key(1)]
-        public string Name = "";
+        public string Name { get; set; } = "";
         [Key(2)]
-        public string OwnerName;
+        public string OwnerName { get; set; }
         [Key(3)]
-        public string Password = "";
+        public string Password { get; set; } = "";
         [Key(4)]
-        public bool ShowRanking;
+        public bool ShowRanking { get; set; }
         [Key(5)]
-        public short StartHealth;
+        public short StartHealth { get; set; }
         [Key(6)]
-        public short StartArmor;
+        public short StartArmor { get; set; }
         [Key(7)]
-        public short AmountLifes;
+        public short AmountLifes { get; set; }
         [Key(8)]
-        public bool MixTeamsAfterRound;
+        public bool MixTeamsAfterRound { get; set; }
         [Key(9)]
-        public int BombDetonateTimeMs;
+        public int BombDetonateTimeMs { get; set; }
         [Key(10)]
-        public int BombDefuseTimeMs;
+        public int BombDefuseTimeMs { get; set; }
         [Key(11)]
-        public int BombPlantTimeMs;
+        public int BombPlantTimeMs { get; set; }
         [Key(12)]
-        public int RoundTime;
+        public int RoundTime { get; set; }
         [Key(13)]
-        public int CountdownTime;
+        public int CountdownTime { get; set; }
         [Key(14)]
-        public int SpawnAgainAfterDeathMs;
+        public int SpawnAgainAfterDeathMs { get; set; }
         [Key(15)]
-        public int MapLimitTime;
+        public int MapLimitTime { get; set; }
         [Key(16)]
-        public EMapLimitType MapLimitType;
+        public EMapLimitType MapLimitType { get; set; }
         [Key(17)]
-        public List<CustomLobbyTeamData> Teams;
+        public List<CustomLobbyTeamData> Teams { get; set; }
     }
     #nullable restore
 }

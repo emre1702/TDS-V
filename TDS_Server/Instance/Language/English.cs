@@ -1,4 +1,4 @@
-﻿using TDS_Server.Interface;
+﻿using TDS_Server.Interfaces;
 
 namespace TDS_Server.Instance.Language
 {

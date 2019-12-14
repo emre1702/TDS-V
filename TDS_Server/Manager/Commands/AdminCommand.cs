@@ -3,9 +3,9 @@ using System;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Dto;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
@@ -14,7 +14,7 @@ using TDS_Server_DB.Entity.Player;
 
 namespace TDS_Server.Manager.Commands
 {
-    internal class AdminCommand
+    class AdminCommand
     {
         [TDSCommand(DAdminCommand.AdminSay)]
         public static void AdminSay(TDSPlayer player, [TDSRemainingText] string text)
@@ -61,7 +61,7 @@ namespace TDS_Server.Manager.Commands
                 target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
             target.CurrentLobby.RemovePlayer(target);
-            await LobbyManager.MainMenu.AddPlayer(target, 0);
+            await LobbyManager.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);
         }
 
         [TDSCommand(DAdminCommand.LobbyBan, 1)]

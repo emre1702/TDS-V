@@ -6,7 +6,7 @@ using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Default;
 using TDS_Server.Dto;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Instance.Utility

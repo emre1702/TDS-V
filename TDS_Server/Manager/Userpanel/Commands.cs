@@ -59,7 +59,7 @@ namespace TDS_Server.Manager.Userpanel
             _commandDatasJson = Serializer.ToBrowser(_commandDatas);
         }
 
-        public static string GetData(TDSPlayer player)
+        public static string GetData()
         {
             return _commandDatasJson;
         }

@@ -14,11 +14,11 @@ namespace TDS_Server.Manager.Userpanel
             switch (dataType)
             {
                 case EUserpanelLoadDataType.Commands:
-                    json = Commands.GetData(player);
+                    json = Commands.GetData();
                     break;
 
                 case EUserpanelLoadDataType.Rules:
-                    json = Rules.GetData(player);
+                    json = Rules.GetData();
                     break;
 
                 case EUserpanelLoadDataType.FAQs:

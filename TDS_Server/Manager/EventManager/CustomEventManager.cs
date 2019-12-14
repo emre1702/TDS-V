@@ -1,5 +1,5 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 
 namespace TDS_Server.Manager.EventManager

@@ -20,7 +20,7 @@ using TDS_Server_DB.Entity;
 using DB = TDS_Server_DB.Entity;
 using System.Text.RegularExpressions;
 using TDS_Common.Dto.Map.Creator;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 
 namespace TDS_Server.Manager.Maps
 {
@@ -70,18 +70,19 @@ namespace TDS_Server.Manager.Maps
                 UTF8Encoding utf8e = new UTF8Encoding();
                 XmlTextWriter xmlSink = new XmlTextWriter(memStrm, utf8e);
                 serializer.Serialize(xmlSink, mapDto);
+                xmlSink.Dispose();
                 byte[] utf8EncodedData = memStrm.ToArray();
 
                 string mapXml = utf8e.GetString(utf8EncodedData);
-                string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml);
-                await File.WriteAllTextAsync(mapPath, prettyMapXml);
+                string prettyMapXml = await XmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
+                await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
 
                 if (!onlySave)
                 {
                     using var dbContext = new TDSDbContext();
                     var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
                     await dbContext.Maps.AddAsync(dbMap);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(true);
 
                     mapDto.SyncedData.Id = dbMap.Id;
                     mapDto.RatingAverage = 5;
@@ -103,7 +104,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNewMaps(TDSDbContext dbContext)
         {
-            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false);
+            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false).ConfigureAwait(false);
             foreach (var map in _newCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -114,7 +115,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadSavedMaps(TDSDbContext dbContext)
         {
-            _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true);
+            _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true).ConfigureAwait(false);
             foreach (var map in _savedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -124,7 +125,7 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNeedCheckMaps(TDSDbContext dbContext)
         {
-            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false);
+            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false).ConfigureAwait(false);
             foreach (var map in _newCreatedMaps)
             {
                 map.Info.IsNewMap = true;

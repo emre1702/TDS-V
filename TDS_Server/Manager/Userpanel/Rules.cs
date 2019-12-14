@@ -26,7 +26,7 @@ namespace TDS_Server.Manager.Userpanel
             _rulesJson = Serializer.ToBrowser(sendRules);
         }
 
-        public static string GetData(TDSPlayer player)
+        public static string GetData()
         {
             return _rulesJson;
         }

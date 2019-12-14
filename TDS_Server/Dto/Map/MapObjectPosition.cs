@@ -29,15 +29,17 @@ namespace TDS_Server.Dto.Map
 
         public MapObjectPosition() { }
 
-        public MapObjectPosition(MapCreatorPosition obj)
+        public MapObjectPosition(MapCreatorPosition pos)
         {
-            Name = obj.Info?.ToString() ?? "?";
-            X = obj.PosX;
-            Y = obj.PosY;
-            Z = obj.PosZ;
-            RotX = obj.RotX;
-            RotY = obj.RotY;
-            RotZ = obj.RotZ;
+            if (pos is null)
+                return;
+            Name = pos.Info?.ToString() ?? "?";
+            X = pos.PosX;
+            Y = pos.PosY;
+            Z = pos.PosZ;
+            RotX = pos.RotX;
+            RotY = pos.RotY;
+            RotZ = pos.RotZ;
         }
 
         public MapCreatorPosition ToMapCreatorPosition(int id)

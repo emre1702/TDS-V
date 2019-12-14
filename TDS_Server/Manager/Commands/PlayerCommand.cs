@@ -4,8 +4,8 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
-using TDS_Server.Enum;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Enums;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Sync;
@@ -319,7 +319,7 @@ namespace TDS_Server.Manager.Commands
             switch (player.CurrentLobby.Type)
             {
                 case ELobbyType.MapCreateLobby:
-                    new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), 
+                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), 
                         target: target, 
                         sender: player, 
                         onAccept: async (sender, target, invitation) => 

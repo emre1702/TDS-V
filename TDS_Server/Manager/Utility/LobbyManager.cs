@@ -7,15 +7,15 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Sync;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Lobby;
 using TDS_Server_DB.Entity.Rest;
 using TDS_Server.Instance.GameModes;
 using TDS_Common.Manager.Utility;
+using TDS_Server_DB.Entity.LobbyEntities;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -97,21 +97,21 @@ namespace TDS_Server.Manager.Utility
                 // All Normals
                 if (mapAssignment.MapId == -2)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Normal).ToList());
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Normal).ToList());
                     return;
                 }
 
                 // All Bombs
                 if (mapAssignment.MapId == -3)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Bomb).ToList());
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Bomb).ToList());
                     return;
                 }
 
                 // All Sniper
                 if (mapAssignment.MapId == -4)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enum.EMapType.Sniper).ToList());
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Sniper).ToList());
                     return;
                 }
 

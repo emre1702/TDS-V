@@ -2,20 +2,21 @@ using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Utility;
-using TDS_Server.Interface;
+using TDS_Server.Interfaces;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity.Gang;
+using TDS_Server_DB.Entity.GangEntities;
 using TDS_Server_DB.Entity.Player;
 using TimeZoneConverter;
 
@@ -42,8 +43,8 @@ namespace TDS_Server.Instance.Player
         }
 
         public Client Client { get; }
-        public Lobby.Lobby? CurrentLobby { get; set; }
-        public Lobby.Lobby? PreviousLobby { get; set; }
+        public LobbyInstances.Lobby? CurrentLobby { get; set; }
+        public LobbyInstances.Lobby? PreviousLobby { get; set; }
 
         public PlayerLobbyStats? CurrentLobbyStats
         {
@@ -180,7 +181,7 @@ namespace TDS_Server.Instance.Player
                 _spectates = value;
             }
         }
-        public HashSet<TDSPlayer> Spectators { get; set; } = new HashSet<TDSPlayer>();
+        public HashSet<TDSPlayer> Spectators { get; } = new HashSet<TDSPlayer>();
         public bool LoggedIn => Entity != null && Entity.PlayerStats != null ? Entity.PlayerStats.LoggedIn : false;
 
         public int PlayMinutes
@@ -238,7 +239,7 @@ namespace TDS_Server.Instance.Player
 
         public bool IsCrouched { get; set; }
 
-        public TimeZoneInfo Timezone = TimeZoneInfo.Utc;
+        private TimeZoneInfo _timezone = TimeZoneInfo.Utc;
 
         private Players? _entity;
         private int _lastSaveTick;
@@ -375,17 +376,17 @@ namespace TDS_Server.Instance.Player
         {
             if (Entity == null)
                 return;
-            Timezone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.Timezone);
+            _timezone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.Timezone);
         }
 
         public DateTime GetLocalDateTime(DateTime dateTime)
         {
-            return TimeZoneInfo.ConvertTime(dateTime, Timezone);
+            return TimeZoneInfo.ConvertTime(dateTime, _timezone);
         }
 
         public string GetLocalDateTimeString(DateTime dateTime)
         {
-            return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? Constants.DateTimeOffsetFormat);
+            return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? Constants.DateTimeOffsetFormat, CultureInfo.CurrentCulture);
         }
 
         public async Task SaveData(bool force = false)
@@ -401,8 +402,8 @@ namespace TDS_Server.Instance.Player
                     dbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
                     CurrentLobbyStats = null;
                 }
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         public async void CheckSaveData()
@@ -410,12 +411,12 @@ namespace TDS_Server.Instance.Player
             if (Environment.TickCount - _lastSaveTick < SettingsManager.SavePlayerDataCooldownMinutes * 60 * 1000)
                 return;
 
-            await SaveData();
+            await SaveData().ConfigureAwait(false);
         }
 
         public async void Logout()
         {
-            await RemoveDBContext();
+            await RemoveDBContext().ConfigureAwait(false);
         }
     }
 }

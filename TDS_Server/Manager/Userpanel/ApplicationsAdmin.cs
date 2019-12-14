@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
@@ -38,7 +38,8 @@ namespace TDS_Server.Manager.Userpanel
                         PlayerName = a.Player.Name
                     })
                     .OrderBy(a => a.ID)
-                    .ToListAsync();
+                    .ToListAsync()
+                    .ConfigureAwait(false);
 
                 var appsToSend = apps.Select(a => new AppToSendData
                 {
@@ -67,19 +68,23 @@ namespace TDS_Server.Manager.Userpanel
             int creatorId = await dbContext.Applications              
                 .Where(a => a.Id == applicationId)
                 .Select(a => a.PlayerId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
 
             if (creatorId == default)
                 return;
 
             var answers = await dbContext.ApplicationAnswers
                 .Where(a => a.ApplicationId == applicationId)
-                .ToDictionaryAsync(a => a.QuestionId, a => a.Answer);
+                .ToDictionaryAsync(a => a.QuestionId, a => a.Answer)
+                .ConfigureAwait(false);
             var questionsJson = ApplicationUser.AdminQuestions;
 
-            var stats = await PlayerStats.GetPlayerStats(creatorId, false, player);
+            var stats = await PlayerStats.GetPlayerStats(creatorId, false, player).ConfigureAwait(false);
 
-            bool alreadyInvited = await dbContext.ApplicationInvitations.AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id);
+            bool alreadyInvited = await dbContext.ApplicationInvitations
+                .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id)
+                .ConfigureAwait(false);
 
             string json = Serializer.ToBrowser(new ApplicationData
             { 
@@ -116,9 +121,9 @@ namespace TDS_Server.Manager.Userpanel
             };
             dbContext.ApplicationInvitations.Add(invitation);
             
-            await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync().ConfigureAwait(true);
 
-            int playerId = await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync();
+            int playerId = await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync().ConfigureAwait(true);
             if (playerId == default)
                 return null;
 

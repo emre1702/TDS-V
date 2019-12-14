@@ -96,10 +96,10 @@ namespace TDS_Server.Instance
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> _allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
+		public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
 #pragma warning restore IDE0060 // Remove unused parameter
-        {
-            if (NAPI.Player.IsPlayerDead(target.Client))
+		{
+			if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
             if (source != null)
             {

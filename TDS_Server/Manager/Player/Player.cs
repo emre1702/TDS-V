@@ -52,14 +52,14 @@ namespace TDS_Server.Manager.Player
 
         public static async Task<bool> DoesPlayerWithScnameExist(string scname)
         {
-            return await GetPlayerIDByScname(scname) != 0;
+            return await GetPlayerIDByScname(scname).ConfigureAwait(false) != 0;
         }
 
         public static async Task<bool> DoesPlayerWithNameExist(string name)
         {
             using var dbContext = new TDSDbContext();
             return await dbContext.Players.AsNoTracking()
-                            .AnyAsync(p => EF.Functions.ILike(p.Name, name));    
+                            .AnyAsync(p => EF.Functions.ILike(p.Name, name)).ConfigureAwait(false);    
         }
 
         public static async Task<int> GetPlayerIDByScname(string scname)
@@ -69,7 +69,8 @@ namespace TDS_Server.Manager.Player
                 .AsNoTracking()
                 .Where(p => p.SCName == scname)
                 .Select(p => p.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
         }
 
         public static async Task<int> GetPlayerIDByName(string name)
@@ -79,7 +80,8 @@ namespace TDS_Server.Manager.Player
                 .AsNoTracking()
                 .Where(p => p.Name == name)
                 .Select(p => p.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
         }
 
         public static TDSPlayer? GetPlayerByID(int id)

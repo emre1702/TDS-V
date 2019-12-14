@@ -1,4 +1,4 @@
-﻿using TDS_Server_DB.Entity.Lobby;
+﻿using TDS_Server_DB.Entity.LobbyEntities;
 
 namespace TDS_Server_DB.Entity.Player
 {

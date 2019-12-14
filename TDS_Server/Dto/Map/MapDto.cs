@@ -2,12 +2,10 @@
 using System.Xml.Serialization;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
-using EMapType = TDS_Server.Enum.EMapType;
+using EMapType = TDS_Server.Enums.EMapType;
 using TDS_Server_DB.Entity.Player;
-using TDS_Common.Dto.Map;
 using System.Linq;
 using TDS_Common.Dto.Map.Creator;
-using TDS_Server.Manager.Utility;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Dto.Map

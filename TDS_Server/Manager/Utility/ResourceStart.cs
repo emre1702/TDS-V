@@ -47,39 +47,39 @@ namespace TDS_Server.Manager.Utility
                 connection.Open();
                 connection.ReloadTypes();
 
-                var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync();
+                var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync().ConfigureAwait(true);
                 foreach (var stat in playerStats)
                 {
                     stat.LoggedIn = false;
                 }
-                await dbcontext.SaveChangesAsync();
+                await dbcontext.SaveChangesAsync().ConfigureAwait(true);
                 dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 ServerDailyStatsManager.Init();
                 ServerTotalStatsManager.Init();
 
-                await SettingsManager.Load(dbcontext);
+                await SettingsManager.Load(dbcontext).ConfigureAwait(true);
 
                 HourTimer.Execute();
 
-                await AdminsManager.Init(dbcontext);
+                await AdminsManager.Init(dbcontext).ConfigureAwait(true);
                 Workaround.Init();
-                await CommandsManager.LoadCommands(dbcontext);
+                await CommandsManager.LoadCommands(dbcontext).ConfigureAwait(true);
                 Damagesys.LoadDefaults(dbcontext);
 
-                await BansManager.Get().RemoveExpiredBans();
+                await BansManager.Get().RemoveExpiredBans().ConfigureAwait(true);
 
-                await MapsLoader.LoadDefaultMaps(dbcontext);
-                await MapCreator.LoadNewMaps(dbcontext);
-                await MapCreator.LoadSavedMaps(dbcontext);
-                await MapCreator.LoadNeedCheckMaps(dbcontext);
+                await MapsLoader.LoadDefaultMaps(dbcontext).ConfigureAwait(true);
+                await MapCreator.LoadNewMaps(dbcontext).ConfigureAwait(true);
+                await MapCreator.LoadSavedMaps(dbcontext).ConfigureAwait(true);
+                await MapCreator.LoadNeedCheckMaps(dbcontext).ConfigureAwait(true);
 
                 Normal.Init(dbcontext);
                 Bomb.Init(dbcontext);
                 Sniper.Init(dbcontext);
 
-                await Gang.LoadAll(dbcontext);
-                await LobbyManager.LoadAllLobbies(dbcontext);
+                await Gang.LoadAll(dbcontext).ConfigureAwait(true);
+                await LobbyManager.LoadAllLobbies(dbcontext).ConfigureAwait(true);
                 GangwarAreasManager.LoadGangwarAreas(dbcontext);
 
                 Userpanel.Main.Init(dbcontext);

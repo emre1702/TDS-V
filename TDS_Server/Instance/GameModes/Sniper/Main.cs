@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Dto.Map;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.GameModes

@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 

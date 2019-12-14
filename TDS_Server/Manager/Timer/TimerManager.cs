@@ -4,13 +4,13 @@ using TDS_Common.Instance.Utility;
 
 namespace TDS_Server.Manager.Timer
 {
-    internal class TimerManager : Script
+    class TimerManager : Script
     {
         public TimerManager()
         {
             TDSTimer.Init(NAPI.Util.ConsoleOutput, () => (ulong)Environment.TickCount & int.MaxValue);
-            new TDSTimer(MinuteTimer.Execute, 60 * 1000, 0);
-            new TDSTimer(HourTimer.Execute, 60 * 60 * 1000, 0);
+            _ = new TDSTimer(MinuteTimer.Execute, 60 * 1000, 0);
+            _ = new TDSTimer(HourTimer.Execute, 60 * 60 * 1000, 0);
         }
 
         [ServerEvent(Event.Update)]

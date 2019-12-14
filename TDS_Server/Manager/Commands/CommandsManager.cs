@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Dto;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Mapping;

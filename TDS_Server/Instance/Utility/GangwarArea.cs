@@ -1,13 +1,12 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
 using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.Lobby;
+using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Gang;
+using TDS_Server_DB.Entity.GangEntities;
 
 namespace TDS_Server.Instance.Utility
 {

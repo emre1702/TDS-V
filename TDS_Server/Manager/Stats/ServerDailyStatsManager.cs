@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;

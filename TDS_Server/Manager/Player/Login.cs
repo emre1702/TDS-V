@@ -5,7 +5,7 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
 using TDS_Server.Instance.Player;

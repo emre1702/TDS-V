@@ -4,7 +4,7 @@ using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
-using TDS_Server.Enum;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 
@@ -17,7 +17,7 @@ namespace TDS_Server.Instance.GameModes
         private TDSTimer? _bombDetonateTimer,
                       _bombPlantDefuseTimer;
 
-        private void SendBombPlantInfos(TDSPlayer character)
+        private static void SendBombPlantInfos(TDSPlayer character)
         {
             NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.BOMB_PLANT_INFO);
         }

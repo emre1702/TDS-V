@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Utility
 
         public static async Task Load(TDSDbContext dbcontext)
         {
-            ServerSettings = await dbcontext.ServerSettings.SingleAsync();
+            ServerSettings = await dbcontext.ServerSettings.SingleAsync().ConfigureAwait(true);
 
             SyncedSettings = new SyncedServerSettingsDto()
             {

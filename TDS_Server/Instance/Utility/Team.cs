@@ -31,7 +31,7 @@ namespace TDS_Server.Instance.Utility
         public List<TDSPlayer>? SpectateablePlayers { get; set; }
         public List<TDSPlayer>? AlivePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
-        public int SpawnCounter;
+        public int SpawnCounter { get; set; }
 
         public bool IsSpectator => Entity.Index == 0;
 
