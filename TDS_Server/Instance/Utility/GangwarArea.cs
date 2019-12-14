@@ -41,32 +41,17 @@ namespace TDS_Server.Instance.Utility
             InLobby = LobbyManager.GangLobby;
         }
 
-        public void SetInPreparation(GangwarLobby lobby)
+        public void SetInPreparation()
         {
-            if (Owner is null)
-                return;
-
-            foreach (var player in Owner.PlayersOnline)
-            {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.GANGWAR_OWNER_PREPARATION_INFO, Entity.Map.Name, lobby.AttackerTeam.Entity.Name));
-            }
+           
             
 
         }
 
-        public void SetInAttack(GangwarLobby lobby)
+        public void SetInAttack()
         {
-            if (Owner is null)
-                return;
 
-            lobby.SendLangMessageToOwner(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, Entity.Map.Name, lobby.AttackerTeam.Entity.Name));
-            foreach (var player in Owner.GangLobbyTeam.Players)
-            {
-                new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)
-                {
-                    RemoveOnLobbyLeave = true
-                };
-            }
+            
         }
 
         public Task SetDefended()
@@ -115,22 +100,6 @@ namespace TDS_Server.Instance.Utility
 
             //Todo Is in the skull or whatever
             return true;
-        }
-
-
-        private async void AcceptDefendInvitation(TDSPlayer player, TDSPlayer? sender, Invitation invitation)
-        {
-            if (!(InLobby is GangwarLobby lobby))
-                return;
-
-            if (!await lobby.AddPlayer(player, (uint)lobby.OwnerTeam.Entity.Index))
-            {
-                invitation.Resend();
-                return;
-            }
-                
-            lobby.SendLangNotificationToAttacker(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
-            lobby.SendLangNotificationToOwner(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
         }
     }
 }
