@@ -164,14 +164,14 @@ export class UserpanelService {
     loadSettingsNormal() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsNormal);
 
-        this.settings.Constants = [
+        /*this.settings.Constants = [
             1, 1, 10000, 60, 12, 23
         ];
         this.allSettingsNormal = [0, LanguageEnum.English, true, true, TimezoneEnum["(UTC) Coordinated Universal Time"],
         "", true, true, true, true, true, 0, "asd", DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"]];
         this.settingsNormalLoaded.emit(null);
         this.loadingData = false;
-        this.loadingDataChanged.emit(null);
+        this.loadingDataChanged.emit(null);*/
     }
 
     loadMyStats() {
