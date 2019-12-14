@@ -125,7 +125,7 @@ namespace TDS_Server.Instance.Player
             }
         }
 
-        public ILanguage Language => LangUtils.GetLang(LanguageEnum);
+        public ILanguage Language { get; private set; } = LangUtils.GetLang(ELanguage.English);
 
         public ELanguage LanguageEnum
         {
@@ -141,6 +141,7 @@ namespace TDS_Server.Instance.Player
                     _langEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = value;
+                LangUtils.GetLang(value);
             }
         }
 
