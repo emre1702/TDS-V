@@ -52,7 +52,7 @@ namespace TDS_Server.Instance.Lobby
                 IsOfficial = true,
                 IsTemporary = true,
                 OwnerId = attacker.Entity!.Id,
-                Name = $"[{actionShort}-Preparation] {attacker.Gang.Entity.Short}",
+                Name = $"[{actionShort}-Prep] {attacker.Gang.Entity.Short}",
                 Type = lobbyType,
                 Teams = new List<Teams>
                 {
