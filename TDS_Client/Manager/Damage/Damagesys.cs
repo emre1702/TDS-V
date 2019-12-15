@@ -11,7 +11,7 @@ namespace TDS_Client.Manager.Damage
     {
         private static int _lastTotalHP = 0;
 
-        public static int CurrentWeaponDamage;
+        //public static int CurrentWeaponDamage;
 
         // Body parts: https://pastebin.com/AGQWgCct
 
