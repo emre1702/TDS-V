@@ -444,9 +444,11 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerWeaponChangeMethod(object[] args)
         {
-            //int weaponHash = (int)args[0];
-            int damage = (int)args[1];
-            Damagesys.CurrentWeaponDamage = damage;
+            uint weaponHash = Convert.ToUInt32(args[0]);
+            //int damage = Convert.ToInt32(args[1]);
+            CustomEventManager.SetNewWeapon(weaponHash);
+            //Damagesys.CurrentWeaponDamage = damage;
+
         }
 
         private void OnAmountInFightSyncMethod(object[] args)

@@ -28,6 +28,7 @@ namespace TDS_Client.Manager.Event
             Misc.SetWeatherTypeNowPersist("CLEAR");
             Misc.SetWind(0);
             Streaming.RequestAnimDict("MP_SUICIDE");
+            Audio.SetAudioFlag("LoadMPData", true);
 
             // CLEAR_GPS_CUSTOM_ROUTE
             Invoker.Invoke(0xE6DE0561D9232A64);

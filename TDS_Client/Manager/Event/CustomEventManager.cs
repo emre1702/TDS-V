@@ -17,6 +17,11 @@ namespace TDS_Client.Manager.Event
         public delegate void RoundStartDelegate(bool isSpectator);
         public static event RoundStartDelegate OnRoundStart;
 
+        public delegate void WeaponChangeDelegate(uint oldWeaponHash, uint newWeaponHash);
+        public static event WeaponChangeDelegate OnWeaponChange;
+
+        private static uint _lastWeaponHash = 0;
+
         public static void SetLobbyLeave(SyncedLobbySettingsDto settings)
         {
             //OnPlayerLoggedInBefore?.Invoke(player);
@@ -42,6 +47,15 @@ namespace TDS_Client.Manager.Event
         public static void SetRoundEnd()
         {
             OnRoundEnd?.Invoke();
+        }
+
+        public static void SetNewWeapon(uint newWeapon)
+        {
+            if (newWeapon == _lastWeaponHash)
+                return;
+
+            OnWeaponChange?.Invoke(_lastWeaponHash, newWeapon);
+            _lastWeaponHash = newWeapon;
         }
     }
 }
