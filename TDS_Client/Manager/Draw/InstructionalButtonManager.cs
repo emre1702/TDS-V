@@ -36,13 +36,16 @@ namespace TDS_Client.Manager.Draw
         }
 
         private static readonly BasicScaleform _scaleform = new BasicScaleform("INSTRUCTIONAL_BUTTONS");
-        private static List<InstructionalButton> _buttons = new List<InstructionalButton>();
+        private static readonly List<InstructionalButton> _allButtons = new List<InstructionalButton>();
+        private static readonly List<InstructionalButton> _buttons = new List<InstructionalButton>();
+        private static readonly List<InstructionalButton> _persistentButtons = new List<InstructionalButton>();
         private static bool _isLayoutPositive;
         private static Color _backgroundColor;
         private static bool _isActive = true;
 
         static InstructionalButtonManager() 
         {
+            AddDefaultButtons();
             TickManager.Add(OnTick, () => IsActive);
         }
 
@@ -51,26 +54,65 @@ namespace TDS_Client.Manager.Draw
             _scaleform.RenderFullscreen();
         }
 
-        public static void Add(string title, string control)
+        public static InstructionalButton Add(string title, string control, bool persistent = false)
         {
-            var button = _buttons.FirstOrDefault(b => b.OriginalControlString == control);
+            var button = _allButtons.FirstOrDefault(b => b.OriginalControlString == control);
             if (button != null)
             {
                 button.Title = title;
-            }
-            else 
-                _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
-        }
-
-        public static void Add(string title, Control control)
-        {
-            var button = _buttons.FirstOrDefault(b => b.ControlEnum == control);
-            if (button != null)
-            {
-                button.Title = title;
+                if (persistent && !_persistentButtons.Contains(button))
+                {
+                    _buttons.Remove(button);
+                    _persistentButtons.Add(button);
+                }
             }
             else
-                _buttons.Add(new InstructionalButton(title, control, _buttons.Count));
+            {
+                button = new InstructionalButton(title, control, _allButtons.Count);
+                List<InstructionalButton> theList = persistent ? _persistentButtons : _buttons;
+                theList.Add(button);
+                _allButtons.Add(button);
+            }
+
+            return button;
+        }
+
+        public static InstructionalButton Add(string title, Control control, bool persistent = false)
+        {
+            var button = _allButtons.FirstOrDefault(b => b.ControlEnum == control);
+            if (button != null)
+            {
+                button.Title = title;
+                if (persistent && !_persistentButtons.Contains(button))
+                {
+                    _buttons.Remove(button);
+                    _persistentButtons.Add(button);
+                }
+            }
+            else
+            {
+                button = new InstructionalButton(title, control, _allButtons.Count);
+                List<InstructionalButton> theList = persistent ? _persistentButtons : _buttons;
+                theList.Add(button);
+                _allButtons.Add(button);
+            }
+
+            return button;
+        }
+
+        public static void Remove(InstructionalButton button)
+        {
+            _allButtons.Remove(button);
+            _persistentButtons.Remove(button);
+            _buttons.Remove(button);
+
+            IsActive = false;
+            for (int i = button.Slot; i < _allButtons.Count; ++i)
+            {
+                var buttonToFixSlot = _allButtons[i];
+                buttonToFixSlot.Slot = i;
+            }
+            IsActive = true;
         }
 
         public static void SetDataSlot(int slot, string control, string title)
@@ -109,9 +151,17 @@ namespace TDS_Client.Manager.Draw
             _scaleform.Call("TOGGLE_MOUSE_BUTTONS", 0);
             _scaleform.Call("CREATE_CONTAINER");
             _scaleform.Call("SET_CLEAR_SPACE", 100);
-            _buttons = new List<InstructionalButton>();
+            _buttons.Clear();
+            _allButtons.Clear();
 
-            AddDefaultButtons();
+            IsActive = false;
+            for (int i = 0; i < _persistentButtons.Count; ++i)
+            {
+                var button = _persistentButtons[i];
+                button.SetSlot(i);
+                _allButtons.Add(button);
+            }
+            IsActive = true;
         }
 
         private static void AddDefaultButtons()
