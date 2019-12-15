@@ -37,6 +37,9 @@ namespace TDS_Common.Dto
         [IgnoreMember]
         public string Json;
 
+        [IgnoreMember]
+        public bool IsFightLobby => Type == ELobbyType.Arena || Type == ELobbyType.FightLobby || Type == ELobbyType.GangwarLobby;
+
         public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
             int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType)
         {
