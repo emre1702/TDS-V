@@ -20,6 +20,7 @@ namespace TDS_Client.Manager.Lobby
                     {
                         Damagesys.ResetLastHP();
                         FloatingDamageInfo.UpdateAllPositions();
+                        FiringMode.Start();
                     }
                 }  
                 else
@@ -28,6 +29,7 @@ namespace TDS_Client.Manager.Lobby
                     if (_inFight)
                     {
                         FloatingDamageInfo.RemoveAll();
+                        FiringMode.Stop();
                     }
                 }
                 _inFight = value;
