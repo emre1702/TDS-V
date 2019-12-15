@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
+using TDS_Client.Instance.Draw.Scaleform;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Event;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
@@ -69,14 +71,20 @@ namespace TDS_Client.Manager.Damage
         private static DateTime? _lastWeaponConfigUpdate;
         private static Dictionary<uint, EFiringMode> _lastFiringModeByWeapon = new Dictionary<uint, EFiringMode>();
         private static DxText _dxText;
+        private static InstructionalButton _instructionalButton;
+        private static bool _isActive;
 
 
         public static void Start()
         {
+            if (_isActive)
+                return;
+            _isActive = true;
             BindManager.Add(EKey.F6, ToggleFireMode);
             TickManager.Add(OnTick);
             OnPlayerWeaponShot += OnWeaponShot;
             CustomEventManager.OnWeaponChange += CustomEventManager_OnWeaponChange;
+            _instructionalButton = InstructionalButtonManager.Add(Settings.Language.FIRING_MODE, "F6", true);
 
             if (_dxText is null)
             {
@@ -103,11 +111,19 @@ namespace TDS_Client.Manager.Damage
 
         public static void Stop()
         {
+            if (!_isActive)
+                return;
+            _isActive = false;
             BindManager.Remove(EKey.F6, ToggleFireMode);
             TickManager.Remove(OnTick);
             OnPlayerWeaponShot -= OnWeaponShot;
             CustomEventManager.OnWeaponChange -= CustomEventManager_OnWeaponChange;
             _currentWeapon = 0;
+            if (_instructionalButton != null)
+            {
+                InstructionalButtonManager.Remove(_instructionalButton);
+                _instructionalButton = null;
+            }
         }
 
         private static void ToggleFireMode(EKey _)
