@@ -77,6 +77,8 @@ namespace TDS_Client.Manager.Utility
         public static float NametagMaxDistance;
         public static bool ShowNametagOnlyOnAiming;
         public static Color MapBorderColor;
+        public static int StartHealth = 100;
+        public static int StartArmor;
         public static bool LoggedIn { get; set; }
 
         // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
@@ -133,6 +135,9 @@ namespace TDS_Client.Manager.Utility
         public static void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
         {
             _syncedLobbySettings = loadedSyncedLobbySettings;
+
+            StartHealth = loadedSyncedLobbySettings.StartHealth;
+            StartArmor = loadedSyncedLobbySettings.StartArmor;
         }
 
         public static int GetPlantOrDefuseTime(EPlantDefuseStatus status)

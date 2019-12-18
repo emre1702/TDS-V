@@ -33,6 +33,10 @@ namespace TDS_Common.Dto
         public bool InLobbyWithMaps;
         [Key(12)]
         public EMapLimitType? MapLimitType;
+        [Key(13)] 
+        public int StartHealth;
+        [Key(14)]
+        public int StartArmor;
 
         [IgnoreMember]
         public string Json;
@@ -41,7 +45,8 @@ namespace TDS_Common.Dto
         public bool IsFightLobby => Type == ELobbyType.Arena || Type == ELobbyType.FightLobby || Type == ELobbyType.GangwarLobby;
 
         public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
-            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType)
+            int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, EMapLimitType? MapLimitType,
+            int StartHealth, int StartArmor)
         {
             this.Id = Id;
             this.Name = Name;
@@ -56,6 +61,8 @@ namespace TDS_Common.Dto
             this.MapLimitTime = MapLimitTime;
             this.InLobbyWithMaps = InLobbyWithMaps;
             this.MapLimitType = MapLimitType;
+            this.StartHealth = StartHealth;
+            this.StartArmor = StartArmor;
 
             this.Json = Serializer.ToClient(this);
         }

@@ -6,15 +6,18 @@ using static RAGE.Events;
 using System.Drawing;
 using System;
 using Font = RAGE.Game.Font;
-using TDS_Client.Enum;
 using RAGE.Game;
 using TDS_Client.Instance.Utility;
-using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw
 {
     class Nametag
     {
+        private static readonly Color _deadColor = Color.FromArgb(ClientConstants.NametagAlpha, 0, 0, 0);
+        private static readonly Color _healthEmptyColor = Color.FromArgb(ClientConstants.NametagAlpha, 50, 0, 0);
+        private static readonly Color _healthFullColor = Color.FromArgb(ClientConstants.NametagAlpha, 0, 255, 0);
+        private static readonly Color? _armorEmptyColor = null;
+        private static readonly Color _armorFullColor = Color.FromArgb(ClientConstants.NametagAlpha, 255, 255, 255);
 
         public static void Draw(List<TickNametagData> nametags) 
         {
@@ -94,9 +97,14 @@ namespace TDS_Client.Manager.Draw
         private static Color GetHealthColor(int hp, int armor)
         {
             if (hp == 0)
-                return Color.FromArgb(ClientConstants.NametagAlpha, 0, 0, 0);
+                return _deadColor;
 
             if (armor == 0)
+                return GetHpColor(hp);
+
+            return GetArmorColor(armor);
+
+            /*if (armor == 0)
                 return Color.FromArgb(ClientConstants.NametagAlpha, (int)Math.Ceiling((100 - hp) * 2.55 / 2), (int)Math.Ceiling(hp * 2.55), 0);
 
             if (armor > 100)
@@ -108,8 +116,26 @@ namespace TDS_Client.Manager.Draw
             return Color.FromArgb(ClientConstants.NametagAlpha,
                     (int)Math.Ceiling(armor * 2.55),
                     (int)Math.Ceiling(armor * 2.55 / 2 + hp * 2.55 / 2),
-                    (int)Math.Ceiling(armor * 2.55));
+                    (int)Math.Ceiling(armor * 2.55));*/
 
+        }
+
+        private static Color GetHpColor(int hp)
+        {
+            return _healthFullColor.GetBetween(_healthEmptyColor, hp / Settings.StartHealth);
+        }
+
+        private static Color GetArmorColor(int armor)
+        {
+            return _armorEmptyColor.Value.GetBetween(_armorFullColor, armor / Settings.StartArmor);
+        }
+
+        private static Color GetArmorColor(int hp, int armor)
+        {
+            if (_armorEmptyColor.HasValue)
+                return GetArmorColor(armor);
+
+            return GetHpColor(hp).GetBetween(_armorFullColor, armor / Settings.StartArmor);
         }
     }
 }

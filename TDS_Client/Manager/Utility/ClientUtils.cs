@@ -137,6 +137,14 @@ namespace TDS_Client.Manager.Utility
             return l < 0.4 ? Color.White : Color.Black;
         }
 
+        public static Color GetBetween(this Color first, Color second, float percentage = 0.5f)
+        {
+            return Color.FromArgb((int)((first.A + second.A)*percentage), 
+                (int)((first.R + second.R) * percentage), 
+                (int)((first.G + second.G) * percentage), 
+                (int)((first.B + second.B) * percentage));
+        }
+
         public static Vector3 GetDirectionByRotation(Vector3 rotation)
         {
             float num = rotation.Z * 0.0174532924f;
