@@ -1,6 +1,6 @@
-﻿namespace TDS_Client.Enum
+﻿namespace TDS_Common.Enum
 {
-    internal enum EPedBone : uint
+    public enum EPedBone : uint
     {
         SKEL_ROOT = 0,
         FB_R_Brow_Out_000 = 1356,

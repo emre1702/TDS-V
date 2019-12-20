@@ -1,10 +1,8 @@
-﻿using System;
-using RAGE;
+﻿using RAGE;
 using RAGE.Elements;
 using RAGE.Game;
-using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
-using Ped = RAGE.Elements.Ped;
+using TDS_Common.Enum;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Utility
