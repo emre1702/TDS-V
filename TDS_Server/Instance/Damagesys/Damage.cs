@@ -107,10 +107,7 @@ namespace TDS_Server.Instance
                     return;
                 if (target.Team == source.Team)
                     return;
-            }
 
-            if (source != null)
-            {
                 UpdateLastHitter(target, source, damage);
                 if (source.CurrentRoundStats != null)
                     source.CurrentRoundStats.Damage += damage;

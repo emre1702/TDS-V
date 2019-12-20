@@ -51,6 +51,8 @@ namespace TDS_Client.Manager.Lobby
 
         public static void AddSameTeam(Player player)
         {
+            //Todo: If the server crashes after a teammate dies, it could be because of the blip.
+            // Then try removing the blip on death
             _sameTeamPlayers.Add(player);
             var prevBlipHandle = player.GetBlipFrom();
             RAGE.Chat.Output("Prev blip handle: " + prevBlipHandle);
