@@ -57,6 +57,12 @@ namespace TDS_Client.Manager.Damage
         public static void ResetLastHP()
         {
             _lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
+
+            Player.LocalPlayer.ClearLastDamageBone();
+            Player.LocalPlayer.ClearLastDamageEntity();
+            Player.LocalPlayer.ClearLastWeaponDamage();
+            Player.LocalPlayer.ResetVisibleDamage();
+            Player.LocalPlayer.ClearBloodDamage();
         }
     }
 }
