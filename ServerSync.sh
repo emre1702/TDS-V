@@ -16,7 +16,7 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 SEPERATOR='==============================='
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.0
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
@@ -28,7 +28,7 @@ rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing 
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll ./TDS_Server.pdb rage@51.38.99.64:/home/rage/RAGE/dotnet/resources/tds/netcoreapp3.0/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.dll ./TDS_Server.pdb rage@51.38.99.64:/home/rage/RAGE/dotnet/resources/tds/netcoreapp3.1/
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."

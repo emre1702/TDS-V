@@ -20,12 +20,12 @@ echo -e "${SEPERATOR}"
 echo -e "Create ${LIGHTBLUE}folder ${NOCOLOR}..."
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window
-mkdir -p /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.0
+mkdir -p /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.0
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
@@ -33,7 +33,7 @@ rsync -hmrtvzP --exclude='TDS_Server.*' --include="*.dll" --include='*.pdb' --ex
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP ./TDS_Server.dll ./TDS_Server.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.0
+rsync -hmrtvzP ./TDS_Server.dll ./TDS_Server.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."

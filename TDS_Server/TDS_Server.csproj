@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AssemblyName>TDS_Server</AssemblyName>
     <RootNamespace>TDS_Server</RootNamespace>
@@ -62,6 +62,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BonusBotConnector_Client\BonusBotConnector_Client.csproj" />
+    <ProjectReference Include="..\BonusBotConnector_Server\BonusBotConnector_Server.csproj" />
     <ProjectReference Include="..\TDS_Common\TDS_Common.csproj" />
     <ProjectReference Include="..\TDS_Server_DB\TDS_Server_DB.csproj" />
   </ItemGroup>
