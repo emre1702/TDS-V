@@ -6,7 +6,7 @@
             [style.background]="getImageUrl('assets/english.png')"></button>
     </div>
 
-    <carousel [buttons]="lobbyChoices"></carousel>
+    <carousel class="carousel" [buttons]="lobbyChoices"></carousel>
 </ng-container>
 
 <app-custom-lobby *ngIf="settings.InUserLobbiesMenu"></app-custom-lobby>

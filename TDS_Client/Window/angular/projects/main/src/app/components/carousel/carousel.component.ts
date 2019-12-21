@@ -56,6 +56,12 @@ export class CarouselComponent implements AfterViewInit {
         private animationBuilder: AnimationBuilder) { }
 
     ngAfterViewInit() {
+        // Need to do it twice because the first time it uses the window.innerWidth
+        // in the second time the button width correctly
+        // We need to call this changeCarousel once (for buttonStyle)
+        // else we cant get the button width correctly
+        this.changeCarousel();
+        this.changeDetector.detectChanges();
         this.changeCarousel();
         this.changeDetector.detectChanges();
         this.createTurnAroundAnimation();
@@ -64,7 +70,12 @@ export class CarouselComponent implements AfterViewInit {
     private changeCarousel() {
         const cellCount = this.buttons.length;
         this.theta = 360 / cellCount;
-        const cellSize = window.innerWidth * this.buttonsWidth;
+        console.log(this.carousel);
+        if (this.carousel)
+            console.log(this.carousel.nativeElement.offsetWidth);
+        console.log(window.innerWidth * 0.6);
+        const cellSize = this.carousel ? this.carousel.nativeElement.offsetWidth : window.innerWidth * 0.6;
+        console.log("CellSize: " + cellSize);
         this.radius = Math.round((cellSize / 2) / Math.tan(Math.PI / cellCount));
         for (let i = 0; i < cellCount; i++) {
             let btnStyle = this.buttonStyles[i + 1];
