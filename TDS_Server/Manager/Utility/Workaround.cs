@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
@@ -33,7 +34,7 @@ namespace TDS_Server.Manager.Utility
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SetPlayerTeamWorkaround, team);
         }
 
-        public static void AttachEntityToEntity(Entity entity, Entity entityTarget, EBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
+        public static void AttachEntityToEntity(Entity entity, Entity entityTarget, EPedBone bone, Vector3 positionOffset, Vector3 rotationOffset, Lobby? lobby = null)
         {
             var infoDto = new EntityAttachInfoDto
             (

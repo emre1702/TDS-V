@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Default;
+using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
@@ -81,7 +82,7 @@ namespace TDS_Server.Instance.GameModes
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
-            Workaround.AttachEntityToEntity(_bomb, character.Client, EBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), Lobby);
+            Workaround.AttachEntityToEntity(_bomb, character.Client, EPedBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), Lobby);
             if (_bombAtPlayer != character)
             {
                 SendBombPlantInfos(character);
@@ -96,7 +97,7 @@ namespace TDS_Server.Instance.GameModes
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
-            Workaround.AttachEntityToEntity(_bomb, character.Client, EBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), Lobby);
+            Workaround.AttachEntityToEntity(_bomb, character.Client, EPedBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), Lobby);
             if (_bombAtPlayer != character)
             {
                 SendBombPlantInfos(character);
