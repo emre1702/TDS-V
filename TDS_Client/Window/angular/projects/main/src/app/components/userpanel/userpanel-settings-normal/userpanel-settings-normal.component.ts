@@ -48,7 +48,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.dateTimeFormatEnum, dataSettingIndex: UserpanelSettingKey.DateTimeFormat,
                     defaultValue: DateTimeFormatEnum[""], enum: DateTimeFormatEnum,
-                    formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss'Z'"])
+                    formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss"])
                 },
                 {
                     type: SettingType.string, dataSettingIndex: UserpanelSettingKey.DiscordIdentity, defaultValue: "",
