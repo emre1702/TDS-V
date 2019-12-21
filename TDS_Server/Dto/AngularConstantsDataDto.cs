@@ -1,9 +1,11 @@
 ﻿using MessagePack;
+using System.Collections.Generic;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Dto
 {
+    #nullable disable
     [MessagePackObject]
     public class AngularConstantsDataDto
     {
@@ -25,6 +27,9 @@ namespace TDS_Server.Dto
         [Key(5)]
         public float MapBuyCounterMultiplicator { get; set; }
 
+        [Key(6)]
+        public string AnnouncementsJson { get; set; }
+
         public static AngularConstantsDataDto Get(TDSPlayer player)
         {
             return new AngularConstantsDataDto
@@ -34,8 +39,10 @@ namespace TDS_Server.Dto
                 UsernameChangeCost = SettingsManager.ServerSettings.UsernameChangeCost,
                 UsernameChangeCooldownDays = SettingsManager.ServerSettings.UsernameChangeCooldownDays,
                 MapBuyBasePrice = SettingsManager.ServerSettings.MapBuyBasePrice,
-                MapBuyCounterMultiplicator = SettingsManager.ServerSettings.MapBuyCounterMultiplicator
+                MapBuyCounterMultiplicator = SettingsManager.ServerSettings.MapBuyCounterMultiplicator,
+                AnnouncementsJson = AnnouncementsManager.Json
             };
         }
     }
+    #nullable restore
 }

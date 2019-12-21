@@ -22,3 +22,40 @@
     bottom: 10%;
     height: 20%;
 }
+
+.announcements {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    max-width: 20%;
+    right: 5px;
+    top: 100px;
+    height: auto;
+    max-height: calc(65% - 100px);
+    overflow-y: hidden;
+
+    .mat-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .announcements-content {
+        padding: 10px;
+        height: 100%;
+        overflow-y: auto;
+
+        .announcement {
+            margin-bottom: 20px;
+
+            .date {
+                font-weight: bold;
+                text-decoration: underline;
+            }
+        }
+
+        .announcement:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}

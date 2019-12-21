@@ -175,6 +175,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     UsernameSettingSaved = "The username was successfully saved.";
     PasswordSettingSaved = "The password was successfully saved.";
     EmailSettingSaved = "The email address was successfully saved.";
+    XDaysAgo = "{0} days ago";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

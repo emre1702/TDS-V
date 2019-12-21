@@ -162,6 +162,7 @@ export interface Language {
     UsernameSettingSaved: string;
     PasswordSettingSaved: string;
     EmailSettingSaved: string;
+    XDaysAgo: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

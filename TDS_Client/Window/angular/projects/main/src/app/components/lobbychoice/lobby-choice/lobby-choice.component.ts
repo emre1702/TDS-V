@@ -35,8 +35,11 @@ export class LobbyChoiceComponent {
         // { index: 3, name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png" },
     ];
 
-    constructor(private rageConnector: RageConnectorService, public settings: SettingsService,
-        private sanitizer: DomSanitizer, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private rageConnector: RageConnectorService,
+        public settings: SettingsService,
+        private sanitizer: DomSanitizer,
+        private changeDetector: ChangeDetectorRef) {
 
         this.rageConnector.listen(DFromClientEvent.LeaveCustomLobbyMenu, () => {
             this.settings.InUserLobbiesMenu = false;

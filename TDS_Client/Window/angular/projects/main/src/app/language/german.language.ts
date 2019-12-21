@@ -185,6 +185,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     UsernameSettingSaved = "Der Benutzername wurde erfolgreich gespeichert.";
     PasswordSettingSaved = "Das Passwort wurde erfolgreich gespeichert.";
     EmailSettingSaved = "Die Email-Adresse wurde erfolgreich gespeichert.";
+    XDaysAgo = "Vor {0} Tagen";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

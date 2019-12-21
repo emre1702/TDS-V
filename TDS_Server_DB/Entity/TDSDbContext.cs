@@ -57,6 +57,7 @@ namespace TDS_Server_DB.Entity
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual DbSet<AdminLevels> AdminLevels { get; set; }
+        public virtual DbSet<Announcements> Announcements { get; set; }
         public virtual DbSet<ApplicationAnswers> ApplicationAnswers { get; set; }
         public virtual DbSet<ApplicationInvitations> ApplicationInvitations { get; set; }
         public virtual DbSet<ApplicationQuestions> ApplicationQuestions { get; set; }
@@ -163,6 +164,20 @@ namespace TDS_Server_DB.Entity
                     .WithMany(p => p.AdminLevelNames)
                     .HasForeignKey(d => d.Level)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Announcements>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Created)
+                    .IsRequired()
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+                
+                entity.Property(e => e.Text)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<ApplicationAnswers>(entity =>

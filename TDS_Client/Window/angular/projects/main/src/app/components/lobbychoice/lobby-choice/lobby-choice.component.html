@@ -6,6 +6,18 @@
             [style.background]="getImageUrl('assets/english.png')"></button>
     </div>
 
+    <div class="container mat-elevation-z8 mat-app-background announcements" cdkDrag>
+        <mat-toolbar color="primary" cdkDragHandle>
+            {{ 'Announcements' | language: settings.Lang }}
+        </mat-toolbar>
+        <div class="announcements-content">
+            <div *ngFor="let announcement of settings.Constants[6]" class="announcement">
+                <div class="date">{{ 'XDaysAgo' | language: settings.Lang:announcement[0] }}:</div>
+                <div>{{ announcement[1] }}</div>
+            </div>
+        </div>
+    </div>
+
     <carousel class="carousel" [buttons]="lobbyChoices"></carousel>
 </ng-container>
 
