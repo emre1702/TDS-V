@@ -1,8 +1,7 @@
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
@@ -53,10 +52,10 @@ namespace TDS_Server.Instance.LobbyInstances
             _dimensionsUsed.Add(Dimension);
 
             Teams = new List<Team>(entity.Teams.Count);
-            foreach (Teams teamEntity in entity.Teams)
+            foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
                 Team team = new Team(teamEntity);
-                Teams[team.Entity.Index] = team;
+                Teams.Add(team);
             }
 
             _syncedLobbySettings = new SyncedLobbySettingsDto
