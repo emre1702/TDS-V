@@ -12,6 +12,7 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialog';
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
+import { LobbySetting } from '../enums/lobby-setting.enum';
 
 @Component({
   selector: 'app-custom-lobby',
@@ -164,6 +165,7 @@ export class CustomLobbyMenuComponent {
     }
   ];
   lobbySettingType = SettingType;
+  lobbySetting = LobbySetting;
   MathFloor = Math.floor;
 
   creating = true;

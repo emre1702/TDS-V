@@ -13,7 +13,7 @@
           <div class="setting-row">
             <mat-form-field color="accent">
               <input matInput [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
-              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+              [placeholder]="lobbySetting[setting.dataSettingIndex] | language: settings.Lang"/>
             </mat-form-field>
           </div>
         </ng-container>
@@ -22,7 +22,7 @@
           <div class="setting-row">
             <mat-form-field color="accent">
               <input matInput [type]="creating ? '' : 'password'" [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
-              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+              [placeholder]="lobbySetting[setting.dataSettingIndex] | language: settings.Lang"/>
             </mat-form-field>
           </div>
         </ng-container>
@@ -31,7 +31,7 @@
           <div class="setting-row">
             <mat-form-field color="accent">
               <input matInput type="number" [formControl]="setting.formControl" [readonly]="!creating" (blur)="changeDetector.detectChanges()"
-              [placeholder]="setting.dataSettingIndex | language: settings.Lang"/>
+              [placeholder]="lobbySetting[setting.dataSettingIndex] | language: settings.Lang"/>
             </mat-form-field>
           </div>
         </ng-container>
@@ -39,7 +39,7 @@
         <ng-container *ngSwitchCase="lobbySettingType.numberSlider">
           <div class="setting-row">
             <mat-slider color="primary" thumbLabel tickInterval="1" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
-                {{ setting.dataSettingIndex | language: settings.Lang }}
+                {{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}
             </mat-slider>
           </div>
           <!-- <div *ngSwitchDefault>output2</div> -->
@@ -48,7 +48,7 @@
         <ng-container *ngSwitchCase="lobbySettingType.enum">
           <div class="setting-row">
             <mat-form-field color="accent">
-              <mat-label>{{ setting.dataSettingIndex | language: settings.Lang }}</mat-label>
+              <mat-label>{{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
               <mat-select [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
                 <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)" [value]="setting.enum[enumStr]">
                   {{ enumStr | language: settings.Lang }}
@@ -61,14 +61,14 @@
         <ng-container *ngSwitchCase="lobbySettingType.boolean">
           <div class="setting-row">
             <mat-checkbox labelPosition="before" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
-              {{ setting.dataSettingIndex | language: settings.Lang }}
+              {{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}
             </mat-checkbox>
           </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="lobbySettingType.button">
           <button class="setting-row" mat-raised-button (click)="setting.action()">
-            {{ setting.dataSettingIndex | language: settings.Lang }}
+            {{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}
           </button>
         </ng-container>
       </ng-container>
