@@ -6,7 +6,6 @@
     <AssemblyName>TDS_Server</AssemblyName>
     <RootNamespace>TDS_Server</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
-	  <LangVersion>preview</LangVersion>
 	  <NullableContextOptions>enable</NullableContextOptions>
 	  <Nullable>enable</Nullable>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
