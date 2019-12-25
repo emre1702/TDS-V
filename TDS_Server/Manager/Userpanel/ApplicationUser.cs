@@ -118,6 +118,8 @@ namespace TDS_Server.Manager.Userpanel
             }
 
             await dbContext.SaveChangesAsync();
+
+            BonusBotConnector_Client.Requests.ChannelChat.SendAdminApplication(application);
         }
 
         public static async void AcceptInvitation(TDSPlayer player, int invitationId)
