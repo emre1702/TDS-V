@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using TDS_Common.Dto;
 using TDS_Server.Instance;
 using TDS_Server.Instance.GameModes;
@@ -31,10 +33,36 @@ namespace TDS_Server.Manager.Utility
             LoadAll();
         }
 
+        private static string? GetLocalIPv4()
+        {
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.OperationalStatus == OperationalStatus.Up)
+                {
+                    IPInterfaceProperties adapterProperties = item.GetIPProperties();
+
+                    if (adapterProperties.GatewayAddresses.Any())
+                    {
+                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses)
+                        {
+                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                return ip.Address.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private async void LoadAll()
         {
             try
             {
+                BonusBotConnector_Server.Program.Main();
+
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
                 AppDomain.CurrentDomain.ProcessExit += ResourceStop.CurrentDomain_ProcessExit;
 
@@ -46,6 +74,8 @@ namespace TDS_Server.Manager.Utility
                 var connection = (NpgsqlConnection)dbcontext.Database.GetDbConnection();
                 connection.Open();
                 connection.ReloadTypes();
+
+                BonusBotConnector_Client.Main.Init(dbcontext, ErrorLogsManager.LogFromBonusBot);
 
                 var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync().ConfigureAwait(true);
                 foreach (var stat in playerStats)

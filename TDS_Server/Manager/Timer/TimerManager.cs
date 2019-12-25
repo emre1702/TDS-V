@@ -11,6 +11,7 @@ namespace TDS_Server.Manager.Timer
             TDSTimer.Init(NAPI.Util.ConsoleOutput, () => (ulong)Environment.TickCount & int.MaxValue);
             _ = new TDSTimer(MinuteTimer.Execute, 60 * 1000, 0);
             _ = new TDSTimer(HourTimer.Execute, 60 * 60 * 1000, 0);
+            _ = new TDSTimer(SecondTimer.Execute, 1000, 0);
         }
 
         [ServerEvent(Event.Update)]

@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BonusBotConnector_Client";
+
+service MessageToChannel {
+  rpc Send (MessageToChannelRequest) returns (MessageToChannelRequestReply);
+}
+
+message MessageToChannelRequest {
+  string text = 1;
+  uint64 guildId = 2;
+  uint64 channelId = 3; 
+}
+
+message MessageToChannelRequestReply {
+    string errorMessage = 1;
+}

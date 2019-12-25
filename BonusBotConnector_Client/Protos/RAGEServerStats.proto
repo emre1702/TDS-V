@@ -1,0 +1,29 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BonusBotConnector_Client";
+
+// Renames the channel (offline or online-player-amount) and creates an embed with the infos
+service RAGEServerStats {
+  rpc Send (RAGEServerStatsRequest) returns (RAGEServerStatsRequestReply);
+}
+
+message RAGEServerStatsRequest {
+  uint64 guildId = 1;
+  uint64 channelId = 2; 
+  int32 serverPort = 3;
+  int32 playerAmountInMainMenu = 4;
+  int32 playerAmountOnline = 5;
+  int32 playerAmountInArena = 6;
+  int32 playerAmountInGangLobby = 7;
+  int32 playerAmountInCustomLobby = 8;
+  string version = 9;
+  string serverName = 10;
+  int32 refreshFrequencySec = 11;
+  string serverAddress = 12;
+
+}
+
+// The response message containing the greetings.
+message RAGEServerStatsRequestReply {
+    string errorMessage = 1;
+}

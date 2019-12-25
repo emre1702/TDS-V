@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server", "TDS_Server\TDS_Server.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6B6B462A-3A21-4624-9E07-F09020BCF48C} = {6B6B462A-3A21-4624-9E07-F09020BCF48C}
+		{A347BAC1-8902-4403-A197-49C795598422} = {A347BAC1-8902-4403-A197-49C795598422}
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54} = {FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client", "TDS_Client\TDS_Client.csproj", "{6B6B462A-3A21-4624-9E07-F09020BCF48C}"
@@ -21,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 		scriptmetadata.meta = scriptmetadata.meta
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonusBotConnector_Server", "BonusBotConnector_Server\BonusBotConnector_Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonusBotConnector_Client", "BonusBotConnector_Client\BonusBotConnector_Client.csproj", "{A347BAC1-8902-4403-A197-49C795598422}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +86,30 @@ Global
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|x64.ActiveCfg = Debug|Any CPU
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Server|x64.Build.0 = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Release|x64.Build.0 = Release|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Server|x64.ActiveCfg = Debug|Any CPU
+		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}.Server|x64.Build.0 = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Debug|x64.Build.0 = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Release|x64.ActiveCfg = Release|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Release|x64.Build.0 = Release|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Server|Any CPU.Build.0 = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Server|x64.ActiveCfg = Debug|Any CPU
+		{A347BAC1-8902-4403-A197-49C795598422}.Server|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

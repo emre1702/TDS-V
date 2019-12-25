@@ -7,6 +7,7 @@ using Npgsql;
 using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
 using TDS_Server_DB.Entity.Admin;
+using TDS_Server_DB.Entity.Bonusbot;
 using TDS_Server_DB.Entity.Command;
 using TDS_Server_DB.Entity.GangEntities;
 using TDS_Server_DB.Entity.LobbyEntities;
@@ -62,6 +63,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<ApplicationInvitations> ApplicationInvitations { get; set; }
         public virtual DbSet<ApplicationQuestions> ApplicationQuestions { get; set; }
         public virtual DbSet<Applications> Applications { get; set; }
+        public virtual DbSet<BonusbotSettings> BonusbotSettings { get; set; }
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
@@ -241,6 +243,20 @@ namespace TDS_Server_DB.Entity
                     .WithOne(player => player.Application)
                     .HasForeignKey<Applications>(app => app.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<BonusbotSettings>(entity =>
+            {
+                entity.Property(e => e.GuildId).IsRequired(false);
+
+                entity.Property(e => e.AdminApplicationsChannelId).IsRequired(false);
+                entity.Property(e => e.SupportRequestsChannelId).IsRequired(false);
+                entity.Property(e => e.ServerInfosChannelId).IsRequired(false);
+                entity.Property(e => e.ActionsInfoChannelId).IsRequired(false);
+
+                entity.Property(e => e.ErrorLogsChannelId).IsRequired(false);
+
+                entity.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(60);
             });
 
             modelBuilder.Entity<CommandAlias>(entity =>
@@ -1096,6 +1112,22 @@ namespace TDS_Server_DB.Entity
                     NametagMaxDistance = 80, ShowNametagOnlyOnAiming = true,
                     MultiplierRankingKills = 75f, MultiplierRankingAssists = 25f, MultiplierRankingDamage = 1f
                 }
+            );
+
+            modelBuilder.Entity<BonusbotSettings>().HasData(
+                new BonusbotSettings
+                {
+                    Id = 1, GuildId = 320309924175282177, 
+                    AdminApplicationsChannelId = 659072893526736896,
+                    SupportRequestsChannelId = 659073029896142855,
+                    ServerInfosChannelId = 659073271911809037,
+                    ActionsInfoChannelId = 659088752890871818,
+
+                    ErrorLogsChannelId = 659073884796092426,
+
+                    SendPrivateMessageOnBan = true,
+                    SendPrivateMessageOnOfflineMessage = true
+                }  
             );
 
             modelBuilder.Entity<Players>().HasData(
