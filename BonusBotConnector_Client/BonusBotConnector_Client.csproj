@@ -9,6 +9,8 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\TDS_Server\bin\Debug\netcoreapp3.1\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>
