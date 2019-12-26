@@ -10,7 +10,7 @@ namespace BonusBotConnector_Client.Requests
     {
         private static RAGEServerStatsClient? _client;
         private static BonusBotErrorLoggerDelegate? _errorLogger;
-        private static string _ipAddress;
+        private static string _ipAddress = "?";
 
         internal static void Init(GrpcChannel channel, BonusBotErrorLoggerDelegate errorLogger)
         {
