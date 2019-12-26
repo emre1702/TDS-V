@@ -20,6 +20,8 @@ namespace BonusBotConnector_Client.Requests
 
         public static void SendBanMessage(string? userIdOrDiscriminator, PlayerBans ban, List<EmbedField> fields)
         {
+            if (Settings!.SendPrivateMessageOnBan != true)
+                return;
             if (string.IsNullOrEmpty(userIdOrDiscriminator))
                 return;
 
@@ -45,6 +47,13 @@ namespace BonusBotConnector_Client.Requests
             {
                 _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, true);
             }
+        }
+
+        public static void SendOfflineMessage(string author, string text, string? userIdOrDiscriminator)
+        {
+            if (Settings!.SendPrivateMessageOnOfflineMessage != true)
+                return;
+            SendRequest($"You got an offline message from '{author}':{Environment.NewLine}{text}", userIdOrDiscriminator);
         }
 
         private static async void SendRequest(string text, string? userIdOrDiscriminator, bool logToBonusBotOnError = true)

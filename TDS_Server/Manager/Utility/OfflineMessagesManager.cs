@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
+using TDS_Server_DB.Entity.Player;
 using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Manager.Utility
@@ -11,17 +12,34 @@ namespace TDS_Server.Manager.Utility
     internal static class OfflineMessagesManager
     {
 
-        public static async void AddOfflineMessage(int playerid, int sourceid, string message)
+        public static async void AddOfflineMessage(Players target, Players source, string message)
         {
             Offlinemessages msg = new Offlinemessages()
             {
-                TargetId = playerid,
-                SourceId = sourceid,
+                TargetId = target.Id,
+                SourceId = source.Id,
                 Message = message
             };
             using var dbContext = new TDSDbContext();
             dbContext.Add(msg);
             await dbContext.SaveChangesAsync();
+
+            BonusBotConnector_Client.Requests.PrivateChat.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordIdentity);
+        }
+
+        public static async void AddOfflineMessage(int targetId, string? targetDiscordIdentity, Players source, string message)
+        {
+            Offlinemessages msg = new Offlinemessages()
+            {
+                TargetId = targetId,
+                SourceId = source.Id,
+                Message = message
+            };
+            using var dbContext = new TDSDbContext();
+            dbContext.Add(msg);
+            await dbContext.SaveChangesAsync();
+
+            BonusBotConnector_Client.Requests.PrivateChat.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordIdentity);
         }
 
         public static async void CheckOfflineMessages(TDSPlayer player)

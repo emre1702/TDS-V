@@ -128,6 +128,7 @@ namespace TDS_Server.Manager.Userpanel
 
             var invitation = await dbContext.ApplicationInvitations
                 .Include(i => i.Admin)
+                .ThenInclude(a => a.PlayerSettings)
                 .Where(i => i.Id == invitationId)
                 .FirstOrDefaultAsync();
             if (invitation == null)
@@ -160,7 +161,7 @@ namespace TDS_Server.Manager.Userpanel
             } 
             else
             {
-                OfflineMessagesManager.AddOfflineMessage(invitation.AdminId, player.Entity.Id, "I've accepted your team application.");
+                OfflineMessagesManager.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
             }
         }
 
@@ -170,6 +171,7 @@ namespace TDS_Server.Manager.Userpanel
 
             var invitation = await dbContext.ApplicationInvitations
                 .Include(i => i.Admin)
+                .ThenInclude(a => a.PlayerSettings)
                 .Where(i => i.Id == invitationId)
                 .FirstOrDefaultAsync();
             if (invitation == null)
@@ -201,7 +203,7 @@ namespace TDS_Server.Manager.Userpanel
             }
             else
             {
-                OfflineMessagesManager.AddOfflineMessage(invitation.AdminId, player.Entity.Id, "I rejected your team application.");
+                OfflineMessagesManager.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
             }
         }
 

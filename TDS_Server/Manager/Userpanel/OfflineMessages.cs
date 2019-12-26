@@ -61,20 +61,16 @@ namespace TDS_Server.Manager.Userpanel
 
             using var dbContext = new TDSDbContext();
 
-            var offlineMessage = await dbContext.Offlinemessages.AsNoTracking().FirstOrDefaultAsync(o => o.Id == offlineMessageID);
+            var offlineMessage = await dbContext.Offlinemessages
+                .Include(o => o.Source)
+                .ThenInclude(s => s.PlayerSettings)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Id == offlineMessageID);
             if (offlineMessage is null)
                 return null;
 
-            var newOfflineMessage = new Offlinemessages
-            {
-                Seen = false,
-                Message = message,
-                SourceId = player.Entity!.Id,
-                TargetId = offlineMessage.SourceId
-            };
-            dbContext.Offlinemessages.Add(newOfflineMessage);
+            OfflineMessagesManager.AddOfflineMessage(offlineMessage.Source, player.Entity!, message);
 
-            await dbContext.SaveChangesAsync();
             return null;
         }
 
@@ -100,16 +96,14 @@ namespace TDS_Server.Manager.Userpanel
 
             using var dbContext = new TDSDbContext();
 
-            var newOfflineMessage = new Offlinemessages
-            {
-                Seen = false,
-                Message = message,
-                SourceId = player.Entity!.Id,
-                TargetId = targetId.Value
-            };
-            dbContext.Offlinemessages.Add(newOfflineMessage);
+            var discordIdentity = await dbContext.PlayerSettings
+                .Where(p => p.PlayerId == targetId.Value)
+                .Select(p => p.DiscordIdentity)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
-            await dbContext.SaveChangesAsync();
+            OfflineMessagesManager.AddOfflineMessage(targetId.Value, discordIdentity, player.Entity!, message);
+
             return true;
         }
 

@@ -63,5 +63,10 @@ namespace TDS_Server_DB.Entity.Player
         public virtual ICollection<PlayerRelations> PlayerRelationsTarget { get; set; }
         public virtual SupportRequests SupportRequests { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
+
+        public string GetDiscriminator()
+        {
+            return $"{Name} ({SCName})";
+        }
     }
 }
