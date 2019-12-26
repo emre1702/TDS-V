@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BonusBotConnector_Client";
+
+message EmbedField {
+    string name = 1;
+    string value = 2;
+}

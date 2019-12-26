@@ -10,6 +10,7 @@
         public ulong? ServerInfosChannelId { get; set; }
         public ulong? SupportRequestsChannelId { get; set; }
         public ulong? ActionsInfoChannelId { get; set; }
+        public ulong? BansInfoChannelId { get; set; }
 
         public ulong? ErrorLogsChannelId { get; set; }
 

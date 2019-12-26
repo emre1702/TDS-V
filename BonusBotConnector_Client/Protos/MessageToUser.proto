@@ -4,20 +4,20 @@ import "Protos/Shared.proto";
 
 option csharp_namespace = "BonusBotConnector_Client";
 
-service MessageToChannel {
-  rpc Send (MessageToChannelRequest) returns (MessageToChannelRequestReply);
-  rpc SendEmbed (EmbedToChannelRequest) returns (MessageToChannelRequestReply);
+service MessageToUser {
+  rpc Send (MessageToUserRequest) returns (MessageToUserRequestReply);
+  rpc SendEmbed (EmbedToUserRequest) returns (MessageToUserRequestReply);
 }
 
-message MessageToChannelRequest {
+message MessageToUserRequest {
   string text = 1;
   uint64 guildId = 2;
-  uint64 channelId = 3; 
+  string userIdOrDiscriminiator = 3; 
 }
 
-message EmbedToChannelRequest {
+message EmbedToUserRequest {
     uint64 guildId = 1;
-    uint64 channelId = 2; 
+    string userIdOrDiscriminiator = 2; 
     string author = 3;
     repeated EmbedField fields = 4;
     // Use -1 to not use a color or to use default (255) if other color is set
@@ -29,6 +29,6 @@ message EmbedToChannelRequest {
     string title = 8;
 }
 
-message MessageToChannelRequestReply {
+message MessageToUserRequestReply {
     string errorMessage = 1;
 }

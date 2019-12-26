@@ -27,6 +27,7 @@ namespace BonusBotConnector_Client
 
             ChannelChat.Init(channel, errorLogger);
             ServerInfos.Init(channel, errorLogger);
+            PrivateChat.Init(channel, errorLogger);
         }
     }
 }

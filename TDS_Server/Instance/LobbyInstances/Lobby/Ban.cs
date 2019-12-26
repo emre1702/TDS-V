@@ -40,9 +40,10 @@ namespace TDS_Server.Instance.LobbyInstances
             if (serial is null)
                 serial = await ExecuteForDBAsync((dbContext) => dbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync());
 
+            PlayerBans? ban = null;
             await ExecuteForDBAsync(async (dbContext) => 
             {
-                PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+                ban = await dbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban != null)
                 {
                     ban.AdminId = admin.Entity?.Id ?? 0;
@@ -84,6 +85,13 @@ namespace TDS_Server.Instance.LobbyInstances
                     SendAllPlayerLangMessage(lang => lang.PERMABAN_INFO.Formatted(target.Name, admin.AdminLevelName, reason));
                 else
                     SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+            }
+
+            if (IsOfficial && ban is { })
+            {
+                var embedFields = BonusBotConnector_Client.Helper.GetBanEmbedFields(ban);
+                BonusBotConnector_Client.Requests.ChannelChat.SendBanInfo(ban, embedFields);
+                BonusBotConnector_Client.Requests.PrivateChat.SendBanMessage(target.PlayerSettings.DiscordIdentity, ban, embedFields);
             }
         }
 

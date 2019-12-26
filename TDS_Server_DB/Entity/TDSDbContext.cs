@@ -253,6 +253,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.SupportRequestsChannelId).IsRequired(false);
                 entity.Property(e => e.ServerInfosChannelId).IsRequired(false);
                 entity.Property(e => e.ActionsInfoChannelId).IsRequired(false);
+                entity.Property(e => e.BansInfoChannelId).IsRequired(false);
 
                 entity.Property(e => e.ErrorLogsChannelId).IsRequired(false);
 
@@ -1122,6 +1123,7 @@ namespace TDS_Server_DB.Entity
                     SupportRequestsChannelId = 659073029896142855,
                     ServerInfosChannelId = 659073271911809037,
                     ActionsInfoChannelId = 659088752890871818,
+                    BansInfoChannelId = 659705941771550730,
 
                     ErrorLogsChannelId = 659073884796092426,
 
