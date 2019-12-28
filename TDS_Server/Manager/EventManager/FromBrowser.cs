@@ -84,7 +84,7 @@ namespace TDS_Server.Manager.EventManager
                 });
                 await player.SaveData();
 
-                player.LoadTimeZone();
+                player.LoadTimezone();
 
                 NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncSettings, json);
             }
