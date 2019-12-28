@@ -8,7 +8,7 @@ namespace TDS_Server.Manager.Logs
 {
     internal static class ErrorLogsManager
     {
-        public static void Log(string info, string stacktrace, Client source, bool logToBonusBot = false)
+        public static void Log(string info, string stacktrace, Client source, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -23,7 +23,7 @@ namespace TDS_Server.Manager.Logs
                 BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
         }
 
-        public static void Log(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = false)
+        public static void Log(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -38,7 +38,7 @@ namespace TDS_Server.Manager.Logs
                 BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
         }
 
-        public static void LogFromBonusBot(string info, string stacktrace, bool logToBonusBot = false)
+        public static void LogFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
