@@ -4,6 +4,7 @@ using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Userpanel;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Userpanel
@@ -37,6 +38,8 @@ namespace TDS_Server.Manager.Userpanel
                 return player.Language.WRONG_PASSWORD;
             }
 
+            int? paid = null;
+            DateTime? lastFreeUsernameChange = player.Entity.PlayerStats.LastFreeUsernameChange;
             switch (type)
             {
                 case EUserpanelSettingsSpecialType.Username:
@@ -51,6 +54,7 @@ namespace TDS_Server.Manager.Userpanel
                         {
                             return player.Language.NOT_ENOUGH_MONEY;
                         }
+                        paid = SettingsManager.ServerSettings.UsernameChangeCost;
                         player.GiveMoney(-SettingsManager.ServerSettings.UsernameChangeCost);
                     }
                     player.Entity.Name = value;
@@ -65,7 +69,20 @@ namespace TDS_Server.Manager.Userpanel
                     return "Unknown error";
             }
 
-            await player.SaveData();
+            try
+            {
+                await player.SaveData();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                if (paid.HasValue)
+                    player.GiveMoney(paid.Value);
+                if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
+                    player.Entity.PlayerStats.LastFreeUsernameChange = lastFreeUsernameChange;
+                return "Unknown error";
+            }
+            
             return "";
         }
     }
