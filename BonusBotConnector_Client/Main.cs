@@ -17,6 +17,9 @@ namespace BonusBotConnector_Client
 
         public static void Init(TDSDbContext dbContext, BonusBotErrorLoggerDelegate errorLogger)
         {
+            if (System.Diagnostics.Debugger.IsAttached)
+                return;
+
             Settings = dbContext.BonusbotSettings.FirstOrDefault();
 
             if (Settings.GuildId is null)
