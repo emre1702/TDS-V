@@ -16,7 +16,7 @@ namespace TDS_Server.Manager.Timer
             OfflineMessages.DeleteOldMessages,
 
 
-            ResourceStop.CheckHourForResourceStop
+            ResourceStop.CheckHourForResourceRestart
         };
 
         public static async void Execute()

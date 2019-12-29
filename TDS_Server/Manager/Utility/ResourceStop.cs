@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
@@ -31,25 +32,55 @@ namespace TDS_Server.Manager.Utility
             OnResourceStop();
         }
 
-        public static Task CheckHourForResourceStop()
+        public static Task CheckHourForResourceRestart()
         {
             if (_isFirstResourceStopCheck)
             {
                 _isFirstResourceStopCheck = false;
-                return Task.FromResult(0); ;
+                return Task.FromResult(0);
             }
 
             if (DateTime.UtcNow.Hour != 5)
-                return Task.FromResult(0); ;
+                return Task.FromResult(0);
 
-            LangUtils.SendAllChatMessage(lang => "#o#" + lang.RESOURCE_RESTART_INFO);
-            LangUtils.SendAllChatMessage(lang => "#o#" + lang.RESOURCE_RESTART_INFO);
-            LangUtils.SendAllChatMessage(lang => "#o#" + lang.RESOURCE_RESTART_INFO);
-            OnResourceStop();
-
-            Process.GetCurrentProcess().Kill();
+            ResourceRestartCountdown(3, true);
 
             return Task.FromResult(0);
+        }
+
+        private static void ResourceRestartCountdown(int counter, bool isMinute)
+        {
+            if (isMinute)
+            {
+                if (--counter > 1)
+                {
+                    LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_MINUTES, counter));
+                    _ = new TDSTimer(() => ResourceRestartCountdown(counter, true), 60 * 1000, 1);
+                }
+                if (counter == 1)
+                {
+                    LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_MINUTES, counter));
+                    _ = new TDSTimer(() => ResourceRestartCountdown(counter, true), 45 * 1000, 1);
+                }
+                else
+                {
+                    LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_SECONDS, 15));
+                    _ = new TDSTimer(() => ResourceRestartCountdown(10, false), 5000, 1);
+                }
+            }
+            else // is second
+            {
+                if (--counter > 0)
+                {
+                    LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_SECONDS, 15));
+                    _ = new TDSTimer(() => ResourceRestartCountdown(counter, false), 1000, 1, true);
+                }
+                else
+                {
+                    OnResourceStop();
+                    Process.GetCurrentProcess().Kill();
+                }
+            }
         }
 
         private static void SaveAllInDatabase()

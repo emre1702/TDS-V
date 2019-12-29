@@ -113,7 +113,8 @@ namespace TDS_Server.Instance.Language
         public override string REPORT_ANSWERED_INFO => "Der Ersteller hat seinem Report mit der ID {0} geantwortet.";
         public override string REPORT_CREATED_INFO => "Ein Report mit der ID {0} wurde erstellt!";
         public override string REPORT_GOT_ANSWER_INFO => "Ein Team-Mitglied hat deinem Report mit der ID {0} geantwortet.";
-        public override string RESOURCE_RESTART_INFO => "TDS-V wird nun kurz restartet!";
+        public override string RESOURCE_RESTART_INFO_MINUTES => "TDS-V wird in {0} Minute(n) neu gestartet.";
+        public override string RESOURCE_RESTART_INFO_SECONDS => "TDS-V wird in {0} Sekunde(n) neu gestartet.";
         public override string ROUND_END_BOMB_DEFUSED_INFO => "Bombe entschärft!<br>Team {0} gewinnt!";
         public override string ROUND_END_BOMB_EXPLODED_INFO => "Bombe explodiert!<br>Team {0} gewinnt!";
         public override string ROUND_END_COMMAND_INFO => "Die Map wurde von {0} übersprungen!";
