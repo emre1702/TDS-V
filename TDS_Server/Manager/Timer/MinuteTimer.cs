@@ -76,7 +76,7 @@ namespace TDS_Server.Manager.Timer
                 return;
 
             player.MuteTime = null;
-            NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.MUTE_EXPIRED);
+            player.SendNotification(player.Language.MUTE_EXPIRED);
         }
 
         private static void ReduceVoiceMuteTime(TDSPlayer player)
@@ -88,7 +88,7 @@ namespace TDS_Server.Manager.Timer
                 return;
             
             player.VoiceMuteTime = null;
-            NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.VOICE_MUTE_EXPIRED);
+            player.SendNotification(player.Language.VOICE_MUTE_EXPIRED);
 
             if (player.Team is null || player.Team.IsSpectator)
                 return;
@@ -96,7 +96,7 @@ namespace TDS_Server.Manager.Timer
             foreach (var target in player.Team.Players)
             {
                 if (!target.HasRelationTo(player, EPlayerRelation.Block))
-                    player.Client.EnableVoiceTo(target.Client);
+                    player.Client?.EnableVoiceTo(target.Client);
             }
         }
     }

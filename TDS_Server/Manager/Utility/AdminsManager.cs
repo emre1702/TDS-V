@@ -65,17 +65,17 @@ namespace TDS_Server.Manager.Utility
 
         public static void SendChatMessageToAdmins(string msg, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, msg), minadminlvl);
+            CallMethodForAdmins(player => player.SendMessage(msg), minadminlvl);
         }
 
         public static void SendLangChatMessageToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Chat.SendChatMessageToPlayer(player.Client, propertygetter(player.GetLang())), minadminlvl);
+            CallMethodForAdmins(player => player.SendMessage(propertygetter(player.GetLang())), minadminlvl);
         }
 
         public static void SendLangNotificationToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => NAPI.Notification.SendNotificationToPlayer(player.Client, propertygetter(player.Language)), minadminlvl);
+            CallMethodForAdmins(player => player.SendNotification(propertygetter(player.Language)), minadminlvl);
         }
     }
 }

@@ -66,7 +66,7 @@ namespace TDS_Server.Instance.Utility
         public void AddPlayer(TDSPlayer player)
         {
             Players.Add(player);
-            player.Client.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
+            player.Client!.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
         }
 
         public void RemovePlayer(TDSPlayer player)
@@ -84,8 +84,8 @@ namespace TDS_Server.Instance.Utility
                 {
                     if (target == player)
                         continue;
-                    target.Client.DisableVoiceTo(player.Client);
-                    player.Client.DisableVoiceTo(target.Client);
+                    target.Client!.DisableVoiceTo(player.Client);
+                    player.Client!.DisableVoiceTo(target.Client);
                 }
             });
             Players.Clear();
@@ -93,15 +93,15 @@ namespace TDS_Server.Instance.Utility
 
         public void SyncAddedPlayer(TDSPlayer player)
         {
-            string json = Serializer.ToClient(Players.Select(p => p.Client.Handle.Value));
+            string json = Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value));
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
                 if (target == player)
                     continue;
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client.Handle.Value);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client!.Handle.Value);
                 if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
-                    target.Client.EnableVoiceTo(player.Client);
+                    target.Client!.EnableVoiceTo(player.Client);
                 if(!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
                     player.Client.EnableVoiceTo(target.Client);
             }
@@ -113,15 +113,15 @@ namespace TDS_Server.Instance.Utility
             {
                 if (target == player)
                     continue;
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client.Handle.Value);
-                target.Client.DisableVoiceTo(player.Client);
+                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client!.Handle.Value);
+                target.Client!.DisableVoiceTo(player.Client);
                 player.Client.DisableVoiceTo(target.Client);
             }
         }
 
         public void SyncAllPlayers()
         {
-            string json = Serializer.ToClient(Players.Select(p => p.Client.Handle.Value));
+            string json = Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value));
             foreach (var player in Players)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
@@ -130,9 +130,9 @@ namespace TDS_Server.Instance.Utility
                     if (target == player)
                         continue;
                     if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
-                        target.Client.EnableVoiceTo(player.Client);
+                        target.Client!.EnableVoiceTo(player.Client);
                     if (!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
-                        player.Client.EnableVoiceTo(target.Client);
+                        player.Client!.EnableVoiceTo(target.Client);
                 }
             }
         }

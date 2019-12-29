@@ -89,7 +89,7 @@ namespace TDS_Server.Instance.LobbyInstances
             string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !{{150|0|0}}";
             team.FuncIterate((target, _) =>
             {
-                NAPI.Chat.SendChatMessageToPlayer(target.Client, str + texts[target.Language]);
+                target.SendMessage(str + texts[target.Language]);
             });
         }
 

@@ -52,7 +52,7 @@ namespace TDS_Server.Instance.LobbyInstances
                         killreward + assistreward + damagereward);
                 strbuilder.Append("#n##o#____________________");
 
-                NAPI.Chat.SendChatMessageToPlayer(character.Client, strbuilder.ToString());
+                character.SendMessage(strbuilder.ToString());
                 strbuilder.Clear();
             });
         }

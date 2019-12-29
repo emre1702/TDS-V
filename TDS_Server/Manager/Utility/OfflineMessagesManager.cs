@@ -55,9 +55,7 @@ namespace TDS_Server.Manager.Utility
 
             if (amountnewentries > 0)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client,
-                    Utils.GetReplaced(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountentries.ToString(), amountnewentries.ToString())
-                );
+                player.SendMessage(Utils.GetReplaced(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountentries.ToString(), amountnewentries.ToString()));
             }
         }
     }

@@ -130,12 +130,12 @@ namespace TDS_Server.Manager.Userpanel
             var target = Player.Player.GetPlayerByID(playerId);
             if (target != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(target.Client, string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
+                target.SendMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
+                player.SendMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
             }
             else
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.SENT_APPLICATION);
+                player.SendMessage(player.Language.SENT_APPLICATION);
             }
 
             return null;

@@ -153,7 +153,7 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
                 if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
-                    character.Client.Kill();
+                    character.Client!.Kill();
                 character.Lifes = 0;
             });
 
@@ -187,7 +187,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
             try
             {
-                Client winner = _ranking.First().Player.Client;
+                Client winner = _ranking.First().Player.Client!;
                 Client? second = _ranking.ElementAtOrDefault(1)?.Player.Client;
                 Client? third = _ranking.ElementAtOrDefault(2)?.Player.Client;
 

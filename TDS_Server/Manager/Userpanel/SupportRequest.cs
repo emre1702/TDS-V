@@ -146,7 +146,7 @@ namespace TDS_Server.Manager.Userpanel
 
                 await dbContext.SaveChangesAsync();   
                 
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.SUPPORT_REQUEST_CREATED);
+                player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED);
             }
             catch (Exception ex)
             {
@@ -181,7 +181,7 @@ namespace TDS_Server.Manager.Userpanel
 
             string messageJson = Serializer.ToBrowser(new SupportRequestMessage
             {
-                Author = player.Client.Name,
+                Author = player.DisplayName,
                 Message = messageEntity.Text,
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });

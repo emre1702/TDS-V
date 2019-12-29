@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Sync
                         _playerInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
-                    player.Client.TriggerEvent(DToClientEvent.SyncNewCustomLobby, json);
+                    player.Client?.TriggerEvent(DToClientEvent.SyncNewCustomLobby, json);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace TDS_Server.Manager.Sync
                         _playerInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
-                    player.Client.TriggerEvent(DToClientEvent.RemoveCustomLobby, lobby.Id);
+                    player.Client?.TriggerEvent(DToClientEvent.RemoveCustomLobby, lobby.Id);
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace TDS_Server.Manager.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
-            player.Client.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, Serializer.ToBrowser(lobbyDatas));
+            player.Client?.TriggerEvent(DToClientEvent.SyncAllCustomLobbies, Serializer.ToBrowser(lobbyDatas));
         }
 
         public static void RemovePlayer(TDSPlayer player)

@@ -35,19 +35,19 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (_boughtMap is { })
                 return;
-            if (_playerVotes.ContainsKey(player.Client) && _playerVotes[player.Client] == mapId)
+            if (_playerVotes.ContainsKey(player.Client!) && _playerVotes[player.Client!] == mapId)
                 return;
 
             if (_mapVotes.Any(m => m.Id == mapId))
             {
-                RemovePlayerVote(player.Client);
-                AddVoteToMap(player.Client, mapId);
+                RemovePlayerVote(player.Client!);
+                AddVoteToMap(player.Client!, mapId);
                 return;
             }
 
             if (_mapVotes.Count >= 9)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
+                player.SendNotification(player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED);
                 return;
             }
 
@@ -57,10 +57,10 @@ namespace TDS_Server.Instance.LobbyInstances
             if (map is null)
                 return;
 
-            RemovePlayerVote(player.Client);
+            RemovePlayerVote(player.Client!);
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
-            _playerVotes[player.Client] = mapId;
+            _playerVotes[player.Client!] = mapId;
             SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, Serializer.ToBrowser(mapVote));
         }
 
@@ -146,7 +146,7 @@ namespace TDS_Server.Instance.LobbyInstances
                             (SettingsManager.ServerSettings.MapBuyCounterMultiplicator * player.Entity.PlayerStats.MapsBoughtCounter));
                 if (price > player.Money)
                 {
-                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.NOT_ENOUGH_MONEY);
+                    player.SendNotification(player.Language.NOT_ENOUGH_MONEY);
                     return;
                 }
 
@@ -161,7 +161,7 @@ namespace TDS_Server.Instance.LobbyInstances
             _mapVotes.Clear();
             _playerVotes.Clear();
 
-            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Client.Name, map.SyncedData.Name));
+            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Client!.Name, map.SyncedData.Name));
             SendAllPlayerEvent(DToClientEvent.StopMapVoting, null);
         }
     }

@@ -19,7 +19,7 @@ namespace TDS_Server.Instance.GameModes
 
         private static void SendBombPlantInfos(TDSPlayer character)
         {
-            NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.BOMB_PLANT_INFO);
+            character.SendMessage(character.Language.BOMB_PLANT_INFO);
         }
 
         private void SendBombDefuseInfos()
@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.GameModes
             {
                 foreach (string str in character.Language.DEFUSE_INFO)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, str);
+                    character.SendMessage(str);
                 }
             });
         }
@@ -36,7 +36,7 @@ namespace TDS_Server.Instance.GameModes
         private void PlantBomb(TDSPlayer player)
         {
             _bombPlantDefuseTimer = null;
-            if (player.Client.Dead)
+            if (player.Client!.Dead)
                 return;
             if (_bomb is null)
                 return;
@@ -63,7 +63,7 @@ namespace TDS_Server.Instance.GameModes
 
             Lobby.FuncIterateAllPlayers((target, team) =>
             {
-                NAPI.Chat.SendChatMessageToPlayer(target.Client, target.Language.BOMB_PLANTED);
+                target.SendMessage(target.Language.BOMB_PLANTED);
                 NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.BombPlanted, Serializer.ToClient(playerpos), team == _counterTerroristTeam);
             });
 
@@ -81,7 +81,7 @@ namespace TDS_Server.Instance.GameModes
         private void DefuseBomb(TDSPlayer character)
         {
             _bombPlantDefuseTimer = null;
-            if (character.Client.Dead)
+            if (character.Client!.Dead)
                 return;
             if (_bomb is null)
                 return;
@@ -93,7 +93,7 @@ namespace TDS_Server.Instance.GameModes
             _terroristTeam.FuncIterate((targetcharacter, team) =>
             {
                 Lobby.DmgSys.UpdateLastHitter(targetcharacter, character, Lobby.LobbyEntity.StartArmor + Lobby.LobbyEntity.StartHealth);
-                targetcharacter.Client.Kill();
+                targetcharacter.Client!.Kill();
             });
             character.Client.StopAnimation();
 
@@ -112,7 +112,7 @@ namespace TDS_Server.Instance.GameModes
                 return false;
             if (_bombPlantDefuseTimer is { })
                 return false;
-            if (character.Client.Dead)
+            if (character.Client!.Dead)
                 return false;
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
                 return false;
@@ -141,7 +141,7 @@ namespace TDS_Server.Instance.GameModes
                 return false;
             if (_bombPlantDefuseTimer is { })
                 return false;
-            if (character.Client.Dead)
+            if (character.Client!.Dead)
                 return false;
             if (character.Client.CurrentWeapon != WeaponHash.Unarmed)
                 return false;

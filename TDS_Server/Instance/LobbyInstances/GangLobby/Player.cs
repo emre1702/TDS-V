@@ -11,7 +11,7 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!await base.AddPlayer(player, teamindex))
                 return false;
 
-            Workaround.FreezePlayer(player.Client, false);
+            Workaround.FreezePlayer(player.Client!, false);
 
             return true;
         }

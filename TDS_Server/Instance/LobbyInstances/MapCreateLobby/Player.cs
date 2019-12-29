@@ -19,8 +19,8 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            Workaround.SetPlayerInvincible(player.Client, true);
-            Workaround.FreezePlayer(player.Client, false);
+            Workaround.SetPlayerInvincible(player.Client!, true);
+            Workaround.FreezePlayer(player.Client!, false);
 
             if (Players.Count > 1)
             {
@@ -43,8 +43,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public void SetPosition(TDSPlayer player, float x, float y, float z, float rot)
         {
-            player.Client.Position = new Vector3(x, y, z);
-            player.Client.Rotation = new Vector3(0, 0, rot);
+            player.Client!.Position = new Vector3(x, y, z);
+            player.Client!.Rotation = new Vector3(0, 0, rot);
         }
 
         public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
@@ -59,7 +59,7 @@ namespace TDS_Server.Instance.LobbyInstances
             if (vehHash == default)
                 return;
 
-            var pos = player.Client.Position;
+            var pos = player.Client!.Position;
 
             NAPI.Task.Run(() => {
                 if (player.FreeroamVehicle != null)

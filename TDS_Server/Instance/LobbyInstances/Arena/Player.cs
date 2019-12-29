@@ -105,30 +105,32 @@ namespace TDS_Server.Instance.LobbyInstances
             }
         }
 
-        private void SetPlayerReadyForRound(TDSPlayer character)
+        private void SetPlayerReadyForRound(TDSPlayer player)
         {
-            Client player = character.Client;
-            if (character.Team != null && !character.Team.IsSpectator)
+            if (player.Client is null)
+                return;
+
+            if (player.Team != null && !player.Team.IsSpectator)
             {
-                Position4DDto? spawndata = GetMapRandomSpawnData(character.Team);
+                Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
                 if (spawndata is null)
                     return;
-                NAPI.Player.SpawnPlayer(player, spawndata.ToVector3(), spawndata.Rotation);
-                if (character.Team.SpectateablePlayers != null && !character.Team.SpectateablePlayers.Contains(character))
-                    character.Team.SpectateablePlayers?.Add(character);
+                NAPI.Player.SpawnPlayer(player.Client, spawndata.ToVector3(), spawndata.Rotation);
+                if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
+                    player.Team.SpectateablePlayers?.Add(player);
             }
             else
-                NAPI.Player.SpawnPlayer(player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
+                NAPI.Player.SpawnPlayer(player.Client, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
 
-            RemoveAsSpectator(character);
+            RemoveAsSpectator(player);
 
-            Workaround.FreezePlayer(player, true);
-            GivePlayerWeapons(character);
+            Workaround.FreezePlayer(player.Client, true);
+            GivePlayerWeapons(player);
 
-            if (_removeSpectatorsTimer.ContainsKey(character))
-                _removeSpectatorsTimer.Remove(character);
+            if (_removeSpectatorsTimer.ContainsKey(player))
+                _removeSpectatorsTimer.Remove(player);
 
-            character.CurrentRoundStats?.Clear();
+            player.CurrentRoundStats?.Clear();
         }
 
         private void RemovePlayerFromAlive(TDSPlayer player)
@@ -150,6 +152,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void StartRoundForPlayer(TDSPlayer player)
         {
+            if (player.Client is null)
+                return;
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team != null && !player.Team.IsSpectator)
             {
@@ -167,6 +171,9 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void SendPlayerRoundInfoOnJoin(TDSPlayer player)
         {
+            if (player.Client is null)
+                return;
+
             if (_currentMap != null)
             {
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, _currentMap.Info.Name,
@@ -237,6 +244,9 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void RespawnPlayer(TDSPlayer player)
         {
+            if (player.Client is null)
+                return;
+
             SetPlayerReadyForRound(player);
             Workaround.FreezePlayer(player.Client, false);
             player.Client.TriggerEvent(DToClientEvent.PlayerRespawned);

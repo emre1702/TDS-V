@@ -21,11 +21,11 @@ namespace TDS_Server.Instance.GameModes
             Lobby.FuncIterateAllPlayers((character, team) =>
             {
                 if (team is null || team.IsSpectator)
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMG_SPECTATOR);
+                    character.SendMessage(character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == _terroristTeam)
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_BAD);
+                    character.SendMessage(character.Language.ROUND_MISSION_BOMB_BAD);
                 else
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.ROUND_MISSION_BOMB_GOOD);
+                    character.SendMessage(character.Language.ROUND_MISSION_BOMB_GOOD);
             });
             if (_bombAtPlayer is null)
                 GiveBombToRandomTerrorist();

@@ -23,12 +23,12 @@ namespace TDS_Server.Manager.Player
             _bansManager = BansManager.Get();
         }
 
-        private static void SendWelcomeMessage(Client player)
+        private static void SendWelcomeMessage(Client client)
         {
-            ILanguage lang = player.GetLang();
-            NAPI.Chat.SendChatMessageToPlayer(player, "#o#__________________________________________");
-            NAPI.Chat.SendChatMessageToPlayer(player, string.Join("#n#", lang.WELCOME_MESSAGE));
-            NAPI.Chat.SendChatMessageToPlayer(player, "#o#__________________________________________");
+            var player = client.GetChar();
+            player.SendMessage("#o#__________________________________________");
+            player.SendMessage(string.Join("#n#", player.Language.WELCOME_MESSAGE));
+            player.SendMessage("#o#__________________________________________");
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
@@ -95,7 +95,7 @@ namespace TDS_Server.Manager.Player
                 Login.LoginPlayer(player, id, password);
             }
             else
-                NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
+                player.GetChar()?.SendNotification(LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
         }
 
         [RemoteEvent(DToServerEvent.LanguageChange)]
@@ -190,7 +190,7 @@ namespace TDS_Server.Manager.Player
             {
                 foreach (var player in target.Team.Players)
                 {
-                    target.Client.DisableVoiceTo(player.Client);
+                    target.Client!.DisableVoiceTo(player.Client);
                 }
             }
             

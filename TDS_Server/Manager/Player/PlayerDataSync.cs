@@ -41,6 +41,8 @@ namespace TDS_Server.Manager.Player
         /// <param name="value"></param>
         public static void SetData(TDSPlayer player, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
         {
+            if (player.Client is null)
+                return;
 
             switch (syncMode)
             {
@@ -131,7 +133,7 @@ namespace TDS_Server.Manager.Player
         {
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
                 return;
-            if (!_playerHandleDatasLobby[lobby.Id].ContainsKey(player.Client.Handle.Value))
+            if (!_playerHandleDatasLobby[lobby.Id].ContainsKey(player.Client!.Handle.Value))
                 return;
 
             _playerHandleDatasLobby[lobby.Id].Remove(player.Client.Handle.Value);
@@ -139,7 +141,7 @@ namespace TDS_Server.Manager.Player
 
         private static void PlayerLoggedOut(TDSPlayer player)
         {
-            if (_playerHandleDatasAll.ContainsKey(player.Client.Handle.Value))
+            if (_playerHandleDatasAll.ContainsKey(player.Client!.Handle.Value))
                 _playerHandleDatasAll.Remove(player.Client.Handle.Value);
 
             if (_playerHandleDatasPlayer.ContainsKey(player.Client.Handle.Value))

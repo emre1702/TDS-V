@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.Utility
             Invitation? invitation = Invitation.GetById(id);
             if (invitation is null)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
                 return null;
             }
                 
@@ -56,7 +56,7 @@ namespace TDS_Server.Manager.Utility
             Invitation? invitation = Invitation.GetById(id);
             if (invitation is null)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
                 return null;
             }
 

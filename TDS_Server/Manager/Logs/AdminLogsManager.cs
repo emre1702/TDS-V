@@ -12,7 +12,7 @@ namespace TDS_Server.Manager.Logs
         {
             var log = new LogAdmins
             {
-                Source = source?.Entity?.Id ?? 0,
+                Source = source?.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Type = cmd,
                 Lobby = target?.CurrentLobby?.Id ?? source?.CurrentLobby?.Id,
@@ -29,7 +29,7 @@ namespace TDS_Server.Manager.Logs
         {
             var log = new LogAdmins
             {
-                Source = source?.Entity?.Id ?? 0,
+                Source = source?.Entity?.Id ?? -1,
                 Target = targetid,
                 Type = cmd,
                 Lobby = source?.CurrentLobby?.Id,

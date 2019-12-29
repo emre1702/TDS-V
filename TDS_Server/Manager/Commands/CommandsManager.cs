@@ -24,8 +24,8 @@ namespace TDS_Server.Manager.Commands
 {
     internal class CommandsManager : Script
     {
-        // private delegate void CommandDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos, object[] args);
-        // private delegate void CommandEmptyDefaultMethod(TDSPlayer character, TDSCommandInfos commandinfos);
+        // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos, object[] args);
+        // private delegate void CommandEmptyDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos);
 
 
         private class HandleArgumentsResult
@@ -136,31 +136,37 @@ namespace TDS_Server.Manager.Commands
             Userpanel.Commands.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
+
         [RemoteEvent(DToServerEvent.CommandUsed)]
-        public static async void UseCommand(Client player, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        public static void UseCommand(Client client, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
-            TDSPlayer character = player.GetChar();
+            TDSPlayer player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            UseCommand(player, msg);
+        }
+
+        public static async void UseCommand(TDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        { 
+            
             try
             {
-                if (character.Entity is null || !character.Entity.PlayerStats.LoggedIn)
-                    return;
-
                 object[]? args = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (_commandByAlias.ContainsKey(cmd))
                     cmd = _commandByAlias[cmd];
 
-                if (!CheckCommandExists(character, cmd, args))
+                if (!CheckCommandExists(player, cmd, args))
                     return;
 
                 DB.Commands entity = _commandsDict[cmd];
 
-                if (!CheckRights(character, entity, cmdinfos))
+                if (!CheckRights(player, entity, cmdinfos))
                     return;
 
                 CommandDataDto commanddata = _commandDataByCommand[cmd];
 
-                if (IsInvalidArgsCount(character, commanddata, args))
+                if (IsInvalidArgsCount(player, commanddata, args))
                     return;
 
                 int amountmethods = commanddata.MethodDatas.Count;
@@ -175,18 +181,18 @@ namespace TDS_Server.Manager.Commands
                     {
                         if (remainingText.Length < methoddata.RemainingTextAttribute.MinLength)
                         {
-                            NAPI.Chat.SendChatMessageToPlayer(player, character.Language.TEXT_TOO_SHORT);
+                            player.SendMessage(player.Language.TEXT_TOO_SHORT);
                             return;
                         }
                         if (remainingText.Length > methoddata.RemainingTextAttribute.MaxLength)
                         {
-                            NAPI.Chat.SendChatMessageToPlayer(player, character.Language.TEXT_TOO_LONG);
+                            player.SendMessage(player.Language.TEXT_TOO_LONG);
                             return;
                         }
                     }
                     #endregion
 
-                    var handleArgumentsResult = await HandleArgumentsTypeConvertings(character, methoddata, methodindex, amountmethods, args);
+                    var handleArgumentsResult = await HandleArgumentsTypeConvertings(player, methoddata, methodindex, amountmethods, args);
                     if (handleArgumentsResult.IsWrongMethod)
                         continue;
 
@@ -195,16 +201,16 @@ namespace TDS_Server.Manager.Commands
 
                     //if (UseImplicitTypes)
                     //{
-                    object[] finalInvokeArgs = GetFinalInvokeArgs(methoddata, character, cmdinfos, args);
+                    object[] finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
                     methoddata.MethodDefault.Invoke(null, finalInvokeArgs);
                     /*}
                     else
                     {
 #pragma warning disable
                         if (args != null)
-                            methoddata.Method.Invoke(character, cmdinfos, args);
+                            methoddata.Method.Invoke(player, cmdinfos, args);
                         else
-                            methoddata.MethodEmpty.Invoke(character, cmdinfos);
+                            methoddata.MethodEmpty.Invoke(player, cmdinfos);
 #pragma warning enable
                     }*/
                     break;
@@ -212,7 +218,7 @@ namespace TDS_Server.Manager.Commands
             }
             catch
             {
-                NAPI.Chat.SendChatMessageToPlayer(player, character.Language.COMMAND_USED_WRONG);
+                player.SendMessage(player.Language.COMMAND_USED_WRONG);
             }
         }
 
@@ -242,7 +248,7 @@ namespace TDS_Server.Manager.Commands
                             // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
                             if (methodindex + 1 == amountmethodsavailable)
                             {
-                                NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST);
+                                player.SendMessage(player.Language.PLAYER_DOESNT_EXIST);
                                 return new HandleArgumentsResult();
                             }
                             return new HandleArgumentsResult { IsWrongMethod = true };
@@ -285,7 +291,7 @@ namespace TDS_Server.Manager.Commands
         {
             if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+                player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
                 return true;
             }
             return false;
@@ -296,7 +302,7 @@ namespace TDS_Server.Manager.Commands
             if (!_commandDataByCommand.ContainsKey(cmd))
             {
                 if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.COMMAND_DOESNT_EXIST);
+                    player.SendMessage(player.Language.COMMAND_DOESNT_EXIST);
                 if (SettingsManager.ToChatOnNonExistentCommand)
                     ChatManager.SendLobbyMessage(player, "/" + cmd + (args != null ?  " " + string.Join(' ', args) : ""), false);
                 return false;
@@ -304,7 +310,7 @@ namespace TDS_Server.Manager.Commands
             return true;
         }
 
-        private static bool CheckRights(TDSPlayer character, DB.Commands entity, TDSCommandInfos cmdinfos)
+        private static bool CheckRights(TDSPlayer player, DB.Commands entity, TDSCommandInfos cmdinfos)
         {
             bool canuse = false;
             bool needright = false;
@@ -314,7 +320,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.LobbyOwnerCanUse)
             {
                 needright = true;
-                canuse = character.IsLobbyOwner;
+                canuse = player.IsLobbyOwner;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.LobbyOwner;
             }
@@ -326,7 +332,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.NeededAdminLevel.HasValue)
             {
                 needright = true;
-                canuse = (character.Entity?.AdminLvl ?? 0) >= entity.NeededAdminLevel.Value;
+                canuse = player.AdminLevel.Level >= entity.NeededAdminLevel.Value;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Admin;
             }
@@ -338,7 +344,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.NeededDonation.HasValue)
             {
                 needright = true;
-                canuse = (character.Entity?.Donation ?? 0) >= entity.NeededDonation.Value;
+                canuse = (player.Entity?.Donation ?? 0) >= entity.NeededDonation.Value;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.VIP;
             }
@@ -350,7 +356,7 @@ namespace TDS_Server.Manager.Commands
             if (!canuse && entity.VipCanUse)
             {
                 needright = true;
-                canuse = character.Entity?.IsVip ?? false;
+                canuse = player.Entity?.IsVip ?? false;
                 if (canuse)
                     cmdinfos.WithRight = ECommandUsageRight.Donator;
             }
@@ -368,7 +374,7 @@ namespace TDS_Server.Manager.Commands
             #endregion User Check
 
             if (!canuse)
-                NAPI.Chat.SendChatMessageToPlayer(character.Client, character.Language.NOT_ALLOWED);
+                player.SendMessage(player.Language.NOT_ALLOWED);
 
             return canuse;
         }

@@ -85,7 +85,7 @@ namespace TDS_Server.Manager.Userpanel
                 targetId = await Player.Player.GetPlayerIDByName(playerName);
                 if (targetId == 0)
                 {
-                    NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.PLAYER_DOESNT_EXIST, true);
+                    player.SendNotification(player.Language.PLAYER_DOESNT_EXIST, true);
                     return false;
                 }
             }

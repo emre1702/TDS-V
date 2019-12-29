@@ -10,14 +10,14 @@ namespace TDS_Server.Manager.Utility
         {
             if (inSpectator)
             {
-                player.Client.Transparency = 0;
+                player.Client!.Transparency = 0;
                 Workaround.FreezePlayer(player.Client, true);
                 Workaround.SetEntityCollisionless(player.Client, true, player.CurrentLobby);
                 Workaround.SetPlayerInvincible(player.Client, true);
             }
             else
             {
-                player.Client.Transparency = 255;
+                player.Client!.Transparency = 255;
                 Workaround.SetPlayerInvincible(player.Client, false);
                 Workaround.SetEntityCollisionless(player.Client, false, player.CurrentLobby);
                 NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.StopSpectator);
@@ -29,6 +29,8 @@ namespace TDS_Server.Manager.Utility
         {
             if (player.Spectates == targetPlayer)
                 return;
+            if (player.Client is null)
+                return;
 
             if (player.Spectates is null)
             {
@@ -39,7 +41,7 @@ namespace TDS_Server.Manager.Utility
                 player.Spectates.Spectators.Remove(player);
             }
 
-            if (targetPlayer is null)
+            if (targetPlayer is null || targetPlayer.Client is null)
             {
                 SetPlayerToSpectator(player, false);
             }

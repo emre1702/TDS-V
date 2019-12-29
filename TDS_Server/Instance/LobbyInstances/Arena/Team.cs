@@ -48,7 +48,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 int teamhealth = 0;
                 foreach (var player in team.AlivePlayers)
                 {
-                    teamhealth += player.Client.Health + player.Client.Armor;
+                    teamhealth += player.Client!.Health + player.Client.Armor;
                 }
                 if (teamhealth > highesthealth)
                 {

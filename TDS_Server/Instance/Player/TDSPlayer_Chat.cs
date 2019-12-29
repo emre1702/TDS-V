@@ -1,4 +1,6 @@
-﻿using TDS_Server.Manager.Utility;
+﻿using GTANetworkAPI;
+using System;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Player
 {
@@ -18,12 +20,12 @@ namespace TDS_Server.Instance.Player
             {
                 if (disconnected)
                 {
-                    InPrivateChatWith.Client.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
+                    InPrivateChatWith.Client?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
                 }
                 else
                 {
-                    Client.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
-                    InPrivateChatWith.Client.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
+                    Client?.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
+                    InPrivateChatWith.Client?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
                 }
                 InPrivateChatWith.InPrivateChatWith = null;
                 InPrivateChatWith = null;
@@ -32,13 +34,29 @@ namespace TDS_Server.Instance.Player
             {
                 if (!disconnected)
                 {
-                    Client.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
+                    Client?.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
                 }
-                SentPrivateChatRequestTo.Client.SendNotification(
+                SentPrivateChatRequestTo.Client?.SendNotification(
                     SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(DisplayName)
                 );
                 SentPrivateChatRequestTo = null;
             }
+        }
+
+        public void SendMessage(string msg)
+        {
+            if (IsConsole)
+                Console.WriteLine(msg);
+            else if (Client is { })
+                NAPI.Chat.SendChatMessageToPlayer(Client, msg);
+        }
+
+        public void SendNotification(string msg, bool flashing = false)
+        {
+            if (IsConsole)
+                Console.WriteLine(msg);
+            else if (Client is { })
+                NAPI.Notification.SendNotificationToPlayer(Client, msg, flashing);
         }
     }
 }

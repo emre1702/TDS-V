@@ -23,6 +23,8 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (player.Entity is null)
                 return;
+            if (player.Client is null)
+                return;
 
             Lobbies entity = new Lobbies
             {

@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.LobbyInstances
         public override void GivePlayerWeapons(TDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
-            player.Client.RemoveAllWeapons();
+            player.Client!.RemoveAllWeapons();
             bool giveLastWeapon = false;
             var weapons = LobbyEntity.LobbyWeapons.Where(w => CurrentGameMode != null ? CurrentGameMode.IsWeaponAllowed(w.Hash) : true);
             foreach (LobbyWeapons weapon in weapons)

@@ -41,14 +41,14 @@ namespace TDS_Server.Manager.Player
 
                 if (character.Entity is null)
                 {
-                    NAPI.Notification.SendNotificationToPlayer(player, LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
+                    character.SendNotification(LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
                     dbContext.Dispose();
                     return false;
                 }
 
                 if (Utils.HashPWServer(password) != character.Entity.Password)
                 {
-                    NAPI.Notification.SendNotificationToPlayer(player, player.GetLang().WRONG_PASSWORD);
+                    character.SendNotification(character.Language.WRONG_PASSWORD);
                     dbContext.Dispose();
                     return false;
                 }

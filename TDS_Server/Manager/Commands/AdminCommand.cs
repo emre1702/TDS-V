@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Commands
             {
                 if (player.CurrentLobby != target.CurrentLobby)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, player.Language.TARGET_NOT_IN_SAME_LOBBY);
+                    player.SendMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
                     return;
                 }
                 target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
@@ -138,7 +138,7 @@ namespace TDS_Server.Manager.Commands
         public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.DisplayName, player.DisplayName, reason));
-            target.Client.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
+            target.Client!.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -195,6 +195,9 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Goto)]
         public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
+            if (player.Client is null || target.Client is null)
+                return;
+
             Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
 
             #region Admin is in vehicle
@@ -228,6 +231,9 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Goto)]
         public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
         {
+            if (player.Client is null)
+                return;
+
             Vector3 pos = new Vector3(x, y, z);
             NAPI.Entity.SetEntityPosition(player.Client, pos);
 
@@ -239,8 +245,7 @@ namespace TDS_Server.Manager.Commands
         {
             if (muteTime < -1)
             {
-                if (outputTo != null)
-                    NAPI.Chat.SendChatMessageToPlayer(outputTo.Client, outputTo.Language.MUTETIME_INVALID);
+                outputTo.SendMessage(outputTo.Language.MUTETIME_INVALID);
                 return false;
             }
             return true;

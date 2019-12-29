@@ -13,7 +13,7 @@ namespace TDS_Server.Manager.Logs
         {
             var log = new LogChats
             {
-                Source = source.Entity?.Id ?? 0,
+                Source = source.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Message = chat,
                 Lobby = isglobal ? null : source?.CurrentLobby?.Id,

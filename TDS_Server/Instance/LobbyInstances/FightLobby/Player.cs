@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            Workaround.SetPlayerInvincible(player.Client, false);
+            Workaround.SetPlayerInvincible(player.Client!, false);
 
             return true;
         }

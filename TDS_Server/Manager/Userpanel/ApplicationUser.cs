@@ -133,14 +133,14 @@ namespace TDS_Server.Manager.Userpanel
                 .FirstOrDefaultAsync();
             if (invitation == null)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
                 return;
             }
 
             var application = await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync();
             if (application.PlayerId != player.Entity!.Id)
             {
-                ErrorLogsManager.Log($"{player.Client.Name} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
+                ErrorLogsManager.Log($"{player.Client?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
                 return;
             }
 
@@ -152,12 +152,12 @@ namespace TDS_Server.Manager.Userpanel
             player.Entity.AdminLvl = 1;
             await player.SaveData();
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
+            player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
+                admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
             } 
             else
             {
@@ -176,7 +176,7 @@ namespace TDS_Server.Manager.Userpanel
                 .FirstOrDefaultAsync();
             if (invitation == null)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
                 return;
             }
 
@@ -187,19 +187,19 @@ namespace TDS_Server.Manager.Userpanel
                 .FirstOrDefaultAsync();
             if (application.PlayerId != player.Entity!.Id)
             {
-                ErrorLogsManager.Log($"{player.Client.Name} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
+                ErrorLogsManager.Log($"{player.Client?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
                 return;
             }
 
             dbContext.Remove(invitation);
             await dbContext.SaveChangesAsync();
 
-            NAPI.Chat.SendChatMessageToPlayer(player.Client, string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
+            player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 
             TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
-                NAPI.Chat.SendChatMessageToPlayer(admin.Client, string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));
+                admin.SendMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));
             }
             else
             {

@@ -33,7 +33,7 @@ namespace TDS_Server.Manager.EventManager
             }
             else
             {
-                NAPI.Chat.SendChatMessageToPlayer(client, player.Language.LOBBY_DOESNT_EXIST);
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
         }
@@ -50,7 +50,7 @@ namespace TDS_Server.Manager.EventManager
                 Lobby lobby = Lobby.LobbiesByIndex[index];
                 if (password != null && lobby.LobbyEntity.Password != password)
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(client, player.Language.WRONG_PASSWORD);
+                    player.SendMessage(player.Language.WRONG_PASSWORD);
                     return;
                 }
 
@@ -58,7 +58,7 @@ namespace TDS_Server.Manager.EventManager
             }
             else
             {
-                NAPI.Chat.SendChatMessageToPlayer(client, player.Language.LOBBY_DOESNT_EXIST);
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
         }

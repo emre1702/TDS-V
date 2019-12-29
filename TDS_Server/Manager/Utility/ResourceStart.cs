@@ -118,6 +118,10 @@ namespace TDS_Server.Manager.Utility
                 ResourceStarted = true;
 
                 Account.Init();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(ReadInput);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
             catch (Exception ex)
             {
@@ -150,6 +154,26 @@ namespace TDS_Server.Manager.Utility
             catch
             {
                 // ignored
+            }
+        }
+
+        private void ReadInput()
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (input.Length == 0)
+                    continue;
+                if (input[0] == '/')
+                    input = input.Substring(1);
+
+                var consolePlayer = new TDSPlayer(null) 
+                {
+                    IsConsole = true
+                };
+
+                NAPI.Task.Run(() => CommandsManager.UseCommand(consolePlayer, input));
+                
             }
         }
     }

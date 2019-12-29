@@ -17,9 +17,9 @@ namespace TDS_Server.Manager.Utility
         {
             TDSPlayer player = client.GetChar();
             if (player.IsPermamuted)
-                player.Client.SendNotification(player.Language.STILL_PERMAMUTED);
+                client.SendNotification(player.Language.STILL_PERMAMUTED);
             else if (player.IsMuted)
-                player.Client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?"));
+                client.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?"));
             else
                 SendLobbyMessage(player, message, isDirty);
         }
@@ -41,47 +41,47 @@ namespace TDS_Server.Manager.Utility
             //    player.SendNotification(Utils.GetReplaced(character.Language.STILL_MUTED, character.MuteTime.Value));
         }
 
-        public static void SendGlobalMessage(TDSPlayer character, string message)
+        public static void SendGlobalMessage(TDSPlayer player, string message)
         {
-            string changedmessage = "[GLOBAL] " + (character.Team?.ChatColor ?? string.Empty) + character.DisplayName + "!{220|220|220}: " + message;
-            var blockingIds = character.BlockingPlayerIds;
+            string changedmessage = "[GLOBAL] " + (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!{220|220|220}: " + message;
+            var blockingIds = player.BlockingPlayerIds;
             foreach (var target in Player.Player.LoggedInPlayers)
             {
                 if (blockingIds.Contains(target.Entity?.Id ?? 0))
                     continue;
-                NAPI.Chat.SendChatMessageToPlayer(target.Client, changedmessage);
+                target.SendMessage(changedmessage);
             }
-            ChatLogsManager.Log(message, character, isglobal: true);
+            ChatLogsManager.Log(message, player, isglobal: true);
         }
 
-        public static void SendAdminMessage(TDSPlayer character, string message)
+        public static void SendAdminMessage(TDSPlayer player, string message)
         {
-            string changedmessage = character.AdminLevel.FontColor + "[" + character.AdminLevelName + "] !{255|255|255}" + character.DisplayName + ": !{220|220|220}" + message;
+            string changedmessage = player.AdminLevel.FontColor + "[" + player.AdminLevelName + "] !{255|255|255}" + player.DisplayName + ": !{220|220|220}" + message;
             NAPI.Chat.SendChatMessageToAll(changedmessage);
-            ChatLogsManager.Log(message, character, isglobal: true, isadminchat: true);
+            ChatLogsManager.Log(message, player, isglobal: true, isadminchat: true);
         }
 
-        public static void SendAdminChat(TDSPlayer character, string message)
+        public static void SendAdminChat(TDSPlayer player, string message)
         {
-            string changedmessage = "[ADMINCHAT] " + character.AdminLevel.FontColor + character.DisplayName + ": !{220|220|220}" + message;
+            string changedmessage = "[ADMINCHAT] " + player.AdminLevel.FontColor + player.DisplayName + ": !{220|220|220}" + message;
             AdminsManager.SendChatMessageToAdmins(changedmessage);
-            ChatLogsManager.Log(message, character, isadminchat: true);
+            ChatLogsManager.Log(message, player, isglobal: true, isadminchat: true);
         }
 
-        public static void SendTeamChat(TDSPlayer character, string message)
+        public static void SendTeamChat(TDSPlayer player, string message)
         {
-            if (character.Team is null)
+            if (player.Team is null)
                 return;
-            string changedmessage = "[TEAM] " + character.Team.ChatColor + character.DisplayName + ": !{220|220|220}" + message;
-            character.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, character.BlockingPlayerIds, character.Team);
-            ChatLogsManager.Log(message, character, isteamchat: true);
+            string changedmessage = "[TEAM] " + player.Team.ChatColor + player.DisplayName + ": !{220|220|220}" + message;
+            player.CurrentLobby?.SendAllPlayerChatMessage(changedmessage, player.BlockingPlayerIds, player.Team);
+            ChatLogsManager.Log(message, player, isteamchat: true);
         }
 
-        public static void SendPrivateMessage(TDSPlayer character, TDSPlayer targetcharacter, string message)
+        public static void SendPrivateMessage(TDSPlayer player, TDSPlayer target, string message)
         {
-            string changedmessage = "[PM] !{253|132|85}" + character.DisplayName + ": !{220|220|220}" + message;
-            NAPI.Chat.SendChatMessageToPlayer(targetcharacter.Client, changedmessage);
-            ChatLogsManager.Log(message, character, target: targetcharacter);
+            string changedmessage = "[PM] !{253|132|85}" + player.DisplayName + ": !{220|220|220}" + message;
+            target.SendMessage(changedmessage);
+            ChatLogsManager.Log(message, player, target: target);
         }
     }
 }

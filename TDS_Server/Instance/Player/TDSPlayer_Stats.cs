@@ -47,8 +47,12 @@ namespace TDS_Server.Instance.Player
                     TotalStats.Money += money;
             }
             else
+                if (Client is { })
+                    ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
+                                    Environment.StackTrace, Client);
+                else
                 ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
-                                Environment.StackTrace, Client);
+                                Environment.StackTrace);
         }
 
         public void GiveMoney(uint money)

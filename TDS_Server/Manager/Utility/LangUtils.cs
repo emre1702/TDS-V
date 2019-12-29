@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Utility
 
             foreach (var player in Player.Player.LoggedInPlayers)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, returndict[player.Language]);
+                player.SendMessage(returndict[player.Language]);
             }
         }
 
@@ -41,7 +41,7 @@ namespace TDS_Server.Manager.Utility
 
             foreach (var player in Player.Player.LoggedInPlayers)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, returndict[player.Language]);
+                player.SendNotification(returndict[player.Language]);
             }
         }
 

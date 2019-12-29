@@ -10,7 +10,7 @@ namespace TDS_Server.Instance.LobbyInstances
         public virtual void GivePlayerWeapons(TDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
-            player.Client.RemoveAllWeapons();
+            player.Client!.RemoveAllWeapons();
             bool giveLastWeapon = false;
             foreach (LobbyWeapons weapon in LobbyEntity.LobbyWeapons)
             {

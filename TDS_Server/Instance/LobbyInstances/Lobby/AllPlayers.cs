@@ -36,12 +36,12 @@ namespace TDS_Server.Instance.LobbyInstances
             if (targetTeam is null)
                 FuncIterateAllPlayers((player, team) =>
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, texts[player.Language]);
+                    player.SendMessage(texts[player.Language]);
                 });
             else
                 targetTeam.FuncIterate((player, team) =>
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(player.Client, texts[player.Language]);
+                    player.SendMessage(texts[player.Language]);
                 });
         }
 
@@ -52,14 +52,14 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 FuncIterateAllPlayers((character, teamID) =>
                 {
-                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language], flashing);
+                    character.SendNotification(texts[character.Language], flashing);
                 });
             }
             else
             {
                 targetTeam.FuncIterate((character, teamID) =>
                 {
-                    NAPI.Notification.SendNotificationToPlayer(character.Client, texts[character.Language], flashing);
+                    character.SendNotification(texts[character.Language], flashing);
                 });
             }
         }
@@ -70,14 +70,14 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 FuncIterateAllPlayers((character, teamID) =>
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
+                    character.SendMessage(msg);
                 });
             }
             else
             {
                 targetTeam.FuncIterate((character, teamID) =>
                 {
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
+                    character.SendMessage(msg);
                 });
             }
         }
@@ -90,7 +90,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 {
                     if (blockingPlayerIds.Contains(character.Entity?.Id ?? 0))
                         return;
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
+                    character.SendMessage(msg);
                 });
             }
             else
@@ -99,7 +99,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 {
                     if (blockingPlayerIds.Contains(character.Entity?.Id ?? 0))
                         return;
-                    NAPI.Chat.SendChatMessageToPlayer(character.Client, msg);
+                    character.SendMessage(msg);
                 });
             }
         }

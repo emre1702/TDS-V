@@ -24,11 +24,11 @@ namespace TDS_Server.Manager.Mapping.Converter
 
             name = name.ToLower();
 
-            var player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower() == name || p.Client.Name.ToLower() == name);
+            var player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower() == name || (p.Client?.Name ?? string.Empty).ToLower() == name);
             if (player is { })
                 return player;
 
-            player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower().StartsWith(name) || p.Client.Name.ToLower().StartsWith(name));
+            player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower().StartsWith(name) || (p.Client?.Name ?? string.Empty).ToLower().StartsWith(name));
             if (player is { })
                 return player;
 

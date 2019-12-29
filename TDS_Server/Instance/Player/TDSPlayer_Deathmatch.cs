@@ -48,7 +48,7 @@ namespace TDS_Server.Instance.Player
         {
             if (damage == 0)
                 return;
-            damage = Math.Min(Client.Armor + Client.Health, damage);
+            damage = Math.Min(Client!.Armor + Client!.Health, damage);
 
             int leftdmg = damage;
             if (Client.Armor > 0)
@@ -64,7 +64,7 @@ namespace TDS_Server.Instance.Player
         {
             #region HP
 
-            if (Client.Health + healtharmor <= 100)
+            if (Client!.Health + healtharmor <= 100)
             {
                 Client.Health += healtharmor;
                 healtharmor = 0;

@@ -99,6 +99,9 @@ namespace TDS_Server.Instance
 		public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
 #pragma warning restore IDE0060 // Remove unused parameter
 		{
+			if (target.Client is null)
+				return;
+
 			if (NAPI.Player.IsPlayerDead(target.Client))
                 return;
             if (source != null)

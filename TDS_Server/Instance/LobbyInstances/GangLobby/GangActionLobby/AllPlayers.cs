@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             foreach (var player in AttackerGang.PlayersOnline)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, langGetter(player.Language));
+                player.SendMessage(langGetter(player.Language));
             }
         }
 
@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             foreach (var player in OwnerGang.PlayersOnline)
             {
-                NAPI.Chat.SendChatMessageToPlayer(player.Client, langGetter(player.Language));
+                player.SendMessage(langGetter(player.Language));
             }
         }
 
@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             foreach (var player in AttackerGang.PlayersOnline)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, langGetter(player.Language));
+                player.SendNotification(langGetter(player.Language));
             }
         }
 
@@ -36,7 +36,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             foreach (var player in OwnerGang.PlayersOnline)
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, langGetter(player.Language));
+                player.SendNotification(langGetter(player.Language));
             }
         }
 

@@ -49,9 +49,9 @@ namespace TDS_Server.Instance.LobbyInstances
             if (LobbyEntity.Type == ELobbyType.MainMenu
                 || LobbyEntity.Type == ELobbyType.MapCreateLobby
                 || LobbyEntity.Type == ELobbyType.GangLobby)
-                Workaround.SetPlayerInvincible(character.Client, true);
+                Workaround.SetPlayerInvincible(character.Client!, true);
 
-            character.Client.Dimension = Dimension;
+            character.Client!.Dimension = Dimension;
             if (SetPositionOnPlayerAdd)
                 character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
             Workaround.FreezePlayer(character.Client, true);
@@ -64,13 +64,13 @@ namespace TDS_Server.Instance.LobbyInstances
             SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client.Handle.Value);
 
             NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
-                                                                                            Serializer.ToClient(Players.Select(p => p.Client.Handle.Value).ToList()),
+                                                                                            Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value).ToList()),
                                                                                             Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
             if (LobbyEntity.Type != ELobbyType.MainMenu)
             {
                 RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
-                NAPI.Notification.SendNotificationToPlayer(character.Client, string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
+                character.SendNotification(string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
             }
 
             CustomEventManager.SetPlayerJoinedLobby(character, this);
@@ -91,7 +91,7 @@ namespace TDS_Server.Instance.LobbyInstances
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
             player.Spectates = null;
-            if (player.Client.Exists)
+            if (player.Client!.Exists)
             {
                 Workaround.FreezePlayer(player.Client, true);
                 player.Client.Transparency = 255;

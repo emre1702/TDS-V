@@ -94,7 +94,7 @@ namespace TDS_Server.Instance.Utility
                 return false;
             if (player.CurrentLobby?.Type != ELobbyType.GangLobby)
                 return false;
-            if (player.Client.Dead)
+            if (player.Client is null || player.Client.Dead)
                 return false;
 
             //Todo Is in the skull or whatever

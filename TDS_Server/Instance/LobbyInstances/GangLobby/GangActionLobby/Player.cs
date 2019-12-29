@@ -15,7 +15,7 @@ namespace TDS_Server.Instance.LobbyInstances
             bool isAttacker = AttackerTeam.Entity.Index == teamindex;
             if (!HasTeamFreePlace(isAttacker))
             {
-                NAPI.Notification.SendNotificationToPlayer(player.Client, player.Language.GANGWAR_TEAM_ALREADY_FULL_INFO);
+                player.SendNotification(player.Language.GANGWAR_TEAM_ALREADY_FULL_INFO);
                 return Task.FromResult(false);
             }
                 
