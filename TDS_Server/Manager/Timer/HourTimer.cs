@@ -38,7 +38,7 @@ namespace TDS_Server.Manager.Timer
 
         public static void CreateTimer()
         {
-            _ = new TDSTimer(Execute, Utils.GetMsToNextHour(), 0);
+            _ = new TDSTimer(Execute, Utils.GetMsToNextHour(), 1);
         }
     }
 }

@@ -109,7 +109,7 @@ namespace TDS_Server.Manager.Utility
             var timeOfDay = DateTime.UtcNow.TimeOfDay;
             var nextFullHour = TimeSpan.FromHours(Math.Ceiling(timeOfDay.TotalHours));
 
-            return (uint)(nextFullHour - timeOfDay).Milliseconds + 1;
+            return (uint)(nextFullHour - timeOfDay).TotalMilliseconds + 1;
         }
 
         public static uint GetMsToNextMinute()
@@ -117,7 +117,7 @@ namespace TDS_Server.Manager.Utility
             var timeOfDay = DateTime.UtcNow.TimeOfDay;
             var nextFullMinute = TimeSpan.FromMinutes(Math.Ceiling(timeOfDay.TotalMinutes));
 
-            return (uint)(nextFullMinute - timeOfDay).Milliseconds + 1;
+            return (uint)(nextFullMinute - timeOfDay).TotalMilliseconds + 1;
         }
 
         public static uint GetMsToNextSecond()
@@ -125,7 +125,7 @@ namespace TDS_Server.Manager.Utility
             var timeOfDay = DateTime.UtcNow.TimeOfDay;
             var nextFullSecond = TimeSpan.FromSeconds(Math.Ceiling(timeOfDay.TotalSeconds));
 
-            return (uint)(nextFullSecond - timeOfDay).Milliseconds;
+            return (uint)(nextFullSecond - timeOfDay).TotalMilliseconds + 1;
         }
 
         /// <summary>

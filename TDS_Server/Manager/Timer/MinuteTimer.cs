@@ -49,7 +49,7 @@ namespace TDS_Server.Manager.Timer
 
         public static void CreateTimer()
         {
-            _ = new TDSTimer(Execute, Utils.GetMsToNextMinute(), 0);
+            _ = new TDSTimer(Execute, Utils.GetMsToNextMinute(), 1);
         }
 
         private static void SavePlayers()

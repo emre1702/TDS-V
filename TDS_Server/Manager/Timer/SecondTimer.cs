@@ -18,7 +18,7 @@ namespace TDS_Server.Manager.Timer
         {
             CreateTimer();
 
-            Console.WriteLine(DateTime.Now.Second);
+            Console.WriteLine("SecondTimer Execute: " + DateTime.Now.Second);
 
             ++_counter;
 
@@ -46,7 +46,8 @@ namespace TDS_Server.Manager.Timer
 
         public static void CreateTimer()
         {
-            _ = new TDSTimer(Execute, Utils.GetMsToNextSecond(), 0);
+            Console.WriteLine("Ms to next second: " + Utils.GetMsToNextSecond());
+            _ = new TDSTimer(Execute, Utils.GetMsToNextSecond(), 1);
         }
     }
 }
