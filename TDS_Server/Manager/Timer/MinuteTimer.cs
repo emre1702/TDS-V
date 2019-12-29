@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Enum;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Stats;
@@ -14,8 +15,7 @@ namespace TDS_Server.Manager.Timer
 
         public static async void Execute()
         {
-            if (!ResourceStart.ResourceStarted)
-                return;
+            CreateTimer();
 
             // int currenttick = Environment.TickCount;
             ++_counter;
@@ -45,6 +45,11 @@ namespace TDS_Server.Manager.Timer
             {
                 ErrorLogsManager.Log(ex.Message, Environment.StackTrace);
             }
+        }
+
+        public static void CreateTimer()
+        {
+            _ = new TDSTimer(Execute, Utils.GetMsToNextMinute(), 0);
         }
 
         private static void SavePlayers()

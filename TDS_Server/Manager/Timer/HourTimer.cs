@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Userpanel;
 using TDS_Server.Manager.Utility;
@@ -21,6 +22,7 @@ namespace TDS_Server.Manager.Timer
 
         public static async void Execute()
         {
+            CreateTimer();
             foreach (var action in _actions)
             {
                 try
@@ -32,6 +34,11 @@ namespace TDS_Server.Manager.Timer
                     ErrorLogsManager.Log(ex.Message, Environment.StackTrace);
                 }
             }
+        }
+
+        public static void CreateTimer()
+        {
+            _ = new TDSTimer(Execute, Utils.GetMsToNextHour(), 0);
         }
     }
 }

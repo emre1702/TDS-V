@@ -1,7 +1,9 @@
 ﻿using BonusBotConnector_Client;
 using BonusBotConnector_Client.Requests;
 using GTANetworkAPI;
+using System;
 using System.Linq;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Utility;
@@ -14,8 +16,9 @@ namespace TDS_Server.Manager.Timer
 
         public static void Execute()
         {
-            if (!ResourceStart.ResourceStarted)
-                return;
+            CreateTimer();
+
+            Console.WriteLine(DateTime.Now.Second);
 
             ++_counter;
 
@@ -39,6 +42,11 @@ namespace TDS_Server.Manager.Timer
                     ServerInfos.Refresh(request);
                 }
             }
+        }
+
+        public static void CreateTimer()
+        {
+            _ = new TDSTimer(Execute, Utils.GetMsToNextSecond(), 0);
         }
     }
 }
