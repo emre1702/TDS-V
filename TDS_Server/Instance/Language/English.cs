@@ -112,6 +112,7 @@ namespace TDS_Server.Instance.Language
         public virtual string REPORT_ANSWERED_INFO => "The creator answered to his report with ID {0}.";
         public virtual string REPORT_CREATED_INFO => "A report with ID {0} was created.";
         public virtual string REPORT_GOT_ANSWER_INFO => "A team-member answered your report with ID {0}.";
+        public virtual string RESOURCE_RESTART_INFO => "TDS-V will now restart!";
         public virtual string ROUND_END_BOMB_DEFUSED_INFO => "Bomb defused!<br>Team {0} wins!";
         public virtual string ROUND_END_BOMB_EXPLODED_INFO => "Bomb exploded!<br>Team {0} wins!";
         public virtual string ROUND_END_COMMAND_INFO => "Map was skipped by {0}!";

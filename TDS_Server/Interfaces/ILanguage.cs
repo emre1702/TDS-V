@@ -108,6 +108,7 @@
         string REPORT_ANSWERED_INFO { get; }
         string REPORT_CREATED_INFO { get; }
         string REPORT_GOT_ANSWER_INFO { get; }
+        string RESOURCE_RESTART_INFO { get; }
         string ROUND_END_BOMB_DEFUSED_INFO { get; }
         string ROUND_END_BOMB_EXPLODED_INFO { get; }
         string ROUND_END_COMMAND_INFO { get; }

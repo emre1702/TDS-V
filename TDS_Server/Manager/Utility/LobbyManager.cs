@@ -16,6 +16,7 @@ using TDS_Server_DB.Entity.Rest;
 using TDS_Server.Instance.GameModes;
 using TDS_Common.Manager.Utility;
 using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Server.Manager.Logs;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -222,6 +223,24 @@ namespace TDS_Server.Manager.Utility
         {
             Lobbies.Remove(lobby);
             CustomLobbyMenuSync.SyncLobbyRemoved(lobby);
+        }
+
+        public static async Task SaveAll()
+        {
+            foreach (var lobby in Lobbies)
+            {
+                try
+                {
+                    await lobby.ExecuteForDBAsync(async dbContext =>
+                    {
+                        await dbContext.SaveChangesAsync();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
+                }
+            }
         }
 
         private static HashSet<LobbyWeapons> GetAllPossibleLobbyWeapons(EMapType type)

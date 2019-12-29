@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Userpanel;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Timer
 {
@@ -12,7 +13,10 @@ namespace TDS_Server.Manager.Timer
         {
             SupportRequest.DeleteTooLongClosedRequests,
             ApplicationUser.DeleteTooLongClosedApplications,
-            OfflineMessages.DeleteOldMessages
+            OfflineMessages.DeleteOldMessages,
+
+
+            ResourceStop.CheckHourForResourceStop
         };
 
         public static async void Execute()
