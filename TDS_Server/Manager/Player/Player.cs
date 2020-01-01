@@ -88,5 +88,17 @@ namespace TDS_Server.Manager.Player
         {
             return LoggedInPlayers.FirstOrDefault(p => p.Entity?.Id == id);
         }
+
+        public static void SetAllLoggedOutInDb(TDSDbContext dbContext)
+        {
+            var entityInfo = dbContext.GetDbEntityType(typeof(PlayerStats));
+            if (entityInfo is null)
+                return;
+            string tableName = dbContext.GetTableName(entityInfo);
+            var propertyName = dbContext.GetPropertyName(entityInfo, nameof(PlayerStats.LoggedIn));
+
+            string sql = "UPDATE {0} SET {1} = 0";
+            dbContext.Database.ExecuteSqlRaw(sql, tableName, propertyName);
+        }
     }
 }

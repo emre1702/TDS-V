@@ -69,50 +69,46 @@ namespace TDS_Server.Manager.Utility
                 SettingsManager.LoadLocal();
                 ClothesManager.Init();
 
-                using var dbcontext = new TDSDbContext(SettingsManager.ConnectionString);
-                dbcontext.Database.Migrate();
-                var connection = (NpgsqlConnection)dbcontext.Database.GetDbConnection();
+                using var dbContext = new TDSDbContext(SettingsManager.ConnectionString);
+                dbContext.Database.Migrate();
+                var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
                 connection.Open();
                 connection.ReloadTypes();
 
-                BonusBotConnector_Client.Main.Init(dbcontext, ErrorLogsManager.LogFromBonusBot);
+                BonusBotConnector_Client.Main.Init(dbContext, ErrorLogsManager.LogFromBonusBot);
 
-                var playerStats = await dbcontext.PlayerStats.Where(s => s.LoggedIn).ToListAsync().ConfigureAwait(true);
-                foreach (var stat in playerStats)
-                {
-                    stat.LoggedIn = false;
-                }
-                await dbcontext.SaveChangesAsync().ConfigureAwait(true);
-                dbcontext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                Player.Player.SetAllLoggedOutInDb(dbContext);
+
+                dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 ServerDailyStatsManager.Init();
                 ServerTotalStatsManager.Init();
 
-                await SettingsManager.Load(dbcontext).ConfigureAwait(true);
+                await SettingsManager.Load(dbContext).ConfigureAwait(true);
 
                 HourTimer.Execute();
 
-                await AdminsManager.Init(dbcontext).ConfigureAwait(true);
+                await AdminsManager.Init(dbContext).ConfigureAwait(true);
                 Workaround.Init();
-                await CommandsManager.LoadCommands(dbcontext).ConfigureAwait(true);
-                Damagesys.LoadDefaults(dbcontext);
+                await CommandsManager.LoadCommands(dbContext).ConfigureAwait(true);
+                Damagesys.LoadDefaults(dbContext);
 
                 await BansManager.Get().RemoveExpiredBans().ConfigureAwait(true);
 
-                await MapsLoader.LoadDefaultMaps(dbcontext).ConfigureAwait(true);
-                await MapCreator.LoadNewMaps(dbcontext).ConfigureAwait(true);
-                await MapCreator.LoadSavedMaps(dbcontext).ConfigureAwait(true);
-                await MapCreator.LoadNeedCheckMaps(dbcontext).ConfigureAwait(true);
+                await MapsLoader.LoadDefaultMaps(dbContext).ConfigureAwait(true);
+                await MapCreator.LoadNewMaps(dbContext).ConfigureAwait(true);
+                await MapCreator.LoadSavedMaps(dbContext).ConfigureAwait(true);
+                await MapCreator.LoadNeedCheckMaps(dbContext).ConfigureAwait(true);
 
-                Normal.Init(dbcontext);
-                Bomb.Init(dbcontext);
-                Sniper.Init(dbcontext);
+                Normal.Init(dbContext);
+                Bomb.Init(dbContext);
+                Sniper.Init(dbContext);
 
-                await Gang.LoadAll(dbcontext).ConfigureAwait(true);
-                await LobbyManager.LoadAllLobbies(dbcontext).ConfigureAwait(true);
-                GangwarAreasManager.LoadGangwarAreas(dbcontext);
+                await Gang.LoadAll(dbContext).ConfigureAwait(true);
+                await LobbyManager.LoadAllLobbies(dbContext).ConfigureAwait(true);
+                GangwarAreasManager.LoadGangwarAreas(dbContext);
 
-                Userpanel.Main.Init(dbcontext);
+                Userpanel.Main.Init(dbContext);
                 InvitationManager.Init();
 
                 ResourceStarted = true;
