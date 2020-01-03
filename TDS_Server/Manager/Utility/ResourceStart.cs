@@ -33,30 +33,6 @@ namespace TDS_Server.Manager.Utility
             LoadAll();
         }
 
-        private static string? GetLocalIPv4()
-        {
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (item.OperationalStatus == OperationalStatus.Up)
-                {
-                    IPInterfaceProperties adapterProperties = item.GetIPProperties();
-
-                    if (adapterProperties.GatewayAddresses.Any())
-                    {
-                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses)
-                        {
-                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                            {
-                                return ip.Address.ToString();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private async void LoadAll()
         {
             try
