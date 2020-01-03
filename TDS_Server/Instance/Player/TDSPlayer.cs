@@ -31,6 +31,7 @@ namespace TDS_Server.Instance.Player
         public TDSPlayer(Client? client)
         {
             Client = client;
+            SetPlayer(this);
         }
 
         public bool HasRelationTo(TDSPlayer target, EPlayerRelation relation)

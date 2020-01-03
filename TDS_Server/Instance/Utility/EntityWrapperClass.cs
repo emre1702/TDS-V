@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Logs;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Instance.Utility
 {
     public abstract class EntityWrapperClass
     {
+        private TDSPlayer? _player;
 
         ~EntityWrapperClass()
         {
@@ -29,6 +33,11 @@ namespace TDS_Server.Instance.Utility
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
         private bool _usingDBContext;
 
+        protected void SetPlayer(TDSPlayer player)
+        {
+            _player = player;
+        }
+
         public void InitDbContext()
         {
             _dbContext = new TDSDbContext();
@@ -46,6 +55,10 @@ namespace TDS_Server.Instance.Utility
             try
             {
                 await action(DbContext);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, _player);
             }
             finally
             {
@@ -70,6 +83,11 @@ namespace TDS_Server.Instance.Utility
             {
                 return await action(DbContext);
             }
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, _player);
+                return default!;
+            }
             finally
             {
                 if (!wasInDBContextBefore)
@@ -92,6 +110,10 @@ namespace TDS_Server.Instance.Utility
             try
             {
                 action(DbContext);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, _player);
             }
             finally
             {
