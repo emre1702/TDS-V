@@ -30,11 +30,11 @@ namespace TDS_Server.Instance.Language
             "Runden-Zeit hat sich verändert. Nun musst du entweder alle Gegner töten oder die Bombe entschärfen.",
             "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und halte die linke Maustaste gedrückt."
         };
-        public override string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "Der Spieler '{0}' hat deine Discord-Identität in GTA 5 eingestellt."
+        public override string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "Der Spieler '{0}' hat deine Discord Benutzer-Id in TDS-V eingestellt."
             + Environment.NewLine + "Warst du dieser Spieler?"
-            + Environment.NewLine + "Bitte bestätige die Einstellung mit dem Befehl '!confirmidentity'.";
-        public override string DISCORD_IDENTITY_SAVE_FAILED => "Speichern der Discord-Identität ist fehlgeschlagen: {0}";
-        public override string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "Die Discord-Identität wurde erfolgreich gespeichert.";
+            + Environment.NewLine + "Bitte bestätige die Einstellung mit dem Befehl '!confirmtds'.";
+        public override string DISCORD_IDENTITY_SAVE_FAILED => "Speichern der Discord Benutzer-Id ist fehlgeschlagen: {0}";
+        public override string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "Die Discord Benutzer-Id wurde erfolgreich gespeichert.";
 
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";

@@ -1,4 +1,5 @@
 ﻿using BonusBotConnector_Server;
+using TDS_Server.Manager.Userpanel;
 
 namespace TDS_Server.Manager.EventManager
 {
@@ -13,8 +14,10 @@ namespace TDS_Server.Manager.EventManager
         {
             switch (command)
             {
+                case "confirmuserid":
                 case "confirmidentity":
-
+                case "confirmtds":
+                    SettingsNormal.ConfirmDiscordUserId(userId);
                     break;
             }
         }
