@@ -11,6 +11,7 @@ using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Commands;
+using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Player;
@@ -37,7 +38,8 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
-                BonusBotConnector_Server.Program.Main();
+                FromBonusBot.Init();
+                BonusBotConnector_Server.Program.Init(ErrorLogsManager.LogFromBonusBot);
 
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
                 AppDomain.CurrentDomain.ProcessExit += ResourceStop.CurrentDomain_ProcessExit;

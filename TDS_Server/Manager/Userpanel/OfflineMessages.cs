@@ -96,13 +96,12 @@ namespace TDS_Server.Manager.Userpanel
 
             using var dbContext = new TDSDbContext();
 
-            var discordIdentity = await dbContext.PlayerSettings
+            var discordUserId = await dbContext.PlayerSettings
                 .Where(p => p.PlayerId == targetId.Value)
-                .Select(p => p.DiscordIdentity)
-                .AsNoTracking()
+                .Select(p => p.DiscordUserId)
                 .FirstOrDefaultAsync();
 
-            OfflineMessagesManager.AddOfflineMessage(targetId.Value, discordIdentity, player.Entity!, message);
+            OfflineMessagesManager.AddOfflineMessage(targetId.Value, discordUserId, player.Entity!, message);
 
             return true;
         }

@@ -12,6 +12,9 @@ using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
+using BonusBotConnector_Client.Requests;
+using TDS_Server.Manager.Userpanel;
 
 namespace TDS_Server.Manager.EventManager
 {
@@ -69,7 +72,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SaveSettings)]
-        public async void PlayerSaveSettings(Client client, string json)
+        public void PlayerSaveSettings(Client client, string json)
         {
             try
             {
@@ -77,16 +80,7 @@ namespace TDS_Server.Manager.EventManager
                 if (!player.LoggedIn || player.Entity is null)
                     return;
 
-                var obj = Serializer.FromBrowser<PlayerSettings>(json);
-                await player.ExecuteForDB((dbContext) =>
-                {
-                    dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj);
-                });
-                await player.SaveData();
-
-                player.LoadTimezone();
-
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncSettings, json);
+                SettingsNormal.SaveSettings(player, json);
             }
             catch (Exception ex)
             {
