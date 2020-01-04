@@ -18,18 +18,18 @@ namespace BonusBotConnector_Client.Requests
             _errorLogger = errorLogger;
         }
 
-        public static void SendBanMessage(string? userIdOrDiscriminator, PlayerBans ban, List<EmbedField> fields)
+        public static void SendBanMessage(ulong userId, PlayerBans ban, List<EmbedField> fields)
         {
             if (Settings!.SendPrivateMessageOnBan != true)
                 return;
-            if (string.IsNullOrEmpty(userIdOrDiscriminator))
+            if (userId == 0)
                 return;
 
             try
             {
                 var embed = new EmbedToUserRequest
                 {
-                    UserIdOrDiscriminiator = userIdOrDiscriminator,
+                    UserId = userId,
                     Author = $"{ban.Admin.Name} ({ban.Admin.SCName})",
                     Title = "You got banned",
                     ColorR = 130,
@@ -49,14 +49,19 @@ namespace BonusBotConnector_Client.Requests
             }
         }
 
-        public static void SendOfflineMessage(string author, string text, string? userIdOrDiscriminator)
+        public static void SendOfflineMessage(string author, string text, ulong userId)
         {
             if (Settings!.SendPrivateMessageOnOfflineMessage != true)
                 return;
-            SendRequest($"You got an offline message from '{author}':{Environment.NewLine}{text}", userIdOrDiscriminator);
+            SendRequest($"You got an offline message from '{author}':{Environment.NewLine}{text}", userId);
         }
 
-        private static async void SendRequest(string text, string? userIdOrDiscriminator, bool logToBonusBotOnError = true)
+        public static void SendMessage(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler)
+        {
+            SendRequest(text, userId, replyHandler);
+        }
+
+        private static async void SendRequest(string text, ulong userId, bool logToBonusBotOnError = true)
         {
             if (_client is null)
                 return;
@@ -64,11 +69,11 @@ namespace BonusBotConnector_Client.Requests
                 return;
             if (Settings.GuildId is null)
                 return;
-            if (string.IsNullOrEmpty(userIdOrDiscriminator))
+            if (userId == 0)
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = Settings.GuildId.Value, UserIdOrDiscriminiator = userIdOrDiscriminator, Text = text });
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = Settings.GuildId.Value, UserId = userId, Text = text });
                 HandleResult(result);
             }
             catch (Exception ex)
@@ -90,6 +95,27 @@ namespace BonusBotConnector_Client.Requests
                 request.GuildId = Settings.GuildId.Value;
                 var result = await _client.SendEmbedAsync(request);
                 HandleResult(result);
+            }
+            catch (Exception ex)
+            {
+                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+            }
+        }
+
+        private static async void SendRequest(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler, bool logToBonusBotOnError = true)
+        {
+            if (_client is null)
+                return;
+            if (Settings is null)
+                return;
+            if (Settings.GuildId is null)
+                return;
+            if (userId == 0)
+                return;
+            try
+            {
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = Settings.GuildId.Value, UserId = userId, Text = text });
+                replyHandler(result);
             }
             catch (Exception ex)
             {

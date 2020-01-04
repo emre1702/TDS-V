@@ -12,12 +12,12 @@ service MessageToUser {
 message MessageToUserRequest {
   string text = 1;
   uint64 guildId = 2;
-  string userIdOrDiscriminiator = 3; 
+  uint64 userId = 3; 
 }
 
 message EmbedToUserRequest {
     uint64 guildId = 1;
-    string userIdOrDiscriminiator = 2; 
+    uint64 userId = 2; 
     string author = 3;
     repeated EmbedField fields = 4;
     // Use -1 to not use a color or to use default (255) if other color is set
