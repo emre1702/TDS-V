@@ -31,7 +31,7 @@ namespace BonusBotConnector_Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<BBCommandService>();
 
                 endpoints.MapGet("/", async context =>
                 {

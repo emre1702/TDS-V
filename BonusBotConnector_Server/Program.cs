@@ -10,8 +10,17 @@ namespace BonusBotConnector_Server
 {
     public class Program
     {
-        public static void Main()
+        public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
+
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        internal static BonusBotErrorLoggerDelegate ErrorLogger { get; set; }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
+        public static void Main() { }
+
+        public static void Init(BonusBotErrorLoggerDelegate errorLogger)
         {
+            ErrorLogger = errorLogger;
             CreateHostBuilder().Build().RunAsync();
         }
 
