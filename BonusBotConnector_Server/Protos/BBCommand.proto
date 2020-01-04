@@ -3,16 +3,15 @@ syntax = "proto3";
 option csharp_namespace = "BonusBotConnector_Server";
 
 service BBCommand {
-  rpc UsedCommand (UsedCommandRequest) returns (EmptyReply);
+  rpc UsedCommand (UsedCommandRequest) returns (UsedCommandReply);
 }
 
 message UsedCommandRequest {
     uint64 userId = 1;
-    string userDiscriminator = 2;
-    string command = 3;
+    string command = 2;
 
 }
 
-message EmptyReply {
-  
+message UsedCommandReply {
+    string message = 1;
 }

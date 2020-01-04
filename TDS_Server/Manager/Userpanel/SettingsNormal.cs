@@ -1,6 +1,7 @@
 ﻿using BonusBotConnector_Client.Requests;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
@@ -44,16 +45,24 @@ namespace TDS_Server.Manager.Userpanel
             }
         }
 
-        public static void ConfirmDiscordUserId(ulong discordUserId)
+        public static string ConfirmDiscordUserId(ulong discordUserId)
         {
             if (!_playerIdWaitingForDiscordUserIdConfirm.TryGetValue(discordUserId, out int userId))
-                return;
+                return "This discord user id is not waiting for a confirmation.";
 
-            var player = Player.Player.GetPlayerByID(userId);
-            if (player is null)
-                SaveDiscordUserId(userId, discordUserId);
-            else 
-                SaveDiscordUserId(player, discordUserId);
+            try
+            {
+                var player = Player.Player.GetPlayerByID(userId);
+                if (player is null)
+                    SaveDiscordUserId(userId, discordUserId);
+                else 
+                    SaveDiscordUserId(player, discordUserId);
+                return "Discord Id confirmation was successful";
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.GetBaseException().Message;
+            }
         } 
 
         private static async void SaveDiscordUserId(int userId, ulong discordUserId)
@@ -61,6 +70,8 @@ namespace TDS_Server.Manager.Userpanel
             using var dbContext = new TDSDbContext();
 
             var settings = await dbContext.PlayerSettings.FirstOrDefaultAsync(s => s.PlayerId == userId);
+            if (settings is null)
+                throw new Exception("Your player settings do not exist?!");
             settings.DiscordUserId = discordUserId;
             await dbContext.SaveChangesAsync();
         }

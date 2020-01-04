@@ -10,16 +10,14 @@ namespace TDS_Server.Manager.EventManager
             BBCommandService.OnUsedCommand += BBCommandService_OnUsedCommand;
         }
 
-        private static void BBCommandService_OnUsedCommand(ulong userId, string command)
+        private static string? BBCommandService_OnUsedCommand(ulong userId, string command)
         {
             switch (command)
             {
-                case "confirmuserid":
-                case "confirmidentity":
                 case "confirmtds":
-                    SettingsNormal.ConfirmDiscordUserId(userId);
-                    break;
+                    return SettingsNormal.ConfirmDiscordUserId(userId);
             }
+            return null;
         }
     }
 }
