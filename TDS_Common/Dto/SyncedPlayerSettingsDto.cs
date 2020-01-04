@@ -20,8 +20,8 @@ namespace TDS_Common.Dto
         public string Timezone { get; set; }
         [Key(13)]
         public string DateTimeFormat { get; set; }
-       [Key(5)]
-        public string DiscordIdentity { get; set; }
+        [Key(5)]
+        public ulong DiscordUserId { get; set; }
         #endregion
 
         #region Fight

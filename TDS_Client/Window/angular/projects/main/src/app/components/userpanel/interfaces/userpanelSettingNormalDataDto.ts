@@ -12,8 +12,8 @@ export interface UserpanelSettingNormalDataDto {
     [3]: boolean;
     /** Timezone */
     [4]: string;
-    /** DiscordIdentity */
-    [5]: string;
+    /** DiscordUserId */
+    [5]: number;
 
     /** Hitsound */
     [6]: boolean;

@@ -4,7 +4,7 @@ export enum UserpanelSettingKey {
     ShowConfettiAtRanking = 3,
     Timezone = 4,
     DateTimeFormat = 13,
-    DiscordIdentity = 5,
+    DiscordUserId = 5,
 
     Bloodscreen = 7,
     Hitsound = 6,

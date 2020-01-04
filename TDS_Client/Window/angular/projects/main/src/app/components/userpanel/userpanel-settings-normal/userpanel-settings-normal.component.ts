@@ -51,8 +51,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss"])
                 },
                 {
-                    type: SettingType.string, dataSettingIndex: UserpanelSettingKey.DiscordIdentity, defaultValue: "",
-                    formControl: new FormControl("")
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.DiscordUserId, defaultValue: 0,
+                    formControl: new FormControl(0)
                 }
             ]
         },
@@ -136,6 +136,10 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     }
 
     save() {
+        const discordUserIdControl = this.getFormControl("General", UserpanelSettingKey.DiscordUserId);
+        if (discordUserIdControl.value == "") {
+            discordUserIdControl.setValue(0);
+        }
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
                 this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.formControl.value;
