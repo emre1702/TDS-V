@@ -6,7 +6,7 @@
         Language = 1,
         ShowConfettiAtRanking,
         TimeZone,
-        DiscordIdentity,
+        DiscordUserId,
 
         Bloodscreen,
         Hitsound,
