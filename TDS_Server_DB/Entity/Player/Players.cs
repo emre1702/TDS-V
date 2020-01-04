@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TDS_Server_DB.Entity.Admin;
+using TDS_Server_DB.Entity.Challenge;
 using TDS_Server_DB.Entity.GangEntities;
 using TDS_Server_DB.Entity.LobbyEntities;
 using TDS_Server_DB.Entity.Rest;
@@ -56,6 +57,7 @@ namespace TDS_Server_DB.Entity.Player
         public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansAdmin { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansPlayer { get; set; }
+        public virtual ICollection<PlayerChallenges> Challenges { get; set; }
         public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }

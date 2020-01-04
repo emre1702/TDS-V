@@ -1,6 +1,7 @@
 using GTANetworkAPI;
 using System.Linq;
 using TDS_Common.Default;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.Player;
@@ -12,11 +13,9 @@ namespace TDS_Server.Manager.Maps
 {
     internal static class MapsRatings
     {
-        public static async void AddPlayerMapRating(Client player, int mapId, byte rating)
+        public static async void AddPlayerMapRating(TDSPlayer player, int mapId, byte rating)
         {
-            int? playerId = player.GetEntity()?.Id;
-            if (playerId is null)
-                return;
+            int playerId = player.Entity!.Id;
 
             MapDto? map = MapsLoader.GetMapById(mapId);
             bool isCustom = false; 
@@ -32,8 +31,9 @@ namespace TDS_Server.Manager.Maps
             PlayerMapRatings? maprating = await dbContext.PlayerMapRatings.FindAsync(playerId, mapId);
             if (maprating is null)
             {
-                maprating = new PlayerMapRatings { PlayerId = playerId.Value, MapId = mapId };
+                maprating = new PlayerMapRatings { PlayerId = playerId, MapId = mapId };
                 dbContext.PlayerMapRatings.Add(maprating);
+                player.AddToChallenge(EChallengeType.ReviewMaps);
             }
             maprating.Rating = rating;
             map.SyncedData.Rating = rating;

@@ -49,8 +49,9 @@ export class AppComponent {
         changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar) {
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string, challengesJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
+            this.settings.ChallengeGroups = JSON.parse(challengesJson);
         });
 
         rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {

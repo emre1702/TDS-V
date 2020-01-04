@@ -34,7 +34,10 @@ namespace TDS_Server.Instance
             if (killer != player)
             {
                 if (killer.CurrentRoundStats != null)
+                {
                     ++killer.CurrentRoundStats.Kills;
+                }
+                    
                 KillingSpreeKill(killer);
             }
 

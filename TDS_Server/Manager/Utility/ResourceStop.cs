@@ -77,10 +77,22 @@ namespace TDS_Server.Manager.Utility
                 }
                 else
                 {
-                    OnResourceStop();
-                    Process.GetCurrentProcess().Kill();
+                    ExecuteResourceRestart();
                 }
             }
+        }
+
+
+        private static void ExecuteResourceRestart()
+        {
+            if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Monday)
+            {
+                using var dbContext = new TDSDbContext();
+                ChallengeManager.ClearWeeklyChallenges(dbContext);
+            }
+            
+            OnResourceStop();
+            Process.GetCurrentProcess().Kill();
         }
 
         private static void SaveAllInDatabase()

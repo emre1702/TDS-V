@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Enum.Userpanel;
 using TDS_Server.Instance.Player;
 using TDS_Server_DB.Entity;
@@ -19,10 +20,12 @@ namespace TDS_Server.Manager.Userpanel
 
                 case EUserpanelLoadDataType.Rules:
                     json = Rules.GetData();
+                    player.AddToChallenge(EChallengeType.ReadTheRules);
                     break;
 
                 case EUserpanelLoadDataType.FAQs:
                     json = FAQs.GetData(player);
+                    player.AddToChallenge(EChallengeType.ReadTheFAQ);
                     break;
 
                 case EUserpanelLoadDataType.MyStats:

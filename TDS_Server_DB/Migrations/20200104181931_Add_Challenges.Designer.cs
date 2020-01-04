@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -14,9 +15,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200104181931_Add_Challenges")]
+    partial class Add_Challenges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,120 +269,8 @@ namespace TDS_Server_DB.Migrations
                         {
                             Type = EChallengeType.Assists,
                             Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 100,
-                            MinNumber = 50
-                        },
-                        new
-                        {
-                            Type = EChallengeType.BeHelpfulEnough,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.BombDefuse,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 10,
-                            MinNumber = 5
-                        },
-                        new
-                        {
-                            Type = EChallengeType.BombPlant,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 10,
-                            MinNumber = 5
-                        },
-                        new
-                        {
-                            Type = EChallengeType.BuyMaps,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 500,
-                            MinNumber = 500
-                        },
-                        new
-                        {
-                            Type = EChallengeType.ChangeSettings,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.CreatorOfAcceptedMap,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.Damage,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 100000,
-                            MinNumber = 20000
-                        },
-                        new
-                        {
-                            Type = EChallengeType.JoinDiscordServer,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.Kills,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 150,
-                            MinNumber = 75
-                        },
-                        new
-                        {
-                            Type = EChallengeType.Killstreak,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 7,
-                            MinNumber = 3
-                        },
-                        new
-                        {
-                            Type = EChallengeType.PlayTime,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 1500,
-                            MinNumber = 300
-                        },
-                        new
-                        {
-                            Type = EChallengeType.ReadTheFAQ,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.ReadTheRules,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
-                        },
-                        new
-                        {
-                            Type = EChallengeType.ReviewMaps,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 10,
-                            MinNumber = 10
-                        },
-                        new
-                        {
-                            Type = EChallengeType.RoundPlayed,
-                            Frequency = EChallengeFrequency.Weekly,
-                            MaxNumber = 100,
-                            MinNumber = 50
-                        },
-                        new
-                        {
-                            Type = EChallengeType.WriteHelpfulIssue,
-                            Frequency = EChallengeFrequency.Forever,
-                            MaxNumber = 1,
-                            MinNumber = 1
+                            MaxNumber = 0,
+                            MinNumber = 0
                         });
                 });
 

@@ -1,10 +1,12 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
+using TDS_Server.Dto.Challlenge;
 using TDS_Server.Enums;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
@@ -19,16 +21,16 @@ namespace TDS_Server.Manager.Player
 {
     internal static class Login
     {
-        public static async void LoginPlayer(Client player, int id, string password)
+        public static async void LoginPlayer(Client client, int id, string password)
         {
             while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);
-            TDSPlayer character = player.GetChar();
+            TDSPlayer player = client.GetChar();
 
-            character.InitDbContext();
-            bool worked = await character.ExecuteForDBAsync(async (dbContext) =>
+            player.InitDbContext();
+            bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                character.Entity = await dbContext.Players
+                player.Entity = await dbContext.Players
                    .Include(p => p.PlayerStats)
                    .Include(p => p.PlayerTotalStats)
                    .Include(p => p.PlayerSettings)
@@ -37,58 +39,95 @@ namespace TDS_Server.Manager.Player
                    .Include(p => p.PlayerMapFavourites)
                    .Include(p => p.PlayerRelationsTarget)
                    .Include(p => p.PlayerClothes)
+                   .Include(p => p.Challenges)
                    .FirstOrDefaultAsync(p => p.Id == id);
 
-                if (character.Entity is null)
+                if (player.Entity is null)
                 {
-                    character.SendNotification(LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
+                    player.SendNotification(LangUtils.GetLang(typeof(English)).ACCOUNT_DOESNT_EXIST);
                     dbContext.Dispose();
                     return false;
                 }
 
-                if (Utils.HashPWServer(password) != character.Entity.Password)
+                if (Utils.HashPWServer(password) != player.Entity.Password)
                 {
-                    character.SendNotification(character.Language.WRONG_PASSWORD);
+                    player.SendNotification(player.Language.WRONG_PASSWORD);
                     dbContext.Dispose();
                     return false;
                 }
 
-                player.Name = character.Entity.Name;
+                client.Name = player.Entity.Name;
                 //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
-                character.Entity.PlayerStats.LoggedIn = true;
+                player.Entity.PlayerStats.LoggedIn = true;
                 await dbContext.SaveChangesAsync();
                 return true;
             });
             
-            if (!worked || character.Entity == null)
+            if (!worked || player.Entity == null)
                 return;
 
-            if (character.Entity.PlayerClothes is null)
-                character.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
+            if (player.Entity.PlayerClothes is null)
+                player.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
-            var angularConstantsData = AngularConstantsDataDto.Get(character);
+            #region Add weekly challenges and reload
+            if (player.Entity.Challenges.Count == 0)
+            {
+                await ChallengeManager.AddWeeklyChallenges(player.Entity);
+                await player.ExecuteForDBAsync(dbContext => 
+                {
+                    player.Entity.Challenges = null;
+                    dbContext.Entry(player.Entity).Reference(p => p.Challenges).IsLoaded = false;
+                    return dbContext.Entry(player.Entity).Reference(p => p.Challenges).LoadAsync();
+                });
+            }
+            player.InitChallengesDict();
+            #endregion
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.RegisterLoginSuccessful, 
-                Serializer.ToClient(SettingsManager.SyncedSettings), Serializer.ToClient(character.Entity.PlayerSettings), Serializer.ToBrowser(angularConstantsData));
 
-            PlayerDataSync.SetData(character, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, character.Entity.PlayerStats.MapsBoughtCounter);
+            var angularConstantsData = AngularConstantsDataDto.Get(player);
 
-            character.Gang = Gang.GetPlayerGang(character);
-            character.GangRank = Gang.GetPlayerGangRank(character);
+            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.RegisterLoginSuccessful, 
+                Serializer.ToClient(SettingsManager.SyncedSettings), 
+                Serializer.ToClient(player.Entity.PlayerSettings), 
+                Serializer.ToBrowser(angularConstantsData),
+                GetChallengesJson(player));
 
-            if (character.ChatLoaded)
-                OfflineMessagesManager.CheckOfflineMessages(character);
+            PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
 
-            MapsRatings.SendPlayerHisRatings(character);
-            EventsHandler.JoinLobbyEvent(player, LobbyManager.MainMenu.Id);
+            player.Gang = Gang.GetPlayerGang(player);
+            player.GangRank = Gang.GetPlayerGangRank(player);
 
-            MapFavourites.LoadPlayerFavourites(character);
+            if (player.ChatLoaded)
+                OfflineMessagesManager.CheckOfflineMessages(player);
 
-            RestLogsManager.Log(ELogType.Login, player, true);
+            MapsRatings.SendPlayerHisRatings(player);
+            EventsHandler.JoinLobbyEvent(client, LobbyManager.MainMenu.Id);
 
-            CustomEventManager.SetPlayerLoggedIn(character);
+            MapFavourites.LoadPlayerFavourites(player);
 
-            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, character.DisplayName));
+            RestLogsManager.Log(ELogType.Login, client, true);
+
+            CustomEventManager.SetPlayerLoggedIn(player);
+
+            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
+        }
+
+        private static string GetChallengesJson(TDSPlayer player)
+        {
+            var result = player.Entity!.Challenges
+                .GroupBy(c => c.Frequency)
+                .Select(g => new ChallengeGroupDto 
+                {
+                    Frequency = g.Key,
+                    Challenges = g.Select(c => new ChallengeDto
+                    {
+                        Type = c.Challenge,
+                        Amount = c.Amount,
+                        CurrentAmount = c.CurrentAmount
+                    })
+                });
+
+            return Serializer.ToBrowser(result);
         }
     }
 }

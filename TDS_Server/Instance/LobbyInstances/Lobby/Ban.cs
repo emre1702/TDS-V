@@ -93,7 +93,7 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 var embedFields = BonusBotConnector_Client.Helper.GetBanEmbedFields(ban);
                 BonusBotConnector_Client.Requests.ChannelChat.SendBanInfo(ban, embedFields);
-                BonusBotConnector_Client.Requests.PrivateChat.SendBanMessage(target.PlayerSettings.DiscordIdentity, ban, embedFields);
+                BonusBotConnector_Client.Requests.PrivateChat.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
             }
         }
 

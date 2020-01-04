@@ -8,6 +8,10 @@ import { DFromClientEvent } from '../enums/dfromclientevent.enum';
 import { DToClientEvent } from '../enums/dtoclientevent.enum';
 import { EventEmitter } from 'events';
 import { ConstantsData } from '../interfaces/constants-data';
+import { ChallengeGroup } from '../components/lobbychoice/models/challenge-group';
+import { ChallengeFrequency } from '../components/lobbychoice/enums/challenge-frequency.enum';
+import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.enum';
+import { DFromServerEvent } from '../enums/dfromserverevent.enum';
 
 // tslint:disable: member-ordering
 
@@ -91,6 +95,25 @@ export class SettingsService {
     public IsLobbyOwnerChanged = new EventEmitter();
 
     public Constants: ConstantsData;
+    public ChallengeGroups: ChallengeGroup[] /* = [
+        [ChallengeFrequency.Weekly, [
+            [ ChallengeType.Assists, 5, 3 ],
+            [ ChallengeType.Kills, 5, 2 ],
+            [ ChallengeType.RoundPlayed, 1, 0 ],
+        ]],
+
+        [ChallengeFrequency.Forever, [
+            [ ChallengeType.Assists, 5, 2 ],
+            [ ChallengeType.Kills, 5, 1 ],
+            [ ChallengeType.BeHelpfulEnough, 1, 0 ],
+            [ ChallengeType.ReadTheFAQ, 1, 0 ],
+            [ ChallengeType.ReadTheRules, 1, 0 ],
+            [ ChallengeType.ReviewMaps, 30, 10 ],
+            [ ChallengeType.ChangeSettings, 1, 0 ],
+            [ ChallengeType.CreatorOfAcceptedMap, 1, 0 ],
+            [ ChallengeType.ReviewMaps, 30, 10 ],
+        ]],
+    ]*/;
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
@@ -112,6 +135,10 @@ export class SettingsService {
     public toggleInFightLobby(bool: boolean) {
         this.InFightLobby = bool;
         this.InFightLobbyChanged.emit(null);
+    }
+
+    private onChallengeCurrentAmountChange(frequency: ChallengeFrequency, type: ChallengeType, currentAmount: number) {
+        this.ChallengeGroups.find(g => g[0] == frequency)[1].find(c => c[0] == type)[2] = currentAmount;
     }
 
     private syncMapPriceData(mapsBoughtCounter: number) {
@@ -137,6 +164,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
+        rageConnector.listen(DFromServerEvent.SyncChallengeCurrentAmountChange, this.onChallengeCurrentAmountChange.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));

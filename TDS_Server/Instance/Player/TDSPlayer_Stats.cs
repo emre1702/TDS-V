@@ -1,5 +1,6 @@
 ﻿using System;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Server.Enums;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Player;
@@ -31,7 +32,10 @@ namespace TDS_Server.Instance.Player
             {
                 if (Entity is null)
                     return;
+                int addToPlayTime = value - Entity.PlayerStats.PlayTime;
                 Entity.PlayerStats.PlayTime = value;
+                if (addToPlayTime > 0)
+                    AddToChallenge(EChallengeType.PlayTime, addToPlayTime);
             }
         }
 

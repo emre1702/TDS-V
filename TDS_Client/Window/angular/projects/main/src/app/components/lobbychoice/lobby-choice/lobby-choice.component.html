@@ -6,7 +6,7 @@
             [style.background]="getImageUrl('assets/english.png')"></button>
     </div>
 
-    <div class="container mat-elevation-z8 mat-app-background announcements" cdkDrag>
+    <!--<div class="container mat-elevation-z8 mat-app-background announcements" cdkDrag>
         <mat-toolbar color="primary" cdkDragHandle>
             {{ 'Announcements' | language: settings.Lang }}
         </mat-toolbar>
@@ -14,6 +14,22 @@
             <div *ngFor="let announcement of settings.Constants[6]" class="announcement">
                 <div class="date">{{ 'XDaysAgo' | language: settings.Lang:announcement[0] }}:</div>
                 <div>{{ announcement[1] }}</div>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="container mat-elevation-z8 mat-app-background challenges" cdkDrag>
+        <mat-toolbar color="primary" cdkDragHandle>
+            {{ 'Challenges' | language: settings.Lang }}
+        </mat-toolbar>
+        <div class="challenges-content">
+            <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">{{ timeToNextWeeklyChallengesRestartInfo }}:</div>
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">{{ 'NoTimeLimit' | language: settings.Lang }}:</div>
+                <li *ngFor="let challenge of challengeGroup[1]"
+                [innerHTML]="getChallengeInfo(challenge)"
+                [class.done]="challenge[1] == challenge[2]">
+                </li>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
-﻿using TDS_Server.Interfaces;
+﻿using System;
+using TDS_Server.Interfaces;
 
 namespace TDS_Server.Instance.Language
 {
@@ -28,6 +29,11 @@ namespace TDS_Server.Instance.Language
             "Round-time got changed. Now you have to kill all opponents or defuse the bomb.",
             "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and hold the left mouse button."
         };
+        public virtual string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "The player '{0}' has set your discord identity in GTA 5." 
+            + Environment.NewLine + "Were you that player?"
+            + Environment.NewLine + "Please confirm the setting with the command '!confirmidentity'.";
+        public virtual string DISCORD_IDENTITY_SAVE_FAILED => "Saving the Discord identity failed: {0}";
+        public virtual string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "The discord identity has been successfully saved.";
 
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";

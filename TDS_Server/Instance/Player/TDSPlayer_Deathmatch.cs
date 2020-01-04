@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System;
+using TDS_Common.Enum.Challenge;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.Player
@@ -24,6 +25,8 @@ namespace TDS_Server.Instance.Player
                     ++_shortTimeKillingSpree;
                 }
                 _killingSpree = value;
+                if (CurrentLobby!.IsOfficial == true)
+                    AddToChallenge(EChallengeType.Killstreak, _killingSpree, true);
             }
         }
         public short ShortTimeKillingSpree

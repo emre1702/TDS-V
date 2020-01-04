@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Enum.Userpanel;
 using TDS_Server_DB.Entity.Admin;
 using TDS_Server_DB.Entity.Bonusbot;
+using TDS_Server_DB.Entity.Challenge;
 using TDS_Server_DB.Entity.Command;
 using TDS_Server_DB.Entity.GangEntities;
 using TDS_Server_DB.Entity.LobbyEntities;
@@ -54,6 +56,8 @@ namespace TDS_Server_DB.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<EUserpanelAdminQuestionAnswerType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ESupportType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EChallengeType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<EChallengeFrequency>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -64,6 +68,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<ApplicationQuestions> ApplicationQuestions { get; set; }
         public virtual DbSet<Applications> Applications { get; set; }
         public virtual DbSet<BonusbotSettings> BonusbotSettings { get; set; }
+        public virtual DbSet<ChallengeSettings> ChallengeSettings { get; set; }
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
@@ -88,6 +93,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<Maps> Maps { get; set; }
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
+        public virtual DbSet<PlayerChallenges> PlayerChallenges { get; set; }
         public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
@@ -129,6 +135,7 @@ namespace TDS_Server_DB.Entity
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.UseIdentityByDefaultColumns();
+            modelBuilder.HasPostgresExtension("tsm_system_rows");
 
             #region Enum
             modelBuilder.HasPostgresEnum<EPlayerRelation>();
@@ -144,6 +151,8 @@ namespace TDS_Server_DB.Entity
             modelBuilder.HasPostgresEnum<ERuleTarget>();
             modelBuilder.HasPostgresEnum<EUserpanelAdminQuestionAnswerType>();
             modelBuilder.HasPostgresEnum<ESupportType>();
+            modelBuilder.HasPostgresEnum<EChallengeType>();
+            modelBuilder.HasPostgresEnum<EChallengeFrequency>();
             #endregion
 
             #region Tables
@@ -258,6 +267,25 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.ErrorLogsChannelId).IsRequired(false);
 
                 entity.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(60);
+            });
+
+            modelBuilder.Entity<ChallengeSettings>(entity =>
+            {
+                entity.HasKey(e => new { e.Type, e.Frequency });
+
+                entity.Property(e => e.Type)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.MinNumber)
+                    .IsRequired()
+                    .HasDefaultValue(1);
+
+                entity.Property(e => e.MaxNumber)
+                    .IsRequired()
+                    .HasDefaultValue(1);
+
+                entity.Property(e => e.Frequency)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<CommandAlias>(entity =>
@@ -679,6 +707,20 @@ namespace TDS_Server_DB.Entity
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
+            modelBuilder.Entity<PlayerChallenges>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Challenge, e.Frequency });
+
+                entity.Property(e => e.Amount).HasDefaultValue(1);
+
+                entity.Property(e => e.CurrentAmount).HasDefaultValue(0);
+
+                entity.HasOne(c => c.Player)
+                    .WithMany(p => p.Challenges)
+                    .HasForeignKey(c => c.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<PlayerClothes>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
@@ -768,7 +810,7 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
-                entity.Property(e => e.DiscordIdentity);
+                entity.Property(e => e.DiscordUserId).HasDefaultValue(0);
                 entity.Property(e => e.Timezone)
                     .HasDefaultValue("UTC");
                 entity.Property(e => e.DateTimeFormat)
@@ -1010,6 +1052,10 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.UsernameChangeCooldownDays)
                     .IsRequired()
                     .HasDefaultValue(60);
+
+                entity.Property(e => e.AmountWeeklyChallenges)
+                    .IsRequired()
+                    .HasDefaultValue(3);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
@@ -1130,6 +1176,26 @@ namespace TDS_Server_DB.Entity
                     SendPrivateMessageOnBan = true,
                     SendPrivateMessageOnOfflineMessage = true
                 }  
+            );
+
+            modelBuilder.Entity<ChallengeSettings>().HasData(
+                new ChallengeSettings { Type = EChallengeType.Assists, Frequency = EChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
+                new ChallengeSettings { Type = EChallengeType.BeHelpfulEnough, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.BombDefuse, Frequency = EChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
+                new ChallengeSettings { Type = EChallengeType.BombPlant, Frequency = EChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
+                new ChallengeSettings { Type = EChallengeType.BuyMaps, Frequency = EChallengeFrequency.Forever, MinNumber = 500, MaxNumber = 500 },
+                new ChallengeSettings { Type = EChallengeType.ChangeSettings, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.CreatorOfAcceptedMap, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.Damage, Frequency = EChallengeFrequency.Weekly, MinNumber = 20000, MaxNumber = 100000 },
+                new ChallengeSettings { Type = EChallengeType.JoinDiscordServer, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.Kills, Frequency = EChallengeFrequency.Weekly, MinNumber = 75, MaxNumber = 150 },
+                new ChallengeSettings { Type = EChallengeType.Killstreak, Frequency = EChallengeFrequency.Weekly, MinNumber = 3, MaxNumber = 7 },
+                new ChallengeSettings { Type = EChallengeType.PlayTime, Frequency = EChallengeFrequency.Weekly, MinNumber = 300, MaxNumber = 1500 },
+                new ChallengeSettings { Type = EChallengeType.ReadTheFAQ, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.ReadTheRules, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = EChallengeType.ReviewMaps, Frequency = EChallengeFrequency.Forever, MinNumber = 10, MaxNumber = 10 },
+                new ChallengeSettings { Type = EChallengeType.RoundPlayed, Frequency = EChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
+                new ChallengeSettings { Type = EChallengeType.WriteHelpfulIssue, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 }
             );
 
             modelBuilder.Entity<Players>().HasData(

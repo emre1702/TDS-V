@@ -22,6 +22,9 @@
         string DEATH_KILLED_INFO { get; }
         string DEATH_DIED_INFO { get; }
         string[] DEFUSE_INFO { get; }
+        string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO { get; }
+        string DISCORD_IDENTITY_SAVE_FAILED { get; }
+        string DISCORD_IDENTITY_SAVED_SUCCESSFULLY { get; }
 
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }

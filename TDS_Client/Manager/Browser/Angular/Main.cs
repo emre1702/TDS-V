@@ -21,14 +21,14 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.ExecuteJs(execStr);
         }
 
-        public static void Start(string angularConstantsDataJson)
+        public static void Start(string angularConstantsDataJson, string challengesJson)
         {
             if (Browser != null)
                 return;
 
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
 
-            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson);
+            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
             foreach (var execStr in _executeQueue)
             {
                 Browser.ExecuteJs(execStr);

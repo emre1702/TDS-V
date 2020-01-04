@@ -109,7 +109,7 @@ export interface Language {
     Language: string;
     AllowDataTransfer: string;
     ShowConfettiAtRanking: string;
-    DiscordIdentity: string;
+    DiscordUserId: string;
     Bloodscreen: string;
     Hitsound: string;
     FloatingDamageInfo: string;
@@ -163,6 +163,30 @@ export interface Language {
     PasswordSettingSaved: string;
     EmailSettingSaved: string;
     XDaysAgo: string;
+    DaysLeft: string;
+    HoursLeft: string;
+    NoTimeLimit: string;
+    "Current:": string;
+
+    ////////////// Challenges ///////////////
+    Challenge_Kills: string;
+    Challenge_Assists: string;
+    Challenge_Damage: string;
+    Challenge_PlayTime: string;
+    Challenge_HeadshotKills: string;
+    Challenge_RoundPlayed: string;
+    Challenge_BombDefuse: string;
+    Challenge_BombPlant: string;
+    Challenge_Killstreak: string;
+    Challenge_BuyMaps: string;
+    Challenge_ReviewMaps: string;
+    Challenge_ReadTheRules: string;
+    Challenge_ReadTheFAQ: string;
+    Challenge_ChangeSettings: string;
+    Challenge_JoinDiscordServer: string;
+    Challenge_WriteHelpfulIssue: string;
+    Challenge_CreatorOfAcceptedMap: string;
+    Challenge_BeHelpfulEnough: string;
 
     ////////////////// Stats ////////////////
     SCName: string;

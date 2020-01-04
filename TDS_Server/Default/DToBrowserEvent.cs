@@ -8,5 +8,6 @@ namespace TDS_Server.Default
     {
         public static string AddInvitation = "AddInvitation_Server";
         public static string RemoveInvitation = "RemoveInvitation_Server";
+        public static string SyncChallengeCurrentAmountChange = "SyncChallengeCurrentAmountChange_Server";
     }
 }

@@ -591,7 +591,7 @@ namespace TDS_Client.Manager.Event
 
             TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
 
-            Browser.Angular.Main.Start(Convert.ToString(args[2]));
+            Browser.Angular.Main.Start(Convert.ToString(args[2]), Convert.ToString(args[3]));
         }
 
         private void OnSetMapVotesMethod(object[] args)

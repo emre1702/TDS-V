@@ -46,5 +46,7 @@
 
         public int UsernameChangeCost { get; set; }
         public int UsernameChangeCooldownDays { get; set; }
+
+        public int AmountWeeklyChallenges { get; set; }
     }
 }

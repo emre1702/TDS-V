@@ -6,6 +6,7 @@ using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Enums;
@@ -154,6 +155,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 ++player.Entity.PlayerStats.MapsBoughtCounter;
                 if (player.CurrentLobbyStats is { })
                     ++player.CurrentLobbyStats.TotalMapsBought;
+                player.AddToChallenge(EChallengeType.BuyMaps);
                 PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
             }
 

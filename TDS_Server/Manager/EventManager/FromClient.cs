@@ -322,7 +322,10 @@ namespace TDS_Server.Manager.EventManager
         [RemoteEvent(DToServerEvent.SendMapRating)]
         public void SendMapRating(Client client, int mapId, int rating)
         {
-            MapsRatings.AddPlayerMapRating(client, mapId, (byte)rating);
+            var player = client.GetChar();
+            if (!player.LoggedIn)
+                return;
+            MapsRatings.AddPlayerMapRating(player, mapId, (byte)rating);
         }
 
         #endregion Map Rating

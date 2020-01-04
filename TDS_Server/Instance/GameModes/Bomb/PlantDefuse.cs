@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Default;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Instance.Utility;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
@@ -47,6 +48,9 @@ namespace TDS_Server.Instance.GameModes
             if (plantPlace is null)
                 return;
 
+            if (Lobby.IsOfficial)
+                player.AddToChallenge(EChallengeType.BombPlant);
+
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerPlantedBomb);
             Workaround.DetachEntity(_bomb);
             _bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
@@ -78,24 +82,27 @@ namespace TDS_Server.Instance.GameModes
             return null;
         }
 
-        private void DefuseBomb(TDSPlayer character)
+        private void DefuseBomb(TDSPlayer player)
         {
             _bombPlantDefuseTimer = null;
-            if (character.Client!.Dead)
+            if (player.Client!.Dead)
                 return;
             if (_bomb is null)
                 return;
 
-            Vector3 playerpos = character.Client.Position;
+            Vector3 playerpos = player.Client.Position;
             if (playerpos.DistanceTo(_bomb.Position) > SettingsManager.DistanceToSpotToDefuse)
                 return;
 
+            if (Lobby.IsOfficial)
+                player.AddToChallenge(EChallengeType.BombDefuse);
+
             _terroristTeam.FuncIterate((targetcharacter, team) =>
             {
-                Lobby.DmgSys.UpdateLastHitter(targetcharacter, character, Lobby.LobbyEntity.StartArmor + Lobby.LobbyEntity.StartHealth);
+                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.LobbyEntity.StartArmor + Lobby.LobbyEntity.StartHealth);
                 targetcharacter.Client!.Kill();
             });
-            character.Client.StopAnimation();
+            player.Client.StopAnimation();
 
             // COUNTER-TERROR WON //
             WinnerTeam = _counterTerroristTeam;

@@ -117,7 +117,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Language = "Sprache";
     AllowDataTransfer = "Erlaube Daten-Transfer";
     ShowConfettiAtRanking = "Konfetti beim Ranking";
-    DiscordIdentity = "Discord-Identität (Name#ID / lange ID)";
+    DiscordUserId = "Discord Benutzer ID";
     Bloodscreen = "Blut-Screen";
     Hitsound = "Hit Geräusch";
     FloatingDamageInfo = "Schwebende Schaden-Infos";
@@ -185,7 +185,31 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     UsernameSettingSaved = "Der Benutzername wurde erfolgreich gespeichert.";
     PasswordSettingSaved = "Das Passwort wurde erfolgreich gespeichert.";
     EmailSettingSaved = "Die Email-Adresse wurde erfolgreich gespeichert.";
-    XDaysAgo = "Vor {0} Tagen";
+    XDaysAgo = "Vor {0} Tag(en)";
+    DaysLeft = "{0} Tag(e) übrig";
+    HoursLeft = "{0} Stunde(n) übrig";
+    NoTimeLimit = "Kein Zeitlimit";
+    "Current:" = "aktuell:";
+
+    ////////////// Challenges ///////////////
+    Challenge_Kills = "Bekomme {0} Kills";
+    Challenge_Assists = "Bekomme {0} Assists";
+    Challenge_Damage = "Teile {0} Schaden aus";
+    Challenge_PlayTime = "Spiel {0} Minuten";
+    Challenge_HeadshotKills = "Bekomme {0} Kopfschuss-Kills";
+    Challenge_RoundPlayed = "Spiele {0} Runden";
+    Challenge_BombDefuse = "Entschärfe {0} Bomben";
+    Challenge_BombPlant = "Lege {0} Bomben";
+    Challenge_Killstreak = "Bekomme eine Serie von {0} Kills";
+    Challenge_BuyMaps = "Kaufe {0} Karten";
+    Challenge_ReviewMaps = "Bewerte {0} verschiedene Karten";
+    Challenge_ReadTheRules = "Lies die Regeln (Benutzeroberfläche)";
+    Challenge_ReadTheFAQ = "Lies das FAQ (Benutzeroberfläche)";
+    Challenge_ChangeSettings = "Ändere deine Einstellungen (Benutzeroberfläche)";
+    Challenge_JoinDiscordServer = "Trete dem Discord-Server bei und stelle die Identität ein (Benutzeroberfläche)";
+    Challenge_WriteHelpfulIssue = "Schreib eine hilfreiche Issue in GitHub";
+    Challenge_CreatorOfAcceptedMap = "Erstelle eine Karte, die die Testphase besteht";
+    Challenge_BeHelpfulEnough = "Hilf dem Server genug, um die \"Contributor\" Rolle in Discord zu bekommen";
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";

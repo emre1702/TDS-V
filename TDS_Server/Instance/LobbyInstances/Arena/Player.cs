@@ -14,6 +14,7 @@ using TDS_Server.Dto.TeamChoiceMenu;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Enums;
+using TDS_Common.Enum.Challenge;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -213,15 +214,15 @@ namespace TDS_Server.Instance.LobbyInstances
             ++teamamountdata.AmountAlive;
         }
 
-        private void SavePlayerRoundStats(TDSPlayer character)
+        private void SavePlayerRoundStats(TDSPlayer player)
         {
             if (!SavePlayerLobbyStats)
                 return;
-            if (character.CurrentLobbyStats is null)
+            if (player.CurrentLobbyStats is null)
                 return;
 
-            PlayerLobbyStats? to = character.CurrentLobbyStats;
-            RoundStatsDto? from = character.CurrentRoundStats;
+            PlayerLobbyStats? to = player.CurrentLobbyStats;
+            RoundStatsDto? from = player.CurrentRoundStats;
             if (to is null || from is null)
                 return;
             to.Kills += from.Kills;
@@ -238,6 +239,15 @@ namespace TDS_Server.Instance.LobbyInstances
                 to.MostDamageInARound = from.Damage;
             if (from.Assists > to.MostAssistsInARound)
                 to.MostAssistsInARound = from.Assists;
+
+            if (IsOfficial)
+            {
+                player.AddToChallenge(EChallengeType.Kills, from.Kills);
+                player.AddToChallenge(EChallengeType.Assists, from.Assists);
+                player.AddToChallenge(EChallengeType.Damage, from.Damage);
+                player.AddToChallenge(EChallengeType.RoundPlayed);
+            }
+            
 
             from.Clear();
         }

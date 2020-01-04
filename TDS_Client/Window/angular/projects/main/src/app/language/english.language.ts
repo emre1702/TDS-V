@@ -122,7 +122,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Language = "Language";
     AllowDataTransfer = "Allow data transfer";
     ShowConfettiAtRanking = "Confetti at ranking";
-    DiscordIdentity = "Discord identity (Name#ID / long ID)";
+    DiscordUserId = "Discord user id";
     Bloodscreen = "Bloodscreen";
     Hitsound = "Hit sound";
     FloatingDamageInfo = "Floating damage info";
@@ -175,7 +175,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     UsernameSettingSaved = "The username was successfully saved.";
     PasswordSettingSaved = "The password was successfully saved.";
     EmailSettingSaved = "The email address was successfully saved.";
-    XDaysAgo = "{0} days ago";
+    XDaysAgo = "{0} day(s) ago";
+    DaysLeft = "{0} day(s) left";
+    HoursLeft = "{0} hour(s) left";
+    NoTimeLimit = "No time limit";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
@@ -191,6 +194,27 @@ The user interface is always being worked on, so don't be surprised if you disco
     CreatedMapsAverageRating = "Created maps average rating";
     LastLogin = "Last login";
     RegisterTimestamp = "Register time";
+    "Current:" = "current:";
+
+    ////////////// Challenges ///////////////
+    Challenge_Kills = "Get {0} kills";
+    Challenge_Assists = "Get {0} assists";
+    Challenge_Damage = "Do {0} damage";
+    Challenge_PlayTime = "Play {0} minutes";
+    Challenge_HeadshotKills = "Get {0} headshot kills";
+    Challenge_RoundPlayed = "Play {0} rounds";
+    Challenge_BombDefuse = "Defuse {0} bombs";
+    Challenge_BombPlant = "Plant {0} bombs";
+    Challenge_Killstreak = "Get a streak of {0} kills";
+    Challenge_BuyMaps = "Buy {0} maps";
+    Challenge_ReviewMaps = "Review {0} different maps";
+    Challenge_ReadTheRules = "Read the rules (in userpanel)";
+    Challenge_ReadTheFAQ = "Read the FAQ (in userpanel)";
+    Challenge_ChangeSettings = "Change your settings (in userpanel)";
+    Challenge_JoinDiscordServer = "Join the discord server and set your Discord identity (in userpanel)";
+    Challenge_WriteHelpfulIssue = "Write a helpful issue in GitHub";
+    Challenge_CreatorOfAcceptedMap = "Create a map that passes the testing phase";
+    Challenge_BeHelpfulEnough = "Help the server enough to get the \"Contributor\" role in Discord";
 
     ////////////////// Stats ////////////////
     Main = "Main";
