@@ -12,5 +12,7 @@
         public const string Mute = "mute";
         public const string VoiceMute = "voicemute";
         public const string NextMap = "nextmap";
+
+        public const string Test = "test";
     }
 }

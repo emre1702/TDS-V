@@ -1245,7 +1245,8 @@ namespace TDS_Server_DB.Entity
                 new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
                 new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true },
                 new Commands { Id = 24, Command = "GiveMoney" },
-                new Commands { Id = 25, Command = "LobbyInvitePlayer" }
+                new Commands { Id = 25, Command = "LobbyInvitePlayer" },
+                new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -1412,7 +1413,9 @@ namespace TDS_Server_DB.Entity
                 new CommandInfos { Id = 24, Language = ELanguage.German, Info = "Gibt einem Spieler Geld." },
                 new CommandInfos { Id = 24, Language = ELanguage.English, Info = "Gives money to a player." },
                 new CommandInfos { Id = 25, Language = ELanguage.German, Info = "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
-                new CommandInfos { Id = 25, Language = ELanguage.English, Info = "Invite a player to your lobby (if possible)." }
+                new CommandInfos { Id = 25, Language = ELanguage.English, Info = "Invites a player to your lobby (if possible)." },
+                new CommandInfos { Id = 26, Language = ELanguage.German, Info = "Befehl zum schnellen Testen von Codes." },
+                new CommandInfos { Id = 26, Language = ELanguage.English, Info = "Command for quick testing of codes." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(

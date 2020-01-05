@@ -241,6 +241,37 @@ namespace TDS_Server.Manager.Commands
                 AdminLogsManager.Log(ELogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
+        [TDSCommand(DAdminCommand.Test)]
+        public static void Test(TDSPlayer player, string type, string arg1, string arg2, string arg3)
+        {
+            switch (type)
+            {
+                case "cloth":
+                    if (!int.TryParse(arg1, out int slot))
+                    {
+                        player.SendNotification(player.Language.COMMAND_USED_WRONG, true);
+                        return;
+                    }
+                    if (!int.TryParse(arg2, out int drawable))
+                    {
+                        player.SendNotification(player.Language.COMMAND_USED_WRONG, true);
+                        return;
+                    }
+                    if (!int.TryParse(arg3, out int texture))
+                    {
+                        player.SendNotification(player.Language.COMMAND_USED_WRONG, true);
+                        return;
+                    }
+
+                    NAPI.Player.SetPlayerClothes(player.Client, slot, drawable, texture);
+                    break;
+
+                default:
+                    player.SendNotification(player.Language.COMMAND_DOESNT_EXIST, true);
+                    break;
+            }
+        }
+
         private static bool IsMuteTimeValid(int muteTime, TDSPlayer outputTo)
         {
             if (muteTime < -1)
