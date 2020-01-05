@@ -21,6 +21,7 @@ namespace TDS_Client.Manager.Lobby
                         Damagesys.ResetLastHP();
                         FloatingDamageInfo.UpdateAllPositions();
                         FiringMode.Start();
+                        Browser.Angular.Main.ToggleRoundStats(true);
                     }
                 }  
                 else
@@ -30,6 +31,7 @@ namespace TDS_Client.Manager.Lobby
                     {
                         FloatingDamageInfo.RemoveAll();
                         FiringMode.Stop();
+                        Browser.Angular.Main.ToggleRoundStats(false);
                     }
                 }
                 _inFight = value;

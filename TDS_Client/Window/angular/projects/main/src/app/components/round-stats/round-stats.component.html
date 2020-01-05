@@ -1,0 +1,22 @@
+<div id="round-stats-1" class="mat-elevation-z8" *ngIf="settings.ShownRoundStatsType == 1"
+(contextmenu)="copyToClipboard(); tooltip1.disabled = false; tooltip1.show();"
+#tooltip1="matTooltip"
+matTooltip="Copied"
+matTooltipHideDelay="1000"
+(mouseenter)="tooltip1.disabled = true"
+cdkDrag>
+    <div>
+        <img class="kills-icon" src="assets/round-stats/kills.png">
+        <span>{{ kills }}</span>
+    </div>
+    <mat-divider vertical></mat-divider>
+    <div>
+        <img class="assists-icon" src="assets/round-stats/assists.png">
+        <span>{{ assists }}</span>
+    </div>
+    <mat-divider vertical></mat-divider>
+    <div>
+        <img class="damage-icon" src="assets/round-stats/damage.png">
+        <span>{{ damage }}</span>
+    </div>
+</div>

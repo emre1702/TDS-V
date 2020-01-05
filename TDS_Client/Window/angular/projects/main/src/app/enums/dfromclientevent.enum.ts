@@ -33,6 +33,7 @@ export enum DFromClientEvent {
     ToggleInFightLobby = "ToggleInFightLobby_Client",
     ToggleLobbyChoice = "ToggleLobbyChoice_Client",
     ToggleMapCreator = "ToggleMapCreator_Client",
+    ToggleRoundStats = "ToggleRoundStats_Client",
     ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server",
     ToggleTeamOrderModus = "ToggleTeamOrderModus_Client",
     ToggleUserpanel = "ToggleUserpanel_Client",

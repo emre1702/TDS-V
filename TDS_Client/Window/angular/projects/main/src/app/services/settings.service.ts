@@ -114,6 +114,7 @@ export class SettingsService {
             [ ChallengeType.ReviewMaps, 30, 10 ],
         ]],
     ]*/;
+    public ShownRoundStatsType = 1;
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },

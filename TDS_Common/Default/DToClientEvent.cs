@@ -2,10 +2,6 @@
 {
     public static class DToClientEvent
     {
-        public const string SetAssistsForRoundStats = "SetAssistsForRoundStats_Server";
-        public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
-        public const string SetKillsForRoundStats = "SetKillsForRoundStats_Server";
-
         public const string AddMapToVoting = "AddMapToVoting_Server";
         public const string AmountInFightSync = "AmountInFightSync_Server";
         public const string ApplySuicideAnimation = "ApplySuicideAnimation_Server";

@@ -36,10 +36,11 @@ import { Invitation } from './components/utils/invitation/models/invitation';
 export class AppComponent {
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
     showUserpanel = false;
     showRankings = false;
+    showRoundStats = true;
 
     rankings: RoundPlayerRankingStat[];
 
@@ -88,6 +89,11 @@ export class AppComponent {
         rageConnector.listen(DFromClientEvent.ShowRankings, (rankings: string) => {
             this.rankings = JSON.parse(rankings) as RoundPlayerRankingStat[];
             this.showRankings = true;
+            changeDetector.detectChanges();
+        });
+
+        rageConnector.listen(DFromClientEvent.ToggleRoundStats, (bool: boolean) => {
+            this.showRoundStats = bool;
             changeDetector.detectChanges();
         });
 

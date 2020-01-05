@@ -249,6 +249,11 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DFromBrowserEvent.GetHashedPassword, hashedPassword);
         }
 
+        public static void ToggleRoundStats(bool toggle)
+        {
+            Execute(DToBrowserEvent.ToggleRoundStats, toggle);
+        }
+
 
         public static void FromServerToBrowser(string eventName, params object[] args)
         {

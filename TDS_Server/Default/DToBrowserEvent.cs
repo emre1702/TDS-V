@@ -6,8 +6,11 @@ namespace TDS_Server.Default
 {
     static class DToBrowserEvent
     {
-        public static string AddInvitation = "AddInvitation_Server";
-        public static string RemoveInvitation = "RemoveInvitation_Server";
-        public static string SyncChallengeCurrentAmountChange = "SyncChallengeCurrentAmountChange_Server";
+        public const string AddInvitation = "AddInvitation_Server";
+        public const string RemoveInvitation = "RemoveInvitation_Server";
+        public const string SetAssistsForRoundStats = "SetAssistsForRoundStats_Server";
+        public const string SetDamageForRoundStats = "SetDamageForRoundStats_Server";
+        public const string SetKillsForRoundStats = "SetKillsForRoundStats_Server";
+        public const string SyncChallengeCurrentAmountChange = "SyncChallengeCurrentAmountChange_Server";
     }
 }

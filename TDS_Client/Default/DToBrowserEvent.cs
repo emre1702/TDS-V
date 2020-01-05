@@ -30,6 +30,7 @@
         public const string ToggleInFightLobby = "ToggleInFightLobby_Client";
         public const string ToggleLobbyChoice = "ToggleLobbyChoice_Client"; 
         public const string ToggleMapCreator = "ToggleMapCreator_Client";
+        public const string ToggleRoundStats = "ToggleRoundStats_Client";
         public const string ToggleTeamOrderModus = "ToggleTeamOrderModus_Client";
         public const string ToggleUserpanel = "ToggleUserpanel_Client";
     }
