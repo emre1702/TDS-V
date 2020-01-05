@@ -69,7 +69,7 @@ namespace TDS_Server.Manager.Player
             if (player.Entity.PlayerClothes is null)
                 player.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
-            #region Add weekly challenges and reload
+            /*#region Add weekly challenges and reload
             if (player.Entity.Challenges.Count == 0)
             {
                 await ChallengeManager.AddWeeklyChallenges(player.Entity);
@@ -81,7 +81,7 @@ namespace TDS_Server.Manager.Player
                 });
             }
             player.InitChallengesDict();
-            #endregion
+            #endregion*/
 
 
             var angularConstantsData = AngularConstantsDataDto.Get(player);

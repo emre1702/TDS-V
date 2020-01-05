@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Player
             dbContext.Players.Add(dbplayer);
             await dbContext.SaveChangesAsync();
 
-            await ChallengeManager.AddForeverChallenges(dbplayer);
+            //await ChallengeManager.AddForeverChallenges(dbplayer);
             RestLogsManager.Log(ELogType.Register, player, true);
             CustomEventManager.SetPlayerRegistered(player);
 
