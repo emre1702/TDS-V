@@ -40,7 +40,7 @@ export class AppComponent {
     showTeamChoice = false;
     showUserpanel = false;
     showRankings = false;
-    showRoundStats = true;
+    showHUD = true;
 
     rankings: RoundPlayerRankingStat[];
 
@@ -92,8 +92,8 @@ export class AppComponent {
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleRoundStats, (bool: boolean) => {
-            this.showRoundStats = bool;
+        rageConnector.listen(DFromClientEvent.ToggleHUD, (bool: boolean) => {
+            this.showHUD = bool;
             changeDetector.detectChanges();
         });
 

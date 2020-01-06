@@ -83,9 +83,9 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
             Add(DToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
             Add(DToClientEvent.SendMapCreatorReturn, OnSendMapCreatorReturnMethod);
-            Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
-            Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
-            Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
+            //Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
+            //Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
+            //Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
@@ -333,7 +333,7 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.SendMapCreatorReturn(err);
         }
 
-        private void OnSetAssistsForRoundStatsMethod(object[] args)
+        /*private void OnSetAssistsForRoundStatsMethod(object[] args)
         {
             RoundInfo.CurrentAssists = (int)args[0];
         }
@@ -346,7 +346,7 @@ namespace TDS_Client.Manager.Event
         private void OnSetKillsForRoundStatsMethod(object[] args)
         {
             RoundInfo.CurrentKills = (int)args[0];
-        }
+        }*/
 
         private void OnPlayerSpectateModeMethod(object[] args)
         {
@@ -589,7 +589,7 @@ namespace TDS_Client.Manager.Event
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
             BindManager.Add(EKey.U, Userpanel.Toggle);
 
-            TickManager.Add(() => Ui.ShowHudComponentThisFrame((int)HudComponent.Cash));
+            TickManager.Add(ClientUtils.HideHUDOriginalComponents);
 
             Browser.Angular.Main.Start(Convert.ToString(args[2]), Convert.ToString(args[3]));
         }

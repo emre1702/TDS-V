@@ -1,0 +1,161 @@
+#hud-1 {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+    width: 320px;
+
+    user-select: none;
+
+    .hud {
+        width: 100%;
+        height: 143px;
+        background-color: rgba(20, 20, 20, 0.55);
+
+        .stats {
+            width: 230px;
+            height: 100%;
+            float: right;
+
+            .row {
+                width: calc(100% - 20px);
+                height: calc(33% - 20px);
+                display: flex;
+                flex-direction: row;
+                padding: 10px;
+                align-items: center;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 10px;
+                }
+
+                progress::-webkit-progress-bar {
+                    background-color: #eee;
+                    border-radius: 2px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+                }
+
+                .progress {
+                    width: 220px;
+                    height: 80%;
+
+
+                    border: 1px grey inset;
+                    box-shadow:inset 0px -2px 5px rgba(0, 0, 0, 0.5);
+
+                    .progress-text {
+                        box-shadow:inset 0px -2px 5px 2px rgba(0, 0, 0, 0.5);
+                        animation: change 1s linear infinite;
+                        height: 100%;
+                        text-align: center;
+                        font-weight: bold;
+                        border: 1px grey inset;
+                    }
+
+                    .progress-text.armor {
+                        background:
+                            linear-gradient(
+                                -45deg,
+                                rgba(255, 255, 255, 0.15) 25%,transparent 25%,
+                                transparent 50%, rgba(255, 255, 255, 0.15) 50%,
+                                rgba(255, 255, 255, 0.15) 75%,transparent 75%)
+                            left/30px 30px repeat-x,
+                            linear-gradient(
+                                to right,
+                                 black 10%,
+                                 rgb(255, 255, 255) 100%)
+                                 right 25px top/215px fixed no-repeat,
+                            red;
+                    }
+
+                    .progress-text.hp {
+                        background:
+                            linear-gradient(
+                                -45deg,
+                                rgba(255, 255, 255, 0.15) 25%,transparent 25%,
+                                transparent 50%, rgba(255, 255, 255, 0.15) 50%,
+                                rgba(255, 255, 255, 0.15) 75%,transparent 75%)
+                            left/30px 30px repeat-x,
+                            linear-gradient(
+                                to right,
+                                 rgb(50, 0, 0) 10%,
+                                 rgb(0, 255, 0) 100%)
+                                 right 25px top/215px fixed no-repeat,
+                            lightgray;
+                    }
+
+                    @keyframes change {
+                        from {background-position:25px 0,right}
+                        to {background-position:55px 0,right}
+                    }
+                }
+
+                span {
+                    width: 100%;
+                    text-align: left;
+                    font-weight: bold;
+                    font-size: 1.4em;
+                    text-align: right;
+                }
+            }
+        }
+
+        .rest {
+            position: absolute;
+            width: 28%;
+            height: calc(100% - 52px);
+            left: 0px;
+            bottom: 52px;
+
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            align-content: flex-start;
+
+            .ammo {
+                margin-top: 20px;
+                text-align: center;
+                font-size: 2.3em;
+                font-weight: bold;
+            }
+
+            .mag {
+                text-align: center;
+            }
+
+            .firingmode {
+                position: absolute;
+                bottom: 15px;
+                font-size: larger;
+                text-align: center;
+                width: 100%;
+            }
+        }
+    }
+
+    .mat-divider {
+        height: 100%;
+        width: 1px;
+    }
+
+    app-round-stats {
+        margin-top: 2px;
+        width: 100%;
+        height: 50px;
+
+
+        //position: absolute;
+        //top: 159px;
+        //right: 15px;
+        //width: 320px;
+        //height: 50px;
+    }
+
+}

@@ -12,14 +12,14 @@ namespace TDS_Client.Manager.Lobby
     internal static class RoundInfo
     {
         private static ulong _startedTick;
-        private static int _currentAssists;
+        /*private static int _currentAssists;
         private static int _currentDamage;
-        private static int _currentKills;
+        private static int _currentKills;*/
 
         private static DxTextRectangle _timeDisplay;
         private static DxTextRectangle[] _teamDisplays;
 
-        public static int CurrentAssists
+        /*public static int CurrentAssists
         {
             get => _currentAssists;
             set
@@ -47,7 +47,7 @@ namespace TDS_Client.Manager.Lobby
                 _currentKills = value;
                 ShowDeathmatchInfo();
             }
-        }
+        }*/
 
         public static bool RefreshOnTick 
         { 

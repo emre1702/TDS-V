@@ -47,6 +47,7 @@ namespace TDS_Client.Manager.Event
             RAGE.Game.Player.SetPlayerTargetingMode(0);
             RAGE.Game.Player.SetPlayerLockon(false);
             AFKCheckManager.OnShoot();
+            DeathmatchInfo.WeaponShot();
         }
 
         private void OnEntityStreamInMethod(Entity entity)

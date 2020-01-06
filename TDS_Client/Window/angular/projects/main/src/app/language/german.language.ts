@@ -190,6 +190,9 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     HoursLeft = "{0} Stunde(n) übrig";
     NoTimeLimit = "Kein Zeitlimit";
     "Current:" = "aktuell:";
+    auto = "Auto";
+    burst = "Burst";
+    single = "Single";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Bekomme {0} Kills";

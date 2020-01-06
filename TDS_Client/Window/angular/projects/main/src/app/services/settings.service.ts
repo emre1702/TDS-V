@@ -115,6 +115,7 @@ export class SettingsService {
         ]],
     ]*/;
     public ShownRoundStatsType = 1;
+    public ShownHudType = 1;
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },

@@ -7,6 +7,7 @@ using TDS_Common.Enum;
 using Player = RAGE.Elements.Player;
 using Entities = RAGE.Elements.Entities;
 using TDS_Common.Manager.Utility;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -102,8 +103,9 @@ namespace TDS_Client.Manager.Utility
             switch (key)
             {
                 case EPlayerDataKey.Money:
-                    Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
+                    //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
                     Browser.Angular.Main.SyncMoney((int)obj);
+                    Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.Money, (int)obj);
                     break;
                 case EPlayerDataKey.AdminLevel:
                     Browser.Angular.Main.RefreshAdminLevel((int)obj);

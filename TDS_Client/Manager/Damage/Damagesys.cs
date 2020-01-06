@@ -1,6 +1,7 @@
 ﻿using RAGE;
 using RAGE.Elements;
 using System;
+using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Common.Default;
 using Player = RAGE.Elements.Player;
@@ -9,26 +10,51 @@ namespace TDS_Client.Manager.Damage
 {
     static class Damagesys
     {
-        private static int _lastTotalHP = 0;
+        private static int _lastArmor = 0;
+        private static int _lastHP = 0;
+        private static int _lastTotalHealth = 0;
+
+        private static int LastArmor
+        {
+            get => _lastArmor;
+            set
+            {
+                if (value != _lastArmor)
+                    Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.Armor, value);
+                _lastArmor = value;
+            }
+        }
+
+        private static int LastHP
+        {
+            get => _lastHP;
+            set
+            {
+                if (value != _lastHP)
+                    Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.HP, value);
+                _lastHP = value;
+            }
+        }
 
         //public static int CurrentWeaponDamage;
 
         // Body parts: https://pastebin.com/AGQWgCct
 
-        public static void ShowBloodscreenIfNecessary()
+        public static void ShowBloodscreenIfNecessary(int currentTotalHP)
         {
-            int currentTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
-            if (currentTotalHP == _lastTotalHP)
+            if (currentTotalHP == _lastTotalHealth)
                 return;
 
-            if (currentTotalHP < _lastTotalHP)
+            if (currentTotalHP < _lastTotalHealth)
                 MainBrowser.ShowBloodscreen();
-            _lastTotalHP = currentTotalHP;
+            _lastTotalHealth = currentTotalHP;
         }
 
         public static void CheckOnTick()
         {
-            int currentTotalHP = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0) + Player.LocalPlayer.GetArmour();
+            int hp = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0);
+            int armor = Player.LocalPlayer.GetArmour();
+            int currentTotalHealth = hp + armor;
             if (Player.LocalPlayer.HasBeenDamagedByAnyPed())
             {
                 int outbone = 0;
@@ -44,19 +70,24 @@ namespace TDS_Client.Manager.Damage
                     if (!RAGE.Game.Entity.HasEntityBeenDamagedByEntity(Player.LocalPlayer.Handle, player.Handle, true))
                         continue;
 
-                    Events.CallRemote(DToServerEvent.GotHit, player.RemoteId, outbone, _lastTotalHP - currentTotalHP);
+                    Events.CallRemote(DToServerEvent.GotHit, player.RemoteId, outbone, _lastTotalHealth - currentTotalHealth);
 
                 }
 
                 Player.LocalPlayer.ClearLastDamageBone();
                 Player.LocalPlayer.ClearLastDamageEntity();                    
             }
-            _lastTotalHP = currentTotalHP;
+            ShowBloodscreenIfNecessary(currentTotalHealth);
+            LastArmor = armor;
+            LastHP = hp;
+            _lastTotalHealth = currentTotalHealth;
         }
 
         public static void ResetLastHP()
         {
-            _lastTotalHP = Player.LocalPlayer.GetHealth() + Player.LocalPlayer.GetArmour();
+            LastArmor = Player.LocalPlayer.GetArmour();
+            LastHP = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0);
+            _lastTotalHealth = LastArmor + LastHP;
 
             Player.LocalPlayer.ClearLastDamageBone();
             Player.LocalPlayer.ClearLastDamageEntity();

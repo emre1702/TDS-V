@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Sanitizer } from '@angular/core';
-import { SettingsService } from '../../services/settings.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { ClipboardService } from 'ngx-clipboard';
 
 @Component({

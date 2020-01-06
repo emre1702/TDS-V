@@ -1,0 +1,31 @@
+<div id="hud-1" *ngIf="settings.ShownHudType == 1" cdkDrag>
+    <div class="hud">
+        <div class="stats">
+            <div class="row">
+                <img src="assets/hud/armor.png">
+                <div class="progress">
+                    <div class="progress-text armor" [style.width]="armor  + '%'">{{ armor + armorExtra }}%</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <img src="assets/hud/hp.png">
+                <div class="progress">
+                    <div class="progress-text hp" [style.width]="hp + '%'">{{ hp }}%</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <img src="assets/hud/money.png">
+                <span>${{ money }}</span>
+            </div>
+        </div>
+        <mat-divider vertical></mat-divider>
+        <div class="rest">
+            <div class="ammo">{{ ammo }}</div>
+            <div class="mag">{{ mag }}</div>
+            <div class="firingmode">{{ firingMode | language: settings.Lang }}</div>
+        </div>
+    </div>
+    <app-round-stats *ngIf="showRoundStats"></app-round-stats>
+</div>

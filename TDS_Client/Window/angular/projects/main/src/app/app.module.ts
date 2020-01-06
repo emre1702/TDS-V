@@ -78,8 +78,9 @@ import { ReversePipe } from './pipes/reverse.pipe';
 import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
 import { InvitationComponent } from './components/utils/invitation/invitation.component';
 import { UserpanelSettingsSpecialComponent } from './components/userpanel/userpanel-settings-special/userpanel-settings-special.component';
-import { RoundStatsComponent } from './components/round-stats/round-stats.component';
+import { RoundStatsComponent } from './components/hud/round-stats/round-stats.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { HudComponent } from './components/hud/hud.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { ClipboardModule } from 'ngx-clipboard';
     UserpanelOfflineMessagesComponent,
     InvitationComponent,
     UserpanelSettingsSpecialComponent,
-    RoundStatsComponent
+    RoundStatsComponent,
+    HudComponent
   ],
   imports: [
     ReactiveFormsModule,

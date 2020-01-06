@@ -1,9 +1,6 @@
 #round-stats-1 {
-    position: absolute;
-    top: 159px;
-    right: 15px;
-    width: 320px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
 
     background-color: rgba(20, 20, 20, 0.55);
 
@@ -31,8 +28,7 @@
     }
 
     img {
-        width: 25px;
-        height: 25px;
+        height: 50%;
     }
 }
 

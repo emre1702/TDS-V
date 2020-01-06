@@ -22,11 +22,13 @@
         public const string ShowCooldown = "ShowCooldown_Client";
         public const string ShowRankings = "ShowRankings_Client";
         public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Client";
+        public const string SyncHUDDataChange = "SyncHUDDataChange_Client";
         public const string SyncIsLobbyOwner = "SyncIsLobbyOwner_Client";
         public const string SyncMapPriceData = "SyncMapPriceData_Client";
         public const string SyncMoney = "SyncMoney_Client";
         public const string ToggleChatOpened = "ToggleChatOpened_Client";
         public const string ToggleFreeroam = "ToggleFreeroam_Client";
+        public const string ToggleHUD = "ToggleHUD_Client";
         public const string ToggleInFightLobby = "ToggleInFightLobby_Client";
         public const string ToggleLobbyChoice = "ToggleLobbyChoice_Client"; 
         public const string ToggleMapCreator = "ToggleMapCreator_Client";

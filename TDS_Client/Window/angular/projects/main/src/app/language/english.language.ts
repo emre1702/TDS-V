@@ -195,6 +195,9 @@ The user interface is always being worked on, so don't be surprised if you disco
     LastLogin = "Last login";
     RegisterTimestamp = "Register time";
     "Current:" = "current:";
+    auto = "Auto";
+    burst = "Burst";
+    single = "Single";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Get {0} kills";

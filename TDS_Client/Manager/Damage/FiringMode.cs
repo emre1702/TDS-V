@@ -74,6 +74,18 @@ namespace TDS_Client.Manager.Damage
         private static InstructionalButton _instructionalButton;
         private static bool _isActive;
 
+        private static EFiringMode CurrentFiringMode
+        {
+            get => _currentFiringMode;
+            set
+            {
+                if (_currentFiringMode != value)
+                    Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.FiringMode, (int)value);
+                _currentFiringMode = value;
+                
+            }
+        }
+
 
         public static void Start()
         {
@@ -147,7 +159,7 @@ namespace TDS_Client.Manager.Damage
 
             if (newFiringMode != _currentFiringMode)
             {
-                _currentFiringMode = newFiringMode;
+                CurrentFiringMode = newFiringMode;
                 _currentBurstShots = 0;
                 _lastWeaponConfigUpdate = DateTime.Now;
 
@@ -209,7 +221,7 @@ namespace TDS_Client.Manager.Damage
             _ignoreCurrentWeapon = IsWeaponIgnored(newWeaponHash);
             if (!_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out _currentFiringMode))
             {
-                _currentFiringMode = EFiringMode.Auto;
+                CurrentFiringMode = EFiringMode.Auto;
             }
             _currentBurstShots = 0;
         }

@@ -4,6 +4,7 @@ using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
+using TDS_Client.Enum;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -252,6 +253,16 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void ToggleRoundStats(bool toggle)
         {
             Execute(DToBrowserEvent.ToggleRoundStats, toggle);
+        }
+
+        public static void ToggleHUD(bool toggle)
+        {
+            Execute(DToBrowserEvent.ToggleHUD, toggle);
+        }
+
+        public static void SyncHUDDataChange(EHUDDataType type, int value)
+        {
+            Execute(DToBrowserEvent.SyncHUDDataChange, type, value);
         }
 
 

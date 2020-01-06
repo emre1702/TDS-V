@@ -436,5 +436,10 @@ namespace TDS_Client.Manager.Utility
                 name = Constants.ServerTeamSuffix + name;
             return name;
         }
+
+        public static void HideHUDOriginalComponents()
+        {
+            Ui.HideHudComponentThisFrame((int)HudComponent.Cash);
+        }
     }
 }

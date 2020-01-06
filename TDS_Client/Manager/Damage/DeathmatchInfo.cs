@@ -16,6 +16,18 @@ namespace TDS_Client.Manager.Damage
                 new FloatingDamageInfo(hitted, damage);
         }
 
+        public static void WeaponShot()
+        {
+            int weapon = 0;
+            int ammo = 0;
+            Player.LocalPlayer.GetCurrentWeapon(ref weapon, true);
+            Player.LocalPlayer.GetAmmoInClip((uint)weapon, ref ammo);
+            int mag = Player.LocalPlayer.GetAmmoInWeapon((uint)weapon);
+
+            Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.Ammo, ammo); 
+            Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.Mag, mag);
+        }
+
         /*
          * let deathmatchinfodata = {
     damage: 0,

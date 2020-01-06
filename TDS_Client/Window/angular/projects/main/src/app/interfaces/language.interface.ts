@@ -167,6 +167,9 @@ export interface Language {
     HoursLeft: string;
     NoTimeLimit: string;
     "Current:": string;
+    auto: string;
+    burst: string;
+    single: string;
 
     ////////////// Challenges ///////////////
     Challenge_Kills: string;
