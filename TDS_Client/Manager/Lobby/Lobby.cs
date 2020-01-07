@@ -76,7 +76,7 @@ namespace TDS_Client.Manager.Lobby
 
                 case ELobbyType.Arena:
                 case ELobbyType.FightLobby:
-                case ELobbyType.GangLobby:
+                case ELobbyType.GangwarLobby:
                     InFightLobby = true;
                     break;
             }
