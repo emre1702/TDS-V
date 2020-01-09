@@ -41,3 +41,9 @@ dotnet_diagnostic.CA1707.severity = none
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
+
+[*]
+indent_style = space 
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
