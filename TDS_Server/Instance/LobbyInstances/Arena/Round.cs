@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using TDS_Common.Default;
@@ -60,6 +60,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
+        public bool RemoveAfterOneRound { get; set; }
 
         private Team? _currentRoundEndWinnerTeam;
         private ERoundEndReason _currentRoundEndReason;
@@ -140,7 +141,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private async void EndRound()
         {
-            if (LobbyEntity.IsTemporary && IsEmpty())
+            if (LobbyEntity.IsTemporary && IsEmpty() || RemoveAfterOneRound)
             {
                 Remove();
                 return;

@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
@@ -22,6 +22,9 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex = null)
         {
+            if (CurrentGameMode?.CanJoinLobby(player, teamindex) == false)
+                return false;
+
             if (!await base.AddPlayer(player, 0).ConfigureAwait(true))
                 return false;
             SpectateOtherAllTeams(player);
@@ -33,6 +36,8 @@ namespace TDS_Server.Instance.LobbyInstances
                 .ToList();
 
             NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
+
+            CurrentGameMode?.AddPlayer(player, teamindex);
 
             return true;
         }
@@ -113,19 +118,28 @@ namespace TDS_Server.Instance.LobbyInstances
 
             if (player.Team != null && !player.Team.IsSpectator)
             {
-                Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
-                if (spawndata is null)
-                    return;
-                NAPI.Player.SpawnPlayer(player.Client, spawndata.ToVector3(), spawndata.Rotation);
+                if (SpawnPlayer)
+                {
+                    Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
+                    if (spawndata is null)
+                        return;
+                    NAPI.Player.SpawnPlayer(player.Client, spawndata.ToVector3(), spawndata.Rotation);
+                }
+                
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
                     player.Team.SpectateablePlayers?.Add(player);
             }
             else
-                NAPI.Player.SpawnPlayer(player.Client, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
+            {
+                if (SpawnPlayer)
+                    NAPI.Player.SpawnPlayer(player.Client, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
+            }
+                
 
             RemoveAsSpectator(player);
 
-            Workaround.FreezePlayer(player.Client, true);
+            if (FreezePlayerOnCountdown)
+                Workaround.FreezePlayer(player.Client, true);
             GivePlayerWeapons(player);
 
             if (_removeSpectatorsTimer.ContainsKey(player))

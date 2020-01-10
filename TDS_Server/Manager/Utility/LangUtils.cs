@@ -11,7 +11,7 @@ namespace TDS_Server.Manager.Utility
 {
     internal static class LangUtils
     {
-        private static readonly Dictionary<ELanguage, ILanguage> _languageByID = new Dictionary<ELanguage, ILanguage>
+        public static readonly Dictionary<ELanguage, ILanguage> LanguageByID = new Dictionary<ELanguage, ILanguage>
         {
             [ELanguage.German] = new German(),
             [ELanguage.English] = new English()
@@ -20,7 +20,7 @@ namespace TDS_Server.Manager.Utility
         public static void SendAllChatMessage(Func<ILanguage, string> langgetter)
         {
             Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in _languageByID.Values)
+            foreach (ILanguage lang in LanguageByID.Values)
             {
                 returndict[lang] = langgetter(lang);
             }
@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Utility
         public static void SendAllNotification(Func<ILanguage, string> langgetter)
         {
             Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in _languageByID.Values)
+            foreach (ILanguage lang in LanguageByID.Values)
             {
                 returndict[lang] = langgetter(lang);
             }
@@ -47,40 +47,40 @@ namespace TDS_Server.Manager.Utility
 
         public static ILanguage GetLang(this Client player)
         {
-            return _languageByID[player.GetChar().LanguageEnum];
+            return LanguageByID[player.GetChar().LanguageEnum];
         }
 
         public static ILanguage GetLang(this TDSPlayer character)
         {
-            return _languageByID[character.LanguageEnum];
+            return LanguageByID[character.LanguageEnum];
         }
 
         public static ILanguage GetLang(this Type language)
         {
-            foreach (ILanguage lang in _languageByID.Values)
+            foreach (ILanguage lang in LanguageByID.Values)
             {
                 if (lang.GetType() == language.GetType())
                 {
                     return lang;
                 }
             }
-            return _languageByID[ELanguage.English];
+            return LanguageByID[ELanguage.English];
         }
 
         public static ILanguage GetLang(byte language)
         {
-            return _languageByID[(ELanguage)language];
+            return LanguageByID[(ELanguage)language];
         }
 
         public static ILanguage GetLang(this ELanguage language)
         {
-            return _languageByID[language];
+            return LanguageByID[language];
         }
 
         public static Dictionary<ILanguage, string> GetLangDictionary(Func<ILanguage, string> langgetter)
         {
             Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in _languageByID.Values)
+            foreach (ILanguage lang in LanguageByID.Values)
             {
                 returndict[lang] = langgetter(lang);
             }

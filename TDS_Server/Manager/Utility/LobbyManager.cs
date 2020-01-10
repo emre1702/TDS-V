@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Utility
         public static Lobby MainMenu => _mainMenu ?? (_mainMenu = 
             Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MainMenu).First());
         public static Arena Arena => _arena ?? (_arena = 
-            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.Arena).Cast<Arena>().First());
+            Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.Arena && !l.IsGangActionLobby).Cast<Arena>().First());
         public static MapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??(_mapCreateLobby = 
             Lobbies.Where(l => l.IsOfficial && l.LobbyEntity.Type == ELobbyType.MapCreateLobby).Cast<MapCreateLobby>().First());
         public static GangLobby GangLobby => _gangLobby ?? (_gangLobby = 
@@ -243,7 +243,7 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        private static HashSet<LobbyWeapons> GetAllPossibleLobbyWeapons(EMapType type)
+        public static HashSet<LobbyWeapons> GetAllPossibleLobbyWeapons(EMapType type)
         {
             return type switch
             {

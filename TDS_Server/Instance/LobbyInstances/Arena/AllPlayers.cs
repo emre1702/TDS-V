@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Linq;
 using System.Text;
 using TDS_Common.Default;
@@ -89,15 +89,15 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void SetAllPlayersInCountdown()
         {
-            FuncIterateAllPlayers((character, team) =>
+            FuncIterateAllPlayers((player, team) =>
             {
                 if (team != null && !team.IsSpectator)
                 {
-                    RemoveAsSpectator(character);
-                    team.SpectateablePlayers?.Add(character);
+                    RemoveAsSpectator(player);
+                    team.SpectateablePlayers?.Add(player);
                 }
-                SetPlayerReadyForRound(character);
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.CountdownStart);
+                SetPlayerReadyForRound(player);
+                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart);
             });
         }
 

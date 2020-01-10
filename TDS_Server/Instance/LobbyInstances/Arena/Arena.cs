@@ -1,4 +1,5 @@
-using TDS_Server.Enums;
+﻿using TDS_Server.Enums;
+using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.LobbyEntities;
 
@@ -6,6 +7,8 @@ namespace TDS_Server.Instance.LobbyInstances
 {
     partial class Arena : FightLobby
     {
+        public GangwarArea? GangwarArea { get; set; }
+
         public Arena(Lobbies entity) : base(entity)
         {
             _roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
@@ -22,6 +25,15 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 _nextRoundStatsDict[ERoundStatus.RoundEnd] = ERoundStatus.MapClear;
             }
+        }
+
+        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound = true): this(entity)
+        {
+            IsGangActionLobby = true;
+            RemoveAfterOneRound = removeAfterOneRound;
+
+            GangwarArea = gangwarArea;
+            gangwarArea.InLobby = this;
         }
 
         public override void Start()

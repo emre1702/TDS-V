@@ -14,7 +14,8 @@ namespace TDS_Server.Instance.Utility
     {
         public GangwarAreas Entity { get; private set; }
         public Gang? Owner { get; private set; }
-        public FightLobby InLobby { get; set; }
+        public Gang? Attacker { get; set; }
+        public Arena? InLobby { get; set; }
 
         public bool HasCooldown
         {
@@ -36,15 +37,14 @@ namespace TDS_Server.Instance.Utility
             {
                 Owner = Gang.GetById(entity.OwnerGangId);
             }
-
-            InLobby = LobbyManager.GangLobby;
         }
 
-        public void SetInPreparation()
+        public void SetInPreparation(Gang attackerGang)
         {
-           
+            Attacker = attackerGang;
+            Attacker.InAction = true;
+            Owner!.InAction = true;
             
-
         }
 
         public void SetInAttack()
@@ -55,8 +55,6 @@ namespace TDS_Server.Instance.Utility
 
         public Task SetDefended()
         {
-            InLobby = LobbyManager.GangLobby;
-
             using var dbContext = new TDSDbContext();
             dbContext.Attach(Entity);
 
@@ -69,7 +67,6 @@ namespace TDS_Server.Instance.Utility
 
         public Task SetCaptured(Gang newOwner)
         {
-            InLobby = LobbyManager.GangLobby;
             if (Owner is { })
             {
                 //Todo inform the owner

@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
+using TDS_Server.Interfaces;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.GangEntities;
 
@@ -71,6 +74,43 @@ namespace TDS_Server.Instance.GangTeam
 
             return NoneRank;
         }
+
+        public void FuncIterate(Action<TDSPlayer> func)
+        {
+            foreach (var player in PlayersOnline)
+            {
+                func(player);
+            }
+        }
+
+        public void SendMessage(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in LangUtils.LanguageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+
+            foreach (var player in PlayersOnline)
+            {
+                player.SendMessage(returndict[player.Language]);
+            }
+        }
+
+        public void SendNotification(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in LangUtils.LanguageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+
+            foreach (var player in PlayersOnline)
+            {
+                player.SendNotification(returndict[player.Language]);
+            }
+        }
+
 
         public static Task LoadAll(TDSDbContext dbContext)
         {

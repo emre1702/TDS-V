@@ -28,7 +28,7 @@ namespace TDS_Server.Manager.Timer
                     {
                         PlayerAmountInArena = LobbyManager.Arena.Players.Count,
                         PlayerAmountInCustomLobby = LobbyManager.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
-                        PlayerAmountInGangLobby = LobbyManager.Lobbies.Where(p => p is GangLobby || p is GangActionLobby).Sum(l => l.Players.Count),
+                        PlayerAmountInGangLobby = LobbyManager.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
                         PlayerAmountInMainMenu = Player.Player.LoggedInPlayers.Where(p => p.CurrentLobby is null || p.CurrentLobby.Type == TDS_Common.Enum.ELobbyType.MainMenu).Count(),
                         PlayerAmountOnline = Player.Player.AmountLoggedInPlayers,
                         ServerPort = NAPI.Server.GetServerPort(),

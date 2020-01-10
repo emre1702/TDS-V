@@ -32,6 +32,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public uint Dimension { get; }
         protected Vector3 SpawnPoint { get; }
+        public bool IsGangActionLobby { get; set; }
 
         private readonly SyncedLobbySettingsDto _syncedLobbySettings;
 

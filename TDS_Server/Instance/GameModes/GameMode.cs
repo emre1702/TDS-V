@@ -34,7 +34,9 @@ namespace TDS_Server.Instance.GameModes
 
         public virtual void SendPlayerRoundInfoOnJoin(TDSPlayer player) { }
 
-
+        
+        public virtual bool CanJoinLobby(TDSPlayer player, uint? teamIndex) { return true; }
+        public virtual void AddPlayer(TDSPlayer player, uint? teamIndex) { }
         public virtual void RemovePlayer(TDSPlayer player) { }
         public virtual void RemovePlayerFromAlive(TDSPlayer player) { }
 

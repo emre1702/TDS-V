@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
@@ -19,12 +19,13 @@ namespace TDS_Server.Instance.LobbyInstances
     partial class Lobby
     {
         public bool SavePlayerLobbyStats { get; set; } = true;
-        public bool SetPositionOnPlayerAdd { get; set; } = true;
+        public bool SetPositionOnPlayerAdd => !IsGangActionLobby;
+        public bool SpawnPlayer => SetPositionOnPlayerAdd;
+        public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
 
         public virtual async Task<bool> AddPlayer(TDSPlayer character, uint? teamindex)
         {
-            if (LobbyEntity.Type != ELobbyType.MainMenu && 
-                (LobbyEntity.Type != ELobbyType.GangwarLobby || !LobbyEntity.IsOfficial))
+            if (LobbyEntity.Type != ELobbyType.MainMenu && !IsGangActionLobby)
             {
                 if (await IsPlayerBaned(character).ConfigureAwait(true))
                     return false;

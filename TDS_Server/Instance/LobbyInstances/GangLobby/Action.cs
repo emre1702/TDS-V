@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
 using TDS_Server.Instance.GangTeam;
@@ -6,6 +7,8 @@ using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
+using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -32,12 +35,65 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!CheckCanStartGangwar(attacker, gangwarArea))
                 return;
 
-            var lobby = new GangwarLobby(attacker, gangwarArea);
+            gangwarArea.SetInPreparation(attacker.Gang);
+
+            var lobby = new Arena(CreateEntity(gangwarArea), gangwarArea);
+
             await lobby.AddToDB();
 
+            lobby.SetRoundStatus(Enums.ERoundStatus.NewMapChoose);
             await lobby.AddPlayer(attacker, 1);
 
-            lobby.StartPreparations();
+            lobby.Start();
+        }
+
+        private static Lobbies CreateEntity(GangwarArea area)
+        {
+            var dummyDBTeam = LobbyManager.MainMenu.Teams[0].Entity.DeepCopy();
+
+            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
+            attackerDBTeam.Index = 1;
+
+            var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
+            ownerDBTeam.Index = 2;
+
+            var lobby = new Lobbies
+            {
+                AmountLifes = 1,
+                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity.MapId } },
+                LobbyMapSettings = new LobbyMapSettings
+                {
+                  MapLimitType = EMapLimitType.Display
+                },
+                LobbyRoundSettings = new LobbyRoundSettings
+                {
+                  CountdownTime = (int)SettingsManager.ServerSettings.GangwarPreparationTimeMs,
+                  RoundTime = (int)SettingsManager.ServerSettings.GangwarActionTimeMs,
+                  ShowRanking = true
+                },
+                LobbyWeapons = LobbyManager.GetAllPossibleLobbyWeapons(EMapType.Normal),
+                LobbyRewards = new LobbyRewards
+                {
+                    MoneyPerAssist = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerAssist,
+                    MoneyPerDamage = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerDamage,
+                    MoneyPerKill = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerKill,
+                },
+                IsOfficial = true,
+                IsTemporary = false,
+                OwnerId = -1,
+                Name = $"[GW-Prep] {area.Attacker.Entity.Short}",
+                Type = ELobbyType.Arena,
+                Teams = new List<Teams>
+                {
+                    dummyDBTeam,
+                    attackerDBTeam,
+                    ownerDBTeam
+                },
+                
+            };
+
+
+            return lobby;
         }
 
         private static bool CheckCanStartAction(TDSPlayer attacker, GangwarArea gangwarArea)
