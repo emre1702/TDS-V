@@ -67,8 +67,8 @@ namespace TDS_Server.Instance.LobbyInstances
                 },
                 LobbyRoundSettings = new LobbyRoundSettings
                 {
-                  CountdownTime = (int)SettingsManager.ServerSettings.GangwarPreparationTimeMs,
-                  RoundTime = (int)SettingsManager.ServerSettings.GangwarActionTimeMs,
+                  CountdownTime = (int)SettingsManager.ServerSettings.GangwarPreparationTime,
+                  RoundTime = (int)SettingsManager.ServerSettings.GangwarActionTime,
                   ShowRanking = true
                 },
                 LobbyWeapons = LobbyManager.GetAllPossibleLobbyWeapons(EMapType.Normal),

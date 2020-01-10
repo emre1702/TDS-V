@@ -28,8 +28,8 @@
 
         public int CloseApplicationAfterDays { get; set; }
         public int DeleteApplicationAfterDays { get; set; }
-        public uint GangwarPreparationTimeMs { get; set; } 
-        public uint GangwarActionTimeMs { get; set; } 
+        public uint GangwarPreparationTime { get; set; } 
+        public uint GangwarActionTime { get; set; } 
         public uint DeleteRequestsDaysAfterClose { get; set; }
         public int DeleteOfflineMessagesAfterDays { get; set; }
 

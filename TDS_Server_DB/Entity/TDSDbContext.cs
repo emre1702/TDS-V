@@ -997,13 +997,13 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(14);
 
-                entity.Property(e => e.GangwarPreparationTimeMs)
+                entity.Property(e => e.GangwarPreparationTime)
                     .IsRequired()
-                    .HasDefaultValue(3 * 60 * 1000);
+                    .HasDefaultValue(3 * 60);
 
-                entity.Property(e => e.GangwarActionTimeMs)
+                entity.Property(e => e.GangwarActionTime)
                     .IsRequired()
-                    .HasDefaultValue(15 * 60 * 1000);
+                    .HasDefaultValue(15 * 60);
 
                 entity.Property(e => e.DeleteRequestsDaysAfterClose)
                     .IsRequired()
