@@ -65,7 +65,7 @@ namespace TDS_Client.Instance.Draw.Dx
         public void SetText(string text)
         {
             this.text.Text = text;
-            this.text.Y = GetAbsoluteY(relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), relativePos);
+            this.text._y = GetAbsoluteY(relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), relativePos);
         }
     }
 }

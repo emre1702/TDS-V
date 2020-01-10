@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private readonly SyncedLobbySettingsDto _syncedLobbySettings;
 
-        public Lobby(Lobbies entity)
+        public Lobby(Lobbies entity, bool isGangActionLobby = false)
         {
             _dbContext = new TDSDbContext();
             LobbyEntity = entity;
@@ -68,7 +68,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 BombDefuseTimeMs: entity.LobbyRoundSettings?.BombDefuseTimeMs,
                 BombPlantTimeMs: entity.LobbyRoundSettings?.BombPlantTimeMs,
                 SpawnAgainAfterDeathMs: entity.SpawnAgainAfterDeathMs,
-                CountdownTime: entity.LobbyRoundSettings?.CountdownTime,
+                CountdownTime: isGangActionLobby ? 0 : entity.LobbyRoundSettings?.CountdownTime,
                 RoundTime: entity.LobbyRoundSettings?.RoundTime,
                 BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
                 InLobbyWithMaps: this is Arena,

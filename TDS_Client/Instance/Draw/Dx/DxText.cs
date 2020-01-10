@@ -11,7 +11,7 @@ namespace TDS_Client.Instance.Draw.Dx
     {
         public string Text;
         private readonly int _xPos;
-        public int Y;
+        private int _y;
         private float _scale;
         private readonly Color _color;
         private readonly Font _font;
@@ -37,7 +37,7 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             Text = text;
             _xPos = GetAbsoluteX(x, relative);
-            Y = GetAbsoluteY(y, relative);
+            _y = GetAbsoluteY(y, relative);
             _scale = scale;
             _color = color;
             _font = font;
@@ -62,9 +62,15 @@ namespace TDS_Client.Instance.Draw.Dx
             return (int)Math.Round(relative ? y * 1080 : y);
         }
 
+        public void SetAbsoluteY(int y)
+        {
+            _y = y;
+            ApplyTextAlignmentY();
+        }
+
         public void SetRelativeY(float y)
         {
-            Y = GetAbsoluteY(y, _relative);
+            _y = GetAbsoluteY(y, _relative);
             ApplyTextAlignmentY();
         }
 
@@ -99,9 +105,9 @@ namespace TDS_Client.Instance.Draw.Dx
         {
             float textheight = Ui.GetTextScaleHeight(_scale, (int)_font);
             if (_alignmentY == EAlignmentY.Center)
-                Y -= GetAbsoluteY(textheight * _amountLines / 2, true);
+                _y -= GetAbsoluteY(textheight * _amountLines / 2, true);
             else if (_alignmentY == EAlignmentY.Bottom)
-                Y -= GetAbsoluteY(textheight * _amountLines, true);
+                _y -= GetAbsoluteY(textheight * _amountLines, true);
         }
 
         public void SetScale(float scale)
@@ -131,7 +137,7 @@ namespace TDS_Client.Instance.Draw.Dx
                     scale = GetBlendValue(elapsedticks, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
-            UIResText.Draw(Text, _xPos, Y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
+            UIResText.Draw(Text, _xPos, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
         }
 
         public override EDxType GetDxType()

@@ -9,7 +9,7 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         public GangwarArea? GangwarArea { get; set; }
 
-        public Arena(Lobbies entity) : base(entity)
+        public Arena(Lobbies entity, bool isGangActionLobby = false) : base(entity, isGangActionLobby)
         {
             _roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
             _roundStatusMethod[ERoundStatus.NewMapChoose] = StartNewMapChoose;
@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.LobbyInstances
             }
         }
 
-        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound = true): this(entity)
+        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound = true): this(entity, true)
         {
             IsGangActionLobby = true;
             RemoveAfterOneRound = removeAfterOneRound;

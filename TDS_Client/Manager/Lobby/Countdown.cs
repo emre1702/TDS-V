@@ -26,10 +26,9 @@ namespace TDS_Client.Manager.Lobby
             }
             _countdownTimer?.Kill();
             _currentCountdownTime = Settings.CountdownTime;
-            _countdownTimer = new TDSTimer(Refresh, 1000, (uint)_currentCountdownTime);
-            _text = new DxText(_currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
-            _text.BlendScale(6f, 1000);
-            PlaySound();
+            _countdownTimer = new TDSTimer(Refresh, 1000, (uint)_currentCountdownTime + 1);
+            _text = new DxText(_currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+            Refresh();
         }
 
         public static void StartAfterwards(int timeremainingms)
@@ -39,12 +38,11 @@ namespace TDS_Client.Manager.Lobby
             _countdownTimer = new TDSTimer(() =>
             {
                 if (_currentCountdownTime > 1)
-                    _countdownTimer = new TDSTimer(Refresh, 1000, (uint)(_currentCountdownTime - 1));
+                    _countdownTimer = new TDSTimer(Refresh, 1000, (uint)(_currentCountdownTime));
                 Refresh();
             }, (uint)(_currentCountdownTime - timeremainingms), 1);
-            _text = new DxText(_currentCountdownTime.ToString(), 0.5f, 0.2f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
-            _text.BlendScale(6f, 1000);
-            PlaySound();
+            _text = new DxText(_currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, alignmentX: UIResText.Alignment.Centered, alignmentY: EAlignmentY.Center);
+            Refresh();
         }
 
         public static void End(bool showGo = true)
@@ -85,9 +83,17 @@ namespace TDS_Client.Manager.Lobby
             if (_text == null)
                 return;
             _text.Text = _currentCountdownTime.ToString();
-            _text.SetScale(2f);
-            _text.BlendScale(6f, 1000);
-            PlaySound();
+            if (_currentCountdownTime <= 5)
+            {
+                _text.SetScale(2f);
+                _text.BlendScale(6f, 1000);
+                _text.SetRelativeY(0.2f);
+                PlaySound();
+            }
+            else
+            {
+                _text.SetScale(1f);
+            }
         }
 
         private static void PlaySound()
