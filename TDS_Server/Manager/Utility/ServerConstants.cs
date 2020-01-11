@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GTANetworkAPI;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -11,5 +9,6 @@ namespace TDS_Server.Manager.Utility
         public const string NewMapsPath = _resourcePathPath + "newmaps/";
         public const string SavedMapsPath = _resourcePathPath + "savedmaps/";
         public const string NeedCheckMapsPath = _resourcePathPath + "needcheckmaps/";
+        public static uint TargetHash => NAPI.Util.GetHashKey("v_ret_ta_skull");
     }
 }

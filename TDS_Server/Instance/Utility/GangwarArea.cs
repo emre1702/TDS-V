@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
@@ -13,6 +14,7 @@ namespace TDS_Server.Instance.Utility
     class GangwarArea
     {
         public GangwarAreas Entity { get; private set; }
+        public MapDto Map { get; private set; }
         public Gang? Owner { get; private set; }
         public Gang? Attacker { get; set; }
         public Arena? InLobby { get; set; }
@@ -29,9 +31,10 @@ namespace TDS_Server.Instance.Utility
             }
         }
 
-        public GangwarArea(GangwarAreas entity)
+        public GangwarArea(GangwarAreas entity, MapDto map)
         {
             Entity = entity;
+            Map = map;
 
             if (entity.OwnerGangId != Gang.None.Entity.Id)
             {

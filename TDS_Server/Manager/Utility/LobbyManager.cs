@@ -116,6 +116,13 @@ namespace TDS_Server.Manager.Utility
                     return;
                 }
 
+                // All Gangwar
+                if (mapAssignment.MapId == -5)
+                {
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Gangwar).ToList());
+                    return;
+                }
+
                 lobbyMapsList.Add(MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name));
             }
             arena.SetMapList(lobbyMapsList);

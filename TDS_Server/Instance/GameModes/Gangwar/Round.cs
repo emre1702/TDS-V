@@ -6,6 +6,14 @@ namespace TDS_Server.Instance.GameModes
 {
     partial class Gangwar
     {
+        public override void StartMapChoose()
+        {
+            base.StartMapChoose();
+
+            CreateTargetBlip();
+            CreateTargetObject();
+        }
+
         public override void StartRoundCountdown()
         {
             base.StartRoundCountdown();
@@ -50,6 +58,13 @@ namespace TDS_Server.Instance.GameModes
                     RemoveOnLobbyLeave = true
                 };
             });
+        }
+
+        public override void StartMapClear()
+        {
+            base.StartMapClear();
+
+            ClearMapFromTarget();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
+using TDS_Server.Dto.Map;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
@@ -40,6 +41,7 @@ namespace TDS_Server.Instance.LobbyInstances
             var lobby = new Arena(CreateEntity(gangwarArea), gangwarArea);
 
             await lobby.AddToDB();
+            lobby.SetMapList(new List<MapDto> { gangwarArea.Map });
 
             lobby.SetRoundStatus(Enums.ERoundStatus.NewMapChoose);
             await lobby.AddPlayer(attacker, 1);
