@@ -123,6 +123,10 @@ namespace TDS_Server.Instance.LobbyInstances
                     if (_currentMap.Objects is null)
                         _currentMap.Objects = new List<MapCreatorPosition>();
                     return _currentMap.Objects;
+                case EMapCreatorPositionType.Vehicle:
+                    if (_currentMap.Vehicles is null)
+                        _currentMap.Vehicles = new List<MapCreatorPosition>();
+                    return _currentMap.Vehicles;
                 case EMapCreatorPositionType.TeamSpawn:
                     if (_currentMap.TeamSpawns is null)
                         _currentMap.TeamSpawns = new List<List<MapCreatorPosition>>();

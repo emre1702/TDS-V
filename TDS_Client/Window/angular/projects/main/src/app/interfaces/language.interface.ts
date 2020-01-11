@@ -172,6 +172,7 @@ export interface Language {
     single: string;
     Target: string;
     TargetInfo: string;
+    Vehicles: string;
 
     ////////////// Challenges ///////////////
     Challenge_Kills: string;

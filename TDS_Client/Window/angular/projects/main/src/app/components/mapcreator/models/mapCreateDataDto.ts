@@ -27,4 +27,6 @@ export class MapCreateDataDto {
     [9]: MapCreatorPosition;
     /** Target */
     [10]: MapCreatorPosition;
+    /** Vehicles */
+    [11]: MapCreatorPosition[] = [];
 }

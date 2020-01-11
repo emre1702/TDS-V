@@ -30,6 +30,9 @@ namespace TDS_Server.Dto.Map
         [XmlElement("objects")]
         public MapObjectsListDto Objects { get; set; }
 
+        [XmlElement("vehicles")]
+        public MapVehiclesListDto Vehicles { get; set; }
+
         [XmlElement("bomb")]
         public MapBombInfoDto? BombInfo { get; set; }
 
@@ -85,6 +88,11 @@ namespace TDS_Server.Dto.Map
             Objects = new MapObjectsListDto
             {
                 Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToArray()
+            };
+
+            Vehicles = new MapVehiclesListDto
+            {
+                Entries = data.Vehicles.Select(o => new MapObjectPosition(o)).ToArray()
             };
 
             Target = data.Target != null && data.Type == TDS_Common.Enum.EMapType.Gangwar ? new Position3DDto(data.Target) : null;

@@ -106,6 +106,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             DeleteMapBlips();
             DeleteMapObjects();
+            DeleteMapVehicles();
             ClearTeamPlayersAmounts();
             SendAllPlayerEvent(DToClientEvent.MapClear, null);
 
@@ -125,6 +126,7 @@ namespace TDS_Server.Instance.LobbyInstances
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             CreateMapObjects(nextMap);
+            CreateMapVehicles(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.LimitInfo.Center));

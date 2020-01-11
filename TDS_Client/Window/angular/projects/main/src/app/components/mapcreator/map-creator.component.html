@@ -1,402 +1,487 @@
 <form class="container mat-elevation-z8 mat-app-background" cdkDrag>
-  <mat-toolbar color="primary" cdkDragHandle>
-    <mat-icon id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back</mat-icon>
-    <h1>{{ currentTitle | language: settings.Lang }}</h1>
-    <mat-icon id="save-nav" (click)="currentTitle='MapCreator'; saveNav()" *ngIf="isSaveableNav()">save</mat-icon>
-  </mat-toolbar>
+    <mat-toolbar color="primary" cdkDragHandle>
+        <mat-icon id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back
+        </mat-icon>
+        <h1>{{ currentTitle | language: settings.Lang }}</h1>
+        <mat-icon id="save-nav" (click)="currentTitle='MapCreator'; saveNav()" *ngIf="isSaveableNav()">save</mat-icon>
+    </mat-toolbar>
 
-  <div id="container-content">
-    <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
-      <mat-form-field color="accent" hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}" class="mat-form-field-with-hint">
-        <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}"
-        [formControl]="nameControl" type="text"
-        [(ngModel)]="data[1]"
-        [disabled]="!settings.IsLobbyOwner"/>
-        <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}</mat-error>
-        <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>
-      </mat-form-field>
-      <div class="two-per-row-container" color="accent">
-        <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required
-        [(ngModel)]="data[2]"
-        (selectionChange)="onMapTypeChange($event)"
-        [disabled]="!settings.IsLobbyOwner">
-          <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
-            {{ type | language: settings.Lang }}
-          </mat-option>
-        </mat-select>
+    <div id="container-content">
+        <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
+            <mat-form-field color="accent"
+                hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}"
+                class="mat-form-field-with-hint">
+                <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}"
+                    [formControl]="nameControl" type="text" [(ngModel)]="data[1]" [disabled]="!settings.IsLobbyOwner" />
+                <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }}
+                    {{ 'Chars' | language: settings.Lang }}</mat-error>
+                <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>
+            </mat-form-field>
+            <div class="two-per-row-container" color="accent">
+                <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required
+                    [(ngModel)]="data[2]" (selectionChange)="onMapTypeChange($event)"
+                    [disabled]="!settings.IsLobbyOwner">
+                    <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
+                        {{ type | language: settings.Lang }}
+                    </mat-option>
+                </mat-select>
 
-        <button class="two-per-row-div"
-            mat-raised-button
-            (click)="switchToMapSettings()"
-            [disabled]="!settings.IsLobbyOwner" >
-          {{ 'MapSettings' | language: settings.Lang }}
-        </button>
-        <button class="two-per-row-div" mat-raised-button
-          (click)="switchToDescriptionEdit(lang)" *ngFor="let lang of getLanguages()"
-          [disabled]="!settings.IsLobbyOwner" >
-          {{ lang | language: settings.Lang }}
-        </button>
-        <button class="two-per-row-div" mat-raised-button
-          [color]="isTeamSpawnsValid() ? 'primary' : 'warn'" (click)="switchToTeamSpawnsEdit()">
-          {{ 'TeamSpawns' | language: settings.Lang }} *
-        </button>
-        <button class="two-per-row-div" mat-raised-button
-          [color]="isMapLimitValid() ? 'primary' : 'warn'" (click)="switchToMapLimitEdit()">
-          {{ 'MapLimit' | language: settings.Lang }} *
-        </button>
-        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] != mapType.Gangwar"
-        (click)="switchToMapCenterEdit()">
-          {{ 'MapCenter' | language: settings.Lang }}
-        </button>
-        <button class="two-per-row-div" mat-raised-button (click)="switchToObjects()">
-          {{ 'Objects' | language: settings.Lang }}
-        </button>
-        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Bomb"
-          [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="switchToBombPlacesEdit()">
-          {{ 'BombPlaces' | language: settings.Lang }} *
-        </button>
-        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Gangwar"
-          [color]="isTargetValid() ? 'primary' : 'warn'" (click)="switchToTargetEdit()">
-          {{ 'Target' | language: settings.Lang }} *
-        </button>
-      </div>
+                <button class="two-per-row-div" mat-raised-button (click)="switchToMapSettings()"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ 'MapSettings' | language: settings.Lang }}
+                </button>
+                <button class="two-per-row-div" mat-raised-button (click)="switchToDescriptionEdit(lang)"
+                    *ngFor="let lang of getLanguages()" [disabled]="!settings.IsLobbyOwner">
+                    {{ lang | language: settings.Lang }}
+                </button>
+                <button class="two-per-row-div" mat-raised-button [color]="isTeamSpawnsValid() ? 'primary' : 'warn'"
+                    (click)="switchToTeamSpawnsEdit()">
+                    {{ 'TeamSpawns' | language: settings.Lang }} *
+                </button>
+                <button class="two-per-row-div" mat-raised-button [color]="isMapLimitValid() ? 'primary' : 'warn'"
+                    (click)="switchToMapLimitEdit()">
+                    {{ 'MapLimit' | language: settings.Lang }} *
+                </button>
+                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] != mapType.Gangwar"
+                    (click)="switchToMapCenterEdit()">
+                    {{ 'MapCenter' | language: settings.Lang }}
+                </button>
+                <button class="two-per-row-div" mat-raised-button (click)="switchToObjects()">
+                    {{ 'Objects' | language: settings.Lang }}
+                </button>
+                <button class="two-per-row-div" mat-raised-button (click)="switchToVehicles()">
+                    {{ 'Vehicles' | language: settings.Lang }}
+                </button>
+                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Bomb"
+                    [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="switchToBombPlacesEdit()">
+                    {{ 'BombPlaces' | language: settings.Lang }} *
+                </button>
+                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Gangwar"
+                    [color]="isTargetValid() ? 'primary' : 'warn'" (click)="switchToTargetEdit()">
+                    {{ 'Target' | language: settings.Lang }} *
+                </button>
+            </div>
 
-      <div class="main-bottom-buttons-row">
-        <button mat-raised-button type="button" (click)="sendDataToClient()"
-          [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || !isTargetValid() || nameControl.invalid || !settings.IsLobbyOwner">
-          {{ 'Send' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-      </div>
+            <div class="main-bottom-buttons-row">
+                <button mat-raised-button type="button" (click)="sendDataToClient()"
+                    [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || !isTargetValid() || nameControl.invalid || !settings.IsLobbyOwner">
+                    {{ 'Send' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+            </div>
 
-      <div class="main-bottom-buttons-row">
-        <button mat-raised-button type="button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
-          {{ 'New' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="saveData()" [disabled]="nameControl.invalid || !settings.IsLobbyOwner">
-          {{ 'Save' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="loadPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
-          {{ 'Load' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div id="mapsettings-content" class="two-per-row-container" *ngIf="currentNav == mapCreatorNav.MapSettings">
-      <mat-form-field class="two-per-row-div" color="accent">
-        <input name="minPlayer" matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data[3][0]"/>
-      </mat-form-field>
-      <mat-form-field class="two-per-row-div" color="accent">
-        <input name="maxPlayers" matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}" type="number" step="1" [(ngModel)]="data[3][1]"/>
-      </mat-form-field>
-    </div>
-
-    <div id="description-content" *ngIf="currentNav == mapCreatorNav.Description">
-      <mat-form-field color="accent">
-        <textarea #descriptionTextArea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-          placeholder="{{ editingDescriptionLang | language: settings.Lang }}-{{ 'Description' | language: settings.Lang }}" maxlength="1000" type="text"
-          >{{ data[4][getLanguageValue(editingDescriptionLang)] }}</textarea>
-      </mat-form-field>
-    </div>
-
-    <div class="positions-div" *ngIf="currentNav == mapCreatorNav.TeamSpawns">
-      <div id="team-spawns-top-row">
-        <mat-form-field color="accent">
-          <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
-          <mat-select name="editingTeamNumber" [(ngModel)]="editingTeamNumber" (selectionChange)="onEditingTeamNumberChange($event)">
-            <mat-option *ngFor="let spawns of data[6]; let i = index" [value]="i">
-              {{ 'Team ' + (i+1) }}
-            </mat-option>
-            <mat-option value="+">
-              +
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-raised-button type="button" [disabled]="!settings.IsLobbyOwner" (click)="removeLastTeam()">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-      </div>
-      <div class="mat-table-container mat-elevation-z8">
-        <mat-table [dataSource]="data[6][editingTeamNumber]" matSort >
-
-          <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}</mat-header-cell>
-            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="x">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="y">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="z">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="rot">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns"
-                  (click)="onSelectedPositionChanged(row)"
-                  [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
-
-        </mat-table>
-      </div>
-
-      <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.TeamSpawn)">
-          {{ 'AddPos' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="holdSelected()"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Hold' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
-          {{ 'Teleport' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div class="positions-div" *ngIf="currentNav == mapCreatorNav.MapLimit">
-      <div class="mat-table-container mat-elevation-z8">
-        <mat-table [dataSource]="data[7]" matSort>
-
-          <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}</mat-header-cell>
-            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="x">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="y">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns2D"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns2D"
-                  (click)="onSelectedPositionChanged(row)"
-                  [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
-
-        </mat-table>
-      </div>
-
-      <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapLimit)">
-          {{ 'AddPos' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="holdSelected()"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Hold' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
-          {{ 'Teleport' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
-      <div class="info">
-        {{ 'MapCenterInfo' | language: settings.Lang }}
-      </div>
-      <div class="positions-container" *ngIf="data[9]">
-        <mat-form-field color="accent">
-          <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]"/>
-        </mat-form-field>
-        <mat-form-field color="accent">
-          <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][4]"/>
-        </mat-form-field>
-        <mat-form-field color="accent">
-          <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][5]"/>
-        </mat-form-field>
-      </div>
-      <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
-        [disabled]="!settings.IsLobbyOwner">
-          {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
-        [disabled]="!settings.IsLobbyOwner">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="tpToSelectedPos()">
-          {{ 'Teleport' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div class="positions-div" *ngIf="currentNav == mapCreatorNav.Objects">
-      <div class="mat-table-container mat-elevation-z8">
-        <mat-table [dataSource]="data[5]" matSort >
-
-          <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}</mat-header-cell>
-            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="x">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="y">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="z">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="rotX">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>RotX </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="rotY">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
-              </ng-container>
-
-          <ng-container matColumnDef="rotZ">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumnsObject"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumnsObject"
-                  (click)="onSelectedPositionChanged(row)"
-                  [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
-
-        </mat-table>
-      </div>
-
-      <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromObjects)"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="holdSelected()"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Hold' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
-          {{ 'Teleport' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div class="positions-div bomb-places-div" *ngIf="currentNav == mapCreatorNav.BombPlaces">
-      <div class="mat-table-container mat-elevation-z8">
-        <mat-table [dataSource]="data[8]" matSort>
-
-          <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}</mat-header-cell>
-            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="x">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="y">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="z">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="rot">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns"
-                  (click)="onSelectedPositionChanged(row)"
-                  [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
-
-        </mat-table>
-      </div>
-
-      <div class="positions-bottom-row">
-        <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.BombPlantPlace)">
-          {{ 'AddPos' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Remove' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="holdSelected()"
-        [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
-          {{ 'Hold' | language: settings.Lang }}
-        </button>
-        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
-          {{ 'Teleport' | language: settings.Lang }}
-        </button>
-      </div>
-    </div>
-
-    <div id="target-div" *ngIf="currentNav == mapCreatorNav.Target">
-        <div class="info">
-          {{ 'TargetInfo' | language: settings.Lang }}
+            <div class="main-bottom-buttons-row">
+                <button mat-raised-button type="button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
+                    {{ 'New' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="saveData()"
+                    [disabled]="nameControl.invalid || !settings.IsLobbyOwner">
+                    {{ 'Save' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="loadPossibleMaps()"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ 'Load' | language: settings.Lang }}
+                </button>
+            </div>
         </div>
-        <div class="positions-container" *ngIf="data[9]">
-          <mat-form-field color="accent">
-            <input name="targetX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]"/>
-          </mat-form-field>
-          <mat-form-field color="accent">
-            <input name="targetY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][4]"/>
-          </mat-form-field>
-          <mat-form-field color="accent">
-            <input name="targetZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][5]"/>
-          </mat-form-field>
+
+        <div id="mapsettings-content" class="two-per-row-container" *ngIf="currentNav == mapCreatorNav.MapSettings">
+            <mat-form-field class="two-per-row-div" color="accent">
+                <input name="minPlayer" matInput placeholder="{{ 'MinPlayers' | language: settings.Lang }}"
+                    type="number" step="1" [(ngModel)]="data[3][0]" />
+            </mat-form-field>
+            <mat-form-field class="two-per-row-div" color="accent">
+                <input name="maxPlayers" matInput placeholder="{{ 'MaxPlayers' | language: settings.Lang }}"
+                    type="number" step="1" [(ngModel)]="data[3][1]" />
+            </mat-form-field>
         </div>
-        <div class="positions-bottom-row">
-          <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
-          [disabled]="!settings.IsLobbyOwner">
-            {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
-          </button>
-          <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
-          [disabled]="!settings.IsLobbyOwner">
-            {{ 'Remove' | language: settings.Lang }}
-          </button>
-          <button mat-raised-button type="button" (click)="tpToSelectedPos()">
-            {{ 'Teleport' | language: settings.Lang }}
-          </button>
+
+        <div id="description-content" *ngIf="currentNav == mapCreatorNav.Description">
+            <mat-form-field color="accent">
+                <textarea #descriptionTextArea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                    placeholder="{{ editingDescriptionLang | language: settings.Lang }}-{{ 'Description' | language: settings.Lang }}"
+                    maxlength="1000" type="text">{{ data[4][getLanguageValue(editingDescriptionLang)] }}</textarea>
+            </mat-form-field>
         </div>
-      </div>
-  </div>
+
+        <div class="positions-div" *ngIf="currentNav == mapCreatorNav.TeamSpawns">
+            <div id="team-spawns-top-row">
+                <mat-form-field color="accent">
+                    <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
+                    <mat-select name="editingTeamNumber" [(ngModel)]="editingTeamNumber"
+                        (selectionChange)="onEditingTeamNumberChange($event)">
+                        <mat-option *ngFor="let spawns of data[6]; let i = index" [value]="i">
+                            {{ 'Team ' + (i+1) }}
+                        </mat-option>
+                        <mat-option value="+">
+                            +
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button type="button" [disabled]="!settings.IsLobbyOwner" (click)="removeLastTeam()">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+            </div>
+            <div class="mat-table-container mat-elevation-z8">
+                <mat-table [dataSource]="data[6][editingTeamNumber]" matSort>
+
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="x">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="y">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="z">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rot">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectedPositionChanged(row)"
+                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+                </mat-table>
+            </div>
+
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.TeamSpawn)">
+                    {{ 'AddPos' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromTeamSpawns)"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="holdSelected()"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Hold' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div class="positions-div" *ngIf="currentNav == mapCreatorNav.MapLimit">
+            <div class="mat-table-container mat-elevation-z8">
+                <mat-table [dataSource]="data[7]" matSort>
+
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="x">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="y">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns2D"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns2D" (click)="onSelectedPositionChanged(row)"
+                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+                </mat-table>
+            </div>
+
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapLimit)">
+                    {{ 'AddPos' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromMapLimits)"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="holdSelected()"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Hold' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
+            <div class="info">
+                {{ 'MapCenterInfo' | language: settings.Lang }}
+            </div>
+            <div class="positions-container" *ngIf="data[9]">
+                <mat-form-field color="accent">
+                    <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[9][3]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[9][4]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[9][5]" />
+                </mat-form-field>
+            </div>
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div class="positions-div" *ngIf="currentNav == mapCreatorNav.Objects">
+            <div class="mat-table-container mat-elevation-z8">
+                <mat-table [dataSource]="data[5]" matSort>
+
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="x">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="y">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="z">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotX">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotX </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotY">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotZ">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumnsObject"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsObject"
+                        (click)="onSelectedPositionChanged(row)"
+                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+                </mat-table>
+            </div>
+
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromObjects)"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="holdSelected()"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Hold' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div class="positions-div" *ngIf="currentNav == mapCreatorNav.Vehicles">
+            <div class="mat-table-container mat-elevation-z8">
+                <mat-table [dataSource]="data[11]" matSort>
+
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="x">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="y">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="z">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotX">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotX </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotY">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rotZ">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumnsVehicle"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsVehicle"
+                        (click)="onSelectedPositionChanged(row)"
+                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+                </mat-table>
+            </div>
+
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromVehicles)"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="holdSelected()"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Hold' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div class="positions-div bomb-places-div" *ngIf="currentNav == mapCreatorNav.BombPlaces">
+            <div class="mat-table-container mat-elevation-z8">
+                <mat-table [dataSource]="data[8]" matSort>
+
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{ 'NumberShort' | language: settings.Lang }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="x">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="y">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="z">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rot">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectedPositionChanged(row)"
+                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+
+                </mat-table>
+            </div>
+
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button"
+                    (click)="startNewPosPlacing(mapCreatorPositionType.BombPlantPlace)">
+                    {{ 'AddPos' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removePosFromBombPlaces)"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="holdSelected()"
+                    [disabled]="!selectedPosition || (!settings.IsLobbyOwner && !isOwner(selectedPosition))">
+                    {{ 'Hold' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+
+        <div id="target-div" *ngIf="currentNav == mapCreatorNav.Target">
+            <div class="info">
+                {{ 'TargetInfo' | language: settings.Lang }}
+            </div>
+            <div class="positions-container" *ngIf="data[10]">
+                <mat-form-field color="accent">
+                    <input name="targetX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[10][3]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="targetY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[10][4]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="targetZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}"
+                        type="number" [(ngModel)]="data[10][5]" />
+                </mat-form-field>
+            </div>
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.Target)"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ data[10] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removeTarget)"
+                    [disabled]="!settings.IsLobbyOwner">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
+        </div>
+    </div>
 </form>

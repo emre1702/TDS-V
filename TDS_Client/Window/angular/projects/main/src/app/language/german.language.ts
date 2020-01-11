@@ -195,6 +195,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     single = "Single";
     Target = "Ziel";
     TargetInfo = `Diese Position wird das Haupt-Ziel der Angreifer.`;
+    Vehicles = "Fahrzeuge";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Bekomme {0} Kills";

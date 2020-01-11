@@ -200,6 +200,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     single = "Single";
     Target = "Target";
     TargetInfo = `This position Will be the main target of the attackers.`;
+    Vehicles = "Vehicles";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Get {0} kills";

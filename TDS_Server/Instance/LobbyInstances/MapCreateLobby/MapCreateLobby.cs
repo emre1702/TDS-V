@@ -73,7 +73,11 @@ namespace TDS_Server.Instance.LobbyInstances
             if (dto.Objects is { })
                 foreach (var pos in dto.Objects)
                     _posById[pos.Id] = pos;
-            
+
+            if (dto.Vehicles is { })
+                foreach (var pos in dto.Vehicles)
+                    _posById[pos.Id] = pos;
+
             if (dto.MapCenter is { })
                 _posById[dto.MapCenter.Id] = dto.MapCenter;
                 

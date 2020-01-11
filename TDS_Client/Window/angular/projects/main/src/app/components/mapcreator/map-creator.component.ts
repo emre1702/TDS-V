@@ -20,7 +20,7 @@ import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 
 enum MapCreatorNav {
-    Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, BombPlaces, Target
+    Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
 }
 
 @Component({
@@ -45,6 +45,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ["id", "x", "y", "z", "rot"];
     displayedColumns2D: string[] = ["id", "x", "y"];
     displayedColumnsObject: string[] = ["id", "name", "x", "y", "z", "rotX", "rotY", "rotZ"];
+    displayedColumnsVehicle: string[] = ["id", "name", "x", "y", "z", "rotX", "rotY", "rotZ"];
 
     nameControl = new FormControl("", [
         Validators.required,
@@ -97,6 +98,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 pos[2] = info;
                 this.addPosToObjects(pos);
                 break;
+            case MapCreatorPositionType.Vehicle:
+                pos[2] = info;
+                this.addPosToVehicles(pos);
+                break;
         }
         this.changeDetector.detectChanges();
     }
@@ -139,6 +144,13 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 break;
             case MapCreatorPositionType.Target:
                 this.data[10] = undefined;
+                break;
+            case MapCreatorPositionType.Vehicle:
+                const vehiclePos = this.data[11].find(p => p[0] === id);
+                if (vehiclePos) {
+                    this.selectedPosition = vehiclePos;
+                    this.removePosFromVehicles();
+                }
                 break;
         }
         this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
@@ -212,6 +224,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
     }
 
+    addPosToVehicles(pos: MapCreatorPosition) {
+        if (!this.data[11])
+            this.data[11] = [];
+        if (!this.updatePosIfExists(this.data[11], pos)) {
+            this.data[11] = [...this.data[11], pos];
+        }
+    }
+
     private updatePosIfExists(arr: MapCreatorPosition[], pos: MapCreatorPosition): boolean {
         const entries = arr.filter(position => position[0] === pos[0]);
         if (entries.length <= 0) {
@@ -262,6 +282,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         const index = this.data[5].indexOf(this.selectedPosition);
         this.data[5].splice(index, 1);
         this.data[5] = [...this.data[5]];
+    }
+
+    removePosFromVehicles() {
+        const index = this.data[11].indexOf(this.selectedPosition);
+        this.data[11].splice(index, 1);
+        this.data[11] = [...this.data[11]];
     }
 
     removePosFromBombPlaces() {
@@ -490,6 +516,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    switchToVehicles() {
+        this.rageConnector.call(DToClientEvent.MapCreatorStartVehicleChoice);
+
+        this.currentTitle = 'Vehicles';
+        this.currentNav = MapCreatorNav.Vehicles;
+        this.changeDetector.detectChanges();
+    }
+
     switchToMapCenterEdit() {
         this.currentTitle = 'MapCenter';
         this.selectedPosition = this.data[9];
@@ -523,6 +557,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 break;
             case MapCreatorNav.Objects:
                 this.rageConnector.call(DToClientEvent.MapCreatorStopObjectPreview);
+                break;
+            case MapCreatorNav.Vehicles:
+                this.rageConnector.call(DToClientEvent.MapCreatorStopVehiclePreview);
                 break;
             case MapCreatorNav.MapSettings:
                 this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Settings, JSON.stringify(this.data[3]));

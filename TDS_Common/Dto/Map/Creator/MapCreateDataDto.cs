@@ -30,6 +30,8 @@ namespace TDS_Common.Dto.Map.Creator
         public MapCreatorPosition MapCenter { get; set; }
         [Key(10)]
         public MapCreatorPosition Target { get; set; }
+        [Key(11)]
+        public List<MapCreatorPosition> Vehicles { get; set; }
 
         [IgnoreMember]
         public List<MapCreatorPosition> GetAllPositions 
@@ -40,6 +42,7 @@ namespace TDS_Common.Dto.Map.Creator
                     .Concat(TeamSpawns.SelectMany(s => s).ToList())
                     .Concat(MapEdges)
                     .Concat(BombPlaces)
+                    .Concat(Vehicles)
                     .ToList();
                 list.Add(MapCenter);
                 list.Add(Target);

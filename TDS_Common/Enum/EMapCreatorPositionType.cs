@@ -7,6 +7,7 @@
         BombPlantPlace,
         MapCenter,
         Object,
-        Target
+        Target,
+        Vehicle
     }
 }

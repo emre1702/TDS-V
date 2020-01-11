@@ -13,7 +13,7 @@ namespace TDS_Client.Instance.MapCreator
     {
         public int ID { get; set; }
         public EMapCreatorPositionType Type { get; } 
-        public string ObjectName { get; }
+        public string ObjOrVehName { get; }
         public int? TeamNumber { get; }
         public bool Deleted { get; private set; }
         public GameEntityBase Entity { get; }
@@ -56,7 +56,7 @@ namespace TDS_Client.Instance.MapCreator
             Type = type;
             OwnerRemoteId = ownerRemoteId;
             TeamNumber = teamNumber;
-            ObjectName = objectName;
+            ObjOrVehName = objectName;
 
             Vector3 a = new Vector3();
             Vector3 b = new Vector3();
@@ -144,7 +144,7 @@ namespace TDS_Client.Instance.MapCreator
             return new MapCreatorPosition 
             {
                 Id = ID,
-                Info = (object)TeamNumber ?? ObjectName,
+                Info = (object)TeamNumber ?? ObjOrVehName,
                 OwnerRemoteId = OwnerRemoteId,
                 PosX = Position.X,
                 PosY = Position.Y,
@@ -202,6 +202,9 @@ namespace TDS_Client.Instance.MapCreator
 
                 case EMapCreatorPositionType.Object:
                     return new Blip(Constants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+
+                case EMapCreatorPositionType.Vehicle:
+                    return new Blip(Constants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
             }
 
             return null;

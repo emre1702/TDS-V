@@ -54,22 +54,29 @@ namespace TDS_Client.Manager.MapCreator
             return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
         }
 
-        public static MapCreatorObject CreateMapCreatorObject(EMapCreatorPositionType type, object editingTeamIndexOrObjectName, ushort playerRemoteId)
+        public static MapCreatorObject CreateMapCreatorObject(EMapCreatorPositionType type, object editingTeamIndexOrObjVehName, ushort playerRemoteId)
         {
             switch (type)
             {
                 case EMapCreatorPositionType.TeamSpawn:
-                    return GetTeamSpawn((int)editingTeamIndexOrObjectName, playerRemoteId);
+                    return GetTeamSpawn((int)editingTeamIndexOrObjVehName, playerRemoteId);
                 case EMapCreatorPositionType.MapCenter:
                     return GetMapCenter(playerRemoteId);
                 case EMapCreatorPositionType.BombPlantPlace:
                     return GetBombPlantPlace(playerRemoteId);
                 case EMapCreatorPositionType.MapLimit:
                     return GetMapLimit(playerRemoteId);
+                case EMapCreatorPositionType.Target:
+                    return GetTarget(playerRemoteId);
                 case EMapCreatorPositionType.Object:
-                    string objName = (string)editingTeamIndexOrObjectName;
+                    string objName = (string)editingTeamIndexOrObjVehName;
                     uint objectHash = Misc.GetHashKey(objName);
                     return GetObject(objectHash, EMapCreatorPositionType.Object, playerRemoteId, objName);
+                case EMapCreatorPositionType.Vehicle:
+                    string vehName = (string)editingTeamIndexOrObjVehName;
+                    // Todo: Check if this works or we need to use the VehicleHash enum instead
+                    uint vehHash = Misc.GetHashKey(vehName);
+                    return GetObject(vehHash, EMapCreatorPositionType.Vehicle, playerRemoteId, vehName);
             }
             return null;
         }
@@ -106,6 +113,9 @@ namespace TDS_Client.Manager.MapCreator
                         break;
                     case (int)EEntityType.Object:
                         type = EMapCreatorPositionType.Object;
+                        break;
+                    case (int)EEntityType.Vehicle:
+                        type = EMapCreatorPositionType.Vehicle;
                         break;
                     default:
                         return null;
@@ -235,6 +245,18 @@ namespace TDS_Client.Manager.MapCreator
                     uint objectHash = Misc.GetHashKey(objName);
                     var obj = GetObject(objectHash, EMapCreatorPositionType.Object, objPos.OwnerRemoteId, objName, objPos.Id);
                     obj.LoadPos(objPos);
+                }
+            }
+
+            if (map.Vehicles != null)
+            {
+                foreach (var vehPos in map.Vehicles)
+                {
+                    string vehName = Convert.ToString(vehPos.Info);
+                    // Todo: Check if this works or we need to use VehicleHash enum instead
+                    uint vehHash = Misc.GetHashKey(vehName);
+                    var obj = GetObject(vehHash, EMapCreatorPositionType.Vehicle, vehPos.OwnerRemoteId, vehName, vehPos.Id);
+                    obj.LoadPos(vehPos);
                 }
             }
 

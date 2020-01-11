@@ -4,5 +4,6 @@ export enum MapCreatorPositionType {
   BombPlantPlace,
   MapCenter,
   Object,
-  Target
+  Target,
+  Vehicle
 }
