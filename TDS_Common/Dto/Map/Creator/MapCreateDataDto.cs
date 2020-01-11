@@ -28,6 +28,8 @@ namespace TDS_Common.Dto.Map.Creator
         public List<MapCreatorPosition> BombPlaces { get; set; }
         [Key(9)]
         public MapCreatorPosition MapCenter { get; set; }
+        [Key(10)]
+        public MapCreatorPosition Target { get; set; }
 
         [IgnoreMember]
         public List<MapCreatorPosition> GetAllPositions 
@@ -40,6 +42,7 @@ namespace TDS_Common.Dto.Map.Creator
                     .Concat(BombPlaces)
                     .ToList();
                 list.Add(MapCenter);
+                list.Add(Target);
 
                 return list;
             }

@@ -82,6 +82,9 @@ namespace TDS_Server.Instance.LobbyInstances
                     foreach (var pos in list)
                         _posById[pos.Id] = pos;
 
+            if (dto.Target is { })
+                _posById[dto.Target.Id] = dto.Target;
+
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);

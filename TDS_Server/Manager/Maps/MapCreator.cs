@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -184,6 +184,7 @@ namespace TDS_Server.Manager.Maps
                 },
                 TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToList()).ToList(),
                 Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToList(),
+                Target = map.Target?.ToMapCreatorPosition(posId++),
                 Description = new Dictionary<int, string> 
                 { 
                     [(int)ELanguage.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty, 

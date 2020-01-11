@@ -44,21 +44,26 @@
           [color]="isMapLimitValid() ? 'primary' : 'warn'" (click)="switchToMapLimitEdit()">
           {{ 'MapLimit' | language: settings.Lang }} *
         </button>
-        <button class="two-per-row-div" mat-raised-button (click)="switchToMapCenterEdit()">
+        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] != mapType.Gangwar"
+        (click)="switchToMapCenterEdit()">
           {{ 'MapCenter' | language: settings.Lang }}
         </button>
         <button class="two-per-row-div" mat-raised-button (click)="switchToObjects()">
           {{ 'Objects' | language: settings.Lang }}
         </button>
-        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == 1"
+        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Bomb"
           [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="switchToBombPlacesEdit()">
           {{ 'BombPlaces' | language: settings.Lang }} *
+        </button>
+        <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Gangwar"
+          [color]="isTargetValid() ? 'primary' : 'warn'" (click)="switchToTargetEdit()">
+          {{ 'Target' | language: settings.Lang }} *
         </button>
       </div>
 
       <div class="main-bottom-buttons-row">
         <button mat-raised-button type="button" (click)="sendDataToClient()"
-          [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || nameControl.invalid || !settings.IsLobbyOwner">
+          [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || !isTargetValid() || nameControl.invalid || !settings.IsLobbyOwner">
           {{ 'Send' | language: settings.Lang }}
         </button>
         <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
@@ -213,10 +218,10 @@
     </div>
 
     <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
-      <div id="map-center-info">
+      <div class="info">
         {{ 'MapCenterInfo' | language: settings.Lang }}
       </div>
-      <div id="map-center-positions-container" *ngIf="data[9]">
+      <div class="positions-container" *ngIf="data[9]">
         <mat-form-field color="accent">
           <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]"/>
         </mat-form-field>
@@ -363,5 +368,35 @@
         </button>
       </div>
     </div>
+
+    <div id="target-div" *ngIf="currentNav == mapCreatorNav.Target">
+        <div class="info">
+          {{ 'TargetInfo' | language: settings.Lang }}
+        </div>
+        <div class="positions-container" *ngIf="data[9]">
+          <mat-form-field color="accent">
+            <input name="targetX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]"/>
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input name="targetY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][4]"/>
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input name="targetZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][5]"/>
+          </mat-form-field>
+        </div>
+        <div class="positions-bottom-row">
+          <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
+          [disabled]="!settings.IsLobbyOwner">
+            {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
+          </button>
+          <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
+          [disabled]="!settings.IsLobbyOwner">
+            {{ 'Remove' | language: settings.Lang }}
+          </button>
+          <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+            {{ 'Teleport' | language: settings.Lang }}
+          </button>
+        </div>
+      </div>
   </div>
 </form>

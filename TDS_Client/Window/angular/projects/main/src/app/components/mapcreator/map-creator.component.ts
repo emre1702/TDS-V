@@ -20,7 +20,7 @@ import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 
 enum MapCreatorNav {
-    Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, BombPlaces
+    Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, BombPlaces, Target
 }
 
 @Component({
@@ -33,6 +33,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     data = new MapCreateDataDto();
     mapCreatorNav = MapCreatorNav;
     mapCreatorPositionType = MapCreatorPositionType;
+    mapType = MapType;
     currentNav = MapCreatorNav.Main;
     editingTeamNumber = 0;
     selectedPosition: MapCreatorPosition;
@@ -136,6 +137,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                     this.removePosFromObjects();
                 }
                 break;
+            case MapCreatorPositionType.Target:
+                this.data[10] = undefined;
+                break;
         }
         this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
         this.changeDetector.detectChanges();
@@ -232,6 +236,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
     }
 
+    addPosToTarget(pos: MapCreatorPosition) {
+        this.data[10] = pos;
+        if (this.currentNav === MapCreatorNav.Target) {
+            this.selectedPosition = pos;
+            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos[0]);
+        }
+    }
+
     removePosFromTeamSpawns() {
         const index = this.data[6][this.editingTeamNumber].indexOf(this.selectedPosition);
         this.data[6][this.editingTeamNumber].splice(index, 1);
@@ -261,6 +273,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     removeMapCenter() {
         this.data[9] = undefined;
+    }
+
+    removeTarget() {
+        this.data[10] = undefined;
     }
 
     sendDataToClient() {
@@ -490,6 +506,16 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    switchToTargetEdit() {
+        this.currentTitle = 'Target';
+        this.selectedPosition = this.data[10];
+        this.currentNav = MapCreatorNav.Target;
+        this.changeDetector.detectChanges();
+
+        if (this.data[10])
+            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[10][0]);
+    }
+
     saveNav() {
         switch (this.currentNav) {
             case MapCreatorNav.Description:
@@ -550,6 +576,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     isBombPlacesValid(): boolean {
         return this.data[2] != MapType.Bomb || this.data[8].length > 0;
+    }
+
+    isTargetValid(): boolean {
+        return this.data[2] != MapType.Gangwar || this.data[9] != undefined;
     }
 
     getMinNameLength() {

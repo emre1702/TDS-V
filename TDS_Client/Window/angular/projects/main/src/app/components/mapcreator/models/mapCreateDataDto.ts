@@ -25,4 +25,6 @@ export class MapCreateDataDto {
     [8]: MapCreatorPosition[] = [];
     /** MapCenter */
     [9]: MapCreatorPosition;
+    /** Target */
+    [10]: MapCreatorPosition;
 }

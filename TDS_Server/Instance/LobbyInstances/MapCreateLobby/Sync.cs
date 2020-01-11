@@ -43,6 +43,8 @@ namespace TDS_Server.Instance.LobbyInstances
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == EMapCreatorPositionType.MapCenter)
                 _currentMap.MapCenter = pos;
+            else if (pos.Type == EMapCreatorPositionType.Target)
+                _currentMap.Target = pos;
             else
                 GetListInCurrentMapForMapType(pos.Type, pos.Info)?.Add(pos);
         }
@@ -75,6 +77,8 @@ namespace TDS_Server.Instance.LobbyInstances
             var data = _posById[objId];
             if (data.Type == EMapCreatorPositionType.MapCenter)
                 _currentMap.MapCenter = null;
+            else if (data.Type == EMapCreatorPositionType.Target)
+                _currentMap.Target = null;
             GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
         }
 

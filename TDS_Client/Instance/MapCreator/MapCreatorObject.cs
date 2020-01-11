@@ -197,6 +197,9 @@ namespace TDS_Client.Instance.MapCreator
                 case EMapCreatorPositionType.MapCenter:
                     return new Blip(Constants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
+                case EMapCreatorPositionType.Target:
+                    return new Blip(Constants.TargetBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+
                 case EMapCreatorPositionType.Object:
                     return new Blip(Constants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
             }

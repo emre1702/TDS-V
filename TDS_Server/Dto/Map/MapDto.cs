@@ -33,6 +33,9 @@ namespace TDS_Server.Dto.Map
         [XmlElement("bomb")]
         public MapBombInfoDto? BombInfo { get; set; }
 
+        [XmlElement("target")]
+        public Position3DDto? Target { get; set; }
+
         [XmlIgnore]
         public SyncedMapDataDto SyncedData { get; set; } = new SyncedMapDataDto();
 
@@ -83,6 +86,8 @@ namespace TDS_Server.Dto.Map
             {
                 Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToArray()
             };
+
+            Target = data.Target != null && data.Type == TDS_Common.Enum.EMapType.Gangwar ? new Position3DDto(data.Target) : null;
 
             if (data.BombPlaces != null)
                 BombInfo = new MapBombInfoDto

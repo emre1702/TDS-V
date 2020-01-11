@@ -147,6 +147,14 @@ namespace TDS_Client.Manager.MapCreator
             return GetObject(ClientConstants.BombPlantPlaceHash, EMapCreatorPositionType.BombPlantPlace, playerRemoteId, id: id);
         }
 
+        public static MapCreatorObject GetTarget(ushort playerRemoteId, int id = -1)
+        {
+            var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == EMapCreatorPositionType.Target);
+            if (entry.Value != null)
+                return entry.Value;
+            return GetObject(ClientConstants.TargetHash, EMapCreatorPositionType.Target, playerRemoteId, id: id);
+        }
+
         public static MapCreatorObject GetObject(uint hash, EMapCreatorPositionType type, ushort playerRemoteId, string objName = null, int id = -1)
         {
            
@@ -241,6 +249,12 @@ namespace TDS_Client.Manager.MapCreator
                         obj.LoadPos(spawnPos);
                     }
                 }
+            }
+
+            if (map.Target != null)
+            {
+                var obj = GetTarget(map.Target.OwnerRemoteId, map.Target.Id);
+                obj.LoadPos(map.Target);
             }
 
             Start();

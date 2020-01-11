@@ -193,6 +193,8 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     auto = "Auto";
     burst = "Burst";
     single = "Single";
+    Target = "Ziel";
+    TargetInfo = `Diese Position wird das Haupt-Ziel der Angreifer.`;
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Bekomme {0} Kills";

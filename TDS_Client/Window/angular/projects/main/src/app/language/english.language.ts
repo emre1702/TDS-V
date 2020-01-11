@@ -198,6 +198,8 @@ The user interface is always being worked on, so don't be surprised if you disco
     auto = "Auto";
     burst = "Burst";
     single = "Single";
+    Target = "Target";
+    TargetInfo = `This position Will be the main target of the attackers.`;
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Get {0} kills";

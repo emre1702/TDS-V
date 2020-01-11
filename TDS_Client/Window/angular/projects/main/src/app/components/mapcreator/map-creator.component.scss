@@ -177,13 +177,13 @@ textarea {
 #map-center-div {
   height: 27vh;
 
-  #map-center-info {
+  .info {
     float: left;
     margin-right: 2.5%;
     width: 42.5%;
   }
 
-  #map-center-positions-container {
+  .positions-container {
     height: 100%;
     float: right;
     margin-left: 2.5%;
@@ -193,6 +193,27 @@ textarea {
       width: 100%;
     }
   }
+}
+
+#target-div {
+    height: 27vh;
+
+    .info {
+        float: left;
+        margin-right: 2.5%;
+        width: 42.5%;
+    }
+
+    .positions-container {
+        height: 100%;
+        float: right;
+        margin-left: 2.5%;
+        width: 42.5%;
+
+        .mat-form-field {
+            width: 100%;
+        }
+    }
 }
 
 #mapsettings-content {

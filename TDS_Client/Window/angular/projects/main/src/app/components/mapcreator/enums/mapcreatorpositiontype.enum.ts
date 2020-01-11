@@ -3,5 +3,6 @@ export enum MapCreatorPositionType {
   MapLimit,
   BombPlantPlace,
   MapCenter,
-  Object
+  Object,
+  Target
 }

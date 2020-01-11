@@ -170,6 +170,8 @@ export interface Language {
     auto: string;
     burst: string;
     single: string;
+    Target: string;
+    TargetInfo: string;
 
     ////////////// Challenges ///////////////
     Challenge_Kills: string;

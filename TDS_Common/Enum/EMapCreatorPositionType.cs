@@ -6,6 +6,7 @@
         MapLimit,
         BombPlantPlace,
         MapCenter,
-        Object
+        Object,
+        Target
     }
 }
