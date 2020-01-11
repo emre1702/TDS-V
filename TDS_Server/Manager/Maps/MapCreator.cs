@@ -134,6 +134,8 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? GetRandomNewMap()
         {
+            if (_newCreatedMaps.Count == 0)
+                return null;
             var list = _newCreatedMaps.Where(m => m.Ratings.Count < SettingsManager.MapRatingAmountForCheck).ToList();
             if (list.Count == 0)
                 return null;

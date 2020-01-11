@@ -104,9 +104,12 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void StartMapClear()
         {
-            CurrentGameMode?.StartMapClear();
+            DeleteMapBlips();
+            DeleteMapObjects();
             ClearTeamPlayersAmounts();
             SendAllPlayerEvent(DToClientEvent.MapClear, null);
+
+            CurrentGameMode?.StartMapClear();
         }
 
         private void StartNewMapChoose()
@@ -121,6 +124,7 @@ namespace TDS_Server.Instance.LobbyInstances
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
+            CreateMapObjects(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.LimitInfo.Center));
@@ -141,22 +145,27 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private async void EndRound()
         {
-            if (LobbyEntity.IsTemporary && IsEmpty() || RemoveAfterOneRound)
+            bool isEmpty = IsEmpty();
+            if (!_dontRemove && (LobbyEntity.IsTemporary && isEmpty || RemoveAfterOneRound))
             {
                 Remove();
                 return;
             }
 
-            _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
-            Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
-
-            FuncIterateAllPlayers((character, team) =>
+            if (!isEmpty)
             {
-                NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
-                if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
-                    character.Client!.Kill();
-                character.Lifes = 0;
-            });
+                _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
+                Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
+
+                FuncIterateAllPlayers((character, team) =>
+                {
+                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
+                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
+                        character.Client!.Kill();
+                    character.Lifes = 0;
+                });
+            }
+            
 
             foreach (var team in Teams)
             {
@@ -165,12 +174,18 @@ namespace TDS_Server.Instance.LobbyInstances
 
             DmgSys.Clear();
 
-            DeleteMapBlips();
             CurrentGameMode?.StopRound();
 
-            RewardAllPlayer();
-            _ranking = GetOrderedRoundRanking();
-            SaveAllPlayerRoundStats();
+            if (!isEmpty)
+            {
+                RewardAllPlayer();
+                _ranking = GetOrderedRoundRanking();
+                SaveAllPlayerRoundStats();
+            }
+            else
+            {
+                _ranking = null;
+            }
             await ExecuteForDBAsync(async (dbContext) => 
             {
                 await dbContext.SaveChangesAsync();

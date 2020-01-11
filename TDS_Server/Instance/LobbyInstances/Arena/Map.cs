@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using MessagePack;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Utility;
+using Object = GTANetworkAPI.Object;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -17,6 +18,7 @@ namespace TDS_Server.Instance.LobbyInstances
         private MapDto? _currentMap;
         private List<MapDto> _maps = new List<MapDto>();
         private List<Blip> _mapBlips = new List<Blip>();
+        private List<Object> _mapObjects = new List<Object>();
         private string _mapsJson = string.Empty;
 
         private MapDto? GetNextMap()
@@ -31,6 +33,9 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (_maps.Count == 0)
                 return null;
+            if (_maps.Count == 1)
+                return _maps[0];
+
             if (IsOfficial && CommonUtils.Rnd.NextDouble() * 100 <= SettingsManager.ArenaNewMapProbabilityPercent)
             {
                 var map = MapCreator.GetRandomNewMap();
@@ -95,14 +100,29 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void CreateMapLimitBlips(MapDto map)
         {
-            if (map.LimitInfo.Edges == null)
+            if (map.LimitInfo.Edges is null)
                 return;
+            int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
                 Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
                 blip.Sprite = Constants.MapLimitBlipSprite;
-                blip.Name = "Limit";
+                blip.Name = "Limit " + ++i;
                 _mapBlips.Add(blip);
+            }
+        }
+
+        private void CreateMapObjects(MapDto map)
+        {
+            if (map.Objects is null || map.Objects.Entries is null || map.Objects.Entries.Length == 0)
+                return;
+
+            foreach (var objData in map.Objects.Entries)
+            {
+                var pos = new Vector3(objData.X, objData.Y, objData.Z);
+                var rot = new Vector3(objData.RotX, objData.RotY, objData.RotZ);
+                var obj = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(objData.Name), pos, rot, 255, Dimension);
+                _mapObjects.Add(obj);
             }
         }
 
@@ -124,14 +144,20 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void DeleteMapBlips()
         {
-            NAPI.Task.Run(() =>
+            foreach (Blip blip in _mapBlips)
             {
-                foreach (Blip blip in _mapBlips)
-                {
-                    blip.Delete();
-                }
-                _mapBlips = new List<Blip>();
-            });
+                blip.Delete();
+            }
+            _mapBlips.Clear();
+        }
+
+        private void DeleteMapObjects()
+        {
+            foreach (var obj in _mapObjects)
+            {
+                obj.Delete();
+            }
+            _mapObjects.Clear();
         }
 
         public void SetMapList(List<MapDto> themaps, string? syncjson = null)

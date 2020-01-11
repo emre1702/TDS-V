@@ -53,21 +53,6 @@ namespace TDS_Server.Instance.GameModes
             _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);
         }
 
-        public override void StartMapClear()
-        {
-            base.StartMapClear();
-            foreach (var place in _bombPlantPlaces)
-            {
-                place.Delete();
-            }
-            if (_bomb != null)
-            {
-                _bomb.Delete();
-                _bomb = null;
-            }
-            _bombPlantPlaces.Clear();
-        }
-
         public override void StopRound()
         {
             _bombPlantDefuseTimer?.Kill();
@@ -75,6 +60,25 @@ namespace TDS_Server.Instance.GameModes
 
             _bombDetonateTimer?.Kill();
             _bombDetonateTimer = null;
+
+            _bombAtPlayer = null;
+            _planter = null;
+        }
+
+        public override void StartMapClear()
+        {
+            base.StartMapClear();
+            foreach (var place in _bombPlantPlaces)
+            {
+                place.Delete();
+            }
+            _bombPlantPlaces.Clear();
+
+            if (_bomb != null)
+            {
+                _bomb.Delete();
+                _bomb = null;
+            }
 
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
@@ -84,8 +88,6 @@ namespace TDS_Server.Instance.GameModes
                 _bombTakeMarker?.Delete();
                 _bombTakeMarker = null;
             }
-            _bombAtPlayer = null;
-            _planter = null;
         }
     }
 }

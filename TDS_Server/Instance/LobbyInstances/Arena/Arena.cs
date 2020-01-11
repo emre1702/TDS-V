@@ -9,6 +9,8 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         public GangwarArea? GangwarArea { get; set; }
 
+        private bool _dontRemove;
+
         public Arena(Lobbies entity, bool isGangActionLobby = false) : base(entity, isGangActionLobby)
         {
             _roundStatusMethod[ERoundStatus.MapClear] = StartMapClear;
@@ -45,11 +47,14 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (IsOfficial)
                 return;
-             base.Remove();
-            DeleteMapBlips();
+            base.Remove();
+
             _nextRoundStatusTimer?.Kill();
             _nextRoundStatusTimer = null;
-            CurrentGameMode?.StopRound();
+
+            _dontRemove = true;
+            EndRound();
+            StartMapClear();
         }
     }
 }
