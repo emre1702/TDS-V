@@ -258,6 +258,105 @@
           }
         }
       }
+    },
+    "map-creator-vehicle-choice": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:module": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/map-creator-vehicle-choice",
+      "sourceRoot": "projects/map-creator-vehicle-choice/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/map-creator-vehicle-choice",
+            "index": "projects/map-creator-vehicle-choice/src/index.html",
+            "main": "projects/map-creator-vehicle-choice/src/main.ts",
+            "polyfills": "projects/map-creator-vehicle-choice/src/polyfills.ts",
+            "tsConfig": "projects/map-creator-vehicle-choice/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/map-creator-vehicle-choice/src/favicon.ico",
+              "projects/map-creator-vehicle-choice/src/assets"
+            ],
+            "styles": [
+              "projects/map-creator-vehicle-choice/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/map-creator-vehicle-choice/src/environments/environment.ts",
+                  "with": "projects/map-creator-vehicle-choice/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "map-creator-vehicle-choice:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "map-creator-vehicle-choice:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "map-creator-vehicle-choice:build"
+          }
+        }
+      }
     }
   },
   "defaultProject": "main"

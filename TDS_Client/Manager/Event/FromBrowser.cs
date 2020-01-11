@@ -52,9 +52,12 @@ namespace TDS_Client.Manager.Event
             Add(DToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
             Add(DFromBrowserEvent.MapCreatorHighlightPos, OnMapCreatorHighlightPosMethod);
             Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
+            Add(DFromBrowserEvent.MapCreatorShowVehicle, OnMapCreatorShowVehicleMethod);
             Add(DFromBrowserEvent.MapCreatorStartNew, OnMapCreatorStartNewBrowserMethod);
             Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
             Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
+            Add(DFromBrowserEvent.MapCreatorStartVehicleChoice, OnMapCreatorStartVehicleChoiceMethod);
+            Add(DFromBrowserEvent.MapCreatorStopVehiclePreview, OnMapCreatorStopVehiclePreviewMethod);
             Add(DFromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
@@ -259,6 +262,12 @@ namespace TDS_Client.Manager.Event
             ObjectPreview.ShowObject(objName);
         }
 
+        private void OnMapCreatorShowVehicleMethod(object[] args)
+        {
+            string vehicleName = (string)args[0];
+            VehiclePreview.ShowVehicle(vehicleName);
+        }
+
         private void OnMapCreatorStartNewBrowserMethod(object[] args)
         {
             Sync.SyncStartNewMap();
@@ -273,6 +282,17 @@ namespace TDS_Client.Manager.Event
         {
             ObjectPreview.Stop();
             Browser.Angular.MapCreatorObjectChoice.Stop();
+        }
+
+        private void OnMapCreatorStartVehicleChoiceMethod(object[] args)
+        {
+            Browser.Angular.MapCreatorVehicleChoice.Start();
+        }
+
+        private void OnMapCreatorStopVehiclePreviewMethod(object[] args)
+        {
+            VehiclePreview.Stop();
+            Browser.Angular.MapCreatorVehicleChoice.Stop();
         }
 
         private void OnColorSettingChangeMethod(object[] args)

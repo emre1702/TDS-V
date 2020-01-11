@@ -58,6 +58,8 @@ namespace TDS_Client.Manager.MapCreator
                 return;
             if (type == EMapCreatorPositionType.Object)
                 ObjectPreview.Stop();
+            else if (type == EMapCreatorPositionType.Vehicle)
+                VehiclePreview.Stop();
 
             if (HoldingObject != null)
                 ReleaseObject();
@@ -155,10 +157,17 @@ namespace TDS_Client.Manager.MapCreator
             var obj = HoldingObject;
             HoldingObject = null;
             object info = null;
-            if (obj.Type == EMapCreatorPositionType.TeamSpawn)
-                info = obj.TeamNumber.Value;
-            else if (obj.Type == EMapCreatorPositionType.Object)
-                info = obj.ObjectName;
+
+            switch (obj.Type)
+            {
+                case EMapCreatorPositionType.TeamSpawn:
+                    info = obj.TeamNumber.Value;
+                    break;
+                case EMapCreatorPositionType.Object:
+                case EMapCreatorPositionType.Vehicle:
+                    info = obj.ObjOrVehName;
+                    break;
+            }
             Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z, 
                 obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info, obj.OwnerRemoteId);
 

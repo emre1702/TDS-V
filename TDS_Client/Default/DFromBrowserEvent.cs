@@ -32,9 +32,12 @@
 
         public const string MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser";
         public const string MapCreatorShowObject = "MapCreatorShowObject_Browser";
+        public const string MapCreatorShowVehicle = "MapCreatorShowVehicle_Browser";
         public const string MapCreatorStartNew = "MapCreatorStartNew_Browser";
         public const string MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser";
         public const string MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser";
+        public const string MapCreatorStartVehicleChoice = "MapCreatorStartVehicleChoice_Browser";
+        public const string MapCreatorStopVehiclePreview = "MapCreatorStopVehiclePreview_Browser";
 
         public const string OnColorSettingChange = "OnColorSettingChange_Browser";
 

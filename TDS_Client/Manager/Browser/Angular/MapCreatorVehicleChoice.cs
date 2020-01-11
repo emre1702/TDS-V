@@ -5,7 +5,7 @@ using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
-    static class MapCreatorObjectChoice
+    static class MapCreatorVehicleChoice
     {
         public static HtmlWindow Browser { get; set; }
         private readonly static Queue<string> _executeQueue = new Queue<string>();
@@ -21,7 +21,7 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void Start()
         {
-            Browser = new HtmlWindow(ClientConstants.AngularMapCreatorObjectChoiceBrowserPath);
+            Browser = new HtmlWindow(ClientConstants.AngularMapCreatorVehicleChoiceBrowserPath);
 
             Execute(DToBrowserEvent.InitLoadAngular, (int)Settings.LanguageEnum);
             foreach (var execStr in _executeQueue)
