@@ -65,15 +65,15 @@ $(document).ready(function () {
         var type = $(this).attr("data-eventtype");
         switch (type) {
             case "lang_english":
-                mp.trigger("LanguageChange_Browser", 9);
+                mp.trigger("b19", 9);	// LanguageChange_Browser
                 break;
             case "lang_german":
-                mp.trigger("LanguageChange_Browser", 7);
+                mp.trigger("b19", 7);	// LanguageChange_Browser
                 break;
             default:
                 return;
         }
-        mp.trigger("SyncRegisterLoginLanguageTexts_Browser");
+        mp.trigger("b36");	// SyncRegisterLoginLanguageTexts_Browser
     });
 
     $(".form").submit(function (event) {
@@ -85,7 +85,7 @@ $(document).ready(function () {
             case "login":
 				var username = $this.find("input[id=login_username]").val();
                 var password = $this.find("input[id=login_password]").val();
-                mp.trigger("TryLogin_Browser", username, password);
+                mp.trigger("b40", username, password);  TryLogin_Browser
                 break;
 
             case "register":
@@ -95,7 +95,7 @@ $(document).ready(function () {
                     let email = $this.find("input[id=register_email]").val();
                     if (password === $(this).val()) {
 						if (!(/^\d+$/.test(username))) {
-							mp.trigger("TryRegister_Browser", username, password, email);
+							mp.trigger("b41", username, password, email);	// TryRegister_Browser
 						} else {
 							alert(langdata["name_may_not_only_numbers"]);
 							event.preventDefault();

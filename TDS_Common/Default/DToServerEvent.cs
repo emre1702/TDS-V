@@ -2,85 +2,85 @@
 {
     public static class DToServerEvent
     {
-        public const string AcceptInvitation = "AcceptInvitation_Browser";
-        public const string AddRatingToMap = "AddRatingToMap_Client";
-        public const string AnswerToOfflineMessage = "AnswerToOfflineMessage_Browser";
+        public const string AcceptInvitation = "c1";
+        public const string AddRatingToMap = "c2";
+        public const string AnswerToOfflineMessage = "c3";
 
-        public const string BuyMap = "BuyMap_Browser";
+        public const string BuyMap = "c4";
 
-        public const string ChatLoaded = "ChatLoaded_Client";
-        public const string ChooseTeam = "ChooseTeam_Browser";
-        public const string CommandUsed = "CommandUsed_Client";
-        public const string CreateCustomLobby = "CreateCustomLobby_Client";
+        public const string ChatLoaded = "c5";
+        public const string ChooseTeam = "c6";
+        public const string CommandUsed = "c7";
+        public const string CreateCustomLobby = "c8";
 
-        public const string DeleteOfflineMessage = "DeleteOfflineMessage_Browser";
+        public const string DeleteOfflineMessage = "c9";
 
-        public const string GetSupportRequestData = "GetSupportRequestData_Browser";
-        public const string GetVehicle = "GetVehicle_Client";
-        public const string GotHit = "GotHit_Client";
+        public const string GetSupportRequestData = "c10";
+        public const string GetVehicle = "c11";
+        public const string GotHit = "c12";
 
-        //public const string HitOtherPlayer = "HitOtherPlayer_Client";
+        //public const string HitOtherPlayer = "c";
 
-        public const string JoinArena = "JoinArena_Client";
-        public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Client";
-        public const string JoinLobby = "JoinLobby_Client";
-        public const string JoinLobbyWithPassword = "JoinLobbyWithPassword_Client";
-        public const string JoinMapCreator = "JoinMapCreator_Client";
+        public const string JoinArena = "c13";
+        public const string JoinedCustomLobbiesMenu = "c14";
+        public const string JoinLobby = "c15";
+        public const string JoinLobbyWithPassword = "c16";
+        public const string JoinMapCreator = "c17";
 
-        public const string LanguageChange = "LanguageChange_Client";
-        public const string LeaveLobby = "LeaveLobby_Browser";
-        public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Client";
-        public const string LeftSupportRequest = "LeftSupportRequest_Browser";
-        public const string LeftSupportRequestsList = "LeftSupportRequestsList_Browser";
-        public const string LobbyChatMessage = "LobbyChatMessage_Client";
-        public const string LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Browser";
-        public const string LoadMapForMapCreator = "LoadMapForMapCreator_Browser";
-        public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Browser";
-        public const string LoadUserpanelData = "LoadUserpanelData_Browser";
+        public const string LanguageChange = "c18";
+        public const string LeaveLobby = "c19";
+        public const string LeftCustomLobbiesMenu = "c20";
+        public const string LeftSupportRequest = "c21";
+        public const string LeftSupportRequestsList = "c22";
+        public const string LobbyChatMessage = "c23";
+        public const string LoadApplicationDataForAdmin = "c24";
+        public const string LoadMapForMapCreator = "c25";
+        public const string LoadMapNamesToLoadForMapCreator = "c26";
+        public const string LoadUserpanelData = "c27";
 
-        public const string MapCreatorStartNewMap = "MapCreatorStartNewMap_Client";
-        public const string MapCreatorSyncAllObjects = "MapCreatorSyncAllObjects_Client";
-        public const string MapCreatorSyncData = "MapCreatorSyncData_Browser";
-        public const string MapCreatorSyncLastId = "MapCreatorSyncLastId_Client";
-        public const string MapCreatorSyncNewObject = "MapCreatorSyncNewObject_Client";
-        public const string MapCreatorSyncObjectPosition = "MapCreatorSyncObjectPosition_Client";
-        public const string MapCreatorSyncRemoveObject = "MapCreatorSyncRemoveObject_Client";
-        public const string MapsListRequest = "MapsListRequest_Client";
-        public const string MapVote = "MapVote_Client";
+        public const string MapCreatorStartNewMap = "c28";
+        public const string MapCreatorSyncAllObjects = "c29";
+        public const string MapCreatorSyncData = "c30";
+        public const string MapCreatorSyncLastId = "c31";
+        public const string MapCreatorSyncNewObject = "c32";
+        public const string MapCreatorSyncObjectPosition = "c33";
+        public const string MapCreatorSyncRemoveObject = "c34";
+        public const string MapsListRequest = "c35";
+        public const string MapVote = "c36";
 
-        public const string OutsideMapLimit = "OutsideMapLimit_Client";
+        public const string OutsideMapLimit = "c37";
 
-        public const string RejectInvitation = "RejectInvitation_Browser";
-        public const string RemoveMap = "RemoveMap_Browser";
-        public const string RequestPlayersForScoreboard = "RequestPlayersForScoreboard_Client";
+        public const string RejectInvitation = "c38";
+        public const string RemoveMap = "c39";
+        public const string RequestPlayersForScoreboard = "c40";
 
-        public const string SaveMapCreatorData = "SaveMapCreatorData_Client";
-        public const string SaveSettings = "SaveSettings_Browser";
-        public const string SaveSpecialSettingsChange = "SaveSpecialSettingsChange_Browser";
-        public const string SendApplication = "SendApplication_Browser";
-        public const string SendApplicationInvite = "SendApplicationInvite_Browser";
-        public const string SendMapCreatorData = "SendMapCreatorData_Client";
-        public const string SendMapRating = "SendMapRating_Client";
-        public const string SendOfflineMessage = "SendOfflineMessage_Browser";
-        public const string SendSupportRequest = "SendSupportRequest_Browser";
-        public const string SendSupportRequestMessage = "SendSupportRequestMessage_Browser";
-        public const string SendTeamOrder = "SendTeamOrder_Client";
-        public const string SetSupportRequestClosed = "SetSupportRequestClosed_Browser";
-        public const string SpectateNext = "SpectateNext_Client";
-        public const string StartDefusing = "StartDefusing_Client";
-        public const string StartPlanting = "StartPlanting_Client";
-        public const string StopDefusing = "StopDefusing_Client";
-        public const string StopPlanting = "StopPlanting_Client";
-        public const string SuicideKill = "SuicideKill_Client";
-        public const string SuicideShoot = "SuicideShoot_Client";
+        public const string SaveMapCreatorData = "c41";
+        public const string SaveSettings = "c42";
+        public const string SaveSpecialSettingsChange = "c43";
+        public const string SendApplication = "c44";
+        public const string SendApplicationInvite = "c45";
+        public const string SendMapCreatorData = "c46";
+        public const string SendMapRating = "c47";
+        public const string SendOfflineMessage = "c48";
+        public const string SendSupportRequest = "c49";
+        public const string SendSupportRequestMessage = "c50";
+        public const string SendTeamOrder = "c51";
+        public const string SetSupportRequestClosed = "c52";
+        public const string SpectateNext = "c53";
+        public const string StartDefusing = "c54";
+        public const string StartPlanting = "c55";
+        public const string StopDefusing = "c56";
+        public const string StopPlanting = "c57";
+        public const string SuicideKill = "c58";
+        public const string SuicideShoot = "c59";
 
-        public const string ToggleCrouch = "ToggleCrouch_Client";
-        public const string ToggleMapFavouriteState = "ToggleMapFavouriteState_Client";
-        public const string TryLogin = "TryLogin_Client";
-        public const string TryRegister = "TryRegister_Client";
+        public const string ToggleCrouch = "c60";
+        public const string ToggleMapFavouriteState = "c61";
+        public const string TryLogin = "c62";
+        public const string TryRegister = "c63";
 
 
         // Special:
-        public const string FromBrowserEvent = "FromBrowserEvent_Browser";
+        public const string FromBrowserEvent = "c64";
     }
 }

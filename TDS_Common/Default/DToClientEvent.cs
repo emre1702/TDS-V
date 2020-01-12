@@ -2,108 +2,108 @@
 {
     public static class DToClientEvent
     {
-        public const string AddMapToVoting = "AddMapToVoting_Server";
-        public const string AmountInFightSync = "AmountInFightSync_Server";
-        public const string ApplySuicideAnimation = "ApplySuicideAnimation_Server";
+        public const string AddMapToVoting = "s1";
+        public const string AmountInFightSync = "s2";
+        public const string ApplySuicideAnimation = "s3";
 
-        public const string BombDetonated = "BombDetonated_Server";
-        public const string BombNotOnHand = "BombNotOnHand_Server";
-        public const string BombOnHand = "BombOnHand_Server";
-        public const string BombPlanted = "BombPlanted_Server";
+        public const string BombDetonated = "s4";
+        public const string BombNotOnHand = "s5";
+        public const string BombOnHand = "s6";
+        public const string BombPlanted = "s7";
 
-        public const string ClearTeamPlayers = "ClearTeamPlayers_Server";
-        public const string CountdownStart = "CountdownStart_Server";
-        public const string CreateCustomLobbyResponse = "CreateCustomLobbyResponse_Server";
+        public const string ClearTeamPlayers = "s8";
+        public const string CountdownStart = "s9";
+        public const string CreateCustomLobbyResponse = "s10";
 
-        public const string Death = "Death_Server";
+        public const string Death = "s11";
 
-        public const string GetSupportRequestData = "GetSupportRequestData_Server";
-        public const string GotoPositionByMapCreator = "GotoPositionByMapCreator_Server";
+        public const string GetSupportRequestData = "s12";
+        public const string GotoPositionByMapCreator = "s13";
 
-        public const string HitOpponent = "HitOpponent_Server";
+        public const string HitOpponent = "s14";
 
-        public const string JoinLobby = "JoinLobby_Server";
-        public const string JoinSameLobby = "JoinSameLobby_Server";
+        public const string JoinLobby = "s15";
+        public const string JoinSameLobby = "s16";
 
-        public const string LeaveCustomLobbyMenu = "LeaveCustomLobbyMenu_Server";
-        public const string LeaveSameLobby = "LeaveSameLobby_Server";
-        public const string LoadApplicationDataForAdmin = "LoadApplicationDataForAdmin_Server";
-        public const string LoadMapFavourites = "LoadMapFavourites_Server";
-        public const string LoadMapForMapCreator = "LoadMapForMapCreator_Server";
-        public const string LoadMapNamesToLoadForMapCreator = "LoadMapNamesToLoadForMapCreator_Server";
-        public const string LoadOwnMapRatings = "LoadOwnMapRatings_Server";
-        public const string LoadUserpanelData = "LoadUserpanelData_Server";
+        public const string LeaveCustomLobbyMenu = "s17";
+        public const string LeaveSameLobby = "s18";
+        public const string LoadApplicationDataForAdmin = "s19";
+        public const string LoadMapFavourites = "s20";
+        public const string LoadMapForMapCreator = "s21";
+        public const string LoadMapNamesToLoadForMapCreator = "s22";
+        public const string LoadOwnMapRatings = "s23";
+        public const string LoadUserpanelData = "s24";
 
-        public const string MapChange = "MapChange_Server";
-        public const string MapClear = "MapClear_Server";
-        public const string MapCreatorRequestAllObjectsForPlayer = "MapCreatorRequestAllObjectsForPlayer_Server";
-        public const string MapCreatorStartNewMap = "MapCreatorStartNewMap_Server";
-        public const string MapCreatorSyncAllObjects = "MapCreatorSyncAllObjects_Server";
-        public const string MapCreatorSyncData = "MapCreatorSyncData_Server";
-        public const string MapCreatorSyncFixLastId = "MapCreatorSyncFixLastId_Server";
-        public const string MapCreatorSyncNewObject = "MapCreatorSyncNewObject_Server";
-        public const string MapCreatorSyncObjectPosition = "MapCreatorSyncObjectPosition_Server";
-        public const string MapCreatorSyncObjectRemove = "MapCreatorSyncObjectRemove_Server";
-        public const string MapsListRequest = "MapsListRequest_Server";
-        public const string MapVotingSyncOnPlayerJoin = "MapVotingSyncOnPlayerJoin_Server";
+        public const string MapChange = "s25";
+        public const string MapClear = "s26";
+        public const string MapCreatorRequestAllObjectsForPlayer = "s27";
+        public const string MapCreatorStartNewMap = "s28";
+        public const string MapCreatorSyncAllObjects = "s29";
+        public const string MapCreatorSyncData = "s30";
+        public const string MapCreatorSyncFixLastId = "s31";
+        public const string MapCreatorSyncNewObject = "s32";
+        public const string MapCreatorSyncObjectPosition = "s33";
+        public const string MapCreatorSyncObjectRemove = "s34";
+        public const string MapsListRequest = "s35";
+        public const string MapVotingSyncOnPlayerJoin = "s36";
 
-        public const string PlayCustomSound = "PlayCustomSound_Server";
-        public const string PlayerGotBomb = "PlayerGotBomb_Server";
-        public const string PlayerPlantedBomb = "PlayerPlantedBomb_Server";
-        public const string PlayerSpectateMode = "PlayerSpectateMode_Server";
-        public const string PlayerJoinedTeam = "PlayerJoinedTeam_Server";
-        public const string PlayerLeftTeam = "PlayerLeftTeam_Server";
-        public const string PlayerRespawned = "PlayerRespawned_Server";
-        public const string PlayerTeamChange = "PlayerTeamChange_Server";
-        public const string PlayerWeaponChange = "PlayerWeaponChange_Server";
+        public const string PlayCustomSound = "s37";
+        public const string PlayerGotBomb = "s38";
+        public const string PlayerPlantedBomb = "s39";
+        public const string PlayerSpectateMode = "s40";
+        public const string PlayerJoinedTeam = "s41";
+        public const string PlayerLeftTeam = "s42";
+        public const string PlayerRespawned = "s43";
+        public const string PlayerTeamChange = "s44";
+        public const string PlayerWeaponChange = "s45";
 
-        public const string RegisterLoginSuccessful = "RegisterLoginSuccessful_Server";
-        public const string RemoveCustomLobby = "RemoveCustomLobby_Server";
-        public const string RequestNewMapsList = "RequestNewMapsList_Server";
+        public const string RegisterLoginSuccessful = "s46";
+        public const string RemoveCustomLobby = "s47";
+        public const string RequestNewMapsList = "s48";
 
-        public const string RemoveSyncedPlayerDatas = "RemoveSyncedPlayerDatas_Server";
-        public const string RoundStart = "RoundStart_Server";
-        public const string RoundEnd = "RoundEnd_Server";
+        public const string RemoveSyncedPlayerDatas = "s49";
+        public const string RoundStart = "s50";
+        public const string RoundEnd = "s51";
 
-        public const string SaveMapCreatorReturn = "SaveMapCreatorReturn_Server";
-        public const string SendMapCreatorReturn = "SendMapCreatorReturn_Server";
-        public const string SetEntityInvincible = "SetEntityInvincible_Server";
-        public const string SetMapVotes = "SetMapVotes_Server";
-        public const string SetPlayerData = "SetPlayerData_Server";
-        public const string SetPlayerInvincible = "SetPlayerInvincible_Server";
-        public const string SetSupportRequestClosed = "SetSupportRequestClosed_Server";
-        public const string SpectatorReattachCam = "SpectatorReattachCam_Server";
-        public const string StartRankingShowAfterRound = "StartRankingShowAfterRound_Server";
-        public const string StartRegisterLogin = "StartRegisterLogin_Server";
-        public const string StopBombPlantDefuse = "StopBombPlantDefuse_Server";
-        public const string StopMapVoting = "StopMapVoting_Server";
-        public const string StopRoundStats = "StopRoundStats_Server";
-        public const string StopSpectator = "StopSpectator_Server";
-        public const string SyncAllCustomLobbies = "SyncAllCustomLobbies_Server";
-        public const string SyncNewCustomLobby = "SyncNewCustomLobby_Server";
-        public const string SyncNewSupportRequestMessage = "SyncNewSupportRequestMessage_Server";
-        public const string SyncPlayerData = "SyncPlayerData_Server";
-        public const string SyncSettings = "SyncSettings_Server";
-        public const string SyncScoreboardData = "SyncScoreboardData_Server";
-        public const string SyncTeamChoiceMenuData = "SyncTeamChoiceMenuData_Server";
-        public const string SyncTeamPlayers = "SyncTeamPlayers_Server";
+        public const string SaveMapCreatorReturn = "s52";
+        public const string SendMapCreatorReturn = "s53";
+        public const string SetEntityInvincible = "s54";
+        public const string SetMapVotes = "s55";
+        public const string SetPlayerData = "s56";
+        public const string SetPlayerInvincible = "s57";
+        public const string SetSupportRequestClosed = "s58";
+        public const string SpectatorReattachCam = "s59";
+        public const string StartRankingShowAfterRound = "s60";
+        public const string StartRegisterLogin = "s61";
+        public const string StopBombPlantDefuse = "s62";
+        public const string StopMapVoting = "s63";
+        public const string StopRoundStats = "s64";
+        public const string StopSpectator = "s65";
+        public const string SyncAllCustomLobbies = "s66";
+        public const string SyncNewCustomLobby = "s67";
+        public const string SyncNewSupportRequestMessage = "s68";
+        public const string SyncPlayerData = "s69";
+        public const string SyncSettings = "s70";
+        public const string SyncScoreboardData = "s71";
+        public const string SyncTeamChoiceMenuData = "s72";
+        public const string SyncTeamPlayers = "s73";
 
-        public const string ToggleTeamChoiceMenu = "ToggleTeamChoiceMenu_Server";
+        public const string ToggleTeamChoiceMenu = "s74";
 
         //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
 
         // Workarounds //
-        public const string AttachEntityToEntityWorkaround = "AttachEntityToEntityWorkaround_Server";
+        public const string AttachEntityToEntityWorkaround = "s75";
 
-        public const string DetachEntityWorkaround = "DetachEntityWorkaround_Server";
-        public const string FreezePlayerWorkaround = "FreezePlayerWorkaround_Server";
-        public const string SetEntityCollisionlessWorkaround = "SetEntityCollisionlessWorkaround_Server";
-        public const string SetPlayerTeamWorkaround = "SetPlayerTeamWorkaround_Server";
-        public const string SetPlayerToSpectatePlayer = "SpectateWorkaround_Server";
+        public const string DetachEntityWorkaround = "s76";
+        public const string FreezePlayerWorkaround = "s77";
+        public const string SetEntityCollisionlessWorkaround = "s78";
+        public const string SetPlayerTeamWorkaround = "s79";
+        public const string SetPlayerToSpectatePlayer = "s80";
 
 
         // Special //
-        public const string ToBrowserEvent = "ToBrowserEvent_Server";
-        public const string FromBrowserEventReturn = "FromBrowserEventReturn_Server";
+        public const string ToBrowserEvent = "s81";
+        public const string FromBrowserEventReturn = "s82";
     }
 }

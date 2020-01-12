@@ -1,60 +1,58 @@
 ﻿namespace TDS_Client.Default
 {
-    public class DFromBrowserEvent
+    public static class DFromBrowserEvent
     {
-        public const string AddMapVote = "AddMapVote_Browser";
-        public const string AddRatingToMap = "AddRatingToMap_Browser";
+        public const string AddMapVote = "b1";
 
-        public const string ChatInputToggled = "ChatInputToggled_Browser";
-        public const string ChatLoaded = "ChatLoaded_Browser";
-        public const string ChatUsed = "ChatUsed_Browser";
-        public const string ChooseArenaToJoin = "ChooseArenaToJoin_Browser";
-        public const string ChooseMapCreatorToJoin = "ChooseMapCreatorToJoin_Browser";
-        public const string CloseChat = "CloseChat_Browser";
-        public const string CloseMapVotingMenu = "CloseMapVotingMenu_Browser";
-        public const string CloseUserpanel = "CloseUserpanel_Browser";
-        public const string CommandUsed = "CommandUsed_Browser";
-        public const string CreateCustomLobby = "CreateCustomLobby_Browser";
+        public const string ChatLoaded = "b2";
+        public const string ChatUsed = "b3";
+        public const string ChooseArenaToJoin = "b4";
+        public const string ChooseMapCreatorToJoin = "b5";
+        public const string CloseChat = "b6";
+        public const string CloseMapVotingMenu = "b7";
+        public const string CloseUserpanel = "b8";
+        public const string CommandUsed = "b9";
+        public const string CreateCustomLobby = "b10";
 
-        public const string GetHashedPassword = "GetHashedPassword_Browser";
-        public const string GetVehicle = "GetVehicle_Browser";
+        public const string GetHashedPassword = "b11";
+        public const string GetVehicle = "b12";
 
-        public const string HoldMapCreatorObject = "HoldMapCreatorObject_Browser";
+        public const string HoldMapCreatorObject = "b13";
 
-        public const string InputStarted = "InputStarted_Browser";
-        public const string InputStopped = "InputStopped_Browser";
-        public const string JoinCustomLobby = "JoinCustomLobby_Browser";
-        public const string JoinCustomLobbyWithPassword = "JoinCustomLobbyWithPassword_Browser";
-        public const string JoinedCustomLobbiesMenu = "JoinedCustomLobbiesMenu_Browser";
+        public const string InputStarted = "b14";
+        public const string InputStopped = "b15";
+        public const string JoinCustomLobby = "b16";
+        public const string JoinCustomLobbyWithPassword = "b17";
+        public const string JoinedCustomLobbiesMenu = "b18";
 
-        public const string LanguageChange = "LanguageChange_Browser";
-        public const string LeftCustomLobbiesMenu = "LeftCustomLobbiesMenu_Browser";
+        public const string LanguageChange = "b19";
+        public const string LeftCustomLobbiesMenu = "b20";
 
-        public const string MapCreatorHighlightPos = "MapCreatorHighlightPos_Browser";
-        public const string MapCreatorShowObject = "MapCreatorShowObject_Browser";
-        public const string MapCreatorShowVehicle = "MapCreatorShowVehicle_Browser";
-        public const string MapCreatorStartNew = "MapCreatorStartNew_Browser";
-        public const string MapCreatorStartObjectChoice = "MapCreatorStartObjectChoice_Browser";
-        public const string MapCreatorStopObjectPreview = "MapCreatorStopObjectPreview_Browser";
-        public const string MapCreatorStartVehicleChoice = "MapCreatorStartVehicleChoice_Browser";
-        public const string MapCreatorStopVehiclePreview = "MapCreatorStopVehiclePreview_Browser";
+        public const string MapCreatorHighlightPos = "b21";
+        public const string MapCreatorShowObject = "b22";
+        public const string MapCreatorShowVehicle = "b23";
+        public const string MapCreatorStartNew = "b24";
+        public const string MapCreatorStartObjectChoice = "b25";
+        public const string MapCreatorStopObjectPreview = "b26";
+        public const string MapCreatorStartVehicleChoice = "b27";
+        public const string MapCreatorStopVehiclePreview = "b28";
 
-        public const string OnColorSettingChange = "OnColorSettingChange_Browser";
+        public const string OnColorSettingChange = "b29";
 
-        public const string RemoveMapCreatorPosition = "RemoveMapCreatorPosition_Browser";
-        public const string RemoveMapCreatorTeamNumber = "RemoveMapCreatorTeamNumber_Browser";
+        public const string RemoveMapCreatorPosition = "b30";
+        public const string RemoveMapCreatorTeamNumber = "b31";
 
-        public const string SaveMapCreatorData = "SaveMapCreatorData_Browser";
-        public const string SendMapCreatorData = "SendMapCreatorData_Browser";
-        public const string SendMapRating = "SendMapRating_Browser";
-        public const string StartMapCreatorPosPlacing = "StartMapCreatorPosPlacing_Browser";
-        public const string SyncRegisterLoginLanguageTexts = "SyncRegisterLoginLanguageTexts_Browser";
+        public const string SaveMapCreatorData = "b32";
+        public const string SendMapCreatorData = "b33";
+        public const string SendMapRating = "b34";
+        public const string StartMapCreatorPosPlacing = "b35";
+        public const string SyncRegisterLoginLanguageTexts = "b36";
 
-        public const string TeleportToXY = "TeleportToXY_Browser";
-        public const string TeleportToPositionRotation = "TeleportToPositionRotation_Browser";
-        public const string ToggleMapFavorite = "ToggleMapFavorite_Browser";
-        public const string TryLogin = "TryLogin_Browser";
-        public const string TryRegister = "TryRegister_Browser";
+        public const string TeleportToXY = "b37";
+        public const string TeleportToPositionRotation = "b38";
+        public const string ToggleMapFavorite = "b39";
+        public const string TryLogin = "b40";
+        public const string TryRegister = "b41";
 
 
         //ChooseMapCreatorToJoin

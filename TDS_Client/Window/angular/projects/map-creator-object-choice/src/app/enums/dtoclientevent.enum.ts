@@ -1,4 +1,4 @@
 export enum DToClientEvent {
-    MapCreatorShowObject = "MapCreatorShowObject_Browser",
-    StartMapCreatorPosPlacing = "StartMapCreatorPosPlacing_Browser"
+    MapCreatorShowObject = "b22",
+    StartMapCreatorPosPlacing = "b35"
 }

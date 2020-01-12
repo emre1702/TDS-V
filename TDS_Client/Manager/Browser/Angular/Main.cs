@@ -156,12 +156,12 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
         {
             ToggleTeamChoiceMenu(true);
-            Execute(DToClientEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
+            Execute(DToBrowserEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
         }
 
         public static void ToggleTeamChoiceMenu(bool boolean)
         {
-            Execute(DToClientEvent.ToggleTeamChoiceMenu, boolean);
+            Execute(DToBrowserEvent.ToggleTeamChoiceMenu, boolean);
         }
 
         public static void ToggleUserpanel(bool boolean)
@@ -217,12 +217,12 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void SetSupportRequestClosed(int requestId, bool closed)
         {
-            Execute(DToClientEvent.SetSupportRequestClosed, requestId, closed);
+            Execute(DToBrowserEvent.SetSupportRequestClosed, requestId, closed);
         }
 
         public static void SyncNewSupportRequestMessage(int requestId, string messageJson)
         {
-            Execute(DToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+            Execute(DToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
         }
 
         public static void SyncMoney(int money)

@@ -1,3 +1,3 @@
 export enum DFromClientEvent {
-    InitLoadAngular = "InitLoadAngular_Client"
+    InitLoadAngular = "cb6"
 }

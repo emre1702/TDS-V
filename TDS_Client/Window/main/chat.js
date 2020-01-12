@@ -83,7 +83,7 @@ chatAPI["show"] = (toggle) => {
 
 chatdata.maininput.blur(() => {
 	enableChatInput(false);
-	mp.trigger("CloseChat_Browser");
+	mp.trigger("b6");	// CloseChat_Browser
 });
 
 
@@ -230,13 +230,13 @@ $(document).ready(function () {
                     if (msg.length > 0) {
                         if (msg == "test")
                             addMessage(JSON.stringify(chatdata.playernames));
-                        mp.trigger("CommandUsed_Browser", msg);
+                        mp.trigger("b9", msg);	// CommandUsed_Browser
                     }
                 } else {
-                    mp.trigger("ChatUsed_Browser", msg, chatdata.chosenchatbody == 1);
+                    mp.trigger("b3", msg, chatdata.chosenchatbody == 1);	// ChatUsed_Browser
                 }
             } else
-                mp.trigger("CloseChat_Browser");
+                mp.trigger("b6");	// CloseChat_Browser
 
             //enableChatInput( false );
         }
@@ -258,5 +258,5 @@ $(document).ready(function () {
         chatdata.bodies[chatdata.chosenchatbody].show(400);
     });
 
-    mp.trigger("ChatLoaded_Browser");
+    mp.trigger("b2");  // ChatLoaded_Browser
 });
