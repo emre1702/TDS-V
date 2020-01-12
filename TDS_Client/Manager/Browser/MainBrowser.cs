@@ -45,11 +45,6 @@ namespace TDS_Client.Manager.Browser
             Execute($"loadMyMapRatings(`{datajson}`);");
         }
 
-        public static void OnSendMapRating(string currentmap, int rating)
-        {
-            EventsSender.Send(DToServerEvent.AddRatingToMap, currentmap, rating);
-        }
-
         #endregion Events
 
         public static void ShowBloodscreen()

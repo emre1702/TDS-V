@@ -38,6 +38,12 @@ namespace TDS_Server.Manager.Utility
         {
             try
             {
+                if (!CodeMistakesChecker.EverythingsAlright())
+                {
+                    NAPI.Resource.StopResource("tds");
+                    return;
+                }
+                    
                 FromBonusBot.Init();
                 BonusBotConnector_Server.Program.Init(ErrorLogsManager.LogFromBonusBot);
 

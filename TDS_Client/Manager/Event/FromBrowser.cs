@@ -26,7 +26,6 @@ namespace TDS_Client.Manager.Event
         {
             Add(DToServerEvent.AcceptInvitation, OnAcceptInvitationMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
-            Add(DFromBrowserEvent.AddRatingToMap, OnAddRatingToMapMethod);
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DToServerEvent.ChooseTeam, OnChooseTeamMethod);
@@ -98,13 +97,6 @@ namespace TDS_Client.Manager.Event
         {
             int mapId = (int)args[0];
             EventsSender.Send(DToServerEvent.MapVote, mapId);
-        }
-
-        private void OnAddRatingToMapMethod(object[] args)
-        {
-            string currentmap = (string)args[0];
-            int rating = (int)args[1];
-            MainBrowser.OnSendMapRating(currentmap, rating);
         }
 
         private void OnChooseArenaToJoinMethod(object[] args)
