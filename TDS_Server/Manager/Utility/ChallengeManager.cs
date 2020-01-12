@@ -17,8 +17,8 @@ namespace TDS_Server.Manager.Utility
         {
             string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
 
-            string sql = "DELETE FROM {0} WHERE frequency = 'weekly'";
-            dbContext.Database.ExecuteSqlRaw(sql, playerChallengesTable);
+            string sql = $"DELETE FROM {playerChallengesTable} WHERE frequency = 'weekly'";
+            dbContext.Database.ExecuteSqlRaw(sql);
         }
 
         public static async Task AddWeeklyChallenges(Players dbPlayer)
@@ -28,26 +28,21 @@ namespace TDS_Server.Manager.Utility
             string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
             string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
-            string sql = @"
+            string sql = @$"
                 INSERT INTO 
-                    {0}
+                    {playerChallengesTable}
                 SELECT 
-                    {1},
+                    {dbPlayer.Id},
                     type,
                     frequency,
                     floor(random() * (max_value - min_value+1) + min_value)
                 FROM
-                    {2}
-                TABLESAMPLE SYSTEM_ROWS({3})
+                    {challengeSettingsTable}
+                TABLESAMPLE SYSTEM_ROWS({SettingsManager.ServerSettings.AmountWeeklyChallenges})
                 WHERE 
                     frequency = 'weekly'
             ";
-            await dbContext.Database.ExecuteSqlRawAsync(sql,
-                    playerChallengesTable,
-                    dbPlayer.Id,
-                    challengeSettingsTable,
-                    SettingsManager.ServerSettings.AmountWeeklyChallenges)
-                .ConfigureAwait(false);
+            await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
         }
 
         public static async Task AddForeverChallenges(Players dbPlayer)
@@ -57,24 +52,20 @@ namespace TDS_Server.Manager.Utility
             string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
             string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
-            string sql = @"
+            string sql = $@"
                 INSERT INTO 
-                    {0}
+                    {playerChallengesTable}
                 SELECT 
-                    {1},
+                    {dbPlayer.Id},
                     type,
                     frequency,
                     max_number
                 FROM
-                    {2}
+                    {challengeSettingsTable}
                 WHERE 
                     frequency = 'forever'
             ";
-            await dbContext.Database.ExecuteSqlRawAsync(sql,
-                    playerChallengesTable,
-                    dbPlayer.Id, 
-                    challengeSettingsTable)
-                .ConfigureAwait(false);
+            await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
         }
 
 

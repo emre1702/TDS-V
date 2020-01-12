@@ -97,8 +97,7 @@ namespace TDS_Server.Manager.Player
             string tableName = dbContext.GetTableName(entityInfo);
             var propertyName = dbContext.GetPropertyName(entityInfo, nameof(PlayerStats.LoggedIn));
 
-            string sql = "UPDATE {0} SET {1} = 0";
-            dbContext.Database.ExecuteSqlRaw(sql, tableName, propertyName);
+            dbContext.Database.ExecuteSqlRaw($"UPDATE {tableName} SET {propertyName} = false");
         }
     }
 }

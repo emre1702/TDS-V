@@ -24,6 +24,9 @@ namespace TDS_Server_DB.Entity
             string schema = entityDbType.GetSchema();
             string table = entityDbType.GetTableName();
 
+            if (schema is null)
+                return table;
+
             return schema + "." + table;
         }
 
