@@ -88,10 +88,10 @@ namespace TDS_Server.Manager.Utility
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
             {
-                // All
+                // All except Gangwar
                 if (mapAssignment.MapId == -1)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps);
+                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type != Enums.EMapType.Gangwar).ToList());
                     return;
                 }
 
@@ -116,7 +116,7 @@ namespace TDS_Server.Manager.Utility
                     return;
                 }
 
-                // All Gangwar
+                // All Gangwar (not really used yet)
                 if (mapAssignment.MapId == -5)
                 {
                     arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Gangwar).ToList());

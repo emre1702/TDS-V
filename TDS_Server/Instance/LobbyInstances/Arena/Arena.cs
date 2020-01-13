@@ -45,8 +45,6 @@ namespace TDS_Server.Instance.LobbyInstances
 
         protected override void Remove()
         {
-            if (IsOfficial)
-                return;
             base.Remove();
 
             _nextRoundStatusTimer?.Kill();
@@ -55,6 +53,14 @@ namespace TDS_Server.Instance.LobbyInstances
             _dontRemove = true;
             EndRound();
             StartMapClear();
+            RoundEndReasonText = null;
+
+            if (GangwarArea is { })
+            {
+                GangwarArea.InLobby = null;
+                GangwarArea = null;
+            }
+                
         }
     }
 }

@@ -27,7 +27,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
             if (gangwarArea.Owner is null)
             {
-                await gangwarArea.SetCaptured(attacker.Gang);
+                await gangwarArea.SetConqueredWithoutAttack(attacker.Gang);
                 return;
             }
 

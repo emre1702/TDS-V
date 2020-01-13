@@ -61,23 +61,25 @@ namespace TDS_Server.Instance.LobbyInstances
         public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
         public bool RemoveAfterOneRound { get; set; }
+        public ERoundEndReason CurrentRoundEndReason { get; private set; }
+        public Dictionary<ILanguage, string>? RoundEndReasonText { get; private set; }
 
         private Team? _currentRoundEndWinnerTeam;
-        private ERoundEndReason _currentRoundEndReason;
+
         private List<RoundPlayerRankingStat>? _ranking; 
 
         public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
         {
             CurrentRoundStatus = status;
             if (status == ERoundStatus.RoundEnd)
-                _currentRoundEndReason = roundEndReason;
+                CurrentRoundEndReason = roundEndReason;
             ERoundStatus nextStatus = _nextRoundStatsDict[status];
             _nextRoundStatusTimer?.Kill();
             if (!IsEmpty())
             {
                 _nextRoundStatusTimer = new TDSTimer(() =>
                 {
-                    if (IsEmpty())
+                    if (IsEmpty() && CurrentGameMode?.CanEndRound(ERoundEndReason.Empty) != false)
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);
                     else
                         SetRoundStatus(nextStatus);
@@ -91,7 +93,8 @@ namespace TDS_Server.Instance.LobbyInstances
                 {
                     ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
-                    NAPI.Task.Run(Remove);
+                    if (!IsOfficial)
+                        NAPI.Task.Run(Remove);
                 }
             }
             else if (CurrentRoundStatus != ERoundStatus.RoundEnd)
@@ -131,6 +134,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 MixTeams();
             SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.LimitInfo.Center));
             _currentMap = nextMap;
+            RoundEndReasonText = null;
         }
 
         private void StartRoundCountdown()
@@ -157,12 +161,12 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!isEmpty)
             {
                 _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
-                Dictionary<ILanguage, string>? reasondict = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
+                RoundEndReasonText = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, reasondict != null ? reasondict[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
-                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && _currentRoundEndReason != ERoundEndReason.Death)
+                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
+                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != ERoundEndReason.Death)
                         character.Client!.Kill();
                     character.Lifes = 0;
                 });
@@ -193,8 +197,8 @@ namespace TDS_Server.Instance.LobbyInstances
                 await dbContext.SaveChangesAsync();
             });
             
-            ServerTotalStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
-            ServerDailyStatsManager.AddArenaRound(_currentRoundEndReason, IsOfficial);
+            ServerTotalStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
+            ServerDailyStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
 
         }
 
@@ -244,7 +248,7 @@ namespace TDS_Server.Instance.LobbyInstances
             int teamsWithPlayers = GetTeamAmount(true);
             // if there is only 1 team playing, it should continue to play
             // if there are 2+ teams playing and there is only 1 team alive, end the round
-            if (teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2)
+            if ((teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2) && CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
             {
                 SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Death);
             }
@@ -254,7 +258,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (CurrentGameMode?.WinnerTeam != null)
                 return CurrentGameMode.WinnerTeam;
-            switch (_currentRoundEndReason)
+            switch (CurrentRoundEndReason)
             {
                 case ERoundEndReason.Death:
                     return GetTeamStillInRound();
@@ -272,7 +276,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private Dictionary<ILanguage, string>? GetRoundEndReasonText(Team? winnerTeam)
         {
-            switch (_currentRoundEndReason)
+            switch (CurrentRoundEndReason)
             {
                 case ERoundEndReason.Death:
                     return LangUtils.GetLangDictionary(lang =>
@@ -305,6 +309,12 @@ namespace TDS_Server.Instance.LobbyInstances
                     {
                         return lang.ROUND_END_NEW_PLAYER_INFO;
                     });
+                case ERoundEndReason.TargetEmpty:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return lang.ROUND_END_TARGET_EMPTY_INFO;
+                    });
+                    
                 case ERoundEndReason.Empty:
                 default:
                     return null;

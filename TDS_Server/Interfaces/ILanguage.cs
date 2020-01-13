@@ -119,6 +119,7 @@
         string ROUND_END_DEATH_INFO { get; }
         string ROUND_END_DEATH_ALL_INFO { get; }
         string ROUND_END_NEW_PLAYER_INFO { get; }
+        string ROUND_END_TARGET_EMPTY_INFO { get; }
         string ROUND_END_TIME_INFO { get; }
         string ROUND_END_TIME_TIE_INFO { get; }
         string ROUND_MISSION_BOMB_BAD { get; }

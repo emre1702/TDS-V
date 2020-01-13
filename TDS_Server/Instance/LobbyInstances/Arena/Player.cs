@@ -15,6 +15,7 @@ using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Enums;
 using TDS_Common.Enum.Challenge;
+using TDS_Server.Instance.GameModes;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -88,7 +89,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             base.SetPlayerTeam(player, team);
 
-            if (CurrentRoundStatus == ERoundStatus.Countdown)
+            if (CurrentRoundStatus == ERoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true)
             {
                 SetPlayerReadyForRound(player);
             }
@@ -99,7 +100,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 if (teamsinround < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = player;
-                    if (CurrentRoundStatus != ERoundStatus.None)
+                    if (CurrentRoundStatus != ERoundStatus.None && CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
                         SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
                     else
                         SetRoundStatus(ERoundStatus.NewMapChoose);

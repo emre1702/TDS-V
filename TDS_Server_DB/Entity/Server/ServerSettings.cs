@@ -38,6 +38,8 @@
         public int AmountPlayersAllowedInGangwarTeamBeforeCountCheck { get; set; }
         public bool GangwarAttackerCanBeMore { get; set; }
         public bool GangwarOwnerCanBeMore { get; set; }
+        public double GangwarTargetRadius { get; set; }
+        public int GangwarTargetWithoutAttackerMaxSeconds { get; set; }
 
 
         public int ReduceMapsBoughtCounterAfterMinute { get; set; }

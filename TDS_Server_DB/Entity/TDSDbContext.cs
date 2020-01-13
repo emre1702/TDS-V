@@ -1033,6 +1033,14 @@ namespace TDS_Server_DB.Entity
                     .IsRequired()
                     .HasDefaultValue(false);
 
+                entity.Property(e => e.GangwarTargetRadius)
+                    .IsRequired()
+                    .HasDefaultValue(5d);
+
+                entity.Property(e => e.GangwarTargetWithoutAttackerMaxSeconds)
+                    .IsRequired()
+                    .HasDefaultValue(5);
+
                 entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
                     .IsRequired()
                     .HasDefaultValue(60);

@@ -1,7 +1,9 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using TDS_Common.Enum;
 using TDS_Server.Dto.Map;
+using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
@@ -46,5 +48,9 @@ namespace TDS_Server.Instance.GameModes
         public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer) { }
         public virtual void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }
 
+
+        public virtual bool CanJoinDuringRound(TDSPlayer player, Team team) { return false; }
+
+        public virtual bool CanEndRound(ERoundEndReason newPlayer) { return true; }
     }
 }

@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Enum;
 using TDS_Server.CustomAttribute;
@@ -35,8 +35,11 @@ namespace TDS_Server.Manager.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
-            arena.CurrentRoundEndBecauseOfPlayer = player;
-            arena.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Command);
+            if (arena.CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
+            {
+                arena.CurrentRoundEndBecauseOfPlayer = player;
+                arena.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Command);
+            }
         }
 
         [TDSCommand(DAdminCommand.LobbyKick)]

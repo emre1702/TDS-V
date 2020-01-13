@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Instance.Player;
+using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.GameModes
@@ -37,6 +38,14 @@ namespace TDS_Server.Instance.GameModes
                 player.SendNotification(player.Language.GANGWAR_TEAM_ALREADY_FULL_INFO);
                 return false;
             }
+
+            return true;
+        }
+
+        public override bool CanJoinDuringRound(TDSPlayer player, Team team)
+        {
+            if (Lobby.DmgSys.DamageDealtThisRound)
+                return false;
 
             return true;
         }

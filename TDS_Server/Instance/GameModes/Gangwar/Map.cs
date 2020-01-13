@@ -6,8 +6,9 @@ namespace TDS_Server.Instance.GameModes
 {
     partial class Gangwar
     {
+        public Object? TargetObject { get; set; }
+
         private Blip? _targetBlip;
-        private Object? _targetObject;
 
         private void CreateTargetBlip()
         {
@@ -24,8 +25,8 @@ namespace TDS_Server.Instance.GameModes
             if (Map.Target is null)
                 return;
 
-            _targetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(),new Vector3(), 120, Lobby.Dimension);
-            Workaround.SetEntityCollisionless(_targetObject, true, Lobby);
+            TargetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(),new Vector3(), 120, Lobby.Dimension);
+            Workaround.SetEntityCollisionless(TargetObject, true, Lobby);
         }
 
         private void ClearMapFromTarget()
@@ -33,8 +34,8 @@ namespace TDS_Server.Instance.GameModes
             _targetBlip?.Delete();
             _targetBlip = null;
 
-            _targetObject?.Delete();
-            _targetObject = null;
+            TargetObject?.Delete();
+            TargetObject = null;
         }
     }
 }

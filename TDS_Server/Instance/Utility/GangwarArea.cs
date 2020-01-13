@@ -1,10 +1,14 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Enum;
+using TDS_Common.Instance.Utility;
 using TDS_Server.Dto.Map;
+using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.Player;
+using TDS_Server.Manager.Player;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.GangEntities;
@@ -16,8 +20,13 @@ namespace TDS_Server.Instance.Utility
         public GangwarAreas Entity { get; private set; }
         public MapDto Map { get; private set; }
         public Gang? Owner { get; private set; }
-        public Gang? Attacker { get; set; }
+        public Gang? Attacker { get; private set; }
         public Arena? InLobby { get; set; }
+
+        private Team? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
+        private Team? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
+
+        // public delegate void Gangwar
 
         public bool HasCooldown
         {
@@ -30,6 +39,9 @@ namespace TDS_Server.Instance.Utility
                     Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-SettingsManager.ServerSettings.GangwarAreaAttackCooldownMinutes);
             }
         }
+
+        private TDSTimer? _checkAtTarget;
+        private int _playerNotAtTargetCounter;
 
         public GangwarArea(GangwarAreas entity, MapDto map)
         {
@@ -47,57 +59,140 @@ namespace TDS_Server.Instance.Utility
             Attacker = attackerGang;
             Attacker.InAction = true;
             Owner!.InAction = true;
-            
         }
 
         public void SetInAttack()
         {
+            _playerNotAtTargetCounter = 0;
+            _checkAtTarget = new TDSTimer(CheckIsAttackerAtTarget, 1000, 0);
+        }
 
+        public async Task SetAttackEnded(bool conquered)
+        {
+            using var dbContext = new TDSDbContext();
+
+            dbContext.Attach(Entity);
+
+            ++Entity.AttackCount;
+            Entity.LastAttacked = DateTime.UtcNow;
+
+            if (conquered)
+                SetConquered(dbContext, true);
+            else 
+                SetDefended(dbContext);
+
+            ClearAttack();
+
+            await dbContext.SaveChangesAsync();          
+        }
+
+        public Task SetConqueredWithoutAttack(Gang newOwner)
+        {
+            Attacker = newOwner;
+
+            using var dbContext = new TDSDbContext();
+
+            dbContext.Attach(Entity);
+
+            Entity.LastAttacked = DateTime.UtcNow;
             
+            SetConquered(dbContext, false);
+
+            return dbContext.SaveChangesAsync();
         }
 
-        public Task SetDefended()
+        private void SetDefended(TDSDbContext dbContext)
         {
-            using var dbContext = new TDSDbContext();
-            dbContext.Attach(Entity);
-
             ++Entity.DefendCount;
-            ++Entity.AttackCount;
-            Entity.LastAttacked = DateTime.UtcNow;
 
-            return dbContext.SaveChangesAsync();
+            //Todo: Inform everyone + owner + attacker
         }
 
-        public Task SetCaptured(Gang newOwner)
+        private void SetConquered(TDSDbContext dbContext, bool outputInfos)
         {
-            if (Owner is { })
-            {
-                //Todo inform the owner
-            }
-            Owner = newOwner;
+            var oldOwner = Owner;
 
-            using var dbContext = new TDSDbContext();
-            dbContext.Attach(Entity);
+            Owner = Attacker;
 
-            Entity.OwnerGangId = newOwner.Entity.Id;
+            Entity.OwnerGangId = Owner!.Entity.Id;
             Entity.DefendCount = 0;
-            ++Entity.AttackCount;
-            Entity.LastAttacked = DateTime.UtcNow;
 
-            return dbContext.SaveChangesAsync();
+            if (outputInfos)
+            {
+                if (Owner is { })
+                {
+                    //Todo: Inform the owner
+                }
+                //Todo: Inform everyone + attacker
+            }
         }
 
-
-        public bool IsAtTarget(TDSPlayer player)
+        private void CheckIsAttackerAtTarget()
         {
-            if (!player.LoggedIn)
-                return false;
-            if (player.CurrentLobby?.Type != ELobbyType.GangLobby)
-                return false;
+            if (InLobby is null)
+                return;
+
+            if (!(InLobby.CurrentGameMode is Gangwar gangwar))
+                return;
+
+            if (gangwar.TargetObject is null)
+                return;
+
+            var posToCheck = gangwar.TargetObject.Position;
+            bool isAnyPlayerAtTarget = NAPI.Player.GetPlayersInRadiusOfPosition(SettingsManager.ServerSettings.GangwarTargetRadius, posToCheck)
+                .Where(p => p.Dimension == InLobby.Dimension)
+                .Select(p => p.GetChar())
+                .Any(p => IsAtTarget(p));
+
+            if (isAnyPlayerAtTarget && _playerNotAtTargetCounter > 0)
+            {
+                _playerNotAtTargetCounter = 0;
+                //Todo: Output to owner that a player is at target
+                return;
+            }
+
+            if (++_playerNotAtTargetCounter < SettingsManager.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
+            {
+                //Todo: Output to owner that they have xx seconds left to go back to target
+            }
+            else
+            {
+                //Todo: Output to owner that no one was at target for too long
+                /*OwnerTeamInGangwar?.FuncIterate((player, team) =>
+                {
+                    player.SendMessage(player.Language.GANGWAR_LOST_);
+                });*/
+                var lobby = InLobby;
+                lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.TargetEmpty);
+            }
+
+
+
+
+        }
+
+        private void ClearAttack()
+        {
+            Attacker!.InAction = false;
+            Owner!.InAction = false;
+            Attacker = null;
+            _checkAtTarget?.Kill();
+            _checkAtTarget = null;
+        }
+
+        private bool IsAtTarget(TDSPlayer player)
+        {
             if (player.Client is null || player.Client.Dead)
                 return false;
-
-            //Todo Is in the skull or whatever
+            if (!player.LoggedIn)
+                return false;
+            if (player.CurrentLobby is null)
+                return false;
+            if (!(player.CurrentLobby is Arena arena))
+                return false;
+            if (arena.GangwarArea != this)
+                return false;
+            
             return true;
         }
     }

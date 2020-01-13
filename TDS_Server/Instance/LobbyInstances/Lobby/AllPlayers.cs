@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +33,20 @@ namespace TDS_Server.Instance.LobbyInstances
         public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, Team? targetTeam = null)
         {
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
+            if (targetTeam is null)
+                FuncIterateAllPlayers((player, team) =>
+                {
+                    player.SendMessage(texts[player.Language]);
+                });
+            else
+                targetTeam.FuncIterate((player, team) =>
+                {
+                    player.SendMessage(texts[player.Language]);
+                });
+        }
+
+        public void SendAllPlayerLangMessage(Dictionary<ILanguage, string> texts, Team? targetTeam = null)
+        {
             if (targetTeam is null)
                 FuncIterateAllPlayers((player, team) =>
                 {

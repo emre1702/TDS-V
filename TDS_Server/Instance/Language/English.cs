@@ -126,6 +126,7 @@ namespace TDS_Server.Instance.Language
         public virtual string ROUND_END_DEATH_INFO => "All opponents are dead!<br>Team {0} wins!";
         public virtual string ROUND_END_DEATH_ALL_INFO => "All players are dead!<br>No team wins!";
         public virtual string ROUND_END_NEW_PLAYER_INFO => "Enough players in ...<br>Round starting!";
+        public virtual string ROUND_END_TARGET_EMPTY_INFO => "The attackers had not been at the target for too long.<br>Owners win!";
         public virtual string ROUND_END_TIME_INFO => "Time's up!<br>Team {0} wins because of most HP left!";
         public virtual string ROUND_END_TIME_TIE_INFO => "Time's up!<br>Tie!";
         public virtual string ROUND_MISSION_BOMB_BAD => "Mission: Let the bomb explode on one of the spots or kill all opponents!";

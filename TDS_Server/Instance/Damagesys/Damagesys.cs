@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
@@ -9,6 +9,8 @@ namespace TDS_Server.Instance
 {
     partial class Damagesys
     {
+        public bool DamageDealtThisRound => _allHitters.Count > 0;
+
         #nullable disable warnings
         private static Dictionary<EWeaponHash, DamageDto> _defaultDamages;
         #nullable restore warnings

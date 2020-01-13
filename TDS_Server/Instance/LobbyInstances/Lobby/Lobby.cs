@@ -85,8 +85,6 @@ namespace TDS_Server.Instance.LobbyInstances
 
         protected async virtual void Remove()
         {
-            if (IsOfficial)
-                return;
             LobbiesByIndex.Remove(LobbyEntity.Id);
             LobbyManager.RemoveLobby(this);
             _dimensionsUsed.Remove(Dimension);
