@@ -8,7 +8,7 @@ namespace TDS_Server.Instance.GameModes
 {
     partial class Gangwar : GameMode
     {
-        private GangwarArea _gangwarArea;
+        private readonly GangwarArea _gangwarArea;
 
         public Gangwar(Arena lobby, MapDto map) : base(lobby, map) 
         { 

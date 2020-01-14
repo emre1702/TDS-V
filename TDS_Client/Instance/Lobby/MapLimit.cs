@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Dto.Map;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Lobby
@@ -19,8 +19,8 @@ namespace TDS_Client.Instance.Lobby
     internal class MapLimit
     {
         private float _minX, _minY, _maxX, _maxY;
-        private List<Position4DDto> _edges;
-        private int _maxOutsideCounter;
+        private List<Position3DDto> _edges;
+        private readonly int _maxOutsideCounter;
         private float _edgesMaxTop = -1;
 
         private int _outsideCounter;
@@ -31,16 +31,19 @@ namespace TDS_Client.Instance.Lobby
         private float _lastRotInMap;
         private bool _createdGpsRoutes;
         private bool _started;
+        private readonly Color _mapBorderColor;
 
         private readonly EMapLimitType _type;
         private readonly Dictionary<EMapLimitType, Action> _mapLimitTypeMethod = new Dictionary<EMapLimitType, Action>{};
         private readonly HashSet<EMapLimitType> _typeToCheckFaster = new HashSet<EMapLimitType> { EMapLimitType.Block }; 
 
-        private bool _savePosition => _edges != null && (_type == EMapLimitType.Block || _type == EMapLimitType.TeleportBackAfterTime);
+        private bool SavePosition => _edges != null && (_type == EMapLimitType.Block || _type == EMapLimitType.TeleportBackAfterTime);
 
-        public MapLimit(List<Position4DDto> edges, EMapLimitType type)
+        public MapLimit(List<Position3DDto> edges, EMapLimitType type, int maxOutsideCounter, Color mapBorderColor)
         {
             _type = type;
+            _maxOutsideCounter = maxOutsideCounter;
+            _mapBorderColor = mapBorderColor;
 
             SetEdges(edges);            
 
@@ -56,8 +59,11 @@ namespace TDS_Client.Instance.Lobby
             Reset();
             if (_type != EMapLimitType.Display)
             {
-                _checkTimer = new TDSTimer(Check, 1000, 0);
-                _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
+                if (_typeToCheckFaster.Contains(_type))
+                    _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
+                else 
+                    _checkTimer = new TDSTimer(Check, 1000, 0);
+                
             }
             TickManager.Add(Draw);
             DrawGpsRoutes();
@@ -74,7 +80,6 @@ namespace TDS_Client.Instance.Lobby
             _checkTimerFaster = null;
             _info?.Remove();
             _info = null;
-            _maxOutsideCounter = Settings.MapLimitTime;
             _outsideCounter = _maxOutsideCounter;
             TickManager.Remove(Draw);
             ClearGpsRoutes();
@@ -83,12 +88,11 @@ namespace TDS_Client.Instance.Lobby
 
         private void Reset()
         {
-            if (_savePosition)
+            if (SavePosition)
             {
                 _lastPosInMap = Player.LocalPlayer.Position;
                 _lastRotInMap = Player.LocalPlayer.GetHeading();
             }
-            _maxOutsideCounter = Settings.MapLimitTime;
             if (_outsideCounter == _maxOutsideCounter)
                 return;
             _info?.Remove();
@@ -96,7 +100,7 @@ namespace TDS_Client.Instance.Lobby
             _outsideCounter = _maxOutsideCounter;
         }
 
-        public void SetEdges(List<Position4DDto> edges)
+        public void SetEdges(List<Position3DDto> edges)
         {
             if (_type != EMapLimitType.Display)
             {
@@ -209,8 +213,8 @@ namespace TDS_Client.Instance.Lobby
             bool inside = false;
             for (int i = 0, j = _edges.Count - 1; i < _edges.Count; j = i++)
             {
-                Position4DDto iPoint = _edges[i];
-                Position4DDto jPoint = _edges[j];
+                Position3DDto iPoint = _edges[i];
+                Position3DDto jPoint = _edges[j];
                 bool intersect = ((iPoint.Y > point.Y) != (jPoint.Y > point.Y))
                         && (point.X < (jPoint.X - iPoint.X) * (point.Y - iPoint.Y) / (jPoint.Y - iPoint.Y) + iPoint.X);
                 if (intersect)
@@ -267,7 +271,7 @@ namespace TDS_Client.Instance.Lobby
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
 
-                Color color = Settings.MapBorderColor;
+                Color color = _mapBorderColor;
                 float maxTop = Math.Max(edgeStartZ + 50, edgeTargetZ + 50);
                 totalMaxTop = Math.Max(totalMaxTop, maxTop);
                 if (_edgesMaxTop != -1)

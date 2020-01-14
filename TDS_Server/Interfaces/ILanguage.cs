@@ -143,6 +143,7 @@
         string TARGET_NOT_BLOCKED { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
+        string TARGET_PLAYER_DEFEND_INFO { get; }
         string TARGET_REJECTED_INVITATION { get; }
         string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
         string TESTING_MAP_NOTIFICATION { get; }

@@ -1,4 +1,11 @@
-﻿using TDS_Server.Instance.Player;
+﻿using GTANetworkAPI;
+using MoreLinq;
+using TDS_Common.Default;
+using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
+using TDS_Server.Dto.Map;
+using TDS_Server.Enums;
+using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 
@@ -7,6 +14,7 @@ namespace TDS_Server.Instance.GameModes
     partial class Gangwar
     {
         private TDSPlayer? _attackLeader;
+        private TDSPlayer? _playerForcedAtTarget;
 
         public override void AddPlayer(TDSPlayer player, uint? teamIndex)
         {
@@ -24,6 +32,23 @@ namespace TDS_Server.Instance.GameModes
             {
                 var newAttackLeader = AttackerTeam.Players[0];
                 SetAttackLeader(newAttackLeader);
+            }
+
+            if (player == _playerForcedAtTarget)
+            {
+                var nextTargetMan = GetNextTargetMan();
+                SetTargetMan(nextTargetMan);
+            }
+        }
+
+        public override void OnPlayerDeath(TDSPlayer player, TDSPlayer killer)
+        {
+            base.OnPlayerDeath(player, killer);
+
+            if (player == _playerForcedAtTarget)
+            {
+                var nextTargetMan = GetNextTargetMan();
+                SetTargetMan(nextTargetMan);
             }
         }
 
@@ -55,6 +80,45 @@ namespace TDS_Server.Instance.GameModes
             _attackLeader = attackLeader;
 
             // Todo: Send him infos or open menu or whatever
+        }
+
+        private TDSPlayer? GetNextTargetMan()
+        {
+            if (TargetObject is null)
+                return null;
+
+            if (AttackerTeam.Players.Count == 0)
+                return null;
+
+            if (Lobby.CurrentRoundStatus == ERoundStatus.Round && AttackerTeam.AlivePlayers!.Count == 0)
+                return null;
+
+            if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
+                return AttackerTeam.Players[CommonUtils.Rnd.Next(AttackerTeam.Players.Count)];
+
+            return AttackerTeam.Players.MinBy(p => p.Client!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+        }
+
+        private void SetTargetMan(TDSPlayer? player)
+        {
+            if (_playerForcedAtTarget is { })
+                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Client, DToClientEvent.RemoveForceStayAtPosition);
+
+            _playerForcedAtTarget = player;
+
+            if (_playerForcedAtTarget is null)
+                return;
+
+            AttackerTeam.FuncIterate((player, team) =>
+            {
+                player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
+            });
+
+            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Client, DToClientEvent.SetForceStayAtPosition,
+                Serializer.ToClient(new Position3DDto(TargetObject!.Position)),
+                SettingsManager.ServerSettings.GangwarTargetRadius,
+                EMapLimitType.KillAfterTime,
+                SettingsManager.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
         }
 
         private bool HasTeamFreePlace(bool isAttacker)

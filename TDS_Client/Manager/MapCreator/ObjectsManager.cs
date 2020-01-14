@@ -4,6 +4,7 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
@@ -286,7 +287,7 @@ namespace TDS_Client.Manager.MapCreator
         {
             MapLimitDisplay?.SetEdges(_cacheMapEditorObjects
                 .Where(o => o.Value.Type == EMapCreatorPositionType.MapLimit)
-                .Select(o => new Position4DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y, Z = o.Value.MovingPosition.Z })
+                .Select(o => new Position3DDto { X = o.Value.MovingPosition.X, Y = o.Value.MovingPosition.Y, Z = o.Value.MovingPosition.Z })
                 .ToList());
         }
 

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using GTANetworkAPI;
+using MessagePack;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map.Creator;
 
@@ -26,6 +27,13 @@ namespace TDS_Server.Dto.Map
             X = pos.PosX;
             Y = pos.PosY;
             Z = pos.PosZ;
+        }
+
+        public Position3DDto(Vector3 pos)
+        {
+            X = pos.X;
+            Y = pos.Y;
+            Z = pos.Z;
         }
 
         public MapCreatorPosition ToMapCreatorPosition(int id)

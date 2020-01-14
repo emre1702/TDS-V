@@ -151,6 +151,7 @@ namespace TDS_Server.Instance.Language
         public override string TARGET_NOT_BLOCKED => "{0} ist nicht blockiert.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
+        public override string TARGET_PLAYER_DEFEND_INFO => "Euer Teamkollege {0} ist am Ziel. Verteidigt ihn!";
         public override string TARGET_REJECTED_INVITATION => "{0} hat deine Einladung abgelehnt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";

@@ -59,6 +59,7 @@
 
         public const string RegisterLoginSuccessful = "s46";
         public const string RemoveCustomLobby = "s47";
+        public const string RemoveForceStayAtPosition = "s84";
         public const string RequestNewMapsList = "s48";
 
         public const string RemoveSyncedPlayerDatas = "s49";
@@ -68,6 +69,7 @@
         public const string SaveMapCreatorReturn = "s52";
         public const string SendMapCreatorReturn = "s53";
         public const string SetEntityInvincible = "s54";
+        public const string SetForceStayAtPosition = "s83";
         public const string SetMapVotes = "s55";
         public const string SetPlayerData = "s56";
         public const string SetPlayerInvincible = "s57";

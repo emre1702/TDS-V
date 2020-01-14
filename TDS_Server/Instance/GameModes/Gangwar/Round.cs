@@ -1,4 +1,9 @@
-﻿using TDS_Server.Enums;
+﻿using GTANetworkAPI;
+using TDS_Common.Default;
+using TDS_Common.Enum;
+using TDS_Common.Manager.Utility;
+using TDS_Server.Dto.Map;
+using TDS_Server.Enums;
 using TDS_Server.Instance.Player;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
@@ -31,6 +36,14 @@ namespace TDS_Server.Instance.GameModes
                     RemoveOnLobbyLeave = true
                 };
             });
+
+            // Do we need to force someone to stay at target?
+            // If yes, force him! Kill him if he don't want to stay there!
+            if (!Lobby.IsGangActionLobby && TargetObject is { })
+            {
+                var playerAtTarget = GetNextTargetMan();
+                SetTargetMan(playerAtTarget);
+            }
         }
 
         public override void StartRound()
@@ -73,6 +86,8 @@ namespace TDS_Server.Instance.GameModes
             {
                 Lobby.SendAllPlayerLangMessage(Lobby.RoundEndReasonText);
             }
+
+            SetTargetMan(null);
         }
 
         public override void StartMapClear()

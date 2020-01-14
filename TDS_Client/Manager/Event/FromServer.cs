@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Default;
+using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
@@ -16,6 +17,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Dto.Map.Creator;
+using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
@@ -78,6 +80,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
+            Add(DToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
             Add(DToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
             Add(DToClientEvent.RoundStart, OnRoundStartMethod);
             Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
@@ -86,6 +89,7 @@ namespace TDS_Client.Manager.Event
             //Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
             //Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
             //Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
+            Add(DToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
             Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
             Add(DToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
             Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
@@ -199,7 +203,7 @@ namespace TDS_Client.Manager.Event
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = Serializer.FromServer<List<Position4DDto>>((string)args[1]);
+            var maplimit = Serializer.FromServer<List<Position3DDto>>((string)args[1]);
             LobbyCam.SetToMapCenter(Serializer.FromServer<Vector3>((string)args[2]));
             Round.InFight = false;
             if (maplimit.Count > 0)
@@ -514,6 +518,11 @@ namespace TDS_Client.Manager.Event
             Browser.Angular.Main.RemoveCustomLobby(lobbyId);
         }
 
+        private void OnRemoveForceStayAtPositionMethod(object[] args)
+        {
+            ForceStayAtPos.Stop();
+        }
+
         private void OnRemoveSyncedPlayerDatasMethod(object[] args)
         {
             ushort playerHandle = Convert.ToUInt16(args[0]);
@@ -592,6 +601,16 @@ namespace TDS_Client.Manager.Event
             TickManager.Add(ClientUtils.HideHUDOriginalComponents);
 
             Browser.Angular.Main.Start(Convert.ToString(args[2]), Convert.ToString(args[3]));
+        }
+
+        private void OnSetForceStayAtPositionMethod(object[] args)
+        {
+            var pos = Serializer.FromServer<Position3DDto>(Convert.ToString(args[0]));
+            var radius = Convert.ToSingle(args[1]);
+            var type = args.Length >= 3 ? (EMapLimitType)Convert.ToInt32(args[2]) : EMapLimitType.Block;
+            var allowedTimeOut = args.Length >= 4 ? Convert.ToInt32(args[3]) : 0;
+
+            ForceStayAtPos.Start(pos, radius, type, allowedTimeOut);
         }
 
         private void OnSetMapVotesMethod(object[] args)

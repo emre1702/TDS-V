@@ -2,6 +2,7 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Collections.Generic;
+using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
@@ -178,7 +179,7 @@ namespace TDS_Client.Manager.MapCreator
             {
                 if (ObjectsManager.MapLimitDisplay == null)
                 {
-                    ObjectsManager.MapLimitDisplay = new MapLimit(new List<Position4DDto>(), EMapLimitType.Display);
+                    ObjectsManager.MapLimitDisplay = new MapLimit(new List<Position3DDto>(), EMapLimitType.Display, 0, Settings.MapBorderColor);
                     ObjectsManager.MapLimitDisplay.Start();
                 }
                 ObjectsManager.RefreshMapLimitDisplay();

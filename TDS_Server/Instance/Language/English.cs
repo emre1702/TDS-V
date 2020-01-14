@@ -150,6 +150,7 @@ namespace TDS_Server.Instance.Language
         public virtual string TARGET_NOT_BLOCKED => "{0} is not blocked.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
+        public virtual string TARGET_PLAYER_DEFEND_INFO => "Your teammate {0} is at the target. Defend him!";
         public virtual string TARGET_REJECTED_INVITATION => "{0} turned down your invitation.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TESTING_MAP_NOTIFICATION => "This is a newly created map, the round-stats will not be saved.";
