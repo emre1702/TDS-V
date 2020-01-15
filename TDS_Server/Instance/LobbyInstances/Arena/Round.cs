@@ -259,72 +259,53 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (CurrentGameMode?.WinnerTeam != null)
                 return CurrentGameMode.WinnerTeam;
-            switch (CurrentRoundEndReason)
+            return CurrentRoundEndReason switch
             {
-                case ERoundEndReason.Death:
-                    return GetTeamStillInRound();
-
-                case ERoundEndReason.Time:
-                    return GetTeamWithHighestHP();
-
-                case ERoundEndReason.Command:
-                case ERoundEndReason.NewPlayer:
-                case ERoundEndReason.Empty:
-                default:
-                    return null;
-            }
+                ERoundEndReason.Death => GetTeamStillInRound(),
+                ERoundEndReason.Time => GetTeamWithHighestHP(),
+                _ => null,
+            };
         }
 
         private Dictionary<ILanguage, string>? GetRoundEndReasonText(Team? winnerTeam)
         {
-            switch (CurrentRoundEndReason)
+            return CurrentRoundEndReason switch
             {
-                case ERoundEndReason.Death:
-                    return LangUtils.GetLangDictionary(lang =>
+                ERoundEndReason.Death => LangUtils.GetLangDictionary(lang =>
                     {
                         return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_DEATH_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_DEATH_ALL_INFO;
-                    });
-
-                case ERoundEndReason.Time:
-                    return LangUtils.GetLangDictionary(lang =>
+                    }),
+                ERoundEndReason.Time => LangUtils.GetLangDictionary(lang =>
                     {
                         return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_TIME_TIE_INFO;
-                    });
-                case ERoundEndReason.BombExploded:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Entity.Name ?? "-");
-                    });
-                case ERoundEndReason.BombDefused:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Entity.Name ?? "-");
-                    });
-                case ERoundEndReason.Command:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.DisplayName ?? "-");
-                    });
-                case ERoundEndReason.NewPlayer:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return lang.ROUND_END_NEW_PLAYER_INFO;
-                    });
-                case ERoundEndReason.TargetEmpty:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return lang.ROUND_END_TARGET_EMPTY_INFO;
-                    });
-                case ERoundEndReason.Error:
-                    return LangUtils.GetLangDictionary(lang =>
-                    {
-                        return lang.ERROR_INFO;
-                    });
-                    
-                case ERoundEndReason.Empty:
-                default:
-                    return null;
-            }
+                    }),
+                ERoundEndReason.BombExploded => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Entity.Name ?? "-");
+                   }),
+                ERoundEndReason.BombDefused => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Entity.Name ?? "-");
+                   }),
+                ERoundEndReason.Command => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.DisplayName ?? "-");
+                   }),
+                ERoundEndReason.NewPlayer => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return lang.ROUND_END_NEW_PLAYER_INFO;
+                   }),
+                ERoundEndReason.TargetEmpty => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return lang.ROUND_END_TARGET_EMPTY_INFO;
+                   }),
+                ERoundEndReason.Error => LangUtils.GetLangDictionary(lang =>
+                   {
+                       return lang.ERROR_INFO;
+                   }),
+
+                _ => null,
+            };
         }
     }
 }
