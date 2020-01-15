@@ -48,7 +48,8 @@ namespace TDS_Server.Manager.Stats
         {
             if (roundEndReason == ERoundEndReason.Command
                 || roundEndReason == ERoundEndReason.Empty
-                || roundEndReason == ERoundEndReason.NewPlayer)
+                || roundEndReason == ERoundEndReason.NewPlayer
+                || roundEndReason == ERoundEndReason.Error)
                 return;
             await CheckNewDay();
             if (isOfficial)

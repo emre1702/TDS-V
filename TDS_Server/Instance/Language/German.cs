@@ -36,6 +36,8 @@ namespace TDS_Server.Instance.Language
         public override string DISCORD_IDENTITY_SAVE_FAILED => "Speichern der Discord Benutzer-Id ist fehlgeschlagen: {0}";
         public override string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "Die Discord Benutzer-Id wurde erfolgreich gespeichert.";
 
+        public override string ERROR_INFO => "Ein Fehler ist aufgetaucht. Der/die Entwickler wurde(n) benachrichtigt.";
+
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";

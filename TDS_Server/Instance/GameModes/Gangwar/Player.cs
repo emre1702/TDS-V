@@ -20,7 +20,7 @@ namespace TDS_Server.Instance.GameModes
         {
             base.AddPlayer(player, teamIndex);
 
-            if (_attackLeader is null && teamIndex == AttackerTeam.Entity.Index) 
+            if (Lobby.IsGangActionLobby && _attackLeader is null && teamIndex == AttackerTeam.Entity.Index) 
                 SetAttackLeader(player);
         }
 
@@ -56,6 +56,8 @@ namespace TDS_Server.Instance.GameModes
         {
             if (!teamIndex.HasValue)
                 return true;
+            if (!Lobby.IsGangActionLobby)
+                return true;
 
             bool isAttacker = AttackerTeam.Entity.Index == teamIndex;
             if (!HasTeamFreePlace(isAttacker))
@@ -69,6 +71,8 @@ namespace TDS_Server.Instance.GameModes
 
         public override bool CanJoinDuringRound(TDSPlayer player, Team team)
         {
+            if (!Lobby.IsGangActionLobby)
+                return false;
             if (Lobby.DmgSys.DamageDealtThisRound)
                 return false;
 

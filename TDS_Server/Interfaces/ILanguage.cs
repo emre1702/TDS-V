@@ -26,6 +26,8 @@
         string DISCORD_IDENTITY_SAVE_FAILED { get; }
         string DISCORD_IDENTITY_SAVED_SUCCESSFULLY { get; }
 
+        string ERROR_INFO { get; }
+
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }

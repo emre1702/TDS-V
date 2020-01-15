@@ -27,7 +27,9 @@ namespace TDS_Server.Instance.LobbyInstances
 
             if (gangwarArea.Owner is null)
             {
-                await gangwarArea.SetConqueredWithoutAttack(attacker.Gang);
+                var task = gangwarArea.SetConqueredWithoutAttack(attacker.Gang);
+                if (task is { })
+                    await task;
                 return;
             }
 
@@ -62,7 +64,7 @@ namespace TDS_Server.Instance.LobbyInstances
             var lobby = new Lobbies
             {
                 AmountLifes = 1,
-                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity.MapId } },
+                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
                 LobbyMapSettings = new LobbyMapSettings
                 {
                   MapLimitType = EMapLimitType.Display

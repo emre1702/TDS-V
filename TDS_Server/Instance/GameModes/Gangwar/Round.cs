@@ -24,22 +24,25 @@ namespace TDS_Server.Instance.GameModes
         {
             base.StartRoundCountdown();
 
-            LangUtils.SendAllNotification(lang => lang.GANGWAR_PREPARATION_INFO);
-            _gangwarArea.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_PREPARATION_INFO, _gangwarArea.Entity.Map.Name, OwnerTeam.Entity.Name));
-
-            _gangwarArea.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_PREPARATION_INFO, _gangwarArea.Entity.Map.Name, AttackerTeam.Entity.Name));
-
-            _gangwarArea.Attacker.FuncIterate(player =>
+            if (Lobby.IsGangActionLobby)
             {
-                _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, onAccept: AcceptAttackPreparationInvitation)
-                {
-                    RemoveOnLobbyLeave = true
-                };
-            });
+                LangUtils.SendAllNotification(lang => lang.GANGWAR_PREPARATION_INFO);
+                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_PREPARATION_INFO, _gangwarArea.Map.SyncedData.Name, OwnerTeam.Entity.Name));
 
+                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_PREPARATION_INFO, _gangwarArea.Map.SyncedData.Name, AttackerTeam.Entity.Name));
+
+                _gangwarArea?.Attacker.FuncIterate(player =>
+                {
+                    _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, onAccept: AcceptAttackPreparationInvitation)
+                    {
+                        RemoveOnLobbyLeave = true
+                    };
+                });
+            }
+           
             // Do we need to force someone to stay at target?
             // If yes, force him! Kill him if he don't want to stay there!
-            if (!Lobby.IsGangActionLobby && TargetObject is { })
+            else if (TargetObject is { })
             {
                 var playerAtTarget = GetNextTargetMan();
                 SetTargetMan(playerAtTarget);
@@ -50,28 +53,30 @@ namespace TDS_Server.Instance.GameModes
         {
             base.StartRound();
 
-            Lobby.LobbyEntity.Name = $"[GW] {Lobby.GangwarArea!.Attacker!.Entity.Short} - {Lobby.GangwarArea.Owner!.Entity.Short}";
-
-            LangUtils.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea.Entity.Map.Name, OwnerTeam.Entity.Name));
-            _gangwarArea.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_STARTED_INFO, _gangwarArea.Entity.Map.Name, OwnerTeam.Entity.Name));
-            _gangwarArea.SetInAttack();
-
-            _gangwarArea.Attacker!.FuncIterate(player =>
+            if (Lobby.IsGangActionLobby)
             {
-                _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, onAccept: AcceptAttackInvitation)
-                {
-                    RemoveOnLobbyLeave = true
-                };
-            });
+                Lobby.LobbyEntity.Name = $"[GW] {Lobby.GangwarArea!.Attacker!.Entity.Short} - {Lobby.GangwarArea.Owner!.Entity.Short}";
 
-            _gangwarArea.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Entity.Map.Name, AttackerTeam.Entity.Name));
-            _gangwarArea.Owner!.FuncIterate(player =>
-            {
-                _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)
+                LangUtils.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea?.Map.SyncedData.Name ?? "?", OwnerTeam.Entity.Name));
+                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_STARTED_INFO, _gangwarArea.Map.SyncedData.Name, OwnerTeam.Entity.Name));
+
+                _gangwarArea?.Attacker!.FuncIterate(player =>
                 {
-                    RemoveOnLobbyLeave = true
-                };
-            });
+                    _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, onAccept: AcceptAttackInvitation)
+                    {
+                        RemoveOnLobbyLeave = true
+                    };
+                });
+
+                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Map.SyncedData.Name, AttackerTeam.Entity.Name));
+                _gangwarArea?.Owner!.FuncIterate(player =>
+                {
+                    _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)
+                    {
+                        RemoveOnLobbyLeave = true
+                    };
+                });
+            }            
         }
 
         public override void StopRound()
@@ -79,10 +84,10 @@ namespace TDS_Server.Instance.GameModes
             base.StopRound();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            _gangwarArea.SetAttackEnded(IsConquered);
+            _gangwarArea?.SetAttackEnded(IsConquered);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            if (Lobby.RoundEndReasonText is { })
+            if (Lobby.IsGangActionLobby && Lobby.RoundEndReasonText is { })
             {
                 Lobby.SendAllPlayerLangMessage(Lobby.RoundEndReasonText);
             }
@@ -103,13 +108,13 @@ namespace TDS_Server.Instance.GameModes
             {
                 ERoundEndReason.BombDefused => false,
                 ERoundEndReason.BombExploded => false,
-                ERoundEndReason.Death => false,     // will handle this manually
-                ERoundEndReason.Empty => false,     // will handle this manually
-                ERoundEndReason.NewPlayer => false,
+                ERoundEndReason.Death => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
+                ERoundEndReason.Empty => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
+                ERoundEndReason.NewPlayer => !Lobby.IsGangActionLobby,
 
                 ERoundEndReason.TargetEmpty => true,
                 ERoundEndReason.Time => true,
-                ERoundEndReason.Command => true,    //Todo: Am I sure with this?
+                ERoundEndReason.Command => true,  
 
                 _ => true
             };

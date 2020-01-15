@@ -35,6 +35,8 @@ namespace TDS_Server.Instance.Language
         public virtual string DISCORD_IDENTITY_SAVE_FAILED => "Saving the Discord user id failed: {0}";
         public virtual string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "The discord user id has been successfully saved.";
 
+        public virtual string ERROR_INFO => "An error occured. The Developer(s) have been notified.";
+
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";

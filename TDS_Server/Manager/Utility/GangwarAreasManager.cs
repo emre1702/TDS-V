@@ -13,9 +13,15 @@ namespace TDS_Server.Manager.Utility
     {
         public static List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
 
-        public static GangwarArea GetById(int id)
+        /// <summary>
+        /// Returns the Gangwar area by Id / MapId.
+        /// MapId is used as Id!
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static GangwarArea? GetById(int id)
         {
-            return GangwarAreas.FirstOrDefault(a => a.Entity.MapId == id);
+            return GangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
         }
 
         public static void LoadGangwarAreas(TDSDbContext dbContext)

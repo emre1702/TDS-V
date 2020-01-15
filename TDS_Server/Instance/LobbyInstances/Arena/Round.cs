@@ -55,7 +55,8 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             [EMapType.Normal] = (lobby, map) => new Normal(lobby, map),
             [EMapType.Bomb] = (lobby, map) => new Bomb(lobby, map),
-            [EMapType.Sniper] = (lobby, map) => new Sniper(lobby, map)
+            [EMapType.Sniper] = (lobby, map) => new Sniper(lobby, map),
+            [EMapType.Gangwar] = (lobby, map) => new Gangwar(lobby, map)
         };
 
         public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
@@ -313,6 +314,11 @@ namespace TDS_Server.Instance.LobbyInstances
                     return LangUtils.GetLangDictionary(lang =>
                     {
                         return lang.ROUND_END_TARGET_EMPTY_INFO;
+                    });
+                case ERoundEndReason.Error:
+                    return LangUtils.GetLangDictionary(lang =>
+                    {
+                        return lang.ERROR_INFO;
                     });
                     
                 case ERoundEndReason.Empty:

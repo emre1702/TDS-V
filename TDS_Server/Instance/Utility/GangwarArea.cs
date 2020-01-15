@@ -17,7 +17,7 @@ namespace TDS_Server.Instance.Utility
 {
     class GangwarArea
     {
-        public GangwarAreas Entity { get; private set; }
+        public GangwarAreas? Entity { get; private set; }
         public MapDto Map { get; private set; }
         public Gang? Owner { get; private set; }
         public Gang? Attacker { get; private set; }
@@ -30,9 +30,11 @@ namespace TDS_Server.Instance.Utility
 
         public bool HasCooldown
         {
-            get => (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < SettingsManager.ServerSettings.GangwarAreaAttackCooldownMinutes;
+            get => Entity is null ? false : (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < SettingsManager.ServerSettings.GangwarAreaAttackCooldownMinutes;
             set
             {
+                if (Entity is null)
+                    return;
                 if (value)
                     Entity.LastAttacked = DateTime.UtcNow;
                 else 
@@ -42,6 +44,12 @@ namespace TDS_Server.Instance.Utility
 
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
+
+        public GangwarArea(GangwarArea copyFrom)
+        {
+            Entity = null;
+            Map = copyFrom.Map;
+        }
 
         public GangwarArea(GangwarAreas entity, MapDto map)
         {
@@ -69,62 +77,76 @@ namespace TDS_Server.Instance.Utility
 
         public async Task SetAttackEnded(bool conquered)
         {
-            using var dbContext = new TDSDbContext();
+            if (Entity is { })
+            {
+                using var dbContext = new TDSDbContext();
 
-            dbContext.Attach(Entity);
+                dbContext.Attach(Entity);
 
-            ++Entity.AttackCount;
-            Entity.LastAttacked = DateTime.UtcNow;
+                ++Entity.AttackCount;
+                HasCooldown = true;
 
-            if (conquered)
-                SetConquered(dbContext, true);
-            else 
-                SetDefended(dbContext);
+                if (conquered)
+                    SetConquered(dbContext, true);
+                else
+                    SetDefended(dbContext);
 
+                await dbContext.SaveChangesAsync();
+            }
             ClearAttack();
-
-            await dbContext.SaveChangesAsync();          
         }
 
-        public Task SetConqueredWithoutAttack(Gang newOwner)
+        public Task? SetConqueredWithoutAttack(Gang newOwner)
         {
-            Attacker = newOwner;
+            if (Entity is { })
+            {
+                Attacker = newOwner;
 
-            using var dbContext = new TDSDbContext();
+                using var dbContext = new TDSDbContext();
 
-            dbContext.Attach(Entity);
+                dbContext.Attach(Entity);
 
-            Entity.LastAttacked = DateTime.UtcNow;
-            
-            SetConquered(dbContext, false);
+                HasCooldown = true;
 
-            return dbContext.SaveChangesAsync();
+                SetConquered(dbContext, false);
+
+                return dbContext.SaveChangesAsync();
+            }
+            return null;
         }
 
         private void SetDefended(TDSDbContext dbContext)
         {
-            ++Entity.DefendCount;
+            if (Entity is { })
+            {
+                ++Entity.DefendCount;
 
-            //Todo: Inform everyone + owner + attacker
+                //Todo: Inform everyone + owner + attacker
+            }
+
         }
 
         private void SetConquered(TDSDbContext dbContext, bool outputInfos)
         {
-            var oldOwner = Owner;
-
-            Owner = Attacker;
-
-            Entity.OwnerGangId = Owner!.Entity.Id;
-            Entity.DefendCount = 0;
-
-            if (outputInfos)
+            if (Entity is { })
             {
-                if (Owner is { })
+                var oldOwner = Owner;
+
+                Owner = Attacker;
+
+                Entity.OwnerGangId = Owner!.Entity.Id;
+                Entity.DefendCount = 0;
+
+                if (outputInfos)
                 {
-                    //Todo: Inform the owner
+                    if (Owner is { })
+                    {
+                        //Todo: Inform the owner
+                    }
+                    //Todo: Inform everyone + attacker
                 }
-                //Todo: Inform everyone + attacker
             }
+            
         }
 
         private void CheckIsAttackerAtTarget()
