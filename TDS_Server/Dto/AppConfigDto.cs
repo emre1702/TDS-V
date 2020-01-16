@@ -9,6 +9,9 @@ namespace TDS_Server.Dto
     {
         [XmlElement]
         public AppConfigEntryDto ConnectionString { get; set; }
+
+        [XmlElement]
+        public EFExtensionsEntryDto EFExtensions { get; set; }
     }
 
 #nullable restore

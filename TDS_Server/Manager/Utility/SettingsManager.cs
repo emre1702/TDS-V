@@ -50,6 +50,13 @@ namespace TDS_Server.Manager.Utility
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
 
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
+
+            Z.EntityFramework.Extensions.LicenseManager.AddLicense(_localSettings.EFExtensions.Name, _localSettings.EFExtensions.Key);
+
+            if (!Z.EntityFramework.Extensions.LicenseManager.ValidateLicense(out string licenseErrorMessage))
+            {
+                System.Console.WriteLine(licenseErrorMessage);
+            }
         }
 
         public static async Task Load(TDSDbContext dbcontext)
