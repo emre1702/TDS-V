@@ -91,13 +91,15 @@ namespace TDS_Server.Manager.Player
 
         public static void SetAllLoggedOutInDb(TDSDbContext dbContext)
         {
-            var entityInfo = dbContext.GetDbEntityType(typeof(PlayerStats));
+            /*var entityInfo = dbContext.GetDbEntityType(typeof(PlayerStats));
             if (entityInfo is null)
                 return;
             string tableName = dbContext.GetTableName(entityInfo);
             var propertyName = dbContext.GetPropertyName(entityInfo, nameof(PlayerStats.LoggedIn));
 
-            dbContext.Database.ExecuteSqlRaw($"UPDATE {tableName} SET {propertyName} = false");
+            dbContext.Database.ExecuteSqlRaw($"UPDATE {tableName} SET {propertyName} = false");*/
+
+            dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false });
         }
     }
 }
