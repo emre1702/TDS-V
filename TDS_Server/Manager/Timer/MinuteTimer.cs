@@ -43,7 +43,7 @@ namespace TDS_Server.Manager.Timer
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log(ex.Message, Environment.StackTrace);
+                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
             }
         }
 
