@@ -238,12 +238,9 @@ namespace TDS_Server.Manager.Userpanel
             using var dbContext = new TDSDbContext();
 
             var deleteAfterDays = SettingsManager.ServerSettings.DeleteRequestsDaysAfterClose;
-            var requests = await dbContext.SupportRequests.Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
-            if (requests.Any())
-            {
-                dbContext.SupportRequests.RemoveRange(requests);
-                await dbContext.SaveChangesAsync();
-            }
+            await dbContext.SupportRequests
+                .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
+                .DeleteFromQueryAsync();
         }
     }
 

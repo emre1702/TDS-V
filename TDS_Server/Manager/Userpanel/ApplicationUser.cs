@@ -211,15 +211,9 @@ namespace TDS_Server.Manager.Userpanel
         {
             using var dbContext = new TDSDbContext();
 
-            var apps = await dbContext.Applications
+            await dbContext.Applications
                 .Where(a => a.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
-                .ToListAsync();
-
-            if (apps.Any())
-            {
-                dbContext.Applications.RemoveRange(apps);
-                await dbContext.SaveChangesAsync();
-            }
+                .DeleteFromQueryAsync();
         }
     }
 

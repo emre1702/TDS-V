@@ -129,12 +129,7 @@ namespace TDS_Server.Manager.Userpanel
             using var dbContext = new TDSDbContext();
 
             var deleteAfterDays = SettingsManager.ServerSettings.DeleteOfflineMessagesAfterDays;
-            var list = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
-            if (list.Any())
-            {
-                dbContext.Offlinemessages.RemoveRange(list);
-                await dbContext.SaveChangesAsync();
-            }
+            await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).DeleteFromQueryAsync();
         }
     }
 
