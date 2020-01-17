@@ -99,7 +99,6 @@ namespace TDS_Server.Manager.Utility
 
                 Account.Init();
 
-                HourTimer.CreateTimer();
                 MinuteTimer.CreateTimer();
                 SecondTimer.CreateTimer();
 
