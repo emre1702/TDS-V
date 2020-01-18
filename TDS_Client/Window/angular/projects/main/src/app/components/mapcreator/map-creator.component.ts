@@ -600,6 +600,13 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     isTeamSpawnsValid(): boolean {
         if (this.data[6].length == 0)
             return false;
+
+        if (this.data[2] == MapType.Gangwar || this.data[2] == MapType.Bomb) {
+            if (this.data[6].length != 2) {
+                return false;
+            }
+        }
+
         for (const spawnArr of this.data[6]) {
             if (spawnArr.length < Constants.MIN_TEAM_SPAWNS)
                 return false;
@@ -608,7 +615,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     isMapLimitValid(): boolean {
-        return !this.data[7].length || this.data[7].length >= 3;
+        return (this.data[2] != MapType.Gangwar && !this.data[7].length) || this.data[7].length >= 3;
     }
 
     isBombPlacesValid(): boolean {
