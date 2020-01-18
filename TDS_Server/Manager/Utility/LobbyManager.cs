@@ -17,6 +17,8 @@ using TDS_Server.Instance.GameModes;
 using TDS_Common.Manager.Utility;
 using TDS_Server_DB.Entity.LobbyEntities;
 using TDS_Server.Manager.Logs;
+using TDS_Server.Enums;
+using EMapType = TDS_Common.Enum.EMapType;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -88,42 +90,34 @@ namespace TDS_Server.Manager.Utility
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
             {
-                // All except Gangwar
-                if (mapAssignment.MapId == -1)
+                switch (mapAssignment.MapId)
                 {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type != Enums.EMapType.Gangwar).ToList());
-                    return;
-                }
+                    case (int)EDefaultMapIds.AllWithoutGangwars:
+                        lobbyMapsList.AddRange(MapsLoader.AllMaps.Where(m => m.Info.Type != Enums.EMapType.Gangwar));
+                        break;
 
-                // All Normals
-                if (mapAssignment.MapId == -2)
-                {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Normal).ToList());
-                    return;
-                }
+                    case (int)EDefaultMapIds.Normals:
+                        lobbyMapsList.AddRange(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Normal));
+                        break;
 
-                // All Bombs
-                if (mapAssignment.MapId == -3)
-                {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Bomb).ToList());
-                    return;
-                }
+                    case (int)EDefaultMapIds.Bombs:
+                        lobbyMapsList.AddRange(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Bomb));
+                        break;
 
-                // All Sniper
-                if (mapAssignment.MapId == -4)
-                {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Sniper).ToList());
-                    return;
-                }
+                    case (int)EDefaultMapIds.Snipers:
+                        lobbyMapsList.AddRange(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Sniper));
+                        break;
 
-                // All Gangwar (not really used yet)
-                if (mapAssignment.MapId == -5)
-                {
-                    arena.SetMapList(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Gangwar).ToList());
-                    return;
-                }
+                    case (int)EDefaultMapIds.Gangwars:
+                        lobbyMapsList.AddRange(MapsLoader.AllMaps.Where(m => m.Info.Type == Enums.EMapType.Gangwar));
+                        break;
 
-                lobbyMapsList.Add(MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name));
+                    default:
+                        var map = MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name);
+                        if (map is { })
+                            lobbyMapsList.Add(map);
+                        break;
+                }
             }
             arena.SetMapList(lobbyMapsList);
         }
