@@ -70,12 +70,7 @@ export class CarouselComponent implements AfterViewInit {
     private changeCarousel() {
         const cellCount = this.buttons.length;
         this.theta = 360 / cellCount;
-        console.log(this.carousel);
-        if (this.carousel)
-            console.log(this.carousel.nativeElement.offsetWidth);
-        console.log(window.innerWidth * 0.6);
         const cellSize = this.carousel ? this.carousel.nativeElement.offsetWidth : window.innerWidth * 0.6;
-        console.log("CellSize: " + cellSize);
         this.radius = Math.round((cellSize / 2) / Math.tan(Math.PI / cellCount));
         for (let i = 0; i < cellCount; i++) {
             let btnStyle = this.buttonStyles[i + 1];
