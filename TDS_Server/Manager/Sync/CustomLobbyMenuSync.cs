@@ -109,7 +109,9 @@ namespace TDS_Server.Manager.Sync
                     Color = $"rgb({t.ColorR},{t.ColorG},{t.ColorB})",
                     BlipColor = t.BlipColor, 
                     SkinHash = t.SkinHash
-                }).ToList()
+                }).ToList(),
+
+                Maps = lobby.LobbyEntity.LobbyMaps.Select(m => m.MapId).ToList()
             };
         }
 

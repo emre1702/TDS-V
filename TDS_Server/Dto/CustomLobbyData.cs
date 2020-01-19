@@ -44,6 +44,8 @@ namespace TDS_Server.Dto
         public EMapLimitType MapLimitType { get; set; }
         [Key(17)]
         public List<CustomLobbyTeamData> Teams { get; set; }
+        [Key(18)]
+        public List<int> Maps { get; set; }
     }
     #nullable restore
 }

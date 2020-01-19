@@ -163,7 +163,7 @@ namespace TDS_Server.Manager.Utility
                         MapLimitTime = data.MapLimitTime,
                         MapLimitType = data.MapLimitType
                     },
-                    LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = -1 } },
+                    LobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet(),
                     LobbyWeapons = GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
