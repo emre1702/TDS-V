@@ -81,6 +81,7 @@ import { UserpanelSettingsSpecialComponent } from './components/userpanel/userpa
 import { RoundStatsComponent } from './components/hud/round-stats/round-stats.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { HudComponent } from './components/hud/hud.component';
+import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-maps-menu/custom-lobby-maps-menu.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,8 @@ import { HudComponent } from './components/hud/hud.component';
     InvitationComponent,
     UserpanelSettingsSpecialComponent,
     RoundStatsComponent,
-    HudComponent
+    HudComponent,
+    CustomLobbyMapsMenuComponent
   ],
   imports: [
     ReactiveFormsModule,

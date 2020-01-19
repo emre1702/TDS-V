@@ -38,7 +38,7 @@
 
         <ng-container *ngSwitchCase="lobbySettingType.numberSlider">
           <div class="setting-row">
-            <mat-slider color="primary" thumbLabel tickInterval="1" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+            <mat-slider color="primary" thumbLabel tickInterval="1" [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()">
                 {{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}
             </mat-slider>
           </div>
@@ -49,7 +49,7 @@
           <div class="setting-row">
             <mat-form-field color="accent">
               <mat-label>{{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
-              <mat-select [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+              <mat-select [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()">
                 <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)" [value]="setting.enum[enumStr]">
                   {{ enumStr | language: settings.Lang }}
                 </mat-option>
@@ -60,7 +60,7 @@
 
         <ng-container *ngSwitchCase="lobbySettingType.boolean">
           <div class="setting-row">
-            <mat-checkbox labelPosition="before" [formControl]="setting.formControl" [disabled]="!creating" (blur)="changeDetector.detectChanges()">
+            <mat-checkbox labelPosition="before" [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()">
               {{ lobbySetting[setting.dataSettingIndex] | language: settings.Lang }}
             </mat-checkbox>
           </div>
@@ -92,10 +92,19 @@
 *ngIf="inTeamsMenu"
 [@settingsShowHideAnimation]
 [teams]="getSelectedLobbyTeams()"
-(backClicked)="goBackToMainSettings($event)">
+[creating]="creating"
+(backClicked)="goBackToMainSettingsFromLobbyTeams($event)">
 </app-custom-lobby-teams-menu>
 
-<div id="main-container" class="container" [@lobbyShowHideAnimation]>
+<app-custom-lobby-maps-menu
+*ngIf="inMapsMenu"
+[@settingsShowHideAnimation]
+[selectedMapsInput]="getSelectedLobbyMaps()"
+[creating]="creating"
+(backClicked)="goBackToMainSettingsFromLobbyMaps($event)">
+</app-custom-lobby-maps-menu>
+
+<div id="main-container" class="container" [@lobbyShowHideAnimation] *ngIf="!inMapsMenu">
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">
     <mat-icon>add_to_photos</mat-icon>
   </div>

@@ -26,6 +26,8 @@ namespace TDS_Server.Manager.Maps
 {
     class MapCreator
     {
+        public static IEnumerable<MapDto> AllCreatingMaps => _newCreatedMaps.Union(_savedMaps).Union(_needCheckMaps);
+
         private static List<MapDto> _newCreatedMaps = new List<MapDto>();
         private static List<MapDto> _savedMaps = new List<MapDto>();
         private static List<MapDto> _needCheckMaps = new List<MapDto>();

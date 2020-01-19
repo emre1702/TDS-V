@@ -74,7 +74,7 @@ export class German extends English {
     Block = "Block";
     None = "Nichts";
     MapLimitType = "Map-Grenze Typ";
-    MapLimitTime = "Map-Grenze Zeit";
+    MapLimitTime = "Map-Grenze Zeit (sec)";
     AreYouSure = "Bist du dir sicher?";
     Yes = "Ja";
     No = "Nein";
@@ -196,6 +196,15 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Target = "Ziel";
     TargetInfo = `Diese Position wird das Haupt-Ziel der Angreifer.`;
     Vehicles = "Fahrzeuge";
+    AvailableMaps = "Verfügbare Karten";
+    SelectedMaps = "Ausgewählte Karten";
+
+    /////////// Default map names ///////////
+    DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
+    DefaultMapIdsNormals = "Alle Normale";
+    DefaultMapIdsBombs = "Alle Bomben";
+    DefaultMapIdsSnipers = "Alle Sniper";
+    DefaultMapIdsGangwars = "Alle Gangwars";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Bekomme {0} Kills";

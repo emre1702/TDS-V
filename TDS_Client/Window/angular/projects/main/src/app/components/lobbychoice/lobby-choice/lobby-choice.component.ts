@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { SettingsService } from '../../../services/settings.service';
@@ -31,7 +31,7 @@ import { Challenge } from '../models/challenge';
         )
     ]
 })
-export class LobbyChoiceComponent implements OnInit {
+export class LobbyChoiceComponent implements OnInit, OnDestroy {
     lobbyChoices: LobbyChoice[] = [
         { index: 0, name: "Arena", func: this.joinArena.bind(this), imgUrl: "assets/arenachoice.png" },
         { index: 1, name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
@@ -49,15 +49,29 @@ export class LobbyChoiceComponent implements OnInit {
         public settings: SettingsService,
         private sanitizer: DomSanitizer,
         private changeDetector: ChangeDetectorRef) {
-
-        this.rageConnector.listen(DFromClientEvent.LeaveCustomLobbyMenu, () => {
-            this.settings.InUserLobbiesMenu = false;
-            this.changeDetector.detectChanges();
-        });
     }
 
     ngOnInit() {
         this.refreshTimeToWeeklyChallengesRestart();
+        this.rageConnector.listen(DFromClientEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+    }
+
+    ngOnDestroy() {
+        this.rageConnector.remove(DFromClientEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+
+        // Clear it so it doesn't use fill our RAM without a reason
+        this.settings.AllMapsForCustomLobby = [];
+    }
+
+    private leaveCustomLobbyMenu() {
+        this.settings.InUserLobbiesMenu = false;
+        this.changeDetector.detectChanges();
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 
     setLanguage(languageId: number) {

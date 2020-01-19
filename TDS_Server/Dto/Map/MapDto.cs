@@ -104,6 +104,40 @@ namespace TDS_Server.Dto.Map
                     PlantPositionsJson = Serializer.ToClient(data.BombPlaces)
                 };
         }
+
+        public static bool operator == (MapDto? thisMap, MapDto? otherMap) 
+        {
+            if (thisMap is null || otherMap is null)
+                return ReferenceEquals(thisMap, otherMap);
+            return thisMap.SyncedData.Id == otherMap.SyncedData.Id;
+        }
+
+        public static bool operator != (MapDto? thisMap, MapDto? otherMap)
+        {
+            if(thisMap is null || otherMap is null)
+                return !ReferenceEquals(thisMap, otherMap);
+
+            return thisMap.SyncedData.Id != otherMap.SyncedData.Id;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (obj is null)
+                return false;
+
+            if (!(obj is MapDto otherMap))
+                return false;
+
+            return SyncedData.Id == otherMap.SyncedData.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
 #pragma warning restore CS8618 // Non-nullable field is uninitialized.

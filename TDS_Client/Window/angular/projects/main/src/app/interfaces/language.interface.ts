@@ -173,6 +173,15 @@ export interface Language {
     Target: string;
     TargetInfo: string;
     Vehicles: string;
+    AvailableMaps: string;
+    SelectedMaps: string;
+
+    /////////// Default map names ///////////
+    DefaultMapIdsAllWithoutGangwars: string;
+    DefaultMapIdsNormals: string;
+    DefaultMapIdsBombs: string;
+    DefaultMapIdsSnipers: string;
+    DefaultMapIdsGangwars: string;
 
     ////////////// Challenges ///////////////
     Challenge_Kills: string;

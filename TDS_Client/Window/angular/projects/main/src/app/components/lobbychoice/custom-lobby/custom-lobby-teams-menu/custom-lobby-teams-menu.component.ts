@@ -115,6 +115,7 @@ export class CustomLobbyTeamsMenuComponent {
     private editingTeam: CustomLobbyTeamData;
 
     @Input() teams: CustomLobbyTeamData[];
+    @Input() creating: boolean;
     @Output() backClicked = new EventEmitter();
 
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }

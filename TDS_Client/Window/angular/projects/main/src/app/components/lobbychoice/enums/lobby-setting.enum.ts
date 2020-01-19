@@ -16,5 +16,6 @@ export enum LobbySetting {
     SpawnAgainAfterDeathMs,
     MapLimitTime,
     MapLimitType,
-    Teams
+    Teams,
+    Maps
 }

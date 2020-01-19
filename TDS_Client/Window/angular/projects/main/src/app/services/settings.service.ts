@@ -12,6 +12,8 @@ import { ChallengeGroup } from '../components/lobbychoice/models/challenge-group
 import { ChallengeFrequency } from '../components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.enum';
 import { DFromServerEvent } from '../enums/dfromserverevent.enum';
+import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
+import { MapType } from '../enums/maptype.enum';
 
 // tslint:disable: member-ordering
 
@@ -83,7 +85,7 @@ export class SettingsService {
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
 
-    public InUserLobbiesMenu = false;
+    public InUserLobbiesMenu = true;
 
     public MapsBoughtCounter = 0;
     public MapBuyStatsChanged = new EventEmitter();
@@ -116,6 +118,7 @@ export class SettingsService {
     ]*/;
     public ShownRoundStatsType = 1;
     public ShownHudType = 1;
+    public AllMapsForCustomLobby: MapDataDto[] = [];
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },

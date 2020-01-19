@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
+using TDS_Server.Instance.Player;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
@@ -53,6 +55,14 @@ namespace TDS_Server.Manager.Maps
                 list.Add(map);
             }
             return list;
+        }
+
+        public static object? GetAllMapsForCustomLobby(TDSPlayer player, object[] args)
+        {
+            var allMapsSyncData = AllMaps.Union(MapCreator.AllCreatingMaps).Select(m => m.SyncedData);
+
+            return Serializer.ToBrowser(allMapsSyncData);
+
         }
 
         public static MapDto? LoadMap(FileInfo fileInfo, bool isOnlySaved)

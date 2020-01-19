@@ -1,9 +1,9 @@
 export enum DFromServerEvent {
-    AddInvitation = "AddInvitation_Server",
-    RemoveInvitation = "RemoveInvitation_Server",
-    SetAssistsForRoundStats = "SetAssistsForRoundStats_Server",
-    SetDamageForRoundStats = "SetDamageForRoundStats_Server",
-    SetKillsForRoundStats = "SetKillsForRoundStats_Server",
+    AddInvitation = "sb1",
+    RemoveInvitation = "sb2",
+    SetAssistsForRoundStats = "sb3",
+    SetDamageForRoundStats = "sb4",
+    SetKillsForRoundStats = "sb5",
 
-    SyncChallengeCurrentAmountChange = "SyncChallengeCurrentAmountChange_Server"
+    SyncChallengeCurrentAmountChange = "sb6"
 }

@@ -36,11 +36,11 @@ import { Invitation } from './components/utils/invitation/models/invitation';
 export class AppComponent {
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = false;
+    showLobbyChoice = true;
     showTeamChoice = false;
     showUserpanel = false;
     showRankings = false;
-    showHUD = true;
+    showHUD = false;
 
     rankings: RoundPlayerRankingStat[];
 

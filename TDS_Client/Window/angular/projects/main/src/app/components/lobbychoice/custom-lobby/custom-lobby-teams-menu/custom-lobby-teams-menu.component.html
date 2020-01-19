@@ -68,13 +68,13 @@
   </div>
 
   <div class="last-row-buttons">
-    <button mat-raised-button (click)="addTeam()">
+    <button mat-raised-button (click)="addTeam()" [disabled]="!creating">
       {{ 'AddTeam' | language: settings.Lang }}
     </button>
-    <button mat-raised-button (click)="removeLastTeam()">
+    <button mat-raised-button (click)="removeLastTeam()" [disabled]="!creating">
       {{ 'RemoveTeam' | language: settings.Lang }}
     </button>
-    <button mat-raised-button (click)="backButtonClicked()" [disabled]="!isValid()">
+    <button mat-raised-button (click)="backButtonClicked()" [disabled]="!isValid() && creating">
       {{ 'Back' | language: settings.Lang }}
     </button>
   </div>

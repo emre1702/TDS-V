@@ -20,7 +20,7 @@ export class RankingComponent implements OnInit {
     set rankings(rankings: RoundPlayerRankingStat[]) {
         this._rankings = rankings;
         this.dataSource = new MatTableDataSource(rankings);
-        this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
+        this.dataSource.sortingDataAccessor = this.sortingDataAccessor.bind(this);
         if (this.sort)
             this.dataSource.sort = this.sort;
         if (this.changeDetector)
@@ -40,8 +40,7 @@ export class RankingComponent implements OnInit {
     }
 
     sortingDataAccessor(obj, property) {
-        console.log(obj);
-        console.log(property);
-        return obj[property];
+        const index = this.displayedColumns.indexOf(property);
+        return obj[index];
     }
 }

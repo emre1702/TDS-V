@@ -79,7 +79,7 @@ export class English implements Language {
     Block = "Block";
     None = "None";
     MapLimitType = "Map limit type";
-    MapLimitTime = "Map limit time";
+    MapLimitTime = "Map limit time (sec)";
     AreYouSure = "Are you sure?";
     Yes = "Yes";
     No = "No";
@@ -201,6 +201,15 @@ The user interface is always being worked on, so don't be surprised if you disco
     Target = "Target";
     TargetInfo = `This position Will be the main target of the attackers.`;
     Vehicles = "Vehicles";
+    AvailableMaps = "Available maps";
+    SelectedMaps = "Selected maps";
+
+    /////////// Default map names ///////////
+    DefaultMapIdsAllWithoutGangwars = "All without gangwar";
+    DefaultMapIdsNormals = "All normal";
+    DefaultMapIdsBombs = "All bombs";
+    DefaultMapIdsSnipers = "All snipers";
+    DefaultMapIdsGangwars = "All gangwars";
 
     ////////////// Challenges ///////////////
     Challenge_Kills = "Get {0} kills";

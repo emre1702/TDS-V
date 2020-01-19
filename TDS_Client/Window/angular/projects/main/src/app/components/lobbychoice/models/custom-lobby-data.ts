@@ -43,4 +43,6 @@ export class CustomLobbyData {
 
     /** Teams */
     [17]: CustomLobbyTeamData[];
+    /** Maps */
+    [18]: number[];
 }

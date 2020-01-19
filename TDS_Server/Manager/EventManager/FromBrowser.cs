@@ -23,7 +23,7 @@ namespace TDS_Server.Manager.EventManager
         public delegate Task<object?> FromBrowserAsyncMethodDelegate(TDSPlayer player, params object[] args);
         public delegate object? FromBrowserMethodDelegate(TDSPlayer player, params object[] args);
 
-        private static readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _AsyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
+        private static readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
         {
             [DToServerEvent.SendApplicationInvite] = Userpanel.ApplicationsAdmin.SendInvitation,
             [DToServerEvent.AnswerToOfflineMessage] = Userpanel.OfflineMessages.Answer,
@@ -36,7 +36,8 @@ namespace TDS_Server.Manager.EventManager
             [DToServerEvent.BuyMap] = BuyMap,
             [DToServerEvent.MapCreatorSyncData] = MapCreatorSyncData,
             [DToServerEvent.AcceptInvitation] = InvitationManager.AcceptInvitation,
-            [DToServerEvent.RejectInvitation] = InvitationManager.RejectInvitation
+            [DToServerEvent.RejectInvitation] = InvitationManager.RejectInvitation,
+            [DToServerEvent.LoadAllMapsForCustomLobby] = Maps.MapsLoader.GetAllMapsForCustomLobby
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
@@ -49,9 +50,9 @@ namespace TDS_Server.Manager.EventManager
                 if (!player.LoggedIn)
                     return;
 
-                if (_AsyncMethods.ContainsKey(eventName))
+                if (_asyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _AsyncMethods[eventName](player, args);
+                    ret = await _asyncMethods[eventName](player, args);
                 } 
                 else if (_methods.ContainsKey(eventName))
                 {

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDete
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../services/settings.service';
 import { LanguageEnum } from '../../enums/language.enum';
-import { MapType } from './enums/maptype.enum';
+import { MapType } from '../../enums/maptype.enum';
 import { MatSelectChange, MatDialog, MatSnackBar } from '@angular/material';
 import { MapCreateDataDto } from './models/mapCreateDataDto';
 import { Constants } from '../../constants';
