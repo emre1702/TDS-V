@@ -22,13 +22,13 @@ namespace TDS_Client.Manager.Utility
         {
             int entity = (int)args[0];
             entity = Entities.Objects.GetAtRemote((ushort)entity).Handle;
-            bool resetCollision = (bool)args[1];
+            bool resetCollision = Convert.ToBoolean(args[1]);
             RAGE.Game.Entity.DetachEntity(entity, true, resetCollision);
         }
 
         public static void FreezePlayerWorkaroundMethod(object[] args)
         {
-            bool freeze = (bool)args[0];
+            bool freeze = Convert.ToBoolean(args[0]);
             Player.LocalPlayer.FreezePosition(freeze);
         }
 
@@ -56,7 +56,7 @@ namespace TDS_Client.Manager.Utility
         public static void SetEntityInvincibleMethod(object[] args)
         {
             ushort handle = Convert.ToUInt16(args[0]);
-            bool toggle = (bool)args[1];
+            bool toggle = Convert.ToBoolean(args[1]);
             var vehHandle = Entities.Vehicles.GetAtRemote(handle)?.Handle ?? -1;
             if (vehHandle != -1)
                 RAGE.Game.Entity.SetEntityInvincible(vehHandle, toggle);
@@ -64,7 +64,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void SetPlayerInvincibleMethod(object[] args)
         {
-            bool toggle = (bool)args[0];
+            bool toggle = Convert.ToBoolean(args[0]);
             Player.LocalPlayer.SetInvincible(toggle);
         }
     }

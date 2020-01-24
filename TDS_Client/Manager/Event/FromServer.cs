@@ -301,7 +301,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnRoundStartMethod(object[] args)
         {
-            Round.IsSpectator = (bool)args[0];
+            Round.IsSpectator = Convert.ToBoolean(args[0]);
             Round.InFight = !Round.IsSpectator;
             Cam.DoScreenFadeIn(50);
             LobbyCam.StopCountdown();
@@ -361,7 +361,7 @@ namespace TDS_Client.Manager.Event
         private void OnDeathMethod(object[] args)
         {
             Player player = ClientUtils.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
-            bool willRespawn = (bool)args[3];
+            bool willRespawn = Convert.ToBoolean(args[3]);
             if (player == Player.LocalPlayer)
             {
                 Round.InFight = false;
@@ -392,7 +392,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnBombPlantedMethod(object[] args)
         {
-            Bomb.BombPlanted(Serializer.FromServer<Vector3>((string)args[0]), (bool)args[1], args.Length > 2 ? (int?)args[2] : null);
+            Bomb.BombPlanted(Serializer.FromServer<Vector3>((string)args[0]), Convert.ToBoolean(args[1]), args.Length > 2 ? (int?)args[2] : null);
         }
 
         private void OnBombNotOnHandMethod(object[] args)
@@ -556,7 +556,7 @@ namespace TDS_Client.Manager.Event
         private void OnStartRegisterLoginMethod(object[] args)
         {
             string scname = (string)args[0];
-            bool isregistered = (bool)args[1];
+            bool isregistered = Convert.ToBoolean(args[1]);
             RegisterLogin.Start(scname, isregistered);
         }
 

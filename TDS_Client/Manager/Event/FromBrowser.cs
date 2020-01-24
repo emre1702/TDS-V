@@ -340,7 +340,7 @@ namespace TDS_Client.Manager.Event
         {
             ChatManager.CloseChatInput();
             string msg = (string)args[0];
-            bool isDirty = (bool)args[1];
+            bool isDirty = Convert.ToBoolean(args[1]);
             EventsSender.Send(DToServerEvent.LobbyChatMessage, msg, isDirty);
         }
 
@@ -475,7 +475,7 @@ namespace TDS_Client.Manager.Event
         private void OnToggleMapFavoriteMethod(object[] args)
         {
             int mapId = (int)args[0];
-            bool isFavorite = (bool)args[1];
+            bool isFavorite = Convert.ToBoolean(args[1]);
             EventsSender.Send(DToServerEvent.ToggleMapFavouriteState, mapId, isFavorite);
         }
 
