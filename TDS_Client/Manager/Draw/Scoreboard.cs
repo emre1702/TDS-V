@@ -14,7 +14,7 @@ using Script = RAGE.Events.Script;
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 namespace TDS_Client.Manager.Draw
 {
-    internal class Scoreboard : Script
+    internal class Scoreboard
     {
         private static DxGrid _grid;
         private static bool _isActivated;
@@ -37,7 +37,7 @@ namespace TDS_Client.Manager.Draw
             }
         }
 
-        public Scoreboard()
+        static Scoreboard()
         {
             _grid = new DxGrid(0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
             CreateColumns();
@@ -88,7 +88,7 @@ namespace TDS_Client.Manager.Draw
 
         public static void LoadLanguage()
         {
-            if (_grid.Header == null)
+            if (_grid is null || _grid.Header == null)
                 return;
             _grid.Header.Cells[0].SetText(Settings.Language.SCOREBOARD_NAME);
             _grid.Header.Cells[1].SetText(Settings.Language.SCOREBOARD_PLAYTIME);

@@ -112,7 +112,7 @@ namespace TDS_Server.Manager.PlayerManager
             LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
         }
 
-        private static byte[] GetChallengesJson(TDSPlayer player)
+        private static string GetChallengesJson(TDSPlayer player)
         {
             var result = player.Entity!.Challenges
                 .GroupBy(c => c.Frequency)
