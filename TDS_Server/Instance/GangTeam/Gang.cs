@@ -118,6 +118,7 @@ namespace TDS_Server.Instance.GangTeam
                 .Include(g => g.Members)
                 .ThenInclude(m => m.RankNavigation)
                 .Include(g => g.RankPermissions)
+                .Include(g => g.Ranks)
                 .AsNoTracking()
                 .ForEachAsync(g =>
             {
