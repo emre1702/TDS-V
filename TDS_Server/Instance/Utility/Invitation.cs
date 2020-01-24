@@ -7,7 +7,7 @@ using TDS_Common.Manager.Utility;
 using TDS_Server.Default;
 using TDS_Server.Dto;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Instance.Utility
 {
@@ -46,7 +46,7 @@ namespace TDS_Server.Instance.Utility
 
             _invitationById[Dto.Id] = this; 
 
-            NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.ToBrowserEvent, DToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
 
         }
 
@@ -69,12 +69,12 @@ namespace TDS_Server.Instance.Utility
             _invitationById.Remove(Dto.Id);
             if (!_target.LoggedIn)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(_target.Client, DToClientEvent.ToBrowserEvent, DToBrowserEvent.RemoveInvitation, Dto.Id);
+            NAPI.ClientEvent.TriggerClientEvent(_target.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.RemoveInvitation, Dto.Id);
         }
 
         public void Resend()
         {
-            NAPI.ClientEvent.TriggerClientEvent(_target.Client, DToClientEvent.ToBrowserEvent, DToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            NAPI.ClientEvent.TriggerClientEvent(_target.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
         }
 
         public static Invitation? GetById(ulong id)

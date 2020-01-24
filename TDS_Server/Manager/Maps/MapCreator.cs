@@ -11,7 +11,7 @@ using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
@@ -62,7 +62,7 @@ namespace TDS_Server.Manager.Maps
                 mapDto.Info.CreatorId = creator.Entity.Id;
 
                 mapDto.LoadSyncedData();
-                //mapDto.SyncedData.CreatorName = creator.Client.Name;
+                //mapDto.SyncedData.CreatorName = creator.Player.Name;
 
                 string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
                 string mapPath = (onlySave ? ServerConstants.SavedMapsPath : ServerConstants.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
@@ -257,7 +257,7 @@ namespace TDS_Server.Manager.Maps
             }
 
             string json = Serializer.ToBrowser(data);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
         public static void RemoveMap(TDSPlayer player, int mapId)
@@ -405,7 +405,7 @@ namespace TDS_Server.Manager.Maps
             return files;
         }
 
-        public static void RequestNewMapsList(Client player, bool requestall = false)
+        public static void RequestNewMapsList(Player player, bool requestall = false)
         {
             uint uid = player.GetChar().Entity.Id;
             List<string> filenames;

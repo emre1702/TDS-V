@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

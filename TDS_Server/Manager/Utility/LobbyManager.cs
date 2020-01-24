@@ -8,7 +8,7 @@ using TDS_Common.Enum;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Sync;
 using TDS_Server_DB.Entity;
@@ -135,13 +135,13 @@ namespace TDS_Server.Manager.Utility
                 var data = Serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
-                    player.Client?.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR);
+                    player.Player?.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR);
                     return;
                 }
                 bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Name.Equals(data.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (nameAlreadyInUse)
                 {
-                    player.Client?.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR);
+                    player.Player?.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR);
                     return;
                 }
 
@@ -199,7 +199,7 @@ namespace TDS_Server.Manager.Utility
             }
             catch
             {
-                player.Client!.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR);
+                player.Player!.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR);
             }
         }
 

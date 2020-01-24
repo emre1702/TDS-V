@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
 using TDS_Server.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Dto
 {
@@ -18,7 +18,7 @@ namespace TDS_Server.Dto
             set
             {
                 _kills = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Client, DToBrowserEvent.SetKillsForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetKillsForRoundStats, value);
             }
         }
 
@@ -28,7 +28,7 @@ namespace TDS_Server.Dto
             set
             {
                 _assists = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Client, DToBrowserEvent.SetAssistsForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetAssistsForRoundStats, value);
             }
         }
 
@@ -38,7 +38,7 @@ namespace TDS_Server.Dto
             set
             {
                 _damage = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Client, DToBrowserEvent.SetDamageForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetDamageForRoundStats, value);
             }
         }
 

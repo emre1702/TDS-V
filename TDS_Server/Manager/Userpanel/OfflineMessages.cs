@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Rest;
@@ -82,7 +82,7 @@ namespace TDS_Server.Manager.Userpanel
             int? targetId;
             if (!(targetId = Utils.GetInt(args[1])).HasValue)
             {
-                targetId = await Player.Player.GetPlayerIDByName(playerName);
+                targetId = await PlayerManager.PlayerManager.GetPlayerIDByName(playerName);
                 if (targetId == 0)
                 {
                     player.SendNotification(player.Language.PLAYER_DOESNT_EXIST, true);

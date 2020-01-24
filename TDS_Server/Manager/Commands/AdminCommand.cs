@@ -6,9 +6,9 @@ using TDS_Server.Default;
 using TDS_Server.Enums;
 using TDS_Server.Instance.Dto;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 
@@ -141,7 +141,7 @@ namespace TDS_Server.Manager.Commands
         public static void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             LangUtils.SendAllChatMessage(lang => lang.KICK_INFO.Formatted(target.DisplayName, player.DisplayName, reason));
-            target.Client!.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
+            target.Player!.Kick(target.Language.KICK_YOU_INFO.Formatted(player.DisplayName, reason));
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -198,33 +198,33 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Goto)]
         public static void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.Client is null || target.Client is null)
+            if (player.Player is null || target.Player is null)
                 return;
 
-            Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Client);
+            Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Player);
 
             #region Admin is in vehicle
-            if (player.Client.IsInVehicle)
+            if (player.Player.IsInVehicle)
             {
-                NAPI.Entity.SetEntityPosition(player.Client.Vehicle, targetpos.Around(2f));
+                NAPI.Entity.SetEntityPosition(player.Player.Vehicle, targetpos.Around(2f));
                 return;
             }
             #endregion Admin is in vehicle
 
             #region Target is in vehicle and we want to sit in it
-            if (target.Client.IsInVehicle)
+            if (target.Player.IsInVehicle)
             {
-                uint? freeSeat = Utils.GetVehicleFreeSeat(target.Client.Vehicle);
+                uint? freeSeat = Utils.GetVehicleFreeSeat(target.Player.Vehicle);
                 if (freeSeat.HasValue)
                 {
-                    NAPI.Player.SetPlayerIntoVehicle(player.Client, target.Client.Vehicle, (int)freeSeat.Value);
+                    NAPI.Player.SetPlayerIntoVehicle(player.Player, target.Player.Vehicle, (int)freeSeat.Value);
                     return;
                 }
             }
             #endregion Target is in vehicle and we want to sit in it
 
             #region Normal
-            NAPI.Entity.SetEntityPosition(player.Client, targetpos.Around(2f));
+            NAPI.Entity.SetEntityPosition(player.Player, targetpos.Around(2f));
             #endregion Normal
 
             if (!cmdinfos.AsLobbyOwner)
@@ -234,11 +234,11 @@ namespace TDS_Server.Manager.Commands
         [TDSCommand(DAdminCommand.Goto)]
         public static void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             Vector3 pos = new Vector3(x, y, z);
-            NAPI.Entity.SetEntityPosition(player.Client, pos);
+            NAPI.Entity.SetEntityPosition(player.Player, pos);
 
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -266,7 +266,7 @@ namespace TDS_Server.Manager.Commands
                         return;
                     }
 
-                    NAPI.Player.SetPlayerClothes(player.Client, slot, drawable, texture);
+                    NAPI.Player.SetPlayerClothes(player.Player, slot, drawable, texture);
                     break;
 
                 default:
@@ -298,7 +298,7 @@ namespace TDS_Server.Manager.Commands
 		[CommandGroup( "administrator/lobby-owner" )]
 		[CommandAlias( "createvehicle" )]
 		[Command( "cveh" )]
-		public void SpawnCarCommand ( Client player, string name ) {
+		public void SpawnCarCommand ( Player player, string name ) {
 			if ( player.IsAdminLevel( neededLevels["cveh"], true ) ) {
 				VehicleHash model = NAPI.Util.VehicleNameToModel( name );
 
@@ -310,14 +310,14 @@ namespace TDS_Server.Manager.Commands
 		}
 
 		[Command( "testskin" )]
-		public static void TestSkin ( Client player, PedHash hash ) {
+		public static void TestSkin ( Player player, PedHash hash ) {
 			if ( player.IsAdminLevel( neededLevels["testskin"] ) ) {
 				player.SetSkin( hash );
 			}
 		}
 
 		[Command( "testweapon" )]
-		public static void TestWeapon ( Client player, string name ) {
+		public static void TestWeapon ( Player player, string name ) {
 			if ( player.IsAdminLevel( neededLevels["testweapon"] ) ) {
 				NAPI.Player.GivePlayerWeapon( player, NAPI.Util.WeaponNameToModel( name ), 1000 );
 			}
@@ -328,7 +328,7 @@ namespace TDS_Server.Manager.Commands
 
 		#region RCON
 		[Command( "rcon" )]
-		public static void AddRCONRights ( Client player ) {
+		public static void AddRCONRights ( Player player ) {
 			if ( player.IsRcon ) {
 				Character character = player.GetChar();
 				character.UID = 0;

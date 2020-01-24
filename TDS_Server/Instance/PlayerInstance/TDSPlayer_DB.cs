@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using TDS_Common.Enum;
 using TDS_Server.Enums;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

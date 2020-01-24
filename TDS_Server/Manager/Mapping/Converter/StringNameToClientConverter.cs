@@ -5,14 +5,14 @@ using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Manager.Mapping.Converter
 {
-    class StringNameToClientConverter : ITypeConverter<string, Client?>
+    class StringNameToClientConverter : ITypeConverter<string, Player?>
     {
-        public Client? Convert(string name, Client? destination, ResolutionContext _)
+        public Player? Convert(string name, Player? destination, ResolutionContext _)
         {
             if (name[0] == '@')
                 name = name.Substring(1);
 
-            Client? player = NAPI.Player.GetPlayerFromName(name);
+            Player? player = NAPI.Player.GetPlayerFromName(name);
             if (player != null)
                 return player;
 

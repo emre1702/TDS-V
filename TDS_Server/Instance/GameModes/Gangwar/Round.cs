@@ -4,7 +4,7 @@ using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 

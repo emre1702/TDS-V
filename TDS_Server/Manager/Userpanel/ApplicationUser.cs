@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -140,7 +140,7 @@ namespace TDS_Server.Manager.Userpanel
             var application = await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync();
             if (application.PlayerId != player.Entity!.Id)
             {
-                ErrorLogsManager.Log($"{player.Client?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
+                ErrorLogsManager.Log($"{player.Player?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
                 return;
             }
 
@@ -154,7 +154,7 @@ namespace TDS_Server.Manager.Userpanel
 
             player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
-            TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
+            TDSPlayer? admin = PlayerManager.PlayerManager.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
                 admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
@@ -187,7 +187,7 @@ namespace TDS_Server.Manager.Userpanel
                 .FirstOrDefaultAsync();
             if (application.PlayerId != player.Entity!.Id)
             {
-                ErrorLogsManager.Log($"{player.Client?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
+                ErrorLogsManager.Log($"{player.Player?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
                 return;
             }
 
@@ -196,7 +196,7 @@ namespace TDS_Server.Manager.Userpanel
 
             player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 
-            TDSPlayer? admin = Player.Player.GetPlayerByID(invitation.AdminId);
+            TDSPlayer? admin = PlayerManager.PlayerManager.GetPlayerByID(invitation.AdminId);
             if (admin != null)
             {
                 admin.SendMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));

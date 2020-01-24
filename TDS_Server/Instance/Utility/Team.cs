@@ -6,7 +6,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Rest;
@@ -67,26 +67,26 @@ namespace TDS_Server.Instance.Utility
         public void AddPlayer(TDSPlayer player)
         {
             Players.Add(player);
-            player.Client!.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
+            player.Player!.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
         }
 
         public void RemovePlayer(TDSPlayer player)
         {
             Players.Remove(player);
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.ClearTeamPlayers);
         }
 
         public void ClearPlayers()
         {
             FuncIterate((player, team) =>
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ClearTeamPlayers);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.ClearTeamPlayers);
                 foreach (var target in Players)
                 {
                     if (target == player)
                         continue;
-                    target.Client!.DisableVoiceTo(player.Client);
-                    player.Client!.DisableVoiceTo(target.Client);
+                    target.Player!.DisableVoiceTo(player.Player);
+                    player.Player!.DisableVoiceTo(target.Player);
                 }
             });
             Players.Clear();
@@ -94,17 +94,17 @@ namespace TDS_Server.Instance.Utility
 
         public void SyncAddedPlayer(TDSPlayer player)
         {
-            string json = Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value));
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
+            string json = Serializer.ToClient(Players.Select(p => p.Player!.Handle.Value));
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
                 if (target == player)
                     continue;
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerJoinedTeam, player.Client!.Handle.Value);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.PlayerJoinedTeam, player.Player!.Handle.Value);
                 if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
-                    target.Client!.EnableVoiceTo(player.Client);
+                    target.Player!.EnableVoiceTo(player.Player);
                 if(!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
-                    player.Client.EnableVoiceTo(target.Client);
+                    player.Player.EnableVoiceTo(target.Player);
             }
         }
 
@@ -114,26 +114,26 @@ namespace TDS_Server.Instance.Utility
             {
                 if (target == player)
                     continue;
-                NAPI.ClientEvent.TriggerClientEvent(target.Client, DToClientEvent.PlayerLeftTeam, player.Client!.Handle.Value);
-                target.Client!.DisableVoiceTo(player.Client);
-                player.Client.DisableVoiceTo(target.Client);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.PlayerLeftTeam, player.Player!.Handle.Value);
+                target.Player!.DisableVoiceTo(player.Player);
+                player.Player.DisableVoiceTo(target.Player);
             }
         }
 
         public void SyncAllPlayers()
         {
-            string json = Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value));
+            string json = Serializer.ToClient(Players.Select(p => p.Player!.Handle.Value));
             foreach (var player in Players)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamPlayers, json);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncTeamPlayers, json);
                 foreach (var target in Players)
                 {
                     if (target == player)
                         continue;
                     if (!player.HasRelationTo(target, EPlayerRelation.Block) && !target.IsVoiceMuted)
-                        target.Client!.EnableVoiceTo(player.Client);
+                        target.Player!.EnableVoiceTo(player.Player);
                     if (!target.HasRelationTo(player, EPlayerRelation.Block) && !player.IsVoiceMuted)
-                        player.Client!.EnableVoiceTo(target.Client);
+                        player.Player!.EnableVoiceTo(target.Player);
                 }
             }
         }

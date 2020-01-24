@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.Utility;

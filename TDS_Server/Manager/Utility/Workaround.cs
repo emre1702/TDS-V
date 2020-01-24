@@ -5,7 +5,7 @@ using TDS_Common.Dto;
 using TDS_Common.Enum;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 
 namespace TDS_Server.Manager.Utility
@@ -24,12 +24,12 @@ namespace TDS_Server.Manager.Utility
             CustomEventManager.OnPlayerLeftLobby += PlayerLeftLobby;
         }
 
-        public static void FreezePlayer(Client player, bool freeze)
+        public static void FreezePlayer(Player player, bool freeze)
         {
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.FreezePlayerWorkaround, freeze);
         }
 
-        public static void SetPlayerTeam(Client player, int team)
+        public static void SetPlayerTeam(Player player, int team)
         {
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SetPlayerTeamWorkaround, team);
         }
@@ -100,12 +100,12 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        public static void SetPlayerInvincible(Client player, bool invincible)
+        public static void SetPlayerInvincible(Player player, bool invincible)
         {
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.SetPlayerInvincible, invincible);
         }
 
-        public static void SetEntityInvincible(Client invincibleAtClient, Entity entity, bool invincible)
+        public static void SetEntityInvincible(Player invincibleAtClient, Entity entity, bool invincible)
         {
             NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, DToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
         }
@@ -123,7 +123,7 @@ namespace TDS_Server.Manager.Utility
                         _attachedEntitiesPerLobby[lobby].Remove(entity);
                         continue;
                     }
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                 }
                 if (_attachedEntitiesPerLobby[lobby].Count == 0)
                     _attachedEntitiesPerLobby.Remove(lobby);
@@ -134,7 +134,7 @@ namespace TDS_Server.Manager.Utility
                 _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                 foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
                 }
                 if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
                     _collisionslessEntitiesPerLobby.Remove(lobby);

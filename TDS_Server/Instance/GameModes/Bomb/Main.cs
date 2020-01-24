@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
 

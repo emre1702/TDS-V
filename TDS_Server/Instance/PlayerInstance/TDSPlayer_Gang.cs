@@ -1,7 +1,7 @@
 ﻿using TDS_Server.Instance.GangTeam;
 using TDS_Server_DB.Entity.GangEntities;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

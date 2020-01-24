@@ -7,8 +7,8 @@ using TDS_Server.Dto.Map;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.GangEntities;
@@ -204,7 +204,7 @@ namespace TDS_Server.Instance.Utility
 
         private bool IsAtTarget(TDSPlayer player)
         {
-            if (player.Client is null || player.Client.Dead)
+            if (player.Player is null || player.Player.Dead)
                 return false;
             if (!player.LoggedIn)
                 return false;

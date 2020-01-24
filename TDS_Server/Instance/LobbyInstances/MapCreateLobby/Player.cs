@@ -6,8 +6,8 @@ using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.LobbyInstances
@@ -19,12 +19,12 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            Workaround.SetPlayerInvincible(player.Client!, true);
-            Workaround.FreezePlayer(player.Client!, false);
+            Workaround.SetPlayerInvincible(player.Player!, true);
+            Workaround.FreezePlayer(player.Player!, false);
 
             if (Players.Count > 1)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
             }
 
             return true;
@@ -43,8 +43,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public void SetPosition(TDSPlayer player, float x, float y, float z, float rot)
         {
-            player.Client!.Position = new Vector3(x, y, z);
-            player.Client!.Rotation = new Vector3(0, 0, rot);
+            player.Player!.Position = new Vector3(x, y, z);
+            player.Player!.Rotation = new Vector3(0, 0, rot);
         }
 
         public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
@@ -59,25 +59,25 @@ namespace TDS_Server.Instance.LobbyInstances
             if (vehHash == default)
                 return;
 
-            var pos = player.Client!.Position;
+            var pos = player.Player!.Position;
 
             NAPI.Task.Run(() => {
                 if (player.FreeroamVehicle != null)
                 {
-                    if (player.Client.IsInVehicle)
-                        player.Client.WarpOutOfVehicle();
+                    if (player.Player.IsInVehicle)
+                        player.Player.WarpOutOfVehicle();
                     player.FreeroamVehicle.Delete();
                     player.FreeroamVehicle = null;
                 }
 
-                Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Client.Heading, 0, 0, player.Client.Name, dimension: Dimension);
+                Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Player.Heading, 0, 0, player.Player.Name, dimension: Dimension);
                 if (vehicle is null)
                     return;
                 player.FreeroamVehicle = vehicle;
 
-                Workaround.SetEntityInvincible(player.Client, vehicle, true);
+                Workaround.SetEntityInvincible(player.Player, vehicle, true);
 
-                player.Client.SetIntoVehicle(vehicle, -1);
+                player.Player.SetIntoVehicle(vehicle, -1);
             });
         }
     }

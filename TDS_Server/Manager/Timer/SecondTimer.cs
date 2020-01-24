@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Timer
@@ -29,8 +29,8 @@ namespace TDS_Server.Manager.Timer
                         PlayerAmountInArena = LobbyManager.Arena.Players.Count,
                         PlayerAmountInCustomLobby = LobbyManager.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
                         PlayerAmountInGangLobby = LobbyManager.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
-                        PlayerAmountInMainMenu = Player.Player.LoggedInPlayers.Where(p => p.CurrentLobby is null || p.CurrentLobby.Type == TDS_Common.Enum.ELobbyType.MainMenu).Count(),
-                        PlayerAmountOnline = Player.Player.AmountLoggedInPlayers,
+                        PlayerAmountInMainMenu = PlayerManager.PlayerManager.LoggedInPlayers.Where(p => p.CurrentLobby is null || p.CurrentLobby.Type == TDS_Common.Enum.ELobbyType.MainMenu).Count(),
+                        PlayerAmountOnline = PlayerManager.PlayerManager.AmountLoggedInPlayers,
                         ServerPort = NAPI.Server.GetServerPort(),
                         Version = "1.0.0",   // Todo: Save Version somewhere else
                         ServerName = NAPI.Server.GetServerName(),

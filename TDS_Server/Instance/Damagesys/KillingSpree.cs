@@ -5,7 +5,7 @@ namespace TDS_Server.Instance
     using System.Collections.Generic;
     using System.Linq;
     using TDS_Common.Default;
-    using TDS_Server.Instance.Player;
+    using TDS_Server.Instance.PlayerInstance;
     using TDS_Server.Manager.Utility;
     using TDS_Server_DB.Entity.LobbyEntities;
 
@@ -99,7 +99,7 @@ namespace TDS_Server.Instance
                 int bonus = reward.Item2;
                 character.CurrentLobby.SendAllPlayerLangNotification((lang) =>
                 {
-                    return Utils.GetReplaced(lang.KILLING_SPREE_HEALTHARMOR, character.Client.Name,
+                    return Utils.GetReplaced(lang.KILLING_SPREE_HEALTHARMOR, character.Player.Name,
                         character.KillingSpree.ToString(), bonus.ToString());
                 });
                 character.AddHPArmor(bonus);

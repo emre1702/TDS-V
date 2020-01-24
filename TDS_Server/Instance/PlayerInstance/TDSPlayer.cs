@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
@@ -6,11 +6,11 @@ using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity.Player;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     public partial class TDSPlayer : EntityWrapperClass
     {
-        public Client? Client { get; }
+        public Player? Player { get; }
 
         public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
 
@@ -22,15 +22,15 @@ namespace TDS_Server.Instance.Player
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == EPlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-        public string DisplayName => Client is null ? "Console" : (AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + Client.Name : Client.Name);
+        public string DisplayName => Player is null ? "Console" : (AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + Player.Name : Player.Name);
 
         public bool IsCrouched { get; set; }
         public bool IsConsole { get; set; }
 
 
-        public TDSPlayer(Client? client)
+        public TDSPlayer(Player? client)
         {
-            Client = client;
+            Player = client;
             SetPlayer(this);
         }
 

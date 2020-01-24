@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.LobbyInstances
@@ -11,7 +11,7 @@ namespace TDS_Server.Instance.LobbyInstances
             if (!await base.AddPlayer(player, teamindex))
                 return false;
 
-            Workaround.FreezePlayer(player.Client!, false);
+            Workaround.FreezePlayer(player.Player!, false);
 
             return true;
         }

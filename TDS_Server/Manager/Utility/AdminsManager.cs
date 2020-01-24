@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Dto;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;

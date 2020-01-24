@@ -4,8 +4,8 @@ using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 
@@ -14,7 +14,7 @@ namespace TDS_Server.Manager.Utility
     internal class Scoreboard : Script
     {
         [RemoteEvent(DToServerEvent.RequestPlayersForScoreboard)]
-        public static void SendDataToPlayer(Client client)
+        public static void SendDataToPlayer(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)

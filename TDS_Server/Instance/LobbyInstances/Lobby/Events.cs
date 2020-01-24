@@ -1,7 +1,7 @@
 using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -11,8 +11,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {
-            NAPI.Player.SetPlayerHealth(character.Client, LobbyEntity.StartHealth);
-            NAPI.Player.SetPlayerArmor(character.Client, LobbyEntity.StartArmor);
+            NAPI.Player.SetPlayerHealth(character.Player, LobbyEntity.StartHealth);
+            NAPI.Player.SetPlayerArmor(character.Player, LobbyEntity.StartArmor);
         }
 
         public void OnPlayerDisconnected(TDSPlayer character)
@@ -36,7 +36,7 @@ namespace TDS_Server.Instance.LobbyInstances
                     DeathSpawnTimer[character].Kill();
                     DeathSpawnTimer.Remove(character);
                 }
-                NAPI.Player.SpawnPlayer(character.Client, SpawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
+                NAPI.Player.SpawnPlayer(character.Player, SpawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
             }
         }
 

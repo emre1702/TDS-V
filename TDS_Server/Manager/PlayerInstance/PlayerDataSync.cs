@@ -5,11 +5,11 @@ using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Manager.Player
+namespace TDS_Server.Manager.PlayerManager
 {
     static class PlayerDataSync
     {
@@ -41,17 +41,17 @@ namespace TDS_Server.Manager.Player
         /// <param name="value"></param>
         public static void SetData(TDSPlayer player, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             switch (syncMode)
             {
                 case EPlayerDataSyncMode.All:
-                    if (!_playerHandleDatasAll.ContainsKey(player.Client.Handle.Value))
-                        _playerHandleDatasAll[player.Client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
-                    _playerHandleDatasAll[player.Client.Handle.Value][key] = value;
+                    if (!_playerHandleDatasAll.ContainsKey(player.Player.Handle.Value))
+                        _playerHandleDatasAll[player.Player.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasAll[player.Player.Handle.Value][key] = value;
 
-                    NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetPlayerData, player.Client.Handle.Value, (int)key, value);
+                    NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.SetPlayerData, player.Player.Handle.Value, (int)key, value);
                     break;
                 case EPlayerDataSyncMode.Lobby:
                     if (player.CurrentLobby == null)
@@ -59,18 +59,18 @@ namespace TDS_Server.Manager.Player
 
                     if (!_playerHandleDatasLobby.ContainsKey(player.CurrentLobby.Id))
                         _playerHandleDatasLobby[player.CurrentLobby.Id] = new Dictionary<ushort, Dictionary<EPlayerDataKey, object>>();
-                    if (!_playerHandleDatasLobby[player.CurrentLobby.Id].ContainsKey(player.Client.Handle.Value))
-                        _playerHandleDatasLobby[player.CurrentLobby.Id][player.Client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
-                    _playerHandleDatasLobby[player.CurrentLobby.Id][player.Client.Handle.Value][key] = value;
+                    if (!_playerHandleDatasLobby[player.CurrentLobby.Id].ContainsKey(player.Player.Handle.Value))
+                        _playerHandleDatasLobby[player.CurrentLobby.Id][player.Player.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasLobby[player.CurrentLobby.Id][player.Player.Handle.Value][key] = value;
 
-                    player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.SetPlayerData, null, player.Client.Handle.Value, (int)key, value);
+                    player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.SetPlayerData, null, player.Player.Handle.Value, (int)key, value);
                     break;
                 case EPlayerDataSyncMode.Player:
-                    if (!_playerHandleDatasPlayer.ContainsKey(player.Client.Handle.Value))
-                        _playerHandleDatasPlayer[player.Client.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
-                    _playerHandleDatasPlayer[player.Client.Handle.Value][key] = value;
+                    if (!_playerHandleDatasPlayer.ContainsKey(player.Player.Handle.Value))
+                        _playerHandleDatasPlayer[player.Player.Handle.Value] = new Dictionary<EPlayerDataKey, object>();
+                    _playerHandleDatasPlayer[player.Player.Handle.Value][key] = value;
 
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SetPlayerData, player.Client.Handle.Value, (int)key, value);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SetPlayerData, player.Player.Handle.Value, (int)key, value);
                     break;
             }
         }
@@ -82,7 +82,7 @@ namespace TDS_Server.Manager.Player
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public static void SetData(Client client, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
+        public static void SetData(Player client, EPlayerDataKey key, EPlayerDataSyncMode syncMode, object value)
         {
 
             switch (syncMode)
@@ -119,35 +119,35 @@ namespace TDS_Server.Manager.Player
 
         private static void SyncPlayerAllData(TDSPlayer player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasAll));
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasAll));
         }
 
         private static void SyncPlayerLobbyData(TDSPlayer player, Lobby lobby)
         {
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
         }
 
         private static void PlayerLeftLobby(TDSPlayer player, Lobby lobby)
         {
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
                 return;
-            if (!_playerHandleDatasLobby[lobby.Id].ContainsKey(player.Client!.Handle.Value))
+            if (!_playerHandleDatasLobby[lobby.Id].ContainsKey(player.Player!.Handle.Value))
                 return;
 
-            _playerHandleDatasLobby[lobby.Id].Remove(player.Client.Handle.Value);
+            _playerHandleDatasLobby[lobby.Id].Remove(player.Player.Handle.Value);
         }
 
         private static void PlayerLoggedOut(TDSPlayer player)
         {
-            if (_playerHandleDatasAll.ContainsKey(player.Client!.Handle.Value))
-                _playerHandleDatasAll.Remove(player.Client.Handle.Value);
+            if (_playerHandleDatasAll.ContainsKey(player.Player!.Handle.Value))
+                _playerHandleDatasAll.Remove(player.Player.Handle.Value);
 
-            if (_playerHandleDatasPlayer.ContainsKey(player.Client.Handle.Value))
-                _playerHandleDatasPlayer.Remove(player.Client.Handle.Value);
+            if (_playerHandleDatasPlayer.ContainsKey(player.Player.Handle.Value))
+                _playerHandleDatasPlayer.Remove(player.Player.Handle.Value);
 
-            NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.RemoveSyncedPlayerDatas, player.Client.Handle.Value);
+            NAPI.ClientEvent.TriggerClientEventForAll(DToClientEvent.RemoveSyncedPlayerDatas, player.Player.Handle.Value);
         }
     }
 }

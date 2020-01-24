@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Common.Enum;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.LobbyInstances
@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            Workaround.SetPlayerInvincible(player.Client!, false);
+            Workaround.SetPlayerInvincible(player.Player!, false);
 
             return true;
         }
@@ -26,7 +26,7 @@ namespace TDS_Server.Instance.LobbyInstances
             character.KillingSpree = 0;
         }
 
-        public static void KillPlayer(Client player, string reason)
+        public static void KillPlayer(Player player, string reason)
         {
             player.Kill();
             player.SendChatMessage(reason);

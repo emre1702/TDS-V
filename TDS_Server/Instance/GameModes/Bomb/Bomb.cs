@@ -5,7 +5,7 @@ using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.GameModes
@@ -37,22 +37,22 @@ namespace TDS_Server.Instance.GameModes
 
             int rnd = CommonUtils.Rnd.Next(amount);
             TDSPlayer character = _terroristTeam.Players[rnd];
-            if (character.Client!.CurrentWeapon == WeaponHash.Unarmed)
+            if (character.Player!.CurrentWeapon == WeaponHash.Unarmed)
                 BombToHand(character);
             else
                 BombToBack(character);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
         }
 
         private void DetonateBomb()
         {
-            // NAPI.Explosion.CreateOwnedExplosion(planter.Client, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
+            // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
             Lobby.SendAllPlayerEvent(DToClientEvent.BombDetonated, null);
             _counterTerroristTeam.FuncIterate((character, team) =>
             {
                 if (character.Lifes == 0)
                     return;
-                int damage = character.Client!.Health + character.Client.Armor;
+                int damage = character.Player!.Health + character.Player.Armor;
                 Lobby.DmgSys.UpdateLastHitter(character, _planter, damage);
                 character.Damage(ref damage);
                 if (_planter != null && _planter.CurrentRoundStats != null)
@@ -82,13 +82,13 @@ namespace TDS_Server.Instance.GameModes
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
-            Workaround.AttachEntityToEntity(_bomb, character.Client!, EPedBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), Lobby);
+            Workaround.AttachEntityToEntity(_bomb, character.Player!, EPedBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), new Vector3(), Lobby);
             if (_bombAtPlayer != character)
             {
                 SendBombPlantInfos(character);
                 _bombAtPlayer = character;
             }
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.BombOnHand);
         }
 
         private void BombToBack(TDSPlayer character)
@@ -97,13 +97,13 @@ namespace TDS_Server.Instance.GameModes
                 return;
             Workaround.DetachEntity(_bomb);
             Workaround.SetEntityCollisionless(_bomb, true, Lobby);
-            Workaround.AttachEntityToEntity(_bomb, character.Client!, EPedBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), Lobby);
+            Workaround.AttachEntityToEntity(_bomb, character.Player!, EPedBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0), Lobby);
             if (_bombAtPlayer != character)
             {
                 SendBombPlantInfos(character);
                 _bombAtPlayer = character;
             } 
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.BombNotOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.BombNotOnHand);
         }
 
         private void DropBomb()
@@ -114,12 +114,12 @@ namespace TDS_Server.Instance.GameModes
                 return;
             Workaround.DetachEntity(_bomb);
             //_bomb.FreezePosition = true;
-            _bomb.Position = _bombAtPlayer.Client!.Position;
+            _bomb.Position = _bombAtPlayer.Player!.Position;
             _bombTakeMarker = NAPI.Marker.CreateMarker(0, _bomb.Position, new Vector3(), new Vector3(), 1,
                                                         new Color(180, 0, 0, 180), true, Lobby.Dimension);
             ColShape bombtakecol = NAPI.ColShape.CreateSphereColShape(_bomb.Position, 2);
             _lobbyBombTakeCol[Lobby] = bombtakecol;
-            NAPI.ClientEvent.TriggerClientEvent(_bombAtPlayer.Client, DToClientEvent.BombNotOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(_bombAtPlayer.Player, DToClientEvent.BombNotOnHand);
             _bombAtPlayer = null;
         }
 
@@ -127,7 +127,7 @@ namespace TDS_Server.Instance.GameModes
         {
             if (_bomb is null)
                 return;
-            ToggleBombAtHand(character, character.Client!.CurrentWeapon, character.Client.CurrentWeapon);
+            ToggleBombAtHand(character, character.Player!.CurrentWeapon, character.Player.CurrentWeapon);
             //_bomb.FreezePosition = false;
             _bombTakeMarker?.Delete();
             _bombTakeMarker = null;

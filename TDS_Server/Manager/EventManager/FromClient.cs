@@ -6,10 +6,10 @@ using TDS_Common.Enum.Userpanel;
 using TDS_Server.Enums;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
 
@@ -20,7 +20,7 @@ namespace TDS_Server.Manager.EventManager
         #region Lobby
 
         [RemoteEvent(DToServerEvent.JoinLobby)]
-        public static async void JoinLobbyEvent(Client client, int index)
+        public static async void JoinLobbyEvent(Player client, int index)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -39,7 +39,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.JoinLobbyWithPassword)]
-        public static async void JoinLobbyEvent(Client client, int index, string? password = null)
+        public static async void JoinLobbyEvent(Player client, int index, string? password = null)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -64,7 +64,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.JoinArena)]
-        public static async void JoinArenaEvent(Client client)
+        public static async void JoinArenaEvent(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -73,7 +73,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.JoinMapCreator)]
-        public static async void JoinMapCreatorEvent(Client client)
+        public static async void JoinMapCreatorEvent(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -86,7 +86,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.CreateCustomLobby)]
-        public static async void CreateCustomLobbyEvent(Client client, string dataJson)
+        public static async void CreateCustomLobbyEvent(Player client, string dataJson)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -95,7 +95,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.JoinedCustomLobbiesMenu)]
-        public static void JoinedCustomLobbiesMenu(Client client)
+        public static void JoinedCustomLobbiesMenu(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -104,7 +104,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LeftCustomLobbiesMenu)]
-        public static void LeftCustomLobbiesMenu(Client client)
+        public static void LeftCustomLobbiesMenu(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -113,7 +113,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.ChooseTeam)]
-        public static void ChooseTeamMethod(Client client, int index)
+        public static void ChooseTeamMethod(Player client, int index)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -124,7 +124,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LeaveLobby)]
-        public static async void LeaveLobbyMethod(Client client)
+        public static async void LeaveLobbyMethod(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -140,7 +140,7 @@ namespace TDS_Server.Manager.EventManager
         #region Damagesys
 
         [RemoteEvent(DToServerEvent.GotHit)]
-        public void OnPlayerGotHitByOtherPlayer(Client client, ushort attackerRemoteId, int boneOrZero, int damage)
+        public void OnPlayerGotHitByOtherPlayer(Player client, ushort attackerRemoteId, int boneOrZero, int damage)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -175,7 +175,7 @@ namespace TDS_Server.Manager.EventManager
         #endregion Damagesys
 
         [RemoteEvent(DToServerEvent.OutsideMapLimit)]
-        public void OnOutsideMapLimit(Client player)
+        public void OnOutsideMapLimit(Player player)
         {
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
@@ -185,7 +185,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SendTeamOrder)]
-        public void SendTeamOrder(Client client, int teamOrderInt)
+        public void SendTeamOrder(Player client, int teamOrderInt)
         {
             if (!System.Enum.TryParse(teamOrderInt.ToString(), out ETeamOrder teamOrder))
                 return;
@@ -194,7 +194,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SuicideKill)]
-        public void SuicideKillMethod(Client player)
+        public void SuicideKillMethod(Player player)
         {
             TDSPlayer character = player.GetChar();
             if (!character.LoggedIn)
@@ -207,7 +207,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SuicideShoot)]
-        public void SuicideShootMethod(Client player)
+        public void SuicideShootMethod(Player player)
         {
             TDSPlayer character = player.GetChar();
             if (!character.LoggedIn)
@@ -218,12 +218,12 @@ namespace TDS_Server.Manager.EventManager
                 return;
             fightLobby.FuncIterateAllPlayers((target, team) =>
             {
-                NAPI.Native.SendNativeToPlayer(target.Client, Hash.SET_PED_SHOOTS_AT_COORD, player, 0f, 0f, 0f, false);
+                NAPI.Native.SendNativeToPlayer(target.Player, Hash.SET_PED_SHOOTS_AT_COORD, player, 0f, 0f, 0f, false);
             });
         }
 
         [RemoteEvent(DToServerEvent.ToggleCrouch)]
-        public void ToggleCrouchMethod(Client client)
+        public void ToggleCrouchMethod(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -236,7 +236,7 @@ namespace TDS_Server.Manager.EventManager
         #region Bomb
 
         [RemoteEvent(DToServerEvent.StartPlanting)]
-        public void OnPlayerStartPlantingEvent(Client player)
+        public void OnPlayerStartPlantingEvent(Player player)
         {
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
@@ -248,7 +248,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.StopPlanting)]
-        public void OnPlayerStopPlantingEvent(Client player)
+        public void OnPlayerStopPlantingEvent(Player player)
         {
             if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
@@ -258,7 +258,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.StartDefusing)]
-        public void OnPlayerStartDefusingEvent(Client player)
+        public void OnPlayerStartDefusingEvent(Player player)
         {
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is Arena arena))
@@ -270,7 +270,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.StopDefusing)]
-        public void OnPlayerStopDefusingEvent(Client player)
+        public void OnPlayerStopDefusingEvent(Player player)
         {
             if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
@@ -284,7 +284,7 @@ namespace TDS_Server.Manager.EventManager
         #region Spectate
 
         [RemoteEvent(DToServerEvent.SpectateNext)]
-        public void SpectateNextEvent(Client player, bool forward)
+        public void SpectateNextEvent(Player player, bool forward)
         {
             TDSPlayer character = player.GetChar();
             if (!(character.CurrentLobby is FightLobby lobby))
@@ -297,7 +297,7 @@ namespace TDS_Server.Manager.EventManager
         #region MapVote
 
         [RemoteEvent(DToServerEvent.MapsListRequest)]
-        public void OnMapsListRequestEvent(Client player)
+        public void OnMapsListRequestEvent(Player player)
         {
             if (!(player.GetChar().CurrentLobby is Arena arena))
                 return;
@@ -306,7 +306,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapVote)]
-        public void OnMapVotingRequestEvent(Client client, int mapId)
+        public void OnMapVotingRequestEvent(Player client, int mapId)
         {
             TDSPlayer player = client.GetChar();
             if (!(player.CurrentLobby is Arena arena))
@@ -320,7 +320,7 @@ namespace TDS_Server.Manager.EventManager
         #region Map Rating
 
         [RemoteEvent(DToServerEvent.SendMapRating)]
-        public void SendMapRating(Client client, int mapId, int rating)
+        public void SendMapRating(Player client, int mapId, int rating)
         {
             var player = client.GetChar();
             if (!player.LoggedIn)
@@ -332,7 +332,7 @@ namespace TDS_Server.Manager.EventManager
 
         #region MapCreator
         [RemoteEvent(DToServerEvent.SendMapCreatorData)]
-        public async void OnSendMapCreatorData(Client client, string json)
+        public async void OnSendMapCreatorData(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -342,7 +342,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SaveMapCreatorData)]
-        public async void OnSaveMapCreatorData(Client client, string json)
+        public async void OnSaveMapCreatorData(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -352,7 +352,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LoadMapNamesToLoadForMapCreator)]
-        public void OnLoadMySavedMapNames(Client client)
+        public void OnLoadMySavedMapNames(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -361,7 +361,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LoadMapForMapCreator)]
-        public void OnLoadMySavedMap(Client client, string mapName)
+        public void OnLoadMySavedMap(Player client, string mapName)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -372,7 +372,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.RemoveMap)]
-        public void OnRemoveMap(Client client, int mapId)
+        public void OnRemoveMap(Player client, int mapId)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -381,7 +381,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.GetVehicle)]
-        public void OnGetVehicle(Client client, int vehTypeNumber)
+        public void OnGetVehicle(Player client, int vehTypeNumber)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -393,7 +393,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorSyncLastId)]
-        public void OnMapCreatorSyncLastId(Client client, int id)
+        public void OnMapCreatorSyncLastId(Player client, int id)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -404,7 +404,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorSyncNewObject)]
-        public void OnMapCreatorSyncNewObject(Client client, string json)
+        public void OnMapCreatorSyncNewObject(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -415,7 +415,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorSyncObjectPosition)]
-        public void OnMapCreatorSyncObjectPosition(Client client, string json)
+        public void OnMapCreatorSyncObjectPosition(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -426,7 +426,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorSyncRemoveObject)]
-        public void OnMapCreatorSyncRemoveObject(Client client, int id)
+        public void OnMapCreatorSyncRemoveObject(Player client, int id)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -437,7 +437,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorSyncAllObjects)]
-        public void OnMapCreatorSyncAllObjects(Client client, int tdsPlayerId, string json)
+        public void OnMapCreatorSyncAllObjects(Player client, int tdsPlayerId, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -448,7 +448,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.MapCreatorStartNewMap)]
-        public void OnMapCreatorStartNewMap(Client client)
+        public void OnMapCreatorStartNewMap(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -461,7 +461,7 @@ namespace TDS_Server.Manager.EventManager
 
         #region Userpanel
         [RemoteEvent(DToServerEvent.LoadUserpanelData)]
-        public void PlayerLoadAllCommands(Client client, int dataType)
+        public void PlayerLoadAllCommands(Player client, int dataType)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -471,7 +471,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SendApplication)]
-        public void SendApplicationMethod(Client client, string json)
+        public void SendApplicationMethod(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -480,7 +480,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.AcceptInvitation)]
-        public void AcceptInvitationMethod(Client client, int id)
+        public void AcceptInvitationMethod(Player client, int id)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -489,7 +489,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.RejectInvitation)]
-        public void RejectInvitationMethod(Client client, int id)
+        public void RejectInvitationMethod(Player client, int id)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -498,7 +498,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LoadApplicationDataForAdmin)]
-        public async void LoadApplicationDataForAdminMethod(Client client, int applicationId)
+        public async void LoadApplicationDataForAdminMethod(Player client, int applicationId)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
 using TDS_Server.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Challenge;
 using TDS_Server_DB.Entity.Player;
@@ -71,7 +71,7 @@ namespace TDS_Server.Manager.Utility
 
         public static void SyncCurrentAmount(TDSPlayer player, PlayerChallenges challenge)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.ToBrowserEvent, 
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.ToBrowserEvent, 
                 DToBrowserEvent.SyncChallengeCurrentAmountChange, 
                 (int)challenge.Frequency, 
                 (int)challenge.Challenge,

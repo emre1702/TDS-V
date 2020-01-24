@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
-namespace TDS_Server.Manager.Player
+namespace TDS_Server.Manager.PlayerManager
 {
-    internal static class Player
+    internal static class PlayerManager
     {
         public static int AmountLoggedInPlayers => LoggedInPlayers.Count;
         public static readonly List<TDSPlayer> LoggedInPlayers = new List<TDSPlayer>();
 
-        private static readonly Dictionary<Client, TDSPlayer> _clientPlayers = new Dictionary<Client, TDSPlayer>();
+        private static readonly Dictionary<Player, TDSPlayer> _clientPlayers = new Dictionary<Player, TDSPlayer>();
 
-        static Player()
+        static PlayerManager()
         {
             CustomEventManager.OnPlayerLoggedInBefore += player =>
             {
@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.Player
             return _clientPlayers.Values.Where(p => p.LoggedIn).ToList();
         }
 
-        public static TDSPlayer GetChar(this Client client)
+        public static TDSPlayer GetChar(this Player client)
         {
             if (!_clientPlayers.ContainsKey(client))
             {
@@ -45,7 +45,7 @@ namespace TDS_Server.Manager.Player
             return _clientPlayers[client];
         }
 
-        public static Players? GetEntity(this Client client)
+        public static Players? GetEntity(this Player client)
         {
             return GetChar(client).Entity;
         }

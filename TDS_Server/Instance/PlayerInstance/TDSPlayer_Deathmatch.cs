@@ -3,7 +3,7 @@ using System;
 using TDS_Common.Enum.Challenge;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {
@@ -51,31 +51,31 @@ namespace TDS_Server.Instance.Player
         {
             if (damage == 0)
                 return;
-            damage = Math.Min(Client!.Armor + Client!.Health, damage);
+            damage = Math.Min(Player!.Armor + Player!.Health, damage);
 
             int leftdmg = damage;
-            if (Client.Armor > 0)
+            if (Player.Armor > 0)
             {
-                leftdmg -= Client.Armor;
-                Client.Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
+                leftdmg -= Player.Armor;
+                Player.Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
             }
             if (leftdmg > 0)
-                Client.Health -= leftdmg;
+                Player.Health -= leftdmg;
         }
 
         public void AddHPArmor(int healtharmor)
         {
             #region HP
 
-            if (Client!.Health + healtharmor <= 100)
+            if (Player!.Health + healtharmor <= 100)
             {
-                Client.Health += healtharmor;
+                Player.Health += healtharmor;
                 healtharmor = 0;
             }
-            else if (Client.Health != 100)
+            else if (Player.Health != 100)
             {
-                healtharmor -= 100 - Client.Health;
-                Client.Health = 100;
+                healtharmor -= 100 - Player.Health;
+                Player.Health = 100;
             }
 
             #endregion HP
@@ -84,7 +84,7 @@ namespace TDS_Server.Instance.Player
 
             if (healtharmor > 0)
             {
-                Client.Armor = Client.Armor + healtharmor <= 100 ? Client.Armor + healtharmor : 100;
+                Player.Armor = Player.Armor + healtharmor <= 100 ? Player.Armor + healtharmor : 100;
             }
 
             #endregion Armor

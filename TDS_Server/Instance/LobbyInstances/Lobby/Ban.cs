@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
@@ -14,13 +14,13 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         public void BanPlayer(TDSPlayer admin, TDSPlayer target, DateTime? endTime, string reason)
         {
-            if (target.Client is null)
+            if (target.Player is null)
                 return;
             if (Players.Contains(target))
                 RemovePlayer(target);
             if (target.Entity is null)
                 return;
-            BanPlayer(admin, target.Entity, endTime, reason, target.Client.Serial);
+            BanPlayer(admin, target.Entity, endTime, reason, target.Player.Serial);
             if (endTime.HasValue)
             {
                 if (LobbyEntity.Type != TDS_Common.Enum.ELobbyType.MainMenu)
@@ -113,7 +113,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
                 if (ban is null)
                 {
-                    if (admin.Client is { })
+                    if (admin.Player is { })
                         admin.SendMessage(admin.Language.PLAYER_ISNT_BANED);
                     return;
                 }

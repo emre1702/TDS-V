@@ -2,7 +2,7 @@
 using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
 using TDS_Common.Enum.Userpanel;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server.Manager.Userpanel
@@ -59,7 +59,7 @@ namespace TDS_Server.Manager.Userpanel
             if (json == null)
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadUserpanelData, (int)dataType, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadUserpanelData, (int)dataType, json);
         }
 
         public static void Init(TDSDbContext dbContext)

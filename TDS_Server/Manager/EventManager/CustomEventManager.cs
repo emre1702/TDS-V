@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Manager.EventManager
 {
     static class CustomEventManager
     {
         public delegate void PlayerDelegate(TDSPlayer player);
-        public delegate void ClientDelegate(Client client);
+        public delegate void ClientDelegate(Player client);
 
         public static event PlayerDelegate? OnPlayerLoggedInBefore;
         public static event PlayerDelegate? OnPlayerLoggedOutBefore;
@@ -38,7 +38,7 @@ namespace TDS_Server.Manager.EventManager
             OnPlayerLoggedOut?.Invoke(player);
         }
 
-        public static void SetPlayerRegistered(Client client)
+        public static void SetPlayerRegistered(Player client)
         {
             OnPlayerRegistered?.Invoke(client);
         }

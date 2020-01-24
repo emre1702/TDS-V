@@ -5,7 +5,7 @@ using TDS_Common.Default;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.GameModes;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Stats;
@@ -166,9 +166,9 @@ namespace TDS_Server.Instance.LobbyInstances
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
                     if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != ERoundEndReason.Death)
-                        character.Client!.Kill();
+                        character.Player!.Kill();
                     character.Lifes = 0;
                 });
             }
@@ -210,9 +210,9 @@ namespace TDS_Server.Instance.LobbyInstances
 
             try
             {
-                Client winner = _ranking.First().Player.Client!;
-                Client? second = _ranking.ElementAtOrDefault(1)?.Player.Client;
-                Client? third = _ranking.ElementAtOrDefault(2)?.Player.Client;
+                Player winner = _ranking.First().Player.Player!;
+                Player? second = _ranking.ElementAtOrDefault(1)?.Player.Player;
+                Player? third = _ranking.ElementAtOrDefault(2)?.Player.Player;
 
                 //Vector3 rot = new Vector3(0, 0, 345);
 

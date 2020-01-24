@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
@@ -22,11 +22,11 @@ namespace TDS_Server.Manager.Maps
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs));
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs));
         }
 
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]
-        public static async void ToggleMapFavouriteState(Client player, int mapId, bool isFavorite)
+        public static async void ToggleMapFavouriteState(Player player, int mapId, bool isFavorite)
         {
             Players? entity = player.GetEntity();
             if (entity is null)

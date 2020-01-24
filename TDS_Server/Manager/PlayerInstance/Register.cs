@@ -9,11 +9,11 @@ using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
-namespace TDS_Server.Manager.Player
+namespace TDS_Server.Manager.PlayerManager
 {
     internal static class Register
     {
-        public static async void RegisterPlayer(Client player, string username, string password, string? email)
+        public static async void RegisterPlayer(Player player, string username, string password, string? email)
         {
             while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);

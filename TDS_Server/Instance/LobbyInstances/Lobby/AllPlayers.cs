@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.Utility;
@@ -17,9 +17,9 @@ namespace TDS_Server.Instance.LobbyInstances
         public void SendAllPlayerEvent(string eventname, Team? team, params object[] args)
         {
             if (team is null)
-                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Select(p => p.Client).ToArray(), eventname, args);
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Select(p => p.Player).ToArray(), eventname, args);
             else
-                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Client).ToArray(), eventname, args);
+                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Player).ToArray(), eventname, args);
         }
 
         public void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
@@ -121,7 +121,7 @@ namespace TDS_Server.Instance.LobbyInstances
         public void PlaySound(string soundName)
         {
             FuncIterateAllPlayers((player, team) =>
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayCustomSound, soundName)
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayCustomSound, soundName)
             );
         }
     }

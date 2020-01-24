@@ -5,7 +5,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Dto;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
@@ -36,7 +36,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 )
                 .ToList();
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
             CurrentGameMode?.AddPlayer(player, teamindex);
 
@@ -107,14 +107,14 @@ namespace TDS_Server.Instance.LobbyInstances
                 }
                 else
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.PlayerSpectateMode);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayerSpectateMode);
                 }
             }
         }
 
         private void SetPlayerReadyForRound(TDSPlayer player)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             if (player.Team != null && !player.Team.IsSpectator)
@@ -124,7 +124,7 @@ namespace TDS_Server.Instance.LobbyInstances
                     Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
                     if (spawndata is null)
                         return;
-                    NAPI.Player.SpawnPlayer(player.Client, spawndata.ToVector3(), spawndata.Rotation);
+                    NAPI.Player.SpawnPlayer(player.Player, spawndata.ToVector3(), spawndata.Rotation);
                 }
                 
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
@@ -133,14 +133,14 @@ namespace TDS_Server.Instance.LobbyInstances
             else
             {
                 if (SpawnPlayer)
-                    NAPI.Player.SpawnPlayer(player.Client, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
+                    NAPI.Player.SpawnPlayer(player.Player, SpawnPoint, LobbyEntity.DefaultSpawnRotation);
             }
                 
 
             RemoveAsSpectator(player);
 
             if (FreezePlayerOnCountdown)
-                Workaround.FreezePlayer(player.Client, true);
+                Workaround.FreezePlayer(player.Player, true);
             GivePlayerWeapons(player);
 
             if (_removeSpectatorsTimer.ContainsKey(player))
@@ -168,13 +168,13 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void StartRoundForPlayer(TDSPlayer player)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team != null && !player.Team.IsSpectator)
             {
                 SetPlayerAlive(player);
-                Workaround.FreezePlayer(player.Client, false);
+                Workaround.FreezePlayer(player.Player, false);
             }
             player.LastHitter = null;
         }
@@ -187,32 +187,32 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void SendPlayerRoundInfoOnJoin(TDSPlayer player)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             if (_currentMap != null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapChange, _currentMap.Info.Name,
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapChange, _currentMap.Info.Name,
                     _currentMap.LimitInfo.EdgesJson, Serializer.ToClient(_currentMap.LimitInfo.Center));
             }
 
-            SendPlayerAmountInFightInfo(player.Client);
-            SyncMapVotingOnJoin(player.Client);
+            SendPlayerAmountInFightInfo(player.Player);
+            SyncMapVotingOnJoin(player.Player);
             CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
 
             switch (CurrentRoundStatus)
             {
                 case ERoundStatus.Countdown:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
 
                 case ERoundStatus.Round:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.RoundStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.RoundStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
             }
         }
 
-        private void SendPlayerAmountInFightInfo(Client player)
+        private void SendPlayerAmountInFightInfo(Player player)
         {
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
@@ -269,12 +269,12 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void RespawnPlayer(TDSPlayer player)
         {
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             SetPlayerReadyForRound(player);
-            Workaround.FreezePlayer(player.Client, false);
-            player.Client.TriggerEvent(DToClientEvent.PlayerRespawned);
+            Workaround.FreezePlayer(player.Player, false);
+            player.Player.TriggerEvent(DToClientEvent.PlayerRespawned);
         }
     }
 }

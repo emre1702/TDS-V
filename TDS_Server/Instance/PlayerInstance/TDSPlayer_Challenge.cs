@@ -5,7 +5,7 @@ using TDS_Common.Enum.Challenge;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Challenge;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

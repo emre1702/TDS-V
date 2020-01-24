@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Reference Include="MessagePack">
-      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\MessagePack.dll</HintPath>
+      <HintPath>C:\RAGEMP\dotnet\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="NeoSmart.Hashing">
       <HintPath>C:\RAGEMP\dotnet\NeoSmart.Hashing.dll</HintPath>

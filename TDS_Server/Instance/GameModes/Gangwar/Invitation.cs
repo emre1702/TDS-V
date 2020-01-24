@@ -1,4 +1,4 @@
-﻿using TDS_Server.Instance.Player;
+﻿using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Instance.GameModes

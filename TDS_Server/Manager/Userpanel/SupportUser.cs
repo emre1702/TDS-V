@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Manager.Userpanel
 {

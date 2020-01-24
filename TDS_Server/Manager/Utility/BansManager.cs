@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 

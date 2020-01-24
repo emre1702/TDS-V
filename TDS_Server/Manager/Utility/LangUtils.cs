@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using TDS_Common.Enum;
 using TDS_Server.Instance.Language;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -25,7 +25,7 @@ namespace TDS_Server.Manager.Utility
                 returndict[lang] = langgetter(lang);
             }
 
-            foreach (var player in Player.Player.LoggedInPlayers)
+            foreach (var player in PlayerManager.PlayerManager.LoggedInPlayers)
             {
                 player.SendMessage(returndict[player.Language]);
             }
@@ -39,13 +39,13 @@ namespace TDS_Server.Manager.Utility
                 returndict[lang] = langgetter(lang);
             }
 
-            foreach (var player in Player.Player.LoggedInPlayers)
+            foreach (var player in PlayerManager.PlayerManager.LoggedInPlayers)
             {
                 player.SendNotification(returndict[player.Language]);
             }
         }
 
-        public static ILanguage GetLang(this Client player)
+        public static ILanguage GetLang(this Player player)
         {
             return LanguageByID[player.GetChar().LanguageEnum];
         }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 using TDS_Server_DB.Entity.Rest;

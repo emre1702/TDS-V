@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server_DB.Entity.Log;
 
 namespace TDS_Server.Manager.Logs
 {
     internal static class ErrorLogsManager
     {
-        public static void Log(string info, string stacktrace, Client source, bool logToBonusBot = true)
+        public static void Log(string info, string stacktrace, Player source, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {

@@ -4,15 +4,14 @@ using System.Globalization;
 using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Enum;
-using TDS_Server.Instance.Player;
-using TDS_Server.Interfaces;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 using Task = System.Threading.Tasks.Task;
 
-namespace TDS_Server.Manager.Player
+namespace TDS_Server.Manager.PlayerManager
 {
     class Account : Script
     {
@@ -23,7 +22,7 @@ namespace TDS_Server.Manager.Player
             _bansManager = BansManager.Get();
         }
 
-        private static void SendWelcomeMessage(Client client)
+        private static void SendWelcomeMessage(Player client)
         {
             var player = client.GetChar();
             player.SendMessage("#o#__________________________________________");
@@ -33,7 +32,7 @@ namespace TDS_Server.Manager.Player
 
         [ServerEvent(Event.PlayerDisconnected)]
 #pragma warning disable IDE0060 // Remove unused parameter
-        public static async void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
+        public static async void OnPlayerDisconnected(Player client, DisconnectionType type, string reason)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             TDSPlayer player = client.GetChar();
@@ -55,14 +54,14 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Client client, string username, string password, string email)
+        public static async void OnPlayerTryRegisterEvent(Player client, string username, string password, string email)
         {
             if (username.Length < 3 || username.Length > 20)
                 return;
-            if (await Player.DoesPlayerWithScnameExist(client.SocialClubName).ConfigureAwait(true))
+            if (await PlayerManager.DoesPlayerWithScnameExist(client.SocialClubName).ConfigureAwait(true))
                 return;
             TDSPlayer player = client.GetChar();
-            if (await Player.DoesPlayerWithNameExist(username).ConfigureAwait(true))
+            if (await PlayerManager.DoesPlayerWithNameExist(username).ConfigureAwait(true))
             {
                 client.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
                 return;
@@ -77,7 +76,7 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.ChatLoaded)]
-        public static void OnPlayerChatLoadEvent(Client player)
+        public static void OnPlayerChatLoadEvent(Player player)
         {
             SendWelcomeMessage(player);
             TDSPlayer character = player.GetChar();
@@ -87,22 +86,22 @@ namespace TDS_Server.Manager.Player
         }
 
         [RemoteEvent(DToServerEvent.TryLogin)]
-        public static async void OnPlayerTryLoginEvent(Client player, string username, string password)
+        public static async void OnPlayerTryLoginEvent(Player client, string username, string password)
         {
-            int id = await Player.GetPlayerIDByName(username).ConfigureAwait(false);
+            int id = await PlayerManager.GetPlayerIDByName(username).ConfigureAwait(false);
             if (id != 0)
             {
-                Login.LoginPlayer(player, id, password);
+                Login.LoginPlayer(client, id, password);
             }
             else
-                player.GetChar()?.SendNotification(LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
+                client.GetChar()?.SendNotification(LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
         }
 
         [RemoteEvent(DToServerEvent.LanguageChange)]
-        public void OnPlayerLanguageChangeEvent(Client player, int language)
+        public void OnPlayerLanguageChangeEvent(Player client, int language)
         {
             if (System.Enum.IsDefined(typeof(ELanguage), language))
-                player.GetChar().LanguageEnum = (ELanguage)language;
+                client.GetChar().LanguageEnum = (ELanguage)language;
         }
 
         [ServerEvent(Event.IncomingConnection)]
@@ -118,36 +117,36 @@ namespace TDS_Server.Manager.Player
 
         //[DisableDefaultOnConnectSpawn] TODO on new Version 0.4.0.1
         [ServerEvent(Event.PlayerConnected)]
-        public static async void OnPlayerConnected(Client player)
+        public static async void OnPlayerConnected(Player client)
         {
             while (_bansManager is null)
                 await Task.Delay(1000).ConfigureAwait(true);
 
-            player.Position = new Vector3(0, 0, 1000).Around(10);
-            Workaround.FreezePlayer(player, true);
+            client.Position = new Vector3(0, 0, 1000).Around(10);
+            Workaround.FreezePlayer(client, true);
 
-            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, false).ConfigureAwait(true);
-            if (!HandlePlayerBan(player, ban))
+            var ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, null, client.Address, client.Serial, client.SocialClubName, client.SocialClubId, false).ConfigureAwait(true);
+            if (!HandlePlayerBan(client, ban))
                 return;
 
             using var dbContext = new TDSDbContext();
-            var playerIDName = await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName).Select(p => new { p.Id, p.Name })
+            var playerIDName = await dbContext.Players.Where(p => p.Name == client.Name || p.SCName == client.SocialClubName).Select(p => new { p.Id, p.Name })
                 .FirstOrDefaultAsync()
                 .ConfigureAwait(true);
             if (playerIDName is null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, player.SocialClubName, false);
+                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, client.SocialClubName, false);
                 return;
             }
 
             ban = await _bansManager.GetBan(LobbyManager.MainMenu.Id, playerIDName.Id).ConfigureAwait(true);
-            if (!HandlePlayerBan(player, ban))
+            if (!HandlePlayerBan(client, ban))
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
+            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
         }
 
-        private static bool HandlePlayerBan(Client player, PlayerBans? ban)
+        private static bool HandlePlayerBan(Player client, PlayerBans? ban)
         {
             if (ban is null)
                 return true;
@@ -155,7 +154,7 @@ namespace TDS_Server.Manager.Player
             string startstr =  ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
             //todo Test line break and display
-            player.Kick($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+            client.Kick($"Banned!\nName: {ban.Player?.Name ?? client.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
 
             return false;
         }
@@ -190,7 +189,7 @@ namespace TDS_Server.Manager.Player
             {
                 foreach (var player in target.Team.Players)
                 {
-                    target.Client!.DisableVoiceTo(player.Client);
+                    target.Player!.DisableVoiceTo(player.Player);
                 }
             }
             

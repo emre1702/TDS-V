@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Server;
@@ -38,9 +38,9 @@ namespace TDS_Server.Manager.Stats
 
         public static void CheckPlayerPeak(TDSPlayer _)
         {
-            if (Player.Player.AmountLoggedInPlayers <= Stats.PlayerPeak)
+            if (PlayerManager.PlayerManager.AmountLoggedInPlayers <= Stats.PlayerPeak)
                 return;
-            Stats.PlayerPeak = (short)Player.Player.AmountLoggedInPlayers;
+            Stats.PlayerPeak = (short)PlayerManager.PlayerManager.AmountLoggedInPlayers;
         }
 
         public static Task Save()

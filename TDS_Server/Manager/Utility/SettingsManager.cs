@@ -10,7 +10,7 @@ using TDS_Server.Dto;
 using TDS_Server_DB.Entity;
 using Command = TDS_Server_DB.Entity.Command.Commands;
 using TDS_Server_DB.Entity.Server;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Manager.Utility
 {

@@ -11,9 +11,9 @@ using TDS_Server.CustomAttribute;
 using TDS_Server.Dto;
 using TDS_Server.Enums;
 using TDS_Server.Instance.Dto;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Mapping;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Command;
@@ -138,7 +138,7 @@ namespace TDS_Server.Manager.Commands
 
 
         [RemoteEvent(DToServerEvent.CommandUsed)]
-        public static void UseCommand(Client client, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        public static void UseCommand(Player client, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -243,9 +243,9 @@ namespace TDS_Server.Manager.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(Client) || parameterType == typeof(Players))
+                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(Player) || parameterType == typeof(Players))
                         {
-                            // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Client)
+                            // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Player)
                             if (methodindex + 1 == amountmethodsavailable)
                             {
                                 player.SendMessage(player.Language.PLAYER_DOESNT_EXIST);

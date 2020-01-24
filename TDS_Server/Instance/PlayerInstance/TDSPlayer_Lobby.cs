@@ -2,7 +2,7 @@
 using TDS_Server.Dto;
 using TDS_Server_DB.Entity.Player;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

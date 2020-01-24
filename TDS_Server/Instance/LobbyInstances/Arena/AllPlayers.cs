@@ -97,7 +97,7 @@ namespace TDS_Server.Instance.LobbyInstances
                     team.SpectateablePlayers?.Add(player);
                 }
                 SetPlayerReadyForRound(player);
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.CountdownStart);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.CountdownStart);
             });
         }
 

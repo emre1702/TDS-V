@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
@@ -31,7 +31,7 @@ namespace TDS_Server.Manager.Userpanel
             player.LoadTimezone();
             player.AddToChallenge(EChallengeType.ChangeSettings);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.SyncSettings, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncSettings, json);
 
             if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId)
             {
@@ -52,7 +52,7 @@ namespace TDS_Server.Manager.Userpanel
 
             try
             {
-                var player = Player.Player.GetPlayerByID(userId);
+                var player = PlayerManager.PlayerManager.GetPlayerByID(userId);
                 if (player is null)
                     SaveDiscordUserId(userId, discordUserId);
                 else 

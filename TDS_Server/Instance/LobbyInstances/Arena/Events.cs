@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Instance.LobbyInstances
 {

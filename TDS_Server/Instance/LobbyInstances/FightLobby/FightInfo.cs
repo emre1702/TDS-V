@@ -2,7 +2,7 @@ using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.Utility;
 
@@ -32,7 +32,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
             FuncIterateAllPlayers((targetcharacter, targetteam) =>
             {
-                targetcharacter.Client!.TriggerEvent(DToClientEvent.Death, player.Client!.Handle.Value, player.Team?.Entity.Index ?? 0, killstr[targetcharacter.Language], player.Lifes > 1);
+                targetcharacter.Player!.TriggerEvent(DToClientEvent.Death, player.Player!.Handle.Value, player.Team?.Entity.Index ?? 0, killstr[targetcharacter.Language], player.Lifes > 1);
             });
         }
     }

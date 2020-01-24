@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Maps;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance.LobbyInstances
@@ -21,10 +21,10 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         //private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
         private readonly List<MapVoteDto> _mapVotes = new List<MapVoteDto>();
-        private readonly Dictionary<Client, int> _playerVotes = new Dictionary<Client, int>();
+        private readonly Dictionary<Player, int> _playerVotes = new Dictionary<Player, int>();
         private MapDto? _boughtMap = null;
 
-        public void SendMapsForVoting(Client player)
+        public void SendMapsForVoting(Player player)
         {
             if (_mapsJson != null)
             {
@@ -36,13 +36,13 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (_boughtMap is { })
                 return;
-            if (_playerVotes.ContainsKey(player.Client!) && _playerVotes[player.Client!] == mapId)
+            if (_playerVotes.ContainsKey(player.Player!) && _playerVotes[player.Player!] == mapId)
                 return;
 
             if (_mapVotes.Any(m => m.Id == mapId))
             {
-                RemovePlayerVote(player.Client!);
-                AddVoteToMap(player.Client!, mapId);
+                RemovePlayerVote(player.Player!);
+                AddVoteToMap(player.Player!, mapId);
                 return;
             }
 
@@ -58,14 +58,14 @@ namespace TDS_Server.Instance.LobbyInstances
             if (map is null)
                 return;
 
-            RemovePlayerVote(player.Client!);
+            RemovePlayerVote(player.Player!);
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
-            _playerVotes[player.Client!] = mapId;
+            _playerVotes[player.Player!] = mapId;
             SendAllPlayerEvent(DToClientEvent.AddMapToVoting, null, Serializer.ToBrowser(mapVote));
         }
 
-        private void AddVoteToMap(Client player, int mapId)
+        private void AddVoteToMap(Player player, int mapId)
         {
             _playerVotes[player] = mapId;
             var map = _mapVotes.First(m => m.Id == mapId);
@@ -73,7 +73,7 @@ namespace TDS_Server.Instance.LobbyInstances
             SendAllPlayerEvent(DToClientEvent.SetMapVotes, null, mapId, map.AmountVotes);
         }
 
-        private void RemovePlayerVote(Client player)
+        private void RemovePlayerVote(Player player)
         {
             if (!_playerVotes.ContainsKey(player))
                 return;
@@ -118,7 +118,7 @@ namespace TDS_Server.Instance.LobbyInstances
             return null;
         }
 
-        private void SyncMapVotingOnJoin(Client player)
+        private void SyncMapVotingOnJoin(Player player)
         {
             if (_mapVotes.Count > 0)
             {
@@ -163,7 +163,7 @@ namespace TDS_Server.Instance.LobbyInstances
             _mapVotes.Clear();
             _playerVotes.Clear();
 
-            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Client!.Name, map.SyncedData.Name));
+            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Player!.Name, map.SyncedData.Name));
             SendAllPlayerEvent(DToClientEvent.StopMapVoting, null);
         }
     }

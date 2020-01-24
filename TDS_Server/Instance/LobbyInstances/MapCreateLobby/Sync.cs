@@ -6,7 +6,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Instance.LobbyInstances
 {
@@ -18,7 +18,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (_lastId >= lastId)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
             }
             else
             {
@@ -32,12 +32,12 @@ namespace TDS_Server.Instance.LobbyInstances
             var player = GetPlayerById(tdsPlayerId);
             if (player is null)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.MapCreatorSyncAllObjects, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncAllObjects, json);
         }
 
         public void SyncNewObject(TDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Client).ToArray(), 
+            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
                 DToClientEvent.MapCreatorSyncNewObject, json);
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
@@ -51,7 +51,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public void SyncObjectPosition(TDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Client).ToArray(), 
+            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
                 DToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
@@ -69,7 +69,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public void SyncRemoveObject(TDSPlayer player, int objId)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Client).ToArray(),
+            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(),
                 DToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))

@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -13,7 +13,7 @@ namespace TDS_Server.Manager.Utility
         }
 
         [RemoteEvent(DToServerEvent.LobbyChatMessage)]
-        public static void SendLobbyMessage(Client client, string message, bool isDirty)
+        public static void SendLobbyMessage(Player client, string message, bool isDirty)
         {
             TDSPlayer player = client.GetChar();
             if (player.IsPermamuted)
@@ -45,7 +45,7 @@ namespace TDS_Server.Manager.Utility
         {
             string changedmessage = "[GLOBAL] " + (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!{220|220|220}: " + message;
             var blockingIds = player.BlockingPlayerIds;
-            foreach (var target in Player.Player.LoggedInPlayers)
+            foreach (var target in PlayerManager.PlayerManager.LoggedInPlayers)
             {
                 if (blockingIds.Contains(target.Entity?.Id ?? 0))
                     continue;

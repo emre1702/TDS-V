@@ -5,7 +5,7 @@ using TDS_Common.Default;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.LobbyEntities;
 using TDS_Server_DB.Entity.Rest;
@@ -23,13 +23,13 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (player.Entity is null)
                 return;
-            if (player.Client is null)
+            if (player.Player is null)
                 return;
 
             Lobbies entity = new Lobbies
             {
-                Name = "MapCreator-" + player.Client.Name,
-                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Client.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
+                Name = "MapCreator-" + player.Player.Name,
+                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Player.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = ELobbyType.MapCreateLobby,
                 OwnerId = player.Entity.Id,
                 IsTemporary = true,

@@ -10,18 +10,18 @@ using TDS_Server.Dto.Challlenge;
 using TDS_Server.Enums;
 using TDS_Server.Instance.GangTeam;
 using TDS_Server.Instance.Language;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
-namespace TDS_Server.Manager.Player
+namespace TDS_Server.Manager.PlayerManager
 {
     internal static class Login
     {
-        public static async void LoginPlayer(Client client, int id, string password)
+        public static async void LoginPlayer(Player client, int id, string password)
         {
             while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);

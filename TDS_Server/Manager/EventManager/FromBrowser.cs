@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server_DB.Entity.Player;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,7 +41,7 @@ namespace TDS_Server.Manager.EventManager
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
-        public static async void OnFromBrowserEvent(Client client, string eventName, params object[] args)
+        public static async void OnFromBrowserEvent(Player client, string eventName, params object[] args)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SaveSettings)]
-        public void PlayerSaveSettings(Client client, string json)
+        public void PlayerSaveSettings(Player client, string json)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.GetSupportRequestData)]
-        public async void GetSupportRequestDataMethod(Client client, int requestId)
+        public async void GetSupportRequestDataMethod(Player client, int requestId)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -100,7 +100,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SetSupportRequestClosed)]
-        public async void SetSupportRequestClosedMethod(Client client, int requestId, bool closed)
+        public async void SetSupportRequestClosedMethod(Player client, int requestId, bool closed)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -110,7 +110,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LeftSupportRequestsList)]
-        public void LeftSupportRequestsListMethod(Client client)
+        public void LeftSupportRequestsListMethod(Player client)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -120,7 +120,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LeftSupportRequest)]
-        public void LeftSupportRequestMethod(Client client, int requestId)
+        public void LeftSupportRequestMethod(Player client, int requestId)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -130,7 +130,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SendSupportRequest)]
-        public async void SendSupportRequestMethod(Client client, string json)
+        public async void SendSupportRequestMethod(Player client, string json)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
@@ -140,7 +140,7 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.SendSupportRequestMessage)]
-        public async void SendSupportRequestMessageMethod(Client client, int requestId, string message)
+        public async void SendSupportRequestMessageMethod(Player client, int requestId, string message)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)

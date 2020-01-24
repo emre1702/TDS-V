@@ -4,8 +4,8 @@ using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
 
@@ -55,7 +55,7 @@ namespace TDS_Server.Manager.Maps
                 return;
 
             var ratingsDict = character.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict));
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict));
         }
     }
 }

@@ -5,7 +5,7 @@ using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Map;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Utility;
 
@@ -100,13 +100,13 @@ namespace TDS_Server.Instance.GameModes
             if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
                 return AttackerTeam.Players[CommonUtils.Rnd.Next(AttackerTeam.Players.Count)];
 
-            return AttackerTeam.Players.MinBy(p => p.Client!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+            return AttackerTeam.Players.MinBy(p => p.Player!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
         }
 
         private void SetTargetMan(TDSPlayer? player)
         {
             if (_playerForcedAtTarget is { })
-                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Client, DToClientEvent.RemoveForceStayAtPosition);
+                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, DToClientEvent.RemoveForceStayAtPosition);
 
             _playerForcedAtTarget = player;
 
@@ -118,7 +118,7 @@ namespace TDS_Server.Instance.GameModes
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
             });
 
-            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Client, DToClientEvent.SetForceStayAtPosition,
+            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, DToClientEvent.SetForceStayAtPosition,
                 Serializer.ToClient(new Position3DDto(TargetObject!.Position)),
                 SettingsManager.ServerSettings.GangwarTargetRadius,
                 EMapLimitType.KillAfterTime,

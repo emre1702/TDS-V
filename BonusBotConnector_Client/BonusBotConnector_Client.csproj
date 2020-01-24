@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\*.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\*.proto" GrpcServices="Player" />
   </ItemGroup>
 
   <ItemGroup>

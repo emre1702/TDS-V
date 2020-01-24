@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Default;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity.Player;
 using TDS_Server.Manager.EventManager;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Enums;
 
@@ -50,27 +50,27 @@ namespace TDS_Server.Instance.LobbyInstances
             if (LobbyEntity.Type == ELobbyType.MainMenu
                 || LobbyEntity.Type == ELobbyType.MapCreateLobby
                 || LobbyEntity.Type == ELobbyType.GangLobby)
-                Workaround.SetPlayerInvincible(character.Client!, true);
+                Workaround.SetPlayerInvincible(character.Player!, true);
 
-            character.Client!.Dimension = Dimension;
+            character.Player!.Dimension = Dimension;
             if (SetPositionOnPlayerAdd)
-                character.Client.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
-            Workaround.FreezePlayer(character.Client, true);
+                character.Player.Position = SpawnPoint.Around(LobbyEntity.AroundSpawnPoint);
+            Workaround.FreezePlayer(character.Player, true);
 
             if (teamindex != null)
                 character.Team = Teams[(int)teamindex.Value];
 
             PlayerDataSync.SetData(character, EPlayerDataKey.IsLobbyOwner, EPlayerDataSyncMode.Player, IsPlayerLobbyOwner(character));
 
-            SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Client.Handle.Value);
+            SendAllPlayerEvent(DToClientEvent.JoinSameLobby, null, character.Player.Handle.Value);
 
-            NAPI.ClientEvent.TriggerClientEvent(character.Client, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
-                                                                                            Serializer.ToClient(Players.Select(p => p.Client!.Handle.Value).ToList()),
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.JoinLobby, _syncedLobbySettings.Json,
+                                                                                            Serializer.ToClient(Players.Select(p => p.Player!.Handle.Value).ToList()),
                                                                                             Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
             if (LobbyEntity.Type != ELobbyType.MainMenu)
             {
-                RestLogsManager.Log(ELogType.Lobby_Join, character.Client, false, LobbyEntity.IsOfficial);
+                RestLogsManager.Log(ELogType.Lobby_Join, character.Player, false, LobbyEntity.IsOfficial);
                 character.SendNotification(string.Format(character.Language.JOINED_LOBBY_MESSAGE, LobbyEntity.Name, DPlayerCommand.LobbyLeave));
             }
 
@@ -92,10 +92,10 @@ namespace TDS_Server.Instance.LobbyInstances
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
             player.Spectates = null;
-            if (player.Client!.Exists)
+            if (player.Player!.Exists)
             {
-                Workaround.FreezePlayer(player.Client, true);
-                player.Client.Transparency = 255;
+                Workaround.FreezePlayer(player.Player, true);
+                player.Player.Transparency = 255;
             }
             if (DeathSpawnTimer.ContainsKey(player))
             {
@@ -109,9 +109,9 @@ namespace TDS_Server.Instance.LobbyInstances
                     Remove();
             }
 
-            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Client.Handle.Value, player.Client.Name);
+            SendAllPlayerEvent(DToClientEvent.LeaveSameLobby, null, player.Player.Handle.Value, player.Player.Name);
             if (LobbyEntity.Type != ELobbyType.MainMenu)
-                RestLogsManager.Log(ELogType.Lobby_Leave, player.Client, false, LobbyEntity.IsOfficial);
+                RestLogsManager.Log(ELogType.Lobby_Leave, player.Player, false, LobbyEntity.IsOfficial);
 
             CustomEventManager.SetPlayerLeftLobby(player, this);
         }

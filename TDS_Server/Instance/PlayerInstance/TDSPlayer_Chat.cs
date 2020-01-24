@@ -2,7 +2,7 @@
 using System;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {
@@ -20,12 +20,12 @@ namespace TDS_Server.Instance.Player
             {
                 if (disconnected)
                 {
-                    InPrivateChatWith.Client?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
+                    InPrivateChatWith.Player?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
                 }
                 else
                 {
-                    Client?.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
-                    InPrivateChatWith.Client?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
+                    Player?.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
+                    InPrivateChatWith.Player?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
                 }
                 InPrivateChatWith.InPrivateChatWith = null;
                 InPrivateChatWith = null;
@@ -34,9 +34,9 @@ namespace TDS_Server.Instance.Player
             {
                 if (!disconnected)
                 {
-                    Client?.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
+                    Player?.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
                 }
-                SentPrivateChatRequestTo.Client?.SendNotification(
+                SentPrivateChatRequestTo.Player?.SendNotification(
                     SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(DisplayName)
                 );
                 SentPrivateChatRequestTo = null;
@@ -47,16 +47,16 @@ namespace TDS_Server.Instance.Player
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (Client is { })
-                NAPI.Chat.SendChatMessageToPlayer(Client, msg);
+            else if (Player is { })
+                NAPI.Chat.SendChatMessageToPlayer(Player, msg);
         }
 
         public void SendNotification(string msg, bool flashing = false)
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (Client is { })
-                NAPI.Notification.SendNotificationToPlayer(Client, msg, flashing);
+            else if (Player is { })
+                NAPI.Notification.SendNotificationToPlayer(Player, msg, flashing);
         }
     }
 }

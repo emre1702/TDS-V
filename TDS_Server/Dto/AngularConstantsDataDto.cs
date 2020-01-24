@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 using System.Collections.Generic;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Dto
@@ -35,7 +35,7 @@ namespace TDS_Server.Dto
             return new AngularConstantsDataDto
             {
                 TDSId = player.Entity!.Id,
-                RemoteId = player.Client.Handle.Value,
+                RemoteId = player.Player.Handle.Value,
                 UsernameChangeCost = SettingsManager.ServerSettings.UsernameChangeCost,
                 UsernameChangeCooldownDays = SettingsManager.ServerSettings.UsernameChangeCooldownDays,
                 MapBuyBasePrice = SettingsManager.ServerSettings.MapBuyBasePrice,

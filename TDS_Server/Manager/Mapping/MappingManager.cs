@@ -2,7 +2,7 @@
 using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Mapping.Converter;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Player;
@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.Mapping
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
 
                 cfg.CreateMap<string, TDSPlayer?>().ConvertUsing<StringNameToPlayerConverter>();
-                cfg.CreateMap<string, Client?>().ConvertUsing<StringNameToClientConverter>();
+                cfg.CreateMap<string, Player?>().ConvertUsing<StringNameToClientConverter>();
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
             });
             config.AssertConfigurationIsValid();

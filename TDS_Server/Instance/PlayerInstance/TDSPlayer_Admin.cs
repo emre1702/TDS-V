@@ -3,7 +3,7 @@ using System.Linq;
 using TDS_Server.Dto;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Stats;
 using TDS_Server_DB.Entity;
 
@@ -104,7 +104,7 @@ namespace TDS_Server.Manager.Utility
                 ServerDailyStatsManager.Save().Wait();
                 LobbyManager.SaveAll().Wait();
 
-                foreach (TDSPlayer player in Player.Player.LoggedInPlayers)
+                foreach (TDSPlayer player in PlayerManager.PlayerManager.LoggedInPlayers)
                 {
                     try
                     {

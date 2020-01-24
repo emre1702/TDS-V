@@ -69,7 +69,7 @@ namespace TDS_Server.Manager.Utility
 
         public static uint? GetVehicleFreeSeat(Vehicle veh)
         {
-            HashSet<int> occupiedSeats = veh.Occupants.Select(o => o.VehicleSeat).ToHashSet();
+            HashSet<int> occupiedSeats = veh.Occupants.OfType<Player>().Select(o => o.VehicleSeat).ToHashSet();
             for (int i = veh.MaxOccupants - 1; i >= 0; --i)
             {
                 if (!occupiedSeats.Contains(i))

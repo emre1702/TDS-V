@@ -2,7 +2,7 @@
 using System;
 using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Stats;
 using TDS_Server.Manager.Utility;
@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Timer
 
         private static void SavePlayers()
         {
-            foreach (var player in Player.Player.GetAllTDSPlayer())
+            foreach (var player in PlayerManager.PlayerManager.GetAllTDSPlayer())
             {
                 try
                 {
@@ -101,7 +101,7 @@ namespace TDS_Server.Manager.Timer
             foreach (var target in player.Team.Players)
             {
                 if (!target.HasRelationTo(player, EPlayerRelation.Block))
-                    player.Client?.EnableVoiceTo(target.Client);
+                    player.Player?.EnableVoiceTo(target.Player);
             }
         }
     }

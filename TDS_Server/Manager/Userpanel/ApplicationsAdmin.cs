@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Enums;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
@@ -94,7 +94,7 @@ namespace TDS_Server.Manager.Userpanel
                 Stats = stats,
                 AlreadyInvited = alreadyInvited
             });
-            NAPI.ClientEvent.TriggerClientEvent(player.Client, DToClientEvent.LoadApplicationDataForAdmin, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadApplicationDataForAdmin, json);
             
         }
 
@@ -127,7 +127,7 @@ namespace TDS_Server.Manager.Userpanel
             if (playerId == default)
                 return null;
 
-            var target = Player.Player.GetPlayerByID(playerId);
+            var target = PlayerManager.PlayerManager.GetPlayerByID(playerId);
             if (target != null)
             {
                 target.SendMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));

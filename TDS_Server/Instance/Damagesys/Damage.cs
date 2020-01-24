@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 
 namespace TDS_Server.Instance
@@ -99,10 +99,10 @@ namespace TDS_Server.Instance
 		public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
 #pragma warning restore IDE0060 // Remove unused parameter
 		{
-			if (target.Client is null)
+			if (target.Player is null)
 				return;
 
-			if (NAPI.Player.IsPlayerDead(target.Client))
+			if (NAPI.Player.IsPlayerDead(target.Player))
                 return;
             if (source != null)
             {
@@ -115,7 +115,7 @@ namespace TDS_Server.Instance
                 if (source.CurrentRoundStats != null)
                     source.CurrentRoundStats.Damage += damage;
 
-                NAPI.ClientEvent.TriggerClientEvent(source.Client, DToClientEvent.HitOpponent, target.Client.Handle.Value, damage);  
+                NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);  
             }
         }
 

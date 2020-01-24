@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS_Common.Enum;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Dto
 {

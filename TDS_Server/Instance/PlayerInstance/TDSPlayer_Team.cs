@@ -2,7 +2,7 @@
 using TDS_Common.Default;
 using TDS_Server.Instance.Utility;
 
-namespace TDS_Server.Instance.Player
+namespace TDS_Server.Instance.PlayerInstance
 {
     partial class TDSPlayer
     {
@@ -17,7 +17,7 @@ namespace TDS_Server.Instance.Player
                 {
                     _team?.RemovePlayer(this);
                     value?.AddPlayer(this);
-                    NAPI.ClientEvent.TriggerClientEvent(Client, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
+                    NAPI.ClientEvent.TriggerClientEvent(Player, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
 
                     _team = value;
                 }

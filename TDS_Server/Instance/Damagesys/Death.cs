@@ -1,9 +1,9 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.Player;
+using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Player;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Instance
@@ -16,7 +16,7 @@ namespace TDS_Server.Instance
         {
             if (sDeadTimer.ContainsKey(player))
                 return;
-            Workaround.FreezePlayer(player.Client!, true);
+            Workaround.FreezePlayer(player.Player!, true);
 
             KillingSpreeDeath(player);
 
@@ -42,7 +42,7 @@ namespace TDS_Server.Instance
             }
 
             // Assist //
-            CheckForAssist(player, killer.Client!);
+            CheckForAssist(player, killer.Player!);
 
             if (player.CurrentLobby?.SavePlayerLobbyStats == true && player.CurrentLobby?.IsOfficial == true)
             {
@@ -51,10 +51,10 @@ namespace TDS_Server.Instance
             
         }
 
-        public TDSPlayer GetKiller(TDSPlayer player, Client? possiblekiller)
+        public TDSPlayer GetKiller(TDSPlayer player, Player? possiblekiller)
         {
             // It's the killer from the Death event //
-            if (player.Client != possiblekiller && possiblekiller != null && possiblekiller.Exists)
+            if (player.Player != possiblekiller && possiblekiller != null && possiblekiller.Exists)
                 return possiblekiller.GetChar();
 
             // It's the last hitter //
@@ -65,7 +65,7 @@ namespace TDS_Server.Instance
             return player;
         }
 
-        private void CheckForAssist(TDSPlayer character, Client killerClient)
+        private void CheckForAssist(TDSPlayer character, Player killerClient)
         {
             if (!_allHitters.ContainsKey(character))
                 return;
@@ -76,7 +76,7 @@ namespace TDS_Server.Instance
                 if (entry.Value >= halfarmorhp)
                 {
                     TDSPlayer target = entry.Key;
-                    Client? targetClient = target.Client;
+                    Player? targetClient = target.Player;
                     if (targetClient is { } && targetClient.Exists && target.CurrentLobby == character.CurrentLobby && killerClient != targetClient && target.CurrentRoundStats != null)
                     {
                         ++target.CurrentRoundStats.Assists;
@@ -100,7 +100,7 @@ namespace TDS_Server.Instance
             TDSPlayer lastHitterCharacter = character.LastHitter;
             character.LastHitter = null;
 
-            if (lastHitterCharacter.Client is null || !lastHitterCharacter.Client.Exists)
+            if (lastHitterCharacter.Player is null || !lastHitterCharacter.Player.Exists)
                 return;
 
             if (character.CurrentLobby != lastHitterCharacter.CurrentLobby)

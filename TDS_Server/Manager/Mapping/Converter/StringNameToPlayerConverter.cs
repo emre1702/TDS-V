@@ -2,8 +2,8 @@
 using GTANetworkAPI;
 using System.Linq;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.Player;
-using TDS_Server.Manager.Player;
+using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Mapping.Converter
@@ -24,11 +24,11 @@ namespace TDS_Server.Manager.Mapping.Converter
 
             name = name.ToLower();
 
-            var player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower() == name || (p.Client?.Name ?? string.Empty).ToLower() == name);
+            var player = PlayerManager.PlayerManager.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower() == name || (p.Player?.Name ?? string.Empty).ToLower() == name);
             if (player is { })
                 return player;
 
-            player = Player.Player.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower().StartsWith(name) || (p.Client?.Name ?? string.Empty).ToLower().StartsWith(name));
+            player = PlayerManager.PlayerManager.LoggedInPlayers.FirstOrDefault(p => p.DisplayName.ToLower().StartsWith(name) || (p.Player?.Name ?? string.Empty).ToLower().StartsWith(name));
             if (player is { })
                 return player;
 
