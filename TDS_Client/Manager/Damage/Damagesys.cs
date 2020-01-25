@@ -20,8 +20,10 @@ namespace TDS_Client.Manager.Damage
             set
             {
                 if (value != _lastArmor)
+                {
                     Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.Armor, value);
-                _lastArmor = value;
+                    _lastArmor = value;
+                }
             }
         }
 
@@ -31,8 +33,11 @@ namespace TDS_Client.Manager.Damage
             set
             {
                 if (value != _lastHP)
+                {
                     Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.HP, value);
-                _lastHP = value;
+                    _lastHP = value;
+                }
+                    
             }
         }
 
@@ -85,6 +90,8 @@ namespace TDS_Client.Manager.Damage
 
         public static void ResetLastHP()
         {
+            _lastArmor = -1;
+            _lastHP = -1;
             LastArmor = Player.LocalPlayer.GetArmour();
             LastHP = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0);
             _lastTotalHealth = LastArmor + LastHP;
