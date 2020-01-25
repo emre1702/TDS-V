@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using TDS_Client.Manager.Utility;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Client.Manager.Browser.Angular
@@ -15,6 +16,7 @@ namespace TDS_Client.Manager.Browser.Angular
             var strBuilder = new StringBuilder($"RageAngularEvent(`{eventName}`");
             foreach (var arg in args)
             {
+                var argType = arg.GetType();
                 if (arg is null)
                     strBuilder.Append(", undefined");
                 else if (arg is string)
@@ -22,7 +24,9 @@ namespace TDS_Client.Manager.Browser.Angular
                         strBuilder.Append($", `{arg}`");
                     else
                         strBuilder.Append(", undefined");
-                else if (!arg.GetType().IsValueType)
+                else if (argType.IsEnum)
+                    strBuilder.Append($", {Convert.ChangeType(arg, Type.GetTypeCode(argType))}");
+                else if (!argType.IsValueType)
                     strBuilder.Append($", `{Serializer.ToBrowser(arg)}`");
                 else if (arg is char)
                     strBuilder.Append($", '{arg}'");
