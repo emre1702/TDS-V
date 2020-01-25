@@ -70,7 +70,6 @@ namespace TDS_Client.Manager.Damage
         private static int _currentBurstShots = 0;
         private static DateTime? _lastWeaponConfigUpdate;
         private static Dictionary<uint, EFiringMode> _lastFiringModeByWeapon = new Dictionary<uint, EFiringMode>();
-        private static DxText _dxText;
         private static InstructionalButton _instructionalButton;
         private static bool _isActive;
 
@@ -99,21 +98,6 @@ namespace TDS_Client.Manager.Damage
             CustomEventManager.OnLanguageChanged += CustomEventManager_OnLanguageChanged;
 
             _instructionalButton = InstructionalButtonManager.Add(Settings.Language.FIRING_MODE, "F6", true);
-
-            if (_dxText is null)
-            {
-                float safeZone = Graphics.GetSafeZoneSize();
-                float finalDrawX = 0.935f - (1.0f - safeZone) * 0.5f;
-                float finalDrawY = 0.0f + (1.0f - safeZone) * 0.5f;
-
-                _dxText = new DxText("", finalDrawX, finalDrawY, 0.56f, Color.FromArgb(240, 240, 240), 
-                    Font.ChaletComprimeCologne,
-                    RAGE.NUI.UIResText.Alignment.Right, 
-                    EAlignmentY.Center, false, false, true) 
-                {
-                    Activated = false
-                };
-            }
 
             if (_currentWeapon == 0)
             {
@@ -196,12 +180,6 @@ namespace TDS_Client.Manager.Damage
                         Audio.PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", true);
                     break; */
             }
-
-            if (Ui.IsHudComponentActive((int)EHudComponent.HUD_WEAPON_ICON) 
-                || (_lastWeaponConfigUpdate.HasValue && (DateTime.Now - _lastWeaponConfigUpdate.Value).TotalMilliseconds < 3000))
-                _dxText.Activated = true;
-            else
-                _dxText.Activated = false;
         }
 
         private static void OnWeaponShot(Vector3 targetPos, RAGE.Elements.Player target, CancelEventArgs cancel)
