@@ -96,6 +96,8 @@ namespace TDS_Client.Manager.Damage
             TickManager.Add(OnTick);
             OnPlayerWeaponShot += OnWeaponShot;
             CustomEventManager.OnWeaponChange += CustomEventManager_OnWeaponChange;
+            CustomEventManager.OnLanguageChanged += CustomEventManager_OnLanguageChanged;
+
             _instructionalButton = InstructionalButtonManager.Add(Settings.Language.FIRING_MODE, "F6", true);
 
             if (_dxText is null)
@@ -115,9 +117,9 @@ namespace TDS_Client.Manager.Damage
 
             if (_currentWeapon == 0)
             {
-                int weapon = 0;
-                RAGE.Elements.Player.LocalPlayer.GetCurrentWeapon(ref weapon, true);
-                CustomEventManager_OnWeaponChange(0, (uint)weapon);
+                uint weapon = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
+                ClientUtils.Notify("Weapon (in FiringMode): " + weapon);
+                CustomEventManager_OnWeaponChange(0, weapon);
             }
         }
 
@@ -224,6 +226,11 @@ namespace TDS_Client.Manager.Damage
                 CurrentFiringMode = EFiringMode.Auto;
             }
             _currentBurstShots = 0;
+        }
+
+        private static void CustomEventManager_OnLanguageChanged(Interface.ILanguage newLang)
+        {
+            _instructionalButton?.SetTitle(newLang.FIRING_MODE);
         }
 
 
