@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace TDS_Common.Instance.Utility
@@ -75,7 +75,7 @@ namespace TDS_Common.Instance.Utility
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
         public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
-            ulong executeatms = executeafterms + _tickGetter();
+            ulong executeatms = executeafterms + (_tickGetter is null ? 0 : _tickGetter());
             Func = thefunc;
             _executeAfterMs = executeafterms;
             _executeAtMs = executeatms;
