@@ -25,7 +25,7 @@ namespace TDS_Server.Manager.PlayerManager
         {
             while (!TDSDbContext.IsConfigured)
                 await Task.Delay(1000);
-            TDSPlayer player = client.GetChar();
+            TDSPlayer player = client.GetChar(true);
 
             player.InitDbContext();
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>

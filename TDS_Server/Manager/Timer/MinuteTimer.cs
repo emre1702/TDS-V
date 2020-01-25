@@ -54,7 +54,7 @@ namespace TDS_Server.Manager.Timer
 
         private static void SavePlayers()
         {
-            foreach (var player in PlayerManager.PlayerManager.GetAllTDSPlayer())
+            foreach (var player in PlayerManager.PlayerManager.LoggedInPlayers)
             {
                 try
                 {

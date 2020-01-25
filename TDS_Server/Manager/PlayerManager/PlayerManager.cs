@@ -26,17 +26,14 @@ namespace TDS_Server.Manager.PlayerManager
             CustomEventManager.OnPlayerLoggedOutBefore += player =>
             {
                 LoggedInPlayers.Remove(player);
+                foreach (var p in _clientPlayers.Where(k => k.Value == player).ToList())
+                    _clientPlayers.Remove(p);
             };
         }
 
-        public static List<TDSPlayer> GetAllTDSPlayer()
+        public static TDSPlayer GetChar(this Player client, bool hasToBeNew = false)
         {
-            return _clientPlayers.Values.Where(p => p.LoggedIn).ToList();
-        }
-
-        public static TDSPlayer GetChar(this Player client)
-        {
-            if (!_clientPlayers.ContainsKey(client))
+            if (hasToBeNew || !_clientPlayers.ContainsKey(client))
             {
                 TDSPlayer player = new TDSPlayer(client);
                 _clientPlayers[client] = player;
