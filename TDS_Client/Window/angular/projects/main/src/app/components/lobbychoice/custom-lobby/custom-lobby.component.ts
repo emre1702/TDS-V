@@ -108,14 +108,16 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             ]
         },
 
+        /* "Weapons" */
         /*{
           title: "Weapons", rows: [
             {
-              type: SettingType.button, dataSettingIndex: "Weapons", defaultValue: [],
+              type: SettingType.button, dataSettingIndex: 19, defaultValue: [],
+              formControl: new FormControl([]),
               action: () => { this.inWeaponsMenu = true; this.changeDetector.detectChanges(); }
             }
           ]
-        },*/
+        }, */
 
         {
             title: "Map", rows: [
@@ -174,11 +176,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     inWeaponsMenu = false;
     inMapsMenu = false;
 
-    lobbyDatas: CustomLobbyData[] = [
-        [1, "Bonus Lobby", "Bonus", "asd", 200, 100, 3,
-            true, true, 10000, 10000, 10000, 30, 30, 30, 30,
-            LobbyMapLimitType.TeleportBackAfterTime, [], []]
-    ];
+    lobbyDatas: CustomLobbyData[] = [];
 
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
         public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
