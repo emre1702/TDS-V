@@ -32,16 +32,16 @@ namespace TDS_Server.Manager.Utility
             PlayerBans? ban = null;
             if (playerId is { } && ip is null && serial is null && socialClubName is null && socialClubId is null && preventConnection is null)
             {
-                ban = await ExecuteForDBAsync((dbContext) =>
+                ban = await ExecuteForDBAsync(async (dbContext) =>
                 {
-                    return dbContext.PlayerBans.FindAsync(playerId, lobbyId).AsTask();
+                    return await dbContext.PlayerBans.FindAsync(playerId, lobbyId).AsTask();
                 });
             }
 
             else if (andConnection)
-                ban = await ExecuteForDBAsync((dbContext) =>
+                ban = await ExecuteForDBAsync(async (dbContext) =>
                 {
-                    return dbContext.PlayerBans
+                    return await dbContext.PlayerBans
                         .Where(b => b.LobbyId == lobbyId
                             && (playerId == null || b.PlayerId == playerId)
                             && (ip == null || b.IP == ip)
@@ -52,9 +52,9 @@ namespace TDS_Server.Manager.Utility
                         .FirstOrDefaultAsync();
                 });
             else
-                ban = await ExecuteForDBAsync((dbContext) =>
+                ban = await ExecuteForDBAsync(async (dbContext) =>
                 {
-                    return dbContext.PlayerBans
+                    return await dbContext.PlayerBans
                         .Where(b => b.LobbyId == lobbyId && (
                             (playerId == null || b.PlayerId == playerId)
                             || (ip == null || b.IP == ip)

@@ -37,10 +37,10 @@ namespace TDS_Server.Instance.PlayerInstance
                 if (challenge.Frequency == EChallengeFrequency.Forever)
                 {
                     list.RemoveAt(i);
-                    await ExecuteForDBAsync(dbContext =>
+                    await ExecuteForDBAsync(async dbContext =>
                     {
                         dbContext.PlayerChallenges.Remove(challenge);
-                        return dbContext.SaveChangesAsync();
+                        await dbContext.SaveChangesAsync();
                     });
                 }
             }

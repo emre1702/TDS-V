@@ -143,7 +143,7 @@ namespace TDS_Server.Manager.PlayerManager
             if (!HandlePlayerBan(client, ban))
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);            
+            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);
         }
 
         private static bool HandlePlayerBan(Player client, PlayerBans? ban)

@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace TDS_Server.Instance.LobbyInstances
         public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
         {
             if (serial is null)
-                serial = await ExecuteForDBAsync((dbContext) => dbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync());
+                serial = await ExecuteForDBAsync(async (dbContext) => await dbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync());
 
             PlayerBans? ban = null;
             await ExecuteForDBAsync(async (dbContext) => 

@@ -25,7 +25,7 @@ namespace TDS_Server.Instance.PlayerInstance
                     ++_shortTimeKillingSpree;
                 }
                 _killingSpree = value;
-                if (CurrentLobby!.IsOfficial == true)
+                if (CurrentLobby?.IsOfficial == true)
                     AddToChallenge(EChallengeType.Killstreak, _killingSpree, true);
             }
         }
