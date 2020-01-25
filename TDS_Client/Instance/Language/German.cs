@@ -42,6 +42,7 @@ namespace TDS_Client.Instance.Language
         public override string AFK_KICK_INFO => "Du warst AFK und wurdest aus der Lobby geworfen.";
         public override string AFK_KICK_WARNING => "Du bist AFK und wirst in {0} Sekunden gekickt! Ändere deine Position oder schieße!";
         public override string FIRING_MODE => "Feuermodus";
+        public override string YOU_DIED => "Du bist gestorben.";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

@@ -10,7 +10,7 @@
 
         public override string password => "Passwort";
 
-        public override string login_title => "Willkommen zurueck";
+        public override string login_title => "Willkommen zurück";
 
         public override string login_forgot_pw => "Passwort vergessen?";
 
@@ -20,7 +20,7 @@
 
         public override string register_email => "E-Mail Adresse für Password-Reset";
 
-        public override string register_confirm_pw => "Passwort bestaetigen";
+        public override string register_confirm_pw => "Passwort bestätigen";
 
         public override string register_button => "Abschicken";
 
@@ -28,9 +28,9 @@
 
         public override string forgotpw_email => "E-Mail Adresse";
 
-        public override string forgotpw_reset => "Zuruecksetzen";
+        public override string forgotpw_reset => "Zurücksetzen";
 
-        public override string password_has_to_be_same => "Beide Passwoerter muessen gleich sein.";
+        public override string password_has_to_be_same => "Beide Passwörter müssen gleich sein.";
 
         public override string name_may_not_only_numbers => "Der Name darf nicht nur aus Zahlen bestehen.";
     }
