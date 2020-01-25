@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TDS_Client.Instance.Draw.Scaleform;
+using TDS_Client.Manager.Event;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Draw
@@ -164,10 +165,21 @@ namespace TDS_Client.Manager.Draw
             IsActive = true;
         }
 
+
+        private static InstructionalButton _cursorButton;
+        private static InstructionalButton _userpanelButton;
+
         private static void AddDefaultButtons()
         {
-            Add("Cursor", Settings.Language.END_KEY);
-            Add("Userpanel", "U");
+            _cursorButton = Add("Cursor", Settings.Language.END_KEY, true);
+            _userpanelButton = Add("Userpanel", "U", true);
+
+            CustomEventManager.OnLanguageChanged += CustomEventManager_OnLanguageChanged;
+        }
+
+        private static void CustomEventManager_OnLanguageChanged(Interface.ILanguage newLang)
+        {
+            
         }
     }
 }
