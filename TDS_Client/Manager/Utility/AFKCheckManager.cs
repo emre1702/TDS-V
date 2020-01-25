@@ -136,7 +136,7 @@ namespace TDS_Client.Manager.Utility
 
         private static bool IsAFKCheckLobby(SyncedLobbySettingsDto settings)
         {
-            return settings.Type == ELobbyType.Arena && settings.IsOfficial;
+            return settings?.Type == ELobbyType.Arena && settings?.IsOfficial == true;
         }
 
         private static string GetWarning()
