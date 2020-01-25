@@ -27,7 +27,7 @@ namespace TDS_Server.Manager.PlayerManager
             {
                 LoggedInPlayers.Remove(player);
                 foreach (var p in _clientPlayers.Where(k => k.Value == player).ToList())
-                    _clientPlayers.Remove(p);
+                    _clientPlayers.Remove(p.Key);
             };
         }
 
