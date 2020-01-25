@@ -85,7 +85,7 @@ export class SettingsService {
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
 
-    public InUserLobbiesMenu = true;
+    public InUserLobbiesMenu = false;
 
     public MapsBoughtCounter = 0;
     public MapBuyStatsChanged = new EventEmitter();
