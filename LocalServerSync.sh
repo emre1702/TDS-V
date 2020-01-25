@@ -61,7 +61,7 @@ cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/angular/dist/m
 rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/angular/dist/map-creator-object-choice
 rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
-d B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/angular/dist/map-creator-vehicle-choice
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Client/Window/angular/dist/map-creator-vehicle-choice
 rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-vehicle-choice
 
 cmd /k
