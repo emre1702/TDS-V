@@ -1,6 +1,8 @@
 ﻿
+using TDS_Client.Interface;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto;
+using TDS_Common.Enum;
 
 namespace TDS_Client.Manager.Event
 {
@@ -19,6 +21,9 @@ namespace TDS_Client.Manager.Event
 
         public delegate void WeaponChangeDelegate(uint oldWeaponHash, uint newWeaponHash);
         public static event WeaponChangeDelegate OnWeaponChange;
+
+        public delegate void LanguageChangedDelegate(ILanguage newLang);
+        public static event LanguageChangedDelegate OnLanguageChanged;
 
         private static uint _lastWeaponHash = 0;
 
@@ -56,6 +61,11 @@ namespace TDS_Client.Manager.Event
 
             OnWeaponChange?.Invoke(_lastWeaponHash, newWeapon);
             _lastWeaponHash = newWeapon;
+        }
+
+        public static void SetNewLanguage(ILanguage newLang)
+        {
+            OnLanguageChanged?.Invoke(newLang);
         }
     }
 }
