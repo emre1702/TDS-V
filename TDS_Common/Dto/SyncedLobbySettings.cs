@@ -1,47 +1,46 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class SyncedLobbySettingsDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id;
-        [Key(1)]
+        [JsonProperty("1")]
         public string Name;
-        [Key(2)]
+        [JsonProperty("2")]
         public ELobbyType Type;
-        [Key(3)]
+        [JsonProperty("3")]
         public bool IsOfficial;
-        [Key(4)]
+        [JsonProperty("4")]
         public int? SpawnAgainAfterDeathMs;
-        [Key(5)]
+        [JsonProperty("5")]
         public int? BombDefuseTimeMs;
-        [Key(6)]
+        [JsonProperty("6")]
         public int? BombPlantTimeMs;
-        [Key(7)]
+        [JsonProperty("7")]
         public int? CountdownTime;
-        [Key(8)]
+        [JsonProperty("8")]
         public int? RoundTime;
-        [Key(9)]
+        [JsonProperty("9")]
         public int? BombDetonateTimeMs;
-        [Key(10)]
+        [JsonProperty("10")]
         public int? MapLimitTime;
-        [Key(11)]
+        [JsonProperty("11")]
         public bool InLobbyWithMaps;
-        [Key(12)]
+        [JsonProperty("12")]
         public EMapLimitType? MapLimitType;
-        [Key(13)] 
+        [JsonProperty("13")] 
         public int StartHealth;
-        [Key(14)]
+        [JsonProperty("14")]
         public int StartArmor;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public string Json;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public bool IsFightLobby => Type == ELobbyType.Arena || Type == ELobbyType.FightLobby;
 
         public SyncedLobbySettingsDto(int Id, string Name, ELobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,

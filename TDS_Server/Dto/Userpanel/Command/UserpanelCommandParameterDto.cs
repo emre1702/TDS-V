@@ -1,16 +1,15 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Server.Dto.Userpanel.Command
 {
-    [MessagePackObject]
     #nullable disable
     public class UserpanelCommandParameterDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Name { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Type { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public object DefaultValue { get; set; }
     }
     #nullable restore

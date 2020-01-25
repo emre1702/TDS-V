@@ -1,18 +1,17 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Server.Dto
 {
-    [MessagePackObject]
     #nullable disable
     public class CustomLobbyTeamData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Name { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Color { get; set; }   // HTML (rgba(...))
-        [Key(2)]
+        [JsonProperty("2")]
         public int BlipColor { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public int SkinHash { get; set; }
     }
     #nullable restore

@@ -1,25 +1,24 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class SyncedServerSettingsDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public float DistanceToSpotToPlant;
-        [Key(1)]
+        [JsonProperty("1")]
         public float DistanceToSpotToDefuse;
-        [Key(2)]
+        [JsonProperty("2")]
         public int RoundEndTime;
-        [Key(3)]
+        [JsonProperty("3")]
         public int MapChooseTime;
-        [Key(4)]
+        [JsonProperty("4")]
         public int TeamOrderCooldownMs;
-        [Key(5)]
+        [JsonProperty("5")]
         public float NametagMaxDistance;
-        [Key(6)]
+        [JsonProperty("6")]
         public bool ShowNametagOnlyOnAiming;
-        [Key(7)]
+        [JsonProperty("7")]
         public int AFKKickAfterSec;
     }
 }

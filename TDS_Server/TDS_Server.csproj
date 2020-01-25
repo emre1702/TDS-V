@@ -72,9 +72,6 @@
     <Reference Include="Bootstrapper">
       <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
     </Reference>
-    <Reference Include="MessagePack">
-      <HintPath>C:\RAGEMP\dotnet\MessagePack.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

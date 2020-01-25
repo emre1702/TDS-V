@@ -37,8 +37,8 @@
     <Reference Include="Bootstrapper">
       <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
     </Reference>
-    <Reference Include="MessagePack">
-      <HintPath>C:\RAGEMP\dotnet\MessagePack.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\RAGEMP\dotnet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

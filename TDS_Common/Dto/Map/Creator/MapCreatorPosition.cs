@@ -1,31 +1,30 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using TDS_Common.Enum;
 
 namespace TDS_Common.Dto.Map.Creator
 {
-    [MessagePackObject]
     public class MapCreatorPosition
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public EMapCreatorPositionType Type { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public object Info { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public float PosX { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public float PosY { get; set; }
-        [Key(5)]
+        [JsonProperty("5")]
         public float PosZ { get; set; }
-        [Key(6)]
+        [JsonProperty("6")]
         public float RotX { get; set; }
-        [Key(7)]
+        [JsonProperty("7")]
         public float RotY { get; set; }
-        [Key(8)]
+        [JsonProperty("8")]
         public float RotZ { get; set; }
 
-        [Key(9)]
+        [JsonProperty("9")]
         public ushort OwnerRemoteId { get; set; }
 
         public MapCreatorPosition() { }

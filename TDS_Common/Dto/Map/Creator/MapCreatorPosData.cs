@@ -1,24 +1,23 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto.Map.Creator
 {
-    [MessagePackObject]
     public class MapCreatorPosData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
 
-        [Key(1)]
+        [JsonProperty("1")]
         public float PosX { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public float PosY { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public float PosZ { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public float RotX { get; set; }
-        [Key(5)]
+        [JsonProperty("5")]
         public float RotY { get; set; }
-        [Key(6)]
+        [JsonProperty("6")]
         public float RotZ { get; set; }
     }
 }

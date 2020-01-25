@@ -1,14 +1,13 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace TDS_Server.Dto
 {
-    [MessagePackObject]
     public class LoadMapDialogGroupDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string GroupName { get; set; } = string.Empty;
-        [Key(1)]
+        [JsonProperty("1")]
         public List<string> Maps { get; set; } = new List<string>();
     }
 }

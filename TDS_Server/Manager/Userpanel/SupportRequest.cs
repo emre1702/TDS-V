@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
-using MessagePack;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -244,70 +244,65 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    [MessagePackObject]
     public class SupportRequestsListData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string PlayerName { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public string CreateTime { get; set; } = string.Empty;
-        [Key(3)]
+        [JsonProperty("3")]
         public ESupportType Type { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public string Title { get; set; } = string.Empty;
-        [Key(5)]
+        [JsonProperty("5")]
         public bool Closed { get; set; }
 
-        [IgnoreMember]
+        [JsonIgnore]
         public DateTime CreateTimeDate { get; set; }
     }
 
-    [MessagePackObject]
     public class SupportRequestData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public ESupportType Type { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public string Title { get; set; } = string.Empty;
-        [Key(3)]
+        [JsonProperty("3")]
         public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
-        [Key(4)]
+        [JsonProperty("4")]
         public int AtleastAdminLevel { get; set; }
-        [Key(5)]
+        [JsonProperty("5")]
         public bool Closed { get; set; }
 
-        [IgnoreMember]
+        [JsonIgnore]
         public DateTime CreateTimeDate { get; set; }
-        [IgnoreMember]
+        [JsonIgnore]
         public int AuthorId { get; set; }
     }
 
-    [MessagePackObject]
     public class SupportRequestMessageData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Author { get; set; } = string.Empty;
-        [Key(1)]
+        [JsonProperty("1")]
         public string Message { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public string CreateTime { get; set; } = string.Empty;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public DateTime CreateTimeDate { get; set; }
     }
-
-    [MessagePackObject]
     public class SupportRequestMessage
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string? Author { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string? Message { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public string? CreateTime { get; set; }
     }
 }

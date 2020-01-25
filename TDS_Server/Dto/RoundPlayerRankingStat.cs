@@ -1,25 +1,24 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using TDS_Server.Instance.PlayerInstance;
 
 namespace TDS_Server.Dto
 {
-    [MessagePackObject]
     public class RoundPlayerRankingStat
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Place { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Name { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public int Points { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public int Kills { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public int Assists { get; set; }
-        [Key(5)]
+        [JsonProperty("5")]
         public int Damage { get; set; }
 
-        [IgnoreMember]
+        [JsonIgnore]
         public TDSPlayer Player { get; set; }
     
         public RoundPlayerRankingStat(TDSPlayer player)

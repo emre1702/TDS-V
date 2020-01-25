@@ -1,28 +1,27 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace TDS_Server.Dto.Userpanel.Command
 {
-    [MessagePackObject]
     #nullable disable
     public class UserpanelCommandDataDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Command { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public short? MinAdminLevel { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public short? MinDonation { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public bool VIPCanUse { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public bool LobbyOwnerCanUse { get; set; }
 
-        [Key(5)]
+        [JsonProperty("5")]
         public List<UserpanelCommandSyntaxDto> Syntaxes { get; set; } = new List<UserpanelCommandSyntaxDto>();
-        [Key(6)]
+        [JsonProperty("6")]
         public List<string> Aliases { get; set; }
-        [Key(7)]
+        [JsonProperty("7")]
         public Dictionary<int, string> Description { get; set; }
     }
     #nullable restore

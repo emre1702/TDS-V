@@ -1,4 +1,4 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
@@ -41,14 +41,13 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    [MessagePackObject]
     public class FAQData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Question { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public string Answer { get; set; } = string.Empty;
     }
 }

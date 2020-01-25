@@ -1,17 +1,16 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Server.Dto.TeamChoiceMenu
 {
-    [MessagePackObject]
     public class TeamChoiceMenuTeamData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Name { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public short Red { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public short Green { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public short Blue { get; set; }
 
 

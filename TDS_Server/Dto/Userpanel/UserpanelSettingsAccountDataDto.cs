@@ -1,14 +1,13 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Server.Dto.Userpanel
 {
-    [MessagePackObject]
     public class UserpanelSettingsSpecialDataDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string Username { get; set; } = string.Empty;
         
-        [Key(1)]
+        [JsonProperty("1")]
         public string Email { get; set; } = string.Empty;
     }
 }

@@ -1,5 +1,5 @@
-﻿using MessagePack;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
@@ -31,17 +31,15 @@ namespace TDS_Server.Manager.Userpanel
             return _rulesJson;
         }
     }
-
-    [MessagePackObject]
     public class RuleData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public Dictionary<int, string>? Texts { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public ERuleTarget Target { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public ERuleCategory Category { get; set; }
     }
 }

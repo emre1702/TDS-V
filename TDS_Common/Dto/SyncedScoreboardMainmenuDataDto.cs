@@ -1,21 +1,20 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class SyncedScoreboardMainmenuLobbyDataDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id;
-        [Key(1)]
+        [JsonProperty("1")]
         public string LobbyName;
-        [Key(2)]
+        [JsonProperty("2")]
         public bool IsOfficial;
-        [Key(3)]
+        [JsonProperty("3")]
         public string CreatorName;
-        [Key(4)]
+        [JsonProperty("4")]
         public string PlayersStr;
-        [Key(5)]
+        [JsonProperty("5")]
         public int PlayersCount;
 
         public SyncedScoreboardMainmenuLobbyDataDto(int Id, string LobbyName, bool IsOfficial, string CreatorName, string PlayersStr, int PlayersCount)

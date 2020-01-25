@@ -1,15 +1,14 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class MapVoteDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Name { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public int AmountVotes { get; set; }
 
     }

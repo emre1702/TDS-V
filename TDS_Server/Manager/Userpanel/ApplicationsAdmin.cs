@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
-using MessagePack;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -142,29 +142,27 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    [MessagePackObject]
     public class AppToSendData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string CreateTime { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public string PlayerName { get; set; } = string.Empty;
     }
 
-    [MessagePackObject]
     public class ApplicationData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ApplicationID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
-        [Key(2)]
+        [JsonProperty("2")]
         public string Questions { get; set; } = string.Empty;
-        [Key(3)]
+        [JsonProperty("3")]
         public PlayerUserpanelStatsDataDto? Stats { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public bool AlreadyInvited { get; set; }
     }
 }

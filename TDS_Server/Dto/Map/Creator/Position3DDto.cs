@@ -1,23 +1,22 @@
 ﻿using GTANetworkAPI;
-using MessagePack;
+using Newtonsoft.Json;
 using System.Xml.Serialization;
 using TDS_Common.Dto.Map.Creator;
 
 namespace TDS_Server.Dto.Map
 {
-    [MessagePackObject]
     public class Position3DDto
     {
         [XmlAttribute("x")]
-        [Key(0)]
+        [JsonProperty("0")]
         public float X { get; set; }
 
         [XmlAttribute("y")]
-        [Key(1)]
+        [JsonProperty("1")]
         public float Y { get; set; }
 
         [XmlAttribute("z")]
-        [Key(2)]
+        [JsonProperty("2")]
         public float Z { get; set; }
 
         public Position3DDto() { }

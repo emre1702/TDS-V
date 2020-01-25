@@ -1,34 +1,33 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class EntityAttachInfoDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int EntityValue;
-        [Key(1)]
+        [JsonProperty("1")]
         public int TargetValue;
-        [Key(2)]
+        [JsonProperty("2")]
         public int Bone;
-        [Key(3)]
+        [JsonProperty("3")]
         public float PositionOffsetX;
-        [Key(4)]
+        [JsonProperty("4")]
         public float PositionOffsetY;
-        [Key(5)]
+        [JsonProperty("5")]
         public float PositionOffsetZ;
-        [Key(6)]
+        [JsonProperty("6")]
         public float RotationOffsetX;
-        [Key(7)]
+        [JsonProperty("7")]
         public float RotationOffsetY;
-        [Key(8)]
+        [JsonProperty("8")]
         public float RotationOffsetZ;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public int? LobbyId;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public string Json;
 
         public EntityAttachInfoDto(int EntityValue, int TargetValue, int Bone,

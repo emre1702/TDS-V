@@ -1,39 +1,38 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
 
 namespace TDS_Common.Dto.Map.Creator
 {
-    [MessagePackObject]
     public class MapCreateDataDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int Id { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Name { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public EMapType Type { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public MapCreateSettings Settings { get; set; }
-        [Key(4)]
+        [JsonProperty("4")]
         public Dictionary<int, string> Description { get; set; }
-        [Key(5)]
+        [JsonProperty("5")]
         public List<MapCreatorPosition> Objects { get; set; }
-        [Key(6)]
+        [JsonProperty("6")]
         public List<List<MapCreatorPosition>> TeamSpawns { get; set; }
-        [Key(7)]
+        [JsonProperty("7")]
         public List<MapCreatorPosition> MapEdges { get; set; }
-        [Key(8)]
+        [JsonProperty("8")]
         public List<MapCreatorPosition> BombPlaces { get; set; }
-        [Key(9)]
+        [JsonProperty("9")]
         public MapCreatorPosition MapCenter { get; set; }
-        [Key(10)]
+        [JsonProperty("10")]
         public MapCreatorPosition Target { get; set; }
-        [Key(11)]
+        [JsonProperty("11")]
         public List<MapCreatorPosition> Vehicles { get; set; }
 
-        [IgnoreMember]
+        [JsonIgnore]
         public List<MapCreatorPosition> GetAllPositions 
         {    
             get 

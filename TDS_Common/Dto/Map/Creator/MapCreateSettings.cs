@@ -1,13 +1,12 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto.Map.Creator
 {
-    [MessagePackObject]
     public class MapCreateSettings
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public uint MinPlayers { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public uint MaxPlayers { get; set; }
     }
 }

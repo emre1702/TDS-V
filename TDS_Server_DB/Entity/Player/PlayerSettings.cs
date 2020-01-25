@@ -1,12 +1,11 @@
-﻿using MessagePack;
-using TDS_Common.Dto;
+﻿using TDS_Common.Dto;
+using Newtonsoft.Json;
 
 namespace TDS_Server_DB.Entity.Player
 {
-    [MessagePackObject]
     public class PlayerSettings : SyncedPlayerSettingsDto
     {
-        [IgnoreMember]
+        [JsonIgnore]
         public virtual Players Player { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-﻿using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Common.Dto
 {
-    [MessagePackObject]
     public class SyncedTeamPlayerAmountDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public uint Amount;
-        [Key(1)]
+        [JsonProperty("1")]
         public uint AmountAlive;
     }
 }

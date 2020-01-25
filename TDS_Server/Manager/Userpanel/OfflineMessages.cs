@@ -1,6 +1,5 @@
-﻿using GTANetworkAPI;
-using MessagePack;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Rest;
 
 namespace TDS_Server.Manager.Userpanel
 {
@@ -133,21 +131,20 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    [MessagePackObject]
     public class OfflineMessage
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string PlayerName { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public string CreateTime { get; set; } = string.Empty;
-        [Key(3)]
+        [JsonProperty("3")]
         public string Text { get; set; } = string.Empty;
-        [Key(4)]
+        [JsonProperty("4")]
         public bool Seen { get; set; }
 
-        [IgnoreMember]
+        [JsonIgnore]
         public DateTime CreateTimeDate { get; set; }
     }
 }

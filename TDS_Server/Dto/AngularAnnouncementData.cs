@@ -1,15 +1,13 @@
-﻿
-using MessagePack;
+﻿using Newtonsoft.Json;
 
 namespace TDS_Server.Dto
 {
-    [MessagePackObject]
     public class AngularAnnouncementData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int DaysAgo { get; set; }
 
-        [Key(1)]
+        [JsonProperty("1")]
         public string Text { get; set; } = string.Empty;
     }
 }

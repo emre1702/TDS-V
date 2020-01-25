@@ -1,33 +1,31 @@
-﻿using MessagePack;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Dto
 {
     #nullable disable
-    [MessagePackObject]
     public class AngularConstantsDataDto
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int TDSId { get; set; }
 
-        [Key(1)]
+        [JsonProperty("1")]
         public ushort RemoteId { get; set; }
 
-        [Key(2)]
+        [JsonProperty("2")]
         public int UsernameChangeCost { get; set; }
 
-        [Key(3)]
+        [JsonProperty("3")]
         public int UsernameChangeCooldownDays { get; set; }
 
-        [Key(4)]
+        [JsonProperty("4")]
         public int MapBuyBasePrice { get; set; }
 
-        [Key(5)]
+        [JsonProperty("5")]
         public float MapBuyCounterMultiplicator { get; set; }
 
-        [Key(6)]
+        [JsonProperty("6")]
         public string AnnouncementsJson { get; set; }
 
         public static AngularConstantsDataDto Get(TDSPlayer player)

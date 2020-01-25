@@ -1,6 +1,5 @@
-﻿using GTANetworkAPI;
-using MessagePack;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,9 +44,9 @@ namespace TDS_Server.Manager.Userpanel
 
         public static async Task<string> GetData(TDSPlayer player)
         {
-            var application = await player.ExecuteForDBAsync((dbContext) =>
+            var application = await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                return dbContext.Applications.FirstOrDefaultAsync(a => a.PlayerId == player.Entity!.Id);
+                return await dbContext.Applications.FirstOrDefaultAsync(a => a.PlayerId == player.Entity!.Id);
             });
 
             if (application == null)
@@ -57,17 +56,17 @@ namespace TDS_Server.Manager.Userpanel
 
             if (application.CreateTime.AddDays(SettingsManager.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
             {
-                await player.ExecuteForDBAsync((dbContext) =>
+                await player.ExecuteForDBAsync(async (dbContext) =>
                 {
                     dbContext.Remove(application);
-                    return dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
                 });
 
                 return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
-            var applicationData = await player.ExecuteForDBAsync((dbContext) => 
-                dbContext.Applications.Where(a => a.PlayerId == player.Entity!.Id)
+            var applicationData = await player.ExecuteForDBAsync(async (dbContext) => 
+                await dbContext.Applications.Where(a => a.PlayerId == player.Entity!.Id)
                     .Include(a => a.Invitations)
                     .ThenInclude(i => i.Admin)
                     .Select(a => new ApplicationUserData 
@@ -217,50 +216,46 @@ namespace TDS_Server.Manager.Userpanel
         }
     }
 
-    [MessagePackObject]
     public class ApplicationUserData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string? CreateTime { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public string AdminQuestions { get; set; } = string.Empty;
 
-        [IgnoreMember]
+        [JsonIgnore]
         public DateTime CreateDateTime { get; set; }
     }
 
-    [MessagePackObject]
     public class ApplicationUserInvitationData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string? AdminName { get; set; }
-        [Key(2)]
+        [JsonProperty("2")]
         public string? AdminSCName { get; set; }
-        [Key(3)]
+        [JsonProperty("3")]
         public string? Message { get; set; }
     }
 
-    [MessagePackObject]
     public class AdminQuestionsData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public string AdminName { get; set; } = string.Empty;
-        [Key(1)]
+        [JsonProperty("1")]
         public IEnumerable<AdminQuestionData>? Questions { get; set; }
     }
 
-    [MessagePackObject]
     public class AdminQuestionData
     {
-        [Key(0)]
+        [JsonProperty("0")]
         public int ID { get; set; }
-        [Key(1)]
+        [JsonProperty("1")]
         public string Question { get; set; } = string.Empty;
-        [Key(2)]
+        [JsonProperty("2")]
         public EUserpanelAdminQuestionAnswerType AnswerType { get; set; }
     }
 }
