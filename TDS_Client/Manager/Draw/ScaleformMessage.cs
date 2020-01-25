@@ -46,7 +46,7 @@ namespace TDS_Client.Manager.Draw.Scaleform
 
         public static void ShowWastedMessage(ulong time = 5000)
         {
-            scaleform.Call(DScaleformFunction.SHOW_SHARD_WASTED_MP_MESSAGE, "~r~Wasted", "You died.", 5, true, true);
+            scaleform.Call(DScaleformFunction.SHOW_SHARD_WASTED_MP_MESSAGE, "~r~Wasted", Settings.Language.YOU_DIED, 5, true, true);
             InitCommonSettings(time);
         }
 
