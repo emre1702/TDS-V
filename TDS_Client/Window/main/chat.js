@@ -81,6 +81,13 @@ chatAPI["show"] = (toggle) => {
     chatdata.active = toggle;
 };
 
+let api = {"chat:push": chatAPI.push, "chat:clear": chatAPI.clear, "chat:activate": chatAPI.activate, "chat:show": chatAPI.show}; 
+
+for(let fn in api)
+{
+	mp.events.add(fn, api[fn]);
+}
+
 chatdata.maininput.blur(() => {
 	enableChatInput(false);
 	mp.trigger("b6");	// CloseChat_Browser
