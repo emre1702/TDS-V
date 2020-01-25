@@ -39,6 +39,7 @@ namespace TDS_Client.Interface
         string AFK_KICK_INFO { get; }
         string AFK_KICK_WARNING { get; }
         string FIRING_MODE { get; }
+        string YOU_DIED { get; }
 
         ELanguage Enum { get; }
         
