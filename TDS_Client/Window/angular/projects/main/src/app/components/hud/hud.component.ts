@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
@@ -24,7 +24,8 @@ export class HudComponent implements OnInit, OnDestroy {
 
     constructor(
         public settings: SettingsService,
-        private rageConnector: RageConnectorService) {
+        private rageConnector: RageConnectorService,
+        private changeDetector: ChangeDetectorRef) {
 
     }
 
@@ -40,12 +41,13 @@ export class HudComponent implements OnInit, OnDestroy {
 
     toggleRoundStats(toggle: boolean) {
         this.showRoundStats = toggle;
+        this.changeDetector.detectChanges();
     }
 
     private hudDataChange(type: HUDDataType, value: number) {
         switch (type) {
             case HUDDataType.Armor:
-                this.armor = Math.max(value, 100);
+                this.armor = Math.min(value, 100);
                 this.armorExtra = value - this.armor;
                 break;
             case HUDDataType.HP:
@@ -64,5 +66,6 @@ export class HudComponent implements OnInit, OnDestroy {
                 this.firingMode = FiringMode[value];
                 break;
         }
+        this.changeDetector.detectChanges();
     }
 }
