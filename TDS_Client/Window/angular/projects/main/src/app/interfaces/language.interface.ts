@@ -167,9 +167,9 @@ export interface Language {
     HoursLeft: string;
     NoTimeLimit: string;
     "Current:": string;
-    auto: string;
-    burst: string;
-    single: string;
+    AutoFiringMode: string;
+    BurstFiringMode: string;
+    SingleFiringMode: string;
     Target: string;
     TargetInfo: string;
     Vehicles: string;
@@ -218,6 +218,26 @@ export interface Language {
     AmountMapsRated: string;
     LastLogin: string;
     RegisterTimestamp: string;
+    MuteTime: string;
+    VoiceMuteTime: string;
+    LobbyStats: string;
+    Logs: string;
+    Kills: string;
+    Assists: string;
+    Deaths: string;
+    Damage: string;
+    TotalKills: string;
+    TotalAssists: string;
+    TotalDeaths: string;
+    TotalDamage: string;
+    TotalRounds: string;
+    MostKillsInARound: string;
+    MostDamageInARound: string;
+    MostAssistsInARound: string;
+    MostKillsInADay: string;
+    MostDamageInADay: string;
+    MostAssistsInADay: string;
+    TotalMapsBought: string;
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

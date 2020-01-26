@@ -195,9 +195,9 @@ The user interface is always being worked on, so don't be surprised if you disco
     LastLogin = "Last login";
     RegisterTimestamp = "Register time";
     "Current:" = "current:";
-    auto = "Auto";
-    burst = "Burst";
-    single = "Single";
+    AutoFiringMode = "Auto";
+    BurstFiringMode = "Burst";
+    SingleFiringMode = "Single";
     Target = "Target";
     TargetInfo = `This position Will be the main target of the attackers.`;
     Vehicles = "Vehicles";
@@ -247,6 +247,26 @@ The user interface is always being worked on, so don't be surprised if you disco
     CommandsLobbyOwner = "Commands - Lobby-owner";
     SupportUser = "Support";
     SupportAdmin = "Support";
+    MuteTime = "Mute time";
+    VoiceMuteTime = "Voice mute time";
+    LobbyStats = "Lobby stats";
+    Logs = "Logs";
+    Kills = "Kills";
+    Assists = "Assists";
+    Deaths = "Deaths";
+    Damage = "Damage";
+    TotalKills = "Total kills";
+    TotalAssists = "Total assists";
+    TotalDeaths = "Total deaths";
+    TotalDamage = "Total damage";
+    TotalRounds = "Total rounds";
+    MostKillsInARound = "Most kills in a round";
+    MostDamageInARound = "Most damage in a round";
+    MostAssistsInARound = "Most assists in a round";
+    MostKillsInADay = "Most kills in a day";
+    MostDamageInADay = "Most damage in a day";
+    MostAssistsInADay = "Most assists in a day";
+    TotalMapsBought = "Total maps bought";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

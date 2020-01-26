@@ -190,9 +190,9 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     HoursLeft = "{0} Stunde(n) übrig";
     NoTimeLimit = "Kein Zeitlimit";
     "Current:" = "aktuell:";
-    auto = "Auto";
-    burst = "Burst";
-    single = "Single";
+    AutoFiringMode = "Auto";
+    BurstFiringMode = "Burst";
+    SingleFiringMode = "Single";
     Target = "Ziel";
     TargetInfo = `Diese Position wird das Haupt-Ziel der Angreifer.`;
     Vehicles = "Fahrzeuge";
@@ -242,6 +242,26 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     CommandsLobbyOwner = "Befehle - Lobby-Besitzer";
     SupportUser = "Support";
     SupportAdmin = "Support";
+    MuteTime = "Mute Zeit";
+    VoiceMuteTime = "Voice Mute Zeit";
+    LobbyStats = "Lobby Statistiken";
+    Logs = "Logs";
+    Kills = "Kills";
+    Assists = "Assists";
+    Deaths = "Tode";
+    Damage = "Schaden";
+    TotalKills = "Gesamte Kills";
+    TotalAssists = "Gesamte Assists";
+    TotalDeaths = "Gesamte Tode";
+    TotalDamage = "Gesamter Schaden";
+    TotalRounds = "Gesamte Runden";
+    MostKillsInARound = "Meiste Kills in einer Runde";
+    MostDamageInARound = "Meister Schaden in einer Runde";
+    MostAssistsInARound = "Meiste Assists in einer Runde";
+    MostKillsInADay = "Meiste Kills an einem Tag";
+    MostDamageInADay = "Meister Schaden an einem Tag";
+    MostAssistsInADay = "Meiste Assists an einem Tag";
+    TotalMapsBought = "Gesamt gekaufte Karten";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

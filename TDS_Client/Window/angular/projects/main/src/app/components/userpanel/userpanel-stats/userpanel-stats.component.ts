@@ -9,7 +9,6 @@ import { SettingsService } from '../../../services/settings.service';
 })
 export class UserpanelStatsComponent implements OnInit, OnDestroy {
 
-    objectKeys = Object.keys;
     array = Array;
 
     @Input()
@@ -21,13 +20,40 @@ export class UserpanelStatsComponent implements OnInit, OnDestroy {
         return this._stats;
     }
 
-    @Input() columns: string[];
+    @Input()
+    set columns(value: { [index: number]: string }) {
+        this._columns = value;
+        this.changeDetector.detectChanges();
+    }
+    get columns(): { [index: number]: string } {
+        return this._columns;
+    }
 
-    lobbyStatsColumns: number[] = [
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
-    ];
+    lobbyStatsColumns = {
+        1: "Kills",
+        2: "Assists",
+        3: "Deaths",
+        4: "Damage",
+
+        5: "TotalKills",
+        6: "TotalAssists",
+        7: "TotalDeaths",
+        8: "TotalDamage",
+        9: "TotalRounds",
+
+        10: "MostKillsInARound",
+        11: "MostDamageInARound",
+        12: "MostAssistsInARound",
+
+        13: "MostKillsInADay",
+        14: "MostDamageInADay",
+        15: "MostAssistsInADay",
+
+        16: "TotalMapsBought"
+    };
 
     private _stats: UserpanelStatsDataDto;
+    private _columns: { [index: number]: string };
 
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
 
@@ -37,6 +63,18 @@ export class UserpanelStatsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+    }
+
+    getIndizes() {
+        return Object.keys(this.columns);
+    }
+
+    getLobbyStatsIndizes() {
+        return Object.keys(this.lobbyStatsColumns);
+    }
+
+    isNormalValue(value: any) {
+        return value && value != "" && typeof(value) != "object";
     }
 
     private detectChanges() {

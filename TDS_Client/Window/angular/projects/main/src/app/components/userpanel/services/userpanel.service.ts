@@ -10,13 +10,9 @@ import { SettingsService } from '../../../services/settings.service';
 import { UserpanelSettingNormalDataDto } from '../interfaces/userpanelSettingNormalDataDto';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
-import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
-import { LanguageEnum } from '../../../enums/language.enum';
-import { TimezoneEnum } from '../enums/timezone.enum';
-import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 
 @Injectable({
     providedIn: 'root'

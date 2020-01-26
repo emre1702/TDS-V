@@ -1,14 +1,14 @@
-<div class="container" *ngIf="stats">
-    <ng-container *ngFor="let key of columns">
-        <div *ngIf="stats[key] != undefined && stats[key] != '' && (!array.isArray(stats[key]) || stats[key].length) && key != 'Logs' && key != 'LobbyStats'">
-            {{ key | language: settings.Lang }}: {{ stats[key] }}
+<div class="container" *ngIf="stats && columns">
+    <ng-container *ngFor="let key of getIndizes()">
+        <div *ngIf="isNormalValue(stats[key])">
+            {{ columns[key] | language: settings.Lang }}: {{ stats[key] }}
         </div>
 
-        <mat-accordion class="logs" *ngIf="key == 'Logs' && stats[key].length">
+        <mat-accordion class="logs" *ngIf="columns[key] == 'Logs' && stats[key] && stats[key].length">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{ key | language: settings.Lang }}
+                        {{ columns[key] | language: settings.Lang }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-expansion-panel *ngFor="let log of stats[key]">
@@ -32,11 +32,11 @@
             </mat-expansion-panel>
         </mat-accordion>
 
-        <mat-accordion class="lobby_stats" *ngIf="key == 'LobbyStats' && stats[key] && stats[key].length">
+        <mat-accordion class="lobby_stats" *ngIf="columns[key] == 'LobbyStats' && stats[key] && stats[key].length">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{ key | language: settings.Lang }}
+                        {{ columns[key] | language: settings.Lang }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-expansion-panel *ngFor="let stat of stats[key]">
@@ -45,8 +45,8 @@
                             {{ stat[0] }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <div *ngFor="let statKey of lobbyStatsColumns">
-                        {{ statKey | language: settings.Lang }}: {{ stat[statKey] }}
+                    <div *ngFor="let statKey of getLobbyStatsIndizes()">
+                        {{ lobbyStatsColumns[statKey] | language: settings.Lang }}: {{ stat[statKey] }}
                     </div>
                 </mat-expansion-panel>
             </mat-expansion-panel>
