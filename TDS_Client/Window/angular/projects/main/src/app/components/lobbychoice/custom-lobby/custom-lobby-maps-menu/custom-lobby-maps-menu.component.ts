@@ -130,7 +130,7 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
     }
 
     backButtonClicked() {
-        this.backClicked.emit(this.selectedMaps.filter(m => m[0]));
+        this.backClicked.emit(this.selectedMaps.map(m => m[0]));
     }
 
     private createDataSource() {
