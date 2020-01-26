@@ -24,7 +24,7 @@
         <div class="rest">
             <div class="ammo">{{ ammo }}</div>
             <div class="mag">{{ mag }}</div>
-            <div class="firingmode">{{ firingMode | language: settings.Lang }}</div>
+            <div class="firingmode">{{ firingMode + 'FiringMode' | language: settings.Lang }}</div>
         </div>
     </div>
     <app-round-stats *ngIf="showRoundStats"></app-round-stats>
