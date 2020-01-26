@@ -15,15 +15,15 @@ namespace TDS_Server.Dto
         public string OwnerName { get; set; }
         [JsonProperty("3")]
         public string Password { get; set; } = "";
-        [JsonProperty("4")]
-        public bool ShowRanking { get; set; }
-        [JsonProperty("5")]
-        public short StartHealth { get; set; }
-        [JsonProperty("6")]
-        public short StartArmor { get; set; }
-        [JsonProperty("7")]
-        public short AmountLifes { get; set; }
         [JsonProperty("8")]
+        public bool ShowRanking { get; set; }
+        [JsonProperty("4")]
+        public short StartHealth { get; set; }
+        [JsonProperty("5")]
+        public short StartArmor { get; set; }
+        [JsonProperty("6")]
+        public short AmountLifes { get; set; }
+        [JsonProperty("7")]
         public bool MixTeamsAfterRound { get; set; }
         [JsonProperty("9")]
         public int BombDetonateTimeMs { get; set; }

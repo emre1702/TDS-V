@@ -125,10 +125,18 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             return ExecuteForDBAsync(async (dbContext) =>
             {
-                dbContext.Entry(LobbyEntity).State = EntityState.Added;
+                dbContext.Add(LobbyEntity);
                 await dbContext.SaveChangesAsync();
 
-                await dbContext.Entry(LobbyEntity).Reference(e => e.Owner).LoadAsync();
+                await dbContext.Entry(LobbyEntity)
+                    .Reference(e => e.Owner)
+                    .LoadAsync();
+
+                await dbContext.Entry(LobbyEntity)
+                    .Collection(e => e.LobbyMaps)
+                    .Query()
+                    .Include(e => e.Map)
+                    .LoadAsync();
             });
 
         }
