@@ -53,9 +53,9 @@ import { LobbySetting } from '../enums/lobby-setting.enum';
 })
 
 export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
-    private spectatorTeam: CustomLobbyTeamData = ["Spectator", "rgb(255, 255, 255)", 4, 0, true];
-    private team1: CustomLobbyTeamData = ["SWAT", "rgb(0, 150, 0)", 52, -1920001264, false];
-    private team2: CustomLobbyTeamData = ["Terroristen", "rgb(150, 0, 0)", 1, 275618457, false];
+    private spectatorTeam: CustomLobbyTeamData = { [0]: "Spectator", [1]: "rgb(255, 255, 255)", [2]: 4, [3]: 0, [4]: true };
+    private team1: CustomLobbyTeamData = { [0]: "SWAT", [1]: "rgb(0, 150, 0)", [2]: 52, [3]: -1920001264, [4]: false };
+    private team2: CustomLobbyTeamData = { [0]: "Terroristen", [1]: "rgb(150, 0, 0)", [2]: 1, [3]: 275618457, [4]: false };
 
     settingPanel: LobbySettingPanel[] = [
         {
@@ -320,7 +320,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             .find(p => p.dataSettingIndex === 1 /*"Name"*/).formControl.value as string).toLowerCase();
         if (lobbyName.startsWith("mapcreator"))
             return false;
-        if (this.lobbyDatas.findIndex(l => l[1] == lobbyName))
+        if (this.lobbyDatas.find(l => l[1] == lobbyName))
             return false;
 
         return true;

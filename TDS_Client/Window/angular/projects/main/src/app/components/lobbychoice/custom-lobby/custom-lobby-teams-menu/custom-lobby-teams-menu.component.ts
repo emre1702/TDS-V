@@ -144,13 +144,13 @@ export class CustomLobbyTeamsMenuComponent {
     addTeam() {
         const defaultData = this.defaultTeamData.length > this.teams.length ? this.defaultTeamData[this.teams.length] : this.defaultTeamData[0];
 
-        this.teams = [...this.teams, [
-            defaultData.name || "Team" + this.teams.length,
-            defaultData.color,
-            defaultData.blipColor,
-            defaultData.skinHash,
-            false
-        ]];
+        this.teams = [...this.teams, {
+            [0]: defaultData.name || "Team" + this.teams.length,
+            [1]: defaultData.color,
+            [2]: defaultData.blipColor,
+            [3]: defaultData.skinHash,
+            [4]: false
+        }];
         this.changeDetector.detectChanges();
     }
 
