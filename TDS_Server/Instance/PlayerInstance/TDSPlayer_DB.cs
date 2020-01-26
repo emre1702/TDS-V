@@ -27,6 +27,7 @@ namespace TDS_Server.Instance.PlayerInstance
                     return;
                 if (_langEnumBeforeLogin != ELanguage.English)
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
+                Language = LangUtils.GetLang(_entity.PlayerSettings.Language);
                 PlayerRelationsPlayer = _entity.PlayerRelationsPlayer.ToList();
                 PlayerRelationsTarget = _entity.PlayerRelationsTarget.ToList();
                 PlayerDataSync.SetData(this, EPlayerDataKey.Money, EPlayerDataSyncMode.Player, _entity.PlayerStats.Money);

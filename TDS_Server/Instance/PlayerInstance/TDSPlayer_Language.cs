@@ -24,7 +24,7 @@ namespace TDS_Server.Instance.PlayerInstance
                     _langEnumBeforeLogin = value;
                 else
                     Entity.PlayerSettings.Language = value;
-                LangUtils.GetLang(value);
+                Language = LangUtils.GetLang(value);
             }
         }
 
