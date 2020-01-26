@@ -46,14 +46,17 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private float GetTextRelativePosY()
         {
-            int amountlines = textString.Count(t => t == '\n') + 1;
-            return y + height / 2 - Ui.GetTextScaleHeight(scale, (int)font) / 2 * amountlines - GetRelativeY(5, false);
+            //int amountlines = textString.Count(t => t == '\n') + 1;
+            //return y + height / 2 - Ui.GetTextScaleHeight(scale, (int)font) / 2 * amountlines;            // - GetRelativeY(5, false);
+            return y + height / 2 - GetRelativeY(5, false);
         }
 
         private float GetTextAbsolutePosY()
         {
-            int amountlines = textString.Count(t => t == '\n') + 1;
-            return y + height / 2 - GetAbsoluteY(Ui.GetTextScaleHeight(scale, (int)font), true) / 2 * amountlines - 5;
+            //int amountlines = textString.Count(t => t == '\n') + 1;
+            //return y + height / 2 - GetAbsoluteY(Ui.GetTextScaleHeight(scale, (int)font), true) / 2 * amountlines;            //  - 5;
+
+            return y + height / 2 - 5;
         }
 
         public override void Draw()
