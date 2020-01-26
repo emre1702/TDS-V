@@ -18,7 +18,7 @@
             /{{ currentCommand[0] }}
             <span *ngFor="let parameter of syntax[0]"
                 [matTooltip]="langPipe.transform(parameter[1], settings.Lang)">
-                [{{ parameter[0] | language: settings.Lang }}{{ parameter[2] != undefined ? ' = ' + parameter[2] : '' }}]
+                [{{ parameter[0] | language: settings.Lang }}{{ parameter[2] && parameter[2].length ? ' = ' + parameter[2] : '' }}]
             </span>
         </div>
     </div>
