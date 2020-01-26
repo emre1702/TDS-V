@@ -184,6 +184,7 @@ export interface Language {
     DefaultMapIdsGangwars: string;
 
     ////////////// Challenges ///////////////
+    Challenges: string;
     Challenge_Kills: string;
     Challenge_Assists: string;
     Challenge_Damage: string;

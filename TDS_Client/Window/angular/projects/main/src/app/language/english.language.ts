@@ -212,6 +212,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     DefaultMapIdsGangwars = "All gangwars";
 
     ////////////// Challenges ///////////////
+    Challenges = "Challenges";
     Challenge_Kills = "Get {0} kills";
     Challenge_Assists = "Get {0} assists";
     Challenge_Damage = "Do {0} damage";

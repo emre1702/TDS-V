@@ -207,6 +207,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     DefaultMapIdsGangwars = "Alle Gangwars";
 
     ////////////// Challenges ///////////////
+    Challenges = "Herausforderungen";
     Challenge_Kills = "Bekomme {0} Kills";
     Challenge_Assists = "Bekomme {0} Assists";
     Challenge_Damage = "Teile {0} Schaden aus";
