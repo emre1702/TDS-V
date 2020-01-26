@@ -1,8 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 
 enum DToServerEvent {
-    FromBrowserEvent = "FromBrowserEvent_Browser"
-};
+    FromBrowserEvent = "c64"
+}
 
 declare const mp: {
     trigger(eventName: string, ...args: any): void;
