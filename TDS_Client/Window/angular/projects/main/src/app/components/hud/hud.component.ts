@@ -48,7 +48,7 @@ export class HudComponent implements OnInit, OnDestroy {
         switch (type) {
             case HUDDataType.Armor:
                 this.armor = Math.min(value, 100);
-                this.armorExtra = value - this.armor;
+                this.armorExtra = Math.max(value - this.armor, 0);
                 break;
             case HUDDataType.HP:
                 this.hp = value;
