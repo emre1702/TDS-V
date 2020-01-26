@@ -68,11 +68,24 @@
     }
 }
 
-#back-button {
+#available-maps-with-button {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 10vw;
-    height: 5vh;
-    font-size: 2em;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    top: 10px;
+    right: 10px;
+
+    #back-button {
+        align-self: flex-end;
+        position: relative;
+        margin-top: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 10vw;
+        height: 5vh;
+        font-size: 1.2em;
+    }
+
 }
+
