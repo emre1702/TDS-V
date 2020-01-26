@@ -222,40 +222,42 @@ namespace TDS_Server.Manager.Userpanel
         [JsonProperty("0")]
         public int Id { get; internal set; }
         [JsonProperty("1")]
-        public long TotalMoney { get; internal set; }
-        [JsonProperty("2")]
-        public double MapsRatedAverage { get; internal set; }
-        [JsonProperty("3")]
-        public string RegisterTimestamp { get; internal set; }
-        [JsonProperty("4")]
-        public bool IsVip { get; internal set; }
-        [JsonProperty("5")]
-        public short AdminLvl { get; internal set; }
-        [JsonProperty("6")]
-        public short Donation { get; internal set; }
-        [JsonProperty("7")]
         public string Name { get; internal set; }
-        [JsonProperty("8")]
+        [JsonProperty("2")]
         public string SCName { get; internal set; }
-        [JsonProperty("9")]
+        [JsonProperty("3")]
         public string Gang { get; internal set; }
-        [JsonProperty("10")]
+        [JsonProperty("4")]
+        public short AdminLvl { get; internal set; }
+        [JsonProperty("8")]
+        public long TotalMoney { get; internal set; }
+        [JsonProperty("14")]
+        public double MapsRatedAverage { get; internal set; }
+        [JsonProperty("18")]
+        public string RegisterTimestamp { get; internal set; }
+        [JsonProperty("6")]
+        public bool IsVip { get; internal set; }
+       
+        [JsonProperty("5")]
+        public short Donation { get; internal set; }       
+       
+        [JsonProperty("13")]
         public int AmountMapsCreated { get; internal set; }
-        [JsonProperty("11")]
+        [JsonProperty("17")]
         public string LastLogin { get; internal set; }
         [JsonProperty("12")]
         public List<string> BansInLobbies { get; internal set; }
-        [JsonProperty("13")]
-        public double CreatedMapsAverageRating { get; internal set; }
-        [JsonProperty("14")]
-        public int AmountMapsRated { get; internal set; }
         [JsonProperty("15")]
-        public int? MuteTime { get; internal set; }
+        public double CreatedMapsAverageRating { get; internal set; }
         [JsonProperty("16")]
+        public int AmountMapsRated { get; internal set; }
+        [JsonProperty("10")]
+        public int? MuteTime { get; internal set; }
+        [JsonProperty("7")]
         public int Money { get; internal set; }
-        [JsonProperty("17")]
+        [JsonProperty("11")]
         public int? VoiceMuteTime { get; internal set; }
-        [JsonProperty("18")]
+        [JsonProperty("9")]
         public int PlayTime { get; internal set; }
 
         [JsonIgnore]
