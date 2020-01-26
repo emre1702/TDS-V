@@ -41,7 +41,7 @@ namespace TDS_Server.Manager.EventManager
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
-        public static async void OnFromBrowserEvent(Player client, string eventName, params object[] args)
+        public static async void OnFromBrowserEvent(Player client, params object[] args)
         {
             try
             {
@@ -50,6 +50,7 @@ namespace TDS_Server.Manager.EventManager
                 if (!player.LoggedIn)
                     return;
 
+                string eventName = (string)args[0];
                 if (_asyncMethods.ContainsKey(eventName))
                 {
                     ret = await _asyncMethods[eventName](player, args);

@@ -84,11 +84,12 @@ namespace TDS_Client.Manager.Utility
             return true;
         }
 
-        public static bool SendFromBrowser(string eventName, params object[] args)
+        public static bool SendFromBrowser(params object[] args)
         {
+            string eventName = (string)args[0];
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                Events.CallRemote(DToServerEvent.FromBrowserEvent, eventName, args);
+                RAGE.Events.CallRemote(DToServerEvent.FromBrowserEvent, args);
                 return true;
             }
 
@@ -99,8 +100,49 @@ namespace TDS_Client.Manager.Utility
             }
 
             entry.LastExecMs = currentTicks;
-            Events.CallRemote(DToServerEvent.FromBrowserEvent, eventName, args);
+            RAGE.Events.CallRemote(DToServerEvent.FromBrowserEvent, args);
             return true;
+        }
+
+        private static void CallWithParamsArgs(string eventName, params object[] args)
+        {
+            switch (args.Length)
+            {
+                case 0:
+                    RAGE.Chat.Output("0");
+                    Events.CallRemote(eventName);
+                    break;
+                case 1:
+                    RAGE.Chat.Output("1");
+                    Events.CallRemote(eventName, args[0]);
+                    break;
+                case 2:
+                    RAGE.Chat.Output("2");
+                    Events.CallRemote(eventName, args[0], args[1]);
+                    break;
+                case 3:
+                    Events.CallRemote(eventName, args[0], args[1], args[2]);
+                    break;
+                case 4:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3]);
+                    break;
+                case 5:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3], args[4]);
+                    break;
+                case 6:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3], args[4], args[5]);
+                    break;
+                case 7:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+                    break;
+                case 8:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+                    break;
+                case 9:
+                    Events.CallRemote(eventName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+                    break;
+            }
+                
         }
     }
 }

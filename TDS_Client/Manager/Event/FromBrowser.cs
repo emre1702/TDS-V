@@ -487,11 +487,13 @@ namespace TDS_Client.Manager.Event
 
         private void OnFromBrowserEventMethod(object[] args)
         {
-            string eventName = (string) args[0];
+            /* string eventName = (string) args[0];
             object[] restArgs = new object[args.Length - 1];
-            args.CopyTo(restArgs, 1);
-
-            EventsSender.SendFromBrowser(eventName, restArgs);
+            if (args.Length > 1)
+            {
+                args.CopyTo(restArgs, 1);
+            } */
+            EventsSender.SendFromBrowser(args);
         }
     }
 }
