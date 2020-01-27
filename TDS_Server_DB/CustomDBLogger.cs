@@ -7,6 +7,8 @@ namespace TDS_Server_DB
 {
     class CustomDBLogger : ILoggerProvider
     {
+        private static object locker = new object();
+
         public ILogger CreateLogger(string categoryName)
         {
             return new CustomLogger();
@@ -34,16 +36,20 @@ namespace TDS_Server_DB
                 string msg = Environment.NewLine + "[" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "] " + formatter(state, exception) + Environment.NewLine;
                 try
                 {
-                    if (_logQuery.Count > 0)
+                    lock (locker)
                     {
-                        foreach (var str in _logQuery)
+                        if (_logQuery.Count > 0)
                         {
-                            File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", str);
+                            foreach (var str in _logQuery)
+                            {
+                                File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", str);
+                            }
+                            _logQuery.Clear();
                         }
-                        _logQuery.Clear();
+
+                        File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", msg);
                     }
-                    
-                    File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", msg);
+                   
                 }
                 catch
                 {

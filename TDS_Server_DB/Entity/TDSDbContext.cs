@@ -122,8 +122,8 @@ namespace TDS_Server_DB.Entity
 
                 string connStr = _connectionString ?? "Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;";
                 optionsBuilder
-                   // .UseLoggerFactory(loggerFactory)
-                   // .EnableSensitiveDataLogging()
+                    .UseLoggerFactory(loggerFactory)
+                    .EnableSensitiveDataLogging()
                     .UseNpgsql(connStr, options => 
                         options.EnableRetryOnFailure())
                     .UseSnakeCaseNamingConvention();
