@@ -2,23 +2,32 @@
 using System.Threading.Tasks;
 using TDS_Server.Enums;
 using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.EventManager;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Server;
 
 namespace TDS_Server.Manager.Stats
 {
-    class ServerTotalStatsManager
+    class ServerTotalStatsManager : EntityWrapperClass
     {
-        #nullable disable warnings
-        public static TDSDbContext DbContext { get; private set; }
-        public static ServerTotalStats Stats { get; private set; }
-        #nullable restore warnings
+        private static ServerTotalStatsManager? _instance;
+        public ServerTotalStats Stats { get; private set; }
+
+        public ServerTotalStatsManager()
+        {
+            // Only to remove the nullable warning
+            Stats = new ServerTotalStats();
+
+            ExecuteForDB(dbContext =>
+            {
+                Stats = dbContext.ServerTotalStats.First();
+            }).Wait();
+        }
 
         public static void Init()
         {
-            DbContext = new TDSDbContext();
-            Stats = DbContext.ServerTotalStats.First();
+            _instance = new ServerTotalStatsManager();
 
             CustomEventManager.OnPlayerLoggedIn += CheckPlayerPeak;
             CustomEventManager.OnPlayerLoggedOut += CheckPlayerPeak;
@@ -26,26 +35,37 @@ namespace TDS_Server.Manager.Stats
 
         public static void AddArenaRound(ERoundEndReason roundEndReason, bool isOfficial)
         {
+            if (_instance is null)
+                return;
+
             if (roundEndReason == ERoundEndReason.Command
                 || roundEndReason == ERoundEndReason.Empty
                 || roundEndReason == ERoundEndReason.NewPlayer)
                 return;
             if (isOfficial)
-                ++Stats.ArenaRoundsPlayed;
+                ++_instance.Stats.ArenaRoundsPlayed;
             else
-                ++Stats.CustomArenaRoundsPlayed;
+                ++_instance.Stats.CustomArenaRoundsPlayed;
         }
 
         public static void CheckPlayerPeak(TDSPlayer _)
         {
-            if (PlayerManager.PlayerManager.AmountLoggedInPlayers <= Stats.PlayerPeak)
+            if (_instance is null)
                 return;
-            Stats.PlayerPeak = (short)PlayerManager.PlayerManager.AmountLoggedInPlayers;
+            if (PlayerManager.PlayerManager.AmountLoggedInPlayers <= _instance.Stats.PlayerPeak)
+                return;
+            _instance.Stats.PlayerPeak = (short)PlayerManager.PlayerManager.AmountLoggedInPlayers;
         }
 
-        public static Task Save()
+        public static async Task Save()
         {
-            return DbContext.SaveChangesAsync();
+            if (_instance is null)
+                return;
+
+            await _instance.ExecuteForDBAsync(async dbContext =>
+            {
+                await dbContext.SaveChangesAsync();
+            });
         }
     }
 }
