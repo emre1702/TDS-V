@@ -1,5 +1,4 @@
-﻿using RAGE;
-using RAGE.Game;
+﻿using TDS_Client.Dto.Map;
 using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Instance.Utility;
@@ -10,7 +9,7 @@ namespace TDS_Client.Manager.Lobby
     {
         private static TDSTimer _timer;
 
-        public static void SetToMapCenter(Vector3 mapcenter)
+        public static void SetToMapCenter(Position3DDto mapcenter)
         {
             var cam = CameraManager.BetweenRoundsCam;
             cam.PointCamAtCoord(mapcenter.X, mapcenter.Y, mapcenter.Z);
