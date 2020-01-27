@@ -22,6 +22,7 @@ namespace TDS_Client.Manager.Lobby
                         FloatingDamageInfo.UpdateAllPositions();
                         FiringMode.Start();
                         Browser.Angular.Main.ToggleRoundStats(true);
+                        TickManager.Add(DeathmatchInfo.OnTick);
                     }
                 }  
                 else
@@ -32,6 +33,7 @@ namespace TDS_Client.Manager.Lobby
                         FloatingDamageInfo.RemoveAll();
                         FiringMode.Stop();
                         Browser.Angular.Main.ToggleRoundStats(false);
+                        TickManager.Remove(DeathmatchInfo.OnTick);
                     }
                 }
                 _inFight = value;

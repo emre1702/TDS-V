@@ -77,7 +77,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
             Add(DToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
             Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
-            Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
+            //Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
             Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
             Add(DToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
             Add(DToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
@@ -204,7 +204,7 @@ namespace TDS_Client.Manager.Event
             MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
             var maplimit = Serializer.FromServer<List<Position3DDto>>((string)args[1]);
-            LobbyCam.SetToMapCenter(Serializer.FromServer<Vector3>((string)args[2]));
+            LobbyCam.SetToMapCenter(Serializer.FromServer<Position3DDto>((string)args[2]));
             Round.InFight = false;
             if (maplimit.Count > 0)
                 MapLimitManager.Load(maplimit);
@@ -446,14 +446,14 @@ namespace TDS_Client.Manager.Event
             DiscordManager.Update();
         }
 
-        private void OnPlayerWeaponChangeMethod(object[] args)
+        /*private void OnPlayerWeaponChangeMethod(object[] args)
         {
-            uint weaponHash = Convert.ToUInt32(args[0]);
+            uint weaponHash = (uint)(int)args[0];
             //int damage = Convert.ToInt32(args[1]);
             CustomEventManager.SetNewWeapon(weaponHash);
             //Damagesys.CurrentWeaponDamage = damage;
 
-        }
+        }*/
 
         private void OnAmountInFightSyncMethod(object[] args)
         {

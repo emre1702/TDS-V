@@ -27,6 +27,11 @@ namespace TDS_Client.Manager.Event
 
         private static uint _lastWeaponHash = 0;
 
+        public static void CheckOnTick()
+        {
+            CheckNewWeapon();
+        }
+
         public static void SetLobbyLeave(SyncedLobbySettingsDto settings)
         {
             //OnPlayerLoggedInBefore?.Invoke(player);
@@ -54,18 +59,20 @@ namespace TDS_Client.Manager.Event
             OnRoundEnd?.Invoke();
         }
 
-        public static void SetNewWeapon(uint newWeapon)
-        {
-            if (newWeapon == _lastWeaponHash)
-                return;
-
-            OnWeaponChange?.Invoke(_lastWeaponHash, newWeapon);
-            _lastWeaponHash = newWeapon;
-        }
-
         public static void SetNewLanguage(ILanguage newLang)
         {
             OnLanguageChanged?.Invoke(newLang);
+        }
+
+
+        private static void CheckNewWeapon()
+        {
+            var currentWeapon = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
+            if (currentWeapon != _lastWeaponHash)
+            {
+                OnWeaponChange?.Invoke(_lastWeaponHash, currentWeapon);
+                _lastWeaponHash = currentWeapon;
+            }
         }
     }
 }

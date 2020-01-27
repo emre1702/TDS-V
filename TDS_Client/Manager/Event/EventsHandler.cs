@@ -1,6 +1,7 @@
 ﻿using RAGE.Game;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Account;
+using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using Script = RAGE.Events.Script;
@@ -24,6 +25,7 @@ namespace TDS_Client.Manager.Event
             ClientUtils.Init();
             Dx.RefreshResolution();
             CameraManager.Init();
+            DeathmatchInfo.Init();
             Streaming.RequestNamedPtfxAsset("scr_xs_celebration");
             Misc.SetWeatherTypeNowPersist("CLEAR");
             Misc.SetWind(0);
