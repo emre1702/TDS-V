@@ -4,6 +4,7 @@ using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Enum.Userpanel;
 
 namespace TDS_Server_DB.Migrations
@@ -13,9 +14,11 @@ namespace TDS_Server_DB.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:Enum:e_challenge_frequency", "hourly,daily,weekly,monthly,yearly,forever")
+                .Annotation("Npgsql:Enum:e_challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .Annotation("Npgsql:Enum:e_freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .Annotation("Npgsql:Enum:e_language", "german,english")
-                .Annotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,gangwar_lobby")
+                .Annotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
                 .Annotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby__join,lobby__leave,lobby__kick,lobby__ban,goto,remove_map,voice_mute")
                 .Annotation("Npgsql:Enum:e_map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .Annotation("Npgsql:Enum:e_player_relation", "none,block,friend")
@@ -25,7 +28,8 @@ namespace TDS_Server_DB.Migrations
                 .Annotation("Npgsql:Enum:e_userpanel_admin_question_answer_type", "text,check,number")
                 .Annotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .Annotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
-                .Annotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust");
+                .Annotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust,minitank,retinue2,outlaw,yosemite2,stryder,jb7002,sultan2,everon,sugoi,zhaba,formula,formula2,rebla,vagrant,furia,vstr,komoda,asbo,kanjo,imorgon")
+                .Annotation("Npgsql:PostgresExtension:tsm_system_rows", ",,");
 
             migrationBuilder.CreateSequence(
                 name: "EntityFrameworkHiLoSequence",
@@ -43,6 +47,56 @@ namespace TDS_Server_DB.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_admin_levels", x => x.level);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "announcements",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    created = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    text = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_announcements", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "bonusbot_settings",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    guild_id = table.Column<decimal>(nullable: true),
+                    admin_applications_channel_id = table.Column<decimal>(nullable: true),
+                    server_infos_channel_id = table.Column<decimal>(nullable: true),
+                    support_requests_channel_id = table.Column<decimal>(nullable: true),
+                    actions_info_channel_id = table.Column<decimal>(nullable: true),
+                    bans_info_channel_id = table.Column<decimal>(nullable: true),
+                    error_logs_channel_id = table.Column<decimal>(nullable: true),
+                    send_private_message_on_ban = table.Column<bool>(nullable: false),
+                    send_private_message_on_offline_message = table.Column<bool>(nullable: false),
+                    refresh_server_stats_frequency_sec = table.Column<int>(nullable: false, defaultValue: 60)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bonusbot_settings", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "challenge_settings",
+                columns: table => new
+                {
+                    type = table.Column<EChallengeType>(nullable: false),
+                    frequency = table.Column<EChallengeFrequency>(nullable: false),
+                    min_number = table.Column<int>(nullable: false, defaultValue: 1),
+                    max_number = table.Column<int>(nullable: false, defaultValue: 1)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_challenge_settings", x => new { x.type, x.frequency });
                 });
 
             migrationBuilder.CreateTable(
@@ -221,8 +275,8 @@ namespace TDS_Server_DB.Migrations
                     multiplier_ranking_damage = table.Column<float>(nullable: false, defaultValue: 1f),
                     close_application_after_days = table.Column<int>(nullable: false, defaultValue: 7),
                     delete_application_after_days = table.Column<int>(nullable: false, defaultValue: 14),
-                    gangwar_preparation_time_ms = table.Column<long>(nullable: false, defaultValue: 180000L),
-                    gangwar_action_time_ms = table.Column<long>(nullable: false, defaultValue: 900000L),
+                    gangwar_preparation_time = table.Column<long>(nullable: false, defaultValue: 180L),
+                    gangwar_action_time = table.Column<long>(nullable: false, defaultValue: 900L),
                     delete_requests_days_after_close = table.Column<long>(nullable: false, defaultValue: 30L),
                     delete_offline_messages_after_days = table.Column<int>(nullable: false, defaultValue: 60),
                     min_players_online_for_gangwar = table.Column<int>(nullable: false, defaultValue: 3),
@@ -230,11 +284,14 @@ namespace TDS_Server_DB.Migrations
                     amount_players_allowed_in_gangwar_team_before_count_check = table.Column<int>(nullable: false, defaultValue: 3),
                     gangwar_attacker_can_be_more = table.Column<bool>(nullable: false, defaultValue: true),
                     gangwar_owner_can_be_more = table.Column<bool>(nullable: false, defaultValue: false),
+                    gangwar_target_radius = table.Column<double>(nullable: false, defaultValue: 5.0),
+                    gangwar_target_without_attacker_max_seconds = table.Column<int>(nullable: false, defaultValue: 5),
                     reduce_maps_bought_counter_after_minute = table.Column<int>(nullable: false, defaultValue: 60),
                     map_buy_base_price = table.Column<int>(nullable: false, defaultValue: 1000),
                     map_buy_counter_multiplicator = table.Column<float>(nullable: false, defaultValue: 1f),
                     username_change_cost = table.Column<int>(nullable: false, defaultValue: 20000),
-                    username_change_cooldown_days = table.Column<int>(nullable: false, defaultValue: 60)
+                    username_change_cooldown_days = table.Column<int>(nullable: false, defaultValue: 60),
+                    amount_weekly_challenges = table.Column<int>(nullable: false, defaultValue: 3)
                 },
                 constraints: table =>
                 {
@@ -529,6 +586,27 @@ namespace TDS_Server_DB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "player_challenges",
+                columns: table => new
+                {
+                    player_id = table.Column<int>(nullable: false),
+                    challenge = table.Column<EChallengeType>(nullable: false),
+                    frequency = table.Column<EChallengeFrequency>(nullable: false),
+                    amount = table.Column<int>(nullable: false, defaultValue: 1),
+                    current_amount = table.Column<int>(nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_player_challenges", x => new { x.player_id, x.challenge, x.frequency });
+                    table.ForeignKey(
+                        name: "FK_player_challenges_players_player_id",
+                        column: x => x.player_id,
+                        principalTable: "players",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "player_clothes",
                 columns: table => new
                 {
@@ -579,8 +657,9 @@ namespace TDS_Server_DB.Migrations
                     language = table.Column<ELanguage>(nullable: false, defaultValue: ELanguage.English),
                     allow_data_transfer = table.Column<bool>(nullable: false),
                     show_confetti_at_ranking = table.Column<bool>(nullable: false),
-                    time_zone = table.Column<string>(nullable: true, defaultValue: "UTC"),
-                    discord_identity = table.Column<string>(nullable: true),
+                    timezone = table.Column<string>(nullable: true, defaultValue: "UTC"),
+                    date_time_format = table.Column<string>(nullable: true, defaultValue: "yyyy'-'MM'-'dd HH':'mm':'ss"),
+                    discord_user_id = table.Column<decimal>(nullable: false, defaultValue: 0m),
                     hitsound = table.Column<bool>(nullable: false),
                     bloodscreen = table.Column<bool>(nullable: false),
                     floating_damage_info = table.Column<bool>(nullable: false),
@@ -612,7 +691,8 @@ namespace TDS_Server_DB.Migrations
                     logged_in = table.Column<bool>(nullable: false),
                     last_login_timestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
                     maps_bought_counter = table.Column<int>(nullable: false, defaultValue: 1),
-                    last_maps_bought_counter_reduce = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())")
+                    last_maps_bought_counter_reduce = table.Column<DateTime>(nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    last_free_username_change = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1174,20 +1254,49 @@ namespace TDS_Server_DB.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "bonusbot_settings",
+                columns: new[] { "id", "actions_info_channel_id", "admin_applications_channel_id", "bans_info_channel_id", "error_logs_channel_id", "guild_id", "send_private_message_on_ban", "send_private_message_on_offline_message", "server_infos_channel_id", "support_requests_channel_id" },
+                values: new object[] { 1, 659088752890871818m, 659072893526736896m, 659705941771550730m, 659073884796092426m, 320309924175282177m, true, true, 659073271911809037m, 659073029896142855m });
+
+            migrationBuilder.InsertData(
+                table: "challenge_settings",
+                columns: new[] { "type", "frequency", "max_number", "min_number" },
+                values: new object[,]
+                {
+                    { EChallengeType.WriteHelpfulIssue, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.RoundPlayed, EChallengeFrequency.Weekly, 100, 50 },
+                    { EChallengeType.ReviewMaps, EChallengeFrequency.Forever, 10, 10 },
+                    { EChallengeType.ReadTheRules, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.ReadTheFAQ, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.PlayTime, EChallengeFrequency.Weekly, 1500, 300 },
+                    { EChallengeType.Killstreak, EChallengeFrequency.Weekly, 7, 3 },
+                    { EChallengeType.JoinDiscordServer, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.Kills, EChallengeFrequency.Weekly, 150, 75 },
+                    { EChallengeType.CreatorOfAcceptedMap, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.ChangeSettings, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.BuyMaps, EChallengeFrequency.Forever, 500, 500 },
+                    { EChallengeType.BombPlant, EChallengeFrequency.Weekly, 10, 5 },
+                    { EChallengeType.BombDefuse, EChallengeFrequency.Weekly, 10, 5 },
+                    { EChallengeType.BeHelpfulEnough, EChallengeFrequency.Forever, 1, 1 },
+                    { EChallengeType.Assists, EChallengeFrequency.Weekly, 100, 50 },
+                    { EChallengeType.Damage, EChallengeFrequency.Weekly, 100000, 20000 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "commands",
                 columns: new[] { "id", "command", "lobby_owner_can_use", "needed_admin_level", "needed_donation", "vip_can_use" },
                 values: new object[,]
                 {
+                    { (short)18, "PrivateMessage", false, null, null, false },
                     { (short)25, "LobbyInvitePlayer", false, null, null, false },
+                    { (short)24, "GiveMoney", false, null, null, false },
                     { (short)21, "UnblockUser", false, null, null, false },
                     { (short)20, "BlockUser", false, null, null, false },
                     { (short)19, "UserId", false, null, null, false },
-                    { (short)18, "PrivateMessage", false, null, null, false },
                     { (short)17, "OpenPrivateChat", false, null, null, false },
-                    { (short)24, "GiveMoney", false, null, null, false },
+                    { (short)13, "TeamChat", false, null, null, false },
                     { (short)15, "Position", false, null, null, false },
                     { (short)14, "PrivateChat", false, null, null, false },
-                    { (short)13, "TeamChat", false, null, null, false },
                     { (short)12, "GlobalChat", false, null, null, false },
                     { (short)11, "Suicide", false, null, null, false },
                     { (short)10, "LobbyLeave", false, null, null, false },
@@ -1214,11 +1323,11 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "vehicle_type", "note", "vehicle_hash" },
                 values: new object[,]
                 {
-                    { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 },
+                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 },
                     { EFreeroamVehicleType.Plane, null, VehicleHash.Pyro },
                     { EFreeroamVehicleType.Helicopter, null, VehicleHash.Akula },
                     { EFreeroamVehicleType.Car, null, VehicleHash.Pfister811 },
-                    { EFreeroamVehicleType.Boat, null, VehicleHash.Speeder2 }
+                    { EFreeroamVehicleType.Bike, null, VehicleHash.Hakuchou2 }
                 });
 
             migrationBuilder.InsertData(
@@ -1295,7 +1404,7 @@ namespace TDS_Server_DB.Migrations
                     { EWeaponHash.ProximityMine, (short)100, 1f, EWeaponType.ThrownWeapon },
                     { EWeaponHash.Musket, (short)165, 1f, EWeaponType.Shotgun },
                     { EWeaponHash.NightVision, (short)0, 1f, EWeaponType.Rest },
-                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun },
+                    { EWeaponHash.MicroSMG, (short)21, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.Hammer, (short)40, 1f, EWeaponType.Melee },
                     { EWeaponHash.GrenadeLauncherSmoke, (short)0, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.Flare, (short)0, 1f, EWeaponType.ThrownWeapon },
@@ -1333,13 +1442,13 @@ namespace TDS_Server_DB.Migrations
                     { EWeaponHash.Crowbar, (short)40, 1f, EWeaponType.Melee },
                     { EWeaponHash.CarbineRifle, (short)32, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.CombatMGMk2, (short)28, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.MicroSMG, (short)21, 1f, EWeaponType.MachineGun },
+                    { EWeaponHash.CombatMG, (short)28, 1f, EWeaponType.MachineGun },
                     { EWeaponHash.Firework, (short)100, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.BullpupRifle, (short)32, 1f, EWeaponType.AssaultRifle },
                     { EWeaponHash.SawnOffShotgun, (short)160, 1f, EWeaponType.Shotgun },
                     { EWeaponHash.Railgun, (short)50, 1f, EWeaponType.HeavyWeapon },
                     { EWeaponHash.Dagger, (short)45, 1f, EWeaponType.Melee },
-                    { EWeaponHash.CombatMG, (short)28, 1f, EWeaponType.MachineGun }
+                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun }
                 });
 
             migrationBuilder.InsertData(
@@ -1367,7 +1476,7 @@ namespace TDS_Server_DB.Migrations
                     { "ClosePM", (short)16 },
                     { "CPC", (short)16 },
                     { "Pos", (short)15 },
-                    { "CurrentPosition", (short)15 },
+                    { "GetPos", (short)15 },
                     { "StopPrivateSay", (short)17 },
                     { "CurrentPos", (short)15 },
                     { "Coordinates", (short)15 },
@@ -1396,23 +1505,23 @@ namespace TDS_Server_DB.Migrations
                     { "MSG", (short)18 },
                     { "Block", (short)20 },
                     { "TChat", (short)13 },
-                    { "GetPos", (short)15 },
-                    { "Leave", (short)10 },
-                    { "Death", (short)11 },
+                    { "CurrentPosition", (short)15 },
+                    { "GChat", (short)12 },
                     { "Dead", (short)11 },
-                    { "LeaveLobby", (short)10 },
+                    { "Kill", (short)11 },
+                    { "Leave", (short)10 },
                     { "AllChat", (short)12 },
                     { "AllSay", (short)12 },
                     { "G", (short)12 },
+                    { "Death", (short)11 },
                     { "Die", (short)11 },
-                    { "GChat", (short)12 },
-                    { "GlobalSay", (short)12 },
-                    { "PublicChat", (short)12 },
                     { "Back", (short)10 },
-                    { "Mainmenu", (short)10 },
-                    { "PublicSay", (short)12 },
                     { "Global", (short)12 },
-                    { "Kill", (short)11 }
+                    { "GlobalSay", (short)12 },
+                    { "Mainmenu", (short)10 },
+                    { "LeaveLobby", (short)10 },
+                    { "PublicChat", (short)12 },
+                    { "PublicSay", (short)12 }
                 });
 
             migrationBuilder.InsertData(
@@ -1421,8 +1530,9 @@ namespace TDS_Server_DB.Migrations
                 values: new object[,]
                 {
                     { (short)12, ELanguage.English, "Global chat which can be read everywhere." },
-                    { (short)18, ELanguage.German, "Private Nachricht an einen bestimmten Spieler." },
                     { (short)19, ELanguage.German, "Gibt dir deine User-Id aus." },
+                    { (short)18, ELanguage.German, "Private Nachricht an einen bestimmten Spieler." },
+                    { (short)12, ELanguage.German, "Globaler Chat, welcher überall gelesen werden kann." },
                     { (short)21, ELanguage.German, "Entfernt das Ziel aus der Blockliste." },
                     { (short)20, ELanguage.German, "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
                     { (short)20, ELanguage.English, "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
@@ -1430,24 +1540,23 @@ namespace TDS_Server_DB.Migrations
                     { (short)24, ELanguage.German, "Gibt einem Spieler Geld." },
                     { (short)24, ELanguage.English, "Gives money to a player." },
                     { (short)25, ELanguage.German, "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
-                    { (short)25, ELanguage.English, "Invite a player to your lobby (if possible)." },
+                    { (short)25, ELanguage.English, "Invites a player to your lobby (if possible)." },
                     { (short)19, ELanguage.English, "Outputs your user-id to yourself." },
-                    { (short)12, ELanguage.German, "Globaler Chat, welcher überall gelesen werden kann." },
+                    { (short)17, ELanguage.English, "Sends a private chat request or accepts the request of another user." },
                     { (short)18, ELanguage.English, "Private message to a specific player." },
-                    { (short)17, ELanguage.German, "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
+                    { (short)10, ELanguage.German, "Verlässt die jetzige Lobby." },
                     { (short)13, ELanguage.German, "Sendet die Nachricht nur zum eigenen Team." },
                     { (short)13, ELanguage.English, "Sends the message to the current team only." },
                     { (short)14, ELanguage.German, "Gibt die Position des Spielers aus." },
-                    { (short)17, ELanguage.English, "Sends a private chat request or accepts the request of another user." },
+                    { (short)17, ELanguage.German, "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
                     { (short)11, ELanguage.English, "Kills the user (suicide)." },
                     { (short)11, ELanguage.German, "Tötet den Nutzer (Selbstmord)." },
                     { (short)15, ELanguage.German, "Sendet eine Nachricht im Privatchat." },
                     { (short)14, ELanguage.English, "Outputs the position of the player." },
-                    { (short)10, ELanguage.German, "Verlässt die jetzige Lobby." },
                     { (short)15, ELanguage.English, "Sends a message in private chat." },
-                    { (short)16, ELanguage.German, "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
                     { (short)10, ELanguage.English, "Leaves the current lobby." },
-                    { (short)16, ELanguage.English, "Closes a private chat or withdraws a private chat request." }
+                    { (short)16, ELanguage.English, "Closes a private chat or withdraws a private chat request." },
+                    { (short)16, ELanguage.German, "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." }
                 });
 
             migrationBuilder.InsertData(
@@ -1456,6 +1565,7 @@ namespace TDS_Server_DB.Migrations
                 values: new object[,]
                 {
                     { (short)22, "LoadMapOfOthers", false, (short)1, null, true },
+                    { (short)26, "Test", false, (short)3, null, false },
                     { (short)23, "VoiceMute", false, (short)1, null, true },
                     { (short)1, "AdminSay", false, (short)1, null, false },
                     { (short)2, "AdminChat", false, (short)1, null, true },
@@ -1515,20 +1625,19 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "alias", "command" },
                 values: new object[,]
                 {
-                    { "Next", (short)9 },
-                    { "KickLobby", (short)7 },
+                    { "Skip", (short)9 },
+                    { "Permaban", (short)3 },
+                    { "PBan", (short)3 },
                     { "PermaMute", (short)8 },
                     { "PMute", (short)8 },
                     { "RMute", (short)8 },
                     { "TimeMute", (short)8 },
                     { "TMute", (short)8 },
+                    { "EndRound", (short)9 },
+                    { "Next", (short)9 },
                     { "MuteVoice", (short)23 },
                     { "VoiceTMute", (short)23 },
-                    { "EndRound", (short)9 },
                     { "VoiceTimeMute", (short)23 },
-                    { "TMuteVoice", (short)23 },
-                    { "Skip", (short)9 },
-                    { "VoicePMute", (short)23 },
                     { "PermaVoiceMute", (short)23 },
                     { "PVoiceMute", (short)23 },
                     { "RVoiceMute", (short)23 },
@@ -1538,32 +1647,33 @@ namespace TDS_Server_DB.Migrations
                     { "PMuteVoice", (short)23 },
                     { "RMuteVoice", (short)23 },
                     { "TimeMuteVoice", (short)23 },
-                    { "VoiceRMute", (short)23 },
-                    { "Permaban", (short)3 },
-                    { "PBan", (short)3 },
+                    { "TMuteVoice", (short)23 },
+                    { "VoicePermaMute", (short)23 },
+                    { "VoicePMute", (short)23 },
                     { "RBan", (short)3 },
+                    { "KickLobby", (short)7 },
+                    { "BanLobby", (short)6 },
                     { "XYZ", (short)4 },
                     { "WarpToPlayer", (short)4 },
                     { "WarpTo", (short)4 },
                     { "Warp", (short)4 },
                     { "GotoXYZ", (short)4 },
-                    { "GotoPlayer", (short)4 },
                     { "Announce", (short)1 },
                     { "Announcement", (short)1 },
                     { "ASay", (short)1 },
                     { "OChat", (short)1 },
-                    { "BanLobby", (short)6 },
                     { "OSay", (short)1 },
-                    { "UnBan", (short)3 },
+                    { "TBan", (short)3 },
+                    { "GotoPlayer", (short)4 },
                     { "AChat", (short)2 },
                     { "ChatAdmin", (short)2 },
                     { "InternChat", (short)2 },
                     { "WriteAdmin", (short)2 },
+                    { "UnBan", (short)3 },
+                    { "RKick", (short)5 },
                     { "UBan", (short)3 },
                     { "Timeban", (short)3 },
-                    { "RKick", (short)5 },
-                    { "TBan", (short)3 },
-                    { "VoicePermaMute", (short)23 }
+                    { "VoiceRMute", (short)23 }
                 });
 
             migrationBuilder.InsertData(
@@ -1571,11 +1681,13 @@ namespace TDS_Server_DB.Migrations
                 columns: new[] { "id", "language", "info" },
                 values: new object[,]
                 {
-                    { (short)3, ELanguage.English, "Bans a player out of the server." },
                     { (short)23, ELanguage.German, "Mutet einen Spieler im Voice-Chat." },
                     { (short)23, ELanguage.English, "Mutes a player in the voice-chat." },
                     { (short)3, ELanguage.German, "Bannt einen Spieler vom gesamten Server." },
+                    { (short)4, ELanguage.German, "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
                     { (short)4, ELanguage.English, "Warps the user to another player (maybe in his vehicle) or to the defined coordinates." },
+                    { (short)3, ELanguage.English, "Bans a player out of the server." },
+                    { (short)26, ELanguage.English, "Command for quick testing of codes." },
                     { (short)9, ELanguage.German, "Beendet die jetzige Runde in der jeweiligen Lobby." },
                     { (short)1, ELanguage.German, "Schreibt öffentlich als ein Admin." },
                     { (short)1, ELanguage.English, "Writes public as an admin." },
@@ -1589,19 +1701,24 @@ namespace TDS_Server_DB.Migrations
                     { (short)7, ELanguage.English, "Kicks a player out of the lobby in which the command was used." },
                     { (short)8, ELanguage.German, "Mutet einen Spieler im normalen Chat." },
                     { (short)8, ELanguage.English, "Mutes a player in the normal chat." },
-                    { (short)4, ELanguage.German, "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
+                    { (short)26, ELanguage.German, "Befehl zum schnellen Testen von Codes." },
                     { (short)6, ELanguage.German, "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." }
                 });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
                 columns: new[] { "id", "amount_lifes", "is_official", "is_temporary", "name", "owner_id", "password", "spawn_again_after_death_ms", "type" },
-                values: new object[,]
-                {
-                    { -3, (short)1, true, false, "MapCreateLobby", -1, null, 400, ELobbyType.MapCreateLobby },
-                    { -2, (short)1, true, false, "GangLobby", -1, null, 400, ELobbyType.GangLobby },
-                    { -1, (short)1, true, false, "Arena", -1, null, 400, ELobbyType.Arena }
-                });
+                values: new object[] { -3, (short)1, true, false, "MapCreateLobby", -1, null, 400, ELobbyType.MapCreateLobby });
+
+            migrationBuilder.InsertData(
+                table: "lobbies",
+                columns: new[] { "id", "amount_lifes", "is_official", "is_temporary", "name", "owner_id", "password", "spawn_again_after_death_ms", "type" },
+                values: new object[] { -2, (short)1, true, false, "GangLobby", -1, null, 400, ELobbyType.GangLobby });
+
+            migrationBuilder.InsertData(
+                table: "lobbies",
+                columns: new[] { "id", "amount_lifes", "is_official", "is_temporary", "name", "owner_id", "password", "spawn_again_after_death_ms", "type" },
+                values: new object[] { -1, (short)1, true, false, "Arena", -1, null, 400, ELobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "lobbies",
@@ -1611,13 +1728,22 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "maps",
                 columns: new[] { "id", "creator_id", "name" },
-                values: new object[,]
-                {
-                    { -1, -1, "All" },
-                    { -2, -1, "All Normals" },
-                    { -3, -1, "All Bombs" },
-                    { -4, -1, "All Sniper" }
-                });
+                values: new object[] { -1, -1, "All" });
+
+            migrationBuilder.InsertData(
+                table: "maps",
+                columns: new[] { "id", "creator_id", "name" },
+                values: new object[] { -2, -1, "All Normals" });
+
+            migrationBuilder.InsertData(
+                table: "maps",
+                columns: new[] { "id", "creator_id", "name" },
+                values: new object[] { -3, -1, "All Bombs" });
+
+            migrationBuilder.InsertData(
+                table: "maps",
+                columns: new[] { "id", "creator_id", "name" },
+                values: new object[] { -4, -1, "All Sniper" });
 
             migrationBuilder.InsertData(
                 table: "killingspree_rewards",
@@ -1758,11 +1884,12 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "teams",
                 columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name" },
-                values: new object[,]
-                {
-                    { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None" },
-                    { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" }
-                });
+                values: new object[] { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None" });
+
+            migrationBuilder.InsertData(
+                table: "teams",
+                columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name" },
+                values: new object[] { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" });
 
             migrationBuilder.InsertData(
                 table: "teams",
@@ -1970,10 +2097,19 @@ namespace TDS_Server_DB.Migrations
                 name: "admin_level_names");
 
             migrationBuilder.DropTable(
+                name: "announcements");
+
+            migrationBuilder.DropTable(
                 name: "application_answers");
 
             migrationBuilder.DropTable(
                 name: "application_invitations");
+
+            migrationBuilder.DropTable(
+                name: "bonusbot_settings");
+
+            migrationBuilder.DropTable(
+                name: "challenge_settings");
 
             migrationBuilder.DropTable(
                 name: "command_alias");
@@ -2034,6 +2170,9 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "player_bans");
+
+            migrationBuilder.DropTable(
+                name: "player_challenges");
 
             migrationBuilder.DropTable(
                 name: "player_clothes");

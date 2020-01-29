@@ -8,22 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Enum.Userpanel;
 using TDS_Server_DB.Entity;
 
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    [Migration("20191214115933_PlayerSettings_Add_DateTimeFormat")]
-    partial class PlayerSettings_Add_DateTimeFormat
+    [Migration("20200129215441_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:Enum:e_challenge_frequency", "hourly,daily,weekly,monthly,yearly,forever")
+                .HasAnnotation("Npgsql:Enum:e_challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .HasAnnotation("Npgsql:Enum:e_freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .HasAnnotation("Npgsql:Enum:e_language", "german,english")
-                .HasAnnotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,gangwar_lobby")
+                .HasAnnotation("Npgsql:Enum:e_lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
                 .HasAnnotation("Npgsql:Enum:e_log_type", "kick,ban,mute,next,login,register,lobby__join,lobby__leave,lobby__kick,lobby__ban,goto,remove_map,voice_mute")
                 .HasAnnotation("Npgsql:Enum:e_map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .HasAnnotation("Npgsql:Enum:e_player_relation", "none,block,friend")
@@ -33,9 +36,10 @@ namespace TDS_Server_DB.Migrations
                 .HasAnnotation("Npgsql:Enum:e_userpanel_admin_question_answer_type", "text,check,number")
                 .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .HasAnnotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
-                .HasAnnotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust")
+                .HasAnnotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust,minitank,retinue2,outlaw,yosemite2,stryder,jb7002,sultan2,everon,sugoi,zhaba,formula,formula2,rebla,vagrant,furia,vstr,komoda,asbo,kanjo,imorgon")
+                .HasAnnotation("Npgsql:PostgresExtension:tsm_system_rows", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("Relational:Sequence:.EntityFrameworkHiLoSequence", "'EntityFrameworkHiLoSequence', '', '1', '10', '', '', 'Int64', 'False'");
 
@@ -161,6 +165,256 @@ namespace TDS_Server_DB.Migrations
                             ColorG = (short)50,
                             ColorR = (short)222
                         });
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Bonusbot.BonusbotSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<decimal?>("ActionsInfoChannelId")
+                        .HasColumnName("actions_info_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("AdminApplicationsChannelId")
+                        .HasColumnName("admin_applications_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("BansInfoChannelId")
+                        .HasColumnName("bans_info_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("ErrorLogsChannelId")
+                        .HasColumnName("error_logs_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("GuildId")
+                        .HasColumnName("guild_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<int>("RefreshServerStatsFrequencySec")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("refresh_server_stats_frequency_sec")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(60);
+
+                    b.Property<bool>("SendPrivateMessageOnBan")
+                        .HasColumnName("send_private_message_on_ban")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SendPrivateMessageOnOfflineMessage")
+                        .HasColumnName("send_private_message_on_offline_message")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal?>("ServerInfosChannelId")
+                        .HasColumnName("server_infos_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("SupportRequestsChannelId")
+                        .HasColumnName("support_requests_channel_id")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("bonusbot_settings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActionsInfoChannelId = 659088752890871818m,
+                            AdminApplicationsChannelId = 659072893526736896m,
+                            BansInfoChannelId = 659705941771550730m,
+                            ErrorLogsChannelId = 659073884796092426m,
+                            GuildId = 320309924175282177m,
+                            RefreshServerStatsFrequencySec = 0,
+                            SendPrivateMessageOnBan = true,
+                            SendPrivateMessageOnOfflineMessage = true,
+                            ServerInfosChannelId = 659073271911809037m,
+                            SupportRequestsChannelId = 659073029896142855m
+                        });
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Challenge.ChallengeSettings", b =>
+                {
+                    b.Property<EChallengeType>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("e_challenge_type");
+
+                    b.Property<EChallengeFrequency>("Frequency")
+                        .HasColumnName("frequency")
+                        .HasColumnType("e_challenge_frequency");
+
+                    b.Property<int>("MaxNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("max_number")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("MinNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("min_number")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.HasKey("Type", "Frequency");
+
+                    b.ToTable("challenge_settings");
+
+                    b.HasData(
+                        new
+                        {
+                            Type = EChallengeType.Assists,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 100,
+                            MinNumber = 50
+                        },
+                        new
+                        {
+                            Type = EChallengeType.BeHelpfulEnough,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.BombDefuse,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 10,
+                            MinNumber = 5
+                        },
+                        new
+                        {
+                            Type = EChallengeType.BombPlant,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 10,
+                            MinNumber = 5
+                        },
+                        new
+                        {
+                            Type = EChallengeType.BuyMaps,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 500,
+                            MinNumber = 500
+                        },
+                        new
+                        {
+                            Type = EChallengeType.ChangeSettings,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.CreatorOfAcceptedMap,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.Damage,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 100000,
+                            MinNumber = 20000
+                        },
+                        new
+                        {
+                            Type = EChallengeType.JoinDiscordServer,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.Kills,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 150,
+                            MinNumber = 75
+                        },
+                        new
+                        {
+                            Type = EChallengeType.Killstreak,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 7,
+                            MinNumber = 3
+                        },
+                        new
+                        {
+                            Type = EChallengeType.PlayTime,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 1500,
+                            MinNumber = 300
+                        },
+                        new
+                        {
+                            Type = EChallengeType.ReadTheFAQ,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.ReadTheRules,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        },
+                        new
+                        {
+                            Type = EChallengeType.ReviewMaps,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 10,
+                            MinNumber = 10
+                        },
+                        new
+                        {
+                            Type = EChallengeType.RoundPlayed,
+                            Frequency = EChallengeFrequency.Weekly,
+                            MaxNumber = 100,
+                            MinNumber = 50
+                        },
+                        new
+                        {
+                            Type = EChallengeType.WriteHelpfulIssue,
+                            Frequency = EChallengeFrequency.Forever,
+                            MaxNumber = 1,
+                            MinNumber = 1
+                        });
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Challenge.PlayerChallenges", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnName("player_id")
+                        .HasColumnType("integer");
+
+                    b.Property<EChallengeType>("Challenge")
+                        .HasColumnName("challenge")
+                        .HasColumnType("e_challenge_type");
+
+                    b.Property<EChallengeFrequency>("Frequency")
+                        .HasColumnName("frequency")
+                        .HasColumnType("e_challenge_frequency");
+
+                    b.Property<int>("Amount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("amount")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("CurrentAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("current_amount")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("PlayerId", "Challenge", "Frequency");
+
+                    b.ToTable("player_challenges");
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Command.CommandAlias", b =>
@@ -990,7 +1244,19 @@ namespace TDS_Server_DB.Migrations
                         {
                             Id = (short)25,
                             Language = ELanguage.English,
-                            Info = "Invite a player to your lobby (if possible)."
+                            Info = "Invites a player to your lobby (if possible)."
+                        },
+                        new
+                        {
+                            Id = (short)26,
+                            Language = ELanguage.German,
+                            Info = "Befehl zum schnellen Testen von Codes."
+                        },
+                        new
+                        {
+                            Id = (short)26,
+                            Language = ELanguage.English,
+                            Info = "Command for quick testing of codes."
                         });
                 });
 
@@ -1216,10 +1482,18 @@ namespace TDS_Server_DB.Migrations
                             Command = "LobbyInvitePlayer",
                             LobbyOwnerCanUse = false,
                             VipCanUse = false
+                        },
+                        new
+                        {
+                            Id = (short)26,
+                            Command = "Test",
+                            LobbyOwnerCanUse = false,
+                            NeededAdminLevel = (short)3,
+                            VipCanUse = false
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangMembers", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangMembers", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnName("player_id")
@@ -1258,7 +1532,7 @@ namespace TDS_Server_DB.Migrations
                     b.ToTable("gang_members");
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRankPermissions", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangRankPermissions", b =>
                 {
                     b.Property<int>("GangId")
                         .HasColumnName("gang_id")
@@ -1300,7 +1574,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRanks", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangRanks", b =>
                 {
                     b.Property<int>("GangId")
                         .HasColumnName("gang_id")
@@ -1327,7 +1601,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.Gangs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1374,7 +1648,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangwarAreas", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangwarAreas", b =>
                 {
                     b.Property<int>("MapId")
                         .HasColumnName("map_id")
@@ -1409,7 +1683,7 @@ namespace TDS_Server_DB.Migrations
                     b.ToTable("gangwar_areas");
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.Lobbies", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.Lobbies", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1586,7 +1860,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyKillingspreeRewards", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnName("lobby_id")
@@ -1639,7 +1913,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyMapSettings", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyMapSettings", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnName("lobby_id")
@@ -1668,7 +1942,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyMaps", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyMaps", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnName("lobby_id")
@@ -1692,7 +1966,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyRewards", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyRewards", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnName("lobby_id")
@@ -1731,7 +2005,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyRoundSettings", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyRoundSettings", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnName("lobby_id")
@@ -1793,7 +2067,7 @@ namespace TDS_Server_DB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyWeapons", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
                     b.Property<EWeaponHash>("Hash")
                         .HasColumnName("hash")
@@ -2791,9 +3065,11 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
 
-                    b.Property<string>("DiscordIdentity")
-                        .HasColumnName("discord_identity")
-                        .HasColumnType("text");
+                    b.Property<decimal>("DiscordUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("discord_user_id")
+                        .HasColumnType("numeric(20,0)")
+                        .HasDefaultValue(0m);
 
                     b.Property<bool>("FloatingDamageInfo")
                         .HasColumnName("floating_damage_info")
@@ -2997,6 +3273,30 @@ namespace TDS_Server_DB.Migrations
                             SCId = 0m,
                             SCName = "System"
                         });
+                });
+
+            modelBuilder.Entity("TDS_Server_DB.Entity.Rest.Announcements", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created")
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnName("text")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("announcements");
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.FreeroamDefaultVehicle", b =>
@@ -3991,6 +4291,12 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(3);
 
+                    b.Property<int>("AmountWeeklyChallenges")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("amount_weekly_challenges")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(3);
+
                     b.Property<float>("ArenaNewMapProbabilityPercent")
                         .HasColumnName("arena_new_map_probability_percent")
                         .HasColumnType("real");
@@ -4037,11 +4343,11 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<long>("GangwarActionTimeMs")
+                    b.Property<long>("GangwarActionTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_action_time_ms")
+                        .HasColumnName("gangwar_action_time")
                         .HasColumnType("bigint")
-                        .HasDefaultValue(900000L);
+                        .HasDefaultValue(900L);
 
                     b.Property<int>("GangwarAreaAttackCooldownMinutes")
                         .ValueGeneratedOnAdd()
@@ -4061,11 +4367,23 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<long>("GangwarPreparationTimeMs")
+                    b.Property<long>("GangwarPreparationTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_preparation_time_ms")
+                        .HasColumnName("gangwar_preparation_time")
                         .HasColumnType("bigint")
-                        .HasDefaultValue(180000L);
+                        .HasDefaultValue(180L);
+
+                    b.Property<double>("GangwarTargetRadius")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("gangwar_target_radius")
+                        .HasColumnType("double precision")
+                        .HasDefaultValue(5.0);
+
+                    b.Property<int>("GangwarTargetWithoutAttackerMaxSeconds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("gangwar_target_without_attacker_max_seconds")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
 
                     b.Property<float>("GiveMoneyFee")
                         .ValueGeneratedOnAdd()
@@ -4191,6 +4509,7 @@ namespace TDS_Server_DB.Migrations
                             Id = (short)1,
                             AFKKickAfterSec = 0,
                             AmountPlayersAllowedInGangwarTeamBeforeCountCheck = 0,
+                            AmountWeeklyChallenges = 0,
                             ArenaNewMapProbabilityPercent = 2f,
                             CloseApplicationAfterDays = 0,
                             DeleteApplicationAfterDays = 0,
@@ -4200,11 +4519,13 @@ namespace TDS_Server_DB.Migrations
                             DistanceToSpotToPlant = 3f,
                             ErrorToPlayerOnNonExistentCommand = true,
                             GamemodeName = "tdm",
-                            GangwarActionTimeMs = 0L,
+                            GangwarActionTime = 0L,
                             GangwarAreaAttackCooldownMinutes = 0,
                             GangwarAttackerCanBeMore = false,
                             GangwarOwnerCanBeMore = false,
-                            GangwarPreparationTimeMs = 0L,
+                            GangwarPreparationTime = 0L,
+                            GangwarTargetRadius = 0.0,
+                            GangwarTargetWithoutAttackerMaxSeconds = 0,
                             GiveMoneyFee = 0.05f,
                             GiveMoneyMinAmount = 100,
                             KillingSpreeMaxSecondsUntilNextKill = 18,
@@ -4703,6 +5024,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TDS_Server_DB.Entity.Challenge.PlayerChallenges", b =>
+                {
+                    b.HasOne("TDS_Server_DB.Entity.Player.Players", "Player")
+                        .WithMany("Challenges")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TDS_Server_DB.Entity.Command.CommandAlias", b =>
                 {
                     b.HasOne("TDS_Server_DB.Entity.Command.Commands", "CommandNavigation")
@@ -4729,9 +5059,9 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangMembers", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangMembers", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                    b.HasOne("TDS_Server_DB.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Members")
                         .HasForeignKey("GangId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4739,38 +5069,38 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
 
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "Player")
                         .WithOne("GangMemberNavigation")
-                        .HasForeignKey("TDS_Server_DB.Entity.Gang.GangMembers", "PlayerId")
+                        .HasForeignKey("TDS_Server_DB.Entity.GangEntities.GangMembers", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server_DB.Entity.Gang.GangRanks", "RankNavigation")
+                    b.HasOne("TDS_Server_DB.Entity.GangEntities.GangRanks", "RankNavigation")
                         .WithMany()
                         .HasForeignKey("RankNavigationGangId", "RankNavigationRank");
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRankPermissions", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangRankPermissions", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                    b.HasOne("TDS_Server_DB.Entity.GangEntities.Gangs", "Gang")
                         .WithOne("RankPermissions")
-                        .HasForeignKey("TDS_Server_DB.Entity.Gang.GangRankPermissions", "GangId")
+                        .HasForeignKey("TDS_Server_DB.Entity.GangEntities.GangRankPermissions", "GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangRanks", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangRanks", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "Gang")
+                    b.HasOne("TDS_Server_DB.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Ranks")
                         .HasForeignKey("GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.Gangs", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.Gangs", b =>
                 {
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "Owner")
                         .WithOne("OwnedGang")
-                        .HasForeignKey("TDS_Server_DB.Entity.Gang.Gangs", "OwnerId")
+                        .HasForeignKey("TDS_Server_DB.Entity.GangEntities.Gangs", "OwnerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server_DB.Entity.Rest.Teams", "Team")
@@ -4780,22 +5110,22 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Gang.GangwarAreas", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.GangEntities.GangwarAreas", b =>
                 {
                     b.HasOne("TDS_Server_DB.Entity.Rest.Maps", "Map")
                         .WithOne("GangwarArea")
-                        .HasForeignKey("TDS_Server_DB.Entity.Gang.GangwarAreas", "MapId")
+                        .HasForeignKey("TDS_Server_DB.Entity.GangEntities.GangwarAreas", "MapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server_DB.Entity.Gang.Gangs", "OwnerGang")
+                    b.HasOne("TDS_Server_DB.Entity.GangEntities.Gangs", "OwnerGang")
                         .WithMany("GangwarAreas")
                         .HasForeignKey("OwnerGangId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.Lobbies", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.Lobbies", b =>
                 {
                     b.HasOne("TDS_Server_DB.Entity.Player.Players", "Owner")
                         .WithMany("Lobbies")
@@ -4804,27 +5134,27 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyKillingspreeRewards", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyKillingspreeRewards")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyMapSettings", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyMapSettings", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyMapSettings")
-                        .HasForeignKey("TDS_Server_DB.Entity.Lobby.LobbyMapSettings", "LobbyId")
+                        .HasForeignKey("TDS_Server_DB.Entity.LobbyEntities.LobbyMapSettings", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyMaps", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyMaps", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyMaps")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4837,25 +5167,25 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyRewards", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyRewards", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRewards")
-                        .HasForeignKey("TDS_Server_DB.Entity.Lobby.LobbyRewards", "LobbyId")
+                        .HasForeignKey("TDS_Server_DB.Entity.LobbyEntities.LobbyRewards", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyRoundSettings", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyRoundSettings", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRoundSettings")
-                        .HasForeignKey("TDS_Server_DB.Entity.Lobby.LobbyRoundSettings", "LobbyId")
+                        .HasForeignKey("TDS_Server_DB.Entity.LobbyEntities.LobbyRoundSettings", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server_DB.Entity.Lobby.LobbyWeapons", b =>
+            modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
                     b.HasOne("TDS_Server_DB.Entity.Rest.Weapons", "HashNavigation")
                         .WithMany("LobbyWeapons")
@@ -4863,7 +5193,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "LobbyNavigation")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("LobbyWeapons")
                         .HasForeignKey("Lobby")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4877,7 +5207,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerBans")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4901,7 +5231,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Player.PlayerLobbyStats", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "Lobby")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerLobbyStats")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5025,7 +5355,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.Teams", b =>
                 {
-                    b.HasOne("TDS_Server_DB.Entity.Lobby.Lobbies", "LobbyNavigation")
+                    b.HasOne("TDS_Server_DB.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("Teams")
                         .HasForeignKey("Lobby")
                         .OnDelete(DeleteBehavior.Cascade)
