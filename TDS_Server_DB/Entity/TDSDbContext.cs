@@ -572,8 +572,9 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogAdmins>(entity =>
             {
-                entity.Property(e => e.Id).UseHiLo();
+                entity.HasKey(e => e.Id);
 
+                entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Reason).IsRequired();
 
@@ -585,6 +586,8 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogChats>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Message).IsRequired();
@@ -596,6 +599,8 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogErrors>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Info).IsRequired();
@@ -607,6 +612,8 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogKills>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Timestamp)
@@ -616,6 +623,8 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<LogRests>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.Id).UseHiLo();
 
                 entity.Property(e => e.Serial).HasMaxLength(200);
