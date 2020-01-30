@@ -995,9 +995,9 @@ namespace TDS_Server_DB.Migrations
                     index = table.Column<short>(nullable: false),
                     name = table.Column<string>(maxLength: 100, nullable: false, defaultValue: "Spectator"),
                     lobby = table.Column<int>(nullable: false),
-                    color_r = table.Column<short>(nullable: false, defaultValue: (short)255),
-                    color_g = table.Column<short>(nullable: false, defaultValue: (short)255),
-                    color_b = table.Column<short>(nullable: false, defaultValue: (short)255),
+                    color_r = table.Column<short>(nullable: false),
+                    color_g = table.Column<short>(nullable: false),
+                    color_b = table.Column<short>(nullable: false),
                     blip_color = table.Column<short>(nullable: false, defaultValue: (short)4),
                     skin_hash = table.Column<int>(nullable: false, defaultValue: 0)
                 },
@@ -1878,28 +1878,15 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "teams",
-                columns: new[] { "id", "blip_color", "color_r", "index", "lobby", "name", "skin_hash" },
-                values: new object[] { -4, (short)1, (short)150, (short)2, -1, "Terrorist", 275618457 });
-
-            migrationBuilder.InsertData(
-                table: "teams",
-                columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name" },
-                values: new object[] { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None" });
-
-            migrationBuilder.InsertData(
-                table: "teams",
-                columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name" },
-                values: new object[] { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" });
-
-            migrationBuilder.InsertData(
-                table: "teams",
-                columns: new[] { "id", "blip_color", "color_g", "index", "lobby", "name", "skin_hash" },
-                values: new object[] { -3, (short)52, (short)150, (short)1, -1, "SWAT", -1920001264 });
-
-            migrationBuilder.InsertData(
-                table: "teams",
                 columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name", "skin_hash" },
-                values: new object[] { -1, (short)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 });
+                values: new object[,]
+                {
+                    { -4, (short)1, (short)0, (short)0, (short)150, (short)2, -1, "Terrorist", 275618457 },
+                    { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None", 0 },
+                    { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator", 0 },
+                    { -3, (short)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT", -1920001264 },
+                    { -1, (short)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 }
+                });
 
             migrationBuilder.InsertData(
                 table: "gangs",

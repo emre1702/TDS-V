@@ -1138,15 +1138,6 @@ namespace TDS_Server_DB.Entity
                 entity.Property(e => e.BlipColor)
                     .HasDefaultValue(4);
                     
-                entity.Property(e => e.ColorR)
-                    .HasDefaultValue(255);
-
-                entity.Property(e => e.ColorG)
-                    .HasDefaultValue(255);
-
-                entity.Property(e => e.ColorB)
-                    .HasDefaultValue(255);
-
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
                     .HasForeignKey(d => d.Lobby)

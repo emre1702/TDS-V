@@ -3461,22 +3461,16 @@ namespace TDS_Server_DB.Migrations
                         .HasDefaultValue((short)4);
 
                     b.Property<short>("ColorB")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_b")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("ColorG")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_g")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("ColorR")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_r")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("Index")
                         .HasColumnName("index")

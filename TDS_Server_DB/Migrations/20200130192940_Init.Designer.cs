@@ -15,7 +15,7 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    [Migration("20200129215441_Init")]
+    [Migration("20200130192940_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3463,22 +3463,16 @@ namespace TDS_Server_DB.Migrations
                         .HasDefaultValue((short)4);
 
                     b.Property<short>("ColorB")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_b")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("ColorG")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_g")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("ColorR")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("color_r")
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)255);
+                        .HasColumnType("smallint");
 
                     b.Property<short>("Index")
                         .HasColumnName("index")
