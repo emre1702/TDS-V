@@ -34,7 +34,7 @@ export class SettingsService {
     }
 
     ///////////////////// Language /////////////////////
-    public LangValue: LanguageEnum = LanguageEnum.German;
+    public LangValue: LanguageEnum = LanguageEnum.English;
     public Lang: Language = SettingsService.langByLangValue[this.LangValue];
     public LanguageChanged = new EventEmitter();
 
