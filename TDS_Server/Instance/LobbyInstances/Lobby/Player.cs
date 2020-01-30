@@ -128,7 +128,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 {
                     stats = new PlayerLobbyStats { LobbyId = LobbyEntity.Id };
                     player.Entity.PlayerLobbyStats.Add(stats);
-                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                    await dbContext.SaveChangesAsync();
                 }
                 player.CurrentLobbyStats = stats;
             }).ConfigureAwait(false);     

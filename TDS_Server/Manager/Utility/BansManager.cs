@@ -81,9 +81,9 @@ namespace TDS_Server.Manager.Utility
             return ban;
         }
 
-        public Task RemoveExpiredBans()
+        public async Task RemoveExpiredBans()
         {
-            return ExecuteForDBAsync(async (dbContext) =>
+            await ExecuteForDBAsync(async (dbContext) =>
             {
                 var bans = await dbContext.PlayerBans
                     .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.UtcNow)

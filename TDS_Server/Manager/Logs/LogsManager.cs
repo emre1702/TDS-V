@@ -1,161 +1,85 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TDS_Server.Instance.Utility;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Log;
 
 namespace TDS_Server.Manager.Logs
 {
-    static class LogsManager
+    class LogsManager : EntityWrapperClass
     {
-        private static readonly TDSDbContext _dbContext;
+        private static LogsManager? _instance;
 
-        private static readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
-        private static bool _usingDBContext;
-
-#pragma warning disable CA1810 // Initialize reference type static fields inline
-        static LogsManager()
-#pragma warning restore CA1810 // Initialize reference type static fields inline
+        public static void Init()
         {
-            _dbContext = new TDSDbContext();
+            _instance = new LogsManager();
         }
 
         public static async Task Save()
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDBAsync(async dbContext =>
             {
-                await _dbContext.SaveChangesAsync();
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                await dbContext.SaveChangesAsync();
+            });
         }
 
-        public static async void AddLog(LogRests logs)
+        public static async void AddLog(LogRests log)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDB(dbContext =>
             {
-                _dbContext.LogRests.Add(logs);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                dbContext.LogRests.Add(log);
+            });
         }
 
-        public static async void AddLog(LogErrors logs)
+        public static async void AddLog(LogErrors log)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDB(dbContext =>
             {
-                _dbContext.LogErrors.Add(logs);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                dbContext.LogErrors.Add(log);
+            });
         }
 
-        public static async void AddLog(LogChats logs)
+        public static async void AddLog(LogChats log)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDB(dbContext =>
             {
-                _dbContext.LogChats.Add(logs);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                dbContext.LogChats.Add(log);
+            });
         }
 
-        public static async void AddLog(LogAdmins logs)
+        public static async void AddLog(LogAdmins log)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDB(dbContext =>
             {
-                _dbContext.LogAdmins.Add(logs);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                dbContext.LogAdmins.Add(log);
+            });
         }
 
         public static async void AddLog(LogKills log)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            if (_instance is null)
+                return;
 
-            try
+            await _instance.ExecuteForDB(dbContext =>
             {
-                _dbContext.LogKills.Add(log);
-            }
-            finally
-            {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
-            }
+                dbContext.LogKills.Add(log);
+            });
         }
     }
 }

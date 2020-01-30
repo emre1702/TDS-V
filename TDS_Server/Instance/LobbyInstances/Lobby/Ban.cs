@@ -65,7 +65,7 @@ namespace TDS_Server.Instance.LobbyInstances
                         EndTimestamp = endTime,
                         Reason = reason
                     };
-                    await dbContext.PlayerBans.AddAsync(ban);
+                    dbContext.PlayerBans.Add(ban);
                 }
                 await dbContext.SaveChangesAsync();
             });

@@ -59,6 +59,8 @@ namespace TDS_Server.Manager.Utility
                 connection.Open();
                 connection.ReloadTypes();
 
+                LogsManager.Init();
+
                 BonusBotConnector_Client.Main.Init(dbContext, ErrorLogsManager.LogFromBonusBot);
 
                 PlayerManager.PlayerManager.SetAllLoggedOutInDb(dbContext);

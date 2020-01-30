@@ -30,7 +30,7 @@ namespace TDS_Server.Instance.Utility
         }
 
         private TDSDbContext? _dbContext;
-        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
         private bool _usingDBContext;
 
         protected void SetPlayer(TDSPlayer player)
@@ -64,8 +64,8 @@ namespace TDS_Server.Instance.Utility
             {
                 if (!wasInDBContextBefore)
                 {
-                    _dbContextSemaphore.Release();
                     _usingDBContext = false;
+                    _dbContextSemaphore.Release();
                 }
             }
         }

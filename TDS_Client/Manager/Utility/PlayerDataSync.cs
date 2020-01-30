@@ -108,7 +108,7 @@ namespace TDS_Client.Manager.Utility
                     Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.Money, (int)obj);
                     break;
                 case EPlayerDataKey.AdminLevel:
-                    Browser.Angular.Main.RefreshAdminLevel((int)obj);
+                    Browser.Angular.Main.RefreshAdminLevel(Convert.ToInt32(obj));
                     break;
                 case EPlayerDataKey.IsLobbyOwner:
                     Lobby.Lobby.IsLobbyOwner = (bool)obj;

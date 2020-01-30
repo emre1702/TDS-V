@@ -49,7 +49,7 @@ namespace TDS_Server.Instance.PlayerInstance
                     dbContext.Entry(CurrentLobbyStats).State = EntityState.Detached;
                     CurrentLobbyStats = null;
                 }
-                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                await dbContext.SaveChangesAsync();
             }).ConfigureAwait(false);
         }
 
