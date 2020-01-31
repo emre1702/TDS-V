@@ -31,7 +31,6 @@ namespace TDS_Server.Instance.Utility
 
         private TDSDbContext? _dbContext;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
-        private bool _usingDBContext;
 
         protected void SetPlayer(TDSPlayer player)
         {
@@ -45,12 +44,7 @@ namespace TDS_Server.Instance.Utility
 
         public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            await _dbContextSemaphore.WaitAsync(2000);
 
             try
             {
@@ -62,22 +56,13 @@ namespace TDS_Server.Instance.Utility
             }
             finally
             {
-                if (!wasInDBContextBefore)
-                {
-                    _usingDBContext = false;
-                    _dbContextSemaphore.Release();
-                }
+                _dbContextSemaphore.Release();
             }
         }
 
         public async Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            await _dbContextSemaphore.WaitAsync(2000);
 
             try
             {
@@ -90,22 +75,13 @@ namespace TDS_Server.Instance.Utility
             }
             finally
             {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
+                _dbContextSemaphore.Release();
             }
         }
 
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
-            bool wasInDBContextBefore = _usingDBContext;
-            if (!wasInDBContextBefore)
-            {
-                await _dbContextSemaphore.WaitAsync();
-                _usingDBContext = true;
-            }
+            await _dbContextSemaphore.WaitAsync(2000);
 
             try
             {
@@ -117,11 +93,7 @@ namespace TDS_Server.Instance.Utility
             }
             finally
             {
-                if (!wasInDBContextBefore)
-                {
-                    _dbContextSemaphore.Release();
-                    _usingDBContext = false;
-                }
+                _dbContextSemaphore.Release();
             }
         }
 
