@@ -440,6 +440,8 @@ namespace TDS_Client.Manager.Utility
         public static void HideHUDOriginalComponents()
         {
             Ui.HideHudComponentThisFrame((int)HudComponent.Cash);
+            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheelStats);
+            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponIcon);
         }
     }
 }
