@@ -1,4 +1,4 @@
-var isregistered = false;
+﻿var isregistered = false;
 var langdata = {};
 
 $(document).ready(function () {
@@ -85,7 +85,7 @@ $(document).ready(function () {
             case "login":
 				var username = $this.find("input[id=login_username]").val();
                 var password = $this.find("input[id=login_password]").val();
-                mp.trigger("b40", username, password);  TryLogin_Browser
+                mp.trigger("b40", username, password);   // TryLogin_Browser
                 break;
 
             case "register":
