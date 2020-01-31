@@ -18,7 +18,7 @@ namespace TDS_Client.Manager.Damage
     static class FiringMode
     {
         // weapons in these groups are completely ignored
-        private static HashSet<uint> _ignoredWeaponGroups = new HashSet<uint>
+        private static readonly HashSet<uint> _ignoredWeaponGroups = new HashSet<uint>
         {
             Misc.GetHashKey("GROUP_UNARMED"),
             Misc.GetHashKey("GROUP_MELEE"),
@@ -32,12 +32,12 @@ namespace TDS_Client.Manager.Damage
         };
 
         // if a weapon's group is already in burstFireAllowedGroups, don't put it here
-        private static HashSet<uint> _burstFireAllowedWeapons = new HashSet<uint>
+        private static readonly HashSet<uint> _burstFireAllowedWeapons = new HashSet<uint>
         {
             Misc.GetHashKey("WEAPON_APPISTOL"),
         };
 
-        private static HashSet<uint> _burstFireAllowedGroups = new HashSet<uint>
+        private static readonly HashSet<uint> _burstFireAllowedGroups = new HashSet<uint>
         {
             Misc.GetHashKey("GROUP_SMG"),
             Misc.GetHashKey("GROUP_MG"),
@@ -45,7 +45,7 @@ namespace TDS_Client.Manager.Damage
         };
 
         // weapons in here are not able to use single fire mode
-        private static HashSet<uint> _singleFireBlacklist = new HashSet<uint>
+        private static readonly HashSet<uint> _singleFireBlacklist = new HashSet<uint>
         {
             Misc.GetHashKey("WEAPON_STUNGUN"),
             Misc.GetHashKey("WEAPON_FLAREGUN"),
@@ -68,7 +68,6 @@ namespace TDS_Client.Manager.Damage
         private static bool _ignoreCurrentWeapon;
         private static EFiringMode _currentFiringMode;
         private static int _currentBurstShots = 0;
-        private static DateTime? _lastWeaponConfigUpdate;
         private static Dictionary<uint, EFiringMode> _lastFiringModeByWeapon = new Dictionary<uint, EFiringMode>();
         private static InstructionalButton _instructionalButton;
         private static bool _isActive;
@@ -99,12 +98,7 @@ namespace TDS_Client.Manager.Damage
 
             _instructionalButton = InstructionalButtonManager.Add(Settings.Language.FIRING_MODE, "F6", true);
 
-            if (_currentWeapon == 0)
-            {
-                uint weapon = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
-                ClientUtils.Notify("Weapon (in FiringMode): " + weapon);
-                CustomEventManager_OnWeaponChange(0, weapon);
-            }
+            Audio.SetAudioFlag("LoadMPData", true);
         }
 
         public static void Stop()
@@ -116,7 +110,6 @@ namespace TDS_Client.Manager.Damage
             TickManager.Remove(OnTick);
             OnPlayerWeaponShot -= OnWeaponShot;
             CustomEventManager.OnWeaponChange -= CustomEventManager_OnWeaponChange;
-            _currentWeapon = 0;
             if (_instructionalButton != null)
             {
                 InstructionalButtonManager.Remove(_instructionalButton);
@@ -147,7 +140,6 @@ namespace TDS_Client.Manager.Damage
             {
                 CurrentFiringMode = newFiringMode;
                 _currentBurstShots = 0;
-                _lastWeaponConfigUpdate = DateTime.Now;
 
                 Audio.PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", true);
                 _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
@@ -156,22 +148,25 @@ namespace TDS_Client.Manager.Damage
 
         private static void OnTick()
         {
+            if (_ignoreCurrentWeapon)
+                return;
+
             switch (_currentFiringMode)
             {
                 case EFiringMode.Auto:
                     break;
                 case EFiringMode.Burst:
-                    if (_currentBurstShots < 3)
+                    if (_currentBurstShots > 0 && _currentBurstShots < 3)
                         Pad.SetControlNormal((int)EInputGroup.MOVE, (int)Control.Attack, 1f);
                     else if (_currentBurstShots == 3)
                     {
                         Player.DisablePlayerFiring(false);
-                        if (Pad.IsDisabledControlJustPressed((int)EInputGroup.MOVE, (int)Control.Attack))
+                        if (Pad.IsDisabledControlJustReleased((int)EInputGroup.MOVE, (int)Control.Attack))
                             _currentBurstShots = 0;
                     }
                     break;
                 case EFiringMode.Single:
-                    if (Pad.IsDisabledControlJustPressed((int)EInputGroup.MOVE, (int)Control.Attack))
+                    if (Pad.IsDisabledControlPressed((int)EInputGroup.MOVE, (int)Control.Attack))
                         Player.DisablePlayerFiring(false);
                     break;
                /* case EFiringMode.Safe:
