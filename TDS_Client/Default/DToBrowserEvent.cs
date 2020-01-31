@@ -10,7 +10,7 @@
         public const string InitLoadAngular = "cb6";
         public const string LeaveCustomLobbyMenu = "cb7";
         public const string LoadFavoriteMaps = "cb8";
-        public const string LoadLanguage = "c9";
+        public const string LoadLanguage = "cb9";
         public const string LoadMapVoting = "cb10";
         public const string MapCreatorSyncData = "cb11";
         public const string OpenMapMenu = "cb12";
