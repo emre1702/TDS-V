@@ -34,6 +34,8 @@ namespace TDS_Client.Manager.Damage
             Player.LocalPlayer.GetAmmoInClip(weapon, ref ammo);
             int mag = Player.LocalPlayer.GetAmmoInWeapon(weapon);
 
+            mag -= ammo;
+
             if (_lastAmmo == ammo && _lastMag == mag)
                 return;
 
