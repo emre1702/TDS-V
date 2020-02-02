@@ -26,11 +26,11 @@ namespace TDS_Server.Manager.Maps
 {
     class MapCreator
     {
-        public static IEnumerable<MapDto> AllCreatingMaps => _newCreatedMaps.Union(_savedMaps).Union(_needCheckMaps);
+        public static IEnumerable<MapDto> AllCreatingMaps => NewCreatedMaps.Union(NeedCheckMaps);    // .Union(_savedMaps)
 
-        private static List<MapDto> _newCreatedMaps = new List<MapDto>();
+        public static List<MapDto> NewCreatedMaps = new List<MapDto>();
         private static List<MapDto> _savedMaps = new List<MapDto>();
-        private static List<MapDto> _needCheckMaps = new List<MapDto>();
+        public static List<MapDto> NeedCheckMaps = new List<MapDto>();
 
         public async static Task<EMapCreateError> Create(TDSPlayer creator, string mapJson, bool onlySave)
         {
@@ -89,7 +89,7 @@ namespace TDS_Server.Manager.Maps
                     mapDto.SyncedData.Id = dbMap.Id;
                     mapDto.RatingAverage = 5;
 
-                    _newCreatedMaps.Add(mapDto);
+                    NewCreatedMaps.Add(mapDto);
                 }
                 else
                 {
@@ -106,8 +106,8 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNewMaps(TDSDbContext dbContext)
         {
-            _newCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false).ConfigureAwait(false);
-            foreach (var map in _newCreatedMaps)
+            NewCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false).ConfigureAwait(false);
+            foreach (var map in NewCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
                 map.SyncedData.CreatorName = string.Empty;
@@ -127,8 +127,8 @@ namespace TDS_Server.Manager.Maps
 
         public static async Task LoadNeedCheckMaps(TDSDbContext dbContext)
         {
-            _needCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false).ConfigureAwait(false);
-            foreach (var map in _newCreatedMaps)
+            NeedCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false).ConfigureAwait(false);
+            foreach (var map in NewCreatedMaps)
             {
                 map.Info.IsNewMap = true;
             }
@@ -136,9 +136,9 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? GetRandomNewMap()
         {
-            if (_newCreatedMaps.Count == 0)
+            if (NewCreatedMaps.Count == 0)
                 return null;
-            var list = _newCreatedMaps.Where(m => m.Ratings.Count < SettingsManager.MapRatingAmountForCheck).ToList();
+            var list = NewCreatedMaps.Where(m => m.Ratings.Count < SettingsManager.MapRatingAmountForCheck).ToList();
             if (list.Count == 0)
                 return null;
             return list[CommonUtils.Rnd.Next(list.Count)];
@@ -146,12 +146,12 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? GetMapById(int mapId)
         {
-            return _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+            return NewCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
         }
 
         public static MapDto? GetMapByName(string mapName)
         {
-            return _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            return NewCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
         public static void SendPlayerMapForMapCreator(TDSPlayer player, string mapName)
@@ -162,11 +162,11 @@ namespace TDS_Server.Manager.Maps
             MapDto? map = MapsLoader.GetMapByName(mapName);
 
             if (map is null)
-                map = _newCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+                map = NewCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
             if (map is null)
                 map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
             if (map is null)
-                map = _needCheckMaps.FirstOrDefault(m => m.Info.Name == mapName);
+                map = NeedCheckMaps.FirstOrDefault(m => m.Info.Name == mapName);
 
             if (map is null)
                 return;
@@ -221,7 +221,7 @@ namespace TDS_Server.Manager.Maps
             data.Add(new LoadMapDialogGroupDto
             {
                 GroupName = "Created",
-                Maps = _newCreatedMaps
+                Maps = NewCreatedMaps
                     .Where(m => m.Info.CreatorId == player.Entity.Id)
                     .Select(m => m.Info.Name)
                     .ToList()
@@ -241,7 +241,7 @@ namespace TDS_Server.Manager.Maps
                 data.Add(new LoadMapDialogGroupDto
                 {
                     GroupName = "OthersCreated",
-                    Maps = _newCreatedMaps
+                    Maps = NewCreatedMaps
                         .Where(m => m.Info.CreatorId != player.Entity.Id)
                         .Select(m => m.Info.Name)
                         .ToList()
@@ -250,7 +250,7 @@ namespace TDS_Server.Manager.Maps
                 data.Add(new LoadMapDialogGroupDto
                 {
                     GroupName = "Deactivated",
-                    Maps = _needCheckMaps
+                    Maps = NeedCheckMaps
                         .Select(m => m.Info.Name)
                         .ToList()
                 });
@@ -266,9 +266,9 @@ namespace TDS_Server.Manager.Maps
             MapDto? map = _savedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
             if (map is null)
             {
-                map = _newCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                map = NewCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
                 if (map is null)
-                    map = _needCheckMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                    map = NeedCheckMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
                 isSavedMap = false;
             }
 
@@ -283,10 +283,10 @@ namespace TDS_Server.Manager.Maps
 
             if (isSavedMap)
                 _savedMaps.Remove(map);
-            else if (_newCreatedMaps.Contains(map))
-                _newCreatedMaps.Remove(map);
+            else if (NewCreatedMaps.Contains(map))
+                NewCreatedMaps.Remove(map);
             else 
-                _needCheckMaps.Remove(map);
+                NeedCheckMaps.Remove(map);
 
             File.Delete(map.Info.FilePath);
         }
@@ -304,7 +304,7 @@ namespace TDS_Server.Manager.Maps
 
         private static void DisableNewMap(MapDto map)
         {
-            _newCreatedMaps.Remove(map);
+            NewCreatedMaps.Remove(map);
 
             string fileName = Path.GetFileName(map.Info.FilePath);
             string fileContent = File.ReadAllText(map.Info.FilePath);

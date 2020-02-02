@@ -59,7 +59,7 @@ namespace TDS_Server.Manager.Maps
 
         public static object? GetAllMapsForCustomLobby(TDSPlayer player, object[] args)
         {
-            var allMapsSyncData = AllMaps.Union(MapCreator.AllCreatingMaps).Select(m => m.SyncedData);
+            var allMapsSyncData = AllMaps.Union(MapCreator.NewCreatedMaps).Union(MapCreator.NeedCheckMaps).Select(m => m.SyncedData);
 
             return Serializer.ToBrowser(allMapsSyncData);
 
