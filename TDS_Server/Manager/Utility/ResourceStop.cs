@@ -57,7 +57,7 @@ namespace TDS_Server.Manager.Utility
                     LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_MINUTES, counter));
                     _ = new TDSTimer(() => ResourceRestartCountdown(counter, true), 60 * 1000, 1);
                 }
-                if (counter == 1)
+                else if (counter == 1)
                 {
                     LangUtils.SendAllChatMessage(lang => "#o#" + string.Format(lang.RESOURCE_RESTART_INFO_MINUTES, counter));
                     _ = new TDSTimer(() => ResourceRestartCountdown(counter, true), 45 * 1000, 1);
