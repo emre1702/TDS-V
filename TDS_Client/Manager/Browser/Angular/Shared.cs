@@ -16,7 +16,7 @@ namespace TDS_Client.Manager.Browser.Angular
             var strBuilder = new StringBuilder($"RageAngularEvent(`{eventName}`");
             foreach (var arg in args)
             {
-                var argType = arg.GetType();
+                var argType = arg?.GetType();
                 if (arg is null)
                     strBuilder.Append(", undefined");
                 else if (arg is string)
