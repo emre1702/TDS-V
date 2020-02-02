@@ -133,7 +133,7 @@ namespace TDS_Server.Instance.LobbyInstances
             CreateMapVehicles(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.LimitInfo.Center));
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.Target ?? nextMap.LimitInfo.Center));
             _currentMap = nextMap;
             RoundEndReasonText = null;
         }
