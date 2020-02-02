@@ -7,11 +7,13 @@ import { MatToolbarModule, MatFormFieldModule, MatTableModule, MatPaginatorModul
 import 'hammerjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { InputTypeDirective } from './extensions/inputTypeDirective';
 
 @NgModule({
   declarations: [
     AppComponent,
     LanguagePipe,
+    InputTypeDirective
   ],
   imports: [
     BrowserModule,
