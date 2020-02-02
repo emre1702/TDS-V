@@ -1048,7 +1048,7 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.GangwarTargetWithoutAttackerMaxSeconds)
                     .IsRequired()
-                    .HasDefaultValue(5);
+                    .HasDefaultValue(10);
 
                 entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
                     .IsRequired()
