@@ -299,11 +299,11 @@
             "tsConfig": "projects/map-creator-vehicle-choice/tsconfig.app.json",
             "aot": false,
             "assets": [
-              "projects/map-creator-vehicle-choice/src/favicon.ico",
               "projects/map-creator-vehicle-choice/src/assets"
             ],
             "styles": [
-              "projects/map-creator-vehicle-choice/src/styles.scss"
+              "projects/map-creator-vehicle-choice/src/styles.scss",
+              "theme.scss"
             ],
             "scripts": []
           },
