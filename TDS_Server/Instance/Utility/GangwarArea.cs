@@ -51,6 +51,11 @@ namespace TDS_Server.Instance.Utility
             Map = copyFrom.Map;
         }
 
+        public GangwarArea(MapDto map)
+        {
+            Map = map;
+        }
+
         public GangwarArea(GangwarAreas entity, MapDto map)
         {
             Entity = entity;
@@ -195,9 +200,16 @@ namespace TDS_Server.Instance.Utility
 
         private void ClearAttack()
         {
-            Attacker!.InAction = false;
-            Owner!.InAction = false;
-            Attacker = null;
+            if (Attacker is { })
+            {
+                Attacker!.InAction = false;
+                Attacker = null;
+            }
+            if (Owner is { })
+            {
+                Owner!.InAction = false;
+            }
+           
             _checkAtTarget?.Kill();
             _checkAtTarget = null;
         }
