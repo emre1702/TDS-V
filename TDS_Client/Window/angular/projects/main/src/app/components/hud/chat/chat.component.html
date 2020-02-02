@@ -11,7 +11,7 @@
             </div>
         </div>
     </div>
-    <mat-form-field [style.display]="chatInputOpen ? 'block' : 'none'">
+    <mat-form-field [style.display]="settings.ChatInputOpen ? 'block' : 'none'">
         <input matInput floatLabel="never" id="main-input"
         autofocus (blur)="removeInputFocus()"
         [mention]="mentionConfig.items"

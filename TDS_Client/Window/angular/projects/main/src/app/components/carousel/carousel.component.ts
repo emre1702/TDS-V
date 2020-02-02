@@ -106,8 +106,15 @@ export class CarouselComponent implements AfterViewInit {
         return this.sanitizer.bypassSecurityTrustStyle("url(" + url + ") no-repeat");
     }
 
-    @HostListener('window:keyup', ['$event'])
+    @HostListener('window:keydown', ['$event'])
     keyEvent(event: KeyboardEvent) {
+        if (this.settings.ChatInputOpen) {
+            return;
+        }
+        if (this.settings.UserpanelOpened) {
+            return;
+        }
+
         if (event.key === "ArrowRight") {
             this.toRight();
         } else if (event.key === "ArrowLeft") {

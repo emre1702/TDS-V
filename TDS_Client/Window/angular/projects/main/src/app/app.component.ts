@@ -38,7 +38,6 @@ export class AppComponent {
     showFreeroam = false;
     showLobbyChoice = true;
     showTeamChoice = false;
-    showUserpanel = false;
     showRankings = false;
     showHUD = false;
 
@@ -82,7 +81,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
-            this.showUserpanel = bool;
+            this.settings.UserpanelOpened = bool;
             changeDetector.detectChanges();
         });
 

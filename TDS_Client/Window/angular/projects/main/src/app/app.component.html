@@ -8,6 +8,6 @@
 <app-freeroam *ngIf="showFreeroam"></app-freeroam>
 <app-lobby-choice *ngIf="showLobbyChoice"></app-lobby-choice>
 <app-team-choice *ngIf="showTeamChoice"></app-team-choice>
-<app-userpanel *ngIf="showUserpanel"></app-userpanel>
+<app-userpanel *ngIf="settings.UserpanelOpened"></app-userpanel>
 <app-ranking *ngIf="showRankings" [rankings]="rankings"></app-ranking>
 <app-hud *ngIf="showHUD"></app-hud>

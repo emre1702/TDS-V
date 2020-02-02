@@ -82,6 +82,9 @@ export class SettingsService {
     public ChatOpened = false;
     public ChatOpenedChange = new EventEmitter();
 
+    public ChatInputOpen = false;
+    public UserpanelOpened = false;
+
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
 
@@ -135,6 +138,14 @@ export class SettingsService {
     public setChatOpened(bool: boolean) {
         this.ChatOpened = bool;
         this.ChatOpenedChange.emit(null);
+    }
+
+    public setChatInputOpen(bool: boolean) {
+        this.ChatInputOpen = bool;
+    }
+
+    public setUserpanelOpened(bool: boolean) {
+        this.UserpanelOpened = bool;
     }
 
     public toggleInFightLobby(bool: boolean) {

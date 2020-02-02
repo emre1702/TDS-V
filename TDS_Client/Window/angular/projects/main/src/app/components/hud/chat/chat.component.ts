@@ -31,7 +31,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     chatActive = true;
     chatInputActive = true;
-    chatInputOpen = false;
     playerNames: string[] = [];
 
     selectedChatBody = 0;
@@ -173,7 +172,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!this.chatActive || !this.chatInputActive)
             return;
 
-        this.chatInputOpen = toggle;
+        this.settings.setChatInputOpen(toggle);
         this.input.value = cmd;
 
         this.changeDetector.detectChanges();
@@ -318,7 +317,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     @HostListener('window:keydown', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        if (event.key === "Enter" && this.chatInputOpen  /* && !this.autocompleteOn */) {
+        if (event.key === "Enter" && this.settings.ChatInputOpen  /* && !this.autocompleteOn */) {
             event.preventDefault();
             let msg = this.input.value;
             if (!this.isNullOrWhitespace(msg) && msg !== this.commandPrefix) {
