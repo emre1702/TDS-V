@@ -25,4 +25,10 @@ export interface ConstantsData {
         /** Text */
         string
     ][];
+
+    /** Username */
+    [7]: string;
+
+    /** SCName */
+    [8]: string;
 }

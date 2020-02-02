@@ -1,0 +1,20 @@
+<div id="chat_container" [style.display]="chatActive ? 'initial' : 'none'">
+    <div id="chat_div">
+        <div id="chat-body" #chatBody>
+            <div *ngFor="let msg of chatBodies[selectedChatBody].messages" [innerHTML]="msg"></div>
+        </div>
+        <div id="chat_choice">
+            <div *ngFor="let body of chatBodies; let i = index"
+            (click)="selectChatBody(i)"
+            [style.background-color]="selectedChatBody == i ? '#04074e' : '#A9A9A9'">
+                {{ body.name | language: settings.Lang }}
+            </div>
+        </div>
+    </div>
+    <mat-form-field [style.display]="chatInputOpen ? 'block' : 'none'">
+        <input matInput floatLabel="never" id="main-input"
+        autofocus (blur)="removeInputFocus()"
+        [mention]="mentionConfig.items"
+        [mentionConfig]="mentionConfig"/>
+    </mat-form-field>
+</div>

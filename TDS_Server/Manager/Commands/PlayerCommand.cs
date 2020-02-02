@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -162,7 +162,7 @@ namespace TDS_Server.Manager.Commands
                 player.Player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
             }
-            string colorStr = "!{155|35|133}";
+            string colorStr = "!$155|35|133$";
             player.InPrivateChatWith.Player?.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]");
         }
 

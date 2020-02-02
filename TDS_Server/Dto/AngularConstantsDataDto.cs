@@ -28,6 +28,12 @@ namespace TDS_Server.Dto
         [JsonProperty("6")]
         public string AnnouncementsJson { get; set; }
 
+        [JsonProperty("7")]
+        public string Username { get; set; }
+
+        [JsonProperty("8")]
+        public string SCName { get; set; }
+
         public static AngularConstantsDataDto Get(TDSPlayer player)
         {
             return new AngularConstantsDataDto
@@ -38,7 +44,9 @@ namespace TDS_Server.Dto
                 UsernameChangeCooldownDays = SettingsManager.ServerSettings.UsernameChangeCooldownDays,
                 MapBuyBasePrice = SettingsManager.ServerSettings.MapBuyBasePrice,
                 MapBuyCounterMultiplicator = SettingsManager.ServerSettings.MapBuyCounterMultiplicator,
-                AnnouncementsJson = AnnouncementsManager.Json
+                AnnouncementsJson = AnnouncementsManager.Json,
+                Username = player.Entity.Name,
+                SCName = player.Entity.SCName
             };
         }
     }

@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -86,7 +86,7 @@ namespace TDS_Server.Instance.LobbyInstances
             Team team = character.Team;
             Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);
 
-            string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !{{150|0|0}}";
+            string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !$150|0|0$";
             team.FuncIterate((target, _) =>
             {
                 target.SendMessage(str + texts[target.Language]);

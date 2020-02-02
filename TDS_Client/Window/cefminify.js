@@ -9,8 +9,8 @@ let uglify = require("uglify-js");
 let cleancssrequire = require("clean-css");
 let files = [
     {
-        path: "main/", html: "main.html", js: ["main.js", "chat.js", "roundend.js"],
-        css: ["main/chat.css", "main/main.css", "main/roundend.css"],
+        path: "main/", html: "main.html", js: ["main.js", "roundend.js"],
+        css: ["main/main.css", "main/roundend.css"],
         reserved: ["setMoney", "playSound", "playHitsound", "playKillstreakSound", "showBloodscreen", "addKillMessage", "alert",
             "toggleCanVoteForMapWithNumpad", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", 
             "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound", 

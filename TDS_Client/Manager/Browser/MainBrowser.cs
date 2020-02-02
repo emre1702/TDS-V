@@ -17,7 +17,6 @@ namespace TDS_Client.Manager.Browser
         public static void Load()
         {
             Browser = new HtmlWindow(ClientConstants.MainBrowserPath);
-            Browser.MarkAsChat();
             OnLoaded();
         }
 
@@ -84,27 +83,6 @@ namespace TDS_Client.Manager.Browser
                 return;
             Execute("hideRoundEndReason();");
             _roundEndReasonShowing = false;
-        }
-
-        public static void LoadPlayersForChat(List<Player> players)
-        {
-            IEnumerable<string> names = players.Select(p => p.Name);
-            Execute($"loadNamesForChat(`{Serializer.ToBrowser(names)}`)");
-        }
-
-        public static void AddPlayerForChat(Player player)
-        {
-            Execute($"addNameForChat(`{player.Name}`)");
-        }
-
-        public static void RemovePlayerForChat(string name)
-        {
-            Execute($"removeNameForChat(`{name}`)");
-        }
-
-        public static void LoadUserName()
-        {
-            Execute($"loadUserName('{Player.LocalPlayer.Name}')");
         }
 
         public static void StartBombTick(int msToDetonate, int startAtMs)

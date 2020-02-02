@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace TDS_Server.Manager.Utility
                 .Select(lvl => new AdminLevelDto
                             (
                                 lvl.Level,
-                                "!{" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "}"
+                                "!$" + lvl.ColorR + "|" + lvl.ColorG + "|" + lvl.ColorB + "$"
                             ))
                 .ToDictionaryAsync(lvl => lvl.Level, lvl => lvl);
 

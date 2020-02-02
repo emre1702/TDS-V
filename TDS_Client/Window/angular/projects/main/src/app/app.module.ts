@@ -82,6 +82,8 @@ import { RoundStatsComponent } from './components/hud/round-stats/round-stats.co
 import { ClipboardModule } from 'ngx-clipboard';
 import { HudComponent } from './components/hud/hud.component';
 import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-maps-menu/custom-lobby-maps-menu.component';
+import { ChatComponent } from './components/hud/chat/chat.component';
+import { MentionModule } from 'angular-mentions';
 
 @NgModule({
   declarations: [
@@ -127,7 +129,8 @@ import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lo
     UserpanelSettingsSpecialComponent,
     RoundStatsComponent,
     HudComponent,
-    CustomLobbyMapsMenuComponent
+    CustomLobbyMapsMenuComponent,
+    ChatComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -164,7 +167,8 @@ import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lo
     MatStepperModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    ClipboardModule
+    ClipboardModule,
+    MentionModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog],
   providers: [

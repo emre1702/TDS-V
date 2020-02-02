@@ -11,19 +11,19 @@ namespace TDS_Client.Manager.Lobby
         public static void Load(List<Player> players)
         {
             PlayersSameLobby = players;
-            MainBrowser.LoadPlayersForChat(players);
+            Browser.Angular.Main.LoadNamesForChat(players);
         }
 
         public static void Load(Player player)
         {
             PlayersSameLobby.Add(player);
-            MainBrowser.AddPlayerForChat(player);
+            Browser.Angular.Main.AddNameForChat(player.Name);
         }
 
         public static void Remove(Player player, string name)
         {
             PlayersSameLobby.Remove(player);
-            MainBrowser.RemovePlayerForChat(name);
+            Browser.Angular.Main.RemoveNameForChat(name);
         }
     }
 }

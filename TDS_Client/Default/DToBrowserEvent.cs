@@ -4,6 +4,7 @@
     {
         public const string AddCustomLobby = "cb1";
         public const string AddMapToVoting = "cb2";
+        public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
         public const string CloseMapMenu = "cb4";
         public const string HideRankings = "cb5";
@@ -12,10 +13,12 @@
         public const string LoadFavoriteMaps = "cb8";
         public const string LoadLanguage = "cb9";
         public const string LoadMapVoting = "cb10";
+        public const string LoadNamesForChat = "cb39";
         public const string MapCreatorSyncData = "cb11";
         public const string OpenMapMenu = "cb12";
         public const string RefreshAdminLevel = "cb13";
         public const string RemoveCustomLobby = "cb14";  
+        public const string RemoveNameForChat = "cb40";
         public const string RemovePositionInMapCreatorBrowser = "cb15";
         public const string ResetMapVoting = "cb16";
         public const string SetMapVotes = "cb17";
@@ -29,6 +32,7 @@
         public const string SyncMoney = "cb24";
         public const string SyncNewSupportRequestMessage = "cb35";
         public const string SyncTeamChoiceMenuData = "cb36";
+        public const string ToggleChatInput = "cb41";
         public const string ToggleChatOpened = "cb25";
         public const string ToggleFreeroam = "cb26";
         public const string ToggleHUD = "cb27";

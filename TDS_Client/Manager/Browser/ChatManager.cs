@@ -45,7 +45,6 @@ namespace TDS_Client.Manager.Browser
         public static void Loaded()
         {
             //Settings.LoadSettings();
-            MainBrowser.LoadUserName();
             EventsSender.Send(DToServerEvent.ChatLoaded);
         }
 
@@ -82,9 +81,9 @@ namespace TDS_Client.Manager.Browser
             IsOpen = true;
 
             if (cmd == null)
-                MainBrowser.Browser.ExecuteJs($"enableChatInput(1);");
+                Angular.Main.ToggleChatInput(true);
             else
-                MainBrowser.Browser.ExecuteJs($"enableChatInput(1, '{cmd}')");
+                Angular.Main.ToggleChatInput(true, cmd);
         }
 
         public static void CloseChatInput(bool force = false)
@@ -92,7 +91,7 @@ namespace TDS_Client.Manager.Browser
             if (!IsOpen && !force)
                 return;
             IsOpen = false;
-            MainBrowser.Browser.ExecuteJs($"enableChatInput(0);");
+            Angular.Main.ToggleChatInput(false);
         }
     }
 }

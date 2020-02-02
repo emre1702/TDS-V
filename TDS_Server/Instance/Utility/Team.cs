@@ -23,7 +23,7 @@ namespace TDS_Server.Instance.Utility
             set
             {
                 _entity = value;
-                ChatColor = "!{" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "}";
+                ChatColor = "!$" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "$";
             }
         }
 
@@ -39,7 +39,7 @@ namespace TDS_Server.Instance.Utility
         public Team(Teams entity)
         {
             _entity = entity;
-            ChatColor = "!{" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "}";
+            ChatColor = "!$" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "$";
 
             if (!IsSpectator)
             {

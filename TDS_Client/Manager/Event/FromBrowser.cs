@@ -340,8 +340,8 @@ namespace TDS_Client.Manager.Event
         {
             ChatManager.CloseChatInput();
             string msg = (string)args[0];
-            bool isDirty = Convert.ToBoolean(args[1]);
-            EventsSender.Send(DToServerEvent.LobbyChatMessage, msg, isDirty);
+            int chatTypeNumber = (int)(args[1]);
+            EventsSender.Send(DToServerEvent.LobbyChatMessage, msg, chatTypeNumber);
         }
 
         private void OnCloseChatMethod(object[] args)

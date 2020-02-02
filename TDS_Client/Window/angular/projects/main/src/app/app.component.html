@@ -1,5 +1,6 @@
 <!-- If there is no *ngIf it's handled in the component itself -->
 
+<app-chat></app-chat>
 <app-mapvoting></app-mapvoting>
 <app-invitation></app-invitation>
 <app-teamorders *ngIf="settings.InTeamOrderModus && settings.InFightLobby" [@teamOrdersAnimation]="getTeamOrdersLength()"></app-teamorders>

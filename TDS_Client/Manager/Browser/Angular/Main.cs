@@ -5,6 +5,11 @@ using TDS_Client.Manager.Utility;
 using TDS_Common.Enum;
 using TDS_Common.Default;
 using TDS_Client.Enum;
+using RAGE.Elements;
+using System.Linq;
+using TDS_Common.Manager.Utility;
+using System;
+using System.Diagnostics;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -27,7 +32,10 @@ namespace TDS_Client.Manager.Browser.Angular
             if (Browser != null)
                 return;
 
+            RAGE.Chat.SafeMode = false;
+
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
+            Browser.MarkAsChat();
 
             Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
             foreach (var execStr in _executeQueue)
@@ -75,6 +83,16 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void LoadFavoriteMaps(string mapFavoritesJson)
         {
             Execute(DToBrowserEvent.LoadFavoriteMaps, mapFavoritesJson);
+        }
+
+        public static void ToggleChatInput(bool activated)
+        {
+            Execute(DToBrowserEvent.ToggleChatInput, activated);
+        }
+
+        public static void ToggleChatInput(bool activated, string startWith)
+        {
+            Execute(DToBrowserEvent.ToggleChatInput, activated, startWith);
         }
 
         public static void ToggleTeamOrderModus(bool activated)
@@ -274,6 +292,22 @@ namespace TDS_Client.Manager.Browser.Angular
         public static void FromBrowserEventReturn(string eventName, object ret)
         {
             Execute(DToServerEvent.FromBrowserEvent, eventName, ret);
+        }
+
+        public static void AddNameForChat(string name)
+        {
+            Execute(DToBrowserEvent.AddNameForChat, name);
+        }
+
+        public static void LoadNamesForChat(List<Player> players)
+        {
+            IEnumerable<string> names = players.Select(p => p.Name);
+            Execute(DToBrowserEvent.LoadNamesForChat, Serializer.ToBrowser(names));
+        }
+
+        public static void RemoveNameForChat(string name)
+        {
+            Execute(DToBrowserEvent.RemoveNameForChat, name);
         }
     }
 
