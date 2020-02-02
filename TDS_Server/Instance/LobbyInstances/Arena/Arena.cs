@@ -45,8 +45,6 @@ namespace TDS_Server.Instance.LobbyInstances
 
         protected override void Remove()
         {
-            base.Remove();
-
             _nextRoundStatusTimer?.Kill();
             _nextRoundStatusTimer = null;
 
@@ -60,7 +58,9 @@ namespace TDS_Server.Instance.LobbyInstances
                 GangwarArea.InLobby = null;
                 GangwarArea = null;
             }
-                
+
+            base.Remove();
+
         }
     }
 }
