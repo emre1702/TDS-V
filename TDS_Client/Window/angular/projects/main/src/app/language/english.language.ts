@@ -199,7 +199,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     BurstFiringMode = "Burst";
     SingleFiringMode = "Single";
     Target = "Target";
-    TargetInfo = `This position Will be the main target of the attackers.`;
+    TargetInfo = `This position will be the main target of the attackers.`;
     Vehicles = "Vehicles";
     AvailableMaps = "Available maps";
     SelectedMaps = "Selected maps";

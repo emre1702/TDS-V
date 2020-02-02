@@ -244,7 +244,7 @@
             <div class="positions-bottom-row">
                 <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)"
                     [disabled]="!settings.IsLobbyOwner">
-                    {{ data[9] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
+                    {{ (data[9] ? 'ChangePos' : 'AddPos') | language: settings.Lang }}
                 </button>
                 <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)"
                     [disabled]="!settings.IsLobbyOwner">
@@ -472,7 +472,7 @@
             <div class="positions-bottom-row">
                 <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.Target)"
                     [disabled]="!settings.IsLobbyOwner">
-                    {{ data[10] ? 'ChangePos' : 'AddPos' | language: settings.Lang }}
+                    {{ (data[10] ? 'ChangePos' : 'AddPos') | language: settings.Lang }}
                 </button>
                 <button mat-raised-button type="button" (click)="removeSelectedPos(removeTarget)"
                     [disabled]="!settings.IsLobbyOwner">
