@@ -16,10 +16,12 @@ namespace TDS_Server.Instance.GameModes
             var gangwarArea = GangwarAreasManager.GetById(map.SyncedData.Id);  
             if (gangwarArea is null)
             {
-                lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.Error);
-                return;
+                /*lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.Error);
+                return;*/
+                // Create dummy gangwar area
+                gangwarArea = new GangwarArea(map);
             }
-            if (!lobby.IsGangActionLobby)
+            else if (!lobby.IsGangActionLobby)
             {
                 gangwarArea = new GangwarArea(gangwarArea);
             }
@@ -31,8 +33,6 @@ namespace TDS_Server.Instance.GameModes
             _allowedWeaponHashes = dbContext.Weapons
                 .Select(w => w.Hash)
                 .ToHashSet();
-
-            
         }
     }
 }
