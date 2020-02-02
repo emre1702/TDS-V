@@ -135,22 +135,22 @@
 
                     <ng-container matColumnDef="x">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="y">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="z">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rot">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -190,12 +190,12 @@
 
                     <ng-container matColumnDef="x">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="y">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="displayedColumns2D"></mat-header-row>
@@ -269,37 +269,37 @@
                     <ng-container matColumnDef="name">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[2] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="x">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="y">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="z">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotX">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotX </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[6] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotY">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[7] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotZ">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="displayedColumnsObject"></mat-header-row>
@@ -338,37 +338,37 @@
                     <ng-container matColumnDef="name">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.Info }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[2] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="x">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="y">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="z">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotX">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotX </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[6] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotY">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[7] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rotZ">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="displayedColumnsVehicle"></mat-header-row>
@@ -407,22 +407,22 @@
 
                     <ng-container matColumnDef="x">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosX }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="y">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosY }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="z">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.PosZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="rot">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element.RotZ }}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
