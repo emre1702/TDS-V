@@ -55,11 +55,11 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             var dummyDBTeam = LobbyManager.MainMenu.Teams[0].Entity.DeepCopy();
 
-            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
-            attackerDBTeam.Index = 1;
-
             var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
-            ownerDBTeam.Index = 2;
+            ownerDBTeam.Index = 1;
+
+            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
+            attackerDBTeam.Index = 2;
 
             var lobby = new Lobbies
             {
@@ -90,8 +90,8 @@ namespace TDS_Server.Instance.LobbyInstances
                 Teams = new List<Teams>
                 {
                     dummyDBTeam,
-                    attackerDBTeam,
-                    ownerDBTeam
+                    ownerDBTeam,
+                    attackerDBTeam
                 },
                 
             };
