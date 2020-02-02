@@ -102,6 +102,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 pos[2] = info;
                 this.addPosToVehicles(pos);
                 break;
+            case MapCreatorPositionType.Target:
+                this.addPosToTarget(pos);
+                break;
         }
         this.changeDetector.detectChanges();
     }
@@ -623,7 +626,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     isTargetValid(): boolean {
-        return this.data[2] != MapType.Gangwar || this.data[9] != undefined;
+        return this.data[2] != MapType.Gangwar || this.data[10] != undefined;
     }
 
     getMinNameLength() {
