@@ -39,11 +39,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 DefaultSpawnRotation = 0f
             };
             MapCreateLobby lobby = new MapCreateLobby(entity);
-            await lobby.ExecuteForDBAsync(async (dbContext) => 
-            {
-                dbContext.Add(entity);
-                await dbContext.SaveChangesAsync();
-            });
+            await lobby.AddToDB();
 
             await lobby.AddPlayer(player, 0);
 

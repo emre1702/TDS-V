@@ -34,7 +34,7 @@ namespace TDS_Server.Instance.LobbyInstances
         protected Vector3 SpawnPoint { get; }
         public bool IsGangActionLobby { get; set; }
 
-        private readonly SyncedLobbySettingsDto _syncedLobbySettings;
+        private SyncedLobbySettingsDto _syncedLobbySettings;
 
         public Lobby(Lobbies entity, bool isGangActionLobby = false)
         {
@@ -101,7 +101,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 dbContext.Dispose();
             });
 
-           
+
         }
 
         private static uint GetFreeDimension()
@@ -117,7 +117,7 @@ namespace TDS_Server.Instance.LobbyInstances
             return Players.Count == 0;
         }
 
-      
+
         /// <summary>
         /// Call this on lobby create.
         /// </summary>
@@ -137,6 +137,26 @@ namespace TDS_Server.Instance.LobbyInstances
                     .Query()
                     .Include(e => e.Map)
                     .LoadAsync();
+
+                // Reload again because LobbyEntity could have changed (default values in DB)
+                _syncedLobbySettings = new SyncedLobbySettingsDto
+                (
+                    Id: LobbyEntity.Id,
+                    Name: LobbyEntity.Name,
+                    Type: LobbyEntity.Type,
+                    IsOfficial: LobbyEntity.IsOfficial,
+                    BombDefuseTimeMs: LobbyEntity.LobbyRoundSettings?.BombDefuseTimeMs,
+                    BombPlantTimeMs: LobbyEntity.LobbyRoundSettings?.BombPlantTimeMs,
+                    SpawnAgainAfterDeathMs: LobbyEntity.SpawnAgainAfterDeathMs,
+                    CountdownTime: IsGangActionLobby ? 0 : LobbyEntity.LobbyRoundSettings?.CountdownTime,
+                    RoundTime: LobbyEntity.LobbyRoundSettings?.RoundTime,
+                    BombDetonateTimeMs: LobbyEntity.LobbyRoundSettings?.BombDetonateTimeMs,
+                    InLobbyWithMaps: this is Arena,
+                    MapLimitTime: LobbyEntity.LobbyMapSettings?.MapLimitTime,
+                    MapLimitType: LobbyEntity.LobbyMapSettings?.MapLimitType,
+                    StartHealth: LobbyEntity.StartHealth,
+                    StartArmor: LobbyEntity.StartArmor
+                );
             });
 
         }
