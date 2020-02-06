@@ -110,7 +110,7 @@ namespace TDS_Client.Instance.MapCreator
 
         public void ResetObjectPosition()
         {
-            Entity.Position = Position;
+            RAGE.Game.Entity.SetEntityCoordsNoOffset(Entity.Handle, Position.X, Position.Y, Position.Z, true, false, false);
             RAGE.Game.Entity.SetEntityRotation(Entity.Handle, Rotation.X, Rotation.Y, Rotation.Z, 2, false);
             LoadEntityData();
 
@@ -121,6 +121,11 @@ namespace TDS_Client.Instance.MapCreator
         public void ActivatePhysics()
         {
             RAGE.Game.Physics.ActivatePhysics(Entity.Handle);
+        }
+
+        public void Freeze(bool toggle)
+        {
+            RAGE.Game.Entity.FreezeEntityPosition(Entity.Handle, toggle);
         }
 
         public void Delete(bool syncToServer)

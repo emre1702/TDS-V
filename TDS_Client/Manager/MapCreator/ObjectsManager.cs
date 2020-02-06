@@ -12,7 +12,7 @@ using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
-using TDS_Server.Dto.Map;
+using TDS_Common.Instance.Utility;
 using Entity = RAGE.Elements.Entity;
 using Ped = RAGE.Elements.Ped;
 using Player = RAGE.Elements.Player;
@@ -257,6 +257,7 @@ namespace TDS_Client.Manager.MapCreator
                     // Todo: Check if this works or we need to use VehicleHash enum instead
                     uint vehHash = Misc.GetHashKey(vehName);
                     var obj = GetObject(vehHash, EMapCreatorPositionType.Vehicle, vehPos.OwnerRemoteId, vehName, vehPos.Id);
+                    obj.Freeze(true);
                     obj.LoadPos(vehPos);
                 }
             }
@@ -269,15 +270,22 @@ namespace TDS_Client.Manager.MapCreator
                     foreach (var spawnPos in teamSpawns)
                     {
                         var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId, spawnPos.Id);
-                        obj.LoadPos(spawnPos);
-                    }
+                        obj.Freeze(true);
+                        new TDSTimer(() =>
+                        {
+                            obj.LoadPos(spawnPos);
+                        }, 1000);
+                     }
                 }
             }
 
             if (map.Target != null)
             {
                 var obj = GetTarget(map.Target.OwnerRemoteId, map.Target.Id);
-                obj.LoadPos(map.Target);
+                new TDSTimer(() =>
+                {
+                    obj.LoadPos(map.Target);
+                }, 1000);
             }
 
             Start();
