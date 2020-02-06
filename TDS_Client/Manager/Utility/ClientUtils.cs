@@ -139,10 +139,12 @@ namespace TDS_Client.Manager.Utility
 
         public static Color GetBetween(this Color first, Color second, float percentage = 0.5f)
         {
-            return Color.FromArgb((int)((first.A + second.A)*percentage), 
-                (int)((first.R + second.R) * percentage), 
-                (int)((first.G + second.G) * percentage), 
-                (int)((first.B + second.B) * percentage));
+            return Color.FromArgb(
+                    (int)Math.Abs(second.A + (first.A - second.A) * percentage),
+                    (int)Math.Abs(second.R + (first.R - second.R) * percentage),
+                    (int)Math.Abs(second.G + (first.G - second.G) * percentage),
+                    (int)Math.Abs(second.B + (first.B - second.B) * percentage)
+                );
         }
 
         public static Vector3 GetDirectionByRotation(Vector3 rotation)
