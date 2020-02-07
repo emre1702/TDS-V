@@ -39,14 +39,6 @@ namespace TDS_Server.Instance.GameModes
                     };
                 });
             }
-           
-            // Do we need to force someone to stay at target?
-            // If yes, force him! Kill him if he don't want to stay there!
-            else if (TargetObject is { })
-            {
-                var playerAtTarget = GetNextTargetMan();
-                SetTargetMan(playerAtTarget);
-            }
         }
 
         public override void StartRound()
@@ -76,7 +68,17 @@ namespace TDS_Server.Instance.GameModes
                         RemoveOnLobbyLeave = true
                     };
                 });
-            }            
+            }
+
+            // Do we need to force someone to stay at target?
+            // If yes, force him! Kill him if he don't want to stay there!
+            else if (TargetObject is { })
+            {
+                var playerAtTarget = GetNextTargetMan();
+                SetTargetMan(playerAtTarget);
+                if (playerAtTarget is { })
+                    playerAtTarget.Player!.Position = TargetObject.Position;
+            }
         }
 
         public override void StopRound()
