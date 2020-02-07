@@ -220,6 +220,16 @@ namespace TDS_Client.Manager.MapCreator
                     Player.LocalPlayer.Position = new Vector3(map.MapCenter.PosX, map.MapCenter.PosY, map.MapCenter.PosZ);
             }
 
+            if (map.Target != null)
+            {
+                var obj = GetTarget(map.Target.OwnerRemoteId, map.Target.Id);
+                obj.LoadPos(map.Target);
+                if (TDSCamera.ActiveCamera != null)
+                    TDSCamera.ActiveCamera.Position = new Vector3(map.Target.PosX, map.Target.PosY, map.Target.PosZ);
+                else
+                    Player.LocalPlayer.Position = new Vector3(map.Target.PosX, map.Target.PosY, map.Target.PosZ);
+            }
+
             if (map.BombPlaces != null)
             {
                 foreach (var bombPlace in map.BombPlaces)
@@ -273,19 +283,11 @@ namespace TDS_Client.Manager.MapCreator
                         obj.Freeze(true);
                         new TDSTimer(() =>
                         {
+                            obj.Freeze(true);
                             obj.LoadPos(spawnPos);
                         }, 1000);
                      }
                 }
-            }
-
-            if (map.Target != null)
-            {
-                var obj = GetTarget(map.Target.OwnerRemoteId, map.Target.Id);
-                new TDSTimer(() =>
-                {
-                    obj.LoadPos(map.Target);
-                }, 1000);
             }
 
             Start();
