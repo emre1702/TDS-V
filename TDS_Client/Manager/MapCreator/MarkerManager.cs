@@ -71,6 +71,8 @@ namespace TDS_Client.Manager.MapCreator
                 if (Pad.IsDisabledControlJustReleased(0, (int)Control.Attack))
                 {
                     ClickedMarker = null;
+                    Browser.Angular.Main.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z,
+                        obj.MovingRotation.X, obj.MovingRotation.Y, obj.MovingRotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
                 }
                 else
                 {
