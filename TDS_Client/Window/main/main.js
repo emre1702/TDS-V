@@ -152,16 +152,16 @@ function toggleOrders(bool) {
 }
 
 function addPlayerTalking(name) {
-	let id = "voice-chat-" + name;
+	let id = "voice-chat-" + name.replace(/\W/g,'_');
 	let img = "<img src='../pic/speaker.png'/>";
 	let child = $("<div id='" + id + "'>" + img + "<span>" + name + "</span></div>");
     voiceChatPlayerNamesBox.append(child);
 }
 
 function removePlayerTalking(name) {
-	let id = "voice-chat-" + name;
+	let id = "voice-chat-" + name.replace(/\W/g,'_');
 	let child = voiceChatPlayerNamesBox.find("#" + id);
-	if (child) {
+	if (child.length) {
 		child.remove();
 	}
 }
