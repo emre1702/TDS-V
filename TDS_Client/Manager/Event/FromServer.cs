@@ -658,12 +658,14 @@ namespace TDS_Client.Manager.Event
             if (inmainmenu)
             {
                 var list = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
+                Scoreboard.ClearRows();
                 Scoreboard.AddMainmenuData(list);
             }
             else
             {
                 var playerlist = Serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
                 var lobbylist = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
+                Scoreboard.ClearRows();
                 Scoreboard.AddLobbyData(playerlist, lobbylist);
             }
         }

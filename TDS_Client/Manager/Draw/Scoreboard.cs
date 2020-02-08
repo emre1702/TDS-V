@@ -113,7 +113,6 @@ namespace TDS_Client.Manager.Draw
             if (tick - _lastLoadedTick >= (ulong)ClientConstants.ScoreboardLoadCooldown || control == Control.Aim)
             {
                 _lastLoadedTick = tick;
-                _grid.ClearRows();
                 if (control == Control.Aim)
                     EventsSender.SendIgnoreCooldown(DToServerEvent.RequestPlayersForScoreboard);
                 else 
@@ -133,6 +132,11 @@ namespace TDS_Client.Manager.Draw
             if (control == Control.Aim)
                 _isManualToggleDisabled = false;
             IsActivated = false;
+        }
+
+        public static void ClearRows()
+        {
+            _grid.ClearRows();
         }
 
         private static void OnTick(List<TickNametagData> _)
