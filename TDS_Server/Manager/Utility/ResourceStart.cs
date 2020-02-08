@@ -89,6 +89,7 @@ namespace TDS_Server.Manager.Utility
                 Normal.Init(dbContext);
                 Bomb.Init(dbContext);
                 Sniper.Init(dbContext);
+                Gangwar.Init(dbContext);
 
                 await Gang.LoadAll(dbContext).ConfigureAwait(true);
                 await LobbyManager.LoadAllLobbies(dbContext).ConfigureAwait(true);
