@@ -83,6 +83,9 @@ namespace TDS_Server.Manager.Utility
                     AddMapsToArena(arena, lobbysetting);
                 }
             }
+
+            SettingsManager.SyncedSettings.ArenaLobbyId = Arena.Id;
+            SettingsManager.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
         }
 
         private static void AddMapsToArena(Arena arena, Lobbies lobbySetting)

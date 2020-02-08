@@ -21,11 +21,9 @@
 
         //public const string HitOtherPlayer = "c";
 
-        public const string JoinArena = "c13";
         public const string JoinedCustomLobbiesMenu = "c14";
         public const string JoinLobby = "c15";
         public const string JoinLobbyWithPassword = "c16";
-        public const string JoinMapCreator = "c17";
 
         public const string LanguageChange = "c18";
         public const string LeaveLobby = "c19";

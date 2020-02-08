@@ -29,7 +29,16 @@ namespace TDS_Server.Manager.EventManager
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
                 Lobby lobby = Lobby.LobbiesByIndex[index];
-                await lobby.AddPlayer(player, null);
+                if (lobby is MapCreateLobby mapCreateLobby)
+                {
+                    if (await lobby.IsPlayerBaned(player))
+                        return;
+                    MapCreateLobby.Create(player);
+                }
+                else
+                {
+                    await lobby.AddPlayer(player, null);
+                }
             }
             else
             {
@@ -61,28 +70,6 @@ namespace TDS_Server.Manager.EventManager
                 player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
                 //todo Remove lobby at client view and check, why he saw this lobby
             }
-        }
-
-        [RemoteEvent(DToServerEvent.JoinArena)]
-        public static async void JoinArenaEvent(Player client)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-            await LobbyManager.Arena.AddPlayer(player, null);
-        }
-
-        [RemoteEvent(DToServerEvent.JoinMapCreator)]
-        public static async void JoinMapCreatorEvent(Player client)
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-
-            if (await LobbyManager.MapCreateLobbyDummy.IsPlayerBaned(player))
-                return;
-
-            MapCreateLobby.Create(player);
         }
 
         [RemoteEvent(DToServerEvent.CreateCustomLobby)]

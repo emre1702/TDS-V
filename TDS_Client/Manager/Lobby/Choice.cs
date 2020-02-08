@@ -6,20 +6,14 @@ namespace TDS_Client.Manager.Lobby
     internal static class Choice
     {
 
-        public static void JoinLobby(int index, uint? teamindex)
-        {
-            EventsSender.Send(DToServerEvent.JoinLobby, index, teamindex);
-            //EventsSender.SendCooldown("joinMapCreatorLobby");
-        }
-
         public static void JoinArena()
         {
-            EventsSender.Send(DToServerEvent.JoinArena);
+            EventsSender.Send(DToServerEvent.JoinLobby, Settings.ArenaLobbyId);
         }
 
         public static void JoinMapCreator()
         {
-            EventsSender.Send(DToServerEvent.JoinMapCreator);
+            EventsSender.Send(DToServerEvent.JoinLobby, Settings.MapCreatorLobbyId);
         }
     }
 }
