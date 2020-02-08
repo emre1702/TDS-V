@@ -230,17 +230,18 @@ namespace TDS_Client.Instance.Lobby
             if (_edges.Count == 0)
                 return;
 
+            // Doesn't work
             /*// START_GPS_CUSTOM_ROUTE
-            Invoker.Invoke(0xDB34E8D56FC13B08, 6, false, true);
+            Invoker.Invoke(Natives._0xDB34E8D56FC13B08, 6, false, true);
 
             foreach (var edge in _edges)
             {
                 // ADD_POINT_TO_GPS_CUSTOM_ROUTE
-                Invoker.Invoke(0x311438A071DD9B1A, edge.X, edge.Y, edge.Z);
+                Invoker.Invoke(Natives._0x311438A071DD9B1A, edge.X, edge.Y, edge.Z);
             }
 
             // SET_GPS_CUSTOM_ROUTE_RENDER
-            RAGE.Game.Invoker.Invoke(0x900086F371220B6F, true, 16, 16);*/
+            Invoker.Invoke(Natives._0x900086F371220B6F, true, 16, 16); */
 
             _createdGpsRoutes = true;
         }
@@ -251,7 +252,7 @@ namespace TDS_Client.Instance.Lobby
                 return;
 
             // CLEAR_GPS_CUSTOM_ROUTE
-            //RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
+            RAGE.Game.Invoker.Invoke(0xE6DE0561D9232A64);
 
             _createdGpsRoutes = false;
         }
