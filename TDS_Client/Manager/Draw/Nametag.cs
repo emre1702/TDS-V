@@ -102,7 +102,10 @@ namespace TDS_Client.Manager.Draw
             if (armor == 0)
                 return GetHpColor(hp);
 
-            return GetArmorColor(armor);
+            if (_armorEmptyColor.HasValue)
+                return GetArmorColor(armor);
+            else
+                return GetArmorColor(hp, armor);
 
             /*if (armor == 0)
                 return Color.FromArgb(ClientConstants.NametagAlpha, (int)Math.Ceiling((100 - hp) * 2.55 / 2), (int)Math.Ceiling(hp * 2.55), 0);
@@ -126,7 +129,10 @@ namespace TDS_Client.Manager.Draw
         }
 
         private static Color GetArmorColor(int armor)
-        {
+        { 
+            if (!_armorEmptyColor.HasValue)
+                return GetArmorColor(100, armor);
+
             return _armorEmptyColor.Value.GetBetween(_armorFullColor, armor / Settings.StartArmor);
         }
 
