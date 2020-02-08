@@ -27,5 +27,5 @@
             <div class="firingmode">{{ firingMode + 'FiringMode' | language: settings.Lang }}</div>
         </div>
     </div>
-    <app-round-stats *ngIf="showRoundStats"></app-round-stats>
+    <app-round-stats [style.display]="showRoundStats ? 'initial' : 'none'"></app-round-stats>
 </div>
