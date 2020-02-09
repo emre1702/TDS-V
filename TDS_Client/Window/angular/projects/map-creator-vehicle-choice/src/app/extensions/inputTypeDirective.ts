@@ -1,4 +1,4 @@
-import { Directive, OnInit, HostListener } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../enums/dtoclientevent.enum';
 
