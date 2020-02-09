@@ -18,6 +18,7 @@ namespace TDS_Server.Instance.GameModes
 
             CreateTargetBlip();
             CreateTargetObject();
+            CreateTargetTextLabel();
         }
 
         public override void StartRoundCountdown()
@@ -27,9 +28,9 @@ namespace TDS_Server.Instance.GameModes
             if (Lobby.IsGangActionLobby)
             {
                 LangUtils.SendAllNotification(lang => lang.GANGWAR_PREPARATION_INFO);
-                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_PREPARATION_INFO, _gangwarArea.Map.SyncedData.Name, OwnerTeam.Entity.Name));
+                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_PREPARATION_INFO, _gangwarArea.Map.BrowserSyncedData.Name, OwnerTeam.Entity.Name));
 
-                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_PREPARATION_INFO, _gangwarArea.Map.SyncedData.Name, AttackerTeam.Entity.Name));
+                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_PREPARATION_INFO, _gangwarArea.Map.BrowserSyncedData.Name, AttackerTeam.Entity.Name));
 
                 _gangwarArea?.Attacker.FuncIterate(player =>
                 {
@@ -49,8 +50,8 @@ namespace TDS_Server.Instance.GameModes
             {
                 Lobby.LobbyEntity.Name = $"[GW] {Lobby.GangwarArea!.Attacker!.Entity.Short} - {Lobby.GangwarArea.Owner!.Entity.Short}";
 
-                LangUtils.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea?.Map.SyncedData.Name ?? "?", OwnerTeam.Entity.Name));
-                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_STARTED_INFO, _gangwarArea.Map.SyncedData.Name, OwnerTeam.Entity.Name));
+                LangUtils.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea?.Map.BrowserSyncedData.Name ?? "?", OwnerTeam.Entity.Name));
+                _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_STARTED_INFO, _gangwarArea.Map.BrowserSyncedData.Name, OwnerTeam.Entity.Name));
 
                 _gangwarArea?.Attacker!.FuncIterate(player =>
                 {
@@ -60,7 +61,7 @@ namespace TDS_Server.Instance.GameModes
                     };
                 });
 
-                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Map.SyncedData.Name, AttackerTeam.Entity.Name));
+                _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Map.BrowserSyncedData.Name, AttackerTeam.Entity.Name));
                 _gangwarArea?.Owner!.FuncIterate(player =>
                 {
                     _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)

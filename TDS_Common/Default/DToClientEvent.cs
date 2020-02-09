@@ -98,6 +98,7 @@
         public const string AttachEntityToEntityWorkaround = "s75";
 
         public const string DetachEntityWorkaround = "s76";
+        public const string FreezeEntityWorkaround = "s85";
         public const string FreezePlayerWorkaround = "s77";
         public const string SetEntityCollisionlessWorkaround = "s78";
         public const string SetPlayerTeamWorkaround = "s79";

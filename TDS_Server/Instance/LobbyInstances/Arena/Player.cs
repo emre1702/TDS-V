@@ -192,8 +192,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
             if (_currentMap != null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapChange, _currentMap.Info.Name,
-                    _currentMap.LimitInfo.EdgesJson, Serializer.ToClient(_currentMap.Target ?? _currentMap.LimitInfo.Center));
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
             }
 
             SendPlayerAmountInFightInfo(player.Player);

@@ -13,7 +13,7 @@ namespace TDS_Server.Instance.GameModes
 
         public Gangwar(Arena lobby, MapDto map) : base(lobby, map) 
         { 
-            var gangwarArea = GangwarAreasManager.GetById(map.SyncedData.Id);  
+            var gangwarArea = GangwarAreasManager.GetById(map.BrowserSyncedData.Id);  
             if (gangwarArea is null)
             {
                 /*lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.Error);

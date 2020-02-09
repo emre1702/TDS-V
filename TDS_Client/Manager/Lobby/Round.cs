@@ -55,7 +55,7 @@ namespace TDS_Client.Manager.Lobby
             StopFight();
             Spectate.Stop();
             if (removemapinfo)
-                MapInfo.RemoveMapInfo();
+                MapDataManager.RemoveMapInfo();
         }
     }
 }

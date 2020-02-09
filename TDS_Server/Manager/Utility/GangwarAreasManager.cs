@@ -29,7 +29,7 @@ namespace TDS_Server.Manager.Utility
             var entities = dbContext.GangwarAreas.Include(a => a.Map).Include(a => a.OwnerGang).ToList();
             foreach (var entity in entities)
             {
-                var map = MapsLoader.AllMaps.FirstOrDefault(m => m.Info.Type == Enums.EMapType.Gangwar && m.SyncedData.Id == entity.MapId);
+                var map = MapsLoader.AllMaps.FirstOrDefault(m => m.Info.Type == Enums.EMapType.Gangwar && m.BrowserSyncedData.Id == entity.MapId);
                 if (map is null)
                 {
                     ErrorLogsManager.Log($"GangwarArea with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);

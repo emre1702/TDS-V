@@ -1,7 +1,6 @@
 ﻿using RAGE;
 using RAGE.Game;
 using RAGE.NUI;
-using System;
 using System.Drawing;
 using TDS_Client.Default;
 using TDS_Client.Enum;
@@ -9,10 +8,8 @@ using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
-using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
 using TDS_Common.Instance.Utility;
-using TDS_Server.Dto.Map;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -39,7 +36,6 @@ namespace TDS_Client.Manager.Lobby
         private static EPlantDefuseStatus _playerStatus;
         private static bool _gotBomb;
         private static bool _bombPlanted;
-        private static Position4DDto[] _plantSpots;
         //private static ulong _plantDefuseStartTick;
         private static bool _dataChanged;
 
@@ -83,11 +79,10 @@ namespace TDS_Client.Manager.Lobby
                 CheckPlantDefuseStop();
         }
 
-        public static void LocalPlayerGotBomb(Position4DDto[] spotstoplant)
+        public static void LocalPlayerGotBomb()
         {
             DataChanged = true;
             _gotBomb = true;
-            _plantSpots = spotstoplant;
             CheckPlantDefuseOnTick = true;
         }
 
@@ -172,10 +167,10 @@ namespace TDS_Client.Manager.Lobby
 
         private static bool IsOnPlantSpot()
         {
-            if (_plantSpots == null)
+            if (MapDataManager.MapData is null || MapDataManager.MapData.BombPlaces is null || MapDataManager.MapData.BombPlaces.Count == 0)
                 return false;
             Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
-            foreach (Position4DDto pos in _plantSpots)
+            foreach (var pos in MapDataManager.MapData.BombPlaces)
             {
                 if (Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z, pos.Z != 0) <= Settings.DistanceToSpotToPlant)
                     return true;
@@ -209,7 +204,6 @@ namespace TDS_Client.Manager.Lobby
             _progressRect?.Remove();
             _progressRect = null;
             _gotBomb = false;
-            _plantSpots = null;
             _playerStatus = EPlantDefuseStatus.None;
             //_plantDefuseStartTick = 0;
             if (_bombPlanted)

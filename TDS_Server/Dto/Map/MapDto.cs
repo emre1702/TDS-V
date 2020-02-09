@@ -7,6 +7,8 @@ using TDS_Server_DB.Entity.Player;
 using System.Linq;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Manager.Utility;
+using TDS_Common.Dto.Map;
+using TDS_Server.Manager.Helper;
 
 namespace TDS_Server.Dto.Map
 {
@@ -40,7 +42,10 @@ namespace TDS_Server.Dto.Map
         public Position3DDto? Target { get; set; }
 
         [XmlIgnore]
-        public SyncedMapDataDto SyncedData { get; set; } = new SyncedMapDataDto();
+        public BrowserSyncedMapDataDto BrowserSyncedData { get; set; } = new BrowserSyncedMapDataDto();
+
+        [XmlIgnore]
+        public string ClientSyncedDataJson { get; set; }
 
         [XmlIgnore]
         public List<PlayerMapRatings> Ratings { get; set; } = new List<PlayerMapRatings>();
@@ -98,18 +103,37 @@ namespace TDS_Server.Dto.Map
             Target = data.Target != null && data.Type == TDS_Common.Enum.EMapType.Gangwar ? new Position3DDto(data.Target) : null;
 
             if (data.BombPlaces != null)
+            {
                 BombInfo = new MapBombInfoDto
                 {
                     PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
-                    PlantPositionsJson = Serializer.ToClient(data.BombPlaces)
                 };
+                BombInfo.PlantPositionsJson = Serializer.ToClient(BombInfo.PlantPositions);
+            }
+
+            LoadMapObjectsDataDto();
+        }
+
+        public void LoadMapObjectsDataDto()
+        {
+            var clientSyncedDataDto = new ClientSyncedDataDto
+            {
+                Name = Info.Name,
+                BombPlaces = BombInfo?.PlantPositions?.Select(e => e.SwitchNamespace()).ToList(),
+                MapEdges = LimitInfo?.Edges?.Select(e => e.SwitchNamespace()).ToList(),
+                Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
+                Target = Target?.SwitchNamespace(),
+                Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
+                Center = Target == null ? LimitInfo?.Center?.SwitchNamespace() : null
+            };
+            ClientSyncedDataJson = Serializer.ToClient(clientSyncedDataDto);
         }
 
         public static bool operator == (MapDto? thisMap, MapDto? otherMap) 
         {
             if (thisMap is null || otherMap is null)
                 return ReferenceEquals(thisMap, otherMap);
-            return thisMap.SyncedData.Id == otherMap.SyncedData.Id;
+            return thisMap.BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;
         }
 
         public static bool operator != (MapDto? thisMap, MapDto? otherMap)
@@ -117,7 +141,7 @@ namespace TDS_Server.Dto.Map
             if(thisMap is null || otherMap is null)
                 return !ReferenceEquals(thisMap, otherMap);
 
-            return thisMap.SyncedData.Id != otherMap.SyncedData.Id;
+            return thisMap.BrowserSyncedData.Id != otherMap.BrowserSyncedData.Id;
         }
 
         public override bool Equals(object? obj)
@@ -131,7 +155,7 @@ namespace TDS_Server.Dto.Map
             if (!(obj is MapDto otherMap))
                 return false;
 
-            return SyncedData.Id == otherMap.SyncedData.Id;
+            return BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;
         }
 
         public override int GetHashCode()

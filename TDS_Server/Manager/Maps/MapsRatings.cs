@@ -36,7 +36,7 @@ namespace TDS_Server.Manager.Maps
                 player.AddToChallenge(EChallengeType.ReviewMaps);
             }
             maprating.Rating = rating;
-            map.SyncedData.Rating = rating;
+            map.BrowserSyncedData.Rating = rating;
 
             await dbContext.SaveChangesAsync();
 

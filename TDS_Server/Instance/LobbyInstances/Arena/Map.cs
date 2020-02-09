@@ -17,8 +17,6 @@ namespace TDS_Server.Instance.LobbyInstances
         private MapDto? _currentMap;
         private List<MapDto> _maps = new List<MapDto>();
         private List<Blip> _mapBlips = new List<Blip>();
-        private List<Object> _mapObjects = new List<Object>();
-        private List<Vehicle> _mapVehicles = new List<Vehicle>();
         private string _mapsJson = string.Empty;
 
         private MapDto? GetNextMap()
@@ -112,36 +110,6 @@ namespace TDS_Server.Instance.LobbyInstances
             }
         }
 
-        private void CreateMapObjects(MapDto map)
-        {
-            if (map.Objects is null || map.Objects.Entries is null || map.Objects.Entries.Length == 0)
-                return;
-
-            foreach (var objData in map.Objects.Entries)
-            {
-                var pos = new Vector3(objData.X, objData.Y, objData.Z);
-                var rot = new Vector3(objData.RotX, objData.RotY, objData.RotZ);
-                var obj = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(objData.Name), pos, rot, 255, Dimension);
-                _mapObjects.Add(obj);
-            }
-        }
-
-        private void CreateMapVehicles(MapDto map)
-        {
-            if (map.Vehicles is null || map.Vehicles.Entries is null || map.Vehicles.Entries.Length == 0)
-                return;
-
-            foreach (var vehData in map.Vehicles.Entries)
-            {
-                var pos = new Vector3(vehData.X, vehData.Y, vehData.Z);
-                var rot = new Vector3(vehData.RotX, vehData.RotY, vehData.RotZ);
-                var veh = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(vehData.Name), pos, rot.Z, 0, 0, "Map", locked: true, engine: false, dimension: Dimension);
-                veh.Rotation = rot;
-                //Workaround.FreezeEntity(veh, this);
-                _mapVehicles.Add(veh);
-            }
-        }
-
         private Position4DDto? GetMapRandomSpawnData(Team? team)
         {
             if (_currentMap is null)
@@ -167,30 +135,12 @@ namespace TDS_Server.Instance.LobbyInstances
             _mapBlips.Clear();
         }
 
-        private void DeleteMapObjects()
-        {
-            foreach (var obj in _mapObjects)
-            {
-                obj.Delete();
-            }
-            _mapObjects.Clear();
-        }
-
-        private void DeleteMapVehicles()
-        {
-            foreach (var veh in _mapVehicles)
-            {
-                veh.Delete();
-            }
-            _mapVehicles.Clear();
-        }
-
         public void SetMapList(List<MapDto> themaps, string? syncjson = null)
         {
             // Only choose maps with team-amount same as this lobby got teams (without spectator)
             _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Count - 1).ToList();
 
-            _mapsJson = syncjson ?? Serializer.ToBrowser(_maps.Select(m => m.SyncedData).ToList());
+            _mapsJson = syncjson ?? Serializer.ToBrowser(_maps.Select(m => m.BrowserSyncedData).ToList());
         }
     }
 }

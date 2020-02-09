@@ -9,6 +9,7 @@ namespace TDS_Server.Instance.GameModes
         public Object? TargetObject { get; set; }
 
         private Blip? _targetBlip;
+        private TextLabel? _targetTextLabel;
 
         private void CreateTargetBlip()
         {
@@ -26,7 +27,17 @@ namespace TDS_Server.Instance.GameModes
                 return;
 
             TargetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(),new Vector3(), 120, Lobby.Dimension);
+            Workaround.FreezeEntity(TargetObject, true, Lobby);
             Workaround.SetEntityCollisionless(TargetObject, true, Lobby);
+        }
+
+        private void CreateTargetTextLabel()
+        {
+            if (TargetObject is null)
+                return;
+
+            _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position, 
+                (float)SettingsManager.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, Lobby.Dimension);
         }
 
         private void ClearMapFromTarget()
@@ -36,6 +47,9 @@ namespace TDS_Server.Instance.GameModes
 
             TargetObject?.Delete();
             TargetObject = null;
+
+            _targetTextLabel?.Delete();
+            _targetTextLabel = null;
         }
     }
 }

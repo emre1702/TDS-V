@@ -13,15 +13,15 @@ namespace TDS_Server.Manager.Helper
     {
         public static void LoadSyncedData(this MapDto map)
         {
-            map.SyncedData.Name = map.Info.Name;
-            map.SyncedData.Description[(int)ELanguage.English] = map.Descriptions?.English;
-            map.SyncedData.Description[(int)ELanguage.German] = map.Descriptions?.German;
-            map.SyncedData.Type = (EMapType) (int)map.Info.Type;
+            map.BrowserSyncedData.Name = map.Info.Name;
+            map.BrowserSyncedData.Description[(int)ELanguage.English] = map.Descriptions?.English;
+            map.BrowserSyncedData.Description[(int)ELanguage.German] = map.Descriptions?.German;
+            map.BrowserSyncedData.Type = (EMapType) (int)map.Info.Type;
         }
 
         public static void LoadMapRatings(this MapDto map, TDSDbContext dbContext)
         {
-            map.Ratings = dbContext.PlayerMapRatings.Where(m => m.MapId == map.SyncedData.Id).ToList();
+            map.Ratings = dbContext.PlayerMapRatings.Where(m => m.MapId == map.BrowserSyncedData.Id).ToList();
             map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
         }
 
@@ -30,6 +30,7 @@ namespace TDS_Server.Manager.Helper
             if (map.BombInfo != null)
                 map.BombInfo.PlantPositionsJson = Serializer.ToBrowser(map.BombInfo.PlantPositions);
             map.LimitInfo.EdgesJson = Serializer.ToBrowser(map.LimitInfo.Edges);
+            map.LoadMapObjectsDataDto();
         }
 
         public static Position3DDto? GetCenter(this MapDto map)
@@ -96,6 +97,16 @@ namespace TDS_Server.Manager.Helper
         public static Vector3 ToVector3(this Position4DDto pos)
         {
             return new Vector3(pos.X, pos.Y, pos.Z);
+        }
+
+        public static TDS_Common.Dto.Map.Position3DDto SwitchNamespace(this Position3DDto dto) 
+        {
+            return new TDS_Common.Dto.Map.Position3DDto { X = dto.X, Y = dto.Y, Z = dto.Z };
+        }
+
+        public static Position3DDto SwitchNamespace(this TDS_Common.Dto.Map.Position3DDto dto)
+        {
+            return new Position3DDto { X = dto.X, Y = dto.Y, Z = dto.Z };
         }
     }
 }

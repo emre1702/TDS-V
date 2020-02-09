@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Dto.Map;
 using TDS_Client.Instance.Lobby;
+using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Server.Dto.Map;
 
 namespace TDS_Client.Manager.Utility
 {

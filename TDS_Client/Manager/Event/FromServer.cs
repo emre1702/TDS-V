@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Default;
-using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
@@ -16,11 +15,11 @@ using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
+using TDS_Common.Dto.Map;
 using TDS_Common.Dto.Map.Creator;
 using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Map;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;
@@ -201,13 +200,11 @@ namespace TDS_Client.Manager.Event
             Graphics.StopScreenEffect(DEffectName.DEATHFAILMPIN);
             Cam.SetCamEffect(0);
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
-            MapInfo.SetMapInfo((string)args[0]);
             MainBrowser.HideRoundEndReason();
-            var maplimit = Serializer.FromServer<List<Position3DDto>>((string)args[1]);
-            LobbyCam.SetToMapCenter(Serializer.FromServer<Position3DDto>((string)args[2]));
             Round.InFight = false;
-            if (maplimit.Count > 0)
-                MapLimitManager.Load(maplimit);
+
+            var mapData = Serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
+            MapDataManager.SetMapData(mapData);
         }
 
         private void OnMapCreatorRequestAllObjectsForPlayerMethod(object[] args)
@@ -244,6 +241,7 @@ namespace TDS_Client.Manager.Event
         private void OnMapClearMethod(object[] args)
         {
             Round.Reset(false);
+            CustomEventManager.SetMapClear();
         }
 
         private void OnMapCreatorSyncNewObjectMethod(object[] args)
@@ -382,7 +380,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerGotBombMethod(object[] args)
         {
-            Bomb.LocalPlayerGotBomb(Serializer.FromServer<Position4DDto[]>((string)args[0]));
+            Bomb.LocalPlayerGotBomb();
         }
 
         private void OnPlayerPlantedBombMethod(object[] args)

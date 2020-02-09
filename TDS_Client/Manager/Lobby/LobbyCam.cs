@@ -1,6 +1,6 @@
-﻿using TDS_Client.Dto.Map;
-using TDS_Client.Instance.Utility;
+﻿using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Dto.Map;
 using TDS_Common.Instance.Utility;
 
 namespace TDS_Client.Manager.Lobby

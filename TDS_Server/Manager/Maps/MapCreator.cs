@@ -64,7 +64,7 @@ namespace TDS_Server.Manager.Maps
                 mapDto.LoadSyncedData();
                 //mapDto.SyncedData.CreatorName = creator.Player.Name;
 
-                string mapFileName = mapDto.Info.Name + "_" + (mapDto.SyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
+                string mapFileName = mapDto.Info.Name + "_" + (mapDto.BrowserSyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
                 string mapPath = (onlySave ? ServerConstants.SavedMapsPath : ServerConstants.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
                 mapDto.Info.FilePath = mapPath;
 
@@ -86,7 +86,7 @@ namespace TDS_Server.Manager.Maps
                     await dbContext.Maps.AddAsync(dbMap);
                     await dbContext.SaveChangesAsync().ConfigureAwait(true);
 
-                    mapDto.SyncedData.Id = dbMap.Id;
+                    mapDto.BrowserSyncedData.Id = dbMap.Id;
                     mapDto.RatingAverage = 5;
 
                     NewCreatedMaps.Add(mapDto);
@@ -110,7 +110,7 @@ namespace TDS_Server.Manager.Maps
             foreach (var map in NewCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
-                map.SyncedData.CreatorName = string.Empty;
+                map.BrowserSyncedData.CreatorName = string.Empty;
                 map.Info.IsNewMap = true;
             }
         }
@@ -146,7 +146,7 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? GetMapById(int mapId)
         {
-            return NewCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+            return NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
         }
 
         public static MapDto? GetMapByName(string mapName)
@@ -175,8 +175,8 @@ namespace TDS_Server.Manager.Maps
 
             var mapCreatorData = new MapCreateDataDto
             {
-                Id = map.SyncedData.Id,
-                Name = map.SyncedData.Name,
+                Id = map.BrowserSyncedData.Id,
+                Name = map.BrowserSyncedData.Name,
                 Type = (EMapType)(int)map.Info.Type,
                 BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToList(),
                 MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++),
@@ -263,12 +263,12 @@ namespace TDS_Server.Manager.Maps
         public static void RemoveMap(TDSPlayer player, int mapId)
         {
             bool isSavedMap = true;
-            MapDto? map = _savedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+            MapDto? map = _savedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
             if (map is null)
             {
-                map = NewCreatedMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                map = NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
                 if (map is null)
-                    map = NeedCheckMaps.FirstOrDefault(m => m.SyncedData.Id == mapId);
+                    map = NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
                 isSavedMap = false;
             }
 

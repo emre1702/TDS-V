@@ -10,6 +10,7 @@ namespace TDS_Client.Manager.Event
         {
             Add(DToClientEvent.AttachEntityToEntityWorkaround, Workaround.AttachEntityToEntityWorkaroundMethod);
             Add(DToClientEvent.DetachEntityWorkaround, Workaround.DetachEntityWorkaroundMethod);
+            Add(DToClientEvent.FreezeEntityWorkaround, Workaround.FreezeEntityWorkaroundMethod);
             Add(DToClientEvent.FreezePlayerWorkaround, Workaround.FreezePlayerWorkaroundMethod);
             Add(DToClientEvent.SetEntityCollisionlessWorkaround, Workaround.SetEntityCollisionlessWorkaroundMethod);
             Add(DToClientEvent.SetEntityInvincible, Workaround.SetEntityInvincibleMethod);

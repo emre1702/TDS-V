@@ -2,14 +2,13 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Collections.Generic;
-using TDS_Client.Dto.Map;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Dto.Map;
 using TDS_Common.Enum;
-using TDS_Server.Dto.Map;
 using Entity = RAGE.Game.Entity;
 using Player = RAGE.Elements.Player;
 

@@ -109,8 +109,6 @@ namespace TDS_Server.Instance.LobbyInstances
         private void StartMapClear()
         {
             DeleteMapBlips();
-            DeleteMapObjects();
-            DeleteMapVehicles();
             ClearTeamPlayersAmounts();
             SendAllPlayerEvent(DToClientEvent.MapClear, null);
 
@@ -129,11 +127,9 @@ namespace TDS_Server.Instance.LobbyInstances
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
-            CreateMapObjects(nextMap);
-            CreateMapVehicles(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.Info.Name, nextMap.LimitInfo.EdgesJson, Serializer.ToClient(nextMap.Target ?? nextMap.LimitInfo.Center));
+            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
             RoundEndReasonText = null;
         }
@@ -166,7 +162,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.SyncedData.Id ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                     if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != ERoundEndReason.Death)
                         character.Player!.Kill();
                     character.Lifes = 0;

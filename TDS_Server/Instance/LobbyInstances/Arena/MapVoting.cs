@@ -113,7 +113,7 @@ namespace TDS_Server.Instance.LobbyInstances
                 });
                 _mapVotes.Clear();
                 _playerVotes.Clear();
-                return _maps.FirstOrDefault(m => m.SyncedData.Id == wonMap.Id);
+                return _maps.FirstOrDefault(m => m.BrowserSyncedData.Id == wonMap.Id);
             }
             return null;
         }
@@ -163,7 +163,7 @@ namespace TDS_Server.Instance.LobbyInstances
             _mapVotes.Clear();
             _playerVotes.Clear();
 
-            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Player!.Name, map.SyncedData.Name));
+            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.Player!.Name, map.BrowserSyncedData.Name));
             SendAllPlayerEvent(DToClientEvent.StopMapVoting, null);
         }
     }

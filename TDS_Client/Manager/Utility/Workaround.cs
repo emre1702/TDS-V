@@ -1,5 +1,6 @@
 ﻿using RAGE.Elements;
 using System;
+using System.Linq;
 using TDS_Common.Dto;
 using TDS_Common.Manager.Utility;
 
@@ -24,6 +25,17 @@ namespace TDS_Client.Manager.Utility
             entity = Entities.Objects.GetAtRemote((ushort)entity).Handle;
             bool resetCollision = Convert.ToBoolean(args[1]);
             RAGE.Game.Entity.DetachEntity(entity, true, resetCollision);
+        }
+
+        public static void FreezeEntityWorkaroundMethod(object[] args)
+        {
+            var objHandleValue = Convert.ToUInt16(args[0]);
+            bool freeze = Convert.ToBoolean(args[1]);
+
+            var obj = Entities.Objects.All.FirstOrDefault(o => o.RemoteId == objHandleValue);
+            if (obj is null)
+                return;
+            obj.FreezePosition(freeze);
         }
 
         public static void FreezePlayerWorkaroundMethod(object[] args)

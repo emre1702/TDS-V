@@ -15,6 +15,7 @@ namespace TDS_Client.Manager.Event
         public delegate void EmptyDelegate();
         public static event EmptyDelegate OnDeath;
         public static event EmptyDelegate OnRoundEnd;
+        public static event EmptyDelegate OnMapClear;
 
         public delegate void RoundStartDelegate(bool isSpectator);
         public static event RoundStartDelegate OnRoundStart;
@@ -57,6 +58,11 @@ namespace TDS_Client.Manager.Event
         public static void SetRoundEnd()
         {
             OnRoundEnd?.Invoke();
+        }
+
+        public static void SetMapClear()
+        {
+            OnMapClear?.Invoke();
         }
 
         public static void SetNewLanguage(ILanguage newLang)

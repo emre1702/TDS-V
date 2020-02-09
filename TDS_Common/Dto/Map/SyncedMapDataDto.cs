@@ -4,7 +4,7 @@ using TDS_Common.Enum;
 
 namespace TDS_Common.Dto
 {
-    public class SyncedMapDataDto
+    public class BrowserSyncedMapDataDto
     {
         [JsonProperty("0")]
         public int Id = 0;

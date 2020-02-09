@@ -59,7 +59,7 @@ namespace TDS_Server.Manager.Maps
 
         public static object? GetAllMapsForCustomLobby(TDSPlayer player, object[] args)
         {
-            var allMapsSyncData = AllMaps.Union(MapCreator.NewCreatedMaps).Union(MapCreator.NeedCheckMaps).Select(m => m.SyncedData);
+            var allMapsSyncData = AllMaps.Union(MapCreator.NewCreatedMaps).Union(MapCreator.NeedCheckMaps).Select(m => m.BrowserSyncedData);
 
             return Serializer.ToBrowser(allMapsSyncData);
 
@@ -98,7 +98,7 @@ namespace TDS_Server.Manager.Maps
 
         public static MapDto? GetMapById(int id)
         {
-            return AllMaps.FirstOrDefault(m => m.SyncedData.Id == id);
+            return AllMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == id);
         }
 
         public static MapDto? GetMapByName(string mapName)
@@ -132,8 +132,8 @@ namespace TDS_Server.Manager.Maps
                     .Where(m => m.Name == map.Info.Name)
                     .Include(m => m.Creator)
                     .First();
-                map.SyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
-                map.SyncedData.Id = dbMap.Id;
+                map.BrowserSyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
+                map.BrowserSyncedData.Id = dbMap.Id;
                 map.LoadMapRatings(dbContext);
             }
         }

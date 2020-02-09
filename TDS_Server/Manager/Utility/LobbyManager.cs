@@ -116,11 +116,11 @@ namespace TDS_Server.Manager.Utility
                         break;
 
                     default:
-                        var map = MapsLoader.AllMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name);
+                        var map = MapsLoader.AllMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
                         if (map is null)
-                            map = MapCreator.NewCreatedMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name);
+                            map = MapCreator.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
                         if (map is null)
-                            map = MapCreator.NeedCheckMaps.FirstOrDefault(m => m.SyncedData.Name == mapAssignment.Map.Name);
+                            map = MapCreator.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
                         if (map is { })
                             lobbyMapsList.Add(map);
                         break;

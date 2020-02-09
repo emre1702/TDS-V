@@ -18,6 +18,8 @@ namespace TDS_Server.Manager.Utility
         private static readonly Dictionary<Entity, EntityCollisionlessInfoDto> _collisionslessEntitiesInfos = new Dictionary<Entity, EntityCollisionlessInfoDto>();
         private static readonly Dictionary<Lobby, List<Entity>> _collisionslessEntitiesPerLobby = new Dictionary<Lobby, List<Entity>>();
 
+        private static readonly Dictionary<Lobby, List<Entity>> _frozenEntityPerLobby = new Dictionary<Lobby, List<Entity>>();
+
         public static void Init()
         {
             CustomEventManager.OnPlayerJoinedLobby += PlayerJoinedLobby;
@@ -27,6 +29,24 @@ namespace TDS_Server.Manager.Utility
         public static void FreezePlayer(Player player, bool freeze)
         {
             NAPI.ClientEvent.TriggerClientEvent(player, DToClientEvent.FreezePlayerWorkaround, freeze);
+        }
+
+        public static void FreezeEntity(Entity entity, bool freeze, Lobby lobby)
+        {
+            lobby.SendAllPlayerEvent(DToClientEvent.FreezeEntityWorkaround, null, entity.Handle.Value, freeze);
+
+            if (freeze)
+            {
+                if (!_frozenEntityPerLobby.ContainsKey(lobby))
+                    _frozenEntityPerLobby[lobby] = new List<Entity>();
+                _frozenEntityPerLobby[lobby].Add(entity);
+            }
+            else
+            {
+                if (!_frozenEntityPerLobby.ContainsKey(lobby))
+                    return;
+                _frozenEntityPerLobby[lobby].Remove(entity);
+            }            
         }
 
         public static void SetPlayerTeam(Player player, int team)
@@ -138,6 +158,15 @@ namespace TDS_Server.Manager.Utility
                 }
                 if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
                     _collisionslessEntitiesPerLobby.Remove(lobby);
+            }
+
+            if (_frozenEntityPerLobby.ContainsKey(lobby))
+            {
+                _frozenEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
+                foreach (Entity entity in _frozenEntityPerLobby[lobby])
+                {
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, true);
+                }
             }
         }
 

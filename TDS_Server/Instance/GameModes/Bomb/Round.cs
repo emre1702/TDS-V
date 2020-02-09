@@ -37,7 +37,7 @@ namespace TDS_Server.Instance.GameModes
             if (Map.BombInfo is null)
                 return;
 
-            foreach (Position3DDto bombplace in Map.BombInfo.PlantPositions)
+            foreach (var bombplace in Map.BombInfo.PlantPositions)
             {
                 Vector3 pos = bombplace.ToVector3();
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
