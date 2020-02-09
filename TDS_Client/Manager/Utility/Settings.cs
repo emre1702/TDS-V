@@ -6,6 +6,7 @@ using TDS_Client.Enum;
 using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
 using TDS_Client.Manager.Draw;
+using TDS_Client.Manager.Event;
 using TDS_Common.Default;
 using TDS_Common.Dto;
 using TDS_Common.Enum;
@@ -38,6 +39,7 @@ namespace TDS_Client.Manager.Utility
                 Language = _languagesDict[_languageEnum];
                 Scoreboard.LoadLanguage();
                 Browser.Angular.Main.LoadLanguage(_languageEnum);
+                CustomEventManager.SetNewLanguage(Language);
                 if (PlayerSettings != null)
                 {
                     PlayerSettings.Language = value;
