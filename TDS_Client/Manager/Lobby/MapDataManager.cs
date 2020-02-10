@@ -83,7 +83,7 @@ namespace TDS_Client.Manager.Lobby
                 var obj = new MapObject(ClientConstants.TargetHash, map.Target.ToVector3(), new Vector3(), dimension: Player.LocalPlayer.Dimension);
                 obj.FreezePosition(true);
                 obj.SetCollision(false, true);
-                //obj.SetInvincible(true);
+                obj.SetInvincible(true);
                 _objects.Add(obj);
             }
 
@@ -95,7 +95,7 @@ namespace TDS_Client.Manager.Lobby
                     uint objectHash = Misc.GetHashKey(objName);
                     var obj = new MapObject(objectHash, data.GetPos(), data.GetRot(), dimension: Player.LocalPlayer.Dimension);
                     obj.FreezePosition(true);
-                    //obj.SetInvincible(true);
+                    obj.SetInvincible(true);
                     _objects.Add(obj);
                 }
             }
