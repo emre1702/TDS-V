@@ -3,4 +3,6 @@ export class Constants {
 
     public static MIN_MAP_CREATE_NAME_LENGTH = 3;
     public static MAX_MAP_CREATE_NAME_LENGTH = 100;
+
+    public static MAX_POSSIBLE_ARMOR = 16959;
 }

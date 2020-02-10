@@ -26,5 +26,6 @@ namespace TDS_Client.Manager.Utility
         {
             [ESound.Hitsound] = "package://sounds/hit.mp3",
         };
+        public static int MaxPossibleArmor => 16959;
     }
 }
