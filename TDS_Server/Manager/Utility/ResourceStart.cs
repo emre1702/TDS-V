@@ -81,10 +81,11 @@ namespace TDS_Server.Manager.Utility
 
                 await BansManager.Get().RemoveExpiredBans().ConfigureAwait(true);
 
-                await MapsLoader.LoadDefaultMaps(dbContext).ConfigureAwait(true);
-                await MapCreator.LoadNewMaps(dbContext).ConfigureAwait(true);
-                await MapCreator.LoadSavedMaps(dbContext).ConfigureAwait(true);
-                await MapCreator.LoadNeedCheckMaps(dbContext).ConfigureAwait(true);
+                var allDbMaps = dbContext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).ToList();
+                await MapsLoader.LoadDefaultMaps(dbContext, allDbMaps);
+                await MapCreator.LoadNewMaps(dbContext, allDbMaps);
+                await MapCreator.LoadSavedMaps(dbContext, allDbMaps);
+                await MapCreator.LoadNeedCheckMaps(dbContext, allDbMaps);
 
                 Normal.Init(dbContext);
                 Bomb.Init(dbContext);

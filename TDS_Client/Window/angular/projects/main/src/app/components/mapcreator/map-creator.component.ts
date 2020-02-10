@@ -361,11 +361,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
             const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
 
-            dialogRef.beforeClosed().subscribe((loadMapStr: string) => {
-                if (!loadMapStr)
+            dialogRef.beforeClosed().subscribe((loadMapId?: number) => {
+                if (loadMapId === undefined)
                     return;
 
-                this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, [loadMapStr], (json: string) => {
+                this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, [loadMapId], (json: string) => {
                     this.data = JSON.parse(json);
                     this.fixData();
                     this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {

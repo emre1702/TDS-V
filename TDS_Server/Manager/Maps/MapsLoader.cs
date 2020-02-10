@@ -24,21 +24,25 @@ namespace TDS_Server.Manager.Maps
         private static readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
 
-        public static async Task LoadDefaultMaps(TDSDbContext dbcontext)
+        public static async Task LoadDefaultMaps(TDSDbContext dbcontext, List<DB.Rest.Maps> allDbMaps)
         {
-            AllMaps = await LoadMaps(dbcontext, ServerConstants.MapsPath, false);
+            AllMaps = await LoadMaps(dbcontext, ServerConstants.MapsPath, false, allDbMaps);
         }
 
-        public static async Task<List<MapDto>> LoadMaps(TDSDbContext dbcontext, string path, bool isOnlySaved)
+        public static async Task<List<MapDto>> LoadMaps(TDSDbContext dbcontext, string path, bool isOnlySaved, List<DB.Rest.Maps> allDbMaps)
         {
             List<MapDto> list = LoadMapsInDirectory(path, isOnlySaved);
 
-            await dbcontext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).LoadAsync();
+            if (isOnlySaved)
+            {
+                LoadSavedMapsFakeDBInfos(list);
+                return list;
+            }
+                
+            await SaveMapsInDB(dbcontext, list, allDbMaps);
 
-            await SaveMapsInDB(dbcontext, list);
-
-            // Load name of creator and Id for Maps //
-            LoadMapDBInfos(dbcontext, list);
+            // Load name of creator, Id and rating for Maps //
+            LoadMapsDBInfos(dbcontext, list, allDbMaps);
 
             return list;
         }
@@ -106,35 +110,48 @@ namespace TDS_Server.Manager.Maps
             return AllMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
-        private static async Task SaveMapsInDB(TDSDbContext dbContext, List<MapDto> maps)
+        private static async Task SaveMapsInDB(TDSDbContext dbContext, List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
         {
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
-            var mapsToAdd = maps.Where(m => !dbContext.Maps.Any(map => map.Name == m.Info.Name));
+            var mapsToAdd = maps.Where(m => !allDbMap.Any(map => map.Name == m.Info.Name));
 
             foreach (var map in mapsToAdd)
             {
-
+                DB.Rest.Maps dbMap;
                 if (map.Info.CreatorId is null || !(await dbContext.Players.AnyAsync(p => p.Id == map.Info.CreatorId)))
-                    await dbContext.Maps.AddAsync(new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = null });
+                    dbMap = new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = null };                    
                 else
-                    await dbContext.Maps.AddAsync(new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId });
+                    dbMap = new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId };
+                dbContext.Maps.Add(dbMap);
+
             }
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        private static void LoadMapDBInfos(TDSDbContext dbContext, List<MapDto> maps)
+        private static void LoadMapsDBInfos(TDSDbContext dbContext, List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
         {
             foreach (var map in maps)
             {
-                DB.Rest.Maps dbMap = dbContext.Maps
-                    .Where(m => m.Name == map.Info.Name)
-                    .Include(m => m.Creator)
-                    .First();
+                var dbMap = allDbMap.First(m => m.Name == map.Info.Name);
+
                 map.BrowserSyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
                 map.BrowserSyncedData.Id = dbMap.Id;
-                map.LoadMapRatings(dbContext);
+                map.Ratings = dbMap.PlayerMapRatings.ToList();
+                map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
+            }
+        }
+
+        private static void LoadSavedMapsFakeDBInfos(List<MapDto> maps)
+        {
+            int negativeIdCounterForSaveMaps = 0;
+            foreach (var map in maps)
+            {
+                map.BrowserSyncedData.CreatorName = "?";
+                map.BrowserSyncedData.Id = --negativeIdCounterForSaveMaps;
+                map.Ratings = new List<DB.Player.PlayerMapRatings>();
+                map.RatingAverage = 5;
             }
         }
     }

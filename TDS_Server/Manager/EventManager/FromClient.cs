@@ -348,14 +348,14 @@ namespace TDS_Server.Manager.EventManager
         }
 
         [RemoteEvent(DToServerEvent.LoadMapForMapCreator)]
-        public void OnLoadMySavedMap(Player client, string mapName)
+        public void OnLoadMySavedMap(Player client, int mapId)
         {
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
             if (!(player.CurrentLobby is MapCreateLobby))
                 return;
-            MapCreator.SendPlayerMapForMapCreator(player, mapName);
+            MapCreator.SendPlayerMapForMapCreator(player, mapId);
         }
 
         [RemoteEvent(DToServerEvent.RemoveMap)]

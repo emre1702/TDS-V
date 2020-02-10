@@ -19,12 +19,6 @@ namespace TDS_Server.Manager.Helper
             map.BrowserSyncedData.Type = (EMapType) (int)map.Info.Type;
         }
 
-        public static void LoadMapRatings(this MapDto map, TDSDbContext dbContext)
-        {
-            map.Ratings = dbContext.PlayerMapRatings.Where(m => m.MapId == map.BrowserSyncedData.Id).ToList();
-            map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
-        }
-
         public static void CreateJsons(this MapDto map)
         {
             if (map.BombInfo != null)

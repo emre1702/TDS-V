@@ -223,8 +223,8 @@ namespace TDS_Client.Manager.Event
 
         private void OnLoadMyMapForMapCreatorMethod(object[] args)
         {
-            string mapName = (string)args[0];
-            EventsSender.Send(DToServerEvent.LoadMapForMapCreator, mapName);
+            int mapId = Convert.ToInt32(args[0]);
+            EventsSender.Send(DToServerEvent.LoadMapForMapCreator, mapId);
         }
 
         private void OnLoadUserpanelDataBrowserMethod(object[] args)

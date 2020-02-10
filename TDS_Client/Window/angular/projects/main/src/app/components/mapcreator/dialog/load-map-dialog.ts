@@ -11,7 +11,7 @@ import { LoadMapDialogGroupDto } from '../models/LoadMapDialogGroupDto';
 // tslint:disable-next-line: component-class-suffix
 export class LoadMapDialog {
 
-    chosenMap: string;
+    chosenMapId: number;
 
     constructor(
         public settings: SettingsService,

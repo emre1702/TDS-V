@@ -93,6 +93,9 @@ namespace TDS_Server.Manager.Maps
                 }
                 else
                 {
+                    mapDto.BrowserSyncedData.Id = _savedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
+                    mapDto.RatingAverage = 5;
+
                     _savedMaps.Add(mapDto);
                 }
 
@@ -104,9 +107,9 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadNewMaps(TDSDbContext dbContext)
+        public static async Task LoadNewMaps(TDSDbContext dbContext, List<DB.Rest.Maps> allDbMaps)
         {
-            NewCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false).ConfigureAwait(false);
+            NewCreatedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NewMapsPath, false, allDbMaps).ConfigureAwait(false);
             foreach (var map in NewCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -115,9 +118,9 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadSavedMaps(TDSDbContext dbContext)
+        public static async Task LoadSavedMaps(TDSDbContext dbContext, List<DB.Rest.Maps> allDbMaps)
         {
-            _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true).ConfigureAwait(false);
+            _savedMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.SavedMapsPath, true, allDbMaps).ConfigureAwait(false);
             foreach (var map in _savedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
@@ -125,9 +128,9 @@ namespace TDS_Server.Manager.Maps
             }
         }
 
-        public static async Task LoadNeedCheckMaps(TDSDbContext dbContext)
+        public static async Task LoadNeedCheckMaps(TDSDbContext dbContext, List<DB.Rest.Maps> allDbMaps)
         {
-            NeedCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false).ConfigureAwait(false);
+            NeedCheckMaps = await MapsLoader.LoadMaps(dbContext, ServerConstants.NeedCheckMapsPath, false, allDbMaps).ConfigureAwait(false);
             foreach (var map in NewCreatedMaps)
             {
                 map.Info.IsNewMap = true;
@@ -154,19 +157,19 @@ namespace TDS_Server.Manager.Maps
             return NewCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
         }
 
-        public static void SendPlayerMapForMapCreator(TDSPlayer player, string mapName)
+        public static void SendPlayerMapForMapCreator(TDSPlayer player, int mapId)
         {
             if (player.Entity is null)
                 return;
             
-            MapDto? map = MapsLoader.GetMapByName(mapName);
+            MapDto? map = MapsLoader.GetMapById(mapId);
 
             if (map is null)
-                map = NewCreatedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+                map = NewCreatedMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
             if (map is null)
-                map = _savedMaps.FirstOrDefault(m => m.Info.Name == mapName);
+                map = _savedMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
             if (map is null)
-                map = NeedCheckMaps.FirstOrDefault(m => m.Info.Name == mapName);
+                map = NeedCheckMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
 
             if (map is null)
                 return;
@@ -207,34 +210,35 @@ namespace TDS_Server.Manager.Maps
                 return;
 
             bool canLoadMapsFromOthers = SettingsManager.CanLoadMapsFromOthers(player);
-            var data = new List<LoadMapDialogGroupDto>();
-
-            data.Add(new LoadMapDialogGroupDto
+            var data = new List<LoadMapDialogGroupDto>
             {
-                GroupName = "Saved",
-                Maps = _savedMaps
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Saved",
+                    Maps = _savedMaps
                     .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => m.Info.Name)
+                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                     .ToList()
-            });
+                },
 
-            data.Add(new LoadMapDialogGroupDto
-            {
-                GroupName = "Created",
-                Maps = NewCreatedMaps
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Created",
+                    Maps = NewCreatedMaps
                     .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => m.Info.Name)
+                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                     .ToList()
-            });
+                },
 
-            data.Add(new LoadMapDialogGroupDto
-            {
-                GroupName = "Added",
-                Maps = MapsLoader.AllMaps
+                new LoadMapDialogGroupDto
+                {
+                    GroupName = "Added",
+                    Maps = MapsLoader.AllMaps
                     .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => m.Info.Name)
+                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                     .ToList()
-            });
+                }
+            };
 
             if (canLoadMapsFromOthers)
             { 
@@ -243,7 +247,7 @@ namespace TDS_Server.Manager.Maps
                     GroupName = "OthersCreated",
                     Maps = NewCreatedMaps
                         .Where(m => m.Info.CreatorId != player.Entity.Id)
-                        .Select(m => m.Info.Name)
+                        .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                         .ToList()
                 });
 
@@ -251,16 +255,16 @@ namespace TDS_Server.Manager.Maps
                 {
                     GroupName = "Deactivated",
                     Maps = NeedCheckMaps
-                        .Select(m => m.Info.Name)
+                        .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                         .ToList()
                 });
             }
 
-            string json = Serializer.ToBrowser(data);
+            string json = Serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
             NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
-        public static void RemoveMap(TDSPlayer player, int mapId)
+        public static async void RemoveMap(TDSPlayer player, int mapId)
         {
             bool isSavedMap = true;
             MapDto? map = _savedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
@@ -283,10 +287,15 @@ namespace TDS_Server.Manager.Maps
 
             if (isSavedMap)
                 _savedMaps.Remove(map);
-            else if (NewCreatedMaps.Contains(map))
-                NewCreatedMaps.Remove(map);
             else 
-                NeedCheckMaps.Remove(map);
+            {
+                if (NewCreatedMaps.Contains(map))
+                    NewCreatedMaps.Remove(map);
+                else
+                    NeedCheckMaps.Remove(map);
+                using var dbContext = new TDSDbContext();
+                await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).DeleteFromQueryAsync();
+            } 
 
             File.Delete(map.Info.FilePath);
         }
