@@ -113,9 +113,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.scrollToBottomTimer) {
             clearTimeout(this.scrollToBottomTimer);
         }
-        this.scrollToBottomTimer = setTimeout(() => {
-            this.scrollChatToBottom();
-        }, 500);
+        this.scrollToBottomTimer = setTimeout(this.scrollChatToBottom.bind(this), 500);
     }
 
     getMentionText(name: {label: string}): string {
@@ -202,7 +200,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         if (this.scrollToBottomTimer) {
             clearTimeout(this.scrollToBottomTimer);
-            this.scrollChatToBottom = undefined;
+            this.scrollToBottomTimer = undefined;
         }
     }
 
