@@ -14,6 +14,7 @@ namespace TDS_Client.Instance.Utility
         public bool IsActive => this == ActiveCamera;
 
         public static TDSCamera ActiveCamera { get; set; }
+        public static Vector3 FocusAtPos { get; set; }
 
         public Vector3 Position
         {
@@ -69,17 +70,19 @@ namespace TDS_Client.Instance.Utility
             Cam.AttachCamToPedBone(Handle, ped.Handle, (int) EPedBone.SKEL_Head, 0, -2f, 0.3f, true);
 
             Streaming.SetFocusEntity(ped.Handle);
+            FocusAtPos = null;
         }
 
         public void PointCamAtCoord(float x, float y, float z)
         {
-            Cam.PointCamAtCoord(Handle, x, y, z);
-            Streaming.SetFocusArea(x, y, z, 0, 0, 0);         
+            PointCamAtCoord(new Vector3(x, y, z));
         }
 
         public void PointCamAtCoord(Vector3 pos)
         {
-            PointCamAtCoord(pos.X, pos.Y, pos.Z);
+            Cam.PointCamAtCoord(Handle, pos.X, pos.Y, pos.Z);
+
+            SetFocusArea(pos); 
         }
 
         public void RenderToPosition(float x, float y, float z, bool ease = false, int easeTime = 0)
@@ -100,22 +103,42 @@ namespace TDS_Client.Instance.Utility
             if (spectatingEntity != null)
             {
                 Streaming.SetFocusEntity(spectatingEntity.Handle);
+                FocusAtPos = null;
                 CameraManager.SpectateCam.Activate();
                 Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
             }
             else 
             {
-                Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+                RemoveFocusArea();
                 Cam.RenderScriptCams(false, ease, easeTime, true, false, 0);
                 ActiveCamera = null;
             }
         }
-            
+
+        public static void SetFocusArea(float x, float y, float z)
+        {
+            SetFocusArea(new Vector3(x, y, z));
+        }
+
+        public static void SetFocusArea(Vector3 pos)
+        {
+            if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
+            {
+                Streaming.SetFocusArea(pos.X, pos.Y, pos.Z, 0, 0, 0);
+                FocusAtPos = pos;
+            }
+        }
+
+        public static void RemoveFocusArea()
+        {
+            Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+            FocusAtPos = null;
+        }
 
         public void Render(bool ease = false, int easeTime = 0)
         {
             Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
-        }
+        }       
 
         public void Detach()
         {
@@ -142,7 +165,7 @@ namespace TDS_Client.Instance.Utility
             ActiveCamera = null;
              if (instantly)
             {
-                Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+                RemoveFocusArea();
                 Cam.RenderScriptCams(false, false, 0, true, false, 0);
             }
                 

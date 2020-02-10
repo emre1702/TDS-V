@@ -3,6 +3,7 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using Player = RAGE.Elements.Player;
@@ -23,7 +24,7 @@ namespace TDS_Client.Manager.Utility
             cam.Position = new Vector3(-425.2233f, 1126.9731f, 326.8f);
             cam.PointCamAtCoord(new Vector3(-427.03f, 1123.21f, 325.85f));
             cam.Activate(true);
-            Streaming.SetFocusArea(-425.2233f, 1126.9731f, 326.8f, 0, 0, 0);
+            TDSCamera.SetFocusArea(-425.2233f, 1126.9731f, 326.8f);
             // Cam-pos:
             //X: -425,2233
             //Y: 1126.9731
@@ -46,7 +47,7 @@ namespace TDS_Client.Manager.Utility
         public static void Stop()
         {
             TickManager.Remove(OnRender);
-            Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+            TDSCamera.RemoveFocusArea();
             Browser.Angular.Main.HideRankings();
             CursorManager.Visible = false;
         }
