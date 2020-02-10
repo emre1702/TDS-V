@@ -11,8 +11,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
         <td mat-cell *matCellDef="let element">
           <input matInput
-          [(ngModel)]="element.Name"
-          [readonly]="element.IsReadOnly"
+          [(ngModel)]="element[0]"
+          [readonly]="element[4]"
           maxLength="25"
           matAutosize
           matTextareaAutosize/>

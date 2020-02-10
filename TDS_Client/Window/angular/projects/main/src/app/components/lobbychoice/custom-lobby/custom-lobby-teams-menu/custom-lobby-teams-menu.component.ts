@@ -104,7 +104,7 @@ export class CustomLobbyTeamsMenuComponent {
     private defaultTeamData = [
         { name: undefined, color: "rgb(255, 255, 255)", blipColor: 4, skinHash: 0 },
         { name: "SWAT", color: "rgb(0, 150, 0)", blipColor: 52, skinHash: -1920001264 },
-        { name: "Terrorist", color: "rgb(150, 0, 0)", blipColor: 1, skinHash: 275618457 },
+        { name: "Terrorists", color: "rgb(150, 0, 0)", blipColor: 1, skinHash: 275618457 },
         { name: "Gang", color: "rgb(0, 0, 150)", blipColor: 38, skinHash: -1057787465 }
     ];
 
