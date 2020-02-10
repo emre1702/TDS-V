@@ -331,6 +331,7 @@ namespace TDS_Client.Manager.Event
                     Chat.Output("Shooting is blocked. Reason: " + (Round.InFight ? "bomb" : (!Bomb.BombOnHand ? "round" : "both")));
                 else
                     Chat.Output("Shooting is not blocked.");
+                return;
             } 
 
             EventsSender.Send(DToServerEvent.CommandUsed, msg);
