@@ -13,6 +13,7 @@ import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialo
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
 import { LobbySetting } from '../enums/lobby-setting.enum';
+import { Constants } from '../../../constants';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -55,7 +56,7 @@ import { LobbySetting } from '../enums/lobby-setting.enum';
 export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     private spectatorTeam: CustomLobbyTeamData = { [0]: "Spectator", [1]: "rgb(255, 255, 255)", [2]: 4, [3]: 0, [4]: true };
     private team1: CustomLobbyTeamData = { [0]: "SWAT", [1]: "rgb(0, 150, 0)", [2]: 52, [3]: -1920001264, [4]: false };
-    private team2: CustomLobbyTeamData = { [0]: "Terroristen", [1]: "rgb(150, 0, 0)", [2]: 1, [3]: 275618457, [4]: false };
+    private team2: CustomLobbyTeamData = { [0]: "Terrorists", [1]: "rgb(150, 0, 0)", [2]: 1, [3]: 275618457, [4]: false };
 
     settingPanel: LobbySettingPanel[] = [
         {
@@ -85,7 +86,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 },
                 {
                     type: SettingType.number, dataSettingIndex: 5 /*"StartArmor"*/, defaultValue: 100,
-                    formControl: new FormControl(100, [Validators.required, Validators.max(200), Validators.min(0)])
+                    formControl: new FormControl(100, [Validators.required, Validators.max(Constants.MAX_POSSIBLE_ARMOR), Validators.min(0)])
                 },
                 {
                     type: SettingType.number, dataSettingIndex: 6 /*"AmountLifes"*/, defaultValue: 1,
@@ -122,7 +123,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Map", rows: [
                 {
-                    type: SettingType.enum, dataSettingIndex: 15 /*"MapLimitType"*/, defaultValue: "KillAfterTime",
+                    type: SettingType.enum, dataSettingIndex: 16 /*"MapLimitType"*/, defaultValue: "KillAfterTime",
                     enum: LobbyMapLimitType,
                     formControl: new FormControl(LobbyMapLimitType.KillAfterTime, [])
                 },
