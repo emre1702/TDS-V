@@ -35,8 +35,6 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.userpanelService.settingsSpecialLoaded.on(null, this.loadSettings.bind(this));
         this.settings.MoneyChanged.on(null, this.moneyChanged.bind(this));
-
-        this.loadSettings();
     }
 
     ngOnDestroy() {
@@ -117,7 +115,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
         this.formGroup.get("emailControl").setValue(this.userpanelService.allSettingsSpecial[1]);
         this.formGroup.get("confirmPasswordControl").setValue("");
         this.hasToBuyUsername = this.userpanelService.allSettingsSpecial[2];
-        this.wantsToBuyUsernameChanged(new MatSlideToggleChange(undefined, false));
+        this.wantsToBuyUsernameChanged(new MatSlideToggleChange(undefined, !this.hasToBuyUsername));
 
         if (this.hasToBuyUsername) {
             this.formGroup.get("usernameBuyControl").setValue(false);
