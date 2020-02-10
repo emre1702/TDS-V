@@ -178,7 +178,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     SettingsSpecial = "Einstellungen Spezial";
     SettingsNormal = "Einstellungen Normal";
     Username = "Benutzername";
-    UsernameChangeInfo = "Das Ändern des Benutzernamens hat eine Abklingzeit von {0} Tagen.\nDas Ändern während des Cooldowns kostet ${1}.";
+    UsernameChangeInfo = "Das Ändern des Benutzernamens hat eine Abklingzeit von {0} Tagen\nund kostet während des Cooldowns ${1}.";
     BuyUsername = "Kaufe Benutzername";
     EmailAddress = "Email-Adresse";
     ConfirmPassword = "Bestätige Passwort";

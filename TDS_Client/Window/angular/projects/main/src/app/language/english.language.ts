@@ -168,7 +168,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     SettingsSpecial = "Settings Special";
     SettingsNormal = "Settings Normal";
     Username = "Username";
-    UsernameChangeInfo = "Changing the username has a cooldown of {0} days.\nChanging it during the cooldown costs ${1}.";
+    UsernameChangeInfo = "Changing the username has a cooldown of {0} days\nand costs ${1} during the cooldown.";
     BuyUsername = "Buy username";
     EmailAddress = "Email address";
     ConfirmPassword = "Confirm password";
