@@ -203,6 +203,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     Vehicles = "Vehicles";
     AvailableMaps = "Available maps";
     SelectedMaps = "Selected maps";
+    User = "User";
+    TDSTeam = "TDS team";
+    VIP = "VIP";
+    LobbyOwner = "Lobby owner";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
@@ -242,10 +246,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     Settings = "Settings";
     Commands = "Commands";
     CommandsUser = "Commands - User";
-    CommandsTDSTeam = "Commands - TDS-Team";
+    CommandsTDSTeam = "Commands - TDS team";
     CommandsDonator = "Commands - Donator";
     CommandsVIP = "Commands - VIP";
-    CommandsLobbyOwner = "Commands - Lobby-owner";
+    CommandsLobbyOwner = "Commands - Lobby owner";
     SupportUser = "Support";
     SupportAdmin = "Support";
     MuteTime = "Mute time";

@@ -175,6 +175,10 @@ export interface Language {
     Vehicles: string;
     AvailableMaps: string;
     SelectedMaps: string;
+    User: string;
+    TDSTeam: string;
+    VIP: string;
+    LobbyOwner: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

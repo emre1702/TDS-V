@@ -198,6 +198,10 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Vehicles = "Fahrzeuge";
     AvailableMaps = "Verfügbare Karten";
     SelectedMaps = "Ausgewählte Karten";
+    User = "Spieler";
+    TDSTeam = "TDS-Team";
+    VIP = "VIP";
+    LobbyOwner = "Lobby-Besitzer";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
