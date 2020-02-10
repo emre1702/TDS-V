@@ -99,6 +99,8 @@ namespace TDS_Client.Manager.Utility
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Stealth), 100, false);
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Strength), 100, false);
             Stats.StatSetInt(Misc.GetHashKey(DPedStat.Wheelie), 100, false);
+
+            RAGE.Game.Player.SetPlayerMaxArmour(ClientConstants.MaxPossibleArmor);
         }
 
         public static void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
