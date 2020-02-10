@@ -16,10 +16,13 @@ namespace TDS_Server.Manager.Userpanel
             if (player.Entity is null)
                 return null;
 
+            var lastUsernameChange = player.Entity.PlayerStats.LastFreeUsernameChange;
             var data = new UserpanelSettingsSpecialDataDto
             {
                 Username = player.Entity.Name,
-                Email = player.Entity.Email
+                Email = player.Entity.Email,
+                UsernameBuyInCooldown = lastUsernameChange.HasValue && lastUsernameChange.Value.AddDays(SettingsManager.ServerSettings.UsernameChangeCooldownDays) > DateTime.UtcNow
+
             };
             return Serializer.ToBrowser(data);
         }

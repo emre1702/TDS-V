@@ -9,5 +9,8 @@ namespace TDS_Server.Dto.Userpanel
         
         [JsonProperty("1")]
         public string Email { get; set; } = string.Empty;
+
+        [JsonProperty("2")]
+        public bool UsernameBuyInCooldown { get; set; }
     }
 }
