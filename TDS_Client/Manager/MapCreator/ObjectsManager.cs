@@ -16,6 +16,7 @@ using TDS_Common.Instance.Utility;
 using Entity = RAGE.Elements.Entity;
 using Ped = RAGE.Elements.Ped;
 using Player = RAGE.Elements.Player;
+using Vehicle = RAGE.Elements.Vehicle;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -102,7 +103,7 @@ namespace TDS_Client.Manager.MapCreator
                     entity = Entities.Objects.GetAtHandle(handle);
                     break;
                 default:
-                    return null;
+                   return null;
             }
 
             if (!type.HasValue)
@@ -166,9 +167,16 @@ namespace TDS_Client.Manager.MapCreator
             return GetObject(ClientConstants.TargetHash, EMapCreatorPositionType.Target, playerRemoteId, id: id);
         }
 
+        public static MapCreatorObject GetVehicle(uint hash, ushort playerRemoteId, string vehName = null, int id = -1)
+        {
+            var vehicle = new Vehicle(hash, Player.LocalPlayer.Position, Player.LocalPlayer.GetHeading(), "Map", locked: true, dimension: Player.LocalPlayer.Dimension);
+            var mapCreatorObj = new MapCreatorObject(vehicle, EMapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
+            _cacheMapEditorObjects[vehicle] = mapCreatorObj;
+            return mapCreatorObj;
+        }
+
         public static MapCreatorObject GetObject(uint hash, EMapCreatorPositionType type, ushort playerRemoteId, string objName = null, int id = -1)
         {
-           
             MapObject obj = new MapObject(hash, Player.LocalPlayer.Position, Player.LocalPlayer.GetRotation(2), dimension: Player.LocalPlayer.Dimension);
             var mapCreatorObj = new MapCreatorObject(obj, type, playerRemoteId, objectName: objName, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
@@ -264,9 +272,8 @@ namespace TDS_Client.Manager.MapCreator
                 foreach (var vehPos in map.Vehicles)
                 {
                     string vehName = Convert.ToString(vehPos.Info);
-                    // Todo: Check if this works or we need to use VehicleHash enum instead
                     uint vehHash = Misc.GetHashKey(vehName);
-                    var obj = GetObject(vehHash, EMapCreatorPositionType.Vehicle, vehPos.OwnerRemoteId, vehName, vehPos.Id);
+                    var obj = GetVehicle(vehHash, vehPos.OwnerRemoteId, vehName, vehPos.Id);
                     obj.Freeze(true);
                     obj.LoadPos(vehPos);
                 }
