@@ -15,6 +15,7 @@ namespace TDS_Client.Manager.Utility
 {
     static class AFKCheckManager
     {
+        private static Vector3 _afkStartPos;
         private static Vector3 _lastPos;
         private static TDSTimer _checkTimer;
         private static TDSTimer _kickTimer;
@@ -38,23 +39,49 @@ namespace TDS_Client.Manager.Utility
                 StopAFK();
                 return;
             }
-                
-            Vector3 currentPos = player.LocalPlayer.Position;
-            if (currentPos.DistanceTo(_lastPos) > 2)
-            {
-                StopAFK();
-                return;
-            } 
 
+            var currentPos = player.LocalPlayer.Position;
             if (_kickTimer is null)
             {
+                var previousPos = _lastPos;
+                _lastPos = currentPos;
+                if (currentPos.DistanceTo(previousPos) > ClientConstants.NeededDistanceToBeNotAFK)
+                    return;
+
                 IsAFKStart();
+            }
+            else
+            {
+                if (currentPos.DistanceTo(_afkStartPos) <= ClientConstants.NeededDistanceToBeNotAFK)
+                    return;
+
+                StopAFK();
             }
         }
 
-        private static void RefreshDisplay()
+        private static void OnTick()
         {
-            _draw.SetText(GetWarning().ToString()); 
+            Vector3 currentPos = player.LocalPlayer.Position;
+
+            if (currentPos.DistanceTo(_afkStartPos) > ClientConstants.NeededDistanceToBeNotAFK)
+            {
+                StopAFK();
+                return;
+            }
+
+            if (_kickTimer.RemainingMsToExecute > ClientConstants.ShowAFKCheckMessageAfterRemainingMs)
+                return;
+
+            if (_draw is null)
+            {
+                _draw = new DxTextRectangle(GetWarning().ToString(), 0, 0, 1, 1, Color.FromArgb(255, 255, 255), Color.FromArgb(40, 200, 0, 0), 1.2f,
+                    frontPriority: 1, relativePos: true);
+            }
+            else
+            {
+                _draw.SetText(GetWarning().ToString());
+            }
+            
         }
 
         public static void OnRoundStart(bool isSpectator)
@@ -96,21 +123,20 @@ namespace TDS_Client.Manager.Utility
 
         public static void OnDeath()
         {
-            if (!(_kickTimer is null))
+            if (!(_kickTimer is null) && _kickTimer.RemainingMsToExecute <= ClientConstants.ShowAFKCheckMessageAfterRemainingMs)
                 IsAFKEnd();
         }
 
         private static void IsAFKStart()
         {
-            TickManager.Add(RefreshDisplay, () => _kickTimer.RemainingMsToExecute < 10000);
+            _afkStartPos = player.LocalPlayer.Position;
+            TickManager.Add(OnTick);
             _kickTimer = new TDSTimer(IsAFKEnd, (uint)Settings.AFKKickAfterSec * 1000, 1);
-
-            _draw = new DxTextRectangle(GetWarning().ToString(), 0, 0, Dx.ResX, Dx.ResY, Color.FromArgb(255, 255, 255), Color.FromArgb(40, 200, 0, 0), 5, 
-                alignmentX: RAGE.NUI.UIResText.Alignment.Centered, alignmentY: Enum.EAlignmentY.Center, frontPriority: 1);
         }
 
         private static void IsAFKEnd()
         {
+            _afkStartPos = null;
             StopCheck();
             Chat.Output(Settings.Language.AFK_KICK_INFO);
             EventsSender.Send(DToServerEvent.LeaveLobby);
@@ -129,7 +155,7 @@ namespace TDS_Client.Manager.Utility
                 return;
             _kickTimer.Kill();
             _kickTimer = null;
-            TickManager.Remove(RefreshDisplay);
+            TickManager.Remove(OnTick);
             _draw.Remove();
             _draw = null;
         }

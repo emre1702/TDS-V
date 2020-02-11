@@ -27,5 +27,7 @@ namespace TDS_Client.Manager.Utility
             [ESound.Hitsound] = "package://sounds/hit.mp3",
         };
         public static int MaxPossibleArmor => 16959;
+        public static ulong ShowAFKCheckMessageAfterRemainingMs = 10000;
+        public static float NeededDistanceToBeNotAFK = 1f;
     }
 }
