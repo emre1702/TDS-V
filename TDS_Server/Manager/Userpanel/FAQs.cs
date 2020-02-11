@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
@@ -19,6 +20,8 @@ namespace TDS_Server.Manager.Userpanel
 
         public static void LoadFAQs(TDSDbContext dbContext)
         {
+            Regex regex = new Regex("(?<=(\r\n|\r|\n))[ ]{2,}", RegexOptions.None);
+
             var allFAQs = dbContext.FAQs.ToList();
 
             foreach (var entry in _faqsJsonByLanguage.ToList())
@@ -28,8 +31,8 @@ namespace TDS_Server.Manager.Userpanel
                     .Select(f => new FAQData 
                     {
                         Id = f.Id,
-                        Question = f.Question,
-                        Answer = f.Answer
+                        Question = regex.Replace(f.Question, ""),
+                        Answer = regex.Replace(f.Answer, "")
                     });
                 _faqsJsonByLanguage[entry.Key] = Serializer.ToBrowser(faqs);
             }
