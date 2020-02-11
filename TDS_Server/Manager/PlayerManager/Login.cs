@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
@@ -59,6 +60,7 @@ namespace TDS_Server.Manager.PlayerManager
                 client.Name = player.Entity.Name;
                 //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
                 player.Entity.PlayerStats.LoggedIn = true;
+                player.Entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 await dbContext.SaveChangesAsync();
                 return true;
             });
