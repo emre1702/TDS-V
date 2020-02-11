@@ -10,4 +10,4 @@
 <app-team-choice *ngIf="showTeamChoice"></app-team-choice>
 <app-userpanel *ngIf="settings.UserpanelOpened"></app-userpanel>
 <app-ranking *ngIf="showRankings" [rankings]="rankings"></app-ranking>
-<app-hud *ngIf="showHUD"></app-hud>
+<app-hud *ngIf="showHUD" [rankingShowing]="showRankings"></app-hud>

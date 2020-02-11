@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
@@ -21,6 +21,8 @@ export class HudComponent implements OnInit, OnDestroy {
     ammo = 0;
     mag = 0;
     firingMode = FiringMode[0];
+
+    @Input() rankingShowing: boolean;
 
     constructor(
         public settings: SettingsService,

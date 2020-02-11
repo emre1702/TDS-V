@@ -1,4 +1,4 @@
-<div id="hud-1" *ngIf="settings.ShownHudType == 1" cdkDrag>
+<div id="hud-1" *ngIf="settings.ShownHudType == 1" [style.display]="rankingShowing ? 'none' : 'flex'" cdkDrag>
     <div class="hud">
         <div class="stats">
             <div class="row">
