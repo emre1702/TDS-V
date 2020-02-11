@@ -41,7 +41,7 @@ namespace TDS_Client.Instance.Language
         public virtual string LET_IT_FLOAT => "Let it float";
         public virtual string ERROR => "Error occured, please report this: '{0}'";
         public virtual string AFK_KICK_INFO => "You were AFK and got kicked out of the lobby.";
-        public virtual string AFK_KICK_WARNING => "You are AFK and will be kicked in {0} seconds!\nChange your position or shoot!";
+        public virtual string AFK_KICK_WARNING => "You are AFK and will\nbe kicked in {0} seconds!\nChange your position or shoot!";
         public virtual string FIRING_MODE => "Firing mode";
         public virtual string YOU_DIED => "You died.";
 
