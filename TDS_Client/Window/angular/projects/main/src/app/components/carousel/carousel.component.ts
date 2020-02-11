@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, AfterViewInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, AfterViewInit, ElementRef, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SettingsService } from '../../services/settings.service';
 import { trigger, transition, query, style, stagger, animate, AnimationBuilder, AnimationPlayer } from '@angular/animations';
@@ -32,7 +32,8 @@ export enum KEY_CODE {
         ]),
     ],
     templateUrl: './carousel.component.html',
-    styleUrls: ['./carousel.component.scss']
+    styleUrls: ['./carousel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarouselComponent implements AfterViewInit {
 

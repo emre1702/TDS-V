@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ViewChild, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ViewChild, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { MatInput, FloatLabelType } from '@angular/material';
@@ -18,7 +18,8 @@ declare const mp: {
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.scss']
+    styleUrls: ['./chat.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatComponent implements OnInit, OnDestroy {
 

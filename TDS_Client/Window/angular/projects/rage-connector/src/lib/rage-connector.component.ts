@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'lib-rage-connector',
@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
       rage-connector works!
     </p>
   `,
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RageConnectorComponent implements OnInit {
 

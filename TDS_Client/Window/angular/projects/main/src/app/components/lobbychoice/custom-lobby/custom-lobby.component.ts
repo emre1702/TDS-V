@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { SettingType } from '../../../enums/setting-type';
 import { LobbySettingPanel } from '../models/lobby-setting-panel';
 import { FormControl, Validators } from '@angular/forms';
@@ -51,6 +51,7 @@ import { Constants } from '../../../constants';
             )]
         )
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CustomLobbyMenuComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { RoundPlayerRankingStat } from './models/roundPlayerRankingStat';
 import { SettingsService } from '../../services/settings.service';
 import { MatSort, MatTableDataSource } from '@angular/material';
@@ -6,7 +6,8 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 @Component({
     selector: 'app-ranking',
     templateUrl: './ranking.component.html',
-    styleUrls: ['./ranking.component.scss']
+    styleUrls: ['./ranking.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingComponent implements OnInit {
 

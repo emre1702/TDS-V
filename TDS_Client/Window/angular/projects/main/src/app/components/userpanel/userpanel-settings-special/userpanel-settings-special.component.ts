@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { UserpanelService } from '../services/userpanel.service';
@@ -11,7 +11,8 @@ import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 @Component({
     selector: 'app-userpanel-settings-special',
     templateUrl: './userpanel-settings-special.component.html',
-    styleUrls: ['./userpanel-settings-special.component.scss']
+    styleUrls: ['./userpanel-settings-special.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
 

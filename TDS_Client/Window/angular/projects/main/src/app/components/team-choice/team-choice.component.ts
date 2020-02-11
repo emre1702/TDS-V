@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
@@ -9,7 +9,8 @@ import { SettingsService } from '../../services/settings.service';
 @Component({
     selector: 'app-team-choice',
     templateUrl: './team-choice.component.html',
-    styleUrls: ['./team-choice.component.scss']
+    styleUrls: ['./team-choice.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamChoiceComponent implements OnInit, OnDestroy {
 

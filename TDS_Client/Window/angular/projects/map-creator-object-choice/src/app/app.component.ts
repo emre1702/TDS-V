@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatInput } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from './enums/dtoclientevent.enum';
@@ -12,7 +12,8 @@ import { DFromClientEvent } from './enums/dfromclientevent.enum';
 @Component({
   selector: 'app-root',
   templateUrl: './app.template.html',
-  styleUrls: ['./app.style.scss']
+  styleUrls: ['./app.style.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
   private langByLangValue = {

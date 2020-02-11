@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
@@ -7,7 +7,8 @@ import { ClipboardService } from 'ngx-clipboard';
 @Component({
     selector: 'app-round-stats',
     templateUrl: './round-stats.component.html',
-    styleUrls: ['./round-stats.component.scss']
+    styleUrls: ['./round-stats.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundStatsComponent implements OnInit, OnDestroy {
 

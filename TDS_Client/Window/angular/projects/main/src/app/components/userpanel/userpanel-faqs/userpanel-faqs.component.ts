@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { UserpanelService } from '../services/userpanel.service';
 
 @Component({
   selector: 'app-userpanel-faqs',
   templateUrl: './userpanel-faqs.component.html',
-  styleUrls: ['./userpanel-faqs.component.scss']
+  styleUrls: ['./userpanel-faqs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelFAQsComponent implements OnInit, OnDestroy {
 

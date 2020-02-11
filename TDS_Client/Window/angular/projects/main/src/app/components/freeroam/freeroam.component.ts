@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'rage-connector';
@@ -8,7 +8,8 @@ import { MatButton } from '@angular/material';
 @Component({
   selector: 'app-freeroam',
   templateUrl: './freeroam.component.html',
-  styleUrls: ['./freeroam.component.scss']
+  styleUrls: ['./freeroam.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FreeroamComponent implements OnInit, OnDestroy {
 

@@ -27,6 +27,11 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.ExecuteJs(execStr);
         }
 
+        private static void ExecuteFast(string eventName, params object[] args)
+        {
+            Browser?.Call(eventName, args);
+        }
+
         public static void Start(string angularConstantsDataJson, string challengesJson)
         {
             if (Browser != null)
@@ -280,7 +285,8 @@ namespace TDS_Client.Manager.Browser.Angular
 
         public static void SyncHUDDataChange(EHUDDataType type, int value)
         {
-            Execute(DToBrowserEvent.SyncHUDDataChange, type, value);
+            ExecuteFast(DToBrowserEvent.SyncHUDDataChange, (int)type, value);
+            //Execute(DToBrowserEvent.SyncHUDDataChange, type, value);
         }
 
 

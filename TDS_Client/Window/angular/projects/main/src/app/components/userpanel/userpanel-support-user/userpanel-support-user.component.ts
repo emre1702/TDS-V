@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { UserpanelService } from '../services/userpanel.service';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
@@ -11,7 +11,8 @@ import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 @Component({
     selector: 'app-userpanel-support-user',
     templateUrl: './userpanel-support-user.component.html',
-    styleUrls: ['./userpanel-support-user.component.scss']
+    styleUrls: ['./userpanel-support-user.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     userpanelSupportType = UserpanelSupportType;

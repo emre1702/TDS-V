@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelService } from '../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
@@ -14,7 +14,8 @@ import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 @Component({
     selector: 'app-userpanel-applications',
     templateUrl: './userpanel-applications.component.html',
-    styleUrls: ['./userpanel-applications.component.scss']
+    styleUrls: ['./userpanel-applications.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     applicationData: {

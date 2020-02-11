@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SettingsService } from '../../../services/settings.service';
 
@@ -6,6 +6,7 @@ import { SettingsService } from '../../../services/settings.service';
   // tslint:disable-next-line: component-selector
   selector: 'custom-lobby-password-dialog',
   templateUrl: 'custom-lobby-password-dialog.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 // tslint:disable-next-line: component-class-suffix
 export class CustomLobbyPasswordDialog {

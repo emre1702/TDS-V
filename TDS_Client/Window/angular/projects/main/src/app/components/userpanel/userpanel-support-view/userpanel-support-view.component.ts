@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Output, Input, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Output, Input, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { EventEmitter } from '@angular/core';
@@ -10,7 +10,8 @@ import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 @Component({
     selector: 'app-userpanel-support-view',
     templateUrl: './userpanel-support-view.component.html',
-    styleUrls: ['./userpanel-support-view.component.scss']
+    styleUrls: ['./userpanel-support-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterViewInit {
 

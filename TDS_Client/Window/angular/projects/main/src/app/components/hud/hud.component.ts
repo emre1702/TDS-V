@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
@@ -8,7 +8,8 @@ import { FiringMode } from './enums/firingmode.enum';
 @Component({
     selector: 'app-hud',
     templateUrl: './hud.component.html',
-    styleUrls: ['./hud.component.scss']
+    styleUrls: ['./hud.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HudComponent implements OnInit, OnDestroy {
 

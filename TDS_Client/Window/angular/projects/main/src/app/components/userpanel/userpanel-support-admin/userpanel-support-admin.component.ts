@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelService } from '../services/userpanel.service';
@@ -10,7 +10,8 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 @Component({
     selector: 'app-userpanel-support-admin',
     templateUrl: './userpanel-support-admin.component.html',
-    styleUrls: ['./userpanel-support-admin.component.scss']
+    styleUrls: ['./userpanel-support-admin.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
 

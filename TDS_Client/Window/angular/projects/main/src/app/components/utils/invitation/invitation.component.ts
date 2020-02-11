@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { Invitation } from './models/invitation';
 import { RageConnectorService } from 'rage-connector';
@@ -28,7 +28,8 @@ import { trigger, transition, query, style, stagger, animate } from '@angular/an
                 ], { optional: true })
             ])
         ]),
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent implements OnInit, OnDestroy {
     invitations: Invitation[] = [];

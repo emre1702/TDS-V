@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { SettingsService } from '../../../services/settings.service';
@@ -29,7 +29,8 @@ import { Challenge } from '../models/challenge';
             ]
             )]
         )
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
     lobbyChoices: LobbyChoice[] = [

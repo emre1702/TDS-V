@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SettingsService } from '../../../services/settings.service';
 import { LoadMapDialogGroupDto } from '../models/LoadMapDialogGroupDto';
@@ -6,7 +6,8 @@ import { LoadMapDialogGroupDto } from '../models/LoadMapDialogGroupDto';
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'load-map-dialog',
-    templateUrl: 'load-map-dialog.html'
+    templateUrl: 'load-map-dialog.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // tslint:disable-next-line: component-class-suffix
 export class LoadMapDialog {

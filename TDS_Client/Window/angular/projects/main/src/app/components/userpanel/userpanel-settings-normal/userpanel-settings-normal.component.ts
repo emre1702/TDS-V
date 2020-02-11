@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SettingType } from '../../../enums/setting-type';
 import { UserpanelSettingsPanel } from '../interfaces/userpanelSettingsPanel';
@@ -16,7 +16,8 @@ import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 @Component({
     selector: 'app-userpanel-settings-normal',
     templateUrl: './userpanel-settings-normal.component.html',
-    styleUrls: ['./userpanel-settings-normal.component.scss']
+    styleUrls: ['./userpanel-settings-normal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 

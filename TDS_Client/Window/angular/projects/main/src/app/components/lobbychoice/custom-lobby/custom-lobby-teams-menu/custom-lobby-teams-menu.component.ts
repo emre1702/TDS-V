@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { CustomLobbyTeamData } from '../../models/custom-lobby-team-data';
 import { BlipColor } from '../../models/blip-color';
@@ -8,7 +8,8 @@ import { PedSkins } from '../../enums/ped-skins';
 @Component({
     selector: 'app-custom-lobby-teams-menu',
     templateUrl: './custom-lobby-teams-menu.component.html',
-    styleUrls: ['./custom-lobby-teams-menu.component.scss']
+    styleUrls: ['./custom-lobby-teams-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomLobbyTeamsMenuComponent {
 

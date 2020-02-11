@@ -5,6 +5,11 @@ enum DToServerEvent {
 }
 
 declare const mp: {
+    events: {
+        add(eventName: string, method: () => void): void;
+        remove(eventName: string, method?: () => void): void;
+    },
+
     trigger(eventName: string, ...args: any): void;
 };
 declare const window: any;
@@ -56,6 +61,8 @@ export class RageConnectorService {
             RageConnectorService.events[eventName] = [];
         }
         RageConnectorService.events[eventName].push(callback);
+
+        mp.events.add(eventName, callback);
     }
 
     public remove(eventName: string, callback?: (...args: any) => void) {
@@ -69,8 +76,10 @@ export class RageConnectorService {
                     RageConnectorService.events[eventName].splice(i, 1);
                 }
             }
+            mp.events.remove(eventName, callback);
         } else {
             RageConnectorService.events[eventName] = undefined;
+            mp.events.remove(eventName);
         }
     }
 
@@ -101,6 +110,7 @@ export class RageConnectorService {
             RageConnectorService.callbackEvents[eventName] = [];
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
+        mp.events.add(eventName, callback);
         if (args)
             mp.trigger(eventName, ...args);
         else
@@ -122,6 +132,7 @@ export class RageConnectorService {
             RageConnectorService.callbackEvents[eventName] = [];
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
+        mp.events.add(eventName, callback);
         if (args)
             mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
         else
