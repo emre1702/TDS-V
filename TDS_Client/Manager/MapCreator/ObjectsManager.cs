@@ -328,6 +328,8 @@ namespace TDS_Client.Manager.MapCreator
             var obj = GetByHandle(ent.Handle);
             if (obj == null)
                 return;
+            if (obj.Rotation is null)
+                return;
 
             obj.MovingRotation = obj.Rotation;
         }
