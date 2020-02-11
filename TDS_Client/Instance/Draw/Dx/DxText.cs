@@ -33,7 +33,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             UIResText.Alignment alignmentX = UIResText.Alignment.Left, EAlignmentY alignmentY = EAlignmentY.Top, bool relative = true,
-            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 1, int frontPriority = 0) : base(frontPriority: frontPriority)
+            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 0, int frontPriority = 0) : base(frontPriority: frontPriority)
         {
             Text = text;
             _xPos = GetAbsoluteX(x, relative);
@@ -54,12 +54,12 @@ namespace TDS_Client.Instance.Draw.Dx
 
         protected override int GetAbsoluteX(float x, bool relative)
         {
-            return (int)Math.Round(relative ? x * 1920 : x);
+            return (int)Math.Round(relative ? x * 1920 : x * (1920/ResX));
         }
 
         protected override int GetAbsoluteY(float y, bool relative)
         {
-            return (int)Math.Round(relative ? y * 1080 : y);
+            return (int)Math.Round(relative ? y * 1080 : y * (1080/ResY));
         }
 
         public void SetAbsoluteY(int y)
@@ -103,11 +103,26 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private void ApplyTextAlignmentY()
         {
-            float textheight = Ui.GetTextScaleHeight(_scale, (int)_font);
+            float lineCount = _amountLines != 0 ? _amountLines : GetLineCount();
+            int textHeight = GetAbsoluteY(Ui.GetTextScaleHeight(_scale, (int)_font), _relative);
+
+            // + 5 ... because of the margin between the lines
+            textHeight = (int)(textHeight * lineCount + textHeight * 0.4 * (lineCount-0.3));
+
             if (_alignmentY == EAlignmentY.Center)
-                _y -= GetAbsoluteY(textheight * _amountLines / 2, true);
+                _y -= textHeight / 2;
             else if (_alignmentY == EAlignmentY.Bottom)
-                _y -= GetAbsoluteY(textheight * _amountLines, true);
+                _y -= textHeight;
+
+
+            // ((((UI::_GET_TEXT_SCALE_HEIGHT(0.35f, 0) * iVar6) + 0.00138888f * 13f) + 0.00138888f * 5f * (iVar6 - 1) * 0.5f)) - 0.00138888f)
+        }
+
+        private int GetLineCount()
+        {
+            Invoker.Invoke(Natives.BeginTextCommandLineCount, "STRING");
+            Invoker.Invoke(Natives.AddTextComponentSubstringPlayerName, Text);
+            return Invoker.Invoke<int>(Natives.EndTextCommandGetLineCount, _xPos, _y);
         }
 
         public void SetScale(float scale)
