@@ -12,6 +12,9 @@ namespace TDS_Client.Manager.Utility
     {
         private static readonly List<(Action, Func<bool>)> _methods = new List<(Action, Func<bool>)>();
 
+        private static readonly List<Action> _methodsToRemove = new List<Action>();
+        private static readonly List<(Action, Func<bool>)> _methodsToAdd = new List<(Action, Func<bool>)>();
+
         public TickManager()
         {
             Tick += OnTickMethod;
@@ -29,21 +32,33 @@ namespace TDS_Client.Manager.Utility
                     method.Item1();
             }
 
+            if (_methodsToRemove.Count > 0)
+            {
+                foreach (var methodToRemove in _methodsToRemove)
+                {
+                    _methods.RemoveAll(m => m.Item1 == methodToRemove);
+                }
+                _methodsToRemove.Clear();
+            }
+            
+            if (_methodsToAdd.Count > 0)
+            {
+                foreach (var methodToAdd in _methodsToAdd)
+                {
+                    _methods.Add(methodToAdd);
+                }
+                _methodsToAdd.Clear();
+            }
         }
 
-        public static void Add(Action method)
+        public static void Add(Action method, Func<bool> requirement = null)
         {
-            _methods.Add((method, null));
-        }
-
-        public static void Add(Action method, Func<bool> requirement)
-        {
-            _methods.Add((method, requirement));
+            _methodsToAdd.Add((method, requirement));
         }
 
         public static void Remove(Action method)
         {
-            _methods.RemoveAll(m => m.Item1 == method);
+            _methodsToRemove.Add(method);
         }
     }
 }
