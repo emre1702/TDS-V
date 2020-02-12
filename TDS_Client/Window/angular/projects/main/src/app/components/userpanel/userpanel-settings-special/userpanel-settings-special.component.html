@@ -22,6 +22,6 @@
             <input matInput formControlName="confirmPasswordControl" [placeholder]="'ConfirmPassword' | language: settings.Lang"/>
         </mat-form-field>
 
-        <button type="submit" mat-raised-button>{{ 'Save' | language: settings.Lang }}</button>
+        <button type="submit" [disabled]="!formGroup.valid" mat-raised-button>{{ 'Save' | language: settings.Lang }}</button>
     </div>
 </form>

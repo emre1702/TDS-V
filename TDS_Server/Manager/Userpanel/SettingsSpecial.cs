@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Common.Enum;
 using TDS_Common.Enum.Userpanel;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Userpanel;
+using TDS_Server.Enums;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
+using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.Userpanel
@@ -27,7 +30,7 @@ namespace TDS_Server.Manager.Userpanel
             return Serializer.ToBrowser(data);
         }
 
-        public static async Task<object?> SetData(TDSPlayer player, params object[] args)
+        public static async Task<object?> SetData(TDSPlayer player, object[] args)
         {
             if (player.Entity is null)
                 return "Unknown error";
@@ -43,6 +46,8 @@ namespace TDS_Server.Manager.Userpanel
 
             int? paid = null;
             DateTime? lastFreeUsernameChange = player.Entity.PlayerStats.LastFreeUsernameChange;
+            
+            object? oldValue = null;
             switch (type)
             {
                 case EUserpanelSettingsSpecialType.Username:
@@ -60,12 +65,15 @@ namespace TDS_Server.Manager.Userpanel
                         paid = SettingsManager.ServerSettings.UsernameChangeCost;
                         player.GiveMoney(-SettingsManager.ServerSettings.UsernameChangeCost);
                     }
+                    oldValue = player.Entity.Name;
                     player.Entity.Name = value;
                     break;
                 case EUserpanelSettingsSpecialType.Password:
-                    player.Entity.Password = value;
+                    oldValue = player.Entity.Password;
+                    player.Entity.Password = Utils.HashPWServer(value);
                     break;
                 case EUserpanelSettingsSpecialType.Email:
+                    oldValue = player.Entity.Email;
                     player.Entity.Email = value;
                     break;
                 default:
@@ -83,10 +91,36 @@ namespace TDS_Server.Manager.Userpanel
                     player.GiveMoney(paid.Value);
                 if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
                     player.Entity.PlayerStats.LastFreeUsernameChange = lastFreeUsernameChange;
+
+                if (oldValue is { })
+                {
+                    switch (type)
+                    {
+                        case EUserpanelSettingsSpecialType.Username:
+                            player.Player!.Name = (string)oldValue;
+                            break;
+                        case EUserpanelSettingsSpecialType.Password:
+                            player.Entity.Password = (string)oldValue;
+                            break;
+                        case EUserpanelSettingsSpecialType.Email:
+                            player.Entity.Email = (string)oldValue;
+                            break;
+                    }
+
+                }
+                
                 return "Unknown error";
             }
-            
-            return "";
+
+            switch (type)
+            {
+                case EUserpanelSettingsSpecialType.Username:
+                    player.Player!.Name = value;
+                    PlayerDataSync.SetData(player, EPlayerDataKey.Name, EPlayerDataSyncMode.Player, value);
+                    break;
+            }
+
+            return string.Empty;
         }
     }
 }

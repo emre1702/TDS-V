@@ -21,7 +21,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
         usernameBuyControl: new FormControl(false),
         passwordControl: new FormControl("", [Validators.minLength(3), Validators.maxLength(50)]),
         emailControl: new FormControl("", [Validators.email]),
-        confirmPasswordControl: new FormControl("", [Validators.required, Validators.minLength(3), Validators.minLength(50)])
+        confirmPasswordControl: new FormControl("", [Validators.required, Validators.minLength(3), Validators.maxLength(50)])
     });
     hasToBuyUsername = false;
 
@@ -55,14 +55,15 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
     saveChanges() {
         const confirmedPassword = this.formGroup.get("confirmPasswordControl").value;
         this.rageConnector.callCallback(DToClientEvent.GetHashedPassword, [confirmedPassword], (hashedPassword) => {
-            const username = this.formGroup.get("usernameControl").value;
-            if ((!this.hasToBuyUsername || this.formGroup.get("usernameBuyControl").value) && this.userpanelService.allSettingsSpecial[0] != username) {
+            const username = (this.formGroup.get("usernameControl").value as string).trim();
+            if ((!this.hasToBuyUsername || this.formGroup.get("usernameBuyControl").enabled && username.length) && this.userpanelService.allSettingsSpecial[0] != username) {
                 this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
                     [UserpanelSettingsSpecialType.Username, username, hashedPassword],
                     (err: string) => {
                         if (err.length) {
                             this.showSaveError(err);
                         } else {
+                            this.userpanelService.allSettingsSpecial[0] = username;
                             this.showSaveSuccess(UserpanelSettingsSpecialType.Username);
                         }
                     });
@@ -70,15 +71,17 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
 
             const password = this.formGroup.get("passwordControl").value as string;
             if (password && password.length) {
-                this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
-                    [UserpanelSettingsSpecialType.Password, password, hashedPassword],
-                    (err: string) => {
-                        if (err.length) {
-                            this.showSaveError(err);
-                        } else {
-                            this.showSaveSuccess(UserpanelSettingsSpecialType.Password);
-                        }
-                    });
+                this.rageConnector.callCallback(DToClientEvent.GetHashedPassword, [password], (hashedNewPassword) => {
+                    this.rageConnector.callCallbackServer(DToServerEvent.SaveSpecialSettingsChange,
+                        [UserpanelSettingsSpecialType.Password, hashedNewPassword, hashedPassword],
+                        (err: string) => {
+                            if (err.length) {
+                                this.showSaveError(err);
+                            } else {
+                                this.showSaveSuccess(UserpanelSettingsSpecialType.Password);
+                            }
+                        });
+                });
             }
 
             const email = this.formGroup.get("emailControl").value;
