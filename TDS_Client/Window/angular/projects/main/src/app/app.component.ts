@@ -106,6 +106,10 @@ export class AppComponent {
             snackBar.open("Cooldown", undefined, { duration: 3000 });
         });
 
+        rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
+            this.settings.Constants[7] = newName;
+        });
+
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
     }
 

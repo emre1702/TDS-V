@@ -32,6 +32,7 @@
         public const string SyncMoney = "cb24";
         public const string SyncNewSupportRequestMessage = "cb35";
         public const string SyncTeamChoiceMenuData = "cb36";
+        public const string SyncUsernameChange = "cb42";
         public const string ToggleChatInput = "cb41";
         public const string ToggleChatOpened = "cb25";
         public const string ToggleFreeroam = "cb26";

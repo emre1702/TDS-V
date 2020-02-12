@@ -30,6 +30,7 @@ export enum DFromClientEvent {
     SyncMoney = "cb24",
     SyncNewSupportRequestMessage = "cb35",
     SyncTeamChoiceMenuData = "cb36",
+    SyncUsernameChange = "cb42",
     ToggleChatInput = "cb41",
     ToggleChatOpened = "cb25",
     ToggleFreeroam = "cb26",

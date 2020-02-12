@@ -113,6 +113,10 @@ namespace TDS_Client.Manager.Utility
                 case EPlayerDataKey.IsLobbyOwner:
                     Lobby.Lobby.IsLobbyOwner = (bool)obj;
                     break;
+                case EPlayerDataKey.Name:
+                    if (!(Browser.Angular.Main.Browser is null))
+                        Browser.Angular.Main.SyncUsernameChange((string)obj);
+                    break;
             }
         }
     }

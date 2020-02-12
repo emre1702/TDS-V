@@ -315,6 +315,11 @@ namespace TDS_Client.Manager.Browser.Angular
         {
             Execute(DToBrowserEvent.RemoveNameForChat, name);
         }
+
+        public static void SyncUsernameChange(string name)
+        {
+            Execute(DToBrowserEvent.SyncUsernameChange, name);
+        }
     }
 
 }

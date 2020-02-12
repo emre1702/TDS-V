@@ -95,6 +95,7 @@ namespace TDS_Server.Manager.PlayerManager
                 GetChallengesJson(player));
 
             PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
+            PlayerDataSync.SetData(player, EPlayerDataKey.Name, EPlayerDataSyncMode.Player, player.Entity.Name);
 
             player.Gang = Gang.GetPlayerGang(player);
             player.GangRank = Gang.GetPlayerGangRank(player);
