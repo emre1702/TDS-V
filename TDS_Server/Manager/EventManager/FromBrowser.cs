@@ -20,8 +20,8 @@ namespace TDS_Server.Manager.EventManager
 {
     partial class EventsHandler
     {
-        public delegate Task<object?> FromBrowserAsyncMethodDelegate(TDSPlayer player, params object[] args);
-        public delegate object? FromBrowserMethodDelegate(TDSPlayer player, params object[] args);
+        public delegate Task<object?> FromBrowserAsyncMethodDelegate(TDSPlayer player, object[] args);
+        public delegate object? FromBrowserMethodDelegate(TDSPlayer player, object[] args);
 
         private static readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
         {
@@ -53,11 +53,11 @@ namespace TDS_Server.Manager.EventManager
                 string eventName = (string)args[0];
                 if (_asyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _asyncMethods[eventName](player, args);
+                    ret = await _asyncMethods[eventName](player, args.Skip(1).ToArray());
                 } 
                 else if (_methods.ContainsKey(eventName))
                 {
-                    ret = _methods[eventName](player, args);
+                    ret = _methods[eventName](player, args.Skip(1).ToArray());
                 }
 
                 if (ret != null)
@@ -150,7 +150,7 @@ namespace TDS_Server.Manager.EventManager
             await Userpanel.SupportRequest.SendMessage(player, requestId, message);
         }
 
-        private static object? BuyMap(TDSPlayer player, params object[] args)
+        private static object? BuyMap(TDSPlayer player, object[] args)
         {
             if (player.CurrentLobby is null)
                 return null;
@@ -164,7 +164,7 @@ namespace TDS_Server.Manager.EventManager
             return null;
         }
 
-        private static object? MapCreatorSyncData(TDSPlayer player, params object[] args)
+        private static object? MapCreatorSyncData(TDSPlayer player, object[] args)
         {
             if (player.CurrentLobby is null)
                 return null;

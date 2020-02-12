@@ -31,7 +31,7 @@ namespace TDS_Server.Manager.Utility
             }
         }
 
-        public static object? AcceptInvitation(TDSPlayer player, params object[] args)
+        public static object? AcceptInvitation(TDSPlayer player, object[] args)
         {
             if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
                 return null;
@@ -48,7 +48,7 @@ namespace TDS_Server.Manager.Utility
             return null;
         }
 
-        public static object? RejectInvitation(TDSPlayer player, params object[] args)
+        public static object? RejectInvitation(TDSPlayer player, object[] args)
         {
             if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
                 return null;

@@ -48,7 +48,7 @@ namespace TDS_Server.Manager.Userpanel
             return json;
         }
 
-        public static async Task<object?> Answer(TDSPlayer player, params object[] args)
+        public static async Task<object?> Answer(TDSPlayer player, object[] args)
         {
             int? offlineMessageID;
             if ((offlineMessageID = Utils.GetInt(args[0])) is null)
@@ -72,7 +72,7 @@ namespace TDS_Server.Manager.Userpanel
             return null;
         }
 
-        public static async Task<object?> Send(TDSPlayer player, params object[] args)
+        public static async Task<object?> Send(TDSPlayer player, object[] args)
         {
             string? playerName = Convert.ToString(args[0]);
             if (playerName is null)
@@ -104,7 +104,7 @@ namespace TDS_Server.Manager.Userpanel
             return true;
         }
 
-        public static async Task<object?> Delete(TDSPlayer player, params object[] args)
+        public static async Task<object?> Delete(TDSPlayer player, object[] args)
         {
             int? offlineMessageId;
             if ((offlineMessageId = Utils.GetInt(args[0])) is null)

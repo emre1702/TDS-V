@@ -98,7 +98,7 @@ namespace TDS_Server.Manager.Userpanel
             
         }
 
-        public static async Task<object?> SendInvitation(TDSPlayer player, params object[] args)
+        public static async Task<object?> SendInvitation(TDSPlayer player, object[] args)
         {
             if (player.AdminLevel.Level != (short)EAdminLevel.Administrator)
                 return null;
