@@ -12,7 +12,7 @@ namespace TDS_Server.Instance.LobbyInstances
 {
     partial class Lobby
     {
-        public List<TDSPlayer> Players { get; } = new List<TDSPlayer>();
+        public HashSet<TDSPlayer> Players { get; } = new HashSet<TDSPlayer>();
 
         public void SendAllPlayerEvent(string eventname, Team? team, params object[] args)
         {

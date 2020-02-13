@@ -35,7 +35,7 @@ namespace TDS_Server.Instance.LobbyInstances
             base.RemovePlayer(player);
 
             if (player.Entity?.Id == LobbyEntity.OwnerId && Players.Count >= 1) {
-                var newOwner = Players[CommonUtils.Rnd.Next(0, Players.Count)];
+                var newOwner = Players.ElementAt(CommonUtils.Rnd.Next(0, Players.Count));
                 LobbyEntity.OwnerId = newOwner.Entity!.Id;
                 PlayerDataSync.SetData(newOwner, EPlayerDataKey.IsLobbyOwner, EPlayerDataSyncMode.Player, true);
             }
