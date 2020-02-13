@@ -47,7 +47,7 @@ namespace TDS_Server.Instance.PlayerInstance
             if (money >= 0 || Money > money * -1)
             {
                 Money += money;
-                if (TotalStats != null)
+                if (money > 0 && TotalStats != null)
                     TotalStats.Money += money;
             }
             else
