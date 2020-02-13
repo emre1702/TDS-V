@@ -1,5 +1,4 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +7,10 @@ using TDS_Server.Dto;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.EventManager;
+using TDS_Server.Manager.Utility;
 using TDS_Server_DB.Entity;
 
-namespace TDS_Server.Manager.Utility
+namespace TDS_Server.Manager.Admin
 {
     internal static class AdminsManager
     {

@@ -1,7 +1,7 @@
 ﻿using MoreLinq;
 using System.Linq;
 using TDS_Server.Dto;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Manager.Admin;
 
 namespace TDS_Server.Instance.PlayerInstance
 {
