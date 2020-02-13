@@ -29,9 +29,9 @@ namespace TDS_Server.Instance.PlayerInstance
 
                 //Todo: Check if this is enough to save the challenge in DB
                 if (setTheValue)
-                    challenge.CurrentAmount = Math.Max(amount, challenge.Amount);
+                    challenge.CurrentAmount = Math.Min(amount, challenge.Amount);
                 else 
-                    challenge.CurrentAmount = Math.Max(challenge.CurrentAmount + amount, challenge.Amount);
+                    challenge.CurrentAmount = Math.Min(challenge.CurrentAmount + amount, challenge.Amount);
                 ChallengeManager.SyncCurrentAmount(this, challenge);
 
                 if (challenge.Frequency == EChallengeFrequency.Forever)

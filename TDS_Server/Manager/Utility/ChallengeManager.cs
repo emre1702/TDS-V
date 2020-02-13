@@ -35,7 +35,7 @@ namespace TDS_Server.Manager.Utility
                     {dbPlayer.Id},
                     type,
                     frequency,
-                    floor(random() * (max_value - min_value+1) + min_value)
+                    floor(random() * (max_number - min_number+1) + min_number)
                 FROM
                     {challengeSettingsTable}
                 TABLESAMPLE SYSTEM_ROWS({SettingsManager.ServerSettings.AmountWeeklyChallenges})

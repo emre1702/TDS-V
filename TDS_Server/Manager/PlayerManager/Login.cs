@@ -71,19 +71,19 @@ namespace TDS_Server.Manager.PlayerManager
             if (player.Entity.PlayerClothes is null)
                 player.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
-            /*#region Add weekly challenges and reload
+            #region Add weekly challenges and reload
             if (player.Entity.Challenges.Count == 0)
             {
                 await ChallengeManager.AddWeeklyChallenges(player.Entity);
-                await player.ExecuteForDBAsync(dbContext => 
+                await player.ExecuteForDBAsync(async dbContext => 
                 {
                     player.Entity.Challenges = null;
-                    dbContext.Entry(player.Entity).Reference(p => p.Challenges).IsLoaded = false;
-                    return dbContext.Entry(player.Entity).Reference(p => p.Challenges).LoadAsync();
+                    dbContext.Entry(player.Entity).Collection(p => p.Challenges).IsLoaded = false;
+                    await dbContext.Entry(player.Entity).Collection(p => p.Challenges).LoadAsync();
                 });
             }
             player.InitChallengesDict();
-            #endregion*/
+            #endregion
 
 
             var angularConstantsData = AngularConstantsDataDto.Get(player);
