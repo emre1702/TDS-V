@@ -1472,7 +1472,8 @@ namespace TDS_Server_DB.Entity
             );
 
             modelBuilder.Entity<LobbyRoundSettings>().HasData(
-                new LobbyRoundSettings { LobbyId = -1, RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000, BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true }
+                new LobbyRoundSettings { LobbyId = -1, RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000, BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true, 
+                    ShowRanking = true }
             );
 
             modelBuilder.Entity<LobbyMapSettings>().HasData(
