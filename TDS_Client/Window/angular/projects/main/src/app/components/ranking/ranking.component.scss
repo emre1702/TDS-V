@@ -13,5 +13,11 @@
     border-collapse: collapse;
     margin: 0px;
     background: transparent;
+
+    td {
+        padding-left: 3px;
+        padding-right: 3px;
+        text-align: center;
+    }
   }
 }
