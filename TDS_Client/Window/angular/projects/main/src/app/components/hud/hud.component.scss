@@ -106,18 +106,12 @@
         }
 
         .rest {
-            position: absolute;
             width: 28%;
-            height: calc(100% - 52px);
+            height: 100%;
             left: 0px;
-            bottom: 52px;
-
 
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-            align-content: flex-start;
 
             .ammo {
                 margin-top: 20px;
