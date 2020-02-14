@@ -35,11 +35,13 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.AllowDataTransfer, defaultValue: false,
-                    formControl: new FormControl(false)
+                    formControl: new FormControl(false),
+                    tooltipLangKey: "AllowDataTransferSettingInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowConfettiAtRanking, defaultValue: true,
-                    formControl: new FormControl(true)
+                    formControl: new FormControl(true),
+                    tooltipLangKey: "ShowConfettiAtRankingSettingInfo"
                 },
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Timezone,
@@ -53,7 +55,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.DiscordUserId, defaultValue: 0,
-                    formControl: new FormControl(0)
+                    formControl: new FormControl(0),
+                    tooltipLangKey: "DiscordUserIdSettingInfo"
                 }
             ]
         },

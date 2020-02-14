@@ -15,5 +15,7 @@ export interface UserpanelSettingRow {
 
     dataSettingIndex: number;
 
+    tooltipLangKey?: string;
+
     onValueChanged?: () => void;
 }

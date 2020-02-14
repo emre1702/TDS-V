@@ -179,6 +179,9 @@ export interface Language {
     TDSTeam: string;
     VIP: string;
     LobbyOwner: string;
+    AllowDataTransferSettingInfo: string;
+    ShowConfettiAtRankingSettingInfo: string;
+    DiscordUserIdSettingInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -202,6 +202,9 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     TDSTeam = "TDS-Team";
     VIP = "VIP";
     LobbyOwner = "Lobby-Besitzer";
+    AllowDataTransferSettingInfo = "Falls TDS-V mal an jemand anderen weitergegeben werden sollte, werden deine Daten nur mit deiner Erlaubnis mit gegeben.\nMehr Infos im FAQ.";
+    ShowConfettiAtRankingSettingInfo = "(De-)aktiviere das laute Konfetti im Ranking nach jeder Runde.";
+    DiscordUserIdSettingInfo = "Erwähne deinen Namen mit einem Backslash davor (z.B. \\@Bonus) in Discord, um deine ID zu erhalten (nur Zahlen).";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
