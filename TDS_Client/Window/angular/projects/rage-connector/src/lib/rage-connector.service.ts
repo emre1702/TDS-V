@@ -57,6 +57,9 @@ export class RageConnectorService {
      * @param callback Any function
      */
     public listen(eventName: string, callback: (...args: any) => void) {
+        if (typeof mp == "undefined") // testing without RAGE
+            return;
+
         if (!RageConnectorService.events[eventName]) {
             RageConnectorService.events[eventName] = [];
         }
@@ -66,6 +69,9 @@ export class RageConnectorService {
     }
 
     public remove(eventName: string, callback?: (...args: any) => void) {
+        if (typeof mp == "undefined") // testing without RAGE
+            return;
+
         if (!RageConnectorService.events[eventName]) {
             return;
         }
@@ -86,12 +92,14 @@ export class RageConnectorService {
     public call(eventName: string, ...args: any) {
         if (typeof mp == "undefined") // testing without RAGE
             return;
+
         mp.trigger(eventName, ...args);
     }
 
     public callServer(eventName: string, ...args: any) {
         if (typeof mp == "undefined") // testing without RAGE
             return;
+
         mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
     }
 
@@ -110,6 +118,7 @@ export class RageConnectorService {
             RageConnectorService.callbackEvents[eventName] = [];
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
+
         mp.events.add(eventName, callback);
         if (args)
             mp.trigger(eventName, ...args);
@@ -132,6 +141,7 @@ export class RageConnectorService {
             RageConnectorService.callbackEvents[eventName] = [];
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
+
         mp.events.add(eventName, callback);
         if (args)
             mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
