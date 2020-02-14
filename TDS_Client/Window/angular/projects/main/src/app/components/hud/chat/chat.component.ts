@@ -136,7 +136,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
 
         if (addToBodies.indexOf(this.selectedChatBody) >= 0) {
-            const scrolledToBottom = this.isChatScrolledToBottom();
+            const scrolledToBottom = this.isChatScrolledToBottom() || this.chatBodies[this.selectedChatBody].messages.length == 0;
             this.changeDetector.detectChanges();
 
             if (scrolledToBottom) {
