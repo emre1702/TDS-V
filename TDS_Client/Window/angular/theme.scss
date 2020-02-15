@@ -58,6 +58,8 @@ $cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 // that you are using.
 @include angular-material-theme($cdark-theme);
 
+$background-color: rgba(48, 48, 48, 0.78);
+
 .color-primary {
   color: mat-color($dark-primary);
 }
@@ -132,7 +134,7 @@ html, body, app-root {
 
 .mat-app-background {
   // border: 4px outset mat-color($dark-primary);
-  background-color: rgba(48, 48, 48, 0.78);
+  background-color: $background-color;
   color: white;
 }
 
@@ -167,4 +169,19 @@ button:not([disabled]):hover {
 
 .mat-checkbox-layout {
   white-space: normal !important;
+}
+
+.color-picker {
+    background-color: $background-color !important;
+
+    .box {
+        input {
+            background: $background-color !important;
+            color: white !important;
+        }
+
+        div {
+            color: white !important;
+        }
+    }
 }
