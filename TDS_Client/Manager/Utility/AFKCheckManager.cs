@@ -156,7 +156,7 @@ namespace TDS_Client.Manager.Utility
             _kickTimer.Kill();
             _kickTimer = null;
             TickManager.Remove(OnTick);
-            _draw.Remove();
+            _draw?.Remove();
             _draw = null;
         }
 
