@@ -69,7 +69,7 @@ namespace TDS_Client.Manager.Utility
                 return;
             }
 
-            if (_kickTimer.RemainingMsToExecute > ClientConstants.ShowAFKCheckMessageAfterRemainingMs)
+            if ((int)_kickTimer.RemainingMsToExecute > Settings.PlayerSettings.AFKKickShowWarningLastSeconds * 1000)
                 return;
 
             if (_draw is null)
@@ -123,7 +123,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void OnDeath()
         {
-            if (!(_kickTimer is null) && _kickTimer.RemainingMsToExecute <= ClientConstants.ShowAFKCheckMessageAfterRemainingMs)
+            if (!(_kickTimer is null) && (int)(_kickTimer.RemainingMsToExecute) <= Settings.PlayerSettings.AFKKickShowWarningLastSeconds * 1000)
                 IsAFKEnd();
         }
 
@@ -131,7 +131,7 @@ namespace TDS_Client.Manager.Utility
         {
             _afkStartPos = player.LocalPlayer.Position;
             TickManager.Add(OnTick);
-            _kickTimer = new TDSTimer(IsAFKEnd, (uint)Settings.AFKKickAfterSec * 1000, 1);
+            _kickTimer = new TDSTimer(IsAFKEnd, (uint)Settings.PlayerSettings.AFKKickAfterSeconds * 1000, 1);
         }
 
         private static void IsAFKEnd()

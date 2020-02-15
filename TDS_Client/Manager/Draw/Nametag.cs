@@ -13,11 +13,6 @@ namespace TDS_Client.Manager.Draw
 {
     class Nametag
     {
-        private static readonly Color _deadColor = Color.FromArgb(ClientConstants.NametagAlpha, 0, 0, 0);
-        private static readonly Color _healthEmptyColor = Color.FromArgb(ClientConstants.NametagAlpha, 50, 0, 0);
-        private static readonly Color _healthFullColor = Color.FromArgb(ClientConstants.NametagAlpha, 0, 255, 0);
-        private static readonly Color? _armorEmptyColor = null;
-        private static readonly Color _armorFullColor = Color.FromArgb(ClientConstants.NametagAlpha, 255, 255, 255);
 
         public static void Draw(List<TickNametagData> nametags) 
         {
@@ -97,12 +92,12 @@ namespace TDS_Client.Manager.Draw
         private static Color GetHealthColor(int hp, int armor)
         {
             if (hp == 0)
-                return _deadColor;
+                return Settings.NametagDeadColor.HasValue ? Settings.NametagDeadColor.Value : Settings.NametagHealthEmptyColor;
 
             if (armor == 0)
                 return GetHpColor(hp);
 
-            if (_armorEmptyColor.HasValue)
+            if (Settings.NametagArmorEmptyColor.HasValue)
                 return GetArmorColor(armor);
             else
                 return GetArmorColor(hp, armor);
@@ -125,23 +120,23 @@ namespace TDS_Client.Manager.Draw
 
         private static Color GetHpColor(int hp)
         {
-            return _healthFullColor.GetBetween(_healthEmptyColor, hp / Settings.StartHealth);
+            return Settings.NametagHealthFullColor.GetBetween(Settings.NametagHealthEmptyColor, hp / Settings.StartHealth);
         }
 
         private static Color GetArmorColor(int armor)
         { 
-            if (!_armorEmptyColor.HasValue)
+            if (!Settings.NametagArmorEmptyColor.HasValue)
                 return GetArmorColor(100, armor);
 
-            return _armorEmptyColor.Value.GetBetween(_armorFullColor, armor / Settings.StartArmor);
+            return Settings.NametagArmorFullColor.GetBetween(Settings.NametagArmorEmptyColor.Value, armor / Settings.StartArmor);
         }
 
         private static Color GetArmorColor(int hp, int armor)
         {
-            if (_armorEmptyColor.HasValue)
+            if (Settings.NametagArmorEmptyColor.HasValue)
                 return GetArmorColor(armor);
 
-            return GetHpColor(hp).GetBetween(_armorFullColor, armor / Settings.StartArmor);
+            return Settings.NametagArmorFullColor.GetBetween(GetHpColor(hp), armor / Settings.StartArmor);
         }
     }
 }

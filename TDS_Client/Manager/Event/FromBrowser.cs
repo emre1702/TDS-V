@@ -295,7 +295,22 @@ namespace TDS_Client.Manager.Event
             switch (dataSetting)
             {
                 case EUserpanelSettingKey.MapBorderColor:
-                    Settings.MapBorderColor = CommonUtils.GetColorFromHtmlRgba(color);
+                    Settings.MapBorderColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.MapBorderColor;
+                    break;
+                case EUserpanelSettingKey.NametagDeadColor:
+                    Settings.NametagDeadColor = CommonUtils.GetColorFromHtmlRgba(color);
+                    break;
+                case EUserpanelSettingKey.NametagHealthEmptyColor:
+                    Settings.NametagHealthEmptyColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthEmptyColor;
+                    break;
+                case EUserpanelSettingKey.NametagHealthFullColor:
+                    Settings.NametagHealthFullColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthFullColor;
+                    break;
+                case EUserpanelSettingKey.NametagArmorEmptyColor:
+                    Settings.NametagArmorEmptyColor = CommonUtils.GetColorFromHtmlRgba(color);
+                    break;
+                case EUserpanelSettingKey.NametagArmorFullColor:
+                    Settings.NametagArmorFullColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagArmorFullColor;
                     break;
             }
             

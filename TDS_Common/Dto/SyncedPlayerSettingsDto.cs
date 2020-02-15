@@ -30,6 +30,8 @@ namespace TDS_Common.Dto
         public bool Bloodscreen { get; set; }
         [JsonProperty("8")]
         public bool FloatingDamageInfo { get; set; }
+        [JsonProperty("25")]
+        public bool CheckAFK { get; set; }
         #endregion
 
         #region Voice
@@ -41,9 +43,34 @@ namespace TDS_Common.Dto
         public float VoiceVolume { get; set; }
         #endregion
 
-        #region Graphical 
+        #region Colors 
         [JsonProperty("12")]
         public string MapBorderColor { get; set; }
+        [JsonProperty("20")]
+        public string NametagDeadColor { get; set; }
+        [JsonProperty("21")]
+        public string NametagHealthEmptyColor { get; set; }
+        [JsonProperty("22")]
+        public string NametagHealthFullColor { get; set; }
+        [JsonProperty("23")]
+        public string NametagArmorEmptyColor { get; set; }
+        [JsonProperty("24")]
+        public string NametagArmorFullColor { get; set; }
+        #endregion 
+
+        #region Times
+        [JsonProperty("14")]
+        public int BloodscreenCooldownMs { get; set; }
+        [JsonProperty("15")]
+        public int HudAmmoUpdateCooldownMs { get; set; }
+        [JsonProperty("16")]
+        public int HudHealthUpdateCooldownMs { get; set; }
+        [JsonProperty("17")]
+        public int AFKKickAfterSeconds { get; set; }
+        [JsonProperty("18")]
+        public int AFKKickShowWarningLastSeconds { get; set; }
+        [JsonProperty("19")]
+        public int ShowFloatingDamageInfoDurationMs { get; set; }
         #endregion
     }
 }

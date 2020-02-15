@@ -129,6 +129,7 @@ export interface Language {
     SkinHash: string;
     BlipColor: string;
     Color: string;
+    Colors: string;
     Transparent: string;
     HeightArrowDoesntBlink: string;
     AddTeam: string;
@@ -182,6 +183,29 @@ export interface Language {
     AllowDataTransferSettingInfo: string;
     ShowConfettiAtRankingSettingInfo: string;
     DiscordUserIdSettingInfo: string;
+    BloodscreenCooldownMs: string;
+    BloodscreenCooldownMsSettingInfo: string;
+    HudAmmoUpdateCooldownMs: string;
+    HudAmmoUpdateCooldownMsSettingInfo: string;
+    HudHealthUpdateCooldownMs: string;
+    HudHealthUpdateCooldownMsSettingInfo: string;
+    CheckAFK: string;
+    CheckAFKSettingInfo: string;
+    MapBorderColor: string;
+    NametagDeadColor: string;
+    NametagDeadColorSettingInfo: string;
+    NametagHealthEmptyColor: string;
+    NametagHealthEmptyColorSettingInfo: string;
+    NametagArmorEmptyColor: string;
+    NametagArmorEmptyColorSettingInfo: string;
+    NametagArmorFullColor: string;
+    NametagArmorFullColorSettingInfo: string;
+    AFKKickAfterSeconds: string;
+    AFKKickAfterSecondsSettingInfo: string;
+    AFKKickShowWarningLastSeconds: string;
+    AFKKickShowWarningLastSecondsSettingInfo: string;
+    ShowFloatingDamageInfoDurationMs: string;
+    ShowFloatingDamageInfoDurationMsSettingInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

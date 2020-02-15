@@ -22,8 +22,11 @@ namespace TDS_Common.Manager.Utility
             return elements[rndIndex];
         }
 
-        public static Color GetColorFromHtmlRgba(string rgba)
+        public static Color? GetColorFromHtmlRgba(string rgba)
         {
+            if (string.IsNullOrEmpty(rgba))
+                return null;
+
             int left = rgba.IndexOf('(');
             int right = rgba.IndexOf(')');
 

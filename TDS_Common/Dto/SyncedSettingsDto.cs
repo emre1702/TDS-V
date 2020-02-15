@@ -19,10 +19,8 @@ namespace TDS_Common.Dto
         [JsonProperty("6")]
         public bool ShowNametagOnlyOnAiming;
         [JsonProperty("7")]
-        public int AFKKickAfterSec;
-        [JsonProperty("8")]
         public int ArenaLobbyId;
-        [JsonProperty("9")]
+        [JsonProperty("8")]
         public int MapCreatorLobbyId;
     }
 }

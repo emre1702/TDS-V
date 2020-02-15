@@ -142,6 +142,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     SkinHash = "Skin";
     BlipColor = "Blip color";
     Color = "Color";
+    Colors = "Colors";
     Transparent = "Transparent";
     HeightArrowDoesntBlink = "Height arrow doesn't blink";
     AddTeam = "Add team";
@@ -210,6 +211,31 @@ The user interface is always being worked on, so don't be surprised if you disco
     AllowDataTransferSettingInfo = "If TDS-V should ever be given to someone else, your data will only be given with your permission.\nMore infos in FAQ.";
     ShowConfettiAtRankingSettingInfo = "(De-)activate the loud confetti in the ranking after each round.";
     DiscordUserIdSettingInfo = "Mention your name with a backslash before (e.g. \\@Bonus) in Discord to get your ID (only numbers).";
+    BloodscreenCooldownMs = "Cooldown between bloodscreens (ms)";
+    BloodscreenCooldownMsSettingInfo = "The cooldown between two bloodscreens.\nHigher cooldown means better performance while getting damage.";
+    HudAmmoUpdateCooldownMs = "Cooldown between ammo updates in hud (ms)";
+    HudAmmoUpdateCooldownMsSettingInfo = "The cooldown between two ammo updates for the hud.\nHigher cooldown means better performance while shooting.\nUse -1 to deactivate updates totally.";
+    HudHealthUpdateCooldownMs = "Cooldown between health updates in hud (ms)";
+    HudHealthUpdateCooldownMsSettingInfo = "The cooldown between two armor and hp updates for the hud.\nHigher cooldown means better performance while getting damage.\nUse -1 to deactivate updates totally.";
+    CheckAFK = "Check AFK";
+    CheckAFKSettingInfo = "Checks in an official arena lobby if you are AFK, warns and kicks you out of the lobby to prevent that you get killed multiple times while being AFK.\nIt's only for your best so if you don't like it, disable it.";
+    MapBorderColor = "Map border color";
+    NametagDeadColor = "Nametag dead color";
+    NametagDeadColorSettingInfo = "The nametag color to use for a dead player.\nIf you don't use one, the 'health empty color' will be used instead.";
+    NametagHealthEmptyColor = "Nametag health empty color";
+    NametagHealthEmptyColorSettingInfo = "The nametag color for an empty health.\nThe final nametag health color will be between health empty and health full colors.";
+    NametagHealthFullColor = "Nametag health full color";
+    NametagHealthFullColorSettingInfo = "The nametag color for a full health.\nThe final nametag health color will be between health empty and health full colors.";
+    NametagArmorEmptyColor = "Nametag armor empty color";
+    NametagArmorEmptyColorSettingInfo = "The nametag color for an empty armor.\nThe final nametag armor color will be between armor empty (or health nametag) and armor full colors.";
+    NametagArmorFullColor = "Nametag armor full color";
+    NametagArmorFullColorSettingInfo = "The nametag color for a full armor.\nThe final nametag armor color will be between armor empty (or health nametag) and armor full colors.";
+    AFKKickAfterSeconds = "AFK kick after seconds";
+    AFKKickAfterSecondsSettingInfo = "Kick yourself out of the lobby after X seconds being AFK (if 'Check AFK' is enabled).";
+    AFKKickShowWarningLastSeconds = "AFK warn last seconds";
+    AFKKickShowWarningLastSecondsSettingInfo = "Warns you in the last X seconds if you are AFK before kicking you out of the lobby.";
+    ShowFloatingDamageInfoDurationMs = "Floating damage info duration";
+    ShowFloatingDamageInfoDurationMsSettingInfo = "The duration in milliseconds for a floating damage info (damage info on hit).";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

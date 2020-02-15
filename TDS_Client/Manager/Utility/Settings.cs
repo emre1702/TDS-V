@@ -74,7 +74,6 @@ namespace TDS_Client.Manager.Utility
         public static int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
         public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
-        public static int AFKKickAfterSec => _syncedServerSettings.AFKKickAfterSec;
         public static int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
         public static int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
 
@@ -83,6 +82,12 @@ namespace TDS_Client.Manager.Utility
         public static Color MapBorderColor;
         public static int StartHealth = 100;
         public static int StartArmor;
+        public static Color? NametagDeadColor = Color.FromArgb(255, 0, 0, 0);
+        public static Color NametagHealthEmptyColor = Color.FromArgb(255, 50, 0, 0);
+        public static Color NametagHealthFullColor = Color.FromArgb(255, 0, 255, 0);
+        public static Color? NametagArmorEmptyColor = null;
+        public static Color NametagArmorFullColor = Color.FromArgb(255, 255, 255, 255);
+
         public static bool LoggedIn { get; set; }
 
         // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
@@ -129,7 +134,13 @@ namespace TDS_Client.Manager.Utility
                 VoiceManager.SetForPlayer(player);
             }
 
-            MapBorderColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor);
+            MapBorderColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
+            NametagDeadColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
+            NametagHealthEmptyColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
+            NametagHealthFullColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
+            NametagArmorEmptyColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorEmptyColor);
+            NametagArmorFullColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
+
             NotTempMapBorderColor = null;
         }
 

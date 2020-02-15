@@ -12,6 +12,7 @@ export interface UserpanelSettingRow {
     onlyInt?: boolean;
     min?: number;
     max?: number;
+    nullable: boolean;
 
     dataSettingIndex: number;
 

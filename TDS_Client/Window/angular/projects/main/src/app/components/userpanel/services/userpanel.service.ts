@@ -13,6 +13,9 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
+import { LanguageEnum } from '../../../enums/language.enum';
+import { TimezoneEnum } from '../enums/timezone.enum';
+import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -161,10 +164,11 @@ export class UserpanelService {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsNormal);
 
         /*this.settings.Constants = [
-            1, 1, 10000, 60, 12, 23
+            1, 1, 10000, 60, 12, 23, [[1, "asd"]], "Bonus", "Bonus"
         ];
         this.allSettingsNormal = [0, LanguageEnum.English, true, true, TimezoneEnum["(UTC) Coordinated Universal Time"],
-        "", true, true, true, true, true, 0, "asd", DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"]];
+        1, true, true, true, true, true, 0, "asd", DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"], 100, 105, 110, 115, 120, 125,
+        "rgba(0, 0, 0, 1)", "rgba(50, 0, 0, 1)", "rgba(0, 255, 0, 1)", undefined, "rgba(255, 255, 255, 1)", true];
         this.settingsNormalLoaded.emit(null);
         this.loadingData = false;
         this.loadingDataChanged.emit(null);*/

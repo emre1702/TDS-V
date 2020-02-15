@@ -47,7 +47,8 @@ export class AppComponent {
         public settings: SettingsService,
         rageConnector: RageConnectorService,
         changeDetector: ChangeDetectorRef,
-        snackBar: MatSnackBar) {
+        snackBar: MatSnackBar,
+        public vcRef: ViewContainerRef) {
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string, challengesJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);

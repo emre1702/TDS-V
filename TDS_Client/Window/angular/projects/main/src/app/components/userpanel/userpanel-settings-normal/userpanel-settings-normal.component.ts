@@ -25,37 +25,41 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     currentDate: Date;
     userpanelSettingKey = UserpanelSettingKey;
 
+    // CARE:
+    // nullable only implemented for Colors yet
+
     settingPanel: UserpanelSettingsPanel[] = [
         {
             title: "General", rows: [
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Language, defaultValue: LanguageEnum.English,
-                    enum: LanguageEnum,
+                    enum: LanguageEnum, nullable: false,
                     formControl: new FormControl(LanguageEnum.English)
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.AllowDataTransfer, defaultValue: false,
-                    formControl: new FormControl(false),
+                    formControl: new FormControl(false), nullable: false,
                     tooltipLangKey: "AllowDataTransferSettingInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowConfettiAtRanking, defaultValue: true,
-                    formControl: new FormControl(true),
+                    formControl: new FormControl(true), nullable: false,
                     tooltipLangKey: "ShowConfettiAtRankingSettingInfo"
                 },
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Timezone,
                     defaultValue: TimezoneEnum["(UTC) Coordinated Universal Time"], enum: TimezoneEnum,
-                    formControl: new FormControl(TimezoneEnum["(UTC) Coordinated Universal Time"])
+                    formControl: new FormControl(TimezoneEnum["(UTC) Coordinated Universal Time"]),
+                    nullable: false,
                 },
                 {
                     type: SettingType.dateTimeFormatEnum, dataSettingIndex: UserpanelSettingKey.DateTimeFormat,
-                    defaultValue: DateTimeFormatEnum[""], enum: DateTimeFormatEnum,
+                    defaultValue: DateTimeFormatEnum[""], enum: DateTimeFormatEnum, nullable: false,
                     formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss"])
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.DiscordUserId, defaultValue: 0,
-                    formControl: new FormControl(0),
+                    formControl: new FormControl(0), nullable: false,
                     tooltipLangKey: "DiscordUserIdSettingInfo"
                 }
             ]
@@ -65,15 +69,20 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Fight", rows: [
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Bloodscreen, defaultValue: true,
-                    formControl: new FormControl(true)
+                    formControl: new FormControl(true), nullable: false,
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Hitsound, defaultValue: true,
-                    formControl: new FormControl(true)
+                    formControl: new FormControl(true), nullable: false,
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.FloatingDamageInfo, defaultValue: true,
-                    formControl: new FormControl(true)
+                    formControl: new FormControl(true), nullable: false,
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.CheckAFK, defaultValue: true,
+                    formControl: new FormControl(true), nullable: false,
+                    tooltipLangKey: "CheckAFKSettingInfo"
                 }
             ],
         },
@@ -82,27 +91,88 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Voice", rows: [
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Voice3D, defaultValue: false,
-                    formControl: new FormControl(false)
+                    formControl: new FormControl(false), nullable: false,
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.VoiceAutoVolume, defaultValue: false,
                     formControl: new FormControl(false),
-                    onValueChanged: this.voiceVolumeSettingChanged.bind(this)
+                    onValueChanged: this.voiceVolumeSettingChanged.bind(this),
+                    nullable: false,
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.VoiceVolume, defaultValue: 1,
-                    min: 0, max: 10,
+                    min: 0, max: 10, nullable: false,
                     formControl: new FormControl(1)
                 },
             ]
         },
 
         {
-            title: "Graphical", rows: [
+            title: "Colors", rows: [
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.MapBorderColor, defaultValue: "rgba(150,0,0,0.35)",
-                    formControl: new FormControl("rgba(150,0,0,0.35)")
+                    formControl: new FormControl("rgba(150,0,0,0.35)"), nullable: false,
                 },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagDeadColor, defaultValue: "rgba(0, 0, 0, 1)",
+                    formControl: new FormControl("rgba(0, 0, 0, 1)"), nullable: true,
+                    tooltipLangKey: "NametagDeadColorSettingInfo"
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagHealthEmptyColor, defaultValue: "rgba(50, 0, 0, 1)",
+                    formControl: new FormControl("rgba(50, 0, 0, 1)"), nullable: false,
+                    tooltipLangKey: "NametagHealthEmptyColorSettingInfo"
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagHealthFullColor, defaultValue: "rgba(0, 255, 0, 1)",
+                    formControl: new FormControl("rgba(0, 255, 0, 1)"), nullable: false,
+                    tooltipLangKey: "NametagHealthFullColorSettingInfo"
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagArmorEmptyColor, defaultValue: undefined,
+                    formControl: new FormControl(undefined), nullable: true,
+                    tooltipLangKey: "NametagArmorEmptyColorSettingInfo"
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagArmorFullColor, defaultValue: "rgba(255, 255, 255, 1)",
+                    formControl: new FormControl("rgba(255, 255, 255, 1)"), nullable: false,
+                    tooltipLangKey: "NametagArmorFullColorSettingInfo"
+                },
+            ]
+        },
+
+        {
+            title: "Times", rows: [
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.BloodscreenCooldownMs, defaultValue: 150,
+                    formControl: new FormControl(150), min: 0, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "BloodscreenCooldownMsSettingInfo", nullable: false,
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudAmmoUpdateCooldownMs, defaultValue: 100,
+                    formControl: new FormControl(100), min: -1, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "HudAmmoUpdateCooldownMsSettingInfo", nullable: false,
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudHealthUpdateCooldownMs, defaultValue: 100,
+                    formControl: new FormControl(100), min: -1, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "HudHealthUpdateCooldownMsSettingInfo", nullable: false,
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickAfterSeconds, defaultValue: 25,
+                    formControl: new FormControl(25), min: 0, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "AFKKickAfterSecondsSettingInfo", nullable: false,
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickShowWarningLastSeconds, defaultValue: 10,
+                    formControl: new FormControl(10), min: 0, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "AFKKickShowWarningLastSecondsSettingInfo", nullable: false,
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ShowFloatingDamageInfoDurationMs, defaultValue: 1000,
+                    formControl: new FormControl(1000), min: 0, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "ShowFloatingDamageInfoDurationMsSettingInfo", nullable: false,
+                }
             ]
         }
     ];

@@ -12,7 +12,7 @@ namespace TDS_Client.Manager.Utility
 
         public static void Init()
         {
-            BindManager.Add(Enum.EKey.LCtrl, ToggleCrouch, Enum.EKeyPressState.Up);
+            // BindManager.Add(Enum.EKey.LCtrl, ToggleCrouch, Enum.EKeyPressState.Up);
             PlayerDataSync.OnDataChanged += PlayerDataSync_OnDataChanged;
         }
 

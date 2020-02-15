@@ -178,7 +178,7 @@ namespace TDS_Server.Manager.Utility
                     StartHealth = data.StartHealth,
                     Teams = data.Teams.Select((t, index) => 
                     {
-                        var color = CommonUtils.GetColorFromHtmlRgba(t.Color);
+                        var color = CommonUtils.GetColorFromHtmlRgba(t.Color) ?? System.Drawing.Color.FromArgb(255, 255, 255);
                         return new Teams 
                         { 
                             Name = t.Name,

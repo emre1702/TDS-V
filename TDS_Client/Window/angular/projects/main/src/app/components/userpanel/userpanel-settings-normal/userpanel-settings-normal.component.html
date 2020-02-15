@@ -12,10 +12,11 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.string">
                         <div class="setting-row">
                             <mat-form-field color="accent">
-                                <input matInput [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                                [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
-                                [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"/>
+                                <input matInput [formControl]="setting.formControl"
+                                    (blur)="changeDetector.detectChanges()"
+                                    [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
+                                    [matTooltipDisabled]="!setting.tooltipLangKey"
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
                             </mat-form-field>
                         </div>
                     </ng-container>
@@ -23,10 +24,11 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.number">
                         <div class="setting-row">
                             <mat-form-field color="accent">
-                                <input matInput type="number" [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                                [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
-                                [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"/>
+                                <input matInput type="number" [formControl]="setting.formControl"
+                                    (blur)="changeDetector.detectChanges()"
+                                    [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
+                                    [matTooltipDisabled]="!setting.tooltipLangKey"
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
                             </mat-form-field>
                         </div>
                     </ng-container>
@@ -34,10 +36,12 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.numberSlider">
                         <div class="setting-row">
                             <span>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</span>
-                            <mat-slider color="primary" thumbLabel tickInterval="1" step="0.05" [formControl]="setting.formControl" [min]="setting.min" [max]="setting.max"
-                            (blur)="changeDetector.detectChanges()" (change)="setting.onValueChanged && setting.onValueChanged()"
-                            [matTooltipDisabled]="!setting.tooltipLangKey"
-                            [matTooltip]="setting.tooltipLangKey | language: settings.Lang"></mat-slider>
+                            <mat-slider color="primary" thumbLabel tickInterval="1" step="0.05"
+                                [formControl]="setting.formControl" [min]="setting.min" [max]="setting.max"
+                                (blur)="changeDetector.detectChanges()"
+                                (change)="setting.onValueChanged && setting.onValueChanged()"
+                                [matTooltipDisabled]="!setting.tooltipLangKey"
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"></mat-slider>
                         </div>
                         <!-- <div *ngSwitchDefault>output2</div> -->
                     </ng-container>
@@ -45,11 +49,13 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.enum">
                         <div class="setting-row">
                             <mat-form-field color="accent">
-                                <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
+                                <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
+                                </mat-label>
                                 <mat-select [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                                [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
-                                    <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)" [value]="setting.enum[enumStr]">
+                                    [matTooltipDisabled]="!setting.tooltipLangKey"
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                                    <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)"
+                                        [value]="setting.enum[enumStr]">
                                         {{ enumStr | language: settings.Lang }}
                                     </mat-option>
                                 </mat-select>
@@ -60,11 +66,13 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.dateTimeFormatEnum">
                         <div class="setting-row">
                             <mat-form-field color="accent">
-                                <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
+                                <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
+                                </mat-label>
                                 <mat-select [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                                [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
-                                    <mat-option *ngFor="let dateTimeFormat of getEnumKeys(setting.enum)" [value]="setting.enum[dateTimeFormat]">
+                                    [matTooltipDisabled]="!setting.tooltipLangKey"
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                                    <mat-option *ngFor="let dateTimeFormat of getEnumKeys(setting.enum)"
+                                        [value]="setting.enum[dateTimeFormat]">
                                         {{ currentDate | date:dateTimeFormat }}
                                     </mat-option>
                                 </mat-select>
@@ -74,9 +82,9 @@
 
                     <ng-container *ngSwitchCase="userpanelSettingType.boolean">
                         <div class="setting-row">
-                            <mat-checkbox labelPosition="before" [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
-                            [matTooltipDisabled]="!setting.tooltipLangKey"
-                            [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                            <mat-checkbox labelPosition="before" [formControl]="setting.formControl"
+                                (blur)="changeDetector.detectChanges()" [matTooltipDisabled]="!setting.tooltipLangKey"
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
                                 {{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
                             </mat-checkbox>
                         </div>
@@ -85,44 +93,50 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.booleanSlider">
                         <div class="setting-row">
                             <mat-slide-toggle labelPosition="before" [formControl]="setting.formControl"
-                            [matTooltipDisabled]="!setting.tooltipLangKey"
-                            [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
-                            (blur)="changeDetector.detectChanges()" (change)="setting.onValueChanged && setting.onValueChanged()">
+                                [matTooltipDisabled]="!setting.tooltipLangKey"
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                (blur)="changeDetector.detectChanges()"
+                                (change)="setting.onValueChanged && setting.onValueChanged()">
                                 {{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
                             </mat-slide-toggle>
                         </div>
                     </ng-container>
 
                     <ng-container *ngSwitchCase="userpanelSettingType.color">
-                      <div class="setting-row">
-                            <input matInput
-                            [(colorPicker)]="setting.formControl.value"
-                            [value]="'MapBorder' | language: settings.Lang"
-                            [style.background]="setting.formControl.value"
-                            [cpFallbackColor]="setting.defaultValue"
-                            (colorPickerChange)="onColorChange(setting)"
-                            cpOutputFormat="rgba"
-                            cpAlphaChannel="always"
-                            readonly="true"
-                            cpUseRootViewContainer="true"
-                            [matTooltipDisabled]="!setting.tooltipLangKey"
-                            [matTooltip]="setting.tooltipLangKey | language: settings.Lang"/>
-                      </div>
-                  </ng-container>
+                        <div class="setting-row" *ngIf="!setting.nullable">
+                            <input matInput [(colorPicker)]="setting.formControl.value"
+                                [value]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
+                                [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
+                                (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
+                                cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
+                                [matTooltipDisabled]="!setting.tooltipLangKey"
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
+                        </div>
+                        <div class="setting-row" *ngIf="setting.nullable">
+                            <input matInput [(colorPicker)]="setting.formControl.value"
+                                [value]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
+                                [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
+                                (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
+                                cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
+                                [matTooltipDisabled]="!setting.tooltipLangKey"
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
+                            <button mat-icon-button (click)="setting.formControl.value = undefined"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </ng-container>
                 </ng-container>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
 
     <div id="last-row-buttons">
-      <button mat-raised-button (click)="save()">
-        {{ 'Save' | language: settings.Lang }}
-      </button>
-      <button mat-raised-button (click)="revertAll()">
-        {{ 'Revert' | language: settings.Lang }}
-      </button>
-      <button mat-raised-button (click)="setDefault()">
-        {{ 'Default' | language: settings.Lang }}
-      </button>
+        <button mat-raised-button (click)="save()">
+            {{ 'Save' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button (click)="revertAll()">
+            {{ 'Revert' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button (click)="setDefault()">
+            {{ 'Default' | language: settings.Lang }}
+        </button>
     </div>
-  </div>
+</div>

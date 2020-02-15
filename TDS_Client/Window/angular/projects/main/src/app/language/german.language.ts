@@ -152,6 +152,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     SkinHash = "Skin";
     BlipColor = "Blip Farbe";
     Color = "Farbe";
+    Colors = "Farben";
     Transparent = "Durchsichtig";
     HeightArrowDoesntBlink = "Höhen-Pfeil blinkt nicht";
     AddTeam = "Team hinzufügen";
@@ -205,6 +206,31 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     AllowDataTransferSettingInfo = "Falls TDS-V mal an jemand anderen weitergegeben werden sollte, werden deine Daten nur mit deiner Erlaubnis mit gegeben.\nMehr Infos im FAQ.";
     ShowConfettiAtRankingSettingInfo = "(De-)aktiviere das laute Konfetti im Ranking nach jeder Runde.";
     DiscordUserIdSettingInfo = "Erwähne deinen Namen mit einem Backslash davor (z.B. \\@Bonus) in Discord, um deine ID zu erhalten (nur Zahlen).";
+    BloodscreenCooldownMs = "Cooldown zwischen Bloodscreens (ms)";
+    BloodscreenCooldownMsSettingInfo = "Der Cooldown zwischen zwei Bloodscreens.\nHöherer Cooldown bedeutet bessere Performance während man Schaden erleidet.";
+    HudAmmoUpdateCooldownMs = "Cooldown zwischen Ammo Updates im Hud (ms)";
+    HudAmmoUpdateCooldownMsSettingInfo = "Der Cooldown zwischen zwei Ammo Updates für das Hud.\nHöherer Cooldown bedeutet bessere Performance während man schießt.\nNutze -1, um Update ganz auszuschalten.";
+    HudHealthUpdateCooldownMs = "Cooldown zwischen Leben Updates im Hud (ms)";
+    HudHealthUpdateCooldownMsSettingInfo = "Der Cooldown zwischen zwei Weste + Leben Updates für das Hud.\nHöherer Cooldown bedeutet bessere Performance während man Schaden erleidet.\nNutze -1, um Update ganz auszuschalten.";
+    CheckAFK = "Prüfe AFK";
+    CheckAFKSettingInfo = "Prüft in einer offiziellen Arena Lobby, ob du AFK bist, warnt und kickt dich aus der Lobby um zu verhindern, dass du in mehreren Runden einfach getötet wirst, während du AFK bist.\nEs ist nur zu deinem Besten, also wenn dir das egal ist, deaktiviere es.";
+    MapBorderColor = "Karten-Limit";
+    NametagDeadColor = "Nametag Tod";
+    NametagDeadColorSettingInfo = "Die Nametag Farbe für tote Spieler.\nFalls du sie nicht angibst, wird 'keine HP' Farbe stattdessen benutzt.";
+    NametagHealthEmptyColor = "Nametag keine HP";
+    NametagHealthEmptyColorSettingInfo = "Die Nametag Farbe für keine HP.\nDie finale Nametag HP Farbe wird zwischen 'keine HP' und 'volle HP' sein.";
+    NametagHealthFullColor = "Nametag volle HP";
+    NametagHealthFullColorSettingInfo = "Die Nametag Farbe für volle HP.\nnDie finale Nametag HP Farbe wird zwischen 'keine HP' und 'volle HP' sein.";
+    NametagArmorEmptyColor = "Nametag keine Weste";
+    NametagArmorEmptyColorSettingInfo = "Die Nametag Farbe für keine Weste.\nDie finale Nametag Weste Farbe wird zwischen 'keine Weste' (oder Nametag HP Farbe) und 'volle Weste' sein.";
+    NametagArmorFullColor = "Nametag volle Weste";
+    NametagArmorFullColorSettingInfo = "Die Nametag Farbe für volle Weste.\nDie finale Nametag Weste Farbe wird zwischen 'keine Weste' (oder Nametag HP Farbe) und 'volle Weste' sein.";
+    AFKKickAfterSeconds = "AFK Kick nach Sekunden";
+    AFKKickAfterSecondsSettingInfo = "Kickt dich aus der Lobby nach X Sekunden AFK sein (falls 'Prüfe AFK' aktiviert).";
+    AFKKickShowWarningLastSeconds = "AFK Warnung letzte Sekunden";
+    AFKKickShowWarningLastSecondsSettingInfo = "Warnt dich in den letzten X Sekunden vor dem Kick aus der Lobby, falls du AFK bist.";
+    ShowFloatingDamageInfoDurationMs = "Schwebende Schaden-Infos Dauer (ms)";
+    ShowFloatingDamageInfoDurationMsSettingInfo = "Die Dauer in Millisekunden der schwebenden Schaden-Infos, wenn man jemanden getroffen hat.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

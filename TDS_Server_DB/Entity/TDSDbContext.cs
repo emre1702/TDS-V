@@ -824,6 +824,31 @@ namespace TDS_Server_DB.Entity
                     .HasDefaultValue("UTC");
                 entity.Property(e => e.DateTimeFormat)
                     .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
+                entity.Property(e => e.BloodscreenCooldownMs)
+                    .HasDefaultValue(150);
+                entity.Property(e => e.HudAmmoUpdateCooldownMs)
+                    .HasDefaultValue(100);
+                entity.Property(e => e.HudHealthUpdateCooldownMs)
+                    .HasDefaultValue(100);
+                entity.Property(e => e.AFKKickAfterSeconds)
+                    .HasDefaultValue(25);
+                entity.Property(e => e.AFKKickShowWarningLastSeconds)
+                    .HasDefaultValue(10);
+                entity.Property(e => e.ShowFloatingDamageInfoDurationMs)
+                    .HasDefaultValue(1000);
+                entity.Property(e => e.NametagDeadColor)
+                    .HasDefaultValue("rgba(0, 0, 0, 1)")
+                    .IsRequired(false);
+                entity.Property(e => e.NametagHealthEmptyColor)
+                    .HasDefaultValue("rgba(50, 0, 0, 1)");
+                entity.Property(e => e.NametagHealthFullColor)
+                    .HasDefaultValue("rgba(0, 255, 0, 1)");
+                entity.Property(e => e.NametagArmorEmptyColor)
+                    .IsRequired(false);
+                entity.Property(e => e.NametagArmorFullColor)
+                    .HasDefaultValue("rgba(255, 255, 255, 1)");
+                entity.Property(e => e.CheckAFK)
+                    .HasDefaultValue(true);
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
@@ -993,10 +1018,6 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.ShowNametagOnlyOnAiming)
                     .IsRequired();
-
-                entity.Property(e => e.AFKKickAfterSec)
-                    .IsRequired()
-                    .HasDefaultValue(25);
 
                 entity.Property(e => e.CloseApplicationAfterDays)
                     .IsRequired()

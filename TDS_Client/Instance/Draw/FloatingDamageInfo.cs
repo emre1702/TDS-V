@@ -32,8 +32,8 @@ namespace TDS_Client.Instance.Draw
 
         private void UpdatePosition()
         {
-            ulong elapsedTicks = TimerManager.ElapsedTicks - startTicks;
-            if (elapsedTicks > ClientConstants.ShowFloatingDamageInfoMs)
+            int elapsedTicks = (int)(TimerManager.ElapsedTicks - startTicks);
+            if (elapsedTicks > Settings.PlayerSettings.ShowFloatingDamageInfoDurationMs)
             {
                 remove = true;
                 Remove();
@@ -43,7 +43,7 @@ namespace TDS_Client.Instance.Draw
             float screenY = 0;
             Graphics.GetScreenCoordFromWorldCoord(targetPosition.X, targetPosition.Y, targetPosition.Z + 1, ref screenX, ref screenY);
 
-            float percentage = elapsedTicks / ClientConstants.ShowFloatingDamageInfoMs;
+            float percentage = elapsedTicks / Settings.PlayerSettings.ShowFloatingDamageInfoDurationMs;
             screenY -= percentage * 0.05f;
 
             if (text == null)

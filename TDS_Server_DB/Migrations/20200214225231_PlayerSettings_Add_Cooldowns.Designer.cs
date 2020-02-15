@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Common.Enum;
@@ -14,9 +15,10 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200214225231_PlayerSettings_Add_Cooldowns")]
+    partial class PlayerSettings_Add_Cooldowns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3049,18 +3051,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("player_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AFKKickAfterSeconds")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("afk_kick_after_seconds")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(25);
-
-                    b.Property<int>("AFKKickShowWarningLastSeconds")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("afk_kick_show_warning_last_seconds")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(10);
-
                     b.Property<bool>("AllowDataTransfer")
                         .HasColumnName("allow_data_transfer")
                         .HasColumnType("boolean");
@@ -3074,12 +3064,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("bloodscreen_cooldown_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(150);
-
-                    b.Property<bool>("CheckAFK")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("check_afk")
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
 
                     b.Property<string>("DateTimeFormat")
                         .ValueGeneratedOnAdd()
@@ -3125,43 +3109,9 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(150,0,0,0.35)");
 
-                    b.Property<string>("NametagArmorEmptyColor")
-                        .HasColumnName("nametag_armor_empty_color")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NametagArmorFullColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_armor_full_color")
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(255, 255, 255, 1)");
-
-                    b.Property<string>("NametagDeadColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_dead_color")
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(0, 0, 0, 1)");
-
-                    b.Property<string>("NametagHealthEmptyColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_health_empty_color")
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(50, 0, 0, 1)");
-
-                    b.Property<string>("NametagHealthFullColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_health_full_color")
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(0, 255, 0, 1)");
-
                     b.Property<bool>("ShowConfettiAtRanking")
                         .HasColumnName("show_confetti_at_ranking")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("ShowFloatingDamageInfoDurationMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("show_floating_damage_info_duration_ms")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1000);
 
                     b.Property<string>("Timezone")
                         .ValueGeneratedOnAdd()
@@ -4341,6 +4291,12 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("AFKKickAfterSec")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("afk_kick_after_sec")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(25);
+
                     b.Property<int>("AmountPlayersAllowedInGangwarTeamBeforeCountCheck")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("amount_players_allowed_in_gangwar_team_before_count_check")
@@ -4563,6 +4519,7 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Id = (short)1,
+                            AFKKickAfterSec = 0,
                             AmountPlayersAllowedInGangwarTeamBeforeCountCheck = 0,
                             AmountWeeklyChallenges = 0,
                             ArenaNewMapProbabilityPercent = 2f,
