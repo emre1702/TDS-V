@@ -19,7 +19,6 @@ namespace TDS_Client.Manager.Utility
         {
             Tick += OnTickMethod;
 
-            Add(Damagesys.CheckOnTick, () => Round.InFight);
             Add(CustomEventManager.CheckOnTick);
         }
 

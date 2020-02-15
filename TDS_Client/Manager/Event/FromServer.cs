@@ -131,7 +131,7 @@ namespace TDS_Client.Manager.Event
         {
             ushort remoteId = Convert.ToUInt16(args[0]);
             int damage = (int)args[1];
-            DeathmatchInfo.HittedOpponent(ClientUtils.GetPlayerByHandleValue(remoteId), damage);
+            FightInfo.HittedOpponent(ClientUtils.GetPlayerByHandleValue(remoteId), damage);
         }
 
         // Join always means we also left another lobby (except on login)

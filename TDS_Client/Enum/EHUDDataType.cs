@@ -5,8 +5,8 @@
         Armor,
         HP,
         Money,
-        Ammo,
-        Mag,
+        AmmoTotal,
+        AmmoInClip,
         FiringMode
     }
 }

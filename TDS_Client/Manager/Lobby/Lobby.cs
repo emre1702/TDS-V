@@ -33,7 +33,7 @@ namespace TDS_Client.Manager.Lobby
                 _inFightLobby = value;
                 Browser.Angular.Main.SyncInFightLobby(value);
                 Browser.Angular.Main.ToggleHUD(_inFightLobby);
-                Damagesys.ResetLastHP();
+                FightInfo.Reset();
             }
         }
 

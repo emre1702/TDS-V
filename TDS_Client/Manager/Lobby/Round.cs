@@ -1,5 +1,6 @@
 ﻿using TDS_Client.Instance.Draw;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Lobby
@@ -18,11 +19,10 @@ namespace TDS_Client.Manager.Lobby
                     MapLimitManager.Start();
                     if (!_inFight)
                     {
-                        Damagesys.ResetLastHP();
+                        FightInfo.Reset();
                         FloatingDamageInfo.UpdateAllPositions();
                         FiringMode.Start();
                         Browser.Angular.Main.ToggleRoundStats(true);
-                        TickManager.Add(DeathmatchInfo.OnTick);
                     }
                 }  
                 else
@@ -33,7 +33,6 @@ namespace TDS_Client.Manager.Lobby
                         FloatingDamageInfo.RemoveAll();
                         FiringMode.Stop();
                         Browser.Angular.Main.ToggleRoundStats(false);
-                        TickManager.Remove(DeathmatchInfo.OnTick);
                     }
                 }
                 _inFight = value;
@@ -46,7 +45,7 @@ namespace TDS_Client.Manager.Lobby
         {
             InFight = false;
             IsSpectator = false;
-            Damagesys.ResetLastHP();
+            FightInfo.Reset();
             Countdown.Stop();
         }
 
