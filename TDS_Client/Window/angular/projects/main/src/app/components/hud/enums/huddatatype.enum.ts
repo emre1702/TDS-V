@@ -2,7 +2,7 @@ export enum HUDDataType {
     Armor,
     HP,
     Money,
-    Ammo,
-    Mag,
+    AmmoInClip,
+    AmmoTotal,
     FiringMode
 }

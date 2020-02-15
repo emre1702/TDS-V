@@ -19,8 +19,8 @@ export class HudComponent implements OnInit, OnDestroy {
     armorExtra = 0;
     hp = 0;
     money = 0;
-    ammo = 0;
-    mag = 0;
+    ammoInClip = 0;
+    ammoTotal = 0;
     firingMode = FiringMode[0];
 
     @Input() rankingShowing: boolean;
@@ -59,11 +59,11 @@ export class HudComponent implements OnInit, OnDestroy {
             case HUDDataType.Money:
                 this.money = value;
                 break;
-            case HUDDataType.Ammo:
-                this.ammo = value;
+            case HUDDataType.AmmoInClip:
+                this.ammoInClip = value;
                 break;
-            case HUDDataType.Mag:
-                this.mag = value;
+            case HUDDataType.AmmoTotal:
+                this.ammoTotal = value;
                 break;
             case HUDDataType.FiringMode:
                 this.firingMode = FiringMode[value];
