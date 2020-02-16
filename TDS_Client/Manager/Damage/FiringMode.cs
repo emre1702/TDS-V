@@ -194,7 +194,11 @@ namespace TDS_Client.Manager.Damage
         {
             _currentWeapon = newWeaponHash;
             _ignoreCurrentWeapon = IsWeaponIgnored(newWeaponHash);
-            if (!_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out _currentFiringMode))
+            if (_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out EFiringMode newFiringMode))
+            {
+                CurrentFiringMode = newFiringMode;
+            }
+            else
             {
                 CurrentFiringMode = EFiringMode.Auto;
             }
