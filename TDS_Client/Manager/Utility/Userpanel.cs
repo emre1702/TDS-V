@@ -12,8 +12,6 @@ namespace TDS_Client.Manager.Utility
         {
             if (key != EKey.NoName)
             {
-                if (ChatManager.IsOpen)
-                    return;
                 if (Browser.Angular.Shared.InInput)
                     return;
             }

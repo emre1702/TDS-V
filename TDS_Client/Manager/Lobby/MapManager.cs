@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void ToggleMenu(EKey _)
         {
-            if (ChatManager.IsOpen)
+            if (Browser.Angular.Shared.InInput)
                 return;
 
             if (!_open)
