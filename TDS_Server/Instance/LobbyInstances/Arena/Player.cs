@@ -254,10 +254,12 @@ namespace TDS_Server.Instance.LobbyInstances
             if (from.Assists > to.MostAssistsInARound)
                 to.MostAssistsInARound = from.Assists;
 
-            if (IsOfficial)
+            if (IsOfficial && from.Damage > 0)
             {
-                player.AddToChallenge(EChallengeType.Kills, from.Kills);
-                player.AddToChallenge(EChallengeType.Assists, from.Assists);
+                if (from.Kills > 0)
+                    player.AddToChallenge(EChallengeType.Kills, from.Kills);
+                if (from.Assists > 0)
+                    player.AddToChallenge(EChallengeType.Assists, from.Assists);
                 player.AddToChallenge(EChallengeType.Damage, from.Damage);
                 player.AddToChallenge(EChallengeType.RoundPlayed);
             }
