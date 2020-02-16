@@ -1,6 +1,7 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Enum;
+using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Common.Default;
 using TDS_Common.Dto;
@@ -91,7 +92,9 @@ namespace TDS_Client.Manager.Lobby
         }
 
         public static void ToggleOrderMode(EKey _)
-        {
+        { 
+            if (!_activated && Browser.Angular.Shared.InInput)
+                return;
             _activated = !_activated;
             Browser.Angular.Main.ToggleTeamOrderModus(_activated);
         }
@@ -102,6 +105,9 @@ namespace TDS_Client.Manager.Lobby
                 return;
             if (!Lobby.InFightLobby)
                 return;
+            if (Browser.Angular.Shared.InInput)
+                return;
+
             ETeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
             ToggleOrderMode(EKey.NoName);
