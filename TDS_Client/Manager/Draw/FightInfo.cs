@@ -61,8 +61,8 @@ namespace TDS_Client.Manager.Draw
                     }
                     if (CurrentHp != _lastHudUpdateHp)
                     {
-                        Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.Armor, CurrentArmor);
-                        _lastHudUpdateArmor = CurrentArmor;
+                        Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.HP, CurrentHp);
+                        _lastHudUpdateHp = CurrentHp;
                     }
                     _lastHudHealthUpdateTick = currentTick;
                 }
@@ -113,8 +113,10 @@ namespace TDS_Client.Manager.Draw
             _lastHudHealthUpdateTick = default;
             _lastHudAmmoUpdateTick = default;
 
-            CurrentArmor = default;
-            CurrentHp = default;
+            CurrentArmor = Player.LocalPlayer.GetArmour();
+            CurrentHp = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0);
+            Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.Armor, CurrentArmor);
+            Browser.Angular.Main.SyncHUDDataChange(Enum.EHUDDataType.HP, CurrentHp);
 
             Player.LocalPlayer.ClearLastDamageBone();
             Player.LocalPlayer.ClearLastDamageEntity();
