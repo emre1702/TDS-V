@@ -3,6 +3,7 @@ using TDS_Common.Default;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.PlayerManager;
+using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Manager.EventManager
 {
@@ -21,11 +22,26 @@ namespace TDS_Server.Manager.EventManager
 
         [ServerEvent(Event.PlayerDisconnected)]
 #pragma warning disable IDE0060 // Remove unused parameter
-        public static void OnPlayerDisconnected(Player player, DisconnectionType type, string reason)
+        public static async void OnPlayerDisconnected(Player client, DisconnectionType type, string reason)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerDisconnected(character);
+            TDSPlayer player = client.GetChar();
+            if (player.Entity is null)
+                return;
+            if (!player.LoggedIn)
+                return;
+
+            player.CurrentLobby?.OnPlayerDisconnected(player);
+
+            player.Entity.PlayerStats.LoggedIn = false;
+            player.ClosePrivateChat(true);
+
+            CustomEventManager.SetPlayerLoggedOut(player);
+
+            await player.SaveData(true).ConfigureAwait(true);
+            player.Logout();
+
+            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName));
         }
 
         //[DisableDefaultOnDeathRespawn]

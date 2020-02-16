@@ -30,29 +30,6 @@ namespace TDS_Server.Manager.PlayerManager
             player.SendMessage("#o#__________________________________________");
         }
 
-        [ServerEvent(Event.PlayerDisconnected)]
-#pragma warning disable IDE0060 // Remove unused parameter
-        public static async void OnPlayerDisconnected(Player client, DisconnectionType type, string reason)
-#pragma warning restore IDE0060 // Remove unused parameter
-        {
-            TDSPlayer player = client.GetChar();
-            if (player.Entity is null)
-                return;
-
-            if (!player.LoggedIn)
-                return;
-
-            player.Entity.PlayerStats.LoggedIn = false;
-            player.ClosePrivateChat(true);
-
-            CustomEventManager.SetPlayerLoggedOut(player);
-
-            await player.SaveData(true).ConfigureAwait(true);
-            player.Logout();
-
-            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName));
-        }
-
         [RemoteEvent(DToServerEvent.TryRegister)]
         public static async void OnPlayerTryRegisterEvent(Player client, string username, string password, string email)
         {
