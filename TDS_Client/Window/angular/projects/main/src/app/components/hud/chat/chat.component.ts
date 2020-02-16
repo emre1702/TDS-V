@@ -173,11 +173,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         this.settings.setChatInputOpen(toggle);
         this.input.value = cmd;
-
+        this.scrollChatToBottom();
         this.changeDetector.detectChanges();
 
-        this.input.focus();
-        this.changeDetector.detectChanges();
+        if (toggle) {
+            this.input.focus();
+            this.changeDetector.detectChanges();
+        }
     }
 
     private isNullOrWhitespace(input: string) {
@@ -185,10 +187,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     private isChatScrolledToBottom(): boolean {
-        const threshold = 20;
-        const position = this.chatBody.nativeElement.scrollTop + this.chatBody.nativeElement.offsetHeight;
-        const height = this.chatBody.nativeElement.scrollHeight;
-        return position > height - threshold;
+        const element = this.chatBody.nativeElement;
+        return element.scrollHeight - element.scrollTop === element.clientHeight;
     }
 
     private scrollChatToBottom() {
