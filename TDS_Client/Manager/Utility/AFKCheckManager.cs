@@ -34,7 +34,7 @@ namespace TDS_Client.Manager.Utility
 
         private static void Check()
         {
-            if (!Round.InFight)
+            if (!Round.InFight || !Settings.PlayerSettings.CheckAFK)
             {
                 StopAFK();
                 return;
@@ -63,7 +63,7 @@ namespace TDS_Client.Manager.Utility
         {
             Vector3 currentPos = player.LocalPlayer.Position;
 
-            if (currentPos.DistanceTo(_afkStartPos) > ClientConstants.NeededDistanceToBeNotAFK)
+            if (!Settings.PlayerSettings.CheckAFK || currentPos.DistanceTo(_afkStartPos) > ClientConstants.NeededDistanceToBeNotAFK)
             {
                 StopAFK();
                 return;
