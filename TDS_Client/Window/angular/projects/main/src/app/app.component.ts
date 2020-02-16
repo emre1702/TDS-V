@@ -52,7 +52,7 @@ export class AppComponent {
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string, challengesJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
-            this.settings.ChallengeGroups = JSON.parse(challengesJson);
+            this.settings.loadChallenges(challengesJson);
         });
 
         rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {

@@ -9,7 +9,6 @@ import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
 import { ChallengeType } from '../enums/challenge-type.enum';
-import { Challenge } from '../models/challenge';
 
 @Component({
     selector: 'app-lobby-choice',
@@ -105,7 +104,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     refreshTimeToWeeklyChallengesRestart(): void {
         const currentDate = new Date();
         let restartDate = new Date();
-        restartDate = new Date(restartDate.setDate(currentDate.getDate() - currentDate.getDay() + 7 + 1));
+        restartDate = new Date(restartDate.setDate(currentDate.getDate() - currentDate.getDay() + 7));
         restartDate.setUTCHours(5);
         restartDate.setMinutes(0);
         restartDate.setSeconds(0);
@@ -119,20 +118,5 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
             this.timeToNextWeeklyChallengesRestartInfo
                 = this.languagePipe.transform("HoursLeft", this.settings.Lang, Math.ceil(hoursToWeeklyChallengesRestart % 24));
         }
-    }
-
-    getChallengeInfo(challenge: Challenge) {
-        return this.sanitizer.bypassSecurityTrustHtml(
-            this.languagePipe.transform('Challenge_' + this.challengeType[challenge[0]], this.settings.Lang, this.getColorText(challenge[1], "orange"))
-            + " (" + this.languagePipe.transform("Current:", this.settings.Lang)
-            + " " + this.getColorText(challenge[2], "yellow") + ")");
-    }
-
-    getColorText(text: string|number, color: string) {
-        return "<span style='color: " + color + "'>" + text + "</span>";
-    }
-
-    bypassTrustHtml(text: string) {
-        return this.sanitizer.bypassSecurityTrustHtml(text);
     }
 }

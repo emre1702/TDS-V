@@ -1,4 +1,5 @@
 import { ChallengeType } from '../enums/challenge-type.enum';
+import { SafeHtml } from '@angular/platform-browser';
 
 export class Challenge {
 
@@ -10,4 +11,7 @@ export class Challenge {
 
     /** CurrentAmount */
     2: number;
+
+    /** Challenge info (not synced) */
+    99: SafeHtml;
 }

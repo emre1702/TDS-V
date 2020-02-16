@@ -27,7 +27,7 @@
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">{{ timeToNextWeeklyChallengesRestartInfo }}:</div>
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">{{ 'NoTimeLimit' | language: settings.Lang }}:</div>
                 <li *ngFor="let challenge of challengeGroup[1]"
-                [innerHTML]="getChallengeInfo(challenge)"
+                [innerHTML]="challenge[99]"
                 [class.done]="challenge[1] == challenge[2]">
                 </li>
             </div>

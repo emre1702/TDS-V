@@ -14,6 +14,9 @@ import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.en
 import { DFromServerEvent } from '../enums/dfromserverevent.enum';
 import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
 import { MapType } from '../enums/maptype.enum';
+import { Challenge } from '../components/lobbychoice/models/challenge';
+import { DomSanitizer } from '@angular/platform-browser';
+import { LanguagePipe } from '../pipes/language.pipe';
 
 // tslint:disable: member-ordering
 
@@ -37,6 +40,7 @@ export class SettingsService {
     public LangValue: LanguageEnum = LanguageEnum.English;
     public Lang: Language = SettingsService.langByLangValue[this.LangValue];
     public LanguageChanged = new EventEmitter();
+    private langPipe = new LanguagePipe();
 
     private static langByLangValue = {
         [LanguageEnum.German]: new German(),
@@ -171,9 +175,32 @@ export class SettingsService {
         this.IsLobbyOwner = isLobbyOwner;
         this.IsLobbyOwnerChanged.emit(null);
     }
+
+    public loadChallenges(challengesJson: string) {
+        this.ChallengeGroups = JSON.parse(challengesJson);
+
+        for (const group of this.ChallengeGroups) {
+            for (const challenge of group[1]) {
+                challenge[99] = this.getChallengeInfo(challenge);
+            }
+        }
+    }
+
+    private getChallengeInfo(challenge: Challenge) {
+        return this.sanitizer.bypassSecurityTrustHtml(
+            this.langPipe.transform('Challenge_' + ChallengeType[challenge[0]], this.Lang, this.getColorText(challenge[1], "orange"))
+            + " (" + this.langPipe.transform("Current:", this.Lang)
+            + " " + this.getColorText(challenge[2], "yellow") + ")");
+    }
+
+    private getColorText(text: string|number, color: string) {
+        return "<span style='color: " + color + "'>" + text + "</span>";
+    }
     ////////////////////////////////////////////////////
 
-    constructor(private rageConnector: RageConnectorService) {
+    constructor(
+        private rageConnector: RageConnectorService,
+        private sanitizer: DomSanitizer) {
         console.log("Settings listener started.");
         rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
         rageConnector.listen(DFromClientEvent.LoadFavoriteMaps, this.loadFavoriteMapIds.bind(this));
