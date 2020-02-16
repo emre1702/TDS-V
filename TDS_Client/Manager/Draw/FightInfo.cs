@@ -104,10 +104,10 @@ namespace TDS_Client.Manager.Draw
 
         public static void Reset()
         {
-            _lastHudUpdateArmor = default;
-            _lastHudUpdateHp = default;
-            _lastHudUpdateTotalAmmo = default;
-            _lastHudUpdateAmmoInClip = default;
+            _lastHudUpdateArmor = -1;
+            _lastHudUpdateHp = -1;
+            _lastHudUpdateTotalAmmo = -1;
+            _lastHudUpdateAmmoInClip = -1;
 
             _lastBloodscreenUpdateTick = default;
             _lastHudHealthUpdateTick = default;
