@@ -16,7 +16,7 @@ namespace TDS_Server.Instance.LobbyInstances
     {
         private MapDto? _currentMap;
         private List<MapDto> _maps = new List<MapDto>();
-        private List<Blip> _mapBlips = new List<Blip>();
+        private readonly List<Blip> _mapBlips = new List<Blip>();
         private string _mapsJson = string.Empty;
 
         private MapDto? GetNextMap()
