@@ -42,6 +42,7 @@ export class AppComponent {
     showHUD = false;
 
     rankings: RoundPlayerRankingStat[];
+    teamOrdersLength = Object.values(TeamOrder).length;
 
     constructor(
         public settings: SettingsService,
@@ -112,10 +113,5 @@ export class AppComponent {
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
-    }
-
-
-    getTeamOrdersLength(): number {
-        return Object.values(TeamOrder).length;
     }
 }

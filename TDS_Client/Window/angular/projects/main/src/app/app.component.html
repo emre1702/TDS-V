@@ -3,7 +3,7 @@
 <app-chat></app-chat>
 <app-mapvoting></app-mapvoting>
 <app-invitation></app-invitation>
-<app-teamorders *ngIf="settings.InTeamOrderModus && settings.InFightLobby" [@teamOrdersAnimation]="getTeamOrdersLength()"></app-teamorders>
+<app-teamorders *ngIf="settings.InTeamOrderModus && settings.InFightLobby" [@teamOrdersAnimation]="teamOrdersLength"></app-teamorders>
 <app-map-creator *ngIf="showMapCreator"></app-map-creator>
 <app-freeroam *ngIf="showFreeroam"></app-freeroam>
 <app-lobby-choice *ngIf="showLobbyChoice"></app-lobby-choice>
