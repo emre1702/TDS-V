@@ -234,7 +234,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     AFKKickAfterSecondsSettingInfo = "Kick yourself out of the lobby after X seconds being AFK (if 'Check AFK' is enabled).";
     AFKKickShowWarningLastSeconds = "AFK warn last seconds";
     AFKKickShowWarningLastSecondsSettingInfo = "Warns you in the last X seconds if you are AFK before kicking you out of the lobby.";
-    ShowFloatingDamageInfoDurationMs = "Floating damage info duration";
+    ShowFloatingDamageInfoDurationMs = "Floating damage info duration (ms)";
     ShowFloatingDamageInfoDurationMsSettingInfo = "The duration in milliseconds for a floating damage info (damage info on hit).";
 
     /////////// Default map names ///////////
