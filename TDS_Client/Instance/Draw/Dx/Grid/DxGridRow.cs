@@ -41,7 +41,7 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
             TextAlignment = textAlignment;
             RelativePos = relative;
 
-            TextHeight = Ui.GetTextScaleHeight(scale, (int)font);
+            TextHeight = GetTextAbsoluteHeight(1, Scale, Font, RelativePos);
 
             if (isHeader)
                 grid.SetHeader(this);
@@ -62,11 +62,11 @@ namespace TDS_Client.Instance.Draw.Dx.Grid
         private void DrawText()
         {
             if (TextAlignment == UIResText.Alignment.Left)
-                UIResText.Draw(text, GetAbsoluteX(Grid.X - Grid.Width / 2, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+                UIResText.Draw(text, GetAbsoluteX(Grid.X - Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
             else if (TextAlignment == UIResText.Alignment.Centered)
-                UIResText.Draw(text, GetAbsoluteX(Grid.X, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+                UIResText.Draw(text, GetAbsoluteX(Grid.X, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
             else if (TextAlignment == UIResText.Alignment.Right)
-                UIResText.Draw(text, GetAbsoluteX(Grid.X + Grid.Width / 2, true), GetAbsoluteY(Y, RelativePos) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+                UIResText.Draw(text, GetAbsoluteX(Grid.X + Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
         }
 
         public new float Draw()

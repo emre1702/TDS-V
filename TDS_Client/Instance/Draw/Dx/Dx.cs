@@ -80,25 +80,34 @@ namespace TDS_Client.Instance.Draw.Dx
             return (float)Math.Floor(start + progress * (end - start));
         }
 
-        protected float GetRelativeX(float x, bool relative)
+        protected float GetRelativeX(float x, bool relative, bool isText = false)
         {
-            return relative ? x : x / ResX;
+            return relative ? x : x / (isText ? 1920 : ResX);
         }
 
-        protected float GetRelativeY(float y, bool relative)
+        protected float GetRelativeY(float y, bool relative, bool isText = false)
         {
-            return relative ? y : y / ResY;
+            return relative ? y : y / (isText ? 1080 : ResY);
         }
 
-        protected virtual int GetAbsoluteX(float x, bool relative)
+        protected virtual int GetAbsoluteX(float x, bool relative, bool isText = false)
         {
-            return (int)Math.Round(relative ? x * ResX : x);
+            return (int)Math.Round(relative ? x * (isText ? 1920 : ResX) : x * (isText ? (1920 / ResX) : 1));
         }
 
-        protected virtual int GetAbsoluteY(float y, bool relative)
+        protected virtual int GetAbsoluteY(float y, bool relative, bool isText = false)
         {
-            return (int)Math.Round(relative ? y * ResY : y);
+            return (int)Math.Round(relative ? y * (isText ? 1080 : ResY) : y * (isText ? (1080 / ResY) : 1));
         }
+
+        protected int GetTextAbsoluteHeight(float lineCount, float scale, Font font, bool relative)
+        {
+            int textHeight = GetAbsoluteY(Ui.GetTextScaleHeight(scale, (int)font), relative, true);
+
+            // + 5 ... because of the margin between the lines
+            textHeight = (int)(textHeight * lineCount + textHeight * 0.4 * (lineCount - 0.3));
+            return textHeight;
+        } 
 
         #region IDisposable Support
 

@@ -52,14 +52,14 @@ namespace TDS_Client.Instance.Draw.Dx
             ApplyTextAlignmentY();
         }
 
-        protected override int GetAbsoluteX(float x, bool relative)
+        private int GetAbsoluteX(float x, bool relative)
         {
-            return (int)Math.Round(relative ? x * 1920 : x * (1920/ResX));
+            return GetAbsoluteX(x, relative, true);
         }
 
-        protected override int GetAbsoluteY(float y, bool relative)
+        private int GetAbsoluteY(float y, bool relative)
         {
-            return (int)Math.Round(relative ? y * 1080 : y * (1080/ResY));
+            return GetAbsoluteY(y, relative, true);
         }
 
         public void SetAbsoluteY(int y)
@@ -103,11 +103,7 @@ namespace TDS_Client.Instance.Draw.Dx
 
         private void ApplyTextAlignmentY()
         {
-            float lineCount = _amountLines != 0 ? _amountLines : GetLineCount();
-            int textHeight = GetAbsoluteY(Ui.GetTextScaleHeight(_scale, (int)_font), _relative);
-
-            // + 5 ... because of the margin between the lines
-            textHeight = (int)(textHeight * lineCount + textHeight * 0.4 * (lineCount-0.3));
+            int textHeight = GetTextAbsoluteHeight(_amountLines != 0 ? _amountLines : GetLineCount(), _scale, _font, _relative);
 
             if (_alignmentY == EAlignmentY.Center)
                 _y -= textHeight / 2;
