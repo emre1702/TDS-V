@@ -15,13 +15,12 @@ namespace TDS_Client.Manager.Lobby
         private static TDSTimer _countdownTimer;
         private static int _currentCountdownTime;
 
-        private static string[] _countdownSounds = new string[] { "go", "1", "2", "3" };
+        private static readonly string[] _countdownSounds = new string[] { "go", "1", "2", "3" };
 
         public static void Start()
         {
             if (Settings.CountdownTime == 0)
             {
-                End();
                 return;
             }
             _countdownTimer?.Kill();
@@ -77,7 +76,6 @@ namespace TDS_Client.Manager.Lobby
         {
             if (--_currentCountdownTime <= 0)
             {
-                End();
                 return;
             }
             if (_text == null)
