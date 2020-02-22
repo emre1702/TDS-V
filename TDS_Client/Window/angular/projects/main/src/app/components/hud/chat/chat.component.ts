@@ -330,7 +330,10 @@ export class ChatComponent implements OnInit, OnDestroy {
             } else {
                 this.rageConnector.call(DToClientEvent.CloseChat);
             }
+        } else if (event.key === " " && !this.settings.ChatInputOpen && (event.target as HTMLDivElement).id == "chat_container") {
+            event.preventDefault();
         }
+
 
 
 
