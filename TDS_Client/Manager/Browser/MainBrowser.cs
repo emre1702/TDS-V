@@ -1,4 +1,5 @@
 ﻿using RAGE.Ui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Manager.Utility;
@@ -12,7 +13,7 @@ namespace TDS_Client.Manager.Browser
     {
         public static HtmlWindow Browser { get; set; }
         private static bool _roundEndReasonShowing;
-        private readonly static Queue<string> _executeQueue = new Queue<string>();
+        private readonly static Queue<Action> _executeQueue = new Queue<Action>();
 
         public static void Load()
         {
@@ -23,18 +24,26 @@ namespace TDS_Client.Manager.Browser
         private static void Execute(string execStr)
         {
             if (Browser == null)
-                _executeQueue.Enqueue(execStr);
+                _executeQueue.Enqueue(() => Browser.ExecuteJs(execStr));
             else
                 Browser.ExecuteJs(execStr);
+        }
+
+        private static void Call(string eventName, params object[] args)
+        {
+            if (Browser == null)
+                _executeQueue.Enqueue(() => Browser.Call(eventName, args));
+            else
+                Browser.Call(eventName, args);
         }
 
         #region Events
 
         private static void OnLoaded()
         {
-            foreach (var execStr in _executeQueue)
+            foreach (var exec in _executeQueue)
             {
-                Browser.ExecuteJs(execStr);
+                exec();
             }
             _executeQueue.Clear();
         }
@@ -48,22 +57,22 @@ namespace TDS_Client.Manager.Browser
 
         public static void ShowBloodscreen()
         {
-            Execute("showBloodscreen();");
+            Call("c");
         }
 
         public static void PlaySound(string soundname)
         {
-            Execute($"playSound('{soundname}')");
+            Call("a", soundname);
         }
 
         public static void PlayHitsound()
         {
-            Execute("playHitsound();");
+            Call("b");
         }
 
         public static void AddKillMessage(string msg)
         {
-            Execute($"addKillMessage('{msg}');");
+            Call("d", msg);
         }
 
         public static void SendAlert(string msg)
@@ -97,12 +106,12 @@ namespace TDS_Client.Manager.Browser
 
         public static void StartPlayerTalking(string name)
         {
-            Execute($"addPlayerTalking('{name}')");
+            Call("e", name);
         }
 
         public static void StopPlayerTalking(string name)
         {
-            Execute($"removePlayerTalking('{name}')");
+            Call("f", name);
         }
     }
 }

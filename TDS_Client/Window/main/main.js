@@ -38,15 +38,18 @@ let volume = 0.05;
 let killstreakSoundPlaying = false;
 let nextKillstreakSoundNames = [];
 
-function playSound(soundname) {
-    $("#audio_" + soundname).trigger("play").prop("volume", volume);
-}
+// playSound
+mp.events.add("a", (soundName) => {
+    $("#audio_" + soundName).trigger("play").prop("volume", volume);
+});
 
-function playHitsound() {
-    hitsounds[hitsoundcounter++].trigger("play").prop("volume", volume);
+// playHitsound
+mp.events.add("b", () => {
+	hitsounds[hitsoundcounter++].trigger("play").prop("volume", volume);
     if (hitsoundcounter == hitsoundsamount)
         hitsoundcounter = 0;
-}
+});
+
 
 function playBombTickSound() {
     bombTickSounds[bombTickCounter++].trigger("play").prop("volume", volume);
@@ -88,7 +91,7 @@ function stopBombTickSound() {
     }
 }
 
-function showBloodscreen() {
+mp.events.add("c", () => {
     if (bloodscreentimeout) {
         clearTimeout(bloodscreentimeout);
 
@@ -108,7 +111,7 @@ function showBloodscreen() {
         });
         //bloodscreen.removeClass("bloodscreen_show").removeClass("bloodscreen_hide_transition");
     }, 2500);
-}
+});
 
 function formatMsgKill(input) {
     var start = '<span style="color: white;">';
@@ -138,11 +141,11 @@ function removeThis(element) {
     element.remove();
 }
 
-function addKillMessage(msg) {
+mp.events.add("d", (msg) => {
     let child = $("<text>" + formatMsgKill(msg) + "<br></text>");
     killmessagesBox.append(child);
     child.delay(11000).fadeOut(4000, child.remove);
-}
+});
 
 function toggleOrders(bool) {
     if (bool)
@@ -151,20 +154,20 @@ function toggleOrders(bool) {
         ordersDiv.hide(1000);
 }
 
-function addPlayerTalking(name) {
+mp.events.add("e", (name) => {
 	let id = "voice-chat-" + name.replace(/\W/g,'_');
 	let img = "<img src='../pic/speaker.png'/>";
 	let child = $("<div id='" + id + "'>" + img + "<span>" + name + "</span></div>");
     voiceChatPlayerNamesBox.append(child);
-}
+});
 
-function removePlayerTalking(name) {
+mp.events.add("f", (name) => {
 	let id = "voice-chat-" + name.replace(/\W/g,'_');
 	let child = voiceChatPlayerNamesBox.find("#" + id);
 	if (child.length) {
 		child.remove();
 	}
-}
+});
 
 $(document).ready(() => {
     bloodscreenDom = bloodscreen.get()[0];
