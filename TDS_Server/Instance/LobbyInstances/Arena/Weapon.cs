@@ -1,4 +1,6 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity.LobbyEntities;
@@ -7,13 +9,17 @@ namespace TDS_Server.Instance.LobbyInstances
 {
     partial class Arena
     {
+        private static IEnumerable<LobbyWeapons>? _allRoundWeapons;
+
         public override void GivePlayerWeapons(TDSPlayer player)
         {
+            if (_allRoundWeapons is null)
+                return;
             var lastWeapon = player.LastWeaponOnHand;
             player.Player!.RemoveAllWeapons();
             bool giveLastWeapon = false;
-            var weapons = LobbyEntity.LobbyWeapons.Where(w => CurrentGameMode != null ? CurrentGameMode.IsWeaponAllowed(w.Hash) : true);
-            foreach (LobbyWeapons weapon in weapons)
+            
+            foreach (LobbyWeapons weapon in _allRoundWeapons)
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;

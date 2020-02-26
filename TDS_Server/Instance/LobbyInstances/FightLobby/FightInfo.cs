@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Enum;
@@ -16,7 +16,7 @@ namespace TDS_Server.Instance.LobbyInstances
             if (killer != null && player != killer)
             {
                 //Todo weaponname was empty, test it
-                string? weaponname = System.Enum.GetName(typeof(EWeaponHash), weapon);
+                string? weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
                 killstr = LangUtils.GetLangDictionary((lang) =>
                 {
                     return lang.DEATH_KILLED_INFO.Formatted(killer?.DisplayName ?? "-", player.DisplayName, weaponname ?? "?");

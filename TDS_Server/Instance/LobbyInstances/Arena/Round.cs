@@ -136,6 +136,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         private void StartRoundCountdown()
         {
+            _allRoundWeapons = LobbyEntity.LobbyWeapons.Where(w => CurrentGameMode != null ? CurrentGameMode.IsWeaponAllowed(w.Hash) : true);
             SetAllPlayersInCountdown();
             CurrentGameMode?.StartRoundCountdown();
         }
