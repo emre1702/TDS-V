@@ -42,7 +42,7 @@ namespace TDS_Server.Instance.GameModes
         public virtual void RemovePlayer(TDSPlayer player) { }
         public virtual void RemovePlayerFromAlive(TDSPlayer player) { }
 
-        public virtual bool IsWeaponAllowed(EWeaponHash weaponHash) => true;
+        public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => true;
 
         public virtual void OnPlayerEnterColShape(ColShape shape, TDSPlayer player) { }
         public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer) { }

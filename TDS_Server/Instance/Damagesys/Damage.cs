@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using TDS_Common.Default;
@@ -92,11 +92,11 @@ namespace TDS_Server.Instance
 			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
         };*/
 
-        private readonly Dictionary<EWeaponHash, DamageDto> _damagesDict = new Dictionary<EWeaponHash, DamageDto>();
+        private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> _allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
 
 #pragma warning disable IDE0060 // Remove unused parameter
-		public void DamagePlayer(TDSPlayer target, EWeaponHash weapon, int? bone, TDSPlayer? source, int damage)
+		public void DamagePlayer(TDSPlayer target, WeaponHash weapon, ulong bone, TDSPlayer? source, int damage)
 #pragma warning restore IDE0060 // Remove unused parameter
 		{
 			if (target.Player is null)
@@ -115,7 +115,7 @@ namespace TDS_Server.Instance
                 if (source.CurrentRoundStats != null)
                     source.CurrentRoundStats.Damage += damage;
 
-                NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);  
+               // NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);  
             }
         }
 
@@ -133,14 +133,14 @@ namespace TDS_Server.Instance
             target.LastHitter = source;
         }
 
-        public int GetDamage(EWeaponHash hash, bool headshot = false)
+        public int GetDamage(WeaponHash hash, bool headshot = false)
         {
             if (!_damagesDict.ContainsKey(hash))
                 return 0;
-            int damage = _damagesDict[hash].Damage;
+            float damage = _damagesDict[hash].Damage;
             if (headshot)
-                damage = (int)(damage * _damagesDict[hash].HeadMultiplier);
-            return damage;
+                damage *= _damagesDict[hash].HeadMultiplier;
+            return (int)damage;
         }
     }
 }

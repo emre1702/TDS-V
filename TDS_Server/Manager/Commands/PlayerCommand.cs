@@ -47,22 +47,22 @@ namespace TDS_Server.Manager.Commands
 
             string animName = "PILL";
             float animTime = 0.536f;
-            switch ((EWeaponHash)player.Player.CurrentWeapon)
+            switch ((WeaponHash)player.Player.CurrentWeapon)
             {
                 // Pistols //
-                case EWeaponHash.Pistol:
-                case EWeaponHash.CombatPistol:
-                case EWeaponHash.APPistol:
-                case EWeaponHash.Pistol50:
-                case EWeaponHash.HeavyRevolver:
-                case EWeaponHash.SNSPistol:
-                case EWeaponHash.HeavyPistol:
-                case EWeaponHash.DoubleActionRevolver:
-                case EWeaponHash.HeavyRevolverMk2:
-                case EWeaponHash.SNSPistolMk2:
-                case EWeaponHash.PistolMk2:
-                case EWeaponHash.VintagePistol:
-                case EWeaponHash.MarksmanPistol:
+                case WeaponHash.Pistol:
+                case WeaponHash.Combatpistol:
+                case WeaponHash.Appistol:
+                case WeaponHash.Pistol50:
+                case WeaponHash.Revolver:
+                case WeaponHash.Snspistol:
+                case WeaponHash.Heavypistol:
+                case WeaponHash.Doubleaction:
+                case WeaponHash.Revolver_mk2:
+                case WeaponHash.Snspistol_mk2:
+                case WeaponHash.Pistol_mk2:
+                case WeaponHash.Vintagepistol:
+                case WeaponHash.Marksmanpistol:
                     animName = "PISTOL";
                     animTime = 0.365f;
                     break;

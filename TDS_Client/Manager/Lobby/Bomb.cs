@@ -130,7 +130,7 @@ namespace TDS_Client.Manager.Lobby
         private static bool ShouldPlantDefuseStop()
         {
             uint weaponHash = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
-            if (weaponHash != (uint)EWeaponHash.Unarmed)
+            if (weaponHash != (uint)WeaponHash.Unarmed)
                 return true;
             if (!Pad.IsDisabledControlPressed(0, (int)Control.Attack))
                 return true;

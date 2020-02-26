@@ -38,7 +38,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            // NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayerWeaponChange, (uint)newWeapon /*, DmgSys.GetDamage((EWeaponHash)newWeapon)*/);
+            // NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayerWeaponChange, (uint)newWeapon /*, DmgSys.GetDamage((WeaponHash)newWeapon)*/);
         }
     }
 }
