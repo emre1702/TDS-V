@@ -45,7 +45,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
             Add(DToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
-            Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
+            //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
@@ -125,13 +125,6 @@ namespace TDS_Client.Manager.Event
             int type = (int)args[0];
             string json = (string)args[1];
             Browser.Angular.Main.LoadUserpanelData(type, json);
-        }
-
-        private void OnHitOpponentMethod(object[] args)
-        {
-            ushort remoteId = Convert.ToUInt16(args[0]);
-            int damage = (int)args[1];
-            FightInfo.HittedOpponent(ClientUtils.GetPlayerByHandleValue(remoteId), damage);
         }
 
         // Join always means we also left another lobby (except on login)

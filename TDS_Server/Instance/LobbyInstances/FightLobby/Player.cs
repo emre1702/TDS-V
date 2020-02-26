@@ -32,9 +32,9 @@ namespace TDS_Server.Instance.LobbyInstances
             player.SendChatMessage(reason);
         }
 
-        public void DamagedPlayer(TDSPlayer target, TDSPlayer source, WeaponHash weapon, int? bone, int damage)
+        public void DamagedPlayer(TDSPlayer target, TDSPlayer source, WeaponHash weapon, ulong bone, int damage)
         {
-            DmgSys.DamagePlayer(target, (EWeaponHash)weapon, bone, source, damage);
+            DmgSys.DamagePlayer(target, weapon, bone, source, damage);
         }
     }
 }

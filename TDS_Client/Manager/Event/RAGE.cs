@@ -3,7 +3,9 @@ using RAGE;
 using RAGE.Elements;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
+using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
+using TDS_Common.Default;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
@@ -20,6 +22,8 @@ namespace TDS_Client.Manager.Event
             OnPlayerStopTalking += OnPlayerStopTalkingMethod;
             OnPlayerWeaponShot += OnPlayerWeaponShotMethod;
             OnEntityStreamIn += OnEntityStreamInMethod;
+            OnIncomingDamage += OnIncomingDamageMethod;
+            OnOutgoingDamage += OnOutgoingDamageMethod;
         }
 
         private void OnPlayerSpawnMethod(CancelEventArgs cancel)
@@ -52,6 +56,27 @@ namespace TDS_Client.Manager.Event
         private void OnEntityStreamInMethod(Entity entity)
         {
             Crouching.OnEntityStreamIn(entity);
+        }
+
+        private void OnIncomingDamageMethod(Player sourcePlayer, Entity sourceEntity, Entity targetEntity, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
+        {
+            RAGE.Ui.Console.Log(RAGE.Ui.ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type.ToString()}, targetEntity {targetEntity.Type} - {targetEntity is Player}", true);
+
+            MainBrowser.ShowBloodscreen();
+
+            if (sourcePlayer != null)
+            {
+                EventsSender.SendIgnoreCooldown(DToServerEvent.GotHit, sourcePlayer.RemoteId, weaponHash, boneIdx, damage);
+            }
+            
+        }
+
+
+        private void OnOutgoingDamageMethod(Entity sourceEntity, Entity targetEntity, Player sourcePlayer, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
+        {
+            RAGE.Ui.Console.Log(RAGE.Ui.ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type.ToString()}, targetEntity {targetEntity.Type} - {targetEntity is Player}", true);
+
+            FightInfo.HittedOpponent(sourcePlayer, damage);
         }
     }
 }

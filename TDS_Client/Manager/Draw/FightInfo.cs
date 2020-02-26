@@ -29,7 +29,7 @@ namespace TDS_Client.Manager.Draw
         {
             CustomEventManager.OnWeaponChange += CustomEventManager_OnWeaponChange;
 
-            TickManager.Add(FightInfo.OnTick, () => Round.InFight);
+            TickManager.Add(OnTick, () => Round.InFight);
         }
 
         public static void OnTick()
@@ -40,7 +40,7 @@ namespace TDS_Client.Manager.Draw
             CurrentHp = Math.Max(Player.LocalPlayer.GetHealth() - 100, 0);
 
             int healthLost = previousArmor + previousHp - CurrentArmor - CurrentHp;
-            Damagesys.CheckDamage(healthLost);
+            //Damagesys.CheckDamage(healthLost);
 
             var currentTick = TimerManager.ElapsedTicks;
 
@@ -48,7 +48,7 @@ namespace TDS_Client.Manager.Draw
             {
                 if (healthLost > 0 && (int)(currentTick - _lastBloodscreenUpdateTick) >= Settings.PlayerSettings.BloodscreenCooldownMs)
                 {
-                    MainBrowser.ShowBloodscreen();
+                    //MainBrowser.ShowBloodscreen();
                     _lastBloodscreenUpdateTick = currentTick;
                 }
 

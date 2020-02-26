@@ -127,8 +127,15 @@ namespace TDS_Server.Manager.EventManager
         #region Damagesys
 
         [RemoteEvent(DToServerEvent.GotHit)]
-        public void OnPlayerGotHitByOtherPlayer(Player client, ushort attackerRemoteId, int boneOrZero, int damage)
+        public void OnPlayerGotHitByOtherPlayer(Player client, ushort attackerRemoteId, ulong weaponHash, ulong boneIdx, int damage)
         {
+            /*if (!ushort.TryParse(attackerRemoteIdStr, out ushort attackerRemoteId))
+                return;
+            if (!Enum.TryParse(weaponHashStr, out WeaponHash weaponHash))
+                return;
+            if (!ulong.TryParse(boneIdxString, out ulong boneIdx))
+                return;*/
+
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
             {
@@ -155,8 +162,7 @@ namespace TDS_Server.Manager.EventManager
                 return;
             }
 
-            WeaponHash currentweapon = client.CurrentWeapon;
-            fightLobby.DamagedPlayer(player, attacker, currentweapon, boneOrZero == 0 ? (int?)null : boneOrZero, damage);
+            fightLobby.DamagedPlayer(player, attacker, (WeaponHash)weaponHash, boneIdx, damage);
         }
 
         #endregion Damagesys
