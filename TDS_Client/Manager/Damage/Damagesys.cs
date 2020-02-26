@@ -13,7 +13,7 @@ namespace TDS_Client.Manager.Damage
     {
         // Body parts: https://pastebin.com/AGQWgCct
 
-        public static void CheckDamage(int healthLost)
+        /*public static void CheckDamage(int healthLost)
         {
             if (!Player.LocalPlayer.HasBeenDamagedByAnyPed())
                 return;
@@ -21,8 +21,10 @@ namespace TDS_Client.Manager.Damage
             int outbone = 0;
             Player.LocalPlayer.GetLastDamageBone(ref outbone);
 
-            foreach (var player in Entities.Players.Streamed)
+            foreach (var player in Entities.Players.All)
             {
+                if (!player.Exists)
+                    continue;
                 if (player == Player.LocalPlayer)
                     continue;
                 if (!RAGE.Game.Entity.HasEntityBeenDamagedByEntity(Player.LocalPlayer.Handle, player.Handle, true))
@@ -33,6 +35,6 @@ namespace TDS_Client.Manager.Damage
 
             Player.LocalPlayer.ClearLastDamageBone();
             Player.LocalPlayer.ClearLastDamageEntity();
-        }
+        }*/
     }
 }
