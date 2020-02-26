@@ -114,7 +114,7 @@ namespace TDS_Server.Manager.Maps
         {
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
-            var mapsToAdd = maps.Where(m => !allDbMap.Any(map => map.Name == m.Info.Name));
+            var mapsToAdd = maps.Where(m => !allDbMap.Any(map => map.Name == m.Info.Name)).ToList();
 
             foreach (var map in mapsToAdd)
             {
@@ -124,7 +124,7 @@ namespace TDS_Server.Manager.Maps
                 else
                     dbMap = new DB.Rest.Maps() { Name = map.Info.Name, CreatorId = map.Info.CreatorId };
                 dbContext.Maps.Add(dbMap);
-
+                allDbMap.Add(dbMap);
             }
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
