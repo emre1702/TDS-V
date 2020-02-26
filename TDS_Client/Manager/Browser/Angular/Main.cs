@@ -16,20 +16,23 @@ namespace TDS_Client.Manager.Browser.Angular
     static class Main
     {
         public static HtmlWindow Browser { get; set; }
-        private readonly static Queue<string> _executeQueue = new Queue<string>();
+        private readonly static Queue<Action> _executeQueue = new Queue<Action>();
 
         private static void Execute(string eventName, params object[] args)
         {
             string execStr = Shared.GetExecStr(eventName, args);
-            if (Browser == null)
-                _executeQueue.Enqueue(execStr);
+            if (Browser is null)
+                _executeQueue.Enqueue(() => Browser.ExecuteJs(execStr));
             else
                 Browser.ExecuteJs(execStr);
         }
 
         private static void ExecuteFast(string eventName, params object[] args)
         {
-            Browser?.Call(eventName, args);
+            if (Browser is null)
+                _executeQueue.Enqueue(() => Browser.Call(eventName, args));
+            else
+                Browser.Call(eventName, args);
         }
 
         public static void Start(string angularConstantsDataJson, string challengesJson)
@@ -43,9 +46,9 @@ namespace TDS_Client.Manager.Browser.Angular
             Browser.MarkAsChat();
 
             Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
-            foreach (var execStr in _executeQueue)
+            foreach (var exec in _executeQueue)
             {
-                Browser.ExecuteJs(execStr);
+                exec();
             }
             _executeQueue.Clear();
         }
