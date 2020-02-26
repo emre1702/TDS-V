@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     selectedChatBody = 0;
     private scrollToBottomTimer: NodeJS.Timeout;
+    isNearBottom = true;
 
     private commandPrefix = "/";
     private maxMessagesInBody = 40;
@@ -136,10 +137,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
 
         if (addToBodies.indexOf(this.selectedChatBody) >= 0) {
-            const scrolledToBottom = this.isChatScrolledToBottom() || this.chatBodies[this.selectedChatBody].messages.length == 0;
             this.changeDetector.detectChanges();
 
-            if (scrolledToBottom) {
+            if (this.isNearBottom) {
                 this.scrollChatToBottom();
             } else if (!this.scrollToBottomTimer) {
                 this.scrollToBottomTimer = setTimeout(this.scrollChatToBottom.bind(this), 15000);
@@ -186,9 +186,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         return !input || !input.trim();
     }
 
+    scrolled(event: any): void {
+        this.isNearBottom = this.isChatScrolledToBottom();
+    }
+
     private isChatScrolledToBottom(): boolean {
-        const element = this.chatBody.nativeElement;
-        return element.scrollHeight - element.scrollTop === element.clientHeight;
+        const threshold = 150;
+        const element = this.chatBody.nativeElement as HTMLDivElement;
+        const position = element.scrollTop + element.offsetHeight;
+        const height = element.scrollHeight;
+        return position > height - threshold;
     }
 
     private scrollChatToBottom() {
@@ -197,6 +204,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             left: 0,
             behavior: 'smooth'
         });
+        this.isNearBottom = true;
         this.changeDetector.detectChanges();
 
         if (this.scrollToBottomTimer) {

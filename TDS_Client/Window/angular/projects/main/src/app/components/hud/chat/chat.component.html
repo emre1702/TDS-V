@@ -1,6 +1,6 @@
 <div id="chat_container" [style.display]="chatActive ? 'initial' : 'none'" tabindex="-1">
     <div id="chat_div">
-        <div id="chat-body" #chatBody>
+        <div id="chat-body" #chatBody (scroll)="scrolled($event)">
             <div *ngFor="let msg of chatBodies[selectedChatBody].messages" [innerHTML]="msg"></div>
         </div>
         <div id="chat_choice">
