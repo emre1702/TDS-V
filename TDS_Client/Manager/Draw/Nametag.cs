@@ -86,6 +86,8 @@ namespace TDS_Client.Manager.Draw
         {
             var hp = Math.Max(Entity.GetEntityHealth(handle) - 100, 0);
             var armor = Ped.GetPedArmour(handle);
+
+            //RAGE.Chat.Output($"HP: {hp} - Armor: {armor} - HP orig: {Entity.GetEntityHealth(handle)}");
             return GetHealthColor(hp, armor);
         }
 
