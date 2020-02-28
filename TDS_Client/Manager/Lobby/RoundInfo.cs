@@ -66,9 +66,9 @@ namespace TDS_Client.Manager.Lobby
 
         private static bool _refreshOnTick;
 
-        public static void Start(ulong alreadywastedms)
+        public static void Start(ulong elapsedMsSinceRoundStart)
         {
-            _startedTick = TimerManager.ElapsedTicks - alreadywastedms;
+            _startedTick = TimerManager.ElapsedTicks - elapsedMsSinceRoundStart;
 
             if (_teamDisplays != null)
                 Stop();

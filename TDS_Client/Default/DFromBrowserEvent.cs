@@ -3,6 +3,7 @@
     public static class DFromBrowserEvent
     {
         public const string AddMapVote = "b1";
+        public const string AngularReady = "b42";
 
         public const string ChatLoaded = "b2";
         public const string ChatUsed = "b3";
