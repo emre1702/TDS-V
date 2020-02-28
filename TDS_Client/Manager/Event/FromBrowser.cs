@@ -26,6 +26,7 @@ namespace TDS_Client.Manager.Event
         {
             Add(DToServerEvent.AcceptInvitation, OnAcceptInvitationMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
+            Add(DFromBrowserEvent.AngularReady, (args) => Browser.Angular.Main.SetReady());
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DToServerEvent.ChooseTeam, OnChooseTeamMethod);

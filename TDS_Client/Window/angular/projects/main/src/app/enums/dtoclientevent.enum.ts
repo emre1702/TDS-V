@@ -1,5 +1,6 @@
 export enum DToClientEvent {
     AddMapVote = "b1",
+    AngularReady = "b42",
     ChatLoaded = "b2",
     ChatUsed = "b3",
     ChooseArenaToJoin = "b4",

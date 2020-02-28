@@ -16,21 +16,22 @@ namespace TDS_Client.Manager.Browser.Angular
     static class Main
     {
         public static HtmlWindow Browser { get; set; }
-        private readonly static Queue<Action> _executeQueue = new Queue<Action>();
+        private readonly static LinkedList<Action> _executeList = new LinkedList<Action>();
+        private static bool _isReady;
 
         private static void Execute(string eventName, params object[] args)
         {
             string execStr = Shared.GetExecStr(eventName, args);
-            if (Browser is null)
-                _executeQueue.Enqueue(() => Browser.ExecuteJs(execStr));
+            if (!_isReady)
+                _executeList.AddLast(() => Browser.ExecuteJs(execStr));
             else
                 Browser.ExecuteJs(execStr);
         }
 
         private static void ExecuteFast(string eventName, params object[] args)
         {
-            if (Browser is null)
-                _executeQueue.Enqueue(() => Browser.Call(eventName, args));
+            if (!_isReady)
+                _executeList.AddLast(() => Browser.Call(eventName, args));
             else
                 Browser.Call(eventName, args);
         }
@@ -42,15 +43,20 @@ namespace TDS_Client.Manager.Browser.Angular
 
             RAGE.Chat.SafeMode = false;
 
+            _executeList.AddFirst(() => Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson));
+
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
             Browser.MarkAsChat();
+        }
 
-            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
-            foreach (var exec in _executeQueue)
+        public static void SetReady()
+        {
+            _isReady = true;
+            foreach (var exec in _executeList)
             {
                 exec();
             }
-            _executeQueue.Clear();
+            _executeList.Clear();
         }
 
         public static void LoadLanguage(ELanguage language)

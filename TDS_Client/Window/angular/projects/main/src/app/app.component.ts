@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, OnInit } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerRankingStat';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
-import { Invitation } from './components/utils/invitation/models/invitation';
+import { DToClientEvent } from './enums/dtoclientevent.enum';
 
 @Component({
     selector: 'app-root',
@@ -33,7 +33,7 @@ import { Invitation } from './components/utils/invitation/models/invitation';
         ])
     ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     showMapCreator = false;
     showFreeroam = false;
     showLobbyChoice = true;
@@ -46,7 +46,7 @@ export class AppComponent {
 
     constructor(
         public settings: SettingsService,
-        rageConnector: RageConnectorService,
+        private rageConnector: RageConnectorService,
         changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar,
         public vcRef: ViewContainerRef) {
@@ -113,5 +113,9 @@ export class AppComponent {
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
+    }
+
+    ngOnInit() {
+        this.rageConnector.call(DToClientEvent.AngularReady);
     }
 }
