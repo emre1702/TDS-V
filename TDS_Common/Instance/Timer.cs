@@ -56,6 +56,7 @@ namespace TDS_Common.Instance.Utility
 
         /// <summary>The remaining ms to execute</summary>
         public ulong RemainingMsToExecute => _executeAtMs - _tickGetter();
+        public ulong ElapsedMsSinceLastExecOrCreate => _tickGetter() - (_executeAtMs - _executeAfterMs);
 
         /// <summary>
         /// Needs to be used once at server and once and client
