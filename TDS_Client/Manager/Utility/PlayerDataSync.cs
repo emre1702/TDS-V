@@ -96,6 +96,7 @@ namespace TDS_Client.Manager.Utility
         }
 
 
+        private static bool _nameSyncedWithAngular;
         private static void OnLocalPlayerDataChange(Player player, EPlayerDataKey key, object obj)
         {
             if (player != Player.LocalPlayer)
@@ -114,8 +115,12 @@ namespace TDS_Client.Manager.Utility
                     Lobby.Lobby.IsLobbyOwner = (bool)obj;
                     break;
                 case EPlayerDataKey.Name:
-                    if (!(Browser.Angular.Main.Browser is null))
-                        Browser.Angular.Main.SyncUsernameChange((string)obj);
+                    if (!_nameSyncedWithAngular)
+                    {
+                        _nameSyncedWithAngular = true;
+                        return;
+                    }
+                    Browser.Angular.Main.SyncUsernameChange((string)obj);
                     break;
             }
         }
