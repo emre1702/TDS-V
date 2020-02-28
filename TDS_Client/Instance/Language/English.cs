@@ -5,6 +5,15 @@ namespace TDS_Client.Instance.Language
 {
     internal class English : ILanguage
     {
+        public virtual string[] WELCOME_MESSAGE => new string[] {
+            "#n#Welcome to #b#Team Deathmatch Server#w#.",
+            "#n#For announcements, support, bug-reports etc.",
+            "#n#please visit our Discord-server:",
+            "#n#discord.gg/ntVnGFt",
+            "#n#You can get/hide the cursor with #r#END#w#.",
+            "#n#Have fun on TDS#w#!"
+        };
+
         public virtual string DEFUSING => "Defusing ...";
         public virtual string PLANTING => "Planting ...";
         public virtual string OUTSIDE_MAP_LIMIT => "You are outside of the map!\nThere are {0} seconds left to return to the map.";

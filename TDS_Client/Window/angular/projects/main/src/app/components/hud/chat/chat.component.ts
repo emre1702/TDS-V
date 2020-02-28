@@ -85,8 +85,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.LoadNamesForChat, this.loadNamesForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
-
-        this.rageConnector.call(DToClientEvent.ChatLoaded);
     }
 
     ngOnDestroy() {

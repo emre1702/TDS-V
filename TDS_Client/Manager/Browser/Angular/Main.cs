@@ -36,27 +36,37 @@ namespace TDS_Client.Manager.Browser.Angular
                 Browser.Call(eventName, args);
         }
 
-        public static void Start(string angularConstantsDataJson, string challengesJson)
+        public static void Init()
         {
             if (Browser != null)
                 return;
 
             RAGE.Chat.SafeMode = false;
 
-            _executeList.AddFirst(() => Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson));
-
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
             Browser.MarkAsChat();
         }
 
-        public static void SetReady()
+        public static void Start(string angularConstantsDataJson, string challengesJson)
         {
             _isReady = true;
+
+            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
+
+            SendWelcomeMessage();
+
             foreach (var exec in _executeList)
             {
                 exec();
             }
             _executeList.Clear();
+        }
+
+        private static void SendWelcomeMessage()
+        {
+            RAGE.Chat.Output("#o#__________________________________________");
+            RAGE.Chat.Output(string.Join("#n#", Settings.Language.WELCOME_MESSAGE));
+            RAGE.Chat.Output("#o#__________________________________________");
         }
 
         public static void LoadLanguage(ELanguage language)

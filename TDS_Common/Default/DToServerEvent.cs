@@ -8,7 +8,6 @@
 
         public const string BuyMap = "c4";
 
-        public const string ChatLoaded = "c5";
         public const string ChooseTeam = "c6";
         public const string CommandUsed = "c7";
         public const string CreateCustomLobby = "c8";

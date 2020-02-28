@@ -7,7 +7,6 @@ namespace TDS_Server.Instance.PlayerInstance
     partial class TDSPlayer
     {
 
-        public bool ChatLoaded { get; set; }
         public TDSPlayer? InPrivateChatWith { get; set; }
         public TDSPlayer? SentPrivateChatRequestTo { get; set; }
 

@@ -22,14 +22,6 @@ namespace TDS_Server.Manager.PlayerManager
             _bansManager = BansManager.Get();
         }
 
-        private static void SendWelcomeMessage(Player client)
-        {
-            var player = client.GetChar();
-            player.SendMessage("#o#__________________________________________");
-            player.SendMessage(string.Join("#n#", player.Language.WELCOME_MESSAGE));
-            player.SendMessage("#o#__________________________________________");
-        }
-
         [RemoteEvent(DToServerEvent.TryRegister)]
         public static async void OnPlayerTryRegisterEvent(Player client, string username, string password, string email)
         {
@@ -50,16 +42,6 @@ namespace TDS_Server.Manager.PlayerManager
                 return;
             }
             Register.RegisterPlayer(client, username, password, email.Length != 0 ? email : null);
-        }
-
-        [RemoteEvent(DToServerEvent.ChatLoaded)]
-        public static void OnPlayerChatLoadEvent(Player player)
-        {
-            SendWelcomeMessage(player);
-            TDSPlayer character = player.GetChar();
-            character.ChatLoaded = true;
-            if (character.Entity != null)
-                OfflineMessagesManager.CheckOfflineMessages(character);
         }
 
         [RemoteEvent(DToServerEvent.TryLogin)]

@@ -296,8 +296,8 @@ namespace TDS_Client.Manager.Event
             Round.InFight = !Round.IsSpectator;
             Cam.DoScreenFadeIn(50);
             LobbyCam.StopCountdown();
-            Countdown.End(args.Length < 2 || Convert.ToUInt64(args[1]) != 0);
-            RoundInfo.Start(args.Length >= 2 ? Convert.ToUInt64(args[1]) : 0);
+            Countdown.End(args.Length < 2 || Convert.ToUInt32(args[1]) != 0);
+            RoundInfo.Start(args.Length >= 2 ? Convert.ToUInt32(args[1]) : 0);
             CustomEventManager.SetRoundStart(Round.IsSpectator);
         }
 

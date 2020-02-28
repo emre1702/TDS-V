@@ -11,7 +11,6 @@ namespace TDS_Client.Manager.Utility
         {
             [DToServerEvent.AddRatingToMap] = new CooldownEventDto(1000),
             [DToServerEvent.BuyMap] = new CooldownEventDto(2000),
-            [DToServerEvent.ChatLoaded] = new CooldownEventDto(100000),
             [DToServerEvent.ChooseTeam] = new CooldownEventDto(1000),
             [DToServerEvent.CommandUsed] = new CooldownEventDto(500),
             [DToServerEvent.CreateCustomLobby] = new CooldownEventDto(2000),

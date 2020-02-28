@@ -175,15 +175,6 @@ namespace TDS_Server.Instance.Language
 
         public override string VOICE_MUTE_EXPIRED => "Dein Voice-Channel Mute ist abgelaufen. Du darfst wieder reden.";
 
-        public override string[] WELCOME_MESSAGE => new string[] {
-            "#n#Willkommen auf dem #b#Team Deathmatch Server#w#.",
-            "#n#Für Ankündigungen, Support, Bug-Meldung usw.",
-            "#n#bitte unseren Discord-Server nutzen:",
-            "#n#discord.gg/ntVnGFt",
-            "#n#Du kannst den Cursor mit #r#ENDE#w# umschalten.",
-            "#n#Viel Spaß wünscht das #b#TDS-Team#w#!"
-        };
-
         public override string WRONG_PASSWORD => "Falsches Passwort!";
 
         public override string YOU_ACCEPTED_INVITATION => "Du hast die Einladung von {0} angenommen.";

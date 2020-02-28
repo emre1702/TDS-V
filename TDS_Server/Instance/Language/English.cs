@@ -174,15 +174,6 @@ namespace TDS_Server.Instance.Language
 
         public virtual string VOICE_MUTE_EXPIRED => "Your voice channel mute has expired. You can talk again.";
 
-        public virtual string[] WELCOME_MESSAGE => new string[] {
-            "#n#Welcome to #b#Team Deathmatch Server#w#.",
-            "#n#For announcements, support, bug-reports etc.",
-            "#n#please visit our Discord-server:",
-            "#n#discord.gg/ntVnGFt",
-            "#n#You can get/hide the cursor with #r#END#w#.",
-            "#n#Have fun on TDS#w#!"
-        };
-
         public virtual string WRONG_PASSWORD => "Wrong password!";
 
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";

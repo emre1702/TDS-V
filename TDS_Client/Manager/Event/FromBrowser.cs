@@ -26,7 +26,6 @@ namespace TDS_Client.Manager.Event
         {
             Add(DToServerEvent.AcceptInvitation, OnAcceptInvitationMethod);
             Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
-            Add(DFromBrowserEvent.AngularReady, (args) => Browser.Angular.Main.SetReady());
             Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
             Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
             Add(DToServerEvent.ChooseTeam, OnChooseTeamMethod);
@@ -61,7 +60,6 @@ namespace TDS_Client.Manager.Event
             Add(DFromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
             Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
             Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
-            Add(DFromBrowserEvent.ChatLoaded, OnChatLoadedMethod);
             Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(DToServerEvent.RejectInvitation, OnRejectInvitationMethod);
             Add(DToServerEvent.RemoveMap, OnRemoveMapMethod);
@@ -330,11 +328,6 @@ namespace TDS_Client.Manager.Event
             string password = (string)args[1];
             string email = (string)args[2];
             RegisterLogin.TryRegister(username, password, email);
-        }
-
-        private void OnChatLoadedMethod(object[] args)
-        {
-            ChatManager.Loaded();
         }
 
         private void OnCommandUsedMethod(object[] args)

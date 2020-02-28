@@ -42,12 +42,6 @@ namespace TDS_Client.Manager.Browser
             Pad.DisableAllControlActions((int)EInputGroup.SUB);
         }
 
-        public static void Loaded()
-        {
-            //Settings.LoadSettings();
-            EventsSender.Send(DToServerEvent.ChatLoaded);
-        }
-
         private static void OpenLobbyChatInput(Control _)
         {
             if (Angular.Shared.InInput)

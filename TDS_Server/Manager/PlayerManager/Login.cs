@@ -100,8 +100,7 @@ namespace TDS_Server.Manager.PlayerManager
             player.Gang = Gang.GetPlayerGang(player);
             player.GangRank = Gang.GetPlayerGangRank(player);
 
-            if (player.ChatLoaded)
-                OfflineMessagesManager.CheckOfflineMessages(player);
+            OfflineMessagesManager.CheckOfflineMessages(player);
 
             MapsRatings.SendPlayerHisRatings(player);
             EventsHandler.JoinLobbyEvent(client, LobbyManager.MainMenu.Id);

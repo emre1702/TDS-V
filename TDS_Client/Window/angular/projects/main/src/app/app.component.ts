@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -33,7 +33,9 @@ import { DToClientEvent } from './enums/dtoclientevent.enum';
         ])
     ],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
+    started = false;
+
     showMapCreator = false;
     showFreeroam = false;
     showLobbyChoice = true;
@@ -54,6 +56,8 @@ export class AppComponent implements OnInit {
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string, challengesJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
             this.settings.loadChallenges(challengesJson);
+            this.started = true;
+            changeDetector.detectChanges();
         });
 
         rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {
@@ -113,9 +117,5 @@ export class AppComponent implements OnInit {
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
-    }
-
-    ngOnInit() {
-        this.rageConnector.call(DToClientEvent.AngularReady);
     }
 }

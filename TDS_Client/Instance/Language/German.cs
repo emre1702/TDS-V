@@ -5,6 +5,15 @@ namespace TDS_Client.Instance.Language
 {
     internal class German : English
     {
+        public override string[] WELCOME_MESSAGE => new string[] {
+            "#n#Willkommen auf dem #b#Team Deathmatch Server#w#.",
+            "#n#Für Ankündigungen, Support, Bug-Meldung usw.",
+            "#n#bitte unseren Discord-Server nutzen:",
+            "#n#discord.gg/ntVnGFt",
+            "#n#Du kannst den Cursor mit #r#ENDE#w# umschalten.",
+            "#n#Viel Spaß wünscht das #b#TDS-Team#w#!"
+        };
+
         public override string DEFUSING => "Entschärfung ...";
         public override string PLANTING => "Lege Bombe ...";
         public override string OUTSIDE_MAP_LIMIT => "Du bist außerhalb der Map-Grenze!\nDir bleiben noch {0} Sekunden, um zurück zu gehen.";

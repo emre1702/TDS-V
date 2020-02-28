@@ -167,7 +167,6 @@
 
         string VOICE_MUTE_EXPIRED { get; }
 
-        string[] WELCOME_MESSAGE { get; }
         string WRONG_PASSWORD { get; }
 
         string YOU_ACCEPTED_INVITATION { get; }

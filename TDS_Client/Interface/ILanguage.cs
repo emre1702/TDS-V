@@ -6,6 +6,7 @@ namespace TDS_Client.Interface
     {
         ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
 
+        string[] WELCOME_MESSAGE { get; }
         string OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME { get; }
         string OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME { get; }
         string PLANTING { get; }
