@@ -15,8 +15,8 @@ using TDS_Server_DB.Entity;
 namespace TDS_Server_DB.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    [Migration("20200202112541_ServerSettings_GangwarTargetWithoutAttackerMaxSeconds_DefaultValueTo10")]
-    partial class ServerSettings_GangwarTargetWithoutAttackerMaxSeconds_DefaultValueTo10
+    [Migration("20200229153238_SeeData_Weapons_AddBullpuprifleMk2_AddSpecialCarbineMk2")]
+    partial class SeeData_Weapons_AddBullpuprifleMk2_AddSpecialCarbineMk2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,9 +34,9 @@ namespace TDS_Server_DB.Migrations
                 .HasAnnotation("Npgsql:Enum:e_rule_target", "user,admin,vip")
                 .HasAnnotation("Npgsql:Enum:e_support_type", "question,help,compliment,complaint")
                 .HasAnnotation("Npgsql:Enum:e_userpanel_admin_question_answer_type", "text,check,number")
-                .HasAnnotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .HasAnnotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .HasAnnotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust,minitank,retinue2,outlaw,yosemite2,stryder,jb7002,sultan2,everon,sugoi,zhaba,formula,formula2,rebla,vagrant,furia,vstr,komoda,asbo,kanjo,imorgon")
+                .HasAnnotation("Npgsql:Enum:weapon_hash", "advancedrifle,appistol,assaultrifle,assaultrifle_mk2,assaultshotgun,assaultsmg,autoshotgun,ball,bat,battleaxe,bottle,bullpuprifle,bullpuprifle_mk2,bullpupshotgun,bzgas,carbinerifle,carbinerifle_mk2,combatmg,combatmg_mk2,combatpdw,combatpistol,compactlauncher,compactrifle,crowbar,dagger,dbshotgun,doubleaction,fireextinguisher,firework,flare,flaregun,flashlight,golfclub,grenade,grenadelauncher,grenadelauncher_smoke,gusenberg,hammer,hatchet,heavypistol,heavyshotgun,heavysniper,heavysniper_mk2,hominglauncher,knife,knuckle,machete,machinepistol,marksmanpistol,marksmanrifle,marksmanrifle_mk2,mg,microsmg,minigun,minismg,molotov,musket,nightstick,parachute,petrolcan,pipebomb,pistol,pistol_mk2,pistol50,poolcue,proximine,pumpshotgun,pumpshotgun_mk2,railgun,revolver,revolver_mk2,rpg,sawnoffshotgun,smg,smg_mk2,smokegrenade,sniperrifle,snowball,snspistol,snspistol_mk2,stone_hatchet,specialcarbine,specialcarbine_mk2,stickybomb,stungun,switchblade,unarmed,vintagepistol,wrench,raypistol,raycarbine,rayminigun,ceramic_pistol,hazard_can,navy_revolver")
                 .HasAnnotation("Npgsql:PostgresExtension:tsm_system_rows", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.0.2")
@@ -2063,15 +2063,15 @@ namespace TDS_Server_DB.Migrations
                             CountdownTime = 5,
                             MixTeamsAfterRound = true,
                             RoundTime = 240,
-                            ShowRanking = false
+                            ShowRanking = true
                         });
                 });
 
             modelBuilder.Entity("TDS_Server_DB.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
-                    b.Property<EWeaponHash>("Hash")
+                    b.Property<WeaponHash>("Hash")
                         .HasColumnName("hash")
-                        .HasColumnType("e_weapon_hash");
+                        .HasColumnType("weapon_hash");
 
                     b.Property<int>("Lobby")
                         .HasColumnName("lobby")
@@ -2098,537 +2098,531 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            Hash = EWeaponHash.SniperRifle,
+                            Hash = WeaponHash.Sniperrifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.FireExtinguisher,
+                            Hash = WeaponHash.Fireextinguisher,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CompactGrenadeLauncher,
+                            Hash = WeaponHash.Compactlauncher,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Snowball,
+                            Hash = WeaponHash.Snowball,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.VintagePistol,
+                            Hash = WeaponHash.Vintagepistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatPDW,
+                            Hash = WeaponHash.Combatpdw,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavySniper,
+                            Hash = WeaponHash.Heavysniper,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavySniperMk2,
+                            Hash = WeaponHash.Heavysniper_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SweeperShotgun,
+                            Hash = WeaponHash.Autoshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MicroSMG,
+                            Hash = WeaponHash.Microsmg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Wrench,
+                            Hash = WeaponHash.Wrench,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Pistol,
+                            Hash = WeaponHash.Pistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PistolMk2,
+                            Hash = WeaponHash.Pistol_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PumpShotgun,
+                            Hash = WeaponHash.Pumpshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PumpShotgunMk2,
+                            Hash = WeaponHash.Pumpshotgun_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.APPistol,
+                            Hash = WeaponHash.Appistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Baseball,
+                            Hash = WeaponHash.Ball,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Molotov,
+                            Hash = WeaponHash.Molotov,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SMG,
+                            Hash = WeaponHash.Smg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SMGMk2,
+                            Hash = WeaponHash.Smg_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.StickyBomb,
+                            Hash = WeaponHash.Stickybomb,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PetrolCan,
+                            Hash = WeaponHash.Petrolcan,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.StunGun,
+                            Hash = WeaponHash.Stungun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyShotgun,
+                            Hash = WeaponHash.Heavyshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Minigun,
+                            Hash = WeaponHash.Minigun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.GolfClub,
+                            Hash = WeaponHash.Golfclub,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.FlareGun,
+                            Hash = WeaponHash.Flaregun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Flare,
+                            Hash = WeaponHash.Flare,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.GrenadeLauncherSmoke,
+                            Hash = WeaponHash.Grenadelauncher_smoke,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Hammer,
+                            Hash = WeaponHash.Hammer,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatPistol,
+                            Hash = WeaponHash.Combatpistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Gusenberg,
+                            Hash = WeaponHash.Gusenberg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CompactRifle,
+                            Hash = WeaponHash.Compactrifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HomingLauncher,
+                            Hash = WeaponHash.Hominglauncher,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Nightstick,
+                            Hash = WeaponHash.Nightstick,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Railgun,
+                            Hash = WeaponHash.Railgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SawnOffShotgun,
+                            Hash = WeaponHash.Sawnoffshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.BullpupRifle,
+                            Hash = WeaponHash.Bullpuprifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Firework,
+                            Hash = WeaponHash.Firework,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatMG,
+                            Hash = WeaponHash.Combatmg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatMGMk2,
+                            Hash = WeaponHash.Combatmg_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CarbineRifle,
+                            Hash = WeaponHash.Carbinerifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Crowbar,
+                            Hash = WeaponHash.Crowbar,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Flashlight,
+                            Hash = WeaponHash.Flashlight,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Dagger,
+                            Hash = WeaponHash.Dagger,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Grenade,
+                            Hash = WeaponHash.Grenade,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PoolCue,
+                            Hash = WeaponHash.Poolcue,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Bat,
+                            Hash = WeaponHash.Bat,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Pistol50,
+                            Hash = WeaponHash.Pistol50,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Knife,
+                            Hash = WeaponHash.Knife,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MG,
+                            Hash = WeaponHash.Mg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.BullpupShotgun,
+                            Hash = WeaponHash.Bullpupshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.BZGas,
+                            Hash = WeaponHash.Bzgas,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.GrenadeLauncher,
+                            Hash = WeaponHash.Grenadelauncher,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.NightVision,
+                            Hash = WeaponHash.Musket,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Musket,
+                            Hash = WeaponHash.Proximine,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.ProximityMine,
+                            Hash = WeaponHash.Advancedrifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.AdvancedRifle,
+                            Hash = WeaponHash.Rpg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.RPG,
+                            Hash = WeaponHash.Pipebomb,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.PipeBomb,
+                            Hash = WeaponHash.Minismg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MiniSMG,
+                            Hash = WeaponHash.Snspistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SNSPistol,
+                            Hash = WeaponHash.Snspistol_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SNSPistolMk2,
+                            Hash = WeaponHash.Assaultrifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.AssaultRifle,
+                            Hash = WeaponHash.Assaultrifle_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.AssaultRifleMk2,
+                            Hash = WeaponHash.Specialcarbine,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SpecialCarbine,
+                            Hash = WeaponHash.Revolver,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyRevolver,
+                            Hash = WeaponHash.Revolver_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyRevolverMk2,
+                            Hash = WeaponHash.Doubleaction,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.DoubleActionRevolver,
+                            Hash = WeaponHash.Marksmanrifle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MarksmanRifle,
+                            Hash = WeaponHash.Marksmanrifle_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MarksmanRifleMk2,
+                            Hash = WeaponHash.Battleaxe,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.BattleAxe,
+                            Hash = WeaponHash.Heavypistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyPistol,
+                            Hash = WeaponHash.Knuckle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.KnuckleDuster,
+                            Hash = WeaponHash.Machinepistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MachinePistol,
+                            Hash = WeaponHash.Marksmanpistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.MarksmanPistol,
+                            Hash = WeaponHash.Machete,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Machete,
+                            Hash = WeaponHash.Switchblade,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SwitchBlade,
+                            Hash = WeaponHash.Assaultshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.AssaultShotgun,
+                            Hash = WeaponHash.Dbshotgun,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.DoubleBarrelShotgun,
+                            Hash = WeaponHash.Assaultsmg,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.AssaultSMG,
+                            Hash = WeaponHash.Hatchet,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Hatchet,
+                            Hash = WeaponHash.Bottle,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Bottle,
+                            Hash = WeaponHash.Parachute,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.Parachute,
+                            Hash = WeaponHash.Smokegrenade,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.SmokeGrenade,
+                            Hash = WeaponHash.Raypistol,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.UpnAtomizer,
+                            Hash = WeaponHash.Raycarbine,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.UnholyHellbringer,
+                            Hash = WeaponHash.Carbinerifle_mk2,
                             Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         },
                         new
                         {
-                            Hash = EWeaponHash.CarbineRifleMK2,
+                            Hash = WeaponHash.Rayminigun,
                             Lobby = -1,
-                            Ammo = 99999
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Widowmaker,
-                            Lobby = -1,
-                            Ammo = 99999
+                            Ammo = 9999
                         });
                 });
 
@@ -3051,6 +3045,18 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("player_id")
                         .HasColumnType("integer");
 
+                    b.Property<int>("AFKKickAfterSeconds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("afk_kick_after_seconds")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(25);
+
+                    b.Property<int>("AFKKickShowWarningLastSeconds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("afk_kick_show_warning_last_seconds")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(10);
+
                     b.Property<bool>("AllowDataTransfer")
                         .HasColumnName("allow_data_transfer")
                         .HasColumnType("boolean");
@@ -3058,6 +3064,18 @@ namespace TDS_Server_DB.Migrations
                     b.Property<bool>("Bloodscreen")
                         .HasColumnName("bloodscreen")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("BloodscreenCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("bloodscreen_cooldown_ms")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(150);
+
+                    b.Property<bool>("CheckAFK")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("check_afk")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("DateTimeFormat")
                         .ValueGeneratedOnAdd()
@@ -3079,6 +3097,18 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("hitsound")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("HudAmmoUpdateCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("hud_ammo_update_cooldown_ms")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(100);
+
+                    b.Property<int>("HudHealthUpdateCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("hud_health_update_cooldown_ms")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(100);
+
                     b.Property<ELanguage>("Language")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("language")
@@ -3091,9 +3121,43 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(150,0,0,0.35)");
 
+                    b.Property<string>("NametagArmorEmptyColor")
+                        .HasColumnName("nametag_armor_empty_color")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NametagArmorFullColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("nametag_armor_full_color")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(255, 255, 255, 1)");
+
+                    b.Property<string>("NametagDeadColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("nametag_dead_color")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(0, 0, 0, 1)");
+
+                    b.Property<string>("NametagHealthEmptyColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("nametag_health_empty_color")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(50, 0, 0, 1)");
+
+                    b.Property<string>("NametagHealthFullColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("nametag_health_full_color")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(0, 255, 0, 1)");
+
                     b.Property<bool>("ShowConfettiAtRanking")
                         .HasColumnName("show_confetti_at_ranking")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("ShowFloatingDamageInfoDurationMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("show_floating_damage_info_duration_ms")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1000);
 
                     b.Property<string>("Timezone")
                         .ValueGeneratedOnAdd()
@@ -3567,19 +3631,63 @@ namespace TDS_Server_DB.Migrations
 
             modelBuilder.Entity("TDS_Server_DB.Entity.Rest.Weapons", b =>
                 {
-                    b.Property<EWeaponHash>("Hash")
+                    b.Property<WeaponHash>("Hash")
                         .HasColumnName("hash")
-                        .HasColumnType("e_weapon_hash");
+                        .HasColumnType("weapon_hash");
 
-                    b.Property<short>("DefaultDamage")
-                        .HasColumnName("default_damage")
-                        .HasColumnType("smallint");
-
-                    b.Property<float>("DefaultHeadMultiplicator")
+                    b.Property<int>("ClipSize")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("default_head_multiplicator")
+                        .HasColumnName("clip_size")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<float>("Damage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("damage")
                         .HasColumnType("real")
-                        .HasDefaultValueSql("1");
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("HeadShotDamageModifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("head_shot_damage_modifier")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("HitLimbsDamageModifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("hit_limbs_damage_modifier")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("MaxHeadShotDistance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("max_head_shot_distance")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("MinHeadShotDistance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("min_head_shot_distance")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("Range")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("range")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("ReloadTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("reload_time")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<float>("TimeBetweenShots")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("time_between_shots")
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
 
                     b.Property<EWeaponType>("Type")
                         .HasColumnName("type")
@@ -3592,632 +3700,1276 @@ namespace TDS_Server_DB.Migrations
                     b.HasData(
                         new
                         {
-                            Hash = EWeaponHash.SniperRifle,
-                            DefaultDamage = (short)101,
-                            DefaultHeadMultiplicator = 2f,
+                            Hash = WeaponHash.Sniperrifle,
+                            ClipSize = 0,
+                            Damage = 101f,
+                            HeadShotDamageModifier = 1000f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.SniperRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.FireExtinguisher,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Fireextinguisher,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.CompactGrenadeLauncher,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Compactlauncher,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.Snowball,
-                            DefaultDamage = (short)10,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Snowball,
+                            ClipSize = 0,
+                            Damage = 10f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.VintagePistol,
-                            DefaultDamage = (short)34,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Vintagepistol,
+                            ClipSize = 0,
+                            Damage = 34f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatPDW,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Combatpdw,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavySniper,
-                            DefaultDamage = (short)216,
-                            DefaultHeadMultiplicator = 2f,
+                            Hash = WeaponHash.Heavysniper,
+                            ClipSize = 0,
+                            Damage = 216f,
+                            HeadShotDamageModifier = 2f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.SniperRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavySniperMk2,
-                            DefaultDamage = (short)216,
-                            DefaultHeadMultiplicator = 2f,
+                            Hash = WeaponHash.Heavysniper_mk2,
+                            ClipSize = 0,
+                            Damage = 216f,
+                            HeadShotDamageModifier = 2f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.SniperRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.SweeperShotgun,
-                            DefaultDamage = (short)162,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Autoshotgun,
+                            ClipSize = 0,
+                            Damage = 162f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.MicroSMG,
-                            DefaultDamage = (short)21,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Microsmg,
+                            ClipSize = 0,
+                            Damage = 21f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Wrench,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Wrench,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Pistol,
-                            DefaultDamage = (short)26,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Pistol,
+                            ClipSize = 0,
+                            Damage = 26f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.PistolMk2,
-                            DefaultDamage = (short)26,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Pistol_mk2,
+                            ClipSize = 0,
+                            Damage = 26f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.PumpShotgun,
-                            DefaultDamage = (short)58,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Pumpshotgun,
+                            ClipSize = 0,
+                            Damage = 58f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.PumpShotgunMk2,
-                            DefaultDamage = (short)58,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Pumpshotgun_mk2,
+                            ClipSize = 0,
+                            Damage = 58f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.APPistol,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Appistol,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Baseball,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Ball,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.Molotov,
-                            DefaultDamage = (short)10,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Molotov,
+                            ClipSize = 0,
+                            Damage = 10f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.SMG,
-                            DefaultDamage = (short)22,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Smg,
+                            ClipSize = 0,
+                            Damage = 22f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.SMGMk2,
-                            DefaultDamage = (short)22,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Smg_mk2,
+                            ClipSize = 0,
+                            Damage = 22f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.StickyBomb,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Stickybomb,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.PetrolCan,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Petrolcan,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.StunGun,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Stungun,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyShotgun,
-                            DefaultDamage = (short)117,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Heavyshotgun,
+                            ClipSize = 0,
+                            Damage = 117f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Minigun,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Minigun,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.GolfClub,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Golfclub,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.FlareGun,
-                            DefaultDamage = (short)50,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Flaregun,
+                            ClipSize = 0,
+                            Damage = 50f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Flare,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Flare,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.GrenadeLauncherSmoke,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Grenadelauncher_smoke,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.Hammer,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Hammer,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatPistol,
-                            DefaultDamage = (short)27,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Combatpistol,
+                            ClipSize = 0,
+                            Damage = 27f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Gusenberg,
-                            DefaultDamage = (short)34,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Gusenberg,
+                            ClipSize = 0,
+                            Damage = 34f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.CompactRifle,
-                            DefaultDamage = (short)34,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Compactrifle,
+                            ClipSize = 0,
+                            Damage = 34f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.HomingLauncher,
-                            DefaultDamage = (short)150,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Hominglauncher,
+                            ClipSize = 0,
+                            Damage = 150f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.Nightstick,
-                            DefaultDamage = (short)35,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Nightstick,
+                            ClipSize = 0,
+                            Damage = 35f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Railgun,
-                            DefaultDamage = (short)50,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Railgun,
+                            ClipSize = 0,
+                            Damage = 50f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.SawnOffShotgun,
-                            DefaultDamage = (short)160,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Sawnoffshotgun,
+                            ClipSize = 0,
+                            Damage = 160f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.BullpupRifle,
-                            DefaultDamage = (short)32,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Bullpuprifle,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.Firework,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Firework,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatMG,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Combatmg,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.CombatMGMk2,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Combatmg_mk2,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.CarbineRifle,
-                            DefaultDamage = (short)32,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Carbinerifle,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.Crowbar,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Crowbar,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Flashlight,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Flashlight,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Dagger,
-                            DefaultDamage = (short)45,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Dagger,
+                            ClipSize = 0,
+                            Damage = 45f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Grenade,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Grenade,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.PoolCue,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Poolcue,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Bat,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Bat,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.Pistol50,
-                            DefaultDamage = (short)51,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Pistol50,
+                            ClipSize = 0,
+                            Damage = 51f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.Knife,
-                            DefaultDamage = (short)45,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Knife,
+                            ClipSize = 0,
+                            Damage = 45f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.MG,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Mg,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.BullpupShotgun,
-                            DefaultDamage = (short)112,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Bullpupshotgun,
+                            ClipSize = 0,
+                            Damage = 112f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Shotgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.BZGas,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Bzgas,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.Unarmed,
-                            DefaultDamage = (short)15,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Unarmed,
+                            ClipSize = 0,
+                            Damage = 15f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Melee
                         },
                         new
                         {
-                            Hash = EWeaponHash.GrenadeLauncher,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Grenadelauncher,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.HeavyWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.NightVision,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Musket,
+                            ClipSize = 0,
+                            Damage = 165f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Shotgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Proximine,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.ThrownWeapon
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Advancedrifle,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Rpg,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.HeavyWeapon
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Pipebomb,
+                            ClipSize = 0,
+                            Damage = 100f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.ThrownWeapon
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Minismg,
+                            ClipSize = 0,
+                            Damage = 22f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.MachineGun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Snspistol,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Snspistol_mk2,
+                            ClipSize = 0,
+                            Damage = 28f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Assaultrifle,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Assaultrifle_mk2,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Specialcarbine,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.AssaultRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Revolver,
+                            ClipSize = 0,
+                            Damage = 110f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Revolver_mk2,
+                            ClipSize = 0,
+                            Damage = 110f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Doubleaction,
+                            ClipSize = 0,
+                            Damage = 110f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Marksmanrifle,
+                            ClipSize = 0,
+                            Damage = 65f,
+                            HeadShotDamageModifier = 2f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.SniperRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Marksmanrifle_mk2,
+                            ClipSize = 0,
+                            Damage = 65f,
+                            HeadShotDamageModifier = 2f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.SniperRifle
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Battleaxe,
+                            ClipSize = 0,
+                            Damage = 50f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Melee
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Heavypistol,
+                            ClipSize = 0,
+                            Damage = 40f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Knuckle,
+                            ClipSize = 0,
+                            Damage = 30f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Melee
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Machinepistol,
+                            ClipSize = 0,
+                            Damage = 20f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.MachineGun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Marksmanpistol,
+                            ClipSize = 0,
+                            Damage = 150f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Machete,
+                            ClipSize = 0,
+                            Damage = 45f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Melee
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Switchblade,
+                            ClipSize = 0,
+                            Damage = 50f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Melee
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Assaultshotgun,
+                            ClipSize = 0,
+                            Damage = 192f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Shotgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Dbshotgun,
+                            ClipSize = 0,
+                            Damage = 166f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Shotgun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Assaultsmg,
+                            ClipSize = 0,
+                            Damage = 23f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.MachineGun
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Hatchet,
+                            ClipSize = 0,
+                            Damage = 50f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Melee
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Bottle,
+                            ClipSize = 0,
+                            Damage = 10f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.ThrownWeapon
+                        },
+                        new
+                        {
+                            Hash = WeaponHash.Parachute,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.Rest
                         },
                         new
                         {
-                            Hash = EWeaponHash.Musket,
-                            DefaultDamage = (short)165,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Shotgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.ProximityMine,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Smokegrenade,
+                            ClipSize = 0,
+                            Damage = 0f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.ThrownWeapon
                         },
                         new
                         {
-                            Hash = EWeaponHash.AdvancedRifle,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.AssaultRifle
+                            Hash = WeaponHash.Raypistol,
+                            ClipSize = 0,
+                            Damage = 80f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
+                            Type = EWeaponType.Handgun
                         },
                         new
                         {
-                            Hash = EWeaponHash.RPG,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.HeavyWeapon
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.PipeBomb,
-                            DefaultDamage = (short)100,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.ThrownWeapon
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.MiniSMG,
-                            DefaultDamage = (short)22,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Raycarbine,
+                            ClipSize = 0,
+                            Damage = 23f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.MachineGun
                         },
                         new
                         {
-                            Hash = EWeaponHash.SNSPistol,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.SNSPistolMk2,
-                            DefaultDamage = (short)28,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.AssaultRifle,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Carbinerifle_mk2,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.AssaultRifleMk2,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Rayminigun,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.SpecialCarbine,
-                            DefaultDamage = (short)32,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Bullpuprifle_mk2,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         },
                         new
                         {
-                            Hash = EWeaponHash.HeavyRevolver,
-                            DefaultDamage = (short)110,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.HeavyRevolverMk2,
-                            DefaultDamage = (short)110,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.DoubleActionRevolver,
-                            DefaultDamage = (short)110,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.MarksmanRifle,
-                            DefaultDamage = (short)65,
-                            DefaultHeadMultiplicator = 2f,
-                            Type = EWeaponType.SniperRifle
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.MarksmanRifleMk2,
-                            DefaultDamage = (short)65,
-                            DefaultHeadMultiplicator = 2f,
-                            Type = EWeaponType.SniperRifle
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.BattleAxe,
-                            DefaultDamage = (short)50,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Melee
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.HeavyPistol,
-                            DefaultDamage = (short)40,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.KnuckleDuster,
-                            DefaultDamage = (short)30,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Melee
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.MachinePistol,
-                            DefaultDamage = (short)20,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.MachineGun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.MarksmanPistol,
-                            DefaultDamage = (short)150,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Machete,
-                            DefaultDamage = (short)45,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Melee
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.SwitchBlade,
-                            DefaultDamage = (short)50,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Melee
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.AssaultShotgun,
-                            DefaultDamage = (short)192,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Shotgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.DoubleBarrelShotgun,
-                            DefaultDamage = (short)166,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Shotgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.AssaultSMG,
-                            DefaultDamage = (short)23,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.MachineGun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Hatchet,
-                            DefaultDamage = (short)50,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Melee
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Bottle,
-                            DefaultDamage = (short)10,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.ThrownWeapon
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Parachute,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Rest
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.SmokeGrenade,
-                            DefaultDamage = (short)0,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.ThrownWeapon
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.UpnAtomizer,
-                            DefaultDamage = (short)80,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.Handgun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.UnholyHellbringer,
-                            DefaultDamage = (short)23,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.MachineGun
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.CarbineRifleMK2,
-                            DefaultDamage = (short)32,
-                            DefaultHeadMultiplicator = 1f,
-                            Type = EWeaponType.AssaultRifle
-                        },
-                        new
-                        {
-                            Hash = EWeaponHash.Widowmaker,
-                            DefaultDamage = (short)32,
-                            DefaultHeadMultiplicator = 1f,
+                            Hash = WeaponHash.Specialcarbine_mk2,
+                            ClipSize = 0,
+                            Damage = 32f,
+                            HeadShotDamageModifier = 1f,
+                            HitLimbsDamageModifier = 0f,
+                            MaxHeadShotDistance = 0f,
+                            MinHeadShotDistance = 0f,
+                            Range = 0f,
+                            ReloadTime = 0f,
+                            TimeBetweenShots = 0f,
                             Type = EWeaponType.AssaultRifle
                         });
                 });
@@ -4272,12 +5024,6 @@ namespace TDS_Server_DB.Migrations
                         .HasColumnName("id")
                         .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("AFKKickAfterSec")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("afk_kick_after_sec")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(25);
 
                     b.Property<int>("AmountPlayersAllowedInGangwarTeamBeforeCountCheck")
                         .ValueGeneratedOnAdd()
@@ -4501,7 +5247,6 @@ namespace TDS_Server_DB.Migrations
                         new
                         {
                             Id = (short)1,
-                            AFKKickAfterSec = 0,
                             AmountPlayersAllowedInGangwarTeamBeforeCountCheck = 0,
                             AmountWeeklyChallenges = 0,
                             ArenaNewMapProbabilityPercent = 2f,

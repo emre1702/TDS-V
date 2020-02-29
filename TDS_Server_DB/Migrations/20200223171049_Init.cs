@@ -26,9 +26,9 @@ namespace TDS_Server_DB.Migrations
                 .Annotation("Npgsql:Enum:e_rule_target", "user,admin,vip")
                 .Annotation("Npgsql:Enum:e_support_type", "question,help,compliment,complaint")
                 .Annotation("Npgsql:Enum:e_userpanel_admin_question_answer_type", "text,check,number")
-                .Annotation("Npgsql:Enum:e_weapon_hash", "sniper_rifle,fire_extinguisher,compact_grenade_launcher,snowball,vintage_pistol,combat_pdw,heavy_sniper,heavy_sniper_mk2,sweeper_shotgun,micro_smg,wrench,pistol,pistol_mk2,pump_shotgun,pump_shotgun_mk2,ap_pistol,baseball,molotov,smg,smg_mk2,sticky_bomb,petrol_can,stun_gun,heavy_shotgun,minigun,golf_club,flare_gun,flare,grenade_launcher_smoke,hammer,combat_pistol,gusenberg,compact_rifle,homing_launcher,nightstick,railgun,sawn_off_shotgun,bullpup_rifle,firework,combat_mg,combat_mg_mk2,carbine_rifle,crowbar,flashlight,dagger,grenade,pool_cue,bat,pistol50,knife,mg,bullpup_shotgun,bz_gas,unarmed,grenade_launcher,night_vision,musket,proximity_mine,advanced_rifle,rpg,pipe_bomb,mini_smg,sns_pistol,sns_pistol_mk2,assault_rifle,assault_rifle_mk2,special_carbine,heavy_revolver,heavy_revolver_mk2,double_action_revolver,marksman_rifle,marksman_rifle_mk2,battle_axe,heavy_pistol,knuckle_duster,machine_pistol,marksman_pistol,machete,switch_blade,assault_shotgun,double_barrel_shotgun,assault_smg,hatchet,bottle,parachute,smoke_grenade,upn_atomizer,unholy_hellbringer,carbine_rifle_mk2,sepcial_carbine_mk2,bullpup_rifle_mk2,widowmaker")
                 .Annotation("Npgsql:Enum:e_weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .Annotation("Npgsql:Enum:vehicle_hash", "ninef,ninef2,blista,asea,asea2,boattrailer,bus,armytanker,armytrailer,armytrailer2,freighttrailer,coach,airbus,asterope,airtug,ambulance,barracks,barracks2,baller,baller2,bjxl,banshee,benson,bfinjection,biff,blazer,blazer2,blazer3,bison,bison2,bison3,boxville,boxville2,boxville3,bobcatxl,bodhi2,buccaneer,buffalo,buffalo2,bulldozer,bullet,blimp,burrito,burrito2,burrito3,burrito4,burrito5,cavalcade,cavalcade2,policet,gburrito,cablecar,caddy,caddy2,camper,carbonizzare,cheetah,comet2,cogcabrio,coquette,cutter,gresley,dilettante,dilettante2,dune,dune2,hotknife,dloader,dubsta,dubsta2,dump,rubble,docktug,dominator,emperor,emperor2,emperor3,entityxf,exemplar,elegy2,f620,fbi,fbi2,felon,felon2,feltzer2,firetruk,flatbed,forklift,fq2,fusilade,fugitive,futo,granger,gauntlet,habanero,hauler,handler,infernus,ingot,intruder,issi2,jackal,journey,jb700,khamelion,landstalker,lguard,manana,mesa,mesa2,mesa3,crusader,minivan,mixer,mixer2,monroe,mower,mule,mule2,oracle,oracle2,packer,patriot,pbus,penumbra,peyote,phantom,phoenix,picador,pounder,police,police4,police2,police3,policeold1,policeold2,pony,pony2,prairie,pranger,premier,primo,proptrailer,rancherxl,rancherxl2,rapidgt,rapidgt2,radi,ratloader,rebel,regina,rebel2,rentalbus,ruiner,rumpo,rumpo2,rhino,riot,ripley,rocoto,romero,sabregt,sadler,sadler2,sandking,sandking2,schafter2,schwarzer,scrap,seminole,sentinel,sentinel2,zion,zion2,serrano,sheriff,sheriff2,speedo,speedo2,stanier,stinger,stingergt,stockade,stockade3,stratum,sultan,superd,surano,surfer,surfer2,surge,taco,tailgater,taxi,trash,tractor,tractor2,tractor3,graintrailer,baletrailer,tiptruck,tiptruck2,tornado,tornado2,tornado3,tornado4,tourbus,towtruck,towtruck2,utillitruck,utillitruck2,utillitruck3,voodoo2,washington,stretch,youga,ztype,sanchez,sanchez2,scorcher,tribike,tribike2,tribike3,fixter,cruiser,bmx,policeb,akuma,carbonrs,bagger,bati,bati2,ruffian,daemon,double,pcj,vader,vigero,faggio2,hexer,annihilator,buzzard,buzzard2,cargobob,cargobob2,cargobob3,skylift,polmav,maverick,nemesis,frogger,frogger2,cuban800,duster,stunt,mammatus,jet,shamal,luxor,titan,lazer,cargoplane,squalo,marquis,dinghy,dinghy2,jetmax,predator,tropic,seashark,seashark2,submersible,freightcar,freight,freightcont1,freightcont2,freightgrain,tankercar,metrotrain,docktrailer,trailers,trailers2,trailers3,tvtrailer,raketrailer,tanker,trailerlogs,tr2,tr3,tr4,trflat,trailersmall,velum,adder,voltic,vacca,suntrap,impaler3,monster4,monster5,slamvan6,issi6,cerberus2,cerberus3,deathbike2,dominator6,deathbike3,impaler4,slamvan4,slamvan5,brutus,brutus2,brutus3,deathbike,dominator4,dominator5,bruiser,bruiser2,bruiser3,rcbandito,italigto,cerberus,impaler2,monster3,tulip,scarab,scarab2,scarab3,issi4,issi5,clique,deveste,vamos,imperator,imperator2,imperator3,toros,deviant,schlagen,impaler,zr380,zr3802,zr3803,nimbus,xls,xls2,seven70,fmj,bestiagts,pfister811,brickade,rumpo3,volatus,prototipo,reaper,tug,windsor2,trailers4,xa21,caddy3,vagner,phantom3,nightshark,cheetah2,torero,hauler2,trailerlarge,technical3,insurgent3,apc,tampa3,dune3,trailersmall2,halftrack,ardent,oppressor,mule3,velum2,tanker2,casco,boxville4,hydra,insurgent,insurgent2,gburrito2,technical,dinghy3,savage,enduro,guardian,lectro,kuruma,kuruma2,trash2,barracks3,valkyrie,slamvan2,rhapsody,warrener,blade,glendale,panto,dubsta3,pigalle,elegy,tempesta,italigtb,italigtb2,nero,nero2,specter,specter2,diablous,diablous2,blazer5,ruiner2,dune4,dune5,phantom2,voltic2,penetrator,boxville5,wastelander,technical2,fcr,fcr2,comet3,ruiner3,monster,sovereign,sultanrs,banshee2,faction3,minivan2,sabregt2,slamvan3,tornado5,virgo2,virgo3,innovation,hakuchou,furoregt,verlierer2,nightshade,mamba,limo2,schafter3,schafter4,schafter5,schafter6,cog55,cog552,cognoscenti,cognoscenti2,baller3,baller4,baller5,baller6,toro2,seashark3,dinghy4,tropic2,speeder2,cargobob4,supervolito,supervolito2,valkyrie2,swift2,luxor2,feltzer3,osiris,virgo,windsor,coquette3,vindicator,t20,brawler,toro,chino,miljet,besra,coquette2,swift,vigilante,bombushka,alphaz1,seabreeze,tula,havok,hunter,microlight,rogue,pyro,howard,mogul,starling,nokota,molotok,rapidgt3,retinue,cyclone,visione,lynx,gargoyle,tyrus,sheava,omnis,le7b,contender,trophytruck,trophytruck2,rallytruck,cliffhanger,bf400,tropos,brioso,tampa2,btype,submersible2,dukes,dukes2,buffalo3,dominator2,dodo,marshall,blimp2,gauntlet2,stalion,stalion2,blista2,blista3,entity2,cheburek,jester3,caracara,hotring,seasparrow,flashgt,ellie,michelli,fagaloa,dominator3,tyrant,tezeract,gb200,issi3,taipan,stafford,scramjet,strikeforce,terbyte,pbus2,oppressor2,pounder2,speedo4,freecrawler,mule4,menacer,blimp3,swinger,patriot2,tornado6,faggio3,faggio,raptor,vortex,avarus,sanctus,youga2,hakuchou2,nightblade,chimera,esskey,wolfsbane,zombiea,zombieb,defiler,daemon2,ratbike,shotaro,manchez,blazer4,jester2,massacro2,ratloader2,slamvan,z190,viseris,comet5,raiden,riata,sc1,autarch,savestra,gt500,comet4,neon,sentinel3,khanjali,barrage,volatol,akula,deluxo,stromberg,chernobog,riot2,avenger,avenger2,thruster,yosemite,hermes,hustler,streiter,revolter,pariah,kamacho,lurcher,btype2,faction,faction2,moonbeam,moonbeam2,primo2,chino2,buccaneer2,voodoo,turismo2,infernus2,gp1,ruston,btype3,paragon,paragon2,jugular,rrocket,neo,krieger,peyote2,gauntlet4,s80,caracara2,thrax,novak,zorrusso,issi7,locust,emerus,hellion,dynasty,gauntlet3,nebula,zion3,drafter,tampa,bifta,speeder,kalahari,paradise,jester,turismor,alpha,vestra,zentorno,massacro,huntley,thrust,minitank,retinue2,outlaw,yosemite2,stryder,jb7002,sultan2,everon,sugoi,zhaba,formula,formula2,rebla,vagrant,furia,vstr,komoda,asbo,kanjo,imorgon")
+                .Annotation("Npgsql:Enum:weapon_hash", "advancedrifle,appistol,assaultrifle,assaultrifle_mk2,assaultshotgun,assaultsmg,autoshotgun,ball,bat,battleaxe,bottle,bullpuprifle,bullpuprifle_mk2,bullpupshotgun,bzgas,carbinerifle,carbinerifle_mk2,combatmg,combatmg_mk2,combatpdw,combatpistol,compactlauncher,compactrifle,crowbar,dagger,dbshotgun,doubleaction,fireextinguisher,firework,flare,flaregun,flashlight,golfclub,grenade,grenadelauncher,grenadelauncher_smoke,gusenberg,hammer,hatchet,heavypistol,heavyshotgun,heavysniper,heavysniper_mk2,hominglauncher,knife,knuckle,machete,machinepistol,marksmanpistol,marksmanrifle,marksmanrifle_mk2,mg,microsmg,minigun,minismg,molotov,musket,nightstick,parachute,petrolcan,pipebomb,pistol,pistol_mk2,pistol50,poolcue,proximine,pumpshotgun,pumpshotgun_mk2,railgun,revolver,revolver_mk2,rpg,sawnoffshotgun,smg,smg_mk2,smokegrenade,sniperrifle,snowball,snspistol,snspistol_mk2,stone_hatchet,specialcarbine,specialcarbine_mk2,stickybomb,stungun,switchblade,unarmed,vintagepistol,wrench,raypistol,raycarbine,rayminigun,ceramic_pistol,hazard_can,navy_revolver")
                 .Annotation("Npgsql:PostgresExtension:tsm_system_rows", ",,");
 
             migrationBuilder.CreateSequence(
@@ -269,7 +269,6 @@ namespace TDS_Server_DB.Migrations
                     give_money_min_amount = table.Column<int>(nullable: false, defaultValue: 100),
                     nametag_max_distance = table.Column<float>(nullable: false, defaultValue: 625f),
                     show_nametag_only_on_aiming = table.Column<bool>(nullable: false),
-                    afk_kick_after_sec = table.Column<int>(nullable: false, defaultValue: 25),
                     multiplier_ranking_kills = table.Column<float>(nullable: false, defaultValue: 75f),
                     multiplier_ranking_assists = table.Column<float>(nullable: false, defaultValue: 25f),
                     multiplier_ranking_damage = table.Column<float>(nullable: false, defaultValue: 1f),
@@ -285,7 +284,7 @@ namespace TDS_Server_DB.Migrations
                     gangwar_attacker_can_be_more = table.Column<bool>(nullable: false, defaultValue: true),
                     gangwar_owner_can_be_more = table.Column<bool>(nullable: false, defaultValue: false),
                     gangwar_target_radius = table.Column<double>(nullable: false, defaultValue: 5.0),
-                    gangwar_target_without_attacker_max_seconds = table.Column<int>(nullable: false, defaultValue: 5),
+                    gangwar_target_without_attacker_max_seconds = table.Column<int>(nullable: false, defaultValue: 10),
                     reduce_maps_bought_counter_after_minute = table.Column<int>(nullable: false, defaultValue: 60),
                     map_buy_base_price = table.Column<int>(nullable: false, defaultValue: 1000),
                     map_buy_counter_multiplicator = table.Column<float>(nullable: false, defaultValue: 1f),
@@ -317,10 +316,17 @@ namespace TDS_Server_DB.Migrations
                 name: "weapons",
                 columns: table => new
                 {
-                    hash = table.Column<EWeaponHash>(nullable: false),
+                    hash = table.Column<WeaponHash>(nullable: false),
                     type = table.Column<EWeaponType>(nullable: false),
-                    default_damage = table.Column<short>(nullable: false),
-                    default_head_multiplicator = table.Column<float>(nullable: false, defaultValueSql: "1")
+                    clip_size = table.Column<int>(nullable: false, defaultValue: 0),
+                    min_head_shot_distance = table.Column<float>(nullable: false, defaultValue: 0f),
+                    max_head_shot_distance = table.Column<float>(nullable: false, defaultValue: 0f),
+                    head_shot_damage_modifier = table.Column<float>(nullable: false, defaultValue: 0f),
+                    damage = table.Column<float>(nullable: false, defaultValue: 0f),
+                    hit_limbs_damage_modifier = table.Column<float>(nullable: false, defaultValue: 0f),
+                    reload_time = table.Column<float>(nullable: false, defaultValue: 0f),
+                    time_between_shots = table.Column<float>(nullable: false, defaultValue: 0f),
+                    range = table.Column<float>(nullable: false, defaultValue: 0f)
                 },
                 constraints: table =>
                 {
@@ -663,10 +669,22 @@ namespace TDS_Server_DB.Migrations
                     hitsound = table.Column<bool>(nullable: false),
                     bloodscreen = table.Column<bool>(nullable: false),
                     floating_damage_info = table.Column<bool>(nullable: false),
+                    check_afk = table.Column<bool>(nullable: false, defaultValue: true),
                     voice3d = table.Column<bool>(nullable: false, defaultValue: false),
                     voice_auto_volume = table.Column<bool>(nullable: false, defaultValue: false),
                     voice_volume = table.Column<float>(nullable: false, defaultValue: 6f),
-                    map_border_color = table.Column<string>(nullable: true, defaultValue: "rgba(150,0,0,0.35)")
+                    map_border_color = table.Column<string>(nullable: true, defaultValue: "rgba(150,0,0,0.35)"),
+                    nametag_dead_color = table.Column<string>(nullable: true, defaultValue: "rgba(0, 0, 0, 1)"),
+                    nametag_health_empty_color = table.Column<string>(nullable: true, defaultValue: "rgba(50, 0, 0, 1)"),
+                    nametag_health_full_color = table.Column<string>(nullable: true, defaultValue: "rgba(0, 255, 0, 1)"),
+                    nametag_armor_empty_color = table.Column<string>(nullable: true),
+                    nametag_armor_full_color = table.Column<string>(nullable: true, defaultValue: "rgba(255, 255, 255, 1)"),
+                    bloodscreen_cooldown_ms = table.Column<int>(nullable: false, defaultValue: 150),
+                    hud_ammo_update_cooldown_ms = table.Column<int>(nullable: false, defaultValue: 100),
+                    hud_health_update_cooldown_ms = table.Column<int>(nullable: false, defaultValue: 100),
+                    afk_kick_after_seconds = table.Column<int>(nullable: false, defaultValue: 25),
+                    afk_kick_show_warning_last_seconds = table.Column<int>(nullable: false, defaultValue: 10),
+                    show_floating_damage_info_duration_ms = table.Column<int>(nullable: false, defaultValue: 1000)
                 },
                 constraints: table =>
                 {
@@ -887,7 +905,7 @@ namespace TDS_Server_DB.Migrations
                 name: "lobby_weapons",
                 columns: table => new
                 {
-                    hash = table.Column<EWeaponHash>(nullable: false),
+                    hash = table.Column<WeaponHash>(nullable: false),
                     lobby = table.Column<int>(nullable: false),
                     ammo = table.Column<int>(nullable: false),
                     damage = table.Column<short>(nullable: true),
@@ -1356,100 +1374,448 @@ namespace TDS_Server_DB.Migrations
 
             migrationBuilder.InsertData(
                 table: "weapons",
-                columns: new[] { "hash", "default_damage", "default_head_multiplicator", "type" },
-                values: new object[,]
-                {
-                    { EWeaponHash.MarksmanPistol, (short)150, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.MachinePistol, (short)20, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.KnuckleDuster, (short)30, 1f, EWeaponType.Melee },
-                    { EWeaponHash.HeavyPistol, (short)40, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.BattleAxe, (short)50, 1f, EWeaponType.Melee },
-                    { EWeaponHash.MarksmanRifleMk2, (short)65, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.MarksmanRifle, (short)65, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.DoubleActionRevolver, (short)110, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.HeavyRevolverMk2, (short)110, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.Pistol, (short)26, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.HeavyRevolver, (short)110, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.SpecialCarbine, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.AssaultRifleMk2, (short)30, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.AssaultRifle, (short)30, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.SNSPistolMk2, (short)28, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.SNSPistol, (short)28, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.MiniSMG, (short)22, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.PipeBomb, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.RPG, (short)100, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Machete, (short)45, 1f, EWeaponType.Melee },
-                    { EWeaponHash.SwitchBlade, (short)50, 1f, EWeaponType.Melee },
-                    { EWeaponHash.AssaultShotgun, (short)192, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.DoubleBarrelShotgun, (short)166, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.SniperRifle, (short)101, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.FireExtinguisher, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.CompactGrenadeLauncher, (short)100, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Snowball, (short)10, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.VintagePistol, (short)34, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.CombatPDW, (short)28, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.HeavySniper, (short)216, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.HeavySniperMk2, (short)216, 2f, EWeaponType.SniperRifle },
-                    { EWeaponHash.AdvancedRifle, (short)30, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.SweeperShotgun, (short)162, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.CarbineRifleMK2, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.UnholyHellbringer, (short)23, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.UpnAtomizer, (short)80, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.SmokeGrenade, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Parachute, (short)0, 1f, EWeaponType.Rest },
-                    { EWeaponHash.Bottle, (short)10, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Hatchet, (short)50, 1f, EWeaponType.Melee },
-                    { EWeaponHash.AssaultSMG, (short)23, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Widowmaker, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.ProximityMine, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Musket, (short)165, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.NightVision, (short)0, 1f, EWeaponType.Rest },
-                    { EWeaponHash.MicroSMG, (short)21, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Hammer, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.GrenadeLauncherSmoke, (short)0, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Flare, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.FlareGun, (short)50, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.GolfClub, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Minigun, (short)30, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.HeavyShotgun, (short)117, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.StunGun, (short)0, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.PetrolCan, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.StickyBomb, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.SMGMk2, (short)22, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.SMG, (short)22, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Molotov, (short)10, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Baseball, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.APPistol, (short)28, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.PumpShotgunMk2, (short)58, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.PumpShotgun, (short)58, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.PistolMk2, (short)26, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.Gusenberg, (short)34, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.CompactRifle, (short)34, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.HomingLauncher, (short)150, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Nightstick, (short)35, 1f, EWeaponType.Melee },
-                    { EWeaponHash.GrenadeLauncher, (short)100, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Unarmed, (short)15, 1f, EWeaponType.Melee },
-                    { EWeaponHash.BZGas, (short)0, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.BullpupShotgun, (short)112, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.MG, (short)40, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Knife, (short)45, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Pistol50, (short)51, 1f, EWeaponType.Handgun },
-                    { EWeaponHash.Bat, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.PoolCue, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Wrench, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Grenade, (short)100, 1f, EWeaponType.ThrownWeapon },
-                    { EWeaponHash.Flashlight, (short)30, 1f, EWeaponType.Melee },
-                    { EWeaponHash.Crowbar, (short)40, 1f, EWeaponType.Melee },
-                    { EWeaponHash.CarbineRifle, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.CombatMGMk2, (short)28, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.CombatMG, (short)28, 1f, EWeaponType.MachineGun },
-                    { EWeaponHash.Firework, (short)100, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.BullpupRifle, (short)32, 1f, EWeaponType.AssaultRifle },
-                    { EWeaponHash.SawnOffShotgun, (short)160, 1f, EWeaponType.Shotgun },
-                    { EWeaponHash.Railgun, (short)50, 1f, EWeaponType.HeavyWeapon },
-                    { EWeaponHash.Dagger, (short)45, 1f, EWeaponType.Melee },
-                    { EWeaponHash.CombatPistol, (short)27, 1f, EWeaponType.Handgun }
-                });
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Marksmanpistol, 150f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Machinepistol, 20f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Knuckle, 30f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Heavypistol, 40f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Battleaxe, 50f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Marksmanrifle_mk2, 65f, 2f, EWeaponType.SniperRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Marksmanrifle, 65f, 2f, EWeaponType.SniperRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Doubleaction, 110f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Revolver_mk2, 110f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pistol, 26f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Revolver, 110f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Specialcarbine, 32f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Assaultrifle_mk2, 30f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Assaultrifle, 30f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Snspistol_mk2, 28f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Snspistol, 28f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Minismg, 22f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pipebomb, 100f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Rpg, 100f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Machete, 45f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Switchblade, 50f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Assaultshotgun, 192f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Dbshotgun, 166f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Sniperrifle, 101f, 1000f, EWeaponType.SniperRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Fireextinguisher, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Compactlauncher, 100f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Snowball, 10f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Vintagepistol, 34f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Combatpdw, 28f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Heavysniper, 216f, 2f, EWeaponType.SniperRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Heavysniper_mk2, 216f, 2f, EWeaponType.SniperRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Advancedrifle, 30f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Autoshotgun, 162f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Carbinerifle_mk2, 32f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Raycarbine, 23f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Raypistol, 80f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Smokegrenade, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Parachute, 1f, EWeaponType.Rest });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Bottle, 10f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Hatchet, 50f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Assaultsmg, 23f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Rayminigun, 32f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Wrench, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Proximine, 100f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Grenadelauncher, 100f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Microsmg, 21f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Hammer, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Grenadelauncher_smoke, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Flare, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Flaregun, 50f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Golfclub, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Minigun, 30f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Heavyshotgun, 117f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Stungun, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Petrolcan, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Stickybomb, 100f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Smg_mk2, 22f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Smg, 22f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Molotov, 10f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Ball, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Appistol, 28f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pumpshotgun_mk2, 58f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pumpshotgun, 58f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pistol_mk2, 26f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Gusenberg, 34f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Musket, 165f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Compactrifle, 34f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Nightstick, 35f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Unarmed, 15f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Bzgas, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Bullpupshotgun, 112f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Mg, 40f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Knife, 45f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Pistol50, 51f, 1f, EWeaponType.Handgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Bat, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Poolcue, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Grenade, 100f, 1f, EWeaponType.ThrownWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Dagger, 45f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Flashlight, 30f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Crowbar, 40f, 1f, EWeaponType.Melee });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Carbinerifle, 32f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Combatmg_mk2, 28f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Combatmg, 28f, 1f, EWeaponType.MachineGun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Firework, 100f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Bullpuprifle, 32f, 1f, EWeaponType.AssaultRifle });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Sawnoffshotgun, 160f, 1f, EWeaponType.Shotgun });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Railgun, 50f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Hominglauncher, 150f, 1f, EWeaponType.HeavyWeapon });
+
+            migrationBuilder.InsertData(
+                table: "weapons",
+                columns: new[] { "hash", "damage", "head_shot_damage_modifier", "type" },
+                values: new object[] { WeaponHash.Combatpistol, 27f, 1f, EWeaponType.Handgun });
 
             migrationBuilder.InsertData(
                 table: "admin_level_names",
@@ -1778,113 +2144,116 @@ namespace TDS_Server_DB.Migrations
             migrationBuilder.InsertData(
                 table: "lobby_round_settings",
                 columns: new[] { "lobby_id", "bomb_defuse_time_ms", "bomb_detonate_time_ms", "bomb_plant_time_ms", "countdown_time", "mix_teams_after_round", "round_time", "show_ranking" },
-                values: new object[] { -1, 8000, 45000, 3000, 5, true, 240, false });
+                values: new object[] { -1, 8000, 45000, 3000, 5, true, 240, true });
 
             migrationBuilder.InsertData(
                 table: "lobby_weapons",
                 columns: new[] { "hash", "lobby", "ammo", "damage", "head_multiplicator" },
                 values: new object[,]
                 {
-                    { EWeaponHash.RPG, -1, 99999, null, null },
-                    { EWeaponHash.SpecialCarbine, -1, 99999, null, null },
-                    { EWeaponHash.AssaultRifleMk2, -1, 99999, null, null },
-                    { EWeaponHash.AssaultRifle, -1, 99999, null, null },
-                    { EWeaponHash.SNSPistolMk2, -1, 99999, null, null },
-                    { EWeaponHash.SNSPistol, -1, 99999, null, null },
-                    { EWeaponHash.MiniSMG, -1, 99999, null, null },
-                    { EWeaponHash.PipeBomb, -1, 99999, null, null },
-                    { EWeaponHash.AdvancedRifle, -1, 99999, null, null },
-                    { EWeaponHash.BZGas, -1, 99999, null, null },
-                    { EWeaponHash.Musket, -1, 99999, null, null },
-                    { EWeaponHash.NightVision, -1, 99999, null, null },
-                    { EWeaponHash.GrenadeLauncher, -1, 99999, null, null },
-                    { EWeaponHash.HeavyRevolver, -1, 99999, null, null },
-                    { EWeaponHash.BullpupShotgun, -1, 99999, null, null },
-                    { EWeaponHash.MG, -1, 99999, null, null },
-                    { EWeaponHash.Knife, -1, 99999, null, null },
-                    { EWeaponHash.Pistol50, -1, 99999, null, null },
-                    { EWeaponHash.Bat, -1, 99999, null, null },
-                    { EWeaponHash.ProximityMine, -1, 99999, null, null },
-                    { EWeaponHash.HeavyRevolverMk2, -1, 99999, null, null },
-                    { EWeaponHash.BattleAxe, -1, 99999, null, null },
-                    { EWeaponHash.MarksmanRifle, -1, 99999, null, null },
-                    { EWeaponHash.Widowmaker, -1, 99999, null, null },
-                    { EWeaponHash.CarbineRifleMK2, -1, 99999, null, null },
-                    { EWeaponHash.UnholyHellbringer, -1, 99999, null, null },
-                    { EWeaponHash.UpnAtomizer, -1, 99999, null, null },
-                    { EWeaponHash.SmokeGrenade, -1, 99999, null, null },
-                    { EWeaponHash.Parachute, -1, 99999, null, null },
-                    { EWeaponHash.Bottle, -1, 99999, null, null },
-                    { EWeaponHash.Hatchet, -1, 99999, null, null },
-                    { EWeaponHash.AssaultSMG, -1, 99999, null, null },
-                    { EWeaponHash.DoubleBarrelShotgun, -1, 99999, null, null },
-                    { EWeaponHash.AssaultShotgun, -1, 99999, null, null },
-                    { EWeaponHash.SwitchBlade, -1, 99999, null, null },
-                    { EWeaponHash.Machete, -1, 99999, null, null },
-                    { EWeaponHash.MarksmanPistol, -1, 99999, null, null },
-                    { EWeaponHash.MachinePistol, -1, 99999, null, null },
-                    { EWeaponHash.KnuckleDuster, -1, 99999, null, null },
-                    { EWeaponHash.HeavyPistol, -1, 99999, null, null },
-                    { EWeaponHash.PoolCue, -1, 99999, null, null },
-                    { EWeaponHash.MarksmanRifleMk2, -1, 99999, null, null },
-                    { EWeaponHash.DoubleActionRevolver, -1, 99999, null, null },
-                    { EWeaponHash.Grenade, -1, 99999, null, null },
-                    { EWeaponHash.Flashlight, -1, 99999, null, null },
-                    { EWeaponHash.SMGMk2, -1, 99999, null, null },
-                    { EWeaponHash.Dagger, -1, 99999, null, null },
-                    { EWeaponHash.SMG, -1, 99999, null, null },
-                    { EWeaponHash.Molotov, -1, 99999, null, null },
-                    { EWeaponHash.Baseball, -1, 99999, null, null },
-                    { EWeaponHash.APPistol, -1, 99999, null, null },
-                    { EWeaponHash.PumpShotgunMk2, -1, 99999, null, null },
-                    { EWeaponHash.PumpShotgun, -1, 99999, null, null },
-                    { EWeaponHash.PistolMk2, -1, 99999, null, null },
-                    { EWeaponHash.Pistol, -1, 99999, null, null },
-                    { EWeaponHash.Wrench, -1, 99999, null, null },
-                    { EWeaponHash.MicroSMG, -1, 99999, null, null },
-                    { EWeaponHash.SweeperShotgun, -1, 99999, null, null },
-                    { EWeaponHash.HeavySniperMk2, -1, 99999, null, null },
-                    { EWeaponHash.HeavySniper, -1, 99999, null, null },
-                    { EWeaponHash.CombatPDW, -1, 99999, null, null },
-                    { EWeaponHash.VintagePistol, -1, 99999, null, null },
-                    { EWeaponHash.Snowball, -1, 99999, null, null },
-                    { EWeaponHash.CompactGrenadeLauncher, -1, 99999, null, null },
-                    { EWeaponHash.FireExtinguisher, -1, 99999, null, null },
-                    { EWeaponHash.StickyBomb, -1, 99999, null, null },
-                    { EWeaponHash.SniperRifle, -1, 99999, null, null },
-                    { EWeaponHash.PetrolCan, -1, 99999, null, null },
-                    { EWeaponHash.HeavyShotgun, -1, 99999, null, null },
-                    { EWeaponHash.Crowbar, -1, 99999, null, null },
-                    { EWeaponHash.CarbineRifle, -1, 99999, null, null },
-                    { EWeaponHash.CombatMGMk2, -1, 99999, null, null },
-                    { EWeaponHash.CombatMG, -1, 99999, null, null },
-                    { EWeaponHash.Firework, -1, 99999, null, null },
-                    { EWeaponHash.BullpupRifle, -1, 99999, null, null },
-                    { EWeaponHash.SawnOffShotgun, -1, 99999, null, null },
-                    { EWeaponHash.Railgun, -1, 99999, null, null },
-                    { EWeaponHash.Nightstick, -1, 99999, null, null },
-                    { EWeaponHash.HomingLauncher, -1, 99999, null, null },
-                    { EWeaponHash.CompactRifle, -1, 99999, null, null },
-                    { EWeaponHash.Gusenberg, -1, 99999, null, null },
-                    { EWeaponHash.CombatPistol, -1, 99999, null, null },
-                    { EWeaponHash.Hammer, -1, 99999, null, null },
-                    { EWeaponHash.GrenadeLauncherSmoke, -1, 99999, null, null },
-                    { EWeaponHash.Flare, -1, 99999, null, null },
-                    { EWeaponHash.FlareGun, -1, 99999, null, null },
-                    { EWeaponHash.GolfClub, -1, 99999, null, null },
-                    { EWeaponHash.Minigun, -1, 99999, null, null },
-                    { EWeaponHash.StunGun, -1, 99999, null, null }
+                    { WeaponHash.Rpg, -1, 9999, null, null },
+                    { WeaponHash.Specialcarbine, -1, 9999, null, null },
+                    { WeaponHash.Assaultrifle_mk2, -1, 9999, null, null },
+                    { WeaponHash.Assaultrifle, -1, 9999, null, null },
+                    { WeaponHash.Snspistol_mk2, -1, 9999, null, null },
+                    { WeaponHash.Snspistol, -1, 9999, null, null },
+                    { WeaponHash.Minismg, -1, 9999, null, null },
+                    { WeaponHash.Pipebomb, -1, 9999, null, null },
+                    { WeaponHash.Advancedrifle, -1, 9999, null, null },
+                    { WeaponHash.Bzgas, -1, 9999, null, null },
+                    { WeaponHash.Musket, -1, 9999, null, null },
+                    { WeaponHash.Grenadelauncher, -1, 9999, null, null },
+                    { WeaponHash.Revolver, -1, 9999, null, null },
+                    { WeaponHash.Bullpupshotgun, -1, 9999, null, null },
+                    { WeaponHash.Mg, -1, 9999, null, null },
+                    { WeaponHash.Knife, -1, 9999, null, null },
+                    { WeaponHash.Pistol50, -1, 9999, null, null },
+                    { WeaponHash.Bat, -1, 9999, null, null },
+                    { WeaponHash.Proximine, -1, 9999, null, null },
+                    { WeaponHash.Revolver_mk2, -1, 9999, null, null },
+                    { WeaponHash.Heavypistol, -1, 9999, null, null },
+                    { WeaponHash.Marksmanrifle, -1, 9999, null, null },
+                    { WeaponHash.Rayminigun, -1, 9999, null, null },
+                    { WeaponHash.Carbinerifle_mk2, -1, 9999, null, null },
+                    { WeaponHash.Raycarbine, -1, 9999, null, null },
+                    { WeaponHash.Raypistol, -1, 9999, null, null },
+                    { WeaponHash.Smokegrenade, -1, 9999, null, null },
+                    { WeaponHash.Parachute, -1, 9999, null, null },
+                    { WeaponHash.Bottle, -1, 9999, null, null },
+                    { WeaponHash.Hatchet, -1, 9999, null, null },
+                    { WeaponHash.Assaultsmg, -1, 9999, null, null },
+                    { WeaponHash.Dbshotgun, -1, 9999, null, null },
+                    { WeaponHash.Assaultshotgun, -1, 9999, null, null },
+                    { WeaponHash.Switchblade, -1, 9999, null, null },
+                    { WeaponHash.Machete, -1, 9999, null, null },
+                    { WeaponHash.Marksmanpistol, -1, 9999, null, null },
+                    { WeaponHash.Machinepistol, -1, 9999, null, null },
+                    { WeaponHash.Knuckle, -1, 9999, null, null },
+                    { WeaponHash.Poolcue, -1, 9999, null, null },
+                    { WeaponHash.Battleaxe, -1, 9999, null, null },
+                    { WeaponHash.Marksmanrifle_mk2, -1, 9999, null, null },
+                    { WeaponHash.Doubleaction, -1, 9999, null, null },
+                    { WeaponHash.Grenade, -1, 9999, null, null },
+                    { WeaponHash.Crowbar, -1, 9999, null, null },
+                    { WeaponHash.Flashlight, -1, 9999, null, null },
+                    { WeaponHash.Smg, -1, 9999, null, null },
+                    { WeaponHash.Molotov, -1, 9999, null, null },
+                    { WeaponHash.Ball, -1, 9999, null, null },
+                    { WeaponHash.Appistol, -1, 9999, null, null },
+                    { WeaponHash.Pumpshotgun_mk2, -1, 9999, null, null },
+                    { WeaponHash.Pumpshotgun, -1, 9999, null, null },
+                    { WeaponHash.Pistol_mk2, -1, 9999, null, null },
+                    { WeaponHash.Pistol, -1, 9999, null, null },
+                    { WeaponHash.Wrench, -1, 9999, null, null },
+                    { WeaponHash.Microsmg, -1, 9999, null, null },
+                    { WeaponHash.Autoshotgun, -1, 9999, null, null },
+                    { WeaponHash.Heavysniper_mk2, -1, 9999, null, null },
+                    { WeaponHash.Heavysniper, -1, 9999, null, null },
+                    { WeaponHash.Combatpdw, -1, 9999, null, null },
+                    { WeaponHash.Vintagepistol, -1, 9999, null, null },
+                    { WeaponHash.Snowball, -1, 9999, null, null },
+                    { WeaponHash.Compactlauncher, -1, 9999, null, null },
+                    { WeaponHash.Fireextinguisher, -1, 9999, null, null },
+                    { WeaponHash.Sniperrifle, -1, 9999, null, null },
+                    { WeaponHash.Dagger, -1, 9999, null, null },
+                    { WeaponHash.Stickybomb, -1, 9999, null, null },
+                    { WeaponHash.Smg_mk2, -1, 9999, null, null },
+                    { WeaponHash.Stungun, -1, 9999, null, null },
+                    { WeaponHash.Carbinerifle, -1, 9999, null, null },
+                    { WeaponHash.Combatmg_mk2, -1, 9999, null, null },
+                    { WeaponHash.Combatmg, -1, 9999, null, null },
+                    { WeaponHash.Firework, -1, 9999, null, null },
+                    { WeaponHash.Bullpuprifle, -1, 9999, null, null },
+                    { WeaponHash.Sawnoffshotgun, -1, 9999, null, null },
+                    { WeaponHash.Railgun, -1, 9999, null, null },
+                    { WeaponHash.Petrolcan, -1, 9999, null, null },
+                    { WeaponHash.Hominglauncher, -1, 9999, null, null },
+                    { WeaponHash.Nightstick, -1, 9999, null, null },
+                    { WeaponHash.Gusenberg, -1, 9999, null, null },
+                    { WeaponHash.Combatpistol, -1, 9999, null, null },
+                    { WeaponHash.Hammer, -1, 9999, null, null },
+                    { WeaponHash.Grenadelauncher_smoke, -1, 9999, null, null },
+                    { WeaponHash.Flare, -1, 9999, null, null },
+                    { WeaponHash.Flaregun, -1, 9999, null, null },
+                    { WeaponHash.Golfclub, -1, 9999, null, null },
+                    { WeaponHash.Minigun, -1, 9999, null, null },
+                    { WeaponHash.Heavyshotgun, -1, 9999, null, null },
+                    { WeaponHash.Compactrifle, -1, 9999, null, null }
                 });
+
+            migrationBuilder.InsertData(
+                table: "teams",
+                columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name" },
+                values: new object[] { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" });
 
             migrationBuilder.InsertData(
                 table: "teams",
                 columns: new[] { "id", "blip_color", "color_b", "color_g", "color_r", "index", "lobby", "name", "skin_hash" },
                 values: new object[,]
                 {
+                    { -3, (short)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT", -1920001264 },
                     { -4, (short)1, (short)0, (short)0, (short)150, (short)2, -1, "Terrorist", 275618457 },
                     { -5, (short)4, (short)255, (short)255, (short)255, (short)0, -2, "None", 0 },
-                    { -2, (short)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator", 0 },
-                    { -3, (short)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT", -1920001264 },
                     { -1, (short)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 }
                 });
 

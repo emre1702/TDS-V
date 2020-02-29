@@ -4,7 +4,7 @@ namespace TDS_Server.Dto
 {
     internal class DamageDto
     {
-        public short Damage;
+        public float Damage;
         public float HeadMultiplier;
 
         public DamageDto()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Enum;
 using TDS_Server.Dto;
@@ -12,7 +13,7 @@ namespace TDS_Server.Instance
         public bool DamageDealtThisRound => _allHitters.Count > 0;
 
         #nullable disable warnings
-        private static Dictionary<EWeaponHash, DamageDto> _defaultDamages;
+        private static Dictionary<WeaponHash, DamageDto> _defaultDamages;
         #nullable restore warnings
 
         public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards)
@@ -39,8 +40,8 @@ namespace TDS_Server.Instance
                     w => w.Hash,
                     w => new DamageDto
                     {
-                        Damage = w.DefaultDamage,
-                        HeadMultiplier = w.DefaultHeadMultiplicator
+                        Damage = w.Damage,
+                        HeadMultiplier = w.HeadShotDamageModifier
                     }
                 );
         }

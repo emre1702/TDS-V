@@ -60,6 +60,8 @@ namespace TDS_Server.Manager.Utility
                 connection.Open();
                 connection.ReloadTypes();
 
+                WeaponDatasLoader.LoadData();
+
                 LogsManager.Init();
 
                 BonusBotConnector_Client.Main.Init(dbContext, ErrorLogsManager.LogFromBonusBot);

@@ -206,7 +206,7 @@ namespace TDS_Server.Instance.LobbyInstances
                     break;
 
                 case ERoundStatus.Round:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.RoundStart, true, _nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
                     break;
             }
         }
