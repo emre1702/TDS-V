@@ -13,7 +13,6 @@ namespace TDS_Client.Manager.MapCreator
 
         public static void ShowVehicle(string vehicleName)
         {
-            // Todo: Test this - if it doesn't work, use VehicleHash enum (vehicleName is the key)
             var hash = RAGE.Game.Misc.GetHashKey(vehicleName);
             if (hash == default)
                 return;

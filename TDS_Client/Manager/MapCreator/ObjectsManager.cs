@@ -76,7 +76,6 @@ namespace TDS_Client.Manager.MapCreator
                     return GetObject(objectHash, EMapCreatorPositionType.Object, playerRemoteId, objName);
                 case EMapCreatorPositionType.Vehicle:
                     string vehName = (string)editingTeamIndexOrObjVehName;
-                    // Todo: Check if this works or we need to use the VehicleHash enum instead
                     uint vehHash = Misc.GetHashKey(vehName);
                     return GetObject(vehHash, EMapCreatorPositionType.Vehicle, playerRemoteId, vehName);
             }
