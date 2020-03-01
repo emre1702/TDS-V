@@ -1511,7 +1511,7 @@ namespace TDS_Server_DB.Entity
 
             modelBuilder.Entity<Weapons>().HasData(
                 new Weapons { Hash = WeaponHash.Sniperrifle, Type = EWeaponType.SniperRifle, Damage = 101, HeadShotDamageModifier = 1000 },
-                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Compactlauncher, Type = EWeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Snowball, Type = EWeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Vintagepistol, Type = EWeaponType.Handgun, Damage = 34, HeadShotDamageModifier = 1 },
@@ -1531,7 +1531,7 @@ namespace TDS_Server_DB.Entity
                 new Weapons { Hash = WeaponHash.Smg, Type = EWeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Smg_mk2, Type = EWeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Stickybomb, Type = EWeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Petrolcan, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Petrolcan, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Stungun, Type = EWeaponType.Handgun, Damage = 0, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Heavyshotgun, Type = EWeaponType.Shotgun, Damage = 117, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Minigun, Type = EWeaponType.HeavyWeapon, Damage = 30, HeadShotDamageModifier = 1 },
@@ -1592,15 +1592,19 @@ namespace TDS_Server_DB.Entity
                 new Weapons { Hash = WeaponHash.Dbshotgun, Type = EWeaponType.Shotgun, Damage = 166, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Assaultsmg, Type = EWeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Hatchet, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bottle, Type = EWeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Stone_hatchet, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bottle, Type = EWeaponType.Melee, Damage = 10, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Parachute, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smokegrenade, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Raypistol, Type = EWeaponType.Handgun, Damage = 80, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Raycarbine, Type = EWeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Carbinerifle_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Rayminigun, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
                 new Weapons { Hash = WeaponHash.Bullpuprifle_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 }
+                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Smokegrenade, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.CeramicPistol, Type = EWeaponType.Handgun, Damage = 20, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.NavyRevolver, Type = EWeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.HazardCan, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 }
             );
 
             modelBuilder.Entity<LobbyWeapons>().HasData(
@@ -1687,13 +1691,17 @@ namespace TDS_Server_DB.Entity
                 new LobbyWeapons { Hash = WeaponHash.Hatchet, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Bottle, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Parachute, Lobby = -1, Ammo = 9999 },
-                new LobbyWeapons { Hash = WeaponHash.Smokegrenade, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Raypistol, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Raycarbine, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Carbinerifle_mk2, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Rayminigun, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Bullpuprifle_mk2, Lobby = -1, Ammo = 9999 },
-                new LobbyWeapons { Hash = WeaponHash.Specialcarbine_mk2, Lobby = -1, Ammo = 9999 }
+                new LobbyWeapons { Hash = WeaponHash.Specialcarbine_mk2, Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.Smokegrenade, Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.CeramicPistol, Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.NavyRevolver, Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.HazardCan, Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.Stone_hatchet, Lobby = -1, Ammo = 9999 }
             );
 
             modelBuilder.Entity<Maps>().HasData(
