@@ -32,6 +32,7 @@ namespace TDS_Client.Manager.Event
             Misc.SetWind(0);
             Streaming.RequestAnimDict("MP_SUICIDE");
             Audio.SetAudioFlag("LoadMPData", true);
+            Browser.Angular.Main.Init();
 
             // CLEAR_GPS_CUSTOM_ROUTE
             Invoker.Invoke(0xE6DE0561D9232A64);

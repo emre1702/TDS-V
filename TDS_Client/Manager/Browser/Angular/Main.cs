@@ -42,6 +42,7 @@ namespace TDS_Client.Manager.Browser.Angular
                 return;
 
             RAGE.Chat.SafeMode = false;
+            RAGE.Chat.Show(false);
 
             Browser = new HtmlWindow(ClientConstants.AngularMainBrowserPath);
             Browser.MarkAsChat();
