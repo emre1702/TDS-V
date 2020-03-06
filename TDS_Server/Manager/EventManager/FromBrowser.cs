@@ -21,6 +21,7 @@ namespace TDS_Server.Manager.EventManager
     partial class EventsHandler
     {
         public delegate Task<object?> FromBrowserAsyncMethodDelegate(TDSPlayer player, object[] args);
+        public delegate ValueTask<object?> FromBrowserMaybeAsyncMethodDelegate(TDSPlayer player, object[] args);
         public delegate object? FromBrowserMethodDelegate(TDSPlayer player, object[] args);
 
         private static readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
@@ -31,13 +32,17 @@ namespace TDS_Server.Manager.EventManager
             [DToServerEvent.DeleteOfflineMessage] = Userpanel.OfflineMessages.Delete,
             [DToServerEvent.SaveSpecialSettingsChange] = Userpanel.SettingsSpecial.SetData
         };
+        private static readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
+        {
+            
+        };
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {
             [DToServerEvent.BuyMap] = BuyMap,
             [DToServerEvent.MapCreatorSyncData] = MapCreatorSyncData,
             [DToServerEvent.AcceptInvitation] = InvitationManager.AcceptInvitation,
             [DToServerEvent.RejectInvitation] = InvitationManager.RejectInvitation,
-            [DToServerEvent.LoadAllMapsForCustomLobby] = Maps.MapsLoader.GetAllMapsForCustomLobby
+            [DToServerEvent.LoadAllMapsForCustomLobby] = Maps.MapsLoader.GetAllMapsForCustomLobby,
         };
 
         [RemoteEvent(DToServerEvent.FromBrowserEvent)]
@@ -55,6 +60,10 @@ namespace TDS_Server.Manager.EventManager
                 {
                     ret = await _asyncMethods[eventName](player, args.Skip(1).ToArray());
                 } 
+                else if (_asyncMethods.ContainsKey(eventName))
+                {
+                    ret = await _maybeAsyncMethods[eventName](player, args.Skip(1).ToArray());
+                }
                 else if (_methods.ContainsKey(eventName))
                 {
                     ret = _methods[eventName](player, args.Skip(1).ToArray());
