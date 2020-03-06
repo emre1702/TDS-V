@@ -127,42 +127,42 @@ namespace TDS_Server.Manager.EventManager
         #region Damagesys
 
         [RemoteEvent(DToServerEvent.GotHit)]
-        public void OnPlayerGotHitByOtherPlayer(Player client, ushort attackerRemoteId, ulong weaponHash, ulong boneIdx, int damage)
+        public void OnPlayerGotHitByOtherPlayer(Player client, int attackerRemoteId, string weaponHashStr, string boneIdxStr)
         {
             /*if (!ushort.TryParse(attackerRemoteIdStr, out ushort attackerRemoteId))
-                return;
+                return;*/
             if (!Enum.TryParse(weaponHashStr, out WeaponHash weaponHash))
                 return;
-            if (!ulong.TryParse(boneIdxString, out ulong boneIdx))
-                return;*/
+            if (!ulong.TryParse(boneIdxStr, out ulong boneIdx))
+                return;
 
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
             {
-                var attackerClientError = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
-                ErrorLogsManager.Log(string.Format("Player {0} got hit by {1} with {2} damage - but he is not online.", client.Name, attackerClientError?.Name ?? "id " + attackerRemoteId, damage),
+                var attackerClientError = NAPI.Player.GetPlayerFromHandle(new NetHandle((ushort)attackerRemoteId, EntityType.Player));
+                ErrorLogsManager.Log(string.Format("Player {0} got hit by {1} with bone {2} - but he is not online.", client.Name, attackerClientError?.Name ?? "id " + attackerRemoteId, boneIdxStr),
                     Environment.StackTrace, client);
                 return;
             }
 
-            var attackerClient = NAPI.Player.GetPlayerFromHandle(new NetHandle(attackerRemoteId, EntityType.Player));
+            var attackerClient = NAPI.Player.GetPlayerFromHandle(new NetHandle((ushort)attackerRemoteId, EntityType.Player));
             if (attackerClient is null)
                 return;
 
             TDSPlayer attacker = attackerClient.GetChar();
             if (!attacker.LoggedIn)
             {
-                ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but he is not online.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
+                ErrorLogsManager.Log(string.Format("Attacker {0} dealt damage on bone {1} to {2} - but he is not online.", attackerClient.Name, boneIdxStr, client.Name), Environment.StackTrace, attacker);
                 return;
             }
 
             if (!(player.CurrentLobby is FightLobby fightLobby))
             {
-                ErrorLogsManager.Log(string.Format("Attacker {0} dealt {1} damage to {2} - but this player isn't in fightlobby.", attackerClient.Name, damage, client.Name), Environment.StackTrace, attacker);
+                ErrorLogsManager.Log(string.Format("Attacker {0} dealt damage on bone {1} to {2} - but this player isn't in fightlobby.", attackerClient.Name, boneIdxStr, client.Name), Environment.StackTrace, attacker);
                 return;
             }
 
-            fightLobby.DamagedPlayer(player, attacker, (WeaponHash)weaponHash, boneIdx, damage);
+            fightLobby.DamagedPlayer(player, attacker, (WeaponHash)weaponHash, boneIdx);
         }
 
         #endregion Damagesys

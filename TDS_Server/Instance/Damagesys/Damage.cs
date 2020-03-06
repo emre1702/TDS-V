@@ -92,11 +92,17 @@ namespace TDS_Server.Instance
 			[API.Shared.GetHashKey ( "WEAPON_COMBATMG_MK2" )] = 28
         };*/
 
+        private static readonly HashSet<ulong> _headBones = new HashSet<ulong>
+        {
+            12844, 31086
+        };
+
         private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>> _allHitters = new Dictionary<TDSPlayer, Dictionary<TDSPlayer, int>>();
+        
 
 #pragma warning disable IDE0060 // Remove unused parameter
-		public void DamagePlayer(TDSPlayer target, WeaponHash weapon, ulong bone, TDSPlayer? source, int damage)
+		public void DamagePlayer(TDSPlayer target, WeaponHash weapon, ulong bone, TDSPlayer? source)
 #pragma warning restore IDE0060 // Remove unused parameter
 		{
 			if (target.Player is null)
@@ -104,19 +110,23 @@ namespace TDS_Server.Instance
 
 			if (NAPI.Player.IsPlayerDead(target.Player))
                 return;
-            if (source != null)
-            {
-                if (target.CurrentLobby != source.CurrentLobby)
-                    return;
-                if (target.Team == source.Team)
-                    return;
 
-                UpdateLastHitter(target, source, damage);
-                if (source.CurrentRoundStats != null)
-                    source.CurrentRoundStats.Damage += damage;
+            if (source is null)
+                return;
 
-               // NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);  
-            }
+            if (target.CurrentLobby != source.CurrentLobby)
+                return;
+            if (target.Team == source.Team)
+                return;
+
+            bool isHeadShot = _headBones.Contains(bone);
+            int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);
+
+            target.Damage(ref damage);
+
+            UpdateLastHitter(target, source, damage);
+            if (source.CurrentRoundStats != null)
+                source.CurrentRoundStats.Damage += damage;
         }
 
         public void UpdateLastHitter(TDSPlayer target, TDSPlayer? source, int damage)

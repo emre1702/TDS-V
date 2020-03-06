@@ -66,7 +66,8 @@ namespace TDS_Client.Manager.Event
 
             if (sourcePlayer != null)
             {
-                EventsSender.SendIgnoreCooldown(DToServerEvent.GotHit, sourcePlayer.RemoteId, weaponHash, boneIdx, damage);
+                cancel.Cancel = true;
+                EventsSender.SendIgnoreCooldown(DToServerEvent.GotHit, (int)sourcePlayer.RemoteId, weaponHash.ToString(), boneIdx.ToString());
             }
             
         }
