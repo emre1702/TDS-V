@@ -1,4 +1,4 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.PlayerInstance;
@@ -11,8 +11,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {
-            NAPI.Player.SetPlayerHealth(character.Player, LobbyEntity.StartHealth);
-            NAPI.Player.SetPlayerArmor(character.Player, LobbyEntity.StartArmor);
+            character.Health = LobbyEntity.StartHealth;
+            character.Armor = LobbyEntity.StartArmor;
         }
 
         public void OnPlayerDisconnected(TDSPlayer character)

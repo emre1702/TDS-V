@@ -52,7 +52,7 @@ namespace TDS_Server.Instance.GameModes
             {
                 if (character.Lifes == 0)
                     return;
-                int damage = character.Player!.Health + character.Player.Armor;
+                int damage = character.Health + character.Armor;
                 Lobby.DmgSys.UpdateLastHitter(character, _planter, damage);
                 character.Damage(ref damage);
                 if (_planter != null && _planter.CurrentRoundStats != null)

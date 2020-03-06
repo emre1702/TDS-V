@@ -51,31 +51,31 @@ namespace TDS_Server.Instance.PlayerInstance
         {
             if (damage == 0)
                 return;
-            damage = Math.Min(Player!.Armor + Player!.Health, damage);
+            damage = Math.Min(_armor + _health, damage);
 
             int leftdmg = damage;
-            if (Player.Armor > 0)
+            if (_armor > 0)
             {
-                leftdmg -= Player.Armor;
-                Player.Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
+                leftdmg -= _armor;
+                Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
             }
             if (leftdmg > 0)
-                Player.Health -= leftdmg;
+                Health -= leftdmg;
         }
 
         public void AddHPArmor(int healtharmor)
         {
             #region HP
 
-            if (Player!.Health + healtharmor <= 100)
+            if (_health + healtharmor <= 100)
             {
-                Player.Health += healtharmor;
+                Health += healtharmor;
                 healtharmor = 0;
             }
-            else if (Player.Health != 100)
+            else if (_health != 100)
             {
-                healtharmor -= 100 - Player.Health;
-                Player.Health = 100;
+                healtharmor -= 100 - _health;
+                Health = 100;
             }
 
             #endregion HP
@@ -84,7 +84,7 @@ namespace TDS_Server.Instance.PlayerInstance
 
             if (healtharmor > 0)
             {
-                Player.Armor = Player.Armor + healtharmor <= 100 ? Player.Armor + healtharmor : 100;
+                Armor = _armor + healtharmor <= 100 ? _armor + healtharmor : 100;
             }
 
             #endregion Armor
