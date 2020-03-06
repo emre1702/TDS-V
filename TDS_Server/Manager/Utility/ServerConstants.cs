@@ -10,5 +10,6 @@ namespace TDS_Server.Manager.Utility
         public const string SavedMapsPath = _resourcePathPath + "savedmaps/";
         public const string NeedCheckMapsPath = _resourcePathPath + "needcheckmaps/";
         public static uint TargetHash => NAPI.Util.GetHashKey("v_ret_ta_skull");
+        public static float ArenaHeadMultiplicator => 1.7f;
     }
 }

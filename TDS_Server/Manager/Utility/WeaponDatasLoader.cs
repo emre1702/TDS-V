@@ -114,16 +114,18 @@ namespace TDS_Server.Manager.Utility
             var dataDict = dbContext.Weapons.AsNoTracking().ToDictionary(w => w.Hash, w => w.Damage);
             #endif
 
-            foreach (var lobbyWeapon in dbContext.LobbyWeapons)
+            var arenaWeapons = dbContext.LobbyWeapons.Where(w => w.Lobby == -1).ToList();
+            foreach (var lobbyWeapon in arenaWeapons)
             {
                 #if reloadArenaWeaponDamages
                 lobbyWeapon.Damage = dataDict[lobbyWeapon.Hash];
                 #endif
 
                 #if reloadArenaWeaponHeadshots
-                lobbyWeapon.HeadMultiplicator = 1.5f;
+                lobbyWeapon.HeadMultiplicator = ServerConstants.ArenaHeadMultiplicator;
                 #endif
             }
+            dbContext.SaveChanges();
         }
 
         private static WeaponHash? GetWeaponHash(WeaponData data)
