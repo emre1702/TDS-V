@@ -18,7 +18,7 @@ namespace TDS_Server.Dto
             set
             {
                 _kills = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetKillsForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetKillsForRoundStats, value);
             }
         }
 
@@ -28,7 +28,7 @@ namespace TDS_Server.Dto
             set
             {
                 _assists = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetAssistsForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetAssistsForRoundStats, value);
             }
         }
 
@@ -38,7 +38,7 @@ namespace TDS_Server.Dto
             set
             {
                 _damage = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToBrowserEvent.SetDamageForRoundStats, value);
+                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetDamageForRoundStats, value);
             }
         }
 
