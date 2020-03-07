@@ -1,0 +1,75 @@
+.container {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 50%;
+    height: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    #top {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        height: 90%;
+        overflow: auto;
+
+        #selected-weapons {
+            width: calc(75% - 10px);
+            height: 100%;
+            overflow: auto;
+
+            .mat-table {
+                width: 100%;
+                height: auto;
+                background: transparent;
+
+                .mat-row {
+
+                    .mat-cell {
+                        text-align: center;
+                    }
+                }
+
+                .mat-header-row {
+
+                    .mat-header-cell {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+        #available-weapons {
+            width: calc(25% - 10px);
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+
+            .scrollbar-container {
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+            }
+        }
+    }
+
+    #bottom {
+        height: calc(10% - 10px);
+        padding: 20px;
+        display: flex;
+        flex-direction: row-reverse;
+
+        #back-button {
+            align-self: flex-end;
+            position: relative;
+            margin-top: 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            width: 10vw;
+            height: 5vh;
+            font-size: 1.2em;
+        }
+    }
+}

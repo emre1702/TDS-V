@@ -1,5 +1,6 @@
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from './custom-lobby-team-data';
+import { CustomLobbyWeaponData } from './custom-lobby-weapon-data';
 
 export class CustomLobbyData {
     /**  LobbyId? */
@@ -45,4 +46,6 @@ export class CustomLobbyData {
     [17]: CustomLobbyTeamData[];
     /** Maps */
     [18]: number[];
+    /** Weapons */
+    [19]: CustomLobbyWeaponData[];
 }

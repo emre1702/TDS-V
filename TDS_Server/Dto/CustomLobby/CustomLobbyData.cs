@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TDS_Common.Enum;
 
-namespace TDS_Server.Dto
+namespace TDS_Server.Dto.CustomLobby
 {
     #nullable disable
     public class CustomLobbyData
@@ -45,6 +45,8 @@ namespace TDS_Server.Dto
         public List<CustomLobbyTeamData> Teams { get; set; }
         [JsonProperty("18")]
         public List<int> Maps { get; set; }
+        [JsonProperty("19")]
+        public List<CustomLobbyWeaponData> Weapons { get; set; }
     }
     #nullable restore
 }

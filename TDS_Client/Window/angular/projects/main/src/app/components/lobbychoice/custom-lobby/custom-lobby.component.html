@@ -1,5 +1,5 @@
 <div class="container mat-elevation-z8 mat-app-background settings-table-container" [@settingsShowHideAnimation]
-*ngIf="!inTeamsMenu && !inWeaponsMenu && !inMapsMenu">
+*ngIf="inMenu == customLobbyMenuType.Main && !loadingData">
   <div class="settings-expansion-panel-container">
     <mat-expansion-panel *ngFor="let panel of settingPanel">
       <mat-expansion-panel-header>
@@ -89,22 +89,32 @@
 </div>
 
 <app-custom-lobby-teams-menu
-*ngIf="inTeamsMenu"
+*ngIf="inMenu == customLobbyMenuType.Teams"
 [@settingsShowHideAnimation]
 [teams]="getSelectedLobbyTeams()"
 [creating]="creating"
-(backClicked)="goBackToMainSettingsFromLobbyTeams($event)">
+(backClicked)="goBackToMainSettings($event)">
 </app-custom-lobby-teams-menu>
 
 <app-custom-lobby-maps-menu
-*ngIf="inMapsMenu"
+*ngIf="inMenu == customLobbyMenuType.Maps"
 [@settingsShowHideAnimation]
 [selectedMapsInput]="getSelectedLobbyMaps()"
 [creating]="creating"
-(backClicked)="goBackToMainSettingsFromLobbyMaps($event)">
+(backClicked)="goBackToMainSettings($event)">
 </app-custom-lobby-maps-menu>
 
-<div id="main-container" class="container" [@lobbyShowHideAnimation] *ngIf="!inMapsMenu">
+<app-custom-lobby-weapons-menu
+*ngIf="inMenu == customLobbyMenuType.Weapons"
+[@settingsShowHideAnimation]
+[creating]="creating"
+[selectedWeapons]="getSelectedLobbyWeapons()"
+[allWeapons]="createLobbyDatas != undefined ? createLobbyDatas[0] : []"
+(backClicked)="goBackToMainSettings($event)">
+</app-custom-lobby-weapons-menu>
+
+<div id="main-container" class="container" [@lobbyShowHideAnimation]
+*ngIf="inMenu == customLobbyMenuType.Main && !loadingData">
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">
     <mat-icon>add_to_photos</mat-icon>
   </div>

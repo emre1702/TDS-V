@@ -206,6 +206,19 @@ export interface Language {
     AFKKickShowWarningLastSecondsSettingInfo: string;
     ShowFloatingDamageInfoDurationMs: string;
     ShowFloatingDamageInfoDurationMsSettingInfo: string;
+    Weapons: string;
+    Ammo: string;
+    HeadMultiplicator: string;
+    Melee: string;
+    Handguns: string;
+    SubmachineGuns: string;
+    Shotguns: string;
+    AssaultRifles: string;
+    LightMachineGuns: string;
+    SniperRifles: string;
+    HeavyWeapons: string;
+    Throwables: string;
+    Miscellaneous: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -1,10 +1,15 @@
-export interface CustomLobbyWeaponData {
-    /** WeaponId */
-    [0]: number;
+import { WeaponHash } from '../enums/weapon-hash.enum';
 
-    /** WeaponName */
-    [1]: string;
+export interface CustomLobbyWeaponData {
+    /** WeaponHash */
+    [0]: WeaponHash;
 
     /** Ammo */
+    [1]: number;
+
+    /** Damage */
     [2]: number;
+
+    /** HeadshotMultiplicator */
+    [3]: number;
 }

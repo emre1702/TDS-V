@@ -236,6 +236,19 @@ The user interface is always being worked on, so don't be surprised if you disco
     AFKKickShowWarningLastSecondsSettingInfo = "Warns you in the last X seconds if you are AFK before kicking you out of the lobby.";
     ShowFloatingDamageInfoDurationMs = "Floating damage info duration (ms)";
     ShowFloatingDamageInfoDurationMsSettingInfo = "The duration in milliseconds for a floating damage info (damage info on hit).";
+    Weapons = "Weapons";
+    Ammo = "Ammo";
+    HeadMultiplicator = "Head multiplicator";
+    Melee = "Melee";
+    Handguns = "Handguns";
+    SubmachineGuns = "Submachine guns";
+    Shotguns = "Shotguns";
+    AssaultRifles = "Assault rifles";
+    LightMachineGuns = "Light machine guns";
+    SniperRifles = "Sniper rifles";
+    HeavyWeapons = "Heavy weapons";
+    Throwables = "Throwables";
+    Miscellaneous = "Miscellaneous";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

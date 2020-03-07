@@ -32,6 +32,7 @@
         public const string LobbyChatMessage = "c23";
         public const string LoadAllMapsForCustomLobby = "c65";
         public const string LoadApplicationDataForAdmin = "c24";
+        public const string LoadDatasForCustomLobby = "c66";
         public const string LoadMapForMapCreator = "c25";
         public const string LoadMapNamesToLoadForMapCreator = "c26";
         public const string LoadUserpanelData = "c27";

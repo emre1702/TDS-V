@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Dto
+namespace TDS_Server.Dto.CustomLobby
 {
     #nullable disable
     public class CustomLobbyTeamData

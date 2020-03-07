@@ -14,6 +14,12 @@ import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
 import { LobbySetting } from '../enums/lobby-setting.enum';
 import { Constants } from '../../../constants';
+import { CustomLobbyMenuType } from '../enums/custom-lobby-menu-type.enum';
+import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-creation';
+import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
+import { WeaponHash } from '../enums/weapon-hash.enum';
+import { isNumber } from 'util';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -105,21 +111,21 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.button, dataSettingIndex: 17 /*"Teams"*/, defaultValue: [this.spectatorTeam, this.team1, this.team2],
                     formControl: new FormControl([this.spectatorTeam, this.team1, this.team2]),
-                    action: () => { this.inTeamsMenu = true; this.changeDetector.detectChanges(); }
+                    action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Teams); }
                 }
             ]
         },
 
         /* "Weapons" */
-        /*{
-          title: "Weapons", rows: [
-            {
-              type: SettingType.button, dataSettingIndex: 19, defaultValue: [],
-              formControl: new FormControl([]),
-              action: () => { this.inWeaponsMenu = true; this.changeDetector.detectChanges(); }
-            }
-          ]
-        }, */
+        {
+            title: "Weapons", rows: [
+                {
+                    type: SettingType.button, dataSettingIndex: 19, defaultValue: null,
+                    formControl: new FormControl(null),
+                    action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Weapons); }
+                }
+            ]
+        },
 
         {
             title: "Map", rows: [
@@ -131,7 +137,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.button, dataSettingIndex: 18, defaultValue: [-1],
                     formControl: new FormControl([-1]),
-                    action: () => { this.inMapsMenu = true; this.changeDetector.detectChanges(); }
+                    action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Maps); }
                 }
             ]
         },
@@ -174,11 +180,12 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     MathFloor = Math.floor;
 
     creating = true;
-    inTeamsMenu = false;
-    inWeaponsMenu = false;
-    inMapsMenu = false;
+    inMenu: CustomLobbyMenuType = CustomLobbyMenuType.Main;
+    customLobbyMenuType = CustomLobbyMenuType;
+    loadingData = false;
 
     lobbyDatas: CustomLobbyData[] = [];
+    createLobbyDatas: DataForCustomLobbyCreation;
 
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
         public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
@@ -291,21 +298,60 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         }
     }
 
+    private changeToOtherMenu(menuType: CustomLobbyMenuType) {
+        if (this.loadingData) {
+            return;
+        }
+        if (this.creating) {
+            if (this.createLobbyDatas == undefined) {
+                this.loadDatasForCustomLobby(menuType);
+            } else {
+                this.inMenu = menuType;
+                this.loadingData = false;
+            }
+        }
+        this.changeDetector.detectChanges();
+    }
+
+    private loadDatasForCustomLobby(menuType: CustomLobbyMenuType) {
+        this.loadingData = true;
+        this.changeDetector.detectChanges();
+
+        this.rageConnector.callCallbackServer(DToServerEvent.LoadDatasForCustomLobby, [], (json: string) => {
+            this.createLobbyDatas = JSON.parse(json);
+
+            if (menuType == CustomLobbyMenuType.Weapons) {
+                this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
+            }
+
+            this.inMenu = menuType;
+            this.loadingData = false;
+            this.changeDetector.detectChanges();
+        });
+    }
+
     goBack() {
         this.settings.InUserLobbiesMenu = false;
         this.rageConnector.call(DToClientEvent.LeftCustomLobbiesMenu);
         this.changeDetector.detectChanges();
     }
 
-    goBackToMainSettingsFromLobbyTeams(event: CustomLobbyTeamData[]) {
-        this.inTeamsMenu = false;
-        this.setSelectedLobbyTeams(event);
-        this.changeDetector.detectChanges();
-    }
+    goBackToMainSettings(event: CustomLobbyTeamData[] | number[] | CustomLobbyWeaponData[]) {
+        if (this.creating) {
+            switch (this.inMenu) {
+                case CustomLobbyMenuType.Weapons:
+                    this.setSelectedLobbyWeapons(event as CustomLobbyWeaponData[]);
+                    break;
+                case CustomLobbyMenuType.Maps:
+                    this.setSelectedLobbyMaps(event as number[]);
+                    break;
+                case CustomLobbyMenuType.Teams:
+                    this.setSelectedLobbyTeams(event as CustomLobbyTeamData[]);
+                    break;
+            }
+        }
 
-    goBackToMainSettingsFromLobbyMaps(event: number[]) {
-        this.inMapsMenu = false;
-        this.setSelectedLobbyMaps(event);
+        this.inMenu = CustomLobbyMenuType.Main;
         this.changeDetector.detectChanges();
     }
 
@@ -352,10 +398,23 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             .find(p => p.dataSettingIndex === 18 /*"Map"*/).formControl.value;
     }
 
+    getSelectedLobbyWeapons() {
+        return this.settingPanel
+            .find(p => p.title === "Weapons").rows
+            .find(p => p.dataSettingIndex === 19 /*"Weapons"*/).formControl.value;
+    }
+
     setSelectedLobbyMaps(maps: number[]) {
         this.settingPanel
             .find(p => p.title === "Map").rows
             .find(p => p.dataSettingIndex === 18 /*"Map"*/).formControl.setValue(maps);
+        this.changeDetector.detectChanges();
+    }
+
+    setSelectedLobbyWeapons(weapons: CustomLobbyWeaponData[]) {
+        this.settingPanel
+            .find(p => p.title === "Weapons").rows
+            .find(p => p.dataSettingIndex === 19 /*"Weapons"*/).formControl.setValue(weapons);
         this.changeDetector.detectChanges();
     }
 }

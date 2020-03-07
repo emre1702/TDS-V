@@ -3,7 +3,7 @@ using System.Linq;
 using TDS_Common.Default;
 using TDS_Common.Enum;
 using TDS_Common.Manager.Utility;
-using TDS_Server.Dto;
+using TDS_Server.Dto.CustomLobby;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
@@ -111,7 +111,15 @@ namespace TDS_Server.Manager.Sync
                     SkinHash = t.SkinHash
                 }).ToList(),
 
-                Maps = lobby.LobbyEntity.LobbyMaps.Select(m => m.MapId).ToList()
+                Maps = lobby.LobbyEntity.LobbyMaps.Select(m => m.MapId).ToList(),
+                Weapons = lobby.LobbyEntity.LobbyWeapons.Select(w => new CustomLobbyWeaponData 
+                { 
+                    WeaponHash = w.Hash,
+                    Ammo = w.Ammo,
+                    Damage = w.Damage,
+                    HeadshotMultiplicator = w.HeadMultiplicator
+                }).ToList()
+                
             };
         }
 

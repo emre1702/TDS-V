@@ -10,6 +10,7 @@ export enum DToServerEvent {
     LeftSupportRequestsList = "c22",
     LoadAllMapsForCustomLobby = "c65",
     LoadApplicationDataForAdmin = "c24",
+    LoadDatasForCustomLobby = "c66",
     LoadMapNamesToLoadForMapCreator = "c26",
     LoadMapForMapCreator = "c25",
     LoadUserpanelData = "c27",

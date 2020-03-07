@@ -34,7 +34,7 @@ namespace TDS_Server.Manager.EventManager
         };
         private static readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
         {
-            
+            [DToServerEvent.LoadDatasForCustomLobby] = LobbyManager.LoadDatas
         };
         private static readonly Dictionary<string, FromBrowserMethodDelegate> _methods = new Dictionary<string, FromBrowserMethodDelegate>
         {

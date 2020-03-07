@@ -17,5 +17,6 @@ export enum LobbySetting {
     MapLimitTime,
     MapLimitType,
     Teams,
-    Maps
+    Maps,
+    Weapons
 }

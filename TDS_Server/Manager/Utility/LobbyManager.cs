@@ -19,6 +19,7 @@ using TDS_Server_DB.Entity.LobbyEntities;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Enums;
 using EMapType = TDS_Common.Enum.EMapType;
+using TDS_Server.Dto.CustomLobby;
 
 namespace TDS_Server.Manager.Utility
 {
@@ -39,6 +40,8 @@ namespace TDS_Server.Manager.Utility
         private static Arena? _arena;
         private static MapCreateLobby? _mapCreateLobby;
         private static GangLobby? _gangLobby;
+
+        private static string? _customLobbyDatas;
 
 
         public static async Task LoadAllLobbies(TDSDbContext dbcontext)
@@ -171,7 +174,13 @@ namespace TDS_Server.Manager.Utility
                         MapLimitType = data.MapLimitType
                     },
                     LobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet(),
-                    LobbyWeapons = GetAllPossibleLobbyWeapons(EMapType.Normal),
+                    LobbyWeapons = data.Weapons.Select(w => new LobbyWeapons 
+                    { 
+                        Hash = w.WeaponHash,
+                        Ammo = w.Ammo,
+                        Damage = w.Damage,
+                        HeadMultiplicator = w.HeadshotMultiplicator
+                    }).ToHashSet(),      // GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
                     SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
                     StartArmor = data.StartArmor,
@@ -208,6 +217,35 @@ namespace TDS_Server.Manager.Utility
             {
                 player.Player!.TriggerEvent(DToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR);
             }
+        }
+
+        public static async ValueTask<object?> LoadDatas(TDSPlayer player, object[] args)
+        {
+            if (_customLobbyDatas is null)
+            {
+                using var dbContext = new TDSDbContext();
+                var model = new DataForCustomLobbyCreation 
+                {
+                    WeaponDatas = await dbContext.Weapons.Select(w => new CustomLobbyWeaponData
+                    {
+                        WeaponHash = w.Hash,
+                        Ammo = 9999,
+                        Damage = w.Damage,
+                        HeadshotMultiplicator = w.HeadShotDamageModifier
+                    }).ToListAsync(),
+
+                    ArenaWeaponDatas = Arena.LobbyEntity.LobbyWeapons.Select(w => new CustomLobbyWeaponData
+                    {
+                        WeaponHash = w.Hash,
+                        Ammo = w.Ammo,
+                        Damage = w.Damage,
+                        HeadshotMultiplicator = w.HeadMultiplicator
+                    }).ToList()
+                };
+                _customLobbyDatas = Serializer.ToBrowser(model);
+            }
+
+            return _customLobbyDatas;
         }
 
         private static bool IsCustomLobbyNameAllowed(string name)

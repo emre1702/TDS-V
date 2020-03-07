@@ -84,6 +84,7 @@ import { HudComponent } from './components/hud/hud.component';
 import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-maps-menu/custom-lobby-maps-menu.component';
 import { ChatComponent } from './components/hud/chat/chat.component';
 import { MentionModule } from 'angular-mentions';
+import { CustomLobbyWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-weapons-menu/custom-lobby-weapons-menu.component';
 
 @NgModule({
   declarations: [
@@ -130,7 +131,8 @@ import { MentionModule } from 'angular-mentions';
     RoundStatsComponent,
     HudComponent,
     CustomLobbyMapsMenuComponent,
-    ChatComponent
+    ChatComponent,
+    CustomLobbyWeaponsMenuComponent
   ],
   imports: [
     ReactiveFormsModule,
