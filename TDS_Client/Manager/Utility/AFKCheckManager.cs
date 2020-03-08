@@ -84,7 +84,11 @@ namespace TDS_Client.Manager.Utility
 
         private static bool CanBeAFK()
         {
-            return Round.InFight && Settings.PlayerSettings.CheckAFK && Player.IsPlayerPlaying();
+            return Round.InFight 
+                && Settings.PlayerSettings.CheckAFK 
+                && Player.IsPlayerPlaying() 
+                && !Player.IsPlayerClimbing()
+                && !Player.IsPlayerFreeAiming();
         }
 
         private static bool IsStillAFK()
