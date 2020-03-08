@@ -1,9 +1,12 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum.Challenge;
+using TDS_Common.Manager.Utility;
 using TDS_Server.Default;
+using TDS_Server.Dto.Challlenge;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server_DB.Entity;
 using TDS_Server_DB.Entity.Challenge;
@@ -76,6 +79,24 @@ namespace TDS_Server.Manager.Utility
                 (int)challenge.Frequency, 
                 (int)challenge.Challenge,
                 challenge.CurrentAmount);
+        }
+
+        public static string GetChallengesJson(TDSPlayer player)
+        {
+            var result = player.Entity!.Challenges
+                .GroupBy(c => c.Frequency)
+                .Select(g => new ChallengeGroupDto
+                {
+                    Frequency = g.Key,
+                    Challenges = g.Select(c => new ChallengeDto
+                    {
+                        Type = c.Challenge,
+                        Amount = c.Amount,
+                        CurrentAmount = c.CurrentAmount
+                    })
+                });
+
+            return Serializer.ToBrowser(result);
         }
     }
 }

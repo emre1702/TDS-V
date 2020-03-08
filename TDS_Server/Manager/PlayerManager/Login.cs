@@ -93,7 +93,7 @@ namespace TDS_Server.Manager.PlayerManager
                 Serializer.ToClient(SettingsManager.SyncedSettings), 
                 Serializer.ToClient(player.Entity.PlayerSettings), 
                 Serializer.ToBrowser(angularConstantsData),
-                GetChallengesJson(player));
+                ChallengeManager.GetChallengesJson(player));
 
             PlayerDataSync.SetData(player, EPlayerDataKey.MapsBoughtCounter, EPlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
             PlayerDataSync.SetData(player, EPlayerDataKey.Name, EPlayerDataSyncMode.Player, player.Entity.Name);
@@ -113,24 +113,6 @@ namespace TDS_Server.Manager.PlayerManager
             CustomEventManager.SetPlayerLoggedIn(player);
 
             LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
-        }
-
-        private static string GetChallengesJson(TDSPlayer player)
-        {
-            var result = player.Entity!.Challenges
-                .GroupBy(c => c.Frequency)
-                .Select(g => new ChallengeGroupDto 
-                {
-                    Frequency = g.Key,
-                    Challenges = g.Select(c => new ChallengeDto
-                    {
-                        Type = c.Challenge,
-                        Amount = c.Amount,
-                        CurrentAmount = c.CurrentAmount
-                    })
-                });
-
-            return Serializer.ToBrowser(result);
         }
     }
 }
