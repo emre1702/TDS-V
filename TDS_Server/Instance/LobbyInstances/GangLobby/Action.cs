@@ -63,7 +63,7 @@ namespace TDS_Server.Instance.LobbyInstances
 
             var lobby = new Lobbies
             {
-                AmountLifes = 1,
+                FightSettings = new LobbyFightSettings(),
                 LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
                 LobbyMapSettings = new LobbyMapSettings
                 {

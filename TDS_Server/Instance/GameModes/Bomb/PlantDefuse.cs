@@ -99,7 +99,7 @@ namespace TDS_Server.Instance.GameModes
 
             _terroristTeam.FuncIterate((targetcharacter, team) =>
             {
-                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.LobbyEntity.StartArmor + Lobby.LobbyEntity.StartHealth);
+                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.LobbyEntity.FightSettings.StartArmor + Lobby.LobbyEntity.FightSettings.StartHealth);
                 targetcharacter.Player!.Kill();
             });
             player.Player.StopAnimation();

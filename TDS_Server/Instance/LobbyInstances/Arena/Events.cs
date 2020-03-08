@@ -34,7 +34,7 @@ namespace TDS_Server.Instance.LobbyInstances
                     DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
                         RespawnPlayer(character);
-                    }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
+                    }, (uint)LobbyEntity.FightSettings.SpawnAgainAfterDeathMs);
                 }
             }
 

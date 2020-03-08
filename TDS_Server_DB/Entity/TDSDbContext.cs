@@ -81,6 +81,7 @@ namespace TDS_Server_DB.Entity
         public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LobbyKillingspreeRewards> KillingspreeRewards { get; set; }
+        public virtual DbSet<LobbyFightSettings> LobbyFightSettings { get; set; }
         public virtual DbSet<LobbyMaps> LobbyMaps { get; set; }
         public virtual DbSet<LobbyRewards> LobbyRewards { get; set; }
         public virtual DbSet<LobbyRoundSettings> LobbyRoundSettings { get; set; }
@@ -473,16 +474,26 @@ namespace TDS_Server_DB.Entity
 
                 entity.Property(e => e.Password).HasMaxLength(100);
 
-                entity.Property(e => e.SpawnAgainAfterDeathMs).HasDefaultValueSql("400");
-
-                entity.Property(e => e.StartArmor).HasDefaultValueSql("100");
-
-                entity.Property(e => e.StartHealth).HasDefaultValueSql("100");
-
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Lobbies)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<LobbyFightSettings>(entity =>
+            {
+                entity.HasKey(e => e.LobbyId);
+
+                entity.Property(e => e.LobbyId).ValueGeneratedNever();
+
+                entity.Property(e => e.SpawnAgainAfterDeathMs).HasDefaultValue(400);
+                entity.Property(e => e.StartArmor).HasDefaultValue(100);
+                entity.Property(e => e.StartHealth).HasDefaultValue(100);
+
+                entity.HasOne(d => d.Lobby)
+                   .WithOne(p => p.FightSettings)
+                   .HasForeignKey<LobbyFightSettings>(d => d.LobbyId)
+                   .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LobbyMaps>(entity =>
@@ -1240,12 +1251,12 @@ namespace TDS_Server_DB.Entity
             );
 
             var seedLobbies = new List<Lobbies> {
-                new Lobbies { Id = -4, OwnerId = -1, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true, SpawnAgainAfterDeathMs = 0 },
-                new Lobbies { Id = -1, OwnerId = -1, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
-                new Lobbies { Id = -2, OwnerId = -1, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 },
+                new Lobbies { Id = -4, OwnerId = -1, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
+                new Lobbies { Id = -1, OwnerId = -1, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
+                new Lobbies { Id = -2, OwnerId = -1, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
    
                 // only for map-creator ban
-                new Lobbies { Id = -3, OwnerId = -1, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true, AmountLifes = 1, SpawnAgainAfterDeathMs = 400 }
+                new Lobbies { Id = -3, OwnerId = -1, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 
@@ -1498,6 +1509,10 @@ namespace TDS_Server_DB.Entity
             modelBuilder.Entity<LobbyRewards>().HasData(
                 new LobbyRewards { LobbyId = -1, MoneyPerKill = 20, MoneyPerAssist = 10, MoneyPerDamage = 0.1 },
                 new LobbyRewards { LobbyId = -2, MoneyPerKill = 20, MoneyPerAssist = 10, MoneyPerDamage = 0.1 }
+            );
+
+            modelBuilder.Entity<LobbyFightSettings>().HasData(
+                new LobbyFightSettings { LobbyId = -1 }
             );
 
             modelBuilder.Entity<LobbyRoundSettings>().HasData(

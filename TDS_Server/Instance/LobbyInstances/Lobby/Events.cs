@@ -11,8 +11,8 @@ namespace TDS_Server.Instance.LobbyInstances
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {
-            character.Health = LobbyEntity.StartHealth;
-            character.Armor = LobbyEntity.StartArmor;
+            character.Health = LobbyEntity.FightSettings?.StartHealth ?? 100;
+            character.Armor = LobbyEntity.FightSettings?.StartArmor ?? 100;
         }
 
         public void OnPlayerDisconnected(TDSPlayer character)

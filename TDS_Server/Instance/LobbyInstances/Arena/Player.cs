@@ -163,7 +163,7 @@ namespace TDS_Server.Instance.LobbyInstances
             {
                 PlayerCantBeSpectatedAnymore(player);
                 SpectateOtherSameTeam(player);
-            }, (uint)LobbyEntity.SpawnAgainAfterDeathMs);
+            }, (uint)LobbyEntity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
         private void StartRoundForPlayer(TDSPlayer player)
@@ -221,7 +221,7 @@ namespace TDS_Server.Instance.LobbyInstances
         {
             if (player.Team is null || player.Team.AlivePlayers is null)
                 return;
-            player.Lifes = (sbyte)(LobbyEntity.AmountLifes ?? 0);
+            player.Lifes = (sbyte)(LobbyEntity.FightSettings?.AmountLifes ?? 0);
             player.Team.AlivePlayers.Add(player);
             var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
             ++teamamountdata.Amount;

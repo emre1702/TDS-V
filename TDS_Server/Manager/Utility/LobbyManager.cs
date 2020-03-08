@@ -61,6 +61,7 @@ namespace TDS_Server.Manager.Utility
                 .Include(l => l.LobbyMaps)
                 .ThenInclude((LobbyMaps map) => map.Map)
                 .Include(l => l.Owner)
+                .Include(l => l.FightSettings)
                 .ToListAsync();
             foreach (Lobbies lobbysetting in lobbies)
             {
@@ -159,9 +160,15 @@ namespace TDS_Server.Manager.Utility
                 {
                     Name = data.Name,
                     OwnerId = player.Entity?.Id ?? 0,
-                    AmountLifes = data.AmountLifes,
                     IsOfficial = false,
                     IsTemporary = true,
+                    FightSettings = new LobbyFightSettings
+                    {
+                        AmountLifes = data.AmountLifes,
+                        SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
+                        StartArmor = data.StartArmor,
+                        StartHealth = data.StartHealth,
+                    },
                     LobbyRoundSettings = new LobbyRoundSettings
                     { 
                         RoundTime = data.RoundTime, CountdownTime = data.CountdownTime, BombDetonateTimeMs = data.BombDetonateTimeMs,
@@ -182,9 +189,6 @@ namespace TDS_Server.Manager.Utility
                         HeadMultiplicator = w.HeadshotMultiplicator
                     }).ToHashSet(),      // GetAllPossibleLobbyWeapons(EMapType.Normal),
                     Password = data.Password,
-                    SpawnAgainAfterDeathMs = data.SpawnAgainAfterDeathMs,
-                    StartArmor = data.StartArmor,
-                    StartHealth = data.StartHealth,
                     Teams = data.Teams.Select((t, index) => 
                     {
                         var color = CommonUtils.GetColorFromHtmlRgba(t.Color) ?? System.Drawing.Color.FromArgb(255, 255, 255);

@@ -82,16 +82,16 @@ namespace TDS_Server.Manager.Sync
         {
             return new CustomLobbyData
             {
-                AmountLifes = lobby.LobbyEntity.AmountLifes ?? 1,
+                AmountLifes = lobby.LobbyEntity.FightSettings?.AmountLifes ?? 1,
 
                 LobbyId = lobby.LobbyEntity.Id,
                 Name = lobby.LobbyEntity.Name,
                 OwnerName = lobby.OwnerName,
                 Password = lobby.LobbyEntity.Password,
                 ShowRanking = lobby.LobbyEntity.LobbyRoundSettings.ShowRanking,
-                SpawnAgainAfterDeathMs = lobby.LobbyEntity.SpawnAgainAfterDeathMs,
-                StartArmor = lobby.LobbyEntity.StartArmor,
-                StartHealth = lobby.LobbyEntity.StartHealth,
+                SpawnAgainAfterDeathMs = lobby.LobbyEntity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,
+                StartArmor = lobby.LobbyEntity.FightSettings?.StartArmor ?? 100,
+                StartHealth = lobby.LobbyEntity.FightSettings?.StartHealth ?? 100,
 
                 RoundTime = lobby.LobbyEntity.LobbyRoundSettings.RoundTime,
                 MixTeamsAfterRound = lobby.LobbyEntity.LobbyRoundSettings.MixTeamsAfterRound,

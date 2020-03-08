@@ -28,7 +28,7 @@ namespace TDS_Server.Instance.LobbyInstances
         public bool IsOfficial => LobbyEntity.IsOfficial;
         public string CreatorName => LobbyEntity.Owner?.Name ?? "?";
         public string OwnerName => CreatorName;
-        public int StartTotalHP => LobbyEntity.StartArmor + LobbyEntity.StartHealth;
+        public int StartTotalHP => (LobbyEntity.FightSettings?.StartArmor ?? 100) + (LobbyEntity.FightSettings?.StartHealth ?? 100);
 
         public uint Dimension { get; }
         protected Vector3 SpawnPoint { get; }
@@ -67,15 +67,15 @@ namespace TDS_Server.Instance.LobbyInstances
                 IsOfficial: entity.IsOfficial,
                 BombDefuseTimeMs: entity.LobbyRoundSettings?.BombDefuseTimeMs,
                 BombPlantTimeMs: entity.LobbyRoundSettings?.BombPlantTimeMs,
-                SpawnAgainAfterDeathMs: entity.SpawnAgainAfterDeathMs,
+                SpawnAgainAfterDeathMs: entity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,
                 CountdownTime: isGangActionLobby ? 0 : entity.LobbyRoundSettings?.CountdownTime,
                 RoundTime: entity.LobbyRoundSettings?.RoundTime,
                 BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
                 InLobbyWithMaps: this is Arena,
                 MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
                 MapLimitType: entity.LobbyMapSettings?.MapLimitType,
-                StartHealth: entity.StartHealth,
-                StartArmor: entity.StartArmor
+                StartHealth: entity.FightSettings?.StartHealth ?? 100,
+                StartArmor: entity.FightSettings?.StartArmor ?? 100
             );
         }
 
@@ -147,15 +147,15 @@ namespace TDS_Server.Instance.LobbyInstances
                     IsOfficial: LobbyEntity.IsOfficial,
                     BombDefuseTimeMs: LobbyEntity.LobbyRoundSettings?.BombDefuseTimeMs,
                     BombPlantTimeMs: LobbyEntity.LobbyRoundSettings?.BombPlantTimeMs,
-                    SpawnAgainAfterDeathMs: LobbyEntity.SpawnAgainAfterDeathMs,
+                    SpawnAgainAfterDeathMs: LobbyEntity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,
                     CountdownTime: IsGangActionLobby ? 0 : LobbyEntity.LobbyRoundSettings?.CountdownTime,
                     RoundTime: LobbyEntity.LobbyRoundSettings?.RoundTime,
                     BombDetonateTimeMs: LobbyEntity.LobbyRoundSettings?.BombDetonateTimeMs,
                     InLobbyWithMaps: this is Arena,
                     MapLimitTime: LobbyEntity.LobbyMapSettings?.MapLimitTime,
                     MapLimitType: LobbyEntity.LobbyMapSettings?.MapLimitType,
-                    StartHealth: LobbyEntity.StartHealth,
-                    StartArmor: LobbyEntity.StartArmor
+                    StartHealth: LobbyEntity.FightSettings?.StartHealth ?? 100,
+                    StartArmor: LobbyEntity.FightSettings?.StartArmor ?? 100
                 );
             });
 
