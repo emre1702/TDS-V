@@ -128,6 +128,11 @@ namespace TDS_Server.Instance
             if (source.CurrentRoundStats != null)
                 source.CurrentRoundStats.Damage += damage;
 
+            if (source.Entity?.PlayerSettings.FloatingDamageInfo == true)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);
+            }
+
             if (target.Health == 0 && isHeadShot)
             {
                 NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.ExplodeHead, (uint)weapon);

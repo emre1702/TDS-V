@@ -75,7 +75,7 @@ namespace TDS_Client.Manager.Event
         {
             RAGE.Ui.Console.Log(RAGE.Ui.ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type.ToString()}, targetEntity {targetEntity.Type} - {targetEntity is Player}", true);
 
-            FightInfo.HittedOpponent(sourcePlayer, damage);
+            FightInfo.HittedOpponent();
         }
     }
 }

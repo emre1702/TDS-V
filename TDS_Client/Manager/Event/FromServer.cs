@@ -46,7 +46,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.Death, OnDeathMethod);
             Add(DToClientEvent.ExplodeHead, OnExplodeHeadMethod);
             Add(DToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
-            //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
+            Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
             Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
@@ -126,6 +126,16 @@ namespace TDS_Client.Manager.Event
             int type = (int)args[0];
             string json = (string)args[1];
             Browser.Angular.Main.LoadUserpanelData(type, json);
+        }
+
+        private void OnHitOpponentMethod(object[] args)
+        {
+            ushort targetHandle = Convert.ToUInt16(args[0]);
+            int damage = (int)args[1];
+            Player target = ClientUtils.GetPlayerByHandleValue(targetHandle);
+
+            FightInfo.HittedOpponent(target, damage);
+
         }
 
         // Join always means we also left another lobby (except on login)
@@ -377,6 +387,8 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             Browser.Angular.Main.GetSupportRequestData(json);
         }
+
+
 
         private void OnPlayerGotBombMethod(object[] args)
         {

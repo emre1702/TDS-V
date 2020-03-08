@@ -92,11 +92,14 @@ namespace TDS_Client.Manager.Draw
             }
         }
 
-        public static void HittedOpponent(Player hitted, int damage)
+        public static void HittedOpponent()
         {
             if (Settings.PlayerSettings.Hitsound)
                 MainBrowser.PlayHitsound();
+        }
 
+        public static void HittedOpponent(Player hitted, int damage)
+        {
             if (Settings.PlayerSettings.FloatingDamageInfo && hitted != null)
                 new FloatingDamageInfo(hitted, damage);
         }
