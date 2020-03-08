@@ -17,6 +17,8 @@
 
         public const string Death = "s11";
 
+        public const string ExplodeHead = "s86";
+
         public const string GetSupportRequestData = "s12";
         public const string GotoPositionByMapCreator = "s13";
 

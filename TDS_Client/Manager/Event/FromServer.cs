@@ -44,6 +44,7 @@ namespace TDS_Client.Manager.Event
             Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
             Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
             Add(DToClientEvent.Death, OnDeathMethod);
+            Add(DToClientEvent.ExplodeHead, OnExplodeHeadMethod);
             Add(DToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
             //Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
             Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
@@ -363,6 +364,12 @@ namespace TDS_Client.Manager.Event
                 RoundInfo.OnePlayerDied((int)args[1]);
             string killinfoStr = (string)args[2];
             MainBrowser.AddKillMessage(killinfoStr);
+        }
+
+        private void OnExplodeHeadMethod(object[] args)
+        {
+            var weaponHash = Convert.ToUInt32(args[0]);
+            Player.LocalPlayer.ExplodeHead(weaponHash);
         }
 
         private void OnGetSupportRequestDataMethod(object[] args)

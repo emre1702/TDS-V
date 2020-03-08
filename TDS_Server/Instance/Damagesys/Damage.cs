@@ -127,6 +127,11 @@ namespace TDS_Server.Instance
             UpdateLastHitter(target, source, damage);
             if (source.CurrentRoundStats != null)
                 source.CurrentRoundStats.Damage += damage;
+
+            if (target.Health == 0 && isHeadShot)
+            {
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.ExplodeHead, (uint)weapon);
+            }
         }
 
         public void UpdateLastHitter(TDSPlayer target, TDSPlayer? source, int damage)
