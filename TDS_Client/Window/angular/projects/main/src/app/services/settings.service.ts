@@ -48,9 +48,15 @@ export class SettingsService {
     };
 
     public loadLanguage(lang: number) {
+        if (this.LangValue == lang) {
+            return;
+        }
+
         this.LangValue = lang;
         this.Lang = SettingsService.langByLangValue[lang];
         this.LanguageChanged.emit(null);
+
+        this.loadChallenges();
     }
     ////////////////////////////////////////////////////
 
@@ -176,12 +182,16 @@ export class SettingsService {
         this.IsLobbyOwnerChanged.emit(null);
     }
 
-    public loadChallenges(challengesJson: string) {
-        this.ChallengeGroups = JSON.parse(challengesJson);
+    public loadChallenges(challengesJson?: string) {
+        if (challengesJson) {
+            this.ChallengeGroups = JSON.parse(challengesJson);
+        }
 
-        for (const group of this.ChallengeGroups) {
-            for (const challenge of group[1]) {
-                challenge[99] = this.getChallengeInfo(challenge);
+        if (this.ChallengeGroups) {
+            for (const group of this.ChallengeGroups) {
+                for (const challenge of group[1]) {
+                    challenge[99] = this.getChallengeInfo(challenge);
+                }
             }
         }
     }
