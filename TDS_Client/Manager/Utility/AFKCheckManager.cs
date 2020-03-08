@@ -34,7 +34,7 @@ namespace TDS_Client.Manager.Utility
 
         private static void Check()
         {
-            if (!Round.InFight || !Settings.PlayerSettings.CheckAFK)
+            if (!CanBeAFK())
             {
                 StopAFK();
                 return;
@@ -61,9 +61,7 @@ namespace TDS_Client.Manager.Utility
 
         private static void OnTick()
         {
-            Vector3 currentPos = player.LocalPlayer.Position;
-
-            if (!Settings.PlayerSettings.CheckAFK || currentPos.DistanceTo(_afkStartPos) > ClientConstants.NeededDistanceToBeNotAFK)
+            if (!IsStillAFK())
             {
                 StopAFK();
                 return;
@@ -82,6 +80,23 @@ namespace TDS_Client.Manager.Utility
                 _draw.SetText(GetWarning().ToString());
             }
             
+        }
+
+        private static bool CanBeAFK()
+        {
+            return Round.InFight && Settings.PlayerSettings.CheckAFK && Player.IsPlayerPlaying();
+        }
+
+        private static bool IsStillAFK()
+        {
+            if (!CanBeAFK())
+                return false;
+                
+            Vector3 currentPos = player.LocalPlayer.Position;
+            if (currentPos.DistanceTo(_afkStartPos) > ClientConstants.NeededDistanceToBeNotAFK)
+                return false;
+
+            return true;
         }
 
         public static void OnRoundStart(bool isSpectator)
