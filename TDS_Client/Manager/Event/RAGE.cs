@@ -48,8 +48,6 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerWeaponShotMethod(Vector3 targetPos, Player target, CancelEventArgs cancel)
         {
-            RAGE.Game.Player.SetPlayerTargetingMode(0);
-            RAGE.Game.Player.SetPlayerLockon(false);
             AFKCheckManager.OnShoot();
         }
 

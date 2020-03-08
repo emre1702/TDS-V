@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Event;
-using TDS_Client.Manager.Lobby;
 using static RAGE.Events;
 
 namespace TDS_Client.Manager.Utility
@@ -19,6 +17,7 @@ namespace TDS_Client.Manager.Utility
         {
             Tick += OnTickMethod;
 
+            Add(AntiCheatManager.OnTick);
             Add(CustomEventManager.CheckOnTick);
         }
 
