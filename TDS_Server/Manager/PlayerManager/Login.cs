@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
 using TDS_Common.Enum;
+using TDS_Common.Enum.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Challlenge;
@@ -72,7 +73,7 @@ namespace TDS_Server.Manager.PlayerManager
                 player.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
             #region Add weekly challenges and reload
-            if (player.Entity.Challenges.Count == 0)
+            if (!player.Entity.Challenges.Any(c => c.Frequency == EChallengeFrequency.Weekly))
             {
                 await ChallengeManager.AddWeeklyChallenges(player.Entity);
                 await player.ExecuteForDBAsync(async dbContext => 
