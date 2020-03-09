@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Instance.Lobby;
-using TDS_Common.Dto.Map;
-using TDS_Common.Enum;
+using TDS_Shared.Dto.Map;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -10,7 +10,7 @@ namespace TDS_Client.Manager.Utility
     {
         private static MapLimit _mapLimit;
 
-        public static void Start(Position3DDto pos, float radius, EMapLimitType type, int allowedTimeOut = 0)
+        public static void Start(Position3DDto pos, float radius, MapLimitType type, int allowedTimeOut = 0)
         {
             _mapLimit?.Stop();
 

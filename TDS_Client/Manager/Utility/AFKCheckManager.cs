@@ -5,10 +5,10 @@ using System.Drawing;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Event;
 using TDS_Client.Manager.Lobby;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
-using TDS_Common.Instance.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Dto;
+using TDS_Shared.Enum;
+using TDS_Shared.Instance.Utility;
 using player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
@@ -181,7 +181,7 @@ namespace TDS_Client.Manager.Utility
 
         private static bool IsAFKCheckLobby(SyncedLobbySettingsDto settings)
         {
-            return settings?.Type == ELobbyType.Arena && settings?.IsOfficial == true;
+            return settings?.Type == LobbyType.Arena && settings?.IsOfficial == true;
         }
 
         private static string GetWarning()

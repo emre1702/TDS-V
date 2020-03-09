@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 
-namespace TDS_Common.Manager.Utility
+namespace TDS_Shared.Manager.Utility
 {
     public static class CommonUtils
     {

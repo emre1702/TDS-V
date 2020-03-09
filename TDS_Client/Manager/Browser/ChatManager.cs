@@ -2,7 +2,7 @@
 using RAGE.Game;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Browser

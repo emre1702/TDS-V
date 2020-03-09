@@ -10,10 +10,10 @@ using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Userpanel;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Enum;
+using TDS_Shared.Enum.Userpanel;
+using TDS_Shared.Manager.Utility;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
@@ -149,7 +149,7 @@ namespace TDS_Client.Manager.Event
         private void OnGetVehicleMethod(object[] args)
         {
             // convert because if it fails, there will be an error @clientside, not @serverside
-            EFreeroamVehicleType vehType = (EFreeroamVehicleType)(int)args[0];
+            FreeroamVehicleType vehType = (FreeroamVehicleType)(int)args[0];
             EventsSender.Send(DToServerEvent.GetVehicle, (int)vehType);
         }
 
@@ -228,10 +228,10 @@ namespace TDS_Client.Manager.Event
 
         private void OnLoadUserpanelDataBrowserMethod(object[] args)
         {
-            EUserpanelLoadDataType type = (EUserpanelLoadDataType)Convert.ToInt32(args[0]);
+            UserpanelLoadDataType type = (UserpanelLoadDataType)Convert.ToInt32(args[0]);
             switch (type)
             {
-                case EUserpanelLoadDataType.SettingsRest:
+                case UserpanelLoadDataType.SettingsRest:
                     Browser.Angular.Main.LoadUserpanelData((int)type, Serializer.ToBrowser(Settings.PlayerSettings));
                     break;
                 default:
@@ -362,10 +362,10 @@ namespace TDS_Client.Manager.Event
         private void OnLanguageChangeMethod(object[] args)
         {
             var languageID = Convert.ToInt32(args[0]);
-            if (!System.Enum.IsDefined(typeof(ELanguage), languageID))
+            if (!System.Enum.IsDefined(typeof(Language), languageID))
                 return;
 
-            Settings.LanguageEnum = (ELanguage)languageID;
+            Settings.LanguageEnum = (Language)languageID;
         }
 
         private void OnRejectInvitationMethod(object[] args)
@@ -402,7 +402,7 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SaveMapCreatorData, json))
-                Browser.Angular.Main.SaveMapCreatorReturn((int)EMapCreateError.Cooldown);
+                Browser.Angular.Main.SaveMapCreatorReturn((int)MapCreateError.Cooldown);
         }
 
         private void OnSaveSettingsMethod(object[] args)
@@ -423,7 +423,7 @@ namespace TDS_Client.Manager.Event
         {
             string json = (string)args[0];
             if (!EventsSender.Send(DToServerEvent.SendMapCreatorData, json))
-                Browser.Angular.Main.SendMapCreatorReturn((int)EMapCreateError.Cooldown);
+                Browser.Angular.Main.SendMapCreatorReturn((int)MapCreateError.Cooldown);
         }
 
         private void OnSetSupportRequestClosedBrowserMethod(object[] args)
@@ -448,7 +448,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnStartMapCreatorPosPlacingMethod(object[] args)
         {
-            EMapCreatorPositionType type = (EMapCreatorPositionType)(int)args[0];
+            MapCreatorPositionType type = (MapCreatorPositionType)(int)args[0];
             object editingTeamIndexOrObjectName = args[1];
             ObjectPlacing.StartNewPlacing(type, editingTeamIndexOrObjectName);
         }

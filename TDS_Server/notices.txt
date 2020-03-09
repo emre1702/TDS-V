@@ -1,3 +1,0 @@
-﻿- Bomb-maps ONLY for lobbies with 2 teams
-- bomb-place Z 1 less than player-pos
-

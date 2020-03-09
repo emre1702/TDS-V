@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Instance.MapCreator;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.MapCreator
 {
@@ -90,12 +90,12 @@ namespace TDS_Client.Manager.MapCreator
                 IEnumerable<AxisMarker> markerList;
                 switch (obj.Type)
                 {
-                    case EMapCreatorPositionType.Target:
-                    case EMapCreatorPositionType.MapCenter:
-                    case EMapCreatorPositionType.MapLimit:
+                    case MapCreatorPositionType.Target:
+                    case MapCreatorPositionType.MapCenter:
+                    case MapCreatorPositionType.MapLimit:
                         markerList = _rotateMarker.Where(m => m.IsPositionMarker);
                         break;
-                    case EMapCreatorPositionType.TeamSpawn:
+                    case MapCreatorPositionType.TeamSpawn:
                         markerList = _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z);
                         break;
                     default:

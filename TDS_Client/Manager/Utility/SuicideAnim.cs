@@ -1,6 +1,6 @@
 ﻿using PlayerElement = RAGE.Elements.Player;
 using RAGE.Game;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Manager.Utility
 {

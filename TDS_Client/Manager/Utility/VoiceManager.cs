@@ -3,7 +3,7 @@ using RAGE.Game;
 using System.Collections.Generic;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility

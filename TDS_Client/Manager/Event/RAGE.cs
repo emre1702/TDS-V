@@ -5,7 +5,7 @@ using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;

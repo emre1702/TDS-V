@@ -2,7 +2,7 @@
 using RAGE.Elements;
 using RAGE.Game;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Utility
@@ -67,7 +67,7 @@ namespace TDS_Client.Instance.Utility
             }
                 
             SpectatingPed = ped;
-            Cam.AttachCamToPedBone(Handle, ped.Handle, (int) EPedBone.SKEL_Head, 0, -2f, 0.3f, true);
+            Cam.AttachCamToPedBone(Handle, ped.Handle, (int) PedBone.SKEL_Head, 0, -2f, 0.3f, true);
 
             Streaming.SetFocusEntity(ped.Handle);
             FocusAtPos = null;

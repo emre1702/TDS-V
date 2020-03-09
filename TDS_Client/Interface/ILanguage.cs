@@ -1,4 +1,4 @@
-﻿using TDS_Common.Enum;
+﻿using TDS_Shared.Enum;
 
 namespace TDS_Client.Interface
 {
@@ -42,7 +42,7 @@ namespace TDS_Client.Interface
         string FIRING_MODE { get; }
         string YOU_DIED { get; }
 
-        ELanguage Enum { get; }
+        Language Enum { get; }
         
     }
 }

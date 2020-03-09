@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Interface;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Instance.Language
 {
@@ -55,6 +55,6 @@ namespace TDS_Client.Instance.Language
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 
-        public override ELanguage Enum => ELanguage.German;
+        public override TDS_Shared.Enum.Language Enum => TDS_Shared.Enum.Language.German;
     }
 }

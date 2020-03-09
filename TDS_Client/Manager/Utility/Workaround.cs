@@ -1,8 +1,8 @@
 ﻿using RAGE.Elements;
 using System;
 using System.Linq;
-using TDS_Common.Dto;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Dto;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Client.Manager.Utility
 {

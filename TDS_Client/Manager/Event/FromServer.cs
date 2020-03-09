@@ -13,13 +13,13 @@ using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Common.Dto.Map;
-using TDS_Common.Dto.Map.Creator;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Userpanel;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Dto;
+using TDS_Shared.Dto.Map;
+using TDS_Shared.Dto.Map.Creator;
+using TDS_Shared.Enum;
+using TDS_Shared.Enum.Userpanel;
+using TDS_Shared.Manager.Utility;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
 using Control = RAGE.Game.Control;
@@ -519,7 +519,7 @@ namespace TDS_Client.Manager.Event
             string json = (string)args[0];
             var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             Settings.LoadUserSettings(settings);
-            Browser.Angular.Main.LoadUserpanelData((int)EUserpanelLoadDataType.SettingsRest, json);
+            Browser.Angular.Main.LoadUserpanelData((int)UserpanelLoadDataType.SettingsRest, json);
         }
 
         private void OnRemoveCustomLobbyMethod(object[] args)
@@ -617,7 +617,7 @@ namespace TDS_Client.Manager.Event
         {
             var pos = Serializer.FromServer<Position3DDto>(Convert.ToString(args[0]));
             var radius = Convert.ToSingle(args[1]);
-            var type = args.Length >= 3 ? (EMapLimitType)Convert.ToInt32(args[2]) : EMapLimitType.Block;
+            var type = args.Length >= 3 ? (MapLimitType)Convert.ToInt32(args[2]) : MapLimitType.Block;
             var allowedTimeOut = args.Length >= 4 ? Convert.ToInt32(args[3]) : 0;
 
             ForceStayAtPos.Start(pos, radius, type, allowedTimeOut);

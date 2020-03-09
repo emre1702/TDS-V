@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+      <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\TDS_Common\TDS_Shared.csproj" />
+    <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
+    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+  </ItemGroup>
+
+</Project>

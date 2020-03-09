@@ -1,8 +1,8 @@
 ﻿
 using TDS_Client.Interface;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
+using TDS_Shared.Dto;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.Event
 {

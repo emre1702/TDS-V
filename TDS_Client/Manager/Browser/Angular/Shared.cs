@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Client.Manager.Browser.Angular
 {

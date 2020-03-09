@@ -3,16 +3,16 @@ using RAGE;
 using RAGE.Elements;
 using TDS_Client.Enum;
 using TDS_Client.Manager.MapCreator;
-using TDS_Common.Dto.Map.Creator;
-using TDS_Common.Enum;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Dto.Map.Creator;
+using TDS_Shared.Enum;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Client.Instance.MapCreator
 {
     class MapCreatorObject
     {
         public int ID { get; set; }
-        public EMapCreatorPositionType Type { get; } 
+        public MapCreatorPositionType Type { get; } 
         public string ObjOrVehName { get; }
         public int? TeamNumber { get; }
         public bool Deleted { get; private set; }
@@ -50,7 +50,7 @@ namespace TDS_Client.Instance.MapCreator
 
         public static int IdCounter = 0;
 
-        public MapCreatorObject(GameEntityBase entity, EMapCreatorPositionType type, ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
+        public MapCreatorObject(GameEntityBase entity, MapCreatorPositionType type, ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
             Entity = entity;
             Type = type;
@@ -190,25 +190,25 @@ namespace TDS_Client.Instance.MapCreator
         {
             switch (Type)
             {
-                case EMapCreatorPositionType.TeamSpawn:
+                case MapCreatorPositionType.TeamSpawn:
                     return new Blip(Constants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.MapLimit:
+                case MapCreatorPositionType.MapLimit:
                     return new Blip(Constants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.BombPlantPlace:
+                case MapCreatorPositionType.BombPlantPlace:
                     return new Blip(Constants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.MapCenter:
+                case MapCreatorPositionType.MapCenter:
                     return new Blip(Constants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.Target:
+                case MapCreatorPositionType.Target:
                     return new Blip(Constants.TargetBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.Object:
+                case MapCreatorPositionType.Object:
                     return new Blip(Constants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
-                case EMapCreatorPositionType.Vehicle:
+                case MapCreatorPositionType.Vehicle:
                     return new Blip(Constants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
             }
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS_Client.Instance.Draw.Dx;
-using TDS_Common.Instance.Utility;
+using TDS_Shared.Instance.Utility;
 using static RAGE.Events;
 
 namespace TDS_Client.Manager.Utility

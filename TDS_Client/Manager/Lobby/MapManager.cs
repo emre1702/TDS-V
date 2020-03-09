@@ -3,8 +3,8 @@ using RAGE.Elements;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Default;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.Lobby
 {
@@ -67,16 +67,16 @@ namespace TDS_Client.Manager.Lobby
             _lobbyIdAtLastLoad = Settings.LobbyId;
             if (!_mapBuyDataSynced)
             {
-                OnMapsBoughtCounterChanged(Player.LocalPlayer, EPlayerDataKey.MapsBoughtCounter, PlayerDataSync.GetData(EPlayerDataKey.MapsBoughtCounter, 1));
+                OnMapsBoughtCounterChanged(Player.LocalPlayer, PlayerDataKey.MapsBoughtCounter, PlayerDataSync.GetData(PlayerDataKey.MapsBoughtCounter, 1));
             }
             Browser.Angular.Main.OpenMapMenu(mapjson);
         }
 
-        private static void OnMapsBoughtCounterChanged(Player player, EPlayerDataKey key, object data)
+        private static void OnMapsBoughtCounterChanged(Player player, PlayerDataKey key, object data)
         {
             if (player != Player.LocalPlayer)
                 return;
-            if (key != EPlayerDataKey.MapsBoughtCounter)
+            if (key != PlayerDataKey.MapsBoughtCounter)
                 return;
             _mapBuyDataSynced = true;
             Browser.Angular.Main.SyncMapPriceData((int)data);

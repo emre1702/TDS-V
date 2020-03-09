@@ -1,7 +1,7 @@
 ﻿using RAGE;
 using System.Collections.Generic;
 using TDS_Client.Dto;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Manager.Utility
 {

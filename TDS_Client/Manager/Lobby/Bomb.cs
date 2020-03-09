@@ -7,9 +7,9 @@ using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Enum;
-using TDS_Common.Instance.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Enum;
+using TDS_Shared.Instance.Utility;
 
 namespace TDS_Client.Manager.Lobby
 {

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\TDS_Server.Core.csproj" />
+    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

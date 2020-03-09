@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Interface;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Instance.Language
 {
@@ -56,6 +56,6 @@ namespace TDS_Client.Instance.Language
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 
-        public virtual ELanguage Enum => ELanguage.English;
+        public virtual TDS_Shared.Enum.Language Enum => TDS_Shared.Enum.Language.English;
     }
 }

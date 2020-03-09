@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using TDS_Client.Default;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Enum;
-using TDS_Common.Default;
+using TDS_Shared.Enum;
+using TDS_Shared.Default;
 using TDS_Client.Enum;
 using RAGE.Elements;
 using System.Linq;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Manager.Utility;
 using System;
 using System.Diagnostics;
 
@@ -70,7 +70,7 @@ namespace TDS_Client.Manager.Browser.Angular
             RAGE.Chat.Output("#o#__________________________________________");
         }
 
-        public static void LoadLanguage(ELanguage language)
+        public static void LoadLanguage(Language language)
         {
             Execute(DToBrowserEvent.LoadLanguage, (int)language);
         }
@@ -222,13 +222,13 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DToBrowserEvent.ShowCooldown);
         }
 
-        public static void AddPositionToMapCreatorBrowser(int id, EMapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, 
+        public static void AddPositionToMapCreatorBrowser(int id, MapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, 
             object info, ushort ownerRemoteId)
         {
             Execute(DToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);
         }
 
-        public static void RemovePositionInMapCreatorBrowser(int id, EMapCreatorPositionType type)
+        public static void RemovePositionInMapCreatorBrowser(int id, MapCreatorPositionType type)
         {
             Execute(DToBrowserEvent.RemovePositionInMapCreatorBrowser, id, (int)type);
         }

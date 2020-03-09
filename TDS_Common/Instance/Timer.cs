@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Common.Instance.Utility
+namespace TDS_Shared.Instance
 {
     /// <summary>
     /// Timer-class

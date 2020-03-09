@@ -4,8 +4,8 @@ using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Event;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
+using TDS_Shared.Dto;
+using TDS_Shared.Enum;
 using PlayerElement = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Lobby
@@ -37,7 +37,7 @@ namespace TDS_Client.Manager.Lobby
             }
         }
 
-        private static ELobbyType? _inLobbyType;
+        private static LobbyType? _inLobbyType;
         private static bool _isLobbyOwner;
         private static bool _inFightLobby;
 
@@ -50,10 +50,10 @@ namespace TDS_Client.Manager.Lobby
             {
                 switch (_inLobbyType)
                 {
-                    case ELobbyType.MainMenu:
+                    case LobbyType.MainMenu:
                         LeftMainMenu();
                         break;
-                    case ELobbyType.MapCreateLobby:
+                    case LobbyType.MapCreateLobby:
                         LeftMapCreator();
                         break;
                     default:
@@ -65,17 +65,17 @@ namespace TDS_Client.Manager.Lobby
 
             switch (settings.Type)
             {
-                case ELobbyType.MainMenu:
+                case LobbyType.MainMenu:
                     InFightLobby = false;
                     JoinedMainmenu();
                     break;
-                case ELobbyType.MapCreateLobby:
+                case LobbyType.MapCreateLobby:
                     InFightLobby = false;
                     JoinedMapCreator();
                     break;
 
-                case ELobbyType.Arena:
-                case ELobbyType.FightLobby:
+                case LobbyType.Arena:
+                case LobbyType.FightLobby:
                     InFightLobby = true;
                     break;
             }

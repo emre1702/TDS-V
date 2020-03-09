@@ -1,6 +1,6 @@
 ﻿using RAGE.Elements;
-using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Default;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -22,7 +22,7 @@ namespace TDS_Client.Manager.Utility
                 return;
 
             var player = (Player)entity;
-            bool isCrouched = PlayerDataSync.GetData<bool>(player, EPlayerDataKey.Crouched);
+            bool isCrouched = PlayerDataSync.GetData<bool>(player, PlayerDataKey.Crouched);
             if (isCrouched)
             {
                 player.SetMovementClipset(_movementClipSet, _clipSetSwitchTime);
@@ -30,9 +30,9 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
-        private static void PlayerDataSync_OnDataChanged(Player player, EPlayerDataKey key, object data)
+        private static void PlayerDataSync_OnDataChanged(Player player, PlayerDataKey key, object data)
         {
-            if (key != EPlayerDataKey.Crouched)
+            if (key != PlayerDataKey.Crouched)
                 return;
             if ((bool)data)
             {

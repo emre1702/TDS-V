@@ -1,6 +1,6 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 
 namespace TDS_Client.Manager.Utility
 {
@@ -20,9 +20,9 @@ namespace TDS_Client.Manager.Utility
         public static uint TargetHash => Misc.GetHashKey("v_ret_ta_skull");
         public static uint BombPlantPlaceHash => Misc.GetHashKey("prop_mp_placement_med");
         public static uint[] TeamSpawnPedHash = new uint[] { 0x7A05FA59, 0x106D9A99, 0x5E3DA4A4, 0xC0F371B7, 0x45348DBB, 0xE83B93B7, 0x5CDEF405 };
-        public static Dictionary<ESound, string> SoundPaths = new Dictionary<ESound, string>()
+        public static Dictionary<Sound, string> SoundPaths = new Dictionary<Sound, string>()
         {
-            [ESound.Hitsound] = "package://sounds/hit.mp3",
+            [Sound.Hitsound] = "package://sounds/hit.mp3",
         };
         public static int MaxPossibleArmor => 16959;
         public static float NeededDistanceToBeNotAFK = 1f;

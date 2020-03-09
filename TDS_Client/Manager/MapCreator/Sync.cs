@@ -4,10 +4,10 @@ using System.Linq;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto.Map.Creator;
-using TDS_Common.Enum;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Dto.Map.Creator;
+using TDS_Shared.Enum;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Client.Manager.MapCreator
 {

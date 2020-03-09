@@ -8,7 +8,7 @@ using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Utility;
 using TDS_Client.Manager.Lobby;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
@@ -433,7 +433,7 @@ namespace TDS_Client.Manager.Utility
         public static string GetDisplayName(this Player player)
         {
             string name = player.Name;
-            int adminLevel = Convert.ToInt32(PlayerDataSync.GetData(player, TDS_Common.Enum.EPlayerDataKey.AdminLevel));
+            int adminLevel = Convert.ToInt32(PlayerDataSync.GetData(player, TDS_Shared.Enum.PlayerDataKey.AdminLevel));
             if (adminLevel > Constants.ServerTeamSuffixMinAdminLevel)
                 name = Constants.ServerTeamSuffix + name;
             return name;

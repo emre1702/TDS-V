@@ -10,7 +10,7 @@ using TDS_Client.Instance.Draw.Scaleform;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Event;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto;
+using TDS_Shared.Dto;
 using static RAGE.Events;
 
 namespace TDS_Client.Manager.Damage

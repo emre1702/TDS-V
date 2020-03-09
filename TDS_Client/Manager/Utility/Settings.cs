@@ -7,10 +7,10 @@ using TDS_Client.Instance.Language;
 using TDS_Client.Interface;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Event;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Dto;
+using TDS_Shared.Enum;
+using TDS_Shared.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Utility
@@ -20,16 +20,16 @@ namespace TDS_Client.Manager.Utility
         public const int ScreenFadeInTimeAfterSpawn = 2000;
         public const int ScreenFadeOutTimeAfterSpawn = 2000;
 
-        private static readonly Dictionary<ELanguage, ILanguage> _languagesDict = new Dictionary<ELanguage, ILanguage>()
+        private static readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
         {
-            [ELanguage.German] = new German(),
-            [ELanguage.English] = new English()
+            [TDS_Shared.Enum.Language.German] = new German(),
+            [TDS_Shared.Enum.Language.English] = new English()
         };
 
-        private static ELanguage _languageEnum = ELanguage.English;
+        private static Language _languageEnum = TDS_Shared.Enum.Language.English;
         private static bool _languageManuallyChanged;
 
-        public static ELanguage LanguageEnum
+        public static Language LanguageEnum
         {
             get => _languageEnum;
             set
@@ -73,7 +73,7 @@ namespace TDS_Client.Manager.Utility
         public static int RoundEndTime => _syncedServerSettings.RoundEndTime;
         public static int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
         public static bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
-        public static EMapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? EMapLimitType.KillAfterTime;
+        public static MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
         public static int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
         public static int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
 
@@ -181,7 +181,7 @@ namespace TDS_Client.Manager.Utility
             switch (lang)
             {
                 case 2: // German
-                    LanguageEnum = ELanguage.German;
+                    LanguageEnum = TDS_Shared.Enum.Language.German;
                     _languageManuallyChanged = false;
                     break;
             }

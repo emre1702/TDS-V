@@ -6,8 +6,8 @@ using System.Drawing;
 using TDS_Client.Instance.Draw.Dx.Grid;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto;
+using TDS_Shared.Default;
+using TDS_Shared.Dto;
 using static RAGE.Events;
 using Script = RAGE.Events.Script;
 

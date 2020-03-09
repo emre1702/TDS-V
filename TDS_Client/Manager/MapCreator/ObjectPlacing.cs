@@ -7,8 +7,8 @@ using TDS_Client.Instance.Lobby;
 using TDS_Client.Instance.MapCreator;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto.Map;
-using TDS_Common.Enum;
+using TDS_Shared.Dto.Map;
+using TDS_Shared.Enum;
 using Entity = RAGE.Game.Entity;
 using Player = RAGE.Elements.Player;
 
@@ -51,14 +51,14 @@ namespace TDS_Client.Manager.MapCreator
                 Draw.DrawSkeleton(HighlightedObject.Position, HighlightedObject.Size, HighlightedObject.Rotation);
         }
 
-        public static void StartNewPlacing(EMapCreatorPositionType type, object editingTeamIndexOrObjectName)
+        public static void StartNewPlacing(MapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
             MapCreatorObject obj = ObjectsManager.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, Player.LocalPlayer.RemoteId);
             if (obj == null)
                 return;
-            if (type == EMapCreatorPositionType.Object)
+            if (type == MapCreatorPositionType.Object)
                 ObjectPreview.Stop();
-            else if (type == EMapCreatorPositionType.Vehicle)
+            else if (type == MapCreatorPositionType.Vehicle)
                 VehiclePreview.Stop();
 
             if (HoldingObject != null)
@@ -124,7 +124,7 @@ namespace TDS_Client.Manager.MapCreator
                 HighlightedObject = null;
             HoldingObject = null;
 
-            if (objType == EMapCreatorPositionType.MapLimit)
+            if (objType == MapCreatorPositionType.MapLimit)
             {
                 ObjectsManager.RefreshMapLimitDisplay();
             }
@@ -160,11 +160,11 @@ namespace TDS_Client.Manager.MapCreator
 
             switch (obj.Type)
             {
-                case EMapCreatorPositionType.TeamSpawn:
+                case MapCreatorPositionType.TeamSpawn:
                     info = obj.TeamNumber.Value;
                     break;
-                case EMapCreatorPositionType.Object:
-                case EMapCreatorPositionType.Vehicle:
+                case MapCreatorPositionType.Object:
+                case MapCreatorPositionType.Vehicle:
                     info = obj.ObjOrVehName;
                     break;
             }
@@ -174,11 +174,11 @@ namespace TDS_Client.Manager.MapCreator
             Draw.HighlightColor_Edge = new RGBA(255, 255, 255, 35);
             Draw.HighlightColor_Full = new RGBA(255, 255, 255, 35);
 
-            if (obj.Type == EMapCreatorPositionType.MapLimit)
+            if (obj.Type == MapCreatorPositionType.MapLimit)
             {
                 if (ObjectsManager.MapLimitDisplay == null)
                 {
-                    ObjectsManager.MapLimitDisplay = new MapLimit(new List<Position3DDto>(), EMapLimitType.Display, 0, Settings.MapBorderColor);
+                    ObjectsManager.MapLimitDisplay = new MapLimit(new List<Position3DDto>(), MapLimitType.Display, 0, Settings.MapBorderColor);
                     ObjectsManager.MapLimitDisplay.Start();
                 }
                 ObjectsManager.RefreshMapLimitDisplay();

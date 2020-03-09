@@ -4,7 +4,7 @@ using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Enum;
+using TDS_Shared.Enum;
 using Script = RAGE.Events.Script;
 
 namespace TDS_Client.Manager.Event

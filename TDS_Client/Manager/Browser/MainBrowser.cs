@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Manager.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Manager.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Browser

@@ -8,10 +8,10 @@ using System.Linq;
 using TDS_Client.Enum;
 using TDS_Client.Instance.Draw.Dx;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto.Map;
-using TDS_Common.Enum;
-using TDS_Common.Instance.Utility;
+using TDS_Shared.Default;
+using TDS_Shared.Dto.Map;
+using TDS_Shared.Enum;
+using TDS_Shared.Instance.Utility;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Lobby
@@ -33,13 +33,13 @@ namespace TDS_Client.Instance.Lobby
         private bool _started;
         private readonly Color _mapBorderColor;
 
-        private readonly EMapLimitType _type;
-        private readonly Dictionary<EMapLimitType, Action> _mapLimitTypeMethod = new Dictionary<EMapLimitType, Action>{};
-        private readonly HashSet<EMapLimitType> _typeToCheckFaster = new HashSet<EMapLimitType> { EMapLimitType.Block }; 
+        private readonly MapLimitType _type;
+        private readonly Dictionary<MapLimitType, Action> _mapLimitTypeMethod = new Dictionary<MapLimitType, Action>{};
+        private readonly HashSet<MapLimitType> _typeToCheckFaster = new HashSet<MapLimitType> { MapLimitType.Block }; 
 
-        private bool SavePosition => _edges != null && (_type == EMapLimitType.Block || _type == EMapLimitType.TeleportBackAfterTime);
+        private bool SavePosition => _edges != null && (_type == MapLimitType.Block || _type == MapLimitType.TeleportBackAfterTime);
 
-        public MapLimit(List<Position3DDto> edges, EMapLimitType type, int maxOutsideCounter, Color mapBorderColor)
+        public MapLimit(List<Position3DDto> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor)
         {
             _type = type;
             _maxOutsideCounter = maxOutsideCounter;
@@ -47,9 +47,9 @@ namespace TDS_Client.Instance.Lobby
 
             SetEdges(edges);            
 
-            _mapLimitTypeMethod[EMapLimitType.KillAfterTime] = IsOutsideKillAfterTime;
-            _mapLimitTypeMethod[EMapLimitType.TeleportBackAfterTime] = IsOutsideTeleportBackAfterTime;
-            _mapLimitTypeMethod[EMapLimitType.Block] = IsOutsideBlock;
+            _mapLimitTypeMethod[MapLimitType.KillAfterTime] = IsOutsideKillAfterTime;
+            _mapLimitTypeMethod[MapLimitType.TeleportBackAfterTime] = IsOutsideTeleportBackAfterTime;
+            _mapLimitTypeMethod[MapLimitType.Block] = IsOutsideBlock;
         }
 
         public void Start()
@@ -57,7 +57,7 @@ namespace TDS_Client.Instance.Lobby
             if (_started)
                 Stop();
             Reset();
-            if (_type != EMapLimitType.Display)
+            if (_type != MapLimitType.Display)
             {
                 if (_typeToCheckFaster.Contains(_type))
                     _checkTimerFaster = new TDSTimer(CheckFaster, ClientConstants.MapLimitFasterCheckTimeMs, 0);
@@ -102,7 +102,7 @@ namespace TDS_Client.Instance.Lobby
 
         public void SetEdges(List<Position3DDto> edges)
         {
-            if (_type != EMapLimitType.Display)
+            if (_type != MapLimitType.Display)
             {
                 _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
                 _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;

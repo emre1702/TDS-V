@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Manager.Lobby
 {

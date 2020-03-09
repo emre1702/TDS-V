@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Client.Instance.Lobby;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Dto.Map;
+using TDS_Shared.Dto.Map;
 
 namespace TDS_Client.Manager.Lobby
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Browser;
 using TDS_Client.Manager.Utility;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
+using TDS_Shared.Default;
+using TDS_Shared.Dto;
+using TDS_Shared.Enum;
 using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Manager.Lobby
@@ -43,7 +43,7 @@ namespace TDS_Client.Manager.Lobby
         {
             BindManager.Add(EKey.NumPad0, ToggleOrderMode);
             int i = 0;
-            foreach (var orderobj in System.Enum.GetValues(typeof(ETeamOrder)))
+            foreach (var orderobj in System.Enum.GetValues(typeof(TeamOrder)))
             {
                 BindManager.Add(EKey.NumPad1 + i, GiveOrder);
                 ++i;
@@ -108,14 +108,14 @@ namespace TDS_Client.Manager.Lobby
             if (Browser.Angular.Shared.InInput)
                 return;
 
-            ETeamOrder order = GetTeamOrderByKey(key);
+            TeamOrder order = GetTeamOrderByKey(key);
             EventsSender.Send(DToServerEvent.SendTeamOrder, (int)order);
             ToggleOrderMode(EKey.NoName);
         }
 
-        private static ETeamOrder GetTeamOrderByKey(EKey key)
+        private static TeamOrder GetTeamOrderByKey(EKey key)
         {
-            return (ETeamOrder)(key - EKey.NumPad1);
+            return (TeamOrder)(key - EKey.NumPad1);
         }
     }
 }
