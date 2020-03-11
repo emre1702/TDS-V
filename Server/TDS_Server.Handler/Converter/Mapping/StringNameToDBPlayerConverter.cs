@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
 
-namespace TDS_Server.Core.Manager.Mapping.Converter
+namespace TDS_Server.Handler.Converter.Mapping
 {
     class StringNameToDBPlayerConverter : ITypeConverter<string, Task<Players?>>
     {

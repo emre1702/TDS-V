@@ -1,5 +1,5 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.RAGE.Events.Custom;
+using TDS_Server.RAGE.Startup;
 
 namespace TDS_Server.RAGE.Events.RAGE
 {
@@ -8,9 +8,12 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.PlayerConnected)]
         public void PlayerConnected(GTANetworkAPI.Player player)
         {
-            BaseCustomEvents.PlayerConnectedInternal?.Invoke(player);
+            (Program.BaseAPI.Player as PlayerAPI)?.PlayerConnected(player);
 
-            PedHash
+            var modPlayer = (Program.BaseAPI.Player as PlayerAPI)?.GetIPlayer(player);
+            if (modPlayer is null)
+                return;
+            Program.TDSCore.EventsHandler.OnPlayerConnected(modPlayer);
         }
     }
 }

@@ -51,9 +51,9 @@ namespace TDS_Server.Entity.Player
                     TotalStats.Money += money;
             }
             else
-                if (Player is { })
+                if (ModPlayer is { })
                     ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
-                                    Environment.StackTrace, Player);
+                                    Environment.StackTrace, ModPlayer);
                 else
                 ErrorLogsManager.Log($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
                                 Environment.StackTrace);

@@ -19,12 +19,12 @@ namespace TDS_Server.Entity.Player
             {
                 if (disconnected)
                 {
-                    InPrivateChatWith.Player?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
+                    InPrivateChatWith.ModPlayer?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_DISCONNECTED);
                 }
                 else
                 {
-                    Player?.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
-                    InPrivateChatWith.Player?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
+                    ModPlayer?.SendNotification(Language.PRIVATE_CHAT_CLOSED_YOU);
+                    InPrivateChatWith.ModPlayer?.SendNotification(InPrivateChatWith.Language.PRIVATE_CHAT_CLOSED_PARTNER);
                 }
                 InPrivateChatWith.InPrivateChatWith = null;
                 InPrivateChatWith = null;
@@ -33,9 +33,9 @@ namespace TDS_Server.Entity.Player
             {
                 if (!disconnected)
                 {
-                    Player?.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
+                    ModPlayer?.SendNotification(Language.PRIVATE_CHAT_REQUEST_CLOSED_YOU);
                 }
-                SentPrivateChatRequestTo.Player?.SendNotification(
+                SentPrivateChatRequestTo.ModPlayer?.SendNotification(
                     SentPrivateChatRequestTo.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(DisplayName)
                 );
                 SentPrivateChatRequestTo = null;
@@ -46,16 +46,16 @@ namespace TDS_Server.Entity.Player
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (Player is { })
-                NAPI.Chat.SendChatMessageToPlayer(Player, msg);
+            else if (ModPlayer is { })
+                NAPI.Chat.SendChatMessageToPlayer(ModPlayer, msg);
         }
 
         public void SendNotification(string msg, bool flashing = false)
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (Player is { })
-                NAPI.Notification.SendNotificationToPlayer(Player, msg, flashing);
+            else if (ModPlayer is { })
+                NAPI.Notification.SendNotificationToPlayer(ModPlayer, msg, flashing);
         }
     }
 }

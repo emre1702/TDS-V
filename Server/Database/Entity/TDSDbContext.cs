@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Challenge;
-using TDS_Common.Enum.Userpanel;
-using TDS_Server_DB.Entity.Admin;
-using TDS_Server_DB.Entity.Bonusbot;
-using TDS_Server_DB.Entity.Challenge;
-using TDS_Server_DB.Entity.Command;
-using TDS_Server_DB.Entity.GangEntities;
-using TDS_Server_DB.Entity.LobbyEntities;
-using TDS_Server_DB.Entity.Log;
-using TDS_Server_DB.Entity.Player;
-using TDS_Server_DB.Entity.Rest;
-using TDS_Server_DB.Entity.Server;
-using TDS_Server_DB.Entity.Userpanel;
+using System;
+using System.Collections.Generic;
+using TDS_Server.Database.Entity.Admin;
+using TDS_Server.Database.Entity.Bonusbot;
+using TDS_Server.Database.Entity.Challenge;
+using TDS_Server.Database.Entity.Command;
+using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.Log;
+using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Database.Entity.Server;
+using TDS_Server.Database.Entity.Userpanel;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Challenge;
+using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Database.Entity
 {
@@ -43,21 +43,21 @@ namespace TDS_Server.Database.Entity
 
         static TDSDbContext()
         {
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EPlayerRelation>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<PlayerRelation>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<WeaponHash>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EWeaponType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELogType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELobbyType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ELanguage>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<WeaponType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<LogType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<LobbyType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Language>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<VehicleHash>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EFreeroamVehicleType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EMapLimitType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleCategory>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ERuleTarget>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EUserpanelAdminQuestionAnswerType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<ESupportType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EChallengeType>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<EChallengeFrequency>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<FreeroamVehicleType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<MapLimitType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<RuleCategory>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<RuleTarget>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<UserpanelAdminQuestionAnswerType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<SupportType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeFrequency>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -125,7 +125,7 @@ namespace TDS_Server.Database.Entity
                 optionsBuilder
                     .UseLoggerFactory(loggerFactory)
                     .EnableSensitiveDataLogging()
-                    .UseNpgsql(connStr, options => 
+                    .UseNpgsql(connStr, options =>
                         options.EnableRetryOnFailure())
                     .UseSnakeCaseNamingConvention();
             }
@@ -139,21 +139,21 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresExtension("tsm_system_rows");
 
             #region Enum
-            modelBuilder.HasPostgresEnum<EPlayerRelation>();
+            modelBuilder.HasPostgresEnum<PlayerRelation>();
             modelBuilder.HasPostgresEnum<WeaponHash>();
-            modelBuilder.HasPostgresEnum<EWeaponType>();
-            modelBuilder.HasPostgresEnum<ELogType>();
-            modelBuilder.HasPostgresEnum<ELobbyType>();
-            modelBuilder.HasPostgresEnum<ELanguage>();
+            modelBuilder.HasPostgresEnum<WeaponType>();
+            modelBuilder.HasPostgresEnum<LogType>();
+            modelBuilder.HasPostgresEnum<LobbyType>();
+            modelBuilder.HasPostgresEnum<Language>();
             modelBuilder.HasPostgresEnum<VehicleHash>();
-            modelBuilder.HasPostgresEnum<EFreeroamVehicleType>();
-            modelBuilder.HasPostgresEnum<EMapLimitType>();
-            modelBuilder.HasPostgresEnum<ERuleCategory>();
-            modelBuilder.HasPostgresEnum<ERuleTarget>();
-            modelBuilder.HasPostgresEnum<EUserpanelAdminQuestionAnswerType>();
-            modelBuilder.HasPostgresEnum<ESupportType>();
-            modelBuilder.HasPostgresEnum<EChallengeType>();
-            modelBuilder.HasPostgresEnum<EChallengeFrequency>();
+            modelBuilder.HasPostgresEnum<FreeroamVehicleType>();
+            modelBuilder.HasPostgresEnum<MapLimitType>();
+            modelBuilder.HasPostgresEnum<RuleCategory>();
+            modelBuilder.HasPostgresEnum<RuleTarget>();
+            modelBuilder.HasPostgresEnum<UserpanelAdminQuestionAnswerType>();
+            modelBuilder.HasPostgresEnum<SupportType>();
+            modelBuilder.HasPostgresEnum<ChallengeType>();
+            modelBuilder.HasPostgresEnum<ChallengeFrequency>();
             #endregion
 
             #region Tables
@@ -187,7 +187,7 @@ namespace TDS_Server.Database.Entity
                     .IsRequired()
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
-                
+
                 entity.Property(e => e.Text)
                     .IsRequired();
             });
@@ -824,7 +824,7 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.Bloodscreen);
                 entity.Property(e => e.FloatingDamageInfo);
                 entity.Property(e => e.Hitsound);
-                entity.Property(e => e.Language).HasDefaultValue(ELanguage.English);
+                entity.Property(e => e.Language).HasDefaultValue(Language.English);
                 entity.Property(e => e.Voice3D).HasDefaultValue(false);
                 entity.Property(e => e.VoiceAutoVolume).HasDefaultValue(false);
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
@@ -969,7 +969,7 @@ namespace TDS_Server.Database.Entity
 
             modelBuilder.Entity<ServerDailyStats>(entity =>
             {
-                
+
 
                 entity.HasKey(e => e.Date);
 
@@ -1013,7 +1013,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.NametagMaxDistance)
                     .IsRequired()
-                    .HasDefaultValue(25*25);
+                    .HasDefaultValue(25 * 25);
 
                 entity.Property(e => e.MultiplierRankingKills)
                     .IsRequired()
@@ -1169,7 +1169,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.BlipColor)
                     .HasDefaultValue(4);
-                    
+
                 entity.HasOne(d => d.LobbyNavigation)
                     .WithMany(p => p.Teams)
                     .HasForeignKey(d => d.Lobby)
@@ -1197,22 +1197,37 @@ namespace TDS_Server.Database.Entity
 
             #region Seed data
             modelBuilder.Entity<ServerSettings>().HasData(
-                new ServerSettings {  Id = 1, GamemodeName = "tdm",
-                    ErrorToPlayerOnNonExistentCommand = true, ToChatOnNonExistentCommand = false,
-                    DistanceToSpotToPlant = 3, DistanceToSpotToDefuse = 3,
-                    SavePlayerDataCooldownMinutes = 1, SaveLogsCooldownMinutes = 1, SaveSeasonsCooldownMinutes = 1, TeamOrderCooldownMs = 3000,
-                    ArenaNewMapProbabilityPercent = 2, KillingSpreeMaxSecondsUntilNextKill = 18,
-                    MapRatingAmountForCheck = 10, MinMapRatingForNewMaps = 3f, 
-                    GiveMoneyFee = 0.05f, GiveMoneyMinAmount = 100,
-                    NametagMaxDistance = 80, ShowNametagOnlyOnAiming = true,
-                    MultiplierRankingKills = 75f, MultiplierRankingAssists = 25f, MultiplierRankingDamage = 1f
+                new ServerSettings
+                {
+                    Id = 1,
+                    GamemodeName = "tdm",
+                    ErrorToPlayerOnNonExistentCommand = true,
+                    ToChatOnNonExistentCommand = false,
+                    DistanceToSpotToPlant = 3,
+                    DistanceToSpotToDefuse = 3,
+                    SavePlayerDataCooldownMinutes = 1,
+                    SaveLogsCooldownMinutes = 1,
+                    SaveSeasonsCooldownMinutes = 1,
+                    TeamOrderCooldownMs = 3000,
+                    ArenaNewMapProbabilityPercent = 2,
+                    KillingSpreeMaxSecondsUntilNextKill = 18,
+                    MapRatingAmountForCheck = 10,
+                    MinMapRatingForNewMaps = 3f,
+                    GiveMoneyFee = 0.05f,
+                    GiveMoneyMinAmount = 100,
+                    NametagMaxDistance = 80,
+                    ShowNametagOnlyOnAiming = true,
+                    MultiplierRankingKills = 75f,
+                    MultiplierRankingAssists = 25f,
+                    MultiplierRankingDamage = 1f
                 }
             );
 
             modelBuilder.Entity<BonusbotSettings>().HasData(
                 new BonusbotSettings
                 {
-                    Id = 1, GuildId = 320309924175282177, 
+                    Id = 1,
+                    GuildId = 320309924175282177,
                     AdminApplicationsChannelId = 659072893526736896,
                     SupportRequestsChannelId = 659073029896142855,
                     ServerInfosChannelId = 659073271911809037,
@@ -1223,27 +1238,27 @@ namespace TDS_Server.Database.Entity
 
                     SendPrivateMessageOnBan = true,
                     SendPrivateMessageOnOfflineMessage = true
-                }  
+                }
             );
 
             modelBuilder.Entity<ChallengeSettings>().HasData(
-                new ChallengeSettings { Type = EChallengeType.Assists, Frequency = EChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
-                new ChallengeSettings { Type = EChallengeType.BeHelpfulEnough, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.BombDefuse, Frequency = EChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
-                new ChallengeSettings { Type = EChallengeType.BombPlant, Frequency = EChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
-                new ChallengeSettings { Type = EChallengeType.BuyMaps, Frequency = EChallengeFrequency.Forever, MinNumber = 500, MaxNumber = 500 },
-                new ChallengeSettings { Type = EChallengeType.ChangeSettings, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.CreatorOfAcceptedMap, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.Damage, Frequency = EChallengeFrequency.Weekly, MinNumber = 20000, MaxNumber = 100000 },
-                new ChallengeSettings { Type = EChallengeType.JoinDiscordServer, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.Kills, Frequency = EChallengeFrequency.Weekly, MinNumber = 75, MaxNumber = 150 },
-                new ChallengeSettings { Type = EChallengeType.Killstreak, Frequency = EChallengeFrequency.Weekly, MinNumber = 3, MaxNumber = 7 },
-                new ChallengeSettings { Type = EChallengeType.PlayTime, Frequency = EChallengeFrequency.Weekly, MinNumber = 300, MaxNumber = 1500 },
-                new ChallengeSettings { Type = EChallengeType.ReadTheFAQ, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.ReadTheRules, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
-                new ChallengeSettings { Type = EChallengeType.ReviewMaps, Frequency = EChallengeFrequency.Forever, MinNumber = 10, MaxNumber = 10 },
-                new ChallengeSettings { Type = EChallengeType.RoundPlayed, Frequency = EChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
-                new ChallengeSettings { Type = EChallengeType.WriteHelpfulIssue, Frequency = EChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 }
+                new ChallengeSettings { Type = ChallengeType.Assists, Frequency = ChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
+                new ChallengeSettings { Type = ChallengeType.BeHelpfulEnough, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.BombDefuse, Frequency = ChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
+                new ChallengeSettings { Type = ChallengeType.BombPlant, Frequency = ChallengeFrequency.Weekly, MinNumber = 5, MaxNumber = 10 },
+                new ChallengeSettings { Type = ChallengeType.BuyMaps, Frequency = ChallengeFrequency.Forever, MinNumber = 500, MaxNumber = 500 },
+                new ChallengeSettings { Type = ChallengeType.ChangeSettings, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.CreatorOfAcceptedMap, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.Damage, Frequency = ChallengeFrequency.Weekly, MinNumber = 20000, MaxNumber = 100000 },
+                new ChallengeSettings { Type = ChallengeType.JoinDiscordServer, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.Kills, Frequency = ChallengeFrequency.Weekly, MinNumber = 75, MaxNumber = 150 },
+                new ChallengeSettings { Type = ChallengeType.Killstreak, Frequency = ChallengeFrequency.Weekly, MinNumber = 3, MaxNumber = 7 },
+                new ChallengeSettings { Type = ChallengeType.PlayTime, Frequency = ChallengeFrequency.Weekly, MinNumber = 300, MaxNumber = 1500 },
+                new ChallengeSettings { Type = ChallengeType.ReadTheFAQ, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.ReadTheRules, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 },
+                new ChallengeSettings { Type = ChallengeType.ReviewMaps, Frequency = ChallengeFrequency.Forever, MinNumber = 10, MaxNumber = 10 },
+                new ChallengeSettings { Type = ChallengeType.RoundPlayed, Frequency = ChallengeFrequency.Weekly, MinNumber = 50, MaxNumber = 100 },
+                new ChallengeSettings { Type = ChallengeType.WriteHelpfulIssue, Frequency = ChallengeFrequency.Forever, MinNumber = 1, MaxNumber = 1 }
             );
 
             modelBuilder.Entity<Players>().HasData(
@@ -1251,12 +1266,12 @@ namespace TDS_Server.Database.Entity
             );
 
             var seedLobbies = new List<Lobbies> {
-                new Lobbies { Id = -4, OwnerId = -1, Type = ELobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
-                new Lobbies { Id = -1, OwnerId = -1, Type = ELobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
-                new Lobbies { Id = -2, OwnerId = -1, Type = ELobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
+                new Lobbies { Id = -4, OwnerId = -1, Type = LobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
+                new Lobbies { Id = -1, OwnerId = -1, Type = LobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
+                new Lobbies { Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
    
                 // only for map-creator ban
-                new Lobbies { Id = -3, OwnerId = -1, Type = ELobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true }
+                new Lobbies { Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 
@@ -1300,14 +1315,14 @@ namespace TDS_Server.Database.Entity
 
 
             modelBuilder.Entity<AdminLevelNames>().HasData(new List<AdminLevelNames> {
-                new AdminLevelNames { Level = 0, Language = ELanguage.English, Name = "User" },
-                new AdminLevelNames { Level = 0, Language = ELanguage.German, Name = "User" },
-                new AdminLevelNames { Level = 1, Language = ELanguage.English, Name = "Supporter" },
-                new AdminLevelNames { Level = 1, Language = ELanguage.German, Name = "Supporter" },
-                new AdminLevelNames { Level = 2, Language = ELanguage.English, Name = "Administrator" },
-                new AdminLevelNames { Level = 2, Language = ELanguage.German, Name = "Administrator" },
-                new AdminLevelNames { Level = 3, Language = ELanguage.English, Name = "Projectleader" },
-                new AdminLevelNames { Level = 3, Language = ELanguage.German, Name = "Projektleiter" }
+                new AdminLevelNames { Level = 0, Language = Language.English, Name = "User" },
+                new AdminLevelNames { Level = 0, Language = Language.German, Name = "User" },
+                new AdminLevelNames { Level = 1, Language = Language.English, Name = "Supporter" },
+                new AdminLevelNames { Level = 1, Language = Language.German, Name = "Supporter" },
+                new AdminLevelNames { Level = 2, Language = Language.English, Name = "Administrator" },
+                new AdminLevelNames { Level = 2, Language = Language.German, Name = "Administrator" },
+                new AdminLevelNames { Level = 3, Language = Language.English, Name = "Projectleader" },
+                new AdminLevelNames { Level = 3, Language = Language.German, Name = "Projektleiter" }
             });
 
             modelBuilder.Entity<CommandAlias>().HasData(
@@ -1414,64 +1429,64 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
-                new CommandInfos { Id = 1, Language = ELanguage.German, Info = "Schreibt öffentlich als ein Admin." },
-                new CommandInfos { Id = 1, Language = ELanguage.English, Info = "Writes public as an admin." },
-                new CommandInfos { Id = 2, Language = ELanguage.German, Info = "Schreibt intern nur den Admins." },
-                new CommandInfos { Id = 2, Language = ELanguage.English, Info = "Writes intern to admins only." },
-                new CommandInfos { Id = 3, Language = ELanguage.German, Info = "Bannt einen Spieler vom gesamten Server." },
-                new CommandInfos { Id = 3, Language = ELanguage.English, Info = "Bans a player out of the server." },
-                new CommandInfos { Id = 4, Language = ELanguage.German, Info = "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
-                new CommandInfos { Id = 4, Language = ELanguage.English, Info = "Warps the user to another player (maybe in his vehicle) or to the defined coordinates." },
-                new CommandInfos { Id = 5, Language = ELanguage.German, Info = "Kickt einen Spieler vom Server." },
-                new CommandInfos { Id = 5, Language = ELanguage.English, Info = "Kicks a player out of the server." },
-                new CommandInfos { Id = 6, Language = ELanguage.German, Info = "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
-                new CommandInfos { Id = 6, Language = ELanguage.English, Info = "Bans a player out of the lobby in which the command was used." },
-                new CommandInfos { Id = 7, Language = ELanguage.German, Info = "Kickt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
-                new CommandInfos { Id = 7, Language = ELanguage.English, Info = "Kicks a player out of the lobby in which the command was used." },
-                new CommandInfos { Id = 8, Language = ELanguage.German, Info = "Mutet einen Spieler im normalen Chat." },
-                new CommandInfos { Id = 8, Language = ELanguage.English, Info = "Mutes a player in the normal chat." },
-                new CommandInfos { Id = 9, Language = ELanguage.German, Info = "Beendet die jetzige Runde in der jeweiligen Lobby." },
-                new CommandInfos { Id = 9, Language = ELanguage.English, Info = "Ends the current round in the lobby." },
-                new CommandInfos { Id = 10, Language = ELanguage.German, Info = "Verlässt die jetzige Lobby." },
-                new CommandInfos { Id = 10, Language = ELanguage.English, Info = "Leaves the current lobby." },
-                new CommandInfos { Id = 11, Language = ELanguage.German, Info = "Tötet den Nutzer (Selbstmord)." },
-                new CommandInfos { Id = 11, Language = ELanguage.English, Info = "Kills the user (suicide)." },
-                new CommandInfos { Id = 12, Language = ELanguage.German, Info = "Globaler Chat, welcher überall gelesen werden kann." },
-                new CommandInfos { Id = 12, Language = ELanguage.English, Info = "Global chat which can be read everywhere." },
-                new CommandInfos { Id = 13, Language = ELanguage.German, Info = "Sendet die Nachricht nur zum eigenen Team." },
-                new CommandInfos { Id = 13, Language = ELanguage.English, Info = "Sends the message to the current team only." },
-                new CommandInfos { Id = 14, Language = ELanguage.German, Info = "Gibt die Position des Spielers aus." },
-                new CommandInfos { Id = 14, Language = ELanguage.English, Info = "Outputs the position of the player." },
-                new CommandInfos { Id = 15, Language = ELanguage.German, Info = "Sendet eine Nachricht im Privatchat." },
-                new CommandInfos { Id = 15, Language = ELanguage.English, Info = "Sends a message in private chat." },
-                new CommandInfos { Id = 16, Language = ELanguage.German, Info = "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
-                new CommandInfos { Id = 16, Language = ELanguage.English, Info = "Closes a private chat or withdraws a private chat request." },
-                new CommandInfos { Id = 17, Language = ELanguage.German, Info = "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
-                new CommandInfos { Id = 17, Language = ELanguage.English, Info = "Sends a private chat request or accepts the request of another user." },
-                new CommandInfos { Id = 18, Language = ELanguage.German, Info = "Private Nachricht an einen bestimmten Spieler." },
-                new CommandInfos { Id = 18, Language = ELanguage.English, Info = "Private message to a specific player." },
-                new CommandInfos { Id = 19, Language = ELanguage.German, Info = "Gibt dir deine User-Id aus." },
-                new CommandInfos { Id = 19, Language = ELanguage.English, Info = "Outputs your user-id to yourself." },
-                new CommandInfos { Id = 20, Language = ELanguage.German, Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
-                new CommandInfos { Id = 20, Language = ELanguage.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
-                new CommandInfos { Id = 21, Language = ELanguage.German, Info = "Entfernt das Ziel aus der Blockliste." },
-                new CommandInfos { Id = 21, Language = ELanguage.English, Info = "Removes the target from the blocklist." },
-                new CommandInfos { Id = 23, Language = ELanguage.German, Info = "Mutet einen Spieler im Voice-Chat." },
-                new CommandInfos { Id = 23, Language = ELanguage.English, Info = "Mutes a player in the voice-chat." },
-                new CommandInfos { Id = 24, Language = ELanguage.German, Info = "Gibt einem Spieler Geld." },
-                new CommandInfos { Id = 24, Language = ELanguage.English, Info = "Gives money to a player." },
-                new CommandInfos { Id = 25, Language = ELanguage.German, Info = "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
-                new CommandInfos { Id = 25, Language = ELanguage.English, Info = "Invites a player to your lobby (if possible)." },
-                new CommandInfos { Id = 26, Language = ELanguage.German, Info = "Befehl zum schnellen Testen von Codes." },
-                new CommandInfos { Id = 26, Language = ELanguage.English, Info = "Command for quick testing of codes." }
+                new CommandInfos { Id = 1, Language = Language.German, Info = "Schreibt öffentlich als ein Admin." },
+                new CommandInfos { Id = 1, Language = Language.English, Info = "Writes public as an admin." },
+                new CommandInfos { Id = 2, Language = Language.German, Info = "Schreibt intern nur den Admins." },
+                new CommandInfos { Id = 2, Language = Language.English, Info = "Writes intern to admins only." },
+                new CommandInfos { Id = 3, Language = Language.German, Info = "Bannt einen Spieler vom gesamten Server." },
+                new CommandInfos { Id = 3, Language = Language.English, Info = "Bans a player out of the server." },
+                new CommandInfos { Id = 4, Language = Language.German, Info = "Teleportiert den Nutzer zu einem Spieler (evtl. in sein Auto) oder zu den angegebenen Koordinaten." },
+                new CommandInfos { Id = 4, Language = Language.English, Info = "Warps the user to another player (maybe in his vehicle) or to the defined coordinates." },
+                new CommandInfos { Id = 5, Language = Language.German, Info = "Kickt einen Spieler vom Server." },
+                new CommandInfos { Id = 5, Language = Language.English, Info = "Kicks a player out of the server." },
+                new CommandInfos { Id = 6, Language = Language.German, Info = "Bannt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                new CommandInfos { Id = 6, Language = Language.English, Info = "Bans a player out of the lobby in which the command was used." },
+                new CommandInfos { Id = 7, Language = Language.German, Info = "Kickt einen Spieler aus der Lobby, in welchem der Befehl genutzt wurde." },
+                new CommandInfos { Id = 7, Language = Language.English, Info = "Kicks a player out of the lobby in which the command was used." },
+                new CommandInfos { Id = 8, Language = Language.German, Info = "Mutet einen Spieler im normalen Chat." },
+                new CommandInfos { Id = 8, Language = Language.English, Info = "Mutes a player in the normal chat." },
+                new CommandInfos { Id = 9, Language = Language.German, Info = "Beendet die jetzige Runde in der jeweiligen Lobby." },
+                new CommandInfos { Id = 9, Language = Language.English, Info = "Ends the current round in the lobby." },
+                new CommandInfos { Id = 10, Language = Language.German, Info = "Verlässt die jetzige Lobby." },
+                new CommandInfos { Id = 10, Language = Language.English, Info = "Leaves the current lobby." },
+                new CommandInfos { Id = 11, Language = Language.German, Info = "Tötet den Nutzer (Selbstmord)." },
+                new CommandInfos { Id = 11, Language = Language.English, Info = "Kills the user (suicide)." },
+                new CommandInfos { Id = 12, Language = Language.German, Info = "Globaler Chat, welcher überall gelesen werden kann." },
+                new CommandInfos { Id = 12, Language = Language.English, Info = "Global chat which can be read everywhere." },
+                new CommandInfos { Id = 13, Language = Language.German, Info = "Sendet die Nachricht nur zum eigenen Team." },
+                new CommandInfos { Id = 13, Language = Language.English, Info = "Sends the message to the current team only." },
+                new CommandInfos { Id = 14, Language = Language.German, Info = "Gibt die Position des Spielers aus." },
+                new CommandInfos { Id = 14, Language = Language.English, Info = "Outputs the position of the player." },
+                new CommandInfos { Id = 15, Language = Language.German, Info = "Sendet eine Nachricht im Privatchat." },
+                new CommandInfos { Id = 15, Language = Language.English, Info = "Sends a message in private chat." },
+                new CommandInfos { Id = 16, Language = Language.German, Info = "Schließt den Privatchat oder nimmt eine Privatchat-Anfrage zurück." },
+                new CommandInfos { Id = 16, Language = Language.English, Info = "Closes a private chat or withdraws a private chat request." },
+                new CommandInfos { Id = 17, Language = Language.German, Info = "Sendet eine Anfrage für einen Privatchat oder nimmt die Anfrage eines Users an." },
+                new CommandInfos { Id = 17, Language = Language.English, Info = "Sends a private chat request or accepts the request of another user." },
+                new CommandInfos { Id = 18, Language = Language.German, Info = "Private Nachricht an einen bestimmten Spieler." },
+                new CommandInfos { Id = 18, Language = Language.English, Info = "Private message to a specific player." },
+                new CommandInfos { Id = 19, Language = Language.German, Info = "Gibt dir deine User-Id aus." },
+                new CommandInfos { Id = 19, Language = Language.English, Info = "Outputs your user-id to yourself." },
+                new CommandInfos { Id = 20, Language = Language.German, Info = "Fügt das Ziel in deine Blocklist ein, sodass du keine Nachrichten mehr von ihm liest, er dich nicht einladen kann usw." },
+                new CommandInfos { Id = 20, Language = Language.English, Info = "Adds the target into your blocklist so you won't see messages from him, he can't invite you anymore etc." },
+                new CommandInfos { Id = 21, Language = Language.German, Info = "Entfernt das Ziel aus der Blockliste." },
+                new CommandInfos { Id = 21, Language = Language.English, Info = "Removes the target from the blocklist." },
+                new CommandInfos { Id = 23, Language = Language.German, Info = "Mutet einen Spieler im Voice-Chat." },
+                new CommandInfos { Id = 23, Language = Language.English, Info = "Mutes a player in the voice-chat." },
+                new CommandInfos { Id = 24, Language = Language.German, Info = "Gibt einem Spieler Geld." },
+                new CommandInfos { Id = 24, Language = Language.English, Info = "Gives money to a player." },
+                new CommandInfos { Id = 25, Language = Language.German, Info = "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
+                new CommandInfos { Id = 25, Language = Language.English, Info = "Invites a player to your lobby (if possible)." },
+                new CommandInfos { Id = 26, Language = Language.German, Info = "Befehl zum schnellen Testen von Codes." },
+                new CommandInfos { Id = 26, Language = Language.English, Info = "Command for quick testing of codes." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(
-                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Car, VehicleHash = VehicleHash.Pfister811 },
-                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Helicopter, VehicleHash = VehicleHash.Akula },
-                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Plane, VehicleHash = VehicleHash.Pyro },
-                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Bike, VehicleHash = VehicleHash.Hakuchou2 },
-                new FreeroamDefaultVehicle { VehicleType = EFreeroamVehicleType.Boat, VehicleHash = VehicleHash.Speeder2 }
+                new FreeroamDefaultVehicle { VehicleType = FreeroamVehicleType.Car, VehicleHash = VehicleHash.Pfister811 },
+                new FreeroamDefaultVehicle { VehicleType = FreeroamVehicleType.Helicopter, VehicleHash = VehicleHash.Akula },
+                new FreeroamDefaultVehicle { VehicleType = FreeroamVehicleType.Plane, VehicleHash = VehicleHash.Pyro },
+                new FreeroamDefaultVehicle { VehicleType = FreeroamVehicleType.Bike, VehicleHash = VehicleHash.Hakuchou2 },
+                new FreeroamDefaultVehicle { VehicleType = FreeroamVehicleType.Boat, VehicleHash = VehicleHash.Speeder2 }
             );
 
             modelBuilder.Entity<LobbyKillingspreeRewards>().HasData(
@@ -1516,114 +1531,123 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<LobbyRoundSettings>().HasData(
-                new LobbyRoundSettings { LobbyId = -1, RoundTime = 240, CountdownTime = 5, BombDetonateTimeMs = 45000, BombDefuseTimeMs = 8000, BombPlantTimeMs = 3000, MixTeamsAfterRound = true, 
-                    ShowRanking = true }
+                new LobbyRoundSettings
+                {
+                    LobbyId = -1,
+                    RoundTime = 240,
+                    CountdownTime = 5,
+                    BombDetonateTimeMs = 45000,
+                    BombDefuseTimeMs = 8000,
+                    BombPlantTimeMs = 3000,
+                    MixTeamsAfterRound = true,
+                    ShowRanking = true
+                }
             );
 
             modelBuilder.Entity<LobbyMapSettings>().HasData(
-                new LobbyMapSettings { LobbyId = -1, MapLimitTime = 10, MapLimitType = EMapLimitType.KillAfterTime }  
+                new LobbyMapSettings { LobbyId = -1, MapLimitTime = 10, MapLimitType = MapLimitType.KillAfterTime }
             );
 
             modelBuilder.Entity<Weapons>().HasData(
-                new Weapons { Hash = WeaponHash.Sniperrifle, Type = EWeaponType.SniperRifle, Damage = 101, HeadShotDamageModifier = 1000 },
-                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Compactlauncher, Type = EWeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snowball, Type = EWeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Vintagepistol, Type = EWeaponType.Handgun, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatpdw, Type = EWeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavysniper, Type = EWeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Heavysniper_mk2, Type = EWeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Autoshotgun, Type = EWeaponType.Shotgun, Damage = 162, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Microsmg, Type = EWeaponType.MachineGun, Damage = 21, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Wrench, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol, Type = EWeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol_mk2, Type = EWeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pumpshotgun, Type = EWeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pumpshotgun_mk2, Type = EWeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Appistol, Type = EWeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Ball, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Molotov, Type = EWeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smg, Type = EWeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smg_mk2, Type = EWeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stickybomb, Type = EWeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Petrolcan, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stungun, Type = EWeaponType.Handgun, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavyshotgun, Type = EWeaponType.Shotgun, Damage = 117, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Minigun, Type = EWeaponType.HeavyWeapon, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Golfclub, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flaregun, Type = EWeaponType.Handgun, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flare, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenadelauncher_smoke, Type = EWeaponType.HeavyWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hammer, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatpistol, Type = EWeaponType.Handgun, Damage = 27, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Gusenberg, Type = EWeaponType.MachineGun, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Compactrifle, Type = EWeaponType.AssaultRifle, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hominglauncher, Type = EWeaponType.HeavyWeapon, Damage = 150, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Nightstick, Type = EWeaponType.Melee, Damage = 35, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Railgun, Type = EWeaponType.HeavyWeapon, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Sawnoffshotgun, Type = EWeaponType.Shotgun, Damage = 160, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpuprifle, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Firework, Type = EWeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatmg, Type = EWeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatmg_mk2, Type = EWeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Carbinerifle, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Crowbar, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flashlight, Type = EWeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Dagger, Type = EWeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenade, Type = EWeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Poolcue, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bat, Type = EWeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol50, Type = EWeaponType.Handgun, Damage = 51, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Knife, Type = EWeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Mg, Type = EWeaponType.MachineGun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpupshotgun, Type = EWeaponType.Shotgun, Damage = 112, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bzgas, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Unarmed, Type = EWeaponType.Melee, Damage = 15, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenadelauncher, Type = EWeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Musket, Type = EWeaponType.Shotgun, Damage = 165, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Proximine, Type = EWeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Advancedrifle, Type = EWeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Rpg, Type = EWeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pipebomb, Type = EWeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Minismg, Type = EWeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snspistol, Type = EWeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snspistol_mk2, Type = EWeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultrifle, Type = EWeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultrifle_mk2, Type = EWeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Specialcarbine, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Revolver, Type = EWeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Revolver_mk2, Type = EWeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Doubleaction, Type = EWeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Marksmanrifle, Type = EWeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Marksmanrifle_mk2, Type = EWeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Battleaxe, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavypistol, Type = EWeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Knuckle, Type = EWeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Machinepistol, Type = EWeaponType.MachineGun, Damage = 20, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Marksmanpistol, Type = EWeaponType.Handgun, Damage = 150, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Machete, Type = EWeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Switchblade, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultshotgun, Type = EWeaponType.Shotgun, Damage = 192, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Dbshotgun, Type = EWeaponType.Shotgun, Damage = 166, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultsmg, Type = EWeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hatchet, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stone_hatchet, Type = EWeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bottle, Type = EWeaponType.Melee, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Parachute, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Raypistol, Type = EWeaponType.Handgun, Damage = 80, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Raycarbine, Type = EWeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Carbinerifle_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Rayminigun, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpuprifle_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = EWeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smokegrenade, Type = EWeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.CeramicPistol, Type = EWeaponType.Handgun, Damage = 20, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.NavyRevolver, Type = EWeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.HazardCan, Type = EWeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 }
+                new Weapons { Hash = WeaponHash.Sniperrifle, Type = WeaponType.SniperRifle, Damage = 101, HeadShotDamageModifier = 1000 },
+                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Compactlauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Snowball, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Vintagepistol, Type = WeaponType.Handgun, Damage = 34, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Combatpdw, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Heavysniper, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
+                new Weapons { Hash = WeaponHash.Heavysniper_mk2, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
+                new Weapons { Hash = WeaponHash.Autoshotgun, Type = WeaponType.Shotgun, Damage = 162, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Microsmg, Type = WeaponType.MachineGun, Damage = 21, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Wrench, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pistol, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pistol_mk2, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pumpshotgun, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pumpshotgun_mk2, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Appistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Ball, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Molotov, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Smg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Smg_mk2, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Stickybomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Petrolcan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Stungun, Type = WeaponType.Handgun, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Heavyshotgun, Type = WeaponType.Shotgun, Damage = 117, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Minigun, Type = WeaponType.HeavyWeapon, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Golfclub, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Flaregun, Type = WeaponType.Handgun, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Flare, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Grenadelauncher_smoke, Type = WeaponType.HeavyWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Hammer, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Combatpistol, Type = WeaponType.Handgun, Damage = 27, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Gusenberg, Type = WeaponType.MachineGun, Damage = 34, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Compactrifle, Type = WeaponType.AssaultRifle, Damage = 34, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Hominglauncher, Type = WeaponType.HeavyWeapon, Damage = 150, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Nightstick, Type = WeaponType.Melee, Damage = 35, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Railgun, Type = WeaponType.HeavyWeapon, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Sawnoffshotgun, Type = WeaponType.Shotgun, Damage = 160, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bullpuprifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Firework, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Combatmg, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Combatmg_mk2, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Carbinerifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Crowbar, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Flashlight, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Dagger, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Grenade, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Poolcue, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bat, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pistol50, Type = WeaponType.Handgun, Damage = 51, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Knife, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Mg, Type = WeaponType.MachineGun, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bullpupshotgun, Type = WeaponType.Shotgun, Damage = 112, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bzgas, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Unarmed, Type = WeaponType.Melee, Damage = 15, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Grenadelauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Musket, Type = WeaponType.Shotgun, Damage = 165, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Proximine, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Advancedrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Rpg, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Pipebomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Minismg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Snspistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Snspistol_mk2, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Assaultrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Assaultrifle_mk2, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Specialcarbine, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Revolver, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Revolver_mk2, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Doubleaction, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Marksmanrifle, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
+                new Weapons { Hash = WeaponHash.Marksmanrifle_mk2, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
+                new Weapons { Hash = WeaponHash.Battleaxe, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Heavypistol, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Knuckle, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Machinepistol, Type = WeaponType.MachineGun, Damage = 20, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Marksmanpistol, Type = WeaponType.Handgun, Damage = 150, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Machete, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Switchblade, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Assaultshotgun, Type = WeaponType.Shotgun, Damage = 192, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Dbshotgun, Type = WeaponType.Shotgun, Damage = 166, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Assaultsmg, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Stone_hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bottle, Type = WeaponType.Melee, Damage = 10, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Parachute, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Raypistol, Type = WeaponType.Handgun, Damage = 80, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Raycarbine, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Carbinerifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Rayminigun, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Bullpuprifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.Smokegrenade, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.CeramicPistol, Type = WeaponType.Handgun, Damage = 20, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.NavyRevolver, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
+                new Weapons { Hash = WeaponHash.HazardCan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 }
             );
 
             modelBuilder.Entity<LobbyWeapons>().HasData(
-                new LobbyWeapons { Hash = WeaponHash.Sniperrifle,  Lobby = -1, Ammo = 9999 },
+                new LobbyWeapons { Hash = WeaponHash.Sniperrifle, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Fireextinguisher, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Compactlauncher, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Snowball, Lobby = -1, Ammo = 9999 },
@@ -1731,20 +1755,20 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Rules>().HasData(
-                new Rules { Id = 1, Target = ERuleTarget.User, Category = ERuleCategory.General },
-                new Rules { Id = 2, Target = ERuleTarget.User, Category = ERuleCategory.Chat },
-                new Rules { Id = 3, Target = ERuleTarget.Admin, Category = ERuleCategory.General },
-                new Rules { Id = 4, Target = ERuleTarget.Admin, Category = ERuleCategory.General },
-                new Rules { Id = 5, Target = ERuleTarget.Admin, Category = ERuleCategory.General },
-                new Rules { Id = 6, Target = ERuleTarget.VIP, Category = ERuleCategory.General },
-                new Rules { Id = 7, Target = ERuleTarget.VIP, Category = ERuleCategory.General }
+                new Rules { Id = 1, Target = RuleTarget.User, Category = RuleCategory.General },
+                new Rules { Id = 2, Target = RuleTarget.User, Category = RuleCategory.Chat },
+                new Rules { Id = 3, Target = RuleTarget.Admin, Category = RuleCategory.General },
+                new Rules { Id = 4, Target = RuleTarget.Admin, Category = RuleCategory.General },
+                new Rules { Id = 5, Target = RuleTarget.Admin, Category = RuleCategory.General },
+                new Rules { Id = 6, Target = RuleTarget.VIP, Category = RuleCategory.General },
+                new Rules { Id = 7, Target = RuleTarget.VIP, Category = RuleCategory.General }
             );
 
             modelBuilder.Entity<RuleTexts>().HasData(
-                new RuleTexts 
-                { 
-                    RuleId = 1, 
-                    Language = ELanguage.English, 
+                new RuleTexts
+                {
+                    RuleId = 1,
+                    Language = Language.English,
                     RuleStr = @"Teaming with opposing players is strictly forbidden!"
                         + "\nThis means the deliberate sparing, better treatment, letting or similar of certain opposing players without the permission of the own team members."
                         + "\nIf such behaviour is noticed, it can lead to severe penalties and is permanently noted."
@@ -1752,7 +1776,7 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 1,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = @"Teamen mit gegnerischen Spielern ist strengstens verboten!"
                         + "\nDamit ist das absichtliche Verschonen, besser Behandeln, Lassen o.ä. von bestimmten gegnerischen Spielern ohne Erlaubnis der eigenen Team-Mitglieder gemeint."
                         + "\nWird ein solches Verhalten bemerkt, kann es zu starken Strafen führen und es wird permanent notiert."
@@ -1761,7 +1785,7 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 2,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = @"The normal chat in an official lobby has rules, the other chats (private lobbies, dirty) none."
                         + "\nBy 'normal chat' we mean all chat methods (global, team, etc.) in the 'normal' chat area."
                         + "\nThe chat rules listed here are ONLY for the normal chat in an official lobby."
@@ -1770,7 +1794,7 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 2,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Der normale Chat in einer offiziellen Lobby hat Regeln, die restlichen Chats (private Lobbys, dirty) jedoch keine."
                         + "\nUnter 'normaler Chat' versteht man alle Chats-Methode (global, team usw.) im 'normal' Chat-Bereich."
                         + "\nDie hier aufgelisteten Chat-Regeln richten sich NUR an den normalen Chat in einer offiziellen Lobby."
@@ -1780,27 +1804,27 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 3,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = "Admins have to follow the same rules as players do."
                 },
                 new RuleTexts
                 {
                     RuleId = 3,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Admins haben genauso die Regeln zu befolgen wie auch die Spieler."
                 },
 
                 new RuleTexts
                 {
                     RuleId = 4,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = "Exploitation of the commands is strictly forbidden!"
                         + "\nAdmin commands for 'punishing' (kick, mute, ban etc.) may only be used for violations of rules."
                 },
                 new RuleTexts
                 {
                     RuleId = 4,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Ausnutzung der Befehle ist strengstens verboten!"
                         + "\nAdmin-Befehle zum 'Bestrafen' (Kick, Mute, Ban usw.) dürfen auch nur bei Verstößen gegen Regeln genutzt werden."
                 },
@@ -1808,7 +1832,7 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 5,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = "If you are not sure if the time for e.g. Mute or Bann could be too high,"
                         + "\nask your team leader - if you can't reach someone quickly, choose a lower time."
                         + "\nToo high times are bad, too low times are no problem."
@@ -1816,7 +1840,7 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 5,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Wenn du dir nicht sicher bist, ob die Zeit für z.B. Mute oder Bann zu hoch sein könnte,"
                         + "\nfrage deinen Team-Leiter - kannst du niemanden auf die Schnelle erreichen, so entscheide dich für eine niedrigere Zeit."
                         + "\nZu hohe Zeiten sind schlecht, zu niedrige kein Problem."
@@ -1825,42 +1849,42 @@ namespace TDS_Server.Database.Entity
                 new RuleTexts
                 {
                     RuleId = 6,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = "All admin rules with the exception of activity duty are also valid for VIPs."
                 },
                 new RuleTexts
                 {
                     RuleId = 6,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Alle Admin-Regeln mit Ausnahme von Aktivitäts-Pflicht sind auch gültig für VIPs."
                 },
 
                 new RuleTexts
                 {
                     RuleId = 7,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     RuleStr = "The VIPs are free to decide whether they want to use their rights or not."
                 },
                 new RuleTexts
                 {
                     RuleId = 7,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     RuleStr = "Den VIPs ist es frei überlassen, ob sie ihre Rechte nutzen wollen oder nicht."
                 }
             );
 
             modelBuilder.Entity<FAQs>().HasData(
-                new FAQs 
-                { 
+                new FAQs
+                {
                     Id = 1,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     Question = "How do I activate my cursor?",
                     Answer = "With the END key on your keyboard."
                 },
                 new FAQs
                 {
                     Id = 1,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     Question = "Wie aktiviere ich meinen Cursor?",
                     Answer = "Mit der ENDE Taste auf deiner Tastatur."
                 },
@@ -1868,7 +1892,7 @@ namespace TDS_Server.Database.Entity
                 new FAQs
                 {
                     Id = 2,
-                    Language = ELanguage.English,
+                    Language = Language.English,
                     Question = "What is the 'Allow data transfer' setting in the userpanel?",
                     Answer = "In case of a transfer of TDS-V, the database will also be transferred, but without the player data (for data protection reasons)."
                             + "\nHowever, if you want to keep your data, you must allow it in the user panel."
@@ -1877,7 +1901,7 @@ namespace TDS_Server.Database.Entity
                 new FAQs
                 {
                     Id = 2,
-                    Language = ELanguage.German,
+                    Language = Language.German,
                     Question = "Was ist die 'Erlaube Daten-Transfer' Einstellung im Userpanel?",
                     Answer = "Im Falle einer Übergabe von TDS-V wird die Datenbank auch übergeben, jedoch ohne die Spieler-Daten (aus Datenschutz-Gründen)."
                             + "\nFalls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben."

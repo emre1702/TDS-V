@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
-using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Mapping.Converter;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Database.Entity.Player;
+using TDS_Server.Entity.Player;
+using TDS_Server.Handler.Converter.Mapping;
+using TDS_Server.Handler.Player;
 
-namespace TDS_Server.Core.Manager.Mapping
+namespace TDS_Server.Handler
 {
-    class MappingManager
+    public class MappingHandler
     {
-        public static IMapper Mapper { get; set; }
+        public IMapper Mapper { get; set; }
 
-        static MappingManager()
+        public MappingHandler(TDSPlayerHandler tdsPlayerHandler)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -26,9 +27,10 @@ namespace TDS_Server.Core.Manager.Mapping
 
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
 
-                cfg.CreateMap<string, TDSPlayer?>().ConvertUsing<StringNameToPlayerConverter>();
-                cfg.CreateMap<string, Player?>().ConvertUsing<StringNameToClientConverter>();
+                cfg.CreateMap<string, ITDSPlayer?>().ConvertUsing(new StringNameToPlayerConverter(tdsPlayerHandler));
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
+
+                cfg.CreateMap<IPlayer, ITDSPlayer>().ConvertUsing(new IPlayerToITDSPlayerConverter(tdsPlayerHandler));
             });
             config.AssertConfigurationIsValid();
 

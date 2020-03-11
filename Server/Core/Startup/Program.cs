@@ -1,20 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Handler.Events.Mod;
 
 namespace TDS_Server.Core.Startup
 {
     public class Program
     {
-        private static ServiceProvider _serviceProvider;
+        public EventsHandler EventsHandler;
 
         public Program(IModAPI modAPI)
         {
-            var serviceCollection = Services.InitServiceCollection();
+            var serviceProvider = Services.InitServiceCollection(modAPI);
 
-            serviceCollection
-                .AddSingleton(modAPI);
-
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            EventsHandler = serviceProvider.GetRequiredService<EventsHandler>();
         }
 
     }

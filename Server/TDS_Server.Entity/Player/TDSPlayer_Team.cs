@@ -17,7 +17,7 @@ namespace TDS_Server.Entity.Player
                 {
                     _team?.RemovePlayer(this);
                     value?.AddPlayer(this);
-                    NAPI.ClientEvent.TriggerClientEvent(Player, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
+                    NAPI.ClientEvent.TriggerClientEvent(ModPlayer, DToClientEvent.PlayerTeamChange, value?.Entity.Name ?? "-");
 
                     _team = value;
                 }

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Entity
 {
     public abstract class DatabaseEntityWrapper
     {
-        private TDSPlayer? _player;
+        private ITDSPlayer? _player;
 
         ~DatabaseEntityWrapper()
         {
@@ -29,7 +31,7 @@ namespace TDS_Server.Entity
         private TDSDbContext? _dbContext;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
-        protected void SetPlayer(TDSPlayer player)
+        protected void SetPlayer(ITDSPlayer player)
         {
             _player = player;
         }

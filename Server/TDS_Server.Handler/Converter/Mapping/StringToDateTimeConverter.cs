@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace TDS_Server.Core.Manager.Mapping.Converter
+namespace TDS_Server.Handler.Converter.Mapping
 {
     class StringToDateTimeConverter : ITypeConverter<string, DateTime?>
     {

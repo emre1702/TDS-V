@@ -1,5 +1,5 @@
-﻿using TDS_Common.Dto;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Database.Entity.Player
 {

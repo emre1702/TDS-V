@@ -16,9 +16,9 @@ namespace TDS_Server.Entity.Player
             {
                 _armor = value;
                 
-                if (Player is null)
+                if (ModPlayer is null)
                     return;
-                Player.Armor = value;
+                ModPlayer.Armor = value;
             }
         }
 
@@ -29,9 +29,9 @@ namespace TDS_Server.Entity.Player
             {
                 _health = value;
 
-                if (Player is null)
+                if (ModPlayer is null)
                     return;
-                Player.Health = value;
+                ModPlayer.Health = value;
             }
         }
     }

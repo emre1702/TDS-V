@@ -2,30 +2,14 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity.Player;
+using TDS_Server.Entity;
 
 namespace TDS_Server.Core.Manager.Utility
 {
-    class BansHandler : EntityWrapperClass
+    public class BansHandler : DatabaseEntityWrapper
     {
-        private static BansHandler? _instance;
-
-        private BansHandler() { }
-
-        public static BansHandler Get()
-        {
-            if (_instance is null)
-            {
-                _instance = new BansHandler();
-                _instance.InitDbContext();
-            }
-            return _instance;
-        }
-
-        public async Task<PlayerBans?> GetBan(int lobbyId, 
+        public async Task<PlayerBans?> GetBan(int lobbyId,
             int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
             bool? preventConnection = null, bool andConnection = false)
         {
@@ -91,7 +75,7 @@ namespace TDS_Server.Core.Manager.Utility
                 dbContext.PlayerBans.RemoveRange(bans);
                 await dbContext.SaveChangesAsync();
             });
-            
+
         }
     }
 }

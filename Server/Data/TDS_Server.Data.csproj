@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\ModAPI\Events\" />
     <Folder Include="Models\MainMenu\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,20 @@
-﻿using GTANetworkAPI;
+﻿using AutoMapper;
+using GTANetworkAPI;
 
 namespace TDS_Server.RAGE.Startup
 {
     class Program : Script
     {
+        public static Core.Startup.Program TDSCore;
+        internal static BaseAPI BaseAPI;
+
         public Program()
         {
-            new TDS_Server.Core.Startup.Program(new BaseAPI());
+            BaseAPI = new BaseAPI();
+
+            TDSCore = new Core.Startup.Program(BaseAPI);
+
         }
 
-        [ServerEvent(Event.PlayerConnected)]
-        public 
     }
 }

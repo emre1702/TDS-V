@@ -2,7 +2,7 @@
 
 namespace TDS_Server.RAGE.Events.RAGE
 {
-    partial class BaseRAGEEvents : Script
+    public partial class BaseRAGEEvents : Script
     {
     }
 }

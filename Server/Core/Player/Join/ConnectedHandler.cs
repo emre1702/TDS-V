@@ -1,24 +1,33 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI;
+﻿using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Handler.Events.Mod;
 
 namespace TDS_Server.Core.Player.Join
 {
     class ConnectedHandler
     {
+        private IModAPI _api;
         private BansHandler _bansHandler;
+        private EventsHandler _eventsHandler;
 
         public ConnectedHandler(
             IModAPI api,
-            BansHandler bansHandler)
+            BansHandler bansHandler,
+            EventsHandler eventsHandler)
         {
+            _api = api;
             _bansHandler = bansHandler;
+            _eventsHandler = eventsHandler;
 
-            api.Events.PlayerConnected += PlayerConnected;
+            _eventsHandler.PlayerConnected += PlayerConnected;
         }
 
-        private async void PlayerConnected(IPlayer player)
+        private async void PlayerConnected(ITDSPlayer player)
         {
-            while (_bansManager is null)
-                await Task.Delay(1000).ConfigureAwait(true);
+            player.ModPlayer.Position = new Position3D(0, 0, 1000).Around(10);
+
+
 
             client.Position = new Vector3(0, 0, 1000).Around(10);
             Workaround.FreezePlayer(client, true);
