@@ -1,14 +1,16 @@
-﻿using GTANetworkAPI;
+﻿using TDS_Server.Data.Interfaces.ModAPI.Blip;
+using TDS_Server.Data.Interfaces.ModAPI.Object;
+using TDS_Server.Data.Models.GTA;
 
 namespace TDS_Server.Data.Models
 {
     internal class BombPlantPlaceDto
     {
-        public Object Object;
-        public Blip Blip;
-        public Vector3 Position;
+        public IObject Object;
+        public IBlip Blip;
+        public Position3D Position;
 
-        public BombPlantPlaceDto(Object obj, Blip blip, Vector3 pos) => (Object, Blip, Position) = (obj, blip, pos);
+        public BombPlantPlaceDto(IObject obj, IBlip blip, Position3D pos) => (Object, Blip, Position) = (obj, blip, pos);
 
         public void Delete()
         {

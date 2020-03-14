@@ -1,11 +1,9 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Linq;
-using TDS_Common.Enum;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
+using TDS_Server.Data.Models.Map;
+using TDS_Server.Data.Models.Map.Creator;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Core.Manager.Helper
 {
@@ -14,16 +12,16 @@ namespace TDS_Server.Core.Manager.Helper
         public static void LoadSyncedData(this MapDto map)
         {
             map.BrowserSyncedData.Name = map.Info.Name;
-            map.BrowserSyncedData.Description[(int)ELanguage.English] = map.Descriptions?.English;
-            map.BrowserSyncedData.Description[(int)ELanguage.German] = map.Descriptions?.German;
-            map.BrowserSyncedData.Type = (EMapType) (int)map.Info.Type;
+            map.BrowserSyncedData.Description[(int)Language.English] = map.Descriptions?.English;
+            map.BrowserSyncedData.Description[(int)Language.German] = map.Descriptions?.German;
+            map.BrowserSyncedData.Type = (MapType)(int)map.Info.Type;
         }
 
-        public static void CreateJsons(this MapDto map)
+        public static void CreateJsons(this MapDto map, Serializer serializer)
         {
             if (map.BombInfo != null)
-                map.BombInfo.PlantPositionsJson = Serializer.ToBrowser(map.BombInfo.PlantPositions);
-            map.LimitInfo.EdgesJson = Serializer.ToBrowser(map.LimitInfo.Edges);
+                map.BombInfo.PlantPositionsJson = serializer.ToBrowser(map.BombInfo.PlantPositions);
+            map.LimitInfo.EdgesJson = serializer.ToBrowser(map.LimitInfo.Edges);
             map.LoadMapObjectsDataDto();
         }
 
@@ -88,19 +86,6 @@ namespace TDS_Server.Core.Manager.Helper
             return null;
         }
 
-        public static Vector3 ToVector3(this Position4DDto pos)
-        {
-            return new Vector3(pos.X, pos.Y, pos.Z);
-        }
 
-        public static TDS_Common.Dto.Map.Position3DDto SwitchNamespace(this Position3DDto dto) 
-        {
-            return new TDS_Common.Dto.Map.Position3DDto { X = dto.X, Y = dto.Y, Z = dto.Z };
-        }
-
-        public static Position3DDto SwitchNamespace(this TDS_Common.Dto.Map.Position3DDto dto)
-        {
-            return new Position3DDto { X = dto.X, Y = dto.Y, Z = dto.Z };
-        }
     }
 }

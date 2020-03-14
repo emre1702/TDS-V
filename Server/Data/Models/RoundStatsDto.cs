@@ -1,13 +1,12 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Default;
-using TDS_Server.Default;
-using TDS_Server.Instance.PlayerInstance;
+﻿using TDS_Server.Data.Default;
+using TDS_Server.Data.Interfaces;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Data.Models
 {
     public class RoundStatsDto
     {
-        private TDSPlayer _player;
+        private ITDSPlayer _player;
         private int _kills;
         private int _assists;
         private int _damage;
@@ -18,7 +17,7 @@ namespace TDS_Server.Data.Models
             set
             {
                 _kills = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetKillsForRoundStats, value);
+                _player.SendBrowserEvent(ToBrowserEvent.SetKillsForRoundStats, value);
             }
         }
 
@@ -28,7 +27,7 @@ namespace TDS_Server.Data.Models
             set
             {
                 _assists = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetAssistsForRoundStats, value);
+                _player.SendBrowserEvent(ToBrowserEvent.SetAssistsForRoundStats, value);
             }
         }
 
@@ -38,11 +37,11 @@ namespace TDS_Server.Data.Models
             set
             {
                 _damage = value;
-                NAPI.ClientEvent.TriggerClientEvent(_player.Player, DToClientEvent.ToBrowserEvent, DToBrowserEvent.SetDamageForRoundStats, value);
+                _player.SendBrowserEvent(ToBrowserEvent.SetDamageForRoundStats, value);
             }
         }
 
-        public RoundStatsDto(TDSPlayer player)
+        public RoundStatsDto(ITDSPlayer player)
         {
             _player = player;
             Clear();  // to sync it

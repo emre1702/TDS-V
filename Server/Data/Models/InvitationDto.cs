@@ -2,6 +2,7 @@
 
 namespace TDS_Server.Data.Models
 {
+    #nullable enable
     public class InvitationDto
     {
         [JsonProperty("0")]

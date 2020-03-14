@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Server.Dto;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Core.Damagesystem
 {

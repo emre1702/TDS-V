@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Server.CustomAttribute;
 using TDS_Server.Default;
 using TDS_Server.Enums;
@@ -10,7 +10,7 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Sync;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Core.Manager.Commands
 {

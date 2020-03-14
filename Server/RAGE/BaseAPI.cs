@@ -7,9 +7,12 @@ namespace TDS_Server.RAGE.Startup
     {
         public IPlayerAPI Player { get; private set; }
 
+        public ISyncAPI Sync { get; private set; }
+
         internal BaseAPI()
         {
             Player = new PlayerAPI();
+            Sync = new SyncAPI();
         }
     }
 }

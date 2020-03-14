@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Common.Enum.Userpanel;
-using TDS_Server_DB.Entity.Player;
+using TDS_Shared.Data.Enums.Userpanel;
+using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Database.Entity.Userpanel
 {
@@ -10,7 +10,7 @@ namespace TDS_Server.Database.Entity.Userpanel
         public int Id { get; set; }
         public int AuthorId { get; set; }
         public string Title { get; set; }
-        public ESupportType Type { get; set; }
+        public SupportType Type { get; set; }
         public int AtleastAdminLevel { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime? CloseTime { get; set; }

@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Instance.Utility;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Log;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Log;
 
 namespace TDS_Server.Core.Manager.Logs
 {

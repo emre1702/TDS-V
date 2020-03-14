@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TDS_Server_DB.Entity.GangEntities;
-using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Database.Entity.Rest
 {

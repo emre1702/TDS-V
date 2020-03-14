@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.Rest
 {
     public partial class FreeroamDefaultVehicle
     {
-        public EFreeroamVehicleType VehicleType { get; set; }
+        public FreeroamVehicleType VehicleType { get; set; }
         public VehicleHash VehicleHash { get; set; }
         public string Note { get; set; }
     }

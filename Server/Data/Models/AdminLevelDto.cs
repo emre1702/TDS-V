@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TDS_Common.Enum;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Data.Interfaces;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Models
 {
@@ -8,8 +8,8 @@ namespace TDS_Server.Data.Models
     {
         public short Level { get; set; }
         public string FontColor { get; set; }
-        public Dictionary<ELanguage, string> Names { get; set; } = new Dictionary<ELanguage, string>();
-        public List<TDSPlayer> PlayersOnline { get; set; } = new List<TDSPlayer>();
+        public Dictionary<Language, string> Names { get; set; } = new Dictionary<Language, string>();
+        public List<ITDSPlayer> PlayersOnline { get; set; } = new List<ITDSPlayer>();
 
         public AdminLevelDto(short level, string fontColor)
         {

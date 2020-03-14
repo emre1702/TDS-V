@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Serialization;
-using TDS_Common.Dto;
-using TDS_Common.Enum;
-using MapType = TDS_Server.Enums.MapType;
-using TDS_Server_DB.Entity.Player;
 using System.Linq;
-using TDS_Common.Dto.Map.Creator;
-using TDS_Common.Manager.Utility;
-using TDS_Common.Dto.Map;
-using TDS_Server.Manager.Helper;
+using System.Xml.Serialization;
+using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Models.Map.Creator;
+using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models.Map;
+using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Manager.Utility;
+using MapType = TDS_Server.Data.Enums.MapType;
+using Position3DDto = TDS_Server.Data.Models.Map.Creator.Position3DDto;
 
 namespace TDS_Server.Data.Models.Map
 {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
-
+    #nullable enable
+    #nullable disable warnings
     [XmlRoot("TDSMap")]
     public class MapDto
     {
@@ -58,9 +59,14 @@ namespace TDS_Server.Data.Models.Map
         [XmlIgnore]
         public bool IsSniper => Info.Type == MapType.Sniper;
 
-        public MapDto() { }
+        private Serializer _serializer;
 
-        public MapDto(MapCreateDataDto data)
+        public MapDto(Serializer serializer) 
+        {
+            _serializer = serializer;    
+        }
+
+        public MapDto(MapCreateDataDto data, Serializer serializer) : this(serializer)
         {
             Info = new MapInfoDto
             {
@@ -72,8 +78,8 @@ namespace TDS_Server.Data.Models.Map
 
             Descriptions = new MapDescriptionsDto
             {
-                English = data.Description[(int)ELanguage.English],
-                German = data.Description[(int)ELanguage.German]
+                English = data.Description[(int)Language.English],
+                German = data.Description[(int)Language.German]
             };
 
             data.TeamSpawns.RemoveAll(l => l.Count == 0);
@@ -87,7 +93,7 @@ namespace TDS_Server.Data.Models.Map
             {
                 Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
                 Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
-                EdgesJson = Serializer.ToClient(data.MapEdges)
+                EdgesJson = serializer.ToClient(data.MapEdges)
             };
 
             Objects = new MapObjectsListDto
@@ -100,7 +106,7 @@ namespace TDS_Server.Data.Models.Map
                 Entries = data.Vehicles.Select(o => new MapObjectPosition(o)).ToArray()
             };
 
-            Target = data.Target != null && data.Type == TDS_Common.Enum.EMapType.Gangwar ? new Position3DDto(data.Target) : null;
+            Target = data.Target != null && data.Type == TDS_Shared.Data.Enums.MapType.Gangwar ? new Position3DDto(data.Target) : null;
 
             if (data.BombPlaces != null)
             {
@@ -108,7 +114,7 @@ namespace TDS_Server.Data.Models.Map
                 {
                     PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
                 };
-                BombInfo.PlantPositionsJson = Serializer.ToClient(BombInfo.PlantPositions);
+                BombInfo.PlantPositionsJson = serializer.ToClient(BombInfo.PlantPositions);
             }
 
             LoadMapObjectsDataDto();
@@ -124,27 +130,27 @@ namespace TDS_Server.Data.Models.Map
                 Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
                 Target = Target?.SwitchNamespace(),
                 Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
-                Center = Target == null ? LimitInfo?.Center?.SwitchNamespace() : null
+                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
             };
-            ClientSyncedDataJson = Serializer.ToClient(clientSyncedDataDto);
+            ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
         }
 
-        public static bool operator == (MapDto? thisMap, MapDto? otherMap) 
+        public static bool operator ==(MapDto? thisMap, MapDto? otherMap)
         {
             if (thisMap is null || otherMap is null)
                 return ReferenceEquals(thisMap, otherMap);
             return thisMap.BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;
         }
 
-        public static bool operator != (MapDto? thisMap, MapDto? otherMap)
+        public static bool operator !=(MapDto thisMap, MapDto otherMap)
         {
-            if(thisMap is null || otherMap is null)
+            if (thisMap is null || otherMap is null)
                 return !ReferenceEquals(thisMap, otherMap);
 
             return thisMap.BrowserSyncedData.Id != otherMap.BrowserSyncedData.Id;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
                 return true;
@@ -163,6 +169,4 @@ namespace TDS_Server.Data.Models.Map
             return base.GetHashCode();
         }
     }
-
-#pragma warning restore CS8618 // Non-nullable field is uninitialized.
 }

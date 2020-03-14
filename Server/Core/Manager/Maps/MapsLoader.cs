@@ -12,8 +12,8 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Helper;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
-using DB = TDS_Server_DB.Entity;
+using TDS_Server.Database.Entity;
+using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.Maps
 {

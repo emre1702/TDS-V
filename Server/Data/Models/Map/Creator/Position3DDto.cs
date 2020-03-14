@@ -1,7 +1,7 @@
-﻿using GTANetworkAPI;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
-using TDS_Common.Dto.Map.Creator;
+using TDS_Server.Data.Models.GTA;
+using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator
 {
@@ -28,7 +28,7 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.PosZ;
         }
 
-        public Position3DDto(Vector3 pos)
+        public Position3DDto(Position3D pos)
         {
             X = pos.X;
             Y = pos.Y;

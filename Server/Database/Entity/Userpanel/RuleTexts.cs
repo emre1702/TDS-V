@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.Userpanel
 {
@@ -7,7 +7,7 @@ namespace TDS_Server.Database.Entity.Userpanel
     {
         public int RuleId { get; set; }
         public string RuleStr { get; set; }
-        public ELanguage Language { get; set; }
+        public Language Language { get; set; }
 
         public virtual Rules Rule { get; set; }
     }

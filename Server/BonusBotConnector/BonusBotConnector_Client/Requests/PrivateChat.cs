@@ -1,7 +1,7 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity.Player;
 using static BonusBotConnector_Client.Main;
 using static BonusBotConnector_Client.MessageToUser;
 

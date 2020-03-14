@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.CustomLobby;
 using TDS_Server.Instance.LobbyInstances;

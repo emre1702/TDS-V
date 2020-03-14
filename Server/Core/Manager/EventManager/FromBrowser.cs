@@ -4,15 +4,15 @@ using TDS_Common.Default;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.PlayerManager;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity.Player;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Manager.Utility;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Challenge;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Challenge;
 using BonusBotConnector_Client.Requests;
 using TDS_Server.Manager.Userpanel;
 

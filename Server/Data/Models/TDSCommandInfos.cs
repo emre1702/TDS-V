@@ -1,4 +1,4 @@
-﻿using TDS_Server.Enums;
+﻿using TDS_Server.Data.Enums;
 
 namespace TDS_Server.Data.Models
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TDS_Common.Default;
 using TDS_Common.Dto;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Server.Enums;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.PlayerInstance;

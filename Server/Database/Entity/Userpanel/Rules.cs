@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Database.Entity.Userpanel
 {
@@ -7,9 +8,9 @@ namespace TDS_Server.Database.Entity.Userpanel
     {
         public int Id { get; set; }
 
-        public ERuleTarget Target { get; set; }
+        public RuleTarget Target { get; set; }
 
-        public ERuleCategory Category { get; set; }
+        public RuleCategory Category { get; set; }
 
         public virtual ICollection<RuleTexts> RuleTexts { get; set; }
 

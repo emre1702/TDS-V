@@ -29,7 +29,7 @@ namespace TDS_Server.Core.Manager.Timer
                         PlayerAmountInArena = LobbyManager.Arena.Players.Count,
                         PlayerAmountInCustomLobby = LobbyManager.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
                         PlayerAmountInGangLobby = LobbyManager.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
-                        PlayerAmountInMainMenu = PlayerManager.PlayerManager.LoggedInPlayers.Where(p => p.CurrentLobby is null || p.CurrentLobby.Type == TDS_Common.Enum.ELobbyType.MainMenu).Count(),
+                        PlayerAmountInMainMenu = PlayerManager.PlayerManager.LoggedInPlayers.Where(p => p.CurrentLobby is null || p.CurrentLobby.Type == TDS_Shared.Data.Enums.ELobbyType.MainMenu).Count(),
                         PlayerAmountOnline = PlayerManager.PlayerManager.AmountLoggedInPlayers,
                         ServerPort = NAPI.Server.GetServerPort(),
                         Version = "1.0.0",   // Todo: Save Version somewhere else

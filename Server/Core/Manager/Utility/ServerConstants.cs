@@ -1,6 +1,4 @@
-﻿using GTANetworkAPI;
-
-namespace TDS_Server.Core.Manager.Utility
+﻿namespace TDS_Server.Core.Manager.Utility
 {
     class ServerConstants
     {
@@ -9,7 +7,7 @@ namespace TDS_Server.Core.Manager.Utility
         public const string NewMapsPath = _resourcePathPath + "newmaps/";
         public const string SavedMapsPath = _resourcePathPath + "savedmaps/";
         public const string NeedCheckMapsPath = _resourcePathPath + "needcheckmaps/";
-        public static uint TargetHash => NAPI.Util.GetHashKey("v_ret_ta_skull");
-        public static float ArenaHeadMultiplicator => 1.7f;
+        public static string GangwarTargetObjectName = "v_ret_ta_skull";
+        public static float ArenaHeadMultiplicator = 1.7f;
     }
 }

@@ -7,7 +7,7 @@ using TDS_Server.Enums;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.EventManager;
-using TDS_Server_DB.Entity.Server;
+using TDS_Server.Database.Entity.Server;
 
 namespace TDS_Server.Core.Manager.Stats
 {

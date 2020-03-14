@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using System;
 using TDS_Common.Default;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Userpanel;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Server.Enums;
 using TDS_Server.Instance.GameModes;
 using TDS_Server.Instance.LobbyInstances;

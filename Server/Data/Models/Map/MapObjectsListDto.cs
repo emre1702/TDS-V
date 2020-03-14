@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using TDS_Common.Dto.Map;
 
 namespace TDS_Server.Data.Models.Map
 {

@@ -1,13 +1,21 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TDS_Server.Database
 {
-    class CustomDBLogger : ILoggerProvider
+    public class CustomDBLogger : ILoggerProvider
     {
-        private static object locker = new object();
+        private bool _disposed = false;
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+        private readonly static object _locker = new object();
+        private static string _path;
+
+        public CustomDBLogger(string path)
+            => _path = path;
 
         public ILogger CreateLogger(string categoryName)
         {
@@ -16,7 +24,21 @@ namespace TDS_Server.Database
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _handle.Dispose();
+            }
+
+            _disposed = true;
         }
 
         private class CustomLogger : ILogger
@@ -36,18 +58,18 @@ namespace TDS_Server.Database
                 string msg = Environment.NewLine + "[" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "] " + formatter(state, exception) + Environment.NewLine;
                 try
                 {
-                    lock (locker)
+                    lock (_locker)
                     {
                         if (_logQuery.Count > 0)
                         {
                             foreach (var str in _logQuery)
                             {
-                                File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", str);
+                                File.AppendAllText(_path, str);
                             }
                             _logQuery.Clear();
                         }
 
-                        File.AppendAllText(@"D:\DBLogs\FromCsharp\log.txt", msg);
+                        File.AppendAllText(_path, msg);
                     }
                    
                 }

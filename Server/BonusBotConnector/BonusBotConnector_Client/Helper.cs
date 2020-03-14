@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity.Player;
 
 namespace BonusBotConnector.Client
 {
@@ -10,7 +10,7 @@ namespace BonusBotConnector.Client
         {
            var list = new List<EmbedField>
            {
-               new EmbedField { Name = "Location:", Value = ban.Lobby.Type == TDS_Common.Enum.ELobbyType.MainMenu ? "Server" : ban.Lobby.Name },
+               new EmbedField { Name = "Location:", Value = ban.Lobby.Type == TDS_Shared.Data.Enums.ELobbyType.MainMenu ? "Server" : ban.Lobby.Name },
                new EmbedField { Name = "Admin:", Value = $"{ban.Admin.Name} ({ban.Admin.SCName})" },
                new EmbedField { Name = "Reason:", Value = ban.Reason },
                new EmbedField { Name = "Started:", Value = ban.StartTimestamp.ToString() },

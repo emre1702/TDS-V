@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
-using TDS_Common.Dto.Map.Creator;
+using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator
 {
+    #nullable enable
     public class Position4DDto
     {
         [XmlAttribute("x")]
@@ -24,7 +25,7 @@ namespace TDS_Server.Data.Models.Map.Creator
 
         public Position4DDto() { }
 
-        public Position4DDto(MapCreatorPosition pos) 
+        public Position4DDto(MapCreatorPosition pos)
         {
             X = pos.PosX;
             Y = pos.PosY;

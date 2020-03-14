@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server_DB.Entity.Admin;
-using TDS_Server_DB.Entity.Challenge;
-using TDS_Server_DB.Entity.GangEntities;
-using TDS_Server_DB.Entity.LobbyEntities;
-using TDS_Server_DB.Entity.Rest;
-using TDS_Server_DB.Entity.Userpanel;
+using TDS_Server.Database.Entity.Admin;
+using TDS_Server.Database.Entity.Challenge;
+using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Database.Entity.Userpanel;
 
 namespace TDS_Server.Database.Entity.Player
 {

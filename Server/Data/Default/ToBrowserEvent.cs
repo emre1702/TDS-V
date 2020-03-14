@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Data.Default
+﻿namespace TDS_Server.Data.Default
 {
-    static class ToBrowserEvent
+    public static class ToBrowserEvent
     {
         public const string AddInvitation = "sb1";
         public const string RemoveInvitation = "sb2";

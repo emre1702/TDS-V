@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Data.Models
 {
@@ -19,9 +19,9 @@ namespace TDS_Server.Data.Models
         public int Damage { get; set; }
 
         [JsonIgnore]
-        public TDSPlayer Player { get; set; }
-    
-        public RoundPlayerRankingStat(TDSPlayer player)
+        public ITDSPlayer Player { get; set; }
+
+        public RoundPlayerRankingStat(ITDSPlayer player)
         {
             Player = player;
             Name = player.DisplayName;

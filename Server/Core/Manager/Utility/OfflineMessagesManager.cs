@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
 using TDS_Server.Instance.PlayerInstance;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
-using TDS_Server_DB.Entity.Rest;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Rest;
 
 namespace TDS_Server.Core.Manager.Utility
 {

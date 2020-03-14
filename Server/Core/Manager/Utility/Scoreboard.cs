@@ -6,7 +6,7 @@ using TDS_Common.Dto;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.PlayerManager;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Common.Manager.Utility;
 
 namespace TDS_Server.Core.Manager.Utility

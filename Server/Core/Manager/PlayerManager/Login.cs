@@ -4,8 +4,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Challenge;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Challlenge;
@@ -17,7 +17,7 @@ using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
+using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
@@ -70,7 +70,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 return;
 
             if (player.Entity.PlayerClothes is null)
-                player.Entity.PlayerClothes = new TDS_Server_DB.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
+                player.Entity.PlayerClothes = new TDS_Server.Database.Entity.Player.PlayerClothes { IsMale = CommonUtils.GetRandom(true, false) };
 
             #region Add weekly challenges and reload
             if (!player.Entity.Challenges.Any(c => c.Frequency == EChallengeFrequency.Weekly))

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Common.Enum;
-using TDS_Server_DB.Entity.Player;
-using TDS_Server_DB.Entity.Rest;
+using TDS_Shared.Data.Enums;
+using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Rest;
 
 namespace TDS_Server.Database.Entity.LobbyEntities
 {
@@ -19,7 +19,7 @@ namespace TDS_Server.Database.Entity.LobbyEntities
 
         public int Id { get; set; }
         public int OwnerId { get; set; }
-        public ELobbyType Type { get; set; }
+        public LobbyType Type { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public float DefaultSpawnX { get; set; }

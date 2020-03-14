@@ -2,10 +2,10 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
-using TDS_Server_DB.Entity;
+using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.Userpanel
 {

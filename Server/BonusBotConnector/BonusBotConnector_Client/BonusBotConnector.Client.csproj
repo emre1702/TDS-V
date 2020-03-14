@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TDS_Server_DB\Database.csproj" />
+    <ProjectReference Include="..\..\Database\TDS_Server.Database.csproj" />
   </ItemGroup>
 
 </Project>

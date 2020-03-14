@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using TDS_Common.Default;
-using TDS_Common.Enum.Challenge;
-using TDS_Common.Enum.Userpanel;
+using TDS_Shared.Data.Enums.Challenge;
+using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Server.Instance.PlayerInstance;
-using TDS_Server_DB.Entity;
+using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.Userpanel
 {

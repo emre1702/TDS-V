@@ -2,6 +2,7 @@
 
 namespace TDS_Server.Data.Models.Map
 {
+    #nullable enable
     public class MapDescriptionsDto
     {
         [XmlElement("english")]

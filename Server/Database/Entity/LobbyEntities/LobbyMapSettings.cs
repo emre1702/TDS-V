@@ -1,4 +1,4 @@
-﻿using TDS_Common.Enum;
+﻿using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.LobbyEntities
 {
@@ -6,7 +6,7 @@ namespace TDS_Server.Database.Entity.LobbyEntities
     {
         public int LobbyId { get; set; }
         public int MapLimitTime { get; set; }
-        public EMapLimitType MapLimitType { get; set; }
+        public MapLimitType MapLimitType { get; set; }
 
         public virtual Lobbies Lobby { get; set; }
     }

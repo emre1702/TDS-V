@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Server.Dto;
 using TDS_Server.Dto.Map;
 using TDS_Server.Instance.LobbyInstances;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Maps;
 using TDS_Server.Manager.Sync;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Rest;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Instance.GameModes;
 using TDS_Common.Manager.Utility;
-using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Enums;
-using EMapType = TDS_Common.Enum.EMapType;
+using EMapType = TDS_Shared.Data.Enums.EMapType;
 using TDS_Server.Dto.CustomLobby;
 
 namespace TDS_Server.Core.Manager.Utility

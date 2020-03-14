@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TDS_Server.Instance.PlayerInstance;
-using TDS_Server_DB.Entity.Log;
+using TDS_Server.Database.Entity.Log;
 
 namespace TDS_Server.Core.Manager.Logs
 {

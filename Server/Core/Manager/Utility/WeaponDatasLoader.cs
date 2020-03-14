@@ -12,8 +12,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Dto.WeaponsMeta;
 using TDS_Server.Manager.Logs;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Rest;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Rest;
 
 namespace TDS_Server.Core.Manager.Utility
 {

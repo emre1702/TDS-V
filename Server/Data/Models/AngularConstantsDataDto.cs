@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Data.Models
 {
-    #nullable disable
+#nullable disable
     public class AngularConstantsDataDto
     {
         [JsonProperty("0")]
@@ -34,12 +33,12 @@ namespace TDS_Server.Data.Models
         [JsonProperty("8")]
         public string SCName { get; set; }
 
-        public static AngularConstantsDataDto Get(TDSPlayer player)
+        public static AngularConstantsDataDto Get(ITDSPlayer player)
         {
             return new AngularConstantsDataDto
             {
-                TDSId = player.Entity!.Id,
-                RemoteId = player.Player.Handle.Value,
+                TDSId = player.Id,
+                RemoteId = player.RemoteId,
                 UsernameChangeCost = SettingsManager.ServerSettings.UsernameChangeCost,
                 UsernameChangeCooldownDays = SettingsManager.ServerSettings.UsernameChangeCooldownDays,
                 MapBuyBasePrice = SettingsManager.ServerSettings.MapBuyBasePrice,
@@ -50,5 +49,5 @@ namespace TDS_Server.Data.Models
             };
         }
     }
-    #nullable restore
+#nullable restore
 }

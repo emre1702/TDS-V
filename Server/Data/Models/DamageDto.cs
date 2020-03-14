@@ -1,4 +1,4 @@
-﻿using TDS_Server_DB.Entity.LobbyEntities;
+﻿using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Data.Models
 {

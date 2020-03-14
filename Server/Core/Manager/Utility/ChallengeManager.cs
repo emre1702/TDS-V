@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Common.Default;
-using TDS_Common.Enum.Challenge;
+using TDS_Shared.Data.Enums.Challenge;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Default;
 using TDS_Server.Dto.Challlenge;
 using TDS_Server.Instance.PlayerInstance;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Challenge;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Challenge;
+using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Core.Manager.Utility
 {

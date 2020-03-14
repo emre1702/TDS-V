@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using TDS_Server.CustomAttribute;
+using TDS_Server.Data.CustomAttribute;
 
 namespace TDS_Server.Data.Models
 {
+    #nullable enable
     class CommandMethodDataDto
     {
         public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true

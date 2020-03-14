@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Common.Enum;
-using TDS_Server_DB.Entity.LobbyEntities;
+using TDS_Shared.Data.Enums;
+using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Database.Entity.Rest
 {
     public partial class Weapons
     {
         public WeaponHash Hash { get; set; }
-        public EWeaponType Type { get; set; }
+        public WeaponType Type { get; set; }
 
         public int ClipSize { get; set; }
         public float MinHeadShotDistance { get; set; }

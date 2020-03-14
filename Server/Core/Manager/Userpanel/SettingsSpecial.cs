@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Common.Enum;
-using TDS_Common.Enum.Userpanel;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Dto.Userpanel;
 using TDS_Server.Enums;

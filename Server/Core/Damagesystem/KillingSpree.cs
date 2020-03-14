@@ -7,7 +7,7 @@ namespace TDS_Server.Core.Damagesystem
     using TDS_Common.Default;
     using TDS_Server.Instance.PlayerInstance;
     using TDS_Server.Manager.Utility;
-    using TDS_Server_DB.Entity.LobbyEntities;
+    using TDS_Server.Database.Entity.LobbyEntities;
 
     partial class Damagesys
     {

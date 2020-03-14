@@ -5,7 +5,7 @@ using System.Linq;
 using TDS_Server.Instance.Utility;
 using TDS_Server.Manager.Logs;
 using TDS_Server.Manager.Maps;
-using TDS_Server_DB.Entity;
+using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.Utility
 {

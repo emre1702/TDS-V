@@ -1,6 +1,5 @@
-﻿using System;
-using System.Xml.Serialization;
-using TDS_Common.Dto.Map.Creator;
+﻿using System.Xml.Serialization;
+using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map
 {

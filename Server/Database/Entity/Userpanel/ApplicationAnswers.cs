@@ -1,4 +1,4 @@
-﻿using TDS_Server_DB.Entity.Player;
+﻿using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Database.Entity.Userpanel
 {

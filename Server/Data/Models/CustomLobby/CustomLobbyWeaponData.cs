@@ -1,5 +1,5 @@
-﻿using GTANetworkAPI;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Models.CustomLobby
 {
@@ -16,7 +16,7 @@ namespace TDS_Server.Data.Models.CustomLobby
 
         [JsonProperty("3")]
         public float? HeadshotMultiplicator { get; set; }
-        
+
         /*[JsonProperty("4")]
         public float MinHeadshotDistance { get; set; }
 

@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using TDS_Common.Enum.Challenge;
+using TDS_Shared.Data.Enums.Challenge;
 
 namespace TDS_Server.Data.Models.Challenge
 {
     public class ChallengeModel
     {
         [JsonProperty("0")]
-        public EChallengeType Type { get; set; }
+        public ChallengeType Type { get; set; }
 
         [JsonProperty("1")]
         public int Amount { get; set; }

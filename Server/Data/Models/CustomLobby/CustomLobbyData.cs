@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Models.CustomLobby
 {

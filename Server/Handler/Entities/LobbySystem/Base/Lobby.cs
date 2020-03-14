@@ -1,0 +1,178 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Models.GTA;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
+using TDS_Shared.Manager.Utility;
+
+namespace TDS_Server.Handler.Entities.LobbySystem.Base
+{
+    public partial class Lobby : DatabaseEntityWrapper, ILobby
+    {
+        public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
+        private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
+
+        public Lobbies Entity { get; }
+
+        public int Id => Entity.Id;
+        public LobbyType Type => Entity.Type;
+        public string Name => Entity.Name;
+        public bool IsOfficial => Entity.IsOfficial;
+        public string CreatorName => Entity.Owner?.Name ?? "?";
+        public string OwnerName => CreatorName;
+        public int StartTotalHP => (Entity.FightSettings?.StartArmor ?? 100) + (Entity.FightSettings?.StartHealth ?? 100);
+
+        public uint Dimension { get; }
+        protected Position3D SpawnPoint { get; }
+        public bool IsGangActionLobby { get; set; }
+
+        protected SyncedLobbySettingsDto _syncedLobbySettings;
+        protected Serializer _serializer;
+        protected IModAPI _modAPI;
+
+        public Lobby(
+            Lobbies entity,
+            bool isGangActionLobby,
+
+            TDSDbContext dbContext,
+            LoggingHandler loggingHandler,
+            Serializer serializer,
+            IModAPI modAPI) : base(dbContext, loggingHandler)
+        {
+            _serializer = serializer;
+            _modAPI = modAPI;
+
+            Entity = entity;
+
+            dbContext.Attach(entity);
+
+            Dimension = GetFreeDimension();
+            SpawnPoint = new Position3D(
+                entity.DefaultSpawnX,
+                entity.DefaultSpawnY,
+                entity.DefaultSpawnZ
+            );
+
+            _dimensionsUsed.Add(Dimension);
+
+            Teams = new List<Team>(entity.Teams.Count);
+            foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
+            {
+                Team team = new Team(teamEntity);
+                Teams.Add(team);
+            }
+
+            _syncedLobbySettings = new SyncedLobbySettingsDto
+            (
+                Id: entity.Id,
+                Name: entity.Name,
+                Type: entity.Type,
+                IsOfficial: entity.IsOfficial,
+                BombDefuseTimeMs: entity.LobbyRoundSettings?.BombDefuseTimeMs,
+                BombPlantTimeMs: entity.LobbyRoundSettings?.BombPlantTimeMs,
+                SpawnAgainAfterDeathMs: entity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,
+                CountdownTime: isGangActionLobby ? 0 : entity.LobbyRoundSettings?.CountdownTime,
+                RoundTime: entity.LobbyRoundSettings?.RoundTime,
+                BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
+                InLobbyWithMaps: this is Arena,
+                MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
+                MapLimitType: entity.LobbyMapSettings?.MapLimitType,
+                StartHealth: entity.FightSettings?.StartHealth ?? 100,
+                StartArmor: entity.FightSettings?.StartArmor ?? 100,
+                serializer: serializer
+            );
+        }
+
+        public virtual void Start()
+        {
+        }
+
+        protected async virtual void Remove()
+        {
+            LobbiesByIndex.Remove(Entity.Id);
+            LobbyManager.RemoveLobby(this);
+            _dimensionsUsed.Remove(Dimension);
+
+            foreach (TDSPlayer player in Players.ToArray())
+            {
+                RemovePlayer(player);
+            }
+
+            await ExecuteForDBAsync(async (dbContext) =>
+            {
+                dbContext.Remove(Entity);
+                await dbContext.SaveChangesAsync();
+                dbContext.Dispose();
+            });
+
+
+        }
+
+        private static uint GetFreeDimension()
+        {
+            uint tryid = 0;
+            while (_dimensionsUsed.Contains(tryid))
+                ++tryid;
+            return tryid;
+        }
+
+        protected bool IsEmpty()
+        {
+            return Players.Count == 0;
+        }
+
+
+        /// <summary>
+        /// Call this on lobby create.
+        /// </summary>
+        public Task AddToDB()
+        {
+            return ExecuteForDBAsync(async (dbContext) =>
+            {
+                dbContext.Add(Entity);
+                await dbContext.SaveChangesAsync();
+
+                await dbContext.Entry(Entity)
+                    .Reference(e => e.Owner)
+                    .LoadAsync();
+
+                await dbContext.Entry(Entity)
+                    .Collection(e => e.LobbyMaps)
+                    .Query()
+                    .Include(e => e.Map)
+                    .LoadAsync();
+
+                // Reload again because Entity could have changed (default values in DB)
+                _syncedLobbySettings = new SyncedLobbySettingsDto
+                (
+                    Id: Entity.Id,
+                    Name: Entity.Name,
+                    Type: Entity.Type,
+                    IsOfficial: Entity.IsOfficial,
+                    BombDefuseTimeMs: Entity.LobbyRoundSettings?.BombDefuseTimeMs,
+                    BombPlantTimeMs: Entity.LobbyRoundSettings?.BombPlantTimeMs,
+                    SpawnAgainAfterDeathMs: Entity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,
+                    CountdownTime: IsGangActionLobby ? 0 : Entity.LobbyRoundSettings?.CountdownTime,
+                    RoundTime: Entity.LobbyRoundSettings?.RoundTime,
+                    BombDetonateTimeMs: Entity.LobbyRoundSettings?.BombDetonateTimeMs,
+                    InLobbyWithMaps: this is Arena,
+                    MapLimitTime: Entity.LobbyMapSettings?.MapLimitTime,
+                    MapLimitType: Entity.LobbyMapSettings?.MapLimitType,
+                    StartHealth: Entity.FightSettings?.StartHealth ?? 100,
+                    StartArmor: Entity.FightSettings?.StartArmor ?? 100,
+                    serializer: _serializer
+                );
+            });
+
+        }
+    }
+}

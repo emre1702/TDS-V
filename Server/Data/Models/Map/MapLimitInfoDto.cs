@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
+using TDS_Server.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map
 {
-
-#nullable disable warnings
+    #nullable enable
     public class MapLimitInfoDto
     {
         [XmlElement("pos")]
@@ -17,7 +17,6 @@ namespace TDS_Server.Data.Models.Map
 
         [XmlIgnore]
         [JsonIgnore]
-        public string EdgesJson { get; set; }
+        public string EdgesJson { get; set; } = "[]";
     }
-#nullable restore warnings
 }

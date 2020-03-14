@@ -25,13 +25,6 @@ namespace TDS_Server.Database.Entity
     {
         public static bool IsConfigured { get; private set; }
 
-        private static string _connectionString;
-
-        public TDSDbContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         public TDSDbContext()
         {
         }
@@ -39,6 +32,7 @@ namespace TDS_Server.Database.Entity
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
             : base(options)
         {
+           
         }
 
         static TDSDbContext()
@@ -112,24 +106,6 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var loggerFactory = LoggerFactory.Create(builder =>
-                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
-                        .AddProvider(new CustomDBLogger())
-                );
-
-                string connStr = _connectionString ?? "Server=localhost;Database=TDSV;User ID=tdsv;Password=ajagrebo;";
-                optionsBuilder
-                    .UseLoggerFactory(loggerFactory)
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql(connStr, options =>
-                        options.EnableRetryOnFailure())
-                    .UseSnakeCaseNamingConvention();
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

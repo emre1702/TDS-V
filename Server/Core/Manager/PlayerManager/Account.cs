@@ -3,19 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq;
 using TDS_Common.Default;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
+using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.EventManager;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
 using Task = System.Threading.Tasks.Task;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
     class Account : Script
     {
-        private static BansManager? _bansManager;
+        private static BansHandler? _bansManager;
 
         public static void Init()
         {

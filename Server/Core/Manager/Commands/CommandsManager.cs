@@ -15,10 +15,10 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Mapping;
 using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Command;
-using TDS_Server_DB.Entity.Player;
-using DB = TDS_Server_DB.Entity.Command;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Command;
+using TDS_Server.Database.Entity.Player;
+using DB = TDS_Server.Database.Entity.Command;
 
 namespace TDS_Server.Core.Manager.Commands
 {

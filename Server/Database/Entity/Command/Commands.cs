@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TDS_Server_DB.Entity.Admin;
+using TDS_Server.Database.Entity.Admin;
 
 namespace TDS_Server.Database.Entity.Command
 {

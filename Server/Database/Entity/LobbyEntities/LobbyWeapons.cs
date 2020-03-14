@@ -1,5 +1,5 @@
-﻿using GTANetworkAPI;
-using TDS_Server_DB.Entity.Rest;
+﻿using TDS_Server.Database.Entity.Rest;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.LobbyEntities
 {

@@ -15,7 +15,7 @@ namespace TDS_Server.Core.Manager.Userpanel
 
         public static void LoadCommandData(
             Dictionary<string, CommandDataDto> commandDataByCommand, 
-            Dictionary<string, TDS_Server_DB.Entity.Command.Commands> commandsDict)
+            Dictionary<string, TDS_Server.Database.Entity.Command.Commands> commandsDict)
         {
             foreach (var entry in commandDataByCommand)
             {

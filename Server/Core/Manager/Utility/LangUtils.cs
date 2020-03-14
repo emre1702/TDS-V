@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
-using TDS_Common.Enum;
+using TDS_Shared.Data.Enums;
 using TDS_Server.Instance.Language;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;

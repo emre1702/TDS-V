@@ -6,8 +6,8 @@ using TDS_Common.Default;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.PlayerManager;
-using TDS_Server_DB.Entity;
-using TDS_Server_DB.Entity.Player;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Core.Manager.Maps
 {
