@@ -1,11 +1,4 @@
-﻿using BonusBotConnector_Client.Requests;
-using Grpc.Net.Client;
-using System;
-using System.Linq;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Bonusbot;
-
-namespace BonusBotConnector.Client
+﻿namespace BonusBotConnector.Client
 {
     public static class Main
     {

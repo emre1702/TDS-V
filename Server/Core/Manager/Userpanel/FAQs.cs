@@ -11,10 +11,10 @@ namespace TDS_Server.Core.Manager.Userpanel
 {
     class FAQs
     {
-        private static readonly Dictionary<ELanguage, string> _faqsJsonByLanguage = new Dictionary<ELanguage, string>() 
+        private static readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>() 
         { 
-            [ELanguage.English] = string.Empty,
-            [ELanguage.German] = string.Empty
+            [Language.English] = string.Empty,
+            [Language.German] = string.Empty
         };
 
 

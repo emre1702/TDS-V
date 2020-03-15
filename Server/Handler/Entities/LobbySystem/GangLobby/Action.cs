@@ -11,7 +11,7 @@ using TDS_Server.Manager.Utility;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
@@ -45,7 +45,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
             await lobby.AddToDB();
             lobby.SetMapList(new List<MapDto> { gangwarArea.Map });
 
-            lobby.SetRoundStatus(Enums.ERoundStatus.NewMapChoose);
+            lobby.SetRoundStatus(Enums.RoundStatus.NewMapChoose);
             await lobby.AddPlayer(attacker, 1);
 
             lobby.Start();
@@ -78,15 +78,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
                 LobbyWeapons = LobbyManager.GetAllPossibleLobbyWeapons(EMapType.Normal),
                 LobbyRewards = new LobbyRewards
                 {
-                    MoneyPerAssist = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerAssist,
-                    MoneyPerDamage = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerDamage,
-                    MoneyPerKill = LobbyManager.Arena.LobbyEntity.LobbyRewards.MoneyPerKill,
+                    MoneyPerAssist = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerAssist,
+                    MoneyPerDamage = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerDamage,
+                    MoneyPerKill = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerKill,
                 },
                 IsOfficial = true,
                 IsTemporary = false,
                 OwnerId = -1,
                 Name = $"[GW-Prep] {area.Attacker.Entity.Short}",
-                Type = ELobbyType.Arena,
+                Type = LobbyType.Arena,
                 Teams = new List<Teams>
                 {
                     dummyDBTeam,
@@ -127,7 +127,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
                 //todo The owners are already in an action
                 return false;
             }
-            if (attacker.CurrentLobby?.Type != ELobbyType.GangLobby)
+            if (attacker.Lobby?.Type != LobbyType.GangLobby)
             {
                 ErrorLogsManager.Log("Tried to start an action, but is not in GangLobby", Environment.StackTrace, attacker);
                 return false;

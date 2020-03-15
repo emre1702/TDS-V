@@ -45,7 +45,9 @@ namespace TDS_Server.Core.Startup
                         // .EnableSensitiveDataLogging()
                         .UseNpgsql(appConfigHandler.ConnectionString, options =>
                             options.EnableRetryOnFailure())
-                        .UseSnakeCaseNamingConvention());
+                        .UseSnakeCaseNamingConvention()
+                        .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll)
+                    );
 
             return serviceCollection.BuildServiceProvider();
         }

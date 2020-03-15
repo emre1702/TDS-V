@@ -114,7 +114,7 @@ namespace TDS_Server.Core.Damagesystem
             if (source is null)
                 return;
 
-            if (target.CurrentLobby != source.CurrentLobby)
+            if (target.Lobby != source.Lobby)
                 return;
             if (target.Team == source.Team)
                 return;
@@ -130,12 +130,12 @@ namespace TDS_Server.Core.Damagesystem
 
             if (source.Entity?.PlayerSettings.FloatingDamageInfo == true)
             {
-                NAPI.ClientEvent.TriggerClientEvent(source.Player, DToClientEvent.HitOpponent, target.Player.Handle.Value, damage);
+                NAPI.ClientEvent.TriggerClientEvent(source.Player, ToClientEvent.HitOpponent, target.Player.Handle.Value, damage);
             }
 
             if (target.Health == 0 && isHeadShot)
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.ExplodeHead, (uint)weapon);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, ToClientEvent.ExplodeHead, (uint)weapon);
             }
         }
 

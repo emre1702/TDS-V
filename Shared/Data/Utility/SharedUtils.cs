@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 
-namespace TDS_Shared.Manager.Utility
+namespace TDS_Shared.Data.Utility
 {
-    public static class CommonUtils
+    public static class SharedUtils
     {
         public static readonly Random Rnd = new Random();
         public static bool IsServersided { get; set; }

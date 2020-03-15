@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    enum InvitationType
+    public enum InvitationType
     {
         None,
         Lobby

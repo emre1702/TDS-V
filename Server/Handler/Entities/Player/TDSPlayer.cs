@@ -21,6 +21,8 @@ namespace TDS_Server.Handler.Entities.Player
         public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
         public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
         public IPlayer? ModPlayer { get; }
+        public string IPAddress => ModPlayer?.IPAddress ?? "-";
+        public string Serial => ModPlayer?.Serial ?? "-";
 
         public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
 
@@ -44,6 +46,7 @@ namespace TDS_Server.Handler.Entities.Player
         private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly SpectateHandler _spectateHandler;
 
         public TDSPlayer(
             IPlayer? modPlayer,
@@ -64,6 +67,7 @@ namespace TDS_Server.Handler.Entities.Player
             _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _dataSyncHandler = dataSyncHandler;
+            _spectateHandler = spectateHandler;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
         }

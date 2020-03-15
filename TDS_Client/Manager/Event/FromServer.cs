@@ -33,86 +33,86 @@ namespace TDS_Client.Manager.Event
 
         private void AddFromServerEvents()
         {
-            Add(DToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
-            Add(DToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
-            Add(DToClientEvent.ApplySuicideAnimation, OnApplySuicideAnimationMethod);
-            Add(DToClientEvent.BombPlanted, OnBombPlantedMethod);
-            Add(DToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
-            Add(DToClientEvent.BombOnHand, OnBombOnHandMethod);
-            Add(DToClientEvent.BombDetonated, OnBombDetonatedMethod);
-            Add(DToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
-            Add(DToClientEvent.CountdownStart, OnCountdownStartMethod);
-            Add(DToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
-            Add(DToClientEvent.Death, OnDeathMethod);
-            Add(DToClientEvent.ExplodeHead, OnExplodeHeadMethod);
-            Add(DToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
-            Add(DToClientEvent.HitOpponent, OnHitOpponentMethod);
-            Add(DToClientEvent.JoinLobby, OnJoinLobbyMethod);
-            Add(DToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
-            Add(DToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
-            Add(DToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
-            Add(DToClientEvent.LoadApplicationDataForAdmin, OnLoadApplicationDataForAdminMethod);
-            Add(DToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
-            Add(DToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
-            Add(DToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
-            Add(DToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
-            Add(DToClientEvent.LoadUserpanelData, OnLoadUserpanelDataMethod);
-            Add(DToClientEvent.MapChange, OnMapChangeMethod);
-            Add(DToClientEvent.MapClear, OnMapClearMethod);
-            Add(DToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
-            Add(DToClientEvent.MapCreatorStartNewMap, OnMapCreatorStartNewMapMethod);
-            Add(DToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
-            Add(DToClientEvent.MapCreatorSyncData, OnMapCreatorSyncDataMethod);
-            Add(DToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
-            Add(DToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
-            Add(DToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
-            Add(DToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
-            Add(DToClientEvent.MapsListRequest, OnMapListRequestMethod);
-            Add(DToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
-            Add(DToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
-            Add(DToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
-            Add(DToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
-            Add(DToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
-            Add(DToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
-            Add(DToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
-            Add(DToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
-            Add(DToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
-            //Add(DToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
-            Add(DToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
-            Add(DToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
-            Add(DToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
-            Add(DToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
-            Add(DToClientEvent.RoundStart, OnRoundStartMethod);
-            Add(DToClientEvent.RoundEnd, OnRoundEndMethod);
-            Add(DToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
-            Add(DToClientEvent.SendMapCreatorReturn, OnSendMapCreatorReturnMethod);
-            //Add(DToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
-            //Add(DToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
-            //Add(DToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
-            Add(DToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
-            Add(DToClientEvent.SetMapVotes, OnSetMapVotesMethod);
-            Add(DToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
-            Add(DToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
-            Add(DToClientEvent.SetSupportRequestClosed, OnSetSupportRequestClosedMethod);
-            Add(DToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
-            Add(DToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
-            Add(DToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
-            Add(DToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
-            Add(DToClientEvent.StopMapVoting, OnStopMapVotingMethod);
-            Add(DToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
-            Add(DToClientEvent.StopSpectator, OnStopSpectatorMethod);
-            Add(DToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
-            Add(DToClientEvent.SyncNewSupportRequestMessage, OnSyncNewSupportRequestMessageMethod);
-            Add(DToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
-            Add(DToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
-            Add(DToClientEvent.SyncSettings, OnSyncSettingsMethod);
-            Add(DToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
-            Add(DToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
-            Add(DToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
-            Add(DToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
+            Add(ToClientEvent.AddMapToVoting, OnAddMapToVotingMethod);
+            Add(ToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
+            Add(ToClientEvent.ApplySuicideAnimation, OnApplySuicideAnimationMethod);
+            Add(ToClientEvent.BombPlanted, OnBombPlantedMethod);
+            Add(ToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
+            Add(ToClientEvent.BombOnHand, OnBombOnHandMethod);
+            Add(ToClientEvent.BombDetonated, OnBombDetonatedMethod);
+            Add(ToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
+            Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
+            Add(ToClientEvent.CreateCustomLobbyResponse, OnCreateCustomLobbyResponseMethod);
+            Add(ToClientEvent.Death, OnDeathMethod);
+            Add(ToClientEvent.ExplodeHead, OnExplodeHeadMethod);
+            Add(ToClientEvent.GetSupportRequestData, OnGetSupportRequestDataMethod);
+            Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
+            Add(ToClientEvent.JoinLobby, OnJoinLobbyMethod);
+            Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
+            Add(ToClientEvent.LeaveCustomLobbyMenu, OnLeaveCustomLobbyMenuMethod);
+            Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+            Add(ToClientEvent.LoadApplicationDataForAdmin, OnLoadApplicationDataForAdminMethod);
+            Add(ToClientEvent.LoadMapFavourites, OnLoadMapFavouritesMethod);
+            Add(ToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
+            Add(ToClientEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorServerMethod);
+            Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
+            Add(ToClientEvent.LoadUserpanelData, OnLoadUserpanelDataMethod);
+            Add(ToClientEvent.MapChange, OnMapChangeMethod);
+            Add(ToClientEvent.MapClear, OnMapClearMethod);
+            Add(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
+            Add(ToClientEvent.MapCreatorStartNewMap, OnMapCreatorStartNewMapMethod);
+            Add(ToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
+            Add(ToClientEvent.MapCreatorSyncData, OnMapCreatorSyncDataMethod);
+            Add(ToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
+            Add(ToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
+            Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
+            Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
+            Add(ToClientEvent.MapsListRequest, OnMapListRequestMethod);
+            Add(ToClientEvent.MapVotingSyncOnPlayerJoin, OnMapVotingSyncOnPlayerJoinMethod);
+            Add(ToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
+            Add(ToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
+            Add(ToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
+            Add(ToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
+            Add(ToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
+            Add(ToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
+            Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
+            Add(ToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
+            //Add(ToClientEvent.PlayerWeaponChange, OnPlayerWeaponChangeMethod);
+            Add(ToClientEvent.RegisterLoginSuccessful, OnRegisterLoginSuccessfulMethod);
+            Add(ToClientEvent.RemoveCustomLobby, OnRemoveCustomLobbyMethod);
+            Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
+            Add(ToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
+            Add(ToClientEvent.RoundStart, OnRoundStartMethod);
+            Add(ToClientEvent.RoundEnd, OnRoundEndMethod);
+            Add(ToClientEvent.SaveMapCreatorReturn, OnSaveMapCreatorReturnMethod);
+            Add(ToClientEvent.SendMapCreatorReturn, OnSendMapCreatorReturnMethod);
+            //Add(ToClientEvent.SetAssistsForRoundStats, OnSetAssistsForRoundStatsMethod);
+            //Add(ToClientEvent.SetDamageForRoundStats, OnSetDamageForRoundStatsMethod);
+            //Add(ToClientEvent.SetKillsForRoundStats, OnSetKillsForRoundStatsMethod);
+            Add(ToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
+            Add(ToClientEvent.SetMapVotes, OnSetMapVotesMethod);
+            Add(ToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
+            Add(ToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
+            Add(ToClientEvent.SetSupportRequestClosed, OnSetSupportRequestClosedMethod);
+            Add(ToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
+            Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
+            Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
+            Add(ToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
+            Add(ToClientEvent.StopMapVoting, OnStopMapVotingMethod);
+            Add(ToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
+            Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
+            Add(ToClientEvent.SyncAllCustomLobbies, OnSyncAllCustomLobbiesMethod);
+            Add(ToClientEvent.SyncNewSupportRequestMessage, OnSyncNewSupportRequestMessageMethod);
+            Add(ToClientEvent.SyncNewCustomLobby, OnSyncNewCustomLobbyMethod);
+            Add(ToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
+            Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
+            Add(ToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
+            Add(ToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
+            Add(ToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
+            Add(ToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
 
-            Add(DToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
-            Add(DToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+            Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
+            Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
         }
 
         private void OnLoadOwnMapRatingsMethod(object[] args)
@@ -145,7 +145,7 @@ namespace TDS_Client.Manager.Event
             SyncedLobbySettingsDto settings = Serializer.FromServer<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
             Players.Load(ClientUtils.GetTriggeredPlayersList((string)args[1]));
-            Team.CurrentLobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
+            Team.LobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
             Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
             MainBrowser.HideRoundEndReason();
@@ -468,7 +468,7 @@ namespace TDS_Client.Manager.Event
         private void OnAmountInFightSyncMethod(object[] args)
         {
             SyncedTeamPlayerAmountDto[] list = Serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
-            foreach (var team in Team.CurrentLobbyTeams)
+            foreach (var team in Team.LobbyTeams)
             {
                 if (!team.IsSpectator)
                     team.AmountPlayers = list[team.Index - 1];
@@ -610,7 +610,7 @@ namespace TDS_Client.Manager.Event
 
             TickManager.Add(ClientUtils.HideHUDOriginalComponents);
 
-            Browser.Angular.Main.Start(Convert.ToString(args[2]), Convert.ToString(args[3]));
+            Browser.Angular.Main.Start(Convert.ToString(args[2]));
         }
 
         private void OnSetForceStayAtPositionMethod(object[] args)

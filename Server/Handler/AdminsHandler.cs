@@ -59,17 +59,17 @@ namespace TDS_Server.Handler
             }
         }
 
-        public void SendChatMessageToAdmins(string msg, byte minadminlvl = 1)
+        public void SendMessage(string msg, byte minadminlvl = 1)
         {
             CallMethodForAdmins(player => player.SendMessage(msg), minadminlvl);
         }
 
-        public void SendLangChatMessageToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
+        public void SendMessage(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
             CallMethodForAdmins(player => player.SendMessage(propertygetter(player.Language)), minadminlvl);
         }
 
-        public void SendLangNotificationToAdmins(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
+        public void SendNotification(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
             CallMethodForAdmins(player => player.SendNotification(propertygetter(player.Language)), minadminlvl);
         }

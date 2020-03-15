@@ -24,10 +24,10 @@ namespace TDS_Server.Core.Damagesystem
                 return;
 
             // Death //
-            if (player.CurrentLobbyStats != null && player.CurrentLobby?.SavePlayerLobbyStats == true)
+            if (player.LobbyStats != null && player.Lobby?.SavePlayerLobbyStats == true)
             {
-                ++player.CurrentLobbyStats.Deaths;
-                ++player.CurrentLobbyStats.TotalDeaths;
+                ++player.LobbyStats.Deaths;
+                ++player.LobbyStats.TotalDeaths;
             }
 
             // Kill //
@@ -44,7 +44,7 @@ namespace TDS_Server.Core.Damagesystem
             // Assist //
             CheckForAssist(player, killer.Player!);
 
-            if (player.CurrentLobby?.SavePlayerLobbyStats == true && player.CurrentLobby?.IsOfficial == true)
+            if (player.Lobby?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {
                 KillLogsManager.Log(player, killer, weapon);
             }
@@ -70,14 +70,14 @@ namespace TDS_Server.Core.Damagesystem
             if (!_allHitters.ContainsKey(character))
                 return;
 
-            int halfarmorhp = character.CurrentLobby!.StartTotalHP / 2;
+            int halfarmorhp = character.Lobby!.StartTotalHP / 2;
             foreach (KeyValuePair<TDSPlayer, int> entry in _allHitters[character])
             {
                 if (entry.Value >= halfarmorhp)
                 {
                     TDSPlayer target = entry.Key;
                     Player? targetClient = target.Player;
-                    if (targetClient is { } && targetClient.Exists && target.CurrentLobby == character.CurrentLobby && killerClient != targetClient && target.CurrentRoundStats != null)
+                    if (targetClient is { } && targetClient.Exists && target.Lobby == character.Lobby && killerClient != targetClient && target.CurrentRoundStats != null)
                     {
                         ++target.CurrentRoundStats.Assists;
                         target.SendNotification(Utils.GetReplaced(character.Language.GOT_ASSIST, character.DisplayName));
@@ -103,7 +103,7 @@ namespace TDS_Server.Core.Damagesystem
             if (lastHitterCharacter.Player is null || !lastHitterCharacter.Player.Exists)
                 return;
 
-            if (character.CurrentLobby != lastHitterCharacter.CurrentLobby)
+            if (character.Lobby != lastHitterCharacter.Lobby)
                 return;
 
             if (lastHitterCharacter.Lifes == 0)

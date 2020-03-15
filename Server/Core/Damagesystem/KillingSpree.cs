@@ -60,7 +60,7 @@ namespace TDS_Server.Core.Damagesystem
             if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
             {
                 short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
-                player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.PlayCustomSound, null, _shortTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.SendAllPlayerEvent(ToClientEvent.PlayCustomSound, null, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;
             }
@@ -68,7 +68,7 @@ namespace TDS_Server.Core.Damagesystem
             if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
-                player.CurrentLobby?.SendAllPlayerEvent(DToClientEvent.PlayCustomSound, null, _longTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.SendAllPlayerEvent(ToClientEvent.PlayCustomSound, null, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
 
             player.LastKillAt = timeNow;
@@ -89,7 +89,7 @@ namespace TDS_Server.Core.Damagesystem
         {
             if (!sSpreeReward.ContainsKey(character.KillingSpree))
                 return;
-            if (character.CurrentLobby is null)
+            if (character.Lobby is null)
                 return;
 
             Tuple<string, int, int> reward = sSpreeReward[character.KillingSpree];
@@ -97,7 +97,7 @@ namespace TDS_Server.Core.Damagesystem
             if (rewardtyp == "healtharmor")
             {
                 int bonus = reward.Item2;
-                character.CurrentLobby.SendAllPlayerLangNotification((lang) =>
+                character.Lobby.SendAllPlayerLangNotification((lang) =>
                 {
                     return Utils.GetReplaced(lang.KILLING_SPREE_HEALTHARMOR, character.Player.Name,
                         character.KillingSpree.ToString(), bonus.ToString());

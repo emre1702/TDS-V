@@ -40,7 +40,7 @@ namespace TDS_Server.Data.Models.CustomLobby
         [JsonProperty("15")]
         public int MapLimitTime { get; set; }
         [JsonProperty("16")]
-        public EMapLimitType MapLimitType { get; set; }
+        public MapLimitType MapLimitType { get; set; }
         [JsonProperty("17")]
         public List<CustomLobbyTeamData> Teams { get; set; }
         [JsonProperty("18")]

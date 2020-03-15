@@ -1,15 +1,11 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Manager.Utility;
-
-namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+﻿namespace TDS_Server.Handler.Entities.GameModes.Gangwar
 {
     partial class Gangwar
     {
-        public Object? TargetObject { get; set; }
+        public IObject? TargetObject { get; set; }
 
-        private Blip? _targetBlip;
-        private TextLabel? _targetTextLabel;
+        private IBlip? _targetBlip;
+        private ITextLabel? _targetTextLabel;
 
         private void CreateTargetBlip()
         {
@@ -26,7 +22,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             if (Map.Target is null)
                 return;
 
-            TargetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(),new Vector3(), 120, Lobby.Dimension);
+            TargetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(), new Vector3(), 120, Lobby.Dimension);
             Workaround.FreezeEntity(TargetObject, true, Lobby);
             Workaround.SetEntityCollisionless(TargetObject, true, Lobby);
         }
@@ -36,7 +32,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             if (TargetObject is null)
                 return;
 
-            _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position, 
+            _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position,
                 (float)SettingsManager.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, Lobby.Dimension);
         }
 

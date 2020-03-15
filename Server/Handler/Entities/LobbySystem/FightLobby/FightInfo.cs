@@ -6,7 +6,7 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Interfaces;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
@@ -31,7 +31,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
 
             FuncIterateAllPlayers((targetcharacter, targetteam) =>
             {
-                targetcharacter.Player!.TriggerEvent(DToClientEvent.Death, player.Player!.Handle.Value, player.Team?.Entity.Index ?? 0, killstr[targetcharacter.Language], player.Lifes > 1);
+                targetcharacter.Player!.TriggerEvent(ToClientEvent.Death, player.Player!.Handle.Value, player.Team?.Entity.Index ?? 0, killstr[targetcharacter.Language], player.Lifes > 1);
             });
         }
     }

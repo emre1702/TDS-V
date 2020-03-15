@@ -1,6 +1,6 @@
 ﻿using TDS_Server.Instance.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {

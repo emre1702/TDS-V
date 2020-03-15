@@ -5,11 +5,11 @@ using TDS_Server.Instance.GangTeam;
 using TDS_Server.Manager.Utility;
 using TDS_Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
-    partial class GangLobby : FightLobby
+    public partial class GangLobby : FightLobby
     {
-        public GangLobby(Lobbies lobbyEntity) : base(lobbyEntity)
+        public GangLobby(Lobbies Entity) : base(Entity)
         {
             foreach (var team in Teams)
             {
@@ -24,7 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
 
         public static IEnumerable<GangLobby> GetAllDerivedLobbies()
         {
-            return LobbyManager.Lobbies.Where(l => l is GangLobby && l.Type != ELobbyType.GangLobby).Cast<GangLobby>();
+            return LobbyManager.Lobbies.Where(l => l is GangLobby && l.Type != LobbyType.GangLobby).Cast<GangLobby>();
         }
     }
 }

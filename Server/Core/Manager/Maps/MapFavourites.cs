@@ -22,7 +22,7 @@ namespace TDS_Server.Core.Manager.Maps
                 .Where(m => m.PlayerId == player.Entity.Id)
                 .Select(m => m.MapId)
                 .ToList();
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs));
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs));
         }
 
         [RemoteEvent(DToServerEvent.ToggleMapFavouriteState)]

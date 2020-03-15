@@ -16,7 +16,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             var gangwarArea = GangwarAreasManager.GetById(map.BrowserSyncedData.Id);  
             if (gangwarArea is null)
             {
-                /*lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.Error);
+                /*lobby.SetRoundStatus(Enums.RoundStatus.RoundEnd, Enums.ERoundEndReason.Error);
                 return;*/
                 // Create dummy gangwar area
                 gangwarArea = new GangwarArea(map);

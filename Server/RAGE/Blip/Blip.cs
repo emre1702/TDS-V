@@ -9,6 +9,17 @@ namespace TDS_Server.RAGE.Blip
     {
         internal readonly GTANetworkAPI.Blip _instance;
 
+        public string Name 
+        { 
+            get => _instance.Name;
+            set => _instance.Name = value;
+        }
+        public uint Sprite 
+        { 
+            get => _instance.Sprite;
+            set => _instance.Sprite = value; 
+        }
+
         public Blip(Position3D position, uint dimension = uint.MaxValue)
         {
             _instance = NAPI.Blip.CreateBlip(position.ToVector3(), dimension);
@@ -25,6 +36,11 @@ namespace TDS_Server.RAGE.Blip
         public Blip(Position3D position, float range, uint dimension = uint.MaxValue)
         {
             _instance = NAPI.Blip.CreateBlip(position.ToVector3(), range, dimension);
+        }
+
+        public void Delete()
+        {
+            _instance.Delete();
         }
     }
 }

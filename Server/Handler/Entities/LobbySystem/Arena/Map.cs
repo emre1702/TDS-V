@@ -1,14 +1,11 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Helper;
-using TDS_Server.Manager.Maps;
-using TDS_Server.Manager.Utility;
-using Object = GTANetworkAPI.Object;
+using TDS_Server.Data.Interfaces.ModAPI.Blip;
+using TDS_Server.Data.Models.Map;
+using TDS_Server.Data.Models.Map.Creator;
+using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -16,13 +13,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         private MapDto? _currentMap;
         private List<MapDto> _maps = new List<MapDto>();
-        private readonly List<Blip> _mapBlips = new List<Blip>();
+        private readonly List<IBlip> _mapBlips = new List<IBlip>();
         private string _mapsJson = string.Empty;
 
         private MapDto? GetNextMap()
         {
             MapDto? map = GetVotedMap();
-            if (map != null)
+            if (map is { })
                 return map;
             return GetRandomMap();
         }
@@ -34,7 +31,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (_maps.Count == 1)
                 return _maps[0];
 
-            if (IsOfficial && CommonUtils.Rnd.NextDouble() * 100 <= SettingsManager.ArenaNewMapProbabilityPercent)
+            if (IsOfficial && Random.NextDouble() * 100 <= SettingsHandler.ServerSettings.ArenaNewMapProbabilityPercent)
             {
                 var map = MapCreator.GetRandomNewMap();
                 if (map != null)
@@ -52,8 +49,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private static MapDto GetRandomMapFromList(List<MapDto> list)
         {
-            var sumRatings = (int) Math.Floor(list.Sum(m => m.RatingAverage));
-            var chooseAtRating = CommonUtils.Rnd.Next(sumRatings) + 1;
+            var sumRatings = (int)Math.Floor(list.Sum(m => m.RatingAverage));
+            var chooseAtRating = Utils.Rnd.Next(sumRatings) + 1;
             double currentlyAtRating = 0;
             foreach (var map in list)
             {
@@ -63,7 +60,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
 
             // if I did a mistake, just return anything
-            return list[CommonUtils.Rnd.Next(0, list.Count)];
+            return list[Utils.Rnd.Next(0, list.Count)];
         }
 
         /// <summary>
@@ -103,7 +100,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
-                Blip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
+                IBlip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
                 blip.Sprite = Constants.MapLimitBlipSprite;
                 blip.Name = "Limit " + ++i;
                 _mapBlips.Add(blip);
@@ -128,7 +125,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void DeleteMapBlips()
         {
-            foreach (Blip blip in _mapBlips)
+            foreach (IBlip blip in _mapBlips)
             {
                 blip.Delete();
             }

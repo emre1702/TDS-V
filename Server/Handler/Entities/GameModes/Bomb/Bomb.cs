@@ -41,13 +41,13 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 BombToHand(character);
             else
                 BombToBack(character);
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
         }
 
         private void DetonateBomb()
         {
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
-            Lobby.SendAllPlayerEvent(DToClientEvent.BombDetonated, null);
+            Lobby.SendAllPlayerEvent(ToClientEvent.BombDetonated, null);
             _counterTerroristTeam.FuncIterate((character, team) =>
             {
                 if (character.Lifes == 0)
@@ -60,8 +60,8 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             });
             // TERROR WON //
             WinnerTeam = _terroristTeam;
-            if (Lobby.CurrentRoundStatus == ERoundStatus.Round)
-                Lobby.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombExploded);
+            if (Lobby.CurrentRoundStatus == RoundStatus.Round)
+                Lobby.SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.BombExploded);
         }
 
         private void ToggleBombAtHand(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 SendBombPlantInfos(character);
                 _bombAtPlayer = character;
             }
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.BombOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.BombOnHand);
         }
 
         private void BombToBack(TDSPlayer character)
@@ -103,7 +103,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 SendBombPlantInfos(character);
                 _bombAtPlayer = character;
             } 
-            NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.BombNotOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.BombNotOnHand);
         }
 
         private void DropBomb()
@@ -119,7 +119,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                                                         new Color(180, 0, 0, 180), true, Lobby.Dimension);
             ColShape bombtakecol = NAPI.ColShape.CreateSphereColShape(_bomb.Position, 2);
             _lobbyBombTakeCol[Lobby] = bombtakecol;
-            NAPI.ClientEvent.TriggerClientEvent(_bombAtPlayer.Player, DToClientEvent.BombNotOnHand);
+            NAPI.ClientEvent.TriggerClientEvent(_bombAtPlayer.Player, ToClientEvent.BombNotOnHand);
             _bombAtPlayer = null;
         }
 

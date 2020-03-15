@@ -5,36 +5,54 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.ClothesMeta;
-using TDS_Server.Manager.Logs;
+using TDS_Server.Data.Models.ClothesMeta;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Events;
+using TDS_Shared.Data.Utility;
+using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
-    static class ClothesManager
+    public class ClothesHandler
     {
         // https://rage.mp/files/file/50-gtao-outfits/
-        private static List<GenderOutfits> _maleOutfits = new List<GenderOutfits>();
-        private static List<GenderOutfits> _femaleOutfits = new List<GenderOutfits>();
+        private readonly List<GenderOutfits> _maleOutfits = new List<GenderOutfits>();
+        private readonly List<GenderOutfits> _femaleOutfits = new List<GenderOutfits>();
 
-        private static List<PropertyInfo>? _drawableProperties;
-        private static List<PropertyInfo>? _textureProperties;
-        private static List<PropertyInfo>? _propIndexProperties;
-        private static List<PropertyInfo>? _propTextureProperties;
+        private List<PropertyInfo>? _drawableProperties;
+        private List<PropertyInfo>? _textureProperties;
+        private List<PropertyInfo>? _propIndexProperties;
+        private List<PropertyInfo>? _propTextureProperties;
 
-        public static void Init()
+        private readonly LoggingHandler _loggingHandler;
+        private readonly Serializer _serializer;
+
+        public ClothesHandler(LoggingHandler loggingHandler, Serializer serializer, EventsHandler eventsHandler)
         {
+            _loggingHandler = loggingHandler;
+            _serializer = serializer;
+
             if (!File.Exists("scriptmetadata.meta"))
             {
-                ErrorLogsManager.Log($"scriptmetadata.meta missing in path '{Path.GetFullPath("scriptmetadata.meta")}'.", Environment.StackTrace);
+                loggingHandler.LogError($"scriptmetadata.meta missing in path '{Path.GetFullPath("scriptmetadata.meta")}'.", Environment.StackTrace);
                 return;
             }
 
             if (!DoesCacheExist())
                 InitCache();
+
+            eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
         }
 
-        private static void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)
+        private void EventsHandler_PlayerRegistered(TDSPlayer player)
+        {
+            if (player.Entity is null)
+                return;
+
+            player.Entity.PlayerClothes = new Database.Entity.Player.PlayerClothes { IsMale = SharedUtils.GetRandom(true, false) };
+        }
+
+        private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)
         {
             foreach (var item in items)
             {
@@ -67,7 +85,7 @@ namespace TDS_Server.Core.Manager.Utility
             }
         }
 
-        private static void InitCache()
+        private void InitCache()
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -79,7 +97,7 @@ namespace TDS_Server.Core.Manager.Utility
             using XmlReader reader = XmlReader.Create(metaFileInfo.OpenText(), new XmlReaderSettings { Async = true });
             if (!_xmlSerializer.CanDeserialize(reader))
             {
-                ErrorLogsManager.Log($"Could not deserialize file {metaFileInfo.FullName}.", Environment.StackTrace);
+                _loggingHandler.LogError($"Could not deserialize file {metaFileInfo.FullName}.", Environment.StackTrace);
                 return;
             }
 
@@ -90,8 +108,8 @@ namespace TDS_Server.Core.Manager.Utility
             ProcessItems(clothesData.Outfits.OutfitsDataFemale.OutfitsData.Items, _femaleOutfits);
 
             Directory.CreateDirectory("cache");
-            File.WriteAllText("cache/maleClothes.json", Serializer.ToClient(_maleOutfits));
-            File.WriteAllText("cache/femaleClothes.json", Serializer.ToClient(_femaleOutfits));
+            File.WriteAllText("cache/maleClothes.json", _serializer.ToClient(_maleOutfits));
+            File.WriteAllText("cache/femaleClothes.json", _serializer.ToClient(_femaleOutfits));
 
             var fileSize = metaFileInfo.Length;
             File.WriteAllText("cache/clothesSizeCache.json", fileSize.ToString());
@@ -100,7 +118,7 @@ namespace TDS_Server.Core.Manager.Utility
             Console.WriteLine($"Clothes cache generated in {watch.ElapsedMilliseconds} ms.");
         }
 
-        private static void InitProperties()
+        private void InitProperties()
         {
             _drawableProperties = new List<PropertyInfo>();
             _textureProperties = new List<PropertyInfo>();
@@ -119,7 +137,7 @@ namespace TDS_Server.Core.Manager.Utility
             }
         }
 
-        private static bool DoesCacheExist()
+        private bool DoesCacheExist()
         {
             if (!File.Exists("cache/maleClothes.json"))
                 return false;
@@ -138,7 +156,7 @@ namespace TDS_Server.Core.Manager.Utility
             return true;
         }
 
-        #nullable disable
+#nullable disable
         private class OutfitData
         {
             public int Drawable;
@@ -150,6 +168,6 @@ namespace TDS_Server.Core.Manager.Utility
             public List<OutfitData> Components;
             public List<OutfitData> Props;
         }
-        #nullable restore
+#nullable restore
     }
 }

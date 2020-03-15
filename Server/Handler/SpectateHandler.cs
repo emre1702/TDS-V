@@ -2,7 +2,7 @@
 using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Default;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
     public class SpectateHandler
     {
@@ -21,14 +21,14 @@ namespace TDS_Server.Core.Manager.Utility
                 player.ModPlayer.Transparency = 0;
 
                 Workaround.FreezePlayer(player.Player, true);
-                Workaround.SetEntityCollisionless(player.Player, true, player.CurrentLobby);
+                Workaround.SetEntityCollisionless(player.Player, true, player.Lobby);
                 Workaround.SetPlayerInvincible(player.Player, true);
             }
             else
             {
                 player.ModPlayer.Transparency = 255;
                 Workaround.SetPlayerInvincible(player.Player, false);
-                Workaround.SetEntityCollisionless(player.Player, false, player.CurrentLobby);
+                Workaround.SetEntityCollisionless(player.Player, false, player.Lobby);
                 _modAPI.Sync.SendEvent(player, ToClientEvent.StopSpectator);
             }
 

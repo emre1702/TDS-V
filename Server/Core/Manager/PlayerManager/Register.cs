@@ -36,7 +36,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             dbplayer.PlayerSettings = new PlayerSettings
             {
                 AllowDataTransfer = false,
-                Language = ELanguage.English,
+                Language = Language.English,
                 Hitsound = true,
                 Bloodscreen = true,
                 FloatingDamageInfo = true,

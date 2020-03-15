@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
+using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
-    class AnnouncementsManager
+    class AnnouncementsHandler : IAnnouncementsHandler
     {
-        public static string Json { get; private set; } = string.Empty;
+        public string Json { get; }
 
-        public static void LoadAnnouncements(TDSDbContext dbContext)
+        public AnnouncementsHandler(TDSDbContext dbContext, Serializer serializer)
         {
             var data = dbContext.Announcements
                 .OrderByDescending(a => a.Id)
@@ -22,7 +23,7 @@ namespace TDS_Server.Core.Manager.Utility
                 })
                 .ToList();
 
-            Json = Serializer.ToBrowser(data);
+            Json = serializer.ToBrowser(data);
         }
     }
 }

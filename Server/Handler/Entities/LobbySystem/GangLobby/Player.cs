@@ -2,7 +2,7 @@
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {

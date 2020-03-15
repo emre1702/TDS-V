@@ -1,8 +1,8 @@
 ﻿using TDS_Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
-    partial class FightLobby : Lobby
+    public partial class FightLobby : Lobby
     {
         public readonly Damagesys DmgSys;
 

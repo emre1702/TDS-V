@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Xml.Serialization;
-using TDS_Server.Data.Extensions;
+using TDS_Shared.Data.Extensions;
+using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.Data.Models.GTA
 {
@@ -19,9 +20,7 @@ namespace TDS_Server.Data.Models.GTA
         [JsonProperty("0")]
         public float Z { get; set; }
 
-        private static readonly Random _random = new Random();
-
-        public Position3D(float x, float y, float z) 
+        public Position3D(float x, float y, float z)
             => (X, Y, Z) = (x, y, z);
 
         public Position3D(double x, double y, double z)
@@ -30,29 +29,31 @@ namespace TDS_Server.Data.Models.GTA
         public Position3D(int x, int y, int z)
            => (X, Y, Z) = (x, y, z);
 
-        public void Around(float around, bool considerZ = false)
+        public Position3D Around(float around, bool considerZ = false)
         {
-            float addToX = _random.NextFloat(-around, around);
+            float addToX = SharedUtils.Rnd.NextFloat(-around, around);
             X += addToX;
             around -= Math.Abs(addToX);
 
             if (around == 0)
-                return;
+                return this;
 
             if (!considerZ)
-            { 
-                Y += _random.NextDouble() >= 0.5 ? around : -around;
-                return;
+            {
+                Y += SharedUtils.GetRandom(true, false) ? around : -around;
+                return this;
             }
 
-            float addToY = _random.NextFloat(-around, around);
+            float addToY = SharedUtils.Rnd.NextFloat(-around, around);
             Y += addToY;
             around -= addToY;
 
             if (around == 0)
-                return;
+                return this;
 
-            Z += _random.NextDouble() >= 0.5 ? around : -around;
+            Z += SharedUtils.GetRandom(true, false) ? around : -around;
+
+            return this;
         }
     }
 }

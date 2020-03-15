@@ -2,6 +2,9 @@
 {
     public interface IBlip
     {
+        string Name { get; set; }
+        uint Sprite { get; set; }
+
         void Delete();
     }
 }

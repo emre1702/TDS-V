@@ -55,6 +55,6 @@
 
 
         //ChooseMapCreatorToJoin
-        //SyncChoiceLanguageTexts
+        //SyncChoicLanguageTexts
     }
 }

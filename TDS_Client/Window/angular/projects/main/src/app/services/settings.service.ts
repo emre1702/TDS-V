@@ -218,6 +218,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
         rageConnector.listen(DFromServerEvent.SyncChallengeCurrentAmountChange, this.onChallengeCurrentAmountChange.bind(this));
+        rageConnector.listen(DFromServerEvent.SyncChallenges, this.loadChallenges.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));

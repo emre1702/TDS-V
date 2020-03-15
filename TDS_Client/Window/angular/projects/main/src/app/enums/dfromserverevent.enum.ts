@@ -5,5 +5,6 @@ export enum DFromServerEvent {
     SetDamageForRoundStats = "sb4",
     SetKillsForRoundStats = "sb5",
 
-    SyncChallengeCurrentAmountChange = "sb6"
+    SyncChallengeCurrentAmountChange = "sb6",
+    SyncChallenges = "sb7"
 }

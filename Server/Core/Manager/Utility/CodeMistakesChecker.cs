@@ -14,7 +14,7 @@ namespace TDS_Server.Core.Manager.Utility
             bool hasError = false;
 
             hasError = CheckHasDuplicateValuesInEventsType(typeof(ToBrowserEvent)) ? true : hasError;
-            hasError = CheckHasDuplicateValuesInEventsType(typeof(DToClientEvent)) ? true : hasError;
+            hasError = CheckHasDuplicateValuesInEventsType(typeof(ToClientEvent)) ? true : hasError;
             hasError = CheckHasDuplicateValuesInEventsType(typeof(DToServerEvent)) ? true : hasError;
 
             return !hasError;

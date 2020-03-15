@@ -1,4 +1,6 @@
-﻿namespace TDS_Server.Handler.Entities.Player
+﻿using System;
+
+namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {

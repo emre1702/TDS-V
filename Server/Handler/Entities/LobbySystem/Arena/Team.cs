@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using TDS_Server.Instance.Utility;
+using TDS_Server.Handler.Entities.TeamSystem;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {

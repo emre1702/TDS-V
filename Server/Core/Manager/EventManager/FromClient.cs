@@ -57,7 +57,7 @@ namespace TDS_Server.Core.Manager.EventManager
             if (Lobby.LobbiesByIndex.ContainsKey(index))
             {
                 Lobby lobby = Lobby.LobbiesByIndex[index];
-                if (password != null && lobby.LobbyEntity.Password != password)
+                if (password != null && lobby.Entity.Password != password)
                 {
                     player.SendMessage(player.Language.WRONG_PASSWORD);
                     return;
@@ -105,7 +105,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby is null || !(player.CurrentLobby is Arena arena))
+            if (player.Lobby is null || !(player.Lobby is Arena arena))
                 return;
             arena.ChooseTeam(player, index);
         }
@@ -116,10 +116,10 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return;
 
-            player.CurrentLobby.RemovePlayer(player);
+            player.Lobby.RemovePlayer(player);
             await LobbyManager.MainMenu.AddPlayer(player, 0);
         }
         #endregion Lobby
@@ -156,7 +156,7 @@ namespace TDS_Server.Core.Manager.EventManager
                 return;
             }
 
-            if (!(player.CurrentLobby is FightLobby fightLobby))
+            if (!(player.Lobby is FightLobby fightLobby))
             {
                 ErrorLogsManager.Log(string.Format("Attacker {0} dealt damage on bone {1} to {2} - but this player isn't in fightlobby.", attackerClient.Name, boneIdxStr, client.Name), Environment.StackTrace, attacker);
                 return;
@@ -171,9 +171,9 @@ namespace TDS_Server.Core.Manager.EventManager
         public void OnOutsideMapLimit(Player player)
         {
             TDSPlayer character = player.GetChar();
-            if (!(character.CurrentLobby is Arena arena))
+            if (!(character.Lobby is Arena arena))
                 return;
-            if (arena.LobbyEntity.LobbyMapSettings.MapLimitType == EMapLimitType.KillAfterTime)
+            if (arena.Entity.LobbyMapSettings.MapLimitType == EMapLimitType.KillAfterTime)
                 FightLobby.KillPlayer(player, character.Language.TOO_LONG_OUTSIDE_MAP);
         }
 
@@ -194,7 +194,7 @@ namespace TDS_Server.Core.Manager.EventManager
                 return;
             if (character.Lifes == 0)
                 return;
-            if (!(character.CurrentLobby is FightLobby))
+            if (!(character.Lobby is FightLobby))
                 return;
             FightLobby.KillPlayer(player, character.Language.COMMITED_SUICIDE);
         }
@@ -207,7 +207,7 @@ namespace TDS_Server.Core.Manager.EventManager
                 return;
             if (character.Lifes == 0)
                 return;
-            if (!(character.CurrentLobby is FightLobby fightLobby))
+            if (!(character.Lobby is FightLobby fightLobby))
                 return;
             fightLobby.FuncIterateAllPlayers((target, team) =>
             {
@@ -223,7 +223,7 @@ namespace TDS_Server.Core.Manager.EventManager
                 return;
 
             player.IsCrouched = !player.IsCrouched;
-            PlayerDataSync.SetData(player, EPlayerDataKey.Crouched, EPlayerDataSyncMode.Lobby, player.IsCrouched);
+            PlayerDataSync.SetData(player, PlayerDataKey.Crouched, PlayerDataSyncMode.Lobby, player.IsCrouched);
         }
 
         #region Bomb
@@ -232,18 +232,18 @@ namespace TDS_Server.Core.Manager.EventManager
         public void OnPlayerStartPlantingEvent(Player player)
         {
             TDSPlayer character = player.GetChar();
-            if (!(character.CurrentLobby is Arena arena))
+            if (!(character.Lobby is Arena arena))
                 return;
             if (!(arena.CurrentGameMode is Bomb bombMode))
                 return;
             if (!bombMode.StartBombPlanting(character))
-                player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
+                player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
         }
 
         [RemoteEvent(DToServerEvent.StopPlanting)]
         public void OnPlayerStopPlantingEvent(Player player)
         {
-            if (!(player.GetChar().CurrentLobby is Arena arena))
+            if (!(player.GetChar().Lobby is Arena arena))
                 return;
             if (!(arena.CurrentGameMode is Bomb bombMode))
                 return;
@@ -254,18 +254,18 @@ namespace TDS_Server.Core.Manager.EventManager
         public void OnPlayerStartDefusingEvent(Player player)
         {
             TDSPlayer character = player.GetChar();
-            if (!(character.CurrentLobby is Arena arena))
+            if (!(character.Lobby is Arena arena))
                 return;
             if (!(arena.CurrentGameMode is Bomb bombMode))
                 return;
             if (!bombMode.StartBombDefusing(character))
-                player.TriggerEvent(DToClientEvent.StopBombPlantDefuse);
+                player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
         }
 
         [RemoteEvent(DToServerEvent.StopDefusing)]
         public void OnPlayerStopDefusingEvent(Player player)
         {
-            if (!(player.GetChar().CurrentLobby is Arena arena))
+            if (!(player.GetChar().Lobby is Arena arena))
                 return;
             if (!(arena.CurrentGameMode is Bomb bombMode))
                 return;
@@ -280,7 +280,7 @@ namespace TDS_Server.Core.Manager.EventManager
         public void SpectateNextEvent(Player player, bool forward)
         {
             TDSPlayer character = player.GetChar();
-            if (!(character.CurrentLobby is FightLobby lobby))
+            if (!(character.Lobby is FightLobby lobby))
                 return;
             lobby.SpectateNext(character, forward);
         }
@@ -292,7 +292,7 @@ namespace TDS_Server.Core.Manager.EventManager
         [RemoteEvent(DToServerEvent.MapsListRequest)]
         public void OnMapsListRequestEvent(Player player)
         {
-            if (!(player.GetChar().CurrentLobby is Arena arena))
+            if (!(player.GetChar().Lobby is Arena arena))
                 return;
 
             arena.SendMapsForVoting(player);
@@ -302,7 +302,7 @@ namespace TDS_Server.Core.Manager.EventManager
         public void OnMapVotingRequestEvent(Player client, int mapId)
         {
             TDSPlayer player = client.GetChar();
-            if (!(player.CurrentLobby is Arena arena))
+            if (!(player.Lobby is Arena arena))
                 return;
 
             arena.MapVote(player, mapId);
@@ -331,7 +331,7 @@ namespace TDS_Server.Core.Manager.EventManager
             if (!player.LoggedIn)
                 return;
             EMapCreateError err = await MapCreator.Create(player, json, false);
-            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SendMapCreatorReturn, (int)err);
+            NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.SendMapCreatorReturn, (int)err);
         }
 
         [RemoteEvent(DToServerEvent.SaveMapCreatorData)]
@@ -341,7 +341,7 @@ namespace TDS_Server.Core.Manager.EventManager
             if (!player.LoggedIn)
                 return;
             EMapCreateError err = await MapCreator.Create(player, json, true);
-            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SaveMapCreatorReturn, (int)err);
+            NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.SaveMapCreatorReturn, (int)err);
         }
 
         [RemoteEvent(DToServerEvent.LoadMapNamesToLoadForMapCreator)]
@@ -359,7 +359,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby))
+            if (!(player.Lobby is MapCreateLobby))
                 return;
             MapCreator.SendPlayerMapForMapCreator(player, mapId);
         }
@@ -379,7 +379,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (player.CurrentLobby is null || !(player.CurrentLobby is MapCreateLobby lobby))
+            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
                 return;
             EFreeroamVehicleType vehType = (EFreeroamVehicleType)vehTypeNumber;
             lobby.GiveVehicle(player, vehType);
@@ -391,7 +391,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.SyncLastId(player, id);
         }
@@ -402,7 +402,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.SyncNewObject(player, json);
         }
@@ -413,7 +413,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.SyncObjectPosition(player, json);
         }
@@ -424,7 +424,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.SyncRemoveObject(player, id);
         }
@@ -435,7 +435,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.SyncAllObjectsToPlayer(tdsPlayerId, json);
         }
@@ -446,7 +446,7 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer player = client.GetChar();
             if (!player.LoggedIn)
                 return;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return;
             lobby.StartNewMap();
         }

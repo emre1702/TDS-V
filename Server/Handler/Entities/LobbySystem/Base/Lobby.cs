@@ -9,18 +9,16 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.Base
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class Lobby : DatabaseEntityWrapper, ILobby
     {
-        public static readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
-        private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
-
         public Lobbies Entity { get; }
 
         public int Id => Entity.Id;
@@ -35,9 +33,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
         protected Position3D SpawnPoint { get; }
         public bool IsGangActionLobby { get; set; }
 
-        protected SyncedLobbySettingsDto _syncedLobbySettings;
-        protected Serializer _serializer;
-        protected IModAPI _modAPI;
+        protected SyncedLobbySettingsDto SyncedLobbySettings;
+        protected readonly Serializer Serializer;
+        protected readonly IModAPI ModAPI;
+        protected readonly LobbiesHandler LobbiesHandler;
+        protected readonly SettingsHandler SettingsHandler;
+        protected readonly LangHelper LangHelper;
 
         public Lobby(
             Lobbies entity,
@@ -46,32 +47,36 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
             TDSDbContext dbContext,
             LoggingHandler loggingHandler,
             Serializer serializer,
-            IModAPI modAPI) : base(dbContext, loggingHandler)
+            IModAPI modAPI,
+            LobbiesHandler lobbiesHandler,
+            SettingsHandler settingsHandler,
+            LangHelper langHelper) : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
-            _modAPI = modAPI;
+            Serializer = serializer;
+            ModAPI = modAPI;
+            LobbiesHandler = lobbiesHandler;
+            SettingsHandler = settingsHandler;
+            LangHelper = langHelper;
 
             Entity = entity;
 
             dbContext.Attach(entity);
 
-            Dimension = GetFreeDimension();
+            Dimension = lobbiesHandler.GetFreeDimension();
             SpawnPoint = new Position3D(
                 entity.DefaultSpawnX,
                 entity.DefaultSpawnY,
                 entity.DefaultSpawnZ
             );
 
-            _dimensionsUsed.Add(Dimension);
-
             Teams = new List<Team>(entity.Teams.Count);
             foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                Team team = new Team(teamEntity);
+                Team team = new Team(serializer, ModAPI, teamEntity);
                 Teams.Add(team);
             }
 
-            _syncedLobbySettings = new SyncedLobbySettingsDto
+            SyncedLobbySettings = new SyncedLobbySettingsDto
             (
                 Id: entity.Id,
                 Name: entity.Name,
@@ -90,6 +95,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
                 StartArmor: entity.FightSettings?.StartArmor ?? 100,
                 serializer: serializer
             );
+
+            LobbiesHandler.AddLobby(this);
         }
 
         public virtual void Start()
@@ -98,9 +105,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
         protected async virtual void Remove()
         {
-            LobbiesByIndex.Remove(Entity.Id);
-            LobbyManager.RemoveLobby(this);
-            _dimensionsUsed.Remove(Dimension);
+            LobbiesHandler.RemoveLobby(this);
 
             foreach (TDSPlayer player in Players.ToArray())
             {
@@ -115,14 +120,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
             });
 
 
-        }
-
-        private static uint GetFreeDimension()
-        {
-            uint tryid = 0;
-            while (_dimensionsUsed.Contains(tryid))
-                ++tryid;
-            return tryid;
         }
 
         protected bool IsEmpty()
@@ -152,7 +149,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
                     .LoadAsync();
 
                 // Reload again because Entity could have changed (default values in DB)
-                _syncedLobbySettings = new SyncedLobbySettingsDto
+                SyncedLobbySettings = new SyncedLobbySettingsDto
                 (
                     Id: Entity.Id,
                     Name: Entity.Name,
@@ -169,7 +166,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
                     MapLimitType: Entity.LobbyMapSettings?.MapLimitType,
                     StartHealth: Entity.FightSettings?.StartHealth ?? 100,
                     StartArmor: Entity.FightSettings?.StartArmor ?? 100,
-                    serializer: _serializer
+                    serializer: Serializer
                 );
             });
 

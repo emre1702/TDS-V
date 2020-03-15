@@ -10,9 +10,9 @@ using TDS_Server.Manager.Utility;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
-    partial class MapCreateLobby : Lobby
+    public partial class MapCreateLobby : Lobby
     {
         private int _lastId;
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
             {
                 Name = "MapCreator-" + player.Player.Name,
                 Teams = new List<Teams> { new Teams { Index = 0, Name = player.Player.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
-                Type = ELobbyType.MapCreateLobby,
+                Type = LobbyType.MapCreateLobby,
                 OwnerId = player.Entity.Id,
                 IsTemporary = true,
                 DefaultSpawnX = -365.425f,
@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
             _lastId = 0;
             _currentMap = new MapCreateDataDto();
             _posById = new Dictionary<int, MapCreatorPosition>();
-            SendAllPlayerEvent(DToClientEvent.MapCreatorStartNewMap, null);
+            SendAllPlayerEvent(ToClientEvent.MapCreatorStartNewMap, null);
         }
 
         public void SetMap(MapCreateDataDto dto)
@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            SendAllPlayerEvent(DToClientEvent.LoadMapForMapCreator, null, json);
+            SendAllPlayerEvent(ToClientEvent.LoadMapForMapCreator, null, json);
         }
     }
 }

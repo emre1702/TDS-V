@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    enum GangActionState
+    public enum GangActionState
     {
         InPreparation,
         BeforeAction,

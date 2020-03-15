@@ -4,7 +4,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Common.Instance.Utility;
 using TDS_Server.Instance.PlayerInstance;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
@@ -29,8 +29,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
                     DeathSpawnTimer[character] = new TDSTimer(() =>
                     {
                         SpectateOtherSameTeam(character);
-                        NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.PlayerSpectateMode);
-                    }, (uint)LobbyEntity.FightSettings.SpawnAgainAfterDeathMs);
+                        NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.PlayerSpectateMode);
+                    }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
                 }
             }
             --character.Lifes;
@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
 
         public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            // NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayerWeaponChange, (uint)newWeapon /*, DmgSys.GetDamage((WeaponHash)newWeapon)*/);
+            // NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.PlayerWeaponChange, (uint)newWeapon /*, DmgSys.GetDamage((WeaponHash)newWeapon)*/);
         }
     }
 }

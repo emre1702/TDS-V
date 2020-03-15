@@ -31,7 +31,7 @@ namespace TDS_Server.Core.Manager.Userpanel
             player.LoadTimezone();
             player.AddToChallenge(EChallengeType.ChangeSettings);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.SyncSettings, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.SyncSettings, json);
 
             if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId)
             {

@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Shared.Default;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.Base
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public HashSet<TDSPlayer> Players { get; } = new HashSet<TDSPlayer>();
+        public HashSet<ITDSPlayer> Players { get; } = new HashSet<ITDSPlayer>();
 
-        public void SendAllPlayerEvent(string eventname, Team? team, params object[] args)
-        {
-            if (team is null)
-                _modAPI.
-                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Select(p => p.Player).ToArray(), eventname, args);
-            else
-                NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p.Team == team).Select(p => p.Player).ToArray(), eventname, args);
-        }
-
-        public void FuncIterateAllPlayers(Action<TDSPlayer, Team?> func)
+        public void FuncIterateAllPlayers(Action<ITDSPlayer, ITeam?> func)
         {
             foreach (var player in Players)
             {
@@ -29,7 +20,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
         public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, Team? targetTeam = null)
         {
-            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
+            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
             if (targetTeam is null)
                 FuncIterateAllPlayers((player, team) =>
                 {
@@ -58,7 +49,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
         public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team? targetTeam = null, bool flashing = false)
         {
-            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(langgetter);
+            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
             if (targetTeam is null)
             {
                 FuncIterateAllPlayers((character, teamID) =>
@@ -117,9 +108,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
         public void PlaySound(string soundName)
         {
-            FuncIterateAllPlayers((player, team) =>
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayCustomSound, soundName)
-            );
+            ModAPI.Sync.SendEvent(this, ToClientEvent.PlayCustomSound, soundName);
         }
     }
 }

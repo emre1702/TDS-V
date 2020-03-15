@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
+﻿namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {

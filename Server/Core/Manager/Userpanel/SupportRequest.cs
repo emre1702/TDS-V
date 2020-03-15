@@ -113,7 +113,7 @@ namespace TDS_Server.Core.Manager.Userpanel
                 _inSupportRequest[data.ID] = new HashSet<TDSPlayer>();
             _inSupportRequest[data.ID].Add(player);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.GetSupportRequestData, Serializer.ToBrowser(data)); 
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.GetSupportRequestData, Serializer.ToBrowser(data)); 
         }
 
         public static async Task SendRequest(TDSPlayer player, string json)
@@ -188,7 +188,7 @@ namespace TDS_Server.Core.Manager.Userpanel
 
             foreach (var target in _inSupportRequest[requestId])
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, ToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
             }
         }
 
@@ -213,7 +213,7 @@ namespace TDS_Server.Core.Manager.Userpanel
 
             foreach (var target in _inSupportRequestsList)
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.SetSupportRequestClosed, requestId, closed);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, ToClientEvent.SetSupportRequestClosed, requestId, closed);
             }
         }
 

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Entity;
+using TDS_Server.Handler;
+using TDS_Server.Handler.Entities;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
     public class BansHandler : DatabaseEntityWrapper
     {

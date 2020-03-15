@@ -42,7 +42,7 @@ namespace TDS_Server.Core.Player.Join
                 .ConfigureAwait(true);
             if (playerIDName is null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, client.SocialClubName, false);
+                NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.StartRegisterLogin, client.SocialClubName, false);
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace TDS_Server.Core.Player.Join
             if (!HandlePlayerBan(client, ban))
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.StartRegisterLogin, playerIDName.Name, true);
+            NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.StartRegisterLogin, playerIDName.Name, true);
         }
     }
 }

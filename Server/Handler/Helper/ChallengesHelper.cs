@@ -10,17 +10,18 @@ using TDS_Server.Data.Models.Challenge;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities;
+using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Helper
 {
-    public class ChallengesHelper
+    public class ChallengesHelper : DatabaseEntityWrapper
     {
         private readonly SettingsHandler _settingsHandler;
-        private readonly LoggingHandler _loggingHandler;
-        private readonly TDSDbContext _dbContext;
         private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
 
@@ -30,15 +31,33 @@ namespace TDS_Server.Handler.Helper
             LoggingHandler loggingHandler, 
             TDSDbContext dbContext,
             Serializer serializer,
-            IModAPI modAPI)
+            IModAPI modAPI) : base(dbContext, loggingHandler)
         { 
             _settingsHandler = settingsHandler;
-            _loggingHandler = loggingHandler;
-            _dbContext = dbContext;
             _serializer = serializer;
             _modAPI = modAPI;
 
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerRegistered += EventsHandler_PlayerRegister;
+        }
+
+        private async void EventsHandler_PlayerLoggedIn(TDSPlayer player)
+        {
+            if (player.Entity is null)
+                return;
+
+            if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
+            {
+                await AddWeeklyChallenges(player.Entity);
+                await player.ExecuteForDBAsync(async dbContext =>
+                {
+                    player.Entity.Challenges = null;
+                    dbContext.Entry(player.Entity).Collection(p => p.Challenges).IsLoaded = false;
+                    await dbContext.Entry(player.Entity).Collection(p => p.Challenges).LoadAsync();
+                });
+            }
+            player.InitChallengesDict();
+            player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
         }
 
         private async void EventsHandler_PlayerRegister(ITDSPlayer player)
@@ -53,20 +72,25 @@ namespace TDS_Server.Handler.Helper
             }
         }
 
-        public void ClearWeeklyChallenges(TDSDbContext dbContext)
+        public void ClearWeeklyChallenges()
         {
-            string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
+            ExecuteForDB(dbContext =>
+            { 
+                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
 
-            string sql = $"DELETE FROM {playerChallengesTable} WHERE frequency = 'weekly'";
-            dbContext.Database.ExecuteSqlRaw(sql);
+                string sql = $"DELETE FROM {playerChallengesTable} WHERE frequency = 'weekly'";
+                dbContext.Database.ExecuteSqlRaw(sql);
+            }).RunSynchronously();
         }
 
         public async Task AddWeeklyChallenges(Players dbPlayer)
         {
-            string playerChallengesTable = _dbContext.GetTableName(typeof(PlayerChallenges));
-            string challengeSettingsTable = _dbContext.GetTableName(typeof(ChallengeSettings));
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
+                string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
-            string sql = @$"
+                string sql = @$"
                 INSERT INTO 
                     {playerChallengesTable}
                 SELECT 
@@ -79,29 +103,34 @@ namespace TDS_Server.Handler.Helper
                 TABLESAMPLE SYSTEM_ROWS({_settingsHandler.ServerSettings.AmountWeeklyChallenges})
                 WHERE 
                     frequency = 'weekly'
-            ";
-            await _dbContext.Database.ExecuteSqlRawAsync(sql);
+                ";
+                await dbContext.Database.ExecuteSqlRawAsync(sql);
+            });
+            
         }
 
         public async Task AddForeverChallenges(Players dbPlayer)
         {
-            string playerChallengesTable = _dbContext.GetTableName(typeof(PlayerChallenges));
-            string challengeSettingsTable = _dbContext.GetTableName(typeof(ChallengeSettings));
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
+                string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
-            string sql = $@"
-                INSERT INTO 
-                    {playerChallengesTable}
-                SELECT 
-                    {dbPlayer.Id},
-                    type,
-                    frequency,
-                    max_number
-                FROM
-                    {challengeSettingsTable}
-                WHERE 
-                    frequency = 'forever'
-            ";
-            await _dbContext.Database.ExecuteSqlRawAsync(sql);
+                string sql = $@"
+                    INSERT INTO 
+                        {playerChallengesTable}
+                    SELECT 
+                        {dbPlayer.Id},
+                        type,
+                        frequency,
+                        max_number
+                    FROM
+                        {challengeSettingsTable}
+                    WHERE 
+                        frequency = 'forever'
+                ";
+                await dbContext.Database.ExecuteSqlRawAsync(sql);
+            });
         }
 
 

@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Instance.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {

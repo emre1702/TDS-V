@@ -1,6 +1,6 @@
 ﻿namespace TDS_Shared.Manager.Utility
 {
-    public static class Constants
+    public static partial class Constants
     {
         public const int TeamSpawnBlipSprite = 491;
         public const int MapLimitBlipSprite = 441;

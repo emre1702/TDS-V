@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    internal enum CommandUsageRight
+    public enum CommandUsageRight
     {
         User,
         LobbyOwner,

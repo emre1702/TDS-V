@@ -4,11 +4,16 @@ namespace TDS_Server.RAGE.Startup
 {
     class Program : Script
     {
+        #nullable disable warnings
+        public static BaseAPI BaseAPI;
+        public static Core.Startup.Program TDSCore;
+
         public Program()
         {
-            var baseAPI = new BaseAPI();
+            BaseAPI = new BaseAPI();
 
-            var tdsCore = new Core.Startup.Program(baseAPI);
+            TDSCore = new Core.Startup.Program(BaseAPI);
+            
         }
 
     }

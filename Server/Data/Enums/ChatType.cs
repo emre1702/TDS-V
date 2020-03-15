@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TDS_Server.Data.Enums
 {
-    enum ChatType
+    public enum ChatType
     {
         Normal,
         Dirty,

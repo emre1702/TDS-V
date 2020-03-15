@@ -8,5 +8,6 @@
         public const string SetDamageForRoundStats = "sb4";
         public const string SetKillsForRoundStats = "sb5";
         public const string SyncChallengeCurrentAmountChange = "sb6";
+        public const string SyncChallenges = "sb7";
     }
 }

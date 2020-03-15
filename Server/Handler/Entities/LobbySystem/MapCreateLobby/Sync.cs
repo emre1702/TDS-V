@@ -8,7 +8,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Common.Manager.Utility;
 using TDS_Server.Instance.PlayerInstance;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
         {
             if (_lastId >= lastId)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
             }
             else
             {
@@ -32,13 +32,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
             var player = GetPlayerById(tdsPlayerId);
             if (player is null)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncAllObjects, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncAllObjects, json);
         }
 
         public void SyncNewObject(TDSPlayer player, string json)
         {
             NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
-                DToClientEvent.MapCreatorSyncNewObject, json);
+                ToClientEvent.MapCreatorSyncNewObject, json);
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == EMapCreatorPositionType.MapCenter)
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
         public void SyncObjectPosition(TDSPlayer player, string json)
         {
             NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
-                DToClientEvent.MapCreatorSyncObjectPosition, json);
+                ToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
             if (!_posById.ContainsKey(pos.Id))
@@ -70,7 +70,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
         public void SyncRemoveObject(TDSPlayer player, int objId)
         {
             NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(),
-                DToClientEvent.MapCreatorSyncObjectRemove, objId);
+                ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -84,15 +84,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
 
         public void SyncMapInfoChange(EMapCreatorInfoType infoType, object data)
         {
-            SendAllPlayerEvent(DToClientEvent.MapCreatorSyncData, null, infoType, data);
+            SendAllPlayerEvent(ToClientEvent.MapCreatorSyncData, null, infoType, data);
 
             switch (infoType)
             {
                 case EMapCreatorInfoType.DescriptionEnglish:
-                    _currentMap.Description[(int)ELanguage.English] = Convert.ToString(data);
+                    _currentMap.Description[(int)Language.English] = Convert.ToString(data);
                     break;
                 case EMapCreatorInfoType.DescriptionGerman:
-                    _currentMap.Description[(int)ELanguage.German] = Convert.ToString(data);
+                    _currentMap.Description[(int)Language.German] = Convert.ToString(data);
                     break;
                 case EMapCreatorInfoType.Name:
                     _currentMap.Name = Convert.ToString(data);

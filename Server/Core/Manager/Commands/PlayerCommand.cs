@@ -19,19 +19,19 @@ namespace TDS_Server.Core.Manager.Commands
         [TDSCommand(Default.PlayerCommand.LobbyLeave)]
         public static async void LobbyLeave(TDSPlayer player)
         {
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return;
-            if (player.CurrentLobby.LobbyEntity.Type == ELobbyType.MainMenu)
+            if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
                 if (CustomLobbyMenuSync.IsPlayerInCustomLobbyMenu(player))
                 {
                     CustomLobbyMenuSync.RemovePlayer(player);
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LeaveCustomLobbyMenu);
+                    NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LeaveCustomLobbyMenu);
                 }
                 return;
             }
 
-            player.CurrentLobby.RemovePlayer(player);
+            player.Lobby.RemovePlayer(player);
             await LobbyManager.MainMenu.AddPlayer(player, 0);
         }
 
@@ -40,7 +40,7 @@ namespace TDS_Server.Core.Manager.Commands
         {
             if (player.Player is null)
                 return;
-            if (!(player.CurrentLobby is FightLobby fightLobby))
+            if (!(player.Lobby is FightLobby fightLobby))
                 return;
             if (player.Lifes == 0)
                 return;
@@ -68,7 +68,7 @@ namespace TDS_Server.Core.Manager.Commands
                     break;
             }
             
-            fightLobby.SendAllPlayerEvent(DToClientEvent.ApplySuicideAnimation, null, player.Player.Handle.Value, animName, animTime);
+            fightLobby.SendAllPlayerEvent(ToClientEvent.ApplySuicideAnimation, null, player.Player.Handle.Value, animName, animTime);
         }
 
         [TDSCommand(Default.PlayerCommand.GlobalChat)]
@@ -327,20 +327,20 @@ namespace TDS_Server.Core.Manager.Commands
         [TDSCommand(Default.PlayerCommand.LobbyInvitePlayer)]
         public static void LobbyInvitePlayer(TDSPlayer player, TDSPlayer target)
         {
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return;
             if (!player.IsLobbyOwner)
                 return;
 
-            switch (player.CurrentLobby.Type)
+            switch (player.Lobby.Type)
             {
-                case ELobbyType.MapCreateLobby:
+                case LobbyType.MapCreateLobby:
                     _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), 
                         target: target, 
                         sender: player, 
                         onAccept: async (sender, target, invitation) => 
                         {
-                            await sender.CurrentLobby!.AddPlayer(target!, null);
+                            await sender.Lobby!.AddPlayer(target!, null);
                             target?.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
                             sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target?.DisplayName ?? "?"), false);
                         },

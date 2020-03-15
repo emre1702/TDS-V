@@ -1,22 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Server;
 using TDS_Shared.Data.Models;
 using Command = TDS_Server.Database.Entity.Command.Commands;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
-    public class SettingsHandler
+    public class SettingsHandler : ISettingsHandler
     {
-         public SyncedServerSettingsDto SyncedSettings { get; }
-        public readonly ServerSettings ServerSettings;
+        public SyncedServerSettingsDto SyncedSettings { get; }
+        public ServerSettings ServerSettings { get; }
         private readonly Command _loadMapOfOthersRightInfos;
 
         public SettingsHandler(TDSDbContext dbContext)

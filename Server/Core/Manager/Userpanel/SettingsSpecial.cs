@@ -116,7 +116,7 @@ namespace TDS_Server.Core.Manager.Userpanel
             {
                 case EUserpanelSettingsSpecialType.Username:
                     player.Player!.Name = value;
-                    PlayerDataSync.SetData(player, EPlayerDataKey.Name, EPlayerDataSyncMode.Player, value);
+                    PlayerDataSync.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, value);
                     break;
             }
 

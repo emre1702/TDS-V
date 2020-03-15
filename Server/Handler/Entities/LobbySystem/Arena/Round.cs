@@ -1,108 +1,106 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using TDS_Common.Default;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Instance.GameModes;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Stats;
-using TDS_Server.Manager.Utility;
-using TDS_Server.Dto;
 using System.Linq;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Enums;
-using TDS_Server.Interfaces;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models;
+using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler.Entities.GameModes;
+using TDS_Server.Handler.Entities.GameModes.Bomb;
+using TDS_Server.Handler.Entities.GameModes.Gangwar;
+using TDS_Server.Handler.Entities.GameModes.Normal;
+using TDS_Server.Handler.Entities.GameModes.Sniper;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        public LobbyRoundSettings RoundSettings => LobbyEntity.LobbyRoundSettings;
+        public LobbyRoundSettings RoundSettings => Entity.LobbyRoundSettings;
 
         public GameMode? CurrentGameMode;
 
         private TDSTimer? _nextRoundStatusTimer;
 
-        public readonly Dictionary<ERoundStatus, uint> DurationsDict = new Dictionary<ERoundStatus, uint>
+        public readonly Dictionary<RoundStatus, uint> DurationsDict = new Dictionary<RoundStatus, uint>
         {
-            [ERoundStatus.MapClear] = 1 * 1000,
-            [ERoundStatus.NewMapChoose] = 4 * 1000,
-            [ERoundStatus.Countdown] = 5 * 1000,
-            [ERoundStatus.Round] = 4 * 60 * 1000,
-            [ERoundStatus.RoundEnd] = 1 * 1000,
-            [ERoundStatus.RoundEndRanking] = 10 * 1000,
-            [ERoundStatus.None] = 0
+            [RoundStatus.MapClear] = 1 * 1000,
+            [RoundStatus.NewMapChoose] = 4 * 1000,
+            [RoundStatus.Countdown] = 5 * 1000,
+            [RoundStatus.Round] = 4 * 60 * 1000,
+            [RoundStatus.RoundEnd] = 1 * 1000,
+            [RoundStatus.RoundEndRanking] = 10 * 1000,
+            [RoundStatus.None] = 0
         };
 
-        private readonly Dictionary<ERoundStatus, Action> _roundStatusMethod = new Dictionary<ERoundStatus, Action>();
+        private readonly Dictionary<RoundStatus, Action> _roundStatusMethod = new Dictionary<RoundStatus, Action>();
 
-        private readonly Dictionary<ERoundStatus, ERoundStatus> _nextRoundStatsDict = new Dictionary<ERoundStatus, ERoundStatus>
+        private readonly Dictionary<RoundStatus, RoundStatus> _nextRoundStatsDict = new Dictionary<RoundStatus, RoundStatus>
         {
-            [ERoundStatus.MapClear] = ERoundStatus.NewMapChoose,
-            [ERoundStatus.NewMapChoose] = ERoundStatus.Countdown,
-            [ERoundStatus.Countdown] = ERoundStatus.Round,
-            [ERoundStatus.Round] = ERoundStatus.RoundEnd,
-            [ERoundStatus.RoundEnd] = ERoundStatus.RoundEndRanking,
-            [ERoundStatus.RoundEndRanking] = ERoundStatus.MapClear,
-            [ERoundStatus.None] = ERoundStatus.NewMapChoose
+            [RoundStatus.MapClear] = RoundStatus.NewMapChoose,
+            [RoundStatus.NewMapChoose] = RoundStatus.Countdown,
+            [RoundStatus.Countdown] = RoundStatus.Round,
+            [RoundStatus.Round] = RoundStatus.RoundEnd,
+            [RoundStatus.RoundEnd] = RoundStatus.RoundEndRanking,
+            [RoundStatus.RoundEndRanking] = RoundStatus.MapClear,
+            [RoundStatus.None] = RoundStatus.NewMapChoose
         };
-        private readonly Dictionary<EMapType, Func<Arena, MapDto, GameMode>> _gameModeByMapType
-            = new Dictionary<EMapType, Func<Arena, MapDto, GameMode>>
-        {
-            [EMapType.Normal] = (lobby, map) => new Normal(lobby, map),
-            [EMapType.Bomb] = (lobby, map) => new Bomb(lobby, map),
-            [EMapType.Sniper] = (lobby, map) => new Sniper(lobby, map),
-            [EMapType.Gangwar] = (lobby, map) => new Gangwar(lobby, map)
-        };
+        private readonly Dictionary<MapType, Func<Arena, MapDto, GameMode>> _gameModeByMapType
+            = new Dictionary<MapType, Func<Arena, MapDto, GameMode>>
+            {
+                [MapType.Normal] = (lobby, map) => new Normal(lobby, map),
+                [MapType.Bomb] = (lobby, map) => new Bomb(lobby, map),
+                [MapType.Sniper] = (lobby, map) => new Sniper(lobby, map),
+                [MapType.Gangwar] = (lobby, map) => new Gangwar(lobby, map)
+            };
 
-        public ERoundStatus CurrentRoundStatus = ERoundStatus.None;
+        public RoundStatus CurrentRoundStatus = RoundStatus.None;
         public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
         public bool RemoveAfterOneRound { get; set; }
-        public ERoundEndReason CurrentRoundEndReason { get; private set; }
+        public RoundEndReason CurrentRoundEndReason { get; private set; }
         public Dictionary<ILanguage, string>? RoundEndReasonText { get; private set; }
 
         private Team? _currentRoundEndWinnerTeam;
 
-        private List<RoundPlayerRankingStat>? _ranking; 
+        private List<RoundPlayerRankingStat>? _ranking;
 
-        public void SetRoundStatus(ERoundStatus status, ERoundEndReason roundEndReason = ERoundEndReason.Time)
+        public void SetRoundStatus(RoundStatus status, RoundEndReason roundEndReason = RoundEndReason.Time)
         {
             CurrentRoundStatus = status;
-            if (status == ERoundStatus.RoundEnd)
+            if (status == RoundStatus.RoundEnd)
                 CurrentRoundEndReason = roundEndReason;
-            ERoundStatus nextStatus = _nextRoundStatsDict[status];
+            RoundStatus nextStatus = _nextRoundStatsDict[status];
             _nextRoundStatusTimer?.Kill();
             if (!IsEmpty())
             {
                 _nextRoundStatusTimer = new TDSTimer(() =>
                 {
-                    if (IsEmpty() && CurrentGameMode?.CanEndRound(ERoundEndReason.Empty) != false)
-                        SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Empty);
+                    if (IsEmpty() && CurrentGameMode?.CanEndRound(RoundEndReason.Empty) != false)
+                        SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Empty);
                     else
                         SetRoundStatus(nextStatus);
                 }, DurationsDict[status]);
                 try
                 {
                     if (_roundStatusMethod.ContainsKey(status))
-                        NAPI.Task.Run(_roundStatusMethod[status]);
+                        ModAPI.Thread.RunInMainThread(_roundStatusMethod[status]);
                 }
                 catch (Exception ex)
                 {
-                    ErrorLogsManager.Log($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
+                    _loggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     if (!IsOfficial)
-                        NAPI.Task.Run(Remove);
+                        ModAPI.Thread.RunInMainThread(Remove);
                 }
             }
-            else if (CurrentRoundStatus != ERoundStatus.RoundEnd)
+            else if (CurrentRoundStatus != RoundStatus.RoundEnd)
             {
-                NAPI.Task.Run(_roundStatusMethod[ERoundStatus.RoundEnd]);
-                NAPI.Task.Run(_roundStatusMethod[ERoundStatus.MapClear]);
-                CurrentRoundStatus = ERoundStatus.None;
+                ModAPI.Thread.RunInMainThread(_roundStatusMethod[RoundStatus.RoundEnd]);
+                ModAPI.Thread.RunInMainThread(_roundStatusMethod[RoundStatus.MapClear]);
+                CurrentRoundStatus = RoundStatus.None;
             }
         }
 
@@ -110,7 +108,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             DeleteMapBlips();
             ClearTeamPlayersAmounts();
-            SendAllPlayerEvent(DToClientEvent.MapClear, null);
+            SendAllPlayerEvent(ToClientEvent.MapClear, null);
 
             CurrentGameMode?.StartMapClear();
         }
@@ -121,7 +119,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (nextMap == null)
                 return;
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
-            if (nextMap.Info.IsNewMap) 
+            if (nextMap.Info.IsNewMap)
                 SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
             CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap);
             CurrentGameMode?.StartMapChoose();
@@ -129,14 +127,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            SendAllPlayerEvent(DToClientEvent.MapChange, null, nextMap.ClientSyncedDataJson);
+            SendAllPlayerEvent(ToClientEvent.MapChange, null, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
             RoundEndReasonText = null;
         }
 
         private void StartRoundCountdown()
         {
-            _allRoundWeapons = LobbyEntity.LobbyWeapons.Where(w => CurrentGameMode != null ? CurrentGameMode.IsWeaponAllowed(w.Hash) : true);
+            _allRoundWeapons = Entity.LobbyWeapons.Where(w => CurrentGameMode != null ? CurrentGameMode.IsWeaponAllowed(w.Hash) : true);
             SetAllPlayersInCountdown();
             CurrentGameMode?.StartRoundCountdown();
         }
@@ -150,7 +148,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private async void EndRound()
         {
             bool isEmpty = IsEmpty();
-            if (!_dontRemove && (LobbyEntity.IsTemporary && isEmpty || RemoveAfterOneRound))
+            if (!_dontRemove && (Entity.IsTemporary && isEmpty || RemoveAfterOneRound))
             {
                 Remove();
                 return;
@@ -163,13 +161,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Player, DToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                    NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                     if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != ERoundEndReason.Death)
                         character.Player!.Kill();
                     character.Lifes = 0;
                 });
             }
-            
+
 
             foreach (var team in Teams)
             {
@@ -190,11 +188,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 _ranking = null;
             }
-            await ExecuteForDBAsync(async (dbContext) => 
+            await ExecuteForDBAsync(async (dbContext) =>
             {
                 await dbContext.SaveChangesAsync();
             });
-            
+
             ServerTotalStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
             ServerDailyStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
 
@@ -232,8 +230,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
 
                 string json = Serializer.ToBrowser(_ranking);
-                SendAllPlayerEvent(DToClientEvent.StartRankingShowAfterRound, null, json, winner.Handle.Value, second?.Handle.Value ?? 0, third?.Handle.Value ?? 0);
-            } 
+                SendAllPlayerEvent(ToClientEvent.StartRankingShowAfterRound, null, json, winner.Handle.Value, second?.Handle.Value ?? 0, third?.Handle.Value ?? 0);
+            }
             catch (Exception ex)
             {
                 ErrorLogsManager.Log("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
@@ -248,7 +246,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             // if there are 2+ teams playing and there is only 1 team alive, end the round
             if ((teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2) && CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
             {
-                SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Death);
+                SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.Death);
             }
         }
 
@@ -258,8 +256,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return CurrentGameMode.WinnerTeam;
             return CurrentRoundEndReason switch
             {
-                ERoundEndReason.Death => GetTeamStillInRound(),
-                ERoundEndReason.Time => GetTeamWithHighestHP(),
+                RoundEndReason.Death => GetTeamStillInRound(),
+                RoundEndReason.Time => GetTeamWithHighestHP(),
                 _ => null,
             };
         }

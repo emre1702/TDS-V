@@ -94,7 +94,7 @@ namespace TDS_Server.Core.Manager.Userpanel
                 Stats = stats,
                 AlreadyInvited = alreadyInvited
             });
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadApplicationDataForAdmin, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LoadApplicationDataForAdmin, json);
             
         }
 

@@ -8,7 +8,6 @@ namespace TDS_Server.RAGE.Player
     {
         internal Dictionary<GTANetworkAPI.Player, IPlayer> PlayerCache { get; } = new Dictionary<GTANetworkAPI.Player, IPlayer>();
 
-
         internal void PlayerConnected(GTANetworkAPI.Player modPlayer)
         {
             var player = new Player(modPlayer);

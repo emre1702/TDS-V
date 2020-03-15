@@ -1,9 +1,9 @@
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using System.Linq;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
@@ -12,7 +12,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
             var lastWeapon = player.LastWeaponOnHand;
             player.Player!.RemoveAllWeapons();
             bool giveLastWeapon = false;
-            foreach (LobbyWeapons weapon in LobbyEntity.LobbyWeapons)
+            foreach (LobbyWeapons weapon in Entity.LobbyWeapons)
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;

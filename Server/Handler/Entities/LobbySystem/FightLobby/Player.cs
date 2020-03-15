@@ -4,7 +4,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.FightLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {

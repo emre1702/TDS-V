@@ -70,7 +70,7 @@ namespace TDS_Client.Manager.Draw
             playerlist.Sort((a, b) => a.TeamIndex.CompareTo(b.TeamIndex));
             foreach (var playerdata in playerlist)
             {
-                var team = Team.CurrentLobbyTeams[playerdata.TeamIndex];
+                var team = Team.LobbyTeams[playerdata.TeamIndex];
                 DxGridRow row = new DxGridRow(_grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: UIResText.Alignment.Centered, scale: 0.3f);
                 new DxGridCell(playerdata.Name, row, _columns[0]);
 

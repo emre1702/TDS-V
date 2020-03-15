@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.Base
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
@@ -45,17 +46,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
         {
             var oldPlayersList = Players.ToList();
             ClearTeamPlayersLists();
-            foreach (TDSPlayer character in oldPlayersList)
+            foreach (TDSPlayer player in oldPlayersList)
             {
-                if (character.Team is null) // propably not (yet) in the lobby
+                if (player.Team is null) // propably not (yet) in the lobby
                     continue;
-                if (!character.Team.IsSpectator)
+                if (!player.Team.IsSpectator)
                 {
-                    character.Team = null;
-                    character.Team = GetTeamWithFewestPlayer();
+                    player.Team = null;
+                    player.Team = GetTeamWithFewestPlayer();
                 }
                 else
-                    character.Team.Players.Add(character);
+                    player.Team.Players.Add(player);
             }
 
             foreach (var team in Teams)

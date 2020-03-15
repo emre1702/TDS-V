@@ -1,23 +1,20 @@
-﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
+﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Enums;
-using TDS_Server.Dto.Map;
-using TDS_Server.Enums;
-using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
 
 namespace TDS_Server.Handler.Entities.GameModes
 {
-    abstract class GameMode
+    public abstract class GameMode
     {
         protected Arena Lobby;
         protected MapDto Map;
 
         public Team? WinnerTeam { get; set; }
 
-        public GameMode(Arena lobby, MapDto map)
+        protected GameMode(Arena lobby, MapDto map)
         {
             Lobby = lobby;
             Map = map;
@@ -36,7 +33,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         public virtual void SendPlayerRoundInfoOnJoin(TDSPlayer player) { }
 
-        
+
         public virtual bool CanJoinLobby(TDSPlayer player, uint? teamIndex) { return true; }
         public virtual void AddPlayer(TDSPlayer player, uint? teamIndex) { }
         public virtual void RemovePlayer(TDSPlayer player) { }
@@ -44,13 +41,13 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => true;
 
-        public virtual void OnPlayerEnterColShape(ColShape shape, TDSPlayer player) { }
+        public virtual void OnPlayerEnterColShape(IColShape shape, TDSPlayer player) { }
         public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer) { }
         public virtual void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }
 
 
         public virtual bool CanJoinDuringRound(TDSPlayer player, Team team) { return false; }
 
-        public virtual bool CanEndRound(ERoundEndReason newPlayer) { return true; }
+        public virtual bool CanEndRound(RoundEndReason newPlayer) { return true; }
     }
 }

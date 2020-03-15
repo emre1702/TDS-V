@@ -12,15 +12,15 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Team
     {
-        public static List<SyncedTeamDataDto> CurrentLobbyTeams 
+        public static List<SyncedTeamDataDto> LobbyTeams 
         { 
-            get => _currentLobbyTeams;
+            get => _LobbyTeams;
             set
             {
-                _currentLobbyTeams = value;
-                if (_currentLobbyTeams != null)
+                _LobbyTeams = value;
+                if (_LobbyTeams != null)
                 {
-                    if (_currentLobbyTeams.Count == 1)
+                    if (_LobbyTeams.Count == 1)
                     {
                         Player.LocalPlayer.SetCanAttackFriendly(true, true);
                     }
@@ -37,7 +37,7 @@ namespace TDS_Client.Manager.Lobby
         public static int AmountPlayersSameTeam => _sameTeamPlayers.Count;
 
         private static bool _activated;
-        private static List<SyncedTeamDataDto> _currentLobbyTeams;
+        private static List<SyncedTeamDataDto> _LobbyTeams;
 
         public static void Init()
         {

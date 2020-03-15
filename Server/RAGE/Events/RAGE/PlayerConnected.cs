@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using TDS_Server.RAGE.Player;
 using TDS_Server.RAGE.Startup;
 
 namespace TDS_Server.RAGE.Events.RAGE
@@ -10,9 +11,10 @@ namespace TDS_Server.RAGE.Events.RAGE
         {
             (Program.BaseAPI.Player as PlayerAPI)?.PlayerConnected(player);
 
-            var modPlayer = (Program.BaseAPI.Player as PlayerAPI)?.GetIPlayer(player);
+            var modPlayer = GetModPlayer(player);
             if (modPlayer is null)
                 return;
+
             Program.TDSCore.EventsHandler.OnPlayerConnected(modPlayer);
         }
     }

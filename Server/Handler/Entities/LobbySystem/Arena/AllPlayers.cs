@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TDS_Server.Dto;
 using TDS_Server.Manager.Utility;
 using TDS_Common.Manager.Utility;
+using TDS_Server.Data.Models;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -14,13 +15,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         private void RewardAllPlayer()
         {
-            if (!LobbyEntity.IsOfficial)
+            if (!Entity.IsOfficial)
                 return;
             if (IsEmpty())
                 return;
-            if (LobbyEntity.LobbyRewards is null)
+            if (Entity.LobbyRewards is null)
                 return;
-            if (LobbyEntity.LobbyRewards.MoneyPerKill == 0 && LobbyEntity.LobbyRewards.MoneyPerAssist == 0 && LobbyEntity.LobbyRewards.MoneyPerDamage == 0)
+            if (Entity.LobbyRewards.MoneyPerKill == 0 && Entity.LobbyRewards.MoneyPerAssist == 0 && Entity.LobbyRewards.MoneyPerDamage == 0)
                 return;
 
             StringBuilder strbuilder = new StringBuilder();
@@ -35,12 +36,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 uint assistreward = 0;
                 uint damagereward = 0;
 
-                if (LobbyEntity.LobbyRewards.MoneyPerKill != 0)
-                    killreward = (uint)(character.CurrentRoundStats.Kills * LobbyEntity.LobbyRewards.MoneyPerKill);
-                if (LobbyEntity.LobbyRewards.MoneyPerAssist != 0)
-                    assistreward = (uint)(character.CurrentRoundStats.Assists * LobbyEntity.LobbyRewards.MoneyPerAssist);
-                if (LobbyEntity.LobbyRewards.MoneyPerDamage != 0)
-                    damagereward = (uint)(character.CurrentRoundStats.Damage * LobbyEntity.LobbyRewards.MoneyPerDamage);
+                if (Entity.LobbyRewards.MoneyPerKill != 0)
+                    killreward = (uint)(character.CurrentRoundStats.Kills * Entity.LobbyRewards.MoneyPerKill);
+                if (Entity.LobbyRewards.MoneyPerAssist != 0)
+                    assistreward = (uint)(character.CurrentRoundStats.Assists * Entity.LobbyRewards.MoneyPerAssist);
+                if (Entity.LobbyRewards.MoneyPerDamage != 0)
+                    damagereward = (uint)(character.CurrentRoundStats.Damage * Entity.LobbyRewards.MoneyPerDamage);
 
                 character.GiveMoney(killreward + assistreward + damagereward);
 
@@ -97,7 +98,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     team.SpectateablePlayers?.Add(player);
                 }
                 SetPlayerReadyForRound(player);
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.CountdownStart);
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.CountdownStart);
             });
         }
 
@@ -110,7 +111,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = Serializer.ToClient(amounts);
-            SendAllPlayerEvent(DToClientEvent.AmountInFightSync, null, json);
+            SendAllPlayerEvent(ToClientEvent.AmountInFightSync, null, json);
         }
 
         protected void SaveAllPlayerRoundStats()

@@ -59,7 +59,7 @@ namespace TDS_Server.Core.Manager.Userpanel
             if (json == null)
                 return;
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadUserpanelData, (int)dataType, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LoadUserpanelData, (int)dataType, json);
         }
 
         public static void Init(TDSDbContext dbContext)

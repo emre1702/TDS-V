@@ -7,8 +7,9 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.Player;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.Base
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
@@ -23,15 +24,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
             BanPlayer(admin, target.Entity, endTime, reason, target.Player.Serial);
             if (endTime.HasValue)
             {
-                if (LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                    target.SendMessage(target.Language.TIMEBAN_LOBBY_YOU_INFO.Formatted(endTime.Value.Minute / 60, LobbyEntity.Name, admin.DisplayName, reason));
+                if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    target.SendMessage(target.Language.TIMEBAN_LOBBY_YOU_INFO.Formatted(endTime.Value.Minute / 60, Entity.Name, admin.DisplayName, reason));
                 else
                     target.SendMessage(target.Language.TIMEBAN_YOU_INFO.Formatted(endTime.Value.Minute / 60, admin.DisplayName, reason));
             }
             else
             {
-                if (LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                    target.SendMessage(target.Language.PERMABAN_LOBBY_YOU_INFO.Formatted(LobbyEntity.Name, admin.DisplayName, reason));
+                if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    target.SendMessage(target.Language.PERMABAN_LOBBY_YOU_INFO.Formatted(Entity.Name, admin.DisplayName, reason));
                 else
                     target.SendMessage(target.Language.PERMABAN_YOU_INFO.Formatted(admin.DisplayName, reason));
             }
@@ -45,7 +46,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
             PlayerBans? ban = null;
             await ExecuteForDBAsync(async (dbContext) => 
             {
-                ban = await dbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+                ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban != null)
                 {
                     ban.AdminId = admin.Entity?.Id ?? 0;
@@ -59,7 +60,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
                     ban = new PlayerBans()
                     {
                         PlayerId = target.Id,
-                        LobbyId = LobbyEntity.Id,
+                        LobbyId = Entity.Id,
                         Serial = serial,
                         AdminId = admin.Entity?.Id ?? 0,
                         EndTimestamp = endTime,
@@ -72,21 +73,21 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
             if (endTime.HasValue)
             {
-                if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                    LangUtils.SendAllChatMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, LobbyEntity.Name, admin.DisplayName, reason));
-                else if (LobbyEntity.Type == TDS_Shared.Data.Enums.ELobbyType.MainMenu)
+                if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    LangUtils.SendAllChatMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, Entity.Name, admin.DisplayName, reason));
+                else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
                     SendAllPlayerLangMessage(lang => lang.TIMEBAN_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, admin.DisplayName, reason));
                 else
-                    SendAllPlayerLangMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, LobbyEntity.Name, admin.DisplayName, reason));
+                    SendAllPlayerLangMessage(lang => lang.TIMEBAN_LOBBY_INFO.Formatted(target.Name, (endTime?.Minute ?? 0) / 60, Entity.Name, admin.DisplayName, reason));
             }
             else
             {
-                if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                    LangUtils.SendAllChatMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.DisplayName, reason));
-                else if (LobbyEntity.Type == TDS_Shared.Data.Enums.ELobbyType.MainMenu)
+                if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    LangUtils.SendAllChatMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, Entity.Name, admin.DisplayName, reason));
+                else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
                     SendAllPlayerLangMessage(lang => lang.PERMABAN_INFO.Formatted(target.Name, admin.DisplayName, reason));
                 else
-                    SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.DisplayName, reason));
+                    SendAllPlayerLangMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, Entity.Name, admin.DisplayName, reason));
             }
 
             if (IsOfficial && ban is { })
@@ -102,15 +103,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
             if (target.Entity is null)
                 return;
             UnbanPlayer(admin, target.Entity, reason);
-            if (LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                target.SendMessage(target.Language.UNBAN_YOU_LOBBY_INFO.Formatted(LobbyEntity.Name, admin.DisplayName, reason));
+            if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                target.SendMessage(target.Language.UNBAN_YOU_LOBBY_INFO.Formatted(Entity.Name, admin.DisplayName, reason));
         }
 
         public async void UnbanPlayer(TDSPlayer admin, Players target, string reason)
         {
             await ExecuteForDBAsync(async (dbContext) =>
             {
-                PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, LobbyEntity.Id);
+                PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban is null)
                 {
                     if (admin.Player is { })
@@ -121,19 +122,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
                 await dbContext.SaveChangesAsync();
             });
 
-            if (LobbyEntity.IsOfficial && LobbyEntity.Type != TDS_Shared.Data.Enums.ELobbyType.MainMenu)
-                LangUtils.SendAllChatMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
-            else if (LobbyEntity.Type == TDS_Shared.Data.Enums.ELobbyType.MainMenu)
+            if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                LangUtils.SendAllChatMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, Entity.Name, admin.AdminLevelName, reason));
+            else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
                 LangUtils.SendAllChatMessage(lang => lang.UNBAN_INFO.Formatted(target.Name, admin.AdminLevelName, reason));
             else
-                SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, LobbyEntity.Name, admin.AdminLevelName, reason));
+                SendAllPlayerLangMessage(lang => lang.UNBAN_LOBBY_INFO.Formatted(target.Name, Entity.Name, admin.AdminLevelName, reason));
         }
 
         public async Task<bool> IsPlayerBaned(TDSPlayer character)
         {
             if (character.Entity is null)
                 return false;
-            PlayerBans? ban = await ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(character.Entity.Id, LobbyEntity.Id));
+            PlayerBans? ban = await ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(character.Entity.Id, Entity.Id));
             if (ban is null)
                 return false;
 

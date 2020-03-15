@@ -33,20 +33,18 @@ namespace TDS_Server.Data.Models
         [JsonProperty("8")]
         public string SCName { get; set; }
 
-        public static AngularConstantsDataDto Get(ITDSPlayer player)
+
+        public AngularConstantsDataDto(ITDSPlayer player, ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler)
         {
-            return new AngularConstantsDataDto
-            {
-                TDSId = player.Id,
-                RemoteId = player.RemoteId,
-                UsernameChangeCost = SettingsManager.ServerSettings.UsernameChangeCost,
-                UsernameChangeCooldownDays = SettingsManager.ServerSettings.UsernameChangeCooldownDays,
-                MapBuyBasePrice = SettingsManager.ServerSettings.MapBuyBasePrice,
-                MapBuyCounterMultiplicator = SettingsManager.ServerSettings.MapBuyCounterMultiplicator,
-                AnnouncementsJson = AnnouncementsManager.Json,
-                Username = player.Entity.Name,
-                SCName = player.Entity.SCName
-            };
+            TDSId = player.Id;
+            RemoteId = player.RemoteId;
+            UsernameChangeCost = settingsHandler.ServerSettings.UsernameChangeCost;
+            UsernameChangeCooldownDays = settingsHandler.ServerSettings.UsernameChangeCooldownDays;
+            MapBuyBasePrice = settingsHandler.ServerSettings.MapBuyBasePrice;
+            MapBuyCounterMultiplicator = settingsHandler.ServerSettings.MapBuyCounterMultiplicator;
+            AnnouncementsJson = announcementsHandler.Json;
+            Username = player.Entity.Name;
+            SCName = player.Entity.SCName;
         }
     }
 #nullable restore

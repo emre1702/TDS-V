@@ -1,4 +1,6 @@
-﻿namespace TDS_Server.Handler.Entities.LobbySystem.Base
+﻿using TDS_Server.Data.Interfaces;
+
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
@@ -27,6 +29,13 @@
             if (!obj.GetType().IsSubclassOf(typeof(Lobby)) && obj.GetType() != typeof(Lobby))
                 return false;
             return Id == ((Lobby)obj).Id;
+        }
+
+        public bool Equals(ILobby? lobby)
+        {
+            if (lobby is null)
+                return false;
+            return Id == lobby.Id;
         }
 
         public override int GetHashCode()

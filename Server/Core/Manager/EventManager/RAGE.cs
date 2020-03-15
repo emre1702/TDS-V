@@ -13,10 +13,10 @@ namespace TDS_Server.Core.Manager.EventManager
         public static void OnPlayerSpawn(Player player)
         {
             TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerSpawn(character);
+            character.Lobby?.OnPlayerSpawn(character);
             foreach (var target in character.Spectators)
             {
-                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.SpectatorReattachCam);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, ToClientEvent.SpectatorReattachCam);
             }
         }
 
@@ -31,7 +31,7 @@ namespace TDS_Server.Core.Manager.EventManager
             if (!player.LoggedIn)
                 return;
 
-            player.CurrentLobby?.OnPlayerDisconnected(player);
+            player.Lobby?.OnPlayerDisconnected(player);
 
             player.Entity.PlayerStats.LoggedIn = false;
             player.ClosePrivateChat(true);
@@ -51,28 +51,28 @@ namespace TDS_Server.Core.Manager.EventManager
             TDSPlayer character = player.GetChar();
             if (!character.LoggedIn)
                 return;
-            if (character.CurrentLobby is null)
+            if (character.Lobby is null)
                 return;
             TDSPlayer killer;
-            if (character.CurrentLobby is FightLobby fightLobby)
+            if (character.Lobby is FightLobby fightLobby)
                 killer = fightLobby.DmgSys.GetKiller(character, killerClient);
             else 
                 killer = killerClient?.GetChar() ?? character;
-            character.CurrentLobby?.OnPlayerDeath(character, killer, reason);
+            character.Lobby?.OnPlayerDeath(character, killer, reason);
         }
 
         [ServerEvent(Event.PlayerEnterColshape)]
         public static void OnPlayerEnterColShape(ColShape shape, Player player)
         {
             TDSPlayer character = player.GetChar();
-            character.CurrentLobby?.OnPlayerEnterColShape(shape, character);
+            character.Lobby?.OnPlayerEnterColShape(shape, character);
         }
 
         [ServerEvent(Event.PlayerWeaponSwitch)]
         public static void OnPlayerWeaponSwitch(Player player, WeaponHash oldweapon, WeaponHash newweapon)
         {
             TDSPlayer character = player.GetChar();
-            if (character.CurrentLobby is FightLobby fightlobby)
+            if (character.Lobby is FightLobby fightlobby)
                 fightlobby.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
             character.LastWeaponOnHand = newweapon;
 

@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             if (Lobby.IsOfficial)
                 player.AddToChallenge(EChallengeType.BombPlant);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.PlayerPlantedBomb);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.PlayerPlantedBomb);
             Workaround.DetachEntity(_bomb);
             _bomb.Position = new Vector3(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
             _bomb.Rotation = new Vector3(270, 0, 0);
@@ -68,7 +68,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             Lobby.FuncIterateAllPlayers((target, team) =>
             {
                 target.SendMessage(target.Language.BOMB_PLANTED);
-                NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.BombPlanted, Serializer.ToClient(playerpos), team == _counterTerroristTeam);
+                NAPI.ClientEvent.TriggerClientEvent(target.Player, ToClientEvent.BombPlanted, Serializer.ToClient(playerpos), team == _counterTerroristTeam);
             });
 
             SendBombDefuseInfos();
@@ -99,21 +99,21 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 
             _terroristTeam.FuncIterate((targetcharacter, team) =>
             {
-                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.LobbyEntity.FightSettings.StartArmor + Lobby.LobbyEntity.FightSettings.StartHealth);
+                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
                 targetcharacter.Player!.Kill();
             });
             player.Player.StopAnimation();
 
             // COUNTER-TERROR WON //
             WinnerTeam = _counterTerroristTeam;
-            Lobby.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.BombDefused);
+            Lobby.SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.BombDefused);
         }
 
         public bool StartBombPlanting(TDSPlayer character)
         {
             if (_bomb is null)
                 return false;
-            if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return false;
             if (_bombDetonateTimer is { })
                 return false;
@@ -142,7 +142,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             //Todo StartBombDefusing was empty, test it
             if (_bomb is null)
                 return false;
-            if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return false;
             if (_bombDetonateTimer is null)
                 return false;

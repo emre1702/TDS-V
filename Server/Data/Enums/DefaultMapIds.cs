@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    enum DefaultMapIds
+    public enum DefaultMapIds
     {
         AllWithoutGangwars = -1,
         Normals = -2,

@@ -88,7 +88,7 @@ namespace TDS_Client.Manager.Lobby
 
         private static void CreateTeamsDisplays()
         {
-            var teams = Team.CurrentLobbyTeams;
+            var teams = Team.LobbyTeams;
             int showamountleft = (int)Math.Ceiling((teams.Count - 1) / 2d);
             int showamountright = teams.Count - showamountleft - 1;
             _teamDisplays = new DxTextRectangle[teams.Count - 1];
@@ -140,7 +140,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void RefreshAllTeamTexts()
         {
-            foreach (var team in Team.CurrentLobbyTeams)
+            foreach (var team in Team.LobbyTeams)
             {
                 if (team.IsSpectator)
                     continue;
@@ -152,7 +152,7 @@ namespace TDS_Client.Manager.Lobby
         {
             if (_teamDisplays == null)
                 return;
-            SyncedTeamDataDto team = Team.CurrentLobbyTeams[index];
+            SyncedTeamDataDto team = Team.LobbyTeams[index];
             _teamDisplays[index - 1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
         }
 
@@ -163,7 +163,7 @@ namespace TDS_Client.Manager.Lobby
 
         public static void OnePlayerDied(int teamindex)
         {
-            --Team.CurrentLobbyTeams[teamindex].AmountPlayers.AmountAlive;
+            --Team.LobbyTeams[teamindex].AmountPlayers.AmountAlive;
             RefreshTeamText(teamindex);
         }
 

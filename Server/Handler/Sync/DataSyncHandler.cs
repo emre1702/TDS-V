@@ -7,7 +7,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Handler.Player
+namespace TDS_Server.Handler.Sync
 {
     public class DataSyncHandler
     {

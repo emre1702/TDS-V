@@ -71,7 +71,7 @@ namespace TDS_Server.Core.Manager.EventManager
 
                 if (ret != null)
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.FromBrowserEventReturn, eventName, ret);
+                    NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.FromBrowserEventReturn, eventName, ret);
                 }
             }
             catch (Exception ex)
@@ -161,9 +161,9 @@ namespace TDS_Server.Core.Manager.EventManager
 
         private static object? BuyMap(TDSPlayer player, object[] args)
         {
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return null;
-            if (!(player.CurrentLobby is Arena arena))
+            if (!(player.Lobby is Arena arena))
                 return null;
             int? mapId;
             if ((mapId = Utils.GetInt(args[0])) == null)
@@ -175,9 +175,9 @@ namespace TDS_Server.Core.Manager.EventManager
 
         private static object? MapCreatorSyncData(TDSPlayer player, object[] args)
         {
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return null;
-            if (!(player.CurrentLobby is MapCreateLobby lobby))
+            if (!(player.Lobby is MapCreateLobby lobby))
                 return null;
             var infoType = (EMapCreatorInfoType)Convert.ToInt32(args[0]);
             var data = args[1];

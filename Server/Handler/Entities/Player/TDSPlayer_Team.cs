@@ -1,13 +1,14 @@
-﻿using TDS_Server.Handler.Entities.Utility;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Entities.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        private Team? _team;
+        private ITeam? _team;
 
-        public Team? Team
+        public ITeam? Team
         {
             get => _team;
             set

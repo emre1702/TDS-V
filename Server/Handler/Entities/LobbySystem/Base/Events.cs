@@ -1,9 +1,8 @@
-﻿using GTANetworkAPI;
-using System.Collections.Generic;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.PlayerInstance;
+﻿using System.Collections.Generic;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Shared.Instance;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.Base
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
@@ -11,8 +10,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {
-            character.Health = LobbyEntity.FightSettings?.StartHealth ?? 100;
-            character.Armor = LobbyEntity.FightSettings?.StartArmor ?? 100;
+            character.Health = Entity.FightSettings?.StartHealth ?? 100;
+            character.Armor = Entity.FightSettings?.StartArmor ?? 100;
         }
 
         public void OnPlayerDisconnected(TDSPlayer character)
@@ -23,24 +22,25 @@ namespace TDS_Server.Handler.Entities.LobbySystem.Base
         /// <summary>
         ///
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="player"></param>
         /// <param name="killer"></param>
         /// <param name="weapon"></param>
         /// <returns>Time in ms to disapper & spawn again</returns>
-        public virtual void OnPlayerDeath(TDSPlayer character, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
+        public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
             if (spawnPlayer)
             {
-                if (DeathSpawnTimer.ContainsKey(character))
+                if (DeathSpawnTimer.ContainsKey(player))
                 {
-                    DeathSpawnTimer[character].Kill();
-                    DeathSpawnTimer.Remove(character);
+                    DeathSpawnTimer[player].Kill();
+                    DeathSpawnTimer.Remove(player);
                 }
-                NAPI.Player.SpawnPlayer(character.Player, SpawnPoint.Around(LobbyEntity.AroundSpawnPoint), LobbyEntity.DefaultSpawnRotation);
+
+                player.ModPlayer?.Spawn(SpawnPoint.Around(Entity.AroundSpawnPoint), Entity.DefaultSpawnRotation);
             }
         }
 
-        public virtual void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
+        public virtual void OnPlayerEnterColShape(IColShape shape, TDSPlayer character)
         {
         }
     }

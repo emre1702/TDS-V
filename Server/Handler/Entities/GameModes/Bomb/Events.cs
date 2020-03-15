@@ -30,14 +30,14 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 
         public override void SendPlayerRoundInfoOnJoin(TDSPlayer player)
         {
-            if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return;
 
             if (_bombDetonateTimer is null || _bomb is null)
                 return;
 
             if (_bombDetonateTimer != null && _bomb != null)
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.BombPlanted,
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.BombPlanted,
                     Serializer.ToClient(_bomb.Position),
                     false,
                     _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);

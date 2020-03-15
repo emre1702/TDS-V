@@ -1,13 +1,12 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Default;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Default;
-using TDS_Server.Dto;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Data.Default;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Models;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Shared.Default;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.Utility
 {
@@ -20,18 +19,22 @@ namespace TDS_Server.Handler.Entities.Utility
         private TDSPlayer? _sender;
         private Action<TDSPlayer, TDSPlayer?, Invitation>? _onAccept;
         private Action<TDSPlayer, TDSPlayer?, Invitation>? _onReject;
-        private EInvitationType _type;
+        private InvitationType _type;
 
         private static ulong _idCounter = 0;
         private static Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
 
+        private readonly Serializer _serializer;
 
-        public Invitation(string message, TDSPlayer target, TDSPlayer? sender, 
-            Action<TDSPlayer, TDSPlayer?, Invitation>? onAccept = null, 
-            Action<TDSPlayer, TDSPlayer?, Invitation>? onReject = null, 
-            EInvitationType type = EInvitationType.None)
+        public Invitation(string message, TDSPlayer target, TDSPlayer? sender,
+            Serializer serializer,
+            Action<TDSPlayer, TDSPlayer?, Invitation>? onAccept = null,
+            Action<TDSPlayer, TDSPlayer?, Invitation>? onReject = null,
+            InvitationType type = InvitationType.None)
         {
-            Dto = new InvitationDto 
+            _serializer = serializer;
+
+            Dto = new InvitationDto
             {
                 Id = _idCounter++,
                 Sender = sender?.DisplayName,
@@ -44,9 +47,9 @@ namespace TDS_Server.Handler.Entities.Utility
             _onReject = onReject;
             _type = type;
 
-            _invitationById[Dto.Id] = this; 
+            _invitationById[Dto.Id] = this;
 
-            NAPI.ClientEvent.TriggerClientEvent(target.Player, DToClientEvent.ToBrowserEvent, ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            target.SendBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
 
         }
 
@@ -69,12 +72,12 @@ namespace TDS_Server.Handler.Entities.Utility
             _invitationById.Remove(Dto.Id);
             if (!_target.LoggedIn)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(_target.Player, DToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveInvitation, Dto.Id);
+            _target.SendBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
         }
 
         public void Resend()
         {
-            NAPI.ClientEvent.TriggerClientEvent(_target.Player, DToClientEvent.ToBrowserEvent, ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            _target.SendBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
         }
 
         public static Invitation? GetById(ulong id)
@@ -89,7 +92,7 @@ namespace TDS_Server.Handler.Entities.Utility
             return _invitationById.Values.Where(i => i._sender == sender);
         }
 
-        public static IEnumerable<Invitation> GetBySender(TDSPlayer sender, EInvitationType type)
+        public static IEnumerable<Invitation> GetBySender(TDSPlayer sender, InvitationType type)
         {
             return _invitationById.Values.Where(i => i._sender == sender && i._type == type);
         }

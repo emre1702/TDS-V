@@ -17,25 +17,25 @@ namespace TDS_Server.Core.Manager.Utility
         public static void SendDataToPlayer(Player client)
         {
             TDSPlayer player = client.GetChar();
-            if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
+            if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
             {
                 var entries = GetDataForMainmenu();
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, Serializer.ToClient(entries));
+                NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.SyncScoreboardData, Serializer.ToClient(entries));
             }
             else
             {
-                var entries = GetDataForLobby(player.CurrentLobby.Id);
+                var entries = GetDataForLobby(player.Lobby.Id);
                 if (entries is null)
                     return;
-                var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.CurrentLobby?.Id);
-                NAPI.ClientEvent.TriggerClientEvent(client, DToClientEvent.SyncScoreboardData, Serializer.ToClient(entries), Serializer.ToClient(lobbydata));
+                var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.Lobby?.Id);
+                NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.SyncScoreboardData, Serializer.ToClient(entries), Serializer.ToClient(lobbydata));
             }
         }
 
         private static List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
         {
             List<SyncedScoreboardMainmenuLobbyDataDto> list = new List<SyncedScoreboardMainmenuLobbyDataDto>();
-            foreach (Lobby lobby in LobbyManager.Lobbies.Where(l => l.Type != ELobbyType.MapCreateLobby))
+            foreach (Lobby lobby in LobbyManager.Lobbies.Where(l => l.Type != LobbyType.MapCreateLobby))
             {
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;
@@ -69,9 +69,9 @@ namespace TDS_Server.Core.Manager.Utility
                 (
                     name: player.DisplayName,
                     playtimeMinutes: player.PlayMinutes,
-                    kills: (int)((player.CurrentLobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0)),
-                    assists: (int)((player.CurrentLobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0)),
-                    deaths: player.CurrentLobbyStats?.Deaths ?? 0,
+                    kills: (int)((player.LobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0)),
+                    assists: (int)((player.LobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0)),
+                    deaths: player.LobbyStats?.Deaths ?? 0,
                     teamIndex: player.Team?.Entity.Index ?? 0
                 );
                 list.Add(entry);

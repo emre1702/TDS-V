@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerRankingStat';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
-import { DToClientEvent } from './enums/dtoclientevent.enum';
+import { DToClientEvent } from './enums/DToClientEvent.enum';
 
 @Component({
     selector: 'app-root',
@@ -53,9 +53,8 @@ export class AppComponent {
         snackBar: MatSnackBar,
         public vcRef: ViewContainerRef) {
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string, challengesJson: string) => {
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
-            this.settings.loadChallenges(challengesJson);
             this.started = true;
             changeDetector.detectChanges();
         });

@@ -9,14 +9,14 @@ namespace TDS_Server.Handler.Entities
 {
     public abstract class DatabaseEntityWrapper
     {
-        protected TDSDbContext DbContext { get; }
+        private TDSDbContext _dbContext;
 
         private ITDSPlayer? _player;
         protected readonly LoggingHandler _loggingHandler;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
         protected DatabaseEntityWrapper(TDSDbContext dbContext, LoggingHandler loggingHandler)
-            => (DbContext, _loggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
+            => (_dbContext, _loggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
 
         ~DatabaseEntityWrapper()
         {
@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Entities
 
             try
             {
-                await action(DbContext);
+                await action(_dbContext);
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Entities
 
             try
             {
-                return await action(DbContext);
+                return await action(_dbContext);
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.Entities
 
             try
             {
-                action(DbContext);
+                action(_dbContext);
             }
             catch (Exception ex)
             {

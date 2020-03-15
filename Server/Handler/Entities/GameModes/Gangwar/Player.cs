@@ -94,10 +94,10 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             if (AttackerTeam.Players.Count == 0)
                 return null;
 
-            if (Lobby.CurrentRoundStatus == ERoundStatus.Round && AttackerTeam.AlivePlayers!.Count == 0)
+            if (Lobby.CurrentRoundStatus == RoundStatus.Round && AttackerTeam.AlivePlayers!.Count == 0)
                 return null;
 
-            if (Lobby.CurrentRoundStatus != ERoundStatus.Round)
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return AttackerTeam.Players[CommonUtils.Rnd.Next(AttackerTeam.Players.Count)];
 
             return AttackerTeam.Players.MinBy(p => p.Player!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
@@ -106,7 +106,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
         private void SetTargetMan(TDSPlayer? player)
         {
             if (_playerForcedAtTarget is { })
-                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, DToClientEvent.RemoveForceStayAtPosition);
+                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, ToClientEvent.RemoveForceStayAtPosition);
 
             _playerForcedAtTarget = player;
 
@@ -118,7 +118,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
             });
 
-            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, DToClientEvent.SetForceStayAtPosition,
+            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, ToClientEvent.SetForceStayAtPosition,
                 Serializer.ToClient(new Position3DDto(TargetObject!.Position)),
                 SettingsManager.ServerSettings.GangwarTargetRadius,
                 EMapLimitType.KillAfterTime,

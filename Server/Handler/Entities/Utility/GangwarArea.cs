@@ -1,21 +1,19 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Instance.GameModes;
-using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Handler.Entities.GameModes.Gangwar;
+using TDS_Server.Handler.Entities.GangTeam;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
 
 namespace TDS_Server.Handler.Entities.Utility
 {
-    class GangwarArea
+    public class GangwarArea
     {
         public GangwarAreas? Entity { get; private set; }
         public MapDto Map { get; private set; }
@@ -37,7 +35,7 @@ namespace TDS_Server.Handler.Entities.Utility
                     return;
                 if (value)
                     Entity.LastAttacked = DateTime.UtcNow;
-                else 
+                else
                     Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-SettingsManager.ServerSettings.GangwarAreaAttackCooldownMinutes);
             }
         }
@@ -151,7 +149,7 @@ namespace TDS_Server.Handler.Entities.Utility
                     //Todo: Inform everyone + attacker
                 }
             }
-            
+
         }
 
         private void CheckIsAttackerAtTarget()
@@ -166,7 +164,7 @@ namespace TDS_Server.Handler.Entities.Utility
                 return;
 
             var posToCheck = gangwar.TargetObject.Position;
-            bool isAnyPlayerAtTarget = NAPI.Player.GetPlayersInRadiusOfPosition(SettingsManager.ServerSettings.GangwarTargetRadius, posToCheck)
+            bool isAnyPlayerAtTarget = NAPI.Player.GetPlayersInRadiusOfPosition(_settingsHandler.ServerSettings.GangwarTargetRadius, posToCheck)
                 .Where(p => p.Dimension == InLobby.Dimension)
                 .Select(p => p.GetChar())
                 .Any(p => IsAtTarget(p));
@@ -178,7 +176,7 @@ namespace TDS_Server.Handler.Entities.Utility
                 return;
             }
 
-            if (++_playerNotAtTargetCounter < SettingsManager.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
+            if (++_playerNotAtTargetCounter < _settingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
             {
                 //Todo: Output to owner that they have xx seconds left to go back to target
             }
@@ -190,7 +188,7 @@ namespace TDS_Server.Handler.Entities.Utility
                     player.SendMessage(player.Language.GANGWAR_LOST_);
                 });*/
                 var lobby = InLobby;
-                lobby.SetRoundStatus(Enums.ERoundStatus.RoundEnd, Enums.ERoundEndReason.TargetEmpty);
+                lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);
             }
 
 
@@ -209,24 +207,24 @@ namespace TDS_Server.Handler.Entities.Utility
             {
                 Owner!.InAction = false;
             }
-           
+
             _checkAtTarget?.Kill();
             _checkAtTarget = null;
         }
 
         private bool IsAtTarget(TDSPlayer player)
         {
-            if (player.Player is null || player.Player.Dead)
+            if (player.ModPlayer is null || player.ModPlayer.Dead)
                 return false;
             if (!player.LoggedIn)
                 return false;
-            if (player.CurrentLobby is null)
+            if (player.Lobby is null)
                 return false;
-            if (!(player.CurrentLobby is Arena arena))
+            if (!(player.Lobby is Arena arena))
                 return false;
             if (arena.GangwarArea != this)
                 return false;
-            
+
             return true;
         }
     }

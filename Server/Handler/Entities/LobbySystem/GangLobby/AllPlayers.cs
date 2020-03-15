@@ -1,7 +1,7 @@
 ﻿using System;
 using TDS_Server.Interfaces;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.GangLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {

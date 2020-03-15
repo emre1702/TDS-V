@@ -195,13 +195,13 @@ namespace TDS_Server.Core.Manager.Maps
                 Target = map.Target?.ToMapCreatorPosition(posId++),
                 Description = new Dictionary<int, string> 
                 { 
-                    [(int)ELanguage.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty, 
-                    [(int)ELanguage.German] = map.Descriptions != null ? Regex.Replace(map.Descriptions.German ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty
+                    [(int)Language.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty, 
+                    [(int)Language.German] = map.Descriptions != null ? Regex.Replace(map.Descriptions.German ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty
                 }
 
             };
 
-            ((MapCreateLobby)player.CurrentLobby!).SetMap(mapCreatorData);
+            ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
         }
 
         public static void SendPlayerMapNamesForMapCreator(TDSPlayer player)
@@ -261,7 +261,7 @@ namespace TDS_Server.Core.Manager.Maps
             }
 
             string json = Serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.LoadMapNamesToLoadForMapCreator, json);
+            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
         public static async void RemoveMap(TDSPlayer player, int mapId)

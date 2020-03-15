@@ -1,20 +1,14 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.Linq;
-using TDS_Common.Default;
-using TDS_Shared.Data.Enums;
 using TDS_Server.Core.Manager.Utility;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.EventManager;
-using TDS_Server.Manager.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.Player;
 using Task = System.Threading.Tasks.Task;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
-    class Account : Script
+    class Account
     {
         private static BansHandler? _bansManager;
 
@@ -24,7 +18,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
         }
 
         [RemoteEvent(DToServerEvent.TryRegister)]
-        public static async void OnPlayerTryRegisterEvent(Player client, string username, string password, string email)
+        public async Task OnPlayerTryRegisterEvent(Player client, string username, string password, string email)
         {
             if (username.Length < 3 || username.Length > 20)
                 return;
@@ -45,27 +39,17 @@ namespace TDS_Server.Core.Manager.PlayerManager
             Register.RegisterPlayer(client, username, password, email.Length != 0 ? email : null);
         }
 
-        [RemoteEvent(DToServerEvent.TryLogin)]
-        public static async void OnPlayerTryLoginEvent(Player client, string username, string password)
-        {
-            int id = await PlayerManager.GetPlayerIDByName(username).ConfigureAwait(false);
-            if (id != 0)
-            {
-                Login.LoginPlayer(client, id, password);
-            }
-            else
-                client.GetChar()?.SendNotification(LangUtils.GetLang(ELanguage.English).ACCOUNT_DOESNT_EXIST);
-        }
+        
 
         [RemoteEvent(DToServerEvent.LanguageChange)]
         public void OnPlayerLanguageChangeEvent(Player client, int language)
         {
-            if (System.Enum.IsDefined(typeof(ELanguage), language))
-                client.GetChar().LanguageEnum = (ELanguage)language;
+            if (System.Enum.IsDefined(typeof(Language), language))
+                client.GetChar().LanguageEnum = (Language)language;
         }
 
         [ServerEvent(Event.IncomingConnection)]
-        public static async void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
+        public async Task OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
             while (_bansManager is null)
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -75,20 +59,20 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 cancel.Cancel = true;
         }
 
-        private static bool HandlePlayerBan(Player client, PlayerBans? ban)
+        private bool HandlePlayerBan(TDSPlayer player, PlayerBans? ban)
         {
             if (ban is null)
                 return true;
 
-            string startstr =  ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
             //todo Test line break and display
-            client.Kick($"Banned!\nName: {ban.Player?.Name ?? client.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+            player.ModPlayer?.Kick($"Banned!\nName: {ban.Player?.Name ?? player.DisplayName}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
 
             return false;
         }
 
-        public static void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
+        public void ChangePlayerMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
             if (target.Entity is null)
                 return;
@@ -96,7 +80,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             target.MuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
         }
 
-        public static async void ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
+        public async Task ChangePlayerMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
         {
             OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
@@ -107,24 +91,24 @@ namespace TDS_Server.Core.Manager.PlayerManager
             await dbcontext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public static void ChangePlayerVoiceMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
+        public void ChangePlayerVoiceMuteTime(TDSPlayer admin, TDSPlayer target, int minutes, string reason)
         {
             if (target.Entity is null)
                 return;
             OutputVoiceMuteInfo(admin.DisplayName, target.Entity.Name, minutes, reason);
             target.VoiceMuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
 
-            if (target.Team != null)
+            if (target.VoiceMuteTime is { } && target.Team is { })
             {
                 foreach (var player in target.Team.Players)
                 {
-                    target.Player!.DisableVoiceTo(player.Player);
+                    target.SetVoiceTo(player, false);
                 }
             }
-            
+
         }
 
-        public static async void ChangePlayerVoiceMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
+        public async Task ChangePlayerVoiceMuteTime(TDSPlayer admin, Players target, int minutes, string reason)
         {
             OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
 
@@ -135,7 +119,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             await dbcontext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private static void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)
+        private void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)
         {
             switch (minutes)
             {
@@ -153,7 +137,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             }
         }
 
-        private static void OutputVoiceMuteInfo(string adminName, string targetName, float minutes, string reason)
+        private void OutputVoiceMuteInfo(string adminName, string targetName, float minutes, string reason)
         {
             switch (minutes)
             {

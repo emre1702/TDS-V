@@ -10,7 +10,7 @@ using TDS_Server.Instance.PlayerInstance;
 using TDS_Server.Manager.PlayerManager;
 using TDS_Server.Manager.Utility;
 
-namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
+namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
@@ -24,7 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
 
             if (Players.Count > 1)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, DToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
+                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
             }
 
             return true;
@@ -34,10 +34,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem.MapCreateLobby
         {
             base.RemovePlayer(player);
 
-            if (player.Entity?.Id == LobbyEntity.OwnerId && Players.Count >= 1) {
+            if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1) {
                 var newOwner = Players.ElementAt(CommonUtils.Rnd.Next(0, Players.Count));
-                LobbyEntity.OwnerId = newOwner.Entity!.Id;
-                PlayerDataSync.SetData(newOwner, EPlayerDataKey.IsLobbyOwner, EPlayerDataSyncMode.Player, true);
+                Entity.OwnerId = newOwner.Entity!.Id;
+                PlayerDataSync.SetData(newOwner, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, true);
             }
         }
 

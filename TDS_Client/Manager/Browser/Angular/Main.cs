@@ -1,15 +1,11 @@
-﻿using RAGE.Ui;
-using System.Collections.Generic;
-using TDS_Client.Default;
-using TDS_Client.Manager.Utility;
-using TDS_Shared.Enum;
-using TDS_Shared.Default;
-using TDS_Client.Enum;
-using RAGE.Elements;
-using System.Linq;
-using TDS_Shared.Manager.Utility;
+﻿using RAGE.Elements;
+using RAGE.Ui;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using TDS_Client.Default;
+using TDS_Client.Enum;
+using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Manager.Browser.Angular
 {
@@ -48,11 +44,11 @@ namespace TDS_Client.Manager.Browser.Angular
             Browser.MarkAsChat();
         }
 
-        public static void Start(string angularConstantsDataJson, string challengesJson)
+        public static void Start(string angularConstantsDataJson)
         {
             _isReady = true;
 
-            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson, challengesJson);
+            Execute(DToBrowserEvent.InitLoadAngular, angularConstantsDataJson);
 
             SendWelcomeMessage();
 
@@ -222,7 +218,7 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(DToBrowserEvent.ShowCooldown);
         }
 
-        public static void AddPositionToMapCreatorBrowser(int id, MapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, 
+        public static void AddPositionToMapCreatorBrowser(int id, MapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ,
             object info, ushort ownerRemoteId)
         {
             Execute(DToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);

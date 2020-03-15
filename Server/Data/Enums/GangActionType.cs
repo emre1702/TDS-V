@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    enum GangActionType
+    public enum GangActionType
     {
         Gangwar
     }

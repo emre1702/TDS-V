@@ -9,19 +9,6 @@ namespace TDS_Server.Core.Manager.Logs
 {
     internal static class RestLogsManager
     {
-        public static void Log(ELogType type, Player source, bool saveipserial = false, bool savelobby = false)
-        {
-            bool ipAddressParseWorked = IPAddress.TryParse(source?.Address, out IPAddress address);
-            var log = new LogRests
-            {
-                Type = type,
-                Source = source?.GetEntity()?.Id ?? 0,
-                Ip = saveipserial && ipAddressParseWorked ? address : null,
-                Serial = saveipserial ? source?.Serial : null,
-                Lobby = savelobby ? source?.GetChar().CurrentLobby?.Id : null,
-                Timestamp = DateTime.UtcNow
-            };
-            LogsManager.AddLog(log);
-        }
+        
     }
 }

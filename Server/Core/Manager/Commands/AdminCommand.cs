@@ -31,14 +31,14 @@ namespace TDS_Server.Core.Manager.Commands
         [TDSCommand(Default.AdminCommand.NextMap)]
         public static void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!(player.CurrentLobby is Arena arena))
+            if (!(player.Lobby is Arena arena))
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
             if (arena.CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
             {
                 arena.CurrentRoundEndBecauseOfPlayer = player;
-                arena.SetRoundStatus(ERoundStatus.RoundEnd, ERoundEndReason.Command);
+                arena.SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.Command);
             }
         }
 
@@ -47,7 +47,7 @@ namespace TDS_Server.Core.Manager.Commands
         {
             if (player == target)
                 return;
-            if (target.CurrentLobby is null)
+            if (target.Lobby is null)
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
@@ -56,24 +56,24 @@ namespace TDS_Server.Core.Manager.Commands
             }
             else
             {
-                if (player.CurrentLobby != target.CurrentLobby)
+                if (player.Lobby != target.Lobby)
                 {
                     player.SendMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
                     return;
                 }
-                target.CurrentLobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                target.Lobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
-            target.CurrentLobby.RemovePlayer(target);
+            target.Lobby.RemovePlayer(target);
             await LobbyManager.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);
         }
 
         [TDSCommand(Default.AdminCommand.LobbyBan, 1)]
         public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
+            if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;
-            var lobby = player.CurrentLobby;
-            if (lobby.Type == ELobbyType.MapCreateLobby) 
+            var lobby = player.Lobby;
+            if (lobby.Type == LobbyType.MapCreateLobby) 
                 lobby = LobbyManager.MapCreateLobbyDummy;
             if (!lobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
@@ -90,10 +90,10 @@ namespace TDS_Server.Core.Manager.Commands
         [TDSCommand(Default.AdminCommand.LobbyBan, 0)]
         public static void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.CurrentLobby is null || player.CurrentLobby.Type == ELobbyType.MainMenu)
+            if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;
-             var lobby = player.CurrentLobby;
-            if (lobby.Type == ELobbyType.MapCreateLobby)
+             var lobby = player.Lobby;
+            if (lobby.Type == LobbyType.MapCreateLobby)
                 lobby = LobbyManager.MapCreateLobbyDummy;
             if (!lobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;

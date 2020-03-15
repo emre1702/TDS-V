@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Net;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler
 {
@@ -12,6 +15,7 @@ namespace TDS_Server.Handler
         public LoggingHandler(TDSDbContext dbContext)
             => _dbContext = dbContext;
 
+        #region Error
         public void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             var log = new LogErrors
@@ -26,7 +30,7 @@ namespace TDS_Server.Handler
             _dbContext.LogErrors.Add(log);
 
             if (logToBonusBot)
-                BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+                BonusBotConnector.Client.Requests.ChannelChat.SendError(log.ToString());
         }
 
         public void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true)
@@ -43,52 +47,137 @@ namespace TDS_Server.Handler
             _dbContext.LogErrors.Add(log);
 
             if (logToBonusBot)
-                BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+                BonusBotConnector.Client.Requests.ChannelChat.SendError(log.ToString());
         }
 
         /*public static void LogError(string info, string stacktrace, Player source, bool logToBonusBot = true)
+       {
+           var log = new LogErrors
+           {
+               Info = info,
+               StackTrace = stacktrace,
+               Source = source?.GetEntity()?.Id,
+               Timestamp = DateTime.UtcNow
+           };
+           Console.WriteLine(info + "\n" + stacktrace);
+           LogsManager.AddLog(log);
+           if (logToBonusBot)
+               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+       }
+
+       public void LogError(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = true)
+       {
+           var log = new LogErrors
+           {
+               Info = info,
+               StackTrace = stacktrace,
+               Source = source?.Entity?.Id,
+               Timestamp = DateTime.UtcNow
+           };
+           Console.WriteLine(info + "\n" + stacktrace);
+           LogsManager.AddLog(log);
+           if (logToBonusBot)
+               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+       }
+
+       public void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
+       {
+           var log = new LogErrors
+           {
+               Info = info,
+               StackTrace = stacktrace,
+               Source = -1,
+               Timestamp = DateTime.UtcNow
+           };
+           Console.WriteLine(info + "\n" + stacktrace);
+           LogsManager.AddLog(log);
+           if (logToBonusBot)
+               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+       }*/
+        #endregion Error
+
+        #region Chat
+        public void LogChat(string chat, TDSPlayer source, TDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
         {
-            var log = new LogErrors
+            var log = new LogChats
             {
-                Info = info,
-                StackTrace = stacktrace,
-                Source = source?.GetEntity()?.Id,
+                Source = source.Entity?.Id ?? -1,
+                Target = target?.Entity?.Id ?? null,
+                Message = chat,
+                Lobby = isGlobal ? null : source?.Lobby?.Id,
+                IsAdminChat = isAdminChat,
+                IsTeamChat = isTeamChat,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(info + "\n" + stacktrace);
-            LogsManager.AddLog(log);
-            if (logToBonusBot)
-                BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+
+            _dbContext.LogChats.Add(log);
+        }
+        #endregion Chat
+
+        #region Admin
+        public void LogAdmin(LogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
+        {
+            var log = new LogAdmins
+            {
+                Source = source?.Entity?.Id ?? -1,
+                Target = target?.Entity?.Id ?? null,
+                Type = cmd,
+                Lobby = target?.Lobby?.Id ?? source?.Lobby?.Id,
+                AsDonator = asdonator,
+                AsVip = asvip,
+                Reason = reason,
+                Timestamp = DateTime.UtcNow,
+                LengthOrEndTime = lengthOrEndTime
+            };
+            _dbContext.LogAdmins.Add(log);
         }
 
-        public void LogError(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = true)
+        public void LogAdmin(LogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
-            var log = new LogErrors
+            var log = new LogAdmins
             {
-                Info = info,
-                StackTrace = stacktrace,
-                Source = source?.Entity?.Id,
-                Timestamp = DateTime.UtcNow
+                Source = source?.Entity?.Id ?? -1,
+                Target = targetid,
+                Type = cmd,
+                Lobby = source?.Lobby?.Id,
+                AsDonator = asdonator,
+                AsVip = asvip,
+                Reason = reason,
+                Timestamp = DateTime.UtcNow,
+                LengthOrEndTime = lengthOrEndTime
             };
-            Console.WriteLine(info + "\n" + stacktrace);
-            LogsManager.AddLog(log);
-            if (logToBonusBot)
-                BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+            _dbContext.LogAdmins.Add(log);
         }
+        #endregion Admin
 
-        public void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
+        #region Kill
+        public void LogKill(TDSPlayer player, TDSPlayer killer, uint weapon)
         {
-            var log = new LogErrors
+            var log = new LogKills
             {
-                Info = info,
-                StackTrace = stacktrace,
-                Source = -1,
+                KillerId = killer.Entity!.Id,
+                DeadId = player.Entity!.Id,
+                WeaponId = weapon
+            };
+            _dbContext.LogKills.Add(log);
+        }
+        #endregion Kill
+
+        #region Rest
+        public void LogRest(LogType type, TDSPlayer source, bool saveipserial = false, bool savelobby = false)
+        {
+            bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress, out IPAddress address);
+            var log = new LogRests
+            {
+                Type = type,
+                Source = source?.Id ?? 0,
+                Ip = saveipserial && ipAddressParseWorked ? address : null,
+                Serial = saveipserial ? source?.Serial : null,
+                Lobby = savelobby ? source?.Lobby?.Id : null,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(info + "\n" + stacktrace);
-            LogsManager.AddLog(log);
-            if (logToBonusBot)
-                BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
-        }*/
+            _dbContext.LogRests.Add(log);
+        }
+        #endregion
     }
 }
