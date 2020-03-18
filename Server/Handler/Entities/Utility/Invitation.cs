@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Default;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Shared.Default;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.Utility
@@ -15,10 +15,10 @@ namespace TDS_Server.Handler.Entities.Utility
         public InvitationDto Dto;
         public bool RemoveOnLobbyLeave { get; set; }
 
-        private TDSPlayer _target;
-        private TDSPlayer? _sender;
-        private Action<TDSPlayer, TDSPlayer?, Invitation>? _onAccept;
-        private Action<TDSPlayer, TDSPlayer?, Invitation>? _onReject;
+        private readonly ITDSPlayer _target;
+        private readonly ITDSPlayer? _sender;
+        private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onAccept;
+        private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onReject;
         private InvitationType _type;
 
         private static ulong _idCounter = 0;
@@ -26,10 +26,10 @@ namespace TDS_Server.Handler.Entities.Utility
 
         private readonly Serializer _serializer;
 
-        public Invitation(string message, TDSPlayer target, TDSPlayer? sender,
+        public Invitation(string message, ITDSPlayer target, ITDSPlayer? sender,
             Serializer serializer,
-            Action<TDSPlayer, TDSPlayer?, Invitation>? onAccept = null,
-            Action<TDSPlayer, TDSPlayer?, Invitation>? onReject = null,
+            Action<ITDSPlayer, ITDSPlayer?, Invitation>? onAccept = null,
+            Action<ITDSPlayer, ITDSPlayer?, Invitation>? onReject = null,
             InvitationType type = InvitationType.None)
         {
             _serializer = serializer;

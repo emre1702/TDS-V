@@ -1,36 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        private readonly Dictionary<TDSPlayer, TDSTimer> _removeSpectatorsTimer = new Dictionary<TDSPlayer, TDSTimer>();
+        private readonly Dictionary<ITDSPlayer, TDSTimer> _removeSpectatorsTimer = new Dictionary<ITDSPlayer, TDSTimer>();
 
-        protected override void SpectateOtherSameTeam(TDSPlayer character, bool next = true)
+        protected override void SpectateOtherSameTeam(ITDSPlayer character, bool next = true)
         {
             if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
                 base.SpectateOtherSameTeam(character, next);
         }
 
-        protected override void SpectateOtherAllTeams(TDSPlayer character, bool next = true)
+        protected override void SpectateOtherAllTeams(ITDSPlayer character, bool next = true)
         {
             if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
                 base.SpectateOtherAllTeams(character, next);
         }
 
-        private void PlayerCantBeSpectatedAnymore(TDSPlayer character)
+        private void PlayerCantBeSpectatedAnymore(ITDSPlayer player)
         {
-            if (_removeSpectatorsTimer.ContainsKey(character))
-                _removeSpectatorsTimer.Remove(character);
-            character.Team?.SpectateablePlayers?.Remove(character);
+            if (_removeSpectatorsTimer.ContainsKey(player))
+                _removeSpectatorsTimer.Remove(player);
+            player.Team?.SpectateablePlayers?.Remove(player);
 
-            if (character.Spectators.Any())
+            if (player.Spectators.Any())
             {
-                foreach (TDSPlayer spectator in character.Spectators.ToList())  // ToList because the list gets changed in both methods
+                foreach (ITDSPlayer spectator in player.Spectators.ToList())  // ToList because the list gets changed in both methods
                 {
                     SpectateNext(spectator, true);
                 }

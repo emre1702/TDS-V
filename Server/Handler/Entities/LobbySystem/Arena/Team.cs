@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.TeamSystem;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -24,7 +25,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return Teams.Skip(1).Count(team => team.Players.Count > 0);
         }
 
-        private Team? GetTeamStillInRound(int minalive = 1)
+        private ITeam? GetTeamStillInRound(int minalive = 1)
         {
             foreach (var team in Teams)
             {
@@ -36,12 +37,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return null;
         }
 
-        private Team? GetTeamWithHighestHP()
+        private ITeam? GetTeamWithHighestHP()
         {
             int highesthealth = 0;
-            Team? teamwithhighesthealth = Teams[1];
+            ITeam? teamwithhighesthealth = Teams[1];
 
-            foreach (Team team in Teams)
+            foreach (ITeam team in Teams)
             {
                 if (team.AlivePlayers is null)
                     continue;

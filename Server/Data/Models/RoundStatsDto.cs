@@ -1,6 +1,5 @@
-﻿using TDS_Server.Data.Default;
+﻿using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Shared.Default;
 
 namespace TDS_Server.Data.Models
 {

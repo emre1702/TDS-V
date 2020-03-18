@@ -6,6 +6,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 
 namespace TDS_Server.Data.Utility
 {
@@ -65,9 +67,9 @@ namespace TDS_Server.Data.Utility
             return $"{(int)(span.TotalMinutes / 60)}:{(int)Math.Ceiling(span.TotalMinutes % 60)}";
         }
 
-        public static uint? GetVehicleFreeSeat(Vehicle veh)
+        public static uint? GetVehicleFreeSeat(IVehicle veh)
         {
-            HashSet<int> occupiedSeats = veh.Occupants.OfType<Player>().Select(o => o.VehicleSeat).ToHashSet();
+            HashSet<int> occupiedSeats = veh.Occupants.Select(o => o.VehicleSeat).ToHashSet();
             for (int i = veh.MaxOccupants - 1; i >= 0; --i)
             {
                 if (!occupiedSeats.Contains(i))
@@ -82,11 +84,6 @@ namespace TDS_Server.Data.Utility
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 
             return Regex.Replace(name, invalidRegStr, "_");
-        }
-
-        public static Vector3 ToVector3(this Position3DDto pos)
-        {
-            return new Vector3(pos.X, pos.Y, pos.Z);
         }
 
         public static int? GetInt(object obj)

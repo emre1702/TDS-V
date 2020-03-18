@@ -8,17 +8,11 @@ using TDS_Client.Default;
 using TDS_Client.Enum;
 using TDS_Client.Manager.Account;
 using TDS_Client.Manager.Browser;
-using TDS_Client.Manager.Damage;
 using TDS_Client.Manager.Draw;
 using TDS_Client.Manager.Lobby;
 using TDS_Client.Manager.MapCreator;
 using TDS_Client.Manager.Utility;
 using TDS_Shared.Default;
-using TDS_Shared.Dto;
-using TDS_Shared.Dto.Map;
-using TDS_Shared.Dto.Map.Creator;
-using TDS_Shared.Enum;
-using TDS_Shared.Enum.Userpanel;
 using TDS_Shared.Manager.Utility;
 using static RAGE.Events;
 using Cam = RAGE.Game.Cam;
@@ -148,7 +142,7 @@ namespace TDS_Client.Manager.Event
             Team.LobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
             Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
-            MainBrowser.HideRoundEndReason();
+            MainBrowser.HidRoundEndReason();
         }
 
         private void OnJoinSameLobbyMethod(object[] args)
@@ -204,7 +198,7 @@ namespace TDS_Client.Manager.Event
             Graphics.StopScreenEffect(DEffectName.DEATHFAILMPIN);
             Cam.SetCamEffect(0);
             Cam.DoScreenFadeIn(Settings.MapChooseTime);
-            MainBrowser.HideRoundEndReason();
+            MainBrowser.HidRoundEndReason();
             Round.InFight = false;
 
             var mapData = Serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
@@ -291,7 +285,7 @@ namespace TDS_Client.Manager.Event
             if (Round.IsSpectator)
             {
                 Spectate.Start();
-                MainBrowser.HideRoundEndReason();
+                MainBrowser.HidRoundEndReason();
             }
         }
 
@@ -707,7 +701,7 @@ namespace TDS_Client.Manager.Event
             CursorManager.Visible = boolean;
             if (boolean)
                 Scoreboard.PressedScoreboardKey();
-            else 
+            else
                 Scoreboard.ReleasedScoreboardKey();
             Browser.Angular.Main.ToggleTeamChoiceMenu(boolean);
         }

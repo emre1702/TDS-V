@@ -1,6 +1,15 @@
-﻿using TDS_Server.Data.Enums;
+﻿using System;
+using TDS_Server.Core.Manager.Stats;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Helper;
+using TDS_Server.Handler.Maps;
+using TDS_Server.Handler.Sync;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -10,8 +19,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private bool _dontRemove;
 
-        public Arena(Lobbies entity, bool isGangActionLobby = false) : base(entity, isGangActionLobby)
+        private readonly MapsLoadingHandler _mapsLoadingHandler;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ServerStatsHandler _serverStatsHandler;
+
+        public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+            SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
+            IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler) 
+            : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler)
         {
+            _serviceProvider = serviceProvider;
+            _mapsLoadingHandler = mapsLoadingHandler;
+            _serverStatsHandler = serverStatsHandler;
+
             _roundStatusMethod[RoundStatus.MapClear] = StartMapClear;
             _roundStatusMethod[RoundStatus.NewMapChoose] = StartNewMapChoose;
             _roundStatusMethod[RoundStatus.Countdown] = StartRoundCountdown;
@@ -28,7 +48,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound = true) : this(entity, true)
+        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, 
+            LobbiesHandler lobbiesHandler, SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, 
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler) 
+            : this(entity, true, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, mapsLoadingHandler, eventsHandler, 
+                  serviceProvider, serverStatsHandler)
         {
             IsGangActionLobby = true;
             RemoveAfterOneRound = removeAfterOneRound;

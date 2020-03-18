@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
-using TDS_Server.Data.Default;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Challenge;
@@ -41,14 +41,16 @@ namespace TDS_Server.Handler.Helper
             eventsHandler.PlayerRegistered += EventsHandler_PlayerRegister;
         }
 
-        private async void EventsHandler_PlayerLoggedIn(TDSPlayer player)
+        private async void EventsHandler_PlayerLoggedIn(ITDSPlayer iplayer)
         {
+            if (!(iplayer is TDSPlayer player))
+                return;
             if (player.Entity is null)
                 return;
 
             if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
             {
-                await AddWeeklyChallenges(player.Entity);
+                await AddWeeklyChallenges(player);
                 await player.ExecuteForDBAsync(async dbContext =>
                 {
                     player.Entity.Challenges = null;
@@ -64,11 +66,11 @@ namespace TDS_Server.Handler.Helper
         {
             try 
             {
-                await AddForeverChallenges(player.Entity);
+                await AddForeverChallenges(player);
             } 
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex, player);
+                LoggingHandler.LogError(ex, player);
             }
         }
 
@@ -83,7 +85,7 @@ namespace TDS_Server.Handler.Helper
             }).RunSynchronously();
         }
 
-        public async Task AddWeeklyChallenges(Players dbPlayer)
+        public async Task AddWeeklyChallenges(ITDSPlayer player)
         {
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -94,7 +96,7 @@ namespace TDS_Server.Handler.Helper
                 INSERT INTO 
                     {playerChallengesTable}
                 SELECT 
-                    {dbPlayer.Id},
+                    {player.Id},
                     type,
                     frequency,
                     floor(random() * (max_number - min_number+1) + min_number)
@@ -109,7 +111,7 @@ namespace TDS_Server.Handler.Helper
             
         }
 
-        public async Task AddForeverChallenges(Players dbPlayer)
+        public async Task AddForeverChallenges(ITDSPlayer player)
         {
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -120,7 +122,7 @@ namespace TDS_Server.Handler.Helper
                     INSERT INTO 
                         {playerChallengesTable}
                     SELECT 
-                        {dbPlayer.Id},
+                        {player.Id},
                         type,
                         frequency,
                         max_number

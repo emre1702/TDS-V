@@ -1,24 +1,13 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
-using TDS_Server.Data.Models.GTA;
 using TDS_Server.RAGE.Extensions;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGE.Blip
 {
     class Blip : IBlip
     {
         internal readonly GTANetworkAPI.Blip _instance;
-
-        public string Name 
-        { 
-            get => _instance.Name;
-            set => _instance.Name = value;
-        }
-        public uint Sprite 
-        { 
-            get => _instance.Sprite;
-            set => _instance.Sprite = value; 
-        }
 
         public Blip(Position3D position, uint dimension = uint.MaxValue)
         {
@@ -38,9 +27,27 @@ namespace TDS_Server.RAGE.Blip
             _instance = NAPI.Blip.CreateBlip(position.ToVector3(), range, dimension);
         }
 
+        public ushort Id => _instance.Id;
+        public string Name
+        {
+            get => _instance.Name;
+            set => _instance.Name = value;
+        }
+        public uint Sprite
+        {
+            get => _instance.Sprite;
+            set => _instance.Sprite = value;
+        }
+        public int Color { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
         public void Delete()
         {
             _instance.Delete();
+        }
+
+        public bool Equals(IBlip? other)
+        {
+            return _instance.Id == other?.Id;
         }
     }
 }

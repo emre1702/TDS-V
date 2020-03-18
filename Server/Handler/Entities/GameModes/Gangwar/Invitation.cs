@@ -1,11 +1,12 @@
-﻿using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.Utility;
 
-namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        private async void AcceptAttackPreparationInvitation(TDSPlayer player, TDSPlayer? sender, Invitation? invitation)
+        private async void AcceptAttackPreparationInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
             if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
             {
@@ -16,7 +17,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
         }
 
-        private async void AcceptAttackInvitation(TDSPlayer player, TDSPlayer? sender, Invitation? invitation)
+        private async void AcceptAttackInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
             if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
             {
@@ -29,7 +30,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
         }
 
 
-        private async void AcceptDefendInvitation(TDSPlayer player, TDSPlayer? sender, Invitation? invitation)
+        private async void AcceptDefendInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
             if (!await Lobby.AddPlayer(player, (uint)OwnerTeam.Entity.Index))
             {

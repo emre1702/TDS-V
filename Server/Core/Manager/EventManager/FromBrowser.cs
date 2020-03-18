@@ -179,7 +179,7 @@ namespace TDS_Server.Core.Manager.EventManager
                 return null;
             if (!(player.Lobby is MapCreateLobby lobby))
                 return null;
-            var infoType = (EMapCreatorInfoType)Convert.ToInt32(args[0]);
+            var infoType = (MapCreatorInfoType)Convert.ToInt32(args[0]);
             var data = args[1];
 
             lobby.SyncMapInfoChange(infoType, data);

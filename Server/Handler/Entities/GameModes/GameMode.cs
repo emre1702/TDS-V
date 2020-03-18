@@ -1,9 +1,14 @@
 ﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.GameModes
 {
@@ -11,13 +16,21 @@ namespace TDS_Server.Handler.Entities.GameModes
     {
         protected Arena Lobby;
         protected MapDto Map;
+        protected IModAPI ModAPI;
+        protected readonly Serializer Serializer;
+        protected SettingsHandler SettingsHandler;
+        protected LangHelper LangHelper;
 
-        public Team? WinnerTeam { get; set; }
+        public ITeam? WinnerTeam { get; set; }
 
-        protected GameMode(Arena lobby, MapDto map)
+        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper)
         {
             Lobby = lobby;
             Map = map;
+            ModAPI = modAPI;
+            Serializer = serializer;
+            SettingsHandler = settingsHandler;
+            LangHelper = langHelper;
         }
 
         public virtual void StartRoundCountdown() { }
@@ -31,22 +44,22 @@ namespace TDS_Server.Handler.Entities.GameModes
         public virtual void StopRound() { }
 
 
-        public virtual void SendPlayerRoundInfoOnJoin(TDSPlayer player) { }
+        public virtual void SendPlayerRoundInfoOnJoin(ITDSPlayer player) { }
 
 
-        public virtual bool CanJoinLobby(TDSPlayer player, uint? teamIndex) { return true; }
-        public virtual void AddPlayer(TDSPlayer player, uint? teamIndex) { }
-        public virtual void RemovePlayer(TDSPlayer player) { }
-        public virtual void RemovePlayerFromAlive(TDSPlayer player) { }
+        public virtual bool CanJoinLobby(ITDSPlayer player, uint? teamIndex) { return true; }
+        public virtual void AddPlayer(ITDSPlayer player, uint? teamIndex) { }
+        public virtual void RemovePlayer(ITDSPlayer player) { }
+        public virtual void RemovePlayerFromAlive(ITDSPlayer player) { }
 
         public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => true;
 
-        public virtual void OnPlayerEnterColShape(IColShape shape, TDSPlayer player) { }
-        public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer) { }
-        public virtual void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }
+        public virtual void OnPlayerEnterColShape(IColShape shape, ITDSPlayer player) { }
+        public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer) { }
+        public virtual void OnPlayerWeaponSwitch(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }
 
 
-        public virtual bool CanJoinDuringRound(TDSPlayer player, Team team) { return false; }
+        public virtual bool CanJoinDuringRound(ITDSPlayer player, ITeam team) { return false; }
 
         public virtual bool CanEndRound(RoundEndReason newPlayer) { return true; }
     }

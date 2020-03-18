@@ -99,7 +99,7 @@ namespace TDS_Server.Core.Damagesystem
                 int bonus = reward.Item2;
                 character.Lobby.SendAllPlayerLangNotification((lang) =>
                 {
-                    return Utils.GetReplaced(lang.KILLING_SPREE_HEALTHARMOR, character.Player.Name,
+                    return string.Format(lang.KILLING_SPREE_HEALTHARMOR, character.Player.Name,
                         character.KillingSpree.ToString(), bonus.ToString());
                 });
                 character.AddHPArmor(bonus);

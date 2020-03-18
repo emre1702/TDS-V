@@ -127,7 +127,7 @@ namespace TDS_Client.Manager.Utility
 
         public static Color GetRandomColor()
         {
-            return Color.FromArgb(255, CommonUtils.Rnd.Next(255), CommonUtils.Rnd.Next(255), CommonUtils.Rnd.Next(255));
+            return Color.FromArgb(255, SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255));
         }
 
         public static Color GetContrast(this Color original)
@@ -434,8 +434,8 @@ namespace TDS_Client.Manager.Utility
         {
             string name = player.Name;
             int adminLevel = Convert.ToInt32(PlayerDataSync.GetData(player, TDS_Shared.Enum.PlayerDataKey.AdminLevel));
-            if (adminLevel > Constants.ServerTeamSuffixMinAdminLevel)
-                name = Constants.ServerTeamSuffix + name;
+            if (adminLevel > SharedConstants.ServerTeamSuffixMinAdminLevel)
+                name = SharedConstants.ServerTeamSuffix + name;
             return name;
         }
 

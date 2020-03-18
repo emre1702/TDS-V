@@ -24,9 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		scriptmetadata.meta = scriptmetadata.meta
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Server", "Server\BonusBotConnector\BonusBotConnector_Server\BonusBotConnector.Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Server", "Server\BonusBotConnector\Server\BonusBotConnector.Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Client", "Server\BonusBotConnector\BonusBotConnector_Client\BonusBotConnector.Client.csproj", "{A347BAC1-8902-4403-A197-49C795598422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Client", "Server\BonusBotConnector\Client\BonusBotConnector.Client.csproj", "{A347BAC1-8902-4403-A197-49C795598422}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9BBD6AEC-65B3-487B-A601-033600378583}"
 EndProject

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -9,8 +8,10 @@ using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Challenge;
+using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.Player
@@ -27,6 +28,7 @@ namespace TDS_Server.Handler.Entities.Player
         public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
 
         public IVehicle? FreeroamVehicle { get; set; }
+        public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
 
 
         public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
@@ -34,7 +36,7 @@ namespace TDS_Server.Handler.Entities.Player
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == PlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= Constants.ServerTeamSuffixMinAdminLevel ? Constants.ServerTeamSuffix + ModPlayer.Name : ModPlayer.Name);
+        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel ? SharedConstants.ServerTeamSuffix + ModPlayer.Name : ModPlayer.Name);
         public bool IsVip => Entity?.IsVip ?? false;
 
         public bool IsCrouched { get; set; }
@@ -47,18 +49,22 @@ namespace TDS_Server.Handler.Entities.Player
         private readonly SettingsHandler _settingsHandler;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly SpectateHandler _spectateHandler;
+        private readonly GangsHandler _gangsHandler;
+        private readonly LobbiesHandler _lobbiesHandler;
 
         public TDSPlayer(
             IPlayer? modPlayer,
-            TDSDbContext dbContext, 
-            LoggingHandler loggingHandler, 
-            AdminsHandler adminsHandler, 
+            TDSDbContext dbContext,
+            LoggingHandler loggingHandler,
+            AdminsHandler adminsHandler,
             ChallengesHelper challengesHandler,
             LangHelper langHelper,
             IModAPI modAPI,
             SettingsHandler settingsHandler,
             DataSyncHandler dataSyncHandler,
-            SpectateHandler spectateHandler) : base(dbContext, loggingHandler)
+            SpectateHandler spectateHandler,
+            GangsHandler gangsHandler,
+            LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
         {
             ModPlayer = modPlayer;
             _adminsHandler = adminsHandler;
@@ -68,11 +74,13 @@ namespace TDS_Server.Handler.Entities.Player
             _settingsHandler = settingsHandler;
             _dataSyncHandler = dataSyncHandler;
             _spectateHandler = spectateHandler;
+            _gangsHandler = gangsHandler;
+            _lobbiesHandler = lobbiesHandler;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
         }
 
-        public bool HasRelationTo(TDSPlayer target, PlayerRelation relation)
+        public bool HasRelationTo(ITDSPlayer target, PlayerRelation relation)
         {
             return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
         }
@@ -81,5 +89,17 @@ namespace TDS_Server.Handler.Entities.Player
         {
 
         }
+
+        public bool Equals(ITDSPlayer? other)
+        {
+            return Id == other?.Id;
+        }
+
+        public void Spawn(Position3D position, float rotation)
+        {
+            ModPlayer?.Spawn(position, rotation);
+        }
+
+        
     }
 }

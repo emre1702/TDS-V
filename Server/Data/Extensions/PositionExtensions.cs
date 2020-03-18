@@ -1,5 +1,5 @@
-﻿using TDS_Server.Data.Models.GTA;
-using TDS_Server.Data.Models.Map.Creator;
+﻿using TDS_Server.Data.Models.Map.Creator;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Extensions
 {

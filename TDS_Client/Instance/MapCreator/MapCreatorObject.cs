@@ -191,25 +191,25 @@ namespace TDS_Client.Instance.MapCreator
             switch (Type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return new Blip(Constants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.MapLimit:
-                    return new Blip(Constants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.BombPlantPlace:
-                    return new Blip(Constants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.MapCenter:
-                    return new Blip(Constants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Target:
-                    return new Blip(Constants.TargetBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Object:
-                    return new Blip(Constants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Vehicle:
-                    return new Blip(Constants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
+                    return new Blip(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: Player.LocalPlayer.Dimension);
             }
 
             return null;

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Instance;
 
@@ -6,7 +8,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        protected Dictionary<TDSPlayer, TDSTimer> DeathSpawnTimer { get; } = new Dictionary<TDSPlayer, TDSTimer>();
+        protected Dictionary<ITDSPlayer, TDSTimer> DeathSpawnTimer { get; } = new Dictionary<ITDSPlayer, TDSTimer>();
 
         public virtual void OnPlayerSpawn(TDSPlayer character)
         {
@@ -26,7 +28,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         /// <param name="killer"></param>
         /// <param name="weapon"></param>
         /// <returns>Time in ms to disapper & spawn again</returns>
-        public virtual void OnPlayerDeath(TDSPlayer player, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
+        public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
             if (spawnPlayer)
             {
@@ -40,7 +42,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public virtual void OnPlayerEnterColShape(IColShape shape, TDSPlayer character)
+        public virtual void OnPlayerEnterColShape(IColShape shape, ITDSPlayer character)
         {
         }
     }

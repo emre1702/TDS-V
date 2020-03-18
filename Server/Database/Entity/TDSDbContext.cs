@@ -1,5 +1,4 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using System;

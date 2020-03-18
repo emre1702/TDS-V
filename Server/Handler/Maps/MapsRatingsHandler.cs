@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
@@ -15,13 +16,13 @@ namespace TDS_Server.Handler.Maps
     {
         private Serializer _serializer;
         private MapsLoadingHandler _mapsLoadingHandler;
-        private MapsCreatingHandler _mapsCreatingHandler;
+        private MapCreatorHandler _mapsCreatingHandler;
 
         public MapsRatingsHandler(
             EventsHandler eventsHandler, 
             Serializer serializer, 
-            MapsLoadingHandler mapsLoadingHandler, 
-            MapsCreatingHandler mapsCreatorHandler, 
+            MapsLoadingHandler mapsLoadingHandler,
+            MapCreatorHandler mapsCreatorHandler, 
             TDSDbContext dbContext, LoggingHandler 
             loggingHandler)
             : base(dbContext, loggingHandler)
@@ -38,12 +39,6 @@ namespace TDS_Server.Handler.Maps
             int playerId = player.Entity!.Id;
 
             MapDto? map = _mapsLoadingHandler.GetMapById(mapId);
-            bool isCustom = false;
-            if (map is null)
-            {
-                map = _mapsCreatingHandler.GetMapById(mapId);
-                isCustom = true;
-            }
             if (map is null)
                 return;
 
@@ -62,11 +57,11 @@ namespace TDS_Server.Handler.Maps
             map.Ratings.Add(maprating);
             map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
-            if (isCustom)
+            if (map.Info.IsNewMap)
                 _mapsCreatingHandler.AddedMapRating(map);
         }
 
-        public void SendPlayerHisRatings(TDSPlayer player)
+        public void SendPlayerHisRatings(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return;

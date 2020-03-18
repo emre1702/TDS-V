@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Rest;
@@ -48,7 +49,7 @@ namespace TDS_Server.Core.Manager.Utility
             BonusBotConnector.Client.Requests.PrivateChat.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId);
         }
 
-        public async void CheckOfflineMessages(TDSPlayer player)
+        public async void CheckOfflineMessages(ITDSPlayer player)
         {
             (int amountNewEntries, int amountEntries) = await ExecuteForDBAsync(async dbContext =>
             {

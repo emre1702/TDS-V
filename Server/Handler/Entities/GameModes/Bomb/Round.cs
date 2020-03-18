@@ -1,9 +1,7 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Dto.Map;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto;
-using TDS_Server.Dto.Map;
-using TDS_Server.Manager.Utility;
+﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Server.Data.Models;
+using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
@@ -39,18 +37,19 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 
             foreach (var bombplace in Map.BombInfo.PlantPositions)
             {
-                Vector3 pos = bombplace.ToVector3();
+                var pos = new Position3D(bombplace.X, bombplace.Y, bombplace.Z);
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
-                    obj: NAPI.Object.CreateObject(-51423166, pos, new Vector3(), 255, Lobby.Dimension),
-                    blip: NAPI.Blip.CreateBlip(pos, Lobby.Dimension),
+                    obj: ModAPI.MapObject.Create(-51423166, pos, null, 255, Lobby),
+                    blip: ModAPI.Blip.Create(pos, Lobby),
                     pos: pos
                 );
-                dto.Blip.Sprite = Constants.BombPlantPlaceBlipSprite;
+                dto.Blip.Sprite = SharedConstants.BombPlantPlaceBlipSprite;
                 dto.Blip.Name = "Bomb-Plant";
                 _bombPlantPlaces.Add(dto);
             }
 
-            _bomb = NAPI.Object.CreateObject(1764669601, Map.BombInfo.PlantPositions[0].ToVector3(), new Vector3(), 255, Lobby.Dimension);
+            var bombPos = Map.BombInfo.PlantPositions[0];
+            _bomb = ModAPI.MapObject.Create(1764669601, new Position3D(bombPos.X, bombPos.Y, bombPos.Z), null, 255, Lobby);
         }
 
         public override void StopRound()
@@ -82,9 +81,9 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
-                _lobbyBombTakeCol.Remove(Lobby, out ColShape? col);
-                if (col != null)
-                    NAPI.ColShape.DeleteColShape(col);
+                _lobbyBombTakeCol.Remove(Lobby, out IColShape? col);
+                if (col is { })
+                    col.Delete();
                 _bombTakeMarker?.Delete();
                 _bombTakeMarker = null;
             }

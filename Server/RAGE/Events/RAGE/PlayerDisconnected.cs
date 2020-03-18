@@ -11,7 +11,7 @@ namespace TDS_Server.RAGE.Events.RAGE
         {
             (Program.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
 
-            var modPlayer = GetModPlayer(player);
+            var modPlayer = Program.GetModPlayer(player);
             if (modPlayer is null)
                 return;
 

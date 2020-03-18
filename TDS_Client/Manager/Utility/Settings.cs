@@ -134,12 +134,12 @@ namespace TDS_Client.Manager.Utility
                 VoiceManager.SetForPlayer(player);
             }
 
-            MapBorderColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
-            NametagDeadColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
-            NametagHealthEmptyColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
-            NametagHealthFullColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
-            NametagArmorEmptyColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorEmptyColor);
-            NametagArmorFullColor = CommonUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
+            MapBorderColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
+            NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
+            NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
+            NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
+            NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorEmptyColor);
+            NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
 
             NotTempMapBorderColor = null;
         }

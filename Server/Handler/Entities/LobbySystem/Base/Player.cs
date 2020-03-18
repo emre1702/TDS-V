@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
@@ -16,7 +18,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
         public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
 
-        public virtual async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex)
+        public virtual async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (Entity.Type != LobbyType.MainMenu && !IsGangActionLobby)
             {
@@ -43,35 +45,34 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (Entity.Type == LobbyType.MainMenu
                 || Entity.Type == LobbyType.MapCreateLobby
                 || Entity.Type == LobbyType.GangLobby)
-                Workaround.SetPlayerInvincible(player.Player!, true);
+                player.ModPlayer?.SetInvincible(true);
 
-            player.Player!.Dimension = Dimension;
+            player.ModPlayer!.Dimension = Dimension;
             if (SetPositionOnPlayerAdd)
-                player.Player.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
-            Workaround.FreezePlayer(player.Player, true);
+                player.ModPlayer.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
+            player.ModPlayer.Freeze(true);
 
             if (teamindex != null)
                 player.Team = Teams[(int)teamindex.Value];
 
-            PlayerDataSync.SetData(player, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, IsPlayerLobbyOwner(player));
+            DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, IsPlayerLobbyOwner(player));
 
-            SendAllPlayerEvent(ToClientEvent.JoinSameLobby, null, player.Player.Handle.Value);
+            ModAPI.Sync.SendEvent(ToClientEvent.JoinSameLobby, player.RemoteId);
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.JoinLobby, SyncedLobbySettings.Json,
-                                                                                            Serializer.ToClient(Players.Select(p => p.Player!.Handle.Value).ToList()),
-                                                                                            Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
+            player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Select(p => p.RemoteId).ToList()),
+                                                                                 Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
             if (Entity.Type != LobbyType.MainMenu)
             {
-                RestLogsManager.Log(ELogType.Lobby_Join, player.Player, false, Entity.IsOfficial);
+                LoggingHandler.LogRest(LogType.Lobby_Join, player, false, Entity.IsOfficial);
                 player.SendNotification(string.Format(player.Language.JOINED_LOBBY_MESSAGE, Entity.Name, PlayerCommand.LobbyLeave));
             }
 
-            CustomEventManager.SetPlayerJoinedLobby(player, this);
+            EventsHandler.OnLobbyJoin(player, this);
             return true;
         }
 
-        public virtual async void RemovePlayer(TDSPlayer player)
+        public virtual async void RemovePlayer(ITDSPlayer player)
         {
             Players.Remove(player);
 
@@ -85,11 +86,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
             player.Spectates = null;
-            if (player.Player!.Exists)
+            if (player.ModPlayer is { })
             {
-                Workaround.FreezePlayer(player.Player, true);
-                player.Player.Transparency = 255;
+                player.ModPlayer.Freeze(true);
+                player.ModPlayer.Transparency = 255;
             }
+            
             if (DeathSpawnTimer.ContainsKey(player))
             {
                 DeathSpawnTimer[player].Kill();
@@ -102,14 +104,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     Remove();
             }
 
-            SendAllPlayerEvent(ToClientEvent.LeaveSameLobby, null, player.Player.Handle.Value, player.Player.Name);
+            ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby,  player.RemoteId, player.DisplayName);
             if (Entity.Type != LobbyType.MainMenu)
-                RestLogsManager.Log(ELogType.Lobby_Leave, player.Player, false, Entity.IsOfficial);
+                LoggingHandler.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 
-            CustomEventManager.SetPlayerLeftLobby(player, this);
+            EventsHandler.OnLobbyLeave(player, this);
         }
 
-        private async Task AddPlayerLobbyStats(TDSPlayer player)
+        private async Task AddPlayerLobbyStats(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return;
@@ -127,7 +129,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }).ConfigureAwait(false);
         }
 
-        public virtual void SetPlayerTeam(TDSPlayer player, ITeam team)
+        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam team)
         {
             if (player.Team is { })
             {
@@ -149,7 +151,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return player.Lobby is Lobby lobby && lobby == this && Entity.OwnerId == player.Entity.Id;
         }
 
-        public TDSPlayer? GetOwner()
+        public ITDSPlayer? GetOwner()
         {
             return GetPlayerById(Entity.OwnerId);
         }

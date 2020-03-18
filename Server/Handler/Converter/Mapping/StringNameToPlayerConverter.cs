@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Entity.Player;
 using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler.Converter.Mapping

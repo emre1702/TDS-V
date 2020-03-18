@@ -48,7 +48,7 @@ namespace TDS_Server.Handler.Entities.Player
                     TotalStats.Money += money;
             }
             else
-                _loggingHandler.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
+                LoggingHandler.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
                                 Environment.StackTrace, this);
         }
 

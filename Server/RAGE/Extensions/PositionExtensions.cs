@@ -1,5 +1,5 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Models.GTA;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGE.Extensions
 {

@@ -1,19 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TDS_Server.Dto.Map;
-using TDS_Server.Instance.LobbyInstances;
+﻿using System.Linq;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Helper;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.GameModes.Sniper
 {
     partial class Sniper : GameMode
     {
-        public Sniper(Arena lobby, MapDto map) : base(lobby, map) { }
+        public Sniper(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper)
+            : base(lobby, map, modAPI, serializer, settingsHandler, langHelper) { }
 
         public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
-                .Where(w => w.Type == TDS_Shared.Data.Enums.EWeaponType.SniperRifle)
+                .Where(w => w.Type == WeaponType.SniperRifle)
                 .Select(w => w.Hash)
                 .ToHashSet();
         }

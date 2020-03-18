@@ -1,8 +1,5 @@
-﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using TDS_Server.Instance.PlayerInstance;
+﻿using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Data.Enums;
@@ -13,32 +10,32 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         private static IEnumerable<LobbyWeapons>? _allRoundWeapons;
 
-        public override void GivePlayerWeapons(TDSPlayer player)
+        public override void GivePlayerWeapons(ITDSPlayer player)
         {
             if (_allRoundWeapons is null)
                 return;
             var lastWeapon = player.LastWeaponOnHand;
-            player.Player!.RemoveAllWeapons();
+            player.ModPlayer!.RemoveAllWeapons();
             bool giveLastWeapon = false;
-            
+
             foreach (LobbyWeapons weapon in _allRoundWeapons)
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;
                 WeaponHash hash = (WeaponHash)((uint)weapon.Hash);
-                NAPI.Player.GivePlayerWeapon(player.Player, hash, 0);
-                NAPI.Player.SetPlayerWeaponAmmo(player.Player, hash, weapon.Ammo);
+                player.ModPlayer.GiveWeapon(hash);
+                player.ModPlayer.SetWeaponAmmo(hash, weapon.Ammo);
                 if (hash == lastWeapon)
                     giveLastWeapon = true;
             }
             if (giveLastWeapon)
-                NAPI.Player.SetPlayerCurrentWeapon(player.Player, lastWeapon);
+                player.ModPlayer.CurrentWeapon = lastWeapon;
         }
 
-        public override void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
+        public override void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
-            CurrentGameMode?.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
+            base.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
+            CurrentGameMode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
         }
     }
 }

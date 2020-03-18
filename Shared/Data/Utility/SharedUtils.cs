@@ -1,7 +1,9 @@
 ﻿using NeoSmart.Hashing.XXHash;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace TDS_Shared.Data.Utility
@@ -20,6 +22,18 @@ namespace TDS_Shared.Data.Utility
         {
             var rndIndex = Rnd.Next(0, elements.Length);
             return elements[rndIndex];
+        }
+
+        public static T GetRandom<T>(List<T> collection)
+        {
+            var rndIndex = Rnd.Next(collection.Count);
+            return collection[rndIndex];
+        }
+
+        public static T GetRandom<T>(HashSet<T> collection)
+        {
+            var rndIndex = Rnd.Next(collection.Count);
+            return collection.ElementAt(rndIndex);
         }
 
         public static Color? GetColorFromHtmlRgba(string rgba)

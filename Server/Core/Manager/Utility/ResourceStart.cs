@@ -1,23 +1,7 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using TDS_Common.Dto;
-using TDS_Server.Instance;
-using TDS_Server.Instance.GameModes;
-using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Admin;
-using TDS_Server.Manager.Commands;
-using TDS_Server.Manager.EventManager;
-using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Maps;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server.Manager.Stats;
-using TDS_Server.Manager.Timer;
 using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Core.Manager.Utility
@@ -44,7 +28,7 @@ namespace TDS_Server.Core.Manager.Utility
                     NAPI.Resource.StopResource("tds");
                     return;
                 }
-                    
+
                 FromBonusBot.Init();
                 BonusBotConnector_Server.Program.Init(ErrorLogsManager.LogFromBonusBot);
 
@@ -84,11 +68,7 @@ namespace TDS_Server.Core.Manager.Utility
 
                 await BansManager.Get().RemoveExpiredBans().ConfigureAwait(true);
 
-                var allDbMaps = dbContext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).ToList();
-                await MapsLoader.LoadDefaultMaps(dbContext, allDbMaps);
-                await MapCreator.LoadNewMaps(dbContext, allDbMaps);
-                await MapCreator.LoadSavedMaps(dbContext, allDbMaps);
-                await MapCreator.LoadNeedCheckMaps(dbContext, allDbMaps);
+
 
                 Normal.Init(dbContext);
                 Bomb.Init(dbContext);
@@ -136,9 +116,9 @@ namespace TDS_Server.Core.Manager.Utility
         {
             try
             {
-                ErrorLogsManager.Log("CurrentDomain_UnhandledException: " 
-                    +  ((Exception)e.ExceptionObject).GetBaseException().Message, 
-                    ((Exception)e.ExceptionObject).StackTrace ?? Environment.StackTrace, 
+                ErrorLogsManager.Log("CurrentDomain_UnhandledException: "
+                    + ((Exception)e.ExceptionObject).GetBaseException().Message,
+                    ((Exception)e.ExceptionObject).StackTrace ?? Environment.StackTrace,
                     (TDSPlayer?)null);
             }
             catch
@@ -157,13 +137,13 @@ namespace TDS_Server.Core.Manager.Utility
                 if (input[0] == '/')
                     input = input.Substring(1);
 
-                var consolePlayer = new TDSPlayer(null) 
+                var consolePlayer = new TDSPlayer(null)
                 {
                     IsConsole = true
                 };
 
                 NAPI.Task.Run(() => CommandsManager.UseCommand(consolePlayer, input));
-                
+
             }
         }
     }

@@ -1,14 +1,23 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models;
+using TDS_Server.Data.Models.CustomLobby;
+using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Challenge;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex = null)
+        public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex = null)
         {
             if (CurrentGameMode?.CanJoinLobby(player, teamindex) == false)
                 return false;
@@ -23,14 +32,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 )
                 .ToList();
 
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
+            player.SendEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
             CurrentGameMode?.AddPlayer(player, teamindex);
 
             return true;
         }
 
-        public void ChooseTeam(TDSPlayer player, int teamIndex)
+        public void ChooseTeam(ITDSPlayer player, int teamIndex)
         {
             player.CurrentRoundStats = new RoundStatsDto(player);
 
@@ -41,13 +50,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public override void RemovePlayer(TDSPlayer player)
+        public override void RemovePlayer(ITDSPlayer player)
         {
             if (player.Lifes > 0)
             {
                 RemovePlayerFromAlive(player);
                 PlayerCantBeSpectatedAnymore(player);
-                DmgSys.CheckLastHitter(player, out TDSPlayer? killercharacter);
+                DmgSys.CheckLastHitter(player, out ITDSPlayer? killercharacter);
 
                 DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
             }
@@ -72,7 +81,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public override void SetPlayerTeam(TDSPlayer player, Team team)
+        public override void SetPlayerTeam(ITDSPlayer player, ITeam team)
         {
             base.SetPlayerTeam(player, team);
 
@@ -87,21 +96,21 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 if (teamsinround < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = player;
-                    if (CurrentRoundStatus != RoundStatus.None && CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
-                        SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.NewPlayer);
+                    if (CurrentRoundStatus != RoundStatus.None && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
+                        SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.NewPlayer);
                     else
                         SetRoundStatus(RoundStatus.NewMapChoose);
                 }
                 else
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.PlayerSpectateMode);
+                    player.SendEvent( ToClientEvent.PlayerSpectateMode);
                 }
             }
         }
 
-        private void SetPlayerReadyForRound(TDSPlayer player)
+        private void SetPlayerReadyForRound(ITDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
 
             if (player.Team != null && !player.Team.IsSpectator)
@@ -111,7 +120,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
                     if (spawndata is null)
                         return;
-                    NAPI.Player.SpawnPlayer(player.Player, spawndata.ToVector3(), spawndata.Rotation);
+                    player.Spawn(spawndata.To3D(), spawndata.Rotation);
                 }
 
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
@@ -120,14 +129,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             else
             {
                 if (SpawnPlayer)
-                    NAPI.Player.SpawnPlayer(player.Player, SpawnPoint, Entity.DefaultSpawnRotation);
+                    player.Spawn(SpawnPoint, Entity.DefaultSpawnRotation);
             }
 
 
             RemoveAsSpectator(player);
 
             if (FreezePlayerOnCountdown)
-                Workaround.FreezePlayer(player.Player, true);
+                player.ModPlayer.Freeze(true);
             GivePlayerWeapons(player);
 
             if (_removeSpectatorsTimer.ContainsKey(player))
@@ -136,12 +145,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.CurrentRoundStats?.Clear();
         }
 
-        private void RemovePlayerFromAlive(TDSPlayer player)
+        private void RemovePlayerFromAlive(ITDSPlayer player)
         {
             if (player.Team != null)
             {
-                player.Team.AlivePlayers?.Remove(player);
-                --player.Team.SyncedTeamData.AmountPlayers.AmountAlive;
+                player.Team.RemoveAlivePlayer(player);
             }
 
             CurrentGameMode?.RemovePlayerFromAlive(player);
@@ -153,58 +161,58 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
-        private void StartRoundForPlayer(TDSPlayer player)
+        private void StartRoundForPlayer(ITDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
+            player.SendEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team != null && !player.Team.IsSpectator)
             {
                 SetPlayerAlive(player);
-                Workaround.FreezePlayer(player.Player, false);
+                player.ModPlayer.Freeze(false);
             }
             player.LastHitter = null;
         }
 
-        private void AddPlayerAsPlayer(TDSPlayer player, int teamIndex)
+        private void AddPlayerAsPlayer(ITDSPlayer player, int teamIndex)
         {
             var team = Entity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
             SetPlayerTeam(player, team);
         }
 
-        private void SendPlayerRoundInfoOnJoin(TDSPlayer player)
+        private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
 
             if (_currentMap is { })
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
+                player.SendEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
             }
 
-            SendPlayerAmountInFightInfo(player.Player);
-            SyncMapVotingOnJoin(player.Player);
+            SendPlayerAmountInFightInfo(player);
+            SyncMapVotingOnJoin(player);
             CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
 
             switch (CurrentRoundStatus)
             {
                 case RoundStatus.Countdown:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    player.SendEvent(ToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
 
                 case RoundStatus.Round:
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
+                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
                     break;
             }
         }
 
-        private void SendPlayerAmountInFightInfo(TDSPlayer player)
+        private void SendPlayerAmountInFightInfo(ITDSPlayer player)
         {
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
+            player.SendEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
         }
 
-        private void SetPlayerAlive(TDSPlayer player)
+        private void SetPlayerAlive(ITDSPlayer player)
         {
             if (player.Team is null || player.Team.AlivePlayers is null)
                 return;
@@ -215,7 +223,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             ++teamamountdata.AmountAlive;
         }
 
-        private void SavePlayerRoundStats(TDSPlayer player)
+        private void SavePlayerRoundStats(ITDSPlayer player)
         {
             if (!SavePlayerLobbyStats)
                 return;
@@ -244,25 +252,25 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (IsOfficial && from.Damage > 0)
             {
                 if (from.Kills > 0)
-                    player.AddToChallenge(EChallengeType.Kills, from.Kills);
+                    player.AddToChallenge(ChallengeType.Kills, from.Kills);
                 if (from.Assists > 0)
-                    player.AddToChallenge(EChallengeType.Assists, from.Assists);
-                player.AddToChallenge(EChallengeType.Damage, from.Damage);
-                player.AddToChallenge(EChallengeType.RoundPlayed);
+                    player.AddToChallenge(ChallengeType.Assists, from.Assists);
+                player.AddToChallenge(ChallengeType.Damage, from.Damage);
+                player.AddToChallenge(ChallengeType.RoundPlayed);
             }
 
 
             from.Clear();
         }
 
-        private void RespawnPlayer(TDSPlayer player)
+        private void RespawnPlayer(ITDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
 
             SetPlayerReadyForRound(player);
-            Workaround.FreezePlayer(player.Player, false);
-            player.Player.TriggerEvent(ToClientEvent.PlayerRespawned);
+            player.ModPlayer.Freeze(false);
+            player.SendEvent(ToClientEvent.PlayerRespawned);
         }
     }
 }

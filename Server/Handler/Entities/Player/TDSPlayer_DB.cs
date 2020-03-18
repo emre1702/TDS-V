@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.Entities.Player
             _lastSaveTick = Environment.TickCount;
             await ExecuteForDBAsync(async (dbContext) =>
             {
-                if (LobbyStats is { } && _lobbyHandler.GetLobby(LobbyStats.LobbyId) is null)
+                if (LobbyStats is { } && _lobbiesHandler.GetLobby(LobbyStats.LobbyId) is null)
                 {
                     dbContext.Entry(LobbyStats).State = EntityState.Detached;
                     LobbyStats = null;

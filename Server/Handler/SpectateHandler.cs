@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Default;
 
@@ -11,7 +12,7 @@ namespace TDS_Server.Handler
         public SpectateHandler(IModAPI modAPI) 
             => _modAPI = modAPI;
 
-        public void SetPlayerToSpectator(TDSPlayer player, bool inSpectator)
+        public void SetPlayerToSpectator(ITDSPlayer player, bool inSpectator)
         {
             if (player.ModPlayer is null)
                 return;
@@ -19,22 +20,21 @@ namespace TDS_Server.Handler
             if (inSpectator)
             {
                 player.ModPlayer.Transparency = 0;
-
-                Workaround.FreezePlayer(player.Player, true);
-                Workaround.SetEntityCollisionless(player.Player, true, player.Lobby);
-                Workaround.SetPlayerInvincible(player.Player, true);
+                player.ModPlayer.Freeze(true);
+                player.ModPlayer.SetCollisionless(true, player.Lobby);
             }
             else
             {
                 player.ModPlayer.Transparency = 255;
-                Workaround.SetPlayerInvincible(player.Player, false);
-                Workaround.SetEntityCollisionless(player.Player, false, player.Lobby);
+                player.ModPlayer.Freeze(false);
+                player.ModPlayer.SetCollisionless(false, player.Lobby);
+
                 _modAPI.Sync.SendEvent(player, ToClientEvent.StopSpectator);
             }
 
         }
 
-        public void SetPlayerToSpectatePlayer(TDSPlayer player, TDSPlayer? targetPlayer)
+        public void SetPlayerToSpectatePlayer(ITDSPlayer player, ITDSPlayer? targetPlayer)
         {
             if (player.Spectates == targetPlayer)
                 return;

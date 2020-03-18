@@ -1,12 +1,10 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Default;
-using TDS_Common.Dto.Map.Creator;
+using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -14,17 +12,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
 
-        public void SyncLastId(TDSPlayer player, int lastId)
+        public void SyncLastId(ITDSPlayer player, int lastId)
         {
             if (_lastId >= lastId)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
+                player.SendEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
             }
             else
             {
                 _lastId = lastId;
             }
-            
+
         }
 
         public void SyncAllObjectsToPlayer(int tdsPlayerId, string json)
@@ -32,26 +30,25 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var player = GetPlayerById(tdsPlayerId);
             if (player is null)
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncAllObjects, json);
+            player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, json);
         }
 
-        public void SyncNewObject(TDSPlayer player, string json)
+        public void SyncNewObject(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
-                ToClientEvent.MapCreatorSyncNewObject, json);
+            ModAPI.Sync.SendEvent(Players.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncNewObject, json);
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
-            if (pos.Type == EMapCreatorPositionType.MapCenter)
+            if (pos.Type == MapCreatorPositionType.MapCenter)
                 _currentMap.MapCenter = pos;
-            else if (pos.Type == EMapCreatorPositionType.Target)
+            else if (pos.Type == MapCreatorPositionType.Target)
                 _currentMap.Target = pos;
             else
                 GetListInCurrentMapForMapType(pos.Type, pos.Info)?.Add(pos);
         }
 
-        public void SyncObjectPosition(TDSPlayer player, string json)
+        public void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(), 
+            ModAPI.Sync.SendEvent(Players.Where(p => p != player).ToList(),
                 ToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
@@ -67,67 +64,66 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             data.RotZ = pos.RotZ;
         }
 
-        public void SyncRemoveObject(TDSPlayer player, int objId)
+        public void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).Select(p => p.Player).ToArray(),
-                ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            ModAPI.Sync.SendEvent(Players.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;
             var data = _posById[objId];
-            if (data.Type == EMapCreatorPositionType.MapCenter)
+            if (data.Type == MapCreatorPositionType.MapCenter)
                 _currentMap.MapCenter = null;
-            else if (data.Type == EMapCreatorPositionType.Target)
+            else if (data.Type == MapCreatorPositionType.Target)
                 _currentMap.Target = null;
             GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
         }
 
-        public void SyncMapInfoChange(EMapCreatorInfoType infoType, object data)
+        public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            SendAllPlayerEvent(ToClientEvent.MapCreatorSyncData, null, infoType, data);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncData, infoType, data);
 
             switch (infoType)
             {
-                case EMapCreatorInfoType.DescriptionEnglish:
+                case MapCreatorInfoType.DescriptionEnglish:
                     _currentMap.Description[(int)Language.English] = Convert.ToString(data);
                     break;
-                case EMapCreatorInfoType.DescriptionGerman:
+                case MapCreatorInfoType.DescriptionGerman:
                     _currentMap.Description[(int)Language.German] = Convert.ToString(data);
                     break;
-                case EMapCreatorInfoType.Name:
+                case MapCreatorInfoType.Name:
                     _currentMap.Name = Convert.ToString(data);
                     break;
-                case EMapCreatorInfoType.Type:
-                    _currentMap.Type = (EMapType)Convert.ToInt32(data);
+                case MapCreatorInfoType.Type:
+                    _currentMap.Type = (MapType)Convert.ToInt32(data);
                     break;
-                case EMapCreatorInfoType.Settings:
+                case MapCreatorInfoType.Settings:
                     _currentMap.Settings = Serializer.FromBrowser<MapCreateSettings>(Convert.ToString(data));
                     break;
             }
 
         }
 
-        private List<MapCreatorPosition>? GetListInCurrentMapForMapType(EMapCreatorPositionType type, object? info)
+        private List<MapCreatorPosition>? GetListInCurrentMapForMapType(MapCreatorPositionType type, object? info)
         {
             switch (type)
             {
-                case EMapCreatorPositionType.BombPlantPlace:
+                case MapCreatorPositionType.BombPlantPlace:
                     if (_currentMap.BombPlaces is null)
                         _currentMap.BombPlaces = new List<MapCreatorPosition>();
                     return _currentMap.BombPlaces;
-                case EMapCreatorPositionType.MapLimit:
+                case MapCreatorPositionType.MapLimit:
                     if (_currentMap.MapEdges is null)
                         _currentMap.MapEdges = new List<MapCreatorPosition>();
                     return _currentMap.MapEdges;
-                case EMapCreatorPositionType.Object:
+                case MapCreatorPositionType.Object:
                     if (_currentMap.Objects is null)
                         _currentMap.Objects = new List<MapCreatorPosition>();
                     return _currentMap.Objects;
-                case EMapCreatorPositionType.Vehicle:
+                case MapCreatorPositionType.Vehicle:
                     if (_currentMap.Vehicles is null)
                         _currentMap.Vehicles = new List<MapCreatorPosition>();
                     return _currentMap.Vehicles;
-                case EMapCreatorPositionType.TeamSpawn:
+                case MapCreatorPositionType.TeamSpawn:
                     if (_currentMap.TeamSpawns is null)
                         _currentMap.TeamSpawns = new List<List<MapCreatorPosition>>();
                     if (!int.TryParse(info?.ToString(), out int teamIndex))

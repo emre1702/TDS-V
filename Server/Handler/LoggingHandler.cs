@@ -97,7 +97,7 @@ namespace TDS_Server.Handler
         #endregion Error
 
         #region Chat
-        public void LogChat(string chat, TDSPlayer source, TDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
+        public void LogChat(string chat, ITDSPlayer source, ITDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
         {
             var log = new LogChats
             {
@@ -151,12 +151,12 @@ namespace TDS_Server.Handler
         #endregion Admin
 
         #region Kill
-        public void LogKill(TDSPlayer player, TDSPlayer killer, uint weapon)
+        public void LogKill(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             var log = new LogKills
             {
-                KillerId = killer.Entity!.Id,
-                DeadId = player.Entity!.Id,
+                KillerId = killer.Id,
+                DeadId = player.Id,
                 WeaponId = weapon
             };
             _dbContext.LogKills.Add(log);
@@ -164,15 +164,15 @@ namespace TDS_Server.Handler
         #endregion Kill
 
         #region Rest
-        public void LogRest(LogType type, TDSPlayer source, bool saveipserial = false, bool savelobby = false)
+        public void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
         {
-            bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress, out IPAddress address);
+            bool ipAddressParseWorked = IPAddress.TryParse(source?.ModPlayer?.IPAddress ?? "-", out IPAddress address);
             var log = new LogRests
             {
                 Type = type,
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
-                Serial = saveipserial ? source?.Serial : null,
+                Serial = saveipserial ? source?.ModPlayer?.Serial ?? null : null,
                 Lobby = savelobby ? source?.Lobby?.Id : null,
                 Timestamp = DateTime.UtcNow
             };

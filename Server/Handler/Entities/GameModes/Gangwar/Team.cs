@@ -1,11 +1,11 @@
-﻿using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.Utility;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Entities.TeamSystem;
 
-namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        public Team AttackerTeam => Lobby.Teams[2];
-        public Team OwnerTeam => Lobby.Teams[1];
+        public ITeam AttackerTeam => Lobby.Teams[2];
+        public ITeam OwnerTeam => Lobby.Teams[1];
     }
 }

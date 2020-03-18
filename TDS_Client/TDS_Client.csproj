@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TDS_Common\TDS_Shared.csproj" />
+    <ProjectReference Include="..\Shared\Data\TDS_Shared.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

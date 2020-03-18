@@ -1,5 +1,5 @@
 ﻿using System;
-using TDS_Server.Interfaces;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {

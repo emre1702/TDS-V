@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Entity.Player;
 using TDS_Server.Handler.Converter.Mapping;
 using TDS_Server.Handler.Player;
 

@@ -1,24 +1,24 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Shared.Data.Enums;
-using TDS_Server.Dto.Map;
-using TDS_Server.Instance.GangTeam;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Data.Enums;
+using MapType = TDS_Server.Data.Enums.MapType;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
 
-        public async Task StartGangwar(TDSPlayer attacker, int gangwarAreaId)
+        public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
         {
-            var gangwarArea = GangwarAreasManager.GetById(gangwarAreaId);
+            var gangwarArea = _gangwarAreasHandler.GetById(gangwarAreaId);
             if (gangwarArea is null)
             {
                 //Todo This gangwar area does not exist (anymore).
@@ -40,20 +40,20 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             gangwarArea.SetInPreparation(attacker.Gang);
 
-            var lobby = new Arena(CreateEntity(gangwarArea), gangwarArea);
+            var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea);
 
             await lobby.AddToDB();
             lobby.SetMapList(new List<MapDto> { gangwarArea.Map });
 
-            lobby.SetRoundStatus(Enums.RoundStatus.NewMapChoose);
+            lobby.SetRoundStatus(RoundStatus.NewMapChoose);
             await lobby.AddPlayer(attacker, 1);
 
             lobby.Start();
         }
 
-        private static Lobbies CreateEntity(GangwarArea area)
+        private Lobbies CreateEntity(GangwarArea area)
         {
-            var dummyDBTeam = LobbyManager.MainMenu.Teams[0].Entity.DeepCopy();
+            var dummyDBTeam = LobbiesHandler.MainMenu.Teams[0].Entity.DeepCopy();
 
             var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
             ownerDBTeam.Index = 1;
@@ -67,20 +67,20 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
                 LobbyMapSettings = new LobbyMapSettings
                 {
-                  MapLimitType = EMapLimitType.Display
+                    MapLimitType = MapLimitType.Display
                 },
                 LobbyRoundSettings = new LobbyRoundSettings
                 {
-                  CountdownTime = (int)SettingsManager.ServerSettings.GangwarPreparationTime,
-                  RoundTime = (int)SettingsManager.ServerSettings.GangwarActionTime,
-                  ShowRanking = true
+                    CountdownTime = (int)SettingsHandler.ServerSettings.GangwarPreparationTime,
+                    RoundTime = (int)SettingsHandler.ServerSettings.GangwarActionTime,
+                    ShowRanking = true
                 },
-                LobbyWeapons = LobbyManager.GetAllPossibleLobbyWeapons(EMapType.Normal),
+                LobbyWeapons = LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
                 LobbyRewards = new LobbyRewards
                 {
-                    MoneyPerAssist = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerAssist,
-                    MoneyPerDamage = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerDamage,
-                    MoneyPerKill = LobbyManager.Arena.Entity.LobbyRewards.MoneyPerKill,
+                    MoneyPerAssist = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerAssist,
+                    MoneyPerDamage = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerDamage,
+                    MoneyPerKill = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerKill,
                 },
                 IsOfficial = true,
                 IsTemporary = false,
@@ -93,16 +93,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     ownerDBTeam,
                     attackerDBTeam
                 },
-                
+
             };
 
 
             return lobby;
         }
 
-        private static bool CheckCanStartAction(TDSPlayer attacker, GangwarArea gangwarArea)
+        private bool CheckCanStartAction(ITDSPlayer attacker, GangwarArea gangwarArea)
         {
-            if (attacker.Gang == Gang.None)
+            if (attacker.Gang == _gangsHandler.None)
             {
                 //todo You are not in a gang.
                 return false;
@@ -129,7 +129,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             if (attacker.Lobby?.Type != LobbyType.GangLobby)
             {
-                ErrorLogsManager.Log("Tried to start an action, but is not in GangLobby", Environment.StackTrace, attacker);
+                LoggingHandler.LogError("Tried to start an action, but is not in GangLobby", Environment.StackTrace, attacker);
                 return false;
             }
 
@@ -139,19 +139,20 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return true;
         }
 
-        private static bool CheckCanStartGangwar(TDSPlayer attacker, GangwarArea gangwarArea)
+        private bool CheckCanStartGangwar(ITDSPlayer attacker, GangwarArea gangwarArea)
         {
+
             if (attacker.Gang.Entity.RankPermissions.StartGangwar > attacker.GangRank!.Rank)
             {
                 //todo You don't have the permission in your gang to do that.
                 return false;
             }
-            if (attacker.Gang.PlayersOnline.Count < SettingsManager.ServerSettings.MinPlayersOnlineForGangwar)
+            if (attacker.Gang.PlayersOnline.Count < SettingsHandler.ServerSettings.MinPlayersOnlineForGangwar)
             {
                 //todo Not enough players in your gang are online
                 return false;
             }
-            if (gangwarArea.Owner!.PlayersOnline.Count < SettingsManager.ServerSettings.MinPlayersOnlineForGangwar)
+            if (gangwarArea.Owner!.PlayersOnline.Count < SettingsHandler.ServerSettings.MinPlayersOnlineForGangwar)
             {
                 //todo Not enough players in the other gang are online
                 return false;

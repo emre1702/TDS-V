@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
+using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -31,10 +35,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (_maps.Count == 1)
                 return _maps[0];
 
-            if (IsOfficial && Random.NextDouble() * 100 <= SettingsHandler.ServerSettings.ArenaNewMapProbabilityPercent)
+            if (IsOfficial && SharedUtils.Rnd.NextDouble() * 100 <= SettingsHandler.ServerSettings.ArenaNewMapProbabilityPercent)
             {
-                var map = MapCreator.GetRandomNewMap();
-                if (map != null)
+                var map = _mapsLoadingHandler.GetRandomNewMap();
+                if (map is { })
                     return map;
             }
 
@@ -50,7 +54,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private static MapDto GetRandomMapFromList(List<MapDto> list)
         {
             var sumRatings = (int)Math.Floor(list.Sum(m => m.RatingAverage));
-            var chooseAtRating = Utils.Rnd.Next(sumRatings) + 1;
+            var chooseAtRating = SharedUtils.Rnd.Next(sumRatings) + 1;
             double currentlyAtRating = 0;
             foreach (var map in list)
             {
@@ -60,7 +64,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
 
             // if I did a mistake, just return anything
-            return list[Utils.Rnd.Next(0, list.Count)];
+            return SharedUtils.GetRandom(list);
         }
 
         /// <summary>
@@ -75,17 +79,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 if (Teams.Count < teamsSpawnList.TeamID)
                     return;
-                List<Vector3> regions = new List<Vector3>();
+                var regions = new List<Position3D>();
                 foreach (var spawns in teamsSpawnList.Spawns)
                 {
-                    var position = spawns.ToVector3();
+                    var position = spawns.To3D();
                     if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
                         continue;
                     regions.Add(position);
 
-                    Blip blip = NAPI.Blip.CreateBlip(pos: position, dimension: Dimension);
-                    blip.Sprite = Constants.TeamSpawnBlipSprite;
-                    Team team = Teams[(int)teamsSpawnList.TeamID];
+                    IBlip blip = ModAPI.Blip.Create(position, this);
+                    blip.Sprite = SharedConstants.TeamSpawnBlipSprite;
+                    ITeam team = Teams[(int)teamsSpawnList.TeamID];
                     blip.Color = team.Entity.BlipColor;
                     blip.Name = "Spawn " + team.Entity.Name;
                     _mapBlips.Add(blip);
@@ -100,14 +104,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
-                IBlip blip = NAPI.Blip.CreateBlip(edge.ToVector3(), Dimension);
-                blip.Sprite = Constants.MapLimitBlipSprite;
+                IBlip blip = ModAPI.Blip.Create(edge, this);
+                blip.Sprite = SharedConstants.MapLimitBlipSprite;
                 blip.Name = "Limit " + ++i;
                 _mapBlips.Add(blip);
             }
         }
 
-        private Position4DDto? GetMapRandomSpawnData(Team? team)
+        private Position4DDto? GetMapRandomSpawnData(ITeam? team)
         {
             if (_currentMap is null)
                 return null;

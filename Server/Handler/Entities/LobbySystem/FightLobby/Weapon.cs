@@ -1,29 +1,27 @@
-﻿using GTANetworkAPI;
-using System.Linq;
-using TDS_Server.Instance.PlayerInstance;
+﻿using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
-        public virtual void GivePlayerWeapons(TDSPlayer player)
+        public virtual void GivePlayerWeapons(ITDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
-            player.Player!.RemoveAllWeapons();
+            player.ModPlayer!.RemoveAllWeapons();
             bool giveLastWeapon = false;
             foreach (LobbyWeapons weapon in Entity.LobbyWeapons)
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;
-                WeaponHash hash = (WeaponHash) ((uint)weapon.Hash);
-                NAPI.Player.GivePlayerWeapon(player.Player, hash, 0);
-                NAPI.Player.SetPlayerWeaponAmmo(player.Player, hash, weapon.Ammo);
-                if (hash == lastWeapon)
+                player.ModPlayer.GiveWeapon(weapon.Hash);
+                player.ModPlayer.SetWeaponAmmo(weapon.Hash, weapon.Ammo);
+                if (weapon.Hash == lastWeapon)
                     giveLastWeapon = true;
             }
             if (giveLastWeapon)
-                NAPI.Player.SetPlayerCurrentWeapon(player.Player, lastWeapon);
+                player.ModPlayer.CurrentWeapon = lastWeapon;
         }
     }
 }

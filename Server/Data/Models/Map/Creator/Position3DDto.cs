@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
-using TDS_Server.Data.Models.GTA;
+using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator

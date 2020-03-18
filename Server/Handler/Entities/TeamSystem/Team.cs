@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -28,16 +29,18 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         }
 
         public string ChatColor { get; private set; }
-        public List<TDSPlayer> Players { get; private set; } = new List<TDSPlayer>();
-        public List<TDSPlayer>? SpectateablePlayers { get; set; }
-        public List<TDSPlayer>? AlivePlayers { get; set; }
+        public List<ITDSPlayer> Players { get; private set; } = new List<ITDSPlayer>();
+        public List<ITDSPlayer>? SpectateablePlayers { get; set; }
+        public List<ITDSPlayer>? AlivePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
         public int SpawnCounter { get; set; }
 
         public bool IsSpectator => Entity.Index == 0;
 
-        private Serializer _serializer;
-        private IModAPI _modAPI;
+        HashSet<ITDSPlayer> ITeam.Players => throw new NotImplementedException();
+
+        private readonly Serializer _serializer;
+        private readonly IModAPI _modAPI;
 
         public Team(Serializer serializer, IModAPI modAPI, Teams entity)
         {
@@ -49,8 +52,8 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
             if (!IsSpectator)
             {
-                SpectateablePlayers = new List<TDSPlayer>();
-                AlivePlayers = new List<TDSPlayer>();
+                SpectateablePlayers = new List<ITDSPlayer>();
+                AlivePlayers = new List<ITDSPlayer>();
             }
 
             SyncedTeamData = new SyncedTeamDataDto
@@ -62,7 +65,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             );
         }
 
-        public void FuncIterate(Action<TDSPlayer, Team> func)
+        public void FuncIterate(Action<ITDSPlayer, ITeam> func)
         {
             foreach (var player in Players)
             {
@@ -70,16 +73,25 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             }
         }
 
-        public void AddPlayer(TDSPlayer player)
+        public void AddPlayer(ITDSPlayer player)
         {
             Players.Add(player);
             player.ModPlayer?.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
         }
 
-        public void RemovePlayer(TDSPlayer player)
+        public void RemovePlayer(ITDSPlayer player)
         {
             Players.Remove(player);
             player.SendEvent(ToClientEvent.ClearTeamPlayers);
+        }
+
+        public void RemoveAlivePlayer(ITDSPlayer player)
+        {
+            if (AlivePlayers is null)
+                return;
+
+             AlivePlayers.Remove(player);
+             SyncedTeamData.AmountPlayers.AmountAlive = (uint)AlivePlayers.Count;
         }
 
         public void ClearPlayers()
@@ -98,7 +110,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             Players.Clear();
         }
 
-        public void SyncAddedPlayer(TDSPlayer player)
+        public void SyncAddedPlayer(ITDSPlayer player)
         {
             string json = _serializer.ToClient(Players.Select(p => p.RemoteId));
             player.SendEvent(ToClientEvent.SyncTeamPlayers, json);
@@ -114,7 +126,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             }
         }
 
-        public void SyncRemovedPlayer(TDSPlayer player)
+        public void SyncRemovedPlayer(ITDSPlayer player)
         {
             foreach (var target in Players)
             {
@@ -166,6 +178,11 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public bool Equals([AllowNull] ITeam other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

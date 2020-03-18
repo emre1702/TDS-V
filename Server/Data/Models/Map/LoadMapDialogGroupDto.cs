@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Server.Dto.Map;
 
 namespace TDS_Server.Data.Models.Map
 {

@@ -1,44 +1,44 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
+﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        public override void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
+        public override void OnPlayerEnterColShape(IColShape shape, ITDSPlayer player)
         {
-            base.OnPlayerEnterColShape(shape, character);
-            CurrentGameMode?.OnPlayerEnterColShape(shape, character);
+            base.OnPlayerEnterColShape(shape, player);
+            CurrentGameMode?.OnPlayerEnterColShape(shape, player);
         }
 
-        public override void OnPlayerDeath(TDSPlayer character, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
-            if (character.Lifes > 0)
+            if (player.Lifes > 0)
             {
-                if (CurrentRoundStatus == RoundStatus.RoundEnd && character.Team != _currentRoundEndWinnerTeam)
+                if (CurrentRoundStatus == RoundStatus.RoundEnd && player.Team != _currentRoundEndWinnerTeam)
                 {
-                    DmgSys.OnPlayerDeath(character, killer, weapon);
+                    DmgSys.OnPlayerDeath(player, killer, weapon);
                     return;
                 }
 
-                CurrentGameMode?.OnPlayerDeath(character, killer);
+                CurrentGameMode?.OnPlayerDeath(player, killer);
 
-                if (character.Lifes == 1)   // Will be dead
+                if (player.Lifes == 1)   // Will be dead
                 {
-                    RemovePlayerFromAlive(character);
+                    RemovePlayerFromAlive(player);
                 }
                 else   // Will respawn again
                 {
-                    DeathSpawnTimer[character] = new TDSTimer(() =>
+                    DeathSpawnTimer[player] = new TDSTimer(() =>
                     {
-                        RespawnPlayer(character);
+                        RespawnPlayer(player);
                     }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
                 }
             }
 
-            base.OnPlayerDeath(character, killer, weapon, false);
+            base.OnPlayerDeath(player, killer, weapon, false);
             RoundCheckForEnoughAlive();
         }
     }

@@ -30,7 +30,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 Password = Utils.HashPWServer(password),
                 Email = email,
                 IsVip = false,
-                AdminLvl = CommonUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
+                AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
             };
             
             dbplayer.PlayerSettings = new PlayerSettings
@@ -49,7 +49,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             dbplayer.PlayerTotalStats = new PlayerTotalStats();
             dbplayer.PlayerClothes = new PlayerClothes
             {
-                IsMale = CommonUtils.GetRandom(true, false)
+                IsMale = SharedUtils.GetRandom(true, false)
             };
             dbContext.Players.Add(dbplayer);
             await dbContext.SaveChangesAsync();

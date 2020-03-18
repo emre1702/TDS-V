@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Entities.Player
 
         public string GetLocalDateTimeString(DateTime dateTime)
         {
-            return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? Constants.DateTimeOffsetFormat);
+            return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? SharedConstants.DateTimeOffsetFormat);
         }
     }
 }

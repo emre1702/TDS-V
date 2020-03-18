@@ -35,10 +35,10 @@ namespace TDS_Server.Core.Manager.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 AdminLogsManager.Log(ELogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
-            if (arena.CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
+            if (arena.CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
             {
                 arena.CurrentRoundEndBecauseOfPlayer = player;
-                arena.SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.Command);
+                arena.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Command);
             }
         }
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Core.Manager.Commands
             if (!cmdinfos.AsLobbyOwner)
             {
                 AdminLogsManager.Log(ELogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
-                LangUtils.SendAllChatMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                LangUtils.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
             else
             {
@@ -61,7 +61,7 @@ namespace TDS_Server.Core.Manager.Commands
                     player.SendMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
                     return;
                 }
-                target.Lobby.SendAllPlayerLangMessage(lang => Utils.GetReplaced(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                target.Lobby.SendAllPlayerLangMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
             target.Lobby.RemovePlayer(target);
             await LobbyManager.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);

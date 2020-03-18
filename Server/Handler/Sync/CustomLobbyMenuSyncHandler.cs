@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Sync
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
-            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOut;
         }
 
         private void EventsHandler_PlayerLoggedOut(TDSPlayer player)

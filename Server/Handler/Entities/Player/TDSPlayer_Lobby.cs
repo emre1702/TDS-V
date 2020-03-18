@@ -17,10 +17,13 @@ namespace TDS_Server.Handler.Entities.Player
             set
             {
                 if (_lobbyStats != null)
-                    DbContext.Entry(_lobbyStats).State = EntityState.Detached;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    ExecuteForDB(dbContext => dbContext.Entry(_lobbyStats).State = EntityState.Detached);
+
                 _lobbyStats = value;
                 if (value != null)
-                    DbContext.Attach(_lobbyStats);
+                    ExecuteForDB(dbContext => dbContext.Attach(_lobbyStats));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
         public RoundStatsDto? CurrentRoundStats { get; set; }

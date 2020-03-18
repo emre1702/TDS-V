@@ -1,14 +1,7 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Default;
-using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Utility;
+﻿using TDS_Server.Data.Enums;
+using TDS_Server.Handler.Entities.Utility;
 
-namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
@@ -19,6 +12,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             CreateTargetBlip();
             CreateTargetObject();
             CreateTargetTextLabel();
+            CreateTargetColShape();
         }
 
         public override void StartRoundCountdown()
@@ -27,14 +21,14 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
 
             if (Lobby.IsGangActionLobby)
             {
-                LangUtils.SendAllNotification(lang => lang.GANGWAR_PREPARATION_INFO);
+                LangHelper.SendAllNotification(lang => lang.GANGWAR_PREPARATION_INFO);
                 _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_PREPARATION_INFO, _gangwarArea.Map.BrowserSyncedData.Name, OwnerTeam.Entity.Name));
 
                 _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_PREPARATION_INFO, _gangwarArea.Map.BrowserSyncedData.Name, AttackerTeam.Entity.Name));
 
                 _gangwarArea?.Attacker.FuncIterate(player =>
                 {
-                    _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, onAccept: AcceptAttackPreparationInvitation)
+                    _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, Serializer, onAccept: AcceptAttackPreparationInvitation)
                     {
                         RemoveOnLobbyLeave = true
                     };
@@ -50,12 +44,12 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             {
                 Lobby.Entity.Name = $"[GW] {Lobby.GangwarArea!.Attacker!.Entity.Short} - {Lobby.GangwarArea.Owner!.Entity.Short}";
 
-                LangUtils.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea?.Map.BrowserSyncedData.Name ?? "?", OwnerTeam.Entity.Name));
+                LangHelper.SendAllNotification(lang => string.Format(lang.GANGWAR_STARTED_INFO, AttackerTeam.Entity.Name, _gangwarArea?.Map.BrowserSyncedData.Name ?? "?", OwnerTeam.Entity.Name));
                 _gangwarArea?.Attacker!.SendMessage(lang => string.Format(lang.GANGWAR_ATTACKER_STARTED_INFO, _gangwarArea.Map.BrowserSyncedData.Name, OwnerTeam.Entity.Name));
 
                 _gangwarArea?.Attacker!.FuncIterate(player =>
                 {
-                    _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, onAccept: AcceptAttackInvitation)
+                    _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, Serializer, onAccept: AcceptAttackInvitation)
                     {
                         RemoveOnLobbyLeave = true
                     };
@@ -64,7 +58,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
                 _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Map.BrowserSyncedData.Name, AttackerTeam.Entity.Name));
                 _gangwarArea?.Owner!.FuncIterate(player =>
                 {
-                    _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, onAccept: AcceptDefendInvitation)
+                    _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, Serializer, onAccept: AcceptDefendInvitation)
                     {
                         RemoveOnLobbyLeave = true
                     };
@@ -78,7 +72,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
                 var playerAtTarget = GetNextTargetMan();
                 SetTargetMan(playerAtTarget);
                 if (playerAtTarget is { })
-                    playerAtTarget.Player!.Position = TargetObject.Position;
+                    playerAtTarget.ModPlayer!.Position = TargetObject.Position;
             }
         }
 
@@ -105,37 +99,37 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             ClearMapFromTarget();
         }
 
-        public override bool CanEndRound(ERoundEndReason endReason)
+        public override bool CanEndRound(RoundEndReason endReason)
         {
             return endReason switch
             {
-                ERoundEndReason.BombDefused => false,
-                ERoundEndReason.BombExploded => false,
-                ERoundEndReason.Death => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
-                ERoundEndReason.Empty => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
-                ERoundEndReason.NewPlayer => !Lobby.IsGangActionLobby,
+                RoundEndReason.BombDefused => false,
+                RoundEndReason.BombExploded => false,
+                RoundEndReason.Death => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
+                RoundEndReason.Empty => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
+                RoundEndReason.NewPlayer => !Lobby.IsGangActionLobby,
 
-                ERoundEndReason.TargetEmpty => true,
-                ERoundEndReason.Time => true,
-                ERoundEndReason.Command => true,  
+                RoundEndReason.TargetEmpty => true,
+                RoundEndReason.Time => true,
+                RoundEndReason.Command => true,
 
                 _ => true
             };
         }
 
 
-        private bool IsConquered => 
+        private bool IsConquered =>
             Lobby.CurrentRoundEndReason switch
             {
-                ERoundEndReason.Time => true,
+                RoundEndReason.Time => true,
 
-                ERoundEndReason.Command => false,
-                ERoundEndReason.TargetEmpty => false,
-                ERoundEndReason.Empty => false,
+                RoundEndReason.Command => false,
+                RoundEndReason.TargetEmpty => false,
+                RoundEndReason.Empty => false,
 
-                ERoundEndReason.Death when (Lobby.CurrentGameMode is Gangwar gangwar) => gangwar.AttackerTeam.AlivePlayers!.Count > 0,
+                RoundEndReason.Death when (Lobby.CurrentGameMode is Gangwar gangwar) => gangwar.AttackerTeam.AlivePlayers!.Count > 0,
 
-                _ => false 
+                _ => false
 
             };
     }

@@ -80,7 +80,7 @@ namespace TDS_Server.Core.Damagesystem
                     if (targetClient is { } && targetClient.Exists && target.Lobby == character.Lobby && killerClient != targetClient && target.CurrentRoundStats != null)
                     {
                         ++target.CurrentRoundStats.Assists;
-                        target.SendNotification(Utils.GetReplaced(character.Language.GOT_ASSIST, character.DisplayName));
+                        target.SendNotification(string.Format(character.Language.GOT_ASSIST, character.DisplayName));
                     }
                     if (killerClient != targetClient ||
                         halfarmorhp % 2 != 0 ||
@@ -112,7 +112,7 @@ namespace TDS_Server.Core.Damagesystem
             if (lastHitterCharacter.CurrentRoundStats != null)
                 ++lastHitterCharacter.CurrentRoundStats.Kills;
             KillingSpreeKill(lastHitterCharacter);
-            lastHitterCharacter.SendNotification(Utils.GetReplaced(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
             killer = lastHitterCharacter;
         }
     }

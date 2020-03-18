@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
@@ -8,15 +9,16 @@ using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Manager.Utility;
-using static System.Collections.Generic.Dictionary<ulong, TDS_Server.Handler.Entities.Player.TDSPlayer>;
+using static System.Collections.Generic.Dictionary<ulong, TDS_Server.Data.Interfaces.ITDSPlayer>;
 
 namespace TDS_Server.Handler.Player
 {
     public class TDSPlayerHandler
     {
         public ValueCollection LoggedInPlayers => _tdsPlayerCache.Values;
+        public int AmountLoggedInPlayers => LoggedInPlayers.Count;
 
-        private readonly Dictionary<ulong, TDSPlayer> _tdsPlayerCache = new Dictionary<ulong, TDSPlayer>();
+        private readonly Dictionary<ulong, ITDSPlayer> _tdsPlayerCache = new Dictionary<ulong, ITDSPlayer>();
         private readonly Queue<(ulong, DateTime)> _removeFromCacheAtTimeQueue = new Queue<(ulong, DateTime)>();
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
@@ -29,11 +31,11 @@ namespace TDS_Server.Handler.Player
             _nameCheckHelper = nameCheckHelper;
             _serviceProvider = serviceProvider;
 
-            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOutAfter;
             eventsHandler.OnMinute += RemoveOldCaches;
         }
 
-        public TDSPlayer GetTDSPlayer(IPlayer modPlayer)
+        public ITDSPlayer GetTDSPlayer(IPlayer modPlayer)
         {
             var playerId = modPlayer.SocialClubId;
 
@@ -42,6 +44,16 @@ namespace TDS_Server.Handler.Player
                 var tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider, modPlayer);
                 _tdsPlayerCache[playerId] = tdsPlayer;
             }
+
+            return _tdsPlayerCache[playerId];
+        }
+
+        public ITDSPlayer? GetTDSPlayerIfExists(IPlayer modPlayer)
+        {
+            var playerId = modPlayer.SocialClubId;
+
+            if (!_tdsPlayerCache.ContainsKey(playerId))
+                return null;
 
             return _tdsPlayerCache[playerId];
         }
@@ -61,7 +73,7 @@ namespace TDS_Server.Handler.Player
             _removeFromCacheAtTimeQueue.Clear();
         }
 
-        internal TDSPlayer? FindTDSPlayer(string name)
+        internal ITDSPlayer? FindTDSPlayer(string name)
         {
             foreach (var player in _tdsPlayerCache.Values)
             {
@@ -78,7 +90,7 @@ namespace TDS_Server.Handler.Player
             return null;
         }
 
-        private void EventsHandler_PlayerLoggedOut(TDSPlayer player)
+        private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
             _removeFromCacheAtTimeQueue.Enqueue((player.SocialClubId, DateTime.Now.AddMinutes(Constants.RemoveTDSPlayerMinutesAfterLoggedOut)));
         }

@@ -1,37 +1,34 @@
-﻿using GTANetworkAPI;
-using System.Collections.Generic;
-using TDS_Common.Default;
+﻿using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Interfaces;
-using TDS_Server.Manager.Utility;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
-        protected void DeathInfoSync(TDSPlayer player, TDSPlayer? killer, uint weapon)
+        protected void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon)
         {
             Dictionary<ILanguage, string> killstr;
-            if (killer != null && player != killer)
+            if (killer is { } && player != killer)
             {
                 string? weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
-                killstr = LangUtils.GetLangDictionary((lang) =>
+                killstr = LangHelper.GetLangDictionary((lang) =>
                 {
-                    return lang.DEATH_KILLED_INFO.Formatted(killer?.DisplayName ?? "-", player.DisplayName, weaponname ?? "?");
+                    return string.Format(lang.DEATH_KILLED_INFO, killer?.DisplayName ?? "-", player.DisplayName, weaponname ?? "?");
                 });
             }
             else
             {
-                killstr = LangUtils.GetLangDictionary((lang) =>
+                killstr = LangHelper.GetLangDictionary((lang) =>
                 {
-                    return Utils.GetReplaced(lang.DEATH_DIED_INFO, player.DisplayName);
+                    return string.Format(lang.DEATH_DIED_INFO, player.DisplayName);
                 });
             }
 
-            FuncIterateAllPlayers((targetcharacter, targetteam) =>
+            FuncIterateAllPlayers((targetPlayer, targetteam) =>
             {
-                targetcharacter.Player!.TriggerEvent(ToClientEvent.Death, player.Player!.Handle.Value, player.Team?.Entity.Index ?? 0, killstr[targetcharacter.Language], player.Lifes > 1);
+                targetPlayer.SendEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
             });
         }
     }

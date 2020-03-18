@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        private TDSPlayer? _spectates;
+        private ITDSPlayer? _spectates;
 
-        public TDSPlayer? Spectates
+        public ITDSPlayer? Spectates
         {
             get => _spectates;
             set
@@ -15,6 +16,6 @@ namespace TDS_Server.Handler.Entities.Player
                 _spectates = value;
             }
         }
-        public HashSet<TDSPlayer> Spectators { get; } = new HashSet<TDSPlayer>();
+        public HashSet<ITDSPlayer> Spectators { get; } = new HashSet<ITDSPlayer>();
     }
 }

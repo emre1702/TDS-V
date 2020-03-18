@@ -1,36 +1,35 @@
-﻿using GTANetworkAPI;
-using MoreLinq;
-using TDS_Common.Default;
+﻿using MoreLinq;
+using System.Linq;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Map;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Utility;
+using TDS_Shared.Data.Utility;
+using TDS_Shared.Default;
 
-namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        private TDSPlayer? _attackLeader;
-        private TDSPlayer? _playerForcedAtTarget;
+        private ITDSPlayer? _attackLeader;
+        private ITDSPlayer? _playerForcedAtTarget;
 
-        public override void AddPlayer(TDSPlayer player, uint? teamIndex)
+        public override void AddPlayer(ITDSPlayer player, uint? teamIndex)
         {
             base.AddPlayer(player, teamIndex);
 
-            if (Lobby.IsGangActionLobby && _attackLeader is null && teamIndex == AttackerTeam.Entity.Index) 
+            if (Lobby.IsGangActionLobby && _attackLeader is null && teamIndex == AttackerTeam.Entity.Index)
                 SetAttackLeader(player);
         }
 
-        public override void RemovePlayer(TDSPlayer player)
+        public override void RemovePlayer(ITDSPlayer player)
         {
             base.RemovePlayer(player);
 
             if (player == _attackLeader && AttackerTeam.Players.Count > 0)
             {
-                var newAttackLeader = AttackerTeam.Players[0];
+                var newAttackLeader = AttackerTeam.Players.First();
                 SetAttackLeader(newAttackLeader);
             }
 
@@ -41,7 +40,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             }
         }
 
-        public override void OnPlayerDeath(TDSPlayer player, TDSPlayer killer)
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
         {
             base.OnPlayerDeath(player, killer);
 
@@ -52,7 +51,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             }
         }
 
-        public override bool CanJoinLobby(TDSPlayer player, uint? teamIndex)
+        public override bool CanJoinLobby(ITDSPlayer player, uint? teamIndex)
         {
             if (!teamIndex.HasValue)
                 return true;
@@ -69,7 +68,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             return true;
         }
 
-        public override bool CanJoinDuringRound(TDSPlayer player, Team team)
+        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team)
         {
             if (!Lobby.IsGangActionLobby)
                 return false;
@@ -79,14 +78,14 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
             return true;
         }
 
-        private void SetAttackLeader(TDSPlayer attackLeader)
+        private void SetAttackLeader(ITDSPlayer attackLeader)
         {
             _attackLeader = attackLeader;
 
             // Todo: Send him infos or open menu or whatever
         }
 
-        private TDSPlayer? GetNextTargetMan()
+        private ITDSPlayer? GetNextTargetMan()
         {
             if (TargetObject is null)
                 return null;
@@ -98,15 +97,15 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
                 return null;
 
             if (Lobby.CurrentRoundStatus != RoundStatus.Round)
-                return AttackerTeam.Players[CommonUtils.Rnd.Next(AttackerTeam.Players.Count)];
+                return SharedUtils.GetRandom(AttackerTeam.Players);
 
-            return AttackerTeam.Players.MinBy(p => p.Player!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+            return AttackerTeam.Players.MinBy(p => p.ModPlayer!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
         }
 
-        private void SetTargetMan(TDSPlayer? player)
+        private void SetTargetMan(ITDSPlayer? player)
         {
             if (_playerForcedAtTarget is { })
-                NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, ToClientEvent.RemoveForceStayAtPosition);
+                _playerForcedAtTarget.SendEvent(ToClientEvent.RemoveForceStayAtPosition);
 
             _playerForcedAtTarget = player;
 
@@ -118,24 +117,24 @@ namespace TDS_Server.Handler.Entities.GameModes.Gangwar
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
             });
 
-            NAPI.ClientEvent.TriggerClientEvent(_playerForcedAtTarget.Player, ToClientEvent.SetForceStayAtPosition,
-                Serializer.ToClient(new Position3DDto(TargetObject!.Position)),
-                SettingsManager.ServerSettings.GangwarTargetRadius,
-                EMapLimitType.KillAfterTime,
-                SettingsManager.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
+            _playerForcedAtTarget.SendEvent(ToClientEvent.SetForceStayAtPosition,
+                Serializer.ToClient(TargetObject!.Position),
+                SettingsHandler.ServerSettings.GangwarTargetRadius,
+                MapLimitType.KillAfterTime,
+                SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
         }
 
         private bool HasTeamFreePlace(bool isAttacker)
         {
             if (isAttacker)
             {
-                return AttackerTeam.Players.Count < SettingsManager.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || AttackerTeam.Players.Count < OwnerTeam.Players.Count + (SettingsManager.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
+                return AttackerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
+                    || AttackerTeam.Players.Count < OwnerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
             }
             else
             {
-                return OwnerTeam.Players.Count < SettingsManager.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || OwnerTeam.Players.Count < AttackerTeam.Players.Count + (SettingsManager.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
+                return OwnerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
+                    || OwnerTeam.Players.Count < AttackerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
             }
         }
     }

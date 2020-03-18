@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 
@@ -10,7 +11,7 @@ namespace TDS_Server.Handler.Entities.Player
         private short _shortTimeKillingSpree;
 
         public sbyte Lifes { get; set; } = 0;
-        public TDSPlayer? LastHitter { get; set; }
+        public ITDSPlayer? LastHitter { get; set; }
         public DateTime? LastKillAt { get; set; }
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
 
@@ -36,7 +37,7 @@ namespace TDS_Server.Handler.Entities.Player
                     return _shortTimeKillingSpree;
 
                 var timeSpanSinceLastKill = DateTime.UtcNow - LastKillAt.Value;
-                if (timeSpanSinceLastKill.TotalSeconds <= _settingsHandler.KillingSpreeMaxSecondsUntilNextKill)
+                if (timeSpanSinceLastKill.TotalSeconds <= _settingsHandler.ServerSettings.KillingSpreeMaxSecondsUntilNextKill)
                 {
                     return _shortTimeKillingSpree;
                 }

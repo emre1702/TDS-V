@@ -1,42 +1,41 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Default;
+﻿using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
-using TDS_Common.Instance.Utility;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Shared.Default;
+using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
-        public override void OnPlayerDeath(TDSPlayer character, TDSPlayer killer, uint weapon, bool spawnPlayer = true)
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
-            if (character.Team is null || character.Team.IsSpectator)
+            if (player.Team is null || player.Team.IsSpectator)
             {
-                SpectateOtherAllTeams(character);
+                SpectateOtherAllTeams(player);
                 return;
             }
 
-            DmgSys.OnPlayerDeath(character, killer, weapon);
-            base.OnPlayerDeath(character, killer, weapon, false);
+            DmgSys.OnPlayerDeath(player, killer, weapon);
+            base.OnPlayerDeath(player, killer, weapon, false);
 
             // was alive //
-            if (character.Lifes > 0)
+            if (player.Lifes > 0)
             {
-                DeathInfoSync(character, killer, weapon);
+                DeathInfoSync(player, killer, weapon);
 
-                if (character.Lifes == 1 && spawnPlayer)
+                if (player.Lifes == 1 && spawnPlayer)
                 {
-                    DeathSpawnTimer[character] = new TDSTimer(() =>
+                    DeathSpawnTimer[player] = new TDSTimer(() =>
                     {
-                        SpectateOtherSameTeam(character);
-                        NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.PlayerSpectateMode);
+                        SpectateOtherSameTeam(player);
+                        player.SendEvent(ToClientEvent.PlayerSpectateMode);
                     }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
                 }
             }
-            --character.Lifes;
+            --player.Lifes;
         }
 
-        public virtual void OnPlayerWeaponSwitch(TDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
+        public virtual void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
             // NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.PlayerWeaponChange, (uint)newWeapon /*, DmgSys.GetDamage((WeaponHash)newWeapon)*/);
         }

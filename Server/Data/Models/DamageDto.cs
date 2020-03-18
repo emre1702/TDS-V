@@ -2,7 +2,7 @@
 
 namespace TDS_Server.Data.Models
 {
-    internal class DamageDto
+    public class DamageDto
     {
         public float Damage;
         public float HeadMultiplier;

@@ -1,13 +1,9 @@
-﻿using GTANetworkAPI;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using System.Collections.Generic;
-using TDS_Server.Dto;
-using TDS_Server.Manager.Utility;
-using TDS_Common.Manager.Utility;
 using TDS_Server.Data.Models;
+using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -25,9 +21,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
 
             StringBuilder strbuilder = new StringBuilder();
-            FuncIterateAllPlayers((character, team) =>
+            FuncIterateAllPlayers((player, team) =>
             {
-                if (character.CurrentRoundStats is null)
+                if (player.CurrentRoundStats is null)
                     return;
                 if (team is null || team.IsSpectator)
                     return;
@@ -37,23 +33,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 uint damagereward = 0;
 
                 if (Entity.LobbyRewards.MoneyPerKill != 0)
-                    killreward = (uint)(character.CurrentRoundStats.Kills * Entity.LobbyRewards.MoneyPerKill);
+                    killreward = (uint)(player.CurrentRoundStats.Kills * Entity.LobbyRewards.MoneyPerKill);
                 if (Entity.LobbyRewards.MoneyPerAssist != 0)
-                    assistreward = (uint)(character.CurrentRoundStats.Assists * Entity.LobbyRewards.MoneyPerAssist);
+                    assistreward = (uint)(player.CurrentRoundStats.Assists * Entity.LobbyRewards.MoneyPerAssist);
                 if (Entity.LobbyRewards.MoneyPerDamage != 0)
-                    damagereward = (uint)(character.CurrentRoundStats.Damage * Entity.LobbyRewards.MoneyPerDamage);
+                    damagereward = (uint)(player.CurrentRoundStats.Damage * Entity.LobbyRewards.MoneyPerDamage);
 
-                character.GiveMoney(killreward + assistreward + damagereward);
+                player.GiveMoney(killreward + assistreward + damagereward);
 
                 strbuilder.Append("#o#____________________#n#");
-                strbuilder.AppendFormat(character.Language.ROUND_REWARD_INFO,
+                strbuilder.AppendFormat(player.Language.ROUND_REWARD_INFO,
                         killreward == 0 ? "-" : killreward.ToString(),
                         assistreward == 0 ? "-" : assistreward.ToString(),
                         damagereward == 0 ? "-" : damagereward.ToString(),
                         killreward + assistreward + damagereward);
                 strbuilder.Append("#n##o#____________________");
 
-                character.SendMessage(strbuilder.ToString());
+                player.SendMessage(strbuilder.ToString());
                 strbuilder.Clear();
             });
         }
@@ -68,9 +64,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 .Select(p => new RoundPlayerRankingStat(p))
                 .ToList();
 
-            float killsMult = SettingsManager.MultiplierRankingKills;
-            float assistsMult = SettingsManager.MultiplierRankingAssists;
-            float damageMult = SettingsManager.MultiplierRankingDamage;
+            float killsMult = SettingsHandler.ServerSettings.MultiplierRankingKills;
+            float assistsMult = SettingsHandler.ServerSettings.MultiplierRankingAssists;
+            float damageMult = SettingsHandler.ServerSettings.MultiplierRankingDamage;
 
             foreach (var ranking in list)
             {
@@ -98,7 +94,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     team.SpectateablePlayers?.Add(player);
                 }
                 SetPlayerReadyForRound(player);
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.CountdownStart);
+                player.SendEvent(ToClientEvent.CountdownStart);
             });
         }
 
@@ -111,7 +107,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = Serializer.ToClient(amounts);
-            SendAllPlayerEvent(ToClientEvent.AmountInFightSync, null, json);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.AmountInFightSync, json);
         }
 
         protected void SaveAllPlayerRoundStats()

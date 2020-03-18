@@ -1,8 +1,17 @@
-﻿namespace TDS_Server.Handler.Entities.GameModes.Gangwar
+﻿using System.Drawing;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Blip;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Server.Data.Interfaces.ModAPI.MapObject;
+using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
+using TDS_Shared.Manager.Utility;
+
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        public IObject? TargetObject { get; set; }
+        public IMapObject? TargetObject { get; set; }
+        public IColShape? TargetColShape { get; set; }
 
         private IBlip? _targetBlip;
         private ITextLabel? _targetTextLabel;
@@ -12,8 +21,8 @@
             if (Map.Target is null)
                 return;
 
-            _targetBlip = NAPI.Blip.CreateBlip(Map.Target.ToVector3(), Lobby.Dimension);
-            _targetBlip.Sprite = Constants.TargetBlipSprite;
+            _targetBlip = ModAPI.Blip.Create(Map.Target, Lobby);
+            _targetBlip.Sprite = SharedConstants.TargetBlipSprite;
             _targetBlip.Name = "Target";
         }
 
@@ -22,9 +31,9 @@
             if (Map.Target is null)
                 return;
 
-            TargetObject = NAPI.Object.CreateObject(ServerConstants.TargetHash, Map.Target.ToVector3(), new Vector3(), 120, Lobby.Dimension);
-            Workaround.FreezeEntity(TargetObject, true, Lobby);
-            Workaround.SetEntityCollisionless(TargetObject, true, Lobby);
+            TargetObject = ModAPI.MapObject.Create(SharedConstants.TargetHashName, Map.Target, null, 120, Lobby);
+            TargetObject.Freeze(true, Lobby);
+            TargetObject.SetCollisionsless(true, Lobby);
         }
 
         private void CreateTargetTextLabel()
@@ -32,8 +41,19 @@
             if (TargetObject is null)
                 return;
 
-            _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position,
-                (float)SettingsManager.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, Lobby.Dimension);
+            _targetTextLabel = ModAPI.TextLabel.Create("Target", TargetObject.Position,
+                SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, Color.FromArgb(220, 220, 220), true, Lobby);
+        }
+
+        private void CreateTargetColShape()
+        {
+            if (TargetObject is null)
+                return;
+
+            TargetColShape = ModAPI.ColShape.CreateSphere(TargetObject.Position, SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby);
+
+            TargetColShape.PlayerEntered += PlayerEnteredTargetColShape;
+            TargetColShape.PlayerExited += PlayerExitedTargetColShape;
         }
 
         private void ClearMapFromTarget()

@@ -12,11 +12,11 @@ namespace TDS_Server.Handler.Entities
         private TDSDbContext _dbContext;
 
         private ITDSPlayer? _player;
-        protected readonly LoggingHandler _loggingHandler;
+        protected readonly LoggingHandler LoggingHandler;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
         protected DatabaseEntityWrapper(TDSDbContext dbContext, LoggingHandler loggingHandler)
-            => (_dbContext, _loggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
+            => (_dbContext, LoggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
 
         ~DatabaseEntityWrapper()
         {
@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex, _player);
             }
             finally
             {
@@ -56,7 +56,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex, _player);
                 return default!;
             }
             finally
@@ -75,7 +75,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex, _player);
             }
             finally
             {

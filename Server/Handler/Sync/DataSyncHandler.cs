@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -32,7 +33,7 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerJoinedLobby += SyncPlayerLobbyData;
 
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
-            eventsHandler.PlayerLoggedOut += PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOutBefore += PlayerLoggedOut;
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace TDS_Server.Handler.Sync
             _playerHandleDatasLobby[lobby.Id].Remove(player.RemoteId);
         }
 
-        private void PlayerLoggedOut(ITDSPlayer player)
+        private ValueTask PlayerLoggedOut(ITDSPlayer player)
         {
             if (_playerHandleDatasAll.ContainsKey(player.RemoteId))
                 _playerHandleDatasAll.Remove(player.RemoteId);
@@ -109,6 +110,7 @@ namespace TDS_Server.Handler.Sync
                 _playerHandleDatasPlayer.Remove(player.RemoteId);
 
             _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
+            return new ValueTask();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
+using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator
@@ -33,7 +34,12 @@ namespace TDS_Server.Data.Models.Map.Creator
             Rotation = pos.RotZ;
         }
 
-        public Position3DDto To3D()
+        public Position3D To3D()
+        {
+            return new Position3D { X = X, Y = Y, Z = Z };
+        }
+
+        public Position3DDto To3DDto()
         {
             return new Position3DDto { X = X, Y = Y, Z = Z };
         }

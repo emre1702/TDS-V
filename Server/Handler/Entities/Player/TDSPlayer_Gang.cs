@@ -1,19 +1,19 @@
-﻿using TDS_Server.Instance.GangTeam;
+﻿using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.GangEntities;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        private Gang? _gang;
+        private IGang? _gang;
 
-        public Gang Gang
+        public IGang Gang
         {
             get
             {
                 if (_gang is null)
                 {
-                    _gang = Gang.None;
+                    _gang = _gangsHandler.None;
                 }
                 return _gang;
             }

@@ -62,15 +62,15 @@ namespace TDS_Server.Core.Manager.Stats
            
         }
 
-        public static async void AddArenaRound(ERoundEndReason roundEndReason, bool isOfficial)
+        public static async void AddArenaRound(RoundEndReason roundEndReason, bool isOfficial)
         {
             if (_instance is null)
                 return;
 
-            if (roundEndReason == ERoundEndReason.Command
-                || roundEndReason == ERoundEndReason.Empty
-                || roundEndReason == ERoundEndReason.NewPlayer
-                || roundEndReason == ERoundEndReason.Error)
+            if (roundEndReason == RoundEndReason.Command
+                || roundEndReason == RoundEndReason.Empty
+                || roundEndReason == RoundEndReason.NewPlayer
+                || roundEndReason == RoundEndReason.Error)
                 return;
             await CheckNewDay();
             if (isOfficial)

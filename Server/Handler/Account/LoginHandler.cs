@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.Player;
@@ -17,7 +18,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Account
 {
-    class LoginHandler
+    public class LoginHandler
     {
         private readonly DatabasePlayerHelper _databasePlayerHandler;
         private readonly ChallengesHelper _challengesHelper;
@@ -42,9 +43,7 @@ namespace TDS_Server.Handler.Account
             => (_databasePlayerHandler, _challengesHelper, _langHelper, _eventsHandler, _serializer, _settingsHandler, _serviceProvider, _dataSyncHandler, _loggingHandler)
             = (databasePlayerHandler, challengesHelper, langHelper, eventsHandler, serializer, settingsHandler, serviceProvider, dataSyncHandler, loggingHandler);
 
-
-        //[RemoteEvent(DToServerEvent.TryLogin)]
-        public async void TryLogin(TDSPlayer player, string username, string password)
+        public async void TryLogin(ITDSPlayer player, string username, string password)
         {
             int id = await _databasePlayerHandler.GetPlayerIDByName(username);
             if (id != 0)
@@ -55,10 +54,14 @@ namespace TDS_Server.Handler.Account
                 player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
         }
 
-        public async Task LoginPlayer(TDSPlayer player, int id, string password)
+        public async Task LoginPlayer(ITDSPlayer iplayer, int id, string password)
         {
+            if (!(iplayer is TDSPlayer player))
+                return;
             if (player.ModPlayer is null)
                 return;
+            
+
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
                 player.Entity = await dbContext.Players
@@ -112,13 +115,6 @@ namespace TDS_Server.Handler.Account
             _eventsHandler.OnPlayerLogin(player);
 
             _loggingHandler.LogRest(LogType.Login, player, true);
-
-
-            MapsRatings.SendPlayerHisRatings(player);
-
-            MapFavourites.LoadPlayerFavourites(player);
-
-
 
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
         }

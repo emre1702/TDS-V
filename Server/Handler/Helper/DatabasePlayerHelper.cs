@@ -8,7 +8,7 @@ using TDS_Server.Handler.Entities;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
-    internal class DatabasePlayerHelper : DatabaseEntityWrapper
+    public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
         public DatabasePlayerHelper(TDSDbContext dbContext, LoggingHandler loggingHandler) : base(dbContext, loggingHandler)
         {

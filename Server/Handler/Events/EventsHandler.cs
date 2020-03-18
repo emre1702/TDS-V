@@ -1,9 +1,6 @@
-﻿using System;
-using TDS_Server.Core.Manager.Utility;
+﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler.Events
@@ -11,12 +8,11 @@ namespace TDS_Server.Handler.Events
     public class EventsHandler
     {
         private readonly TDSPlayerHandler _tdsPlayerHandler;
-        private readonly ChatHandler _chatHandler;
 
-        public EventsHandler(TDSPlayerHandler tdsPlayerHandler, ChatHandler chatHandler)
-            => (_tdsPlayerHandler, _chatHandler) = (tdsPlayerHandler, chatHandler);
+        public EventsHandler(TDSPlayerHandler tdsPlayerHandler)
+            => (_tdsPlayerHandler) = (tdsPlayerHandler);
 
-        public delegate void PlayerDelegate(TDSPlayer player);
+        public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
 
         public event PlayerDelegate? PlayerDisconnected;
@@ -24,7 +20,10 @@ namespace TDS_Server.Handler.Events
         public event PlayerDelegate? PlayerRegistered;
         public event PlayerDelegate? PlayerLoggedOut;
 
-        public delegate void PlayerLobbyDelegate(TDSPlayer player, Lobby lobby);
+        public delegate ValueTask PlayerAsyncDelegate(ITDSPlayer player);
+        public event PlayerAsyncDelegate? PlayerLoggedOutBefore;
+
+        public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
@@ -33,32 +32,44 @@ namespace TDS_Server.Handler.Events
         public event CounterDelegate? OnMinute;
         public event CounterDelegate? OnHour;
 
-        public void OnPlayerConnected(IPlayer modPlayer) 
+        public delegate void EmptyDelegate();
+        public event EmptyDelegate? MapsLoaded;
+
+        public void OnPlayerConnected(IPlayer modPlayer)
         {
             var tdsPlayer = _tdsPlayerHandler.GetTDSPlayer(modPlayer);
             PlayerConnected?.Invoke(tdsPlayer);
-        } 
+        }
 
-        public void OnPlayerDisconnected(IPlayer modPlayer) 
+        public void OnPlayerDisconnected(IPlayer modPlayer)
         {
             var tdsPlayer = _tdsPlayerHandler.GetTDSPlayer(modPlayer);
             PlayerDisconnected?.Invoke(tdsPlayer);
         }
 
-        public void OnPlayerLogin(TDSPlayer tdsPlayer)
+        public void OnPlayerLogin(ITDSPlayer tdsPlayer)
         {
             PlayerLoggedIn?.Invoke(tdsPlayer);
         }
 
-        public void OnPlayerRegister(TDSPlayer tdsPlayer)
+        public void OnPlayerRegister(ITDSPlayer tdsPlayer)
         {
             PlayerRegistered?.Invoke(tdsPlayer);
         }
 
-        public void LobbyChatMessage(IPlayer modPlayer, string message, int chatTypeNumber)
+        public void OnMapsLoaded()
         {
-            var tdsPlayer = _tdsPlayerHandler.GetTDSPlayer(modPlayer);
-            _chatHandler.SendLobbyMessage(tdsPlayer, message, chatTypeNumber);
+            MapsLoaded?.Invoke();
+        }
+
+        internal void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
+        {
+            PlayerJoinedLobby?.Invoke(player, lobby);
+        }
+
+        internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
+        {
+            PlayerLeftLobby?.Invoke(player, lobby);
         }
     }
 }

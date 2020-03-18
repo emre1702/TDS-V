@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\ModAPI\Events\" />
+    <Folder Include="Models\GTA\" />
     <Folder Include="Models\MainMenu\" />
   </ItemGroup>
 

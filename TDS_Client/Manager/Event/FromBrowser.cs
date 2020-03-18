@@ -294,22 +294,22 @@ namespace TDS_Client.Manager.Event
             switch (dataSetting)
             {
                 case EUserpanelSettingKey.MapBorderColor:
-                    Settings.MapBorderColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.MapBorderColor;
+                    Settings.MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? Settings.MapBorderColor;
                     break;
                 case EUserpanelSettingKey.NametagDeadColor:
-                    Settings.NametagDeadColor = CommonUtils.GetColorFromHtmlRgba(color);
+                    Settings.NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
                 case EUserpanelSettingKey.NametagHealthEmptyColor:
-                    Settings.NametagHealthEmptyColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthEmptyColor;
+                    Settings.NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthEmptyColor;
                     break;
                 case EUserpanelSettingKey.NametagHealthFullColor:
-                    Settings.NametagHealthFullColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthFullColor;
+                    Settings.NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagHealthFullColor;
                     break;
                 case EUserpanelSettingKey.NametagArmorEmptyColor:
-                    Settings.NametagArmorEmptyColor = CommonUtils.GetColorFromHtmlRgba(color);
+                    Settings.NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
                 case EUserpanelSettingKey.NametagArmorFullColor:
-                    Settings.NametagArmorFullColor = CommonUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagArmorFullColor;
+                    Settings.NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? Settings.NametagArmorFullColor;
                     break;
             }
             
@@ -492,7 +492,7 @@ namespace TDS_Client.Manager.Event
         private void OnGetHashedPassword(object[] args)
         {
             string pw = Convert.ToString(args[0]);
-            Browser.Angular.Main.GetHashedPasswordReturn(CommonUtils.HashPWClient(pw));
+            Browser.Angular.Main.GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
         }
 
         private void OnFromBrowserEventMethod(object[] args)

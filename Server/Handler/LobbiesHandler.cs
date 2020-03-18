@@ -5,18 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.GameModes.Bomb;
 using TDS_Server.Handler.Entities.GameModes.Normal;
 using TDS_Server.Handler.Entities.GameModes.Sniper;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
@@ -51,15 +54,16 @@ namespace TDS_Server.Handler
 
         private readonly Serializer _serializer;
         private readonly TDSDbContext _dbContext;
-        private readonly MapsHandler _mapsHandler;
+        private readonly MapsLoadingHandler _mapsHandler;
         private readonly LoggingHandler _loggingHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+        private readonly IServiceProvider _serviceProvider;
 
         public LobbiesHandler(
             TDSDbContext dbContext, 
             SettingsHandler settingsHandler, 
-            Serializer serializer, 
-            MapsHandler mapsHandler, 
+            Serializer serializer,
+            MapsLoadingHandler mapsHandler, 
             LoggingHandler loggingHandler, 
             IServiceProvider serviceProvider,
             CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler,
@@ -68,6 +72,7 @@ namespace TDS_Server.Handler
             _dbContext = dbContext;
             _serializer = serializer;
             _mapsHandler = mapsHandler;
+            _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
 
@@ -114,12 +119,19 @@ namespace TDS_Server.Handler
             settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
             settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
 
+            Normal.Init(dbContext);
+            Gangwar.Init(dbContext);
+            Bomb.Init(dbContext);
+            Sniper.Init(dbContext);
+
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        private async void EventsHandler_PlayerLoggedIn(TDSPlayer player)
+        private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            await MainMenu.AddPlayer(player, null);
+            if (!(player is TDSPlayer tdsPlayer))
+                return;
+            await MainMenu.AddPlayer(tdsPlayer, null);
         }
 
         private void AddMapsToArena(Arena arena, Lobbies lobbySetting)
@@ -130,27 +142,27 @@ namespace TDS_Server.Handler
                 switch (mapAssignment.MapId)
                 {
                     case (int)DefaultMapIds.AllWithoutGangwars:
-                        lobbyMapsList.AddRange(_mapsHandler.AllMaps.Where(m => m.Info.Type != MapType.Gangwar));
+                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type != MapType.Gangwar));
                         break;
 
                     case (int)DefaultMapIds.Normals:
-                        lobbyMapsList.AddRange(_mapsHandler.AllMaps.Where(m => m.Info.Type == MapType.Normal));
+                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Normal));
                         break;
 
                     case (int)DefaultMapIds.Bombs:
-                        lobbyMapsList.AddRange(_mapsHandler.AllMaps.Where(m => m.Info.Type == MapType.Bomb));
+                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Bomb));
                         break;
 
                     case (int)DefaultMapIds.Snipers:
-                        lobbyMapsList.AddRange(_mapsHandler.AllMaps.Where(m => m.Info.Type == MapType.Sniper));
+                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Sniper));
                         break;
 
                     case (int)DefaultMapIds.Gangwars:
-                        lobbyMapsList.AddRange(_mapsHandler.AllMaps.Where(m => m.Info.Type == MapType.Gangwar));
+                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Gangwar));
                         break;
 
                     default:
-                        var map = _mapsHandler.AllMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
+                        var map = _mapsHandler.DefaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
                         if (map is null)
                             map = _mapsHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
                         if (map is null)
@@ -241,7 +253,8 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                Arena arena = new Arena(entity);
+                
+                Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity);
                 await arena.AddToDB();
 
                 AddMapsToArena(arena, entity);

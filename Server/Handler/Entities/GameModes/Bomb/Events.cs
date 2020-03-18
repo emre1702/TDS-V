@@ -1,15 +1,14 @@
-﻿using GTANetworkAPI;
-using TDS_Common.Default;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Utility;
+﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
-        public override void OnPlayerEnterColShape(ColShape shape, TDSPlayer character)
+        public override void OnPlayerEnterColShape(IColShape shape, ITDSPlayer character)
         {
             base.OnPlayerEnterColShape(shape, character);
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
@@ -21,14 +20,14 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             }
         }
 
-        public override void OnPlayerDeath(TDSPlayer player, TDSPlayer killer)
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
         {
             base.OnPlayerDeath(player, killer);
             if (_bombAtPlayer == player)
                 DropBomb();
         }
 
-        public override void SendPlayerRoundInfoOnJoin(TDSPlayer player)
+        public override void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
             if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return;
@@ -37,13 +36,13 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 return;
 
             if (_bombDetonateTimer != null && _bomb != null)
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.BombPlanted,
+                player.SendEvent(ToClientEvent.BombPlanted,
                     Serializer.ToClient(_bomb.Position),
                     false,
                     _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
         }
 
-        public override void OnPlayerWeaponSwitch(TDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
+        public override void OnPlayerWeaponSwitch(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
         {
             base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
             if (_bombAtPlayer == character)

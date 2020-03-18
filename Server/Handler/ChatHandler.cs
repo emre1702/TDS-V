@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities.Player;
@@ -16,7 +17,7 @@ namespace TDS_Server.Handler
         public ChatHandler(LoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler)
             => (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler);
 
-        public void SendLobbyMessage(TDSPlayer player, string message, int chatTypeNumber)
+        public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
             if (player.IsPermamuted)
             {
@@ -47,7 +48,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        public void SendLobbyMessage(TDSPlayer player, string message, bool isDirty)
+        public void SendLobbyMessage(ITDSPlayer player, string message, bool isDirty)
         {
             if (!player.LoggedIn)
                 return;
@@ -65,10 +66,10 @@ namespace TDS_Server.Handler
             //else if (character.IsPermamuted)
             //    player.SendNotification(character.Language.STILL_PERMAMUTED);
             //else
-            //    player.SendNotification(Utils.GetReplaced(character.Language.STILL_MUTED, character.MuteTime.Value));
+            //    player.SendNotification(string.Format(character.Language.STILL_MUTED, character.MuteTime.Value));
         }
 
-        public void SendGlobalMessage(TDSPlayer player, string message)
+        public void SendGlobalMessage(ITDSPlayer player, string message)
         {
             string changedmessage = "[GLOBAL] " + (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message + "$Global$";
             var blockingIds = player.BlockingPlayerIds;
@@ -81,21 +82,21 @@ namespace TDS_Server.Handler
             _loggingHandler.LogChat(message, player, isGlobal: true);
         }
 
-        public void SendAdminMessage(TDSPlayer player, string message)
+        public void SendAdminMessage(ITDSPlayer player, string message)
         {
             string changedMessage = player.AdminLevel.FontColor + "[" + player.AdminLevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
             _modAPI.Chat.SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
-        public void SendAdminChat(TDSPlayer player, string message)
+        public void SendAdminChat(ITDSPlayer player, string message)
         {
             string changedMessage = "[ADMINCHAT] " + player.AdminLevel.FontColor + player.DisplayName + ": !$220|220|220$" + message;
             _adminsHandler.SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
-        public void SendTeamChat(TDSPlayer player, string message)
+        public void SendTeamChat(ITDSPlayer player, string message)
         {
             if (player.Team is null)
                 return;
@@ -104,7 +105,7 @@ namespace TDS_Server.Handler
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
 
-        public void SendPrivateMessage(TDSPlayer player, TDSPlayer target, string message)
+        public void SendPrivateMessage(ITDSPlayer player, TDSPlayer target, string message)
         {
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
             target.SendMessage(changedMessage);

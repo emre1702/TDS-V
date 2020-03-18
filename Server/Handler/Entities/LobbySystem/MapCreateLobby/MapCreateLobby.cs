@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Common.Default;
-using TDS_Common.Dto.Map.Creator;
-using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Helper;
+using TDS_Server.Handler.Sync;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Default;
+using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -17,33 +20,29 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private int _lastId;
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
 
-        public MapCreateLobby(Lobbies entity) : base(entity) {}
+        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+            SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler) 
+            : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler) 
+            { 
+            
+            }
 
-        public static async void Create(TDSPlayer player)
+        private static Lobbies CreateEntity(ITDSPlayer player)
         {
-            if (player.Entity is null)
-                return;
-            if (player.Player is null)
-                return;
-
             Lobbies entity = new Lobbies
             {
-                Name = "MapCreator-" + player.Player.Name,
-                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Player.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
+                Name = "MapCreator-" + player.ModPlayer?.Name ?? "?",
+                Teams = new List<Teams> { new Teams { Index = 0, Name = player.ModPlayer?.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = LobbyType.MapCreateLobby,
-                OwnerId = player.Entity.Id,
+                OwnerId = player.Entity?.Id ?? -1,
                 IsTemporary = true,
                 DefaultSpawnX = -365.425f,
                 DefaultSpawnY = -131.809f,
                 DefaultSpawnZ = 37.873f,
                 DefaultSpawnRotation = 0f
             };
-            MapCreateLobby lobby = new MapCreateLobby(entity);
-            await lobby.AddToDB();
 
-            await lobby.AddPlayer(player, 0);
-
-            LobbyManager.AddLobby(lobby);
+            return entity;
         }
 
         public void StartNewMap()
@@ -51,7 +50,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = 0;
             _currentMap = new MapCreateDataDto();
             _posById = new Dictionary<int, MapCreatorPosition>();
-            SendAllPlayerEvent(ToClientEvent.MapCreatorStartNewMap, null);
+            ModAPI.Sync.SendEvent(ToClientEvent.MapCreatorStartNewMap);
         }
 
         public void SetMap(MapCreateDataDto dto)
@@ -61,11 +60,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (dto.BombPlaces is { })
                 foreach (var pos in dto.BombPlaces)
                     _posById[pos.Id] = pos;
-           
+
             if (dto.MapEdges is { })
                 foreach (var pos in dto.MapEdges)
                     _posById[pos.Id] = pos;
-            
+
             if (dto.Objects is { })
                 foreach (var pos in dto.Objects)
                     _posById[pos.Id] = pos;
@@ -76,7 +75,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (dto.MapCenter is { })
                 _posById[dto.MapCenter.Id] = dto.MapCenter;
-                
+
             if (dto.TeamSpawns is { })
                 foreach (var list in dto.TeamSpawns)
                     foreach (var pos in list)
@@ -88,7 +87,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            SendAllPlayerEvent(ToClientEvent.LoadMapForMapCreator, null, json);
+            ModAPI.Sync.SendEvent(ToClientEvent.LoadMapForMapCreator, json);
         }
     }
 }

@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Models.GTA;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -39,6 +41,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly LobbiesHandler LobbiesHandler;
         protected readonly SettingsHandler SettingsHandler;
         protected readonly LangHelper LangHelper;
+        protected readonly DataSyncHandler DataSyncHandler;
+        protected readonly EventsHandler EventsHandler;
 
         public Lobby(
             Lobbies entity,
@@ -50,13 +54,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             IModAPI modAPI,
             LobbiesHandler lobbiesHandler,
             SettingsHandler settingsHandler,
-            LangHelper langHelper) : base(dbContext, loggingHandler)
+            LangHelper langHelper,
+            DataSyncHandler dataSyncHandler,
+            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
             Serializer = serializer;
             ModAPI = modAPI;
             LobbiesHandler = lobbiesHandler;
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
+            DataSyncHandler = dataSyncHandler;
+            EventsHandler = eventsHandler;
 
             Entity = entity;
 
@@ -69,7 +77,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 entity.DefaultSpawnZ
             );
 
-            Teams = new List<Team>(entity.Teams.Count);
+            Teams = new List<ITeam>(entity.Teams.Count);
             foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
                 Team team = new Team(serializer, ModAPI, teamEntity);

@@ -1,38 +1,36 @@
 ﻿using System.Threading.Tasks;
-using GTANetworkAPI;
+using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
-        public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex)
+        public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            Workaround.SetPlayerInvincible(player.Player!, false);
+            player.ModPlayer?.SetInvincible(false);
 
             return true;
         }
 
-        public override void RemovePlayer(TDSPlayer character)
+        public override void RemovePlayer(ITDSPlayer player)
         {
-            base.RemovePlayer(character);
+            base.RemovePlayer(player);
 
-            character.Team?.SpectateablePlayers?.Remove(character);
-            character.LastKillAt = null;
-            character.KillingSpree = 0;
+            player.Team?.SpectateablePlayers?.Remove(player);
+            player.LastKillAt = null;
+            player.KillingSpree = 0;
         }
 
-        public static void KillPlayer(Player player, string reason)
+        public static void KillPlayer(ITDSPlayer player, string reason)
         {
-            player.Kill();
-            player.SendChatMessage(reason);
+            player.ModPlayer?.Kill();
+            player.SendMessage(reason);
         }
 
-        public void DamagedPlayer(TDSPlayer target, TDSPlayer source, WeaponHash weapon, ulong bone)
+        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, ulong bone)
         {
             DmgSys.DamagePlayer(target, weapon, bone, source);
         }

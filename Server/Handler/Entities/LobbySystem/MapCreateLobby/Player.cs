@@ -1,55 +1,55 @@
-﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Default;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server.Manager.Utility;
+using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Data.Utility;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
-        public override async Task<bool> AddPlayer(TDSPlayer player, uint? teamindex)
+        public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            Workaround.SetPlayerInvincible(player.Player!, true);
-            Workaround.FreezePlayer(player.Player!, false);
+            player.ModPlayer?.SetInvincible(true);
+            player.ModPlayer?.Freeze(false);
 
             if (Players.Count > 1)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
+                player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
             }
 
             return true;
         }
 
-        public override void RemovePlayer(TDSPlayer player)
+        public override void RemovePlayer(ITDSPlayer player)
         {
             base.RemovePlayer(player);
 
-            if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1) {
-                var newOwner = Players.ElementAt(CommonUtils.Rnd.Next(0, Players.Count));
+            if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1)
+            {
+                var newOwner = SharedUtils.GetRandom(Players);
                 Entity.OwnerId = newOwner.Entity!.Id;
-                PlayerDataSync.SetData(newOwner, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, true);
+                DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, true);
             }
         }
 
-        public void SetPosition(TDSPlayer player, float x, float y, float z, float rot)
+        public void SetPosition(ITDSPlayer player, float x, float y, float z, float rot)
         {
-            player.Player!.Position = new Vector3(x, y, z);
-            player.Player!.Rotation = new Vector3(0, 0, rot);
+            player.ModPlayer!.Position = new Position3D(x, y, z);
+            player.ModPlayer!.Rotation = rot;
         }
 
-        public async void GiveVehicle(TDSPlayer player, EFreeroamVehicleType vehType)
+        public async void GiveVehicle(ITDSPlayer player, FreeroamVehicleType vehType)
         {
-            VehicleHash vehHash = await ExecuteForDBAsync(async (dbContext) => 
+            VehicleHash vehHash = await ExecuteForDBAsync(async (dbContext) =>
             {
                 return await dbContext.FreeroamDefaultVehicle
                     .Where(v => v.VehicleType == vehType)
@@ -59,25 +59,26 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (vehHash == default)
                 return;
 
-            var pos = player.Player!.Position;
+            var pos = player.ModPlayer!.Position;
 
-            NAPI.Task.Run(() => {
-                if (player.FreeroamVehicle != null)
+            ModAPI.Thread.RunInMainThread(() =>
+            {
+                if (player.FreeroamVehicle is { })
                 {
-                    if (player.Player.IsInVehicle)
-                        player.Player.WarpOutOfVehicle();
+                    if (player.ModPlayer.IsInVehicle)
+                        player.ModPlayer.WarpOutOfVehicle();
                     player.FreeroamVehicle.Delete();
                     player.FreeroamVehicle = null;
                 }
 
-                Vehicle? vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Player.Heading, 0, 0, player.Player.Name, dimension: Dimension);
+                IVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation, 0, 0, player.ModPlayer.Name, dimension: Dimension);
                 if (vehicle is null)
                     return;
                 player.FreeroamVehicle = vehicle;
 
-                Workaround.SetEntityInvincible(player.Player, vehicle, true);
+                player.SetEntityInvincible(vehicle, true);
 
-                player.Player.SetIntoVehicle(vehicle, -1);
+                player.ModPlayer.SetIntoVehicle(vehicle, 0);
             });
         }
     }

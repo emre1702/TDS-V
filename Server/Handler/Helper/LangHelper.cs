@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Language;
+using TDS_Server.Data.Languages;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums;
 

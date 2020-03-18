@@ -24,5 +24,7 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        public int TeamIndex => Team?.Entity.Index ?? 0;
+
     }
 }

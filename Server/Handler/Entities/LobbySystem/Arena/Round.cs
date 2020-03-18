@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
@@ -8,11 +9,12 @@ using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.GameModes.Bomb;
-using TDS_Server.Handler.Entities.GameModes.Gangwar;
 using TDS_Server.Handler.Entities.GameModes.Normal;
 using TDS_Server.Handler.Entities.GameModes.Sniper;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Default;
 using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -48,22 +50,22 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             [RoundStatus.RoundEndRanking] = RoundStatus.MapClear,
             [RoundStatus.None] = RoundStatus.NewMapChoose
         };
-        private readonly Dictionary<MapType, Func<Arena, MapDto, GameMode>> _gameModeByMapType
-            = new Dictionary<MapType, Func<Arena, MapDto, GameMode>>
+        private readonly Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>> _gameModeByMapType
+            = new Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>>
             {
-                [MapType.Normal] = (lobby, map) => new Normal(lobby, map),
-                [MapType.Bomb] = (lobby, map) => new Bomb(lobby, map),
-                [MapType.Sniper] = (lobby, map) => new Sniper(lobby, map),
-                [MapType.Gangwar] = (lobby, map) => new Gangwar(lobby, map)
+                [MapType.Normal] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Normal>(serviceProvider, lobby, map),
+                [MapType.Bomb] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Bomb>(serviceProvider, lobby, map),
+                [MapType.Sniper] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Sniper>(serviceProvider, lobby, map),
+                [MapType.Gangwar] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Gangwar>(serviceProvider, lobby, map)
             };
 
         public RoundStatus CurrentRoundStatus = RoundStatus.None;
-        public TDSPlayer? CurrentRoundEndBecauseOfPlayer;
+        public ITDSPlayer? CurrentRoundEndBecauseOfPlayer;
         public bool RemoveAfterOneRound { get; set; }
         public RoundEndReason CurrentRoundEndReason { get; private set; }
         public Dictionary<ILanguage, string>? RoundEndReasonText { get; private set; }
 
-        private Team? _currentRoundEndWinnerTeam;
+        private ITeam? _currentRoundEndWinnerTeam;
 
         private List<RoundPlayerRankingStat>? _ranking;
 
@@ -90,7 +92,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
                 catch (Exception ex)
                 {
-                    _loggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
+                    LoggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     if (!IsOfficial)
                         ModAPI.Thread.RunInMainThread(Remove);
@@ -108,7 +110,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             DeleteMapBlips();
             ClearTeamPlayersAmounts();
-            SendAllPlayerEvent(ToClientEvent.MapClear, null);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.MapClear);
 
             CurrentGameMode?.StartMapClear();
         }
@@ -121,13 +123,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
             if (nextMap.Info.IsNewMap)
                 SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
-            CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap);
+            CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap, _serviceProvider);
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            SendAllPlayerEvent(ToClientEvent.MapChange, null, nextMap.ClientSyncedDataJson);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
             RoundEndReasonText = null;
         }
@@ -161,9 +163,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(character.Player, ToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
-                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != ERoundEndReason.Death)
-                        character.Player!.Kill();
+                    character.SendEvent(ToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
+                        character.ModPlayer?.Kill();
                     character.Lifes = 0;
                 });
             }
@@ -193,9 +195,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 await dbContext.SaveChangesAsync();
             });
 
-            ServerTotalStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
-            ServerDailyStatsManager.AddArenaRound(CurrentRoundEndReason, IsOfficial);
-
+            _serverStatsHandler.AddArenaRound(CurrentRoundEndReason, IsOfficial);
         }
 
         private void ShowRoundRanking()
@@ -205,36 +205,35 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             try
             {
-                Player winner = _ranking.First().Player.Player!;
-                Player? second = _ranking.ElementAtOrDefault(1)?.Player.Player;
-                Player? third = _ranking.ElementAtOrDefault(2)?.Player.Player;
+                ITDSPlayer winner = _ranking.First().Player;
+                ITDSPlayer? second = _ranking.ElementAtOrDefault(1)?.Player;
+                ITDSPlayer? third = _ranking.ElementAtOrDefault(2)?.Player;
 
                 //Vector3 rot = new Vector3(0, 0, 345);
-
-                NAPI.Player.SpawnPlayer(winner, new Vector3(-425.48, 1123.55, 325.85), 345);
-                Workaround.FreezePlayer(winner, true);
-                winner.Dimension = Dimension;
+                winner.Spawn(new Position3D(-425.48, 1123.55, 325.85), 345);
+                winner.ModPlayer!.Freeze(true);
+                winner.ModPlayer.Dimension = Dimension;
 
                 if (second is { })
                 {
-                    NAPI.Player.SpawnPlayer(second, new Vector3(-427.03, 1123.21, 325.85), 345);
-                    Workaround.FreezePlayer(second, true);
-                    second.Dimension = Dimension;
+                    second.Spawn(new Position3D(-427.03, 1123.21, 325.85), 345);
+                    second.ModPlayer!.Freeze(true);
+                    second.ModPlayer.Dimension = Dimension;
                 }
 
                 if (third is { })
                 {
-                    NAPI.Player.SpawnPlayer(third, new Vector3(-424.33, 1122.5, 325.85), 345);
-                    Workaround.FreezePlayer(third, true);
-                    third.Dimension = Dimension;
+                    third.Spawn(new Position3D(-424.33, 1122.5, 325.85), 345);
+                    third.ModPlayer!.Freeze(true);
+                    third.ModPlayer.Dimension = Dimension;
                 }
 
                 string json = Serializer.ToBrowser(_ranking);
-                SendAllPlayerEvent(ToClientEvent.StartRankingShowAfterRound, null, json, winner.Handle.Value, second?.Handle.Value ?? 0, third?.Handle.Value ?? 0);
+                ModAPI.Sync.SendEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
+                LoggingHandler.LogError("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
             }
         }
 
@@ -244,13 +243,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int teamsWithPlayers = GetTeamAmount(true);
             // if there is only 1 team playing, it should continue to play
             // if there are 2+ teams playing and there is only 1 team alive, end the round
-            if ((teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2) && CurrentGameMode?.CanEndRound(ERoundEndReason.NewPlayer) != false)
+            if ((teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2) && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
             {
-                SetRoundStatus(RoundStatus.RoundEnd, ERoundEndReason.Death);
+                SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Death);
             }
         }
 
-        private Team? GetRoundWinnerTeam()
+        private ITeam? GetRoundWinnerTeam()
         {
             if (CurrentGameMode?.WinnerTeam != null)
                 return CurrentGameMode.WinnerTeam;
@@ -262,39 +261,39 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             };
         }
 
-        private Dictionary<ILanguage, string>? GetRoundEndReasonText(Team? winnerTeam)
+        private Dictionary<ILanguage, string>? GetRoundEndReasonText(ITeam? winnerTeam)
         {
             return CurrentRoundEndReason switch
             {
-                ERoundEndReason.Death => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.Death => LangHelper.GetLangDictionary(lang =>
                     {
-                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_DEATH_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_DEATH_ALL_INFO;
+                        return winnerTeam != null ? string.Format(lang.ROUND_END_DEATH_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_DEATH_ALL_INFO;
                     }),
-                ERoundEndReason.Time => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.Time => LangHelper.GetLangDictionary(lang =>
                     {
-                        return winnerTeam != null ? Utils.GetReplaced(lang.ROUND_END_TIME_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_TIME_TIE_INFO;
+                        return winnerTeam != null ? string.Format(lang.ROUND_END_TIME_INFO, winnerTeam.Entity.Name) : lang.ROUND_END_TIME_TIE_INFO;
                     }),
-                ERoundEndReason.BombExploded => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.BombExploded => LangHelper.GetLangDictionary(lang =>
                    {
-                       return Utils.GetReplaced(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Entity.Name ?? "-");
+                       return string.Format(lang.ROUND_END_BOMB_EXPLODED_INFO, winnerTeam?.Entity.Name ?? "-");
                    }),
-                ERoundEndReason.BombDefused => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.BombDefused => LangHelper.GetLangDictionary(lang =>
                    {
-                       return Utils.GetReplaced(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Entity.Name ?? "-");
+                       return string.Format(lang.ROUND_END_BOMB_DEFUSED_INFO, winnerTeam?.Entity.Name ?? "-");
                    }),
-                ERoundEndReason.Command => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.Command => LangHelper.GetLangDictionary(lang =>
                    {
-                       return Utils.GetReplaced(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.DisplayName ?? "-");
+                       return string.Format(lang.ROUND_END_COMMAND_INFO, CurrentRoundEndBecauseOfPlayer?.DisplayName ?? "-");
                    }),
-                ERoundEndReason.NewPlayer => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.NewPlayer => LangHelper.GetLangDictionary(lang =>
                    {
                        return lang.ROUND_END_NEW_PLAYER_INFO;
                    }),
-                ERoundEndReason.TargetEmpty => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.TargetEmpty => LangHelper.GetLangDictionary(lang =>
                    {
                        return lang.ROUND_END_TARGET_EMPTY_INFO;
                    }),
-                ERoundEndReason.Error => LangUtils.GetLangDictionary(lang =>
+                RoundEndReason.Error => LangHelper.GetLangDictionary(lang =>
                    {
                        return lang.ERROR_INFO;
                    }),

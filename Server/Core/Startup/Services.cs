@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TDS_Server.Core.Manager.EventManager;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Core.Player.Join;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database;
@@ -10,6 +9,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Core.Startup

@@ -55,7 +55,7 @@ namespace TDS_Server.Core.Manager.Utility
 
             if (amountnewentries > 0)
             {
-                player.SendMessage(Utils.GetReplaced(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountentries.ToString(), amountnewentries.ToString()));
+                player.SendMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountentries.ToString(), amountnewentries.ToString()));
             }
         }
     }

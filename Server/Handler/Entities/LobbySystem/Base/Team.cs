@@ -12,7 +12,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public List<Team> Teams { get; set; }
+        public List<ITeam> Teams { get; set; }
 
         private static readonly Dictionary<TeamOrder, Func<ILanguage, string>> teamOrderDict = new Dictionary<TeamOrder, Func<ILanguage, string>>
         {
@@ -27,7 +27,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return this.TeamPlayers.Values.Count(list => list.Count > 0);
         }*/
 
-        protected Team GetTeamWithFewestPlayer()
+        protected ITeam GetTeamWithFewestPlayer()
         {
             return Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
         }
@@ -75,15 +75,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public static void SendTeamOrder(TDSPlayer character, TeamOrder teamOrder)
+        public void SendTeamOrder(TDSPlayer character, TeamOrder teamOrder)
         {
             if (!teamOrderDict.ContainsKey(teamOrder))
                 return;
             if (character.Team is null)
                 return;
 
-            Team team = character.Team;
-            Dictionary<ILanguage, string> texts = LangUtils.GetLangDictionary(teamOrderDict[teamOrder]);
+            ITeam team = character.Team;
+            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(teamOrderDict[teamOrder]);
 
             string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !$150|0|0$";
             team.FuncIterate((target, _) =>

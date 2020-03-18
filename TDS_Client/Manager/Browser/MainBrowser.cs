@@ -86,11 +86,11 @@ namespace TDS_Client.Manager.Browser
             Execute($"showRoundEndReason(`{reason}`, {mapId});");
         }
 
-        public static void HideRoundEndReason()
+        public static void HidRoundEndReason()
         {
             if (!_roundEndReasonShowing)
                 return;
-            Execute("hideRoundEndReason();");
+            Execute("hidRoundEndReason();");
             _roundEndReasonShowing = false;
         }
 

@@ -1,12 +1,4 @@
-﻿using GTANetworkAPI;
-using System.Collections.Generic;
-using TDS_Common.Default;
-using TDS_Common.Dto;
-using TDS_Shared.Data.Enums;
-using TDS_Server.Enums;
-using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.EventManager;
+﻿using System.Collections.Generic;
 
 namespace TDS_Server.Core.Manager.Utility
 {
@@ -46,7 +38,7 @@ namespace TDS_Server.Core.Manager.Utility
                 if (!_frozenEntityPerLobby.ContainsKey(lobby))
                     return;
                 _frozenEntityPerLobby[lobby].Remove(entity);
-            }            
+            }
         }
 
         public static void SetPlayerTeam(Player player, int team)
