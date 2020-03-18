@@ -2,16 +2,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
 
 namespace TDS_Server.Handler
 {
     public class BansHandler : DatabaseEntityWrapper
     {
-        public BansHandler(TDSDbContext dbContext, LoggingHandler logger) : base(dbContext, logger) { }
+        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger) : base(dbContext, logger) { }
 
         public async Task<PlayerBans?> GetBan(int lobbyId,
             int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
@@ -19,13 +19,13 @@ namespace TDS_Server.Handler
         {
             PlayerBans? ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
             {
-                ({ }, null, null, null, null, _) 
+                ({ }, null, null, null, null, _)
                     => await ExecuteForDBAsync(async (dbContext) =>
                         {
                             return await dbContext.PlayerBans.FindAsync(playerId, lobbyId);
                         }),
 
-                (_, _, _, _, _, true) 
+                (_, _, _, _, _, true)
                     => await ExecuteForDBAsync(async (dbContext) =>
                     {
                         return await dbContext.PlayerBans

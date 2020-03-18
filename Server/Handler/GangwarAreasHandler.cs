@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities.Utility;
@@ -18,10 +19,10 @@ namespace TDS_Server.Core.Manager.Utility
 
         private readonly TDSDbContext _dbContext;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly IServiceProvider _serviceProvider;
 
-        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler, LoggingHandler loggingHandler, IServiceProvider serviceProvider)
+        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
             _dbContext = dbContext;
             _mapsLoadingHandler = mapsLoadingHandler;

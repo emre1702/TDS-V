@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Player;
@@ -8,9 +9,10 @@ namespace TDS_Server.Handler.Events
     public class EventsHandler
     {
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
-        public EventsHandler(TDSPlayerHandler tdsPlayerHandler)
-            => (_tdsPlayerHandler) = (tdsPlayerHandler);
+        public EventsHandler(TDSPlayerHandler tdsPlayerHandler, ILoggingHandler loggingHandler)
+            => (_tdsPlayerHandler, _loggingHandler) = (tdsPlayerHandler, loggingHandler);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
@@ -27,13 +29,19 @@ namespace TDS_Server.Handler.Events
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
-        public delegate void CounterDelegate(int counter);
-        public event CounterDelegate? OnSecond;
-        public event CounterDelegate? OnMinute;
-        public event CounterDelegate? OnHour;
+        public delegate void CounterDelegate(ulong counter);
+        public event CounterDelegate? Second;
+        public event CounterDelegate? Minute;
+        public event CounterDelegate? Hour;
 
         public delegate void EmptyDelegate();
         public event EmptyDelegate? MapsLoaded;
+        public event EmptyDelegate? Update;
+
+        public void OnUpdate()
+        {
+            Update?.Invoke();
+        }
 
         public void OnPlayerConnected(IPlayer modPlayer)
         {
@@ -70,6 +78,45 @@ namespace TDS_Server.Handler.Events
         internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
+        }
+
+        private ulong _hourCounter;
+        internal void OnHour()
+        {
+            try
+            {
+                Hour?.Invoke(++_hourCounter);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
+        }
+
+        private ulong _minuteCounter;
+        internal void OnMinute()
+        {
+            try
+            {
+                Minute?.Invoke(++_minuteCounter);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
+        }
+
+        private ulong _secondCounter;
+        internal void OnSecond()
+        {
+            try
+            {
+                Second?.Invoke(++_secondCounter);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
     }
 }

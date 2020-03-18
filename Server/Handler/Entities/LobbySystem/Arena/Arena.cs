@@ -1,6 +1,7 @@
 ﻿using System;
 using TDS_Server.Core.Manager.Stats;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
@@ -23,7 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private readonly IServiceProvider _serviceProvider;
         private readonly ServerStatsHandler _serverStatsHandler;
 
-        public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+        public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
             IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler) 
             : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler)
@@ -48,7 +49,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, 
+        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, 
             LobbiesHandler lobbiesHandler, SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, 
             EventsHandler eventsHandler, IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler) 
             : this(entity, true, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, mapsLoadingHandler, eventsHandler, 

@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Maps
     {
         private readonly Serializer _serializer;
 
-        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, LoggingHandler loggingHandler) : base(dbContext, loggingHandler)
+        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler) : base(dbContext, loggingHandler)
         {
             _serializer = serializer;
 

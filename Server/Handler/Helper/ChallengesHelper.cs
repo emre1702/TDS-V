@@ -27,8 +27,8 @@ namespace TDS_Server.Handler.Helper
 
         public ChallengesHelper(
             SettingsHandler settingsHandler, 
-            EventsHandler eventsHandler, 
-            LoggingHandler loggingHandler, 
+            EventsHandler eventsHandler,
+            ILoggingHandler loggingHandler, 
             TDSDbContext dbContext,
             Serializer serializer,
             IModAPI modAPI) : base(dbContext, loggingHandler)

@@ -20,4 +20,8 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\TDS_Server.Data.csproj" />
+  </ItemGroup>
+
 </Project>

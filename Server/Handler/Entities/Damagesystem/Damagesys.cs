@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Core.Damagesystem
@@ -18,9 +18,9 @@ namespace TDS_Server.Core.Damagesystem
 #nullable restore warnings
 
         private readonly IModAPI _modAPI;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
-        public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards, IModAPI modAPI, LoggingHandler loggingHandler)
+        public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards, IModAPI modAPI, ILoggingHandler loggingHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;

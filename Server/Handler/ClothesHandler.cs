@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.ClothesMeta;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
@@ -24,10 +25,10 @@ namespace TDS_Server.Handler
         private List<PropertyInfo>? _propIndexProperties;
         private List<PropertyInfo>? _propTextureProperties;
 
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly Serializer _serializer;
 
-        public ClothesHandler(LoggingHandler loggingHandler, Serializer serializer, EventsHandler eventsHandler)
+        public ClothesHandler(ILoggingHandler loggingHandler, Serializer serializer, EventsHandler eventsHandler)
         {
             _loggingHandler = loggingHandler;
             _serializer = serializer;

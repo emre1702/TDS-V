@@ -1,10 +1,8 @@
-﻿namespace BonusBotConnector.Client.Protos
-{
-syntax = "proto3";
+﻿syntax = "proto3";
 
 import "Protos/Shared.proto";
 
-option csharp_namespace = "BonusBotConnector_Client";
+option csharp_namespace = "BonusBotConnector.Client";
 
 service MessageToUser {
   rpc Send (MessageToUserRequest) returns (MessageToUserRequestReply);
@@ -33,5 +31,4 @@ message EmbedToUserRequest {
 
 message MessageToUserRequestReply {
     string errorMessage = 1;
-}
 }

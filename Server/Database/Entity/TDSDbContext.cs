@@ -24,14 +24,13 @@ namespace TDS_Server.Database.Entity
     {
         public static bool IsConfigured { get; private set; }
 
-        public TDSDbContext()
-        {
-        }
-
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
             : base(options)
         {
-           
+            Database.Migrate();
+            var connection = (NpgsqlConnection)Database.GetDbConnection();
+            connection.Open();
+            connection.ReloadTypes();
         }
 
         static TDSDbContext()

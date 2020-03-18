@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
@@ -31,7 +32,7 @@ namespace TDS_Server.Handler.Maps
         private readonly SettingsHandler _settingsHandler;
 
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, SettingsHandler settingsHandler,
-            TDSDbContext dbContext, LoggingHandler loggingHandler)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
 

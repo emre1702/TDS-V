@@ -6,7 +6,7 @@ namespace BonusBotConnector.Client
 {
     public class Helper
     {
-        public static List<EmbedField> GetBanEmbedFields(PlayerBans ban)
+        public List<EmbedField> GetBanEmbedFields(PlayerBans ban)
         {
            var list = new List<EmbedField>
            {

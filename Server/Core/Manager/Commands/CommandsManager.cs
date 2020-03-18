@@ -19,6 +19,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
 using DB = TDS_Server.Database.Entity.Command;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Core.Manager.Commands
 {
@@ -138,14 +139,6 @@ namespace TDS_Server.Core.Manager.Commands
 
 
         [RemoteEvent(DToServerEvent.CommandUsed)]
-        public static void UseCommand(Player client, string msg)   // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
-        {
-            TDSPlayer player = client.GetChar();
-            if (!player.LoggedIn)
-                return;
-            UseCommand(player, msg);
-        }
-
         public static async void UseCommand(TDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         { 
             

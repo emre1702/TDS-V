@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
@@ -19,7 +20,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private readonly GangsHandler _gangsHandler;
         private readonly IServiceProvider _serviceProvider;
 
-        public GangLobby(Lobbies Entity, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler, 
+        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler, 
             SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler, 
             GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider) 
             : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler)

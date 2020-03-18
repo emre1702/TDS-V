@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BonusBotConnector.Client;
+using BonusBotConnector_Server;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TDS_Server.Core.Manager.EventManager;
 using TDS_Server.Core.Player.Join;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
+using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
@@ -35,9 +39,12 @@ namespace TDS_Server.Core.Startup
                 .AddSingleton<MappingHandler>()
                 .AddSingleton<BansHandler>()
                 .AddSingleton<LangHelper>()
-                .AddSingleton<LoggingHandler>()
+                .AddSingleton<ILoggingHandler, LoggingHandler>()
                 .AddSingleton<Serializer>()
                 .AddSingleton<DataSyncHandler>()
+                .AddSingleton<BonusBotConnectorClient>()
+                .AddSingleton<BonusBotConnectorServer>()
+                // .AddTransient<ITDSPlayer, TDSPlayer>()
 
                 .AddDbContext<TDSDbContext>(options =>
                     options

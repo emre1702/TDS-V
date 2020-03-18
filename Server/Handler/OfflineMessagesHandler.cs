@@ -14,7 +14,7 @@ namespace TDS_Server.Core.Manager.Utility
 {
     internal class OfflineMessagesHandler : DatabaseEntityWrapper
     {
-        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler) : base(dbContext, loggingHandler)
+        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler) : base(dbContext, loggingHandler)
         {
             eventsHandler.PlayerLoggedIn += CheckOfflineMessages;
         }

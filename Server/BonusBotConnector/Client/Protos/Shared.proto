@@ -1,11 +1,8 @@
-﻿namespace BonusBotConnector.Client.Protos
-{
-syntax = "proto3";
+﻿syntax = "proto3";
 
-option csharp_namespace = "BonusBotConnector_Client";
+option csharp_namespace = "BonusBotConnector.Client";
 
 message EmbedField {
     string name = 1;
     string value = 2;
-}
 }

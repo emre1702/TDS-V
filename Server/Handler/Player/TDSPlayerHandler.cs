@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Manager.Utility;
 using static System.Collections.Generic.Dictionary<ulong, TDS_Server.Data.Interfaces.ITDSPlayer>;
 
@@ -19,20 +20,22 @@ namespace TDS_Server.Handler.Player
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
 
         private readonly Dictionary<ulong, ITDSPlayer> _tdsPlayerCache = new Dictionary<ulong, ITDSPlayer>();
-        private readonly Queue<(ulong, DateTime)> _removeFromCacheAtTimeQueue = new Queue<(ulong, DateTime)>();
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILoggingHandler _loggingHandler;
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper, 
             IServiceProvider serviceProvider, 
-            EventsHandler eventsHandler)
+            EventsHandler eventsHandler,
+            ILoggingHandler loggingHandler)
         {
             _nameCheckHelper = nameCheckHelper;
             _serviceProvider = serviceProvider;
+            _loggingHandler = loggingHandler;
 
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOutAfter;
-            eventsHandler.OnMinute += RemoveOldCaches;
+            eventsHandler.Minute += UpdatePlayers;
         }
 
         public ITDSPlayer GetTDSPlayer(IPlayer modPlayer)
@@ -58,21 +61,6 @@ namespace TDS_Server.Handler.Player
             return _tdsPlayerCache[playerId];
         }
 
-        private void RemoveOldCaches(int _)
-        {
-            if (_removeFromCacheAtTimeQueue.Count == 0)
-                return;
-
-            var dateNow = DateTime.Now;
-            foreach (var entry in _removeFromCacheAtTimeQueue)
-            {
-                if (dateNow >= entry.Item2)
-                    break;
-                _tdsPlayerCache.Remove(entry.Item1);
-            }
-            _removeFromCacheAtTimeQueue.Clear();
-        }
-
         internal ITDSPlayer? FindTDSPlayer(string name)
         {
             foreach (var player in _tdsPlayerCache.Values)
@@ -92,7 +80,60 @@ namespace TDS_Server.Handler.Player
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            _removeFromCacheAtTimeQueue.Enqueue((player.SocialClubId, DateTime.Now.AddMinutes(Constants.RemoveTDSPlayerMinutesAfterLoggedOut)));
+            _tdsPlayerCache.Remove(player.SocialClubId);
+        }
+
+        private void UpdatePlayers(ulong _)
+        {
+            foreach (var player in LoggedInPlayers)
+            {
+                try
+                {
+                    ++player.PlayMinutes;
+                    ReduceMuteTime(player);
+                    ReduceVoiceMuteTime(player);
+                    player.CheckReduceMapBoughtCounter();
+
+                    player.CheckSaveData();
+                }
+                catch (Exception ex)
+                {
+                    _loggingHandler.LogError(ex, player);
+                }
+            }
+        }
+
+        private void ReduceMuteTime(ITDSPlayer player)
+        {
+            if (!player.MuteTime.HasValue || player.MuteTime == 0)
+                return;
+
+            if (--player.MuteTime != 0)
+                return;
+
+            player.MuteTime = null;
+            player.SendNotification(player.Language.MUTE_EXPIRED);
+        }
+
+        private void ReduceVoiceMuteTime(ITDSPlayer player)
+        {
+            if (!player.VoiceMuteTime.HasValue || player.VoiceMuteTime == 0)
+                return;
+
+            if (--player.VoiceMuteTime != 0)
+                return;
+
+            player.VoiceMuteTime = null;
+            player.SendNotification(player.Language.VOICE_MUTE_EXPIRED);
+
+            if (player.Team is null || player.Team.IsSpectator)
+                return;
+
+            foreach (var target in player.Team.Players)
+            {
+                if (!target.HasRelationTo(player, PlayerRelation.Block))
+                    player.SetVoiceTo(target, true);
+            }
         }
     }
 }

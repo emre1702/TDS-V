@@ -1,6 +1,6 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
-option csharp_namespace = "BonusBotConnector_Server";
+option csharp_namespace = "BonusBotConnector.Server";
 
 service BBCommand {
   rpc UsedCommand (UsedCommandRequest) returns (UsedCommandReply);

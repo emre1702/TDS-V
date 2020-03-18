@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
@@ -15,7 +16,7 @@ namespace TDS_Server.Handler.Entities.GameModes
         private readonly GangwarArea? _gangwarArea;
 
         public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, 
-            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler, LangHelper langHelper) 
+            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper) 
             : base(lobby, map, modAPI, serializer, settingsHandler, langHelper)
         {
             var gangwarArea = gangwarAreasHandler.GetById(map.BrowserSyncedData.Id);

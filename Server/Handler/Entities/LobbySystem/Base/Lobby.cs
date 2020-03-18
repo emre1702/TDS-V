@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             bool isGangActionLobby,
 
             TDSDbContext dbContext,
-            LoggingHandler loggingHandler,
+            ILoggingHandler loggingHandler,
             Serializer serializer,
             IModAPI modAPI,
             LobbiesHandler lobbiesHandler,

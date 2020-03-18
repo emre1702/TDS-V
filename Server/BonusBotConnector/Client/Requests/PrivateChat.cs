@@ -1,26 +1,32 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Database.Entity.Bonusbot;
 using TDS_Server.Database.Entity.Player;
-using static BonusBotConnector_Client.Main;
-using static BonusBotConnector_Client.MessageToUser;
+using static BonusBotConnector.Client.BonusBotConnectorClient;
+using static BonusBotConnector.Client.MessageToUser;
 
 namespace BonusBotConnector.Client.Requests
 {
-    public static class PrivateChat
+    public class PrivateChat
     {
-        private static MessageToUserClient? _client;
-        private static BonusBotErrorLoggerDelegate? _errorLogger;
+        private readonly MessageToUserClient _client;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly BonusbotSettings _settings;
+        private readonly Helper _helper;
 
-        internal static void Init(GrpcChannel channel, BonusBotErrorLoggerDelegate errorLogger)
+        internal PrivateChat(GrpcChannel channel, ILoggingHandler loggingHandler, Helper helper, BonusbotSettings settings)
         {
             _client = new MessageToUserClient(channel);
-            _errorLogger = errorLogger;
+            _loggingHandler = loggingHandler;
+            _settings = settings;
+            _helper = helper;
         }
 
-        public static void SendBanMessage(ulong userId, PlayerBans ban, List<EmbedField> fields)
+        public void SendBanMessage(ulong userId, PlayerBans ban, List<EmbedField> fields)
         {
-            if (Settings!.SendPrivateMessageOnBan != true)
+            if (_settings.SendPrivateMessageOnBan != true)
                 return;
             if (userId == 0)
                 return;
@@ -41,93 +47,75 @@ namespace BonusBotConnector.Client.Requests
                 embed.Fields.AddRange(fields);
 
                 SendRequest(embed);
-                
+
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, true);
+                _loggingHandler.LogErrorFromBonusBot(ex);
             }
         }
 
-        public static void SendOfflineMessage(string author, string text, ulong userId)
+        public void SendOfflineMessage(string author, string text, ulong userId)
         {
-            if (Settings!.SendPrivateMessageOnOfflineMessage != true)
+            if (_settings.SendPrivateMessageOnOfflineMessage != true)
                 return;
             SendRequest($"You got an offline message from '{author}':{Environment.NewLine}{text}", userId);
         }
 
-        public static void SendMessage(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler)
+        public void SendMessage(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler)
         {
             SendRequest(text, userId, replyHandler);
         }
 
-        private static async void SendRequest(string text, ulong userId, bool logToBonusBotOnError = true)
+        private async void SendRequest(string text, ulong userId, bool logToBonusBotOnError = true)
         {
-            if (_client is null)
-                return;
-            if (Settings is null)
-                return;
-            if (Settings.GuildId is null)
-                return;
             if (userId == 0)
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = Settings.GuildId.Value, UserId = userId, Text = text });
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text });
                 HandleResult(result);
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
             }
         }
 
-        private static async void SendRequest(EmbedToUserRequest request, bool logToBonusBotOnError = true)
+        private async void SendRequest(EmbedToUserRequest request, bool logToBonusBotOnError = true)
         {
-            if (_client is null)
-                return;
-            if (Settings is null)
-                return;
-            if (Settings.GuildId is null)
-                return;
             try
             {
-                request.GuildId = Settings.GuildId.Value;
+                request.GuildId = _settings.GuildId!.Value;
                 var result = await _client.SendEmbedAsync(request);
                 HandleResult(result);
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
             }
         }
 
-        private static async void SendRequest(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler, bool logToBonusBotOnError = true)
+        private async void SendRequest(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler, bool logToBonusBotOnError = true)
         {
-            if (_client is null)
-                return;
-            if (Settings is null)
-                return;
-            if (Settings.GuildId is null)
-                return;
             if (userId == 0)
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = Settings.GuildId.Value, UserId = userId, Text = text });
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text });
                 replyHandler(result);
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
             }
         }
 
-        private static void HandleResult(MessageToUserRequestReply result)
+        private void HandleResult(MessageToUserRequestReply result)
         {
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return;
-            _errorLogger?.Invoke(result.ErrorMessage, Environment.StackTrace, true);
+            _loggingHandler.LogErrorFromBonusBot(result.ErrorMessage, Environment.StackTrace, true);
         }
     }
 }

@@ -45,13 +45,13 @@ namespace TDS_Server.Handler.Entities.Utility
         private readonly SettingsHandler _settingsHandler;
         private readonly GangsHandler _gangsHandler;
 
-        public GangwarArea(GangwarArea copyFrom, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler)
+        public GangwarArea(GangwarArea copyFrom, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = null;
         }
 
-        public GangwarArea(MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler)
+        public GangwarArea(MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             Map = map;
@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _gangsHandler = gangsHandler;
         }
 
-        public GangwarArea(GangwarAreas entity, MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler)
+        public GangwarArea(GangwarAreas entity, MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = entity;

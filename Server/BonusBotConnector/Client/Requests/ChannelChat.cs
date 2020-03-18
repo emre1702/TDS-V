@@ -1,25 +1,31 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Database.Entity.Bonusbot;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Userpanel;
-using static BonusBotConnector_Client.Main;
-using static BonusBotConnector_Client.MessageToChannel;
+using static BonusBotConnector.Client.BonusBotConnectorClient;
+using static BonusBotConnector.Client.MessageToChannel;
 
 namespace BonusBotConnector.Client.Requests
 {
-    public static class ChannelChat
+    public class ChannelChat
     {
-        private static MessageToChannelClient? _client;
-        private static BonusBotErrorLoggerDelegate? _errorLogger;
+        private readonly MessageToChannelClient _client;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly BonusbotSettings _settings;
+        private readonly Helper _helper;
 
-        internal static void Init(GrpcChannel channel, BonusBotErrorLoggerDelegate errorLogger)
+        public ChannelChat(GrpcChannel channel, ILoggingHandler loggingHandler, Helper helper, BonusbotSettings settings)
         {
             _client = new MessageToChannelClient(channel);
-            _errorLogger = errorLogger;
+            _loggingHandler = loggingHandler;
+            _settings = settings;
+            _helper = helper;
         }
 
-        public static void SendAdminApplication(Applications application)
+        public void SendAdminApplication(Applications application)
         {
             var request = new EmbedToChannelRequest
             {
@@ -31,27 +37,27 @@ namespace BonusBotConnector.Client.Requests
             };
             request.Fields.Add(new EmbedField { Name = "Play hours:", Value = (application.Player.PlayerStats.PlayTime / 60f).ToString() });
             request.Fields.Add(new EmbedField { Name = "Created:", Value = application.CreateTime.ToString() });
-            SendRequest(request, Settings?.AdminApplicationsChannelId);
+            SendRequest(request, _settings.AdminApplicationsChannelId);
         }
 
-        public static void SendSupportRequest(string info)
+        public void SendSupportRequest(string info)
         {
-            SendRequest(info, Settings?.SupportRequestsChannelId);
+            SendRequest(info, _settings.SupportRequestsChannelId);
         }
 
-        public static void SendError(string msg)
+        public void SendError(string msg)
         {
-            SendRequest(msg, Settings?.ErrorLogsChannelId, false);
+            SendRequest(msg, _settings.ErrorLogsChannelId, false);
         }
 
-        public static void SendActionInfo(string info)
+        public void SendActionInfo(string info)
         {
-            SendRequest(info, Settings?.ActionsInfoChannelId);
+            SendRequest(info, _settings.ActionsInfoChannelId);
         }
 
-        public static void SendBanInfo(PlayerBans ban, List<EmbedField> fields)
+        public void SendBanInfo(PlayerBans ban, List<EmbedField> fields)
         {
-            if (Settings?.BansInfoChannelId is null)
+            if (_settings.BansInfoChannelId is null)
                 return;
 
             try
@@ -63,65 +69,55 @@ namespace BonusBotConnector.Client.Requests
                     ColorR = 130,
                     ColorG = 0,
                     ColorB = 0
-                }; 
-                
+                };
+
                 embed.Fields.AddRange(fields);
-                SendRequest(embed, Settings.BansInfoChannelId);
+                SendRequest(embed, _settings.BansInfoChannelId);
 
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, true);
+                _loggingHandler.LogErrorFromBonusBot(ex, true);
             }
         }
 
-        private static async void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true) 
+        private async void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true)
         {
-            if (_client is null)
-                return;
-            if (Settings?.GuildId is null)
-                return;
             if (channelId is null)
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToChannelRequest { GuildId = Settings.GuildId.Value, ChannelId = channelId.Value, Text = text });
+                var result = await _client.SendAsync(new MessageToChannelRequest { GuildId = _settings.GuildId!.Value, ChannelId = channelId.Value, Text = text });
                 HandleResult(result);
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
             }
         }
 
-        private static async void SendRequest(EmbedToChannelRequest request, ulong? channelId, bool logToBonusBotOnError = true)
+        private async void SendRequest(EmbedToChannelRequest request, ulong? channelId, bool logToBonusBotOnError = true)
         {
-            if (_client is null)
-                return;
-            if (Settings is null)
-                return;
-            if (Settings.GuildId is null)
-                return;
             if (channelId is null)
                 return;
             try
             {
-                request.GuildId = Settings.GuildId.Value;
+                request.GuildId = _settings.GuildId!.Value;
                 request.ChannelId = channelId.Value;
                 var result = await _client.SendEmbedAsync(request);
                 HandleResult(result);
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, logToBonusBotOnError);
+                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
             }
         }
 
-        private static void HandleResult(MessageToChannelRequestReply result)
+        private void HandleResult(MessageToChannelRequestReply result)
         {
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return;
-            _errorLogger?.Invoke(result.ErrorMessage, Environment.StackTrace, true);
+            _loggingHandler.LogErrorFromBonusBot(result.ErrorMessage, Environment.StackTrace,  true);
         }
     }
 }

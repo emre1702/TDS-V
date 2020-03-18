@@ -55,7 +55,7 @@ namespace TDS_Server.Handler.Entities.Player
         public TDSPlayer(
             IPlayer? modPlayer,
             TDSDbContext dbContext,
-            LoggingHandler loggingHandler,
+            ILoggingHandler loggingHandler,
             AdminsHandler adminsHandler,
             ChallengesHelper challengesHandler,
             LangHelper langHelper,

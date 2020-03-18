@@ -15,12 +15,13 @@ namespace TDS_Server.Core.Manager.Stats
 {
     public class ServerStatsHandler : DatabaseEntityWrapper
     {
-        public ServerDailyStats Stats { get; private set; }
+        public ServerDailyStats DailyStats { get; private set; }
+        public ServerTotalStats TotalStats { get; private set; }
 
         private readonly EventsHandler _eventsHandler;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
 
-        public ServerStatsHandler(EventsHandler eventsHandler, TDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, LoggingHandler loggingHandler) 
+        public ServerStatsHandler(EventsHandler eventsHandler, TDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler) 
             : base(dbContext, loggingHandler)
         {
             _eventsHandler = eventsHandler;
@@ -31,35 +32,35 @@ namespace TDS_Server.Core.Manager.Stats
             _eventsHandler.PlayerRegistered += PlayerRegistered;
 
             // Only to remove nullable warning
-            Stats = new ServerDailyStats();
+            DailyStats = new ServerDailyStats();
+            TotalStats = new ServerTotalStats();
 
             ExecuteForDB(dbContext =>
             {
-                Stats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
-                if (Stats is null)
+                DailyStats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
+                if (DailyStats is null)
                 {
-                    Stats = new ServerDailyStats { Date = DateTime.Today };
-                    dbContext.ServerDailyStats.Add(Stats);
+                    DailyStats = new ServerDailyStats { Date = DateTime.Today };
+                    dbContext.ServerDailyStats.Add(DailyStats);
                     dbContext.SaveChanges();
                 }
+
+                TotalStats = dbContext.ServerTotalStats.First();
             }).Wait();
+
+            _eventsHandler.Minute += Save;
         }
 
-        public static void Init()
+        private async ValueTask CheckNewDay()
         {
-
-        }
-
-        private async Task CheckNewDay()
-        {
-            if (Stats.Date.Date == DateTime.Today)
+            if (DailyStats.Date.Date == DateTime.Today)
                 return;
 
             await ExecuteForDBAsync(async dbContext =>
             {
-                dbContext.Entry(Stats).State = EntityState.Detached;
-                Stats = new ServerDailyStats { Date = DateTime.Today };
-                dbContext.ServerDailyStats.Add(Stats);
+                dbContext.Entry(DailyStats).State = EntityState.Detached;
+                DailyStats = new ServerDailyStats { Date = DateTime.Today };
+                dbContext.ServerDailyStats.Add(DailyStats);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -74,33 +75,46 @@ namespace TDS_Server.Core.Manager.Stats
                 return;
             await CheckNewDay();
             if (isOfficial)
-                ++Stats.ArenaRoundsPlayed;
+            {
+                ++DailyStats.ArenaRoundsPlayed;
+                ++TotalStats.ArenaRoundsPlayed;
+            }
             else
-                ++Stats.CustomArenaRoundsPlayed;
+            {
+                ++DailyStats.CustomArenaRoundsPlayed;
+                ++TotalStats.CustomArenaRoundsPlayed;
+            }
+                
         }
 
         private async void PlayerLoggedIn(ITDSPlayer player)
         {
             await CheckNewDay();
-            ++Stats.AmountLogins;
+            ++DailyStats.AmountLogins;
             CheckPlayerPeak(player);
         }
 
         private async void CheckPlayerPeak(ITDSPlayer _)
         {
-            if (_tdsPlayerHandler.AmountLoggedInPlayers <= Stats.PlayerPeak)
-                return;
             await CheckNewDay();
-            Stats.PlayerPeak = (short)_tdsPlayerHandler.AmountLoggedInPlayers;
+            int amountLoggedIn = _tdsPlayerHandler.AmountLoggedInPlayers;
+            if (amountLoggedIn > DailyStats.PlayerPeak)
+            {
+                DailyStats.PlayerPeak = (short)amountLoggedIn;
+            }
+            if (amountLoggedIn > TotalStats.PlayerPeak)
+            {
+                TotalStats.PlayerPeak = (short)amountLoggedIn;
+            }
         }
 
         private async void PlayerRegistered(ITDSPlayer _)
         {
             await CheckNewDay();
-            ++Stats.AmountRegistrations;
+            ++DailyStats.AmountRegistrations;
         }
 
-        public async Task Save()
+        public async void Save(ulong _)
         {
             await ExecuteForDBAsync(async dbContext =>
             {

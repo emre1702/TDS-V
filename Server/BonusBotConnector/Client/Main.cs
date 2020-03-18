@@ -1,28 +1,40 @@
-﻿namespace BonusBotConnector.Client
+﻿using BonusBotConnector.Client.Requests;
+using Grpc.Net.Client;
+using System;
+using System.Linq;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Bonusbot;
+
+namespace BonusBotConnector.Client
 {
     public class BonusBotConnectorClient
     {
-        public BonusbotSettings? Settings { get; private set; }
-        // public static GrpcChannel? Channel { get; private set; }
+        public ChannelChat? ChannelChat { get; }
+        public ServerInfos? ServerInfos { get; }
+        public PrivateChat? PrivateChat { get; }
 
         public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
 
-        public BonusBotConnectorClient(TDSDbContext dbContext, BonusBotErrorLoggerDelegate errorLogger)
+        public BonusBotConnectorClient(ILoggingHandler loggingHandler, TDSDbContext dbContext)
         {
             if (System.Diagnostics.Debugger.IsAttached)
                 return;
 
-            Settings = dbContext.BonusbotSettings.FirstOrDefault();
+            var settings = dbContext.BonusbotSettings.FirstOrDefault();
 
-            if (Settings.GuildId is null)
+            if (settings.GuildId is null)
                 return;
 
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
 
-            ChannelChat.Init(channel, errorLogger);
-            ServerInfos.Init(channel, errorLogger);
-            PrivateChat.Init(channel, errorLogger);
+            var helper = new Helper();
+            ChannelChat = new ChannelChat(channel, loggingHandler, helper, settings);
+
+            if (settings.ServerInfosChannelId is { })
+                ServerInfos = new ServerInfos(channel, loggingHandler, helper, settings);
+            PrivateChat = new PrivateChat(channel, loggingHandler, helper, settings);
         }
     }
 }

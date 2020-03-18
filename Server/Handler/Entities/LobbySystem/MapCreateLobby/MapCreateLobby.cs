@@ -20,7 +20,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private int _lastId;
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
 
-        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, LoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler) 
             : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler) 
             { 

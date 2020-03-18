@@ -32,7 +32,7 @@ namespace TDS_Server.Data.Interfaces
         ITeam? Team { set; get; }
         bool IsPermamuted { get; }
         bool IsMuted { get; }
-        int? MuteTime { get; }
+        int? MuteTime { get; set; }
         HashSet<int> BlockingPlayerIds { get; }
         string AdminLevelName { get; }
         bool LoggedIn { get; }
@@ -57,6 +57,8 @@ namespace TDS_Server.Data.Interfaces
         ILobby? PreviousLobby { get; set; }
         short ShortTimeKillingSpree { get; }
         IVehicle? FreeroamVehicle { get; set; }
+        int PlayMinutes { get; set; }
+        int? VoiceMuteTime { get; set; }
 
         void SendBrowserEvent(string eventName, params object[] args);
         void SendEvent(string eventName, params object[] args);
@@ -72,5 +74,7 @@ namespace TDS_Server.Data.Interfaces
         Task ExecuteForDB(Action<TDSDbContext> p);
         void SetEntityInvincible(IVehicle vehicle, bool invincible);
         Task ExecuteForDBAsync(Func<TDSDbContext, Task> p);
+        void CheckSaveData();
+        void CheckReduceMapBoughtCounter();
     }
 }

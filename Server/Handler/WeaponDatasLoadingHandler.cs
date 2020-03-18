@@ -2,7 +2,6 @@
 #define reloadArenaWeaponDamages
 #define reloadArenaWeaponHeadshots
 
-using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
@@ -10,23 +9,31 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Dto.WeaponsMeta;
-using TDS_Server.Manager.Logs;
+using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Core.Manager.Utility
 {
-    class WeaponDatasLoader
+    public class WeaponDatasLoadingHandler
     {
-        public static void LoadData()
+        private readonly TDSDbContext _dbContext;
+        private readonly LoggingHandler _loggingHandler;
+
+        public WeaponDatasLoadingHandler(TDSDbContext dbContext, LoggingHandler loggingHandler)
         {
+            _dbContext = dbContext;
+            _loggingHandler = loggingHandler;
+
             LoadWeaponMetaInfos();
             ReloadArenaWeaponDatas();
         }
 
         [Conditional("loadWeaponDatas")]
-        private static void LoadWeaponMetaInfos()
+        private void LoadWeaponMetaInfos()
         {
             Log("Checking if weapon_metas folder exists.");
             if (!Directory.Exists("weapon_metas"))
@@ -45,13 +52,12 @@ namespace TDS_Server.Core.Manager.Utility
                     using XmlReader reader = XmlReader.Create(File.OpenRead(filePath));
                     if (!xmlSerializer.CanDeserialize(reader))
                     {
-                        ErrorLogsManager.Log($"Could not deserialize file {filePath}.", Environment.StackTrace);
+                        _loggingHandler.LogError($"Could not deserialize file {filePath}.", Environment.StackTrace);
                         continue;
                     }
 
                     var weaponsMeta = (WeaponsMetaDto)xmlSerializer.Deserialize(reader);
 
-                    using var dbContext = new TDSDbContext();
                     foreach (var weaponsData in weaponsMeta.Datas)
                     {
                         try
@@ -63,7 +69,7 @@ namespace TDS_Server.Core.Manager.Utility
                                 continue;
                             }
 
-                            var weaponDbInfo = dbContext.Weapons.Where(w => w.Hash == weaponHash).Select(w => new { w.Hash, w.Type }).FirstOrDefault();
+                            var weaponDbInfo = _dbContext.Weapons.Where(w => w.Hash == weaponHash).Select(w => new { w.Hash, w.Type }).FirstOrDefault();
                             if (weaponDbInfo is null)
                             {
                                 Log($"Weapon entry in DB missing for '{weaponsData.Name}' with hash '{weaponHash.ToString()}' ({(uint)weaponHash.Value})", LogType.Warning);
@@ -84,8 +90,8 @@ namespace TDS_Server.Core.Manager.Utility
                                 ReloadTime = weaponsData.ReloadTime.Value,
                                 TimeBetweenShots = weaponsData.TimeBetweenShots.Value
                             };
-                            dbContext.Update(weaponDb);
-                            dbContext.SaveChanges();
+                            _dbContext.Update(weaponDb);
+                            _dbContext.SaveChanges();
                         }
                         catch (Exception ex)
                         {
@@ -106,26 +112,24 @@ namespace TDS_Server.Core.Manager.Utility
         }
 
         [Conditional("reloadArenaWeaponDamages"), Conditional("reloadArenaWeaponHeadshots")]
-        private static void ReloadArenaWeaponDatas()
+        private void ReloadArenaWeaponDatas()
         {
-            using var dbContext = new TDSDbContext();
+#if reloadArenaWeaponDamages
+            var dataDict = _dbContext.Weapons.AsNoTracking().ToDictionary(w => w.Hash, w => w.Damage);
+#endif
 
-            #if reloadArenaWeaponDamages
-            var dataDict = dbContext.Weapons.AsNoTracking().ToDictionary(w => w.Hash, w => w.Damage);
-            #endif
-
-            var arenaWeapons = dbContext.LobbyWeapons.Where(w => w.Lobby == -1).ToList();
+            var arenaWeapons = _dbContext.LobbyWeapons.Where(w => w.Lobby == -1).ToList();
             foreach (var lobbyWeapon in arenaWeapons)
             {
-                #if reloadArenaWeaponDamages
+#if reloadArenaWeaponDamages
                 lobbyWeapon.Damage = dataDict[lobbyWeapon.Hash];
-                #endif
+#endif
 
-                #if reloadArenaWeaponHeadshots
-                lobbyWeapon.HeadMultiplicator = ServerConstants.ArenaHeadMultiplicator;
-                #endif
+#if reloadArenaWeaponHeadshots
+                lobbyWeapon.HeadMultiplicator = Constants.ArenaHeadMultiplicator;
+#endif
             }
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         private static WeaponHash? GetWeaponHash(WeaponData data)

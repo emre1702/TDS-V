@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
-        public DatabasePlayerHelper(TDSDbContext dbContext, LoggingHandler loggingHandler) : base(dbContext, loggingHandler)
+        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler) : base(dbContext, loggingHandler)
         {
             ExecuteForDB(dbContext =>
                 dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false })).RunSynchronously();

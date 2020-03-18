@@ -28,7 +28,7 @@ namespace TDS_Server.Handler.Entities.GangTeam
 
         private readonly LangHelper _langHelper;
 
-        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, LoggingHandler loggingHandler, LangHelper langHelper) : base(dbContext, loggingHandler)
+        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper) : base(dbContext, loggingHandler)
         {
             _langHelper = langHelper;
 

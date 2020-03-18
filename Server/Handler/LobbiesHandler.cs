@@ -55,7 +55,7 @@ namespace TDS_Server.Handler
         private readonly Serializer _serializer;
         private readonly TDSDbContext _dbContext;
         private readonly MapsLoadingHandler _mapsHandler;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
         private readonly IServiceProvider _serviceProvider;
 
@@ -63,8 +63,8 @@ namespace TDS_Server.Handler
             TDSDbContext dbContext, 
             SettingsHandler settingsHandler, 
             Serializer serializer,
-            MapsLoadingHandler mapsHandler, 
-            LoggingHandler loggingHandler, 
+            MapsLoadingHandler mapsHandler,
+            ILoggingHandler loggingHandler, 
             IServiceProvider serviceProvider,
             CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler,
             EventsHandler eventsHandler)

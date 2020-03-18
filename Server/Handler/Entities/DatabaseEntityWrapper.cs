@@ -12,10 +12,10 @@ namespace TDS_Server.Handler.Entities
         private TDSDbContext _dbContext;
 
         private ITDSPlayer? _player;
-        protected readonly LoggingHandler LoggingHandler;
+        protected readonly ILoggingHandler LoggingHandler;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
-        protected DatabaseEntityWrapper(TDSDbContext dbContext, LoggingHandler loggingHandler)
+        protected DatabaseEntityWrapper(TDSDbContext dbContext, ILoggingHandler loggingHandler)
             => (_dbContext, LoggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
 
         ~DatabaseEntityWrapper()

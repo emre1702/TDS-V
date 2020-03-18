@@ -9,12 +9,12 @@ namespace TDS_Server.Handler
 {
     public class ChatHandler
     {
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly AdminsHandler _adminsHandler;
 
-        public ChatHandler(LoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler)
+        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler)
             => (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler);
 
         public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)

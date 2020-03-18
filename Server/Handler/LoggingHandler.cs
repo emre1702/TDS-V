@@ -1,19 +1,35 @@
-﻿using System;
+﻿using BonusBotConnector.Client;
+using System;
 using System.Net;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler
 {
-    public class LoggingHandler
+    public class LoggingHandler : ILoggingHandler
     {
-        private TDSDbContext _dbContext;
+        private readonly TDSDbContext _dbContext;
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+        private readonly SettingsHandler _settingsHandler;
 
-        public LoggingHandler(TDSDbContext dbContext)
-            => _dbContext = dbContext;
+        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+        {
+            _dbContext = dbContext;
+            _bonusBotConnectorClient = bonusBotConnectorClient;
+            _settingsHandler = settingsHandler;
+
+            eventsHandler.Minute += Save;
+        }
+
+        private async void Save(ulong counter)
+        {
+            if (counter % (ulong)_settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
+                await _dbContext.SaveChangesAsync();
+        }
 
         #region Error
         public void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
@@ -25,12 +41,12 @@ namespace TDS_Server.Handler
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(log.Info + Environment.StackTrace + log.StackTrace);
+            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
             _dbContext.LogErrors.Add(log);
 
             if (logToBonusBot)
-                BonusBotConnector.Client.Requests.ChannelChat.SendError(log.ToString());
+                _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
         public void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true)
@@ -42,12 +58,46 @@ namespace TDS_Server.Handler
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(log.Info + Environment.StackTrace + log.StackTrace);
+            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
             _dbContext.LogErrors.Add(log);
 
             if (logToBonusBot)
-                BonusBotConnector.Client.Requests.ChannelChat.SendError(log.ToString());
+                _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
+        }
+
+        public void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true)
+        {
+            var log = new LogErrors
+            {
+                Info = ex.GetBaseException().Message,
+                StackTrace = ex.StackTrace ?? Environment.StackTrace,
+                Source = -1,
+                Timestamp = DateTime.UtcNow
+            };
+            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
+
+            _dbContext.LogErrors.Add(log);
+
+            if (logToBonusBot)
+                _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
+        }
+
+        public void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
+        {
+            var log = new LogErrors
+            {
+                Info = info,
+                StackTrace = stacktrace,
+                Source = -1,
+                Timestamp = DateTime.UtcNow
+            };
+            Console.WriteLine(info + "\n" + stacktrace);
+
+            _dbContext.LogErrors.Add(log);
+
+            if (logToBonusBot)
+                _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
         /*public static void LogError(string info, string stacktrace, Player source, bool logToBonusBot = true)
@@ -62,7 +112,7 @@ namespace TDS_Server.Handler
            Console.WriteLine(info + "\n" + stacktrace);
            LogsManager.AddLog(log);
            if (logToBonusBot)
-               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+               _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
        }
 
        public void LogError(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = true)
@@ -77,23 +127,10 @@ namespace TDS_Server.Handler
            Console.WriteLine(info + "\n" + stacktrace);
            LogsManager.AddLog(log);
            if (logToBonusBot)
-               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
+               _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
        }
 
-       public void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
-       {
-           var log = new LogErrors
-           {
-               Info = info,
-               StackTrace = stacktrace,
-               Source = -1,
-               Timestamp = DateTime.UtcNow
-           };
-           Console.WriteLine(info + "\n" + stacktrace);
-           LogsManager.AddLog(log);
-           if (logToBonusBot)
-               BonusBotConnector_Client.Requests.ChannelChat.SendError(log.ToString());
-       }*/
+      */
         #endregion Error
 
         #region Chat
@@ -115,7 +152,7 @@ namespace TDS_Server.Handler
         #endregion Chat
 
         #region Admin
-        public void LogAdmin(LogType cmd, TDSPlayer? source, TDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
+        public void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {
@@ -132,7 +169,7 @@ namespace TDS_Server.Handler
             _dbContext.LogAdmins.Add(log);
         }
 
-        public void LogAdmin(LogType cmd, TDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
+        public void LogAdmin(LogType cmd, ITDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {

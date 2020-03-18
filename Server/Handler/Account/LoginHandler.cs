@@ -28,7 +28,7 @@ namespace TDS_Server.Handler.Account
         private readonly SettingsHandler _settingsHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
@@ -39,7 +39,7 @@ namespace TDS_Server.Handler.Account
             SettingsHandler settingsHandler,
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
-            LoggingHandler loggingHandler)
+            ILoggingHandler loggingHandler)
             => (_databasePlayerHandler, _challengesHelper, _langHelper, _eventsHandler, _serializer, _settingsHandler, _serviceProvider, _dataSyncHandler, _loggingHandler)
             = (databasePlayerHandler, challengesHelper, langHelper, eventsHandler, serializer, settingsHandler, serviceProvider, dataSyncHandler, loggingHandler);
 

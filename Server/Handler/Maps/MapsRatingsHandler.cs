@@ -23,8 +23,8 @@ namespace TDS_Server.Handler.Maps
             Serializer serializer, 
             MapsLoadingHandler mapsLoadingHandler,
             MapCreatorHandler mapsCreatorHandler, 
-            TDSDbContext dbContext, LoggingHandler 
-            loggingHandler)
+            TDSDbContext dbContext, 
+            ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             _serializer = serializer;

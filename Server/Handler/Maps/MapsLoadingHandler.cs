@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.Player;
@@ -36,10 +37,10 @@ namespace TDS_Server.Handler.Maps
         private readonly EventsHandler _eventsHandler;
 
         private readonly Serializer _serializer;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly SettingsHandler _settingsHandler;
 
-        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, LoggingHandler loggingHandler, SettingsHandler settingsHandler)
+        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, ILoggingHandler loggingHandler, SettingsHandler settingsHandler)
             => (_dbContext, _eventsHandler, _serializer, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, serializer, loggingHandler, settingsHandler);
 
         public void LoadAllMaps()

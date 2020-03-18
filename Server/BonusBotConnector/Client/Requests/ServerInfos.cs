@@ -1,46 +1,43 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Net;
-using static BonusBotConnector_Client.Main;
-using static BonusBotConnector_Client.RAGEServerStats;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Database.Entity.Bonusbot;
+using static BonusBotConnector.Client.RAGEServerStats;
 
 namespace BonusBotConnector.Client.Requests
 {
-    public static class ServerInfos
+    public class ServerInfos
     {
-        private static RAGEServerStatsClient? _client;
-        private static BonusBotErrorLoggerDelegate? _errorLogger;
-        private static string _ipAddress = "?";
+        private readonly RAGEServerStatsClient _client;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly BonusbotSettings _settings;
+        private readonly Helper _helper;
+        private readonly string _ipAddress = "?";
 
-        internal static void Init(GrpcChannel channel, BonusBotErrorLoggerDelegate errorLogger)
+        internal ServerInfos(GrpcChannel channel, ILoggingHandler loggingHandler, Helper helper, BonusbotSettings settings)
         {
             _client = new RAGEServerStatsClient(channel);
-            _errorLogger = errorLogger;
+            _loggingHandler = loggingHandler;
+            _settings = settings;
+            _helper = helper;
 
             _ipAddress = new WebClient().DownloadString("https://www.l2.io/ip");
         }
 
-        public static async void Refresh(RAGEServerStatsRequest request)
+        public async void Refresh(RAGEServerStatsRequest request)
         {
-            if (_client is null)
-                return;
-            if (Settings is null)
-                return;
-            if (Settings.GuildId is null)
-                return;
-            if (Settings.ServerInfosChannelId is null)
-                return;
             try
             {
-                request.GuildId = Settings.GuildId.Value;
-                request.ChannelId = Settings.ServerInfosChannelId.Value;
+                request.GuildId = _settings.GuildId!.Value;
+                request.ChannelId = _settings.ServerInfosChannelId!.Value;
                 request.ServerAddress = _ipAddress;
                 var result = await _client.SendAsync(request);
-              
+
             }
             catch (Exception ex)
             {
-                _errorLogger?.Invoke(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
+                _loggingHandler.LogErrorFromBonusBot(ex);
             }
         }
     }

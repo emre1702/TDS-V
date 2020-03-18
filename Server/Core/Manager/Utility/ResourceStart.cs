@@ -8,16 +8,6 @@ namespace TDS_Server.Core.Manager.Utility
 {
     internal class ResourceStart : Script
     {
-        public static bool ResourceStarted { get; private set; }
-
-        public ResourceStart()
-        {
-            NAPI.Server.SetAutoRespawnAfterDeath(false);
-            NAPI.Server.SetGlobalServerChat(false);
-            var date = DateTime.UtcNow;
-            NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
-            LoadAll();
-        }
 
         private async void LoadAll()
         {
@@ -28,36 +18,6 @@ namespace TDS_Server.Core.Manager.Utility
                     NAPI.Resource.StopResource("tds");
                     return;
                 }
-
-                FromBonusBot.Init();
-                BonusBotConnector_Server.Program.Init(ErrorLogsManager.LogFromBonusBot);
-
-                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                AppDomain.CurrentDomain.ProcessExit += ResourceStop.CurrentDomain_ProcessExit;
-
-                SettingsManager.LoadLocal();
-                ClothesManager.Init();
-
-                using var dbContext = new TDSDbContext(SettingsManager.ConnectionString);
-                dbContext.Database.Migrate();
-                var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-                connection.Open();
-                connection.ReloadTypes();
-
-                WeaponDatasLoader.LoadData();
-
-                LogsManager.Init();
-
-                BonusBotConnector_Client.Main.Init(dbContext, ErrorLogsManager.LogFromBonusBot);
-
-                PlayerManager.PlayerManager.SetAllLoggedOutInDb(dbContext);
-
-                dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-
-                ServerDailyStatsManager.Init();
-                ServerTotalStatsManager.Init();
-
-                await SettingsManager.Load(dbContext).ConfigureAwait(true);
 
                 HourTimer.Execute();
 
@@ -112,39 +72,6 @@ namespace TDS_Server.Core.Manager.Utility
             }
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            try
-            {
-                ErrorLogsManager.Log("CurrentDomain_UnhandledException: "
-                    + ((Exception)e.ExceptionObject).GetBaseException().Message,
-                    ((Exception)e.ExceptionObject).StackTrace ?? Environment.StackTrace,
-                    (TDSPlayer?)null);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        private void ReadInput()
-        {
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (input.Length == 0)
-                    continue;
-                if (input[0] == '/')
-                    input = input.Substring(1);
-
-                var consolePlayer = new TDSPlayer(null)
-                {
-                    IsConsole = true
-                };
-
-                NAPI.Task.Run(() => CommandsManager.UseCommand(consolePlayer, input));
-
-            }
-        }
+        
     }
 }
