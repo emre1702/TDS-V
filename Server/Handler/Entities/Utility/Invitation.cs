@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -10,29 +11,30 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Entities.Utility
 {
-    class Invitation
+    public class Invitation
     {
         public InvitationDto Dto;
         public bool RemoveOnLobbyLeave { get; set; }
 
-        private readonly ITDSPlayer _target;
-        private readonly ITDSPlayer? _sender;
+        public readonly ITDSPlayer Target;
+        public readonly ITDSPlayer? Sender;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onAccept;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onReject;
-        private InvitationType _type;
+        public InvitationType Type;
 
         private static ulong _idCounter = 0;
-        private static Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
 
         private readonly Serializer _serializer;
+        private readonly InvitationsHandler _invitationsHandler;
 
         public Invitation(string message, ITDSPlayer target, ITDSPlayer? sender,
-            Serializer serializer,
+            Serializer serializer, InvitationsHandler invitationsHandler,
             Action<ITDSPlayer, ITDSPlayer?, Invitation>? onAccept = null,
             Action<ITDSPlayer, ITDSPlayer?, Invitation>? onReject = null,
             InvitationType type = InvitationType.None)
         {
             _serializer = serializer;
+            _invitationsHandler = invitationsHandler;
 
             Dto = new InvitationDto
             {
@@ -41,13 +43,13 @@ namespace TDS_Server.Handler.Entities.Utility
                 Message = message
             };
 
-            _sender = sender;
-            _target = target;
+            Sender = sender;
+            Target = target;
             _onAccept = onAccept;
             _onReject = onReject;
-            _type = type;
+            Type = type;
 
-            _invitationById[Dto.Id] = this;
+            invitationsHandler.Add(this);
 
             target.SendBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
 
@@ -55,51 +57,29 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public void Accept()
         {
-            if (!_target.LoggedIn)
+            if (!Target.LoggedIn)
                 return;
-            _onAccept?.Invoke(_target, _sender, this);
+            _onAccept?.Invoke(Target, Sender, this);
         }
 
         public void Reject()
         {
-            if (!_target.LoggedIn)
+            if (!Target.LoggedIn)
                 return;
-            _onReject?.Invoke(_target, _sender, this);
+            _onReject?.Invoke(Target, Sender, this);
         }
 
         public void Withdraw()
         {
-            _invitationById.Remove(Dto.Id);
-            if (!_target.LoggedIn)
+            _invitationsHandler.Remove(this);
+            if (!Target.LoggedIn)
                 return;
-            _target.SendBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
+            Target.SendBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
         }
 
         public void Resend()
         {
-            _target.SendBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
-        }
-
-        public static Invitation? GetById(ulong id)
-        {
-            if (!_invitationById.TryGetValue(id, out Invitation? invitation))
-                return null;
-            return invitation;
-        }
-
-        public static IEnumerable<Invitation> GetBySender(TDSPlayer sender)
-        {
-            return _invitationById.Values.Where(i => i._sender == sender);
-        }
-
-        public static IEnumerable<Invitation> GetBySender(TDSPlayer sender, InvitationType type)
-        {
-            return _invitationById.Values.Where(i => i._sender == sender && i._type == type);
-        }
-
-        public static IEnumerable<Invitation> GetByTarget(TDSPlayer target)
-        {
-            return _invitationById.Values.Where(i => i._target == target);
+            Target.SendBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
-        public async Task SaveData(bool force = false)
+        public async ValueTask SaveData(bool force = false)
         {
             if (!force && (Entity is null || !Entity.PlayerStats.LoggedIn))
                 return;

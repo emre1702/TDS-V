@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Core.Manager.Commands;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
@@ -22,9 +23,13 @@ namespace TDS_Server.Core.Startup
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
-        
+        private readonly CommandsHandler _commandsHandler;
+
+
         public Program(IModAPI modAPI)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;   
+
             _modAPI = modAPI;
             _serviceProvider = Services.InitServiceCollection(modAPI);
 
@@ -32,28 +37,28 @@ namespace TDS_Server.Core.Startup
             RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
             _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
             _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
+            _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
             var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
             mapsLoadingHandler.LoadAllMaps();
+
+            Task.Run(ReadInput);
         }
 
+        public ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
+            => _tdsPlayerHandler.GetIfLoggedIn(player);
+
         public ITDSPlayer? GetTDSPlayer(IPlayer player)
+            => _tdsPlayerHandler.Get(player);
+
+        public void HandleProgramException(Exception ex, string msgBefore = "")
         {
-            return _tdsPlayerHandler.GetTDSPlayerIfExists(player);
+            _loggingHandler.LogError($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            try
-            {
-                _loggingHandler.LogError("CurrentDomain_UnhandledException: "
-                    + ((Exception)e.ExceptionObject).GetBaseException().Message,
-                    ((Exception)e.ExceptionObject).StackTrace ?? Environment.StackTrace);
-            }
-            catch
-            {
-                // ignored
-            }
+            HandleProgramException((Exception)e.ExceptionObject, "CurrentDomain_UnhandledException: ");
         }
 
         private void ReadInput()
@@ -69,7 +74,7 @@ namespace TDS_Server.Core.Startup
                 var consolePlayer = ActivatorUtilities.CreateInstance<ITDSPlayer>(_serviceProvider, null);
                 consolePlayer.IsConsole = true;
 
-                _modAPI.Thread.RunInMainThread(() => CommandsManager.UseCommand(consolePlayer, input));
+                _modAPI.Thread.RunInMainThread(() => _commandsHandler.UseCommand(consolePlayer, input));
 
             }
         }

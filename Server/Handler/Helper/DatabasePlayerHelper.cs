@@ -4,22 +4,28 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
-        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler) : base(dbContext, loggingHandler)
+        private readonly ChatHandler _chatHandler;
+
+        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler) : base(dbContext, loggingHandler)
         {
+            _chatHandler = chatHandler;
+
             ExecuteForDB(dbContext =>
-                dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false })).RunSynchronously();
+                dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false })).Wait();
         }
 
 
         public async Task<bool> DoesPlayerWithScnameExist(string scname)
         {
-            return await GetPlayerIDByScname(scname).ConfigureAwait(false) != 0;
+            int id = await GetPlayerIDByScname(scname).ConfigureAwait(false);
+            return id is { } && id != 0;
         }
 
         public async Task<bool> DoesPlayerWithNameExist(string name)
@@ -51,6 +57,36 @@ namespace TDS_Server.Core.Manager.PlayerManager
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false));
+        }
+
+        public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
+        {
+            _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+
+            target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Entry(target.PlayerStats).State = EntityState.Modified;
+
+                await dbContext.SaveChangesAsync();
+                dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
+            });            
+        }
+
+        public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
+        {
+            _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+
+            target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Entry(target.PlayerStats).State = EntityState.Modified;
+
+                await dbContext.SaveChangesAsync();
+                dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
+            });            
         }
     }
 }

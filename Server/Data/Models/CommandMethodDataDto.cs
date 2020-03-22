@@ -5,7 +5,7 @@ using TDS_Server.Data.CustomAttribute;
 namespace TDS_Server.Data.Models
 {
     #nullable enable
-    class CommandMethodDataDto
+    public class CommandMethodDataDto
     {
         public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
 

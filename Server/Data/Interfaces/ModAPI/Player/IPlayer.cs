@@ -47,7 +47,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         void PlayAnimation(string v1, string v2, int loop);
         void Freeze(bool v);
         void SendMessage(string msg);
-        void SendNotification(string msg, bool flashing);
+        void SendNotification(string msg, bool flashing = false);
         void WarpOutOfVehicle();
         void SetIntoVehicle(IVehicle vehicle, int v);
     }

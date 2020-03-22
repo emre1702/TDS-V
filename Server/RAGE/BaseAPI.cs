@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Pool;
 using TDS_Server.Data.Interfaces.ModAPI.Sync;
 using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
 using TDS_Server.Data.Interfaces.ModAPI.Thread;
@@ -15,6 +16,7 @@ using TDS_Server.RAGE.ColShape;
 using TDS_Server.RAGE.MapObject;
 using TDS_Server.RAGE.Marker;
 using TDS_Server.RAGE.Player;
+using TDS_Server.RAGE.Pool;
 using TDS_Server.RAGE.TextLabel;
 using TDS_Server.RAGE.Thread;
 using TDS_Server.RAGE.Vehicle;
@@ -29,6 +31,7 @@ namespace TDS_Server.RAGE.Startup
         public IMapObjectAPI MapObject { get; }
         public IMarkerAPI Marker { get; }
         public IPlayerAPI Player { get; }
+        public IPoolAPI Pool { get; }
         public ISyncAPI Sync { get; }
         public ITextLabelAPI TextLabel { get; }
         public IThreadAPI Thread { get; }
@@ -43,6 +46,7 @@ namespace TDS_Server.RAGE.Startup
             MapObject = new MapObjectAPI();
             Marker = new MarkerAPI();
             Player = new PlayerAPI();
+            Pool = new PoolAPI();
             Sync = new SyncAPI();
             TextLabel = new TextLabelAPI();
             Thread = new ThreadAPI();

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -34,11 +36,12 @@ namespace TDS_Server.Handler.Player
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
 
+            eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore; ;
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOutAfter;
             eventsHandler.Minute += UpdatePlayers;
         }
 
-        public ITDSPlayer GetTDSPlayer(IPlayer modPlayer)
+        public ITDSPlayer Get(IPlayer modPlayer)
         {
             var playerId = modPlayer.SocialClubId;
 
@@ -51,14 +54,23 @@ namespace TDS_Server.Handler.Player
             return _tdsPlayerCache[playerId];
         }
 
-        public ITDSPlayer? GetTDSPlayerIfExists(IPlayer modPlayer)
+        public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
         {
             var playerId = modPlayer.SocialClubId;
 
             if (!_tdsPlayerCache.ContainsKey(playerId))
                 return null;
 
-            return _tdsPlayerCache[playerId];
+            var player = _tdsPlayerCache[playerId];
+            if (!player.LoggedIn)
+                return null;
+
+            return player;
+        }
+
+        public ITDSPlayer? GetIfExists(int playerId)
+        {
+            return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
         }
 
         internal ITDSPlayer? FindTDSPlayer(string name)
@@ -76,6 +88,11 @@ namespace TDS_Server.Handler.Player
             }
 
             return null;
+        }
+
+        private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
+        {
+            return player.SaveData(true);
         }
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)

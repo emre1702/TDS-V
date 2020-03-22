@@ -45,7 +45,7 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
         }
 
-        private void EventsHandler_PlayerRegistered(TDSPlayer player)
+        private void EventsHandler_PlayerRegistered(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return;

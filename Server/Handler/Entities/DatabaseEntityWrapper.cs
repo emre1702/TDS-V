@@ -82,5 +82,24 @@ namespace TDS_Server.Handler.Entities
                 _dbContextSemaphore.Release();
             }
         }
+
+        public async Task<T> ExecuteForDB<T>(Func<TDSDbContext, T> action)
+        {
+            await _dbContextSemaphore.WaitAsync(2000);
+
+            try
+            {
+                return action(_dbContext);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, _player);
+                return default!;
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
     }
 }

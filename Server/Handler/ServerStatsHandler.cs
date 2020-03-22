@@ -116,6 +116,11 @@ namespace TDS_Server.Core.Manager.Stats
 
         public async void Save(ulong _)
         {
+            await SaveTask();
+        }
+
+        public async Task SaveTask()
+        {
             await ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.SaveChangesAsync();

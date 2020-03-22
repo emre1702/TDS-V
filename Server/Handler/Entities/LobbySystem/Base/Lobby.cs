@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BonusBotConnector.Client;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,6 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly LangHelper LangHelper;
         protected readonly DataSyncHandler DataSyncHandler;
         protected readonly EventsHandler EventsHandler;
+        protected readonly BonusBotConnectorClient BonusBotConnectorClient;
 
         public Lobby(
             Lobbies entity,
@@ -56,7 +58,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             SettingsHandler settingsHandler,
             LangHelper langHelper,
             DataSyncHandler dataSyncHandler,
-            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+            EventsHandler eventsHandler,
+            BonusBotConnectorClient bonusBotConnectorClient) : base(dbContext, loggingHandler)
         {
             Serializer = serializer;
             ModAPI = modAPI;
@@ -65,6 +68,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             LangHelper = langHelper;
             DataSyncHandler = dataSyncHandler;
             EventsHandler = eventsHandler;
+            BonusBotConnectorClient = bonusBotConnectorClient;
 
             Entity = entity;
 

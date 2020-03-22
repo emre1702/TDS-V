@@ -11,6 +11,7 @@ using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -29,6 +30,7 @@ namespace TDS_Server.Handler.Account
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly ServerStartHandler _serverStartHandler;
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
@@ -39,12 +41,31 @@ namespace TDS_Server.Handler.Account
             SettingsHandler settingsHandler,
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
-            ILoggingHandler loggingHandler)
-            => (_databasePlayerHandler, _challengesHelper, _langHelper, _eventsHandler, _serializer, _settingsHandler, _serviceProvider, _dataSyncHandler, _loggingHandler)
-            = (databasePlayerHandler, challengesHelper, langHelper, eventsHandler, serializer, settingsHandler, serviceProvider, dataSyncHandler, loggingHandler);
+            ILoggingHandler loggingHandler,
+            ServerStartHandler serverStartHandler)
+        {
+            _databasePlayerHandler = databasePlayerHandler; 
+            _challengesHelper = challengesHelper; 
+            _langHelper = langHelper; 
+            _eventsHandler = eventsHandler;
+            _serializer = serializer; 
+            _settingsHandler = settingsHandler;
+            _serviceProvider = serviceProvider; 
+            _dataSyncHandler = dataSyncHandler;
+            _loggingHandler = loggingHandler;
+            _serverStartHandler = serverStartHandler;
+
+            _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
+        }
 
         public async void TryLogin(ITDSPlayer player, string username, string password)
         {
+            if (!_serverStartHandler.IsReadyForLogin)
+            {
+                player.SendNotification(player.Language.TRY_AGAIN_LATER);
+                return;
+            }
+
             int id = await _databasePlayerHandler.GetPlayerIDByName(username);
             if (id != 0)
             {
@@ -54,7 +75,7 @@ namespace TDS_Server.Handler.Account
                 player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
         }
 
-        public async Task LoginPlayer(ITDSPlayer iplayer, int id, string password)
+        public async Task LoginPlayer(ITDSPlayer iplayer, int id, string? password)
         {
             if (!(iplayer is TDSPlayer player))
                 return;
@@ -83,7 +104,7 @@ namespace TDS_Server.Handler.Account
                     return false;
                 }
 
-                if (Utils.HashPWServer(password) != player.Entity.Password)
+                if (password is { } && Utils.HashPWServer(password) != player.Entity.Password)
                 {
                     player.SendNotification(player.Language.WRONG_PASSWORD);
                     dbContext.Dispose();
@@ -117,6 +138,11 @@ namespace TDS_Server.Handler.Account
             _loggingHandler.LogRest(LogType.Login, player, true);
 
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
+        }
+
+        private async void EventsHandler_PlayerRegistered(ITDSPlayer player)
+        {
+            await LoginPlayer(player, player.Id, null);
         }
     }
 }

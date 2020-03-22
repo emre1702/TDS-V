@@ -3,6 +3,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler
@@ -13,9 +14,10 @@ namespace TDS_Server.Handler
         private readonly IModAPI _modAPI;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly AdminsHandler _adminsHandler;
+        private readonly LangHelper _langHelper;
 
-        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler)
-            => (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler);
+        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
+            => (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler, langHelper);
 
         public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
@@ -110,6 +112,42 @@ namespace TDS_Server.Handler
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
             target.SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, target: target);
+        }
+
+        public void OutputMuteInfo(string adminName, string targetName, float minutes, string reason)
+        {
+            switch (minutes)
+            {
+                case -1:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.PERMAMUTE_INFO, targetName, adminName, reason));
+                    break;
+
+                case 0:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.UNMUTE_INFO, targetName, adminName, reason));
+                    break;
+
+                default:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.TIMEMUTE_INFO, targetName, adminName, minutes, reason));
+                    break;
+            }
+        }
+
+        public void OutputVoiceMuteInfo(string adminName, string targetName, float minutes, string reason)
+        {
+            switch (minutes)
+            {
+                case -1:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.PERMAVOICEMUTE_INFO, targetName, adminName, reason));
+                    break;
+
+                case 0:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.UNVOICEMUTE_INFO, targetName, adminName, reason));
+                    break;
+
+                default:
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.TIMEVOICEMUTE_INFO, targetName, adminName, minutes, reason));
+                    break;
+            }
         }
     }
 }

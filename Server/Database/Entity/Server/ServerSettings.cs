@@ -49,5 +49,6 @@
         public int UsernameChangeCooldownDays { get; set; }
 
         public int AmountWeeklyChallenges { get; set; }
+        public int ReloadServerBansEveryMinutes { get; set; }
     }
 }

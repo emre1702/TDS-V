@@ -1,6 +1,7 @@
 ﻿using BonusBotConnector.Client;
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
@@ -27,7 +28,12 @@ namespace TDS_Server.Handler
 
         private async void Save(ulong counter)
         {
-            if (counter % (ulong)_settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
+            await SaveTask(counter);
+        }
+
+        public async Task SaveTask(ulong? counter = null)
+        {
+            if (counter is null || counter % (ulong)_settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
                 await _dbContext.SaveChangesAsync();
         }
 

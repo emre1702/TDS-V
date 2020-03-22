@@ -158,6 +158,7 @@
         string TIMEMUTE_INFO { get; }
         string TIMEVOICEMUTE_INFO { get; }
         string TOO_LONG_OUTSIDE_MAP { get; }
+        string TRY_AGAIN_LATER { get; }
 
         string UNBAN_INFO { get; }
         string UNBAN_LOBBY_INFO { get; }

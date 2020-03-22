@@ -4,12 +4,14 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Rest;
@@ -20,6 +22,8 @@ namespace TDS_Server.Core.Manager.Utility
 {
     public class WeaponDatasLoadingHandler
     {
+        public Dictionary<WeaponHash, DamageDto> DefaultDamages;
+
         private readonly TDSDbContext _dbContext;
         private readonly LoggingHandler _loggingHandler;
 
@@ -30,6 +34,16 @@ namespace TDS_Server.Core.Manager.Utility
 
             LoadWeaponMetaInfos();
             ReloadArenaWeaponDatas();
+
+            DefaultDamages = _dbContext.Weapons
+               .ToDictionary(
+                   w => w.Hash,
+                   w => new DamageDto
+                   {
+                       Damage = w.Damage,
+                       HeadMultiplier = w.HeadShotDamageModifier
+                   }
+               );
         }
 
         [Conditional("loadWeaponDatas")]
@@ -132,14 +146,14 @@ namespace TDS_Server.Core.Manager.Utility
             _dbContext.SaveChanges();
         }
 
-        private static WeaponHash? GetWeaponHash(WeaponData data)
+        private WeaponHash? GetWeaponHash(WeaponData data)
             => data.Name switch
             {
                 "WEAPON_PROXMINE" => WeaponHash.Proximine,
                 _ => TryConvertNameToWeaponHash(data.Name)
             };
 
-        private static WeaponHash? TryConvertNameToWeaponHash(string name)
+        private WeaponHash? TryConvertNameToWeaponHash(string name)
         {
             if (name.Length < "WEAPON_".Length)
                 return null;
@@ -152,7 +166,7 @@ namespace TDS_Server.Core.Manager.Utility
             return null;
         }
 
-        private static void Log(string msg, LogType logType = LogType.Info)
+        private void Log(string msg, LogType logType = LogType.Info)
         {
             switch (logType)
             {

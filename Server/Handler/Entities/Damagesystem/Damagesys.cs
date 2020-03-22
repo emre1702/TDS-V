@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
@@ -13,14 +14,11 @@ namespace TDS_Server.Core.Damagesystem
     {
         public bool DamageDealtThisRound => _allHitters.Count > 0;
 
-#nullable disable warnings
-        private static Dictionary<WeaponHash, DamageDto> _defaultDamages;
-#nullable restore warnings
-
         private readonly IModAPI _modAPI;
         private readonly ILoggingHandler _loggingHandler;
 
-        public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards, IModAPI modAPI, ILoggingHandler loggingHandler)
+        public Damagesys(ICollection<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards, IModAPI modAPI, ILoggingHandler loggingHandler, 
+            WeaponDatasLoadingHandler weaponDatasLoadingHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
@@ -28,7 +26,7 @@ namespace TDS_Server.Core.Damagesystem
             foreach (LobbyWeapons weapon in weapons)
             {
                 if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
-                    _damagesDict[weapon.Hash] = _defaultDamages[weapon.Hash];
+                    _damagesDict[weapon.Hash] = weaponDatasLoadingHandler.DefaultDamages[weapon.Hash];
                 else
                     _damagesDict[weapon.Hash] = new DamageDto(weapon);
             }
@@ -38,19 +36,6 @@ namespace TDS_Server.Core.Damagesystem
         public void Clear()
         {
             _allHitters.Clear();
-        }
-
-        public static void LoadDefaults(TDSDbContext dbcontext)
-        {
-            _defaultDamages = dbcontext.Weapons
-                .ToDictionary(
-                    w => w.Hash,
-                    w => new DamageDto
-                    {
-                        Damage = w.Damage,
-                        HeadMultiplier = w.HeadShotDamageModifier
-                    }
-                );
         }
     }
 }

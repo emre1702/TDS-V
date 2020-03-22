@@ -11,7 +11,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public void BanPlayer(TDSPlayer admin, TDSPlayer target, DateTime? endTime, string reason)
+        public void BanPlayer(ITDSPlayer admin, ITDSPlayer target, DateTime? endTime, string reason)
         {
             if (target.ModPlayer is null)
                 return;
@@ -19,7 +19,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 RemovePlayer(target);
             if (target.Entity is null)
                 return;
-            BanPlayer(admin, target.Entity, endTime, reason, target.Serial);
+            BanPlayer(admin, target.Entity, endTime, reason, target.ModPlayer.Serial);
             if (endTime.HasValue)
             {
                 if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public async void BanPlayer(TDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
+        public async void BanPlayer(ITDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
         {
             if (serial is null)
                 serial = await ExecuteForDBAsync(async (dbContext) => await dbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync());
@@ -90,13 +90,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (IsOfficial && ban is { })
             {
-                var embedFields = BonusBotConnector.Client.Helper.GetBanEmbedFields(ban);
-                BonusBotConnector.Client.Requests.ChannelChat.SendBanInfo(ban, embedFields);
-                BonusBotConnector.Client.Requests.PrivateChat.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
+                var embedFields = BonusBotConnectorClient.Helper?.GetBanEmbedFields(ban);
+                if (embedFields is null)
+                    return;
+                BonusBotConnectorClient.ChannelChat?.SendBanInfo(ban, embedFields);
+                BonusBotConnectorClient.PrivateChat?.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
             }
         }
 
-        public void UnbanPlayer(TDSPlayer admin, TDSPlayer target, string reason)
+        public void UnbanPlayer(ITDSPlayer admin, ITDSPlayer target, string reason)
         {
             if (target.Entity is null)
                 return;
@@ -105,7 +107,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 target.SendMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Entity.Name, admin.DisplayName, reason));
         }
 
-        public async void UnbanPlayer(TDSPlayer admin, Players target, string reason)
+        public async void UnbanPlayer(ITDSPlayer admin, Players target, string reason)
         {
             await ExecuteForDBAsync(async (dbContext) =>
             {

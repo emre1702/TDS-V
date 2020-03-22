@@ -1,29 +1,27 @@
 ﻿using AutoMapper;
-using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using TDS_Common.Default;
-using TDS_Server.CustomAttribute;
-using TDS_Server.Dto;
-using TDS_Server.Enums;
-using TDS_Server.Instance.Dto;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Mapping;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.CustomAttribute;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Userpanel;
+using TDS_Shared.Default;
 using DB = TDS_Server.Database.Entity.Command;
-using TDS_Server.Data.Interfaces;
 
-namespace TDS_Server.Core.Manager.Commands
+namespace TDS_Server.Handler.Commands
 {
-    internal class CommandsManager : Script
+    public class CommandsHandler
     {
         // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos, object[] args);
         // private delegate void CommandEmptyDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos);
@@ -35,9 +33,9 @@ namespace TDS_Server.Core.Manager.Commands
             public bool IsWrongMethod;
         }
 
-        private static readonly Dictionary<string, CommandDataDto> _commandDataByCommand = new Dictionary<string, CommandDataDto>();  // this is the primary Dictionary for commands!
-        private static readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
-        private static readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
+        private readonly Dictionary<string, CommandDataDto> _commandDataByCommand = new Dictionary<string, CommandDataDto>();  // this is the primary Dictionary for commands!
+        private readonly Dictionary<string, DB.Commands> _commandsDict = new Dictionary<string, DB.Commands>();
+        private readonly Dictionary<string, string> _commandByAlias = new Dictionary<string, string>();
 
         // private const int AmountDefaultParams = 2;
 
@@ -45,9 +43,23 @@ namespace TDS_Server.Core.Manager.Commands
         // Without implicit types it's much faster but you can only use Methods with signature Method([defaultParams]) or Method([defaultParams], object[] args)
         // private const bool UseImplicitTypes = true;
 
-        public static async Task LoadCommands(TDSDbContext dbcontext)
+        private readonly MappingHandler _mappingHandler;
+        private readonly ISettingsHandler _settingsHandler;
+        private readonly ChatHandler _chatHandler;
+
+        public CommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler, 
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, RemoteEventsHandler remoteEventsHandler)
         {
-            foreach (DB.Commands command in await dbcontext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).ToListAsync())
+            _mappingHandler = mappingHandler;
+            _settingsHandler = settingsHandler;
+            _chatHandler = chatHandler;
+
+            LoadCommands(dbContext, userpanelCommandsHandler);
+        }
+
+        public void LoadCommands(TDSDbContext dbcontext, UserpanelCommandsHandler userpanelCommandsHandler)
+        {
+            foreach (DB.Commands command in dbcontext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).ToList())
             {
                 _commandsDict[command.Command.ToLower()] = command;
 
@@ -111,7 +123,7 @@ namespace TDS_Server.Core.Manager.Commands
                             break;
                         }
                     }
-                        
+
 
                     #endregion TDSRemainingText attribute
                 }
@@ -134,14 +146,13 @@ namespace TDS_Server.Core.Manager.Commands
                 commanddata.MethodDatas.Sort((a, b) => -1 * a.Priority.CompareTo(b.Priority));
             }
 
-            Userpanel.Commands.LoadCommandData(_commandDataByCommand, _commandsDict);
+            userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
 
-        [RemoteEvent(DToServerEvent.CommandUsed)]
-        public static async void UseCommand(TDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
-        { 
-            
+        public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        {
+
             try
             {
                 object[]? args = GetArgs(msg, out string cmd);
@@ -215,7 +226,7 @@ namespace TDS_Server.Core.Manager.Commands
             }
         }
 
-        private static async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(TDSPlayer player, CommandMethodDataDto methoddata, int methodindex, int amountmethodsavailable, object[]? args)
+        private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex, int amountmethodsavailable, object[]? args)
         {
             if (args is null)
                 return new HandleArgumentsResult { Worked = true };
@@ -236,7 +247,7 @@ namespace TDS_Server.Core.Manager.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(Player) || parameterType == typeof(Players))
+                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(ITDSPlayer) || parameterType == typeof(Players))
                         {
                             // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Player)
                             if (methodindex + 1 == amountmethodsavailable)
@@ -267,7 +278,7 @@ namespace TDS_Server.Core.Manager.Commands
 
         }
 
-        private static object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args, out string remainingText)
+        private object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args, out string remainingText)
         {
             if (args != null && methodData.ToOneStringAfterParameterCount.HasValue)
             {
@@ -280,7 +291,7 @@ namespace TDS_Server.Core.Manager.Commands
             return args;
         }
 
-        private static bool IsInvalidArgsCount(TDSPlayer player, CommandDataDto commanddata, object[]? args)
+        private bool IsInvalidArgsCount(ITDSPlayer player, CommandDataDto commanddata, object[]? args)
         {
             if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
             {
@@ -290,20 +301,20 @@ namespace TDS_Server.Core.Manager.Commands
             return false;
         }
 
-        private static bool CheckCommandExists(TDSPlayer player, string cmd, object[]? args)
+        private bool CheckCommandExists(ITDSPlayer player, string cmd, object[]? args)
         {
             if (!_commandDataByCommand.ContainsKey(cmd))
             {
-                if (SettingsManager.ErrorToPlayerOnNonExistentCommand)
+                if (_settingsHandler.ServerSettings.ErrorToPlayerOnNonExistentCommand)
                     player.SendMessage(player.Language.COMMAND_DOESNT_EXIST);
-                if (SettingsManager.ToChatOnNonExistentCommand)
-                    ChatManager.SendLobbyMessage(player, "/" + cmd + (args != null ?  " " + string.Join(' ', args) : ""), false);
+                if (_settingsHandler.ServerSettings.ToChatOnNonExistentCommand)
+                    _chatHandler.SendLobbyMessage(player, "/" + cmd + (args != null ? " " + string.Join(' ', args) : ""), false);
                 return false;
             }
             return true;
         }
 
-        private static bool CheckRights(TDSPlayer player, DB.Commands entity, TDSCommandInfos cmdinfos)
+        private bool CheckRights(ITDSPlayer player, DB.Commands entity, TDSCommandInfos cmdinfos)
         {
             bool canuse = false;
             bool needright = false;
@@ -315,7 +326,7 @@ namespace TDS_Server.Core.Manager.Commands
                 needright = true;
                 canuse = player.IsLobbyOwner;
                 if (canuse)
-                    cmdinfos.WithRight = ECommandUsageRight.LobbyOwner;
+                    cmdinfos.WithRight = CommandUsageRight.LobbyOwner;
             }
 
             #endregion Lobby-Owner Check
@@ -327,7 +338,7 @@ namespace TDS_Server.Core.Manager.Commands
                 needright = true;
                 canuse = player.AdminLevel.Level >= entity.NeededAdminLevel.Value;
                 if (canuse)
-                    cmdinfos.WithRight = ECommandUsageRight.Admin;
+                    cmdinfos.WithRight = CommandUsageRight.Admin;
             }
 
             #endregion Admin Check
@@ -339,7 +350,7 @@ namespace TDS_Server.Core.Manager.Commands
                 needright = true;
                 canuse = (player.Entity?.Donation ?? 0) >= entity.NeededDonation.Value;
                 if (canuse)
-                    cmdinfos.WithRight = ECommandUsageRight.VIP;
+                    cmdinfos.WithRight = CommandUsageRight.VIP;
             }
 
             #endregion Donator Check
@@ -351,7 +362,7 @@ namespace TDS_Server.Core.Manager.Commands
                 needright = true;
                 canuse = player.Entity?.IsVip ?? false;
                 if (canuse)
-                    cmdinfos.WithRight = ECommandUsageRight.Donator;
+                    cmdinfos.WithRight = CommandUsageRight.Donator;
             }
 
             #endregion VIP Check
@@ -361,7 +372,7 @@ namespace TDS_Server.Core.Manager.Commands
             if (!needright)
             {
                 canuse = true;
-                cmdinfos.WithRight = ECommandUsageRight.User;
+                cmdinfos.WithRight = CommandUsageRight.User;
             }
 
             #endregion User Check
@@ -372,7 +383,7 @@ namespace TDS_Server.Core.Manager.Commands
             return canuse;
         }
 
-        private static object[]? GetArgs(string msg, out string cmd)
+        private object[]? GetArgs(string msg, out string cmd)
         {
             int cmdendindex = msg.IndexOf(' ');
             if (cmdendindex == -1)
@@ -384,7 +395,7 @@ namespace TDS_Server.Core.Manager.Commands
             return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToArray();
         }
 
-        private static object[] GetFinalInvokeArgs(CommandMethodDataDto methodData, TDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
+        private object[] GetFinalInvokeArgs(CommandMethodDataDto methodData, ITDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
         {
             object[] newargs = new object[(args?.Length ?? 0) + methodData.AmountDefaultParams];
             newargs[0] = cmdUser;
@@ -395,10 +406,10 @@ namespace TDS_Server.Core.Manager.Commands
             return newargs;
         }
 
-        private static async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
+        private async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
         {
-            theType = MappingManager.GetCorrectDestType(theType);
-            object? converterReturn = MappingManager.Mapper.Map(notConvertedArg, typeof(string), theType);
+            theType = _mappingHandler.GetCorrectDestType(theType);
+            object? converterReturn = _mappingHandler.Mapper.Map(notConvertedArg, typeof(string), theType);
             if (converterReturn != null && converterReturn is Task<Players?> task)
                 return await task;
             return converterReturn;

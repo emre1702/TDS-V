@@ -1079,6 +1079,10 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.AmountWeeklyChallenges)
                     .IsRequired()
                     .HasDefaultValue(3);
+
+                entity.Property(e => e.ReloadServerBansEveryMinutes)
+                    .IsRequired()
+                    .HasDefaultValue(5);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>

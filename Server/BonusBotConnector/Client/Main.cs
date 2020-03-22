@@ -13,6 +13,7 @@ namespace BonusBotConnector.Client
         public ChannelChat? ChannelChat { get; }
         public ServerInfos? ServerInfos { get; }
         public PrivateChat? PrivateChat { get; }
+        public Helper? Helper { get; }
 
         public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
 
@@ -29,12 +30,12 @@ namespace BonusBotConnector.Client
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
 
-            var helper = new Helper();
-            ChannelChat = new ChannelChat(channel, loggingHandler, helper, settings);
+            Helper = new Helper();
+            ChannelChat = new ChannelChat(channel, loggingHandler, Helper, settings);
 
             if (settings.ServerInfosChannelId is { })
-                ServerInfos = new ServerInfos(channel, loggingHandler, helper, settings);
-            PrivateChat = new PrivateChat(channel, loggingHandler, helper, settings);
+                ServerInfos = new ServerInfos(channel, loggingHandler, Helper, settings);
+            PrivateChat = new PrivateChat(channel, loggingHandler, Helper, settings);
         }
     }
 }

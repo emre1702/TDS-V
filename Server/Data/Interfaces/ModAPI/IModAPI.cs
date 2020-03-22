@@ -4,6 +4,7 @@ using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Pool;
 using TDS_Server.Data.Interfaces.ModAPI.Sync;
 using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
 using TDS_Server.Data.Interfaces.ModAPI.Thread;
@@ -19,9 +20,11 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         IMapObjectAPI MapObject { get; }
         IMarkerAPI Marker { get; }
         IPlayerAPI Player { get; }
+        IPoolAPI Pool { get; }
         ISyncAPI Sync { get; }
         ITextLabelAPI TextLabel { get; }
         IThreadAPI Thread { get; }
         IVehicleAPI Vehicle { get; }
+        
     }
 }

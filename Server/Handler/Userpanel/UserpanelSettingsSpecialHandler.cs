@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models.Userpanel;
+using TDS_Server.Data.Utility;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Dto.Userpanel;
-using TDS_Server.Enums;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Logs;
-using TDS_Server.Manager.PlayerManager;
-using TDS_Server.Manager.Utility;
+using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Core.Manager.Userpanel
+namespace TDS_Server.Handler.Userpanel
 {
-    static class SettingsSpecial
+    class UserpanelSettingsSpecialHandler
     {
-        public static string? GetData(TDSPlayer player)
+        private readonly ISettingsHandler _settingsHandler;
+        private readonly Serializer _serializer;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
+
+        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler, DataSyncHandler dataSyncHandler) 
+            => (_settingsHandler, _serializer, _loggingHandler, _dataSyncHandler) = (settingsHandler, serializer, loggingHandler, dataSyncHandler);
+
+        public string? GetData(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return null;
@@ -24,18 +31,18 @@ namespace TDS_Server.Core.Manager.Userpanel
             {
                 Username = player.Entity.Name,
                 Email = player.Entity.Email,
-                UsernameBuyInCooldown = lastUsernameChange.HasValue && lastUsernameChange.Value.AddDays(SettingsManager.ServerSettings.UsernameChangeCooldownDays) > DateTime.UtcNow
+                UsernameBuyInCooldown = lastUsernameChange.HasValue && lastUsernameChange.Value.AddDays(_settingsHandler.ServerSettings.UsernameChangeCooldownDays) > DateTime.UtcNow
 
             };
-            return Serializer.ToBrowser(data);
+            return _serializer.ToBrowser(data);
         }
 
-        public static async Task<object?> SetData(TDSPlayer player, object[] args)
+        public async Task<object?> SetData(ITDSPlayer player, object[] args)
         {
             if (player.Entity is null)
                 return "Unknown error";
 
-            var type = (EUserpanelSettingsSpecialType)Convert.ToInt32(args[0]);
+            var type = (UserpanelSettingsSpecialType)Convert.ToInt32(args[0]);
             string value = Convert.ToString(args[1])!;
             string password = Convert.ToString(args[2])!;
 
@@ -46,33 +53,33 @@ namespace TDS_Server.Core.Manager.Userpanel
 
             int? paid = null;
             DateTime? lastFreeUsernameChange = player.Entity.PlayerStats.LastFreeUsernameChange;
-            
+
             object? oldValue = null;
             switch (type)
             {
-                case EUserpanelSettingsSpecialType.Username:
-                    if (!player.Entity.PlayerStats.LastFreeUsernameChange.HasValue 
-                        || player.Entity.PlayerStats.LastFreeUsernameChange.Value.AddDays(SettingsManager.ServerSettings.UsernameChangeCooldownDays) < DateTime.UtcNow)
+                case UserpanelSettingsSpecialType.Username:
+                    if (!player.Entity.PlayerStats.LastFreeUsernameChange.HasValue
+                        || player.Entity.PlayerStats.LastFreeUsernameChange.Value.AddDays(_settingsHandler.ServerSettings.UsernameChangeCooldownDays) < DateTime.UtcNow)
                     {
                         player.Entity.PlayerStats.LastFreeUsernameChange = DateTime.UtcNow;
                     }
                     else
                     {
-                        if (player.Money < SettingsManager.ServerSettings.UsernameChangeCost)
+                        if (player.Money < _settingsHandler.ServerSettings.UsernameChangeCost)
                         {
                             return player.Language.NOT_ENOUGH_MONEY;
                         }
-                        paid = SettingsManager.ServerSettings.UsernameChangeCost;
-                        player.GiveMoney(-SettingsManager.ServerSettings.UsernameChangeCost);
+                        paid = _settingsHandler.ServerSettings.UsernameChangeCost;
+                        player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost);
                     }
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
                     break;
-                case EUserpanelSettingsSpecialType.Password:
+                case UserpanelSettingsSpecialType.Password:
                     oldValue = player.Entity.Password;
                     player.Entity.Password = Utils.HashPWServer(value);
                     break;
-                case EUserpanelSettingsSpecialType.Email:
+                case UserpanelSettingsSpecialType.Email:
                     oldValue = player.Entity.Email;
                     player.Entity.Email = value;
                     break;
@@ -86,7 +93,7 @@ namespace TDS_Server.Core.Manager.Userpanel
             }
             catch (Exception ex)
             {
-                ErrorLogsManager.Log(ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                _loggingHandler.LogError(ex, player);
                 if (paid.HasValue)
                     player.GiveMoney(paid.Value);
                 if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
@@ -96,27 +103,27 @@ namespace TDS_Server.Core.Manager.Userpanel
                 {
                     switch (type)
                     {
-                        case EUserpanelSettingsSpecialType.Username:
-                            player.Player!.Name = (string)oldValue;
+                        case UserpanelSettingsSpecialType.Username:
+                            player.ModPlayer!.Name = (string)oldValue;
                             break;
-                        case EUserpanelSettingsSpecialType.Password:
+                        case UserpanelSettingsSpecialType.Password:
                             player.Entity.Password = (string)oldValue;
                             break;
-                        case EUserpanelSettingsSpecialType.Email:
+                        case UserpanelSettingsSpecialType.Email:
                             player.Entity.Email = (string)oldValue;
                             break;
                     }
 
                 }
-                
+
                 return "Unknown error";
             }
 
             switch (type)
             {
-                case EUserpanelSettingsSpecialType.Username:
-                    player.Player!.Name = value;
-                    PlayerDataSync.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, value);
+                case UserpanelSettingsSpecialType.Username:
+                    player.ModPlayer!.Name = value;
+                    _dataSyncHandler.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, value);
                     break;
             }
 

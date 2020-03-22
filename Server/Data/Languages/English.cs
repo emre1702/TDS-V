@@ -165,6 +165,7 @@ namespace TDS_Server.Data.Languages
         public virtual string TIMEMUTE_INFO => "{0} was muted for {1} minutes by {2}. Reason: {3}";
         public virtual string TIMEVOICEMUTE_INFO => "{0} was muted in voice-chat for {1} minutes by {2}. Reason: {3}";
         public virtual string TOO_LONG_OUTSIDE_MAP => "You've been too long outside the map.";
+        public virtual string TRY_AGAIN_LATER => "Try again later."; 
 
         public virtual string UNBAN_INFO => "{0} was unbaned by {1}. Reason: {2}";
         public virtual string UNBAN_LOBBY_INFO => "{0} was unbaned in lobby '{1}' by {2}. Reason: {3}";

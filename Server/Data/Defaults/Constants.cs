@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Defaults
 {
-    public class Constants
+    public static class Constants
     {
         private const string _resourcePathPath = "dotnet/resources/tds/";
         public const string MapsPath = _resourcePathPath + "maps/";

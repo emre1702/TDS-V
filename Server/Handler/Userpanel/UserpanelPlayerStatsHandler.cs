@@ -4,38 +4,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Manager.Utility;
+using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities;
+using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Core.Manager.Userpanel
+namespace TDS_Server.Handler.Userpanel
 {
-    class PlayerStats
+    class UserpanelPlayerStatsHandler : DatabaseEntityWrapper
     {
-        public static async Task<string?> GetData(TDSPlayer player)
+        private readonly Serializer _serializer;
+        private readonly LobbiesHandler _lobbiesHandler;
+
+        public UserpanelPlayerStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler) 
+            => (_serializer, _lobbiesHandler) = (serializer, lobbiesHandler);
+
+        public async Task<string?> GetData(ITDSPlayer player)
         {
             try
             {
                 if (player.Entity is null)
                     return null;
                 var stats = await GetPlayerStats(player.Entity.Id, true, player);
-                return Serializer.ToBrowser(stats);
+                return _serializer.ToBrowser(stats);
             }
             catch (Exception ex)
             {
-                Logs.ErrorLogsManager.Log("SendPlayerPlayerStats failed: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                LoggingHandler.LogError("SendPlayerPlayerStats failed: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
                 return null;
             }
         }
 
-        public static async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, TDSPlayer? forPlayer = null)
+        public async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, ITDSPlayer? forPlayer = null)
         {
-            using var dbContext = new TDSDbContext();
-            dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-
-            var data = await dbContext.Players
+            var data = await ExecuteForDBAsync(async dbContext 
+                => await dbContext.Players
                 .Include(p => p.GangMemberNavigation)
                     .ThenInclude(g => g.Gang)
                         .ThenInclude(g => g.Team)
@@ -73,12 +78,13 @@ namespace TDS_Server.Core.Manager.Userpanel
 
                     LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)).ToList() : null
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync());
 
             if (data == null)
                 return null;
 
-            data.Logs = await dbContext.LogAdmins
+            data.Logs = await ExecuteForDBAsync(async dbContext
+                => await dbContext.LogAdmins
                 .Select(l => new PlayerUserpanelAdminTargetHistoryDataDto
                 {
                     SourceId = l.Source,
@@ -92,15 +98,16 @@ namespace TDS_Server.Core.Manager.Userpanel
                     LengthOrEndTime = l.LengthOrEndTime
                 })
                 .Where(l => l.TargetId == playerId)
-                .ToListAsync();
+                .ToListAsync());
 
             foreach (var adminTarget in data.Logs)
             {
-                adminTarget.Admin = await dbContext.Players
+                adminTarget.Admin = await ExecuteForDBAsync(async dbContext
+                => await dbContext.Players
                     .Where(p => p.Id == adminTarget.SourceId)
                     .Select(p => p.Name)
-                    .FirstOrDefaultAsync();
-                adminTarget.Lobby = adminTarget.LobbyId.HasValue ? LobbyManager.GetLobby(adminTarget.LobbyId.Value)?.Name : null;
+                    .FirstOrDefaultAsync());
+                adminTarget.Lobby = adminTarget.LobbyId.HasValue ? _lobbiesHandler.GetLobby(adminTarget.LobbyId.Value)?.Name : null;
             }
 
             if (forPlayer != null)
@@ -119,12 +126,12 @@ namespace TDS_Server.Core.Manager.Userpanel
             }
             else
             {
-                data.RegisterTimestamp = new DateTimeOffset(data.RegisterDateTime).ToString(Constants.DateTimeOffsetFormat);
-                data.LastLogin = new DateTimeOffset(data.LastLoginDateTime).ToString(Constants.DateTimeOffsetFormat);
+                data.RegisterTimestamp = new DateTimeOffset(data.RegisterDateTime).ToString(SharedConstants.DateTimeOffsetFormat);
+                data.LastLogin = new DateTimeOffset(data.LastLoginDateTime).ToString(SharedConstants.DateTimeOffsetFormat);
 
                 foreach (var log in data.Logs)
                 {
-                    log.Timestamp = new DateTimeOffset(log.TimestampDateTime).ToString(Constants.DateTimeOffsetFormat);
+                    log.Timestamp = new DateTimeOffset(log.TimestampDateTime).ToString(SharedConstants.DateTimeOffsetFormat);
                 }
             }
 
@@ -237,10 +244,10 @@ namespace TDS_Server.Core.Manager.Userpanel
         public string RegisterTimestamp { get; internal set; }
         [JsonProperty("6")]
         public bool IsVip { get; internal set; }
-       
+
         [JsonProperty("5")]
-        public short Donation { get; internal set; }       
-       
+        public short Donation { get; internal set; }
+
         [JsonProperty("13")]
         public int AmountMapsCreated { get; internal set; }
         [JsonProperty("17")]
@@ -270,5 +277,5 @@ namespace TDS_Server.Core.Manager.Userpanel
         [JsonProperty("20")]
         public List<PlayerUserpanelAdminTargetHistoryDataDto> Logs { get; internal set; }
     }
-    #nullable restore
+#nullable restore
 }

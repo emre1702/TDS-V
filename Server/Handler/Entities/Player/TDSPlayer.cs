@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -51,6 +52,7 @@ namespace TDS_Server.Handler.Entities.Player
         private readonly SpectateHandler _spectateHandler;
         private readonly GangsHandler _gangsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
+        private readonly ChatHandler _chatHandler;
 
         public TDSPlayer(
             IPlayer? modPlayer,
@@ -64,7 +66,8 @@ namespace TDS_Server.Handler.Entities.Player
             DataSyncHandler dataSyncHandler,
             SpectateHandler spectateHandler,
             GangsHandler gangsHandler,
-            LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
+            LobbiesHandler lobbiesHandler,
+            ChatHandler chatHandler) : base(dbContext, loggingHandler)
         {
             ModPlayer = modPlayer;
             _adminsHandler = adminsHandler;
@@ -76,6 +79,7 @@ namespace TDS_Server.Handler.Entities.Player
             _spectateHandler = spectateHandler;
             _gangsHandler = gangsHandler;
             _lobbiesHandler = lobbiesHandler;
+            _chatHandler = chatHandler;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
         }

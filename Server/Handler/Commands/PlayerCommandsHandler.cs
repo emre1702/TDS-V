@@ -1,44 +1,58 @@
-﻿using GTANetworkAPI;
-using System;
-using TDS_Common.Default;
-using TDS_Shared.Data.Enums;
-using TDS_Server.CustomAttribute;
-using TDS_Server.Default;
-using TDS_Server.Enums;
-using TDS_Server.Instance.LobbyInstances;
-using TDS_Server.Instance.PlayerInstance;
-using TDS_Server.Instance.Utility;
-using TDS_Server.Manager.Sync;
-using TDS_Server.Manager.Utility;
+﻿using System;
+using TDS_Server.Data.CustomAttribute;
+using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Handler.Sync;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Default;
 
-namespace TDS_Server.Core.Manager.Commands
+namespace TDS_Server.Handler.Commands
 {
-    internal class PlayerCommand : Script
+    public class PlayerCommandsHandler
     {
-        [TDSCommand(Default.PlayerCommand.LobbyLeave)]
-        public static async void LobbyLeave(TDSPlayer player)
+
+        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+        private readonly LobbiesHandler _lobbiesHandler;
+        private readonly IModAPI _modAPI;
+        private readonly ChatHandler _chatHandler;
+
+        public PlayerCommandsHandler(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, IModAPI modAPI, ChatHandler chatHandler)
+        {
+            _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
+            _lobbiesHandler = lobbiesHandler;
+            _modAPI = modAPI;
+            _chatHandler = chatHandler;
+        }
+
+        [TDSCommand(PlayerCommand.LobbyLeave)]
+        public async void OnLobbyLeave(TDSPlayer player)
         {
             if (player.Lobby is null)
                 return;
             if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
-                if (CustomLobbyMenuSync.IsPlayerInCustomLobbyMenu(player))
+                if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
                 {
-                    CustomLobbyMenuSync.RemovePlayer(player);
-                    NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.LeaveCustomLobbyMenu);
+                    _customLobbyMenuSyncHandler.RemovePlayer(player);
+                    player.SendEvent(ToClientEvent.LeaveCustomLobbyMenu);
                 }
                 return;
             }
 
             player.Lobby.RemovePlayer(player);
-            await LobbyManager.MainMenu.AddPlayer(player, 0);
+            await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
         }
 
-        [TDSCommand(Default.PlayerCommand.Suicide)]
-        public static void Suicide(TDSPlayer player)
+        [TDSCommand(PlayerCommand.Suicide)]
+        public void Suicide(TDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
             if (!(player.Lobby is FightLobby fightLobby))
                 return;
@@ -47,7 +61,7 @@ namespace TDS_Server.Core.Manager.Commands
 
             string animName = "PILL";
             float animTime = 0.536f;
-            switch ((WeaponHash)player.Player.CurrentWeapon)
+            switch (player.ModPlayer.CurrentWeapon)
             {
                 // Pistols //
                 case WeaponHash.Pistol:
@@ -67,26 +81,26 @@ namespace TDS_Server.Core.Manager.Commands
                     animTime = 0.365f;
                     break;
             }
-            
-            fightLobby.SendAllPlayerEvent(ToClientEvent.ApplySuicideAnimation, null, player.Player.Handle.Value, animName, animTime);
+
+            _modAPI.Sync.SendEvent(fightLobby, ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
         }
 
-        [TDSCommand(Default.PlayerCommand.GlobalChat)]
-        public static void GlobalChat(TDSPlayer player, [TDSRemainingText] string message)
+        [TDSCommand(PlayerCommand.GlobalChat)]
+        public void GlobalChat(TDSPlayer player, [TDSRemainingText] string message)
         {
-            ChatManager.SendGlobalMessage(player, message);
+            _chatHandler.SendGlobalMessage(player, message);
         }
 
-        [TDSCommand(Default.PlayerCommand.TeamChat)]
-        public static void TeamChat(TDSPlayer player, [TDSRemainingText] string message)
+        [TDSCommand(PlayerCommand.TeamChat)]
+        public void TeamChat(TDSPlayer player, [TDSRemainingText] string message)
         {
-            ChatManager.SendTeamChat(player, message);
+            _chatHandler.SendTeamChat(player, message);
         }
 
-        [TDSCommand(Default.PlayerCommand.OpenPrivateChat)]
-        public static void OpenPrivateChat(TDSPlayer player, TDSPlayer target)
+        [TDSCommand(PlayerCommand.OpenPrivateChat)]
+        public void OpenPrivateChat(TDSPlayer player, TDSPlayer target)
         {
-            if (player.Player is null || target.Player is null)
+            if (player.ModPlayer is null || target.ModPlayer is null)
                 return;
             // Am I blocked?
             if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
@@ -98,7 +112,7 @@ namespace TDS_Server.Core.Manager.Commands
             // Am I already in chat?
             if (player.InPrivateChatWith != null)
             {
-                player.Player.SendNotification(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH.Formatted(player.InPrivateChatWith.DisplayName));
+                player.ModPlayer.SendNotification(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH.Formatted(player.InPrivateChatWith.DisplayName));
                 return;
             }
 
@@ -109,7 +123,7 @@ namespace TDS_Server.Core.Manager.Commands
             // Withdraw my old request
             if (player.SentPrivateChatRequestTo != null)
             {
-                TDSPlayer oldTargett = player.SentPrivateChatRequestTo;
+                ITDSPlayer oldTargett = player.SentPrivateChatRequestTo;
                 oldTargett.Player!.SendNotification(oldTargett.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER.Formatted(player.DisplayName));
                 player.SentPrivateChatRequestTo = null;
             }
@@ -117,21 +131,21 @@ namespace TDS_Server.Core.Manager.Commands
             // Is Target already in a private chat?
             if (target.InPrivateChatWith != null)
             {
-                player.Player.SendNotification(player.Language.TARGET_ALREADY_IN_PRIVATE_CHAT);
+                player.ModPlayer.SendNotification(player.Language.TARGET_ALREADY_IN_PRIVATE_CHAT);
                 return;
             }
 
             // Send request
             if (target.SentPrivateChatRequestTo != player)
             {
-                player.Player.SendNotification(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO.Formatted(target.DisplayName));
+                player.ModPlayer.SendNotification(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO.Formatted(target.DisplayName));
                 target.Player.SendNotification(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM.Formatted(player.DisplayName));
                 player.SentPrivateChatRequestTo = target;
             }
             // Accept request
             else
             {
-                player.Player.SendNotification(player.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(target.DisplayName));
+                player.ModPlayer.SendNotification(player.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(target.DisplayName));
                 target.Player.SendNotification(target.Language.PRIVATE_CHAT_OPENED_WITH.Formatted(player.DisplayName));
                 target.SentPrivateChatRequestTo = null;
                 player.InPrivateChatWith = target;
@@ -139,35 +153,35 @@ namespace TDS_Server.Core.Manager.Commands
             }
         }
 
-        [TDSCommand(Default.PlayerCommand.ClosePrivateChat)]
-        public static void ClosePrivateChat(TDSPlayer player)
+        [TDSCommand(PlayerCommand.ClosePrivateChat)]
+        public void ClosePrivateChat(TDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
             if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
             {
-                player.Player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                player.ModPlayer.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
             }
             player.ClosePrivateChat(false);
         }
 
-        [TDSCommand(Default.PlayerCommand.PrivateChat)]
-        public static void PrivateChat(TDSPlayer player, [TDSRemainingText] string message)
+        [TDSCommand(PlayerCommand.PrivateChat)]
+        public void PrivateChat(TDSPlayer player, [TDSRemainingText] string message)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
             if (player.InPrivateChatWith is null)
             {
-                player.Player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                player.ModPlayer.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
             }
             string colorStr = "!$155|35|133$";
             player.InPrivateChatWith.Player?.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]");
         }
 
-        [TDSCommand(Default.PlayerCommand.PrivateMessage)]
-        public static void PrivateMessage(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
+        [TDSCommand(PlayerCommand.PrivateMessage)]
+        public void PrivateMessage(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
         {
             if (player == target)
                 return;
@@ -180,39 +194,39 @@ namespace TDS_Server.Core.Manager.Commands
             player.SendMessage(player.Language.PRIVATE_MESSAGE_SENT);
         }
 
-        [TDSCommand(Default.PlayerCommand.Position)]
-        public static void OutputCurrentPosition(TDSPlayer player)
+        [TDSCommand(PlayerCommand.Position)]
+        public void OutputCurrentPosition(TDSPlayer player)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
-            if (player.Player.IsInVehicle)
+            if (player.ModPlayer.IsInVehicle)
             {
-                Vector3 pos = player.Player.Vehicle.Position;
+                Vector3 pos = player.ModPlayer.Vehicle.Position;
                 player.SendMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                Vector3 rot = player.Player.Vehicle.Rotation;
+                Vector3 rot = player.ModPlayer.Vehicle.Rotation;
                 player.SendMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
-                player.SendMessage($"Vehicle dimension: {player.Player.Vehicle.Dimension} | Your dimension: {player.Player.Dimension}");
+                player.SendMessage($"Vehicle dimension: {player.ModPlayer.Vehicle.Dimension} | Your dimension: {player.ModPlayer.Dimension}");
             }
             else
             {
-                Vector3 pos = player.Player.Position;
+                Vector3 pos = player.ModPlayer.Position;
                 player.SendMessage("Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                Vector3 rot = player.Player.Rotation;
+                Vector3 rot = player.ModPlayer.Rotation;
                 player.SendMessage("Player ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
-                player.SendMessage($"Dimension: {player.Player.Dimension}");
+                player.SendMessage($"Dimension: {player.ModPlayer.Dimension}");
             }
         }
 
-        [TDSCommand(Default.PlayerCommand.UserId)]
-        public static void OutputUserId(TDSPlayer player)
+        [TDSCommand(PlayerCommand.UserId)]
+        public void OutputUserId(TDSPlayer player)
         {
             player.SendMessage("User id: " + (player.Entity?.Id.ToString() ?? "?"));
         }
 
-        [TDSCommand(Default.PlayerCommand.BlockUser)]
-        public static async void BlockUser(TDSPlayer player, TDSPlayer target)
+        [TDSCommand(PlayerCommand.BlockUser)]
+        public async void BlockUser(TDSPlayer player, TDSPlayer target)
         {
-            if (player.Player is null || target.Player is null)
+            if (player.ModPlayer is null || target.Player is null)
                 return;
             if (player.Entity is null || target.Entity is null)
                 return;
@@ -221,7 +235,7 @@ namespace TDS_Server.Core.Manager.Commands
             {
                 PlayerRelations relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
 
-                if (relation != null && relation.Relation == EPlayerRelation.Block)
+                if (relation != null && relation.Relation == PlayerRelation.Block)
                 {
                     //player.SendMessage(string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
                     UnblockUser(player, target);
@@ -229,25 +243,25 @@ namespace TDS_Server.Core.Manager.Commands
                 }
 
                 string msg;
-                if (relation != null && relation.Relation == EPlayerRelation.Friend)
+                if (relation != null && relation.Relation == PlayerRelation.Friend)
                 {
                     msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.DisplayName);
-                    var playerRelation = player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+                    var playerRelation = player.ModPlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
                     if (playerRelation != null)
-                        playerRelation.Relation = EPlayerRelation.Block;
+                        playerRelation.Relation = PlayerRelation.Block;
                     var targetRelation = target.PlayerRelationsTarget.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
                     if (targetRelation != null)
-                        targetRelation.Relation = EPlayerRelation.Block;
+                        targetRelation.Relation = PlayerRelation.Block;
                 }
                 else
                 {
                     relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
                     dbContext.PlayerRelations.Add(relation);
                     msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
-                    player.PlayerRelationsPlayer.Add(relation);
+                    player.ModPlayerRelationsPlayer.Add(relation);
                     target.PlayerRelationsTarget.Add(relation);
                 }
-                relation.Relation = EPlayerRelation.Block;
+                relation.Relation = PlayerRelation.Block;
                 await dbContext.SaveChangesAsync();
                 player.SendMessage(msg);
 
@@ -256,18 +270,18 @@ namespace TDS_Server.Core.Manager.Commands
 
             if (!continuue)
                 return;
-            
+
             if (player.InPrivateChatWith == target)
                 player.ClosePrivateChat(false);
-            target.Player.DisableVoiceTo(player.Player);
- 
+            target.Player.DisableVoiceTo(player.ModPlayer);
+
             target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
         }
 
-        [TDSCommand(Default.PlayerCommand.UnblockUser)]
-        public static async void UnblockUser(TDSPlayer player, TDSPlayer target)
+        [TDSCommand(PlayerCommand.UnblockUser)]
+        public async void UnblockUser(TDSPlayer player, TDSPlayer target)
         {
-            if (player.Player is null || target.Player is null)
+            if (player.ModPlayer is null || target.Player is null)
                 return;
             if (player.Entity is null || target.Entity is null)
                 return;
@@ -275,7 +289,7 @@ namespace TDS_Server.Core.Manager.Commands
             await player.ExecuteForDBAsync(async (dbContext) =>
             {
                 var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
-                if (relation is null || relation.Relation != EPlayerRelation.Block)
+                if (relation is null || relation.Relation != PlayerRelation.Block)
                 {
                     player.SendMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName));
                     return;
@@ -286,34 +300,34 @@ namespace TDS_Server.Core.Manager.Commands
             });
 
             if (target.Team == player.Team)
-                target.Player.EnableVoiceTo(player.Player);
+                target.Player.EnableVoiceTo(player.ModPlayer);
 
-            player.PlayerRelationsPlayer.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+            player.ModPlayerRelationsPlayer.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
             target.PlayerRelationsTarget.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
             player.SendMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
             target.SendMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
         }
 
-        [TDSCommand(Default.PlayerCommand.GiveMoney)]
-        public static void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
+        [TDSCommand(PlayerCommand.GiveMoney)]
+        public void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
         {
-            if (player.Player is null || target.Player is null)
+            if (player.ModPlayer is null || target.ModPlayer is null)
                 return;
             if (player.Entity is null || target.Entity is null)
                 return;
 
-            if (money < SettingsManager.GiveMoneyMinAmount)
+            if (money < _settingsHandler.ServerSettings.GiveMoneyMinAmount)
             {
-                player.Player.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
+                player.ModPlayer.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
                 return;
             }
 
-            uint fee = (uint)Math.Ceiling(money * SettingsManager.GiveMoneyFee);
+            uint fee = (uint)Math.Ceiling(money * _settingsHandler.ServerSettings.GiveMoneyFee);
             money += fee;
 
             if (player.Money < money)
             {
-                player.Player.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
+                player.ModPlayer.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
                 return;
             }
 
@@ -324,8 +338,8 @@ namespace TDS_Server.Core.Manager.Commands
             target.SendMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
         }
 
-        [TDSCommand(Default.PlayerCommand.LobbyInvitePlayer)]
-        public static void LobbyInvitePlayer(TDSPlayer player, TDSPlayer target)
+        [TDSCommand(PlayerCommand.LobbyInvitePlayer)]
+        public void LobbyInvitePlayer(TDSPlayer player, TDSPlayer target)
         {
             if (player.Lobby is null)
                 return;
@@ -335,23 +349,23 @@ namespace TDS_Server.Core.Manager.Commands
             switch (player.Lobby.Type)
             {
                 case LobbyType.MapCreateLobby:
-                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName), 
-                        target: target, 
-                        sender: player, 
-                        onAccept: async (sender, target, invitation) => 
+                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
+                        target: target,
+                        sender: player,
+                        onAccept: async (sender, target, invitation) =>
                         {
                             await sender.Lobby!.AddPlayer(target!, null);
                             target?.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
                             sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target?.DisplayName ?? "?"), false);
                         },
 
-                        onReject: (sender, target, invitation) => 
+                        onReject: (sender, target, invitation) =>
                         {
                             target?.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender.DisplayName), false);
                             sender.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target?.DisplayName ?? "?"), false);
                         },
 
-                        type: EInvitationType.Lobby
+                        type: InvitationType.Lobby
                     );
                     break;
             }

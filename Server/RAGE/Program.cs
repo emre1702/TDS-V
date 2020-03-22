@@ -35,6 +35,18 @@ namespace TDS_Server.RAGE.Startup
             };
         }
 
+        internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(GTANetworkAPI.Player player)
+        {
+            var modPlayer = GetModPlayer(player);
+            if (modPlayer is null)
+                return null;
+
+            return GetTDSPlayerIfLoggedIn(modPlayer);
+        }
+
+        internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
+            => TDSCore.GetTDSPlayerIfLoggedIn(player);
+
         internal static ITDSPlayer? GetTDSPlayer(GTANetworkAPI.Player player)
         {
             var modPlayer = GetModPlayer(player);

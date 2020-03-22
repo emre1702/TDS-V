@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BonusBotConnector.Client;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
@@ -14,8 +15,13 @@ namespace TDS_Server.Core.Manager.Utility
 {
     internal class OfflineMessagesHandler : DatabaseEntityWrapper
     {
-        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler) : base(dbContext, loggingHandler)
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+
+        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, BonusBotConnectorClient bonusBotConnectorClient) 
+            : base(dbContext, loggingHandler)
         {
+            _bonusBotConnectorClient = bonusBotConnectorClient;
+
             eventsHandler.PlayerLoggedIn += CheckOfflineMessages;
         }
 
@@ -27,14 +33,17 @@ namespace TDS_Server.Core.Manager.Utility
                 SourceId = source.Id,
                 Message = message
             };
-            using var dbContext = new TDSDbContext();
-            dbContext.Add(msg);
-            await dbContext.SaveChangesAsync();
 
-            BonusBotConnector.Client.Requests.PrivateChat.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId);
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Add(msg);
+                await dbContext.SaveChangesAsync();
+            });
+
+            _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId);
         }
 
-        public async void AddOfflineMessage(int targetId, ulong targetDiscordId, Players source, string message)
+        public async void Add(int targetId, ulong targetDiscordId, Players source, string message)
         {
             Offlinemessages msg = new Offlinemessages()
             {
@@ -42,11 +51,14 @@ namespace TDS_Server.Core.Manager.Utility
                 SourceId = source.Id,
                 Message = message
             };
-            using var dbContext = new TDSDbContext();
-            dbContext.Add(msg);
-            await dbContext.SaveChangesAsync();
 
-            BonusBotConnector.Client.Requests.PrivateChat.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId);
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Add(msg);
+                await dbContext.SaveChangesAsync();
+            });
+
+            _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId);
         }
 
         public async void CheckOfflineMessages(ITDSPlayer player)

@@ -166,6 +166,7 @@ namespace TDS_Server.Data.Languages
         public override string TIMEMUTE_INFO => "{0} wurde von {1} für {2} Minuten gemutet. Grund: {3}";
         public override string TIMEVOICEMUTE_INFO => "{0} wurde von {1} für {2} Minuten im Voice-Chat gemutet. Grund: {3}";
         public override string TOO_LONG_OUTSIDE_MAP => "Du warst zu lange außerhalb der Map.";
+        public override string TRY_AGAIN_LATER => "Versuche es später erneut.";
 
         public override string UNBAN_INFO => "{0} wurde von {1} entbannt. Grund: {2}";
         public override string UNBAN_LOBBY_INFO => "{0} wurde in der Lobby '{1}' von {2} entbannt. Grund: {3}";

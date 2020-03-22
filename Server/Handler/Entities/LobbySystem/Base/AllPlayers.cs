@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, Team? targetTeam = null)
+        public void SendAllPlayerLangMessage(Func<ILanguage, string> langgetter, ITeam? targetTeam = null)
         {
             Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
             if (targetTeam is null)
@@ -33,7 +33,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 });
         }
 
-        public void SendAllPlayerLangMessage(Dictionary<ILanguage, string> texts, Team? targetTeam = null)
+        public void SendAllPlayerLangMessage(Dictionary<ILanguage, string> texts, ITeam? targetTeam = null)
         {
             if (targetTeam is null)
                 FuncIterateAllPlayers((player, team) =>
@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 });
         }
 
-        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, Team? targetTeam = null, bool flashing = false)
+        public void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, ITeam? targetTeam = null, bool flashing = false)
         {
             Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
             if (targetTeam is null)
@@ -66,7 +66,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SendAllPlayerChatMessage(string msg, Team? targetTeam = null)
+        public void SendAllPlayerChatMessage(string msg, ITeam? targetTeam = null)
         {
             if (targetTeam is null)
             {
@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SendAllPlayerChatMessage(string msg, HashSet<int> blockingPlayerIds, Team? targetTeam = null)
+        public void SendAllPlayerChatMessage(string msg, HashSet<int> blockingPlayerIds, ITeam? targetTeam = null)
         {
             if (targetTeam is null)
             {

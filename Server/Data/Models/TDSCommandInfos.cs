@@ -2,7 +2,7 @@
 
 namespace TDS_Server.Data.Models
 {
-    internal class TDSCommandInfos
+    public class TDSCommandInfos
     {
         public string Command;
         public CommandUsageRight WithRight = CommandUsageRight.User;

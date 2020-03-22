@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Helper
 
                 string sql = $"DELETE FROM {playerChallengesTable} WHERE frequency = 'weekly'";
                 dbContext.Database.ExecuteSqlRaw(sql);
-            }).RunSynchronously();
+            }).Wait();
         }
 
         public async Task AddWeeklyChallenges(ITDSPlayer player)

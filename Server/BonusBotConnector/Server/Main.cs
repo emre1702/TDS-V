@@ -9,6 +9,8 @@ namespace BonusBotConnector_Server
     {
         public BBCommandService CommandService { get; }
 
+        public static void Main() { }
+
         public BonusBotConnectorServer(ILoggingHandler loggingHandler)
         {
             var host = CreateHostBuilder(loggingHandler).Build();

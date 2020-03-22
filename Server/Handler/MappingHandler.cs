@@ -22,21 +22,22 @@ namespace TDS_Server.Handler
                 cfg.CreateMap<string, int>().ConvertUsing(str => Convert.ToInt32(str));
                 cfg.CreateMap<string, float>().ConvertUsing(str => Convert.ToSingle(str));
                 cfg.CreateMap<string, double>().ConvertUsing(str => Convert.ToDouble(str));
-                cfg.CreateMap<string, bool>().ConvertUsing(str => str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1");
+                cfg.CreateMap<string, bool>().ConvertUsing(str => 
+                        str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1" || str.Equals("yes", StringComparison.CurrentCultureIgnoreCase));
 
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
 
                 cfg.CreateMap<string, ITDSPlayer?>().ConvertUsing(new StringNameToPlayerConverter(tdsPlayerHandler));
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
 
-                cfg.CreateMap<IPlayer, ITDSPlayer>().ConvertUsing(new IPlayerToITDSPlayerConverter(tdsPlayerHandler));
+                cfg.CreateMap<IPlayer, ITDSPlayer?>().ConvertUsing(new IPlayerToITDSPlayerConverter(tdsPlayerHandler));
             });
             config.AssertConfigurationIsValid();
 
             Mapper = config.CreateMapper();
         }
 
-        public static Type GetCorrectDestType(Type sourceType)
+        public Type GetCorrectDestType(Type sourceType)
         {
             if (sourceType == typeof(Players))
                 return typeof(Task<Players?>);

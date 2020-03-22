@@ -33,6 +33,9 @@ namespace TDS_Server.Data.Interfaces
         bool IsPermamuted { get; }
         bool IsMuted { get; }
         int? MuteTime { get; set; }
+
+        void LoadTimezone();
+
         HashSet<int> BlockingPlayerIds { get; }
         string AdminLevelName { get; }
         bool LoggedIn { get; }
@@ -47,6 +50,9 @@ namespace TDS_Server.Data.Interfaces
         WeaponHash LastWeaponOnHand { get; set; }
         DateTime? LastKillAt { get; set; }
         short KillingSpree { get; set; }
+
+        string GetLocalDateTimeString(DateTime createTime);
+
         PedHash FreemodeSkin { get; }
         bool IsVoiceMuted { get; }
         int TeamIndex { get; }
@@ -59,6 +65,8 @@ namespace TDS_Server.Data.Interfaces
         IVehicle? FreeroamVehicle { get; set; }
         int PlayMinutes { get; set; }
         int? VoiceMuteTime { get; set; }
+        Language LanguageEnum { get; set; }
+        bool IsConsole { get; set; }
 
         void SendBrowserEvent(string eventName, params object[] args);
         void SendEvent(string eventName, params object[] args);
@@ -74,7 +82,9 @@ namespace TDS_Server.Data.Interfaces
         Task ExecuteForDB(Action<TDSDbContext> p);
         void SetEntityInvincible(IVehicle vehicle, bool invincible);
         Task ExecuteForDBAsync(Func<TDSDbContext, Task> p);
+        Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
         void CheckSaveData();
         void CheckReduceMapBoughtCounter();
+        ValueTask SaveData(bool force = false);
     }
 }

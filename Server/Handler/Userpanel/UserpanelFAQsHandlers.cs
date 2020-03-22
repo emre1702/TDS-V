@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TDS_Shared.Data.Enums;
-using TDS_Common.Manager.Utility;
-using TDS_Server.Instance.PlayerInstance;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Manager.Utility;
 
-namespace TDS_Server.Core.Manager.Userpanel
+namespace TDS_Server.Handler.Userpanel
 {
-    class FAQs
+    class UserpanelFAQsHandlers
     {
-        private static readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>() 
-        { 
+        private readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>()
+        {
             [Language.English] = string.Empty,
             [Language.German] = string.Empty
         };
 
+        public UserpanelFAQsHandlers(TDSDbContext dbContext, Serializer serializer)
+        {
+            LoadFAQs(dbContext, serializer);
+        }
 
-        public static void LoadFAQs(TDSDbContext dbContext)
+        public void LoadFAQs(TDSDbContext dbContext, Serializer serializer)
         {
             Regex regex = new Regex("(?<=(\r\n|\r|\n))[ ]{2,}", RegexOptions.None);
 
@@ -28,17 +32,17 @@ namespace TDS_Server.Core.Manager.Userpanel
             {
                 var faqs = allFAQs
                     .Where(f => f.Language == entry.Key)
-                    .Select(f => new FAQData 
+                    .Select(f => new FAQData
                     {
                         Id = f.Id,
                         Question = regex.Replace(f.Question, ""),
                         Answer = regex.Replace(f.Answer, "")
                     });
-                _faqsJsonByLanguage[entry.Key] = Serializer.ToBrowser(faqs);
+                _faqsJsonByLanguage[entry.Key] = serializer.ToBrowser(faqs);
             }
         }
 
-        public static string GetData(TDSPlayer player)
+        public string GetData(ITDSPlayer player)
         {
             return _faqsJsonByLanguage[player.LanguageEnum];
         }

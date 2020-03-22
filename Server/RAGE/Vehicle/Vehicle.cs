@@ -29,7 +29,7 @@ namespace TDS_Server.RAGE.Vehicle
                     if (o is GTANetworkAPI.Player player)
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                        return (ITDSEntity)Program.GetTDSPlayer(player);
+                        return (ITDSEntity)Program.GetTDSPlayerIfLoggedIn(player);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                     }
                     return null;
