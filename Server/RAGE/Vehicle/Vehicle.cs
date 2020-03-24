@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.RAGE.Startup;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGE.Vehicle
 {
@@ -17,10 +16,10 @@ namespace TDS_Server.RAGE.Vehicle
 
         public ushort Id => _instance.Id;
 
-        public List<ITDSEntity> Occupants 
+        public List<ITDSEntity> Occupants
         {
-            
-            get 
+
+            get
             {
                 var modOccupants = _instance.Occupants;
 #pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
@@ -42,6 +41,10 @@ namespace TDS_Server.RAGE.Vehicle
         }
 
         public int MaxOccupants => _instance.MaxOccupants;
+
+        public Position3D Rotation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public Position3D Position { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public uint Dimension { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public void Delete()
         {

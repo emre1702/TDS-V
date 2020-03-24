@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
@@ -25,5 +26,6 @@ namespace TDS_Server.Data.Interfaces
         void BanPlayer(ITDSPlayer player, ITDSPlayer target, DateTime? length, string reason);
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
         void BanPlayer(ITDSPlayer player, Players dbTarget, DateTime? length, string reason, string? serial = null);
+        Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
     }
 }

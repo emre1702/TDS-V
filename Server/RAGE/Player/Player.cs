@@ -74,6 +74,10 @@ namespace TDS_Server.RAGE.Player
 
         public bool IsInVehicle => throw new System.NotImplementedException();
 
+        public IVehicle Vehicle => throw new System.NotImplementedException();
+
+        public bool IsDead => throw new System.NotImplementedException();
+
         public void SetHealth(int health)
         {
             NAPI.Player.SetPlayerHealth(_instance, health);
@@ -176,6 +180,11 @@ namespace TDS_Server.RAGE.Player
         }
 
         public void SetIntoVehicle(IVehicle vehicle, int v)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetClothes(int slot, int drawable, int texture)
         {
             throw new System.NotImplementedException();
         }

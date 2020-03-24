@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BonusBotConnector.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Core.Manager.Utility;
@@ -22,8 +23,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler, 
             SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler, 
-            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider) 
-            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler)
+            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient) 
+            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, weaponDatasLoadingHandler,
+                  bonusBotConnectorClient)
         {
             _gangwarAreasHandler = gangwarAreasHandler;
             _gangsHandler = gangsHandler;

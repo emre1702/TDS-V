@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
@@ -12,7 +13,7 @@ namespace TDS_Server.Handler.Sync
 {
     public class CustomLobbyMenuSyncHandler
     {
-        private readonly List<TDSPlayer> _playersInCustomLobbyMenu = new List<TDSPlayer>();
+        private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new List<ITDSPlayer>();
 
         private readonly Serializer _serializer;
         private readonly LobbiesHandler _lobbiesHandler;
@@ -22,10 +23,10 @@ namespace TDS_Server.Handler.Sync
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
-            eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
         }
 
-        private void EventsHandler_PlayerLoggedOut(TDSPlayer player)
+        private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)
         {
             RemovePlayer(player);
         }
@@ -38,7 +39,7 @@ namespace TDS_Server.Handler.Sync
             string json = _serializer.ToBrowser(GetCustomLobbyData(lobby));
             for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
             {
-                TDSPlayer player = _playersInCustomLobbyMenu[i];
+                ITDSPlayer player = _playersInCustomLobbyMenu[i];
                 if (!player.LoggedIn)
                 {
                     _playersInCustomLobbyMenu.RemoveAt(i);
@@ -54,7 +55,7 @@ namespace TDS_Server.Handler.Sync
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    TDSPlayer player = _playersInCustomLobbyMenu[i];
+                    ITDSPlayer player = _playersInCustomLobbyMenu[i];
                     if (!player.LoggedIn)
                     {
                         _playersInCustomLobbyMenu.RemoveAt(i);
@@ -65,7 +66,7 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        public void AddPlayer(TDSPlayer player)
+        public void AddPlayer(ITDSPlayer player)
         {
             _playersInCustomLobbyMenu.Add(player);
             List<CustomLobbyData> lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
@@ -75,7 +76,7 @@ namespace TDS_Server.Handler.Sync
             player.SendEvent(ToClientEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
         }
 
-        public void RemovePlayer(TDSPlayer player)
+        public void RemovePlayer(ITDSPlayer player)
         {
             _playersInCustomLobbyMenu.Remove(player);
         }

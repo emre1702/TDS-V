@@ -22,11 +22,13 @@ namespace TDS_Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
         private readonly Serializer _serializer;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, 
-            ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler) 
+            ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler) 
             : base(dbContext, loggingHandler)
-            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler) = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler);
+            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler) 
+            = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -84,7 +86,7 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(a => a.ApplicationId == applicationId)
                     .ToDictionaryAsync(a => a.QuestionId, a => a.Answer)
                     .ConfigureAwait(false));
-            var questionsJson = UserpanelApplicationUserHandler.AdminQuestions;
+            var questionsJson = _userpanelApplicationUserHandler.AdminQuestions;
 
             var stats = await _userpanelPlayerStatsHandler.GetPlayerStats(creatorId, false, player).ConfigureAwait(false);
 
@@ -93,7 +95,7 @@ namespace TDS_Server.Handler.Userpanel
                     .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id)
                     .ConfigureAwait(false));
 
-            string json = Serializer.ToBrowser(new ApplicationData
+            string json = _serializer.ToBrowser(new ApplicationData
             {
                 ApplicationID = applicationId,
                 Answers = answers,

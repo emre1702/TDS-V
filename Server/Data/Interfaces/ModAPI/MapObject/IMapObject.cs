@@ -7,7 +7,6 @@ namespace TDS_Server.Data.Interfaces.ModAPI.MapObject
     #nullable enable
     public interface IMapObject : IEntity, IEquatable<IMapObject>
     {
-        Position3D Position { get; set; }
         Position3D Rotation { get; set; }
 
         void Delete();

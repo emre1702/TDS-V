@@ -3,22 +3,23 @@ using System;
 using System.Net;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.Bonusbot;
+using static BonusBotConnector.Client.BonusBotConnectorClient;
 using static BonusBotConnector.Client.RAGEServerStats;
 
 namespace BonusBotConnector.Client.Requests
 {
     public class ServerInfos
     {
+        public event ErrorLogDelegate? Error;
+
         private readonly RAGEServerStatsClient _client;
-        private readonly ILoggingHandler _loggingHandler;
         private readonly BonusbotSettings _settings;
         private readonly Helper _helper;
         private readonly string _ipAddress = "?";
 
-        internal ServerInfos(GrpcChannel channel, ILoggingHandler loggingHandler, Helper helper, BonusbotSettings settings)
+        internal ServerInfos(GrpcChannel channel, Helper helper, BonusbotSettings settings)
         {
             _client = new RAGEServerStatsClient(channel);
-            _loggingHandler = loggingHandler;
             _settings = settings;
             _helper = helper;
 
@@ -37,7 +38,7 @@ namespace BonusBotConnector.Client.Requests
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogErrorFromBonusBot(ex);
+                Error?.Invoke(ex);
             }
         }
     }

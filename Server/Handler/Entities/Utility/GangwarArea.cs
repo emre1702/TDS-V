@@ -88,40 +88,43 @@ namespace TDS_Server.Handler.Entities.Utility
         {
             if (Entity is { })
             {
-                using var dbContext = new TDSDbContext();
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    dbContext.Attach(Entity);
 
-                dbContext.Attach(Entity);
+                    ++Entity.AttackCount;
+                    HasCooldown = true;
 
-                ++Entity.AttackCount;
-                HasCooldown = true;
+                    if (conquered)
+                        SetConquered(dbContext, true);
+                    else
+                        SetDefended(dbContext);
 
-                if (conquered)
-                    SetConquered(dbContext, true);
-                else
-                    SetDefended(dbContext);
-
-                await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
+                });
+                
             }
             ClearAttack();
         }
 
-        public Task? SetConqueredWithoutAttack(IGang newOwner)
+        public async Task? SetConqueredWithoutAttack(IGang newOwner)
         {
             if (Entity is { })
             {
                 Attacker = newOwner;
 
-                using var dbContext = new TDSDbContext();
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    dbContext.Attach(Entity);
 
-                dbContext.Attach(Entity);
+                    HasCooldown = true;
 
-                HasCooldown = true;
+                    SetConquered(dbContext, false);
 
-                SetConquered(dbContext, false);
+                    await dbContext.SaveChangesAsync();
+                });
 
-                return dbContext.SaveChangesAsync();
             }
-            return null;
         }
 
         private void SetDefended(TDSDbContext dbContext)

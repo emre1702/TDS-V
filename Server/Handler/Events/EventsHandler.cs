@@ -1,33 +1,42 @@
-﻿using System;
+﻿using BonusBotConnector_Server;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Userpanel;
 
 namespace TDS_Server.Handler.Events
 {
     public class EventsHandler
     {
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
-
-        private readonly ILoggingHandler _loggingHandler;
         private readonly BansHandler _bansHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ResourceStopHandler _resourceStopHandler;
+        private readonly UserpanelHandler _userpanelHandler;
 
-        public EventsHandler(TDSPlayerHandler tdsPlayerHandler, ILoggingHandler loggingHandler, BansHandler bansHandler, LobbiesHandler lobbiesHandler, ResourceStopHandler resourceStopHandler)
-            => (_tdsPlayerHandler, _loggingHandler, _bansHandler, _lobbiesHandler, _resourceStopHandler) 
-            = (tdsPlayerHandler, loggingHandler, bansHandler, lobbiesHandler, resourceStopHandler);
+        public EventsHandler(BansHandler bansHandler, LobbiesHandler lobbiesHandler, ResourceStopHandler resourceStopHandler,
+            BonusBotConnectorServer bonusBotConnectorServer, UserpanelHandler userpanelHandler)
+        {
+            (_bansHandler, _lobbiesHandler, _resourceStopHandler) 
+            = (bansHandler, lobbiesHandler, resourceStopHandler);
+
+            _userpanelHandler = userpanelHandler;
+                
+            bonusBotConnectorServer.CommandService.OnUsedCommand += BBCommandService_OnUsedCommand;
+        }
 
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
 
-        public event PlayerDelegate? PlayerDisconnected;
         public event PlayerDelegate? PlayerLoggedIn;
         public event PlayerDelegate? PlayerRegistered;
         public event PlayerDelegate? PlayerLoggedOut;
+
+        public delegate void ModPlayerDelegate(IPlayer player);
+        public event ModPlayerDelegate? PlayerDisconnected;
 
         public delegate ValueTask PlayerAsyncDelegate(ITDSPlayer player);
         public event PlayerAsyncDelegate? PlayerLoggedOutBefore;
@@ -45,21 +54,22 @@ namespace TDS_Server.Handler.Events
         public event EmptyDelegate? MapsLoaded;
         public event EmptyDelegate? Update;
 
+        public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
+        public event ErrorDelegate? Error;
+
         public void OnUpdate()
         {
             Update?.Invoke();
         }
 
-        public void OnPlayerConnected(IPlayer modPlayer)
+        public void OnPlayerConnected(ITDSPlayer tdsPlayer)
         {
-            var tdsPlayer = _tdsPlayerHandler.Get(modPlayer);
             PlayerConnected?.Invoke(tdsPlayer);
         }
 
         public void OnPlayerDisconnected(IPlayer modPlayer)
         {
-            var tdsPlayer = _tdsPlayerHandler.Get(modPlayer);
-            PlayerDisconnected?.Invoke(tdsPlayer);
+            PlayerDisconnected?.Invoke(modPlayer);
         }
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
@@ -117,7 +127,7 @@ namespace TDS_Server.Handler.Events
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex);
+                Error?.Invoke(ex);
             }
         }
 
@@ -130,7 +140,7 @@ namespace TDS_Server.Handler.Events
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex);
+                Error?.Invoke(ex);
             }
         }
 
@@ -143,8 +153,20 @@ namespace TDS_Server.Handler.Events
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex);
+                Error?.Invoke(ex);
             }
+        }
+
+
+
+
+        private string? BBCommandService_OnUsedCommand(ulong userId, string command)
+        {
+            return command switch
+            {
+                "confirmtds" => _userpanelHandler.SettingsNormalHandler.ConfirmDiscordUserId(userId),
+                _ => null,
+            };
         }
     }
 }

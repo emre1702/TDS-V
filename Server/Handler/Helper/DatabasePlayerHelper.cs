@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -21,7 +22,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false })).Wait();
         }
 
-
         public async Task<bool> DoesPlayerWithScnameExist(string scname)
         {
             int id = await GetPlayerIDByScname(scname).ConfigureAwait(false);
@@ -35,6 +35,12 @@ namespace TDS_Server.Core.Manager.PlayerManager
                     .AsNoTracking()
                     .AnyAsync(p => EF.Functions.ILike(p.Name, name))
                     .ConfigureAwait(false));
+        }
+
+        public async Task<Players?> GetPlayerByName(string name)
+        {
+            return await ExecuteForDBAsync(async dbContext => 
+                await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()));
         }
 
         public async Task<int> GetPlayerIDByScname(string scname)

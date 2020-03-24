@@ -24,6 +24,23 @@ namespace TDS_Server.Handler
             _settingsHandler = settingsHandler;
 
             eventsHandler.Minute += Save;
+            eventsHandler.Error += LogError;
+
+            if (_bonusBotConnectorClient.ChannelChat is { })
+            {
+                _bonusBotConnectorClient.ChannelChat.Error += LogErrorFromBonusBot;
+                _bonusBotConnectorClient.ChannelChat.ErrorString += LogErrorFromBonusBot;
+            }
+            if (_bonusBotConnectorClient.PrivateChat is { })
+            {
+                _bonusBotConnectorClient.PrivateChat.Error += LogErrorFromBonusBot;
+                _bonusBotConnectorClient.PrivateChat.ErrorString += LogErrorFromBonusBot;
+            }
+            if (_bonusBotConnectorClient.ServerInfos is { })
+            {
+                _bonusBotConnectorClient.ServerInfos.Error += LogErrorFromBonusBot;
+            }
+
         }
 
         private async void Save(ulong counter)

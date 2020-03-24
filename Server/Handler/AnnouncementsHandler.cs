@@ -7,7 +7,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler
 {
-    class AnnouncementsHandler : IAnnouncementsHandler
+    public class AnnouncementsHandler : IAnnouncementsHandler
     {
         public string Json { get; }
 

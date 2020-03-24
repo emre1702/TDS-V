@@ -46,13 +46,15 @@ namespace TDS_Server.Handler.Commands
         private readonly MappingHandler _mappingHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ChatHandler _chatHandler;
+        private readonly BaseCommands _baseCommands;
 
         public CommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler, 
-            ISettingsHandler settingsHandler, ChatHandler chatHandler, RemoteEventsHandler remoteEventsHandler)
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands)
         {
             _mappingHandler = mappingHandler;
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;
+            _baseCommands = baseCommands;
 
             LoadCommands(dbContext, userpanelCommandsHandler);
         }
@@ -69,10 +71,11 @@ namespace TDS_Server.Handler.Commands
                 }
             }
 
-            List<MethodInfo> methods = Assembly.GetExecutingAssembly().GetTypes()
-                   .SelectMany(t => t.GetMethods())
-                   .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0)
-                   .ToList();
+            List<MethodInfo> methods = _baseCommands
+                    .GetType()
+                    .GetMethods()
+                    .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0)
+                    .ToList();
             foreach (MethodInfo method in methods)
             {
                 var attribute = method.GetCustomAttribute<TDSCommand>();
@@ -206,7 +209,7 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     object[] finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    methoddata.MethodDefault.Invoke(null, finalInvokeArgs);
+                    methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs);
                     /*}
                     else
                     {

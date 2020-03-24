@@ -1,7 +1,8 @@
-﻿using TDS_Server.Core.Manager.Utility;
-using TDS_Server.Data.Interfaces;
+﻿/*using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Handler.Events.Mod;
+using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Events;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Core.Player.Join
 {
@@ -53,4 +54,4 @@ namespace TDS_Server.Core.Player.Join
             NAPI.ClientEvent.TriggerClientEvent(client, ToClientEvent.StartRegisterLogin, playerIDName.Name, true);
         }
     }
-}
+}*/

@@ -33,17 +33,17 @@ namespace TDS_Server.Handler.Entities
         [JsonProperty("8")]
         public string SCName { get; set; }
 
-        public static AngularConstantsData Get(ITDSPlayer player)
+        public static AngularConstantsData Get(ITDSPlayer player, ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler)
         {
             return new AngularConstantsData
             {
                 TDSId = player.Id,
                 RemoteId = player.RemoteId,
-                UsernameChangeCost = _settingsHandler.ServerSettings.UsernameChangeCost,
-                UsernameChangeCooldownDays = _settingsHandler.ServerSettings.UsernameChangeCooldownDays,
-                MapBuyBasePrice = _settingsHandler.ServerSettings.MapBuyBasePrice,
-                MapBuyCounterMultiplicator = _settingsHandler.ServerSettings.MapBuyCounterMultiplicator,
-                AnnouncementsJson = _announcementsHandler.Json,
+                UsernameChangeCost = settingsHandler.ServerSettings.UsernameChangeCost,
+                UsernameChangeCooldownDays = settingsHandler.ServerSettings.UsernameChangeCooldownDays,
+                MapBuyBasePrice = settingsHandler.ServerSettings.MapBuyBasePrice,
+                MapBuyCounterMultiplicator = settingsHandler.ServerSettings.MapBuyCounterMultiplicator,
+                AnnouncementsJson = announcementsHandler.Json,
                 Username = player.Entity.Name,
                 SCName = player.Entity.SCName
             };

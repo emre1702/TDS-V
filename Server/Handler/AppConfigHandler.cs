@@ -13,7 +13,7 @@ namespace TDS_Server.Handler
 
         public AppConfigHandler()
         {
-            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "TDS_Server";
+            string appName = "TDS_Server";
             using var fileStream = new FileStream(appName + ".config", FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));

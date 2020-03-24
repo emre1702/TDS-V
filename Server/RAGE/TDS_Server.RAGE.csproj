@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
       <Nullable>enable</Nullable>
+      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,5 +24,9 @@
   <ItemGroup>
     <Folder Include="Object\" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
+  </Target>
 
 </Project>

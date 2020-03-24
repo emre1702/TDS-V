@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Enums;
+﻿using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
@@ -14,16 +15,17 @@ namespace TDS_Server.Handler.Entities.GameModes
 {
     public abstract class GameMode
     {
-        protected Arena Lobby;
-        protected MapDto Map;
-        protected IModAPI ModAPI;
+        protected readonly Arena Lobby;
+        protected readonly MapDto Map;
+        protected readonly IModAPI ModAPI;
         protected readonly Serializer Serializer;
-        protected SettingsHandler SettingsHandler;
-        protected LangHelper LangHelper;
+        protected readonly SettingsHandler SettingsHandler;
+        protected readonly LangHelper LangHelper;
+        protected readonly InvitationsHandler InvitationsHandler;
 
         public ITeam? WinnerTeam { get; set; }
 
-        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper)
+        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
         {
             Lobby = lobby;
             Map = map;
@@ -31,6 +33,7 @@ namespace TDS_Server.Handler.Entities.GameModes
             Serializer = serializer;
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
+            InvitationsHandler = invitationsHandler;
         }
 
         public virtual void StartRoundCountdown() { }

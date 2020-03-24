@@ -85,10 +85,15 @@ namespace TDS_Server.Handler.Maps
 
                 if (!onlySave)
                 {
-                    using var dbContext = new TDSDbContext();
+
                     var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
-                    await dbContext.Maps.AddAsync(dbMap);
-                    await dbContext.SaveChangesAsync().ConfigureAwait(true);
+
+                    await ExecuteForDBAsync(async dbContext =>
+                    {
+                        await dbContext.Maps.AddAsync(dbMap);
+                        await dbContext.SaveChangesAsync();
+                    });
+                    
 
                     mapDto.BrowserSyncedData.Id = dbMap.Id;
                     mapDto.RatingAverage = 5;

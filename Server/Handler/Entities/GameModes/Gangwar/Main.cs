@@ -16,8 +16,8 @@ namespace TDS_Server.Handler.Entities.GameModes
         private readonly GangwarArea? _gangwarArea;
 
         public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, 
-            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper) 
-            : base(lobby, map, modAPI, serializer, settingsHandler, langHelper)
+            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler) 
+            : base(lobby, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
         {
             var gangwarArea = gangwarAreasHandler.GetById(map.BrowserSyncedData.Id);
             if (gangwarArea is null)

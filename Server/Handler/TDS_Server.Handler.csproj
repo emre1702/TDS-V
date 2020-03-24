@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\TDS_Shared\TDS_Shared.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
+    <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
   </ItemGroup>
 

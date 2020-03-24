@@ -4,39 +4,34 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.Commands
 {
-    public class AdminCommandsHandler
+    partial class BaseCommands
     {
-        private readonly ChatHandler _chatHandler;
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly LangHelper _langHelper;
-
-        public AdminCommandsHandler(ChatHandler chatHandler, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, LangHelper langHelper)
-            => (_chatHandler, _loggingHandler, _lobbiesHandler, _langHelper) = (chatHandler, loggingHandler, lobbiesHandler, langHelper);
 
         [TDSCommand(AdminCommand.AdminSay)]
-        public void AdminSay(TDSPlayer player, [TDSRemainingText] string text)
+        public void AdminSay(ITDSPlayer player, [TDSRemainingText] string text)
         {
             _chatHandler.SendAdminMessage(player, text);
         }
 
         [TDSCommand(AdminCommand.AdminChat)]
-        public void AdminChat(TDSPlayer player, [TDSRemainingText] string text)
+        public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
         {
             _chatHandler.SendAdminChat(player, text);
         }
 
         [TDSCommand(AdminCommand.NextMap)]
-        public void NextMap(TDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
+        public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!(player.Lobby is Arena arena))
                 return;
@@ -50,7 +45,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.LobbyKick)]
-        public async void LobbyKick(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        public async void LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player == target)
                 return;
@@ -75,7 +70,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.LobbyBan, 1)]
-        public void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public void LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;
@@ -95,7 +90,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.LobbyBan, 0)]
-        public void LobbyBanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public void LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;
@@ -117,7 +112,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 1)]
-        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == DateTime.MinValue)
                 _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason);
@@ -131,7 +126,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
-        public void BanPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == DateTime.MinValue)
                 _lobbiesHandler.MainMenu.UnbanPlayer(player, dbTarget, reason);
@@ -145,7 +140,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Kick)]
-        public void KickPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_INFO, target.DisplayName, player.DisplayName, reason));
             target.ModPlayer?.Kick(string.Format(target.Language.KICK_YOU_INFO, player.DisplayName, reason));
@@ -155,108 +150,112 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Mute, 1)]
-        public void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Account.ChangePlayerMuteTime(player, target, minutes, reason);
+            target.ChangeMuteTime(target, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Mute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.Mute, 0)]
-        public void MutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Account.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
+            await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 0)]
-        public void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Account.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
+            await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]
-        public void VoiceMutePlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            Account.ChangePlayerVoiceMuteTime(player, target, minutes, reason);
+            target.ChangeVoiceMuteTime(player, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.VoiceMute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.Goto)]
-        public void GotoPlayer(TDSPlayer player, TDSCommandInfos cmdinfos, TDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        public void GotoPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.ModPlayer is null || target.ModPlayer is null)
                 return;
 
-            Vector3 targetpos = NAPI.Entity.GetEntityPosition(target.Player);
+            var targetPos = target.ModPlayer.Position;
 
             #region Admin is in vehicle
             if (player.ModPlayer.IsInVehicle)
             {
-                NAPI.Entity.SetEntityPosition(player.ModPlayer.Vehicle, targetpos.Around(2f));
+                player.ModPlayer.Vehicle.Position = targetPos.Around(2f, false);
                 return;
             }
             #endregion Admin is in vehicle
 
             #region Target is in vehicle and we want to sit in it
-            if (target.Player.IsInVehicle)
+            if (target.ModPlayer.IsInVehicle)
             {
-                uint? freeSeat = Utils.GetVehicleFreeSeat(target.Player.Vehicle);
+                uint? freeSeat = Utils.GetVehicleFreeSeat(target.ModPlayer.Vehicle);
                 if (freeSeat.HasValue)
                 {
-                    NAPI.Player.SetPlayerIntoVehicle(player.Player, target.Player.Vehicle, (int)freeSeat.Value);
+                    player.ModPlayer.SetIntoVehicle(target.ModPlayer.Vehicle, (int)freeSeat.Value);
                     return;
                 }
             }
             #endregion Target is in vehicle and we want to sit in it
 
             #region Normal
-            NAPI.Entity.SetEntityPosition(player.Player, targetpos.Around(2f));
+            player.ModPlayer.Position = targetPos.Around(2f, false);
             #endregion Normal
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Goto, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
+        //Todo implement Position3D as parameter
         [TDSCommand(AdminCommand.Goto)]
-        public void GotoVector(TDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
+        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.Player is null)
+            if (player.ModPlayer is null)
                 return;
 
-            Vector3 pos = new Vector3(x, y, z);
-            NAPI.Entity.SetEntityPosition(player.Player, pos);
+
+            player.ModPlayer.Position = new Position3D(x, y, z);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.Test)]
-        public void Test(TDSPlayer player, string type, string arg1, string arg2, string arg3)
+        public void Test(ITDSPlayer player, string type, string arg1, string arg2, string arg3)
         {
             switch (type)
             {
                 case "cloth":
+                    if (player.ModPlayer is null)
+                        return;
+
                     if (!int.TryParse(arg1, out int slot))
                     {
                         player.SendNotification(player.Language.COMMAND_USED_WRONG, true);
@@ -273,7 +272,7 @@ namespace TDS_Server.Handler.Commands
                         return;
                     }
 
-                    NAPI.Player.SetPlayerClothes(player.Player, slot, drawable, texture);
+                    player.ModPlayer.SetClothes(slot, drawable, texture);
                     break;
 
                 default:
@@ -282,7 +281,7 @@ namespace TDS_Server.Handler.Commands
             }
         }
 
-        private bool IsMuteTimeValid(int muteTime, TDSPlayer outputTo)
+        private bool IsMuteTimeValid(int muteTime, ITDSPlayer outputTo)
         {
             if (muteTime < -1)
             {

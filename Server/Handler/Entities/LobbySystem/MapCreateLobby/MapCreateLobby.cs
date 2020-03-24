@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BonusBotConnector.Client;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -21,8 +22,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
 
         public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler) 
-            : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler) 
+            SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient) 
+            : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient) 
             { 
             
             }

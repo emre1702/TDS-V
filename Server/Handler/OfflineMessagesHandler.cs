@@ -13,7 +13,7 @@ using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Core.Manager.Utility
 {
-    internal class OfflineMessagesHandler : DatabaseEntityWrapper
+    public class OfflineMessagesHandler : DatabaseEntityWrapper
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
 

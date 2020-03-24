@@ -67,6 +67,8 @@ namespace TDS_Server.Data.Interfaces
         int? VoiceMuteTime { get; set; }
         Language LanguageEnum { get; set; }
         bool IsConsole { get; set; }
+        List<PlayerRelations> PlayerRelationsPlayer { get; }
+        List<PlayerRelations> PlayerRelationsTarget { get; }
 
         void SendBrowserEvent(string eventName, params object[] args);
         void SendEvent(string eventName, params object[] args);
@@ -86,5 +88,8 @@ namespace TDS_Server.Data.Interfaces
         void CheckSaveData();
         void CheckReduceMapBoughtCounter();
         ValueTask SaveData(bool force = false);
+        void ClosePrivateChat(bool v);
+        void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
+        void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
     }
 }

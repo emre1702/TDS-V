@@ -11,7 +11,6 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         bool Dead { get; }
         string IPAddress { get; }
         string Name { get; set; }
-        Position3D Position { get; set; }
         ushort RemoteId { get; }
 
         void SetInvincible(bool v);
@@ -28,11 +27,12 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
 
         void SetCollisionless(bool v, ILobby lobby);
 
-        uint Dimension { get; set; }
         int Armor { get; set; }
         int Health { get; set; }
         float Rotation { get; set; }
         bool IsInVehicle { get; }
+        IVehicle Vehicle { get; }
+        bool IsDead { get; }
 
         void Kick(string reason);
         void SendEvent(string eventName, params object[] args);
@@ -50,5 +50,6 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         void SendNotification(string msg, bool flashing = false);
         void WarpOutOfVehicle();
         void SetIntoVehicle(IVehicle vehicle, int v);
+        void SetClothes(int slot, int drawable, int texture);
     }
 }

@@ -11,15 +11,16 @@ namespace BonusBotConnector.Client.Requests
 {
     public class PrivateChat
     {
+        public event ErrorLogDelegate? Error;
+        public event ErrorStringLogDelegate? ErrorString;
+
         private readonly MessageToUserClient _client;
-        private readonly ILoggingHandler _loggingHandler;
         private readonly BonusbotSettings _settings;
         private readonly Helper _helper;
 
-        internal PrivateChat(GrpcChannel channel, ILoggingHandler loggingHandler, Helper helper, BonusbotSettings settings)
+        internal PrivateChat(GrpcChannel channel, Helper helper, BonusbotSettings settings)
         {
             _client = new MessageToUserClient(channel);
-            _loggingHandler = loggingHandler;
             _settings = settings;
             _helper = helper;
         }
@@ -51,7 +52,7 @@ namespace BonusBotConnector.Client.Requests
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogErrorFromBonusBot(ex);
+                Error?.Invoke(ex);
             }
         }
 
@@ -78,7 +79,7 @@ namespace BonusBotConnector.Client.Requests
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
+                Error?.Invoke(ex, logToBonusBotOnError);
             }
         }
 
@@ -92,7 +93,7 @@ namespace BonusBotConnector.Client.Requests
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
+                Error?.Invoke(ex, logToBonusBotOnError);
             }
         }
 
@@ -107,7 +108,7 @@ namespace BonusBotConnector.Client.Requests
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogErrorFromBonusBot(ex, logToBonusBotOnError);
+                Error?.Invoke(ex, logToBonusBotOnError);
             }
         }
 
@@ -115,7 +116,7 @@ namespace BonusBotConnector.Client.Requests
         {
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return;
-            _loggingHandler.LogErrorFromBonusBot(result.ErrorMessage, Environment.StackTrace, true);
+            ErrorString?.Invoke(result.ErrorMessage, Environment.StackTrace, true);
         }
     }
 }

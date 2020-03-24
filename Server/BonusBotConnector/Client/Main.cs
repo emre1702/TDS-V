@@ -15,9 +15,11 @@ namespace BonusBotConnector.Client
         public PrivateChat? PrivateChat { get; }
         public Helper? Helper { get; }
 
-        public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
+        //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
+        public delegate void ErrorLogDelegate(Exception ex, bool logToBonusBot = true);
+        public delegate void ErrorStringLogDelegate(string message, string stackTrace, bool logToBonusBot = true);
 
-        public BonusBotConnectorClient(ILoggingHandler loggingHandler, TDSDbContext dbContext)
+        public BonusBotConnectorClient(TDSDbContext dbContext)
         {
             if (System.Diagnostics.Debugger.IsAttached)
                 return;
@@ -31,11 +33,11 @@ namespace BonusBotConnector.Client
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
 
             Helper = new Helper();
-            ChannelChat = new ChannelChat(channel, loggingHandler, Helper, settings);
+            ChannelChat = new ChannelChat(channel, Helper, settings);
 
             if (settings.ServerInfosChannelId is { })
-                ServerInfos = new ServerInfos(channel, loggingHandler, Helper, settings);
-            PrivateChat = new PrivateChat(channel, loggingHandler, Helper, settings);
+                ServerInfos = new ServerInfos(channel, Helper, settings);
+            PrivateChat = new PrivateChat(channel, Helper, settings);
         }
     }
 }

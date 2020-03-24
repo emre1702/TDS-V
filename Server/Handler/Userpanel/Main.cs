@@ -10,34 +10,36 @@ namespace TDS_Server.Handler.Userpanel
     public class UserpanelHandler
     {
 
-        private readonly UserpanelApplicationsAdminHandler _userpanelApplicationsAdminHandler;
-        private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
+        private readonly UserpanelApplicationsAdminHandler _applicationsAdminHandler;
+        private readonly UserpanelApplicationUserHandler _applicationUserHandler;
 
-        private readonly UserpanelCommandsHandler _userpanelCommandsHandler;
-        private readonly UserpanelRulesHandler _userpanelRulesHandler;
-        private readonly UserpanelFAQsHandlers _userpanelFAQsHandlers;
-        private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
+        private readonly UserpanelCommandsHandler _commandsHandler;
+        private readonly UserpanelRulesHandler _rulesHandler;
+        private readonly UserpanelFAQsHandlers _fAQsHandlers;
+        private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
 
-        private readonly UserpanelSupportUserHandler _userpanelSupportUserHandler;
-        private readonly UserpanelSupportAdminHandler _userpanelSupportAdminHandler;
-        private readonly UserpanelSettingsSpecialHandler _userpanelSettingsSpecialHandler;
-        private readonly UserpanelOfflineMessagesHandler _userpanelOfflineMessagesHandler;
+        private readonly UserpanelSupportUserHandler _supportUserHandler;
+        private readonly UserpanelSupportAdminHandler _supportAdminHandler;
+        public readonly UserpanelSettingsNormalHandler SettingsNormalHandler;
+        private readonly UserpanelSettingsSpecialHandler _settingsSpecialHandler;
+        private readonly UserpanelOfflineMessagesHandler _offlineMessagesHandler;
 
         public UserpanelHandler(IServiceProvider serviceProvider)
         {
-            _userpanelPlayerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
-            _userpanelApplicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
-            _userpanelRulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
-            _userpanelFAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
-            _userpanelCommandsHandler = ActivatorUtilities.CreateInstance<UserpanelCommandsHandler>(serviceProvider);
-            _userpanelOfflineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
-            _userpanelSettingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
+            _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
+            _applicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
+            _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
+            _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
+            _commandsHandler = ActivatorUtilities.CreateInstance<UserpanelCommandsHandler>(serviceProvider);
+            _offlineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
+            SettingsNormalHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsNormalHandler>(serviceProvider);
+            _settingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
 
             var userpanelSupportRequestHandler = ActivatorUtilities.CreateInstance<UserpanelSupportRequestHandler>(serviceProvider);
 
-            _userpanelApplicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _userpanelPlayerStatsHandler);
-            _userpanelSupportUserHandler = new UserpanelSupportUserHandler(userpanelSupportRequestHandler);
-            _userpanelSupportAdminHandler = new UserpanelSupportAdminHandler(userpanelSupportRequestHandler);
+            _applicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler);
+            _supportUserHandler = new UserpanelSupportUserHandler(userpanelSupportRequestHandler);
+            _supportAdminHandler = new UserpanelSupportAdminHandler(userpanelSupportRequestHandler);
         }
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
@@ -46,44 +48,44 @@ namespace TDS_Server.Handler.Userpanel
             switch (dataType)
             {
                 case UserpanelLoadDataType.Commands:
-                    json = _userpanelCommandsHandler.GetData();
+                    json = _commandsHandler.GetData();
                     break;
 
                 case UserpanelLoadDataType.Rules:
-                    json = _userpanelRulesHandler.GetData();
+                    json = _rulesHandler.GetData();
                     player.AddToChallenge(ChallengeType.ReadTheRules);
                     break;
 
                 case UserpanelLoadDataType.FAQs:
-                    json = _userpanelFAQsHandlers.GetData(player);
+                    json = _fAQsHandlers.GetData(player);
                     player.AddToChallenge(ChallengeType.ReadTheFAQ);
                     break;
 
                 case UserpanelLoadDataType.MyStats:
-                    json = await _userpanelPlayerStatsHandler.GetData(player);
+                    json = await _playerStatsHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.ApplicationUser:
-                    json = await _userpanelApplicationUserHandler.GetData(player);
+                    json = await _applicationUserHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.ApplicationsAdmin:
-                    json = await _userpanelApplicationsAdminHandler.GetData(player);
+                    json = await _applicationsAdminHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SettingsSpecial:
-                    json = _userpanelSettingsSpecialHandler.GetData(player);
+                    json = _settingsSpecialHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SupportUser:
-                    json = await _userpanelSupportUserHandler.GetData(player);
+                    json = await _supportUserHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SupportAdmin:
-                    json = await _userpanelSupportAdminHandler.GetData(player);
+                    json = await _supportAdminHandler.GetData(player);
                     break;
                 case UserpanelLoadDataType.OfflineMessages:
-                    json = await _userpanelOfflineMessagesHandler.GetData(player);
+                    json = await _offlineMessagesHandler.GetData(player);
                     break;
             }
 

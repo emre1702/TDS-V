@@ -12,7 +12,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Maps
 {
-    internal class MapsRatingsHandler : DatabaseEntityWrapper
+    public class MapsRatingsHandler : DatabaseEntityWrapper
     {
         private Serializer _serializer;
         private MapsLoadingHandler _mapsLoadingHandler;

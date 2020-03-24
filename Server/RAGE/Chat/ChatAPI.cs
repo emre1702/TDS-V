@@ -29,5 +29,10 @@ namespace TDS_Server.RAGE.Chat
                     modPlayer._instance.SendChatMessage(message);
             }
         }
+
+        public void SendMessage(ITeam lobby, string message, ICollection<int>? ignorePlayersWithId = null)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

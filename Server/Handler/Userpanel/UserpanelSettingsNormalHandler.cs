@@ -13,7 +13,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelSettingsNormalHandler : DatabaseEntityWrapper
+    public class UserpanelSettingsNormalHandler : DatabaseEntityWrapper
     {
         private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 

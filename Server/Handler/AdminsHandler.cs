@@ -29,7 +29,7 @@ namespace TDS_Server.Handler
             }
 
             eventsHandler.PlayerLoggedIn += SetOnline;
-            eventsHandler.PlayerLoggedOutBefore += SetOffline;
+            eventsHandler.PlayerLoggedOut += SetOffline;
         }
 
         private void SetOnline(ITDSPlayer player)

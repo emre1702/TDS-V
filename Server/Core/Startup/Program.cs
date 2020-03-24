@@ -33,6 +33,8 @@ namespace TDS_Server.Core.Startup
             _modAPI = modAPI;
             _serviceProvider = Services.InitServiceCollection(modAPI);
 
+            Services.InitializeSingletons(_serviceProvider);
+
             EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
             RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
             _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();

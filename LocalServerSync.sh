@@ -25,15 +25,15 @@ mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/bin/Debug/netcoreapp3.1
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/RAGE/bin/Debug/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --exclude='TDS_Server.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
+rsync -hmrtvzP --exclude='TDS_Server.RAGE.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
 
 echo -e "${SEPERATOR}"
-echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP ./TDS_Server.dll ./TDS_Server.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
+echo -e "Update ${LIGHTBLUE}TDS_Server.RAGE ${NOCOLOR}..."
+rsync -hmrtvzP ./TDS_Server.RAGE.dll ./TDS_Server.RAGE.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
@@ -41,7 +41,7 @@ cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/TDS_Server/JavaScript && rsync -
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside C# ${NOCOLOR}files ..."
-cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V && rsync -hmrtvzP --delete --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' TDS_Client/. TDS_Common/. /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client/
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V && rsync -hmrtvzP --delete --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' TDS_Client/. Shared/. /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client/
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside JS ${NOCOLOR}..."
