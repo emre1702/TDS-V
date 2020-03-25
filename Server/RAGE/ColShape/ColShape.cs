@@ -36,7 +36,7 @@ namespace TDS_Server.RAGE.ColShape
         {
             if (_instance != colShape)
                 return;
-            var tdsPlayer = Program.GetTDSPlayerIfLoggedIn(client);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(client);
             if (tdsPlayer is null)
                 return;
 
@@ -47,7 +47,7 @@ namespace TDS_Server.RAGE.ColShape
         {
             if (_instance != colShape)
                 return;
-            var tdsPlayer = Program.GetTDSPlayerIfLoggedIn(client);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(client);
             if (tdsPlayer is null)
                 return;
 

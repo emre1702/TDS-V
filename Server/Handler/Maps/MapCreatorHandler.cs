@@ -29,9 +29,9 @@ namespace TDS_Server.Handler.Maps
         private readonly Serializer _serializer;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly XmlHelper _xmlHelper;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
 
-        public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, SettingsHandler settingsHandler,
+        public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);

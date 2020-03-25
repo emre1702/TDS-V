@@ -13,8 +13,8 @@ namespace TDS_Server.Handler
 
         public AppConfigHandler()
         {
-            string appName = "TDS_Server";
-            using var fileStream = new FileStream(appName + ".config", FileMode.Open);
+            string path = "C:\\RAGEMP\\server-files\\TDS_Server.config";
+            using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
 

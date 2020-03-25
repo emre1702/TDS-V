@@ -9,13 +9,13 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.PlayerConnected)]
         public void PlayerConnected(GTANetworkAPI.Player player)
         {
-            (Program.BaseAPI.Player as PlayerAPI)?.PlayerConnected(player);
+            (Init.BaseAPI.Player as PlayerAPI)?.PlayerConnected(player);
 
-            var tdsPlayer = Program.GetTDSPlayer(player);
+            var tdsPlayer = Init.GetTDSPlayer(player);
             if (tdsPlayer is null)
                 return;
 
-            Program.TDSCore.EventsHandler.OnPlayerConnected(tdsPlayer);
+            Init.TDSCore.EventsHandler.OnPlayerConnected(tdsPlayer);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -18,19 +19,19 @@ namespace TDS_Server.Handler.Account
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly ServerStartHandler _serverStartHandler;
+        private readonly ISettingsHandler _settingsHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, 
-            ServerStartHandler serverStartHandler) 
+        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, ISettingsHandler settingsHandler) 
             : base(dbContext, logger) 
         {
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
-            _serverStartHandler = serverStartHandler;
+            _eventsHandler = eventsHandler;
 
             eventsHandler.Hour += RemoveExpiredBans;
             eventsHandler.Minute += RefreshServerBansCache;
+            eventsHandler.IncomingConnection += CheckBanOnIncomingConnection;
 
             RefreshServerBansCache((ulong)settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
         }
@@ -150,7 +151,14 @@ namespace TDS_Server.Handler.Account
             int lobbyId = _lobbiesHandler.MainMenu.Id;
             _cachedBans = await ExecuteForDBAsync(async dbContext => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).ToListAsync());
 
-            _serverStartHandler.LoadedServerBans = true;
+            _eventsHandler.OnLoadedServerBans();
+        }
+
+        private void CheckBanOnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
+        {
+            var ban = GetServerBan(null, ip, serial, socialClubName, socialClubId, true);
+            if (ban is { })
+                cancel.Cancel = true;
         }
     }
 }

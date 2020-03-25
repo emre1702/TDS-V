@@ -42,16 +42,16 @@ namespace TDS_Server.Handler.Entities.Utility
 
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
         private readonly GangsHandler _gangsHandler;
 
-        public GangwarArea(GangwarArea copyFrom, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = null;
         }
 
-        public GangwarArea(MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             Map = map;
@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _gangsHandler = gangsHandler;
         }
 
-        public GangwarArea(GangwarAreas entity, MapDto map, SettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public GangwarArea(GangwarAreas entity, MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = entity;

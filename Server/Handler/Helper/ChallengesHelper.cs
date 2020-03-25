@@ -21,12 +21,12 @@ namespace TDS_Server.Handler.Helper
 {
     public class ChallengesHelper : DatabaseEntityWrapper
     {
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
         private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
 
         public ChallengesHelper(
-            SettingsHandler settingsHandler, 
+            ISettingsHandler settingsHandler, 
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, 
             TDSDbContext dbContext,

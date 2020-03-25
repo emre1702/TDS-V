@@ -11,7 +11,7 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.ResourceStop)]
         public void ResourceStop()
         {
-            Program.TDSCore.EventsHandler.OnResourceStop();
+            Init.TDSCore.EventsHandler.OnResourceStop();
         }
     }
 }

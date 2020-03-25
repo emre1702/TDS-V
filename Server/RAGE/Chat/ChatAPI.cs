@@ -14,7 +14,7 @@ namespace TDS_Server.RAGE.Chat
 
         public void SendMessage(string message, ICollection<int>? ignorePlayersWithId = null)
         {
-            foreach (var player in Program.TDSCore.LoggedInPlayers)
+            foreach (var player in Init.TDSCore.LoggedInPlayers)
             {
                 if ((ignorePlayersWithId is null || !ignorePlayersWithId.Contains(player.Id)) && player.ModPlayer is Player.Player modPlayer)
                     modPlayer._instance.SendChatMessage(message);

@@ -1,35 +1,34 @@
 ﻿using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Handler.Server
 {
     public class ServerStartHandler
     {
         public bool IsReadyForLogin 
-            => LoadedServerBans;
-
-        public bool LoadedServerBans 
-        { 
-            get => _loadedServerBans; 
-            set 
-            { 
-                if (_loadedServerBans == value)
-                    return;
-
-                _loadedServerBans = value; 
-                KickServerBannedPlayers();
-            }
-        }
+            => _loadedServerBans;
 
         private bool _loadedServerBans;
 
         private readonly BansHandler _bansHandler;
         private readonly IModAPI _modAPI;
 
-        public ServerStartHandler(BansHandler bansHandler, IModAPI modAPI)
+        public ServerStartHandler(BansHandler bansHandler, IModAPI modAPI, EventsHandler eventsHandler)
         {
             _bansHandler = bansHandler;
             _modAPI = modAPI;
+
+            eventsHandler.LoadedServerBans += EventsHandler_LoadedServerBans;
+        }
+
+        private void EventsHandler_LoadedServerBans()
+        {
+            if (_loadedServerBans)
+                return;
+
+            _loadedServerBans = true;
+            KickServerBannedPlayers();
         }
 
         private void KickServerBannedPlayers()

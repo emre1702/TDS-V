@@ -18,6 +18,7 @@ namespace TDS_Server.Data.Interfaces
         int StartTotalHP { get; }
         LobbyType Type { get; }
         Lobbies Entity { get; }
+        string OwnerName { get; }
 
         bool IsPlayerLobbyOwner(ITDSPlayer player);
         void RemovePlayer(ITDSPlayer player);

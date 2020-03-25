@@ -26,7 +26,7 @@ namespace BonusBotConnector_Server
                 {
                     webBuilder.UseStartup<Startup>()
                         .UseUrls("http://localhost:5001")
-                        .ConfigureServices(services => services.AddSingleton(loggingHandler));
+                        .ConfigureServices(services => services.AddSingleton(loggingHandler).AddSingleton<BBCommandService>());
                 });
     }
 }

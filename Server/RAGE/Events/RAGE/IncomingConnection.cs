@@ -9,7 +9,7 @@ namespace TDS_Server.RAGE.Events.RAGE
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
             var cancelEventArgs = new System.ComponentModel.CancelEventArgs();
-            Program.TDSCore.EventsHandler.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancelEventArgs);
+            Init.TDSCore.EventsHandler.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancelEventArgs);
 
             cancel.Cancel = cancelEventArgs.Cancel;
         }

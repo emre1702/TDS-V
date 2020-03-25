@@ -19,13 +19,13 @@ namespace TDS_Server.Handler.Entities.GameModes
         protected readonly MapDto Map;
         protected readonly IModAPI ModAPI;
         protected readonly Serializer Serializer;
-        protected readonly SettingsHandler SettingsHandler;
+        protected readonly ISettingsHandler SettingsHandler;
         protected readonly LangHelper LangHelper;
         protected readonly InvitationsHandler InvitationsHandler;
 
         public ITeam? WinnerTeam { get; set; }
 
-        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
         {
             Lobby = lobby;
             Map = map;

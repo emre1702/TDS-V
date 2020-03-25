@@ -16,7 +16,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
         private readonly ITeam _counterTerroristTeam;
         private ITDSPlayer? _bombAtPlayer;
 
-        public Bomb(Arena arena, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        public Bomb(Arena arena, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
             : base(arena, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
         {
             _terroristTeam = arena.Teams[2];

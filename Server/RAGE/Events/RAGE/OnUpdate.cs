@@ -8,7 +8,7 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.Update)]
         public void OnUpdate()
         {
-            Program.TDSCore.EventsHandler.OnUpdate();
+            Init.TDSCore.EventsHandler.OnUpdate();
         }
     }
 }

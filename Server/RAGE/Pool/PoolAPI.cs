@@ -15,7 +15,7 @@ namespace TDS_Server.RAGE.Pool
             var newList = new List<IPlayer>();
             foreach (var player in players)
             {
-                var modPlayer = Program.GetModPlayer(player);
+                var modPlayer = Init.GetModPlayer(player);
                 if (modPlayer is { })
                     newList.Add(modPlayer);
             }

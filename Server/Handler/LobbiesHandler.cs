@@ -56,17 +56,16 @@ namespace TDS_Server.Handler
         private readonly TDSDbContext _dbContext;
         private readonly MapsLoadingHandler _mapsHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
         private readonly IServiceProvider _serviceProvider;
+        private readonly EventsHandler _eventsHandler;
 
         public LobbiesHandler(
             TDSDbContext dbContext, 
-            SettingsHandler settingsHandler, 
+            ISettingsHandler settingsHandler, 
             Serializer serializer,
             MapsLoadingHandler mapsHandler,
             ILoggingHandler loggingHandler, 
             IServiceProvider serviceProvider,
-            CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler,
             EventsHandler eventsHandler)
         {
             _dbContext = dbContext;
@@ -74,7 +73,7 @@ namespace TDS_Server.Handler
             _mapsHandler = mapsHandler;
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
-            _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
+            _eventsHandler = eventsHandler;
 
             var temporaryLobbies = dbContext.Lobbies.Where(l => l.IsTemporary).ToList();
             dbContext.Lobbies.RemoveRange(temporaryLobbies);
@@ -259,8 +258,9 @@ namespace TDS_Server.Handler
 
                 AddMapsToArena(arena, entity);
 
-                _customLobbyMenuSyncHandler.RemovePlayer(player);
-                _customLobbyMenuSyncHandler.SyncLobbyAdded(arena);
+                _eventsHandler.OnCustomLobbyMenuLeave(player);
+                _eventsHandler.OnCustomLobbyCreated(arena);
+
                 await arena.AddPlayer(player, null);
             }
             catch
@@ -322,7 +322,7 @@ namespace TDS_Server.Handler
             _dimensionsUsed.Remove(lobby.Dimension);
 
             if (!lobby.IsOfficial)
-                _customLobbyMenuSyncHandler.SyncLobbyRemoved(lobby);
+                _eventsHandler.OnCustomLobbyRemoved(lobby);
         }
 
         public uint GetFreeDimension()

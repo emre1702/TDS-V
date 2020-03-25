@@ -9,7 +9,7 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.UnhandledException)]
         public void OnUnhandledException(Exception ex)
         {
-            Program.TDSCore.HandleProgramException(ex, "Unhandled exception: ");
+            Init.TDSCore.HandleProgramException(ex, "Unhandled exception: ");
         }
     }
 }

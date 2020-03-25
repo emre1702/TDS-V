@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly Serializer Serializer;
         protected readonly IModAPI ModAPI;
         protected readonly LobbiesHandler LobbiesHandler;
-        protected readonly SettingsHandler SettingsHandler;
+        protected readonly ISettingsHandler SettingsHandler;
         protected readonly LangHelper LangHelper;
         protected readonly DataSyncHandler DataSyncHandler;
         protected readonly EventsHandler EventsHandler;
@@ -55,7 +55,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             Serializer serializer,
             IModAPI modAPI,
             LobbiesHandler lobbiesHandler,
-            SettingsHandler settingsHandler,
+            ISettingsHandler settingsHandler,
             LangHelper langHelper,
             DataSyncHandler dataSyncHandler,
             EventsHandler eventsHandler,

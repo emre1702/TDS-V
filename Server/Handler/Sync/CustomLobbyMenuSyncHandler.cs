@@ -23,15 +23,14 @@ namespace TDS_Server.Handler.Sync
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
-            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOut += RemovePlayer;
+            eventsHandler.PlayerJoinedCustomMenuLobby += AddPlayer;
+            eventsHandler.PlayerLeftCustomMenuLobby += RemovePlayer;
+            eventsHandler.CustomLobbyCreated += SyncLobbyAdded;
+            eventsHandler.CustomLobbyRemoved += SyncLobbyRemoved;
         }
 
-        private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)
-        {
-            RemovePlayer(player);
-        }
-
-        public void SyncLobbyAdded(Lobby lobby)
+        public void SyncLobbyAdded(ILobby lobby)
         {
             if (lobby.IsOfficial || lobby.Entity.Type == LobbyType.MapCreateLobby)
                 return;
@@ -49,7 +48,7 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        public void SyncLobbyRemoved(Lobby lobby)
+        public void SyncLobbyRemoved(ILobby lobby)
         {
             if (!lobby.IsOfficial && lobby.Entity.Type != LobbyType.MapCreateLobby)
             {
@@ -86,7 +85,7 @@ namespace TDS_Server.Handler.Sync
             return _playersInCustomLobbyMenu.Contains(player);
         }
 
-        private CustomLobbyData GetCustomLobbyData(Lobby lobby)
+        private CustomLobbyData GetCustomLobbyData(ILobby lobby)
         {
             return new CustomLobbyData
             {

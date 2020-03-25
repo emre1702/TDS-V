@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Userpanel;
 
@@ -12,28 +14,20 @@ namespace TDS_Server.Handler.Events
 {
     public class EventsHandler
     {
-        private readonly BansHandler _bansHandler;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly ResourceStopHandler _resourceStopHandler;
-        private readonly UserpanelHandler _userpanelHandler;
-
-        public EventsHandler(BansHandler bansHandler, LobbiesHandler lobbiesHandler, ResourceStopHandler resourceStopHandler,
-            BonusBotConnectorServer bonusBotConnectorServer, UserpanelHandler userpanelHandler)
+        public EventsHandler()
         {
-            (_bansHandler, _lobbiesHandler, _resourceStopHandler) 
-            = (bansHandler, lobbiesHandler, resourceStopHandler);
-
-            _userpanelHandler = userpanelHandler;
-                
-            bonusBotConnectorServer.CommandService.OnUsedCommand += BBCommandService_OnUsedCommand;
         }
 
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
-
         public event PlayerDelegate? PlayerLoggedIn;
         public event PlayerDelegate? PlayerRegistered;
         public event PlayerDelegate? PlayerLoggedOut;
+        public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
+        public event PlayerDelegate? PlayerLeftCustomMenuLobby;
+
+        public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
+        public event IncomingConnectionDelegate? IncomingConnection;
 
         public delegate void ModPlayerDelegate(IPlayer player);
         public event ModPlayerDelegate? PlayerDisconnected;
@@ -45,6 +39,10 @@ namespace TDS_Server.Handler.Events
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
+        public delegate void LobbyDelegate(ILobby lobby);
+        public event LobbyDelegate? CustomLobbyCreated;
+        public event LobbyDelegate? CustomLobbyRemoved;
+
         public delegate void CounterDelegate(ulong counter);
         public event CounterDelegate? Second;
         public event CounterDelegate? Minute;
@@ -53,10 +51,14 @@ namespace TDS_Server.Handler.Events
         public delegate void EmptyDelegate();
         public event EmptyDelegate? MapsLoaded;
         public event EmptyDelegate? Update;
+        public event EmptyDelegate? ResourceStop;
+        public event EmptyDelegate? LoadedServerBans;
 
         public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
         public event ErrorDelegate? Error;
 
+
+        #region RAGE 
         public void OnUpdate()
         {
             Update?.Invoke();
@@ -74,19 +76,17 @@ namespace TDS_Server.Handler.Events
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
-            var ban = _bansHandler.GetServerBan(null, ip, serial, socialClubName, socialClubId, true);
-            if (ban is { })
-                cancel.Cancel = true;
+            IncomingConnection?.Invoke(ip, serial, socialClubName, socialClubId, cancel);
         }
 
         public void OnResourceStop()
         {
-            _resourceStopHandler?.OnResourceStop();
+            ResourceStop?.Invoke();
         }
+        #endregion
 
 
-
-
+        #region Custom
         public void OnPlayerLogin(ITDSPlayer tdsPlayer)
         {
             PlayerLoggedIn?.Invoke(tdsPlayer);
@@ -112,12 +112,34 @@ namespace TDS_Server.Handler.Events
             PlayerLeftLobby?.Invoke(player, lobby);
         }
 
+        internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
+        {
+            PlayerJoinedCustomMenuLobby?.Invoke(player);
+        }
+
+        internal void OnCustomLobbyMenuLeave(ITDSPlayer player)
+        {
+            PlayerLeftCustomMenuLobby?.Invoke(player);
+        }
+
+        internal void OnCustomLobbyCreated(ILobby lobby)
+        {
+            CustomLobbyCreated?.Invoke(lobby);
+        }
+
+        internal void OnCustomLobbyRemoved(ILobby lobby)
+        {
+            CustomLobbyRemoved?.Invoke(lobby);
+        }
+
+        internal void OnLoadedServerBans()
+        {
+            LoadedServerBans?.Invoke();
+        }
+        #endregion
 
 
-
-
-
-
+        #region Timer
         private ulong _hourCounter;
         internal void OnHour()
         {
@@ -156,17 +178,7 @@ namespace TDS_Server.Handler.Events
                 Error?.Invoke(ex);
             }
         }
+        #endregion
 
-
-
-
-        private string? BBCommandService_OnUsedCommand(ulong userId, string command)
-        {
-            return command switch
-            {
-                "confirmtds" => _userpanelHandler.SettingsNormalHandler.ConfirmDiscordUserId(userId),
-                _ => null,
-            };
-        }
     }
 }

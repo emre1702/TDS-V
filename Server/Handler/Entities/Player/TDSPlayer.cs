@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities.Player
         private readonly ChallengesHelper _challengesHandler;
         private readonly LangHelper _langHelper;
         private readonly IModAPI _modAPI;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly SpectateHandler _spectateHandler;
         private readonly GangsHandler _gangsHandler;
@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Entities.Player
             ChallengesHelper challengesHandler,
             LangHelper langHelper,
             IModAPI modAPI,
-            SettingsHandler settingsHandler,
+            ISettingsHandler settingsHandler,
             DataSyncHandler dataSyncHandler,
             SpectateHandler spectateHandler,
             GangsHandler gangsHandler,

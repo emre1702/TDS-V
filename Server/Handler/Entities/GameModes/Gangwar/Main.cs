@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Entities.GameModes
     {
         private readonly GangwarArea? _gangwarArea;
 
-        public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler, 
+        public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, 
             GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler) 
             : base(lobby, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
         {

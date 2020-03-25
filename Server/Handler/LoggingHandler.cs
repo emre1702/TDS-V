@@ -15,9 +15,9 @@ namespace TDS_Server.Handler
     {
         private readonly TDSDbContext _dbContext;
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
 
-        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, ISettingsHandler settingsHandler)
         {
             _dbContext = dbContext;
             _bonusBotConnectorClient = bonusBotConnectorClient;

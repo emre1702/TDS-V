@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BonusBotConnector_Server;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums.Challenge;
@@ -24,8 +25,10 @@ namespace TDS_Server.Handler.Userpanel
         private readonly UserpanelSettingsSpecialHandler _settingsSpecialHandler;
         private readonly UserpanelOfflineMessagesHandler _offlineMessagesHandler;
 
-        public UserpanelHandler(IServiceProvider serviceProvider)
+        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer)
         {
+            bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
+
             _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
             _applicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
@@ -40,6 +43,15 @@ namespace TDS_Server.Handler.Userpanel
             _applicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler);
             _supportUserHandler = new UserpanelSupportUserHandler(userpanelSupportRequestHandler);
             _supportAdminHandler = new UserpanelSupportAdminHandler(userpanelSupportRequestHandler);
+        }
+
+        private string? CommandService_OnUsedCommand(ulong userId, string command)
+        {
+            return command switch
+            {
+                "confirmtds" => SettingsNormalHandler?.ConfirmDiscordUserId(userId) ?? "BonusBot-Connector is not started at server.",
+                _ => null,
+            };
         }
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)

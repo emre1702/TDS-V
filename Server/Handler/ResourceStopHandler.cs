@@ -42,17 +42,10 @@ namespace TDS_Server.Handler
             Console.CancelKeyPress += CurrentDomain_ProcessExit;
 
             eventsHandler.Hour += CheckHourForResourceRestart;
+            eventsHandler.ResourceStop += OnResourceStop;
 
         }
 
-        public void OnResourceStop()
-        {
-            if (_resourceStopped)
-                return;
-            _resourceStopped = true;
-            SaveAllInDatabase();
-            RemoveAllCreated();
-        }
 
         public void CurrentDomain_ProcessExit(object? sender, EventArgs e)
         {
@@ -157,6 +150,15 @@ namespace TDS_Server.Handler
         private void RemoveAllCreated()
         {
             _modAPI.Pool.RemoveAll();
+        }
+
+        private void OnResourceStop()
+        {
+            if (_resourceStopped)
+                return;
+            _resourceStopped = true;
+            SaveAllInDatabase();
+            RemoveAllCreated();
         }
     }
 }

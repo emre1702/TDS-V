@@ -26,7 +26,7 @@ namespace TDS_Server.Handler.Account
         private readonly LangHelper _langHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly Serializer _serializer;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Account
             LangHelper langHelper,
             EventsHandler eventsHandler,
             Serializer serializer,
-            SettingsHandler settingsHandler,
+            ISettingsHandler settingsHandler,
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,

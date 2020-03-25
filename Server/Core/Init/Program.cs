@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
 
-namespace TDS_Server.Core.Startup
+namespace TDS_Server.Core.Init
 {
     public class Program
     {

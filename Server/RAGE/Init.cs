@@ -1,28 +1,26 @@
 ﻿using GTANetworkAPI;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using System;
+using TDS_Server.Core.Init;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.RAGE.Player;
 
 namespace TDS_Server.RAGE.Startup
 {
-    class Program : Script
+    class Init : Script
     {
-        #nullable disable warnings
+#nullable disable warnings
         public static BaseAPI BaseAPI;
-        public static Core.Startup.Program TDSCore;
+        public static Core.Init.Program TDSCore;
 
-        public Program()
+        public Init()
         {
             BaseAPI = new BaseAPI();
 
-            TDSCore = new Core.Startup.Program(BaseAPI);
+            TDSCore = new Core.Init.Program(BaseAPI);
 
-            Init();
-        }
-
-        private void Init()
-        {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
             var date = DateTime.UtcNow;

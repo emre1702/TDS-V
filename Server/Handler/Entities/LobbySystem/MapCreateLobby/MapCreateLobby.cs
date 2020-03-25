@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
 
         public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            SettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient) 
+            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient) 
             : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient) 
             { 
             

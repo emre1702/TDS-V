@@ -38,9 +38,9 @@ namespace TDS_Server.Handler.Maps
 
         private readonly Serializer _serializer;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly SettingsHandler _settingsHandler;
+        private readonly ISettingsHandler _settingsHandler;
 
-        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, ILoggingHandler loggingHandler, SettingsHandler settingsHandler)
+        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
             => (_dbContext, _eventsHandler, _serializer, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, serializer, loggingHandler, settingsHandler);
 
         public void LoadAllMaps()

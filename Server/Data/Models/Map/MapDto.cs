@@ -61,6 +61,8 @@ namespace TDS_Server.Data.Models.Map
 
         private Serializer _serializer;
 
+        public MapDto() : this(new Serializer()) { }
+
         public MapDto(Serializer serializer) 
         {
             _serializer = serializer;    

@@ -9,13 +9,13 @@ namespace TDS_Server.RAGE.Events.RAGE
         [ServerEvent(Event.PlayerDisconnected)]
         public void PlayerDisconnected(GTANetworkAPI.Player player)
         {
-            (Program.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
+            (Init.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
 
-            var modPlayer = Program.GetModPlayer(player);
+            var modPlayer = Init.GetModPlayer(player);
             if (modPlayer is null)
                 return;
 
-            Program.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
+            Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
         }
     }
 }
