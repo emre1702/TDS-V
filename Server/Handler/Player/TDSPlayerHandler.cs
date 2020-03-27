@@ -47,7 +47,8 @@ namespace TDS_Server.Handler.Player
 
             if (!_tdsPlayerCache.ContainsKey(playerId))
             {
-                var tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider, modPlayer);
+                var tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+                tdsPlayer.ModPlayer = modPlayer;
                 _tdsPlayerCache[playerId] = tdsPlayer;
             }
 

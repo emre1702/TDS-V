@@ -17,13 +17,11 @@ namespace BonusBotConnector.Client.Requests
 
         private readonly MessageToChannelClient _client;
         private readonly BonusbotSettings _settings;
-        private readonly Helper _helper;
 
-        public ChannelChat(GrpcChannel channel, Helper helper, BonusbotSettings settings)
+        public ChannelChat(GrpcChannel channel, BonusbotSettings settings)
         {
             _client = new MessageToChannelClient(channel);
             _settings = settings;
-            _helper = helper;
         }
 
         public void SendAdminApplication(Applications application)

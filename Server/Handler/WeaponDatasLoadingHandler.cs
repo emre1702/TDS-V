@@ -11,6 +11,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
@@ -25,9 +26,9 @@ namespace TDS_Server.Core.Manager.Utility
         public Dictionary<WeaponHash, DamageDto> DefaultDamages;
 
         private readonly TDSDbContext _dbContext;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
-        public WeaponDatasLoadingHandler(TDSDbContext dbContext, LoggingHandler loggingHandler)
+        public WeaponDatasLoadingHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler)
         {
             _dbContext = dbContext;
             _loggingHandler = loggingHandler;

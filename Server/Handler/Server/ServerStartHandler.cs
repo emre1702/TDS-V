@@ -1,4 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI;
+﻿using System.Globalization;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 
@@ -37,7 +40,21 @@ namespace TDS_Server.Handler.Server
             foreach (var player in players)
             {
                 var ban = _bansHandler.GetServerBan(null, player.IPAddress, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
+                HandleBan(player, ban);
             }
+        }
+
+        private bool HandleBan(IPlayer player, PlayerBans? ban)
+        {
+            if (ban is null)
+                return true;
+
+            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+            string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
+            //todo Test line break and display
+            player.Kick($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+
+            return false;
         }
     }
 }

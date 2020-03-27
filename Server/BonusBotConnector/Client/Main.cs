@@ -33,11 +33,11 @@ namespace BonusBotConnector.Client
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
 
             Helper = new Helper();
-            ChannelChat = new ChannelChat(channel, Helper, settings);
+            ChannelChat = new ChannelChat(channel, settings);
 
             if (settings.ServerInfosChannelId is { })
-                ServerInfos = new ServerInfos(channel, Helper, settings);
-            PrivateChat = new PrivateChat(channel, Helper, settings);
+                ServerInfos = new ServerInfos(channel, settings);
+            PrivateChat = new PrivateChat(channel, settings);
         }
     }
 }

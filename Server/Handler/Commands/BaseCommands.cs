@@ -20,12 +20,11 @@ namespace TDS_Server.Handler.Commands
         private readonly InvitationsHandler _invitationsHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly LangHelper _langHelper;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, IModAPI modAPI, ChatHandler chatHandler,
             ISettingsHandler settingsHandler, Serializer serializer, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
-            TDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
+            DatabasePlayerHelper databasePlayerHelper)
         {
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -36,7 +35,6 @@ namespace TDS_Server.Handler.Commands
             _invitationsHandler = invitationsHandler;
             _loggingHandler = loggingHandler;
             _langHelper = langHelper;
-            _tdsPlayerHandler = tdsPlayerHandler;
             _databasePlayerHelper = databasePlayerHelper;
         }
     }

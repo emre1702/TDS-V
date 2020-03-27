@@ -76,6 +76,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<TDSPlayerHandler>()
 
                // Server
+               .AddSingleton<ServerInfoHandler>()
                .AddSingleton<ServerStartHandler>()
 
                // Sync
@@ -84,6 +85,7 @@ namespace TDS_Server.Core.Init
 
                // Userpanel
                .AddSingleton<UserpanelHandler>()
+               .AddSingleton<UserpanelCommandsHandler>()
 
                .AddSingleton<AdminsHandler>()
                .AddSingleton<IAnnouncementsHandler, AnnouncementsHandler>()
@@ -103,10 +105,13 @@ namespace TDS_Server.Core.Init
                .AddSingleton<SpectateHandler>()
                .AddSingleton<TimerHandler>()
                .AddSingleton<WeaponDatasLoadingHandler>()
+               .AddSingleton<ScoreboardHandler>()
+               
 
                .AddSingleton<Serializer>()
+               
 
-               .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory));
+               .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
 
             return serviceCollection.BuildServiceProvider();
         }
@@ -139,6 +144,7 @@ namespace TDS_Server.Core.Init
 
             serviceProvider.GetRequiredService<TDSPlayerHandler>();
 
+            serviceProvider.GetRequiredService<ServerInfoHandler>();
             serviceProvider.GetRequiredService<ServerStartHandler>();
 
             serviceProvider.GetRequiredService<CustomLobbyMenuSyncHandler>();
@@ -164,6 +170,9 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<SpectateHandler>();
             serviceProvider.GetRequiredService<TimerHandler>();
             serviceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
+            serviceProvider.GetRequiredService<ScoreboardHandler>();
+            serviceProvider.GetRequiredService<UserpanelCommandsHandler>();
+            
         }
 
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)

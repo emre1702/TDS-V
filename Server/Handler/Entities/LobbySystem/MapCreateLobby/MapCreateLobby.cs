@@ -23,10 +23,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient) 
-            : base(CreateEntity(player), false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient) 
+            : this(CreateEntity(player), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient) 
             { 
             
             }
+
+        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient)
+            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient)
+        {
+
+        }
 
         private static Lobbies CreateEntity(ITDSPlayer player)
         {

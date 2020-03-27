@@ -70,5 +70,15 @@ namespace TDS_Server.RAGE.Events.Remote
 
             Init.TDSCore.RemoteEventsHandler.OnLanguageChange(tdsPlayer, (Language)language);
         }
+
+        [RemoteEvent(ToServerEvent.RequestPlayersForScoreboard)]
+        public static void RequestPlayersForScoreboard(GTANetworkAPI.Player player)
+        {
+            var tdsPlayer = Init.GetTDSPlayer(player);
+            if (tdsPlayer is null)
+                return;
+
+            Init.TDSCore.RemoteEventsHandler.OnRequestPlayersForScoreboard(tdsPlayer);
+        }
     }
 }

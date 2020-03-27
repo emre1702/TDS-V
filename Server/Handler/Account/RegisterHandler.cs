@@ -16,14 +16,13 @@ namespace TDS_Server.Core.Manager.PlayerManager
     public class RegisterHandler : DatabaseEntityWrapper
     {
         private readonly EventsHandler _eventsHandler;
-        private readonly LangHelper _langHelper;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, LangHelper langHelper,
-            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler) 
+        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, DatabasePlayerHelper databasePlayerHelper, 
+            ServerStartHandler serverStartHandler) 
             : base(dbContext, loggingHandler)
-            => (_eventsHandler, _langHelper, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, langHelper, databasePlayerHelper, serverStartHandler);
+            => (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email)
         {

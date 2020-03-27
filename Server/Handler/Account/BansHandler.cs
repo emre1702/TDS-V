@@ -32,8 +32,6 @@ namespace TDS_Server.Handler.Account
             eventsHandler.Hour += RemoveExpiredBans;
             eventsHandler.Minute += RefreshServerBansCache;
             eventsHandler.IncomingConnection += CheckBanOnIncomingConnection;
-
-            RefreshServerBansCache((ulong)settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
         }
 
         public async Task<PlayerBans?> GetBan(int lobbyId,
@@ -143,7 +141,7 @@ namespace TDS_Server.Handler.Account
         }
 
 
-        private async void RefreshServerBansCache(ulong counter)
+        public async void RefreshServerBansCache(ulong counter)
         {
             if (counter % (ulong)_settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
                 return;

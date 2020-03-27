@@ -10,7 +10,7 @@ namespace TDS_Server.Core.Manager.Utility
 {
     public class InvitationsHandler
     {
-        private Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
+        private readonly Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
 
         public InvitationsHandler(EventsHandler eventsHandler)
         {
@@ -83,10 +83,10 @@ namespace TDS_Server.Core.Manager.Utility
             return invitation;
         }
 
-        private IEnumerable<Invitation> GetBySender(ITDSPlayer sender)
+        /*private IEnumerable<Invitation> GetBySender(ITDSPlayer sender)
         {
             return _invitationById.Values.Where(i => i.Sender == sender);
-        }
+        }*/
 
         private IEnumerable<Invitation> GetBySender(ITDSPlayer sender, InvitationType type)
         {

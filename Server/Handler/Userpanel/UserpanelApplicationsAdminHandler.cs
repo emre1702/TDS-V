@@ -24,8 +24,8 @@ namespace TDS_Server.Handler.Userpanel
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
 
-        public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, 
-            ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler) 
+        public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler) 
             : base(dbContext, loggingHandler)
             => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler) 
             = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);

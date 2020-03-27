@@ -1,4 +1,5 @@
-﻿using TDS_Server.Core.Manager.PlayerManager;
+﻿using System;
+using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
@@ -14,11 +15,12 @@ namespace TDS_Server.Handler.Events
         private readonly MapFavouritesHandler _mapFavouritesHandler;
         private readonly CommandsHandler _commandsHandler;
         private readonly RegisterHandler _registerHandler;
+        private readonly ScoreboardHandler _scoreboardHandler;
 
         public RemoteEventsHandler(ChatHandler chatHandler, LoginHandler loginHandler, MapFavouritesHandler mapFavouritesHandler, CommandsHandler commandsHandler,
-            RegisterHandler registerHandler)
-            => (_chatHandler, _loginHandler, _mapFavouritesHandler, _commandsHandler, _registerHandler) 
-            = (chatHandler, loginHandler, mapFavouritesHandler, commandsHandler, registerHandler);
+            RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler)
+            => (_chatHandler, _loginHandler, _mapFavouritesHandler, _commandsHandler, _registerHandler, _scoreboardHandler) 
+            = (chatHandler, loginHandler, mapFavouritesHandler, commandsHandler, registerHandler, scoreboardHandler);
 
         public void LobbyChatMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
@@ -48,6 +50,11 @@ namespace TDS_Server.Handler.Events
         public void OnLanguageChange(ITDSPlayer player, Language language)
         {
             player.LanguageEnum = language;
+        }
+
+        public void OnRequestPlayersForScoreboard(ITDSPlayer tdsPlayer)
+        {
+            _scoreboardHandler.OnRequestPlayersForScoreboard(tdsPlayer);
         }
     }
 }

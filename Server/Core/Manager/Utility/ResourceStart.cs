@@ -13,11 +13,6 @@
 //        {
 //            try
 //            {
-//                if (!CodeMistakesChecker.EverythingsAlright())
-//                {
-//                    NAPI.Resource.StopResource("tds");
-//                    return;
-//                }
 
 //                Workaround.Init();
 

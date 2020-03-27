@@ -20,14 +20,14 @@ namespace TDS_Server.Handler
         private bool _isFirstResourceStopCheck = true;
 
         private readonly LangHelper _langHelper;
-        private readonly LoggingHandler _loggingHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly ChallengesHelper _challengesHelper;
         private readonly ServerStatsHandler _serverStatsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly TDSPlayerHandler _tdsPlayersHandler;
         private readonly IModAPI _modAPI;
 
-        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, LoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
+        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
             LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
         {
             _langHelper = langHelper;
@@ -50,6 +50,7 @@ namespace TDS_Server.Handler
         public void CurrentDomain_ProcessExit(object? sender, EventArgs e)
         {
             OnResourceStop();
+            Environment.Exit(0);
         }
 
         public void CheckHourForResourceRestart(ulong _)

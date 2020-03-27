@@ -9,7 +9,7 @@ namespace TDS_Server.Handler
     {
         public string ConnectionString => _localSettings.ConnectionString.Value; 
 
-        private AppConfigDto _localSettings;
+        private readonly AppConfigDto _localSettings;
 
         public AppConfigHandler()
         {

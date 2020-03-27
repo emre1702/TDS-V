@@ -59,7 +59,7 @@ namespace TDS_Server.Data.Models.Map
         [XmlIgnore]
         public bool IsSniper => Info.Type == MapType.Sniper;
 
-        private Serializer _serializer;
+        private readonly Serializer _serializer;
 
         public MapDto() : this(new Serializer()) { }
 

@@ -14,14 +14,12 @@ namespace BonusBotConnector.Client.Requests
 
         private readonly RAGEServerStatsClient _client;
         private readonly BonusbotSettings _settings;
-        private readonly Helper _helper;
         private readonly string _ipAddress = "?";
 
-        internal ServerInfos(GrpcChannel channel, Helper helper, BonusbotSettings settings)
+        internal ServerInfos(GrpcChannel channel, BonusbotSettings settings)
         {
             _client = new RAGEServerStatsClient(channel);
             _settings = settings;
-            _helper = helper;
 
             _ipAddress = new WebClient().DownloadString("https://www.l2.io/ip");
         }

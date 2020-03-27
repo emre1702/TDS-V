@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -22,7 +23,7 @@ namespace TDS_Server.Handler.Entities.Player
         public int Id => Entity?.Id ?? 0;
         public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
         public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
-        public IPlayer? ModPlayer { get; }
+        public IPlayer? ModPlayer { get; set; }
         public string IPAddress => ModPlayer?.IPAddress ?? "-";
         public string Serial => ModPlayer?.Serial ?? "-";
 
@@ -55,7 +56,6 @@ namespace TDS_Server.Handler.Entities.Player
         private readonly ChatHandler _chatHandler;
 
         public TDSPlayer(
-            IPlayer? modPlayer,
             TDSDbContext dbContext,
             ILoggingHandler loggingHandler,
             AdminsHandler adminsHandler,
@@ -69,7 +69,6 @@ namespace TDS_Server.Handler.Entities.Player
             LobbiesHandler lobbiesHandler,
             ChatHandler chatHandler) : base(dbContext, loggingHandler)
         {
-            ModPlayer = modPlayer;
             _adminsHandler = adminsHandler;
             _challengesHandler = challengesHandler;
             _langHelper = langHelper;

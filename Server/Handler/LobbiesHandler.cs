@@ -58,6 +58,7 @@ namespace TDS_Server.Handler
         private readonly ILoggingHandler _loggingHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly EventsHandler _eventsHandler;
+        private readonly ISettingsHandler _settingsHandler;
 
         public LobbiesHandler(
             TDSDbContext dbContext, 
@@ -74,14 +75,20 @@ namespace TDS_Server.Handler
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
             _eventsHandler = eventsHandler;
+            _settingsHandler = settingsHandler;
 
-            var temporaryLobbies = dbContext.Lobbies.Where(l => l.IsTemporary).ToList();
-            dbContext.Lobbies.RemoveRange(temporaryLobbies);
-            dbContext.SaveChanges();
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+        }
+
+        public void LoadLobbies()
+        {
+            var temporaryLobbies = _dbContext.Lobbies.Where(l => l.IsTemporary).ToList();
+            _dbContext.Lobbies.RemoveRange(temporaryLobbies);
+            _dbContext.SaveChanges();
             //Todo: Add QueryTrackingBehavior NoTracking to every constructor and TrackAll at the end
-            dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-            List<Lobbies> lobbies = dbContext.Lobbies
+            List<Lobbies> lobbies = _dbContext.Lobbies
                 .Include(l => l.LobbyRewards)
                 .Include(l => l.LobbyRoundSettings)
                 .Include(l => l.LobbyMapSettings)
@@ -97,17 +104,17 @@ namespace TDS_Server.Handler
                 LobbyType type = lobbysetting.Type;
                 var lobby = type switch
                 {
-                    LobbyType.FightLobby => ActivatorUtilities.CreateInstance<FightLobby>(serviceProvider, lobbysetting, false),
+                    LobbyType.FightLobby => ActivatorUtilities.CreateInstance<FightLobby>(_serviceProvider, lobbysetting, false),
 
-                    LobbyType.Arena => ActivatorUtilities.CreateInstance<Arena>(serviceProvider, lobbysetting, false),
+                    LobbyType.Arena => ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, lobbysetting, false),
                     //case LobbyType.GangLobby:
                     //    lobby = new GangLobby(lobbysetting);
                     //    break;
-                    LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<MapCreateLobby>(serviceProvider, lobbysetting),
+                    LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, lobbysetting),
 
-                    LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(serviceProvider, lobbysetting),
+                    LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, lobbysetting),
 
-                    _ => ActivatorUtilities.CreateInstance<Lobby>(serviceProvider, lobbysetting, false),
+                    _ => ActivatorUtilities.CreateInstance<Lobby>(_serviceProvider, lobbysetting, false),
                 };
                 if (lobby is Arena arena)
                 {
@@ -115,15 +122,13 @@ namespace TDS_Server.Handler
                 }
             }
 
-            settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
-            settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
+            _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
+            _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
 
-            Normal.Init(dbContext);
-            Gangwar.Init(dbContext);
-            Bomb.Init(dbContext);
-            Sniper.Init(dbContext);
-
-            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+            Normal.Init(_dbContext);
+            Gangwar.Init(_dbContext);
+            Bomb.Init(_dbContext);
+            Sniper.Init(_dbContext);
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)

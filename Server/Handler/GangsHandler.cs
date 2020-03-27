@@ -22,17 +22,20 @@ namespace TDS_Server.Handler
         public Gang None => _gangById[-1];
         public GangRanks NoneRank => None.Entity.Ranks.First();
 
+        private readonly TDSDbContext _dbContext;
+        private readonly IServiceProvider _serviceProvider;
 
         public GangsHandler(EventsHandler eventsHandler, TDSDbContext dbContext, IServiceProvider serviceProvider)
         {
-            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+            _dbContext = dbContext;
+            _serviceProvider = serviceProvider;
 
-            LoadAll(dbContext, serviceProvider);
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        public void LoadAll(TDSDbContext dbContext, IServiceProvider serviceProvider)
+        public void LoadAll()
         {
-            dbContext.Gangs
+            _dbContext.Gangs
                 .Include(g => g.Members)
                 .ThenInclude(m => m.RankNavigation)
                 .Include(g => g.RankPermissions)
@@ -40,7 +43,7 @@ namespace TDS_Server.Handler
                 .AsNoTracking()
                 .ForEach(g =>
                 {
-                    ActivatorUtilities.CreateInstance<Gang>(serviceProvider, g);
+                    ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, g);
                 });
         }
 

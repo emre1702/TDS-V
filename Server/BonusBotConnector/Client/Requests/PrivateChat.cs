@@ -16,13 +16,11 @@ namespace BonusBotConnector.Client.Requests
 
         private readonly MessageToUserClient _client;
         private readonly BonusbotSettings _settings;
-        private readonly Helper _helper;
 
-        internal PrivateChat(GrpcChannel channel, Helper helper, BonusbotSettings settings)
+        internal PrivateChat(GrpcChannel channel, BonusbotSettings settings)
         {
             _client = new MessageToUserClient(channel);
             _settings = settings;
-            _helper = helper;
         }
 
         public void SendBanMessage(ulong userId, PlayerBans ban, List<EmbedField> fields)

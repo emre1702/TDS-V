@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
@@ -52,6 +53,17 @@ namespace TDS_Server.Core.Manager.PlayerManager
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false));
+        }
+
+        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer player)
+        {
+            if (player.ModPlayer is null)
+                return null;
+
+            return await ExecuteForDBAsync(async dbContext => 
+                await dbContext.Players.Where(p => p.Name == player.ModPlayer.Name || p.SCName == player.ModPlayer.SocialClubName)
+                    .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
+                    .FirstOrDefaultAsync());
         }
 
         public async Task<int> GetPlayerIDByName(string name)

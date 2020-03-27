@@ -22,7 +22,6 @@ namespace TDS_Server.Handler.Account
     public class LoginHandler
     {
         private readonly DatabasePlayerHelper _databasePlayerHandler;
-        private readonly ChallengesHelper _challengesHelper;
         private readonly LangHelper _langHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly Serializer _serializer;
@@ -34,7 +33,6 @@ namespace TDS_Server.Handler.Account
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
-            ChallengesHelper challengesHelper,
             LangHelper langHelper,
             EventsHandler eventsHandler,
             Serializer serializer,
@@ -45,7 +43,6 @@ namespace TDS_Server.Handler.Account
             ServerStartHandler serverStartHandler)
         {
             _databasePlayerHandler = databasePlayerHandler; 
-            _challengesHelper = challengesHelper; 
             _langHelper = langHelper; 
             _eventsHandler = eventsHandler;
             _serializer = serializer; 

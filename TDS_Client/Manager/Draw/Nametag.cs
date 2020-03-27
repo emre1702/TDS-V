@@ -94,7 +94,7 @@ namespace TDS_Client.Manager.Draw
         private static Color GetHealthColor(int hp, int armor)
         {
             if (hp == 0)
-                return Settings.NametagDeadColor.HasValue ? Settings.NametagDeadColor.Value : Settings.NametagHealthEmptyColor;
+                return Settings.NametagDeadColor ?? Settings.NametagHealthEmptyColor;
 
             if (armor == 0)
                 return GetHpColor(hp);

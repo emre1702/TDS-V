@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext, 
-            LoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler)
+            ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
             => (_serializer, _bonusBotConnectorClient, _tdsPlayerHandler) = (serializer, bonusBotConnectorClient, tdsPlayerHandler);
 

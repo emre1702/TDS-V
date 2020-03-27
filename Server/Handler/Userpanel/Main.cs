@@ -25,7 +25,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly UserpanelSettingsSpecialHandler _settingsSpecialHandler;
         private readonly UserpanelOfflineMessagesHandler _offlineMessagesHandler;
 
-        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer)
+        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer, UserpanelCommandsHandler userpanelCommandsHandler)
         {
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
@@ -33,14 +33,14 @@ namespace TDS_Server.Handler.Userpanel
             _applicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
             _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
-            _commandsHandler = ActivatorUtilities.CreateInstance<UserpanelCommandsHandler>(serviceProvider);
+            _commandsHandler = userpanelCommandsHandler;
             _offlineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
             SettingsNormalHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsNormalHandler>(serviceProvider);
             _settingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
 
             var userpanelSupportRequestHandler = ActivatorUtilities.CreateInstance<UserpanelSupportRequestHandler>(serviceProvider);
 
-            _applicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler);
+            _applicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler, _applicationUserHandler);
             _supportUserHandler = new UserpanelSupportUserHandler(userpanelSupportRequestHandler);
             _supportAdminHandler = new UserpanelSupportAdminHandler(userpanelSupportRequestHandler);
         }

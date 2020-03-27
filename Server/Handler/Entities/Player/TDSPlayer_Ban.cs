@@ -8,7 +8,7 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        public bool Ban(PlayerBans? ban)
+        public bool HandleBan(PlayerBans? ban)
         {
             if (ban is null)
                 return true;
