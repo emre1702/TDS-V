@@ -9,7 +9,7 @@ namespace TDS_Server.Handler.Entities.Player
     {
         public void SetEntityInvincible(IVehicle vehicle, bool invincible)
         {
-            throw new System.NotImplementedException();
+            vehicle.SetInvincible(invincible, this);
         }
     }
 }

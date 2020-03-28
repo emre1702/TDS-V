@@ -75,7 +75,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SendTeamOrder(TDSPlayer character, TeamOrder teamOrder)
+        public void SendTeamOrder(ITDSPlayer character, TeamOrder teamOrder)
         {
             if (!teamOrderDict.ContainsKey(teamOrder))
                 return;

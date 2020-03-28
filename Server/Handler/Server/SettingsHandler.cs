@@ -5,7 +5,7 @@ using TDS_Server.Database.Entity.Server;
 using TDS_Shared.Data.Models;
 using Command = TDS_Server.Database.Entity.Command.Commands;
 
-namespace TDS_Server.Handler
+namespace TDS_Server.Handler.Server
 {
     public class SettingsHandler : ISettingsHandler
     {

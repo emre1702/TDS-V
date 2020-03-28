@@ -1,14 +1,9 @@
-﻿using BonusBotConnector_Server;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Player;
-using TDS_Server.Handler.Userpanel;
+using TDS_Server.Handler.Entities.Utility;
 
 namespace TDS_Server.Handler.Events
 {
@@ -21,6 +16,7 @@ namespace TDS_Server.Handler.Events
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
         public event PlayerDelegate? PlayerLoggedIn;
+
         public event PlayerDelegate? PlayerRegistered;
         public event PlayerDelegate? PlayerLoggedOut;
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
@@ -32,8 +28,7 @@ namespace TDS_Server.Handler.Events
         public delegate void ModPlayerDelegate(IPlayer player);
         public event ModPlayerDelegate? PlayerDisconnected;
 
-        public delegate ValueTask PlayerAsyncDelegate(ITDSPlayer player);
-        public event PlayerAsyncDelegate? PlayerLoggedOutBefore;
+        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
@@ -90,6 +85,14 @@ namespace TDS_Server.Handler.Events
         public void OnPlayerLogin(ITDSPlayer tdsPlayer)
         {
             PlayerLoggedIn?.Invoke(tdsPlayer);
+        }
+
+        public async Task OnPlayerLoggedOut(ITDSPlayer tdsPlayer)
+        {
+            var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
+            if (task.HasValue)
+                await task.Value;
+            PlayerLoggedOut?.Invoke(tdsPlayer);
         }
 
         public void OnPlayerRegister(ITDSPlayer tdsPlayer)

@@ -15,7 +15,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelSupportRequestHandler : DatabaseEntityWrapper
+    public class UserpanelSupportRequestHandler : DatabaseEntityWrapper
     {
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();

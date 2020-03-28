@@ -6,7 +6,7 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Interfaces.ModAPI.Player
 {
-    public interface IPlayer : IEntity, IEquatable<IPlayer>
+    public interface IPlayer : IEntity
     {
         bool Dead { get; }
         string IPAddress { get; }
@@ -25,11 +25,8 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
 
         WeaponHash CurrentWeapon { get; set; }
 
-        void SetCollisionless(bool v, ILobby lobby);
-
         int Armor { get; set; }
         int Health { get; set; }
-        float Rotation { get; set; }
         bool IsInVehicle { get; }
         IVehicle Vehicle { get; }
         bool IsDead { get; }
@@ -44,12 +41,12 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         void SetWeaponAmmo(WeaponHash hash, int ammo);
         void StopAnimation();
         void Kill();
-        void PlayAnimation(string v1, string v2, int loop);
-        void Freeze(bool v);
+        void PlayAnimation(string animDict, string animName, int flag);
+        void Freeze(bool toggle);
         void SendMessage(string msg);
         void SendNotification(string msg, bool flashing = false);
         void WarpOutOfVehicle();
-        void SetIntoVehicle(IVehicle vehicle, int v);
+        void SetIntoVehicle(IVehicle vehicle, int seat);
         void SetClothes(int slot, int drawable, int texture);
     }
 }

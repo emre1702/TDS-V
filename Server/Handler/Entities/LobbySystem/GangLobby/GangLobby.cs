@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -22,8 +23,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private readonly IServiceProvider _serviceProvider;
 
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler, 
-            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient) 
+            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
+            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient)
             : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, weaponDatasLoadingHandler,
                   bonusBotConnectorClient)
         {

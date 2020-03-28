@@ -28,5 +28,6 @@ namespace TDS_Server.Data.Interfaces
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
         void BanPlayer(ITDSPlayer player, Players dbTarget, DateTime? length, string reason, string? serial = null);
         Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
+        void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
     }
 }

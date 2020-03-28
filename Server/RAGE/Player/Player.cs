@@ -3,28 +3,23 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.RAGE.Extensions;
+using TDS_Server.RAGE.Startup;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGE.Player
 {
-    class Player : IPlayer
+    class Player : Entity.Entity, IPlayer
     {
         internal readonly GTANetworkAPI.Player _instance;
 
-        internal Player(GTANetworkAPI.Player player)
+        internal Player(GTANetworkAPI.Player instance) : base(instance)
         {
-            _instance = player;
+            _instance = instance;
         }
 
         public string Name => _instance.Name;
         public ulong SocialClubId => _instance.SocialClubId;
         public string SocialClubName => _instance.SocialClubName;
-
-        public Position3D Position
-        {
-            get => new Position3D(_instance.Position.X, _instance.Position.Y, _instance.Position.Z);
-            set => value.ToVector3();
-        }
 
         public ushort RemoteId => _instance.Handle.Value;
         public int Transparency
@@ -51,11 +46,6 @@ namespace TDS_Server.RAGE.Player
             set => NAPI.Player.SetPlayerCurrentWeapon(_instance, (GTANetworkAPI.WeaponHash)value);
 
         }
-        public uint Dimension 
-        { 
-            get => _instance.Dimension; 
-            set => _instance.Dimension = value; 
-        }
         public int Armor 
         { 
             get => _instance.Armor;
@@ -66,17 +56,12 @@ namespace TDS_Server.RAGE.Player
             get => _instance.Health;
             set => _instance.Health = value;
         }
-        public float Rotation
-        {
-            get => _instance.Rotation.Z;
-            set => _instance.Rotation = new Vector3(0, 0, value);
-        }
 
-        public bool IsInVehicle => throw new System.NotImplementedException();
+        public bool IsInVehicle => _instance.IsInVehicle;
 
-        public IVehicle Vehicle => throw new System.NotImplementedException();
+        public IVehicle Vehicle => new Vehicle.Vehicle(_instance.Vehicle);
 
-        public bool IsDead => throw new System.NotImplementedException();
+        public bool IsDead => _instance.Dead;
 
         public void SetHealth(int health)
         {
@@ -129,64 +114,61 @@ namespace TDS_Server.RAGE.Player
             _instance.Kill();
         }
 
-        public void SetInvincible(bool v)
+        public void Freeze(bool toggle)
         {
-            throw new System.NotImplementedException();
+            Init.WorkaroundsHandler.FreezePlayer(_instance, toggle);
+        }
+
+        public void SetInvincible(bool toggle)
+        {
+            Init.WorkaroundsHandler.SetPlayerInvincible(_instance, toggle);
         }
 
         public void RemoveAllWeapons()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetCollisionless(bool v, ILobby lobby)
-        {
-            throw new System.NotImplementedException();
+            _instance.RemoveAllWeapons();
         }
 
         public void GiveWeapon(TDS_Shared.Data.Enums.WeaponHash hash, int ammo = 0)
         {
-            throw new System.NotImplementedException();
+            _instance.GiveWeapon((WeaponHash)hash, ammo);
         }
 
         public void SetWeaponAmmo(TDS_Shared.Data.Enums.WeaponHash hash, int ammo)
         {
-            throw new System.NotImplementedException();
+            _instance.SetWeaponAmmo((WeaponHash)hash, ammo);
         }
 
-        public void PlayAnimation(string v1, string v2, int loop)
+        public void PlayAnimation(string animDict, string animName, int flag)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Freeze(bool v)
-        {
-            throw new System.NotImplementedException();
+            _instance.PlayAnimation(animDict, animName, flag);
         }
 
         public void SendMessage(string msg)
         {
-            throw new System.NotImplementedException();
+            _instance.SendChatMessage(msg);
         }
 
-        public void SendNotification(string msg, bool flashing)
+        public void SendNotification(string msg, bool flashing = false)
         {
-            throw new System.NotImplementedException();
+            _instance.SendNotification(msg, flashing);
         }
 
         public void WarpOutOfVehicle()
         {
-            throw new System.NotImplementedException();
+            _instance.WarpOutOfVehicle();
         }
 
-        public void SetIntoVehicle(IVehicle vehicle, int v)
+        public void SetIntoVehicle(IVehicle vehicle, int seat)
         {
-            throw new System.NotImplementedException();
+            if (!(vehicle is Vehicle.Vehicle veh))
+                return;
+            _instance.SetIntoVehicle(veh._instance, seat);
         }
 
         public void SetClothes(int slot, int drawable, int texture)
         {
-            throw new System.NotImplementedException();
+            _instance.SetClothes(slot, drawable, texture);
         }
     }
 }

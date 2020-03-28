@@ -1,7 +1,7 @@
 ﻿using RAGE.Elements;
 using System;
 using System.Linq;
-using TDS_Shared.Dto;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Manager.Utility;
 
 namespace TDS_Client.Manager.Utility
@@ -69,9 +69,14 @@ namespace TDS_Client.Manager.Utility
         {
             ushort handle = Convert.ToUInt16(args[0]);
             bool toggle = Convert.ToBoolean(args[1]);
-            var vehHandle = Entities.Vehicles.GetAtRemote(handle)?.Handle ?? -1;
-            if (vehHandle != -1)
-                RAGE.Game.Entity.SetEntityInvincible(vehHandle, toggle);
+
+            var vehHandle = Entities.Vehicles.GetAtRemote(handle)?.Handle;
+            if (vehHandle.HasValue)
+                RAGE.Game.Entity.SetEntityInvincible(vehHandle.Value, toggle);
+
+            var objHandle = Entities.Objects.GetAtRemote(handle)?.Handle;
+            if (objHandle.HasValue)
+                RAGE.Game.Entity.SetEntityInvincible(objHandle.Value, toggle);
         }
 
         public static void SetPlayerInvincibleMethod(object[] args)

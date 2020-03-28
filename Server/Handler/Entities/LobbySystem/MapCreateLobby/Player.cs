@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public void SetPosition(ITDSPlayer player, float x, float y, float z, float rot)
         {
             player.ModPlayer!.Position = new Position3D(x, y, z);
-            player.ModPlayer!.Rotation = rot;
+            player.ModPlayer!.Rotation = new Position3D(0, 0, rot);
         }
 
         public async void GiveVehicle(ITDSPlayer player, FreeroamVehicleType vehType)
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.FreeroamVehicle = null;
                 }
 
-                IVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation, 0, 0, player.ModPlayer.Name, dimension: Dimension);
+                IVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
                 if (vehicle is null)
                     return;
                 player.FreeroamVehicle = vehicle;

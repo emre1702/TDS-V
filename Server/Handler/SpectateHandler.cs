@@ -16,18 +16,20 @@ namespace TDS_Server.Handler
         {
             if (player.ModPlayer is null)
                 return;
+            if (player.Lobby is null)
+                return;
 
             if (inSpectator)
             {
                 player.ModPlayer.Transparency = 0;
                 player.ModPlayer.Freeze(true);
-                player.ModPlayer.SetCollisionless(true, player.Lobby);
+                player.ModPlayer.SetCollisionsless(true, player.Lobby);
             }
             else
             {
                 player.ModPlayer.Transparency = 255;
                 player.ModPlayer.Freeze(false);
-                player.ModPlayer.SetCollisionless(false, player.Lobby);
+                player.ModPlayer.SetCollisionsless(false, player.Lobby);
 
                 _modAPI.Sync.SendEvent(player, ToClientEvent.StopSpectator);
             }

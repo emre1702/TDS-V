@@ -11,7 +11,7 @@ using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler.GangSystem
 {
     public class GangwarAreasHandler
     {

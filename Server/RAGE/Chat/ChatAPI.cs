@@ -32,7 +32,11 @@ namespace TDS_Server.RAGE.Chat
 
         public void SendMessage(ITeam lobby, string message, ICollection<int>? ignorePlayersWithId = null)
         {
-            throw new System.NotImplementedException();
+            foreach (var player in lobby.Players)
+            {
+                if ((ignorePlayersWithId is null || !ignorePlayersWithId.Contains(player.Id)) && player.ModPlayer is Player.Player modPlayer)
+                    modPlayer._instance.SendChatMessage(message);
+            }
         }
     }
 }

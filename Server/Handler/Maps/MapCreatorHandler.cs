@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Maps
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
 
-        public async Task<MapCreateError> Create(TDSPlayer creator, string mapJson, bool onlySave)
+        public async Task<MapCreateError> Create(ITDSPlayer creator, string mapJson, bool onlySave)
         {
             if (creator.Entity is null)
                 return MapCreateError.Unknown;
@@ -116,7 +116,7 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public void SendPlayerMapForMapCreator(TDSPlayer player, int mapId)
+        public void SendPlayerMapForMapCreator(ITDSPlayer player, int mapId)
         {
             if (player.Entity is null)
                 return;
@@ -163,7 +163,7 @@ namespace TDS_Server.Handler.Maps
             ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
         }
 
-        public void SendPlayerMapNamesForMapCreator(TDSPlayer player)
+        public void SendPlayerMapNamesForMapCreator(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return;
@@ -223,7 +223,7 @@ namespace TDS_Server.Handler.Maps
             player.SendEvent(ToClientEvent.LoadMapNamesToLoadForMapCreator, json);
         }
 
-        public async void RemoveMap(TDSPlayer player, int mapId)
+        public async void RemoveMap(ITDSPlayer player, int mapId)
         {
             bool isSavedMap = true;
             MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);

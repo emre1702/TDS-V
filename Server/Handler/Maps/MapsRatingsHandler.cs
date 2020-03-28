@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Maps
             eventsHandler.PlayerLoggedIn += SendPlayerHisRatings;
         }
 
-        public async void AddPlayerMapRating(TDSPlayer player, int mapId, byte rating)
+        public async void AddPlayerMapRating(ITDSPlayer player, int mapId, byte rating)
         {
             int playerId = player.Entity!.Id;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -8,11 +7,10 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Events;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Manager.Utility;
 
@@ -103,6 +101,6 @@ namespace TDS_Server.Handler.Entities.Player
             ModPlayer?.Spawn(position, rotation);
         }
 
-        
+
     }
 }

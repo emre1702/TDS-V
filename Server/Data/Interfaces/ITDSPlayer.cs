@@ -72,6 +72,7 @@ namespace TDS_Server.Data.Interfaces
         bool IsConsole { get; set; }
         List<PlayerRelations> PlayerRelationsPlayer { get; }
         List<PlayerRelations> PlayerRelationsTarget { get; }
+        bool IsCrouched { get; set; }
 
         void SendBrowserEvent(string eventName, params object[] args);
         void SendEvent(string eventName, params object[] args);

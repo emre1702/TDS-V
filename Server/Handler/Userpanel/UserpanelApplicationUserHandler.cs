@@ -17,7 +17,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelApplicationUserHandler : DatabaseEntityWrapper
+    public class UserpanelApplicationUserHandler : DatabaseEntityWrapper
     {
         public string AdminQuestions { get; set; } = string.Empty;
 

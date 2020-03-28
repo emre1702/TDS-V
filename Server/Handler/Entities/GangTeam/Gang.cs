@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 
 namespace TDS_Server.Handler.Entities.GangTeam
 {
     public class Gang : DatabaseEntityWrapper, IGang
     {
-        
+
         public Gangs Entity { get; set; }
         public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
 #nullable disable

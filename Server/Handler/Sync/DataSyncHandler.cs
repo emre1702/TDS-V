@@ -33,7 +33,7 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerJoinedLobby += SyncPlayerLobbyData;
 
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
-            eventsHandler.PlayerLoggedOutBefore += PlayerLoggedOut;
+            eventsHandler.PlayerLoggedOut += PlayerLoggedOut;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace TDS_Server.Handler.Sync
             _playerHandleDatasLobby[lobby.Id].Remove(player.RemoteId);
         }
 
-        private ValueTask PlayerLoggedOut(ITDSPlayer player)
+        private void PlayerLoggedOut(ITDSPlayer player)
         {
             if (_playerHandleDatasAll.ContainsKey(player.RemoteId))
                 _playerHandleDatasAll.Remove(player.RemoteId);
@@ -110,7 +110,6 @@ namespace TDS_Server.Handler.Sync
                 _playerHandleDatasPlayer.Remove(player.RemoteId);
 
             _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
-            return new ValueTask();
         }
     }
 }

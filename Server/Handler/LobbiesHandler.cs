@@ -8,7 +8,6 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
@@ -20,7 +19,6 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -42,7 +40,7 @@ namespace TDS_Server.Handler
         public GangLobby GangLobby => _gangLobby ?? (_gangLobby =
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First());
 
-        private readonly Dictionary<int, Lobby> _lobbiesByIndex = new Dictionary<int, Lobby>();
+        public readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
         private Lobby? _mainMenu;
@@ -61,11 +59,11 @@ namespace TDS_Server.Handler
         private readonly ISettingsHandler _settingsHandler;
 
         public LobbiesHandler(
-            TDSDbContext dbContext, 
-            ISettingsHandler settingsHandler, 
+            TDSDbContext dbContext,
+            ISettingsHandler settingsHandler,
             Serializer serializer,
             MapsLoadingHandler mapsHandler,
-            ILoggingHandler loggingHandler, 
+            ILoggingHandler loggingHandler,
             IServiceProvider serviceProvider,
             EventsHandler eventsHandler)
         {
@@ -181,11 +179,11 @@ namespace TDS_Server.Handler
 
         public Lobby? GetLobby(int id)
         {
-            _lobbiesByIndex.TryGetValue(id, out Lobby? lobby);
+            LobbiesByIndex.TryGetValue(id, out Lobby? lobby);
             return lobby;
         }
 
-        public async Task CreateCustomLobby(TDSPlayer player, string dataJson)
+        public async Task CreateCustomLobby(ITDSPlayer player, string dataJson)
         {
             try
             {
@@ -257,7 +255,7 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                
+
                 Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity);
                 await arena.AddToDB();
 
@@ -274,7 +272,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        public async ValueTask<object?> LoadDatas(TDSPlayer player, object[] args)
+        public async ValueTask<object?> LoadDatas(ITDSPlayer player, object[] args)
         {
             if (_customLobbyDatas is null)
             {
@@ -316,13 +314,13 @@ namespace TDS_Server.Handler
         public void AddLobby(Lobby lobby)
         {
             Lobbies.Add(lobby);
-            _lobbiesByIndex[lobby.Id] = lobby;
+            LobbiesByIndex[lobby.Id] = lobby;
             _dimensionsUsed.Add(lobby.Dimension);
         }
 
         public void RemoveLobby(Lobby lobby)
         {
-            _lobbiesByIndex.Remove(lobby.Entity.Id);
+            LobbiesByIndex.Remove(lobby.Entity.Id);
             Lobbies.Remove(lobby);
             _dimensionsUsed.Remove(lobby.Dimension);
 

@@ -5,7 +5,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Blip
 {
     public interface IBlipAPI
     {
-        IBlip Create(Position3DDto position, ILobby lobby) => Create(new Position3D(position.X, position.Y, position.Z), lobby);
-        IBlip Create(Position3D position, ILobby lobby);
+        IBlip Create(Position3DDto position, uint dimension) => Create(new Position3D(position.X, position.Y, position.Z), dimension);
+        IBlip Create(Position3D position, uint dimension);
     }
 }

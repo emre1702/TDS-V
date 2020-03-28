@@ -21,7 +21,7 @@ namespace TDS_Server.Handler.Entities.GameModes
             if (Map.Target is null)
                 return;
 
-            _targetBlip = ModAPI.Blip.Create(Map.Target, Lobby);
+            _targetBlip = ModAPI.Blip.Create(Map.Target, Lobby.Dimension);
             _targetBlip.Sprite = SharedConstants.TargetBlipSprite;
             _targetBlip.Name = "Target";
         }

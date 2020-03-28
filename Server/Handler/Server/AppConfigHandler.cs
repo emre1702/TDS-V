@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Models;
 
-namespace TDS_Server.Handler
+namespace TDS_Server.Handler.Server
 {
     public class AppConfigHandler
     {

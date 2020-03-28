@@ -87,7 +87,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         continue;
                     regions.Add(position);
 
-                    IBlip blip = ModAPI.Blip.Create(position, this);
+                    IBlip blip = ModAPI.Blip.Create(position, Dimension);
                     blip.Sprite = SharedConstants.TeamSpawnBlipSprite;
                     ITeam team = Teams[(int)teamsSpawnList.TeamID];
                     blip.Color = team.Entity.BlipColor;
@@ -104,7 +104,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
-                IBlip blip = ModAPI.Blip.Create(edge, this);
+                IBlip blip = ModAPI.Blip.Create(edge, Dimension);
                 blip.Sprite = SharedConstants.MapLimitBlipSprite;
                 blip.Name = "Limit " + ++i;
                 _mapBlips.Add(blip);

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
@@ -12,6 +10,7 @@ using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
 
@@ -21,6 +20,8 @@ namespace TDS_Server.Core.Init
     {
         public readonly EventsHandler EventsHandler;
         public readonly RemoteEventsHandler RemoteEventsHandler;
+        public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
+        public readonly LobbiesHandler LobbiesHandler;
         public Dictionary<ulong, ITDSPlayer>.ValueCollection LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
 
         private TDSPlayer? _consolePlayerCache;
@@ -32,46 +33,64 @@ namespace TDS_Server.Core.Init
         private readonly CommandsHandler _commandsHandler;
 
 
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public Program(IModAPI modAPI)
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;   
-
-            _modAPI = modAPI;
-            _serviceProvider = Services.InitServiceCollection(modAPI);
-
-            Services.InitializeSingletons(_serviceProvider);
-
-            var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
-            if (codeChecker.CheckHasErrors())
+            try
             {
-                modAPI.Resource.StopThis();
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+                _modAPI = modAPI;
+                _serviceProvider = Services.InitServiceCollection(modAPI);
+
+                Services.InitializeSingletons(_serviceProvider);
+
+                var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
+                if (codeChecker.CheckHasErrors())
+                {
+                    modAPI.Resource.StopThis();
+                    Environment.Exit(1);
+                }
+
+                LobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
+                LobbiesHandler.LoadLobbies();
+
+                var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
+                var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
+                bansHandler.RefreshServerBansCache((ulong)settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
+
+                var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
+                gangsHandler.LoadAll();
+
+                EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+                RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
+                RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
+                _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
+                _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
+                _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
+
+                var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
+                mapsLoadingHandler.LoadAllMaps();
+
+                Task.Run(ReadInput);
+            }
+            catch (Exception ex)
+            {
+                if (_loggingHandler is { })
+                    _loggingHandler.LogError(ex);
+                else
+                    Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 Environment.Exit(1);
             }
 
-            var lobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
-            lobbiesHandler.LoadLobbies();
-
-            var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
-            var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
-            bansHandler.RefreshServerBansCache((ulong)settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
-
-            var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
-            gangsHandler.LoadAll();
-
-            EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
-            RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
-            _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
-            _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
-            _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
-
-            var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
-            mapsLoadingHandler.LoadAllMaps();
-
-            Task.Run(ReadInput);
         }
 
         public ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
             => _tdsPlayerHandler.GetIfLoggedIn(player);
+
+        public ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
+            => _tdsPlayerHandler.GetIfLoggedIn(remoteId);
 
         public ITDSPlayer? GetTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.Get(player);

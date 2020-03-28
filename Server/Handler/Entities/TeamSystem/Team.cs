@@ -37,8 +37,6 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public bool IsSpectator => Entity.Index == 0;
 
-        HashSet<ITDSPlayer> ITeam.Players => throw new NotImplementedException();
-
         private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
 
@@ -182,7 +180,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public bool Equals([AllowNull] ITeam other)
         {
-            throw new NotImplementedException();
+            return _entity.Id == other?.Entity.Id;
         }
     }
 }

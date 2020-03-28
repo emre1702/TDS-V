@@ -11,7 +11,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelSettingsSpecialHandler
+    public class UserpanelSettingsSpecialHandler
     {
         private readonly ISettingsHandler _settingsHandler;
         private readonly Serializer _serializer;

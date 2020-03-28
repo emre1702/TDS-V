@@ -3,6 +3,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Chat;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
+using TDS_Server.Data.Interfaces.ModAPI.Native;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Pool;
 using TDS_Server.Data.Interfaces.ModAPI.Server;
@@ -20,6 +21,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         IColShapeAPI ColShape { get; }
         IMapObjectAPI MapObject { get; }
         IMarkerAPI Marker { get; }
+        INativeAPI Native { get; }
         IPlayerAPI Player { get; }
         IPoolAPI Pool { get; }
         IResourceAPI Resource { get; }
@@ -28,6 +30,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         ITextLabelAPI TextLabel { get; }
         IThreadAPI Thread { get; }
         IVehicleAPI Vehicle { get; }
-        
+
+        bool CheckHasErrors(ILoggingHandler loggingHandler);
     }
 }

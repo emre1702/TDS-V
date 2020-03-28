@@ -13,7 +13,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelPlayerStatsHandler : DatabaseEntityWrapper
+    public class UserpanelPlayerStatsHandler : DatabaseEntityWrapper
     {
         private readonly Serializer _serializer;
         private readonly LobbiesHandler _lobbiesHandler;

@@ -2,10 +2,8 @@
 
 namespace TDS_Server.Data.Interfaces.ModAPI.Marker
 {
-    public interface IMarker : IEquatable<IMarker>
+    public interface IMarker : IEntity
     {
-        ushort Id { get; }
 
-        void Delete();
     }
 }

@@ -1,10 +1,19 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
+using TDS_Server.Handler.Entities.GameModes.Bomb;
+using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
+using TDS_Server.Handler.Sync;
+using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Events
 {
@@ -16,11 +25,24 @@ namespace TDS_Server.Handler.Events
         private readonly CommandsHandler _commandsHandler;
         private readonly RegisterHandler _registerHandler;
         private readonly ScoreboardHandler _scoreboardHandler;
+        private readonly LobbiesHandler _lobbiesHandler;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly IModAPI _modAPI;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly MapsRatingsHandler _mapsRatingsHandler;
+        private readonly MapCreatorHandler _mapCreatorHandler;
+        private readonly UserpanelHandler _userpanelHandler;
 
         public RemoteEventsHandler(ChatHandler chatHandler, LoginHandler loginHandler, MapFavouritesHandler mapFavouritesHandler, CommandsHandler commandsHandler,
-            RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler)
-            => (_chatHandler, _loginHandler, _mapFavouritesHandler, _commandsHandler, _registerHandler, _scoreboardHandler) 
-            = (chatHandler, loginHandler, mapFavouritesHandler, commandsHandler, registerHandler, scoreboardHandler);
+            RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler, LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider,
+            CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, ILoggingHandler loggingHandler, IModAPI modAPI, DataSyncHandler dataSyncHandler,
+            MapsRatingsHandler mapsRatingsHandler, MapCreatorHandler mapCreatorHandler, UserpanelHandler userpanelHandler)
+            => (_chatHandler, _loginHandler, _mapFavouritesHandler, _commandsHandler, _registerHandler, _scoreboardHandler, _lobbiesHandler, _serviceProvider, _customLobbyMenuSyncHandler,
+            _loggingHandler, _modAPI, _dataSyncHandler, _mapsRatingsHandler, _mapCreatorHandler, _userpanelHandler) 
+            = (chatHandler, loginHandler, mapFavouritesHandler, commandsHandler, registerHandler, scoreboardHandler, lobbiesHandler, serviceProvider, customLobbyMenuSyncHandler,
+            loggingHandler, modAPI, dataSyncHandler, mapsRatingsHandler, mapCreatorHandler, userpanelHandler);
 
         public void LobbyChatMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
@@ -56,5 +78,328 @@ namespace TDS_Server.Handler.Events
         {
             _scoreboardHandler.OnRequestPlayersForScoreboard(tdsPlayer);
         }
+
+        #region Lobby
+
+        public async void OnJoinLobby(ITDSPlayer player, int index)
+        {
+
+            if (_lobbiesHandler.LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = _lobbiesHandler.LobbiesByIndex[index];
+                if (lobby is MapCreateLobby)
+                {
+                    if (await lobby.IsPlayerBaned(player))
+                        return;
+                    ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                }
+                else
+                {
+                    await lobby.AddPlayer(player, null);
+                }
+            }
+            else
+            {
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                //todo Remove lobby at client view and check, why he saw this lobby
+            }
+        }
+
+        public async void OnJoinLobbyWithPassword(ITDSPlayer player, int index, string? password = null)
+        {
+            if (_lobbiesHandler.LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = _lobbiesHandler.LobbiesByIndex[index];
+                if (password != null && lobby.Entity.Password != password)
+                {
+                    player.SendMessage(player.Language.WRONG_PASSWORD);
+                    return;
+                }
+
+                await lobby.AddPlayer(player, null);
+            }
+            else
+            {
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                //todo Remove lobby at client view and check, why he saw this lobby
+            }
+        }
+
+        public async void OnCreateCustomLobby(ITDSPlayer player, string dataJson)
+        {
+            await _lobbiesHandler.CreateCustomLobby(player, dataJson);
+        }
+
+        public void OnJoinedCustomLobbiesMenu(ITDSPlayer player)
+        {
+            _customLobbyMenuSyncHandler.AddPlayer(player);
+        }
+
+        public void OnLeftCustomLobbiesMenu(ITDSPlayer player)
+        {
+            _customLobbyMenuSyncHandler.RemovePlayer(player);
+        }
+
+        public void OnChooseTeam(ITDSPlayer player, int index)
+        {
+            if (player.Lobby is null || !(player.Lobby is Arena arena))
+                return;
+            arena.ChooseTeam(player, index);
+        }
+
+        public async void OnLeaveLobby(ITDSPlayer player)
+        {
+            if (player.Lobby is null)
+                return;
+
+            player.Lobby.RemovePlayer(player);
+            await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
+        }
+        #endregion Lobby
+
+        #region Damagesys
+
+        public void OnGotHit(ITDSPlayer player, ITDSPlayer attacker, WeaponHash weaponHash, ulong boneIdx)
+        {
+            if (!(player.Lobby is FightLobby fightLobby))
+            {
+                _loggingHandler.LogError(string.Format("Attacker {0} dealt damage on bone {1} to {2} - but this player isn't in fightlobby.", attacker.DisplayName, boneIdx, player.DisplayName), 
+                    Environment.StackTrace, attacker);
+                return;
+            }
+
+            fightLobby.DamagedPlayer(player, attacker, weaponHash, boneIdx);
+        }
+
+        #endregion Damagesys
+
+        public void OnOutsideMapLimit(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+            if (arena.Entity.LobbyMapSettings.MapLimitType == MapLimitType.KillAfterTime)
+                FightLobby.KillPlayer(player, player.Language.TOO_LONG_OUTSIDE_MAP);
+        }
+
+        public void OnSendTeamOrder(ITDSPlayer player, TeamOrder teamOrder)
+        {
+            player.Lobby?.SendTeamOrder(player, teamOrder);
+        }
+
+        public void OnSuicideKill(ITDSPlayer player)
+        {
+            if (player.Lifes == 0)
+                return;
+            if (!(player.Lobby is FightLobby))
+                return;
+            FightLobby.KillPlayer(player, player.Language.COMMITED_SUICIDE);
+        }
+
+        public void OnSuicideShoot(ITDSPlayer player)
+        {
+            if (player.Lifes == 0)
+                return;
+            if (!(player.Lobby is FightLobby fightLobby))
+                return;
+
+            _modAPI.Native.Send(fightLobby, NativeHash.SET_PED_SHOOTS_AT_COORD, player.RemoteId, 0f, 0f, 0f, false);
+        }
+
+        public void OnToggleCrouch(ITDSPlayer player)
+        {
+            player.IsCrouched = !player.IsCrouched;
+            _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, PlayerDataSyncMode.Lobby, player.IsCrouched);
+        }
+
+        #region Bomb
+
+        public void OnStartPlanting(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            if (!bombMode.StartBombPlanting(player))
+                player.SendEvent(ToClientEvent.StopBombPlantDefuse);
+        }
+
+        public void OnStopPlanting(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            bombMode.StopBombPlanting(player);
+        }
+
+        public void OnStartDefusing(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            if (!bombMode.StartBombDefusing(player))
+                player.SendEvent(ToClientEvent.StopBombPlantDefuse);
+        }
+
+        public void OnStopDefusing(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+            if (!(arena.CurrentGameMode is Bomb bombMode))
+                return;
+            bombMode.StopBombDefusing(player);
+        }
+
+        #endregion Bomb
+
+        #region Spectate
+
+        public void OnSpectateNext(ITDSPlayer player, bool forward)
+        {
+            if (!(player.Lobby is FightLobby lobby))
+                return;
+            lobby.SpectateNext(player, forward);
+        }
+
+        #endregion Spectate
+
+        #region MapVote
+
+        public void OnMapsListRequest(ITDSPlayer player)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+
+            arena.SendMapsForVoting(player);
+        }
+
+        public void OnMapVote(ITDSPlayer player, int mapId)
+        {
+            if (!(player.Lobby is Arena arena))
+                return;
+
+            arena.MapVote(player, mapId);
+        }
+
+        #endregion MapVote
+
+        #region Map Rating
+
+        public void OnSendMapRating(ITDSPlayer player, int mapId, int rating)
+        {
+            _mapsRatingsHandler.AddPlayerMapRating(player, mapId, (byte)rating);
+        }
+
+        #endregion Map Rating
+
+        #region MapCreator
+        public async void OnSendMapCreatorData(ITDSPlayer player, string json)
+        {
+            MapCreateError err = await _mapCreatorHandler.Create(player, json, false);
+            player.SendEvent(ToClientEvent.SendMapCreatorReturn, (int)err);
+        }
+
+        public async void OnSaveMapCreatorData(ITDSPlayer player, string json)
+        {
+            MapCreateError err = await _mapCreatorHandler.Create(player, json, true);
+            player.SendEvent(ToClientEvent.SaveMapCreatorReturn, (int)err);
+        }
+
+        public void OnLoadMapNamesToLoadForMapCreator(ITDSPlayer player)
+        {
+            _mapCreatorHandler.SendPlayerMapNamesForMapCreator(player);
+        }
+
+        public void OnLoadMapForMapCreator(ITDSPlayer player, int mapId)
+        {
+            if (!(player.Lobby is MapCreateLobby))
+                return;
+            _mapCreatorHandler.SendPlayerMapForMapCreator(player, mapId);
+        }
+
+        public void OnRemoveMap(ITDSPlayer player, int mapId)
+        {
+            _mapCreatorHandler.RemoveMap(player, mapId);
+        }
+
+        public void OnGetVehicle(ITDSPlayer player, int vehTypeNumber)
+        {
+            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
+                return;
+            FreeroamVehicleType vehType = (FreeroamVehicleType)vehTypeNumber;
+            lobby.GiveVehicle(player, vehType);
+        }
+
+        public void OnMapCreatorSyncLastId(ITDSPlayer player, int id)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncLastId(player, id);
+        }
+
+        public void OnMapCreatorSyncNewObject(ITDSPlayer player, string json)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncNewObject(player, json);
+        }
+
+        public void OnMapCreatorSyncObjectPosition(ITDSPlayer player, string json)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncObjectPosition(player, json);
+        }
+
+        public void OnMapCreatorSyncRemoveObject(ITDSPlayer player, int id)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncRemoveObject(player, id);
+        }
+
+        public void OnMapCreatorSyncAllObjects(ITDSPlayer player, int tdsPlayerId, string json)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.SyncAllObjectsToPlayer(tdsPlayerId, json);
+        }
+
+        public void OnMapCreatorStartNewMap(ITDSPlayer player)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return;
+            lobby.StartNewMap();
+        }
+        #endregion MapCreator
+
+        #region Userpanel
+        public void OnLoadUserpanelData(ITDSPlayer player, int dataType)
+        {
+            UserpanelLoadDataType type = (UserpanelLoadDataType)dataType;
+            _userpanelHandler.PlayerLoadData(player, type);
+        }
+
+        public void OnSendApplication(ITDSPlayer player, string json)
+        {
+            _userpanelHandler.ApplicationUserHandler.CreateApplication(player, json);
+        }
+
+        public void OnAcceptInvitation(ITDSPlayer player, int id)
+        {
+            _userpanelHandler.ApplicationUserHandler.AcceptInvitation(player, id);
+        }
+
+        public void OnRejectInvitation(ITDSPlayer player, int id)
+        {
+            _userpanelHandler.ApplicationUserHandler.RejectInvitation(player, id);
+        }
+
+        public async void OnLoadApplicationDataForAdmin(ITDSPlayer player, int applicationId)
+        {
+            await _userpanelHandler.ApplicationsAdminHandler.SendApplicationData(player, applicationId);
+        }
+        #endregion
     }
 }

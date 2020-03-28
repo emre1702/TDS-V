@@ -1,9 +1,11 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.Chat;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
+using TDS_Server.Data.Interfaces.ModAPI.Native;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Pool;
 using TDS_Server.Data.Interfaces.ModAPI.Server;
@@ -16,6 +18,7 @@ using TDS_Server.RAGE.Chat;
 using TDS_Server.RAGE.ColShape;
 using TDS_Server.RAGE.MapObject;
 using TDS_Server.RAGE.Marker;
+using TDS_Server.RAGE.Native;
 using TDS_Server.RAGE.Player;
 using TDS_Server.RAGE.Pool;
 using TDS_Server.RAGE.Server;
@@ -32,6 +35,7 @@ namespace TDS_Server.RAGE.Startup
         public IColShapeAPI ColShape { get; }
         public IMapObjectAPI MapObject { get; }
         public IMarkerAPI Marker { get; }
+        public INativeAPI Native { get; }
         public IPlayerAPI Player { get; }
         public IPoolAPI Pool { get; }
         public IResourceAPI Resource { get; }
@@ -49,6 +53,7 @@ namespace TDS_Server.RAGE.Startup
             ColShape = new ColShapeAPI();
             MapObject = new MapObjectAPI();
             Marker = new MarkerAPI();
+            Native = new NativeAPI();
             Player = new PlayerAPI();
             Pool = new PoolAPI();
             Resource = new ResourceAPI();
@@ -57,6 +62,13 @@ namespace TDS_Server.RAGE.Startup
             TextLabel = new TextLabelAPI();
             Thread = new ThreadAPI();
             Vehicle = new VehicleAPI();
+        }
+
+
+        public bool CheckHasErrors(ILoggingHandler loggingHandler)
+        {
+            var codeMistakesChecker = new CodeMistakesChecker(loggingHandler);
+            return codeMistakesChecker.CheckHasErrors();
         }
     }
 }

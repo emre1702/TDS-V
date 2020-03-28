@@ -9,7 +9,7 @@ namespace TDS_Server.Data.Interfaces
     public interface ITeam : IEquatable<ITeam>
     {
         Teams Entity { get; }
-        HashSet<ITDSPlayer> Players { get; }
+        List<ITDSPlayer> Players { get; }
         string ChatColor { get; }
         bool IsSpectator { get; }
         List<ITDSPlayer>? SpectateablePlayers { get; }

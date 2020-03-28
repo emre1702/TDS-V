@@ -104,7 +104,7 @@ namespace TDS_Server.Handler.Maps
             return list;
         }
 
-        public object? GetAllMapsForCustomLobby(TDSPlayer player, object[] args)
+        public object? GetAllMapsForCustomLobby(ITDSPlayer player, object[] args)
         {
             var allMapsSyncData = DefaultMaps.Union(NewCreatedMaps).Union(NeedCheckMaps).Select(m => m.BrowserSyncedData);
 

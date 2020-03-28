@@ -11,7 +11,7 @@ using TDS_Server.Handler.Entities.GangTeam;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 
-namespace TDS_Server.Handler
+namespace TDS_Server.Handler.GangSystem
 {
     public class GangsHandler
     {

@@ -6,6 +6,7 @@ using TDS_Server.Core.Init;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.RAGE.Player;
+using TDS_Server.RAGE.TDS_Server.Core.Manager.Utility;
 
 namespace TDS_Server.RAGE.Startup
 {
@@ -14,12 +15,14 @@ namespace TDS_Server.RAGE.Startup
 #nullable disable warnings
         public static BaseAPI BaseAPI;
         public static Core.Init.Program TDSCore;
+        public static WorkaroundsHandler WorkaroundsHandler;
 
         public Init()
         {
             BaseAPI = new BaseAPI();
 
             TDSCore = new Core.Init.Program(BaseAPI);
+            WorkaroundsHandler = new WorkaroundsHandler(TDSCore.EventsHandler, BaseAPI, TDSCore.LobbiesHandler);
 
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
@@ -44,6 +47,9 @@ namespace TDS_Server.RAGE.Startup
 
         internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
             => TDSCore.GetTDSPlayerIfLoggedIn(player);
+
+        internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
+            => TDSCore.GetTDSPlayerIfLoggedIn(remoteId);
 
         internal static ITDSPlayer? GetTDSPlayer(GTANetworkAPI.Player player)
         {

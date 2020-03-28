@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Position3D(0.1, 0, 0), null, Lobby);
+            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Position3D(0.1, 0, 0), null);
 
             if (_bombAtPlayer != player)
             {
@@ -100,7 +100,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position3D(0, 0, 0.24), new Position3D(270, 0, 0), Lobby);
+            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position3D(0, 0, 0.24), new Position3D(270, 0, 0));
 
             if (_bombAtPlayer != player)
             {

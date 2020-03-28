@@ -18,10 +18,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         //private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
         private readonly List<MapVoteDto> _mapVotes = new List<MapVoteDto>();
-        private readonly Dictionary<TDSPlayer, int> _playerVotes = new Dictionary<TDSPlayer, int>();
+        private readonly Dictionary<ITDSPlayer, int> _playerVotes = new Dictionary<ITDSPlayer, int>();
         private MapDto? _boughtMap = null;
 
-        public void SendMapsForVoting(TDSPlayer player)
+        public void SendMapsForVoting(ITDSPlayer player)
         {
             if (_mapsJson != null)
             {
@@ -29,7 +29,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void MapVote(TDSPlayer player, int mapId)
+        public void MapVote(ITDSPlayer player, int mapId)
         {
             if (_boughtMap is { })
                 return;
@@ -60,7 +60,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             ModAPI.Sync.SendEvent(this, ToClientEvent.AddMapToVoting, Serializer.ToBrowser(mapVote));
         }
 
-        private void AddVoteToMap(TDSPlayer player, int mapId)
+        private void AddVoteToMap(ITDSPlayer player, int mapId)
         {
             _playerVotes[player] = mapId;
             var map = _mapVotes.First(m => m.Id == mapId);
@@ -68,7 +68,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             ModAPI.Sync.SendEvent(this, ToClientEvent.SetMapVotes, mapId, map.AmountVotes);
         }
 
-        private void RemovePlayerVote(TDSPlayer player)
+        private void RemovePlayerVote(ITDSPlayer player)
         {
             if (!_playerVotes.ContainsKey(player))
                 return;

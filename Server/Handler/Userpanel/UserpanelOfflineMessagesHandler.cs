@@ -14,7 +14,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper
+    public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper
     {
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;

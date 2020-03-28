@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Stats;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Instance;
 
-namespace TDS_Server.Handler
+namespace TDS_Server.Handler.Server
 {
     public class ResourceStopHandler
     {

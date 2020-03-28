@@ -5,10 +5,9 @@ using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.GameModes;
-using TDS_Server.Handler.Entities.GangTeam;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.Utility
@@ -102,7 +101,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
                     await dbContext.SaveChangesAsync();
                 });
-                
+
             }
             ClearAttack();
         }

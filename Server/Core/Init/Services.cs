@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Core.Manager.Stats;
 using TDS_Server.Core.Manager.Timer;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
@@ -16,6 +15,7 @@ using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
@@ -58,6 +58,7 @@ namespace TDS_Server.Core.Init
                // Events
                .AddSingleton<EventsHandler>()
                .AddSingleton<RemoteEventsHandler>()
+               .AddSingleton<RemoteBrowserEventsHandler>()
 
                // Helper
                .AddSingleton<ChallengesHelper>()
@@ -106,10 +107,10 @@ namespace TDS_Server.Core.Init
                .AddSingleton<TimerHandler>()
                .AddSingleton<WeaponDatasLoadingHandler>()
                .AddSingleton<ScoreboardHandler>()
-               
+
 
                .AddSingleton<Serializer>()
-               
+
 
                .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
 
@@ -130,6 +131,7 @@ namespace TDS_Server.Core.Init
 
             serviceProvider.GetRequiredService<EventsHandler>();
             serviceProvider.GetRequiredService<RemoteEventsHandler>();
+            serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
 
             serviceProvider.GetRequiredService<ChallengesHelper>();
             serviceProvider.GetRequiredService<DatabasePlayerHelper>();
@@ -172,7 +174,6 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
             serviceProvider.GetRequiredService<ScoreboardHandler>();
             serviceProvider.GetRequiredService<UserpanelCommandsHandler>();
-            
         }
 
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using TDS_Server.Database.Entity;
-using TDS_Server.Handler;
+using TDS_Server.Handler.Server;
 
 namespace TDS_Server.Core.Init
 {

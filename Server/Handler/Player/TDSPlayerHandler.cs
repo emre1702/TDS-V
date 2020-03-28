@@ -22,6 +22,7 @@ namespace TDS_Server.Handler.Player
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
 
         private readonly Dictionary<ulong, ITDSPlayer> _tdsPlayerCache = new Dictionary<ulong, ITDSPlayer>();
+        private readonly Dictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new Dictionary<ushort, ITDSPlayer>();
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILoggingHandler _loggingHandler;
@@ -36,7 +37,8 @@ namespace TDS_Server.Handler.Player
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
 
-            eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore; ;
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+            eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore;
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOutAfter;
             eventsHandler.Minute += UpdatePlayers;
         }
@@ -69,6 +71,12 @@ namespace TDS_Server.Handler.Player
             return player;
         }
 
+        public ITDSPlayer? GetIfLoggedIn(ushort remoteId)
+        {
+            _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
+            return player;
+        }
+
         public ITDSPlayer? GetIfExists(int playerId)
         {
             return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
@@ -91,6 +99,11 @@ namespace TDS_Server.Handler.Player
             return null;
         }
 
+        private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
+        {
+            _tdsPlayerRemoteIdCache[player.RemoteId] = player;
+        }
+
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
         {
             return player.SaveData(true);
@@ -99,6 +112,7 @@ namespace TDS_Server.Handler.Player
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
             _tdsPlayerCache.Remove(player.SocialClubId);
+            _tdsPlayerRemoteIdCache.Remove(player.RemoteId);
         }
 
         private void UpdatePlayers(ulong _)

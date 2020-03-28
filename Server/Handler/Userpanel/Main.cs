@@ -11,38 +11,39 @@ namespace TDS_Server.Handler.Userpanel
     public class UserpanelHandler
     {
 
-        private readonly UserpanelApplicationsAdminHandler _applicationsAdminHandler;
-        private readonly UserpanelApplicationUserHandler _applicationUserHandler;
+        public readonly UserpanelApplicationsAdminHandler ApplicationsAdminHandler;
+        public readonly UserpanelApplicationUserHandler ApplicationUserHandler;
 
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
         private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
 
-        private readonly UserpanelSupportUserHandler _supportUserHandler;
-        private readonly UserpanelSupportAdminHandler _supportAdminHandler;
+        public readonly UserpanelSupportUserHandler SupportUserHandler;
+        public readonly UserpanelSupportAdminHandler SupportAdminHandler;
+        public readonly UserpanelSupportRequestHandler SupportRequestHandler;
         public readonly UserpanelSettingsNormalHandler SettingsNormalHandler;
-        private readonly UserpanelSettingsSpecialHandler _settingsSpecialHandler;
-        private readonly UserpanelOfflineMessagesHandler _offlineMessagesHandler;
+        public readonly UserpanelSettingsSpecialHandler SettingsSpecialHandler;
+        public readonly UserpanelOfflineMessagesHandler OfflineMessagesHandler;
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer, UserpanelCommandsHandler userpanelCommandsHandler)
         {
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
             _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
-            _applicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
+            ApplicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
             _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
             _commandsHandler = userpanelCommandsHandler;
-            _offlineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
+            OfflineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
             SettingsNormalHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsNormalHandler>(serviceProvider);
-            _settingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
+            SettingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
 
-            var userpanelSupportRequestHandler = ActivatorUtilities.CreateInstance<UserpanelSupportRequestHandler>(serviceProvider);
+            SupportRequestHandler = ActivatorUtilities.CreateInstance<UserpanelSupportRequestHandler>(serviceProvider);
 
-            _applicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler, _applicationUserHandler);
-            _supportUserHandler = new UserpanelSupportUserHandler(userpanelSupportRequestHandler);
-            _supportAdminHandler = new UserpanelSupportAdminHandler(userpanelSupportRequestHandler);
+            ApplicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler, ApplicationUserHandler);
+            SupportUserHandler = new UserpanelSupportUserHandler(SupportRequestHandler);
+            SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
         }
 
         private string? CommandService_OnUsedCommand(ulong userId, string command)
@@ -78,26 +79,26 @@ namespace TDS_Server.Handler.Userpanel
                     break;
 
                 case UserpanelLoadDataType.ApplicationUser:
-                    json = await _applicationUserHandler.GetData(player);
+                    json = await ApplicationUserHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.ApplicationsAdmin:
-                    json = await _applicationsAdminHandler.GetData(player);
+                    json = await ApplicationsAdminHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SettingsSpecial:
-                    json = _settingsSpecialHandler.GetData(player);
+                    json = SettingsSpecialHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SupportUser:
-                    json = await _supportUserHandler.GetData(player);
+                    json = await SupportUserHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.SupportAdmin:
-                    json = await _supportAdminHandler.GetData(player);
+                    json = await SupportAdminHandler.GetData(player);
                     break;
                 case UserpanelLoadDataType.OfflineMessages:
-                    json = await _offlineMessagesHandler.GetData(player);
+                    json = await OfflineMessagesHandler.GetData(player);
                     break;
             }
 

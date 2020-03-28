@@ -3,7 +3,7 @@ using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelSupportUserHandler
+    public class UserpanelSupportUserHandler
     {
         private readonly UserpanelSupportRequestHandler _userpanelSupportRequestHandler;
 

@@ -7,14 +7,13 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGE.Vehicle
 {
-    class Vehicle : IVehicle
+    class Vehicle : Entity.Entity, IVehicle
     {
-        private readonly GTANetworkAPI.Vehicle _instance;
+        internal readonly GTANetworkAPI.Vehicle _instance;
 
-        public Vehicle(GTANetworkAPI.Vehicle instance)
+        public Vehicle(GTANetworkAPI.Vehicle instance) : base(instance)
             => _instance = instance;
 
-        public ushort Id => _instance.Id;
 
         public List<ITDSEntity> Occupants
         {
@@ -41,19 +40,5 @@ namespace TDS_Server.RAGE.Vehicle
         }
 
         public int MaxOccupants => _instance.MaxOccupants;
-
-        public Position3D Rotation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public Position3D Position { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public uint Dimension { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-        public void Delete()
-        {
-            _instance.Delete();
-        }
-
-        public bool Equals(IVehicle? other)
-        {
-            return Id == other?.Id;
-        }
     }
 }

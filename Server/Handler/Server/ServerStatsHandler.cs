@@ -11,7 +11,7 @@ using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Player;
 
-namespace TDS_Server.Core.Manager.Stats
+namespace TDS_Server.Handler.Server
 {
     public class ServerStatsHandler : DatabaseEntityWrapper
     {

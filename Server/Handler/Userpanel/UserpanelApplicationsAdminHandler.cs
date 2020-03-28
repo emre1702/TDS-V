@@ -16,7 +16,7 @@ using TDS_Shared.Manager.Utility;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper
+    public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper
     {
         private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
         private readonly ISettingsHandler _settingsHandler;
