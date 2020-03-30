@@ -15,7 +15,7 @@ using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {

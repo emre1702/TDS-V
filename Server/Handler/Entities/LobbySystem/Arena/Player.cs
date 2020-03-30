@@ -6,12 +6,11 @@ using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.Player;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
-using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -103,7 +102,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
                 else
                 {
-                    player.SendEvent( ToClientEvent.PlayerSpectateMode);
+                    player.SendEvent(ToClientEvent.PlayerSpectateMode);
                 }
             }
         }

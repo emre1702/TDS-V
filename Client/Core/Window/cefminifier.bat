@@ -1,0 +1,3 @@
+node cefminify.js
+
+pause

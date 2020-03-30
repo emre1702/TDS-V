@@ -10,7 +10,7 @@ namespace TDS_Server.Handler
 {
     public class AdminsHandler
     {
-        public Dictionary<short, AdminLevelDto> AdminLevels = new Dictionary<short, AdminLevelDto>();
+        public Dictionary<short, AdminLevelDto> AdminLevels { get; } = new Dictionary<short, AdminLevelDto>();
 
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {

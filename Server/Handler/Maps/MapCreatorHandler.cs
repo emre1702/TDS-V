@@ -19,7 +19,7 @@ using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Maps

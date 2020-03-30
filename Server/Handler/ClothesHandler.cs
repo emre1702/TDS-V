@@ -10,7 +10,7 @@ using TDS_Server.Data.Models.ClothesMeta;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Utility;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler
 {

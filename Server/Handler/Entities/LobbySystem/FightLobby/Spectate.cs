@@ -28,11 +28,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
-        protected virtual void SpectateOtherSameTeam(ITDSPlayer character, bool next = true)
+        protected virtual void SpectateOtherSameTeam(ITDSPlayer character, bool spectateNext = true)
         {
             ITDSPlayer currentlySpectating = character.Spectates ?? character;
             ITDSPlayer? nextPlayer;
-            if (next)
+            if (spectateNext)
                 nextPlayer = GetNextSpectatePlayerInSameTeam(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInSameTeam(currentlySpectating);
@@ -45,11 +45,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        protected virtual void SpectateOtherAllTeams(ITDSPlayer player, bool next = true)
+        protected virtual void SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true)
         {
             ITDSPlayer currentlySpectating = player.Spectates ?? player;
             ITDSPlayer? nextPlayer;
-            if (next)
+            if (spectateNext)
                 nextPlayer = GetNextSpectatePlayerInAllTeams(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);

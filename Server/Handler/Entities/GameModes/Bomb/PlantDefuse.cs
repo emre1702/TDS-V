@@ -2,11 +2,11 @@
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
-using TDS_Shared.Instance;
 
 namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {

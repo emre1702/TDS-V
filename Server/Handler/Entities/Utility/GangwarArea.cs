@@ -8,7 +8,7 @@ using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.GangSystem;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.Utility
 {

@@ -5,7 +5,7 @@ using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Commands
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Core.Manager.Timer
 {

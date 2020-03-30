@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Database.Entity;
 using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {

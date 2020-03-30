@@ -4,10 +4,10 @@ using System.Xml.Serialization;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map;
 using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Manager.Utility;
 using MapType = TDS_Server.Data.Enums.MapType;
 using Position3DDto = TDS_Server.Data.Models.Map.Creator.Position3DDto;
 

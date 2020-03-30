@@ -1,7 +1,7 @@
 ﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {

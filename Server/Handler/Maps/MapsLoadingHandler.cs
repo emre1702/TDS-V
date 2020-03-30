@@ -14,7 +14,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Utility;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Maps

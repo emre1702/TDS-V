@@ -7,7 +7,7 @@ using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {

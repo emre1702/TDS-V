@@ -4,7 +4,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.GameModes
 {

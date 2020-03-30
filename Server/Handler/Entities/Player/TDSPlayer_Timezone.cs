@@ -1,5 +1,5 @@
 ﻿using System;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 using TimeZoneConverter;
 
 namespace TDS_Server.Handler.Entities.Player

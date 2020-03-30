@@ -45,6 +45,12 @@ dotnet_diagnostic.CA1031.severity = none
 # CA1822: Mark members as static
 dotnet_diagnostic.CA1822.severity = none
 
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = none
+
+# CA2225: Operator overloads have named alternates
+dotnet_diagnostic.CA2225.severity = none
+
 [*]
 indent_style = space 
 indent_size = 4

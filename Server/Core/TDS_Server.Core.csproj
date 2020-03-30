@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Core\TDS_Shared.Core.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />

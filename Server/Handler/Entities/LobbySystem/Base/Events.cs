@@ -2,7 +2,7 @@
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Data.Extensions
 {

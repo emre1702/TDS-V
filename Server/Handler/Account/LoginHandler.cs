@@ -15,7 +15,7 @@ using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Account
 {

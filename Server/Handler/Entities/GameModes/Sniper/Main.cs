@@ -7,7 +7,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.GameModes.Sniper
 {

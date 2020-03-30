@@ -7,7 +7,7 @@ using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Server
 {

@@ -3,7 +3,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;

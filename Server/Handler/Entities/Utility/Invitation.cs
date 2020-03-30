@@ -7,7 +7,7 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.Utility
 {

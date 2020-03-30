@@ -22,7 +22,7 @@ using TDS_Server.Handler.Maps;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 using MapType = TDS_Server.Data.Enums.MapType;
 
 namespace TDS_Server.Handler

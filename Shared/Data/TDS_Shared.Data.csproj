@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TDS_Shared\TDS_Shared.csproj" />
+    <ProjectReference Include="..\Core\TDS_Shared.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

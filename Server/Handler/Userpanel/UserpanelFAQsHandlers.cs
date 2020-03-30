@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="angular\dist\**" />
+      <Compile Remove="angular\node_modules\**" />
+      <Compile Remove="node_modules\**" />
+      <EmbeddedResource Remove="angular\dist\**" />
+      <EmbeddedResource Remove="angular\node_modules\**" />
+      <EmbeddedResource Remove="node_modules\**" />
+      <None Remove="angular\dist\**" />
+      <None Remove="angular\node_modules\**" />
+      <None Remove="node_modules\**" />
+    </ItemGroup>
+
+</Project>

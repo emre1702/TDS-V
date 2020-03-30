@@ -1,7 +1,7 @@
 ﻿using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Instance;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {

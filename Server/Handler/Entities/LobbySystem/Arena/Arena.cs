@@ -12,7 +12,7 @@ using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
-using TDS_Shared.Manager.Utility;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
