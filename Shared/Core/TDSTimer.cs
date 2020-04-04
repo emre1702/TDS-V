@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TDS_Shared.Core
 {
@@ -14,10 +15,13 @@ namespace TDS_Shared.Core
         /// <summary>List used to put the Timers in timer-List after the possible List-iteration</summary>
         private static readonly List<TDSTimer> _insertAfterList = new List<TDSTimer>();
 
-        /// <summary>Stopwatch to get the tick counts (Environment.TickCount is only int)</summary>
+        /// <summary>Logger</summary>
         private static Action<string> _logger;
 
-        private static Func<ulong> _tickGetter;
+        /// <summary>Stopwatch to get the elapsed ms</summary>
+        private static readonly Stopwatch _stopwatch = new Stopwatch();
+
+        public static ulong ElapsedMs => unchecked((ulong)_stopwatch.ElapsedMilliseconds);
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
@@ -29,7 +33,7 @@ namespace TDS_Shared.Core
             set 
             {
                 _executeAfterMs = value;
-                _executeAtMs = _tickGetter() + value;
+                _executeAtMs = unchecked((uint)_stopwatch.ElapsedMilliseconds + value);
                 lock (_timer)
                 {
                     _timer.Remove(this);
@@ -55,16 +59,20 @@ namespace TDS_Shared.Core
         public bool IsRunning => !_willRemoved;
 
         /// <summary>The remaining ms to execute</summary>
-        public ulong RemainingMsToExecute => _executeAtMs - _tickGetter();
-        public ulong ElapsedMsSinceLastExecOrCreate => _tickGetter() - (_executeAtMs - _executeAfterMs);
+        public ulong RemainingMsToExecute => unchecked(_executeAtMs - (ulong)_stopwatch.ElapsedMilliseconds);
+        public ulong ElapsedMsSinceLastExecOrCreate => unchecked((ulong)_stopwatch.ElapsedMilliseconds - (_executeAtMs - _executeAfterMs));
+
+        static TDSTimer() 
+        {
+            _stopwatch.Start();
+        }
 
         /// <summary>
-        /// Needs to be used once at server and once and client
+        /// Can be used once at server and once at client to define a logger
         /// </summary>
-        public static void Init(Action<string> thelogger, Func<ulong> theTickGetter)
+        public static void Init(Action<string> thelogger)
         {
             _logger = thelogger;
-            _tickGetter = theTickGetter;
         }
 
         /// <summary>
@@ -76,7 +84,7 @@ namespace TDS_Shared.Core
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
         public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
         {
-            ulong executeatms = executeafterms + (_tickGetter is null ? 0 : _tickGetter());
+            ulong executeatms = unchecked(executeafterms + (ulong)_stopwatch.ElapsedMilliseconds);
             Func = thefunc;
             _executeAfterMs = executeafterms;
             _executeAtMs = executeatms;
@@ -160,7 +168,7 @@ namespace TDS_Shared.Core
         {
             if (changeexecutems)
             {
-                _executeAtMs = _tickGetter();
+                _executeAtMs = unchecked((ulong)_stopwatch.ElapsedMilliseconds);
             }
             if (HandleException)
                 ExecuteMeSafe();
@@ -196,7 +204,7 @@ namespace TDS_Shared.Core
         /// </summary>
         public static void OnUpdateFunc()
         {
-            ulong tick = _tickGetter();
+            ulong elapsedMs = unchecked((ulong)_stopwatch.ElapsedMilliseconds);
             lock (_timer)
             {
                 for (int i = _timer.Count - 1; i >= 0; i--)
@@ -207,7 +215,7 @@ namespace TDS_Shared.Core
                         continue;
                     }
 
-                    if (_timer[i]._executeAtMs > tick)
+                    if (_timer[i]._executeAtMs > elapsedMs)
                         break;
 
                     TDSTimer thetimer = _timer[i];

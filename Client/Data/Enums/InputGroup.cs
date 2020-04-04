@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Enums
 {
-    enum InputGroup
+    public enum InputGroup
     {
         MOVE,
         LOOK,

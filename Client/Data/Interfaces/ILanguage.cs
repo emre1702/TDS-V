@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Data.Interfaces
 {
-    internal interface ILanguage
+    public interface ILanguage
     {
         ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
 

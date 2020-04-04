@@ -16,7 +16,7 @@ namespace TDS_Server.Core.Manager.Timer
         {
             _eventsHandler = eventsHandler;
 
-            TDSTimer.Init(Console.WriteLine, () => (ulong)Environment.TickCount & int.MaxValue);
+            TDSTimer.Init(Console.WriteLine);
 
             _eventsHandler.Update += TDSTimer.OnUpdateFunc;
 

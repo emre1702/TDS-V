@@ -18,9 +18,11 @@ namespace TDS_Client.Handler.Account
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
+        private readonly Serializer _serializer;
 
-        public RegisterLoginHandler(IModAPI modAPI, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler) 
-            => (_modAPI, _cursorHandler, _settingsHandler) = (modAPI, cursorHandler, settingsHandler);
+        public RegisterLoginHandler(IModAPI modAPI, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler,
+            Serializer serializer) 
+            => (_modAPI, _cursorHandler, _settingsHandler, _serializer) = (modAPI, cursorHandler, settingsHandler, serializer);
 
         public void TryLogin(string username, string password)
         {
@@ -50,12 +52,12 @@ namespace TDS_Client.Handler.Account
 
         private void SendDataToBrowser()
         {
-            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{Serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{_serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
 
         public void SyncLanguage()
         {
-            Browser?.ExecuteJs($"loadLanguage(`{Serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
+            Browser?.ExecuteJs($"loadLanguage(`{_serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
         }
     }
 }

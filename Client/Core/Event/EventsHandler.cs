@@ -24,7 +24,7 @@ namespace TDS_Client.Manager.Event
         {
             Settings.LoadLanguageFromRAGE();
             ClientUtils.Init();
-            Dx.RefreshResolution();
+            DxBase.RefreshResolution();
             CameraManager.Init();
             FightInfo.Init();
             Streaming.RequestNamedPtfxAsset("scr_xs_celebration");

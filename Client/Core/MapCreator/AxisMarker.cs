@@ -104,7 +104,7 @@ namespace TDS_Client.Instance.MapCreator
                 var camPos = TDSCamera.ActiveCamera?.Position ?? Cam.GetGameplayCamCoord();
                 float dist = Marker.Position.DistanceTo(camPos);
                 if (IsPositionMarker)
-                    Graphics.DrawSprite("commonmenu", "common_medal", v.X, v.Y, Marker.Scale.X * 4 / dist * (Dx.ResY / Dx.ResX), Marker.Scale.X * 4 / dist, 0, (int)Marker.Color.Red, (int)Marker.Color.Green, (int)Marker.Color.Blue, (int)Marker.Color.Alpha, 0);
+                    Graphics.DrawSprite("commonmenu", "common_medal", v.X, v.Y, Marker.Scale.X * 4 / dist * (DxBase.ResY / DxBase.ResX), Marker.Scale.X * 4 / dist, 0, (int)Marker.Color.Red, (int)Marker.Color.Green, (int)Marker.Color.Blue, (int)Marker.Color.Alpha, 0);
             }
         }
 
