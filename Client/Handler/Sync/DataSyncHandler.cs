@@ -1,30 +1,40 @@
-﻿using RAGE.Elements;
-using RAGE.Game;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Shared.Enum;
-using Player = RAGE.Elements.Player;
-using Entities = RAGE.Elements.Entities;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
-using TDS_Client.Enum;
+using TDS_Shared.Data.Enums;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler.Sync
 {
-    static class PlayerDataSync
+    public class DataSyncHandler
     {
-        public delegate void DataChangedDelegate(Player player, PlayerDataKey key, object data);
+        public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
         public static event DataChangedDelegate OnDataChanged;
 
-        private static readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas 
+        private static readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
-        static PlayerDataSync()
+        private readonly IModAPI _modAPI;
+        private readonly BrowserHandler _angularHandler;
+        private readonly LobbyHandler _lobbyHandler;
+        private readonly Serializer _serializer;
+
+        public DataSyncHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler angularHandler, LobbyHandler lobbyHandler, Serializer serializer)
         {
+            _modAPI = modAPI;
+            _angularHandler = angularHandler;
+            _lobbyHandler = lobbyHandler;
+            _serializer = serializer;
+
             OnDataChanged += OnLocalPlayerDataChange;
         }
 
-        public static T GetData<T>(Player player, PlayerDataKey key, T returnOnEmpty = default)
+        public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
         {
             if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
                 return returnOnEmpty;
@@ -34,7 +44,7 @@ namespace TDS_Client.Manager.Utility
             return (T)_playerRemoteIdDatas[player.RemoteId][key];
         }
 
-        public static object GetData(Player player, PlayerDataKey key)
+        public object GetData(IPlayer player, PlayerDataKey key)
         {
             if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
                 return null;
@@ -44,17 +54,17 @@ namespace TDS_Client.Manager.Utility
             return _playerRemoteIdDatas[player.RemoteId][key];
         }
 
-        public static T GetData<T>(PlayerDataKey key, T returnOnEmpty = default)
+        public T GetData<T>(PlayerDataKey key, T returnOnEmpty = default)
         {
-            return GetData<T>(Player.LocalPlayer, key, returnOnEmpty);
+            return GetData<T>(_modAPI.LocalPlayer, key, returnOnEmpty);
         }
 
-        public static object GetData(PlayerDataKey key)
+        public object GetData(PlayerDataKey key)
         {
-            return GetData(Player.LocalPlayer, key);
+            return GetData(_modAPI.LocalPlayer, key);
         }
 
-        public static void HandleDataFromServer(object[] args)
+        public void HandleDataFromServer(object[] args)
         {
             ushort playerRemoteId = Convert.ToUInt16(args[0]);
             PlayerDataKey key = (PlayerDataKey)Convert.ToInt32(args[1]);
@@ -64,19 +74,19 @@ namespace TDS_Client.Manager.Utility
                 _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
             _playerRemoteIdDatas[playerRemoteId][key] = value;
 
-            var player = Entities.Players.All.FirstOrDefault(p => p.RemoteId == playerRemoteId);
+            var player = _modAPI.Pool.Players.GetAtRemote(playerRemoteId);
             if (player != null)
             {
                 OnDataChanged?.Invoke(player, key, value);
             }
         }
 
-        public static void AppendDictionaryFromServer(string dictJson)
+        public void AppendDictionaryFromServer(string dictJson)
         {
-            var dict = Serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
+            var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
             foreach (var entry in dict)
             {
-                var player = Entities.Players.All.FirstOrDefault(p => p.RemoteId == entry.Key);
+                var player = _modAPI.Pool.Players.GetAtRemote(entry.Key);
                 if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
                     _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
                 foreach (var dataEntry in entry.Value)
@@ -90,29 +100,29 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
-        public static void RemovePlayerData(ushort playerRemoteId)
+        public void RemovePlayerData(ushort playerRemoteId)
         {
             _playerRemoteIdDatas.Remove(playerRemoteId);
         }
 
 
-        private static bool _nameSyncedWithAngular;
-        private static void OnLocalPlayerDataChange(Player player, PlayerDataKey key, object obj)
+        private bool _nameSyncedWithAngular;
+        private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
         {
-            if (player != Player.LocalPlayer)
+            if (player != _modAPI.LocalPlayer)
                 return;
             switch (key)
             {
                 case PlayerDataKey.Money:
                     //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
-                    Browser.Angular.Main.SyncMoney((int)obj);
-                    Browser.Angular.Main.SyncHUDDataChange(EHUDDataType.Money, (int)obj);
+                    _angularHandler.Main.SyncMoney((int)obj);
+                    _angularHandler.Main.SyncHUDDataChange(HudDataType.Money, (int)obj);
                     break;
                 case PlayerDataKey.AdminLevel:
-                    Browser.Angular.Main.RefreshAdminLevel(Convert.ToInt32(obj));
+                    _angularHandler.Main.RefreshAdminLevel(Convert.ToInt32(obj));
                     break;
                 case PlayerDataKey.IsLobbyOwner:
-                    Lobby.Lobby.IsLobbyOwner = (bool)obj;
+                    _lobbyHandler.IsLobbyOwner = (bool)obj;
                     break;
                 case PlayerDataKey.Name:
                     if (!_nameSyncedWithAngular)
@@ -120,7 +130,7 @@ namespace TDS_Client.Manager.Utility
                         _nameSyncedWithAngular = true;
                         return;
                     }
-                    Browser.Angular.Main.SyncUsernameChange((string)obj);
+                    _angularHandler.Main.SyncUsernameChange((string)obj);
                     break;
             }
         }

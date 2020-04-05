@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Enums
 {
-    enum HudDataType
+    public enum HudDataType
     {
         Armor,
         HP,

@@ -33,8 +33,13 @@ namespace TDS_Client.Manager.Utility
         private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
 
-        public CursorHandler(IModAPI modAPI, EventsHandler eventsHandler)
-            => (_modAPI, _eventsHandler) = (modAPI, eventsHandler);
+        public CursorHandler(IModAPI modAPI, EventsHandler eventsHandler, BindsHandler bindsHandler)
+        {
+            _modAPI = modAPI;
+            _eventsHandler = eventsHandler;
+
+            bindsHandler.Add(Key.End, ManuallyToggleCursor);
+        }
 
         public void ManuallyToggleCursor(Key _)
         {

@@ -7,6 +7,8 @@ using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.Sync;
+using TDS_Client.Instance.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -18,12 +20,13 @@ namespace TDS_Client.Handler
     {
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly CamerasHandler _camerasHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
 
-        public UtilsHandler(IModAPI modAPI, Serializer serializer, CamerasHandler camerasHandler)
+        public UtilsHandler(IModAPI modAPI, Serializer serializer, DataSyncHandler dataSyncHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
+            _dataSyncHandler = dataSyncHandler;
 
             modAPI.Event.Tick.Add(new EventMethodData<Action>(DisableAttack, () => Bomb.BombOnHand || !Round.InFight));
             modAPI.Event.Tick.Add(new EventMethodData<Action>(DisableControlActions));
@@ -63,10 +66,10 @@ namespace TDS_Client.Handler
             _modAPI.Ui.DrawNotification(false, false);
         }
 
-        public Position3D GetWorldCoordFromScreenCoord(float x, float y)
+        public Position3D GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
         {
-            Position3D camPos = _camerasHandler.GetCurrentCamPos();
-            Position3D camRot = _camerasHandler.GetCurrentCamRot();
+            Position3D camPos = tdsCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            Position3D camRot = tdsCamera?.Rotation ?? _modAPI.Cam.GetGameplayCamRot();
             var camForward = RotationToDirection(camRot);
             var rotUp = camRot + new Position3D(1, 0, 0);
             var rotDown = camRot + new Position3D(-1, 0, 0);

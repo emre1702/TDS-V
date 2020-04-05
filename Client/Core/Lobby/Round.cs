@@ -7,37 +7,7 @@ namespace TDS_Client.Manager.Lobby
 {
     internal static class Round
     {
-        private static bool _inFight;
-
-        public static bool InFight
-        {
-            get => _inFight;
-            set
-            {
-                if (value)
-                {
-                    MapLimitManager.Start();
-                    if (!_inFight)
-                    {
-                        FightInfo.Reset();
-                        FloatingDamageInfo.UpdateAllPositions();
-                        FiringMode.Start();
-                        Browser.Angular.Main.ToggleRoundStats(true);
-                    }
-                }  
-                else
-                {
-                    MapLimitManager.Stop();
-                    if (_inFight)
-                    {
-                        FloatingDamageInfo.RemoveAll();
-                        FiringMode.Stop();
-                        Browser.Angular.Main.ToggleRoundStats(false);
-                    }
-                }
-                _inFight = value;
-            }
-        }
+        
 
         public static bool IsSpectator { get; set; }
 

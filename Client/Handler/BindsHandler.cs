@@ -1,31 +1,29 @@
-﻿using RAGE;
-using RAGE.Game;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Dto;
-using TDS_Client.Enum;
-using TDS_Client.Manager.Lobby;
-using Events = RAGE.Events;
-using Script = RAGE.Events.Script;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Models;
 
 namespace TDS_Client.Manager.Utility
 {
-    internal class BindManager : Script
+    public class BindsHandler
     {
-        private static readonly List<(EKey, List<KeyBindDto>)> _bindedKeys = new List<(EKey, List<KeyBindDto>)>();
-        private static readonly List<(Control, List<ControlBindDto>)> _bindedControls = new List<(Control, List<ControlBindDto>)>();
-        private static readonly Dictionary<EKey, bool> _lastKeyDownState = new Dictionary<EKey, bool>();
-        private static readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
+        private readonly List<(Key, List<KeyBindDto>)> _bindedKeys = new List<(Key, List<KeyBindDto>)>();
+        private readonly List<(Control, List<ControlBindDto>)> _bindedControls = new List<(Control, List<ControlBindDto>)>();
+        private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
+        private readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
 
-        public BindManager()
+        private readonly IModAPI _modAPI;
+
+        public BindsHandler(IModAPI modAPI)
         {
-            Events.Tick += OnTick;
+            _modAPI = modAPI;
 
-            Add(EKey.End, CursorManager.ManuallyToggleCursor);
+            modAPI.Event.Tick.Add(new EventMethodData<Action>(OnTick));
         }
 
-        public static void Add(EKey key, Action<EKey> method, EKeyPressState pressState = EKeyPressState.Down)
+        public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
         {
             var entry = _bindedKeys.FirstOrDefault(e => e.Item1 == key);
             if (entry.Item2 == null)
@@ -36,7 +34,7 @@ namespace TDS_Client.Manager.Utility
             entry.Item2.Add(new KeyBindDto(method: method, onPressState: pressState));
         }
 
-        public static void Add(Control control, Action<Control> method, EKeyPressState pressState = EKeyPressState.Down, bool OnEnabled = true, bool OnDisabled = false)
+        public void Add(Control control, Action<Control> method, KeyPressState pressState = KeyPressState.Down, bool OnEnabled = true, bool OnDisabled = false)
         {
             var entry = _bindedControls.FirstOrDefault(e => e.Item1 == control);
             if (entry.Item2 == null)
@@ -47,14 +45,14 @@ namespace TDS_Client.Manager.Utility
             entry.Item2.Add(new ControlBindDto(method: method, onPressState: pressState, onEnabled: OnEnabled, onDisabled: OnDisabled));
         }
 
-        public static void Remove(EKey key, Action<EKey> method = null, EKeyPressState pressState = EKeyPressState.None)
+        public void Remove(Key key, Action<Key> method = null, KeyPressState pressState = KeyPressState.None)
         {
             var keyEntry = _bindedKeys.FirstOrDefault(e => e.Item1 == key);
             if (keyEntry.Item2 == null)
                 return;
             var entry = keyEntry.Item2.FirstOrDefault(b =>
                     (method == null || b.Method == method)
-                    && (pressState == EKeyPressState.None || b.OnPressState == pressState)
+                    && (pressState == KeyPressState.None || b.OnPressState == pressState)
             );
             if (entry != null)
                 keyEntry.Item2.Remove(entry);
@@ -62,14 +60,14 @@ namespace TDS_Client.Manager.Utility
                 _bindedKeys.Remove(keyEntry);
         }
 
-        public static void Remove(Control control, Action<Control> method = null, EKeyPressState pressState = EKeyPressState.None)
+        public void Remove(Control control, Action<Control> method = null, KeyPressState pressState = KeyPressState.None)
         {
             var controlEntry = _bindedControls.FirstOrDefault(e => e.Item1 == control);
             if (controlEntry.Item2 == null)
                 return;
             var entry = controlEntry.Item2.FirstOrDefault(b =>
                     (method == null || b.Method == method)
-                    && (pressState == EKeyPressState.None || b.OnPressState == pressState)
+                    && (pressState == KeyPressState.None || b.OnPressState == pressState)
             );
             if (entry != null)
                 controlEntry.Item2.Remove(entry);
@@ -77,12 +75,12 @@ namespace TDS_Client.Manager.Utility
                 _bindedControls.Remove(controlEntry);
         }
 
-        private static void OnTick(List<Events.TickNametagData> _)
+        private void OnTick()
         {
             for (int i = _bindedKeys.Count - 1; i >= 0; --i)
             {
                 var keyEntry = _bindedKeys[i];
-                bool isDown = Input.IsDown((int)keyEntry.Item1);
+                bool isDown = _modAPI.Input.IsDown(keyEntry.Item1);
                 if (_lastKeyDownState.ContainsKey(keyEntry.Item1))
                     if (_lastKeyDownState[keyEntry.Item1] == isDown)
                         continue;
@@ -94,14 +92,14 @@ namespace TDS_Client.Manager.Utility
                     if (isDown && bind.OnDown || !isDown && bind.OnUp)
                         bind.Method(keyEntry.Item1);
                 }
-                   
+
             }
 
             for (int i = _bindedControls.Count - 1; i >= 0; --i)
             {
                 var controlEntry = _bindedControls[i];
-                bool isDownEnabled = Pad.IsControlPressed(0, (int)controlEntry.Item1);
-                bool isDownDisabled = Pad.IsDisabledControlPressed(0, (int)controlEntry.Item1);
+                bool isDownEnabled = _modAPI.Control.IsControlPressed(InputGroup.MOVE, controlEntry.Item1);
+                bool isDownDisabled = _modAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, controlEntry.Item1);
 
                 if (_lastControlPressedState.ContainsKey(controlEntry.Item1))
                     if (_lastControlPressedState[controlEntry.Item1] == (isDownEnabled || isDownDisabled))

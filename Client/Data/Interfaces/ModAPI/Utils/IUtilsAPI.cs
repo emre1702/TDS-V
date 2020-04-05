@@ -4,6 +4,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Utils
 {
     public interface IUtilsAPI
     {
-
+        uint GetHashKey(string str);
     }
 }

@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Manager.Utility
@@ -29,13 +34,15 @@ namespace TDS_Client.Manager.Utility
                 _languageEnum = value;
                 _languageManuallyChanged = true;
                 Language = _languagesDict[_languageEnum];
-                Scoreboard.LoadLanguage();
-                Browser.Angular.Main.LoadLanguage(_languageEnum);
+                bool beforeLogin = PlayerSettings == null;
+                _eventsHandler?.OnLanguageChanged(Language, beforeLogin);
+
+                _scoreboardHandler.LoadLanguage();
                 CustomEventManager.SetNewLanguage(Language);
-                if (PlayerSettings != null)
+                if (!beforeLogin)
                 {
                     PlayerSettings.Language = value;
-                    RemoteEventsSender.Send(ToServerEvent.LanguageChange, PlayerSettings.Language);
+                    _remoteEventsSender.Send(ToServerEvent.LanguageChange, PlayerSettings.Language);
                 }
             }
         }
@@ -85,21 +92,29 @@ namespace TDS_Client.Manager.Utility
         // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
         public Color? NotTempMapBorderColor;
 
-        public SettingsHandler(IModAPI modAPI)
+        private readonly IModAPI _modAPI;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly EventsHandler _eventsHandler;
+
+        public SettingsHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
         {
+            _modAPI = modAPI;
+            _remoteEventsSender = remoteEventsSender;
+            _eventsHandler = eventsHandler;
+
             Language = _languagesDict[LanguageEnum];
 
-            RAGE.Nametags.Enabled = false;
+            modAPI.Nametags.Enabled = false;
 
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Flying), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Lung), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Shooting), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Stamina), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Stealth), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Strength), 100, false);
-            Stats.StatSetInt(Misc.GetHashKey(DPedStat.Wheelie), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Flying), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Lung), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Shooting), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Stamina), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Stealth), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Strength), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Wheelie), 100, false);
 
-            RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
+            modAPI.LocalPlayer.SetMaxArmor(Constants.MaxPossibleArmor);
         }
 
         public void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
@@ -117,16 +132,11 @@ namespace TDS_Client.Manager.Utility
             else
             {
                 loadedSyncedSettings.Language = LanguageEnum;
-                RemoteEventsSender.Send(ToServerEvent.LanguageChange, loadedSyncedSettings.Language);
+                _remoteEventsSender.Send(ToServerEvent.LanguageChange, loadedSyncedSettings.Language);
             }
 
             _languageManuallyChanged = false;
             PlayerSettings = loadedSyncedSettings;
-
-            foreach (var player in RAGE.Elements.Entities.Players.All)
-            {
-                VoiceManager.SetForPlayer(player);
-            }
 
             MapBorderColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
             NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
@@ -136,6 +146,8 @@ namespace TDS_Client.Manager.Utility
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
 
             NotTempMapBorderColor = null;
+
+            _eventsHandler.OnSettingsLoaded();
         }
 
         public SyncedLobbySettingsDto GetSyncedLobbySettings()
@@ -151,11 +163,11 @@ namespace TDS_Client.Manager.Utility
             StartArmor = loadedSyncedLobbySettings.StartArmor;
         }
 
-        public int GetPlantOrDefuseTime(EPlantDefuseStatus status)
+        public int GetPlantOrDefuseTime(PlantDefuseStatus status)
         {
-            if (status == EPlantDefuseStatus.Defusing)
+            if (status == PlantDefuseStatus.Defusing)
                 return _syncedLobbySettings.BombDefuseTimeMs ?? 0;
-            else if (status == EPlantDefuseStatus.Planting)
+            else if (status == PlantDefuseStatus.Planting)
                 return _syncedLobbySettings.BombPlantTimeMs ?? 0;
             return 0;
         }
@@ -171,11 +183,11 @@ namespace TDS_Client.Manager.Utility
 
         public void LoadLanguageFromRAGE()
         {
-            int lang = Locale.GetCurrentLanguageId();
+            int lang = _modAPI.Locale.GetCurrentLanguageId();
             switch (lang)
             {
                 case 2: // German
-                    LanguageEnum = TDS_Shared.Enum.Language.German;
+                    LanguageEnum = TDS_Shared.Data.Enums.Language.German;
                     _languageManuallyChanged = false;
                     break;
             }

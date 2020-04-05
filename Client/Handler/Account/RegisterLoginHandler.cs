@@ -1,6 +1,7 @@
 ﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Browser;
+using TDS_Client.Handler.Browser;
 using TDS_Client.Manager.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Utility;
@@ -10,19 +11,15 @@ namespace TDS_Client.Handler.Account
 {
     public class RegisterLoginHandler
     {
-        public IBrowser Browser;
         private string _name;
         private bool _isRegistered;
 
-        private readonly IModAPI _modAPI;
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly Serializer _serializer;
+        private readonly BrowserHandler _browserHandler;
 
-        public RegisterLoginHandler(IModAPI modAPI, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler,
-            Serializer serializer) 
-            => (_modAPI, _cursorHandler, _settingsHandler, _serializer) = (modAPI, cursorHandler, settingsHandler, serializer);
+        public RegisterLoginHandler(CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, BrowserHandler browserHandler) 
+            => (_cursorHandler, _remoteEventsSender, _browserHandler) = (cursorHandler, remoteEventsSender, browserHandler);
 
         public void TryLogin(string username, string password)
         {
@@ -34,30 +31,21 @@ namespace TDS_Client.Handler.Account
             _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty);
         }
 
-        public void Start(string theName, bool isregistered)
+        public void Start(string name, bool isRegistered)
         {
-            _name = theName;
-            _isRegistered = isregistered;
-            Browser = _modAPI.Browser.Create(Constants.RegisterLoginBrowserPath);
+            _name = name;
+            _isRegistered = isRegistered;
+            _browserHandler.RegisterLogin.CreateBrowser();
+            //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
+
             _cursorHandler.Visible = true;
-            SendDataToBrowser();
+            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered);
         }
 
         public void Stop()
         {
-            Browser?.Destroy();
-            Browser = null;
+            _browserHandler.RegisterLogin.Stop();
             _cursorHandler.Visible = false;
-        }
-
-        private void SendDataToBrowser()
-        {
-            Browser.ExecuteJs($"setLoginPanelData(`{_name}`, {(_isRegistered ? 1 : 0)}, `{_serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
-        }
-
-        public void SyncLanguage()
-        {
-            Browser?.ExecuteJs($"loadLanguage(`{_serializer.ToBrowser(_settingsHandler.Language.LOGIN_REGISTER_TEXTS)}`)");
-        }
+        }        
     }
 }

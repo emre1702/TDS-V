@@ -4,5 +4,7 @@
     {
         void Destroy();
         void ExecuteJs(string js);
+        void MarkAsChat();
+        void Call(string eventName, params object[] args);
     }
 }

@@ -332,7 +332,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnCommandUsedMethod(object[] args)
         {
-            ChatManager.CloseChatInput();
+            ChatHandler.CloseChatInput();
             string msg = (string)args[0];
             if (msg == "checkshoot")
             {
@@ -348,7 +348,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnChatUsedMethod(object[] args)
         {
-            ChatManager.CloseChatInput();
+            ChatHandler.CloseChatInput();
             string msg = (string)args[0];
             int chatTypeNumber = (int)(args[1]);
             EventsSender.Send(ToServerEvent.LobbyChatMessage, msg, chatTypeNumber);
@@ -356,7 +356,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnCloseChatMethod(object[] args)
         {
-            ChatManager.CloseChatInput();
+            ChatHandler.CloseChatInput();
         }
 
         private void OnLanguageChangeMethod(object[] args)

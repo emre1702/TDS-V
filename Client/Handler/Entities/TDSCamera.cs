@@ -2,17 +2,19 @@
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Cam;
+using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
-using Player = RAGE.Elements.Player;
 
 namespace TDS_Client.Instance.Utility
 {
     public class TDSCamera : ITDSCamera
     {
         public ICam Cam { get; set; }
-        public PedBase SpectatingPed { get; set; }
-        public bool IsActive => this == ActiveCamera;
+        public IPedBase SpectatingPed { get; set; }
+        public bool IsActive => this == _camerasHandler.ActiveCamera;
 
         public static Position3D FocusAtPos { get; set; }
 
@@ -26,10 +28,20 @@ namespace TDS_Client.Instance.Utility
             get => Cam.Rotation;
             set => Cam.Rotation = value;
         }
-        public Position3D Direction => Utils.GetDirectionByRotation(Rotation);
+        public Position3D Direction => _utilsHandler.GetDirectionByRotation(Rotation);
 
-        public TDSCamera(IModAPI modAPI)
+        private readonly IModAPI _modAPI;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly UtilsHandler _utilsHandler;
+        private readonly SpectatingHandler _spectatingHandler;
+
+        public TDSCamera(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SpectatingHandler spectatingHandler)
         {
+            _modAPI = modAPI;
+            _camerasHandler = camerasHandler;
+            _utilsHandler = utilsHandler;
+            _spectatingHandler = spectatingHandler;
+
             Cam = modAPI.Cam.Create();
             modAPI.Event.Tick.Add(new EventMethodData<Action>(OnUpdate, () => SpectatingPed != null));
         }
@@ -41,8 +53,7 @@ namespace TDS_Client.Instance.Utility
 
         public void OnUpdate()
         {
-            var rot = SpectatingPed.GetRotation(2);
-            Rotation = rot;
+            Rotation = SpectatingPed.Rotation;
         }
 
         public void SetPosition(Position3D position, bool instantly = false)
@@ -54,7 +65,7 @@ namespace TDS_Client.Instance.Utility
             }
         }
 
-        public void Spectate(PedBase ped)
+        public void Spectate(IPedBase ped)
         {
             if (SpectatingPed != null)
             {
@@ -62,92 +73,77 @@ namespace TDS_Client.Instance.Utility
             }
 
             SpectatingPed = ped;
-            Cam.AttachCamToPedBone(Handle, ped.Handle, (int)PedBone.SKEL_Head, 0, -2f, 0.3f, true);
+            Cam.AttachTo(ped, PedBone.SKEL_Head, 0, -2f, 0.3f, true);
 
-            Streaming.SetFocusEntity(ped.Handle);
+            _modAPI.Streaming.SetFocusEntity(ped);
             FocusAtPos = null;
         }
 
-        public void PointCamAtCoord(float x, float y, float z)
+        public void PointCamAtCoord(Position3D pos)
         {
-            PointCamAtCoord(new Vector3(x, y, z));
-        }
-
-        public void PointCamAtCoord(Vector3 pos)
-        {
-            Cam.PointCamAtCoord(Handle, pos.X, pos.Y, pos.Z);
+            Cam.PointAtCoord(pos);
 
             SetFocusArea(pos);
         }
 
-        public void RenderToPosition(float x, float y, float z, bool ease = false, int easeTime = 0)
+        public void RenderToPosition(Position3D pos, bool ease = false, int easeTime = 0)
         {
-            SetPosition(x, y, z);
+            SetPosition(pos);
             Render(ease, easeTime);
         }
 
-        public void RenderToPosition(Vector3 pos, bool ease = false, int easeTime = 0)
+        public void RenderBack(bool ease = false, int easeTime = 0)
         {
-            RenderToPosition(pos.X, pos.Y, pos.Z, ease, easeTime);
-        }
-
-        public static void RenderBack(bool ease = false, int easeTime = 0)
-        {
-            var spectatingEntity = Manager.Lobby.Spectate.SpectatingEntity;
-            ActiveCamera?.Deactivate();
+            var spectatingEntity = _spectatingHandler.SpectatingEntity;
+            _camerasHandler.ActiveCamera?.Deactivate();
             if (spectatingEntity != null)
             {
-                Streaming.SetFocusEntity(spectatingEntity.Handle);
+                _modAPI.Streaming.SetFocusEntity(spectatingEntity.Handle);
                 FocusAtPos = null;
-                CameraManager.SpectateCam.Activate();
-                Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
+                _camerasHandler.SpectateCam.Activate();
+                Cam.Render(true, ease, easeTime);
             }
             else
             {
                 RemoveFocusArea();
-                Cam.RenderScriptCams(false, ease, easeTime, true, false, 0);
-                ActiveCamera = null;
+                Cam.Render(false, ease, easeTime);
+                _camerasHandler.ActiveCamera = null;
             }
         }
 
-        public static void SetFocusArea(float x, float y, float z)
-        {
-            SetFocusArea(new Vector3(x, y, z));
-        }
-
-        public static void SetFocusArea(Vector3 pos)
+        public void SetFocusArea(Position3D pos)
         {
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
             {
-                Streaming.SetFocusArea(pos.X, pos.Y, pos.Z, 0, 0, 0);
+                _modAPI.Streaming.SetFocusArea(pos, 0, 0, 0);
                 FocusAtPos = pos;
             }
         }
 
-        public static void RemoveFocusArea()
+        public void RemoveFocusArea()
         {
-            Streaming.SetFocusEntity(Player.LocalPlayer.Handle);
+            _modAPI.Streaming.SetFocusEntity(_modAPI.LocalPlayer);
             FocusAtPos = null;
         }
 
         public void Render(bool ease = false, int easeTime = 0)
         {
-            Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
+            Cam.Render(true, ease, easeTime);
         }
 
         public void Detach()
         {
-            Cam.DetachCam(Handle);
+            Cam.Detach();
             SpectatingPed = null;
         }
 
         public void Activate(bool instantly = false)
         {
-            Cam.SetCamActive(Handle, true);
-            ActiveCamera = this;
+            Cam.SetActive(true);
+            _camerasHandler.ActiveCamera = this;
             if (instantly)
             {
-                Cam.RenderScriptCams(true, false, 0, true, false, 0);
+                Cam.Render(true, false, 0);
             }
 
         }
@@ -155,13 +151,13 @@ namespace TDS_Client.Instance.Utility
         public void Deactivate(bool instantly = false)
         {
             if (SpectatingPed != null)
-                Cam.DetachCam(Handle);
-            Cam.SetCamActive(Handle, false);
-            ActiveCamera = null;
+                Cam.Detach();
+            Cam.SetActive(false);
+            _camerasHandler.ActiveCamera = null;
             if (instantly)
             {
                 RemoveFocusArea();
-                Cam.RenderScriptCams(false, false, 0, true, false, 0);
+                Cam.Render(false, false, 0);
             }
 
         }

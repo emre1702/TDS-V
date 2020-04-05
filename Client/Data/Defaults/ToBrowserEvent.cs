@@ -26,7 +26,7 @@
         public const string ShowCooldown = "cb18";
         public const string ShowRankings = "cb19";
         public const string SyncAllCustomLobbies = "cb20";
-        public const string SyncHUDDataChange = "cb21";
+        public const string SyncHudDataChange = "cb21";
         public const string SyncIsLobbyOwner = "cb22";
         public const string SyncMapPriceData = "cb23";
         public const string SyncMoney = "cb24";

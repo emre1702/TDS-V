@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Instance.Lobby;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models.Map;
 using TDS_Shared.Dto.Map;
 using TDS_Shared.Enum;
 
