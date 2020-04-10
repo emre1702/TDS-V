@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Enums
 {
-    enum FiringMode
+    public enum FiringMode
     {
         Auto,
         Burst,

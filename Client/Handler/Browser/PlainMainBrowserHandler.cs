@@ -3,7 +3,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Shared.Core;
 
-namespace TDS_Client.Manager.Browser
+namespace TDS_Client.Handler.Browser
 {
     public class PlainMainBrowserHandler : BrowserHandlerBase
     {

@@ -25,11 +25,6 @@ namespace TDS_Client.RAGEAPI.Cam
         public Cam(int handle)
             => _handle = handle;
 
-        public void Render(bool render, bool ease, int easeTime)
-        {
-            RAGE.Game.Cam.RenderScriptCams(render, ease, easeTime, true, false, 0);
-        }
-
         public void AttachTo(IPedBase ped, PedBone bone, int x, float y, float z, bool heading)
         {
             RAGE.Game.Cam.AttachCamToPedBone(_handle, ped.Handle, (int)bone, x, y, z, heading);

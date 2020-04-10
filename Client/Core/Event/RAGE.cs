@@ -53,7 +53,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnEntityStreamInMethod(Entity entity)
         {
-            Crouching.OnEntityStreamIn(entity);
+            CrouchingHandler.OnEntityStreamIn(entity);
         }
 
         private void OnIncomingDamageMethod(Player sourcePlayer, Entity sourceEntity, Entity targetEntity, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)

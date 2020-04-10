@@ -2,8 +2,10 @@
 using System.Drawing;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
-using TDS_Client.Handler.Draw.Dx;
+using TDS_Client.Handler.Deathmatch;
+using TDS_Client.Handler.Entities.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -11,7 +13,7 @@ using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class AFKCheckHandler
     {
@@ -23,23 +25,27 @@ namespace TDS_Client.Manager.Utility
 
         private DxTextRectangle _draw;
 
+        private readonly EventMethodData<TickDelegate> _onTickEventMethod;
+
         private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly EventMethodData<Action> _onTickEventMethod;
+        private readonly PlayerFightHandler _playerFightHandler;
 
-        public AFKCheckHandler(EventsHandler eventsHandler, IModAPI modAPI, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender)
+        public AFKCheckHandler(EventsHandler eventsHandler, IModAPI modAPI, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler)
         {
+            _onTickEventMethod = new EventMethodData<TickDelegate>(OnTick);
+
             _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;
-            _onTickEventMethod = new EventMethodData<Action>(OnTick);
+            _playerFightHandler = playerFightHandler;
 
-            eventsHandler.OnLobbyJoin += OnLobbyJoin;
-            eventsHandler.OnLobbyLeave += OnLobbyLeave;
-            eventsHandler.OnDeath += OnDeath;
-            eventsHandler.OnRoundStart += OnRoundStart;
-            eventsHandler.OnRoundEnd += OnRoundEnd;
+            eventsHandler.LobbyJoin += OnLobbyJoin;
+            eventsHandler.LobbyLeave += OnLobbyLeave;
+            eventsHandler.Death += OnDeath;
+            eventsHandler.RoundStart += OnRoundStart;
+            eventsHandler.RoundEnd += OnRoundEnd;
         }
 
         private void Check()
@@ -69,7 +75,7 @@ namespace TDS_Client.Manager.Utility
             }
         }
 
-        private void OnTick()
+        private void OnTick(ulong currentTick)
         {
             if (!IsStillAFK())
             {
@@ -94,7 +100,7 @@ namespace TDS_Client.Manager.Utility
 
         private bool CanBeAFK()
         {
-            return PlayerStatusHandler.InFight
+            return _playerFightHandler.InFight
                 && _settingsHandler.PlayerSettings.CheckAFK
                 && _modAPI.LocalPlayer.IsPlaying
                 && !_modAPI.LocalPlayer.IsClimbing
@@ -167,7 +173,7 @@ namespace TDS_Client.Manager.Utility
         {
             _afkStartPos = null;
             StopCheck();
-            Chat.Output(_settingsHandler.Language.AFK_KICK_INFO);
+            _modAPI.Chat.Output(_settingsHandler.Language.AFK_KICK_INFO);
             _remoteEventsSender.Send(ToServerEvent.LeaveLobby);
         }
 

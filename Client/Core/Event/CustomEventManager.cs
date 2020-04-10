@@ -20,18 +20,11 @@ namespace TDS_Client.Manager.Event
         public delegate void RoundStartDelegate(bool isSpectator);
         public static event RoundStartDelegate OnRoundStart;
 
-        public delegate void WeaponChangeDelegate(uint oldWeaponHash, uint newWeaponHash);
-        public static event WeaponChangeDelegate OnWeaponChange;
 
         public delegate void LanguageChangedDelegate(ILanguage newLang);
         public static event LanguageChangedDelegate OnLanguageChanged;
 
-        private static uint _lastWeaponHash = 0;
 
-        public static void CheckOnTick()
-        {
-            CheckNewWeapon();
-        }
 
         public static void SetLobbyLeave(SyncedLobbySettingsDto settings)
         {
@@ -70,15 +63,5 @@ namespace TDS_Client.Manager.Event
             OnLanguageChanged?.Invoke(newLang);
         }
 
-
-        private static void CheckNewWeapon()
-        {
-            var currentWeapon = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
-            if (currentWeapon != _lastWeaponHash)
-            {
-                OnWeaponChange?.Invoke(_lastWeaponHash, currentWeapon);
-                _lastWeaponHash = currentWeapon;
-            }
-        }
     }
 }

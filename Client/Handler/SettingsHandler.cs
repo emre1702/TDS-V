@@ -10,12 +10,12 @@ using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class SettingsHandler
     {
-        public const int ScreenFadeInTimeAfterSpawn = 2000;
-        public const int ScreenFadeOutTimeAfterSpawn = 2000;
+        public readonly int ScreenFadeInTimeAfterSpawn = 2000;
+        public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
 
         private readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
         {

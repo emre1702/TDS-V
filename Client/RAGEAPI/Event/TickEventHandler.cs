@@ -1,64 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using TDS_Client.Data.Models;
-using static RAGE.Events;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 
 namespace TDS_Client.RAGEAPI.Event
 {
-    public class TickEventHandler : ICollection<EventMethodData<Action>>
+    public class TickEventHandler : BaseEventHandler<TickDelegate>
     {
-        public int Count => _actions.Count;
-
-        public bool IsReadOnly => true;
-
-        private readonly List<EventMethodData<Action>> _actions = new List<EventMethodData<Action>>();
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
         public TickEventHandler()
         {
-            Tick += OnTick;
+            _stopwatch.Start();
+
+            RAGE.Events.Tick += OnTick;
         }
 
-        public void Add(EventMethodData<Action> item)
+        private void OnTick(List<RAGE.Events.TickNametagData> nametags)
         {
-            _actions.Add(item);
-        }
-
-        public void Clear()
-        {
-            _actions.Clear();
-        }
-
-        public bool Contains(EventMethodData<Action> item)
-        {
-            return _actions.Contains(item);
-        }
-
-        public void CopyTo(EventMethodData<Action>[] array, int arrayIndex)
-        {
-            _actions.CopyTo(array, arrayIndex);
-        }
-
-        public IEnumerator<EventMethodData<Action>> GetEnumerator()
-        {
-            return _actions.GetEnumerator();
-        }
-
-        public bool Remove(EventMethodData<Action> item)
-        {
-            return _actions.Remove(item);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _actions.GetEnumerator();
-        }
-
-        private void OnTick(List<TickNametagData> nametags)
-        {
-            foreach (var a in _actions) 
+            ulong currentMs = unchecked((ulong)_stopwatch.ElapsedMilliseconds);
+            foreach (var a in Actions)
                 if (a.Requirement is null || a.Requirement())
-                    a.Method();
+                    a.Method(currentMs);
         }
     }
 }

@@ -3,7 +3,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Models;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler.Events
 {
     public class RemoteEventsSender
     {

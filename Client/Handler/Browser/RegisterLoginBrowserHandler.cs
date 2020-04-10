@@ -6,7 +6,7 @@ using TDS_Client.Manager.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Client.Manager.Browser.Angular
+namespace TDS_Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {

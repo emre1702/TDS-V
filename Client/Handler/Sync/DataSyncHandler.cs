@@ -13,25 +13,24 @@ namespace TDS_Client.Handler.Sync
 {
     public class DataSyncHandler
     {
-        public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
-        public static event DataChangedDelegate OnDataChanged;
-
         private static readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
         private readonly IModAPI _modAPI;
-        private readonly BrowserHandler _angularHandler;
+        private readonly BrowserHandler _browserHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly Serializer _serializer;
+        private readonly EventsHandler _eventsHandler;
 
         public DataSyncHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler angularHandler, LobbyHandler lobbyHandler, Serializer serializer)
         {
             _modAPI = modAPI;
-            _angularHandler = angularHandler;
+            _browserHandler = angularHandler;
             _lobbyHandler = lobbyHandler;
             _serializer = serializer;
+            _eventsHandler = eventsHandler;
 
-            OnDataChanged += OnLocalPlayerDataChange;
+            eventsHandler.DataChanged += OnLocalPlayerDataChange;
         }
 
         public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
@@ -77,7 +76,7 @@ namespace TDS_Client.Handler.Sync
             var player = _modAPI.Pool.Players.GetAtRemote(playerRemoteId);
             if (player != null)
             {
-                OnDataChanged?.Invoke(player, key, value);
+                _eventsHandler.OnDataChanged(player, key, value);
             }
         }
 
@@ -94,7 +93,7 @@ namespace TDS_Client.Handler.Sync
                     _playerRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
                     if (player != null)
                     {
-                        OnDataChanged?.Invoke(player, dataEntry.Key, dataEntry.Value);
+                        _eventsHandler.OnDataChanged(player, dataEntry.Key, dataEntry.Value);
                     }
                 }
             }
@@ -115,11 +114,11 @@ namespace TDS_Client.Handler.Sync
             {
                 case PlayerDataKey.Money:
                     //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
-                    _angularHandler.Main.SyncMoney((int)obj);
-                    _angularHandler.Main.SyncHUDDataChange(HudDataType.Money, (int)obj);
+                    _browserHandler.Angular.SyncMoney((int)obj);
+                    _browserHandler.Angular.SyncHudDataChange(HudDataType.Money, (int)obj);
                     break;
                 case PlayerDataKey.AdminLevel:
-                    _angularHandler.Main.RefreshAdminLevel(Convert.ToInt32(obj));
+                    _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
                     break;
                 case PlayerDataKey.IsLobbyOwner:
                     _lobbyHandler.IsLobbyOwner = (bool)obj;
@@ -130,7 +129,7 @@ namespace TDS_Client.Handler.Sync
                         _nameSyncedWithAngular = true;
                         return;
                     }
-                    _angularHandler.Main.SyncUsernameChange((string)obj);
+                    _browserHandler.Angular.SyncUsernameChange((string)obj);
                     break;
             }
         }

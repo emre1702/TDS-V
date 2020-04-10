@@ -8,14 +8,14 @@ namespace TDS_Client.Manager.Event
     {
         public static void AddWorkaroundEvents()
         {
-            Add(ToClientEvent.AttachEntityToEntityWorkaround, Workaround.AttachEntityToEntityWorkaroundMethod);
-            Add(ToClientEvent.DetachEntityWorkaround, Workaround.DetachEntityWorkaroundMethod);
-            Add(ToClientEvent.FreezeEntityWorkaround, Workaround.FreezeEntityWorkaroundMethod);
-            Add(ToClientEvent.FreezePlayerWorkaround, Workaround.FreezePlayerWorkaroundMethod);
-            Add(ToClientEvent.SetEntityCollisionlessWorkaround, Workaround.SetEntityCollisionlessWorkaroundMethod);
-            Add(ToClientEvent.SetEntityInvincible, Workaround.SetEntityInvincibleMethod);
-            Add(ToClientEvent.SetPlayerInvincible, Workaround.SetPlayerInvincibleMethod);
-            Add(ToClientEvent.SetPlayerTeamWorkaround, Workaround.SetPlayerTeamWorkaroundMethod);
+            Add(ToClientEvent.AttachEntityToEntityWorkaround, WorkaroundsHandler.AttachEntityToEntityWorkaroundMethod);
+            Add(ToClientEvent.DetachEntityWorkaround, WorkaroundsHandler.DetachEntityWorkaroundMethod);
+            Add(ToClientEvent.FreezeEntityWorkaround, WorkaroundsHandler.FreezeEntityWorkaroundMethod);
+            Add(ToClientEvent.FreezePlayerWorkaround, WorkaroundsHandler.FreezePlayerWorkaroundMethod);
+            Add(ToClientEvent.SetEntityCollisionlessWorkaround, WorkaroundsHandler.SetEntityCollisionlessWorkaroundMethod);
+            Add(ToClientEvent.SetEntityInvincible, WorkaroundsHandler.SetEntityInvincibleMethod);
+            Add(ToClientEvent.SetPlayerInvincible, WorkaroundsHandler.SetPlayerInvincibleMethod);
+            Add(ToClientEvent.SetPlayerTeamWorkaround, WorkaroundsHandler.SetPlayerTeamWorkaroundMethod);
         }
     }
 }

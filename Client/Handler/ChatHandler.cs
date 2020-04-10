@@ -5,7 +5,7 @@ using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Manager.Utility;
 
-namespace TDS_Client.Manager.Browser
+namespace TDS_Client.Handler
 {
     public class ChatHandler
     {

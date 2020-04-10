@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TDS_Client.Data.Defaults
 {
-    class EffectName
+    public class EffectName
     {
         public static string DEATHFAILMPIN => "DeathFailMPIn";
     }

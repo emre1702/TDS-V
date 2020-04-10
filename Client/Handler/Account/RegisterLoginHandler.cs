@@ -1,9 +1,5 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Browser;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Manager.Utility;
-using TDS_Shared.Core;
+﻿using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -17,9 +13,10 @@ namespace TDS_Client.Handler.Account
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly BrowserHandler _browserHandler;
+        private readonly SettingsHandler _settingsHandler;
 
-        public RegisterLoginHandler(CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, BrowserHandler browserHandler) 
-            => (_cursorHandler, _remoteEventsSender, _browserHandler) = (cursorHandler, remoteEventsSender, browserHandler);
+        public RegisterLoginHandler(CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, BrowserHandler browserHandler, SettingsHandler settingsHandler)
+            => (_cursorHandler, _remoteEventsSender, _browserHandler, _settingsHandler) = (cursorHandler, remoteEventsSender, browserHandler, settingsHandler);
 
         public void TryLogin(string username, string password)
         {
@@ -39,13 +36,13 @@ namespace TDS_Client.Handler.Account
             //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
 
             _cursorHandler.Visible = true;
-            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered);
+            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered, _settingsHandler.Language);
         }
 
         public void Stop()
         {
             _browserHandler.RegisterLogin.Stop();
             _cursorHandler.Visible = false;
-        }        
+        }
     }
 }

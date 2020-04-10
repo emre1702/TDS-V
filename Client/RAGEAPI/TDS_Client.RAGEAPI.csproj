@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core\TDS_Client.Core.csproj" />
     <ProjectReference Include="..\Data\TDS_Client.Data.csproj" />
   </ItemGroup>
 
@@ -16,10 +17,6 @@
     <Reference Include="rage-sharp">
       <HintPath>C:\RAGEMP\dotnet\rage-sharp.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Player\" />
   </ItemGroup>
 
 </Project>

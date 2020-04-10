@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class BindsHandler
     {
@@ -20,7 +21,7 @@ namespace TDS_Client.Manager.Utility
         {
             _modAPI = modAPI;
 
-            modAPI.Event.Tick.Add(new EventMethodData<Action>(OnTick));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
         }
 
         public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
@@ -75,7 +76,7 @@ namespace TDS_Client.Manager.Utility
                 _bindedControls.Remove(controlEntry);
         }
 
-        private void OnTick()
+        private void OnTick(ulong currentMs)
         {
             for (int i = _bindedKeys.Count - 1; i >= 0; --i)
             {

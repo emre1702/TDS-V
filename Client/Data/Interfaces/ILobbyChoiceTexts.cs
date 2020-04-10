@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Interfaces
 {
-    internal interface ILobbyChoiceTexts
+    public interface ILobbyChoiceTexts
     {
         string ARENA { get; }
         string GANG { get; }

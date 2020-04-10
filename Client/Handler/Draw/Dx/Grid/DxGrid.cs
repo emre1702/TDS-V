@@ -1,41 +1,40 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Enum;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Handler.Draw.Dx.Grid
 {
-    internal class DxGrid : DxBase
+    public class DxGrid : DxBase
     {
         public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
         private readonly List<DxGridRow> _rows = new List<DxGridRow>();
         public int ScrollIndex;
 
         public float X, Y, Width, BodyHeight;
-        public UIResText.Alignment Alignment;
+        public AlignmentX Alignment;
         public float RowHeight;
 
         public DxGridRow Header { get; private set; }
 
-        private float bodyTextScale;
-        private Color bodyBackColor;
-        private Font bodyFont;
-        private int maxRows;
+        private float _bodyTextScale;
+        private Color _bodyBackColor;
+        private Font _bodyFont;
+        private int _maxRows;
 
-        public DxGrid(float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
-            UIResText.Alignment alignment = UIResText.Alignment.Centered, int maxRows = 25, int frontPriority = 0) : base(frontPriority)
+        public DxGrid(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
+            AlignmentX alignment = AlignmentX.Center, int maxRows = 25, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority)
         {
             X = x;
             Y = y;
             Width = width;
             BodyHeight = bodyHeight;
-            this.bodyBackColor = bodyBackColor;
-            this.bodyTextScale = bodyTextScale;
-            this.bodyFont = bodyFont;
-            this.Alignment = alignment;
-            this.maxRows = maxRows;
+            _bodyBackColor = bodyBackColor;
+            _bodyTextScale = bodyTextScale;
+            _bodyFont = bodyFont;
+            Alignment = alignment;
+            _maxRows = maxRows;
 
             RowHeight = BodyHeight / maxRows;
         }
@@ -50,7 +49,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
                 atYTopPos = Header.Draw();
             }
 
-            for (int i = 0; i < Math.Min(_rows.Count, maxRows); ++i)
+            for (int i = 0; i < Math.Min(_rows.Count, _maxRows); ++i)
             {
                 int index = i + ScrollIndex;
                 DxGridRow row = _rows[index];
@@ -87,20 +86,20 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private void CheckScroll()
         {
             int rowscount = _rows.Count;
-            if (rowscount <= maxRows)
+            if (rowscount <= _maxRows)
             {
                 ScrollIndex = 0;
                 return;
             }
-            int change = (int)(Math.Ceiling((double)rowscount - maxRows) / 10);
-            if (Pad.IsControlJustPressed(0, (int)Control.SelectNextWeapon))
+            int change = (int)(Math.Ceiling((double)rowscount - _maxRows) / 10);
+            if (ModAPI.Control.IsControlJustPressed(InputGroup.MOVE, Control.SelectNextWeapon))
             {
-                if (ScrollIndex + change < rowscount - maxRows)
+                if (ScrollIndex + change < rowscount - _maxRows)
                     ScrollIndex += change;
                 else
-                    ScrollIndex = rowscount - maxRows;
+                    ScrollIndex = rowscount - _maxRows;
             }
-            else if (Pad.IsControlJustPressed(0, (int)Control.SelectPrevWeapon))
+            else if (ModAPI.Control.IsControlJustPressed(InputGroup.MOVE, Control.SelectPrevWeapon))
             {
                 if (ScrollIndex - change > 0)
                     ScrollIndex -= change;
@@ -109,9 +108,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
         }
 
-        public override EDxType GetDxType()
+        public override DxType GetDxType()
         {
-            return EDxType.Grid;
+            return DxType.Grid;
         }
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Manager.Utility;
 
 namespace TDS_Client.Handler.Draw.Dx
 {

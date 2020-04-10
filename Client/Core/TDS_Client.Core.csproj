@@ -11,7 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Data\TDS_Client.Data.csproj" />
     <ProjectReference Include="..\Handler\TDS_Client.Handler.csproj" />
-    <ProjectReference Include="..\RAGEAPI\TDS_Client.RAGEAPI.csproj" />
     <ProjectReference Include="..\Window\TDS_Client.Window.csproj" />
   </ItemGroup>
 

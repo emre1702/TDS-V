@@ -5,7 +5,7 @@ using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class VoiceHandler
     {

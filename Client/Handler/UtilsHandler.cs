@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Sync;
-using TDS_Client.Instance.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -28,8 +28,8 @@ namespace TDS_Client.Handler
             _serializer = serializer;
             _dataSyncHandler = dataSyncHandler;
 
-            modAPI.Event.Tick.Add(new EventMethodData<Action>(DisableAttack, () => Bomb.BombOnHand || !Round.InFight));
-            modAPI.Event.Tick.Add(new EventMethodData<Action>(DisableControlActions));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !Round.InFight));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableControlActions));
         }
 
         public List<IPlayer> GetTriggeredPlayersList(string objStr)
@@ -43,7 +43,7 @@ namespace TDS_Client.Handler
             return _modAPI.Pool.Players.GetAtRemote(handleValue);
         }
 
-        private void DisableAttack()
+        private void DisableAttack(ulong _)
         {
             _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
             _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
@@ -54,7 +54,7 @@ namespace TDS_Client.Handler
             _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
         }
 
-        private void DisableControlActions()
+        private void DisableControlActions(ulong _)
         {
             _modAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
         }
@@ -434,10 +434,20 @@ namespace TDS_Client.Handler
 
         public void HideHUDOriginalComponents()
         {
-            
+
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);
+        }
+
+        public RaycastHit RaycastFromTo(Position3D from, Position3D to, int ignoreEntity, int flags)
+        {
+            int ray = _modAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
+            RaycastHit cast = new RaycastHit();
+            int curtemp = 0;
+            cast.ShapeResult = _modAPI.Shapetest.GetShapeTestResultEx(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.MaterialHash, ref cast.EntityHit);
+            cast.Hit = Convert.ToBoolean(curtemp);
+            return cast;
         }
     }
 }

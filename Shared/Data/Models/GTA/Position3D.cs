@@ -2,6 +2,7 @@
 using System;
 using System.Xml.Serialization;
 using TDS_Shared.Data.Extensions;
+using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Data.Utility;
 
 namespace TDS_Shared.Data.Models.GTA
@@ -18,6 +19,9 @@ namespace TDS_Shared.Data.Models.GTA
         public float Z { get; set; }
 
         public Position3D() { }
+
+        public Position3D(MapCreatorPosition pos) 
+            => (X, Y, Z) = (pos.PosX, pos.PosY, pos.PosZ);
 
         public Position3D(float x, float y, float z)
             => (X, Y, Z) = (x, y, z);
@@ -235,6 +239,11 @@ namespace TDS_Shared.Data.Models.GTA
                 return false;
 
             return X == otherPos.X && Y == otherPos.Y && Z == otherPos.Z;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

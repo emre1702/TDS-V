@@ -524,7 +524,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnRemoveForceStayAtPositionMethod(object[] args)
         {
-            ForceStayAtPos.Stop();
+            ForceStayAtPosHandler.Stop();
         }
 
         private void OnRemoveSyncedPlayerDatasMethod(object[] args)
@@ -596,7 +596,7 @@ namespace TDS_Client.Manager.Event
             Settings.Load();
             VoiceManager.Init();
             Team.Init();
-            Crouching.Init();
+            CrouchingHandler.Init();
             AFKCheckManager.Init();
 
             BindManager.Add(EKey.F3, MapManager.ToggleMenu);
@@ -614,7 +614,7 @@ namespace TDS_Client.Manager.Event
             var type = args.Length >= 3 ? (MapLimitType)Convert.ToInt32(args[2]) : MapLimitType.Block;
             var allowedTimeOut = args.Length >= 4 ? Convert.ToInt32(args[3]) : 0;
 
-            ForceStayAtPos.Start(pos, radius, type, allowedTimeOut);
+            ForceStayAtPosHandler.Start(pos, radius, type, allowedTimeOut);
         }
 
         private void OnSetMapVotesMethod(object[] args)

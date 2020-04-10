@@ -20,5 +20,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
         void Destroy();
         void PointAtCoord(Position3D pos);
         void SetActive(bool active);
+        void SetFov(float fov);
+        //_modAPI.Cam.SetCamFov(cam.Handle, _modAPI.Cam.GetGameplayCamFov());
     }
 }

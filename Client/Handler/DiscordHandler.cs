@@ -1,6 +1,6 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class DiscordHandler
     {

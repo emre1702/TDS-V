@@ -8,19 +8,20 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Browser;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
 using TDS_Client.Manager.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Manager.Browser.Angular
+namespace TDS_Client.Handler.Browser
 {
     public class AngularBrowserHandler : BrowserHandlerBase
     {
         private readonly SettingsHandler _settingsHandler;
         private readonly CursorHandler _cursorHandler;
 
-        public AngularBrowserHandler(IModAPI modAPI, SettingsHandler settingsHandler, CursorHandler cursorHandler, Serializer serializer)
+        public AngularBrowserHandler(IModAPI modAPI, SettingsHandler settingsHandler, CursorHandler cursorHandler, Serializer serializer, EventsHandler eventsHandler)
             : base(modAPI, serializer, Constants.AngularMainBrowserPath)
         {
             _settingsHandler = settingsHandler;
@@ -31,6 +32,8 @@ namespace TDS_Client.Manager.Browser.Angular
 
             CreateBrowser();
             Browser.MarkAsChat();
+
+            eventsHandler.InFightStatusChanged += ToggleRoundStats;
         }
 
         public override void SetReady(params object[] args)
@@ -281,7 +284,7 @@ namespace TDS_Client.Manager.Browser.Angular
             Execute(ToBrowserEvent.ToggleHUD, toggle);
         }
 
-        public void SyncHUDDataChange(HudDataType type, int value)
+        public void SyncHudDataChange(HudDataType type, int value)
         {
             ExecuteFast(ToBrowserEvent.SyncHudDataChange, (int)type, value);
             //Execute(ToBrowserEvent.SyncHUDDataChange, type, value);

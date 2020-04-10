@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Interfaces
 {
-    internal interface IMapCreatorMenuTexts
+    public interface IMapCreatorMenuTexts
     {
         string GENERAL { get; }
         string DESCRIPTIONS { get; }

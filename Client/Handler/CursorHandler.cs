@@ -2,7 +2,7 @@
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Events;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
     public class CursorHandler
     {

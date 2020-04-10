@@ -1,26 +1,25 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
-using System.Drawing;
-using TDS_Client.Enum;
+﻿using System.Drawing;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Handler.Draw.Dx.Grid
 {
-    internal class DxGridCell : DxBase
+    public class DxGridCell : DxBase
     {
-        private string text;
+        private string _text;
         public DxGridRow Row;
-        private DxGridColumn column;
-        private Color? backColor;
-        private Color? textColor;
-        private float? scale;
-        private Font? font;
-        private UIResText.Alignment? alignment;
+        private DxGridColumn _column;
+        private Color? _backColor;
+        private Color? _textColor;
+        private float? _scale;
+        private Font? _font;
+        private AlignmentX? _alignmentX;
 
-        private float? textHeight;
+        private float? _textHeight;
 
         public Color BackColor
         {
-            get => backColor ?? Row.BackColor;
+            get => _backColor ?? Row.BackColor;
             set
             {
                 if (value != null && value != Row.BackColor)
@@ -30,20 +29,20 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
         }
 
-        public DxGridCell(string text, DxGridRow row, DxGridColumn column, Color? backColor = null, Color? textColor = null, float? scale = null, Font? font = null, 
-            UIResText.Alignment? alignment = null, int frontPriority = 0) : base(frontPriority, false)
+        public DxGridCell(DxHandler dxHandler, IModAPI modAPI, string text, DxGridRow row, DxGridColumn column, Color? backColor = null, Color? textColor = null, float? scale = null, Font? font = null,
+            AlignmentX? alignment = null, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority, false)
         {
-            this.text = text;
+            this._text = text;
             this.Row = row;
-            this.column = column;
-            this.backColor = backColor;
-            this.textColor = textColor;
-            this.scale = scale;
-            this.font = font;
-            this.alignment = alignment;
+            this._column = column;
+            this._backColor = backColor;
+            this._textColor = textColor;
+            this._scale = scale;
+            this._font = font;
+            this._alignmentX = alignment;
 
             if (scale.HasValue && font.HasValue)
-                textHeight = Ui.GetTextScaleHeight(scale.Value, (int)font.Value);
+                _textHeight = modAPI.Ui.GetTextScaleHeight(scale.Value, font.Value);
 
             row.AddCell(this);
         }
@@ -51,39 +50,39 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public override void Draw()
         {
             int y = GetAbsoluteY(GetRelativeY(Row.Y, Row.RelativePos), true, true) - 5;
-            y -= (int)(textHeight ?? Row.TextHeight) / 2;
-            UIResText.Alignment align = alignment ?? Row.TextAlignment;
-            if (align == UIResText.Alignment.Left)
+            y -= (int)(_textHeight ?? Row.TextHeight) / 2;
+            AlignmentX align = _alignmentX ?? Row.TextAlignment;
+            if (align == AlignmentX.Left)
             {
-                int x = GetAbsoluteX(column.X, column.RelativePos, true);
-                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+                int x = GetAbsoluteX(_column.X, _column.RelativePos, true);
+                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
             }
-            else if (align == UIResText.Alignment.Centered)
+            else if (align == AlignmentX.Center)
             {
-                int x = GetAbsoluteX(column.X + column.Width / 2, column.RelativePos, true);
-                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+                int x = GetAbsoluteX(_column.X + _column.Width / 2, _column.RelativePos, true);
+                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
             }
             else
             {
-                int x = GetAbsoluteX(column.X + column.Width, column.RelativePos, true);
-                UIResText.Draw(text, x, y, font ?? Row.Font, scale ?? Row.Scale, textColor ?? Row.TextColor, align, false, false, 0);
+                int x = GetAbsoluteX(_column.X + _column.Width, _column.RelativePos, true);
+                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
             }
         }
 
         public void DrawBackground()
         {
             Color backcolor = BackColor;
-            Graphics.DrawRect(column.X, Row.Y, column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A, 0);
+            ModAPI.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A, 0);
         }
 
         public void SetText(string text)
         {
-            this.text = text;
+            this._text = text;
         }
 
-        public override EDxType GetDxType()
+        public override DxType GetDxType()
         {
-            return EDxType.GridCell;
+            return DxType.GridCell;
         }
     }
 }
